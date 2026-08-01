@@ -72,6 +72,14 @@ def test_luna_worker_does_not_enter_formal_review_ladders() -> None:
         assert "gpt-5.6-luna" not in {candidate for rung in ladder for candidate in rung}
 
 
+def test_luna_economics_use_model_specific_openai_sources() -> None:
+    sources = set(load_model_catalog()["models"]["gpt-5.6-luna"]["sources"])
+    assert {
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+    } <= sources
+
+
 def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
     """The two operator-requested cross-family seats must not silently disappear."""
     for ladder in load_model_catalog()["review_ladders"].values():

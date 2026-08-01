@@ -426,13 +426,13 @@ All three tiers expose **272K context (~258.4K effectively usable before the con
 
 Policy: **prefer 5.6 for NEW work**; retain 5.5/5.4 only for pinned workflows (qg_bakeoff arms, the V7 pipeline reviewer seat until spot-checked post-reset), proven compatibility, or quota pressure. Codex dispatch + `ask-codex` defaults = `gpt-5.6-terra`.
 
-**Luna economics refresh (operator directive 2026-08-01):** OpenAI cut Luna API
-pricing by 80% on 2026-07-30; current standard short-context token rates and
-Codex plan limits place it at roughly one tenth of Terra for equivalent usage
-units. Promote Luna @ `max` for bounded worker tasks; this cost/throughput
-change does not grant advisor, orchestrator, release, or formal-review
-authority. Terra remains the autonomous-integration fallback, and independent
-cross-family review still binds.
+**Luna economics refresh (operator directive 2026-08-01):** OpenAI currently
+positions Luna for cost-sensitive, high-volume workloads, and its published
+standard short-context token prices are below Terra's. Promote Luna @ `max` for
+bounded worker tasks; this cost/throughput advantage does not grant advisor,
+orchestrator, release, or formal-review authority. Terra remains the
+autonomous-integration fallback, and independent cross-family review still
+binds.
 
 Probe evidence (2026-07-09): `luna@medium` QG 69-item triage PASS (69/69 processed, 5/5 spot-verified verdicts, 160s); `sol@xhigh` (Layer B design) + `terra@high` (#4824 fix) probes ran same day; Sonnet-5-vs-Terra and Haiku-4.5-vs-Luna matched pairs queued for the 07-13 claude reset.
 
