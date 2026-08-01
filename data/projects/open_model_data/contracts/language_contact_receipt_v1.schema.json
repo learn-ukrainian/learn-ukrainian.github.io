@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry aggregate language-contact detector receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "detector_id",
+    "source_snapshot_id",
+    "coverage",
+    "candidate_arithmetic",
+    "yields_by_category",
+    "yields_by_source_family",
+    "yields_by_period",
+    "yields_by_register",
+    "offsets_rejected",
+    "prefilter",
+    "evidence_source_usage",
+    "deterministic_sample_locators",
+    "outputs",
+    "claims",
+    "determinism"
+  ],
+  "properties": {
+    "schema_version": {"const": "language_contact_receipt_v1"},
+    "detector_id": {"type": "string", "minLength": 3},
+    "source_snapshot_id": {"type": "string", "minLength": 3},
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["complete", "expected_rows", "expected_lexical_words", "processed_rows", "processed_lexical_words", "dropped_rows", "dropped_lexical_words", "inaccessible_sources", "source_results"],
+      "properties": {
+        "complete": {"type": "boolean"},
+        "expected_rows": {"$ref": "#/$defs/count"},
+        "expected_lexical_words": {"$ref": "#/$defs/count"},
+        "processed_rows": {"$ref": "#/$defs/count"},
+        "processed_lexical_words": {"$ref": "#/$defs/count"},
+        "dropped_rows": {"$ref": "#/$defs/count"},
+        "dropped_lexical_words": {"$ref": "#/$defs/count"},
+        "inaccessible_sources": {"type": "array", "items": {"type": "object"}},
+        "source_results": {"type": "array", "items": {"$ref": "#/$defs/sourceResult"}}
+      }
+    },
+    "candidate_arithmetic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_candidates", "unresolved_review_queue", "protected_rescues", "quoted_russian", "modern_interference_candidates", "other_routes", "queue_route_counts"],
+      "properties": {
+        "total_candidates": {"$ref": "#/$defs/count"},
+        "unresolved_review_queue": {"$ref": "#/$defs/count"},
+        "protected_rescues": {"$ref": "#/$defs/count"},
+        "quoted_russian": {"$ref": "#/$defs/count"},
+        "modern_interference_candidates": {"$ref": "#/$defs/count"},
+        "other_routes": {"$ref": "#/$defs/count"},
+        "queue_route_counts": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "yields_by_category": {"$ref": "#/$defs/countMap"},
+    "yields_by_source_family": {"$ref": "#/$defs/countMap"},
+    "yields_by_period": {"$ref": "#/$defs/countMap"},
+    "yields_by_register": {"$ref": "#/$defs/countMap"},
+    "offsets_rejected": {"$ref": "#/$defs/count"},
+    "prefilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows_with_signal", "rows_without_signal"],
+      "properties": {
+        "rows_with_signal": {"$ref": "#/$defs/count"},
+        "rows_without_signal": {"$ref": "#/$defs/count"}
+      }
+    },
+    "evidence_source_usage": {"type": "object", "additionalProperties": {"type": "object"}},
+    "deterministic_sample_locators": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_candidates"],
+      "properties": {
+        "review_candidates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bytes", "records", "sha256"],
+          "properties": {
+            "bytes": {"$ref": "#/$defs/count"},
+            "records": {"$ref": "#/$defs/count"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_gold_created", "precision_or_recall_claimed", "source_admission_changed", "training_or_publication_performed"],
+      "properties": {
+        "correction_gold_created": {"const": false},
+        "precision_or_recall_claimed": {"const": false},
+        "source_admission_changed": {"const": false},
+        "training_or_publication_performed": {"const": false}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "candidate_order", "timestamps_omitted", "runtime_and_rss_omitted"],
+      "properties": {
+        "serialization": {"type": "string", "minLength": 1},
+        "candidate_order": {"type": "string", "minLength": 1},
+        "timestamps_omitted": {"const": true},
+        "runtime_and_rss_omitted": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "countMap": {"type": "object", "propertyNames": {"minLength": 1}, "additionalProperties": {"$ref": "#/$defs/count"}},
+    "sourceCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "lexical_words"],
+      "properties": {"rows": {"$ref": "#/$defs/count"}, "lexical_words": {"$ref": "#/$defs/count"}}
+    },
+    "sourceResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actual", "expected", "inventory_asset_id", "matches_expected", "source_family"],
+      "properties": {
+        "actual": {"$ref": "#/$defs/sourceCount"},
+        "expected": {"$ref": "#/$defs/sourceCount"},
+        "inventory_asset_id": {"type": "string", "minLength": 1},
+        "matches_expected": {"type": "boolean"},
+        "source_family": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

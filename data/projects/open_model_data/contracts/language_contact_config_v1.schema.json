@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_config_v1.schema.json",
+  "title": "Ukrainian Data Foundry language-contact detector config v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "detector_id",
+    "source_snapshot_id",
+    "record_batch_size",
+    "span",
+    "prefilter",
+    "vesum",
+    "ru_morph",
+    "heritage",
+    "r2u_cache",
+    "reconstruction",
+    "valid_word_routes",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {"const": "language_contact_config_v1"},
+    "detector_id": {"type": "string", "minLength": 3},
+    "source_snapshot_id": {"type": "string", "minLength": 3},
+    "record_batch_size": {"type": "integer", "minimum": 1, "maximum": 4096},
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_chars", "context_tokens", "max_cluster_gap_tokens"],
+      "properties": {
+        "max_chars": {"type": "integer", "minimum": 40, "maximum": 1000},
+        "context_tokens": {"type": "integer", "minimum": 0, "maximum": 50},
+        "max_cluster_gap_tokens": {"type": "integer", "minimum": 0, "maximum": 20}
+      }
+    },
+    "prefilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_unknown_gap_tokens", "min_adjacent_form_chars", "min_heritage_form_chars", "min_latin_run_words", "russian_anchors"],
+      "properties": {
+        "max_unknown_gap_tokens": {"type": "integer", "minimum": 0, "maximum": 5},
+        "min_adjacent_form_chars": {"type": "integer", "minimum": 2, "maximum": 20},
+        "min_heritage_form_chars": {"type": "integer", "minimum": 2, "maximum": 20},
+        "min_latin_run_words": {"type": "integer", "minimum": 2, "maximum": 10},
+        "russian_anchors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "vesum": {"$ref": "#/$defs/localAdapter"},
+    "ru_morph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["threshold", "cache_entries"],
+      "properties": {
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "cache_entries": {"type": "integer", "minimum": 1}
+      }
+    },
+    "heritage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database", "interface", "cache_entries", "max_headwords"],
+      "properties": {
+        "database": {"type": "string", "minLength": 1},
+        "interface": {"type": "string", "minLength": 1},
+        "cache_entries": {"type": "integer", "minimum": 1},
+        "max_headwords": {"type": "integer", "minimum": 1, "maximum": 1000000}
+      }
+    },
+    "r2u_cache": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "interface", "network_during_run"],
+      "properties": {
+        "file": {"type": "string", "minLength": 1},
+        "interface": {"type": "string", "minLength": 1},
+        "network_during_run": {"const": false}
+      }
+    },
+    "reconstruction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_candidates_per_span", "score_threshold", "mappings"],
+      "properties": {
+        "max_candidates_per_span": {"type": "integer", "minimum": 1, "maximum": 20},
+        "score_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "mappings": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"minLength": 1},
+          "additionalProperties": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "valid_word_routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pattern", "route_kind", "source_key"],
+        "properties": {
+          "pattern": {"type": "string", "minLength": 2},
+          "route_kind": {"type": "string", "pattern": "^vetted_"},
+          "source_key": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}}
+  },
+  "$defs": {
+    "localAdapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database", "snapshot_id", "interface", "batch_size", "cache_entries"],
+      "properties": {
+        "database": {"type": "string", "minLength": 1},
+        "snapshot_id": {"type": "string", "minLength": 1},
+        "interface": {"type": "string", "minLength": 1},
+        "batch_size": {"type": "integer", "minimum": 1, "maximum": 900},
+        "cache_entries": {"type": "integer", "minimum": 1}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_family", "inventory_asset_id", "adapter", "evidence", "expected"],
+      "properties": {
+        "source_family": {"type": "string", "minLength": 1},
+        "inventory_asset_id": {"type": "string", "minLength": 1},
+        "adapter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "database", "table", "id_column", "text_column", "locator_column", "dimensions"],
+          "properties": {
+            "kind": {"const": "sqlite_query_v1"},
+            "database": {"type": "string", "minLength": 1},
+            "table": {"type": "string", "minLength": 1},
+            "id_column": {"type": "string", "minLength": 1},
+            "text_column": {"type": "string", "minLength": 1},
+            "locator_column": {"type": "string", "minLength": 1},
+            "dimensions": {
+              "type": "object",
+              "propertyNames": {"enum": ["period", "genre", "register", "origin"]},
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "column": {"type": "string", "minLength": 1},
+                  "constant": {"type": "string", "minLength": 1}
+                },
+                "oneOf": [{"required": ["column"]}, {"required": ["constant"]}]
+              }
+            },
+            "exclude": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["column", "values"],
+              "properties": {
+                "column": {"type": "string", "minLength": 1},
+                "values": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+              }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provenance_status", "rights_status", "origin_status", "contamination_status", "permitted_use"],
+          "properties": {
+            "provenance_status": {"enum": ["complete", "partial", "unverified"]},
+            "rights_status": {"enum": ["granted", "public_domain", "not_reconstructed", "unresolved"]},
+            "origin_status": {"enum": ["verified_human_authorship", "inventory_classified", "unverified"]},
+            "contamination_status": {"enum": ["cleared", "not_checked", "contaminated"]},
+            "permitted_use": {"enum": ["training_eligible", "evaluation_only", "provenance_investigation", "private_reference", "unresolved"]}
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "lexical_words"],
+          "properties": {
+            "rows": {"type": "integer", "minimum": 0},
+            "lexical_words": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}

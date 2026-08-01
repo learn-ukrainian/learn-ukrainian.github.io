@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_candidate_v1.schema.json",
+  "title": "Ukrainian Data Foundry bounded language-contact review candidate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_record_id",
+    "source_family",
+    "locator",
+    "record_id",
+    "record_hash",
+    "span",
+    "classification",
+    "metadata",
+    "evidence",
+    "automatic_error_label",
+    "review_state",
+    "queue_route"
+  ],
+  "properties": {
+    "schema_version": {"const": "language_contact_candidate_v1"},
+    "source_record_id": {"type": "string", "minLength": 3},
+    "source_family": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "pattern": "^sqlite:[^#]+#[^/]+/.+$"},
+    "record_id": {"type": "string", "minLength": 1},
+    "record_hash": {"$ref": "#/$defs/sha256"},
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_char",
+        "end_char",
+        "core_start_char",
+        "core_end_char",
+        "original_text",
+        "span_hash",
+        "boundary_kind",
+        "max_chars"
+      ],
+      "properties": {
+        "start_char": {"type": "integer", "minimum": 0},
+        "end_char": {"type": "integer", "minimum": 1},
+        "core_start_char": {"type": "integer", "minimum": 0},
+        "core_end_char": {"type": "integer", "minimum": 1},
+        "original_text": {"type": "string", "minLength": 1, "maxLength": 240},
+        "span_hash": {"$ref": "#/$defs/sha256"},
+        "boundary_kind": {"type": "string", "minLength": 1},
+        "max_chars": {"const": 240}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language_identity", "representation", "discourse_role", "downstream_disposition", "category", "confidence"],
+      "properties": {
+        "language_identity": {"enum": ["ukrainian", "russian", "mixed_ukrainian_russian", "historical_east_slavic_unresolved", "other_language", "uncertain"]},
+        "representation": {"enum": ["standard_orthography", "ukrainian_phonetic_rendering_of_russian", "historical_orthography", "ocr_or_encoding_candidate", "unknown"]},
+        "discourse_role": {"enum": ["narration", "quotation", "dialogue", "epigraph", "title", "citation_or_document", "metalinguistic_example", "unknown"]},
+        "downstream_disposition": {"enum": ["retain_faithful", "retain_with_language_metadata", "mask_from_modern_ukrainian_loss", "correction_candidate", "protected_historical_or_register_variation", "human_review_required", "unresolved"]},
+        "category": {"enum": ["russian_quotation", "modern_narration_interference", "ukrainian_phonetic_russian", "mixed_surzhyk_candidate", "historical_unresolved", "protected_authentic_ukrainian", "proper_name", "ocr_or_encoding_candidate", "other_language", "valid_word_contact_candidate", "uncertain"]},
+        "confidence": {"enum": ["low", "medium", "high"]}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period", "register", "origin"],
+      "properties": {
+        "period": {"type": "string", "minLength": 1},
+        "register": {"type": "string", "minLength": 1},
+        "origin": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vesum", "russian_morphology", "r2u", "heritage", "external_pending", "reconstruction_candidates", "valid_word_routes", "network_performed"],
+      "properties": {
+        "vesum": {"$ref": "#/$defs/evidenceAdapter"},
+        "russian_morphology": {"$ref": "#/$defs/evidenceAdapter"},
+        "r2u": {"$ref": "#/$defs/evidenceAdapter"},
+        "heritage": {"$ref": "#/$defs/evidenceAdapter"},
+        "external_pending": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["adapter_id", "dictionary_identity", "status"],
+            "properties": {
+              "adapter_id": {"type": "string", "minLength": 1},
+              "dictionary_identity": {"type": "string", "minLength": 1},
+              "status": {"enum": ["not_queried", "lookup_pending", "adapter_unavailable"]}
+            }
+          }
+        },
+        "reconstruction_candidates": {"type": "array", "items": {"type": "object"}},
+        "valid_word_routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["route_type", "evidence_key"],
+            "properties": {
+              "route_type": {"type": "string", "pattern": "^vetted_"},
+              "evidence_key": {"type": "string", "minLength": 3}
+            }
+          }
+        },
+        "network_performed": {"const": false}
+      }
+    },
+    "automatic_error_label": {"const": false},
+    "review_state": {"const": "unresolved"},
+    "queue_route": {"enum": ["unresolved_review", "protected_rescue", "quoted_russian", "modern_interference_review", "historical_review", "valid_word_review", "technical_review", "retain_other_language", "proper_name_review"]}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidenceAdapter": {
+      "type": "object",
+      "required": ["adapter_id", "status"],
+      "properties": {
+        "adapter_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["used", "not_queried", "lookup_pending", "adapter_unavailable"]}
+      }
+    }
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "schema_version": "language_contact_config_v1",
+  "detector_id": "ukrainian-foundry-language-contact-v1",
+  "source_snapshot_id": "existing-asset-inventory-2026-07-31",
+  "record_batch_size": 256,
+  "span": {
+    "max_chars": 240,
+    "context_tokens": 7,
+    "max_cluster_gap_tokens": 3
+  },
+  "prefilter": {
+    "max_unknown_gap_tokens": 1,
+    "min_adjacent_form_chars": 2,
+    "min_heritage_form_chars": 2,
+    "min_latin_run_words": 2,
+    "russian_anchors": [
+      "что",
+      "вот",
+      "они",
+      "очень",
+      "время",
+      "значит",
+      "звучит"
+    ]
+  },
+  "vesum": {
+    "database": "data/vesum.db",
+    "snapshot_id": "dict-uk-v6.8.0-e33803783ac1",
+    "interface": "scripts.verification.vesum.verify_words",
+    "batch_size": 300,
+    "cache_entries": 100000
+  },
+  "ru_morph": {
+    "threshold": 0.7,
+    "cache_entries": 100000
+  },
+  "heritage": {
+    "database": "data/sources.db",
+    "interface": "scripts.lexicon.load_relation_candidates.RelationHeritageLookup",
+    "cache_entries": 50000,
+    "max_headwords": 500000
+  },
+  "r2u_cache": {
+    "file": "data/projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+    "interface": "scripts.rag.source_query.r2u_translate",
+    "network_during_run": false
+  },
+  "reconstruction": {
+    "max_candidates_per_span": 5,
+    "score_threshold": 0.7,
+    "mappings": {
+      "значіт": "значит",
+      "цівілізація": "цивилизация",
+      "очєнь": "очень",
+      "вєжліви": "вежливы",
+      "нєй": "ней",
+      "придєт": "придёт",
+      "врємя": "время"
+    }
+  },
+  "valid_word_routes": [
+    {
+      "pattern": "вірна відповідь",
+      "route_kind": "vetted_russian_sense_transfer",
+      "source_key": "SENSE_RESTRICTED_CALQUES:вірний/evidence-example"
+    },
+    {
+      "pattern": "я рахую, що",
+      "route_kind": "vetted_russian_sense_transfer",
+      "source_key": "SENSE_RESTRICTED_CALQUES:рахувати/note-example"
+    },
+    {
+      "pattern": "являється студентом",
+      "route_kind": "vetted_government_or_copular_calque",
+      "source_key": "SENSE_RESTRICTED_CALQUES:являтися/evidence-example"
+    },
+    {
+      "pattern": "на протязі години",
+      "route_kind": "vetted_collocation_sense_transfer",
+      "source_key": "SENSE_RESTRICTED_CALQUES:на протязі/evidence-example"
+    },
+    {
+      "pattern": "біля двох років",
+      "route_kind": "vetted_russian_sense_transfer",
+      "source_key": "SENSE_RESTRICTED_CALQUES:біля/evidence-example"
+    },
+    {
+      "pattern": "на рахунок цього",
+      "route_kind": "vetted_government_or_sense_transfer",
+      "source_key": "SENSE_RESTRICTED_CALQUES:на рахунок/evidence-example"
+    }
+  ],
+  "sources": [
+    {
+      "source_family": "literary",
+      "inventory_asset_id": "db.literary_texts",
+      "adapter": {
+        "kind": "sqlite_query_v1",
+        "database": "data/sources.db",
+        "table": "literary_texts",
+        "id_column": "id",
+        "text_column": "text",
+        "locator_column": "chunk_id",
+        "dimensions": {
+          "period": {"column": "language_period"},
+          "genre": {"column": "genre"},
+          "register": {"constant": "literary"},
+          "origin": {"constant": "human_authored_source"}
+        }
+      },
+      "evidence": {
+        "provenance_status": "partial",
+        "rights_status": "not_reconstructed",
+        "origin_status": "inventory_classified",
+        "contamination_status": "not_checked",
+        "permitted_use": "provenance_investigation"
+      },
+      "expected": {"rows": 137723, "lexical_words": 36031758}
+    },
+    {
+      "source_family": "public_textbooks",
+      "inventory_asset_id": "db.textbooks.public",
+      "adapter": {
+        "kind": "sqlite_query_v1",
+        "database": "data/sources.db",
+        "table": "textbooks",
+        "id_column": "id",
+        "text_column": "text",
+        "locator_column": "chunk_id",
+        "dimensions": {
+          "period": {"constant": "modern"},
+          "genre": {"constant": "textbook"},
+          "register": {"constant": "educational"},
+          "origin": {"constant": "human_authored_source"}
+        },
+        "exclude": {
+          "column": "source_file",
+          "values": [
+            "anna-ohoiko-1000-words-2nd-ed",
+            "anna-ohoiko-500-verbs",
+            "ulp-1-00-lesson-notes",
+            "ulp-2-00-lesson-notes",
+            "ulp-3-00-lesson-notes",
+            "ulp-4-00-lesson-notes",
+            "ulp-5-00-lesson-notes",
+            "ulp-6-00-lesson-notes"
+          ]
+        }
+      },
+      "evidence": {
+        "provenance_status": "partial",
+        "rights_status": "not_reconstructed",
+        "origin_status": "inventory_classified",
+        "contamination_status": "not_checked",
+        "permitted_use": "provenance_investigation"
+      },
+      "expected": {"rows": 49193, "lexical_words": 9564143}
+    },
+    {
+      "source_family": "external_articles",
+      "inventory_asset_id": "db.external_articles",
+      "adapter": {
+        "kind": "sqlite_query_v1",
+        "database": "data/sources.db",
+        "table": "external_articles",
+        "id_column": "id",
+        "text_column": "text",
+        "locator_column": "chunk_id",
+        "dimensions": {
+          "period": {"constant": "modern"},
+          "genre": {"constant": "article_or_transcript"},
+          "register": {"column": "register_tag"},
+          "origin": {"constant": "human_authored_source"}
+        }
+      },
+      "evidence": {
+        "provenance_status": "partial",
+        "rights_status": "not_reconstructed",
+        "origin_status": "inventory_classified",
+        "contamination_status": "not_checked",
+        "permitted_use": "provenance_investigation"
+      },
+      "expected": {"rows": 1205, "lexical_words": 1837518}
+    },
+    {
+      "source_family": "wikipedia",
+      "inventory_asset_id": "db.wikipedia",
+      "adapter": {
+        "kind": "sqlite_query_v1",
+        "database": "data/sources.db",
+        "table": "wikipedia",
+        "id_column": "id",
+        "text_column": "text",
+        "locator_column": "id",
+        "dimensions": {
+          "period": {"constant": "modern"},
+          "genre": {"constant": "encyclopedia"},
+          "register": {"constant": "reference"},
+          "origin": {"constant": "human_authored_source"}
+        }
+      },
+      "evidence": {
+        "provenance_status": "partial",
+        "rights_status": "not_reconstructed",
+        "origin_status": "inventory_classified",
+        "contamination_status": "not_checked",
+        "permitted_use": "provenance_investigation"
+      },
+      "expected": {"rows": 1029, "lexical_words": 2865506}
+    }
+  ]
+}
