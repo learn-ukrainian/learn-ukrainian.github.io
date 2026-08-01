@@ -147,6 +147,11 @@ def test_facets_reject_forbidden_and_unknown_keys(facet_key: str) -> None:
         "password: supersecret1",
         "api_key=abcdefgh123",
         "refs/entire/checkpoints/abc",
+        "AKIA" + "A" * 16,
+        "xoxb-" + "A" * 24,
+        "eyJ" + "A" * 12 + "." + "B" * 12 + "." + "C" * 12,
+        "Bearer " + "A" * 32,
+        "A" * 64,
     ],
 )
 def test_facet_values_reject_secrets_and_public_entire_refs(value: str) -> None:
@@ -426,12 +431,31 @@ def test_rebuild_reproduces_identical_projection(tmp_path: Path) -> None:
     store.admit(make_link(canonical_id="6174"), None, actor="test", now=NOW)
     result = store.rebuild()
     assert result["parity"] is True
+    assert result["applied"] is True
+    assert result["drift_repaired"] is False
     assert result["links"] == 3
     again = store.rebuild()
     assert again["parity"] is True
     status = store.status()
     assert status["counts"] == {"promoted": 2, "tombstoned": 1}
     assert status["events"] == 6
+
+
+def test_rebuild_repairs_projection_drift_and_reports_applied_state(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    admitted = store.admit(make_link(), make_verification(), actor="test", now=NOW)
+    with sqlite3.connect(store.db_path) as connection:
+        connection.execute(
+            "UPDATE context_links SET state = 'pending', promoted_at = NULL WHERE locator_id = ?",
+            (admitted.locator_id,),
+        )
+
+    result = store.rebuild()
+
+    assert result["parity"] is False
+    assert result["applied"] is True
+    assert result["drift_repaired"] is True
+    assert store.lookup(admitted.locator_id) is not None
 
 
 # ── cross-harness equivalence ────────────────────────────────────────────────
@@ -576,6 +600,8 @@ def test_cli_admit_lookup_explain_roundtrip(tmp_path: Path) -> None:
     code, payload = run_cli(["rebuild", "--db", str(db)])
     assert code == cli.EXIT_OK
     assert payload["parity"] is True
+    assert payload["applied"] is True
+    assert payload["drift_repaired"] is False
 
     code, payload = run_cli(["lookup", "clink_" + "f" * 64, "--db", str(db)])
     assert code == cli.EXIT_NOT_FOUND

@@ -74,12 +74,21 @@ FORBIDDEN_KEY_RE = re.compile(
 FORBIDDEN_VALUE_PATTERNS = (
     ("private-key", re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC |PGP )?PRIVATE KEY-----")),
     ("credential-token", re.compile(r"(?:sk-|gh[pousr]_|AIza)[A-Za-z0-9_-]{16,}")),
+    ("aws-access-key", re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")),
+    ("slack-token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
+    (
+        "jwt-token",
+        re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b"),
+    ),
+    ("bearer-token", re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/-]{16,}={0,2}\b")),
     (
         "credential-assignment",
         re.compile(r"(?i)(?:api[_-]?key|access[_-]?token|secret|password)\s*[:=]\s*\S{8,}"),
     ),
     ("public-entire-ref", re.compile(r"refs/entire(?:/|$)")),
 )
+
+LONG_OPAQUE_FACET_RE = re.compile(r"^[A-Za-z0-9_+/-]{48,}={0,2}$")
 
 MAX_STRING_BYTES = 1024
 MAX_LIST_ITEMS = 64
@@ -141,7 +150,7 @@ def _reject_forbidden_key(path: str) -> None:
         raise SchemaError(f"field rejected by body-free rule: {path!r} names a forbidden concept")
 
 
-def _validate_scalar(path: str, value: Any) -> None:
+def _validate_scalar(path: str, value: Any, *, reject_long_opaque: bool = False) -> None:
     if isinstance(value, bool) or value is None or isinstance(value, int | float):
         return
     if not isinstance(value, str):
@@ -153,6 +162,8 @@ def _validate_scalar(path: str, value: Any) -> None:
     for rule, pattern in FORBIDDEN_VALUE_PATTERNS:
         if pattern.search(value):
             raise SchemaError(f"field {path!r} rejected by {rule} rule")
+    if reject_long_opaque and LONG_OPAQUE_FACET_RE.fullmatch(value):
+        raise SchemaError(f"field {path!r} rejected by long-opaque-token rule")
 
 
 def validate_identity(value: str, *, field_name: str) -> None:
@@ -174,9 +185,9 @@ def validate_facets(facets: dict[str, Any]) -> None:
             if len(value) > MAX_LIST_ITEMS:
                 raise SchemaError(f"facet {key!r} rejected by list-size rule")
             for item in value:
-                _validate_scalar(key, item)
+                _validate_scalar(key, item, reject_long_opaque=True)
         else:
-            _validate_scalar(key, value)
+            _validate_scalar(key, value, reject_long_opaque=True)
 
 
 @dataclass(frozen=True, slots=True)

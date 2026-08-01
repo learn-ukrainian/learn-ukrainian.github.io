@@ -470,8 +470,11 @@ class ContextLinkStore:
                     ),
                 )
             after = self._projection_snapshot(connection)
+        input_parity = before == after
         return {
             "events_replayed": len(events),
             "links": len(projection),
-            "parity": before == after,
+            "parity": input_parity,
+            "applied": True,
+            "drift_repaired": not input_parity,
         }

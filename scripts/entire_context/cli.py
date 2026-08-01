@@ -123,9 +123,9 @@ def cmd_rebuild(args: argparse.Namespace) -> int:
         result = ContextLinkStore(db_path).rebuild()
     except (sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
-        return EXIT_OK
+        return EXIT_REFUSED
     _emit({"available": True, "projection_path": str(db_path), **result})
-    return EXIT_OK if result["parity"] else EXIT_REFUSED
+    return EXIT_OK
 
 
 def _load_json_file(path: str, label: str) -> dict[str, Any]:
