@@ -74,7 +74,7 @@ button, input, select { font: inherit; }
 <main class="wrap" data-read-only="true">
   <section class="hero" aria-labelledby="fleet-title">
     <div>
-      <div class="eyebrow">Unified observer · pre-flip soak</div>
+      <div class="eyebrow">Unified observer · authority active</div>
       <h2 id="fleet-title">Follow the durable trail without changing it.</h2>
       <p>Requests, message metadata, ACP rounds, review receipts, endpoint posture, and dead letters are assembled from the existing fleet-comms read models. Inline previews are capped and credential-like values are redacted.</p>
     </div>
@@ -218,7 +218,7 @@ function summaryDetail(bucket) {
 function renderHealth(health) {
   const mode = short(health.mode, 'unknown').replaceAll('_', ' ');
   const enabled = health.enabled === true;
-  document.getElementById('plane-mode').textContent = `${mode} · pre-flip`;
+  document.getElementById('plane-mode').textContent = `${mode} · durable authority`;
   document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Schema v${short(health.schema.applied_version, 'not applied')} observed` : 'Durable database not present yet';
   document.getElementById('plane-dot').className = `signal-dot ${enabled ? 'live' : 'warn'}`;
 }

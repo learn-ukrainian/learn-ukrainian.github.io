@@ -3,12 +3,12 @@ version: 1
 # Message plane production default (#6159 authority cutover). Env
 # FLEET_COMMS_MESSAGE_PLANE always wins when set. Modes:
 # off | shadow | dual_write | authority.
-# Present-tense operator GO 2026-08-01 authorizes authority only after active
-# migration, reconciliation, crash/restart, replay, and orphan checks pass.
-# Keep the compatibility default through that gate; the final flip is a
-# separate reviewed release step.
+# Present-tense operator GO 2026-08-01 authorized authority after active
+# migration, reconciliation, crash/restart, replay, and orphan checks passed.
+# Protected rail PR #6200 and the retirement prerequisites are merged; the env
+# override remains the explicit rollback control.
 message_plane:
-  default_mode: shadow
+  default_mode: authority
 
 # formal_review_eligible is fail-closed until sealed CF isolation is proven and
 # the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). GLM,
