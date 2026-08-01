@@ -30,12 +30,25 @@ from scripts.api.state_helpers import cache_invalidate
 
 
 @pytest.fixture(autouse=True)
-def _reset_sweep_state():
+def _reset_sweep_state(monkeypatch):
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     cache_invalidate("bridge_expire_sweep")
     comms_router._expire_sweep_thread = None
     yield
     cache_invalidate("bridge_expire_sweep")
     comms_router._expire_sweep_thread = None
+
+
+def test_authority_mode_never_mutates_legacy_delivery_state(tmp_path, monkeypatch):
+    db_path = tmp_path / "messages.db"
+    ids = _seed_channel_db(db_path)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+
+    with patch.object(comms_router, "MESSAGE_DB", db_path):
+        comms_router._maybe_run_delivery_expiry_sweep()
+
+    assert comms_router._expire_sweep_thread is None
+    assert _delivery_status(db_path, ids["stale_delivery_id"]) == "pending"
 
 
 def _seed_channel_db(db_path: Path) -> dict:

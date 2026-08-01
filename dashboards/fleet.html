@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet Observer - ukraine-ops</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/monitor.css">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+button, input, select { font: inherit; }
+.topbar { display: flex; align-items: center; gap: 16px; padding: 15px 24px; position: sticky; top: 0; z-index: 10; }
+.brand { min-width: 230px; }
+.brand h1 { margin: 0; font-family: Charter, Georgia, serif; font-size: 25px; letter-spacing: -.02em; }
+.brand p { margin: 3px 0 0; color: var(--text3); font-size: 12px; }
+.spacer { flex: 1; }
+.refresh { appearance: none; background: var(--text); border: 1px solid var(--text); border-radius: 4px; color: var(--bg); cursor: pointer; font-weight: 700; padding: 8px 11px; }
+.refresh:hover, .refresh:focus-visible { background: var(--accent); border-color: var(--accent); }
+.refresh:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid rgba(122, 28, 32, .28); outline-offset: 2px; }
+.wrap { max-width: 1480px; margin: 0 auto; padding: 28px 24px 64px; }
+.hero { border-bottom: 1px solid var(--text); display: grid; grid-template-columns: minmax(0, 1fr) minmax(310px, .45fr); gap: 28px; padding: 4px 0 22px; }
+.eyebrow { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.hero h2 { font-family: Charter, Georgia, serif; font-size: clamp(30px, 4vw, 48px); font-weight: 700; letter-spacing: -.045em; line-height: .98; margin: 8px 0 12px; max-width: 760px; }
+.hero p { color: var(--text2); line-height: 1.5; margin: 0; max-width: 760px; }
+.signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 16px; }
+.signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 20px; margin-bottom: 6px; }
+.signal-card p { color: var(--text3); font-size: 13px; }
+.signal-row { align-items: center; display: flex; gap: 9px; margin-top: 12px; }
+.signal-dot { background: var(--gray); border-radius: 50%; height: 9px; width: 9px; }
+.signal-dot.live { background: var(--green); box-shadow: 0 0 0 4px rgba(61, 107, 74, .14); }
+.signal-dot.warn { background: var(--yellow); box-shadow: 0 0 0 4px rgba(168, 132, 43, .14); }
+.signal-row span { color: var(--text2); font-size: 12px; }
+.summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+.metric { background: var(--bg2); border: 1px solid var(--border); min-height: 108px; padding: 14px 15px; position: relative; }
+.metric::before { background: var(--accent); content: ''; height: 3px; left: 0; position: absolute; right: 0; top: 0; }
+.metric:nth-child(2)::before { background: var(--blue); }.metric:nth-child(3)::before { background: var(--purple); }.metric:nth-child(4)::before { background: var(--orange); }.metric:nth-child(5)::before { background: var(--cyan); }
+.metric .number { font-family: Charter, Georgia, serif; font-size: 33px; font-weight: 700; line-height: 1; margin-top: 10px; }
+.metric .label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .1em; margin-top: 7px; text-transform: uppercase; }
+.metric .detail { color: var(--text2); font-size: 11px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: 1.2fr repeat(5, minmax(110px, 1fr)) auto; margin: 22px 0 18px; padding: 12px; }
+.field { display: grid; gap: 4px; min-width: 0; }.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.field input, .field select { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; }
+.filter-note { align-self: end; color: var(--text3); font-size: 11px; line-height: 1.35; max-width: 170px; padding-bottom: 5px; }
+.grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.22fr) minmax(390px, .78fr); }
+.panel { background: var(--bg2); border: 1px solid var(--border); min-width: 0; padding: 0; }
+.panel.wide { grid-column: 1 / -1; }.panel-head { align-items: baseline; border-bottom: 1px solid var(--border); display: flex; gap: 12px; justify-content: space-between; padding: 13px 16px; }.panel-head h3 { font-family: Charter, Georgia, serif; font-size: 19px; margin: 0; }.panel-head p { color: var(--text3); font-size: 11px; margin: 0; text-align: right; }
+.ledger { border-left: 3px solid var(--accent); }.ledger.blue { border-left-color: var(--blue); }.ledger.purple { border-left-color: var(--purple); }.ledger.cyan { border-left-color: var(--cyan); }.ledger.orange { border-left-color: var(--orange); }
+.table-wrap { max-height: 360px; overflow: auto; }.table { border-collapse: collapse; font-size: 12px; width: 100%; }.table th { background: var(--bg2); border-bottom: 1px solid var(--border); color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; padding: 8px 10px; position: sticky; text-align: left; text-transform: uppercase; top: 0; }.table td { border-bottom: 1px solid rgba(212, 205, 184, .68); max-width: 230px; padding: 9px 10px; vertical-align: top; }.table tr:last-child td { border-bottom: 0; }.table tr:hover td { background: rgba(122, 28, 32, .035); }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; overflow-wrap: anywhere; }.preview { color: var(--text2); line-height: 1.35; }.muted { color: var(--text3); }.empty { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 22px 16px; }.pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }.pill.complete, .pill.live { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }.pill.running, .pill.queued { background: rgba(42, 86, 128, .11); border-color: rgba(42, 86, 128, .28); color: var(--blue); }.pill.failed, .pill.dead_lettered { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }.pill.incomplete, .pill.expired, .pill.partial { background: rgba(168, 132, 43, .12); border-color: rgba(168, 132, 43, .3); color: var(--yellow); }
+.footnote { color: var(--text3); font-size: 11px; line-height: 1.5; margin: 22px 0 0; }.footnote strong { color: var(--text2); }.error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); font-size: 13px; margin-bottom: 16px; padding: 10px 12px; }.hidden { display: none; }
+@media (max-width: 1120px) { .summary { grid-template-columns: repeat(3, 1fr); }.grid { grid-template-columns: 1fr; }.filter-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }.filter-note { grid-column: 1 / -1; max-width: none; } }
+@media (max-width: 720px) { .topbar { align-items: flex-start; flex-wrap: wrap; }.brand { min-width: 0; }.hero { grid-template-columns: 1fr; }.summary { grid-template-columns: repeat(2, 1fr); }.filter-strip { grid-template-columns: 1fr 1fr; }.table-wrap { max-height: none; }.wrap { padding: 20px 14px 48px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <h1>Fleet Observer</h1>
+    <p>Durable-plane evidence, not a control room</p>
+  </div>
+  <div class="spacer"></div>
+  <button class="refresh" type="button" onclick="refreshFleet()">Refresh data</button>
+  <nav class="monitor-nav" aria-label="Monitor sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a class="active" href="/fleet.html">Fleet</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+    <a href="/docs">API</a>
+  </nav>
+</header>
+
+<main class="wrap" data-read-only="true">
+  <section class="hero" aria-labelledby="fleet-title">
+    <div>
+      <div class="eyebrow">Unified observer · pre-flip soak</div>
+      <h2 id="fleet-title">Follow the durable trail without changing it.</h2>
+      <p>Requests, message metadata, ACP rounds, review receipts, endpoint posture, and dead letters are assembled from the existing fleet-comms read models. Inline previews are capped and credential-like values are redacted.</p>
+    </div>
+    <aside class="signal-card" aria-label="Plane authority status">
+      <strong id="plane-mode">Checking plane posture…</strong>
+      <p id="plane-copy">The observer is read-only. It does not initialize schema, start an agent, or change a cutover mode.</p>
+      <div class="signal-row"><i id="plane-dot" class="signal-dot" aria-hidden="true"></i><span id="plane-status">Waiting for health data</span></div>
+    </aside>
+  </section>
+
+  <div id="error-banner" class="error hidden" role="status"></div>
+
+  <section class="summary" aria-label="Fleet summary">
+    <article class="metric"><div class="number" id="requests-total">—</div><div class="label">Requests</div><div class="detail" id="requests-detail">Loading lifecycle counts</div></article>
+    <article class="metric"><div class="number" id="messages-total">—</div><div class="label">Messages</div><div class="detail" id="messages-detail">Metadata only</div></article>
+    <article class="metric"><div class="number" id="reviews-total">—</div><div class="label">Formal reviews</div><div class="detail" id="reviews-detail">Jobs and attempts</div></article>
+    <article class="metric"><div class="number" id="acp-total">—</div><div class="label">ACP conversations</div><div class="detail" id="acp-detail">Rounds are body-free</div></article>
+    <article class="metric"><div class="number" id="dead-total">—</div><div class="label">Dead letters</div><div class="detail" id="dead-detail">Delivery follow-up evidence</div></article>
+  </section>
+
+  <section class="filter-strip" aria-label="Read-only filters">
+    <div class="field"><label for="filter-agent">Agent</label><input id="filter-agent" placeholder="codex, claude…" oninput="queueRefresh()"></div>
+    <div class="field"><label for="filter-source">Source</label><input id="filter-source" placeholder="initiator" oninput="queueRefresh()"></div>
+    <div class="field"><label for="filter-kind">Kind</label><input id="filter-kind" placeholder="request, reply…" oninput="queueRefresh()"></div>
+    <div class="field"><label for="filter-state">State</label><input id="filter-state" placeholder="queued, complete…" oninput="queueRefresh()"></div>
+    <div class="field"><label for="filter-pr">PR</label><input id="filter-pr" inputmode="numeric" placeholder="6159" oninput="queueRefresh()"></div>
+    <div class="field"><label for="filter-conversation">Conversation</label><input id="filter-conversation" placeholder="opaque ID" oninput="queueRefresh()"></div>
+    <div class="filter-note">Filters only narrow the observer’s GET requests. They never signal or alter the plane.</div>
+  </section>
+
+  <section class="grid">
+    <article class="panel ledger" aria-labelledby="requests-heading">
+      <div class="panel-head"><h3 id="requests-heading">Request ledger</h3><p>Queued → running → terminal</p></div>
+      <div id="requests-content" class="empty">Loading requests…</div>
+    </article>
+    <article class="panel ledger cyan" aria-labelledby="authority-heading">
+      <div class="panel-head"><h3 id="authority-heading">Authority queue</h3><p>Metadata only · payloads and results remain sealed</p></div>
+      <div id="authority-content" class="empty">Loading authority jobs…</div>
+    </article>
+    <article class="panel ledger blue" aria-labelledby="reviews-heading">
+      <div class="panel-head"><h3 id="reviews-heading">Formal review ledger</h3><p>Attempt and publication metadata</p></div>
+      <div id="reviews-content" class="empty">Loading reviews…</div>
+    </article>
+    <article class="panel ledger purple" aria-labelledby="acp-heading">
+      <div class="panel-head"><h3 id="acp-heading">ACP rounds</h3><p>Sanitized conversation event history</p></div>
+      <div id="acp-content" class="empty">Loading ACP conversations…</div>
+    </article>
+    <article class="panel ledger orange" aria-labelledby="dead-heading">
+      <div class="panel-head"><h3 id="dead-heading">Dead letters</h3><p>Metadata, reason, and successor only</p></div>
+      <div id="dead-content" class="empty">Loading dead letters…</div>
+    </article>
+    <article class="panel wide ledger cyan" aria-labelledby="activity-heading">
+      <div class="panel-head"><h3 id="activity-heading">Recent provenance</h3><p>Source is the caller; Agent is the executed seat; Via is the transport</p></div>
+      <div id="activity-content" class="empty">Loading provenance records…</div>
+    </article>
+    <article class="panel wide ledger" aria-labelledby="messages-heading">
+      <div class="panel-head"><h3 id="messages-heading">Message metadata</h3><p>Redacted inline previews · artifact bodies omitted</p></div>
+      <div id="messages-content" class="empty">Loading messages…</div>
+    </article>
+  </section>
+
+  <template id="provenance-columns">
+    <table><thead><tr><th>Source</th><th>Agent</th><th>Via</th></tr></thead></table>
+  </template>
+
+  <p class="footnote"><strong>Authority posture:</strong> the Fleet Observer is the consolidated evidence surface for durable requests, messages, ACP conversations, formal reviews, deliveries, retries, and dead letters. Legacy Channels and Comms URLs redirect here during the compatibility soak.</p>
+</main>
+
+<script>
+const API_TIMEOUT_MS = 5000;
+let refreshTimer = null;
+
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
+
+function short(value, fallback = '—') {
+  return value == null || value === '' ? fallback : String(value);
+}
+
+function formatTime(value) {
+  if (!value) return '—';
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? escapeHtml(value) : parsed.toLocaleString();
+}
+
+function pill(value) {
+  const label = short(value).replaceAll('_', ' ');
+  const klass = String(value || '').toLowerCase().replaceAll(' ', '_');
+  return `<span class="pill ${escapeHtml(klass)}">${escapeHtml(label)}</span>`;
+}
+
+function table(headers, rows, empty) {
+  if (!rows.length) return `<div class="empty">${escapeHtml(empty)}</div>`;
+  return `<div class="table-wrap"><table class="table"><thead><tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+
+function filters() {
+  const value = id => document.getElementById(id).value.trim();
+  return {
+    agent: value('filter-agent'), source: value('filter-source'), kind: value('filter-kind'),
+    state: value('filter-state'), pr: value('filter-pr'), conversation: value('filter-conversation'),
+  };
+}
+
+function query(base, allowed) {
+  const values = filters();
+  const params = new URLSearchParams({ limit: '12' });
+  allowed.forEach(key => { if (values[key]) params.set(key, values[key]); });
+  return `${base}?${params}`;
+}
+
+async function fetchJson(path) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(path, { signal: controller.signal });
+    const text = await response.text();
+    let data = {};
+    try { data = text ? JSON.parse(text) : {}; } catch { data = { detail: text }; }
+    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function setError(message) {
+  const banner = document.getElementById('error-banner');
+  banner.textContent = message || '';
+  banner.classList.toggle('hidden', !message);
+}
+
+function summaryDetail(bucket) {
+  const parts = Object.entries(bucket || {}).map(([name, count]) => `${name} ${count}`);
+  return parts.length ? parts.join(' · ') : 'No durable rows yet';
+}
+
+function renderHealth(health) {
+  const mode = short(health.mode, 'unknown').replaceAll('_', ' ');
+  const enabled = health.enabled === true;
+  document.getElementById('plane-mode').textContent = `${mode} · pre-flip`;
+  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Schema v${short(health.schema.applied_version, 'not applied')} observed` : 'Durable database not present yet';
+  document.getElementById('plane-dot').className = `signal-dot ${enabled ? 'live' : 'warn'}`;
+}
+
+function renderOverview(data) {
+  const counts = data.counts || {};
+  const set = (id, value) => { document.getElementById(id).textContent = short(value, '0'); };
+  set('requests-total', counts.requests?.total); set('messages-total', counts.messages?.total);
+  set('reviews-total', counts.reviews?.total); set('acp-total', counts.acp_conversations?.total);
+  set('dead-total', counts.dead_letters?.total);
+  document.getElementById('requests-detail').textContent = summaryDetail(counts.requests?.by_state);
+  document.getElementById('messages-detail').textContent = summaryDetail(counts.messages?.by_kind);
+  document.getElementById('reviews-detail').textContent = summaryDetail(counts.reviews?.by_state);
+  document.getElementById('acp-detail').textContent = counts.acp_conversations?.total ? 'Event timelines available' : 'No durable ACP rows yet';
+  document.getElementById('dead-detail').textContent = counts.dead_letters?.total ? 'Follow-up evidence available' : 'No dead letters observed';
+}
+
+function renderRequests(data) {
+  const rows = (data.requests || []).map(item => `<tr><td class="mono">${escapeHtml(item.request_id)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.requested_recipient))} → ${escapeHtml(short(item.resolved_recipient))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  document.getElementById('requests-content').innerHTML = table(['Request', 'State', 'Endpoint', 'Source', 'Updated'], rows, 'No requests match the current observer filters.');
+}
+
+function renderAuthorityJobs(data) {
+  const rows = (data.jobs || []).map(item => `<tr><td class="mono">${escapeHtml(item.job_id)}</td><td>${pill(item.kind)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  document.getElementById('authority-content').innerHTML = table(['Job', 'Kind', 'State', 'Source', 'Agent', 'Updated'], rows, 'No authority jobs match the current observer filters.');
+}
+
+function renderReviews(data) {
+  const rows = (data.reviews || []).map(item => `<tr><td class="mono">${escapeHtml(short(item.repository))}#${escapeHtml(item.pr_number)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.gate_kind))}</td><td>${escapeHtml(item.attempt_count)} attempts</td><td>${escapeHtml(item.publication_count)} publications</td></tr>`);
+  document.getElementById('reviews-content').innerHTML = table(['PR', 'State', 'Gate', 'Attempts', 'Receipts'], rows, 'No formal reviews match the current observer filters.');
+}
+
+function renderAcp(data) {
+  const rows = (data.conversations || []).map(item => `<tr><td class="mono">${escapeHtml(item.conversation_id)}</td><td>${pill(item.classification)}</td><td>${escapeHtml((item.participants || []).join(' / ') || '—')}</td><td>${escapeHtml(item.rounds_completed)}/${escapeHtml(item.rounds_requested)}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  document.getElementById('acp-content').innerHTML = table(['Conversation', 'State', 'Participants', 'Rounds', 'Updated'], rows, 'No ACP conversations match the current observer filters.');
+}
+
+function renderDeadLetters(data) {
+  const rows = (data.dead_letters || []).map(item => `<tr><td class="mono">${escapeHtml(item.dead_letter_id)}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.reason))}</td><td>${escapeHtml(short(item.successor))}</td><td>${escapeHtml(formatTime(item.created_at))}</td></tr>`);
+  document.getElementById('dead-content').innerHTML = table(['Dead letter', 'Agent', 'Reason', 'Successor', 'Created'], rows, 'No dead letters match the current observer filters.');
+}
+
+function renderActivity(data) {
+  const rows = (data.records || []).map(item => `<tr><td>${escapeHtml(formatTime(item.ts))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.via))}</td><td>${escapeHtml(short(item.outcome))}</td><td class="mono">${escapeHtml(short(item.model))}</td></tr>`);
+  document.getElementById('activity-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Outcome', 'Model'], rows, 'No runtime provenance records match the current observer filters.');
+}
+
+function renderMessages(data) {
+  const rows = (data.messages || []).map(item => `<tr><td>${escapeHtml(formatTime(item.created_at))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.via))}</td><td>${pill(item.kind)}</td><td class="preview">${escapeHtml(short(item.body_preview, item.artifact_available ? 'Artifact-backed body omitted' : 'No inline body'))}</td></tr>`);
+  document.getElementById('messages-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Kind', 'Bounded preview'], rows, 'No messages match the current observer filters.');
+}
+
+async function refreshFleet() {
+  setError('');
+  try {
+    const common = ['state', 'agent', 'source', 'conversation'];
+    const [health, overview, requests, authorityJobs, reviews, acp, deadLetters, activity, messages] = await Promise.all([
+      fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'),
+      fetchJson(query('/api/fleet/requests', ['kind', ...common])),
+      fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
+      fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
+      fetchJson(query('/api/fleet/acp/conversations', common)),
+      fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
+      fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
+      fetchJson(query('/api/fleet/messages', ['kind', ...common])),
+    ]);
+    renderHealth(health); renderOverview(overview); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
+    renderAcp(acp); renderDeadLetters(deadLetters); renderActivity(activity); renderMessages(messages);
+  } catch (error) {
+    setError(`Observer data could not be read: ${error.message}`);
+  }
+}
+
+function queueRefresh() {
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(refreshFleet, 220);
+}
+
+refreshFleet();
+</script>
+</body>
+</html>
