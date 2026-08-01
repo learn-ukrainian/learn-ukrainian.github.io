@@ -381,7 +381,7 @@ launcher_bind_drive_epic() {
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
-    fleet_clause='Fleet-comms: run plane-status and review-pr; file dual-write remains authoritative in every plane mode.'
+    fleet_clause='Fleet-comms: run plane-status and review-pr; authority mode is durable state and ACP is provider transport.'
   fi
   LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Obtain independent cross-family review."
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
