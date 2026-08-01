@@ -797,6 +797,7 @@ def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
 
     def _fake_acp(target, content, **_kwargs):
         captured.update(target=target, content=content)
+        return SimpleNamespace(ok=True)
 
     monkeypatch.setattr(_acp_compat, "run_compat_ask", _fake_acp)
     monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "the real question body"))
@@ -813,6 +814,7 @@ def test_ask_claude_literal_content_is_not_treated_as_stdin(monkeypatch):
 
     def _fake_acp(target, content, **_kwargs):
         captured.update(target=target, content=content)
+        return SimpleNamespace(ok=True)
 
     monkeypatch.setattr(_acp_compat, "run_compat_ask", _fake_acp)
     monkeypatch.setattr(sys, "stdin", SimpleNamespace(read=lambda: "SHOULD-NOT-BE-USED"))

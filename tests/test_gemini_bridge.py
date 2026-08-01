@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -224,7 +225,7 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
     def _fake_ask_agy(*args, **kwargs):
         captured["args"] = args
         captured["kwargs"] = kwargs
-        return 123
+        return SimpleNamespace(ok=True)
 
     monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
 
