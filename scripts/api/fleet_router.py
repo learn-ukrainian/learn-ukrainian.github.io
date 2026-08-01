@@ -306,6 +306,8 @@ def _paged_query(
 def _safe_plane_status() -> dict[str, Any]:
     """Project the existing plane read model without paths or raw telemetry rows."""
     status = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=0)
+    mode = _safe_text(status.get("mode"), fallback="invalid")
+    authority_active = mode == "authority"
     schema = status.get("schema") if isinstance(status.get("schema"), dict) else {}
     telemetry = (
         status.get("parity_telemetry")
@@ -313,11 +315,13 @@ def _safe_plane_status() -> dict[str, Any]:
         else {}
     )
     return {
-        "mode": status.get("mode", "invalid"),
+        "mode": mode,
         "enabled": bool(status.get("enabled")),
         "read_only": True,
-        "authority": "file_handoffs_authoritative",
-        "cutover": "pre_flip_operator_gated",
+        "authority": (
+            "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative"
+        ),
+        "cutover": "authority_active" if authority_active else "pre_flip_operator_gated",
         "schema": {
             "known_version": schema.get("known_version"),
             "applied_version": schema.get("applied_version"),
@@ -348,7 +352,7 @@ def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> 
 
 @router.get("/health")
 def fleet_health() -> dict[str, Any]:
-    """Read-only health, mode, schema, and pre-flip authority posture."""
+    """Read-only health, mode, schema, and current authority posture."""
     status = _safe_plane_status()
     return {
         "ok": True,
@@ -365,8 +369,8 @@ def fleet_overview() -> dict[str, Any]:
     status = _safe_plane_status()
     result: dict[str, Any] = {
         "read_only": True,
-        "authority": "file_handoffs_authoritative",
-        "cutover": "pre_flip_operator_gated",
+        "authority": status["authority"],
+        "cutover": status["cutover"],
         "health": status,
         "counts": {
             "requests": {"total": 0, "by_state": {}},
