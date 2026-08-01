@@ -511,12 +511,25 @@ def admit_corpus(
     if inaccessible:
         receipt = _empty_receipt(config, profile, sorted(inaccessible, key=lambda item: item["source_family"]))
         _validate(receipt, _validator(RECEIPT_SCHEMA), "incomplete admission receipt")
-        _atomic_json(receipt_output, receipt)
-        manifest_output.parent.mkdir(parents=True, exist_ok=True)
-        manifest_output.write_bytes(b"")
-        if source_record_output is not None:
-            source_record_output.parent.mkdir(parents=True, exist_ok=True)
-            source_record_output.write_bytes(b"")
+        empty_manifest = AtomicJsonl.open(manifest_output)
+        empty_manifest.finish()
+        empty_source_records = AtomicJsonl.open(source_record_output) if source_record_output is not None else None
+        if empty_source_records is not None:
+            empty_source_records.finish()
+        receipt_temporary: Path | None = None
+        try:
+            receipt_temporary = _stage_json(receipt_output, receipt)
+            staged = [(empty_manifest.temporary, manifest_output)]
+            if empty_source_records is not None and source_record_output is not None:
+                staged.append((empty_source_records.temporary, source_record_output))
+            staged.append((receipt_temporary, receipt_output))
+            _promote_staged_artifacts(staged)
+        finally:
+            empty_manifest.abort()
+            if empty_source_records is not None:
+                empty_source_records.abort()
+            if receipt_temporary is not None:
+                receipt_temporary.unlink(missing_ok=True)
         return AdmissionRun(receipt=receipt, receipt_path=receipt_output)
 
     started = time.monotonic()

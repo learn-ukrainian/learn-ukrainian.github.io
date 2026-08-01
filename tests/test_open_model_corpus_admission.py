@@ -94,11 +94,29 @@ def test_evaluation_isolation_and_denominator_mismatch_are_explicit(tmp_path: Pa
 
 
 def test_missing_database_emits_empty_fail_closed_receipt(tmp_path: Path) -> None:
-    result = _run(tmp_path, "missing")
+    _json(tmp_path / "profile.json", _profile(expected_rows=2, expected_words=4))
+    _json(tmp_path / "config.json", _config())
+    manifest = tmp_path / "manifest.jsonl"
+    source_records = tmp_path / "source-records.jsonl"
+    receipt = tmp_path / "receipt.json"
+    manifest.write_bytes(b"stale manifest\n")
+    source_records.write_bytes(b"stale source records\n")
+    receipt.write_bytes(b"stale receipt\n")
+
+    result = admission.admit_corpus(
+        config_path=tmp_path / "config.json",
+        input_root=tmp_path,
+        manifest_output=manifest,
+        source_record_output=source_records,
+        receipt_output=receipt,
+    )
 
     assert result.complete is False
     assert result.receipt["coverage"]["inaccessible_families"] == [{"reason": "FileNotFoundError", "source_family": "fixture_documents"}]
     assert result.receipt["outputs"]["manifest"]["records"] == 0
+    assert manifest.read_bytes() == b""
+    assert source_records.read_bytes() == b""
+    assert json.loads(receipt.read_text(encoding="utf-8"))["coverage"]["complete"] is False
 
 
 def test_coverage_denominator_uses_only_configured_profile_families(tmp_path: Path) -> None:
