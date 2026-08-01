@@ -12,17 +12,18 @@ The checked-in configuration is
 It binds the four public/external families to the frozen profile denominator:
 189,150 rows and 50,298,925 lexical words. A public location, corpus
 membership, author death, or a family name is not permission. Three families
-remain unresolved. The 1,029-row Ukrainian Wikipedia family is a
-`proposed_admission` only for
-`open_weight_ukrainian_continued_pretraining_text_v1`, pending the explicit
-operator choice below.
+remain unresolved. On 2026-08-01, the operator accepted exactly the 1,029-row
+Ukrainian Wikipedia family for the source-admission destination
+`open_weight_ukrainian_continued_pretraining_text_v1`. The recorded acceptance
+does not authorize payload export, training, upload, model release, dataset
+redistribution, or publication.
 
 The runner reads `data/sources.db` in SQLite read-only/query-only mode. It
 keeps source text in process only for lexical-word counting and the frozen
 evaluation exact/near-contamination registry. The JSONL manifest has opaque
 hash-derived record/source/work IDs, attributes, disposition, and word count;
 it has no source text, raw URL, or absolute path. The separate Wikipedia
-source-record JSONL intentionally retains the canonical article URL, capture
+source-record JSONL retains the canonical article URL, capture
 date and timestamp, exact stored-text hash, acquisition-code receipt,
 bibliographic identity, rights evidence, and contamination exclusion. It does
 not contain article text or host paths. Keep both potentially large manifests
@@ -109,49 +110,57 @@ denominator reconciliation; `2` means inaccessible input or an expected/actual
 mismatch. An incomplete receipt still records the full expected denominator
 and writes empty local manifests, rather than silently reducing coverage.
 
-The 2026-08-01 continuation ran the full denominator twice with byte-identical
-results:
+The 2026-08-01 accepted pass ran the full denominator twice with byte-identical
+results. Its small text-free aggregate receipt is committed as
+`data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json`;
+the 142.5 MB disposition manifest and 6.1 MB source-record manifest remain
+local and uncommitted.
 
 | Artifact/disposition | Rows | Lexical words | SHA-256 |
 | --- | ---: | ---: | --- |
-| Full local disposition manifest | 189,150 | 50,298,925 | `c9d77b1428b44b0fd3f72d9d9ab809c81abdea7489c1ebb01fd81f88e0cc3205` |
-| Wikipedia `source_record_v1` manifest | 1,029 | 2,865,506 | `855c9237fe0acd0145f5f406d25746bb76f31603d1abc46e71d94a6d29cf1a19` |
-| Aggregate admission receipt | 189,150 | 50,298,925 | `1ce9888c3d6dd17b67ed5f871e031a26d4d8dfdae215efd52ce4f77317b5b801` |
-| `proposed_admission` | 1,029 | 2,865,506 | Wikipedia only |
+| Full local disposition manifest | 189,150 | 50,298,925 | `69516568590be55f625a7884aaa293420dc102f331c8119bbc5f0d145ec9ccbd` |
+| Admitted Wikipedia `source_record_v1` manifest | 1,029 | 2,865,506 | `6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68` |
+| Aggregate admission receipt | 189,150 | 50,298,925 | `1359e2d2067795c4246be93cb4187d708b22a9d7af406e089d5ac087095c09d4` |
+| Operator decision packet | 1 accepted family | 1,029 rows | `53b12ed59d06929ed3218b3243f07b4aa0724812935b725e2999d44c726444cd` |
+| `admitted` | 1,029 | 2,865,506 | Wikipedia only |
 | `unresolved` | 188,121 | 47,433,419 | Literary, public-textbook, and external-article families |
 | Evaluation exact/near exclusions | 0 | 0 | Frozen registry applied |
 
-All 1,029 generated source records satisfy the frozen JSON contract, but their
-`usage.role` is deliberately `excluded` while the operator decision is
-pending. The frozen semantic validator therefore reports zero admitted and
-1,029 rejected with only `record_marked_excluded`; this is the intended
-fail-closed state, not a data defect. The runner also emits
-`training_eligible_emitted: false`.
+All 1,029 generated source records satisfy the frozen JSON contract and now
+carry `usage.role: training_candidate`. The frozen semantic validator reports
+1,029 admitted and zero rejected. This is a source-contract admission only:
+the aggregate receipt still emits `training_eligible_emitted: false`, and the
+separate exporter and training authorization gates remain closed. The two runs
+completed in 92.37 and 89.60 seconds with peak RSS of 195,510,272 and
+198,606,848 bytes respectively.
 
 ## Dispositions and the human gate
 
-Every processed row is exactly one of `proposed_admission`,
+Every processed row is exactly one of `admitted`, `proposed_admission`,
 `investigation_only`, `excluded`, or `unresolved`.
 
 - Missing provenance, acquisition, snapshot, rights, origin, or contamination
   evidence produces `unresolved`.
 - Any exact or near evaluation match is `excluded`.
-- Complete evidence with an explicit destination can be
-  `proposed_admission`, but the runner always writes
+- Complete evidence with an explicit destination is `proposed_admission` until
+  a validated operator packet accepts or rejects the exact family denominator.
+- Accepted records become source-contract `admitted` records and
+  `training_candidate` source records; neither state is a training payload or
+  training authorization. The runner always writes
   `training_eligible_emitted: false`.
 
 The operator packet at
 `data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json`
 lists the current evidence gaps and the exact accept/reject choices. The Sol
-advisor verdict is that the proposal is supportable; the operator decision is
-still `pending`.
+advisor verdict is that the proposal is supportable. The operator acceptance
+is recorded in [issue #6166](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6166#issuecomment-5151977634)
+and bound into the packet by date, operator ID, family, destination, and packet
+SHA-256.
 
-- **ACCEPT** the named 1,029-row Wikipedia scope with all attribution,
-  share-alike, modification, no-additional-restrictions, lineage, and
-  downstream-review obligations. This advances only to separately controlled
-  exporter and training gates.
-- **REJECT** the named Wikipedia scope, leaving it unavailable downstream.
+The accepted scope retains all attribution, share-alike, modification,
+no-additional-restrictions, lineage, and downstream-review obligations. It
+advances only to separately controlled exporter and training gates.
 
-Either choice leaves the other 188,121 rows unresolved. Acceptance does not
-authorize export, training, model release, redistribution, or publication and
-does not emit `training_eligible`.
+The other 188,121 rows remain unresolved. Acceptance does not authorize export,
+training, upload, model release, redistribution, or publication and does not
+emit `training_eligible`.

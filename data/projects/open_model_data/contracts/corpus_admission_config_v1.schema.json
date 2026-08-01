@@ -10,6 +10,7 @@
     "admission_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
     "profile_config": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"},
     "evidence_packet": {"type": ["string", "null"], "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"},
+    "operator_packet": {"type": ["string", "null"], "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"},
     "families": {
       "type": "array", "minItems": 1,
       "items": {

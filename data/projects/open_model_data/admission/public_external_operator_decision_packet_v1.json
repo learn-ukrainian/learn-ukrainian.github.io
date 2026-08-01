@@ -1,9 +1,16 @@
 {
   "schema_version": "corpus_admission_operator_packet_v1",
   "admission_id": "public-external-full-corpus-admission-v1",
-  "decision_required": true,
+  "decision_required": false,
   "advisor_verdict": "proposal_supported",
-  "operator_decision_status": "pending",
+  "operator_decision_status": "accepted",
+  "operator_decision": {
+    "decision": "accepted",
+    "decided_on": "2026-08-01",
+    "decision_reference": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6166#issuecomment-5151977634",
+    "operator_id": "operator.krisztiankoos",
+    "source_families": ["wikipedia"]
+  },
   "families": [
     {
       "source_family": "literary",
@@ -47,7 +54,7 @@
     },
     {
       "source_family": "wikipedia",
-      "current_disposition": "proposed_admission",
+      "current_disposition": "admitted",
       "rows": 1029,
       "words": 2865506,
       "blocked_by": [],

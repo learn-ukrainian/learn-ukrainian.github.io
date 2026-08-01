@@ -1,6 +1,7 @@
 {
   "admission_id": "public-external-full-corpus-admission-v1",
   "evidence_packet": "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json",
+  "operator_packet": "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json",
   "families": [
     {"attributes": {"author": {"column": "author"}, "genre": {"column": "genre"}, "origin": {"constant": "human_authored_source"}, "period": {"column": "language_period"}, "region": {"constant": "unknown"}, "register": {"constant": "literary"}, "translation_origin": {"constant": "unknown"}}, "evidence": {"acquisition": "partial", "contamination": "not_checked", "origin": "partial", "provenance": "partial", "rights": "not_reconstructed", "snapshot": "partial"}, "proposed_destination": null, "source_family": "literary", "source_group_column": "source_file", "source_record": null, "work_group_column": "work_id"},
     {"attributes": {"author": {"column": "author"}, "genre": {"constant": "textbook"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "educational"}, "translation_origin": {"constant": "unknown"}}, "evidence": {"acquisition": "partial", "contamination": "not_checked", "origin": "partial", "provenance": "partial", "rights": "not_reconstructed", "snapshot": "partial"}, "proposed_destination": null, "source_family": "public_textbooks", "source_group_column": "source_file", "source_record": null, "work_group_column": "title"},
