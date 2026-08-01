@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from collections import defaultdict
+from itertools import product
 from pathlib import Path
 from typing import Any
 
@@ -660,6 +661,101 @@ def test_distributed_edits_still_reach_character_sequence_check() -> None:
     match = registry.match(candidate)
     assert match.matched is True
     assert match.method == "character_sequence"
+
+
+def test_character_sequence_upper_bound_skips_impossible_exact_ratio(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    reference = "спільний-" + ("а" * 240)
+    candidate = "спільний-" + ("я" * 240)
+    registry = exporter.empty_text_registry()
+    registry.add_text(reference, explicit_evaluation_text=True)
+
+    class UpperBoundOnly:
+        def __init__(self, *_args: object, **_kwargs: object) -> None:
+            pass
+
+        def quick_ratio(self) -> float:
+            return 0.1
+
+        def ratio(self) -> float:
+            raise AssertionError("exact SequenceMatcher ratio must not run below its upper bound")
+
+    monkeypatch.setattr(exporter, "SequenceMatcher", UpperBoundOnly)
+    assert registry.match(candidate).matched is False
+
+
+def test_qgram_bound_rejects_same_histogram_different_sequence() -> None:
+    first = ("а" * 200) + ("б" * 200)
+    second = "аб" * 200
+
+    assert exporter.SequenceMatcher(None, first, second, autojunk=False).quick_ratio() == 1.0
+    assert exporter.sequence_ratio_can_reach(first, second, threshold=0.9) is False
+
+
+def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
+    values = [
+        "".join(characters)
+        for length in range(1, 6)
+        for characters in product("аб", repeat=length)
+    ]
+    for first in values:
+        for second in values:
+            ratio = exporter.SequenceMatcher(None, first, second, autojunk=False).ratio()
+            if ratio >= 0.6:
+                assert exporter.sequence_ratio_can_reach(first, second, threshold=0.6) is True
+
+
+def test_long_character_sequence_detects_distributed_repetitive_edits() -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(12_000))
+    candidate = "".join(
+        "я" if index % 10 == 9 else character
+        for index, character in enumerate(reference)
+    )
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
+def test_long_character_sequence_rejects_anagram_like_frequency_match() -> None:
+    first = ("а" * 5000) + ("б" * 5000)
+    second = "аб" * 5000
+
+    assert exporter.character_sequence_matches(first, second, threshold=0.9) is False
+
+
+@pytest.mark.parametrize("edit_kind", ["insert", "delete"])
+def test_long_character_sequence_detects_realistic_indels(edit_kind: str) -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    if edit_kind == "insert":
+        chunks = [reference[index : index + 100] for index in range(0, len(reference), 100)]
+        candidate = "я".join(chunks)
+    else:
+        candidate = "".join(
+            character
+            for index, character in enumerate(reference)
+            if index % 100 != 99
+        )
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
+def test_long_character_sequence_detects_clustered_edit_below_boundary() -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    candidate = reference[:20_000] + ("я" * 4_500) + reference[24_500:]
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
+def test_containment_prefilter_preserves_exact_containment() -> None:
+    reference = "три слова тут і ще кілька слів для надійної перевірки"
+    candidate = f"Початок матеріалу. {reference}. Завершення матеріалу."
+    registry = exporter.empty_text_registry()
+    registry.add_text(reference, explicit_evaluation_text=True)
+
+    match = registry.match(candidate)
+
+    assert match.matched is True
+    assert match.method == "character_containment"
 
 
 def test_character_anchor_index_is_bounded_and_keeps_endpoints() -> None:

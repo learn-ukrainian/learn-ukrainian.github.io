@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import tempfile
 import unicodedata
@@ -110,6 +111,13 @@ NEAR_DUPLICATE_THRESHOLD = 0.90
 MIN_CONTAINMENT_CHARACTERS = 32
 CANDIDATE_ANCHOR_CHARACTERS = 8
 MAX_CHARACTER_ANCHORS_PER_TEXT = 64
+MAX_EXACT_SEQUENCE_CHARACTERS = 4096
+LONG_SEQUENCE_QGRAM_OVERLAP_THRESHOLDS = (
+    (2, 0.80),
+    (3, 0.70),
+    (4, 0.60),
+    (5, 0.50),
+)
 MIN_DERIVED_RULE_CHARACTERS = 16
 SHINGLE_WIDTH = 3
 PROTECTED_REASONS = frozenset(
@@ -190,21 +198,105 @@ class EvaluationExclusionRegistry:
 
         for index in sorted(candidate_indexes):
             reference = self.near_texts[index]
-            if min(len(normalized), len(reference)) >= MIN_CONTAINMENT_CHARACTERS and (
-                normalized in reference or reference in normalized
-            ):
-                return ExclusionMatch(True, "character_containment")
             reference_shingles = self.near_shingles[index]
-            union = shingles | reference_shingles
-            if union and len(shingles & reference_shingles) / len(union) >= NEAR_DUPLICATE_THRESHOLD:
-                return ExclusionMatch(True, "word_shingle_jaccard")
+            if min(len(normalized), len(reference)) >= MIN_CONTAINMENT_CHARACTERS:
+                shorter, longer = (
+                    (normalized, reference)
+                    if len(normalized) <= len(reference)
+                    else (reference, normalized)
+                )
+                final_anchor = len(shorter) - CANDIDATE_ANCHOR_CHARACTERS
+                containment_anchors = {
+                    shorter[offset : offset + CANDIDATE_ANCHOR_CHARACTERS]
+                    for offset in (0, final_anchor // 2, final_anchor)
+                }
+                # Exact containment preserves these deterministic character
+                # anchors. The probes are necessary conditions, so they only
+                # skip impossible pairs before the frozen substring check.
+                if all(anchor in longer for anchor in containment_anchors) and shorter in longer:
+                    return ExclusionMatch(True, "character_containment")
+            if shingles and reference_shingles:
+                shingle_size_ratio = min(len(shingles), len(reference_shingles)) / max(
+                    len(shingles), len(reference_shingles)
+                )
+                if shingle_size_ratio >= NEAR_DUPLICATE_THRESHOLD:
+                    union = shingles | reference_shingles
+                    if len(shingles & reference_shingles) / len(union) >= NEAR_DUPLICATE_THRESHOLD:
+                        return ExclusionMatch(True, "word_shingle_jaccard")
             length_ratio = min(len(normalized), len(reference)) / max(len(normalized), len(reference))
-            if (
-                length_ratio >= NEAR_DUPLICATE_THRESHOLD
-                and SequenceMatcher(None, normalized, reference, autojunk=False).ratio() >= NEAR_DUPLICATE_THRESHOLD
+            if length_ratio >= NEAR_DUPLICATE_THRESHOLD and character_sequence_matches(
+                normalized,
+                reference,
+                threshold=NEAR_DUPLICATE_THRESHOLD,
             ):
                 return ExclusionMatch(True, "character_sequence")
         return ExclusionMatch(False)
+
+
+def sequence_ratio_can_reach(first: str, second: str, *, threshold: float) -> bool:
+    """Return false only when q-gram bounds disprove a SequenceMatcher hit.
+
+    A SequenceMatcher ratio at ``threshold`` needs a minimum number of matched
+    characters. Its ordered matching blocks necessarily contribute q-grams
+    shared by both strings. Counting the maximum possible number of blocks
+    from unmatched characters gives a conservative lower bound on those
+    shared q-grams. Failing either width therefore makes the expensive exact
+    ratio mathematically impossible without changing the decision boundary.
+    """
+    required_matches = math.ceil(threshold * (len(first) + len(second)) / 2)
+    if required_matches > min(len(first), len(second)):
+        return False
+    maximum_blocks = len(first) + len(second) - (2 * required_matches) + 1
+    for width in (2, 3):
+        if min(len(first), len(second)) < width:
+            continue
+        required_shared = max(0, required_matches - ((width - 1) * maximum_blocks))
+        if required_shared == 0:
+            continue
+        first_grams = Counter(first[index : index + width] for index in range(len(first) - width + 1))
+        second_grams = Counter(second[index : index + width] for index in range(len(second) - width + 1))
+        shared = sum((first_grams & second_grams).values())
+        if shared < required_shared:
+            return False
+    return True
+
+
+def qgram_overlap_coefficient(first: str, second: str, *, width: int) -> float:
+    """Return multiset q-gram overlap divided by the smaller q-gram count."""
+    require(width > 0, "q-gram width must be positive")
+    if min(len(first), len(second)) < width:
+        return float(first == second)
+    first_grams = Counter(first[index : index + width] for index in range(len(first) - width + 1))
+    second_grams = Counter(second[index : index + width] for index in range(len(second) - width + 1))
+    shared = sum((first_grams & second_grams).values())
+    return shared / min(sum(first_grams.values()), sum(second_grams.values()))
+
+
+def character_sequence_matches(first: str, second: str, *, threshold: float) -> bool:
+    """Bounded character-sequence fallback for the near-duplicate firewall.
+
+    Exact ``autojunk=False`` matching is retained for bounded strings. On long
+    strings, where both difflib modes can take hours on ordinary language, use
+    a deterministic multiset q-gram ladder. Its thresholds represent the
+    operational lower envelope for surviving 2–5-grams around a 10% edit
+    boundary: a single substitution, insertion, or deletion disrupts at most
+    ``q`` source q-grams. The ladder is deliberately a bounded detector rather
+    than a claim of formal equivalence to difflib on every adversarial edit
+    layout. Containment, word-shingle, and character-anchor checks remain
+    independent routes, while realistic long-text substitution, insertion,
+    deletion, clustered-edit, and repetitive-text cases are regression-tested.
+    """
+    if max(len(first), len(second)) <= MAX_EXACT_SEQUENCE_CHARACTERS:
+        matcher = SequenceMatcher(None, first, second, autojunk=False)
+        return (
+            matcher.quick_ratio() >= threshold
+            and sequence_ratio_can_reach(first, second, threshold=threshold)
+            and matcher.ratio() >= threshold
+        )
+    return all(
+        qgram_overlap_coefficient(first, second, width=width) >= minimum_overlap
+        for width, minimum_overlap in LONG_SEQUENCE_QGRAM_OVERLAP_THRESHOLDS
+    )
 
 
 def character_anchor_offsets(normalized: str) -> tuple[int, ...]:
@@ -590,7 +682,7 @@ def build_exclusion_registry(
 
 def registry_receipt(registry: EvaluationExclusionRegistry) -> dict[str, Any]:
     return {
-        "algorithm_version": "foundry-eval-exclusion-v1",
+        "algorithm_version": "foundry-eval-exclusion-v2",
         "artifacts": registry.artifacts,
         "candidate_anchor_characters": CANDIDATE_ANCHOR_CHARACTERS,
         "maximum_character_anchors_per_text": MAX_CHARACTER_ANCHORS_PER_TEXT,
@@ -619,7 +711,7 @@ def admission_receipt(
 def deduplication_receipt(accepted_fingerprints: int | None, *, partitioning: str) -> dict[str, Any]:
     return {
         "accepted_fingerprints": accepted_fingerprints or 0,
-        "algorithm_version": "foundry-intra-view-dedup-v1",
+        "algorithm_version": "foundry-intra-view-dedup-v2",
         "applied": accepted_fingerprints is not None,
         "candidate_anchor_characters": CANDIDATE_ANCHOR_CHARACTERS,
         "maximum_character_anchors_per_text": MAX_CHARACTER_ANCHORS_PER_TEXT,

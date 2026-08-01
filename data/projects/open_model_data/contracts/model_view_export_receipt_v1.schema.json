@@ -27,7 +27,7 @@
       "required": ["applied", "algorithm_version", "partitioning", "normalization", "near_duplicate_threshold", "minimum_containment_characters", "candidate_anchor_characters", "maximum_character_anchors_per_text", "accepted_fingerprints"],
       "properties": {
         "applied": {"type": "boolean"},
-        "algorithm_version": {"const": "foundry-intra-view-dedup-v1"},
+        "algorithm_version": {"const": "foundry-intra-view-dedup-v2"},
         "partitioning": {"enum": ["source text", "exact destination semantic signature, then plain-text context", "not applicable"]},
         "normalization": {"const": "NFKC; casefold; collapse whitespace"},
         "near_duplicate_threshold": {"const": 0.9},
@@ -41,7 +41,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["algorithm_version", "normalization", "near_duplicate_threshold", "minimum_containment_characters", "candidate_anchor_characters", "maximum_character_anchors_per_text", "artifacts", "exact_fingerprints", "near_fingerprints"],
       "properties": {
-        "algorithm_version": {"const": "foundry-eval-exclusion-v1"},
+        "algorithm_version": {"const": "foundry-eval-exclusion-v2"},
         "normalization": {"const": "NFKC; casefold; collapse whitespace"},
         "near_duplicate_threshold": {"const": 0.9},
         "minimum_containment_characters": {"const": 32},

@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/source_payload_preparation_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry source-payload preparation receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "preparation_id", "config_sha256", "inputs", "source_database_snapshot", "policies", "output_payload", "counts", "strata", "determinism", "safety"],
+  "properties": {
+    "schema_version": {"const": "source_payload_preparation_receipt_v1"},
+    "preparation_id": {"type": "string", "pattern": "^source-payload-preparation:[a-f0-9]{64}$"},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admission_receipt", "operator_packet", "source_records", "detectors", "silver"],
+      "properties": {
+        "admission_receipt": {"$ref": "#/$defs/artifact"},
+        "operator_packet": {"$ref": "#/$defs/artifact"},
+        "source_records": {"$ref": "#/$defs/artifact"},
+        "detectors": {"$ref": "#/$defs/boundInput"},
+        "silver": {"$ref": "#/$defs/boundInput"}
+      }
+    },
+    "source_database_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database_identity", "snapshot_sha256", "schema_sha256"],
+      "properties": {
+        "database_identity": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{1,255}$"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity_normalization", "automated_span_partition", "evaluation_firewall", "origin_evidence", "private_data_evidence"],
+      "properties": {
+        "identity_normalization": {"const": "NFC; casefold only for identity comparison; preserve source character positions for payload derivation"},
+        "automated_span_partition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["execution", "human_reviewed", "linguistic_gold_claimed", "partition_policy"],
+          "properties": {
+            "execution": {"const": "automated detector and silver operational outputs"},
+            "human_reviewed": {"const": false},
+            "linguistic_gold_claimed": {"const": false},
+            "partition_policy": {"const": "retain approved spans; mask loss for operationally excluded spans; exclude records when any exclusion policy requires it"}
+          }
+        },
+        "evaluation_firewall": {"const": "NFKC; casefold; collapse whitespace; exact and near duplicate matches against held-out evaluation are excluded"},
+        "origin_evidence": {"const": "retain only source-record origin evidence state and receipt hash; unresolved origin is not promoted to verified"},
+        "private_data_evidence": {"const": "retain only source-record private-data review state and receipt hash; present or unknown is not admitted"}
+      }
+    },
+    "output_payload": {"$ref": "#/$defs/artifact"},
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_records_processed", "candidate_records", "candidate_spans", "retained_records", "masked_records", "excluded_records", "retained_characters", "masked_characters", "excluded_characters", "reason_counts", "category_counts", "evidence_grade_counts"],
+      "properties": {
+        "source_records_processed": {"const": 1029},
+        "candidate_records": {"type": "integer", "minimum": 0},
+        "candidate_spans": {"type": "integer", "minimum": 0},
+        "retained_records": {"type": "integer", "minimum": 0},
+        "masked_records": {"type": "integer", "minimum": 0},
+        "excluded_records": {"type": "integer", "minimum": 0},
+        "retained_characters": {"type": "integer", "minimum": 0},
+        "masked_characters": {"type": "integer", "minimum": 0},
+        "excluded_characters": {"type": "integer", "minimum": 0},
+        "reason_counts": {"$ref": "#/$defs/countByCode"},
+        "category_counts": {"$ref": "#/$defs/countByCode"},
+        "evidence_grade_counts": {"$ref": "#/$defs/countByCode"}
+      }
+    },
+    "strata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "period", "genre", "register"],
+      "properties": {
+        "source": {"$ref": "#/$defs/strata"},
+        "period": {"$ref": "#/$defs/strata"},
+        "genre": {"$ref": "#/$defs/strata"},
+        "register": {"$ref": "#/$defs/strata"}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "input_order", "candidate_order", "timestamps_omitted"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "input_order": {"const": "ascending wikipedia.id with source-record identity and content hash revalidated"},
+        "candidate_order": {"const": "source record ID then source character start then source character end"},
+        "timestamps_omitted": {"const": true}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_text_emitted", "span_text_emitted", "training_performed", "model_call_performed", "upload_performed", "publication_performed", "human_gold_created"],
+      "properties": {
+        "record_text_emitted": {"const": false},
+        "span_text_emitted": {"const": false},
+        "training_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "human_gold_created": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "code": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,127}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "bytes", "sha256"],
+      "properties": {
+        "records": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "boundInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "receipt"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "receipt": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "countByCode": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "records", "spans", "characters"],
+        "properties": {
+          "code": {"$ref": "#/$defs/code"},
+          "records": {"type": "integer", "minimum": 0},
+          "spans": {"type": "integer", "minimum": 0},
+          "characters": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "strata": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "records", "spans", "retained_characters", "masked_characters"],
+        "properties": {
+          "category": {"$ref": "#/$defs/code"},
+          "records": {"type": "integer", "minimum": 0},
+          "spans": {"type": "integer", "minimum": 0},
+          "retained_characters": {"type": "integer", "minimum": 0},
+          "masked_characters": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}
