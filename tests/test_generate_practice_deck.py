@@ -1026,6 +1026,23 @@ def test_size_budget_warns_and_trims_per_level(capsys: pytest.CaptureFixture[str
     assert shards["A1"]["index"]["counts"]["lexemes"] < 5
 
 
+def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pytest.MonkeyPatch) -> None:
+    shards = {"A1": {"index": {"schema": "atlas-practice-index", "items": []}}}
+    calls = 0
+    original_size_budget = generate_practice_deck._size_budget
+
+    def count_size_budget(payload: dict[str, object], raw_limit: int, gzip_limit: int) -> dict[str, int | bool]:
+        nonlocal calls
+        calls += 1
+        return original_size_budget(payload, raw_limit, gzip_limit)
+
+    monkeypatch.setattr(generate_practice_deck, "_size_budget", count_size_budget)
+
+    apply_size_budgets(shards, raw_limit=50_000, gzip_limit=15_000)
+
+    assert calls == 1
+
+
 def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
     exit_code = main(
         [
@@ -1242,6 +1259,58 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
         "locator": "fixture-1",
         "title": "Fixture page",
     }
+
+
+def test_sentence_inventory_rejects_nominative_plural_for_dictionary_form(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "Це книги.",
+                        "targetForm": "книги",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {
+                            "status": "unreviewed",
+                            "path": "attacker-controlled-path",
+                            "source": "textbook",
+                            "label": "Fixture textbook",
+                            "locator": "fixture-plural",
+                        },
+                        "license": {
+                            "status": "not_openly_licensed",
+                            "useBasis": "short educational quotation with attribution",
+                        },
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    candidates = read_sentence_inventory(inventory_path)
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload(
+            [{"status": "sentence_inventory", "path": str(inventory_path)}]
+        ),
+        JsonVesumVerifier.from_path(VESUM),
+        candidates,
+        BuildConfig(),
+    )
+
+    assert all(
+        item["clozeId"] != "knyha:inventory:1"
+        for level in shards.values()
+        for item in level["cloze"]["cloze"]
+    )
 
 
 @pytest.mark.parametrize("license_status", ["not_openly_licensed", "copyrighted_source"])

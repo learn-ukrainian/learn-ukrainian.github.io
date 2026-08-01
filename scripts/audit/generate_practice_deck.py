@@ -1253,8 +1253,9 @@ def _build_cloze_items(
             case_name, number = inventory_details
             # The inventory is a source-backed example asset.  It supplies no
             # authored grammar cue, so only a VESUM-unambiguous nominative
-            # form is eligible for the generic dictionary-form cloze.
-            if case_name != "nominative":
+            # singular form is eligible for the generic dictionary-form cloze.
+            # Nominative plurals are not dictionary forms for this rule.
+            if case_name != "nominative" or number != "singular":
                 continue
             rule_id = "nominative_identification"
         else:
@@ -1270,6 +1271,10 @@ def _build_cloze_items(
                 curated_form,
             )
         if number not in NUMBER_KEYS:
+            continue
+        if rule_id == "nominative_identification" and (
+            case_name != "nominative" or number != "singular"
+        ):
             continue
         form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
         if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
@@ -3504,6 +3509,7 @@ def apply_size_budgets(
 ) -> None:
     for level, level_shards in shards.items():
         oversized_kinds: set[str] = set()
+        trimmed = False
         for kind, payload in level_shards.items():
             payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
             if not payload["sizeBudget"]["ok"]:
@@ -3518,6 +3524,7 @@ def apply_size_budgets(
             if not isinstance(index_items, list) or not index_items:
                 break
             removed = index_items.pop()
+            trimmed = True
             removed_lemma_id = removed.get("lemmaId") if isinstance(removed, dict) else None
             if not removed_lemma_id:
                 break
@@ -3578,11 +3585,12 @@ def apply_size_budgets(
                     payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
                     if not payload["sizeBudget"]["ok"]:
                         oversized_kinds.add(kind)
-        # Non-oversized shards were deliberately skipped in the trim loop:
-        # dropping lexemes cannot make them exceed a budget, but their final
-        # metadata must still describe the published payload.
-        for payload in level_shards.values():
-            payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
+        if trimmed:
+            # Non-oversized shards were deliberately skipped in the trim loop:
+            # dropping lexemes cannot make them exceed a budget, but their final
+            # metadata must still describe the published payload.
+            for payload in level_shards.values():
+                payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
 
 
 def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) -> list[Path]:
