@@ -3269,11 +3269,22 @@ def merge_practice_seed_entries(
         target = merged[target_index]
         if _plain(str(target.get("lemma") or "")) != _plain(str(seed["lemma"])):
             raise ValueError(f"practice seed lemma does not match Atlas slug {slug}")
+        is_local_recognition = seed.get("admissionMode") == "local_practice_private_teacher"
+        seed_cefr = _normalize_cefr(seed.get("cefr"))
         atlas_cefr = _cefr_level(target)
-        if atlas_cefr is None:
-            raise ValueError(f"practice seed Atlas entry has no CEFR level: {slug}")
-        if atlas_cefr != _normalize_cefr(seed.get("cefr")):
-            raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
+        if is_local_recognition:
+            # Private teacher recognition may carry soft/head/PULS guidance when
+            # the public Atlas entry has no enrichment CEFR. Never rewrite the
+            # public manifest; only stamp the in-memory practice view.
+            if seed_cefr is None:
+                raise ValueError(f"local-practice seed requires CEFR: {slug}")
+            if atlas_cefr is not None and atlas_cefr != seed_cefr:
+                raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
+        else:
+            if atlas_cefr is None:
+                raise ValueError(f"practice seed Atlas entry has no CEFR level: {slug}")
+            if atlas_cefr != seed_cefr:
+                raise ValueError(f"practice seed CEFR differs from Atlas entry for {slug}")
 
         # Several source-backed seed rows may attest one canonical Atlas route.
         # Validate every row above, but do not fabricate multiple cards for one
@@ -3284,7 +3295,6 @@ def merge_practice_seed_entries(
 
         admission = target.get("surface_admission")
         merged_admission = dict(admission) if isinstance(admission, dict) else {}
-        is_local_recognition = seed.get("admissionMode") == "local_practice_private_teacher"
         merged_admission[SURFACE_CLOZE] = False if is_local_recognition else bool(merged_admission.get(SURFACE_CLOZE))
         merged_admission["practice"] = True
         merged_entry = {
@@ -3293,6 +3303,10 @@ def merge_practice_seed_entries(
         }
         if is_local_recognition:
             merged_entry["local_practice_private_teacher"] = True
+            if atlas_cefr is None:
+                merged_entry["cefr"] = seed_cefr
+                source = _clean_text(seed.get("cefrSource")) or "local_practice_unleveled"
+                merged_entry["cefr_source"] = source
         else:
             merged_entry["practice_example"] = {
                 "text": seed["example"],
