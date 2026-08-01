@@ -13,6 +13,7 @@ import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/comp
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
   SRS_STORAGE_KEY,
+  DAILY_PRACTICE_DECK_SIZE,
   cardKey,
   loadState,
   saveState,
@@ -26,9 +27,9 @@ import {
   type PracticeRating,
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
-import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
-import { filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
-import { type DailyWord } from '@site/src/lib/lexicon/daily';
+import { LEARNER_LEVEL_STORAGE_KEY, filterByCumulativeLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { CUSTOM_SETS_STORAGE_KEY, filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
+import { dateSeed, pickDaily, type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -476,6 +477,23 @@ function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDe
       clozeIds: [],
     })),
     cloze: [],
+  };
+}
+
+/**
+ * #6132: two possible modes only (flashcards on every lemma, cloze on `knyha` alone) —
+ * deliberately excludes matching/choice, whose distractor pools are drawn from the
+ * WHOLE deck by design (`meaningDistractors`/`orderedChoiceOptions`), which would make
+ * "no forbidden lemma anywhere in the DOM" an invalid assertion for those modes.
+ */
+function customDeckMixedFixture(): PracticeDeckData {
+  const baseDeck = sampleDeck();
+  return {
+    ...baseDeck,
+    index: baseDeck.index.map((item) => ({
+      ...item,
+      modes: (item.lemmaId === 'knyha' ? ['flashcards', 'cloze'] : ['flashcards']) as PracticeMode[],
+    })),
   };
 }
 
@@ -1189,6 +1207,69 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-synonym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-paronym'))).toBe(false);
     expect(requested.some((u) => u.includes('practice-heritage'))).toBe(false);
+  });
+
+  test('resets the daily re-roll offset when the local calendar day changes while the tab stays open (#6146)', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const { fn } = mockShardFetch({ A1: 24 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      const dayOneNoon = new Date(2026, 5, 23, 12, 0, 0);
+      vi.setSystemTime(dayOneNoon);
+
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice />);
+      await screen.findByTestId('practice-daily-deck');
+
+      const readFeaturedLemmaIds = async () => {
+        const summary = screen.getByTestId('practice-daily-summary');
+        if (summary.getAttribute('aria-expanded') !== 'true') {
+          await user.click(summary);
+        }
+        return Array.from(document.querySelectorAll('.daily-deck-row'))
+          .map((row) => row.querySelector('[data-testid^="practice-daily-why-"]')?.getAttribute('data-testid'))
+          .filter((id): id is string => Boolean(id))
+          .map((id) => id.replace('practice-daily-why-', ''))
+          .sort();
+      };
+
+      const dayOneDefaultIds = await readFeaturedLemmaIds();
+
+      // Re-roll on day one so the featured set diverges from the day's default draw.
+      await user.click(screen.getByTestId('practice-daily-reroll'));
+      let rolledIds: string[] = [];
+      await waitFor(async () => {
+        rolledIds = await readFeaturedLemmaIds();
+        expect(rolledIds).not.toEqual(dayOneDefaultIds);
+      });
+
+      // Jump the clock past local midnight with NO further interaction — this is the
+      // "tab stayed open overnight" scenario the fix targets. Only the armed midnight
+      // timer (not a click) can catch this rollover.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(13 * 60 * 60 * 1000);
+      });
+
+      const dayOnePool = dailyPoolFixture({ A1: 24 });
+      const eligiblePool = filterByCumulativeLevel(dayOnePool, 'A1');
+      const expectedDayTwoDefaultIds = pickDaily(
+        eligiblePool,
+        dateSeed(new Date(2026, 5, 24)),
+        DAILY_PRACTICE_DECK_SIZE,
+      )
+        .map((word) => word.slug)
+        .sort();
+
+      await waitFor(async () => {
+        expect(await readFeaturedLemmaIds()).toEqual(expectedDayTwoDefaultIds);
+      });
+      // Sanity: the reset actually changed the draw — day two's default is not merely
+      // coincidentally equal to what the still-elevated day-one re-roll count produced.
+      expect(rolledIds).not.toEqual(expectedDayTwoDefaultIds);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('a real regenerated daily-pool row with pos renders on the card (#5856 fix-round-2)', async () => {
@@ -4086,6 +4167,83 @@ describe('LexiconPractice', () => {
       await waitFor(() =>
         expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/3 нових/),
       );
+    });
+
+    test('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', async () => {
+      // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
+      // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
+      // just a single mode card, already covered above) respects the deck filter
+      // whichever of its modes gets drawn.
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_mixed',
+        title: 'Дві слова',
+        lemma_keys: ['книга', 'робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        const user = userEvent.setup();
+        const { container, unmount } = render(
+          <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
+        );
+
+        await user.click(screen.getByRole('button', { name: /Дві слова/i }));
+        await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
+
+        const clozeStage = screen.queryByTestId('practice-cloze');
+        if (clozeStage) {
+          expect(clozeStage.textContent).not.toMatch(/місто|школа/);
+        } else {
+          const flashcardWord = container.querySelector('.flashcard-word')?.textContent ?? '';
+          expect(['книга', 'робота']).toContain(flashcardWord);
+        }
+
+        unmount();
+      }
+    });
+
+    test('#6132 mode grid shows a real per-mode count, honest about which modes are empty', async () => {
+      // Custom sets load once at mount (`useState(() => readLocalCustomSets())`), so seed
+      // localStorage BEFORE render — matching the established pattern in the other
+      // Custom Set tests above (e.g. "dashboard session estimate narrows...").
+      const customSet: CustomSet = {
+        id: 'test_custom_deck_mode_counts',
+        title: 'Лічильник',
+        lemma_keys: ['робота'],
+        cloze_items: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      // sampleDeck: 4 lemmas carry flashcards/matching/choice, only 'книга' carries cloze,
+      // and no lemma carries heritage — the grid must say so BEFORE any tap, not just
+      // fail closed with an empty-state message after the learner has already committed.
+      expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('4');
+      expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('1');
+      expect(screen.getByTestId('practice-mode-count-heritage')).toHaveTextContent('0');
+      expect(container.querySelector('[data-mode="heritage"]')).toHaveAttribute('data-mode-empty', 'true');
+      expect(container.querySelector('[data-mode="flashcards"]')).not.toHaveAttribute('data-mode-empty');
+
+      // Narrowing to a 1-word custom deck (no cloze) must narrow the counts too, not just
+      // the session-size estimate — a mixed session from this deck has nothing to draw
+      // from cloze, and the grid should say so for THIS deck, not the full level.
+      await user.click(screen.getByRole('button', { name: /Лічильник/i }));
+
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
+      );
+      expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('0');
     });
   });
 });

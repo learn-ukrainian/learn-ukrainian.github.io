@@ -24,6 +24,8 @@ export interface PracticeDailyDeckProps {
   /** D10: independently localized active-deck titles, or undefined for All Words. */
   deckTitleUk?: string | null;
   deckTitleEn?: string | null;
+  /** #6132: re-draw today's pick set without waiting for the calendar day to change. */
+  onReRoll?: () => void;
 }
 
 const STATUS_META = {
@@ -45,6 +47,7 @@ export default function PracticeDailyDeck({
   learnerLevel,
   deckTitleUk = null,
   deckTitleEn = null,
+  onReRoll,
 }: PracticeDailyDeckProps) {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -110,6 +113,20 @@ export default function PracticeDailyDeck({
             en={`${previewIndex + 1} / ${total}`}
           />
         </span>
+        {onReRoll ? (
+          <button
+            type="button"
+            className="daily-deck-reroll"
+            data-testid="practice-daily-reroll"
+            onClick={() => {
+              setPreviewIndex(0);
+              setFlipped(false);
+              onReRoll();
+            }}
+          >
+            <span aria-hidden="true">🔀</span> <ChromeText k="practice.reRoll" />
+          </button>
+        ) : null}
       </div>
 
       <div className="daily-deck-preview-shell">

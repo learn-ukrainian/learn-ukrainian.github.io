@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup, Tag
 # Structured reduce schema (independent of fetch status stubs).
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
 # Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
-ULIF_PARSER_VERSION = "ulif-dictua-v1"
+ULIF_PARSER_VERSION = "ulif-dictua-v2"
 ULIF_NORMALIZER_VERSION = "ulif-strip-raw-html-v1"
 ULIF_SOURCE_ID = "ulif_dictua"
 ULIF_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua/"
@@ -280,14 +280,13 @@ def parse_dictua_envelope(
         if groups:
             sections[section_name] = groups if include_raw_html else strip_raw_html(groups)
 
-    if status == "ok":
-        if "paradigm" not in sections and source_status == "ok" and paradigm_html:
-            status = "parse_error"
-    elif status == "not_found":
+    if status == "not_found":
         sections = {}
 
-    # Antonyms-only / partial envelopes with source ok and no paradigm stage keep sections.
-    if status == "ok" and not paradigm_html and not sections:
+    # A successful fetch can legitimately have no paradigm when at least one
+    # relation section was parsed.  A content-empty envelope remains unusable
+    # evidence and must fail closed even if its source status says ``ok``.
+    if status == "ok" and not sections:
         status = "parse_error"
 
     return {

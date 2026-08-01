@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_record_v1.schema.json",
+  "title": "Ukrainian Data Foundry adjudicated correction record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_id", "candidate_sha256", "decision_sha256", "candidate", "decision", "conflict_state", "safety_blockers", "export_control"],
+  "properties": {
+    "schema_version": {"const": "correction_record_v1"},
+    "record_id": {"type": "string", "pattern": "^correction:[a-f0-9]{64}$"},
+    "candidate_sha256": {"$ref": "#/$defs/sha256"},
+    "decision_sha256": {"$ref": "#/$defs/sha256"},
+    "candidate": {"$ref": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_candidate_v1.schema.json"},
+    "decision": {"$ref": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_reviewer_decision_v1.schema.json"},
+    "conflict_state": {"enum": ["none", "resolved_by_third_human", "unresolved"]},
+    "safety_blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "export_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualified_correction_intake", "handoff", "model_training_or_export_eligible", "owner_issue"],
+      "properties": {
+        "qualified_correction_intake": {"type": "boolean"},
+        "handoff": {"enum": ["correction_intake_ready", "faithful_or_protected_only", "excluded", "unresolved"]},
+        "model_training_or_export_eligible": {"const": false},
+        "owner_issue": {"const": 6122}
+      }
+    }
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_factory_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry correction factory receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "input", "output", "schemas", "evaluation_registry", "counts", "determinism", "safety"],
+  "properties": {
+    "schema_version": {"const": "correction_factory_receipt_v1"},
+    "operation": {"enum": ["prepare_review_packet", "adjudicate"]},
+    "input": {"$ref": "#/$defs/artifact"},
+    "output": {"$ref": "#/$defs/artifact"},
+    "schemas": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 2
+    },
+    "evaluation_registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v0_1_1_manifest_sha256", "v0_2_packet_sha256", "source_fingerprint_count", "normalization", "near_duplicate_threshold"],
+      "properties": {
+        "v0_1_1_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "v0_2_packet_sha256": {"$ref": "#/$defs/sha256"},
+        "source_fingerprint_count": {"type": "integer", "minimum": 1},
+        "normalization": {"const": "NFKC; casefold; collapse whitespace"},
+        "near_duplicate_threshold": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serialization", "ordering", "timestamps_omitted"],
+      "properties": {
+        "serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"},
+        "ordering": {"const": "input packet order"},
+        "timestamps_omitted": {"const": true}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["automatic_gold_created", "model_training_performed", "dataset_export_or_publication_performed", "raw_dictionary_payload_exported"],
+      "properties": {
+        "automatic_gold_created": {"const": false},
+        "model_training_performed": {"const": false},
+        "dataset_export_or_publication_performed": {"const": false},
+        "raw_dictionary_payload_exported": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "sha256"],
+      "properties": {"records": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}
+    }
+  }
+}

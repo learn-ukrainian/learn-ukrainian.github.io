@@ -187,6 +187,32 @@ def test_parse_dictua_envelope_ok_and_not_found(sample_envelopes):
     assert len(ant["sections"]["antonyms"]) >= 1
 
 
+def test_reduce_accepts_confirmed_headword_without_inflection_table():
+    envelope = _envelope(
+        "привіт",
+        "ok",
+        [
+            ("paradigm", "privit-synonyms.html"),
+            ("synonyms", "privit-synonyms.html"),
+        ],
+    )
+
+    artifact = parse_dictua_envelope(envelope)
+
+    assert artifact["status"] == "ok"
+    assert "paradigm" not in artifact["sections"]
+    assert artifact["sections"]["synonyms"]
+
+
+def test_reduce_rejects_content_empty_ok_envelope():
+    artifact = parse_dictua_envelope(
+        {"lemma": "дуже", "status": "ok", "responses": []}
+    )
+
+    assert artifact["status"] == "parse_error"
+    assert artifact["sections"] == {}
+
+
 def test_strip_raw_html_removes_nested_keys():
     payload = {"rows": [[{"raw_html": "<b>x</b>", "text": "x"}]], "raw_html": "<table/>"}
     cleaned = strip_raw_html(payload)

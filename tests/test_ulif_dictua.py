@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 import requests
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -21,6 +22,16 @@ FIXTURES = ROOT / "tests" / "fixtures" / "ulif_dictua"
 
 def _fixture(name: str) -> str:
     return (FIXTURES / name).read_text(encoding="utf-8")
+
+
+def _without_paradigm(html: str) -> str:
+    """Keep a valid matched DictUA page while removing its inflection table."""
+    soup = BeautifulSoup(html, "html.parser")
+    for table in soup.find_all("table"):
+        labels = table.get_text(" ", strip=True).casefold()
+        if table.find("table") is None and ("називний" in labels or "інфінітив" in labels):
+            table.decompose()
+    return str(soup)
 
 
 class _Response:
@@ -169,6 +180,52 @@ def test_empty_available_relation_tab_is_not_a_parse_error(tmp_path, monkeypatch
     record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
     assert record["status"] == "ok"
     assert "phraseology" not in record["sections"]
+
+
+def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path, monkeypatch):
+    """An adverb-like headword must not be failed solely for lacking inflection."""
+    db_path = tmp_path / "sources.db"
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
+    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
+    search_html = _without_paradigm(_fixture("privit-paradigm.html"))
+    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(search_html))
+
+    def post(_url: str, data: dict[str, str], timeout: int) -> _Response:
+        if "ctl00$ContentPlaceHolder1$search.x" in data:
+            return _Response(search_html)
+        if "ctl00$ContentPlaceHolder1$syn.x" in data:
+            return _Response(_fixture("privit-synonyms.html"))
+        if "ctl00$ContentPlaceHolder1$phras.x" in data:
+            return _Response(_fixture("privit-phraseology.html"))
+        raise AssertionError(f"Unexpected DictUA POST: {data}")
+
+    monkeypatch.setattr(source_query._SESSION, "post", post)
+
+    record = source_query.query_ulif("привіт", ("paradigm", "synonyms"))
+    assert record["status"] == "ok"
+    assert "paradigm" not in record["sections"]
+    assert record["sections"]["synonyms"][0]["sense_or_group_id"] == "synonyms:1"
+    assert record["content_sha256"]
+    assert record["parser_version"] == "ulif-dictua-v2"
+
+
+def test_confirmed_but_content_empty_headword_fails_closed(tmp_path, monkeypatch):
+    db_path = tmp_path / "sources.db"
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
+    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
+    empty_html = _without_paradigm(_fixture("privit-paradigm.html"))
+    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(empty_html))
+    monkeypatch.setattr(
+        source_query._SESSION,
+        "post",
+        lambda *args, **kwargs: _Response(empty_html),
+    )
+
+    record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
+
+    assert record["status"] == "parse_error"
+    assert record["sections"] == {}
+    assert sources_db.get_ulif_dictua_entry("привіт")["status"] == "parse_error"
 
 
 def test_transient_error_is_not_persisted_as_a_negative_cache(tmp_path, monkeypatch):

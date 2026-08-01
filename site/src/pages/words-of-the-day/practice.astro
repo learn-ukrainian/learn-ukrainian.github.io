@@ -1377,6 +1377,25 @@ const frontmatter = {
     font-size: 0.9rem;
     font-weight: 800;
   }
+  :global(.daily-deck-reroll) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 999px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  :global(.daily-deck-reroll:hover),
+  :global(.daily-deck-reroll:focus-visible) {
+    border-color: var(--lu-primary);
+    outline: 2px solid var(--lu-primary);
+    outline-offset: 2px;
+  }
   :global(.daily-deck-preview-shell) {
     display: flex;
     align-items: center;
@@ -1587,6 +1606,7 @@ const frontmatter = {
     }
   }
   :global(.k3-mode-card) {
+    position: relative;
     display: flex;
     min-height: 48px;
     flex-direction: column;
@@ -1606,6 +1626,9 @@ const frontmatter = {
     outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
   }
+  :global(.k3-mode-card[data-mode-empty='true']) {
+    opacity: 0.55;
+  }
   :global(.k3-mode-title) {
     font-size: 1rem;
     font-weight: 900;
@@ -1616,6 +1639,24 @@ const frontmatter = {
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+  }
+  :global(.k3-mode-count) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    min-width: 1.4em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: var(--lu-surface-raised);
+    color: var(--lu-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-align: center;
+  }
+  :global(.k3-mode-card[data-mode-empty='true'] .k3-mode-count) {
+    color: var(--lu-text-muted);
+    background: transparent;
+    border: 1px solid var(--lu-border);
   }
 
   /* Chunk 5 — generalized form rail and N-vowel stress */

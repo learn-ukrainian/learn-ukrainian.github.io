@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { dateSeed, deckSeed, pickDaily } from '@site/src/lib/lexicon/daily';
+import { dateSeed, deckSeed, pickDaily, reRollSeed } from '@site/src/lib/lexicon/daily';
 
 describe('dateSeed', () => {
   test('uses the local calendar date', () => {
@@ -55,5 +55,31 @@ describe('deckSeed', () => {
 
     expect(pickDaily(pool, day1 + seed, 12)).toEqual(pickDaily(pool, day1 + seed, 12));
     expect(pickDaily(pool, day1 + seed, 12)).not.toEqual(pickDaily(pool, day2 + seed, 12));
+  });
+});
+
+describe('reRollSeed', () => {
+  test('is zero for the default (un-re-rolled) draw', () => {
+    expect(reRollSeed(0)).toBe(0);
+  });
+
+  test('#6132: re-rolling draws a different set without changing the day', () => {
+    const pool = Array.from({ length: 30 }, (_, i) => `word-${i}`);
+    const day = dateSeed(new Date(2026, 5, 23));
+
+    const first = pickDaily(pool, day + reRollSeed(0), 12);
+    const second = pickDaily(pool, day + reRollSeed(1), 12);
+    const third = pickDaily(pool, day + reRollSeed(2), 12);
+
+    expect(second).not.toEqual(first);
+    expect(third).not.toEqual(first);
+    expect(third).not.toEqual(second);
+  });
+
+  test('is deterministic for a given count, so the same re-roll replays identically', () => {
+    const pool = Array.from({ length: 30 }, (_, i) => `word-${i}`);
+    const day = dateSeed(new Date(2026, 5, 23));
+
+    expect(pickDaily(pool, day + reRollSeed(3), 12)).toEqual(pickDaily(pool, day + reRollSeed(3), 12));
   });
 });
