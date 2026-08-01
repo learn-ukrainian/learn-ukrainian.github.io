@@ -1290,7 +1290,7 @@ with no records reports `no_evidence`; that is not a provider-health claim.
   },
   "pins": {
     "acpx": "0.13.0",
-    "grok_cli": "0.2.117",
+    "grok_cli": "0.2.118",
     "validation": "before_spawn"
   },
   "comparison_evidence": {

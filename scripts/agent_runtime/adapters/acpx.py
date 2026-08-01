@@ -151,9 +151,9 @@ _OPENCODE_DENY_ALL_CONFIG = json.dumps(
 # Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
 # Built-in acpx ``grok-build`` is intentionally unused: it expands to
 # ``grok agent stdio`` without a place for parent flags required by Grok
-# 0.2.117 (``--model`` / ``--reasoning-effort`` / ``--no-leader`` must appear
+# 0.2.118 (``--model`` / ``--reasoning-effort`` / ``--no-leader`` must appear
 # before ``stdio``).
-PINNED_GROK_VERSION = "0.2.117"
+PINNED_GROK_VERSION = "0.2.118"
 GROK_SHADOW_MODEL = "grok-4.5"
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
@@ -676,7 +676,7 @@ _GROK_VERSION_RE = re.compile(r"\Agrok\s+(\d+\.\d+\.\d+)(?:\s|$)")
 def _probe_grok_version(binary: str) -> str:
     """Return exact semver from ``<binary> --version``, or "" on any failure.
 
-    Native Grok 0.2.117 prints ``grok 0.2.117 (<sha>)``. Wrong,
+    Native Grok 0.2.118 prints ``grok 0.2.118 (<sha>)``. Wrong,
     missing, or unparseable output fails closed before prompt.
     """
     try:
@@ -737,7 +737,7 @@ def _require_grok_profile() -> str:
 
 
 def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
-    """Shell-safe single ``--agent`` value with required Grok 0.2.117 argv order.
+    """Shell-safe single ``--agent`` value with required Grok 0.2.118 argv order.
 
     Exact token order (parent flags before ``stdio``)::
 
