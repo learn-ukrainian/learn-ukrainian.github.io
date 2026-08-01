@@ -374,7 +374,9 @@ def _rail_resolver(path: str) -> rail_path_guard.ApprovedRailApprovalReceiptReso
         "receipt_id": "rail-approval-" + "1" * 32,
         "issuer": "operator",
         "issued_at": "2026-07-31T00:00:00Z",
-        "expires_at": "2026-08-01T00:00:00Z",
+        # Keep this success-path fixture independent of wall-clock time. Expiry
+        # behavior has dedicated coverage in the rail approval test suite.
+        "expires_at": "2099-08-01T00:00:00Z",
         "action": "rail-path-mutation",
         "task_id": "pr-5512",
         "head_sha": _SHA_A,

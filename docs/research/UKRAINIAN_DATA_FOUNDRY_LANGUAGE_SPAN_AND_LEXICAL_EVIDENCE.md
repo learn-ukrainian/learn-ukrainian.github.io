@@ -243,13 +243,17 @@ The repository already implements:
 - a sequential one-second fetch policy in
   `scripts/lexicon/runner/fetch_ulif_20k.py`.
 
-A live `query_ulif("дуже", sections=["paradigm", "synonyms"])` probe returned
-structured synonym groups, register labels, citations, parser version
-`ulif-dictua-v1`, and content hash
-`94da3fd742d98c87849f84fd90cf6b50c7cd31b9fc241d890ca74cb2d8c1da0b`, but
-the aggregate response status was `parse_error`. The adapter therefore exists
-but is not yet trustworthy for #6121. Implementation must reproduce and fix or
-correctly narrow that status before treating any response as complete.
+An initial live `query_ulif("дуже", sections=["paradigm", "synonyms"])` probe
+returned structured synonym groups, register labels, citations, and content
+hash `94da3fd742d98c87849f84fd90cf6b50c7cd31b9fc241d890ca74cb2d8c1da0b`,
+but parser version `ulif-dictua-v1` incorrectly assigned aggregate status
+`parse_error` because the adverb had no inflection table. Issue #6121 resolved
+that false requirement in `ulif-dictua-v2`. A live repeat over the same content
+hash returned `status: ok`, four synonym groups, and no paradigm, as expected.
+Missing WebForms state, malformed result lists, incomplete tab traversal, and
+transient failures still fail closed. The executable boundary and verification
+commands are in the
+[correction-factory runbook](../runbooks/ukrainian-data-foundry-correction-factory.md).
 
 The inspected landing page displays `© ULIF, 2001–2026`; no explicit open-data
 license for bulk redistribution was found there, and `/robots.txt` returned

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_reviewer_decision_v1.schema.json",
+  "title": "Ukrainian Data Foundry qualified correction review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "candidate_id", "candidate_sha256", "review_state", "first_pass_reviews", "final_resolution", "final"],
+  "properties": {
+    "schema_version": {"const": "correction_reviewer_decision_v1"},
+    "candidate_id": {"$ref": "#/$defs/id"},
+    "candidate_sha256": {"$ref": "#/$defs/sha256"},
+    "review_state": {"enum": ["adjudicated", "unresolved"]},
+    "first_pass_reviews": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/review"}},
+    "final_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["first_pass_agreement", "third_human_adjudication", "unresolved_conflict"]},
+        "third_review": {"$ref": "#/$defs/review"}
+      }
+    },
+    "final": {"$ref": "#/$defs/projection"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "human", "ukrainian_qualification", "qualification_evidence", "independence_attested", "test_fixture"],
+      "properties": {
+        "reviewer_id": {"$ref": "#/$defs/id"},
+        "human": {"const": true},
+        "ukrainian_qualification": {"enum": ["native_or_near_native_ukrainian_editor", "credentialed_ukrainian_linguist", "qualified_ukrainian_language_reviewer"]},
+        "qualification_evidence": {"type": "string", "minLength": 1},
+        "independence_attested": {"const": true},
+        "test_fixture": {"type": "boolean"}
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_kind", "source_identity", "locator", "supports", "content_sha256"],
+      "properties": {
+        "source_kind": {"enum": ["primary_source", "dictionary", "grammar", "corpus", "editorial_policy", "other"]},
+        "source_identity": {"type": "string", "minLength": 2},
+        "locator": {"type": "string", "minLength": 1},
+        "supports": {"type": "string", "minLength": 1},
+        "content_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["faithful_literary", "modern_literary_ukrainian", "correction", "preference", "evaluation"],
+      "properties": {
+        "faithful_literary": {"const": "retain_original"},
+        "modern_literary_ukrainian": {"enum": ["retain_original", "mask_span_from_loss", "exclude_span_or_record", "protected", "unresolved"]},
+        "correction": {"enum": ["eligible_intake", "not_applicable", "protected", "unresolved"]},
+        "preference": {"enum": ["eligible_intake", "not_applicable", "protected", "unresolved"]},
+        "evaluation": {"const": "excluded_from_non_evaluation_views"}
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "language_identity", "representation", "discourse_role", "accepted_correction", "acceptable_alternatives", "views", "uncertainty", "citations", "rationale"],
+      "properties": {
+        "decision": {"enum": ["correction", "acceptable_as_is", "protected_variation", "quoted_or_multilingual", "exclude", "unresolved"]},
+        "language_identity": {"enum": ["ukrainian", "russian", "mixed_ukrainian_russian", "historical_east_slavic_unresolved", "church_slavonic_candidate", "other_language", "uncertain"]},
+        "representation": {"enum": ["standard_orthography", "ukrainian_phonetic_rendering_of_russian", "historical_orthography", "transliteration", "ocr_or_encoding_candidate", "unknown"]},
+        "discourse_role": {"enum": ["narration", "quotation", "dialogue", "epigraph", "title", "citation_or_document", "metalinguistic_example", "unknown"]},
+        "accepted_correction": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "acceptable_alternatives": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "views": {"$ref": "#/$defs/views"},
+        "uncertainty": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "citations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/citation"}},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer", "projection"],
+      "properties": {"reviewer": {"$ref": "#/$defs/reviewer"}, "projection": {"$ref": "#/$defs/projection"}}
+    }
+  }
+}
