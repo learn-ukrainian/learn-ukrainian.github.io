@@ -40,6 +40,7 @@ from .recall import (
     search_past_work,
 )
 from .resolvers import (
+    REASON_SOURCE_MISSING,
     ResolutionError,
     resolve_acp_conversation,
     resolve_git_commit,

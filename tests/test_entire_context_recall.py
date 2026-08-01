@@ -1476,6 +1476,31 @@ def test_rollover_bootstrap_then_search_explain_and_handoff(tmp_path: Path, caps
     _assert_no_rollover_canaries(out)
 
 
+def test_rollover_bootstrap_without_root_fails_closed(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The public CLI returns a machine refusal instead of raising a NameError."""
+    monkeypatch.delenv("ENTIRE_CONTEXT_ROLLOVER_ROOT", raising=False)
+    code, out = run_cli(
+        capsys,
+        "bootstrap-rollover",
+        "--agent",
+        ROLLOVER_AGENT,
+        "--lineage-id",
+        ROLLOVER_LINEAGE,
+        "--rollover-id",
+        ROLLOVER_ROLLOVER_ID,
+        "--db",
+        str(tmp_path / "db.sqlite3"),
+    )
+
+    assert code == 2
+    assert json.loads(out) == {"outcome": "refused", "reason": REASON_SOURCE_MISSING}
+    assert not (tmp_path / "db.sqlite3").exists()
+
+
 def test_rollover_resolution_is_deterministic(tmp_path: Path) -> None:
     """Two resolutions yield byte-identical digest, excerpt, and identity."""
     root = tmp_path / "state"
