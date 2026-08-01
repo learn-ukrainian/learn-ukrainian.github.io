@@ -1,5 +1,5 @@
 {
-  "fingerprint": "baf72a97cfcd04d660615c67c05e880a74dd40fd8929708c833f83ab4fadfd1b",
+  "fingerprint": "ea5ce97e64eab3e237b7c60309f959689ea9fe47c5f3789fff49b1a3d73f9be1",
   "inputs": {
     "lexicon_code": [
       {
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
-        "sha256": "42451d146326f68ba9ff1d1001b234736d91b11cd7404e8e15e2b83f84bc1fff"
+        "sha256": "75e0b02d622eac0be42c42cd631555256dccbcde3b75008ce567762e495c3f17"
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
