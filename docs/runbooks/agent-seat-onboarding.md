@@ -83,7 +83,7 @@ Same-family helper output, design panels, and channel chat never seal a PR.
 Workers implement inside `.worktrees/dispatch/<agent>/<task>/`. They do not
 become a second coordination plane.
 
-### Sol-advised bounded execution
+### Luna bounded execution
 
 For bounded implementation or investigation, read the machine-readable
 `execution_routing.sol_advised_bounded` route in
@@ -94,11 +94,13 @@ before dispatching:
    contract, exact owned paths, maximum changed-file and non-test-LOC ceilings,
    constraints, risk boundaries, acceptance evidence, and escalation triggers.
 2. If the envelope is complete and the work is bounded, hand it to
-   `gpt-5.6-luna` at `xhigh`. Luna executes within that contract; it does not
+   `gpt-5.6-luna` at `max`. Luna executes within that contract; it does not
    re-decide the task.
-3. Use direct Luna at `medium` only for simple evidence or mechanical checks.
-   Use Terra when the envelope is missing or broader autonomous integration is
-   required.
+3. Direct Luna at `max` is also the default for a clearly bounded,
+   non-consequential task when the accountable root supplies exact owned paths
+   and an objective scope ceiling. Use Terra at `high` when the ceiling is
+   missing, broader autonomous integration is required, or consequential
+   ambiguity remains.
 4. The accountable orchestrator checks the owned paths and ceilings before
    dispatch and again against Luna's returned diff. Luna escalates any ceiling
    overrun, consequential architecture, security, release, high-risk go/no-go,
