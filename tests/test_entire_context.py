@@ -161,6 +161,22 @@ def test_facet_values_reject_secrets_and_public_entire_refs(value: str) -> None:
         ContextLink.from_dict(payload)
 
 
+@pytest.mark.parametrize("separator", [" ", ",", "\u2022"])
+def test_facet_values_reject_separator_split_opaque_tokens(separator: str) -> None:
+    payload = make_link().to_dict()
+    payload["facets"] = {"title": "A" * 47 + separator + "A" * 47}
+    with pytest.raises(SchemaError, match="long-opaque-token"):
+        ContextLink.from_dict(payload)
+
+
+def test_long_natural_language_facet_remains_allowed() -> None:
+    payload = make_link().to_dict()
+    payload["facets"] = {
+        "title": "Public context links keep canonical systems authoritative across every agent harness"
+    }
+    assert ContextLink.from_dict(payload).facets == payload["facets"]
+
+
 @pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
 def test_non_facet_identity_fields_reject_token_like_values(field: str) -> None:
     payload = make_link().to_dict()

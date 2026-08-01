@@ -88,9 +88,7 @@ FORBIDDEN_VALUE_PATTERNS = (
     ("public-entire-ref", re.compile(r"refs/entire(?:/|$)")),
 )
 
-LONG_OPAQUE_COMPONENT_RE = re.compile(r"(?:^|[.:/])([A-Za-z0-9_+-]{48,}={0,2})(?=$|[.:/])")
-OPAQUE_DELIMITED_VALUE_RE = re.compile(r"^[A-Za-z0-9_+./:=-]+$")
-OPAQUE_DELIMITER_RE = re.compile(r"[.:/=]")
+OPAQUE_RUN_RE = re.compile(r"[A-Za-z0-9_+-]+")
 GIT_EVIDENCE_LOCATOR_RE = re.compile(r"^git:commit/[0-9a-f]{40}$")
 
 MAX_STRING_BYTES = 1024
@@ -172,9 +170,10 @@ def _validate_scalar(
         if pattern.search(value):
             raise SchemaError(f"field {path!r} rejected by {rule} rule")
     if reject_long_opaque:
-        collapsed = OPAQUE_DELIMITER_RE.sub("", value)
-        looks_long_opaque = bool(LONG_OPAQUE_COMPONENT_RE.search(value)) or (
-            len(collapsed) >= 48 and OPAQUE_DELIMITED_VALUE_RE.fullmatch(value) is not None
+        opaque_runs = [match.group(0) for match in OPAQUE_RUN_RE.finditer(value)]
+        split_runs = [run for run in opaque_runs if len(run) >= 16]
+        looks_long_opaque = any(len(run) >= 48 for run in opaque_runs) or (
+            len(split_runs) >= 2 and sum(map(len, split_runs)) >= 48
         )
         exempt = long_opaque_exemption is not None and long_opaque_exemption.fullmatch(value) is not None
         if looks_long_opaque and not exempt:
