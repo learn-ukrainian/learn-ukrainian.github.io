@@ -672,7 +672,7 @@ def admit_corpus(
             "families": sorted(family_results, key=lambda item: item["source_family"]),
             "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
             "outputs": {"manifest": artifact, "source_records": source_record_artifact},
-            "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": sha256_file(SOURCE_RECORD_SCHEMA), "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
+            "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": source_record_schema_sha256, "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
             "training_eligible_emitted": False,
         }
         # The receipt is the commit marker for downstream consumers.  Validate
