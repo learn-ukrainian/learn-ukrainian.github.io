@@ -1442,7 +1442,7 @@ def _handle_acp_compat(args, target: str) -> None:
 
     try:
         require_compat_target(target)
-        run_compat_ask(
+        result = run_compat_ask(
             target,
             content,
             task_id=task_id,
@@ -1455,6 +1455,10 @@ def _handle_acp_compat(args, target: str) -> None:
             stdout_only=bool(getattr(args, "stdout_only", False)),
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else 300,
         )
+        if not bool(getattr(result, "ok", False)):
+            raise SystemExit(
+                getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic"
+            )
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 

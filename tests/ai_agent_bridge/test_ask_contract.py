@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -46,6 +48,7 @@ def test_effort_and_to_model_reach_every_enabled_acp_route(
     def fake_compat(*args, **kwargs):
         captured["args"] = args
         captured.update(kwargs)
+        return SimpleNamespace(ok=True)
 
     monkeypatch.setattr(_acp_compat, "run_compat_ask", fake_compat)
     args = _cli._build_parser().parse_args(
@@ -69,6 +72,54 @@ def test_effort_and_to_model_reach_every_enabled_acp_route(
     assert captured["args"][0] == target
     assert "requested-model" in forwarded
     assert captured["effort"] == "xhigh"
+
+
+def test_terminal_failure_replays_without_invoking_provider_again(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
+    invoke = Mock(side_effect=RuntimeError("protected primary refused"))
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+
+    with pytest.raises(RuntimeError, match="protected primary refused"):
+        _acp_compat.run_compat_ask(
+            "agy",
+            "same prompt",
+            task_id="failure-replay",
+            source="codex",
+            model="gemini-3.6-flash-high",
+            effort="high",
+        )
+
+    replay = _acp_compat.run_compat_ask(
+        "agy",
+        "same prompt",
+        task_id="failure-replay",
+        source="codex",
+        model="gemini-3.6-flash-high",
+        effort="high",
+    )
+
+    assert replay.ok is False
+    assert replay.transport_outcome == "error"
+    assert replay.usage_record == {"replayed": True, "transport": "acp"}
+    assert invoke.call_count == 1
+
+
+def test_cli_returns_nonzero_for_replayed_or_live_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        _acp_compat,
+        "run_compat_ask",
+        lambda *args, **kwargs: SimpleNamespace(ok=False, stderr_excerpt="replayed failure"),
+    )
+    args = _cli._build_parser().parse_args(
+        ["ask-agy", "question", "--task-id", "failed-seat", "--from", "codex"]
+    )
+
+    with pytest.raises(SystemExit, match="replayed failure"):
+        _cli._handle_ask_agy(args)
 
 
 @pytest.mark.parametrize(("command", "handler_name", "target"), RETIRED_ASK_SEATS)
