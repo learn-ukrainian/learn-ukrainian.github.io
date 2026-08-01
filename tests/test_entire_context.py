@@ -151,7 +151,7 @@ def test_rollover_link_exemption_rejects_wrong_or_malformed_identity(
 
 def test_rollover_link_exemption_does_not_bypass_credential_scan() -> None:
     credential_shaped_id = (
-        "sk-aaaaaaaaaaaaaaaaaaaa/lineage-2ec2efd78fd69eb61085db33/"
+        "sk-" + "a" * 20 + "/lineage-2ec2efd78fd69eb61085db33/"
         "rollover-c88026bc03f24420976fbf17c9cda05a"
     )
     link = make_link(
