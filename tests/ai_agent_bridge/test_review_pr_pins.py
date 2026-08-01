@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from scripts.agent_runtime.adapters.acpx import (
+    ACPX_PARTICIPANT_EFFORTS,
+    ACPX_SUPPORTED_PARTICIPANTS,
+)
 from scripts.ai_agent_bridge._review_pr import (
     FORMAL_CF_EFFORT,
     FORMAL_CF_MODEL,
@@ -23,6 +27,13 @@ def test_formal_cf_pins_are_practical_seats_at_high():
     assert formal_cf_pin("glm") == ("glm-5.2", "high")
     assert FORMAL_CF_MODEL["codex"] == "gpt-5.6-terra"
     assert FORMAL_CF_EFFORT["claude"] == "high"
+
+
+def test_formal_cross_family_pins_match_enabled_acp_routes():
+    for reviewer in ("claude", "glm"):
+        model, effort = formal_cf_pin(reviewer)
+        assert ACPX_SUPPORTED_PARTICIPANTS[reviewer]["model"] == model
+        assert ACPX_PARTICIPANT_EFFORTS[reviewer] == effort
 
 
 def test_review_pr_dry_run_emits_model_and_effort(capsys):
