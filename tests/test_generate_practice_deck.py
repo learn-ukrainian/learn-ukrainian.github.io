@@ -1115,6 +1115,70 @@ def test_size_budget_warns_and_trims_per_level(capsys: pytest.CaptureFixture[str
     assert shards["A1"]["index"]["counts"]["lexemes"] < 5
 
 
+def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    index = {
+        "schema": "atlas-practice-index",
+        "items": [
+            {
+                "lemmaId": "one",
+                "lemma": "слово",
+                "cefr": "A1",
+                "modes": ["flashcards", "cloze"],
+                "hasCloze": True,
+                "clozeIds": ["one:cloze:1"],
+                "newOrder": 0,
+            }
+        ],
+        "counts": {
+            "lexemes": 1,
+            "cloze": 1,
+            "clozeEligibleLexemes": 1,
+            "clozeCoverage": 1.0,
+            "modeCounts": {"cloze": 1, "classify": 12},
+            "modeCoverage": {"cloze": 1.0, "classify": 1.0},
+        },
+    }
+    lexemes = {
+        "schema": "atlas-practice-lexemes",
+        "lexemes": [{"lemmaId": "one", "lemma": "слово", "cefr": "A1"}],
+    }
+    cloze = {
+        "schema": "atlas-practice-cloze",
+        "cloze": [{"clozeId": "one:cloze:1", "lemmaId": "one", "form": "слово"}],
+    }
+    classify = {
+        "schema": "atlas-practice-classify",
+        "classify": [
+            {"classifyId": f"one:classify:{index}", "lemmaId": "one", "evidence": "x" * 500}
+            for index in range(12)
+        ],
+    }
+    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze, "classify": classify}}
+    stable_budgets = [
+        generate_practice_deck._size_budget(payload, 1_000_000, 1_000_000)
+        for payload in (index, lexemes, cloze)
+    ]
+    raw_limit = max(int(budget["rawBytes"]) for budget in stable_budgets) + 500
+    gzip_limit = max(int(budget["gzipBytes"]) for budget in stable_budgets) + 500
+
+    apply_size_budgets(shards, raw_limit=raw_limit, gzip_limit=gzip_limit)
+
+    captured = capsys.readouterr()
+    assert "trimmed classify items" in captured.err
+    assert len(shards["A1"]["index"]["items"]) == 1
+    assert len(shards["A1"]["lexemes"]["lexemes"]) == 1
+    assert len(shards["A1"]["cloze"]["cloze"]) == 1
+    assert len(shards["A1"]["classify"]["classify"]) < 12
+    assert shards["A1"]["index"]["counts"]["cloze"] == 1
+    assert shards["A1"]["index"]["counts"]["modeCounts"]["classify"] < 12
+    assert all(
+        payload["sizeBudget"]["ok"]
+        for payload in shards["A1"].values()
+    )
+
+
 def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pytest.MonkeyPatch) -> None:
     shards = {"A1": {"index": {"schema": "atlas-practice-index", "items": []}}}
     calls = 0
@@ -1348,6 +1412,122 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
         "locator": "fixture-1",
         "title": "Fixture page",
     }
+
+
+def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def entry(lemma: str, lemma_id: str, gloss: str, pos: str, level: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "url_slug": lemma_id,
+            "gloss": gloss,
+            "pos": pos,
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": level.lower(), "slug": lemma_id}],
+            "enrichment": {"cefr": {"level": level}},
+        }
+
+    entries = [
+        entry("апостроф", "apostrof", "apostrophe", "noun", "A1"),
+        entry("книга", "knyha", "book", "noun", "A1"),
+        entry("місто", "misto", "city", "noun", "A1"),
+        entry("школа", "shkola", "school", "noun", "A1"),
+        entry("аналогічно", "analogichno", "similarly", "adverb", "A2"),
+        entry("завжди", "zavzhdy", "always", "adv", "A2"),
+        entry("майже", "mayzhe", "almost", "adv", "A2"),
+        entry("часто", "chasto", "often", "adv", "A2"),
+    ]
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "апостроф",
+                        "lemmaId": "apostrof",
+                        "sentence": "Це апостроф.",
+                        "targetForm": "апостроф",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {
+                            "source": "fixture-textbook",
+                            "label": "Fixture textbook",
+                            "locator": "a1-1",
+                        },
+                        "license": {"status": "fixture"},
+                    },
+                    {
+                        "lemma": "аналогічно",
+                        "lemmaId": "analogichno",
+                        "sentence": "Це аналогічно.",
+                        "targetForm": "аналогічно",
+                        "cefr": "A2",
+                        "uses": ["example"],
+                        "provenance": {
+                            "source": "fixture-textbook",
+                            "label": "Fixture textbook",
+                            "locator": "a2-1",
+                        },
+                        "license": {"status": "fixture"},
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    vesum_path = tmp_path / "vesum.json"
+    vesum_path.write_text(
+        json.dumps(
+            {
+                # Two same-lemma analyses prove that dictionary-form identity
+                # clozes do not require an arbitrary single VESUM case.
+                "апостроф": [
+                    {"lemma": "апостроф", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
+                    {"lemma": "апостроф", "pos": "noun", "tags": "noun:inanim:m:v_zna"},
+                ],
+                "аналогічно": [{"lemma": "аналогічно", "pos": "adv", "tags": "adv"}],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
+    candidates = read_sentence_inventory(inventory_path)
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload(
+            [{"status": "sentence_inventory", "path": str(inventory_path)}]
+        ),
+        JsonVesumVerifier.from_path(vesum_path),
+        candidates,
+        BuildConfig(target=len(entries), source_label="fixture"),
+    )
+
+    for level, lemma_id, pos in (
+        ("A1", "apostrof", "noun"),
+        ("A2", "analogichno", "adverb"),
+    ):
+        cloze = next(
+            item for item in shards[level]["cloze"]["cloze"] if item["lemmaId"] == lemma_id
+        )
+        assert cloze["provenance"]["status"] == "sentence_inventory"
+        assert cloze["attribution"] == {
+            "source": "fixture-textbook",
+            "label": "Fixture textbook",
+            "locator": "a1-1" if level == "A1" else "a2-1",
+        }
+        assert cloze["blankCase"] == "nominative"
+        assert len(cloze["options"]) == 4
+        assert {option["pos"] for option in cloze["options"]} == {pos}
+        assert validate_option_set(cloze) == []
+
+    assert generate_practice_deck._option_pos_bucket("pronoun") == "pronoun"
+    assert generate_practice_deck._option_pos_bucket("adverb") == "adverb"
 
 
 def test_sentence_inventory_rejects_nominative_plural_for_dictionary_form(tmp_path: Path) -> None:

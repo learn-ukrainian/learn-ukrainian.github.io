@@ -1204,6 +1204,14 @@ describe('lexicon SRS facade', () => {
 
   test('validates cloze option sets and Ukrainian plural forms', () => {
     expect(validateClozeOptions(cloze('alpha', 'alpha-cloze', 'accusative', 'alphaу'))).toEqual([]);
+    const identity = cloze('alpha', 'alpha-identity', 'nominative', 'alpha');
+    identity.options = [
+      { optionId: 'identity:a', label: 'alpha', lemmaId: 'alpha', kind: 'answer', case: 'nominative', pos: 'noun' },
+      { optionId: 'identity:b', label: 'beta', lemmaId: 'beta', kind: 'decoy-lemma', case: 'nominative', pos: 'noun' },
+      { optionId: 'identity:c', label: 'gamma', lemmaId: 'gamma', kind: 'decoy-lemma', case: 'nominative', pos: 'noun' },
+      { optionId: 'identity:d', label: 'delta', lemmaId: 'delta', kind: 'decoy-lemma', case: 'nominative', pos: 'noun' },
+    ];
+    expect(validateClozeOptions(identity)).toEqual([]);
     expect(uaPlural(0)).toBe('правильних');
     expect(uaPlural(1)).toBe('правильна');
     expect(uaPlural(2)).toBe('правильні');
