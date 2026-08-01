@@ -278,10 +278,14 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                 authority_job.subject_id,
                 current_head_sha=checkout.sha,
             )
-            if authority_job.state in {"complete", "failed", "expired", "dead_lettered"}:
+            if authority_job.state in {"failed", "expired"}:
+                authority_job = authority.retry_job(authority_job.job_id)
+            elif authority_job.state == "dead_lettered":
+                authority_job = authority.redrive_job(authority_job.job_id)
+            if authority_job.state == "complete":
                 replay = authority.read_job_result(authority_job.job_id)
-                if authority_job.state != "complete" or replay is None:
-                    print("review-pr: prior ACP attempt is terminal and not publishable", file=sys.stderr)
+                if replay is None:
+                    print("review-pr: completed ACP attempt has no durable result", file=sys.stderr)
                     return 1
                 raw_response = replay.decode("utf-8")
             else:
