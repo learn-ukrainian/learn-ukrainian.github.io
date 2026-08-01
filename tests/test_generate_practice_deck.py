@@ -1586,6 +1586,16 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     }
 
 
+def test_sentence_inventory_verifies_source_capitalization_against_normalized_vesum() -> None:
+    verifier = JsonVesumVerifier(
+        {"книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}]}
+    )
+
+    assert generate_practice_deck._inventory_form_details(
+        "книга", "noun", "Книга", verifier
+    ) == ("nominative", "singular")
+
+
 def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Path) -> None:
     inventory_path = tmp_path / "sentence-inventory.json"
     inventory_path.write_text(

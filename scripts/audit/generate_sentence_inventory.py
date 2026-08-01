@@ -518,6 +518,51 @@ def load_practice_targets(paths: Iterable[Path]) -> list[dict[str, str]]:
     ]
 
 
+def load_inventory_rows(path: Path) -> list[dict[str, Any]]:
+    """Load a committed inventory strictly enough for residual accounting."""
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema") != "atlas-sentence-inventory":
+        raise ValueError("sentence inventory must use atlas-sentence-inventory schema")
+    rows = payload.get("rows")
+    if not isinstance(rows, list):
+        raise ValueError("sentence inventory rows must be a list")
+    result: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            raise ValueError(f"sentence inventory row {index + 1} must be an object")
+        if _text(row.get("lemmaId")) is None:
+            raise ValueError(f"sentence inventory row {index + 1} requires lemmaId")
+        result.append(row)
+    return result
+
+
+def filter_residual_targets(
+    targets: Iterable[dict[str, str]],
+    inventory_path: Path,
+) -> list[dict[str, str]]:
+    """Keep only practice targets absent from an existing inventory."""
+    existing_ids = {str(row["lemmaId"]) for row in load_inventory_rows(inventory_path)}
+    return [target for target in targets if target["lemmaId"] not in existing_ids]
+
+
+def merge_inventory_rows(
+    existing_rows: Iterable[dict[str, Any]],
+    new_rows: Iterable[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Merge inventory rows without dropping distinct source attestations."""
+    merged: dict[str, dict[str, Any]] = {}
+    for row in [*existing_rows, *new_rows]:
+        lemma_id = _text(row.get("lemmaId"))
+        if lemma_id is None:
+            raise ValueError("inventory rows require lemmaId")
+        row_key = json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        merged.setdefault(f"{lemma_id}\x1f{row_key}", row)
+    return sorted(
+        merged.values(),
+        key=lambda row: (_text(row.get("lemma")) or "", str(row["lemmaId"])),
+    )
+
+
 def build_inventory(
     targets: Iterable[dict[str, str]],
     sources_db: Path,
@@ -572,6 +617,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument(
+        "--residual-from",
+        type=Path,
+        help="Existing sentence inventory whose lemmaIds should be excluded from the target set.",
+    )
+    parser.add_argument(
+        "--merge-existing",
+        type=Path,
+        help="Merge generated rows with this existing inventory before writing --out.",
+    )
     parser.add_argument("--include-ulp", action="store_true")
     parser.add_argument(
         "--max-per-lemma",
@@ -605,6 +660,10 @@ def main(argv: list[str] | None = None) -> int:
         targets = load_practice_targets(args.practice_lexeme_paths)
     else:
         targets = load_practice_targets(discover_practice_lexeme_paths(args.practice_lexemes_dir))
+    if args.residual_from is not None:
+        before = len(targets)
+        targets = filter_residual_targets(targets, args.residual_from)
+        print(f"sentence inventory residual targets: {len(targets)} of {before}")
     rows = build_inventory(
         targets,
         args.sources_db,
@@ -612,6 +671,8 @@ def main(argv: list[str] | None = None) -> int:
         vesum_db=args.vesum_db,
         max_per_lemma=args.max_per_lemma,
     )
+    if args.merge_existing is not None:
+        rows = merge_inventory_rows(load_inventory_rows(args.merge_existing), rows)
     write_inventory(rows, args.out)
     print(f"sentence inventory: {len(rows)} rows")
     return 0

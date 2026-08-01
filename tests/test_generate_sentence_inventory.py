@@ -10,10 +10,13 @@ from scripts.audit.generate_sentence_inventory import (
     _candidate_sentences,
     build_inventory,
     discover_practice_lexeme_paths,
+    filter_residual_targets,
     load_daily_lemmas,
     load_daily_targets,
+    load_inventory_rows,
     load_practice_targets,
     main,
+    merge_inventory_rows,
     write_inventory,
 )
 
@@ -240,6 +243,30 @@ def test_daily_lemmas_and_written_schema(tmp_path) -> None:
         "schemaVersion": 1,
         "rows": [],
     }
+
+
+def test_residual_target_filter_and_inventory_merge_preserve_existing_rows(tmp_path) -> None:
+    inventory = tmp_path / "inventory.json"
+    existing = {
+        "lemma": "дім",
+        "lemmaId": "dim",
+        "sentence": "Це дім.",
+        "targetForm": "дім",
+        "uses": ["example"],
+        "provenance": {"source": "fixture", "label": "Fixture"},
+        "license": {"status": "fixture"},
+    }
+    write_inventory([existing], inventory)
+
+    targets = [
+        {"lemma": "дім", "lemmaId": "dim", "cefr": "A1"},
+        {"lemma": "місто", "lemmaId": "misto", "cefr": "A1"},
+    ]
+    assert filter_residual_targets(targets, inventory) == [targets[1]]
+
+    new_row = {**existing, "lemma": "місто", "lemmaId": "misto", "sentence": "Це місто."}
+    merged = merge_inventory_rows(load_inventory_rows(inventory), [new_row])
+    assert [row["lemmaId"] for row in merged] == ["dim", "misto"]
 
 
 def _practice_shard(path, level, rows):
