@@ -128,7 +128,8 @@ def _opaque_id(prefix: str, value: str) -> str:
     return f"{prefix}.{hashlib.sha256(value.encode('utf-8')).hexdigest()[:24]}"
 
 
-def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+def _stage_json(path: Path, value: Mapping[str, Any]) -> Path:
+    """Write and sync JSON beside its destination without publishing it."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary: Path | None = None
     try:
@@ -137,10 +138,79 @@ def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
             handle.write((canonical_json(value) + "\n").encode("utf-8"))
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
+        return temporary
+    except Exception:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
+        raise
+
+
+def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+    temporary = _stage_json(path, value)
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _backup_path(output: Path) -> Path:
+    with tempfile.NamedTemporaryFile(
+        dir=output.parent,
+        prefix=output.name,
+        suffix=".rollback",
+        delete=False,
+    ) as handle:
+        backup = Path(handle.name)
+    backup.unlink()
+    return backup
+
+
+def _promote_staged_artifacts(artifacts: Sequence[tuple[Path, Path]]) -> None:
+    """Promote a staged artifact set and restore prior outputs on failure."""
+    outputs = [output.absolute() for _, output in artifacts]
+    if len(set(outputs)) != len(outputs):
+        raise AdmissionError("artifact outputs must be distinct")
+    for temporary, output in artifacts:
+        if not temporary.is_file():
+            raise AdmissionError(f"staged artifact is missing: {temporary}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        if output.exists() and not output.is_file():
+            raise AdmissionError(f"artifact destination is not a file: {output}")
+
+    backups: list[tuple[Path, Path]] = []
+    promoted: list[Path] = []
+    try:
+        for temporary, output in artifacts:
+            if output.exists():
+                backup = _backup_path(output)
+                os.replace(output, backup)
+                backups.append((output, backup))
+            os.replace(temporary, output)
+            promoted.append(output)
+    except Exception as exc:
+        rollback_errors: list[str] = []
+        for output in reversed(promoted):
+            try:
+                output.unlink(missing_ok=True)
+            except OSError as rollback_exc:
+                rollback_errors.append(f"remove {output}: {rollback_exc}")
+        for output, backup in reversed(backups):
+            try:
+                if backup.exists():
+                    os.replace(backup, output)
+            except OSError as rollback_exc:
+                rollback_errors.append(f"restore {output}: {rollback_exc}")
+        for temporary, _ in artifacts:
+            temporary.unlink(missing_ok=True)
+        if rollback_errors:
+            raise AdmissionError(
+                "artifact promotion failed and rollback was incomplete: "
+                + "; ".join(rollback_errors)
+            ) from exc
+        raise
+    else:
+        for _, backup in backups:
+            backup.unlink(missing_ok=True)
 
 
 @dataclass
@@ -595,15 +665,19 @@ def admit_corpus(
         # it while both manifests still have temporary names so a receipt
         # contract failure cannot leave rights-bearing outputs behind.
         _validate(receipt, _validator(RECEIPT_SCHEMA), "admission receipt")
-        manifest.replace()
-        if source_records is not None:
-            source_records.replace()
+        receipt_temporary = _stage_json(receipt_output, receipt)
+        staged = [(manifest.temporary, manifest_output)]
+        if source_records is not None and source_record_output is not None:
+            staged.append((source_records.temporary, source_record_output))
+        # Publish the receipt last: it is the commit marker.  The promotion
+        # helper restores any prior outputs if a later rename fails.
+        staged.append((receipt_temporary, receipt_output))
+        _promote_staged_artifacts(staged)
     except Exception:
         manifest.abort()
         if source_records is not None:
             source_records.abort()
         raise
-    _atomic_json(receipt_output, receipt)
     if runtime_output is not None:
         _atomic_json(
             runtime_output,
