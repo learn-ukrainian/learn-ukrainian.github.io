@@ -145,14 +145,21 @@ def _validate_scalar(path: str, value: Any) -> None:
     if isinstance(value, bool) or value is None or isinstance(value, int | float):
         return
     if not isinstance(value, str):
-        raise SchemaError(f"facet {path!r} must be a string, number, or boolean")
+        raise SchemaError(f"field {path!r} must be a string, number, or boolean")
     if "\x00" in value:
-        raise SchemaError(f"facet {path!r} rejected by control-character rule")
+        raise SchemaError(f"field {path!r} rejected by control-character rule")
     if len(value.encode("utf-8")) > MAX_STRING_BYTES:
-        raise SchemaError(f"facet {path!r} rejected by size rule")
+        raise SchemaError(f"field {path!r} rejected by size rule")
     for rule, pattern in FORBIDDEN_VALUE_PATTERNS:
         if pattern.search(value):
-            raise SchemaError(f"facet {path!r} rejected by {rule} rule")
+            raise SchemaError(f"field {path!r} rejected by {rule} rule")
+
+
+def validate_identity(value: str, *, field_name: str) -> None:
+    """Validate one body-free, path-safe externally supplied identity."""
+    if not isinstance(value, str) or not IDENTITY_RE.fullmatch(value):
+        raise SchemaError(f"{field_name} must be a path-safe identity")
+    _validate_scalar(field_name, value)
 
 
 def validate_facets(facets: dict[str, Any]) -> None:
@@ -189,12 +196,16 @@ class ContextLink:
             raise SchemaError("kind must be an allowlisted LinkKind")
         if not NAMESPACE_RE.fullmatch(self.canonical_namespace):
             raise SchemaError("canonical_namespace must be a typed '<system>:<owner/path>' identity")
+        _validate_scalar("canonical_namespace", self.canonical_namespace)
         if not CANONICAL_ID_RE.fullmatch(self.canonical_id):
             raise SchemaError("canonical_id must be an exact, path-safe identity")
+        _validate_scalar("canonical_id", self.canonical_id)
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
         if self.entire_checkpoint_id is not None and not OPAQUE_ID_RE.fullmatch(self.entire_checkpoint_id):
             raise SchemaError("entire_checkpoint_id must be an opaque path-safe identifier")
+        if self.entire_checkpoint_id is not None:
+            _validate_scalar("entire_checkpoint_id", self.entire_checkpoint_id)
         if self.git_sha is not None and not GIT_SHA_RE.fullmatch(self.git_sha):
             raise SchemaError("git_sha must be a full 40-hex commit SHA")
         validate_facets(self.facets)
@@ -283,14 +294,12 @@ class VerificationEvidence:
     checked_at: str
 
     def validate(self) -> None:
-        if not IDENTITY_RE.fullmatch(self.verifier):
-            raise SchemaError("verifier must be a path-safe identity")
+        validate_identity(self.verifier, field_name="verifier")
         if not isinstance(self.status, VerificationStatus):
             raise SchemaError("status must be an allowlisted VerificationStatus")
         if not SHA256_DIGEST_RE.fullmatch(self.canonical_digest):
             raise SchemaError("canonical_digest must be 'sha256:<64 hex>'")
-        if not IDENTITY_RE.fullmatch(self.evidence_locator):
-            raise SchemaError("evidence_locator must be a body-free path-safe identity")
+        validate_identity(self.evidence_locator, field_name="evidence_locator")
         try:
             parse_timestamp(self.checked_at)
         except (ValueError, TypeError) as exc:

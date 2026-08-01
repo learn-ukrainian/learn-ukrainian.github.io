@@ -72,7 +72,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         return EXIT_OK
     try:
         payload = ContextLinkStore(db_path).status()
-    except sqlite3.Error:
+    except (sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_OK
     payload.update({"enabled": True, "available": True, "projection_path": str(db_path)})
@@ -87,7 +87,7 @@ def cmd_lookup(args: argparse.Namespace) -> int:
         return EXIT_OK
     try:
         link = ContextLinkStore(db_path).lookup(args.locator_id)
-    except sqlite3.Error:
+    except (sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_OK
     if link is None:
@@ -104,7 +104,7 @@ def cmd_explain(args: argparse.Namespace) -> int:
         return EXIT_OK
     try:
         detail = ContextLinkStore(db_path).explain(args.locator_id)
-    except sqlite3.Error:
+    except (sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_OK
     if detail is None:
@@ -121,7 +121,7 @@ def cmd_rebuild(args: argparse.Namespace) -> int:
         return EXIT_OK
     try:
         result = ContextLinkStore(db_path).rebuild()
-    except sqlite3.Error:
+    except (sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_OK
     _emit({"available": True, "projection_path": str(db_path), **result})
@@ -161,7 +161,14 @@ def cmd_admit(args: argparse.Namespace) -> int:
     except SchemaError as exc:
         _emit({"outcome": AdmitOutcome.REFUSED.value, "reason": "schema_invalid", "detail": str(exc)})
         return EXIT_REFUSED
-    result = ContextLinkStore(db_path).admit(link, verification, actor=args.actor)
+    try:
+        result = ContextLinkStore(db_path).admit(link, verification, actor=args.actor)
+    except SchemaError as exc:
+        _emit({"outcome": AdmitOutcome.REFUSED.value, "reason": "schema_invalid", "detail": str(exc)})
+        return EXIT_REFUSED
+    except (sqlite3.Error, KeyError, TypeError, ValueError):
+        _emit(_unavailable_payload(db_path, "projection_unreadable"))
+        return EXIT_REFUSED
     _emit(result.to_dict())
     return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
 

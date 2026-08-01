@@ -156,6 +156,22 @@ def test_facet_values_reject_secrets_and_public_entire_refs(value: str) -> None:
         ContextLink.from_dict(payload)
 
 
+@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
+def test_non_facet_identity_fields_reject_token_like_values(field: str) -> None:
+    payload = make_link().to_dict()
+    payload.pop("locator_id")
+    payload[field] = "ghp_" + "x" * 32
+    with pytest.raises(SchemaError, match="credential-token"):
+        ContextLink.from_dict(payload)
+
+
+def test_verification_locator_rejects_token_like_values() -> None:
+    payload = make_verification().to_dict()
+    payload["evidence_locator"] = "ghp_" + "x" * 32
+    with pytest.raises(SchemaError, match="credential-token"):
+        VerificationEvidence.from_dict(payload)
+
+
 def test_from_dict_rejects_unsupported_schema_version() -> None:
     payload = make_link().to_dict()
     payload["schema_version"] = 99
@@ -229,6 +245,18 @@ def test_duplicate_admission_is_idempotent(tmp_path: Path) -> None:
     assert store.lookup(first.locator_id) is not None
 
 
+def test_actor_must_be_a_body_free_identity(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    with pytest.raises(SchemaError, match="credential-token"):
+        store.admit(
+            make_link(),
+            make_verification(),
+            actor="ghp_" + "x" * 32,
+            now=NOW,
+        )
+    assert not store.db_path.exists()
+
+
 def test_pending_claims_are_invisible(tmp_path: Path) -> None:
     store = make_store(tmp_path)
     link = make_link()
@@ -253,6 +281,39 @@ def test_pending_claim_promotes_on_replayed_admission(tmp_path: Path) -> None:
     detail = store.explain(result.locator_id)
     assert detail is not None
     assert [event["event_type"] for event in detail["events"]] == ["claimed", "promoted"]
+
+
+def test_pending_claim_payload_conflict_tombstones_instead_of_promoting(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    pending = make_link(entire_checkpoint_id="unverified-checkpoint", facets={"title": "unverified"})
+    admitted = make_link(entire_checkpoint_id="verified-checkpoint", facets={"title": "verified"})
+    store.submit_claim(pending, actor="test", now=NOW)
+
+    result = store.admit(admitted, make_verification(), actor="test", now=NOW)
+
+    assert result.outcome is AdmitOutcome.REFUSED
+    assert result.reason == "claim_payload_conflict"
+    assert result.state == "tombstoned"
+    assert store.lookup(result.locator_id) is None
+    detail = store.explain(result.locator_id)
+    assert detail is not None
+    assert detail["tombstone_reason"] == "claim_payload_conflict"
+
+
+def test_promoted_claim_payload_conflict_is_refused_without_replacement(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    original = make_link(entire_checkpoint_id="verified-checkpoint", facets={"title": "verified"})
+    first = store.admit(original, make_verification(), actor="test", now=NOW)
+    conflicting = make_link(entire_checkpoint_id="other-checkpoint", facets={"title": "other"})
+
+    result = store.admit(conflicting, make_verification(), actor="test", now=NOW)
+
+    assert result.outcome is AdmitOutcome.REFUSED
+    assert result.reason == "claim_payload_conflict"
+    stored = store.lookup(first.locator_id)
+    assert stored is not None
+    assert stored["entire_checkpoint_id"] == "verified-checkpoint"
+    assert stored["facets"] == {"title": "verified"}
 
 
 def test_missing_verification_is_tombstoned_and_invisible(tmp_path: Path) -> None:
@@ -444,6 +505,36 @@ def test_cli_corrupt_projection_fails_open(tmp_path: Path) -> None:
     db = tmp_path / "corrupt.sqlite3"
     db.write_bytes(b"not a sqlite database at all")
     code, payload = run_cli(["status", "--db", str(db)])
+    assert code == cli.EXIT_OK
+    assert payload["available"] is False
+    assert payload["reason"] == "projection_unreadable"
+
+
+def test_cli_admit_corrupt_projection_fails_closed_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "corrupt.sqlite3"
+    db.write_bytes(b"not a sqlite database at all")
+    link_file = tmp_path / "link.json"
+    link_file.write_text(json.dumps(make_link().to_dict()), encoding="utf-8")
+
+    code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
+
+    assert code == cli.EXIT_REFUSED
+    assert payload["available"] is False
+    assert payload["reason"] == "projection_unreadable"
+
+
+def test_cli_malformed_projection_row_fails_open_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "malformed.sqlite3"
+    store = ContextLinkStore(db)
+    result = store.admit(make_link(), make_verification(), actor="test", now=NOW)
+    with sqlite3.connect(db) as connection:
+        connection.execute(
+            "UPDATE context_links SET facets_json = ? WHERE locator_id = ?",
+            ("not-json", result.locator_id),
+        )
+
+    code, payload = run_cli(["lookup", result.locator_id, "--db", str(db)])
+
     assert code == cli.EXIT_OK
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"

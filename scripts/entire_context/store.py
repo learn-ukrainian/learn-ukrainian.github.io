@@ -24,12 +24,14 @@ from typing import Any
 from .model import (
     LOCATOR_ID_RE,
     ContextLink,
+    SchemaError,
     VerificationEvidence,
     VerificationStatus,
     canonical_json,
     isoformat_z,
     parse_timestamp,
     utc_now,
+    validate_identity,
 )
 
 DEFAULT_VERIFICATION_MAX_AGE_SECONDS = 3600
@@ -137,12 +139,15 @@ class ContextLinkStore:
     ) -> str:
         """Record one pending claim. Idempotent for the same locator ID."""
         link.validate()
+        validate_identity(actor, field_name="actor")
         timestamp = isoformat_z(now or utc_now())
         locator_id = link.locator_id
         with self._transaction() as connection:
             state = self._current_state(connection, locator_id)
             if state is None:
                 self._insert_claim(connection, link, actor=actor, timestamp=timestamp)
+            elif not self._payload_matches(connection, link):
+                raise SchemaError("locator_id is already bound to a different claim payload")
         return locator_id
 
     @staticmethod
@@ -151,6 +156,29 @@ class ContextLinkStore:
             "SELECT state FROM context_links WHERE locator_id = ?", (locator_id,)
         ).fetchone()
         return None if row is None else str(row["state"])
+
+    @staticmethod
+    def _payload_matches(connection: sqlite3.Connection, link: ContextLink) -> bool:
+        row = connection.execute(
+            "SELECT schema_version, locator_id, kind, canonical_namespace, canonical_id,"
+            " canonical_digest, entire_checkpoint_id, git_sha, facets_json"
+            " FROM context_links WHERE locator_id = ?",
+            (link.locator_id,),
+        ).fetchone()
+        if row is None:
+            return False
+        stored = {
+            "schema_version": int(row["schema_version"]),
+            "locator_id": str(row["locator_id"]),
+            "kind": str(row["kind"]),
+            "canonical_namespace": str(row["canonical_namespace"]),
+            "canonical_id": str(row["canonical_id"]),
+            "canonical_digest": str(row["canonical_digest"]),
+            "entire_checkpoint_id": row["entire_checkpoint_id"],
+            "git_sha": row["git_sha"],
+            "facets": json.loads(row["facets_json"]),
+        }
+        return canonical_json(stored) == canonical_json(link.to_dict())
 
     @staticmethod
     def _insert_claim(
@@ -196,6 +224,7 @@ class ContextLinkStore:
     ) -> AdmitResult:
         """Admit one claim. Idempotent; unverifiable claims are tombstoned."""
         link.validate()
+        validate_identity(actor, field_name="actor")
         if verification is not None:
             verification.validate()
         moment = now or utc_now()
@@ -204,12 +233,36 @@ class ContextLinkStore:
 
         with self._transaction() as connection:
             state = self._current_state(connection, locator_id)
-            if state == "promoted":
-                return AdmitResult(locator_id, AdmitOutcome.ALREADY_PROMOTED, "duplicate", state)
             if state == "tombstoned":
                 return AdmitResult(
                     locator_id, AdmitOutcome.ALREADY_TOMBSTONED, "tombstone_terminal", state
                 )
+            if state is not None and not self._payload_matches(connection, link):
+                if state == "pending":
+                    connection.execute(
+                        "INSERT INTO link_events(locator_id, event_type, payload_json, reason, actor, recorded_at)"
+                        " VALUES (?, 'tombstoned', '{}', 'claim_payload_conflict', ?, ?)",
+                        (locator_id, actor, timestamp),
+                    )
+                    connection.execute(
+                        "UPDATE context_links SET state = 'tombstoned',"
+                        " tombstone_reason = 'claim_payload_conflict' WHERE locator_id = ?",
+                        (locator_id,),
+                    )
+                    return AdmitResult(
+                        locator_id,
+                        AdmitOutcome.REFUSED,
+                        "claim_payload_conflict",
+                        "tombstoned",
+                    )
+                return AdmitResult(
+                    locator_id,
+                    AdmitOutcome.REFUSED,
+                    "claim_payload_conflict",
+                    state,
+                )
+            if state == "promoted":
+                return AdmitResult(locator_id, AdmitOutcome.ALREADY_PROMOTED, "duplicate", state)
             if state is None:
                 self._insert_claim(connection, link, actor=actor, timestamp=timestamp)
             # state == "pending": replayed admission of an unresolved claim;
