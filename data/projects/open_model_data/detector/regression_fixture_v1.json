@@ -1,0 +1,186 @@
+{
+  "schema_version": "language_contact_regression_fixture_v1",
+  "rights_scope": "project-authored short routing fixtures; no corpus passages",
+  "cases": [
+    {
+      "id": "clean_ukrainian",
+      "text": "Українська мова має багату історію та живу сучасну традицію.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": []
+    },
+    {
+      "id": "russian_quotation",
+      "text": "Дослідник навів слова: «что вызвало смуту» й продовжив пояснення.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["russian_quotation"]
+    },
+    {
+      "id": "russian_dash_dialogue",
+      "text": "— они что, не разговаривают? — запитав герой.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["russian_quotation"]
+    },
+    {
+      "id": "phonetic_russian_short",
+      "text": "Він вигукнув: «Вот, что значіт цівілізація!»",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["ukrainian_phonetic_russian"]
+    },
+    {
+      "id": "phonetic_russian_slang_surface",
+      "text": "Вона відповіла: «очєнь вєжліви с нєй».",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["ukrainian_phonetic_russian"]
+    },
+    {
+      "id": "phonetic_russian_future",
+      "text": "«придєт наше врємя», — сказав персонаж.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["ukrainian_phonetic_russian"]
+    },
+    {
+      "id": "ochen_without_context",
+      "text": "У примітці зафіксовано форму очєнь.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": []
+    },
+    {
+      "id": "modern_narration_interference",
+      "text": "Ця важлива тема щодня звучит у шкільних аудиторіях.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "educational",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["modern_narration_interference"]
+    },
+    {
+      "id": "pereklychka_heritage_rescue",
+      "text": "Перед уроком відбулася перекличка учнів.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "educational",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["protected_authentic_ukrainian"]
+    },
+    {
+      "id": "pereklychka_inflected_rescue",
+      "text": "Після переклички учні розпочали роботу.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "educational",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["protected_authentic_ukrainian"]
+    },
+    {
+      "id": "short_dialect_sho_rescue",
+      "text": "Він пояснив, шо саме сталося.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "dialectal",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["protected_authentic_ukrainian"]
+    },
+    {
+      "id": "short_dialect_da_rescue",
+      "text": "Вона да й рушила далі.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "dialectal",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["protected_authentic_ukrainian"]
+    },
+    {
+      "id": "short_dialect_moi_rescue",
+      "text": "Він гукнув мой до хлопців.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "dialectal",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["protected_authentic_ukrainian"]
+    },
+    {
+      "id": "adjacent_morphology_only_uncertain",
+      "text": "Оповідач згадав океаненяті та скліплює.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["uncertain"]
+    },
+    {
+      "id": "quoted_morphology_only_uncertain",
+      "text": "Автор записав: «будет делать».",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["uncertain"]
+    },
+    {
+      "id": "historical_unresolved",
+      "text": "і что вас порушило на сю ганьбу",
+      "source_family": "fixture",
+      "period": "historical_literary_ukrainian",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["historical_unresolved"]
+    },
+    {
+      "id": "valid_word_collocation",
+      "text": "Він хотів прийняти участь у події.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "literary",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["valid_word_contact_candidate"]
+    },
+    {
+      "id": "other_language_run",
+      "text": "Автор уживає термін language contact theory для порівняння.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "article",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["other_language"]
+    },
+    {
+      "id": "ocr_control_signal",
+      "text": "Фрагмент містить дефект\u0000 кодування.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "article",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["ocr_or_encoding_candidate"]
+    },
+    {
+      "id": "proper_name_after_orthographic_suspicion",
+      "text": "У документі згадано Ростовъ як назву.",
+      "source_family": "fixture",
+      "period": "modern",
+      "register": "article",
+      "origin": "project_authored_fixture",
+      "expected_categories": ["proper_name"]
+    }
+  ]
+}

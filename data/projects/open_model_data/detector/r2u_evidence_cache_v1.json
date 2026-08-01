@@ -1,0 +1,88 @@
+{
+  "schema_version": "r2u_evidence_cache_v1",
+  "cache_id": "r2u-bounded-language-contact-regressions-2026-08-01",
+  "adapter_id": "scripts.rag.source_query.r2u_translate",
+  "retrieved_on": "2026-08-01",
+  "rights_scope": "query/headword match states, result counts, and response hashes only; no definitions or corpus passages",
+  "entries_sha256": "03af1ea7b495c337e9d7203c201a330253fb0c584e8519d9abd0e93707d5929e",
+  "entries": [
+    {
+      "query": "вежливый",
+      "result_count": 21,
+      "response_sha256": "5e57c62bb2c68c9b42ae90e3b54434e8356aa90a51fb77f6900030e783120f1e",
+      "headword_match": "lemma"
+    },
+    {
+      "query": "вежливы",
+      "result_count": 1,
+      "response_sha256": "35177d91079bdc822b79fcde3d3abdde0020ea389e3ea4dd1310784b292c2618",
+      "headword_match": "related_only"
+    },
+    {
+      "query": "время",
+      "result_count": 151,
+      "response_sha256": "b049b41aad53edac2d55e6ef39c64d60c010bdff6ee185a913cdb4019ab3634b",
+      "headword_match": "surface"
+    },
+    {
+      "query": "значит",
+      "result_count": 43,
+      "response_sha256": "f450655f1645d299d1c5eec1776ea5af585978be356528fb0adda898e4570d44",
+      "headword_match": "surface"
+    },
+    {
+      "query": "звучать",
+      "result_count": 27,
+      "response_sha256": "dbad388566c37351a8267e6ccec047c3aeeabf7727f36a32a9ddafc170b879a6",
+      "headword_match": "lemma"
+    },
+    {
+      "query": "звучит",
+      "result_count": 2,
+      "response_sha256": "2ca94a23bc602cdafe8790dfe202ea35963198a78c31a567cc9a2e9947f3b2ce",
+      "headword_match": "related_only"
+    },
+    {
+      "query": "ней",
+      "result_count": 91,
+      "response_sha256": "22b942c66bae0959b7cfe4018d8e688190df136a7766bbbf4d56e9b139c1e178",
+      "headword_match": "surface"
+    },
+    {
+      "query": "она",
+      "result_count": 151,
+      "response_sha256": "8e0e2de18dd3d4da99c91f06b7d0c816302f12208daa57e3218fe6a3f3dbfadd",
+      "headword_match": "lemma"
+    },
+    {
+      "query": "очень",
+      "result_count": 151,
+      "response_sha256": "da408e91408ebe4626faa184f18a8761779470fa16fd55ad095acce2761e3fa2",
+      "headword_match": "surface"
+    },
+    {
+      "query": "придёт",
+      "result_count": 21,
+      "response_sha256": "a75912fd234d2d93a4ab0eed5c0332d9aacf8e33562f9a5250c4e13af38dd4c3",
+      "headword_match": "related_only"
+    },
+    {
+      "query": "прийти",
+      "result_count": 151,
+      "response_sha256": "ba2eeac985b7b694e633f509203d0c77da6aab7c292e20273428f29033fec877",
+      "headword_match": "lemma"
+    },
+    {
+      "query": "цивилизация",
+      "result_count": 3,
+      "response_sha256": "11c31b054ccd233e534286a63f6bd22efbec7a184fb5fcf832e3aa0144eeeec7",
+      "headword_match": "surface"
+    },
+    {
+      "query": "что",
+      "result_count": 151,
+      "response_sha256": "935a9f8c1739ca0868265fccb595916edf680c0bb48feaa9c47332be134ad441",
+      "headword_match": "related_only"
+    }
+  ]
+}
