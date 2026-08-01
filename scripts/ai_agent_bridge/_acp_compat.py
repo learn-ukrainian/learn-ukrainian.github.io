@@ -61,6 +61,22 @@ def _replay_result(raw: bytes) -> object:
     from agent_runtime.result import Result
 
     payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise RuntimeError("terminal ACP result receipt is not an object")
+    if "ok" not in payload:
+        error_type = str(payload.get("error") or "unknown_error")
+        payload = {
+            "ok": False,
+            "agent": payload.get("agent", ""),
+            "model": payload.get("model", ""),
+            "response": "",
+            "stderr_excerpt": f"replayed ACP terminal failure: {error_type}",
+            "duration_s": payload.get("duration_s", 0.0),
+            "returncode": payload.get("returncode", 1),
+            "effort": payload.get("effort", "unknown"),
+            "transport_metadata": payload.get("transport_metadata"),
+            "transport_outcome": payload.get("transport_outcome", "error"),
+        }
     return Result(
         ok=bool(payload["ok"]),
         agent=str(payload["agent"]),
@@ -179,7 +195,20 @@ def run_compat_ask(
                     fence_token=lease.fence_token,
                     state="failed",
                     result=json.dumps(
-                        {"error": type(exc).__name__, "transport": "acp"},
+                        {
+                            "ok": False,
+                            "agent": participant,
+                            "model": model or "",
+                            "response": "",
+                            "stderr_excerpt": (
+                                f"{type(exc).__name__}: terminal ACP invocation failed"
+                            ),
+                            "duration_s": 0.0,
+                            "returncode": 1,
+                            "effort": effort or "unknown",
+                            "transport_metadata": None,
+                            "transport_outcome": "error",
+                        },
                         sort_keys=True,
                     ).encode("utf-8"),
                 )
