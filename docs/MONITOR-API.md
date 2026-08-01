@@ -1527,6 +1527,36 @@ logged but never changes the observed route response. This telemetry alone
 cannot authorize route deletion; direct bridge/CLI telemetry and the approved
 zero-use window remain separate gates under #6106.
 
+## Legacy one-shot bridge telemetry — `/api/telemetry/legacy-bridge-asks`
+
+The compatibility aliases that converge on `run_compat_ask` record hourly,
+body-free usage aggregates in the same owner-only local store as the legacy
+HTTP route telemetry. A valid invocation records `started` before authority or
+provider work. Its terminal result increments `succeeded` or `failed`; a
+process termination or crash remains visible as `unfinished`.
+
+The recorder persists only the normalized target (`agy`, `claude`, `codex`,
+`cursor`, `deepseek`, `glm`, `grok`, `kimi`, or `pool`), a fixed caller family,
+counts, and first/last timestamps. It never stores prompts, task IDs,
+attachments, model or effort requests, responses, error text, paths, or raw
+caller identities. Caller strings are classified in memory as `anthropic`,
+`openai`, `google`, `xai`, `moonshot`, `zhipu`, `deepseek`, `cursor`,
+`operator`, or `unknown`, and then discarded.
+
+`GET /api/telemetry/legacy-bridge-asks?window=7d` accepts `1h`, `24h`, `7d`,
+`30d`, or `90d`. It returns every allowlisted target, including zero-count
+targets, aggregate start/terminal/unfinished totals, counts by caller family,
+and the same honest `coverage_started_at` and `window_fully_observed` fields.
+Coverage begins on the first telemetry read or valid `run_compat_ask`
+invocation. Refused targets, empty task IDs, and attempts to use the one-shot
+path for formal review are not counted.
+
+Storage is fail-open: telemetry failure never replaces the bridge result. The
+store retains 90 days and is forced to owner-only (`0600`) permissions. This
+evidence does not cover other direct provider entry points and cannot by itself
+authorize alias or route deletion; the approved zero-use window and static
+caller inventory remain separate #6106 gates.
+
 ## Module Build Token Telemetry — `/api/telemetry/module-builds`
 
 Persists module-build token telemetry as local runtime state. This is the

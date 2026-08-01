@@ -127,7 +127,58 @@ def run_compat_ask(
     stdout_only: bool = False,
     hard_timeout: int = 300,
 ) -> object:
-    """Execute one normal ACP ask and return the runner result.
+    """Execute one normal ACP ask with fail-open body-free usage telemetry."""
+    if review:
+        raise ValueError("formal_review_requires_review_pr_acp_sealed_snapshot")
+    participant = require_compat_target(command_target)
+    if not task_id or not task_id.strip():
+        raise ValueError("ACP ask requires a non-empty task_id")
+
+    from scripts.telemetry.legacy_bridge import (
+        finish_bridge_invocation_safely,
+        start_bridge_invocation_safely,
+    )
+
+    telemetry_token = start_bridge_invocation_safely(participant, source)
+    try:
+        result = _run_compat_ask_impl(
+            command_target,
+            content,
+            task_id=task_id,
+            source=source,
+            model=model,
+            effort=effort,
+            data=data,
+            review=review,
+            output_path=output_path,
+            stdout_only=stdout_only,
+            hard_timeout=hard_timeout,
+        )
+    except BaseException:
+        finish_bridge_invocation_safely(telemetry_token, succeeded=False)
+        raise
+    finish_bridge_invocation_safely(
+        telemetry_token,
+        succeeded=bool(getattr(result, "ok", False)),
+    )
+    return result
+
+
+def _run_compat_ask_impl(
+    command_target: str,
+    content: str,
+    *,
+    task_id: str,
+    source: str | None = None,
+    model: str | None = None,
+    effort: str | None = None,
+    data: str | None = None,
+    review: bool = False,
+    output_path: str | None = None,
+    stdout_only: bool = False,
+    hard_timeout: int = 300,
+) -> object:
+    """Execute the authority/ACP path after telemetry admission.
 
     ``review=True`` is refused: formal review must enter through ``review-pr``
     so exact PR identity and a sealed snapshot are mandatory.
