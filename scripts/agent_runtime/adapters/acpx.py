@@ -81,6 +81,7 @@ import shutil
 import subprocess
 from contextlib import contextmanager
 from contextvars import ContextVar
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -175,14 +176,21 @@ _GROK_XAI_API_KEY_ENV_UNSETS: tuple[str, ...] = (
 # "correlation_id"/"idempotency_key" are local runtime metadata only
 # (see _require_local_metadata_field): never forwarded to the ACP wire protocol.
 _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
-    {"acpx_shadow", "acpx_discussion", "target_agent", "correlation_id", "idempotency_key"}
+    {
+        "acpx_shadow",
+        "acpx_discussion",
+        "acpx_transport",
+        "target_agent",
+        "correlation_id",
+        "idempotency_key",
+    }
 )
 
-# Fixed ACPX built-ins that are safe to expose only through the bounded
-# discussion controller.  This is deliberately a small declarative registry,
-# rather than a caller-selectable adapter: consumers can enumerate the proven
-# participants without duplicating seat names, while each adapter below still
-# hard-codes its one target.
+# Fixed ACPX built-ins available only through the runner-owned inter-agent
+# transport boundary (or its bounded discussion controller).  This is
+# deliberately a small declarative registry, rather than a caller-selectable
+# adapter: consumers can enumerate the proven participants without duplicating
+# seat names, while each adapter below still hard-codes its one target.
 ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
     "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": GROK_SHADOW_MODEL},
@@ -200,11 +208,58 @@ ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     },
 }
 
+# The adapter registry is the only source of ACP provider/model selection.
+# These values describe routes that are already implemented above; they do
+# not advertise an ACP route for a provider merely because it appears in the
+# broader fleet catalog.  A caller may request only the exact pinned model or
+# effort for a participant that has one.  Unpinned ACP built-ins intentionally
+# retain their adapter-owned defaults and reject model/effort overrides.
+ACPX_PARTICIPANT_CATALOG_TRANSPORTS: dict[str, str] = {
+    "codex": "native_codex",
+    "grok": "native_grok",
+    "claude": "native_claude",
+    "kimi": "native_kimi",
+    "kimicc": "native_kimi",
+    "cursor": "cursor",
+    "pool": "opencode",
+    "agy": "agy",
+    "glm": "opencode",
+    "deepseek": "hermes",
+}
+ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
+    "grok": GROK_SHADOW_EFFORT,
+    "agy": "high",
+    "glm": "high",
+}
+
+@dataclass(frozen=True)
+class AcpxTransportProvenance:
+    """Runner-sealed provenance for one ACP inter-agent invocation.
+
+    It is intentionally held in a process-local context rather than caller
+    supplied ``tool_config``.  The latter is adapter input and therefore must
+    never be able to forge the Source/Agent/Via fields attached to the plan,
+    result, or usage record.
+    """
+
+    source: str
+    agent: str
+    target_agent: str
+    via: str = "acp"
+
+    def metadata(self) -> dict[str, str]:
+        return {"source": self.source, "agent": self.agent, "via": self.via}
+
+
 # Active ACPX is deliberately not a generally selectable adapter mode.  The
-# discussion controller enters this process-local scope immediately around a
-# direct-only invocation; all other callers, including normal runner routing,
-# continue to receive the shadow-only refusal.
+# bounded discussion controller and the normal runner-owned communication
+# boundary enter distinct process-local scopes immediately around a direct-only
+# invocation; all ordinary runner routing continues to receive the refusal.
 _ACTIVE_DISCUSSION_SCOPE: ContextVar[bool] = ContextVar("acpx_active_discussion", default=False)
+_ACTIVE_COMMUNICATION_PROVENANCE: ContextVar[AcpxTransportProvenance | None] = ContextVar(
+    "acpx_active_communication_provenance",
+    default=None,
+)
 
 
 @contextmanager
@@ -215,6 +270,45 @@ def active_discussion_scope():
         yield
     finally:
         _ACTIVE_DISCUSSION_SCOPE.reset(token)
+
+
+@contextmanager
+def active_communication_scope(*, source: str, agent: str, target_agent: str):
+    """Authorize one runner-owned normal ACP communication invocation.
+
+    This scope does not grant filesystem, terminal, session, queue, or
+    execution lifecycle access.  It only proves that the runner selected a
+    fixed ACP participant and seals its provenance for the adapter plan.
+    """
+    validated_source = _require_local_metadata_field(
+        "source", source, adapter_label="AcpxTransport"
+    )
+    if validated_source == "unknown":
+        raise AcpxShadowRefusalError(
+            "AcpxTransport: Source must resolve to a trusted non-unknown initiator"
+        )
+    validated_agent = _require_local_metadata_field(
+        "agent", agent, adapter_label="AcpxTransport"
+    )
+    validated_target_agent = _require_local_metadata_field(
+        "target_agent", target_agent, adapter_label="AcpxTransport"
+    )
+    token = _ACTIVE_COMMUNICATION_PROVENANCE.set(
+        AcpxTransportProvenance(
+            source=validated_source,
+            agent=validated_agent,
+            target_agent=validated_target_agent,
+        )
+    )
+    try:
+        yield
+    finally:
+        _ACTIVE_COMMUNICATION_PROVENANCE.reset(token)
+
+
+def current_communication_provenance() -> AcpxTransportProvenance | None:
+    """Return runner-sealed ACP provenance, never a caller-provided value."""
+    return _ACTIVE_COMMUNICATION_PROVENANCE.get()
 
 # Bounds for task_id/correlation_id/idempotency_key: opaque local identifiers
 # used only for this adapter's own InvocationPlan.metadata (telemetry/dedup
@@ -387,9 +481,16 @@ def _require_shadow_tool_config(
             f"{adapter_label}: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
             f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
         )
-    active = tc.get("acpx_discussion") is True
-    if active:
+    discussion = tc.get("acpx_discussion") is True
+    communication = tc.get("acpx_transport") is True
+    if discussion and communication:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: acpx_discussion and acpx_transport are mutually exclusive"
+        )
+    if discussion:
         _require_discussion_transport(adapter_label=adapter_label)
+    elif communication:
+        _require_communication_transport(adapter_label=adapter_label)
     else:
         _require_shadow_transport(adapter_label=adapter_label)
         if tc.get("acpx_shadow") is not True:
@@ -403,6 +504,11 @@ def _require_shadow_tool_config(
             f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
             f"exactly one ACP participant: {required_target}"
         )
+    if communication:
+        _require_communication_target(
+            adapter_label=adapter_label,
+            required_target=required_target,
+        )
     return tc
 
 
@@ -412,7 +518,12 @@ def _require_active_discussion_tool_config(
     adapter_label: str,
     required_target: str,
 ) -> dict[str, Any]:
-    """Require the controller-owned active discussion marker before spawn."""
+    """Require one controller-owned active ACP marker before spawn.
+
+    ``acpx_discussion`` remains accepted for the existing durable discussion
+    controller.  ``acpx_transport`` is the reusable normal communication
+    route and additionally requires runner-sealed provenance.
+    """
     tc = dict(tool_config or {})
     unsupported_keys = set(tc) - _ALLOWED_TOOL_CONFIG_KEYS
     if unsupported_keys:
@@ -420,26 +531,62 @@ def _require_active_discussion_tool_config(
             f"{adapter_label}: unsupported tool_config keys {sorted(unsupported_keys)!r}; "
             f"only {sorted(_ALLOWED_TOOL_CONFIG_KEYS)!r} are recognized"
         )
-    if tc.get("acpx_discussion") is not True:
+    discussion = tc.get("acpx_discussion") is True
+    communication = tc.get("acpx_transport") is True
+    if discussion == communication:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: this direct-only seat requires acpx_discussion=True "
-            "from the active discussion controller"
+            f"{adapter_label}: this direct-only seat requires exactly one of "
+            "acpx_discussion=True or acpx_transport=True"
         )
-    _require_discussion_transport(adapter_label=adapter_label)
+    if discussion:
+        _require_discussion_transport(adapter_label=adapter_label)
+    else:
+        _require_communication_transport(adapter_label=adapter_label)
     target_agent = tc.get("target_agent", required_target)
     if target_agent != required_target:
         raise AcpxShadowRefusalError(
             f"{adapter_label}: target_agent={target_agent!r} rejected; this seat supports "
             f"exactly one ACP participant: {required_target}"
         )
+    if communication:
+        _require_communication_target(
+            adapter_label=adapter_label,
+            required_target=required_target,
+        )
     return tc
+
+
+def _require_communication_transport(*, adapter_label: str) -> None:
+    """Refuse normal ACP communication unless the runner sealed provenance."""
+    transport = os.environ.get(TRANSPORT_ENV, "off").strip().lower()
+    if transport != "active" or current_communication_provenance() is None:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: active ACPX communication requires the runner-owned "
+            "transport selection boundary"
+        )
+
+
+def _require_communication_target(*, adapter_label: str, required_target: str) -> None:
+    """Bind runner-sealed logical provenance to this adapter's fixed target."""
+    provenance = current_communication_provenance()
+    if provenance is None or provenance.target_agent != required_target:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: runner-sealed ACP target provenance does not match "
+            f"required target {required_target!r}"
+        )
+
+
+def _communication_metadata() -> dict[str, str]:
+    """Return immutable-by-construction provenance for plan metadata."""
+    provenance = current_communication_provenance()
+    return {} if provenance is None else provenance.metadata()
 
 
 def _require_non_primary_worktree(cwd: Path, *, adapter_label: str) -> None:
     if _worktree_containment.classify_repo_path(cwd, cwd=cwd) == "primary_checkout":
         raise AcpxShadowRefusalError(
             f"{adapter_label}: refusing to spawn against the protected primary checkout "
-            f"({cwd}); run ACPX shadow calls from a worktree"
+            f"({cwd}); run ACPX calls from a worktree"
         )
 
 
@@ -492,7 +639,7 @@ def _require_pinned_acpx_binary(*, adapter_label: str, cwd: Path) -> str:
 
 
 def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
-    """Shared structural confinement flags for every ACPX shadow seat."""
+    """Shared structural confinement flags for every ACPX seat."""
     return [
         binary,
         "--cwd",
@@ -725,13 +872,14 @@ def _build_text_agent_command(
 
 
 class AcpxAdapter:
-    """Adapter for ``acpx codex exec`` — read-only, stateless, shadow-only.
+    """Adapter for one read-only, stateless ``acpx codex exec`` request.
 
-    Not a general-purpose ACPX adapter: it only ever builds one invocation
-    shape (``codex exec``, one Codex ACP participant, no tools, no fs/
-    terminal capability, no session, no queue). Every other ACPX capability
-    (persistent sessions, other agents, flows, compare) is out of scope for
-    this seat and structurally unreachable through this class.
+    Normal communication reaches this seat only through the runner-owned ACP
+    boundary. It is not a general-purpose ACPX adapter: it only ever builds
+    one invocation shape (``codex exec``, one Codex ACP participant, no tools,
+    no fs/terminal capability, no session, no queue). Every other ACPX
+    capability (persistent sessions, other agents, flows, compare) is out of
+    scope for this seat and structurally unreachable through this class.
     """
 
     name: str = "acpx-codex-shadow"
@@ -759,10 +907,10 @@ class AcpxAdapter:
         ``ValueError`` subclass), matching the approved Stage 0/1 contract's
         "reject before spawn" list:
 
-        - ``LU_ACPX_TRANSPORT`` is not exactly ``"shadow"`` (unset, "off", or
-          unrecognized all refuse — the flag-off rollback path).
-        - ``tool_config`` is missing the explicit ``acpx_shadow=True`` marker
-          (the env var alone is not sufficient per-call proof of intent).
+        - the legacy shadow marker lacks ``LU_ACPX_TRANSPORT=shadow``, or the
+          normal marker lacks active runner-sealed ACP provenance.
+        - ``tool_config`` is missing an explicit ``acpx_shadow=True`` legacy
+          marker or ``acpx_transport=True`` normal marker.
         - ``tool_config["target_agent"]`` names anything other than
           ``"codex"``.
         - ``tool_config`` carries any key outside ``_ALLOWED_TOOL_CONFIG_KEYS``.
@@ -817,6 +965,17 @@ class AcpxAdapter:
             _logger.debug("AcpxAdapter: effort=%r has no ACPX flag equivalent; ignoring", effort)
         cmd.extend(["codex", "exec", "-f", "-"])
 
+        metadata: dict[str, Any] = {
+            "acpx_shadow": tc.get("acpx_transport") is not True,
+            "acpx_pinned_version": PINNED_VERSION,
+            "task_id": validated_task_id,
+            "correlation_id": correlation_id,
+            "idempotency_key": idempotency_key,
+        }
+        if tc.get("acpx_transport") is True:
+            metadata["acpx_transport"] = True
+            metadata.update(_communication_metadata())
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
@@ -827,13 +986,7 @@ class AcpxAdapter:
             # read, stored, or forwarded by the controller.
             env_overrides={"ACPX_AUTH_CHAT_GPT": "1"},
             liveness_paths=(),
-            metadata={
-                "acpx_shadow": True,
-                "acpx_pinned_version": PINNED_VERSION,
-                "task_id": validated_task_id,
-                "correlation_id": correlation_id,
-                "idempotency_key": idempotency_key,
-            },
+            metadata=metadata,
         )
 
     @classmethod
@@ -1113,13 +1266,21 @@ class _AcpxDiscussionAdapter:
             "correlation_id": correlation_id,
             "idempotency_key": idempotency_key,
         }
+        if tc.get("acpx_transport") is True:
+            metadata["acpx_discussion"] = False
+            metadata["acpx_transport"] = True
         if self.fixed_model is not None:
             metadata["model"] = self.fixed_model
         if self.fixed_effort is not None:
             metadata["effort"] = self.fixed_effort
         metadata.update(self._extra_metadata())
+        if tc.get("acpx_transport") is True:
+            # Keep the runner-sealed transport fields authoritative even if a
+            # future adapter adds diagnostic metadata with a colliding key.
+            metadata.update(_communication_metadata())
         if effort is not None and self.fixed_effort is None:
             _logger.debug("%s: effort=%r has no ACPX flag equivalent; ignoring", type(self).__name__, effort)
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
@@ -1207,6 +1368,7 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
     fixed_model = GLM_ACP_MODEL
     acpx_model = GLM_ACP_INVOCATION_MODEL
     default_model = fixed_model
+    fixed_effort = "high"
 
     def _custom_agent_command(self, cwd: Path) -> str:
         _ = cwd
@@ -1315,8 +1477,10 @@ class AcpxGrokShadowAdapter:
         noted), matching the approved #6043 contract:
 
         - ``mode`` is not ``"read-only"`` (plain ``ValueError``)
-        - ``LU_ACPX_TRANSPORT`` is not exactly ``"shadow"``
-        - missing ``acpx_shadow=True`` or unsupported ``tool_config`` keys
+        - the legacy shadow marker lacks ``LU_ACPX_TRANSPORT=shadow``, or the
+          normal marker lacks active runner-sealed ACP provenance
+        - missing ``acpx_shadow=True`` legacy marker or ``acpx_transport=True``
+          normal marker, or unsupported ``tool_config`` keys
         - ``target_agent`` is not ``"grok"``
         - ``session_id`` is not None
         - ``cwd`` is the protected primary checkout
@@ -1390,6 +1554,24 @@ class AcpxGrokShadowAdapter:
         # "grok-build".
         cmd.extend(["--agent", agent_command, "exec", "-f", "-"])
 
+        metadata: dict[str, Any] = {
+            "acpx_shadow": tc.get("acpx_transport") is not True,
+            "acpx_pinned_version": PINNED_VERSION,
+            "grok_pinned_version": PINNED_GROK_VERSION,
+            "grok_profile_sha256": _GROK_PROFILE_SHA256,
+            "target_agent": "grok",
+            # Effective values are fixed; never fabricate caller-supplied
+            # alternatives in telemetry.
+            "model": GROK_SHADOW_MODEL,
+            "effort": GROK_SHADOW_EFFORT,
+            "task_id": validated_task_id,
+            "correlation_id": correlation_id,
+            "idempotency_key": idempotency_key,
+        }
+        if tc.get("acpx_transport") is True:
+            metadata["acpx_transport"] = True
+            metadata.update(_communication_metadata())
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
@@ -1398,20 +1580,7 @@ class AcpxGrokShadowAdapter:
             env_overrides={GROK_AUTH_CACHED_TOKEN_ENV: "1"},
             env_unsets=_GROK_XAI_API_KEY_ENV_UNSETS,
             liveness_paths=(),
-            metadata={
-                "acpx_shadow": True,
-                "acpx_pinned_version": PINNED_VERSION,
-                "grok_pinned_version": PINNED_GROK_VERSION,
-                "grok_profile_sha256": _GROK_PROFILE_SHA256,
-                "target_agent": "grok",
-                # Effective values are fixed; never fabricate caller-supplied
-                # alternatives in telemetry.
-                "model": GROK_SHADOW_MODEL,
-                "effort": GROK_SHADOW_EFFORT,
-                "task_id": validated_task_id,
-                "correlation_id": correlation_id,
-                "idempotency_key": idempotency_key,
-            },
+            metadata=metadata,
         )
 
     def parse_response(
