@@ -28,9 +28,6 @@ streams:
   eval-harness:
     title: "Internal UA quality machinery — QG gates, validators, product adapters"
     epics: [4913]
-  benchmark-2156:
-    title: "Public Ukrainian calque + grammar evaluation — UA-GEC benchmark"
-    epics: [6057]  # compatibility key retained; completed v0.1.1 epic #2156 is historical
   open-model-data:
     title: "Ukrainian open-model data infrastructure"
     epics: [6164]  # production successor; completed Foundry v1 epic #6056 is historical

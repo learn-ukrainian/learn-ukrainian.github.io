@@ -152,19 +152,27 @@ receipt artifacts.
 ## Phase 3 evidence boundary
 
 The full candidate stream is a deterministic sampling frame, not review gold.
-Phase 3 selects a frozen, source-aware calibration sample without loading this
-2.17 GB JSONL into memory. Only selected rows may receive bounded R2U and ULIF
-lookups or an identified underlying dictionary result from `slovnyk.me`.
-Receipts may retain response hashes and headword-match states; bulk crawling
-and raw dictionary redistribution remain prohibited.
+Phase 3 may build evidence-backed silver records from a frozen, source-aware
+selection without loading this 2.17 GB JSONL into memory. Only selected rows may
+receive bounded R2U and ULIF lookups or an identified underlying dictionary
+result from `slovnyk.me`. Receipts may retain response hashes and headword-match
+states; bulk crawling and raw dictionary redistribution remain prohibited.
 
-The blind first pass must hide detector categories, confidence, queue routes,
+Silver output must retain the detector context, independent evidence sources,
+uncertainty, and protected or unresolved route. No single VESUM miss, Russian
+morphology hit, dictionary hit, aggregate score, or model vote is sufficient.
+Cross-family models may propose alternatives and expose disagreement, but every
+result is labelled non-human silver or model-only research evidence. This path
+does not claim native-speaker acceptance, reviewer reliability, or human gold.
+
+The existing blind-human campaign remains available as an optional gold upgrade.
+If activated, its first pass hides detector categories, confidence, queue routes,
 and other model/rule votes while showing the bounded original context and the
 period/source metadata needed to protect historical, dialectal, regional,
 quoted, and multilingual language. Two independent qualified Ukrainian humans
 review separate salted orders; disagreements require a distinct third human.
-The sample capacity and statistical stopping rule are frozen by an approved
-review plan, never invented by this detector.
+Those requirements govern only a qualified-human-gold claim and do not block
+the silver or admitted-source-text lanes.
 
 ## Reproduction
 
