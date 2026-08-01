@@ -67,7 +67,9 @@ def _ok_result(agent: str) -> Result:
         returncode=0,
         usage_record={},
     )
-def test_reconcile_dry_run_prints_worker_disappeared_without_applying(capsys):
+def test_reconcile_dry_run_prints_worker_disappeared_without_applying(capsys, monkeypatch):
+    # Reconcile is a legacy bridge command; authority mode retires its CLI path.
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     _channels.create_channel("reviews")
     post = _channels.post("reviews", "user", "stuck", to_agents=["claude"], auto_snapshot=False)
     delivery_id = post["delivery_ids"][0]
