@@ -16,6 +16,7 @@ from scripts.agent_runtime.adapters.kimi import (
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
     KIMI_MODEL_ALIASES,
+    KIMI_PROJECT_SKILLS_RELATIVE,
     KimiAdapter,
 )
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
@@ -32,6 +33,7 @@ def _build(
     mode: str = "workspace-write",
     model: str | None = None,
     effort: str | None = None,
+    tool_config: dict | None = None,
 ):
     binary = tmp_path / "kimi"
     binary.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -44,7 +46,7 @@ def _build(
         model=model,
         task_id="kimi-test",
         session_id=None,
-        tool_config=None,
+        tool_config=tool_config,
         effort=effort,
     )
 
@@ -58,6 +60,75 @@ def test_build_invocation_uses_flagless_write_modes(tmp_path, monkeypatch, mode)
     assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
     assert not ({"--auto", "--yolo", "--plan"} & set(plan.cmd))
     assert plan.metadata == {}
+
+
+def test_native_kimi_loads_canonical_project_skills_in_fresh_worktree(tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.delenv("KIMI_CODE_HOME", raising=False)
+    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: fake_home)
+    skills_dir = tmp_path / KIMI_PROJECT_SKILLS_RELATIVE
+    skill = skills_dir / "entire-context" / "SKILL.md"
+    skill.parent.mkdir(parents=True)
+    skill.write_text("---\nname: entire-context\ndescription: recall\n---\n", encoding="utf-8")
+
+    plan = _build(tmp_path, monkeypatch)
+
+    assert plan.cmd.count("--skills-dir") == 1
+    assert plan.cmd[plan.cmd.index("--skills-dir") + 1] == str(skills_dir.resolve())
+
+
+def test_native_kimi_preserves_existing_project_and_user_skill_roots(tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    project_kimi = tmp_path / ".kimi-code" / "skills"
+    project_shared = tmp_path / KIMI_PROJECT_SKILLS_RELATIVE
+    fake_home = tmp_path / "home"
+    user_kimi = fake_home / ".kimi-code" / "skills"
+    user_generic = fake_home / ".agents" / "skills"
+    for directory in (project_kimi, project_shared, user_kimi, user_generic):
+        directory.mkdir(parents=True)
+    monkeypatch.delenv("KIMI_CODE_HOME", raising=False)
+    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: fake_home)
+
+    plan = _build(tmp_path, monkeypatch)
+    configured_roots = [
+        plan.cmd[index + 1]
+        for index, value in enumerate(plan.cmd)
+        if value == "--skills-dir"
+    ]
+
+    assert configured_roots == [
+        str(project_kimi),
+        str(project_shared.resolve()),
+        str(user_kimi),
+        str(user_generic),
+    ]
+
+
+def test_native_kimi_omits_default_skills_flag_when_canonical_directory_is_missing(tmp_path, monkeypatch):
+    plan = _build(tmp_path, monkeypatch)
+
+    assert "--skills-dir" not in plan.cmd
+
+
+def test_native_kimi_skills_override_is_explicit_deduplicated_and_can_disable_default(tmp_path, monkeypatch):
+    (tmp_path / KIMI_PROJECT_SKILLS_RELATIVE).mkdir(parents=True)
+    override = tmp_path / "custom-skills"
+    override.mkdir()
+
+    configured = _build(
+        tmp_path,
+        monkeypatch,
+        tool_config={"kimi_skills_dirs": [str(override), str(override)]},
+    )
+    disabled = _build(tmp_path, monkeypatch, tool_config={"kimi_skills_dirs": []})
+
+    assert configured.cmd.count("--skills-dir") == 1
+    assert configured.cmd[configured.cmd.index("--skills-dir") + 1] == str(override)
+    assert "--skills-dir" not in disabled.cmd
 
 
 def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monkeypatch):
