@@ -391,6 +391,22 @@ def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
     assert no_sources["A1"]["cloze"]["cloze"] == []
 
 
+def test_curated_cloze_derives_missing_target_form_from_paradigm() -> None:
+    entries = read_manifest(MANIFEST)
+    allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    cloze_sources = read_cloze_sources(CLOZE_SOURCES)
+    candidate = next(row for row in cloze_sources if row["lemmaId"] == "knyha")
+    candidate.pop("form")
+
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
+
+    cloze = next(item for item in shards["A1"]["cloze"]["cloze"] if item["lemmaId"] == "knyha")
+    assert cloze["blankCase"] == "accusative"
+    assert cloze["number"] == "singular"
+    assert cloze["form"] == "книгу"
+
+
 def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     shards = _build(cloze_sources_path=None)
 

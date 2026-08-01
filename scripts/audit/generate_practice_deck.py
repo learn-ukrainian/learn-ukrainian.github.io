@@ -1236,10 +1236,12 @@ def _build_cloze_items(
         if not _cloze_candidate_ok_for_level(candidate, lexeme["cefr"]):
             continue
         curated_form = _clean_text(candidate.get("form"))
-        if not curated_form:
-            continue
         inventory_candidate = candidate.get("sourceType") == "sentence_inventory"
         if inventory_candidate:
+            # A sentence inventory row represents an attested source sentence;
+            # without its explicit target token, it cannot be safely blanked.
+            if not curated_form:
+                continue
             inventory_details = _inventory_form_details(
                 lexeme["lemmaPlain"],
                 lexeme.get("pos"),
