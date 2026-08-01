@@ -3921,7 +3921,10 @@ def run_broken_validator_fixtures() -> int:
 
 
 def _json_bytes(payload: dict[str, Any]) -> bytes:
-    text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    # Shards are machine-consumed static assets.  Keeping the canonical key
+    # order and UTF-8 text makes builds reproducible while avoiding whitespace
+    # that consumes the per-shard mobile budget.
+    text = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     return text.encode("utf-8")
 
 
@@ -4073,6 +4076,40 @@ def apply_size_budgets(
                 if not isinstance(item, dict) or _clean_text(item.get("lemmaId")) in kept_ids
             ]
 
+    def item_lemma_id(item: Any, index: int) -> str:
+        if isinstance(item, dict):
+            lemma_id = _clean_text(item.get("lemmaId"))
+            if lemma_id:
+                return lemma_id
+        # Validator-approved production items all have lemmaId.  Keep malformed
+        # fixture rows independently addressable so trimming never aliases them.
+        return f"__item_{index}"
+
+    def item_size(item: Any) -> int:
+        return len(_json_bytes(item)) if isinstance(item, dict) else len(str(item).encode("utf-8"))
+
+    def coverage_first_rows(original: list[Any]) -> list[tuple[int, Any]]:
+        """Order one representative per lemma before duplicate cards.
+
+        The source row order remains authoritative within a lemma (inventory
+        rows have already been ranked for playability).  Across lemmas, the
+        smallest representative payloads go first so a tight budget admits the
+        greatest number of distinct lemma IDs before spending bytes on repeats.
+        Remaining cards retain their source order after the representatives.
+        """
+        groups: dict[str, list[tuple[int, Any]]] = {}
+        for index, item in enumerate(original):
+            groups.setdefault(item_lemma_id(item, index), []).append((index, item))
+        representatives = [rows[0] for rows in groups.values()]
+        representatives.sort(key=lambda row: (item_size(row[1]), row[0]))
+        representative_indexes = {index for index, _item in representatives}
+        extras = [
+            (index, item)
+            for index, item in enumerate(original)
+            if index not in representative_indexes
+        ]
+        return [*representatives, *extras]
+
     def trim_surface(
         level: str,
         level_shards: dict[str, dict[str, Any]],
@@ -4090,8 +4127,32 @@ def apply_size_budgets(
         if not original_index:
             return False
 
-        def apply_prefix(count: int) -> None:
-            kept_index = original_index[:count]
+        lexeme_by_id = {
+            _clean_text(item.get("lemmaId")): item
+            for item in original_bodies.get("lexemes", [])
+            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+        }
+        original_positions = {id(item): index for index, item in enumerate(original_index)}
+        cloze_first = [
+            item
+            for item in original_index
+            if isinstance(item, dict) and item.get("clozeIds")
+        ]
+        cloze_first_ids = {id(item) for item in cloze_first}
+        non_cloze = [item for item in original_index if id(item) not in cloze_first_ids]
+
+        def surface_item_size(item: Any) -> int:
+            lemma_id = _clean_text(item.get("lemmaId")) if isinstance(item, dict) else None
+            return item_size(item) + item_size(lexeme_by_id.get(lemma_id))
+
+        candidates = sorted(
+            cloze_first,
+            key=lambda item: (surface_item_size(item), original_positions[id(item)]),
+        )
+        candidates.extend(non_cloze)
+
+        def apply_selection(selected: list[Any]) -> None:
+            kept_index = sorted(selected, key=lambda item: original_positions[id(item)])
             index_items[:] = kept_index
             kept_ids = {
                 _clean_text(item.get("lemmaId"))
@@ -4100,25 +4161,21 @@ def apply_size_budgets(
             }
             filter_to_lemma_ids(level_shards, original_bodies, kept_ids)
 
-        def surface_fits(count: int) -> bool:
-            apply_prefix(count)
+        def surface_fits(selected: list[Any]) -> bool:
+            apply_selection(selected)
             return all(
                 set_budget(level_shards[kind])["ok"]
                 for kind in oversized_surface
                 if kind in level_shards
             )
 
-        low, high = 0, len(original_index)
-        best: int | None = None
-        while low <= high:
-            midpoint = (low + high) // 2
-            if surface_fits(midpoint):
-                best = midpoint
-                low = midpoint + 1
-            else:
-                high = midpoint - 1
-        kept = best if best is not None else 0
-        apply_prefix(kept)
+        selected: list[Any] = []
+        for candidate in candidates:
+            trial = [*selected, candidate]
+            if surface_fits(trial):
+                selected = trial
+        apply_selection(selected)
+        kept = len(selected)
         if kept == len(original_index):
             return False
         print(
@@ -4135,21 +4192,21 @@ def apply_size_budgets(
         payload = level_shards[kind]
         original = list(items)
 
-        def mode_fits(count: int) -> bool:
-            items[:] = original[:count]
+        def mode_fits(candidate: list[Any]) -> bool:
+            items[:] = candidate
             return bool(set_budget(payload)["ok"])
 
-        low, high = 0, len(original)
-        best: int | None = None
-        while low <= high:
-            midpoint = (low + high) // 2
-            if mode_fits(midpoint):
-                best = midpoint
-                low = midpoint + 1
-            else:
-                high = midpoint - 1
-        kept = best if best is not None else 0
-        items[:] = original[:kept]
+        selected: list[Any] = []
+        for _index, candidate in coverage_first_rows(original):
+            trial = [*selected, candidate]
+            if mode_fits(trial):
+                selected = trial
+        # Selection is coverage-first, but the emitted order remains the source
+        # order so deterministic deck sequencing and source ranking are stable.
+        selected_ids = {id(item) for item in selected}
+        items[:] = [item for item in original if id(item) in selected_ids]
+        set_budget(payload)
+        kept = len(selected)
         if kept == len(original):
             return False
         print(
