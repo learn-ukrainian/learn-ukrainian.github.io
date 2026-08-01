@@ -33,6 +33,7 @@ from scripts.entire_context.model import (
 from scripts.entire_context.recall import (
     MAX_CAPSULE_BYTES,
     MAX_HANDOFF_ITEMS,
+    MAX_SEARCH_OMISSIONS,
     rank_candidate,
 )
 from scripts.entire_context.resolvers import (
@@ -351,6 +352,25 @@ def test_git_bootstrap_then_search_recall(
     assert_body_free(out)
 
 
+def test_git_projection_supports_merge_parents_and_rejects_tree(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    base = commit_files(repo, {"base.txt": "base\n"}, "base")
+    git(repo, "checkout", "-qb", "left")
+    left = commit_files(repo, {"left.txt": "left\n"}, "left")
+    git(repo, "checkout", "-qb", "right", base)
+    right = commit_files(repo, {"right.txt": "right\n"}, "right")
+    git(repo, "merge", "--no-ff", "-qm", "merge", "left")
+    merge_sha = git(repo, "rev-parse", "HEAD")
+
+    resolution = resolve_git_commit(merge_sha, repo=repo)
+    assert resolution.excerpt["parents"] == sorted([left, right])
+
+    tree_sha = git(repo, "rev-parse", "HEAD^{tree}")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_git_commit(tree_sha, repo=repo)
+    assert excinfo.value.reason == REASON_SOURCE_MISSING
+
+
 def test_acp_bootstrap_then_recall(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     acp_root = make_acp_plane(tmp_path)
     db = tmp_path / "db.sqlite3"
@@ -572,6 +592,29 @@ def test_result_cap_of_ten(tmp_path: Path, git_repo: dict[str, object]) -> None:
     assert result["scanned"] == 12
     assert len(result["results"]) == 10  # hard cap, not the requested 50
     assert result["limit"] == 10
+
+
+def test_search_omission_metadata_is_capped(tmp_path: Path, git_repo: dict[str, object]) -> None:
+    store = make_store(tmp_path)
+    for index in range(MAX_SEARCH_OMISSIONS + 1):
+        sha = commit_files(
+            git_repo["repo"],
+            {f"stale-series/file-{index:02d}.txt": f"{index}\n"},
+            "stale-series",
+        )
+        bootstrap_git(store, git_repo["repo"], sha)
+
+    missing_repo = make_git_repo(tmp_path, name="missing")
+    result = recall.search_past_work(
+        store,
+        "stale-series",
+        repo=missing_repo,
+        acp_root=None,
+        limit=10,
+    )
+    assert result["results"] == []
+    assert len(result["omitted"]) == MAX_SEARCH_OMISSIONS
+    assert result["omissions_truncated"] is True
 
 
 # ── idempotent retry ─────────────────────────────────────────────────────────
@@ -848,6 +891,32 @@ def test_explain_change_traverses_typed_joins(
         assert node["canonical_digest"].startswith("sha256:")
     assert payload["omitted"] == []
     assert_body_free(out)
+
+    code, out = run_cli(
+        capsys,
+        "explain-change",
+        "--canonical-id",
+        sha,
+        "--repo",
+        str(git_repo["repo"]),
+        "--acp-root",
+        str(acp_root),
+        "--db",
+        str(store.db_path),
+    )
+    assert code == 0
+    assert json.loads(out)["found"] is True
+
+
+def test_find_related_limit_zero_is_empty(tmp_path: Path, git_repo: dict[str, object]) -> None:
+    sha = str(git_repo["sha2"])
+    acp_root = make_acp_plane(tmp_path, correlation_id=sha)
+    store = make_store(tmp_path)
+    git_locator = bootstrap_git(store, git_repo["repo"], sha)
+    bootstrap_acp(store, acp_root, git_sha=sha)
+    seed = store.lookup(git_locator)
+    assert seed is not None
+    assert store.find_related(seed, limit=0) == []
 
 
 def test_explain_change_omits_unverifiable_nodes(tmp_path: Path, git_repo: dict[str, object]) -> None:

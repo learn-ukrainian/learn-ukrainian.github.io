@@ -409,6 +409,10 @@ def reverify_link(
         now=now,
     )
     fresh = resolution.link
-    if fresh.canonical_digest != link["canonical_digest"] or fresh.canonical_namespace != link["canonical_namespace"]:
+    # Git namespaces may be explicit organizational labels, so re-resolution
+    # deliberately preserves them instead of pretending to derive them anew.
+    # ACP namespaces are canonical resolver output and can be compared.
+    namespace_mismatch = kind is not LinkKind.GIT_COMMIT and fresh.canonical_namespace != link["canonical_namespace"]
+    if fresh.canonical_digest != link["canonical_digest"] or namespace_mismatch:
         raise ResolutionError(REASON_DIGEST_MISMATCH)
     return resolution.excerpt

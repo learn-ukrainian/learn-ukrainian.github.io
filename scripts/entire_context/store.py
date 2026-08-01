@@ -429,12 +429,14 @@ class ContextLinkStore:
         excluded. Order is deterministic and bounded by ``limit``.
         """
         capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
+        if capped == 0:
+            return []
         locator_id = str(link["locator_id"])
         with self._connect(write=False) as connection:
             rows = connection.execute(
                 "SELECT * FROM context_links WHERE state = 'promoted'"
                 " AND locator_id != ? ORDER BY locator_id LIMIT ?",
-                (locator_id, MAX_RELATED_SCAN_ROWS),
+                (locator_id, capped),
             ).fetchall()
         related: list[tuple[dict[str, Any], str]] = []
         seed_sha = link.get("git_sha")
@@ -453,8 +455,6 @@ class ContextLinkStore:
                 join = "same_canonical_id"
             if join is not None:
                 related.append((candidate, join))
-                if len(related) >= capped:
-                    break
         return related
 
     # ── rebuild ──────────────────────────────────────────────────────────────

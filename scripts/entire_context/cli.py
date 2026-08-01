@@ -245,15 +245,11 @@ def cmd_bootstrap_git(args: argparse.Namespace) -> int:
     if _disabled():
         return _refused("projection_disabled")
     try:
-        resolution = resolve_git_commit(
-            args.sha, repo=_resolve_repo(args), namespace=args.namespace
-        )
+        resolution = resolve_git_commit(args.sha, repo=_resolve_repo(args), namespace=args.namespace)
     except ResolutionError as exc:
         return _refused(exc.reason)
     try:
-        result = ContextLinkStore(db_path).admit(
-            resolution.link, resolution.verification, actor=args.actor
-        )
+        result = ContextLinkStore(db_path).admit(resolution.link, resolution.verification, actor=args.actor)
     except (SchemaError, sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_REFUSED
@@ -261,11 +257,7 @@ def cmd_bootstrap_git(args: argparse.Namespace) -> int:
     if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED):
         payload["excerpt"] = resolution.excerpt
     _emit(payload)
-    return (
-        EXIT_OK
-        if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED)
-        else EXIT_REFUSED
-    )
+    return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
 
 
 def cmd_bootstrap_acp(args: argparse.Namespace) -> int:
@@ -277,15 +269,11 @@ def cmd_bootstrap_acp(args: argparse.Namespace) -> int:
     if acp_root is None:
         return _refused("source_missing")
     try:
-        resolution = resolve_acp_conversation(
-            args.conversation_id, acp_root=acp_root, git_sha=args.git_sha
-        )
+        resolution = resolve_acp_conversation(args.conversation_id, acp_root=acp_root, git_sha=args.git_sha)
     except ResolutionError as exc:
         return _refused(exc.reason)
     try:
-        result = ContextLinkStore(db_path).admit(
-            resolution.link, resolution.verification, actor=args.actor
-        )
+        result = ContextLinkStore(db_path).admit(resolution.link, resolution.verification, actor=args.actor)
     except (SchemaError, sqlite3.Error, KeyError, TypeError, ValueError):
         _emit(_unavailable_payload(db_path, "projection_unreadable"))
         return EXIT_REFUSED
@@ -293,11 +281,7 @@ def cmd_bootstrap_acp(args: argparse.Namespace) -> int:
     if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED):
         payload["excerpt"] = resolution.excerpt
     _emit(payload)
-    return (
-        EXIT_OK
-        if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED)
-        else EXIT_REFUSED
-    )
+    return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
 
 
 def cmd_search(args: argparse.Namespace) -> int:

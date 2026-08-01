@@ -33,6 +33,7 @@ MAX_CAPSULE_BYTES = 8192
 MAX_EXPLAIN_DEPTH = 2
 MAX_EXPLAIN_NODES = 50
 MAX_HANDOFF_SEEDS = 500
+MAX_SEARCH_OMISSIONS = 50
 
 REASON_TOMBSTONED = "tombstoned"
 REASON_HANDOFF_ITEM_CAP = "handoff_item_cap"
@@ -195,6 +196,7 @@ def search_past_work(
     )
     results: list[dict[str, Any]] = []
     omitted: list[dict[str, str]] = []
+    omissions_truncated = False
     for entry in ranked:
         if entry.score <= 0 or len(results) >= capped_limit:
             break
@@ -202,7 +204,10 @@ def search_past_work(
         try:
             card = _verified_card(store, entry.link, repo=repo, acp_root=acp_root, now=now)
         except GateReject as exc:
-            omitted.append(_omitted(locator_id, exc.reason))
+            if len(omitted) < MAX_SEARCH_OMISSIONS:
+                omitted.append(_omitted(locator_id, exc.reason))
+            else:
+                omissions_truncated = True
             continue
         card["score"] = entry.score
         card["matched_fields"] = list(entry.matched_fields)
@@ -211,6 +216,7 @@ def search_past_work(
         "schema": "ec-search.v1",
         "results": results,
         "omitted": omitted,
+        "omissions_truncated": omissions_truncated,
         "scanned": len(candidates),
         "limit": capped_limit,
     }
