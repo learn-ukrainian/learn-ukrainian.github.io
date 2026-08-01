@@ -14,20 +14,98 @@ import scripts.projects.open_model_data.language_contact_detector as detector
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_ROOT = ROOT
+TEST_INPUT_ROOT: Path | None = None
+VESUM_MISS_FORMS = {
+    "будет",
+    "вєжліви",
+    "вызвало",
+    "врємя",
+    "да",
+    "делать",
+    "звучит",
+    "значіт",
+    "мой",
+    "нєй",
+    "океаненяті",
+    "они",
+    "перекличка",
+    "переклички",
+    "перекличку",
+    "перекличкою",
+    "перекличці",
+    "придєт",
+    "разговаривают",
+    "ростовъ",
+    "с",
+    "скліплює",
+    "смуту",
+    "цівілізація",
+    "что",
+    "шо",
+}
 
 
 def _json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _test_input_root() -> Path:
+    assert TEST_INPUT_ROOT is not None
+    return TEST_INPUT_ROOT
+
+
+def _seed_vesum(texts: list[str]) -> None:
+    database = _test_input_root() / "data/vesum.db"
+    forms = {
+        token.normalized
+        for text in texts
+        for token in detector.tokenize_with_offsets(text)
+        if token.normalized not in VESUM_MISS_FORMS
+        and any("а" <= character <= "я" or character in "іїєґ" for character in token.normalized)
+    }
+    connection = sqlite3.connect(database)
+    connection.executemany(
+        "INSERT OR IGNORE INTO forms(word_form, lemma, pos, tags) VALUES (?, ?, 'fixture', 'fixture')",
+        [(form, form) for form in sorted(forms)],
+    )
+    connection.commit()
+    connection.close()
+
+
 @pytest.fixture(scope="module")
-def config() -> dict:
+def evidence_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    global TEST_INPUT_ROOT
+    root = tmp_path_factory.mktemp("language-contact-evidence")
+    data = root / "data"
+    data.mkdir()
+    vesum = sqlite3.connect(data / "vesum.db")
+    vesum.execute(
+        "CREATE TABLE forms(word_form TEXT NOT NULL, lemma TEXT NOT NULL, pos TEXT NOT NULL, tags TEXT NOT NULL, UNIQUE(word_form, lemma, pos, tags))"
+    )
+    vesum.commit()
+    vesum.close()
+    sources = sqlite3.connect(data / "sources.db")
+    sources.execute("CREATE TABLE grinchenko(word TEXT NOT NULL)")
+    sources.execute("CREATE TABLE esum_etymology_meta(lemma TEXT NOT NULL)")
+    sources.execute("CREATE TABLE sum11(word TEXT NOT NULL)")
+    sources.executemany("INSERT INTO grinchenko(word) VALUES (?)", [("шо",), ("да",)])
+    sources.executemany("INSERT INTO sum11(word) VALUES (?)", [("мой",), ("перекличка",)])
+    sources.commit()
+    sources.close()
+    TEST_INPUT_ROOT = root
+    _seed_vesum(["очєнь"])
+    return root
+
+
+@pytest.fixture(scope="module")
+def config(evidence_root: Path) -> dict:
+    assert evidence_root.is_dir()
     return detector._load_and_validate_config(detector.DEFAULT_CONFIG_PATH)
 
 
 @pytest.fixture(scope="module")
-def runtime(config: dict):
-    active = detector.EvidenceRuntime(config, INPUT_ROOT)
+def runtime(config: dict, evidence_root: Path):
+    active = detector.EvidenceRuntime(config, evidence_root)
     yield active
     active.close()
 
@@ -40,6 +118,7 @@ def _detect(
     period: str = "modern",
     register: str = "literary",
 ) -> list[dict]:
+    _seed_vesum([text])
     tokens = detector.tokenize_with_offsets(text)
     vesum = runtime.vesum.lookup(token.normalized for token in tokens)
     return detector.run_detector_on_text(
@@ -54,7 +133,7 @@ def _detect(
         vesum_matches=vesum,
         config=config,
         runtime=runtime,
-        input_root=INPUT_ROOT,
+        input_root=_test_input_root(),
     )
 
 
@@ -271,6 +350,7 @@ def test_evidence_identities_and_pending_states_are_truthful(config: dict, runti
 
 
 def _mini_config(tmp_path: Path, config: dict, texts: list[str]) -> Path:
+    _seed_vesum(texts)
     database = tmp_path / "mini.db"
     connection = sqlite3.connect(database)
     connection.execute("CREATE TABLE records(id INTEGER PRIMARY KEY, text TEXT NOT NULL)")
@@ -279,8 +359,8 @@ def _mini_config(tmp_path: Path, config: dict, texts: list[str]) -> Path:
     connection.close()
     word_count = sum(len(detector.tokenize_with_offsets(text)) for text in texts)
     payload = copy.deepcopy(config)
-    payload["vesum"]["database"] = str(INPUT_ROOT / "data/vesum.db")
-    payload["heritage"]["database"] = str(INPUT_ROOT / "data/sources.db")
+    payload["vesum"]["database"] = str(_test_input_root() / "data/vesum.db")
+    payload["heritage"]["database"] = str(_test_input_root() / "data/sources.db")
     payload["sources"] = [
         {
             "source_family": "fixture",
@@ -466,13 +546,13 @@ def test_missing_evidence_adapters_fail_closed(tmp_path: Path, config: dict) -> 
         detector.EvidenceRuntime(broken_vesum, tmp_path)
 
     broken_r2u = copy.deepcopy(config)
-    broken_r2u["vesum"]["database"] = str(INPUT_ROOT / "data/vesum.db")
+    broken_r2u["vesum"]["database"] = str(_test_input_root() / "data/vesum.db")
     broken_r2u["r2u_cache"]["file"] = str(tmp_path / "missing-r2u.json")
     with pytest.raises(ValueError, match="cannot read JSON"):
         detector.EvidenceRuntime(broken_r2u, tmp_path)
 
     no_heritage = copy.deepcopy(config)
-    no_heritage["vesum"]["database"] = str(INPUT_ROOT / "data/vesum.db")
+    no_heritage["vesum"]["database"] = str(_test_input_root() / "data/vesum.db")
     no_heritage["heritage"]["database"] = "missing-sources.db"
     active = detector.EvidenceRuntime(no_heritage, tmp_path)
     try:
@@ -496,5 +576,10 @@ def test_missing_evidence_adapters_fail_closed(tmp_path: Path, config: dict) -> 
         active.close()
 
 
-def test_frozen_regression_fixture_uses_real_local_adapters() -> None:
-    detector.run_regression_tests(detector.DEFAULT_REGRESSION_FIXTURE, input_root=INPUT_ROOT)
+def test_frozen_regression_fixture_uses_real_local_adapters(config: dict) -> None:
+    fixture = _json(detector.DEFAULT_REGRESSION_FIXTURE)
+    _seed_vesum([case["text"] for case in fixture["cases"]])
+    detector.run_regression_tests(
+        detector.DEFAULT_REGRESSION_FIXTURE,
+        input_root=_test_input_root(),
+    )
