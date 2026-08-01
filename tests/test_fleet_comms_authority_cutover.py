@@ -221,6 +221,47 @@ def test_expired_job_retry_keeps_dead_letter_receipt(tmp_path: Path) -> None:
         assert dead_letters == 1
 
 
+def test_delivery_attempt_exhaustion_moves_to_dead_letter(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        message = service.publish_message(
+            sender="operator",
+            body="deliver with bounded retries",
+            recipients=("codex",),
+            idempotency_key="delivery-exhaustion",
+        )
+        delivery_id = message.delivery_ids[0]
+        first = service.claim_next_delivery(
+            "codex",
+            "worker-a",
+            lease_seconds=1,
+            max_attempts=2,
+            now="2036-06-01T00:00:00Z",
+        )
+        assert first is not None and first.delivery.delivery_id == delivery_id
+        assert service.reclaim_expired_deliveries(
+            max_attempts=2,
+            now="2036-06-01T00:00:02Z",
+        ) == 1
+        second = service.claim_next_delivery(
+            "codex",
+            "worker-b",
+            lease_seconds=1,
+            max_attempts=2,
+            now="2036-06-01T00:00:03Z",
+        )
+        assert second is not None and second.delivery.attempt_count == 2
+        assert service.reclaim_expired_deliveries(
+            max_attempts=2,
+            now="2036-06-01T00:00:05Z",
+        ) == 1
+        assert service.get_delivery(delivery_id).state == "dead_lettered"
+        reason = service.store.connection.execute(
+            "SELECT reason_code FROM authority_dead_letters WHERE delivery_id = ?",
+            (delivery_id,),
+        ).fetchone()[0]
+        assert reason == "attempts_exhausted"
+
+
 def test_formal_review_subject_is_exactly_once_across_key_versions(tmp_path: Path) -> None:
     with AuthorityService(root=_root(tmp_path)) as service:
         first = service.enqueue_formal_review(

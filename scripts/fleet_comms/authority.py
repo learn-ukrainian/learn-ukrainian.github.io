@@ -43,7 +43,7 @@ _JOB_KINDS = frozenset({"request", "discussion", "formal_review"})
 _JOB_TERMINAL = frozenset({"complete", "failed", "expired", "dead_lettered"})
 _DELIVERY_TERMINAL = frozenset({"acknowledged", "failed", "expired", "dead_lettered"})
 _WAKE_STATES = {"emitted": 0, "received": 1, "consumed": 2}
-_AUTHORITY_SCHEMA_VERSION = 4
+_AUTHORITY_SCHEMA_VERSION = 5
 
 
 def _utc_now() -> datetime:
@@ -2277,6 +2277,7 @@ __all__ = [
     "AuthorityDeliveryLease",
     "AuthorityJob",
     "AuthorityJobLease",
+    "AuthorityMessage",
     "AuthorityService",
     "AuthorityServiceError",
     "AuthorityStaleLeaseError",
