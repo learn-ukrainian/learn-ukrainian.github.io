@@ -23,6 +23,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
     assert '<a class="active" href="/">Home</a>' in html
     assert "Operations launchpad" in html
     assert 'href="/artifacts/"' in html
+    assert "comms-stat" not in html
     assert "#0d1117" not in html
     for href in [
         "/admin.html",

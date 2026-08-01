@@ -334,17 +334,6 @@ async function loadStats() {
   } catch(e) {}
 
   try {
-    if (!comms) throw new Error('comms unavailable');
-    const tracks = Object.values(comms.tracks || {});
-    const running = tracks.filter(t => t.health === 'healthy').length;
-    const stalled = tracks.filter(t => t.health === 'stalled').length;
-    document.getElementById('comms-stat').textContent =
-      `${comms.running_processes} processes · ${running} healthy · ${stalled} stalled`;
-    document.getElementById('agent-comms-stat').textContent =
-      `${comms.running_processes} processes · ${running} healthy · ${stalled} stalled`;
-  } catch(e) {}
-
-  try {
     if (!weakPoints) throw new Error('weak points unavailable');
     document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
   } catch(e) {}
