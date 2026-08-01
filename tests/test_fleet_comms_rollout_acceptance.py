@@ -282,4 +282,4 @@ def test_dual_write_mode_is_reported_read_only_with_migrated_plane(
     assert status["mode"] == "dual_write"
     assert status["enabled"] is True
     assert status["read_only"] is True
-    assert status["schema"]["applied_version"] == 3
+    assert status["schema"]["applied_version"] == MIGRATIONS[-1].version

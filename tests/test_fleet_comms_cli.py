@@ -19,7 +19,7 @@ from scripts.fleet_comms.cli import (
     get_formal_review_job,
     main,
 )
-from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
 def _seed_plane_db(root: Path) -> Path:
@@ -27,7 +27,7 @@ def _seed_plane_db(root: Path) -> Path:
     db_path = root / "comms.sqlite3"
     conn = sqlite3.connect(str(db_path))
     try:
-        assert apply_migrations(conn) == 3
+        assert apply_migrations(conn) == MIGRATIONS[-1].version
         conn.execute(
             """INSERT INTO formal_review_jobs(
                 review_id, repository, pr_number, head_sha, gate_kind,

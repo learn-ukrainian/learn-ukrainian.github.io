@@ -12,10 +12,14 @@ or constructor):
   parity + operator finish GO 2026-07-23)
 - ``dual_write`` — same as shadow, and only project ``replied`` to legacy
   when completion is proven ``complete`` (incomplete never becomes replied)
+- ``authority`` — Fleet Comms SQLite/artifacts are the source of truth; never
+  project or authorize a legacy file/status write
 
 Resolution: explicit constructor/raw → env → config default → off.
-File dual-write diaries stay authoritative in every mode. Background workers
-may reload by ``request_id`` only.
+File dual-write diaries stay authoritative in ``off``, ``shadow``, and
+``dual_write`` during the mid-cutover period. In ``authority`` mode, the
+durable Fleet Comms plane is authoritative and background workers may reload
+by ``request_id`` only.
 """
 
 from __future__ import annotations
@@ -40,7 +44,7 @@ from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord
 
 logger = logging.getLogger(__name__)
 
-PlaneMode = Literal["off", "shadow", "dual_write"]
+PlaneMode = Literal["off", "shadow", "dual_write", "authority"]
 ENV_MODE = "FLEET_COMMS_MESSAGE_PLANE"
 ENV_TELEMETRY = "FLEET_COMMS_PLANE_TELEMETRY"
 # Max centrally configured continuation segments for length_limited (Sol).
@@ -80,7 +84,7 @@ def _configured_default_plane_mode() -> PlaneMode:
     value = str(raw).strip().lower()
     if value in {"", "0", "false", "off", "disabled"}:
         return "off"
-    if value in {"shadow", "dual_write"}:
+    if value in {"shadow", "dual_write", "authority"}:
         return value  # type: ignore[return-value]
     if value in {"dual-write", "dualwrite"}:
         return "dual_write"
@@ -99,11 +103,14 @@ def resolve_plane_mode(raw: str | None = None) -> PlaneMode:
         value = str(env).strip().lower()
     if value in {"", "0", "false", "off", "disabled"}:
         return "off"
-    if value in {"shadow", "dual_write", "off"}:
+    if value in {"shadow", "dual_write", "authority", "off"}:
         return value  # type: ignore[return-value]
     if value in {"dual-write", "dualwrite"}:
         return "dual_write"
-    raise ValueError(f"invalid FLEET_COMMS_MESSAGE_PLANE={value!r} (use off|shadow|dual_write)")
+    raise ValueError(
+        f"invalid FLEET_COMMS_MESSAGE_PLANE={value!r} "
+        "(use off|shadow|dual_write|authority)"
+    )
 
 
 def default_parity_telemetry_path(root: Path | None = None) -> Path:
@@ -232,7 +239,7 @@ class MessagePlane:
         attachments: tuple[str, ...] = (),
         metadata: dict[str, Any] | None = None,
     ) -> RequestRecord | None:
-        """Create a durable request for an ask (shadow/dual_write only)."""
+        """Create a durable request for any enabled plane mode."""
         if not self.enabled:
             return None
         dig = invocation_digest(
@@ -279,7 +286,8 @@ class MessagePlane:
         """Run capture conformance and optionally project to legacy.
 
         ``legacy_status_writer`` if provided is ``callable(message_id, reply_id)``
-        used only in dual_write when completion is proven complete.
+        used only in dual_write when completion is proven complete. Authority
+        mode intentionally never invokes it.
         """
         if not self.enabled:
             return PlaneResult(
@@ -417,7 +425,9 @@ class MessagePlane:
         )
 
     def may_mark_legacy_replied(self, request_id: str | None) -> bool:
-        """Gate for dual_write: only proven complete may become legacy replied."""
+        """Gate legacy writes; authority mode refuses every legacy projection."""
+        if self.mode == "authority":
+            return False
         if self.mode != "dual_write" or not request_id:
             # shadow/off: plane does not control legacy; callers keep old behavior
             return self.mode != "dual_write"

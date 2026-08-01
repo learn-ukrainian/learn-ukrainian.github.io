@@ -322,7 +322,23 @@ class ArtifactStore:
             "SELECT 1 FROM delivery_attempts WHERE raw_capture_artifact_id = ? LIMIT 1",
             (artifact_id,),
         ).fetchone()
-        return row is not None
+        if row:
+            return True
+        # Authority-mode metadata shares this artifact store.  These checks
+        # keep queued payloads, immutable context revisions, delivery receipts,
+        # and sealed formal-review snapshots alive through garbage collection.
+        for query in (
+            "SELECT 1 FROM authority_context_revisions WHERE artifact_id = ? LIMIT 1",
+            "SELECT 1 FROM authority_jobs WHERE payload_artifact_id = ? LIMIT 1",
+            "SELECT 1 FROM authority_jobs WHERE result_artifact_id = ? LIMIT 1",
+            "SELECT 1 FROM authority_deliveries WHERE acknowledgment_artifact_id = ? LIMIT 1",
+            "SELECT 1 FROM authority_delivery_attempts WHERE artifact_id = ? LIMIT 1",
+            "SELECT 1 FROM formal_review_snapshot_seals WHERE snapshot_artifact_id = ? LIMIT 1",
+        ):
+            row = self._conn.execute(query, (artifact_id,)).fetchone()
+            if row:
+                return True
+        return False
 
     def garbage_collect_unreferenced(self, *, grace_seconds: int = 3600) -> list[str]:
         """Delete unreferenced artifacts older than grace. Returns deleted artifact_ids."""

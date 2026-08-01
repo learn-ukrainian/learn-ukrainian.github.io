@@ -10,6 +10,7 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms backlog
     .venv/bin/python -m scripts.fleet_comms dead-letters
     .venv/bin/python -m scripts.fleet_comms github-metrics
+    .venv/bin/python -m scripts.fleet_comms authority-import --legacy-db /path/to/messages.db --source legacy-broker
 
 ``formal-job accept`` is the post-``review-pr`` glue (create/reuse job + sealed
 verdict accept). Optional ``--publish`` posts GitHub comment/status via PR-G.
@@ -28,6 +29,7 @@ import sqlite3
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -313,6 +315,143 @@ def cmd_formal_job_accept(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def cmd_authority_import(args: argparse.Namespace) -> int:
+    """Run an explicit, idempotent historical import into a chosen plane root.
+
+    The command has no default source database and never contacts a live bridge;
+    callers must name the legacy SQLite file or a JSONL record file explicitly.
+    JSON output deliberately contains metadata/counts, never imported bodies.
+    """
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    root = Path(args.root).expanduser() if args.root else None
+    try:
+        with AuthorityService(root=root) as service:
+            if args.legacy_db:
+                result = service.import_legacy_sqlite(
+                    Path(args.legacy_db).expanduser(),
+                    source=args.source,
+                )
+            else:
+                record_path = Path(args.records_jsonl).expanduser()
+                try:
+                    lines = record_path.read_text(encoding="utf-8").splitlines()
+                    records = [json.loads(line) for line in lines if line.strip()]
+                except (OSError, json.JSONDecodeError) as exc:
+                    raise FleetCommsCliError("authority_import_records_unreadable") from exc
+                if not all(isinstance(record, dict) for record in records):
+                    raise FleetCommsCliError("authority_import_records_must_be_objects")
+                result = service.import_records(records, source=args.source)
+    except AuthorityServiceError as exc:
+        # Authority errors intentionally contain only stable codes; message
+        # bodies and imported metadata are never printed by this command.
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_ERROR
+    except FleetCommsCliError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_ERROR
+    sys.stdout.write(_json_dump(result.to_dict()))
+    return EXIT_OK
+
+
+def _authority_root(args: argparse.Namespace) -> Path | None:
+    return Path(args.root).expanduser() if args.root else None
+
+
+def _body_argument(value: str) -> str:
+    return sys.stdin.read() if value == "-" else value
+
+
+def _json_object(value: str | None) -> dict[str, Any]:
+    if value is None:
+        return {}
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise FleetCommsCliError("metadata_json_invalid") from exc
+    if not isinstance(parsed, dict):
+        raise FleetCommsCliError("metadata_json_must_be_object")
+    return parsed
+
+
+def cmd_channel_create(args: argparse.Namespace) -> int:
+    """Create or exactly replay one authority-owned asynchronous channel."""
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    try:
+        with AuthorityService(root=_authority_root(args)) as service:
+            channel = service.create_channel(
+                args.name,
+                subscribers=args.subscriber,
+                metadata=_json_object(args.metadata_json),
+            )
+    except AuthorityServiceError as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+    sys.stdout.write(_json_dump(asdict(channel)))
+    return EXIT_OK
+
+
+def cmd_channel_subscribe(args: argparse.Namespace) -> int:
+    """Add durable future fan-out recipients to an authority channel."""
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    try:
+        with AuthorityService(root=_authority_root(args)) as service:
+            channel = service.subscribe(
+                args.name,
+                args.recipient,
+                metadata=_json_object(args.metadata_json),
+            )
+    except AuthorityServiceError as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+    sys.stdout.write(_json_dump(asdict(channel)))
+    return EXIT_OK
+
+
+def cmd_channel_context(args: argparse.Namespace) -> int:
+    """Seal a context revision and atomically make it current for the channel."""
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    try:
+        with AuthorityService(root=_authority_root(args)) as service:
+            revision = service.set_channel_context(
+                args.name,
+                _body_argument(args.body),
+                producer=args.producer,
+            )
+    except AuthorityServiceError as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+    sys.stdout.write(_json_dump(asdict(revision)))
+    return EXIT_OK
+
+
+def cmd_channel_publish(args: argparse.Namespace) -> int:
+    """Append one immutable message and atomically create its fan-out deliveries."""
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    try:
+        with AuthorityService(root=_authority_root(args)) as service:
+            message = service.publish_message(
+                sender=args.sender,
+                body=_body_argument(args.body),
+                channel=args.name,
+                recipients=args.recipient or None,
+                kind=args.kind,
+                conversation_id=args.conversation_id,
+                in_reply_to=args.in_reply_to,
+                correlation_id=args.correlation_id,
+                provenance={"Source": args.source, "Agent": args.sender, "Via": "fleet-comms"},
+                deadline_at=args.deadline_at,
+                idempotency_key=args.idempotency_key,
+            )
+    except AuthorityServiceError as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+    payload = asdict(message)
+    payload["content_included"] = False
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
 
 def cmd_github_metrics(args: argparse.Namespace) -> int:
     """PR open→merge latency from GitHub (metadata only; Sol PR-M residual)."""
@@ -400,7 +539,7 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Fleet-comms CLI: plane-status, formal-job get (read-only), "
             "formal-job accept (writer + optional GitHub publish), "
-            "metrics/backlog/dead-letters (Sol PR-M)."
+            "authority-import, metrics/backlog/dead-letters (Sol PR-M)."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -514,6 +653,79 @@ def build_parser() -> argparse.ArgumentParser:
         help="Plan publication without mutating GitHub (still accepts sealed verdict)",
     )
     formal_accept.set_defaults(func=cmd_formal_job_accept)
+
+    authority_import = sub.add_parser(
+        "authority-import",
+        help="Explicit idempotent import of legacy bridge/channel metadata into Fleet Comms",
+    )
+    authority_import.add_argument(
+        "--source",
+        required=True,
+        help="Stable source namespace used for idempotent import receipts",
+    )
+    authority_import.add_argument(
+        "--root",
+        default=None,
+        help="Authority plane root (never defaults to a legacy database)",
+    )
+    authority_input = authority_import.add_mutually_exclusive_group(required=True)
+    authority_input.add_argument(
+        "--legacy-db",
+        help="Read-only legacy bridge/channel SQLite source; not modified",
+    )
+    authority_input.add_argument(
+        "--records-jsonl",
+        help="JSONL source records for import; bodies are never echoed",
+    )
+    authority_import.set_defaults(func=cmd_authority_import)
+
+    channel = sub.add_parser(
+        "channel",
+        help="Authority-owned asynchronous channel operations",
+    )
+    channel_sub = channel.add_subparsers(dest="channel_command", required=True)
+
+    channel_create = channel_sub.add_parser("create", help="Create an authority channel")
+    channel_create.add_argument("name")
+    channel_create.add_argument("--subscriber", action="append", default=[])
+    channel_create.add_argument("--metadata-json")
+    channel_create.add_argument("--root")
+    channel_create.set_defaults(func=cmd_channel_create)
+
+    channel_subscribe = channel_sub.add_parser(
+        "subscribe", help="Add durable future fan-out recipients"
+    )
+    channel_subscribe.add_argument("name")
+    channel_subscribe.add_argument("recipient", nargs="+")
+    channel_subscribe.add_argument("--metadata-json")
+    channel_subscribe.add_argument("--root")
+    channel_subscribe.set_defaults(func=cmd_channel_subscribe)
+
+    channel_context = channel_sub.add_parser(
+        "context", help="Seal and select the current channel context revision"
+    )
+    channel_context.add_argument("name")
+    channel_context.add_argument("body", help="Context text or '-' for stdin")
+    channel_context.add_argument("--producer", default="fleet-comms-cli")
+    channel_context.add_argument("--root")
+    channel_context.set_defaults(func=cmd_channel_context)
+
+    channel_publish = channel_sub.add_parser(
+        "publish", help="Append an immutable message and create fan-out deliveries"
+    )
+    channel_publish.add_argument("name")
+    channel_publish.add_argument("body", help="Message text or '-' for stdin")
+    channel_publish.add_argument("--sender", required=True)
+    channel_publish.add_argument("--source", default="operator")
+    channel_publish.add_argument("--recipient", action="append", default=[])
+    channel_publish.add_argument("--kind", default="message")
+    channel_publish.add_argument("--conversation-id")
+    channel_publish.add_argument("--in-reply-to")
+    channel_publish.add_argument("--correlation-id")
+    channel_publish.add_argument("--deadline-at")
+    channel_publish.add_argument("--idempotency-key", required=True)
+    channel_publish.add_argument("--root")
+    channel_publish.set_defaults(func=cmd_channel_publish)
 
     metrics = sub.add_parser(
         "metrics",
