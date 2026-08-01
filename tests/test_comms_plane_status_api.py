@@ -26,8 +26,8 @@ def test_read_plane_status_defaults_to_configured_mode(tmp_path: Path, monkeypat
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     monkeypatch.delenv("FLEET_COMMS_PLANE_TELEMETRY", raising=False)
     status = read_plane_status(repo_root=tmp_path)
-    # Compatibility default remains shadow until the final migration gate.
-    assert status["mode"] == "shadow"
+    # The final migration gate promotes durable authority as the default.
+    assert status["mode"] == "authority"
     assert status["enabled"] is True
     assert status["read_only"] is True
     assert status["schema"]["known_version"] == MIGRATIONS[-1].version

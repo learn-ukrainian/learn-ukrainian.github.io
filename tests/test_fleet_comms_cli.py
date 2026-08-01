@@ -93,8 +93,8 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     rc = main(["plane-status", "--root", str(root)])
     assert rc == EXIT_OK
     data = json.loads(capsys.readouterr().out)
-    # Config default is shadow; --root only redirects storage, not mode.
-    assert data["mode"] == "shadow"
+    # Config default is authority; --root only redirects storage, not mode.
+    assert data["mode"] == "authority"
     assert data["plane_root"] == str(root)
 
 

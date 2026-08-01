@@ -19,7 +19,7 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     html = (DASHBOARDS / "fleet.html").read_text(encoding="utf-8")
 
     assert 'data-read-only="true"' in html
-    assert "Unified observer · pre-flip soak" in html
+    assert "Unified observer · authority active" in html
     assert "Fleet Observer is the consolidated evidence surface" in html
     assert "/api/fleet/health" in html
     assert "/api/fleet/overview" in html

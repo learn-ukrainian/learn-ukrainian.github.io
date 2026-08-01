@@ -29,10 +29,10 @@ def test_resolve_plane_mode() -> None:
 def test_resolve_plane_mode_env_unset_uses_configured_default(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Gate A: production default is config message_plane.default_mode (shadow)."""
+    """Gate A: production default is config message_plane.default_mode (authority)."""
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
-    # Config on main/this PR pins shadow after parity window + operator finish GO.
-    assert resolve_plane_mode(None) == "shadow"
+    # Config pins durable authority after the protected cutover rail merged.
+    assert resolve_plane_mode(None) == "authority"
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
     assert resolve_plane_mode(None) == "off"
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "dual_write")
