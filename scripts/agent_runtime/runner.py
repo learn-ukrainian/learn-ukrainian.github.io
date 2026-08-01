@@ -39,7 +39,7 @@ import subprocess
 import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -52,7 +52,21 @@ from ai_llm.fallback import (
     run_gemini_fallback_ladder,
 )
 
-from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+# Registry adapter paths are canonicalized under ``scripts.agent_runtime``.
+# Import the ACP scope from that same module identity even when this runner is
+# reached through the historical top-level ``agent_runtime`` package alias;
+# otherwise ContextVar provenance is set on one module object and checked on
+# another.
+from scripts.agent_runtime.adapters.acpx import (
+    ACPX_PARTICIPANT_CATALOG_TRANSPORTS,
+    ACPX_PARTICIPANT_EFFORTS,
+    ACPX_SUPPORTED_PARTICIPANTS,
+    AcpxTransportProvenance,
+    _require_local_metadata_field,
+    active_communication_scope,
+)
+from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+
 from .adapters.base import AgentAdapter
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .env_sanitize import build_agent_env
@@ -111,14 +125,21 @@ _MCP_TOOL_EVENT_RE = re.compile(
 _MCP_TRANSPORT_FAILURE_RE = re.compile(r"ERROR\s+rmcp::transport::worker:")
 _MCP_FAILURE_URL_RE = re.compile(r"url \((?P<url>https?://[^)\s]+)\)")
 _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
-    {"acpx-pilot-native", "acpx-pilot-shadow", "acpx-discuss", "acpx-discuss-synthesis"}
+    {
+        "acpx-pilot-native",
+        "acpx-pilot-shadow",
+        "acpx-discuss",
+        "acpx-discuss-synthesis",
+        "acpx-transport",
+    }
 )
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 256 * 1024
 # Native OpenCode ACP emits a larger JSON-RPC envelope than the text-only and
-# built-in seats. Keep it bounded, but above the production-observed 263,070
+# built-in seats. Keep it bounded, but above the production-observed 4,204,632
 # bytes that otherwise killed a valid concise GLM response before its terminal
-# frame arrived (#6159).
-_ACPX_GLM_OUTPUT_LIMIT_BYTES = 512 * 1024
+# frame arrived (#6159). The parsed response and formal verdict retain their
+# separate, tighter content/evidence bounds.
+_ACPX_GLM_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -126,6 +147,11 @@ _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 _INVOCATION_ATTRIBUTION: contextvars.ContextVar[InvocationAttribution | None] = (
     contextvars.ContextVar("agent_runtime_invocation_attribution", default=None)
 )
+_INTER_AGENT_TRANSPORT: contextvars.ContextVar[AcpxTransportProvenance | None] = (
+    contextvars.ContextVar("agent_runtime_inter_agent_transport", default=None)
+)
+_INTER_AGENT_TRANSPORT_NAME = "acp"
+_RESERVED_TRANSPORT_PROVENANCE = frozenset({"source", "agent", "via"})
 
 
 class AgentOutputLimitError(AgentRuntimeError):
@@ -141,12 +167,22 @@ class AgentOutputLimitError(AgentRuntimeError):
         )
 
 
+class InterAgentTransportError(AgentRuntimeError):
+    """Refusal at the ACP-only inter-agent transport boundary.
+
+    This is deliberately distinct from an adapter/process failure: callers
+    must not translate it into a legacy bridge retry.  The requested route was
+    unavailable, unsupported, malformed, or lacked trusted provenance before
+    any provider process could be spawned.
+    """
+
+
 def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
     """Return the opt-in cap for isolated ACP direct-only seats only."""
     acpx_seats = {str(route["seat"]) for route in ACPX_SUPPORTED_PARTICIPANTS.values()}
     if (
         agent_name in acpx_seats
-        and entrypoint in {"acpx-pilot-shadow", "acpx-discuss"}
+        and entrypoint in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}
     ):
         if agent_name == "acpx-glm-shadow":
             return _ACPX_GLM_OUTPUT_LIMIT_BYTES
@@ -744,6 +780,7 @@ def _build_usage_record(
     attribution = _INVOCATION_ATTRIBUTION.get() or resolve_invocation_attribution(
         task_id=task_id
     )
+    transport = _INTER_AGENT_TRANSPORT.get()
 
     record = {
         "ts": datetime.now(UTC).isoformat(),
@@ -780,6 +817,10 @@ def _build_usage_record(
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
+    if transport is not None:
+        # The context is installed only by invoke_inter_agent(); no caller
+        # metadata is permitted to supply or overwrite these fields.
+        record["transport"] = transport.metadata()
     return record
 
 
@@ -2661,6 +2702,12 @@ def _invoke_impl(
         isolation_capability_digest=execution.isolation_capability_digest,
         isolation_prompt_digest=execution.isolation_prompt_digest,
         isolation_prompt_transport=execution.isolation_prompt_transport,
+        transport_metadata=(
+            _INTER_AGENT_TRANSPORT.get().metadata()
+            if _INTER_AGENT_TRANSPORT.get() is not None
+            else None
+        ),
+        transport_outcome=outcome if _INTER_AGENT_TRANSPORT.get() is not None else None,
     )
 
 
@@ -2725,6 +2772,262 @@ def invoke(
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 
+@dataclass(frozen=True)
+class InterAgentRoute:
+    """One enabled, fixed ACP participant selected by the runner."""
+
+    participant: str
+    seat: str
+    target_agent: str
+    model: str | None
+    effort: str | None
+
+
+def _require_acp_transport(transport: str | None) -> None:
+    """Select ACP only; bridge fallback belongs outside this boundary."""
+    selected = _INTER_AGENT_TRANSPORT_NAME if transport is None else str(transport).strip().lower()
+    if selected != _INTER_AGENT_TRANSPORT_NAME:
+        raise InterAgentTransportError(
+            "inter-agent transport supports only 'acp'; it never retries the legacy bridge"
+        )
+    active = os.environ.get(ACPX_TRANSPORT_ENV, "off").strip().lower()
+    if active != "active":
+        raise InterAgentTransportError(
+            f"ACP transport is unavailable ({ACPX_TRANSPORT_ENV}={active!r}); refusing before spawn"
+        )
+
+
+def _validate_transport_metadata(metadata: Mapping[str, object] | None) -> None:
+    """Reject arbitrary metadata so credentials and provenance cannot cross this seam."""
+    if metadata is None:
+        return
+    if not isinstance(metadata, Mapping):
+        raise InterAgentTransportError("inter-agent metadata must be a mapping when provided")
+    reserved = sorted(
+        str(key)
+        for key in metadata
+        if str(key).strip().casefold() in _RESERVED_TRANSPORT_PROVENANCE
+    )
+    if reserved:
+        raise InterAgentTransportError(
+            "Source, Agent, and Via are runner-sealed ACP provenance; "
+            f"caller metadata may not override {reserved!r}"
+        )
+    if metadata:
+        raise InterAgentTransportError(
+            "inter-agent transport accepts no arbitrary metadata; use its explicit bounded arguments"
+        )
+
+
+def _validate_catalog_model(
+    *,
+    participant: str,
+    model: str,
+) -> None:
+    """Require a current active catalog model on the adapter's real route."""
+    try:
+        from scripts.review.model_catalog import load_model_catalog
+
+        catalog = load_model_catalog()
+    except (ImportError, OSError, ValueError) as exc:
+        raise InterAgentTransportError(
+            "ACP model selection is unavailable because the canonical model catalog could not load"
+        ) from exc
+
+    try:
+        model_entry = catalog["models"][model]
+        catalog_transport = ACPX_PARTICIPANT_CATALOG_TRANSPORTS[participant]
+    except (KeyError, TypeError) as exc:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} has no enabled catalog route for model {model!r}"
+        ) from exc
+    if model_entry.get("lifecycle") != "active":
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} refuses non-active model {model!r}"
+        )
+    if catalog_transport not in model_entry.get("transports", []):
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} does not implement catalog transport "
+            f"{catalog_transport!r} for model {model!r}"
+        )
+
+
+def resolve_inter_agent_route(
+    agent: str,
+    *,
+    model: str | None = None,
+    effort: str | None = None,
+) -> InterAgentRoute:
+    """Validate one ACP participant/model/effort selection without spawning.
+
+    The selection is deliberately narrower than ordinary runtime routing:
+    only the pinned ACP adapter registry is considered, and an override may
+    only repeat that adapter's current exact pin.  This prevents model catalog
+    presence from inventing a new ACP provider route.
+    """
+    participant = str(agent).strip().lower()
+    try:
+        raw_route = ACPX_SUPPORTED_PARTICIPANTS[participant]
+        seat = raw_route["seat"]
+        target_agent = raw_route["agent"]
+        pinned_model = raw_route["model"]
+    except (KeyError, TypeError) as exc:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} is unsupported; refusing without bridge fallback"
+        ) from exc
+    if not all(isinstance(value, str) and value for value in (seat, target_agent)):
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} has an invalid enabled adapter route"
+        )
+    try:
+        entry = get_agent_entry(seat)
+    except KeyError as exc:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} has no registered direct-only seat"
+        ) from exc
+    if entry.get("direct_only") is not True or entry.get("cli_available") is not False:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} is not an enabled confined direct-only route"
+        )
+
+    if model is not None and model != pinned_model:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} only supports its registered model pin "
+            f"{pinned_model!r}; got {model!r}"
+        )
+    if pinned_model is not None:
+        _validate_catalog_model(participant=participant, model=pinned_model)
+
+    pinned_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
+    if effort is not None and effort != pinned_effort:
+        raise InterAgentTransportError(
+            f"ACP participant {participant!r} only supports its registered effort pin "
+            f"{pinned_effort!r}; got {effort!r}"
+        )
+    return InterAgentRoute(
+        participant=participant,
+        seat=seat,
+        target_agent=target_agent,
+        model=pinned_model,
+        effort=pinned_effort,
+    )
+
+
+def _resolve_trusted_transport_source(
+    *,
+    source: str | None,
+    task_id: str,
+) -> str:
+    """Resolve Source once and refuse unknown/missing provenance before spawn."""
+    try:
+        attribution = resolve_invocation_attribution(
+            explicit=source,
+            task_id=task_id,
+        )
+    except ValueError as exc:
+        raise InterAgentTransportError("inter-agent Source is invalid") from exc
+    if attribution.initiator == "unknown":
+        raise InterAgentTransportError(
+            "inter-agent ACP requires a trusted initiating Source; unknown or missing is refused"
+        )
+    return attribution.initiator
+
+
+def _normalized_transport_outcome(result: Result) -> str:
+    """Expose one bounded terminal vocabulary to communication callers."""
+    if result.rate_limited:
+        return "rate_limited"
+    if result.ok:
+        return "ok"
+    reported = result.usage_record.get("outcome")
+    return reported if reported in {"error", "rate_limited"} else "error"
+
+
+def invoke_inter_agent(
+    agent: str,
+    prompt: str,
+    *,
+    cwd: Path,
+    task_id: str,
+    correlation_id: str,
+    idempotency_key: str,
+    source: str | None = None,
+    model: str | None = None,
+    effort: str | None = None,
+    transport: str | None = None,
+    metadata: Mapping[str, object] | None = None,
+    hard_timeout: int = 300,
+) -> Result:
+    """Invoke one confined ACP participant through the normal communication seam.
+
+    ACP is the default and only transport exposed here.  It performs one
+    direct-only one-shot call, never creates a worktree or provider session,
+    and never retries a failed ACP request through the legacy bridge.  The
+    returned :class:`Result` carries runner-sealed ``transport_metadata``
+    (Source, Agent, Via) and a normalized ``transport_outcome``.
+    """
+    _require_acp_transport(transport)
+    _validate_transport_metadata(metadata)
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise InterAgentTransportError("inter-agent prompt must be a non-empty string")
+    if isinstance(hard_timeout, bool) or not isinstance(hard_timeout, int) or hard_timeout < 1:
+        raise InterAgentTransportError("inter-agent hard_timeout must be a positive integer")
+
+    validated_task_id = _require_local_metadata_field(
+        "task_id", task_id, adapter_label="InterAgentTransport"
+    )
+    validated_correlation_id = _require_local_metadata_field(
+        "correlation_id", correlation_id, adapter_label="InterAgentTransport"
+    )
+    validated_idempotency_key = _require_local_metadata_field(
+        "idempotency_key", idempotency_key, adapter_label="InterAgentTransport"
+    )
+    route = resolve_inter_agent_route(agent, model=model, effort=effort)
+    trusted_source = _resolve_trusted_transport_source(
+        source=source,
+        task_id=validated_task_id,
+    )
+    provenance = AcpxTransportProvenance(
+        source=trusted_source,
+        agent=route.participant,
+        target_agent=route.target_agent,
+    )
+    transport_token = _INTER_AGENT_TRANSPORT.set(provenance)
+    try:
+        with active_communication_scope(
+            source=trusted_source,
+            agent=route.participant,
+            target_agent=route.target_agent,
+        ):
+            result = _invoke_direct_only(
+                route.seat,
+                prompt,
+                cwd=Path(cwd),
+                model=route.model,
+                task_id=validated_task_id,
+                tool_config={
+                    "acpx_transport": True,
+                    "target_agent": route.target_agent,
+                    "correlation_id": validated_correlation_id,
+                    "idempotency_key": validated_idempotency_key,
+                },
+                hard_timeout=hard_timeout,
+                effort=route.effort,
+                entrypoint="acpx-transport",
+                initiator=trusted_source,
+            )
+            usage_record = dict(result.usage_record)
+            usage_record.setdefault("transport", provenance.metadata())
+            return replace(
+                result,
+                usage_record=usage_record,
+                transport_metadata=provenance.metadata(),
+                transport_outcome=_normalized_transport_outcome(result),
+            )
+    finally:
+        _INTER_AGENT_TRANSPORT.reset(transport_token)
+
+
 def _invoke_direct_only(
     agent_name: str,
     prompt: str,
@@ -2753,7 +3056,7 @@ def _invoke_direct_only(
         raise AgentUnavailableError(
             f"Agent {agent_name!r} is not an unavailable direct-only seat"
         )
-    if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss"}:
+    if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}:
         raise ValueError("ACPX direct-only invocation entrypoint was altered")
     attribution_token = _INVOCATION_ATTRIBUTION.set(
         resolve_invocation_attribution(explicit=initiator, task_id=task_id)

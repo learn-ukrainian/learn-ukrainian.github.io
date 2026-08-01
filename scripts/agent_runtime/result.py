@@ -130,3 +130,7 @@ class Result:
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
     response_envelope: ResponseEnvelope | None = None
+    # Present only for runner-selected inter-agent ACP calls.  Source, Agent,
+    # and Via are sealed by the runner, not accepted from caller metadata.
+    transport_metadata: dict[str, str] | None = None
+    transport_outcome: str | None = None

@@ -1,9 +1,9 @@
-"""Bounded, durable ACPX two-seat discussion controller (#6078, #6130).
+"""Bounded, durable ACPX multi-seat discussion controller (#6078, #6130).
 
 This is intentionally a small finite DAG, not a new message-plane router. It
-accepts ``LU_ACPX_TRANSPORT=active`` only here; participants must resolve to
-enabled direct-only ACPX seats, while the final synthesis is a fresh native
-Codex call.
+requires ``LU_ACPX_TRANSPORT=active``; two to six participants resolve through
+the runner-owned normal ACP boundary into enabled direct-only ACPX seats, while
+the final synthesis is a fresh native Codex call.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ import sqlite3
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -40,7 +40,12 @@ from scripts.agent_runtime.adapters.acpx import (
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
 from scripts.agent_runtime.result import Result
-from scripts.agent_runtime.runner import _invoke_direct_only, _invoke_native_once
+from scripts.agent_runtime.runner import (
+    _invoke_direct_only,
+    _invoke_native_once,
+    invoke_inter_agent,
+    resolve_inter_agent_route,
+)
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
@@ -48,15 +53,18 @@ from scripts.guardrails.worktree_containment import classify_repo_path
 
 PARTICIPANTS = ("codex", "grok")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
+MIN_PARTICIPANTS = 2
+MAX_PARTICIPANTS = 6
 MAX_ROUNDS = 3
 DEFAULT_ROUNDS = 2
 CALL_TIMEOUT_SECONDS = 300
 WHOLE_TIMEOUT_SECONDS = 1200
 TOKEN_BUDGET = 160_000
 CONTENT_BUDGET_BYTES = 512 * 1024
+PARTICIPANT_CONCURRENCY = 3
 
 _TERMINAL = frozenset({"COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CANCELLED"})
-_PARTICIPANT_SLOTS = threading.BoundedSemaphore(2)
+_PARTICIPANT_SLOTS = threading.BoundedSemaphore(PARTICIPANT_CONCURRENCY)
 _LOCAL_ADMISSION = threading.Lock()
 _CONVERSATION_ID = re.compile(r"conversation_[0-9a-f]{32}")
 _NEXT = {
@@ -113,6 +121,8 @@ def _result_outcome(result: Result | None, error: BaseException | None) -> str:
         return "rate_limited"
     if error is not None or result is None:
         return "error"
+    if result.transport_outcome in {"ok", "error", "rate_limited"}:
+        return result.transport_outcome
     if not result.ok:
         return str(result.usage_record.get("outcome") or "error")
     return "ok"
@@ -200,13 +210,16 @@ class AcpxDiscussionController:
         self,
         *,
         root: Path,
-        participant_call: Callable[..., Result] = _invoke_direct_only,
+        participant_call: Callable[..., Result] | None = None,
         synthesis_call: Callable[..., Result] = _invoke_native_once,
         clock: Callable[[], float] = time.monotonic,
         cancelled: Callable[[], bool] | None = None,
     ) -> None:
         self.store = ArtifactStore(root=root)
         self.conn = self.store.connection
+        # The default is the runner-owned normal ACP transport.  Test and
+        # migration callers may inject the previous direct-only callback; that
+        # compatibility seam remains read-only and cannot select a bridge.
         self.participant_call = participant_call
         self.synthesis_call = synthesis_call
         self.clock = clock
@@ -455,7 +468,7 @@ class AcpxDiscussionController:
         idempotency_digest: str,
         rounds: int,
         deadline_at: str,
-        participants: tuple[str, str] = PARTICIPANTS,
+        participants: tuple[str, ...] = PARTICIPANTS,
     ) -> tuple[str, dict[str, Any] | None]:
         """Durably create the conversation before spawning any participant."""
         conversation_id = new_id("conversation")
@@ -588,6 +601,31 @@ class AcpxDiscussionController:
             recovered.append(conversation_id)
         return recovered
 
+    @staticmethod
+    def _normalize_participant_overrides(
+        label: str,
+        overrides: Mapping[str, str] | None,
+        participants: tuple[str, ...],
+    ) -> dict[str, str]:
+        """Accept only exact participant-keyed non-secret model/effort pins."""
+        if overrides is None:
+            return {}
+        if not isinstance(overrides, Mapping):
+            raise AcpxDiscussionError(f"{label} must be a participant-keyed mapping")
+        normalized: dict[str, str] = {}
+        for raw_participant, raw_value in overrides.items():
+            participant = str(raw_participant).strip().lower()
+            if participant not in participants or participant in normalized:
+                raise AcpxDiscussionError(
+                    f"{label} contains an unknown or duplicate participant {raw_participant!r}"
+                )
+            if not isinstance(raw_value, str) or not raw_value.strip():
+                raise AcpxDiscussionError(
+                    f"{label}[{participant!r}] must be a non-empty catalog identifier"
+                )
+            normalized[participant] = raw_value.strip()
+        return normalized
+
     def _call_wave(
         self,
         *,
@@ -598,31 +636,50 @@ class AcpxDiscussionController:
         cwd: Path,
         round_no: int,
         prompts: dict[str, str],
-        deliveries: dict[str, tuple[str, str, str | None]],
+        deliveries: Mapping[str, Sequence[tuple[str, str, str | None]] | tuple[str, str, str | None]],
         state: str,
         deadline: float,
-        initiator: str | None = None,
-        participants: tuple[str, str] = PARTICIPANTS,
+        source: str | None = None,
+        models: Mapping[str, str] | None = None,
+        efforts: Mapping[str, str] | None = None,
+        participants: tuple[str, ...] = PARTICIPANTS,
     ) -> list[ParticipantOutcome]:
         reservations: dict[str, str] = {}
         request_messages: dict[str, str] = {}
+        model_overrides = models or {}
+        effort_overrides = efforts or {}
         for participant in participants:
             leg = _leg_digest(conversation_id, str(round_no), participant, _digest(prompts[participant]))
             reservations[participant] = leg
-            sender, body, reply_to = deliveries[participant]
-            request_messages[participant] = self._message(
-                conversation_id,
-                sender=sender,
-                recipient=participant,
-                body=body,
-                reply_to=reply_to,
-                kind="request" if sender == "root" else "reply",
-            )
+            raw_deliveries = deliveries[participant]
+            if (
+                len(raw_deliveries) == 3
+                and isinstance(raw_deliveries[0], str)
+                and isinstance(raw_deliveries[1], str)
+            ):
+                delivery_items = (raw_deliveries,)
+            else:
+                delivery_items = tuple(raw_deliveries)
+            if not delivery_items:
+                raise AcpxDiscussionError(f"participant {participant!r} has no persisted delivery")
+            message_ids: list[str] = []
+            for sender, body, reply_to in delivery_items:
+                message_ids.append(
+                    self._message(
+                        conversation_id,
+                        sender=sender,
+                        recipient=participant,
+                        body=body,
+                        reply_to=reply_to,
+                        kind="request" if sender == "root" else "reply",
+                    )
+                )
+            request_messages[participant] = message_ids[-1]
             self._append(
                 conversation_id,
                 event_type="CALL_RESERVED",
                 state=state,
-                sender=sender,
+                sender=delivery_items[-1][0],
                 recipient=participant,
                 round_no=round_no,
                 leg_key_digest=leg,
@@ -636,17 +693,43 @@ class AcpxDiscussionController:
             if not _PARTICIPANT_SLOTS.acquire(blocking=False):
                 return ParticipantOutcome(participant, "busy", None, 0, None, None)
             try:
-                with active_discussion_scope():
-                    route = ACPX_SUPPORTED_PARTICIPANTS[participant]
-                    result = self.participant_call(
-                        str(route["seat"]), prompts[participant], cwd=cwd, model=None,
+                timeout = max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock())))
+                if self.participant_call is None:
+                    result = invoke_inter_agent(
+                        participant,
+                        prompts[participant],
+                        cwd=cwd,
                         task_id=task_id,
-                        tool_config={"acpx_discussion": True, "target_agent": route["agent"],
-                                     "correlation_id": correlation_id, "idempotency_key": idempotency_key},
-                        hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))),
-                        entrypoint="acpx-discuss",
-                        initiator=initiator,
+                        correlation_id=correlation_id,
+                        idempotency_key=idempotency_key,
+                        source=source,
+                        model=model_overrides.get(participant),
+                        effort=effort_overrides.get(participant),
+                        hard_timeout=timeout,
                     )
+                else:
+                    # Preserve the injectable legacy callback contract for
+                    # deterministic controller tests and migration consumers.
+                    # It still enters only the read-only active ACP scope.
+                    with active_discussion_scope():
+                        route = ACPX_SUPPORTED_PARTICIPANTS[participant]
+                        result = self.participant_call(
+                            str(route["seat"]),
+                            prompts[participant],
+                            cwd=cwd,
+                            model=model_overrides.get(participant),
+                            task_id=task_id,
+                            tool_config={
+                                "acpx_discussion": True,
+                                "target_agent": route["agent"],
+                                "correlation_id": correlation_id,
+                                "idempotency_key": idempotency_key,
+                            },
+                            hard_timeout=timeout,
+                            effort=effort_overrides.get(participant),
+                            entrypoint="acpx-discuss",
+                            initiator=source,
+                        )
             except BaseException as exc:  # preserve cancellation as typed partial evidence
                 error = exc
             finally:
@@ -684,13 +767,22 @@ class AcpxDiscussionController:
                 leg_key_digest=reservations[outcome.participant],
                 message_id=message_id,
             )
-            outcomes.append(ParticipantOutcome(
-                outcome.participant, outcome.outcome, outcome.response,
-                outcome.duration_ms, outcome.tokens, message_id,
-            ))
+            outcomes.append(
+                ParticipantOutcome(
+                    outcome.participant,
+                    outcome.outcome,
+                    outcome.response,
+                    outcome.duration_ms,
+                    outcome.tokens,
+                    message_id,
+                )
+            )
 
-        pool = ThreadPoolExecutor(max_workers=len(participants), thread_name_prefix="acpx-discuss")
-        futures = {pool.submit(invoke, p): p for p in participants}
+        pool = ThreadPoolExecutor(
+            max_workers=min(PARTICIPANT_CONCURRENCY, len(participants)),
+            thread_name_prefix="acpx-discuss",
+        )
+        futures = {pool.submit(invoke, participant): participant for participant in participants}
         pending = set(futures)
         while pending:
             done, pending = wait(
@@ -719,6 +811,9 @@ class AcpxDiscussionController:
         idempotency_key: str,
         rounds: int = DEFAULT_ROUNDS,
         participants: Sequence[str] = PARTICIPANTS,
+        models: Mapping[str, str] | None = None,
+        efforts: Mapping[str, str] | None = None,
+        source: str | None = None,
         initiator: str | None = None,
     ) -> dict[str, Any]:
         if os.environ.get(TRANSPORT_ENV, "off").strip().lower() != "active":
@@ -727,12 +822,13 @@ class AcpxDiscussionController:
             raise AcpxDiscussionError("prompt must be non-empty")
         normalized_participants = tuple(str(item).strip().lower() for item in participants)
         if (
-            len(normalized_participants) != 2
-            or len(set(normalized_participants)) != 2
+            not MIN_PARTICIPANTS <= len(normalized_participants) <= MAX_PARTICIPANTS
+            or len(set(normalized_participants)) != len(normalized_participants)
             or any(item not in SUPPORTED_PARTICIPANTS for item in normalized_participants)
         ):
             raise AcpxDiscussionError(
-                "participants must name exactly two distinct enabled ACP seats: "
+                f"participants must name {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} distinct "
+                "enabled ACP seats: "
                 + ", ".join(sorted(SUPPORTED_PARTICIPANTS))
             )
         if len(prompt.encode("utf-8")) * len(normalized_participants) > CONTENT_BUDGET_BYTES:
@@ -745,6 +841,30 @@ class AcpxDiscussionController:
         task_id = _require_local_metadata_field("task_id", task_id, adapter_label="AcpxDiscuss")
         correlation_id = _require_local_metadata_field("correlation_id", correlation_id, adapter_label="AcpxDiscuss")
         idempotency_key = _require_local_metadata_field("idempotency_key", idempotency_key, adapter_label="AcpxDiscuss")
+        if source is not None and initiator is not None and source != initiator:
+            raise AcpxDiscussionError("source and initiator disagree; provenance must be unambiguous")
+        transport_source = source if source is not None else initiator
+        model_overrides = self._normalize_participant_overrides(
+            "models",
+            models,
+            normalized_participants,
+        )
+        effort_overrides = self._normalize_participant_overrides(
+            "efforts",
+            efforts,
+            normalized_participants,
+        )
+        for participant in normalized_participants:
+            try:
+                resolve_inter_agent_route(
+                    participant,
+                    model=model_overrides.get(participant),
+                    effort=effort_overrides.get(participant),
+                )
+            except Exception as exc:
+                raise AcpxDiscussionError(
+                    f"invalid ACP participant selection for {participant!r}: {exc}"
+                ) from exc
         idempotency_digest = _digest(idempotency_key)
         replay = self._terminal_replay(idempotency_digest)
         if replay is not None:
@@ -763,7 +883,9 @@ class AcpxDiscussionController:
                 idempotency_digest=idempotency_digest,
                 rounds=rounds,
                 participants=normalized_participants,
-                initiator=initiator,
+                models=model_overrides,
+                efforts=effort_overrides,
+                source=transport_source,
             )
 
     def _run_admitted(
@@ -776,8 +898,10 @@ class AcpxDiscussionController:
         idempotency_key: str,
         idempotency_digest: str,
         rounds: int,
-        participants: tuple[str, str],
-        initiator: str | None,
+        participants: tuple[str, ...],
+        models: Mapping[str, str],
+        efforts: Mapping[str, str],
+        source: str | None,
     ) -> dict[str, Any]:
         started = self.clock()
         deadline = started + WHOLE_TIMEOUT_SECONDS
@@ -808,9 +932,11 @@ class AcpxDiscussionController:
             idempotency_key=idempotency_key, cwd=cwd, round_no=1,
             participants=participants,
             prompts={p: prompt for p in participants},
-            deliveries={p: ("root", prompt, None) for p in participants},
+            deliveries={p: (("root", prompt, None),) for p in participants},
             state="INITIAL_FANOUT", deadline=deadline,
-            initiator=initiator,
+            source=source,
+            models=models,
+            efforts=efforts,
         )
         all_outcomes = list(outcomes)
         content_used += sum(len(item.response.encode("utf-8")) for item in outcomes if item.response)
@@ -842,19 +968,25 @@ class AcpxDiscussionController:
             self._append(conversation_id, event_type="STATE", state="CROSS_EXCHANGE", transition=True)
             prior = {item.participant: item.response for item in outcomes}
             prompts: dict[str, str] = {}
-            deliveries: dict[str, tuple[str, str, str | None]] = {}
+            deliveries: dict[str, Sequence[tuple[str, str, str | None]]] = {}
             prior_messages = {item.participant: item.message_id for item in outcomes}
             for participant in participants:
-                peer = next(item for item in participants if item != participant)
-                peer_response = prior.get(peer) or "[unavailable]"
-                prompts[participant] = (
-                    f"Original task:\n{prompt}\n\n{peer}'s prior response:\n"
-                    f"{peer_response}\n\nRespond with your critique or refinement."
+                peers = tuple(peer for peer in participants if peer != participant)
+                peer_evidence = "\n\n".join(
+                    f"{peer}'s prior response:\n{prior.get(peer) or '[unavailable]'}"
+                    for peer in peers
                 )
-                deliveries[participant] = (
-                    peer,
-                    peer_response,
-                    prior_messages.get(peer),
+                prompts[participant] = (
+                    f"Original task:\n{prompt}\n\n{peer_evidence}\n\n"
+                    "Respond with your critique or refinement."
+                )
+                deliveries[participant] = tuple(
+                    (
+                        peer,
+                        prior.get(peer) or "[unavailable]",
+                        prior_messages.get(peer),
+                    )
+                    for peer in peers
                 )
             outcomes = self._call_wave(
                 conversation_id=conversation_id, task_id=task_id, correlation_id=correlation_id,
@@ -863,7 +995,9 @@ class AcpxDiscussionController:
                 prompts=prompts,
                 deliveries=deliveries,
                 state="CROSS_EXCHANGE", deadline=deadline,
-                initiator=initiator,
+                source=source,
+                models=models,
+                efforts=efforts,
             )
             all_outcomes.extend(outcomes)
             content_used += sum(len(value.encode("utf-8")) for value in prompts.values())
@@ -929,7 +1063,7 @@ class AcpxDiscussionController:
                         1,
                         min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock())),
                     ),
-                    initiator=initiator,
+                    initiator=source,
                 )
                 if synthesis_result.ok:
                     synthesis = synthesis_result.response
@@ -1075,9 +1209,9 @@ def verify_discussion_receipt(
         participants = None
     participants_valid = (
         isinstance(participants, list)
-        and len(participants) == 2
+        and MIN_PARTICIPANTS <= len(participants) <= MAX_PARTICIPANTS
         and all(isinstance(item, str) and item in SUPPORTED_PARTICIPANTS for item in participants)
-        and len(set(participants)) == 2
+        and len(set(participants)) == len(participants)
     )
     participant_names: tuple[str, ...] = tuple(participants) if participants_valid else ()
     rounds_value = row["rounds_requested"]
