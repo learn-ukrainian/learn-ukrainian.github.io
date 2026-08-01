@@ -361,11 +361,18 @@ def _operator_decision(
     decided_families = frozenset(str(name) for name in decision["source_families"])
     if not decided_families.issubset(configured_families):
         raise AdmissionError("operator decision references an unconfigured source family")
-    required_disposition = "admitted" if status == "accepted" else "excluded"
     packet_terminal_families = frozenset(
-        name for name, item in packet_families.items() if item["current_disposition"] == required_disposition
+        name
+        for name, item in packet_families.items()
+        if item["current_disposition"] in {"admitted", "excluded"}
     )
     if packet_terminal_families != decided_families:
+        raise AdmissionError("operator decision family set does not match terminal packet families")
+    required_disposition = "admitted" if status == "accepted" else "excluded"
+    direction_families = frozenset(
+        name for name, item in packet_families.items() if item["current_disposition"] == required_disposition
+    )
+    if direction_families != decided_families:
         raise AdmissionError("operator decision family set does not match terminal packet dispositions")
     for name in decided_families:
         family = configured_families[name]

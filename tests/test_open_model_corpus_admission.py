@@ -319,6 +319,44 @@ def test_operator_packet_denominator_mismatch_is_rejected(tmp_path: Path) -> Non
         )
 
 
+def test_operator_packet_rejects_terminal_state_on_an_undecided_family(tmp_path: Path) -> None:
+    config_path, _ = _wikipedia_fixture(tmp_path)
+    _accept_wikipedia_fixture(tmp_path, config_path)
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    archival_config = copy.deepcopy(config["families"][0])
+    archival_config.update({
+        "source_family": "archival_documents",
+        "proposed_destination": None,
+        "source_record": None,
+    })
+    archival_config["evidence"]["rights"] = "not_reconstructed"
+    config["families"].append(archival_config)
+    _json(config_path, config)
+
+    packet = json.loads((tmp_path / "operator.json").read_text(encoding="utf-8"))
+    packet["families"].append({
+        "source_family": "archival_documents",
+        "current_disposition": "excluded",
+        "rows": 1,
+        "words": 2,
+        "blocked_by": ["rights not reconstructed"],
+        "proposed_destination": None,
+        "evidence_packet_id": None,
+        "obligations": [],
+        "material_ambiguities": [],
+    })
+    packet["total_rows"] = 3
+    packet["total_words"] = 6
+    _json(tmp_path / "operator.json", packet)
+    profile_sources = {
+        "wikipedia": {"expected": {"rows": 2, "lexical_words": 4}},
+        "archival_documents": {"expected": {"rows": 1, "lexical_words": 2}},
+    }
+
+    with pytest.raises(admission.AdmissionError, match="terminal packet families"):
+        admission._operator_decision(config, tmp_path, profile_sources)
+
+
 def test_source_record_validation_failure_leaves_no_final_artifacts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
