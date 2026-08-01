@@ -383,6 +383,7 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
             cwd=REPO_ROOT,
             model=model,
             task_id=msg.get("task_id"),
+            initiator=msg.get("from"),
             session_id=None,  # Gemini CLI has no --resume; bridge multi-turn
                               # is handled via conversation context injection
                               # in the prompt builder, not CLI-level resume.

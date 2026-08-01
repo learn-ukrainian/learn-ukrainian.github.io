@@ -215,6 +215,7 @@ def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
         )
 
     assert mock_invoke.call_args.kwargs["mode"] == expected_mode
+    assert mock_invoke.call_args.kwargs["initiator"] == "claude"
 
 
 def test_handle_ask_gemini_routes_to_agy(monkeypatch):

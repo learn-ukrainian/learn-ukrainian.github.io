@@ -601,6 +601,7 @@ class AcpxDiscussionController:
         deliveries: dict[str, tuple[str, str, str | None]],
         state: str,
         deadline: float,
+        initiator: str | None = None,
         participants: tuple[str, str] = PARTICIPANTS,
     ) -> list[ParticipantOutcome]:
         reservations: dict[str, str] = {}
@@ -644,6 +645,7 @@ class AcpxDiscussionController:
                                      "correlation_id": correlation_id, "idempotency_key": idempotency_key},
                         hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))),
                         entrypoint="acpx-discuss",
+                        initiator=initiator,
                     )
             except BaseException as exc:  # preserve cancellation as typed partial evidence
                 error = exc
@@ -717,6 +719,7 @@ class AcpxDiscussionController:
         idempotency_key: str,
         rounds: int = DEFAULT_ROUNDS,
         participants: Sequence[str] = PARTICIPANTS,
+        initiator: str | None = None,
     ) -> dict[str, Any]:
         if os.environ.get(TRANSPORT_ENV, "off").strip().lower() != "active":
             raise AcpxDiscussionError("LU_ACPX_TRANSPORT=active is required by acp-discuss")
@@ -760,6 +763,7 @@ class AcpxDiscussionController:
                 idempotency_digest=idempotency_digest,
                 rounds=rounds,
                 participants=normalized_participants,
+                initiator=initiator,
             )
 
     def _run_admitted(
@@ -773,6 +777,7 @@ class AcpxDiscussionController:
         idempotency_digest: str,
         rounds: int,
         participants: tuple[str, str],
+        initiator: str | None,
     ) -> dict[str, Any]:
         started = self.clock()
         deadline = started + WHOLE_TIMEOUT_SECONDS
@@ -805,6 +810,7 @@ class AcpxDiscussionController:
             prompts={p: prompt for p in participants},
             deliveries={p: ("root", prompt, None) for p in participants},
             state="INITIAL_FANOUT", deadline=deadline,
+            initiator=initiator,
         )
         all_outcomes = list(outcomes)
         content_used += sum(len(item.response.encode("utf-8")) for item in outcomes if item.response)
@@ -857,6 +863,7 @@ class AcpxDiscussionController:
                 prompts=prompts,
                 deliveries=deliveries,
                 state="CROSS_EXCHANGE", deadline=deadline,
+                initiator=initiator,
             )
             all_outcomes.extend(outcomes)
             content_used += sum(len(value.encode("utf-8")) for value in prompts.values())
@@ -910,7 +917,20 @@ class AcpxDiscussionController:
                 kind="request",
             )
             try:
-                synthesis_result = self.synthesis_call("codex", synthesis_prompt, mode="read-only", cwd=cwd, task_id=task_id, session_id=None, entrypoint="acpx-discuss-synthesis", hard_timeout=max(1, min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock()))))
+                synthesis_result = self.synthesis_call(
+                    "codex",
+                    synthesis_prompt,
+                    mode="read-only",
+                    cwd=cwd,
+                    task_id=task_id,
+                    session_id=None,
+                    entrypoint="acpx-discuss-synthesis",
+                    hard_timeout=max(
+                        1,
+                        min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock())),
+                    ),
+                    initiator=initiator,
+                )
                 if synthesis_result.ok:
                     synthesis = synthesis_result.response
             except BaseException as exc:

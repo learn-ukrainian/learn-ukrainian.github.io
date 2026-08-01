@@ -189,7 +189,7 @@ def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(
     assert json.loads(capsys.readouterr().out) == {"state": "COMPLETE"}
 
 
-def test_launcher_transport_routes_supported_bridge_command_to_durable_acp(
+def test_supported_bridge_command_defaults_to_durable_acp(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys,
@@ -206,7 +206,8 @@ def test_launcher_transport_routes_supported_bridge_command_to_durable_acp(
         "load_channel_context",
         lambda channel: {"body": "", "revs": {}, "missing": []},
     )
-    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
+    monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
+    monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
     _channels.create_channel("architecture", exist_ok=False)
     observed: dict[str, object] = {}
 
@@ -235,6 +236,7 @@ def test_launcher_transport_routes_supported_bridge_command_to_durable_acp(
 
     assert _channels_cli._handle_discuss(args) == 0
     assert observed["participants"] == ("kimicc", "pool")
+    assert observed["initiator"] == "codex"
     assert "Compare the bounded options." in str(observed["prompt"])
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out

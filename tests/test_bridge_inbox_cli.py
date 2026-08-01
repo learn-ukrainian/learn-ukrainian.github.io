@@ -62,7 +62,8 @@ def test_post_preflight_skips_non_workspace_write_mode():
 
 
 @pytest.fixture(autouse=True)
-def isolate_db(tmp_path):
+def isolate_db(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "bridge")
     db_file = tmp_path / "messages.db"
     with patch("ai_agent_bridge._config.DB_PATH", db_file), patch("ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
