@@ -577,7 +577,12 @@ class TestCommsBatchProgressTrack:
 
 
 class TestCommsActions:
-    """Tests for POST endpoints."""
+    """Legacy broker mutation endpoints stay permanently retired."""
+
+    @staticmethod
+    def _assert_retired(response, message: str) -> None:
+        assert response.status_code == 410
+        assert response.json() == {"error": message}
 
     def test_cleanup_zombies(self, comms_client, broker_db, mock_project_root):
         old_ts = "2020-01-01T00:00:00+00:00"
@@ -586,7 +591,7 @@ class TestCommsActions:
         pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
         (pid_dir / "orphan.json").write_text(json.dumps({"pid": 99999999}))
         r = comms_client.post("/api/comms/cleanup", params={"max_age_hours": 0.001})
-        assert r.json()["cleaned"] >= 1
+        self._assert_retired(r, "legacy comms writes retired; use fleet-comms authority tooling")
 
     def test_cleanup_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
@@ -596,19 +601,19 @@ class TestCommsActions:
             patch("scripts.api.comms_router.PID_DIR", Path("/nonexistent")),
         ):
             r = comms_client.post("/api/comms/cleanup")
-        assert r.json()["cleaned"] == 0
+        self._assert_retired(r, "legacy comms writes retired; use fleet-comms authority tooling")
 
     def test_acknowledge_message(self, comms_client, broker_db):
         _insert_messages(broker_db, [{"acknowledged": 0}])
         r = comms_client.post("/api/comms/acknowledge/1")
-        assert r.json()["acknowledged"] == 1
+        self._assert_retired(r, "legacy acknowledge retired; use fleet-comms delivery receipts")
 
     def test_acknowledge_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
         db_path.unlink()
         with patch("scripts.api.comms_router.MESSAGE_DB", db_path):
             r = comms_client.post("/api/comms/acknowledge/1")
-        assert r.status_code == 500
+        self._assert_retired(r, "legacy acknowledge retired; use fleet-comms delivery receipts")
 
     def test_send_message(self, comms_client, broker_db):
         r = comms_client.post("/api/comms/send", json={
@@ -618,9 +623,7 @@ class TestCommsActions:
             "task_id": "t1",
             "message_type": "message",
         })
-        data = r.json()
-        assert data["sent"] is True
-        assert "id" in data
+        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
 
     def test_send_message_no_db(self, comms_client, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
@@ -629,13 +632,13 @@ class TestCommsActions:
             r = comms_client.post("/api/comms/send", json={
                 "from_llm": "a", "to_llm": "b", "content": "c",
             })
-        assert r.status_code == 500
+        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
 
     def test_send_message_defaults(self, comms_client, broker_db):
         r = comms_client.post("/api/comms/send", json={
             "from_llm": "a", "to_llm": "b", "content": "c",
         })
-        assert r.json()["sent"] is True
+        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
 
 
 class TestCommsByModule:
@@ -1510,21 +1513,25 @@ class TestPDFPool:
 
 
 class TestCommsCleanupEdgeCases:
-    """Additional edge case tests for cleanup."""
+    """Retired cleanup never resumes mutation for malformed legacy state."""
 
     def test_cleanup_invalid_timestamp(self, comms_client, broker_db, mock_project_root):
         _insert_messages(broker_db, [{"timestamp": "invalid-time", "acknowledged": 0}])
         r = comms_client.post("/api/comms/cleanup", params={"max_age_hours": 0.001})
-        # Should not crash, invalid timestamps are skipped
-        assert r.status_code == 200
+        assert r.status_code == 410
+        assert r.json() == {
+            "error": "legacy comms writes retired; use fleet-comms authority tooling"
+        }
 
     def test_cleanup_orphan_pid_general_exception(self, comms_client, mock_project_root):
         pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
         # Create a PID file that triggers a general exception in os.kill
         (pid_dir / "bad.json").write_text(json.dumps({"pid": -1}))
         r = comms_client.post("/api/comms/cleanup")
-        # Should clean up the bad PID file
-        assert r.status_code == 200
+        assert r.status_code == 410
+        assert r.json() == {
+            "error": "legacy comms writes retired; use fleet-comms authority tooling"
+        }
 
 
 class TestCommsLiveActivityEdgeCases:
