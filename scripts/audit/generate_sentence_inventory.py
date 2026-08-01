@@ -53,6 +53,13 @@ def _exact_target_present(sentence: str, lemma: str) -> bool:
     return any(token.casefold() == target for token in _tokens(sentence))
 
 
+def _single_target_surface(sentence: str, lemma: str) -> str | None:
+    """Return the one exact target token when a sentence can be safely blanked."""
+    target = lemma.casefold()
+    matches = [token for token in _tokens(sentence) if token.casefold() == target]
+    return matches[0] if len(matches) == 1 else None
+
+
 class VesumSentenceVerifier:
     """Small cached VESUM lookup used only for sentence-shape screening."""
 
@@ -126,13 +133,16 @@ def _fts_rows(
     yield from conn.execute(sql, (query,))
 
 
-def _first_source_sentence(
+def _source_sentences(
     conn: sqlite3.Connection,
     *,
     target: dict[str, str],
     source_kind: str,
+    limit: int,
     vesum: VesumSentenceVerifier | None = None,
-) -> dict[str, Any] | None:
+) -> list[dict[str, Any]]:
+    if limit < 1:
+        raise ValueError("source sentence limit must be positive")
     lemma = target["lemma"]
     if source_kind == "textbook":
         rows = _fts_rows(
@@ -155,11 +165,24 @@ def _first_source_sentence(
         source_label = "Ukrainian Lessons Podcast"
         license_info = ULP_LICENSE
 
+    results: list[dict[str, Any]] = []
+    seen_sentences: set[str] = set()
     for row in rows:
         text = _text(row["text"])
         if text is None:
             continue
         for sentence in _candidate_sentences(text, lemma, vesum=vesum):
+            target_form = _single_target_surface(sentence, lemma)
+            if target_form is None:
+                # ``read_sentence_inventory`` replaces exactly one literal
+                # target token.  Reject repeated targets here so every emitted
+                # row is independently blankable and retain the source's
+                # capitalization in ``targetForm``.
+                continue
+            sentence_key = sentence.casefold()
+            if sentence_key in seen_sentences:
+                continue
+            seen_sentences.add(sentence_key)
             provenance: dict[str, Any] = {
                 "source": source_kind,
                 "label": source_label,
@@ -169,17 +192,21 @@ def _first_source_sentence(
                 # attribution while keeping the inventory independent of DB ids.
                 provenance["locator"] = _text(row["chunk_id"])
                 provenance["title"] = _text(row["title"])
-            return {
-                "lemma": lemma,
-                "lemmaId": target["lemmaId"],
-                "sentence": sentence,
-                "targetForm": lemma,
-                "cefr": target.get("cefr"),
-                "uses": ["example"],
-                "provenance": provenance,
-                "license": dict(license_info),
-            }
-    return None
+            results.append(
+                {
+                    "lemma": lemma,
+                    "lemmaId": target["lemmaId"],
+                    "sentence": sentence,
+                    "targetForm": target_form,
+                    "cefr": target.get("cefr"),
+                    "uses": ["example"],
+                    "provenance": provenance,
+                    "license": dict(license_info),
+                }
+            )
+            if len(results) >= limit:
+                return results
+    return results
 
 
 def load_daily_lemmas(path: Path) -> list[str]:
@@ -217,18 +244,32 @@ def build_inventory(
     *,
     include_ulp: bool = False,
     vesum_db: Path | None = None,
+    max_per_lemma: int = 3,
 ) -> list[dict[str, Any]]:
+    if max_per_lemma < 1:
+        raise ValueError("max_per_lemma must be positive")
     conn = sqlite3.connect(sources_db)
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
     try:
         rows: list[dict[str, Any]] = []
         for target in sorted(targets, key=lambda row: row["lemma"]):
-            row = _first_source_sentence(conn, target=target, source_kind="textbook", vesum=vesum)
-            if row is None and include_ulp:
-                row = _first_source_sentence(conn, target=target, source_kind="ulp", vesum=vesum)
-            if row is not None:
-                rows.append(row)
+            source_rows = _source_sentences(
+                conn,
+                target=target,
+                source_kind="textbook",
+                limit=max_per_lemma,
+                vesum=vesum,
+            )
+            if not source_rows and include_ulp:
+                source_rows = _source_sentences(
+                    conn,
+                    target=target,
+                    source_kind="ulp",
+                    limit=max_per_lemma,
+                    vesum=vesum,
+                )
+            rows.extend(source_rows)
         return rows
     finally:
         conn.close()
@@ -253,9 +294,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--include-ulp", action="store_true")
+    parser.add_argument(
+        "--max-per-lemma",
+        type=int,
+        default=3,
+        help="Maximum distinct source sentences to retain for each daily lemma.",
+    )
     args = parser.parse_args(argv)
     rows = build_inventory(
-        load_daily_targets(args.daily_pool), args.sources_db, include_ulp=args.include_ulp, vesum_db=args.vesum_db
+        load_daily_targets(args.daily_pool),
+        args.sources_db,
+        include_ulp=args.include_ulp,
+        vesum_db=args.vesum_db,
+        max_per_lemma=args.max_per_lemma,
     )
     write_inventory(rows, args.out)
     print(f"sentence inventory: {len(rows)} rows")

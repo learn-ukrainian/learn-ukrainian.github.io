@@ -12,15 +12,18 @@ Regenerate it from the current daily pool with:
 .venv/bin/python -m scripts.audit.generate_sentence_inventory \
   --daily-pool site/src/data/lexicon-daily-pool.json \
   --sources-db data/sources.db \
-  --vesum-db data/vesum.db
+  --vesum-db data/vesum.db \
+  --max-per-lemma 3
 ```
 
 The extractor searches textbook FTS for an exact daily-lemma surface, accepts
-only short sentence-shaped matches with a VESUM-attested verb, and records the
-source label, locator, and licence status for every row. The default inventory
-uses textbook matches. `--include-ulp` may add ULP fallback rows, but its
-provenance is intentionally only the safe source-family label — never a local
-file, transcript id, URL, or private locator.
+only short sentence-shaped matches with a VESUM-attested verb, keeps up to three
+distinct blankable sentences per lemma, and records the source label, locator,
+and licence status for every row. The default inventory uses textbook matches.
+`--include-ulp` may add ULP fallback rows, but its provenance is intentionally
+only the safe source-family label — never a local file, transcript id, URL, or
+private locator. `targetForm` preserves the exact source capitalization so the
+deck can replace one and only one attested token with `___`.
 
 The daily generator overlays this inventory after its existing entry-enrichment
 example lookup and preserves `exampleProvenance` and `exampleLicense` in the

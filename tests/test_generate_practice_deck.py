@@ -1665,6 +1665,36 @@ def test_sentence_inventory_rejects_ambiguous_or_repeated_target_forms(tmp_path:
     assert read_sentence_inventory(inventory_path) == []
 
 
+def test_sentence_inventory_blanks_standalone_form_not_hyphenated_compound(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "сумка",
+                        "lemmaId": "sumka",
+                        "sentence": "Це сумка, а сумка-пакет лежить поруч.",
+                        "targetForm": "сумка",
+                        "uses": ["example"],
+                        "provenance": {"source": "textbook", "label": "Fixture textbook"},
+                        "license": {"status": "fixture"},
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    candidates = read_sentence_inventory(inventory_path)
+
+    assert len(candidates) == 1
+    assert candidates[0]["sentence"] == "Це ___, а сумка-пакет лежить поруч."
+
+
 def test_cloze_output_preserves_sentence_cefr() -> None:
     cloze = _build()["A1"]["cloze"]["cloze"][0]
 
