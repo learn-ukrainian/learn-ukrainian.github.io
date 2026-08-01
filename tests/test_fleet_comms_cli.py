@@ -208,7 +208,6 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     )
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
     monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
     _channels.create_channel("architecture", exist_ok=False)
     observed: dict[str, object] = {}
 
@@ -237,14 +236,14 @@ def test_supported_bridge_command_defaults_to_durable_acp(
 
     assert _channels_cli._handle_discuss(args) == 0
     assert observed["participants"] == ("kimicc", "pool")
-    assert observed["source"] == "codex"
+    assert observed["initiator"] == "codex"
     assert "Compare the bounded options." in str(observed["prompt"])
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
     assert "transport: ACP (kimicc, pool)" in output
-    assert "/fleet.html?conversation=conversation_" in output
+    assert "/acp.html?conversation=conversation_" in output
     messages = _channels.read("architecture", tail=10)
-    assert not any("[ACP COMPLETE]" in message["body"] for message in messages)
+    assert any("[ACP COMPLETE]" in message["body"] for message in messages)
 
 
 def test_acp_discuss_cli_busy_is_body_free_no_queue_json(

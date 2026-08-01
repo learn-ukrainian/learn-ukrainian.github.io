@@ -113,13 +113,13 @@ endpoints:
     concurrency_limit: 0
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
-  - name: glm
-    aliases: [glm, glm-local]
+  - name: glm-local
+    aliases: [glm-local, glm]
     state: live
     transports: [acp]
     completion_evidence: [terminal_event, authority_receipt, sealed_verdict]
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    formal_review_eligible: true
+    formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver

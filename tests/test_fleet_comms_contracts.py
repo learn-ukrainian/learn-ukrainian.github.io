@@ -51,9 +51,8 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
 
     assert by_name["claude"].formal_review_eligible is True
     assert by_name["codex"].formal_review_eligible is True
-    assert by_name["glm"].formal_review_eligible is True
 
-    for name in ("agy", "grok", "kimi", "cursor", "gemini"):
+    for name in ("agy", "grok", "kimi", "cursor", "gemini", "glm-local"):
         assert name in by_name, f"missing registry endpoint: {name}"
         assert by_name[name].formal_review_eligible is False, name
 
@@ -73,9 +72,9 @@ def test_every_live_provider_uses_only_acp_transport() -> None:
         assert "authority_receipt" in endpoint.completion_evidence
 
     glm, requested = registry.resolve("glm-local")
-    assert requested == "glm"
-    assert glm.name == "glm"
-    assert glm.formal_review_eligible is True
+    assert requested == "glm-local"
+    assert glm.name == "glm-local"
+    assert glm.formal_review_eligible is False
 
 
 def test_endpoint_registry_rejects_duplicate_aliases(tmp_path: Path) -> None:
