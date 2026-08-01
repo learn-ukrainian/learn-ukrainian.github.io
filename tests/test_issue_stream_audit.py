@@ -674,6 +674,32 @@ def test_schedule_refresh_is_single_flight_and_preserves_previous_outcome(
     assert json.loads(state_path.read_text(encoding="utf-8"))["run_id"] == first["run_id"]
 
 
+def test_spawn_worker_uses_live_interpreter_and_snapshot_code(tmp_path, monkeypatch):
+    live_root = tmp_path / "live"
+    snapshot_root = tmp_path / "release"
+    captured = {}
+
+    def _popen(argv, **kwargs):
+        captured["argv"] = argv
+        captured["kwargs"] = kwargs
+        return object()
+
+    monkeypatch.setattr(issue_stream_audit, "LIVE_REPO_ROOT", live_root)
+    monkeypatch.setattr(issue_stream_audit, "ROOT", snapshot_root)
+    monkeypatch.setattr(issue_stream_audit.subprocess, "Popen", _popen)
+
+    assert issue_stream_audit._spawn_worker("run-1") is True
+    assert captured["argv"] == [
+        str(live_root / ".venv" / "bin" / "python"),
+        "-m",
+        "scripts.orchestration.issue_stream_audit",
+        "--refresh-worker",
+        "run-1",
+    ]
+    assert captured["kwargs"]["cwd"] == str(snapshot_root)
+    assert captured["kwargs"]["start_new_session"] is True
+
+
 def test_concurrent_schedulers_spawn_exactly_one_worker(tmp_path, monkeypatch):
     _refresh_paths(tmp_path, monkeypatch)
     entered = threading.Event()
