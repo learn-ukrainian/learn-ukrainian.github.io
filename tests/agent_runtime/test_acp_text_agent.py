@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import selectors
+import shlex
 import shutil
 import subprocess
 import time
@@ -38,16 +39,15 @@ def _request(process: subprocess.Popen[str], payload: dict) -> None:
     process.stdin.flush()
 
 
-def _run_protocol(tmp_path: Path, *, provider: str, model: str, binary: Path) -> tuple[str, str]:
+def _launch_server(
+    *, provider: str, model: str, binary: Path, extra_env: dict[str, str] | None = None
+) -> subprocess.Popen[str]:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required for the ACP protocol test")
-    capture = tmp_path / f"{provider}-capture.txt"
-    config_capture = tmp_path / f"{provider}-config.yaml"
     env = dict(os.environ)
-    env["LU_ACP_FAKE_CAPTURE"] = str(capture)
-    env["LU_ACP_FAKE_CONFIG_CAPTURE"] = str(config_capture)
-    process = subprocess.Popen(
+    env.update(extra_env or {})
+    return subprocess.Popen(
         [
             node,
             str(_SERVER),
@@ -66,34 +66,47 @@ def _run_protocol(tmp_path: Path, *, provider: str, model: str, binary: Path) ->
         text=True,
         bufsize=1,
     )
-    try:
-        _request(
-            process,
-            {
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "initialize",
-                "params": {
-                    "protocolVersion": 1,
-                    "clientCapabilities": {},
-                    "clientInfo": {"name": "pytest", "version": "1"},
-                },
-            },
-        )
-        initialized = _read_json_line(process)
-        assert initialized["id"] == 1
-        assert initialized["result"]["protocolVersion"] == 1
 
-        _request(
-            process,
-            {
-                "jsonrpc": "2.0",
-                "id": 2,
-                "method": "session/new",
-                "params": {"cwd": str(_ROOT), "mcpServers": []},
+
+def _initialize_session(process: subprocess.Popen[str]) -> str:
+    _request(
+        process,
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": 1,
+                "clientCapabilities": {},
+                "clientInfo": {"name": "pytest", "version": "1"},
             },
-        )
-        session = _read_json_line(process)["result"]["sessionId"]
+        },
+    )
+    initialized = _read_json_line(process)
+    assert initialized["id"] == 1
+    assert initialized["result"]["protocolVersion"] == 1
+    _request(
+        process,
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "session/new",
+            "params": {"cwd": str(_ROOT), "mcpServers": []},
+        },
+    )
+    return _read_json_line(process)["result"]["sessionId"]
+
+
+def _run_protocol(tmp_path: Path, *, provider: str, model: str, binary: Path) -> tuple[str, str]:
+    capture = tmp_path / f"{binary.name}-capture.txt"
+    process = _launch_server(
+        provider=provider,
+        model=model,
+        binary=binary,
+        extra_env={"UNRELATED_API_KEY": "must-not-reach-provider"},
+    )
+    try:
+        session = _initialize_session(process)
         _request(
             process,
             {
@@ -135,11 +148,13 @@ def _run_protocol(tmp_path: Path, *, provider: str, model: str, binary: Path) ->
 
 def _fake_binary(tmp_path: Path, name: str, response: str) -> Path:
     binary = tmp_path / name
+    capture = shlex.quote(str(tmp_path / f"{name}-capture.txt"))
+    config_capture = shlex.quote(str(tmp_path / f"{name}-config.yaml"))
     binary.write_text(
         "#!/bin/sh\n"
-        "printf '%s\\n' \"$PWD|${AGY_APP_DATA_DIR:-}|${HERMES_HOME:-}|$*\" > \"$LU_ACP_FAKE_CAPTURE\"\n"
+        f"printf '%s\\n' \"$PWD|${{AGY_APP_DATA_DIR:-}}|${{HERMES_HOME:-}}|$*|${{UNRELATED_API_KEY:-}}\" > {capture}\n"
         "if [ -n \"${HERMES_HOME:-}\" ]; then\n"
-        "  /bin/cp \"$HERMES_HOME/config.yaml\" \"$LU_ACP_FAKE_CONFIG_CAPTURE\"\n"
+        f"  /bin/cp \"$HERMES_HOME/config.yaml\" {config_capture}\n"
         "fi\n"
         f"printf '%s' {json.dumps(response)}\n",
         encoding="utf-8",
@@ -156,7 +171,7 @@ def test_agy_text_agent_is_source_blind_sandboxed_and_ephemeral(tmp_path):
         model="gemini-3.6-flash-high",
         binary=binary,
     )
-    cwd, app_data, hermes_home, args = capture.strip().split("|", 3)
+    cwd, app_data, hermes_home, args, unrelated_secret = capture.strip().split("|", 4)
     assert response == "agy fake response"
     assert cwd != str(_ROOT)
     assert not Path(cwd).exists()
@@ -167,6 +182,7 @@ def test_agy_text_agent_is_source_blind_sandboxed_and_ephemeral(tmp_path):
     assert "--sandbox" in args
     assert "--disable-slash-commands" in args
     assert "--dangerously-skip-permissions" not in args
+    assert unrelated_secret == ""
 
 
 def test_deepseek_text_agent_has_empty_tools_no_fallbacks_and_ephemeral_home(tmp_path):
@@ -177,7 +193,7 @@ def test_deepseek_text_agent_has_empty_tools_no_fallbacks_and_ephemeral_home(tmp
         model="deepseek-v4-pro",
         binary=binary,
     )
-    cwd, app_data, hermes_home, args = capture.strip().split("|", 3)
+    cwd, app_data, hermes_home, args, unrelated_secret = capture.strip().split("|", 4)
     assert response == "deepseek fake response"
     assert cwd != str(_ROOT)
     assert app_data == ""
@@ -185,7 +201,66 @@ def test_deepseek_text_agent_has_empty_tools_no_fallbacks_and_ephemeral_home(tmp
     assert not Path(hermes_home).exists()
     assert "--ignore-rules -z" in args
     assert "-m deepseek-v4-pro --provider deepseek" in args
-    config = (tmp_path / "deepseek-config.yaml").read_text(encoding="utf-8")
+    config = (tmp_path / "hermes-config.yaml").read_text(encoding="utf-8")
     assert "platform_toolsets:\n  cli: []" in config
     assert "fallback_providers: []" in config
     assert "mcp_servers: {}" in config
+    assert unrelated_secret == ""
+
+
+def test_cancel_force_kills_provider_process_group_before_cleanup(tmp_path):
+    binary = tmp_path / "agy"
+    capture = tmp_path / "cancel-capture.txt"
+    binary.write_text(
+        "#!/bin/sh\n"
+        f"printf '%s\\n' \"$$|$PWD\" > {shlex.quote(str(capture))}\n"
+        "trap '' TERM\n"
+        "while :; do sleep 30; done\n",
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+    process = _launch_server(provider="agy", model="gemini-3.6-flash-high", binary=binary)
+    try:
+        session = _initialize_session(process)
+        _request(
+            process,
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "session/prompt",
+                "params": {
+                    "sessionId": session,
+                    "prompt": [{"type": "text", "text": "Wait."}],
+                },
+            },
+        )
+        deadline = time.monotonic() + 3
+        while not capture.is_file() and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert capture.is_file()
+        child_pid_text, child_cwd = capture.read_text(encoding="utf-8").strip().split("|", 1)
+        child_pid = int(child_pid_text)
+        started = time.monotonic()
+        _request(
+            process,
+            {
+                "jsonrpc": "2.0",
+                "method": "session/cancel",
+                "params": {"sessionId": session},
+            },
+        )
+        cancelled = _read_json_line(process, timeout=5)
+        assert cancelled["id"] == 3
+        assert "error" in cancelled
+        assert time.monotonic() - started < 3
+        assert not Path(child_cwd).exists()
+        with pytest.raises(ProcessLookupError):
+            os.kill(child_pid, 0)
+    finally:
+        if process.stdin:
+            process.stdin.close()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.terminate()
+            process.wait(timeout=5)

@@ -21,6 +21,17 @@ import { Readable, Writable } from 'node:stream';
 const MAX_PROMPT_BYTES = 512 * 1024;
 const MAX_OUTPUT_BYTES = 2 * 1024 * 1024;
 const CHILD_TIMEOUT_MS = 270_000;
+const FORCE_KILL_GRACE_MS = 1_000;
+const CHILD_ENV_KEYS = [
+  'HOME',
+  'LANG',
+  'LC_ALL',
+  'NODE_EXTRA_CA_CERTS',
+  'PATH',
+  'SSL_CERT_DIR',
+  'SSL_CERT_FILE',
+  'TMPDIR',
+];
 const CONFINEMENT_NOTICE = [
   'This is a bounded text-only advisory turn.',
   'Do not invoke tools, inspect files, browse, execute commands, or modify state.',
@@ -74,10 +85,29 @@ async function linkIfPresent(source, destination) {
   }
 }
 
-function boundedAppend(current, chunk, child) {
+function childBaseEnv() {
+  const env = {};
+  for (const name of CHILD_ENV_KEYS) {
+    if (process.env[name] != null) env[name] = process.env[name];
+  }
+  return env;
+}
+
+function signalProcessTree(child, signal) {
+  try {
+    if (process.platform !== 'win32' && child.pid != null) {
+      process.kill(-child.pid, signal);
+    } else {
+      child.kill(signal);
+    }
+  } catch (error) {
+    if (error?.code !== 'ESRCH') throw error;
+  }
+}
+
+function boundedAppend(current, chunk) {
   const next = current + chunk.toString('utf8');
   if (Buffer.byteLength(next, 'utf8') > MAX_OUTPUT_BYTES) {
-    child.kill('SIGTERM');
     throw new Error(`provider output exceeds the ${MAX_OUTPUT_BYTES}-byte limit`);
   }
   return next;
@@ -88,6 +118,7 @@ function runChild(binary, args, { cwd, env, session }) {
     const child = spawn(binary, args, {
       cwd,
       env,
+      detached: process.platform !== 'win32',
       shell: false,
       stdio: ['ignore', 'pipe', 'pipe'],
     });
@@ -95,36 +126,53 @@ function runChild(binary, args, { cwd, env, session }) {
     let stdout = '';
     let stderr = '';
     let settled = false;
+    let terminalError = null;
+    let forceKillTimer = null;
+    let timeoutTimer = null;
 
     const finish = (callback) => {
       if (settled) return;
       settled = true;
-      clearTimeout(timer);
+      clearTimeout(timeoutTimer);
+      clearTimeout(forceKillTimer);
       session.child = null;
+      session.terminate = null;
       callback();
     };
-    const timer = setTimeout(() => {
-      child.kill('SIGTERM');
-      finish(() => reject(new Error(`provider exceeded ${CHILD_TIMEOUT_MS}ms`)));
+    const terminate = (error) => {
+      if (settled) return;
+      terminalError ??= error;
+      signalProcessTree(child, 'SIGTERM');
+      forceKillTimer ??= setTimeout(() => {
+        signalProcessTree(child, 'SIGKILL');
+      }, FORCE_KILL_GRACE_MS);
+    };
+    session.terminate = terminate;
+    timeoutTimer = setTimeout(() => {
+      terminate(new Error(`provider exceeded ${CHILD_TIMEOUT_MS}ms`));
     }, CHILD_TIMEOUT_MS);
 
     child.stdout.on('data', (chunk) => {
       try {
-        stdout = boundedAppend(stdout, chunk, child);
+        stdout = boundedAppend(stdout, chunk);
       } catch (error) {
-        finish(() => reject(error));
+        terminate(error);
       }
     });
     child.stderr.on('data', (chunk) => {
       try {
-        stderr = boundedAppend(stderr, chunk, child);
+        stderr = boundedAppend(stderr, chunk);
       } catch (error) {
-        finish(() => reject(error));
+        terminate(error);
       }
     });
     child.on('error', (error) => finish(() => reject(error)));
     child.on('close', (code, signal) => {
       finish(() => {
+        if (terminalError != null) {
+          reject(terminalError);
+          return;
+        }
         const response = stdout.trim();
         if (code === 0 && response) {
           resolve(response);
@@ -165,7 +213,7 @@ async function runAgy(options, prompt, session, workRoot) {
     ],
     {
       cwd: workRoot,
-      env: { ...process.env, AGY_APP_DATA_DIR: appData },
+      env: { ...childBaseEnv(), AGY_APP_DATA_DIR: appData },
       session,
     },
   );
@@ -204,7 +252,7 @@ async function runDeepSeek(options, prompt, session, workRoot) {
     {
       cwd: workRoot,
       env: {
-        ...process.env,
+        ...childBaseEnv(),
         HERMES_HOME: hermesHome,
         HERMES_SAFE_MODE: '1',
         HERMES_IGNORE_RULES: '1',
@@ -259,6 +307,8 @@ acp
     }
   })
   .onNotification(acp.methods.agent.session.cancel, (context) => {
-    sessions.get(context.params.sessionId)?.child?.kill('SIGTERM');
+    sessions
+      .get(context.params.sessionId)
+      ?.terminate?.(new Error('provider cancelled by ACP client'));
   })
   .connect(stream);
