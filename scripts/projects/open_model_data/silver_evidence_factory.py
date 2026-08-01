@@ -888,16 +888,24 @@ def decide(
     return "unresolved", "unresolved", alternatives, signals, uncertainty
 
 
-def destination_views(grade: str, disposition: str) -> dict[str, str]:
+def destination_views(
+    grade: str,
+    disposition: str,
+    *,
+    correction_authorized: bool,
+    preference_authorized: bool,
+) -> dict[str, str]:
     if disposition in {"protected_variation", "historical_or_register"}:
-        modern = correction = preference = "protected"
+        modern = correction = preference = "protected" if grade == "protected" else "unresolved"
     elif disposition == "quoted_or_multilingual":
         modern, correction, preference = "mask_span_from_loss", "not_applicable", "not_applicable"
     elif disposition == "correction" and grade in {
         "deterministic_source_backed_silver",
         "independently_triangulated_silver",
     }:
-        modern, correction, preference = "unresolved", "silver_candidate", "silver_candidate"
+        modern = "unresolved"
+        correction = "silver_candidate" if correction_authorized else "not_applicable"
+        preference = "silver_candidate" if preference_authorized else "not_applicable"
     elif disposition == "acceptable_as_is":
         modern, correction, preference = "retain_original", "not_applicable", "not_applicable"
     else:
@@ -944,10 +952,15 @@ def build_record(
     candidate_sha = sha256_text(canonical_json(candidate))
     candidate_id = f"lcc.{candidate_sha}"
     grade, disposition, alternatives, signals, uncertainty = decide(candidate, observations)
+    admitted = admission_disposition == "admitted" and admitted_destination is not None
+    correction_authorized = admitted and "correction" in admitted_destination
+    preference_authorized = admitted and "preference" in admitted_destination
     if admission_disposition != "admitted" or admitted_destination is None:
         uncertainty = [*uncertainty, "source family is not admitted for any model destination"]
-    elif "correction" not in admitted_destination:
+    elif disposition == "correction" and not correction_authorized:
         uncertainty = [*uncertainty, "source admission does not authorize the silver-correction destination"]
+    if disposition == "correction" and not preference_authorized:
+        uncertainty = [*uncertainty, "source admission does not authorize the silver-preference destination"]
     decision = {
         "evidence_grade": grade,
         "disposition": disposition,
@@ -982,7 +995,12 @@ def build_record(
             "redistribution_eligible": False,
         },
         "decision": decision,
-        "destination_views": destination_views(grade, disposition),
+        "destination_views": destination_views(
+            grade,
+            disposition,
+            correction_authorized=correction_authorized,
+            preference_authorized=preference_authorized,
+        ),
         "evaluation_firewall": {
             "status": "clear",
             "algorithm_version": "foundry-eval-exclusion-v1",

@@ -100,8 +100,8 @@ large row artifacts remain local.
 
 The full production receipt covers all 739,564 detector candidates. It excludes
 61 exact-normalized evaluation matches before output and emits 739,503 real
-records (4,593,831,256 bytes; SHA-256
-`87be02fcac78e26d6060574d93a1e5dd83e0f8351f9a1997c530ebf285aab502`).
+records (4,593,515,140 bytes; SHA-256
+`7aac3d87cb93fd456a8f30b0ee98c62917db5586c2cb04a78b598ed7982dddea`).
 The result contains 116,647 independently supported protected records and
 622,856 unresolved records. Its dispositions preserve 297,791 protected
 variations, 195,722 historical/register cases, 95,910 quoted or multilingual
@@ -115,6 +115,11 @@ All source families remain in their existing admission state. Silver output is
 cleared, and never human gold. Its compatibility target records how a later
 qualified-human decision could upgrade the same candidate without weakening
 the existing human contract.
+An evidence grade never grants a destination: correction and preference views
+remain `not_applicable` unless the source family is admitted for that exact
+destination. Uncorroborated protected/historical routes remain structured as
+`unresolved`; they are not collapsed into the independently supported
+`protected` grade.
 
 ## Full language-contact frame
 

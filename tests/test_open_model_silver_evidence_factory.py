@@ -410,6 +410,8 @@ def test_source_backed_correction_requires_corroboration_and_keeps_alternative(
     record = _rows(with_source.output_path)[0]
     assert record["decision"]["evidence_grade"] == "deterministic_source_backed_silver"
     assert record["decision"]["disposition"] == "correction"
+    assert record["destination_views"]["correction"] == "not_applicable"
+    assert record["destination_views"]["preference"] == "not_applicable"
     assert record["decision"]["alternatives"] == [
         {
             "text": "українська форма",
@@ -418,6 +420,42 @@ def test_source_backed_correction_requires_corroboration_and_keeps_alternative(
         }
     ]
     assert record["source_enrichment"]["correction_training_eligible"] is False
+
+
+def test_destination_views_preserve_unresolved_protection_grade(tmp_path: Path) -> None:
+    candidate = _candidate(15, category="protected_authentic_ukrainian")
+    run = _run(tmp_path, [candidate], suffix="unresolved-protection")
+    record = _rows(run.output_path)[0]
+
+    assert record["decision"]["evidence_grade"] == "unresolved"
+    assert record["decision"]["disposition"] == "protected_variation"
+    assert record["destination_views"] == {
+        "faithful_literary": "retain_original",
+        "modern_literary_ukrainian": "unresolved",
+        "correction": "unresolved",
+        "preference": "unresolved",
+    }
+
+
+def test_destination_views_require_each_exact_destination_authorization() -> None:
+    grade = "deterministic_source_backed_silver"
+    correction = factory.destination_views(
+        grade,
+        "correction",
+        correction_authorized=True,
+        preference_authorized=False,
+    )
+    preference = factory.destination_views(
+        grade,
+        "correction",
+        correction_authorized=False,
+        preference_authorized=True,
+    )
+
+    assert correction["correction"] == "silver_candidate"
+    assert correction["preference"] == "not_applicable"
+    assert preference["correction"] == "not_applicable"
+    assert preference["preference"] == "silver_candidate"
 
 
 def test_case_distinct_supported_alternatives_are_not_collapsed(tmp_path: Path) -> None:
