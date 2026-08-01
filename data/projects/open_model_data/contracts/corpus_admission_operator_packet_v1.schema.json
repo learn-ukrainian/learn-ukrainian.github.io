@@ -4,12 +4,14 @@
   "title": "Ukrainian Data Foundry corpus-admission operator packet v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "admission_id", "decision_required", "families", "operator_choices", "total_rows", "total_words"],
+  "required": ["schema_version", "admission_id", "decision_required", "advisor_verdict", "operator_decision_status", "families", "operator_choices", "total_rows", "total_words"],
   "properties": {
     "schema_version": {"const": "corpus_admission_operator_packet_v1"},
     "admission_id": {"type": "string", "minLength": 3},
     "decision_required": {"const": true},
-    "families": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "current_disposition", "rows", "words", "blocked_by"], "properties": {"source_family": {"type": "string", "minLength": 3}, "current_disposition": {"enum": ["unresolved", "investigation_only", "proposed_admission", "excluded"]}, "rows": {"type": "integer", "minimum": 0}, "words": {"type": "integer", "minimum": 0}, "blocked_by": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}},
+    "advisor_verdict": {"enum": ["proposal_supported", "proposal_blocked"]},
+    "operator_decision_status": {"enum": ["pending", "accepted", "rejected"]},
+    "families": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["source_family", "current_disposition", "rows", "words", "blocked_by", "proposed_destination", "evidence_packet_id", "obligations", "material_ambiguities"], "properties": {"source_family": {"type": "string", "minLength": 3}, "current_disposition": {"enum": ["unresolved", "investigation_only", "proposed_admission", "excluded"]}, "rows": {"type": "integer", "minimum": 0}, "words": {"type": "integer", "minimum": 0}, "blocked_by": {"type": "array", "items": {"type": "string", "minLength": 1}}, "proposed_destination": {"type": ["string", "null"]}, "evidence_packet_id": {"type": ["string", "null"]}, "obligations": {"type": "array", "items": {"type": "string", "minLength": 1}}, "material_ambiguities": {"type": "array", "items": {"type": "string", "minLength": 1}}}}},
     "operator_choices": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
     "total_rows": {"type": "integer", "minimum": 0},
     "total_words": {"type": "integer", "minimum": 0}

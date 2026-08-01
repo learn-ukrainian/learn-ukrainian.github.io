@@ -12,8 +12,11 @@
     "dispositions": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["rows", "lexical_words"], "properties": {"rows": {"type": "integer", "minimum": 0}, "lexical_words": {"type": "integer", "minimum": 0}}}},
     "families": {"type": "array", "items": {"type": "object"}},
     "evaluation_exclusion": {"type": "object"},
-    "outputs": {"type": "object", "additionalProperties": false, "required": ["manifest"], "properties": {"manifest": {"type": "object", "additionalProperties": false, "required": ["bytes", "records", "sha256"], "properties": {"bytes": {"type": "integer", "minimum": 0}, "records": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}}}},
+    "outputs": {"type": "object", "additionalProperties": false, "required": ["manifest", "source_records"], "properties": {"manifest": {"$ref": "#/$defs/artifact"}, "source_records": {"$ref": "#/$defs/artifact"}}},
     "determinism": {"type": "object"},
     "training_eligible_emitted": {"const": false}
+  },
+  "$defs": {
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["bytes", "records", "sha256"], "properties": {"bytes": {"type": "integer", "minimum": 0}, "records": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}}
   }
 }

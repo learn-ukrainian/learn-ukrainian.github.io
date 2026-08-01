@@ -8,6 +8,7 @@ manifest contains hashes and logical identifiers, never text or host paths.
 from __future__ import annotations
 
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -22,7 +23,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
@@ -33,10 +34,13 @@ from scripts.projects.open_model_data.model_view_exporter import (
     build_exclusion_registry,
     registry_receipt,
 )
+from scripts.projects.open_model_data.validate_source_records import validate_path as validate_source_record_path
 
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 CONFIG_SCHEMA = CONTRACTS / "corpus_admission_config_v1.schema.json"
+EVIDENCE_SCHEMA = CONTRACTS / "corpus_admission_evidence_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "corpus_admission_receipt_v1.schema.json"
+SOURCE_RECORD_SCHEMA = CONTRACTS / "source_record_v1.schema.json"
 
 
 class AdmissionError(ValueError):
@@ -69,6 +73,10 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _empty_artifact() -> dict[str, Any]:
+    return {"bytes": 0, "records": 0, "sha256": hashlib.sha256(b"").hexdigest()}
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -82,7 +90,7 @@ def _read_json(path: Path) -> dict[str, Any]:
 def _validator(path: Path) -> Draft202012Validator:
     schema = _read_json(path)
     Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
+    return Draft202012Validator(schema, format_checker=FormatChecker())
 
 
 def _validate(value: Mapping[str, Any], validator: Draft202012Validator, label: str) -> None:
@@ -187,6 +195,34 @@ def _profile_sources(profile: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]
     return result
 
 
+def _evidence_sources(config: Mapping[str, Any], input_root: Path) -> dict[str, Mapping[str, Any]]:
+    logical_path = config.get("evidence_packet")
+    if logical_path is None:
+        return {}
+    packet = _read_json(input_root / str(logical_path))
+    _validate(packet, _validator(EVIDENCE_SCHEMA), "admission evidence packet")
+    sources = packet["sources"]
+    result = {str(source["source_record_evidence_id"]): source for source in sources}
+    if len(result) != len(sources):
+        raise AdmissionError("admission evidence packet has duplicate source-record evidence IDs")
+    for source in sources:
+        evidence = source["evidence"]
+        evidence_by_id = {str(item["evidence_id"]): item for item in evidence}
+        if len(evidence_by_id) != len(evidence):
+            raise AdmissionError("admission evidence packet has duplicate evidence IDs")
+        rights = source["rights"]
+        missing = set(rights["evidence_ids"]) - set(evidence_by_id)
+        if missing or rights["license_terms_evidence_id"] not in evidence_by_id:
+            raise AdmissionError(f"admission rights evidence references are incomplete: {sorted(missing)}")
+        for cohort in source["acquisition"]["code_cohorts"]:
+            item = evidence_by_id.get(cohort["evidence_id"])
+            if item is None or item["sha256"] != cohort["sha256"] or item["receipt_url"] != cohort["url"]:
+                raise AdmissionError(f"acquisition code receipt mismatch: {cohort['evidence_id']}")
+        if sum(int(cohort["rows"]) for cohort in source["acquisition"]["code_cohorts"]) != source["snapshot"]["rows"]:
+            raise AdmissionError("acquisition code cohorts do not reconcile to snapshot rows")
+    return result
+
+
 def _source_query(profile_source: Mapping[str, Any], family: Mapping[str, Any]) -> str:
     adapter = profile_source["adapter"]
     attributes = family["attributes"]
@@ -199,6 +235,10 @@ def _source_query(profile_source: Mapping[str, Any], family: Mapping[str, Any]) 
     for name, specification in attributes.items():
         if "column" in specification:
             selected[f"attribute_{name}"] = specification["column"]
+    source_record = family.get("source_record")
+    if source_record is not None:
+        for name in ("title", "url", "retrieved_at"):
+            selected[f"source_record_{name}"] = source_record[f"{name}_column"]
     query_columns = [f"{_identifier(column)} AS {_identifier(alias)}" for alias, column in sorted(selected.items())]
     where = ""
     exclusion = adapter.get("exclude")
@@ -238,6 +278,103 @@ def _disposition(
     return "proposed_admission", ["operator_acceptance_required"]
 
 
+def _utc_timestamp(value: str) -> datetime.datetime:
+    try:
+        parsed = datetime.datetime.fromisoformat(value)
+    except ValueError as exc:
+        raise AdmissionError(f"invalid acquisition timestamp: {value!r}") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() != datetime.timedelta(0):
+        raise AdmissionError(f"acquisition timestamp is not UTC: {value!r}")
+    return parsed
+
+
+def _code_cohort(evidence_source: Mapping[str, Any], retrieved_at: str) -> Mapping[str, Any]:
+    captured = _utc_timestamp(retrieved_at)
+    matches = [
+        cohort
+        for cohort in evidence_source["acquisition"]["code_cohorts"]
+        if _utc_timestamp(cohort["first_retrieved_at"]) <= captured <= _utc_timestamp(cohort["last_retrieved_at"])
+    ]
+    if len(matches) != 1:
+        raise AdmissionError(f"capture timestamp maps to {len(matches)} acquisition-code cohorts: {retrieved_at}")
+    return matches[0]
+
+
+def _source_record(
+    *,
+    row: sqlite3.Row,
+    raw_record_id: str,
+    family: Mapping[str, Any],
+    evidence_source: Mapping[str, Any],
+    text: str,
+    usage_role: str,
+) -> dict[str, Any]:
+    title = str(row["source_record_title"] or "").strip()
+    url = str(row["source_record_url"] or "").strip()
+    retrieved_at = str(row["source_record_retrieved_at"] or "").strip()
+    if not title or not url or not retrieved_at:
+        raise AdmissionError(f"source-record identity is incomplete for {family['source_family']}:{raw_record_id}")
+    retrieved = _utc_timestamp(retrieved_at)
+    content_sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    cohort = _code_cohort(evidence_source, retrieved_at)
+    evidence_by_id = {item["evidence_id"]: item for item in evidence_source["evidence"]}
+    evidence_ids = [*evidence_source["rights"]["evidence_ids"], cohort["evidence_id"]]
+    evidence = [
+        {
+            "evidence_id": evidence_id,
+            "citation": evidence_by_id[evidence_id]["citation"],
+            "url": evidence_by_id[evidence_id]["receipt_url"],
+            "retrieved_on": evidence_by_id[evidence_id]["retrieved_on"],
+            "sha256": evidence_by_id[evidence_id]["sha256"],
+        }
+        for evidence_id in evidence_ids
+    ]
+    receipt_material = "\u001f".join((url, retrieved_at, content_sha256, cohort["commit"], cohort["sha256"]))
+    rights = evidence_source["rights"]
+    rights_statement = {
+        "status": rights["status"],
+        "jurisdiction": rights["jurisdiction"],
+        "evidence_ids": list(rights["evidence_ids"]),
+        "legal_conclusion": rights["legal_conclusion"],
+        "license_expression": rights["license_expression"],
+        "license_terms_evidence_id": rights["license_terms_evidence_id"],
+    }
+    bibliographic = evidence_source["bibliographic"]
+    description = evidence_source["description"]
+    return {
+        "schema_version": "source_record_v1",
+        "contract_schema_sha256": sha256_file(SOURCE_RECORD_SCHEMA),
+        "record_id": _opaque_id(f"record.{family['source_family']}", raw_record_id),
+        "work_id": _opaque_id(f"work.{family['source_family']}", title),
+        "source_id": _opaque_id(f"source.{family['source_family']}", url),
+        "acquisition": {
+            "receipt_id": _opaque_id(f"receipt.{family['source_family']}", receipt_material),
+            "source_or_catalog_url": url,
+            "retrieved_on": retrieved.date().isoformat(),
+        },
+        "bibliographic": {
+            "edition": f"{title}; article-level plaintext capture at {retrieved_at}",
+            "editor": bibliographic["editor"],
+            "publisher": bibliographic["publisher"],
+            "translation_origin": bibliographic["translation_origin"],
+        },
+        "description": {
+            "author": description["author"],
+            "date": retrieved.date().isoformat(),
+            "period": description["period"],
+            "genre": description["genre"],
+            "register": description["register"],
+            "region": description["region"],
+        },
+        "content": {"sha256": content_sha256, "hash_scope": evidence_source["snapshot"]["content_hash_scope"]},
+        "derivation": {"kind": "source", "parent_content_sha256": None, "transform_receipt_id": None},
+        "rights": {name: dict(rights_statement) for name in ("copyright", "license", "redistribution", "model_training")},
+        "evidence": evidence,
+        "review": dict(evidence_source["review"]),
+        "usage": {"role": usage_role, "contamination_exclusion_ids": ["eval.foundry_eval_exclusion_v1"]},
+    }
+
+
 def _empty_receipt(config: Mapping[str, Any], profile: Mapping[str, Any], inaccessible: list[dict[str, str]]) -> dict[str, Any]:
     expected_rows = sum(int(source["expected"]["rows"]) for source in profile["sources"])
     expected_words = sum(int(source["expected"]["lexical_words"]) for source in profile["sources"])
@@ -247,18 +384,27 @@ def _empty_receipt(config: Mapping[str, Any], profile: Mapping[str, Any], inacce
         "coverage": {"complete": False, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
                      "processed_rows": 0, "processed_lexical_words": 0, "inaccessible_families": inaccessible},
         "dispositions": zero, "families": [], "evaluation_exclusion": {"applied": False, "reason": "source_database_inaccessible"},
-        "outputs": {"manifest": {"bytes": 0, "records": 0, "sha256": hashlib.sha256(b"").hexdigest()}},
+        "outputs": {"manifest": _empty_artifact(), "source_records": _empty_artifact()},
         "determinism": {"manifest_order": "source family, SQLite record id", "serialization": "UTF-8 canonical JSON with sorted keys and LF", "timestamps_omitted": True},
         "training_eligible_emitted": False,
     }
 
 
-def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, receipt_output: Path, runtime_output: Path | None = None) -> AdmissionRun:
+def admit_corpus(
+    *,
+    config_path: Path,
+    input_root: Path,
+    manifest_output: Path,
+    receipt_output: Path,
+    source_record_output: Path | None = None,
+    runtime_output: Path | None = None,
+) -> AdmissionRun:
     """Process every configured row, or emit an incomplete receipt without drops."""
     config = _read_json(config_path)
     _validate(config, _validator(CONFIG_SCHEMA), "admission config")
     profile = _read_json(input_root / config["profile_config"])
     profile_sources = _profile_sources(profile)
+    evidence_sources = _evidence_sources(config, input_root)
     families = list(config["families"])
     family_names = [str(family["source_family"]) for family in families]
     if len(family_names) != len(set(family_names)):
@@ -266,6 +412,16 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
     unknown = {family["source_family"] for family in families} - set(profile_sources)
     if unknown:
         raise AdmissionError(f"admission family absent from profile: {sorted(unknown)}")
+    source_record_families = [family for family in families if family["source_record"] is not None]
+    if source_record_families and source_record_output is None:
+        raise AdmissionError("--source-record-output is required when source-record evidence is configured")
+    for family in source_record_families:
+        evidence_source_id = family["source_record"]["evidence_source_id"]
+        evidence_source = evidence_sources.get(evidence_source_id)
+        if evidence_source is None or evidence_source["source_family"] != family["source_family"]:
+            raise AdmissionError(f"source-record evidence is missing or mismatched: {evidence_source_id}")
+        if _unresolved_reasons(family["evidence"]) or family["proposed_destination"] is None:
+            raise AdmissionError(f"source-record evidence configured for incomplete family: {family['source_family']}")
 
     inaccessible: list[dict[str, str]] = []
     for family in families:
@@ -276,6 +432,8 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
                 columns = {str(row[1]) for row in connection.execute(f"PRAGMA table_info({_identifier(source['adapter']['table'])})")}
                 needed = {source["adapter"]["id_column"], source["adapter"]["text_column"], family["source_group_column"], family["work_group_column"]}
                 needed.update(spec["column"] for spec in family["attributes"].values() if "column" in spec)
+                if family["source_record"] is not None:
+                    needed.update(family["source_record"][f"{name}_column"] for name in ("title", "url", "retrieved_at"))
                 missing = sorted(needed - columns)
                 if missing:
                     raise AdmissionError("missing columns: " + ", ".join(missing))
@@ -287,6 +445,9 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
         _atomic_json(receipt_output, receipt)
         manifest_output.parent.mkdir(parents=True, exist_ok=True)
         manifest_output.write_bytes(b"")
+        if source_record_output is not None:
+            source_record_output.parent.mkdir(parents=True, exist_ok=True)
+            source_record_output.write_bytes(b"")
         return AdmissionRun(receipt=receipt, receipt_path=receipt_output)
 
     started = time.monotonic()
@@ -299,12 +460,17 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
     processed_rows = processed_words = 0
     seen_record_ids: set[str] = set()
     manifest = AtomicJsonl.open(manifest_output)
+    source_records = AtomicJsonl.open(source_record_output) if source_record_output is not None else None
+    source_record_validator = _validator(SOURCE_RECORD_SCHEMA)
     try:
         for family in families:
             source = profile_sources[family["source_family"]]
             database = input_root / source["adapter"]["database"]
             rows = words = 0
             by_disposition: dict[str, Counter[str]] = {name: Counter() for name in disposition_counts}
+            source_record_rows = 0
+            source_record_timestamps: set[str] = set()
+            source_record_cohorts: Counter[str] = Counter()
             with _connect_read_only(database) as connection:
                 cursor = connection.execute(_source_query(source, family), _query_parameters(source))
                 for row in cursor:
@@ -323,13 +489,33 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
                         name: _value(row, name, spec)
                         for name, spec in sorted(family["attributes"].items())
                     }
-                    manifest.write({
+                    manifest_row = {
                         "attributes": attributes, "disposition": disposition,
                         "evidence_state": dict(sorted(family["evidence"].items())), "reasons": reasons,
                         "record_id": record_id, "source_family": family["source_family"],
                         "source_group_id": _opaque_id(f"source.{family['source_family']}", str(row["source_group"] or "unknown")),
                         "word_count": word_count, "work_group_id": _opaque_id(f"work.{family['source_family']}", str(row["work_group"] or "unknown")),
-                    })
+                    }
+                    source_record_config = family["source_record"]
+                    if source_record_config is not None:
+                        evidence_source = evidence_sources[source_record_config["evidence_source_id"]]
+                        source_record = _source_record(
+                            row=row,
+                            raw_record_id=raw_record_id,
+                            family=family,
+                            evidence_source=evidence_source,
+                            text=text,
+                            usage_role="excluded" if match.matched else "training_candidate",
+                        )
+                        _validate(source_record, source_record_validator, f"source record {record_id}")
+                        assert source_records is not None
+                        source_records.write(source_record)
+                        manifest_row["source_record_id"] = source_record["record_id"]
+                        retrieved_at = str(row["source_record_retrieved_at"])
+                        source_record_rows += 1
+                        source_record_timestamps.add(retrieved_at)
+                        source_record_cohorts[_code_cohort(evidence_source, retrieved_at)["evidence_id"]] += 1
+                    manifest.write(manifest_row)
                     rows += 1
                     words += word_count
                     processed_rows += 1
@@ -339,14 +525,55 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
                     by_disposition[disposition]["rows"] += 1
                     by_disposition[disposition]["lexical_words"] += word_count
             expected = source["expected"]
-            family_results.append({"source_family": family["source_family"], "actual": {"rows": rows, "lexical_words": words}, "expected": expected,
-                                   "matches_expected": rows == expected["rows"] and words == expected["lexical_words"],
-                                   "dispositions": {name: {"rows": by_disposition[name]["rows"], "lexical_words": by_disposition[name]["lexical_words"]} for name in sorted(by_disposition)}})
+            family_result: dict[str, Any] = {
+                "source_family": family["source_family"],
+                "actual": {"rows": rows, "lexical_words": words},
+                "expected": expected,
+                "matches_expected": rows == expected["rows"] and words == expected["lexical_words"],
+                "dispositions": {name: {"rows": by_disposition[name]["rows"], "lexical_words": by_disposition[name]["lexical_words"]} for name in sorted(by_disposition)},
+            }
+            if family["source_record"] is not None:
+                evidence_source = evidence_sources[family["source_record"]["evidence_source_id"]]
+                snapshot = evidence_source["snapshot"]
+                expected_cohorts = {cohort["evidence_id"]: cohort["rows"] for cohort in evidence_source["acquisition"]["code_cohorts"]}
+                source_evidence_matches = (
+                    source_record_rows == snapshot["rows"] == rows
+                    and snapshot["lexical_words"] == words
+                    and len(source_record_timestamps) == snapshot["capture_timestamps"]
+                    and min(source_record_timestamps) == snapshot["first_retrieved_at"]
+                    and max(source_record_timestamps) == snapshot["last_retrieved_at"]
+                    and dict(sorted(source_record_cohorts.items())) == dict(sorted(expected_cohorts.items()))
+                )
+                if not source_evidence_matches:
+                    raise AdmissionError(f"source-record evidence arithmetic mismatch: {family['source_family']}")
+                family_result["source_record_evidence"] = {
+                    "records": source_record_rows,
+                    "capture_timestamps": len(source_record_timestamps),
+                    "first_retrieved_at": min(source_record_timestamps),
+                    "last_retrieved_at": max(source_record_timestamps),
+                    "code_cohorts": dict(sorted(source_record_cohorts.items())),
+                    "matches_snapshot": True,
+                }
+            family_results.append(family_result)
         artifact = manifest.finish()
+        source_record_artifact = source_records.finish() if source_records is not None else _empty_artifact()
         manifest.replace()
+        if source_records is not None:
+            source_records.replace()
     except Exception:
         manifest.abort()
+        if source_records is not None:
+            source_records.abort()
         raise
+
+    if source_record_output is not None:
+        source_record_validation = validate_source_record_path(source_record_output)
+        if (
+            source_record_validation["admitted_records"] != source_record_artifact["records"]
+            or source_record_validation["rejected_records"] != 0
+            or source_record_validation["input_sha256"] != source_record_artifact["sha256"]
+        ):
+            raise AdmissionError("generated source-record manifest failed the frozen admission contract")
 
     expected_rows = sum(int(source["expected"]["rows"]) for source in profile["sources"])
     expected_words = sum(int(source["expected"]["lexical_words"]) for source in profile["sources"])
@@ -357,8 +584,9 @@ def admit_corpus(*, config_path: Path, input_root: Path, manifest_output: Path, 
                      "processed_rows": processed_rows, "processed_lexical_words": processed_words, "inaccessible_families": []},
         "dispositions": {name: {"rows": disposition_counts[name]["rows"], "lexical_words": disposition_counts[name]["lexical_words"]} for name in sorted(disposition_counts)},
         "families": sorted(family_results, key=lambda item: item["source_family"]),
-        "evaluation_exclusion": {"applied": True, **registry_receipt(registry)}, "outputs": {"manifest": artifact},
-        "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "serialization": "UTF-8 canonical JSON with sorted keys and LF", "timestamps_omitted": True},
+        "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
+        "outputs": {"manifest": artifact, "source_records": source_record_artifact},
+        "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": sha256_file(SOURCE_RECORD_SCHEMA), "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
         "training_eligible_emitted": False,
     }
     _validate(receipt, _validator(RECEIPT_SCHEMA), "admission receipt")
@@ -381,11 +609,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--config", type=Path, default=ROOT / "data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json")
     parser.add_argument("--input-root", type=Path, default=ROOT)
     parser.add_argument("--manifest-output", type=Path, required=True)
+    parser.add_argument("--source-record-output", type=Path)
     parser.add_argument("--receipt-output", type=Path, required=True)
     parser.add_argument("--runtime-output", type=Path)
     args = parser.parse_args(argv)
     try:
-        result = admit_corpus(config_path=args.config, input_root=args.input_root, manifest_output=args.manifest_output, receipt_output=args.receipt_output, runtime_output=args.runtime_output)
+        result = admit_corpus(config_path=args.config, input_root=args.input_root, manifest_output=args.manifest_output, receipt_output=args.receipt_output, source_record_output=args.source_record_output, runtime_output=args.runtime_output)
     except AdmissionError as exc:
         parser.error(str(exc))
     print(canonical_json(result.receipt))

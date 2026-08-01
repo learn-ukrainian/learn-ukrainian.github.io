@@ -2,17 +2,22 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.projects.open_model_data import admit_existing_corpus as admission
 from scripts.projects.open_model_data.model_view_exporter import (
     DEFAULT_V011_MANIFEST,
     v011_items,
 )
+from scripts.projects.open_model_data.validate_source_records import validate_path
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _json(path: Path, value: object) -> None:
@@ -37,7 +42,7 @@ def _config(*, complete_evidence: bool = False, destination: str | None = None) 
     evidence = {key: "complete" for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")}
     if not complete_evidence:
         evidence["rights"] = "not_reconstructed"
-    return {"schema_version": "corpus_admission_config_v1", "admission_id": "fixture-admission-v1", "profile_config": "profile.json", "families": [{"source_family": "fixture_documents", "source_group_column": "source", "work_group_column": "work", "attributes": {"author": {"column": "author"}, "genre": {"constant": "fixture"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "neutral"}, "translation_origin": {"constant": "unknown"}}, "evidence": evidence, "proposed_destination": destination}]}
+    return {"schema_version": "corpus_admission_config_v1", "admission_id": "fixture-admission-v1", "profile_config": "profile.json", "evidence_packet": None, "families": [{"source_family": "fixture_documents", "source_group_column": "source", "work_group_column": "work", "attributes": {"author": {"column": "author"}, "genre": {"constant": "fixture"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "neutral"}, "translation_origin": {"constant": "unknown"}}, "evidence": evidence, "proposed_destination": destination, "source_record": None}]}
 
 
 def _run(tmp_path: Path, suffix: str, **kwargs: object) -> admission.AdmissionRun:
@@ -104,3 +109,89 @@ def test_duplicate_source_family_config_is_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(admission.AdmissionError, match="duplicate"):
         admission.admit_corpus(config_path=tmp_path / "config.json", input_root=tmp_path, manifest_output=tmp_path / "manifest.jsonl", receipt_output=tmp_path / "receipt.json")
+
+
+def _wikipedia_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    timestamps = ("2026-04-11T00:59:17+00:00", "2026-04-11T01:00:17+00:00")
+    with sqlite3.connect(tmp_path / "sources.db") as connection:
+        connection.execute(
+            "CREATE TABLE wikipedia (id INTEGER PRIMARY KEY, title TEXT, url TEXT, text TEXT, char_count INTEGER, fetched_at TEXT)"
+        )
+        connection.executemany(
+            "INSERT INTO wikipedia(title, url, text, char_count, fetched_at) VALUES (?, ?, ?, ?, ?)",
+            [
+                ("Стаття один", "https://uk.wikipedia.org/wiki/Стаття_один", "два слова", 10, timestamps[0]),
+                ("Стаття два", "https://uk.wikipedia.org/wiki/Стаття_два", "ще два", 7, timestamps[1]),
+            ],
+        )
+    profile = _profile(expected_rows=2, expected_words=4)
+    source = profile["sources"][0]  # type: ignore[index]
+    source["source_family"] = "wikipedia"
+    source["adapter"].update({"table": "wikipedia", "id_column": "id", "text_column": "text"})  # type: ignore[union-attr]
+    _json(tmp_path / "profile.json", profile)
+
+    evidence = {
+        "schema_version": "corpus_admission_evidence_v1",
+        "evidence_packet_id": "evidence.wikipedia_fixture_v1",
+        "retrieved_on": "2026-08-01",
+        "sources": [{
+            "source_record_evidence_id": "source.wikipedia_fixture_v1", "source_family": "wikipedia",
+            "snapshot": {"kind": "article_level_captured_snapshot", "rows": 2, "lexical_words": 4, "capture_timestamps": 2, "first_retrieved_at": timestamps[0], "last_retrieved_at": timestamps[1], "content_hash_scope": "exact UTF-8 bytes", "revision_id_required_by_contract": False},
+            "acquisition": {"method": "fixture MediaWiki capture", "api_endpoint": "https://uk.wikipedia.org/w/api.php", "api_parameters": {"action": "query", "prop": "extracts", "explaintext": "1"}, "code_cohorts": [{"evidence_id": "code.wikipedia_fixture", "rows": 2, "first_retrieved_at": timestamps[0], "last_retrieved_at": timestamps[1], "commit": "a" * 40, "git_blob_oid": "b" * 40, "sha256": "c" * 64, "url": "https://example.invalid/fetch.py"}]},
+            "bibliographic": {"editor": "Wikipedia contributors", "publisher": "Ukrainian Wikipedia community, hosted by the Wikimedia Foundation", "translation_origin": "unknown"},
+            "description": {"author": "Wikipedia contributors", "period": "modern", "genre": "encyclopedia", "register": "reference", "region": "unknown"},
+            "rights": {"status": "granted", "jurisdiction": "international", "license_expression": "CC-BY-SA-4.0", "license_terms_evidence_id": "rights.cc_by_sa_4.0_legalcode", "evidence_ids": ["rights.cc_by_sa_4.0_legalcode"], "legal_conclusion": "not_asserted", "operational_permission": "share and adapt for any purpose subject to license conditions", "obligations": ["attribute and share alike"], "material_ambiguities": ["other rights are not certified"]},
+            "evidence": [
+                {"evidence_id": "rights.cc_by_sa_4.0_legalcode", "citation": "CC BY-SA 4.0 legal code", "canonical_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode", "receipt_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt", "retrieved_on": "2026-08-01", "sha256": "d" * 64},
+                {"evidence_id": "code.wikipedia_fixture", "citation": "fixture acquisition code", "canonical_url": "https://example.invalid/fetch.py", "receipt_url": "https://example.invalid/fetch.py", "retrieved_on": "2026-08-01", "sha256": "c" * 64},
+            ],
+            "review": {"reviewer_id": "advisor.sol_fixture", "qualification": "operational provenance and license review, not legal advice", "confidence": "medium", "unresolved": False},
+        }],
+    }
+    _json(tmp_path / "evidence.json", evidence)
+    config = {
+        "schema_version": "corpus_admission_config_v1", "admission_id": "fixture-wikipedia-v1", "profile_config": "profile.json", "evidence_packet": "evidence.json",
+        "families": [{"source_family": "wikipedia", "source_group_column": "fetched_at", "work_group_column": "title", "attributes": {"author": {"constant": "Wikipedia contributors"}, "genre": {"constant": "encyclopedia"}, "origin": {"constant": "human_authored_source"}, "period": {"constant": "modern"}, "region": {"constant": "unknown"}, "register": {"constant": "reference"}, "translation_origin": {"constant": "unknown"}}, "evidence": {key: "complete" for key in ("provenance", "acquisition", "snapshot", "rights", "origin", "contamination")}, "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1", "source_record": {"evidence_source_id": "source.wikipedia_fixture_v1", "title_column": "title", "url_column": "url", "retrieved_at_column": "fetched_at"}}],
+    }
+    _json(tmp_path / "config.json", config)
+    return tmp_path / "config.json", tmp_path / "source-records.jsonl"
+
+
+def test_wikipedia_source_records_are_contract_valid_complete_and_deterministic(tmp_path: Path) -> None:
+    config, source_records = _wikipedia_fixture(tmp_path)
+    first = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-1.jsonl", receipt_output=tmp_path / "receipt-1.json", source_record_output=source_records)
+    second = admission.admit_corpus(config_path=config, input_root=tmp_path, manifest_output=tmp_path / "manifest-2.jsonl", receipt_output=tmp_path / "receipt-2.json", source_record_output=tmp_path / "source-records-2.jsonl")
+
+    assert first.receipt["dispositions"]["proposed_admission"] == {"rows": 2, "lexical_words": 4}
+    assert first.receipt["outputs"]["source_records"]["records"] == 2
+    assert first.receipt["families"][0]["source_record_evidence"] == {"capture_timestamps": 2, "code_cohorts": {"code.wikipedia_fixture": 2}, "first_retrieved_at": "2026-04-11T00:59:17+00:00", "last_retrieved_at": "2026-04-11T01:00:17+00:00", "matches_snapshot": True, "records": 2}
+    assert validate_path(source_records)["admitted_records"] == 2
+    records = [json.loads(line) for line in source_records.read_text(encoding="utf-8").splitlines()]
+    assert records[0]["content"]["sha256"] == hashlib.sha256("два слова".encode()).hexdigest()
+    assert records[0]["acquisition"]["source_or_catalog_url"].startswith("https://uk.wikipedia.org/wiki/")
+    assert records[0]["bibliographic"]["translation_origin"] == "unknown"
+    assert records[0]["description"]["register"] == "reference"
+    assert records[0]["rights"]["model_training"]["legal_conclusion"] == "not_asserted"
+    assert first.receipt["training_eligible_emitted"] is False
+    assert (tmp_path / "manifest-1.jsonl").read_bytes() == (tmp_path / "manifest-2.jsonl").read_bytes()
+    assert source_records.read_bytes() == (tmp_path / "source-records-2.jsonl").read_bytes()
+    assert (tmp_path / "receipt-1.json").read_bytes() == (tmp_path / "receipt-2.json").read_bytes()
+    assert first.receipt == second.receipt
+
+
+def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
+    contracts = ROOT / "data/projects/open_model_data/contracts"
+    evidence = json.loads((ROOT / "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json").read_text())
+    packet = json.loads((ROOT / "data/projects/open_model_data/admission/public_external_operator_decision_packet_v1.json").read_text())
+    evidence_schema = json.loads((contracts / "corpus_admission_evidence_v1.schema.json").read_text())
+    packet_schema = json.loads((contracts / "corpus_admission_operator_packet_v1.schema.json").read_text())
+    assert not list(Draft202012Validator(evidence_schema, format_checker=FormatChecker()).iter_errors(evidence))
+    assert not list(Draft202012Validator(packet_schema, format_checker=FormatChecker()).iter_errors(packet))
+    items = {item["evidence_id"]: item for item in evidence["sources"][0]["evidence"]}
+    assert items["rights.wikimedia_terms_554852"]["sha256"] == "bbb5ebfb89700c0e4732109cddbd45e6d8d2ba5dc339b206c7c5089ec4a4812b"
+    assert items["rights.cc_by_sa_4.0_legalcode"]["sha256"] == "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
+    assert evidence["sources"][0]["snapshot"] == {"capture_timestamps": 183, "content_hash_scope": "SHA-256 of the exact UTF-8 bytes of wikipedia.text as stored in data/sources.db", "first_retrieved_at": "2026-04-11T00:59:17.337039+00:00", "kind": "article_level_captured_snapshot", "last_retrieved_at": "2026-07-07T13:47:23.791310+00:00", "lexical_words": 2865506, "revision_id_required_by_contract": False, "rows": 1029}
+    assert packet["operator_decision_status"] == "pending"
+    assert packet["families"][-1]["current_disposition"] == "proposed_admission"
+    assert packet["families"][-1]["proposed_destination"] == "open_weight_ukrainian_continued_pretraining_text_v1"
+    assert packet["decision_required"] is True

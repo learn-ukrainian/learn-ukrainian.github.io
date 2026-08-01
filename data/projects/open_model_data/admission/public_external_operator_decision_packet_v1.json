@@ -1,1 +1,78 @@
-{"admission_id":"public-external-full-corpus-admission-v1","decision_required":true,"families":[{"blocked_by":["Per-source primary provenance, edition, acquisition, and content-hash reconciliation are incomplete.","Rights, redistribution, and model-training terms are not normalized to source_record_v1.","Frozen evaluation exact/near-contamination pass has not run against accessible corpus bytes."],"current_disposition":"unresolved","rows":137723,"source_family":"literary","words":36031758},{"blocked_by":["Edition/publisher and rights evidence are incomplete, including two raw-lineage gaps identified by the recovery audit.","Frozen evaluation exact/near-contamination pass has not run against accessible corpus bytes."],"current_disposition":"unresolved","rows":49193,"source_family":"public_textbooks","words":9564143},{"blocked_by":["Per-article/transcript source and permitted-use evidence is not normalized.","Frozen evaluation exact/near-contamination pass has not run against accessible corpus bytes."],"current_disposition":"unresolved","rows":1205,"source_family":"external_articles","words":1837518},{"blocked_by":["The local snapshot acquisition/revision lineage and content hashes are not reconstructed.","CC license terms alone do not establish this snapshot's provenance, attribution/share-alike handling, or model-use decision.","Frozen evaluation exact/near-contamination pass has not run against accessible corpus bytes."],"current_disposition":"unresolved","rows":1029,"source_family":"wikipedia","words":2865506}],"operator_choices":["Reject all four current family scopes: they remain unresolved and no training eligibility is emitted.","After the listed evidence is reconstructed and the full deterministic pass succeeds, accept or reject each named source-family scope as proposed_admission; acceptance changes only that scope from proposed_admission to the separately authorized training/export gate, never directly to publication."],"schema_version":"corpus_admission_operator_packet_v1","total_rows":189150,"total_words":50298925}
+{
+  "schema_version": "corpus_admission_operator_packet_v1",
+  "admission_id": "public-external-full-corpus-admission-v1",
+  "decision_required": true,
+  "advisor_verdict": "proposal_supported",
+  "operator_decision_status": "pending",
+  "families": [
+    {
+      "source_family": "literary",
+      "current_disposition": "unresolved",
+      "rows": 137723,
+      "words": 36031758,
+      "blocked_by": [
+        "Per-source primary provenance, edition, acquisition, and content-hash reconciliation are incomplete.",
+        "Rights, redistribution, and model-training terms are not normalized to source_record_v1."
+      ],
+      "proposed_destination": null,
+      "evidence_packet_id": null,
+      "obligations": [],
+      "material_ambiguities": []
+    },
+    {
+      "source_family": "public_textbooks",
+      "current_disposition": "unresolved",
+      "rows": 49193,
+      "words": 9564143,
+      "blocked_by": [
+        "Edition/publisher and rights evidence are incomplete, including two raw-lineage gaps identified by the recovery audit."
+      ],
+      "proposed_destination": null,
+      "evidence_packet_id": null,
+      "obligations": [],
+      "material_ambiguities": []
+    },
+    {
+      "source_family": "external_articles",
+      "current_disposition": "unresolved",
+      "rows": 1205,
+      "words": 1837518,
+      "blocked_by": [
+        "Per-article/transcript source and permitted-use evidence is not normalized."
+      ],
+      "proposed_destination": null,
+      "evidence_packet_id": null,
+      "obligations": [],
+      "material_ambiguities": []
+    },
+    {
+      "source_family": "wikipedia",
+      "current_disposition": "proposed_admission",
+      "rows": 1029,
+      "words": 2865506,
+      "blocked_by": [],
+      "proposed_destination": "open_weight_ukrainian_continued_pretraining_text_v1",
+      "evidence_packet_id": "evidence.wikipedia_primary_rights_v1",
+      "obligations": [
+        "Retain each article title and canonical Ukrainian Wikipedia URL so the page history can supply contributor attribution.",
+        "Credit Wikipedia contributors and identify Ukrainian Wikipedia; include the CC BY-SA 4.0 license link and applicable disclaimer notices.",
+        "Mark extraction, normalization, filtering, or other modifications and retain indications of prior modifications where supplied.",
+        "If adapted material is shared, apply CC BY-SA 4.0 or a permitted compatible license and do not impose additional legal or technological restrictions.",
+        "Preserve any visible additional attribution or imported-source requirement discovered at the separately controlled export or publication gate.",
+        "Keep the source-record manifest and exact content hashes with every downstream view; operator acceptance does not itself authorize export, training, model release, or dataset publication."
+      ],
+      "material_ambiguities": [
+        "The Ukrainian Wikipedia local copyright policy revision still describes CC BY-SA 3.0 while the governing Wikimedia Terms identify CC BY-SA 4.0; title-level attribution is retained to satisfy the older notice as well.",
+        "Wikimedia warns that imported text can carry additional attribution requirements and that fair-use or similar exceptions can apply; this aggregate pass did not refetch article histories, talk pages, or banners, so those checks remain mandatory before redistribution or publication.",
+        "CC BY-SA grants only copyright and similar rights the licensor has authority to grant; privacy, publicity, moral, trademark, and other rights are not certified here.",
+        "The historical API request did not record MediaWiki revision IDs; the captured bytes are instead bound by article URL, UTC retrieval timestamp, exact content SHA-256, and acquisition-code cohort."
+      ]
+    }
+  ],
+  "operator_choices": [
+    "ACCEPT the 1,029-row / 2,865,506-word Wikipedia scope for open_weight_ukrainian_continued_pretraining_text_v1 with every listed attribution, share-alike, modification, no-additional-restrictions, lineage, and downstream review obligation. Acceptance advances only to the separately controlled exporter and training gates; it emits no training_eligible state and authorizes no export, training, model release, redistribution, or publication.",
+    "REJECT the 1,029-row / 2,865,506-word Wikipedia scope. It remains unavailable to downstream exporter and training gates; the other 188,121 rows / 47,433,419 words remain unresolved in either choice."
+  ],
+  "total_rows": 189150,
+  "total_words": 50298925
+}
