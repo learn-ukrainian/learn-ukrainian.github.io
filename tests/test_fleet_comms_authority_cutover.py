@@ -127,6 +127,21 @@ def test_queue_claim_is_concurrent_and_exactly_once(tmp_path: Path) -> None:
         assert loaded.fence_token == 1
 
 
+def test_request_message_persists_initiating_source_and_target_agent(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job = service.enqueue_request(
+            recipient="agy",
+            sender="codex",
+            body="bounded provenance request",
+            idempotency_key="request-provenance",
+        )
+        message = service.get_message(job.subject_id)
+
+    assert message.sender == "codex"
+    assert message.recipient == "agy"
+    assert message.provenance == {"Source": "codex", "Agent": "agy", "Via": "queue"}
+
+
 def test_exact_claim_and_terminal_result_replay_do_not_take_unrelated_work(tmp_path: Path) -> None:
     root = _root(tmp_path)
     with AuthorityService(root=root) as service:

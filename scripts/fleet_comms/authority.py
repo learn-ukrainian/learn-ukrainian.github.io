@@ -536,7 +536,7 @@ class AuthorityService:
                 channel=channel,
                 recipients=(recipient_name,),
                 kind="request",
-                provenance={"Source": "authority", "Agent": sender, "Via": "queue"},
+                provenance={"Source": sender, "Agent": recipient_name, "Via": "queue"},
                 deadline_at=deadline_at,
                 idempotency_key=f"request-message:{key}",
             )
