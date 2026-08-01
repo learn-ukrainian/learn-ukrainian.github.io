@@ -68,6 +68,13 @@ def _formal_review_authority_key(
     return "formal-review:" + hashlib.sha256(identity.encode("utf-8")).hexdigest()
 
 
+def _canonical_review_response_text(response: str) -> str:
+    """Unwrap only one exact JSON code fence emitted by ACP review seats."""
+    stripped = response.strip()
+    match = re.fullmatch(r"```json\r?\n(?P<body>.+)\r?\n```", stripped, re.DOTALL)
+    return match.group("body").strip() if match is not None else stripped
+
+
 class _ReviewPrLifecycle:
     """Attach formal-run terminal evidence to its bridge ask without changing asks."""
 
@@ -327,30 +334,58 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     else:
                         os.environ["LU_ACPX_TRANSPORT"] = previous_transport
                 raw_response = str(getattr(result, "response", ""))
-                authority.finish_job(
-                    authority_job.job_id,
-                    worker_id=worker_id,
-                    fence_token=lease.fence_token,
-                    state="complete" if getattr(result, "ok", False) else "failed",
-                    result=raw_response.encode("utf-8"),
-                )
                 if not getattr(result, "ok", False):
+                    authority.finish_job(
+                        authority_job.job_id,
+                        worker_id=worker_id,
+                        fence_token=lease.fence_token,
+                        state="failed",
+                        result=raw_response.encode("utf-8"),
+                    )
                     print("review-pr: ACP reviewer failed without bridge retry", file=sys.stderr)
                     return 1
 
             if not raw_response:
+                if authority_job.state != "complete":
+                    authority.finish_job(
+                        authority_job.job_id,
+                        worker_id=worker_id,
+                        fence_token=lease.fence_token,
+                        state="failed",
+                        result=b"",
+                    )
                 print("review-pr: ACP reviewer failed without bridge retry", file=sys.stderr)
                 return 1
-            validate_code_review_response(
-                raw_response,
-                base_sha=checkout.base_sha,
-                head_sha=checkout.sha,
-                patch_sha256=checkout.patch_digest,
-                changed_paths=checkout.changed_paths,
-                evidence_root=checkout.path,
-                changed_lines=checkout.changed_line_numbers,
-            )
-            canonical = json.loads(raw_response)
+            canonical_response = _canonical_review_response_text(raw_response)
+            try:
+                validate_code_review_response(
+                    canonical_response,
+                    base_sha=checkout.base_sha,
+                    head_sha=checkout.sha,
+                    patch_sha256=checkout.patch_digest,
+                    changed_paths=checkout.changed_paths,
+                    evidence_root=checkout.path,
+                    changed_lines=checkout.changed_line_numbers,
+                )
+            except BaseException:
+                if authority_job.state != "complete":
+                    authority.finish_job(
+                        authority_job.job_id,
+                        worker_id=worker_id,
+                        fence_token=lease.fence_token,
+                        state="failed",
+                        result=raw_response.encode("utf-8"),
+                    )
+                raise
+            if authority_job.state != "complete":
+                authority.finish_job(
+                    authority_job.job_id,
+                    worker_id=worker_id,
+                    fence_token=lease.fence_token,
+                    state="complete",
+                    result=canonical_response.encode("utf-8"),
+                )
+            canonical = json.loads(canonical_response)
             review_evidence = parse_review_evidence(canonical)
             verdict = (
                 "BLOCKED"

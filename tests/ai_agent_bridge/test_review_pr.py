@@ -32,6 +32,13 @@ def test_formal_review_authority_key_is_bounded_and_opaque() -> None:
     assert "/" not in key
 
 
+def test_canonical_review_response_unwraps_only_exact_json_fence() -> None:
+    payload = '{"schema_version":"code-review-findings.v1"}'
+    assert review_pr._canonical_review_response_text(f"```json\n{payload}\n```") == payload
+    with_extra_text = f"Here is the verdict:\n```json\n{payload}\n```"
+    assert review_pr._canonical_review_response_text(with_extra_text) == with_extra_text
+
+
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     model, effort = review_pr.formal_cf_pin("codex")
     prompt = review_pr.build_review_pr_prompt(
