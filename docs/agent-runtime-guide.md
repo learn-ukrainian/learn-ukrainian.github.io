@@ -66,43 +66,36 @@ interactive launcher, this stateless `--bare` route does not install an
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
 
-## ACPX experimental transport (runtime boundary)
+## ACPX structured transport (runtime boundary)
 
-ACPX is an **experimental, feature-flagged structured invocation transport** —
-not a coordination plane and not a replacement for `discuss`, fleet-comms, or
-authoritative file handoffs. **Grok + Codex ACPX is not a new coordination plane.**
-The shadow pilot remains transport evidence only; the separately
-approved active path is a controller-scheduled, bounded conversation DAG whose
-durable state and timeline are written through existing fleet-comms and file
-handoffs.
+ACPX is a **feature-flagged structured invocation transport** — not a
+coordination plane and not a replacement for fleet-comms or authoritative file
+handoffs. Supported two-seat `discuss` calls use ACPX as their execution
+engine; the CLI name remains a compatibility surface. The active path is a
+controller-scheduled bounded conversation DAG whose durable state and timeline
+are written through existing fleet-comms. The expanded participant registry is
+not a new coordination plane.
 
-**Why Grok is the second pilot (#6043, API-backed):** in the 2026-07-30
-snapshot from `/api/comms/live-activity?limit=500&minutes=120`, all **95**
-broker dispatches had sender counts **Codex 26**, **grok-atlas 25**, and
-**Claude 22** among the three busiest senders; the remaining **22** were
-**Gemini 11**, **OpenCode 6**, **GLM 4**, and **AGY 1**. The same-day
-30-day sample from
-`/api/runtime/usage?days=30` had **Codex 20**, **Claude 15**, and **Grok 1**.
-Broker centrality is high; direct-runtime evidence is still limited — hence
-a thin second shadow pilot, not fleet-wide enablement. These are dated
-selection-evidence snapshots, not permanent routing weights.
-
-Approved boundary (#6027 Codex, #6043 Grok):
+Approved boundary (#6027, #6043, #6078, #6130, #6158):
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` retains the comparison pilot below. `active` is accepted only by
   the explicit fleet-comms `acp-discuss` controller; it is never a generic
   runner, routing, dispatch, failover, or review setting. Rollback is setting
   the flag to `off` (or unsetting it) and using native transport.
-- Direct-only seats:
-  - `acpx-codex-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxAdapter`)
-  - `acpx-grok-shadow` (`scripts/agent_runtime/adapters/acpx.py:AcpxGrokShadowAdapter`)
-  — never returned by `available_agents()`, never dispatch/routing/review/
-  failover candidates.
-- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); both adapters refuse to
+- Direct-only seats cover Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool,
+  AGY/Gemini, GLM, and DeepSeek through the fixed registry in
+  `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
+  `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
+  `acpx-glm-shadow`, and `acpx-deepseek-shadow`). They are never returned by
+  `available_agents()` and never become dispatch/routing/review/failover
+  candidates.
+- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); every adapter refuses to
   spawn on any other resolved version.
-- Grok seat also preflights the installed native Grok CLI at exact semver
-  `0.2.117` (wrong/missing/unparseable → refuse before prompt).
+- Custom seats also pin their provider CLIs: Grok `0.2.117`, AGY `1.1.9`,
+  OpenCode/GLM `1.17.13`, and Hermes/DeepSeek `0.18.2`. Provider version
+  parsing is anchored to each reviewed CLI output format, and the project text
+  ACP server is SHA-256 digest-checked before spawn.
 - Codex participant:
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
@@ -113,6 +106,10 @@ Approved boundary (#6027 Codex, #6043 Grok):
   <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
   profile is digest-checked before every spawn and removes write, shell,
   subagent, memory, web, MCP, and LSP tools at the Grok server boundary.
+- AGY and DeepSeek use `scripts/agent_runtime/acp_text_agent.mjs`: one text
+  prompt, source-blind temporary cwd, provider-local sandbox/isolation, and
+  cleanup after the turn. GLM uses native `opencode acp --pure` with a fixed
+  Z.AI subscription model plus deny-all permissions and disabled tools.
 - Adapter safety contract: one in-flight prompt, zero backlog, zero automatic
   prompt retries, bounded timeout/cancellation, required non-empty/bounded
   `task_id`, `correlation_id`, and `idempotency_key` (local runtime metadata

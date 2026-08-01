@@ -274,7 +274,18 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
     assert "automatically selects" in lower
     assert "read-only" in lower
     assert "exactly two enabled participants" in lower
-    for participant in ("codex", "grok", "claude", "kimi", "kimicc k3", "cursor", "pool"):
+    for participant in (
+        "codex",
+        "grok",
+        "claude",
+        "kimi",
+        "kimicc k3",
+        "cursor",
+        "pool",
+        "agy/gemini",
+        "glm",
+        "deepseek",
+    ):
         assert participant in lower
     assert "acp-discuss" in onboarding
     assert "default two rounds" in lower
@@ -314,7 +325,18 @@ def test_fleet_wide_acp_covers_callers_and_enabled_participants(onboarding: str)
     assert "caller-access parity" in lower
     for caller in ("claude", "codex", "agy/gemini", "grok", "kimi and kimicc", "cursor"):
         assert caller in lower
-    for participant in ("codex", "grok", "claude", "kimi", "kimicc k3", "cursor", "pool"):
+    for participant in (
+        "codex",
+        "grok",
+        "claude",
+        "kimi",
+        "kimicc k3",
+        "cursor",
+        "pool",
+        "agy/gemini",
+        "glm",
+        "deepseek",
+    ):
         assert participant in lower
     assert "do not rotate or silently\nsubstitute" in lower
     assert "ordinary workers and review-only seats" in lower

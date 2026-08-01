@@ -128,6 +128,15 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         # Non-secret acpx auth-method selector for the existing Cursor login.
         "ACPX_AUTH_CURSOR_LOGIN",
     },
+    "acpx-glm-shadow": {
+        # Non-secret selector for OpenCode's advertised ACP method ID
+        # ``opencode-login``. The literal value is constrained to ``1`` by
+        # build_agent_env below and carries no credential material.
+        "ACPX_AUTH_OPENCODE_LOGIN",
+        # Fixed non-secret OpenCode policy JSON: all tools and permissions are
+        # denied for the native ACP participant.
+        "OPENCODE_CONFIG_CONTENT",
+    },
     "gemini": {
         "GEMINI_AUTH_MODE",
     },

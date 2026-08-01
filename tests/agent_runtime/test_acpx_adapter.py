@@ -28,8 +28,11 @@ from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,
     AcpxAdapter,
+    AcpxAgyShadowAdapter,
     AcpxClaudeShadowAdapter,
     AcpxCursorShadowAdapter,
+    AcpxDeepSeekShadowAdapter,
+    AcpxGlmShadowAdapter,
     AcpxGrokShadowAdapter,
     AcpxKimiCcShadowAdapter,
     AcpxKimiShadowAdapter,
@@ -1559,7 +1562,153 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
         "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
         "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
         "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
+        "agy": {
+            "seat": "acpx-agy-shadow",
+            "agent": "agy",
+            "model": "gemini-3.6-flash-high",
+        },
+        "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.2"},
+        "deepseek": {
+            "seat": "acpx-deepseek-shadow",
+            "agent": "deepseek",
+            "model": "deepseek-v4-pro",
+        },
     }
+
+
+@pytest.mark.parametrize(
+    ("adapter_class", "participant", "provider_binary", "version", "model"),
+    [
+        (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.6-flash-high"),
+        (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.2"),
+        (AcpxDeepSeekShadowAdapter, "deepseek", "hermes", "0.18.2", "deepseek-v4-pro"),
+    ],
+)
+def test_new_fleet_discussion_seats_use_fixed_confined_commands(
+    tmp_path, monkeypatch, adapter_class, participant, provider_binary, version, model
+):
+    _stub_binary(monkeypatch, tmp_path)
+    binaries = {}
+    for name in ("node", provider_binary):
+        path = tmp_path / name
+        path.write_text("#!/bin/sh\n", encoding="utf-8")
+        path.chmod(0o755)
+        binaries[name] = str(path)
+    monkeypatch.setattr(acpx_module.shutil, "which", lambda name: binaries.get(name))
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_version",
+        lambda _path, _executable: version,
+    )
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    for name in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
+        monkeypatch.delenv(name, raising=False)
+
+    adapter = adapter_class()
+    with acpx_module.active_discussion_scope():
+        plan = adapter.build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model=model,
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": participant,
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+    assert adapter.name == f"acpx-{participant}-shadow"
+    assert "--agent" in plan.cmd
+    command = plan.cmd[plan.cmd.index("--agent") + 1]
+    command_tokens = shlex.split(command)
+    assert command_tokens[0] == binaries[provider_binary if participant == "glm" else "node"]
+    assert provider_binary in " ".join(command_tokens)
+    assert plan.cmd[-3:] == ["exec", "-f", "-"]
+    assert plan.metadata["model"] == model
+    assert plan.metadata["provider_cli_pinned_version"] == version
+    assert "--deny-all" in plan.cmd
+    assert "--no-fs" in plan.cmd
+    assert "--no-terminal" in plan.cmd
+    if participant == "glm":
+        assert ("--model", "zai-coding-plan/glm-5.2") in zip(
+            plan.cmd, plan.cmd[1:], strict=False
+        )
+        assert plan.env_overrides == {
+            "ACPX_AUTH_OPENCODE_LOGIN": "1",
+            "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}'
+        }
+        assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
+            "ACPX_AUTH_OPENCODE_LOGIN"
+        ] == "1"
+        assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
+            "OPENCODE_CONFIG_CONTENT"
+        ] == plan.env_overrides["OPENCODE_CONFIG_CONTENT"]
+    else:
+        assert "--model" not in plan.cmd
+        assert plan.env_overrides == {}
+
+
+def test_new_fleet_discussion_seat_rejects_provider_cli_version_drift(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    agy = tmp_path / "agy"
+    node = tmp_path / "node"
+    for path in (agy, node):
+        path.write_text("#!/bin/sh\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str({"agy": agy, "node": node}[name]),
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_version",
+        lambda _path, _executable: "9.9.9",
+    )
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+
+    with acpx_module.active_discussion_scope(), pytest.raises(
+        AcpxShadowRefusalError, match="version mismatch"
+    ):
+        AcpxAgyShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="gemini-3.6-flash-high",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "agy",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
+def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path):
+    binary = tmp_path / "hermes"
+    binary.write_text(
+        "#!/bin/sh\nprintf '%s\\n' 'Python 3.11.15' "
+        "'Hermes Agent v0.18.2 (2026.7.7.2)'\n",
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+
+    assert acpx_module._probe_participant_cli_version(str(binary), "hermes") == "0.18.2"
+
+
+def test_text_agent_digest_mismatch_refuses_before_spawn(tmp_path, monkeypatch):
+    text_agent = tmp_path / "acp_text_agent.mjs"
+    text_agent.write_text("unreviewed confinement change\n", encoding="utf-8")
+    monkeypatch.setattr(acpx_module, "_TEXT_AGENT_PATH", text_agent)
+
+    with pytest.raises(AcpxShadowRefusalError, match="digest mismatch"):
+        acpx_module._require_text_agent(adapter_label="AcpxAgyShadowAdapter")
 
 
 def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):

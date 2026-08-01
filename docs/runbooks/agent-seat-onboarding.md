@@ -39,7 +39,7 @@ caps or live modes.
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
-| **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `ab discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, and Pool; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Human overview pages
@@ -124,48 +124,47 @@ to Sol or the accountable orchestrator before making a consequential decision.
 - Plane / retention-apply / `formal_review_eligible` flips belong to the
   infra/harness lane after parity + present-tense operator/advisor GO.
 
-### ACPX — experimental transport boundary
+### ACPX — structured transport boundary
 
 ACPX is **not** a coordination product and **not** a second fleet bus.
-Two direct-only shadow seats (Codex + Grok) are **not a new coordination plane** —
-fleet-comms + file dual-write stay authoritative, and native Codex / native
-Grok stay authoritative under shadow compare.
+Direct-only participant seats are **not a new coordination plane**:
+fleet-comms + file dual-write stay authoritative. The Codex/Grok shadow
+comparison remains available, while the active bounded controller may use
+any enabled participant from the fixed registry.
 
-**Seat-selection evidence (#6043, API-backed):** in the 2026-07-30 snapshot
-from `/api/comms/live-activity?limit=500&minutes=120`, all **95** broker
-dispatches had sender counts **Codex 26**, **grok-atlas 25**, and
-**Claude 22** among the three busiest senders; the remaining **22** were
-**Gemini 11**, **OpenCode 6**, **GLM 4**, and **AGY 1**. The same-day
-30-day runtime sample from
-`/api/runtime/usage?days=30` had **Codex 20**, **Claude 15**, and **Grok 1**.
-Broker centrality is therefore strong for Grok, while **direct-runtime
-evidence remains limited** — Grok is a deliberately conservative second
-pilot, not fleet-wide enablement. These are dated selection-evidence
-snapshots, not permanent routing weights.
+**Historical Grok pilot evidence (#6043):** the 2026-07-30 snapshot from
+`/api/comms/live-activity?limit=500&minutes=120` contained 95 broker
+dispatches: Codex 26, grok-atlas 25, Claude 22, and the remaining **22** from
+Gemini 11, OpenCode 6, GLM 4, and AGY 1. The same-day direct-runtime sample
+had Grok 1. This dated evidence justified the second pilot. These are
+not permanent routing weights and do not override current CodexBar headroom.
 
-**Exact contract (#6027 Codex pilot, #6043 Grok second pilot):**
+**Exact contract (#6027, #6043, #6078, #6130, #6158):**
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` is the unchanged comparison pilot. `active` is accepted only by the
   explicit `acp-discuss` controller described below.
-- Direct-only seat names `acpx-codex-shadow` and `acpx-grok-shadow`; never
-  registered for dispatch, routing, review, or failover.
+- Direct-only seat names include `acpx-codex-shadow`, `acpx-grok-shadow`,
+  `acpx-claude-shadow`, `acpx-kimi-shadow`, `acpx-kimicc-shadow`,
+  `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
+  `acpx-glm-shadow`, and `acpx-deepseek-shadow`; never registered for
+  dispatch, routing, review, or failover.
 - Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
   resolved binary version.
-- Grok seat additionally preflights the installed native Grok CLI at exact
-  semver `0.2.117` and refuses wrong/missing/unparseable versions before
-  prompt.
+- Custom participant commands additionally preflight their reviewed provider
+  CLI versions: Grok `0.2.117`, AGY `1.1.9`, OpenCode/GLM `1.17.13`, and
+  Hermes/DeepSeek `0.18.2`. Each version is parsed only from its reviewed CLI
+  output shape, and the project text ACP server is digest-checked before use.
 - Every invocation requires a non-empty, bounded, local `task_id`,
-  `correlation_id`, and `idempotency_key`, plus
-  `tool_config={"acpx_shadow": True, "target_agent": "codex"|"grok"}`, and
-  runs against a read-only, non-primary worktree.
+  `correlation_id`, and `idempotency_key`, a fixed target from the participant
+  registry, and a read-only, non-primary worktree.
 
 **In scope (approved):**
 
-- Feature-flagged adapters (default off / shadow comparison).
-- Exactly one read-only/stateless **Codex** ACP participant
-  (`acpx-codex-shadow`) and exactly one read-only/stateless **Grok** ACP
-  participant (`acpx-grok-shadow`) for structured invocation.
+- Feature-flagged adapters (default off / shadow comparison / bounded active
+  controller).
+- Exactly one read-only/stateless participant per enabled route: Codex, Grok,
+  Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek.
 - Grok fixed effective model/effort: `grok-4.5` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
 - Grok ACP server command (single custom agent argument; never built-in
@@ -178,6 +177,14 @@ snapshots, not permanent routing weights.
   memory, web, MCP, and LSP tools inside the Grok ACP server. This is required
   in addition to ACPX `--deny-all --no-fs --no-terminal --allowed-tools ""`:
   ACPX client flags alone do not remove native Grok tools.
+- AGY and DeepSeek use the project-owned text ACP server. It accepts one text
+  prompt, runs source-blind in a fresh temporary directory, and removes that
+  directory after the turn. AGY runs `plan` + sandbox without permission
+  bypasses. DeepSeek runs Hermes against an isolated empty-tool/no-fallback
+  config while reusing only the existing local credential files.
+- GLM uses native `opencode acp --pure`, pinned to
+  `zai-coding-plan/glm-5.2`, with both `permission.*=deny` and `tools.*=false`.
+  GLM and first-party DeepSeek retain their local-only/never-CI egress guards.
 - Correlation / idempotency fields recorded as **evidence** (local runtime
   metadata only — never ACP protocol flags, argv, or stdin; never published
   to fleet-comms, dispatch authority, or review evidence), not as a new
@@ -193,13 +200,13 @@ snapshots, not permanent routing weights.
 - Plane-mode or retention changes via ACPX
 - Review-eligibility changes via ACPX
 - Primary-checkout writes or write-mode ACP work
-- Treating Grok + Codex ACPX as a coordination plane, review bus, or
+- Treating ACPX as a coordination plane, review bus, or
   fleet-comms replacement
 
 **Do not invent CLI flags, endpoints, or review eligibility here.** The
 adapter's argv is fully confined and callers only ever set the `tool_config`
-keys it allowlists (`acpx_shadow`, `target_agent`, `correlation_id`,
-`idempotency_key`); this runbook describes ownership and safety, not a
+keys it allowlists (`acpx_shadow`/`acpx_discussion`, `target_agent`,
+`correlation_id`, `idempotency_key`); this runbook describes ownership and safety, not a
 floating CLI surface.
 
 #### Active controller-backed ACP conversation
@@ -224,7 +231,7 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
 Every fleet launcher exports ACP as the routine transport. The project
 `discuss` command automatically selects the durable ACP controller when the request names
 exactly two enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
-Cursor, or Pool. The direct `acp-discuss` command remains available for
+Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
 change `delegate.py`. Use the default two rounds; three is the hard maximum.
 
@@ -237,6 +244,16 @@ silently fall back. Admission is one conversation repository-wide. If it is
 occupied, return `busy` immediately: there is no queue, wait, automatic retry,
 or hidden failover. A typed partial ACP outcome is valid evidence to inspect,
 but not a successful discussion, formal review, or coordination authority.
+
+The legacy `discuss` CLI is now a compatibility surface, not a second
+execution engine, for supported two-seat panels: it delegates to ACP and
+records the durable ACP conversation. Legacy `ask-*` one-shots remain only
+until the single-recipient ACP controller and initiator/quota telemetry land;
+do not add new provider launch logic to those modules. The retirement order is
+compatibility shim → deprecation event → measured zero direct launches → code
+removal. Fleet-comms persistence, leases, inbox delivery, formal verdicts,
+and crash recovery are durable-plane responsibilities and are not retired by
+this transport migration.
 
 Fleet-wide means caller-access parity plus the enabled participant set above.
 The live caller classes below may request any supported two-seat panel when
@@ -386,8 +403,8 @@ counts and outcomes.
    native Codex and native Grok remain the authoritative paths.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
 4. Keep file dual-write handoffs current.
-5. Grok + Codex ACPX seats are independent observability pilots only; turning
-   either (or both) off is not a plane cutover.
+5. Direct-only ACPX seats are transport adapters only; turning any or all off
+   is not a plane cutover.
 
 ### Buzz — deferred
 
@@ -427,9 +444,10 @@ printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
   --with claude,kimicc
 
-# The same command uses bridge only for a named exception.
+# Three participants remain a named bridge exception until the bounded
+# controller supports that count.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
-  --with agy,codex
+  --with agy,codex,cursor
 
 # Formal CF
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex
