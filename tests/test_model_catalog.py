@@ -28,10 +28,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-07-21"
-    assert catalog_age_days(catalog, as_of=date(2026, 7, 21)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 20))
-    assert catalog_is_stale(catalog, as_of=date(2026, 8, 21))
+    assert catalog["reviewed_on"] == "2026-08-01"
+    assert catalog_age_days(catalog, as_of=date(2026, 8, 1)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 31))
+    assert catalog_is_stale(catalog, as_of=date(2026, 9, 1))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -62,6 +62,29 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     assert models["poolside/laguna-xs-2.1"]["lifecycle"] == "active"
     assert models["poolside/laguna-m.1"]["lifecycle"] == "fallback"
     assert "pool" in models["poolside/laguna-s-2.1"].get("aliases", [])
+
+
+def test_luna_worker_does_not_enter_formal_review_ladders() -> None:
+    """Same-family bounded execution must never become its own formal gate."""
+    catalog = load_model_catalog()
+    assert "gpt-5.6-luna" not in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
+        assert "gpt-5.6-luna" not in {candidate for rung in ladder for candidate in rung}
+
+
+def test_luna_economics_use_model_specific_openai_sources() -> None:
+    sources = set(load_model_catalog()["models"]["gpt-5.6-luna"]["sources"])
+    assert {
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+    } <= sources
+
+
+def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
+    """The two operator-requested cross-family seats must not silently disappear."""
+    for ladder in load_model_catalog()["review_ladders"].values():
+        candidates = {candidate for rung in ladder for candidate in rung}
+        assert {"kimi-k3", "glm-5.2"} <= candidates
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
@@ -408,7 +431,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     preferred = route["preferred_worker"]
     assert preferred["model_id"] == "gpt-5.6-luna"
-    assert preferred["effort"] == "xhigh"
+    assert preferred["effort"] == "max"
     assert {
         "bounded_implementation",
         "bounded_investigation",
@@ -432,14 +455,28 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     direct = route["direct_worker"]
     assert direct == {
         "model_id": "gpt-5.6-luna",
-        "effort": "medium",
-        "task_types": ["simple_evidence", "mechanical_checks"],
-        "constraints": ["no_consequential_decisions"],
+        "effort": "max",
+        "task_types": [
+            "bounded_implementation",
+            "bounded_investigation",
+            "recon",
+            "bounded_checks",
+            "log_triage",
+        ],
+        "constraints": [
+            "objective_scope_ceiling",
+            "no_consequential_decisions",
+            "no_final_disposition",
+        ],
     }
     assert route["autonomous_fallback"] == {
         "model_id": "gpt-5.6-terra",
         "effort": "high",
-        "when": ["missing_advisory_envelope", "broader_autonomous_integration"],
+        "when": [
+            "missing_objective_scope_ceiling",
+            "broader_autonomous_integration",
+            "unresolved_consequential_ambiguity",
+        ],
     }
 
     models = catalog["models"]

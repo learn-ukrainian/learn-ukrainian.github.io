@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-07-21
+reviewed_on: 2026-08-01
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -60,7 +60,7 @@ execution_routing:
         - escalation_triggers
     preferred_worker:
       model_id: gpt-5.6-luna
-      effort: xhigh
+      effort: max
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
       escalate_to: gpt-5.6-sol
@@ -76,13 +76,13 @@ execution_routing:
         - final_disposition
     direct_worker:
       model_id: gpt-5.6-luna
-      effort: medium
-      task_types: [simple_evidence, mechanical_checks]
-      constraints: [no_consequential_decisions]
+      effort: max
+      task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
+      constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
     autonomous_fallback:
       model_id: gpt-5.6-terra
       effort: high
-      when: [missing_advisory_envelope, broader_autonomous_integration]
+      when: [missing_objective_scope_ceiling, broader_autonomous_integration, unresolved_consequential_ambiguity]
     review_boundary:
       advisory_family: openai
       advisory_satisfies_cross_family_review: false
@@ -115,10 +115,12 @@ models:
     lifecycle: active
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [native_codex, cursor]
-    strengths: [speed, high_volume]
+    strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
     weaknesses: [not_sole_consequential_authority]
     sources:
       - https://developers.openai.com/api/docs/guides/latest-model
+      - https://developers.openai.com/api/docs/models/gpt-5.6-luna
+      - https://developers.openai.com/api/docs/models/gpt-5.6-terra
   claude-fable-5:
     family: anthropic
     tier: frontier_authority

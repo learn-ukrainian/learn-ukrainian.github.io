@@ -376,8 +376,15 @@ Prefer `explorer` subagents for read-only investigation and validation. Use `wor
 
 Routine subagent model routing:
 
-- Use `gpt-5.4-mini` for general repo search, small summaries, docs/index checks, simple validation, and straightforward documentation edits.
-- Use `gpt-5.3-codex-spark` for narrow code-heavy routine tasks where code fluency matters: mechanical Python/TypeScript edits, focused test-failure triage, small refactors with clear ownership, diff review, and targeted validation. This model has a separate usage/limit counter, so prefer it over the main model for bounded coding chores when it can run independently.
+- Use `gpt-5.6-luna` at `max` for clearly bounded repo search, summaries,
+  docs/index checks, focused implementation, test/log triage, small refactors,
+  and targeted validation. Every Luna task must name its owned paths and an
+  objective scope ceiling; Luna does not make consequential decisions or the
+  final disposition.
+- Use `gpt-5.3-codex-spark` only as a separate-quota fallback for the same
+  bounded work when Luna is unavailable or the Codex lane is hot. Use
+  `gpt-5.6-terra` at `high` when the scope ceiling is missing, integration is
+  broader, or consequential ambiguity remains.
 
 Use routine subagents for:
 
@@ -394,7 +401,10 @@ Do not use routine subagents for architecture decisions, security-sensitive judg
 Cost controls:
 
 - Use local deterministic tools before model calls: `rg`, `git diff --check`, `bash -n`, `.venv/bin/ruff`, targeted tests, JSON/YAML parsers, and local API endpoints.
-- Escalate routine model work in this order when quality allows: `gpt-5.4-mini` for general routine work, `gpt-5.3-codex-spark` for bounded code-heavy routine work, then the main model for judgment/integration.
+- Route bounded Codex work to `gpt-5.6-luna` at `max`; use
+  `gpt-5.3-codex-spark` only as the separate-quota fallback, and move to
+  `gpt-5.6-terra` at `high` for broader autonomous integration. The accountable
+  root retains judgment and final disposition.
 - Do not spawn a subagent for work the main agent can finish faster than delegation overhead.
 - Keep routine delegation to one to three subagents at a time unless the user explicitly asks for a larger sweep.
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.

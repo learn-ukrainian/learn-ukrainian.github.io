@@ -80,7 +80,7 @@ or count as a formal review.
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
 | Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, wiki fixes, mechanical PR babysitting | **Sonnet 5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Reserve the frontier Claude tier (Opus 5 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
-| Code change >5 LOC, mechanical / pattern-applying / fixtures | `delegate.py dispatch --agent codex --mode danger --worktree --base origin/main` (no `--model`) |
+| Code change >5 LOC, mechanical / pattern-applying / fixtures | Clearly bounded with exact owned paths + an objective scope ceiling → `delegate.py dispatch --agent codex --model gpt-5.6-luna --effort max --mode danger --worktree --base origin/main`. Missing ceiling, broader integration, or consequential ambiguity → omit `--model` and retain the Terra @ `high` default. |
 | Code Review (PR diff) | Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile code --risk <low\|medium\|high\|critical>`. The resolver applies hard filters first, then the #5293 quality prior above for every formal review; risk remains recorded in the receipt but does not allow a lower tier to leapfrog an eligible higher one. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
 | Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (user 2026-07-17): agy / codex / claude / grok-4.5 only** — dispatch the reviewer on one of the four with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `delegate.py dispatch --agent agy` (write) or `ab ask-agy --to-model gemini-3.1-pro-high` (review). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
@@ -88,7 +88,7 @@ or count as a formal review.
 | Adversarial review of design / ADR / architecture / code — the **Claude reviewer seat** | **Prefer IN-SESSION INLINE for cost** — the interactive orchestrator reads the artifact, verifies claims, writes the verdict + fix notes on the main quota (cheapest path; economics below). When the requested model is Fable, route `claude-fable-5` through native Claude first and use pinned Cursor Fable only if native Claude does not expose it. Dispatching Claude (`claude -p` / `--agent claude` / `review-deep` / an `Agent` review subagent) **is permitted when it adds value or inline isn't feasible** — the `-p` sunset was cancelled (user 2026-06-22). For routine reviews still prefer inline or a non-Claude lane; reserve dispatched Claude for catches that need it. Context heavy → DEFER to the next interactive session, or dispatch if it must clear now. |
 | Q&A or single-shot review without commit | `ab ask-codex` / `ab ask-agy --to-model gemini-3.6-flash-high` for routine/agentic (top AGY default), `--to-model gemini-3.1-pro-high` only for deep single-shot (gemini-cli retired → agy) |
 | Live web fact-check (current version / pricing / URL & citation currency, "is this API still live") | **opencode + lightpanda-MCP HARNESS capability — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); it is NOT model-specific. Route by fit: `ab ask-pool` (poolside.ai, **free**) · `ab ask-glm` (⚠️ LOCAL-ONLY, China-egress) · or an opencode-hosted deepseek. |
-| Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
+| Search / grep / "find me X" across files | Native Codex subagent, default `gpt-5.6-luna` @ `max`, with explicit owned paths and an objective scope ceiling |
 | Status check on running dispatches | Monitor API curl, never inline file scans |
 
 If I'm about to write code inline and it doesn't match row 1, STOP and dispatch instead. Tooling enforces (worktree + commits) — memory does not.
@@ -223,13 +223,17 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   and escalation triggers. Do not use Sol for routine work; explicit escalation
   may raise effort to `xhigh`/`max`.
 * **Sol-advised bounded execution:** when that envelope is complete, prefer
-  `gpt-5.6-luna` @ `xhigh` for bounded implementation or investigation. Luna must
+  `gpt-5.6-luna` @ `max` for bounded implementation or investigation. Luna must
   follow the envelope rather than re-decide its contract, and must escalate
   any owned-path or scope-ceiling overrun, consequential architecture, security,
   release, high-risk go/no-go, unresolved consequential ambiguity, broader
-  integration, or final disposition. Keep direct Luna @ `medium` for simple
-  evidence/mechanical work only. If no stable envelope exists or broader
-  autonomous integration is needed, use Terra.
+  integration, or final disposition.
+* **Direct bounded execution:** use Luna @ `max` without a Sol envelope only
+  when the accountable root supplies exact owned paths, an objective scope
+  ceiling, and a non-consequential task contract. This covers bounded
+  implementation/investigation, recon, checks, and test/log triage. A missing
+  ceiling, broader autonomous integration, or unresolved consequential
+  ambiguity routes to Terra @ `high`.
 * **Review boundary:** Sol and Luna are both OpenAI-family seats. Sol's advisory
   output never satisfies the independent cross-family review gate.
 * **Workers = every other lane** — `gpt-5.6-terra` / `gpt-5.6-luna` (codex coding, not driver),
@@ -266,11 +270,11 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
-| **Coding / impl / fixtures** | **Luna @ `xhigh`** after a complete Sol envelope; otherwise **codex** — `terra` default · Luna @ `medium` = simple evidence/mechanical | **agy** — default `gemini-3.6-flash-high` (agentic workhorse ≈ Terra/Sonnet class); Pro only for deep | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; Luna never sole authority |
+| **Coding / impl / fixtures** | **Luna @ `max`** for bounded work with exact owned paths + an objective scope ceiling; use a complete Sol envelope when consequential boundaries need definition. **Terra @ `high`** for broader autonomous integration or unresolved ambiguity | **agy** — default `gemini-3.6-flash-high` (agentic workhorse ≈ Terra/Sonnet class); Pro only for deep | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; Luna never sole authority |
 | **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.6-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.2 · DeepSeek V4 Pro · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · DeepSeek Flash · Gemini 3.5 Flash | `review-pr` pins Terra/Sonnet5/GLM @ **high**; resolve-reviewer walks `model_catalog.yaml` ladders; cost never lowers quality floor within a risk rung |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | **grok-4.5** | **LANGUAGE-LANES RULE below binds**: only these four; cursor/deepseek/kimi/pool/glm/gemma excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex** · **grok-4.5** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; NO grok as a QG judge seat (separate standing ban); FOLK stays cross-family GPT↔Claude per the folk rubric |
-| **Research / recon / triage** | **Luna @ `xhigh`** inside a complete Sol envelope; direct Luna @ `medium` for simple evidence | Explore-haiku (grep/find) | terra (deeper or no envelope) | Luna never sole authority on consequential calls |
+| **Research / recon / triage** | **Luna @ `max`** with exact owned paths + an objective scope ceiling; add a Sol envelope when the boundaries themselves need judgment | Terra @ `high` for broader or ambiguous work | agy | Luna never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | any opencode model — pool (FREE) · glm (LOCAL) · deepseek | — | — | browsing = harness property, not a model trait |
 
 **LANGUAGE-LANES RULE (HARD, user order 2026-07-17): ALL language-related work — Ukrainian authoring, linguistic/content review, CEFR/russicism analysis, anything that judges Ukrainian text — routes ONLY to claude, codex, gemini (agy), or grok-4.5.** deepseek, glm, kimi, cursor, pool, and gemma are excluded from every language seat (deepseek's former VESUM-gated content-review default is retired; gemma's surface-review slice applies to non-language work only). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), grok is never a QG judge seat, folk review pairing stays GPT↔Claude. Code/infra/tooling work is unaffected.
@@ -418,9 +422,17 @@ All three tiers expose **272K context (~258.4K effectively usable before the con
 | --- | --- | --- | --- |
 | Sol | `gpt-5.6-sol` | Frontier lead: hard architecture, high-stakes advisory/review, bounded advisory envelopes, difficult debugging, final synthesis | **START = `high`** (never below high); `xhigh`/`max` only for explicit escalation |
 | Terra | `gpt-5.6-terra` | Balanced default: normal implementation, scoped planning, investigations, standard reviews (≈5.5-level quality, cheaper) | default `high`; `xhigh` for the hardest cells |
-| Luna | `gpt-5.6-luna` | Fast bounded worker: Sol-enveloped implementation/investigation at `xhigh`; simple recon, test/log triage, mechanical checks, draft summaries at `medium`. **NEVER sole authority** on consequential decisions or release approval | `xhigh` inside a stable Sol envelope; `medium` for simple evidence/mechanical work |
+| Luna | `gpt-5.6-luna` | Default high-volume bounded worker: focused implementation/investigation, recon, test/log triage, mechanical checks, and draft summaries with exact owned paths + an objective scope ceiling. **NEVER sole authority** on consequential decisions or release approval | `max` for bounded work; add a Sol envelope when task boundaries need authority judgment |
 
 Policy: **prefer 5.6 for NEW work**; retain 5.5/5.4 only for pinned workflows (qg_bakeoff arms, the V7 pipeline reviewer seat until spot-checked post-reset), proven compatibility, or quota pressure. Codex dispatch + `ask-codex` defaults = `gpt-5.6-terra`.
+
+**Luna economics refresh (operator directive 2026-08-01):** OpenAI currently
+positions Luna for cost-sensitive, high-volume workloads, and its published
+standard short-context token prices are below Terra's. Promote Luna @ `max` for
+bounded worker tasks; this cost/throughput advantage does not grant advisor,
+orchestrator, release, or formal-review authority. Terra remains the
+autonomous-integration fallback, and independent cross-family review still
+binds.
 
 Probe evidence (2026-07-09): `luna@medium` QG 69-item triage PASS (69/69 processed, 5/5 spot-verified verdicts, 160s); `sol@xhigh` (Layer B design) + `terra@high` (#4824 fix) probes ran same day; Sonnet-5-vs-Terra and Haiku-4.5-vs-Luna matched pairs queued for the 07-13 claude reset.
 

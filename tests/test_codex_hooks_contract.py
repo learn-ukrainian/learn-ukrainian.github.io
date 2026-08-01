@@ -114,8 +114,8 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     assert config["agents"] == {
         "enabled": True,
         "max_concurrent_threads_per_session": 3,
-        "default_subagent_model": "gpt-5.6-terra",
-        "default_subagent_reasoning_effort": "medium",
+        "default_subagent_model": "gpt-5.6-luna",
+        "default_subagent_reasoning_effort": "max",
         "interrupt_message": True,
     }
 
