@@ -211,6 +211,35 @@ def _add_heritage_item(practice_dir: Path, *, options: list[dict[str, object]], 
     _write_json(index_path, index_payload)
 
 
+def _add_synonym_item(practice_dir: Path, *, level: str = "A2") -> None:
+    synonym_path = practice_dir / f"practice-synonym.{level}.json"
+    synonym_payload = json.loads(synonym_path.read_text(encoding="utf-8"))
+    synonym_payload["synonym"] = [
+        {
+            "synonymId": "syn_fixture",
+            "lemmaId": "dim",
+            "targetLemmaId": "slovo",
+            "polarity": "synonym",
+            "prompt": "дім",
+            "answer": "слово",
+            "options": [
+                {"label": "слово", "lemmaId": "slovo", "kind": "answer"},
+                {"label": "сад", "lemmaId": "sad", "kind": "distractor"},
+                {"label": "ліс", "lemmaId": "lis", "kind": "distractor"},
+                {"label": "місто", "lemmaId": "misto", "kind": "distractor"},
+            ],
+            "source": "fixture",
+        }
+    ]
+    _write_json(synonym_path, synonym_payload)
+
+    index_path = practice_dir / f"practice-index.{level}.json"
+    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    index_payload["counts"]["modeCounts"]["synonym"] = 1
+    index_payload["counts"]["modeCoverage"]["synonym"] = 1.0
+    _write_json(index_path, index_payload)
+
+
 def _fixture_paths(tmp_path: Path) -> tuple[Path, Path, Path]:
     daily_pool = tmp_path / "lexicon-daily-pool.json"
     practice_dir = tmp_path / "lexicon"
@@ -508,6 +537,25 @@ def test_heritage_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> Non
     _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
     # Heritage item at A2 referencing 'dim' (present only in the A1 lexeme shard).
     _add_heritage_item(practice_dir, options=_VALID_HERITAGE_OPTIONS, level="A2")
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1", "A2"),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is True, summary["errors"]
+
+
+def test_synonym_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> None:
+    """B1-floor synonym cards can use a prompt from a lower cumulative shard."""
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _write_level(practice_dir, level="A2")
+    _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
+    _add_synonym_item(practice_dir, level="A2")
 
     summary = check_assets(
         daily_pool=daily_pool,

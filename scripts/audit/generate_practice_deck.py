@@ -1925,6 +1925,24 @@ def _valid_synonym_distractors(
     )
 
 
+def _synonym_availability_level(
+    prompt: dict[str, Any],
+    target: dict[str, Any],
+    pair_key: tuple[str, str, str],
+    a2_exception_set: set[tuple[str, str, str]],
+) -> str:
+    """Return the learner level at which a verified pair becomes available.
+
+    Synonym cards have a B1 floor by default.  The floor is a placement level,
+    not a reason to discard a verified lower-level prompt: cumulative decks
+    already load lower lexeme shards.  A curator-approved both-leg-A2
+    exception may lower that floor to A2, but never to A1.
+    """
+    both_legs_a2 = prompt["cefr"] == "A2" and target["cefr"] == "A2"
+    floor = "A2" if pair_key in a2_exception_set and both_legs_a2 else SYNONYM_DEFAULT_AVAILABILITY
+    return max((floor, prompt["cefr"], target["cefr"]), key=lambda level: CEFR_RANK[level])
+
+
 def _lexeme_lists_synonym_target(entry: dict[str, Any], target_plain: str, polarity: str) -> bool:
     section_name = "synonyms" if polarity == "synonym" else "antonyms"
     return any(_plain(label) == target_plain for label in _section_items(entry, section_name))
@@ -2013,8 +2031,7 @@ def format_a2_synonym_nomination_report(rows: list[dict[str, Any]]) -> str:
 
 
 def _build_synonym_items(
-    entry: dict[str, Any],
-    lexeme: dict[str, Any],
+    lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]],
     by_plain_lemma: dict[str, dict[str, Any]],
     all_lexemes: list[dict[str, Any]],
     deck_version: str,
@@ -2024,54 +2041,68 @@ def _build_synonym_items(
     synonym_verdicts_loaded: bool,
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]],
 ) -> list[dict[str, Any]]:
-    items: list[dict[str, Any]] = []
-    for polarity, section_name in (("synonym", "synonyms"), ("antonym", "antonyms")):
-        for target_label in _section_items(entry, section_name):
-            target = by_plain_lemma.get(_plain(target_label))
-            if not target:
-                continue
-            pair_key = _synonym_pair_key(lexeme["lemma"], target["lemma"], polarity)
-            # An a2Exception lowers availability to A2 ONLY when both legs are exactly
-            # A2 vocabulary. A flagged pair with any non-A2 leg has its flag ignored
-            # (loudly) and stays at the default B1+ floor — it must never make items
-            # available at A1.
-            flagged_a2_exception = pair_key in a2_exception_set
-            both_legs_a2 = lexeme["cefr"] == "A2" and target["cefr"] == "A2"
-            if flagged_a2_exception and not both_legs_a2:
-                print(
-                    f"WARN: synonym pair {pair_key!r} a2Exception ignored: "
-                    "both legs must be A2 vocabulary; staying B1+",
-                    file=sys.stderr,
-                )
-            a2_exception = flagged_a2_exception and both_legs_a2
+    """Build cards from the approved verdict set, not relation-link discovery.
 
-            if (
-                CEFR_RANK[lexeme["cefr"]] < CEFR_RANK[SYNONYM_DEFAULT_AVAILABILITY]
-                and not a2_exception
-            ):
-                continue
-            if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
-                continue
-            distractors = _valid_synonym_distractors(target, lexeme, all_lexemes)
+    Manifest relation sections remain useful for reporting unreviewed and
+    rejected candidates, but an approved verdict is the source of truth for
+    emission.  This also covers approved pairs whose two Atlas entries do not
+    link back to one another through the current relation sections.
+    """
+    for entry, lexeme in lexemes_by_entry:
+        for polarity, section_name in (("synonym", "synonyms"), ("antonym", "antonyms")):
+            for target_label in _section_items(entry, section_name):
+                target = by_plain_lemma.get(_plain(target_label))
+                if not target:
+                    continue
+                pair_key = _synonym_pair_key(lexeme["lemma"], target["lemma"], polarity)
+                flagged_a2_exception = pair_key in a2_exception_set
+                both_legs_a2 = lexeme["cefr"] == "A2" and target["cefr"] == "A2"
+                a2_exception = flagged_a2_exception and both_legs_a2
+                if (
+                    CEFR_RANK[lexeme["cefr"]] < CEFR_RANK[SYNONYM_DEFAULT_AVAILABILITY]
+                    and not a2_exception
+                ):
+                    continue
+                if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
+                    continue
+                if len(_valid_synonym_distractors(target, lexeme, all_lexemes)) < 3:
+                    continue
+                if not synonym_verdicts_loaded:
+                    encountered_pairs[lexeme["cefr"]]["awaiting"].add(pair_key)
+                elif pair_key in rejected_set:
+                    encountered_pairs[lexeme["cefr"]]["rejected"].add(pair_key)
+                elif pair_key not in approved_set:
+                    encountered_pairs[lexeme["cefr"]]["awaiting"].add(pair_key)
+
+    if not synonym_verdicts_loaded:
+        return []
+
+    items: list[dict[str, Any]] = []
+    warned_a2_flags: set[tuple[str, str, str]] = set()
+    for pair_key in sorted(approved_set):
+        prompt_a = by_plain_lemma.get(pair_key[0])
+        prompt_b = by_plain_lemma.get(pair_key[1])
+        if not prompt_a or not prompt_b:
+            continue
+
+        both_legs_a2 = prompt_a["cefr"] == "A2" and prompt_b["cefr"] == "A2"
+        if pair_key in a2_exception_set and not both_legs_a2 and pair_key not in warned_a2_flags:
+            print(
+                f"WARN: synonym pair {pair_key!r} a2Exception ignored: "
+                "both legs must be A2 vocabulary; staying B1+",
+                file=sys.stderr,
+            )
+            warned_a2_flags.add(pair_key)
+        level = _synonym_availability_level(prompt_a, prompt_b, pair_key, a2_exception_set)
+        encountered_pairs[level]["approved"].add(pair_key)
+
+        for prompt, target in ((prompt_a, prompt_b), (prompt_b, prompt_a)):
+            distractors = _valid_synonym_distractors(target, prompt, all_lexemes)
             if len(distractors) < 3:
                 continue
 
-            level = lexeme["cefr"]
-
-            if not synonym_verdicts_loaded:
-                encountered_pairs[level]["awaiting"].add(pair_key)
-                continue
-
-            if pair_key in approved_set:
-                encountered_pairs[level]["approved"].add(pair_key)
-            elif pair_key in rejected_set:
-                encountered_pairs[level]["rejected"].add(pair_key)
-                continue
-            else:
-                encountered_pairs[level]["awaiting"].add(pair_key)
-                continue
-
-            key = "\x1f".join((deck_version, lexeme["lemmaId"], target["lemmaId"], polarity))
+            polarity = pair_key[2]
+            key = "\x1f".join((deck_version, prompt["lemmaId"], target["lemmaId"], polarity))
             synonym_id = "syn_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
             options = [
                 _synonym_option(target["lemma"], target["lemmaId"], "answer"),
@@ -2083,18 +2114,20 @@ def _build_synonym_items(
             answer_index = int(hashlib.sha1(synonym_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
             answer = options.pop(0)
             options.insert(answer_index, answer)
-            item = {
-                "synonymId": synonym_id,
-                "lemmaId": lexeme["lemmaId"],
-                "targetLemmaId": target["lemmaId"],
-                "polarity": polarity,
-                "prompt": lexeme["lemma"],
-                "answer": target["lemma"],
-                "level": lexeme["cefr"],
-                "options": options,
-                "source": "ukrajinet-auto-translation",
-            }
-            items.append(item)
+            items.append(
+                {
+                    "synonymId": synonym_id,
+                    "lemmaId": prompt["lemmaId"],
+                    "targetLemmaId": target["lemmaId"],
+                    "polarity": polarity,
+                    "prompt": prompt["lemma"],
+                    "answer": target["lemma"],
+                    "level": level,
+                    "promptLevel": prompt["cefr"],
+                    "options": options,
+                    "source": "ukrajinet-auto-translation",
+                }
+            )
     return items
 
 
@@ -3044,22 +3077,45 @@ def build_practice_shards(
         if paradigm_items:
             mode_lemma_ids[lexeme["cefr"]]["paradigm"].add(lexeme["lemmaId"])
 
-        synonym_items = _build_synonym_items(
-            _entry,
-            lexeme,
-            by_plain_lemma,
-            all_lexemes,
-            deck_version,
-            approved_set,
-            rejected_set,
-            a2_exception_set,
-            synonym_verdicts_loaded,
-            encountered_pairs,
-        )
-        for item in synonym_items:
-            level = str(item.pop("level"))
-            mode_by_level[level]["synonym"].append(item)
-            mode_lemma_ids[level]["synonym"].add(lexeme["lemmaId"])
+
+    synonym_items = _build_synonym_items(
+        lexemes_by_entry,
+        by_plain_lemma,
+        all_lexemes,
+        deck_version,
+        approved_set - rejected_set,
+        rejected_set,
+        a2_exception_set,
+        synonym_verdicts_loaded,
+        encountered_pairs,
+    )
+    for item in synonym_items:
+        level = str(item.pop("level"))
+        prompt_level = str(item.pop("promptLevel"))
+        mode_by_level[level]["synonym"].append(item)
+        mode_lemma_ids[prompt_level]["synonym"].add(item["lemmaId"])
+    resolved_approved_pairs = set().union(
+        *(encountered_pairs[level]["approved"] for level in CEFR_ORDER)
+    )
+    emitted_synonym_items = [
+        item
+        for level in CEFR_ORDER
+        for item in mode_by_level[level]["synonym"]
+    ]
+    emitted_synonym_pairs = {
+        _synonym_pair_key(item["prompt"], item["answer"], item["polarity"])
+        for item in emitted_synonym_items
+    }
+    effective_approved_set = approved_set - rejected_set
+    print(
+        "synonym verdicts: "
+        f"approved={len(approved_set)} rejected={len(rejected_set)} "
+        f"resolved={len(resolved_approved_pairs)} "
+        f"emitted_pairs={len(emitted_synonym_pairs)} emitted_items={len(emitted_synonym_items)} "
+        f"unresolved={len(effective_approved_set - resolved_approved_pairs)} "
+        f"resolved_without_distractors={len(resolved_approved_pairs - emitted_synonym_pairs)}",
+        file=sys.stderr,
+    )
 
     heritage_frame_debt = 0
     for index, pair in enumerate(heritage_pairs or []):
@@ -3750,7 +3806,10 @@ def apply_size_budgets(
         payload["sizeBudget"] = budget
         return budget
 
-    def refresh_level_metadata(level_shards: dict[str, dict[str, Any]]) -> None:
+    def refresh_level_metadata(
+        level_shards: dict[str, dict[str, Any]],
+        mode_lemma_ids: dict[str, set[str]],
+    ) -> None:
         """Keep index counts and mode flags coherent after a local trim."""
         index_items = body_items(level_shards, "index")
         lexemes = body_items(level_shards, "lexemes")
@@ -3767,14 +3826,6 @@ def apply_size_budgets(
             cloze_id = _clean_text(item.get("clozeId"))
             if lemma_id and cloze_id:
                 cloze_by_lemma.setdefault(lemma_id, []).append(cloze_id)
-        mode_lemma_ids = {
-            mode: {
-                _clean_text(item.get("lemmaId"))
-                for item in (body_items(level_shards, mode) or [])
-                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
-            }
-            for mode in DRILL_MODES
-        }
         for item in index_items:
             if not isinstance(item, dict):
                 continue
@@ -3789,7 +3840,7 @@ def apply_size_budgets(
             if cloze_ids:
                 modes.append("cloze")
             for mode in DRILL_MODES:
-                if lemma_id in mode_lemma_ids[mode]:
+                if lemma_id in mode_lemma_ids.get(mode, set()):
                     modes.append(mode)
             item["modes"] = modes
             item["hasCloze"] = bool(cloze_ids)
@@ -3813,9 +3864,51 @@ def apply_size_budgets(
         for mode in DRILL_MODES:
             mode_items = body_items(level_shards, mode) or []
             mode_counts[mode] = len(mode_items)
+            mode_item_lemma_ids = {
+                _clean_text(item.get("lemmaId"))
+                for item in mode_items
+                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+            }
             mode_coverage[mode] = round(
-                len(mode_lemma_ids[mode]) / lexeme_count, 4
+                len(mode_item_lemma_ids) / lexeme_count, 4
             ) if lexeme_count else 0
+
+    def refresh_all_metadata() -> None:
+        """Rebuild mode links across cumulative lower-level lexeme shards.
+
+        Floor-placed synonym and heritage items can live in a higher-level
+        mode shard while their prompt/native lemma remains in a lower-level
+        lexeme shard.  Refreshing one level from only its local mode payload
+        loses the lower index tag after a trim; resolve every mode item against
+        the post-trim lexeme map before refreshing all indexes.
+        """
+        lexeme_level_by_id: dict[str, str] = {}
+        for level, level_shards in shards.items():
+            for lexeme in body_items(level_shards, "lexemes") or []:
+                if not isinstance(lexeme, dict):
+                    continue
+                lemma_id = _clean_text(lexeme.get("lemmaId"))
+                if lemma_id:
+                    lexeme_level_by_id[lemma_id] = level
+
+        mode_lemma_ids_by_level: dict[str, dict[str, set[str]]] = {
+            level: {mode: set() for mode in DRILL_MODES}
+            for level in shards
+        }
+        for level, level_shards in shards.items():
+            for mode in DRILL_MODES:
+                for item in body_items(level_shards, mode) or []:
+                    if not isinstance(item, dict):
+                        continue
+                    lemma_id = _clean_text(item.get("lemmaId"))
+                    if not lemma_id:
+                        continue
+                    prompt_level = lexeme_level_by_id.get(lemma_id, level)
+                    if prompt_level in mode_lemma_ids_by_level:
+                        mode_lemma_ids_by_level[prompt_level][mode].add(lemma_id)
+
+        for level, level_shards in shards.items():
+            refresh_level_metadata(level_shards, mode_lemma_ids_by_level[level])
 
     def filter_to_lemma_ids(
         level_shards: dict[str, dict[str, Any]],
@@ -3930,7 +4023,7 @@ def apply_size_budgets(
         oversized_surface = oversized_kinds & {"index", "lexemes"}
         trimmed = trim_surface(level, level_shards, oversized_surface) if oversized_surface else False
         if trimmed:
-            refresh_level_metadata(level_shards)
+            refresh_all_metadata()
 
         # Surface trimming can only reduce mode payloads.  Re-measure all
         # payloads before the mode-local pass so the warning names the actual
@@ -3945,7 +4038,7 @@ def apply_size_budgets(
             if kind in oversized_kinds:
                 mode_trimmed = trim_mode(level, level_shards, kind) or mode_trimmed
         if mode_trimmed:
-            refresh_level_metadata(level_shards)
+            refresh_all_metadata()
 
         if not trimmed and not mode_trimmed:
             for kind in sorted(oversized_kinds):
