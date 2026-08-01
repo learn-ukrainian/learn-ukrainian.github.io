@@ -209,18 +209,6 @@ def _source_sentences(
     return results
 
 
-def _first_source_sentence(
-    conn: sqlite3.Connection,
-    *,
-    target: dict[str, str],
-    source_kind: str,
-    vesum: VesumSentenceVerifier | None = None,
-) -> dict[str, Any] | None:
-    """Return the first source sentence for callers that need one example."""
-    rows = _source_sentences(conn, target=target, source_kind=source_kind, limit=1, vesum=vesum)
-    return rows[0] if rows else None
-
-
 def load_daily_lemmas(path: Path) -> list[str]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, list):
