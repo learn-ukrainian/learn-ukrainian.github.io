@@ -453,7 +453,7 @@ def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
     assert shards["B1"]["synonym"]["synonym"] == []
 
 
-def test_budget_refresh_preserves_lower_prompt_synonym_index_tag() -> None:
+def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> None:
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat"),
         make_a1_mock_manifest_entry("кицька", "kytska", "kitty"),
@@ -488,7 +488,10 @@ def test_budget_refresh_preserves_lower_prompt_synonym_index_tag() -> None:
 
     a1_index = shards["A1"]["index"]["items"]
     tagged = {item["lemma"] for item in a1_index if "synonym" in item["modes"]}
-    assert {"кіт", "кицька"}.issubset(tagged)
+    assert tagged == set()
+    assert {
+        item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]
+    } == {"kit", "kytska"}
     assert len(shards["B1"]["classify"]["classify"]) < 20
 
 

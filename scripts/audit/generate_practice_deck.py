@@ -380,6 +380,18 @@ def _clean_text(value: Any) -> str | None:
     return value.strip() if _has_text(value) else None
 
 
+def _contains_forbidden_text(value: Any) -> bool:
+    """Reject source text with controls, format controls, or private-use glyphs."""
+    text = _clean_text(value)
+    if text is None:
+        return False
+    return any(
+        unicodedata.category(char) in {"Cc", "Cf"}
+        or 0xE000 <= ord(char) <= 0xF8FF
+        for char in text
+    )
+
+
 def _plain(value: str) -> str:
     return (
         value.casefold()
@@ -440,6 +452,26 @@ _FUNCTION_POS = frozenset(
         "sconj",
     }
 )
+_FUNCTION_IDENTITY_POS = frozenset(
+    {
+        "adp",
+        "conj",
+        "conjunction",
+        "function",
+        "part",
+        "particle",
+        "prep",
+        "preposition",
+        "sconj",
+    }
+)
+
+
+def _is_function_identity_pos(pos: Any) -> bool:
+    value = _clean_text(pos)
+    return bool(value and value.casefold() in _FUNCTION_IDENTITY_POS)
+
+
 _FUNCTION_GLOSS_HEADWORDS = frozenset(
     {
         "and",
@@ -815,6 +847,124 @@ def _candidate_sentence_level(candidate: dict[str, Any], fallback: str) -> str:
     return _normalize_cefr(candidate.get("cefr")) or _normalize_cefr(candidate.get("level")) or fallback
 
 
+_INVENTORY_LANGUAGE_SOURCE_MARKERS = (
+    "ukrmova",
+    "ukrlit",
+    "ulp",
+    "ukrainska-mova",
+    "ukrajinska-mova",
+    "ukrainska-literatura",
+    "ukrajinska-literatura",
+)
+# The source database currently labels most rows simply as ``textbook``; the
+# locator carries the actual book family.  For A1/A2, a language-source row is
+# preferred over these subject/academic families.  Subject-only fallback is
+# intentionally conservative: <=120 characters, <=18 words, no formula-like
+# punctuation, and no non-target word longer than 14 characters.  This is a
+# short/common-vocabulary proxy, not a new coverage floor; harder rows remain
+# residual inventory for later curation.
+_INVENTORY_SUBJECT_SOURCE_MARKERS = (
+    "algebra",
+    "astronom",
+    "biolog",
+    "fizyk",
+    "geograf",
+    "geometr",
+    "informat",
+    "istori",
+    "istorija",
+    "khim",
+    "matem",
+    "mystetstvo",
+    "pravoznav",
+    "pryrod",
+    "zakhyst",
+    "zdorov",
+)
+_INVENTORY_SIMPLE_MAX_CHARS = 120
+_INVENTORY_SIMPLE_MAX_WORDS = 18
+_INVENTORY_SIMPLE_MAX_NON_TARGET_WORD_LENGTH = 14
+_INVENTORY_WORD_RE = re.compile(r"[^\W_]+(?:[-'’ʼ][^\W_]+)*", re.UNICODE)
+
+
+def _inventory_source_text(provenance: dict[str, Any]) -> str:
+    return " ".join(
+        _clean_text(provenance.get(key)) or ""
+        for key in ("source", "label", "locator", "title")
+    ).casefold()
+
+
+def _inventory_source_kind(provenance: dict[str, Any]) -> str:
+    source_text = _inventory_source_text(provenance)
+    if any(marker in source_text for marker in _INVENTORY_LANGUAGE_SOURCE_MARKERS):
+        return "language"
+    if any(marker in source_text for marker in _INVENTORY_SUBJECT_SOURCE_MARKERS):
+        return "subject"
+    return "other"
+
+
+def _inventory_sentence_is_short_common(sentence: str, target_form: str) -> bool:
+    if len(sentence) > _INVENTORY_SIMPLE_MAX_CHARS:
+        return False
+    if re.search(r"[=<>±×÷/]", sentence):
+        return False
+    if sum(char.isdigit() for char in sentence) > 2:
+        return False
+    words = _INVENTORY_WORD_RE.findall(sentence)
+    if not words or len(words) > _INVENTORY_SIMPLE_MAX_WORDS:
+        return False
+    target_plain = _plain(target_form)
+    return all(
+        len(_plain(_strip_stress(word))) <= _INVENTORY_SIMPLE_MAX_NON_TARGET_WORD_LENGTH
+        for word in words
+        if _plain(_strip_stress(word)) != target_plain
+    )
+
+
+def _prefer_inventory_sources(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Rank duplicate A1/A2 inventory rows by source quality per lemma."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        key = _clean_text(row.get("lemmaId")) or _plain(str(row.get("lemma") or ""))
+        if key:
+            grouped.setdefault(key, []).append(row)
+
+    selected: list[dict[str, Any]] = []
+    for group in grouped.values():
+        low_level = [
+            row
+            for row in group
+            if _normalize_cefr(row.get("cefr")) in {"A1", "A2"}
+        ]
+        if not low_level:
+            selected.extend(group)
+            continue
+
+        language_rows = [
+            row
+            for row in low_level
+            if _inventory_source_kind(row["provenance"]) == "language"
+        ]
+        if language_rows:
+            selected.extend(language_rows)
+        else:
+            non_subject_rows = [
+                row
+                for row in low_level
+                if _inventory_source_kind(row["provenance"]) != "subject"
+            ]
+            if non_subject_rows:
+                selected.extend(non_subject_rows)
+            else:
+                selected.extend(
+                    row
+                    for row in low_level
+                    if _inventory_sentence_is_short_common(row["originalSentence"], row["form"])
+                )
+        selected.extend(row for row in group if row not in low_level)
+    return selected
+
+
 def _cloze_candidate_ok_for_level(candidate: dict[str, Any], word_level: str) -> bool:
     sentence_level = _candidate_sentence_level(candidate, word_level)
     return CEFR_RANK[sentence_level] <= CEFR_RANK[word_level]
@@ -1080,13 +1230,17 @@ def _make_no_pair_options(
         decoys = [
             candidate
             for candidate in decoys
-            if abs(len(candidate[1]) - answer_length) <= 12
+            if abs(len(candidate[1]) - answer_length) <= 3
         ]
-        decoys.sort(key=lambda candidate: (abs(len(candidate[1]) - answer_length), _plain(candidate[1])))
+        # Inventory identity cards used to take the alphabetically earliest POS
+        # entries, which made chips look like an unrelated word list.  Keep the
+        # same POS and a tight length band, then use the build's seeded RNG so
+        # the selected decoys are varied but reproducible.
+        rng.shuffle(decoys)
         selected_decoys: list[tuple[dict[str, Any], str]] = []
         for candidate in decoys:
             labels = [cloze["form"], *(item[1] for item in selected_decoys), candidate[1]]
-            if max(map(len, labels)) - min(map(len, labels)) > 12:
+            if max(map(len, labels)) - min(map(len, labels)) > 3:
                 continue
             selected_decoys.append(candidate)
             if len(selected_decoys) == 3:
@@ -1399,6 +1553,12 @@ def _build_cloze_items(
             continue
         curated_form = _clean_text(candidate.get("form"))
         inventory_candidate = candidate.get("sourceType") == "sentence_inventory"
+        if (
+            inventory_candidate
+            and _is_function_identity_pos(lexeme.get("pos"))
+            and candidate.get("curated") is not True
+        ):
+            continue
         if inventory_candidate:
             # A sentence inventory row represents an attested source sentence;
             # without its explicit target token, it cannot be safely blanked.
@@ -3035,10 +3195,6 @@ def build_practice_shards(
         level: {mode: [] for mode in DRILL_MODES}
         for level in CEFR_ORDER
     }
-    mode_lemma_ids: dict[str, dict[str, set[str]]] = {
-        level: {mode: set() for mode in DRILL_MODES}
-        for level in CEFR_ORDER
-    }
     for _entry, lexeme in lexemes_by_entry:
         if config.cloze_enabled and is_surface_admitted(_entry, SURFACE_CLOZE):
             source_rows = [
@@ -3065,18 +3221,11 @@ def build_practice_shards(
                     **stress,
                 }
             )
-            mode_lemma_ids[lexeme["cefr"]]["stress"].add(lexeme["lemmaId"])
 
         classify_items = _build_classify_items(_entry, lexeme)
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
-        if classify_items:
-            mode_lemma_ids[lexeme["cefr"]]["classify"].add(lexeme["lemmaId"])
-
         paradigm_items = _build_paradigm_items(lexeme)
         mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
-        if paradigm_items:
-            mode_lemma_ids[lexeme["cefr"]]["paradigm"].add(lexeme["lemmaId"])
-
 
     synonym_items = _build_synonym_items(
         lexemes_by_entry,
@@ -3091,9 +3240,8 @@ def build_practice_shards(
     )
     for item in synonym_items:
         level = str(item.pop("level"))
-        prompt_level = str(item.pop("promptLevel"))
+        item.pop("promptLevel", None)
         mode_by_level[level]["synonym"].append(item)
-        mode_lemma_ids[prompt_level]["synonym"].add(item["lemmaId"])
     resolved_approved_pairs = set().union(
         *(encountered_pairs[level]["approved"] for level in CEFR_ORDER)
     )
@@ -3170,13 +3318,6 @@ def build_practice_shards(
                 )
                 continue
             mode_by_level[level]["heritage"].append(public_item)
-            # Tag the heritage mode on the NATIVE LEXEME's own index entry (its
-            # shard), not the item's floor level — index entries only exist at
-            # the lexeme's level. A learner below the floor loads the tag but
-            # not the item shard; the client skips missing items (same pattern
-            # as stress/classify). At/above the floor, cumulative loading has
-            # both → reachable AND pedagogy-gated (#4719).
-            mode_lemma_ids[native_lexeme["cefr"]]["heritage"].add(native_lexeme["lemmaId"])
     if heritage_frame_debt:
         print(
             f"heritage frame coverage: {heritage_frame_debt} records without frames — emitted 0 items for them",
@@ -3237,7 +3378,6 @@ def build_practice_shards(
                 )
                 continue
             mode_by_level[level]["paronym"].append(public_item)
-            mode_lemma_ids[level]["paronym"].add(item.get("lemmaId") or lex_a.get("lemmaId") or lex_b.get("lemmaId"))
     if paronym_frame_debt:
         print(
             f"paronym frame coverage: {paronym_frame_debt} records without frames — emitted 0 items for them",
@@ -3266,6 +3406,16 @@ def build_practice_shards(
             level_cloze = []
             for item in cloze_by_level[level]:
                 cloze_ids_by_lemma.get(item["lemmaId"], []).clear()
+        level_lemma_ids = {lexeme["lemmaId"] for lexeme in level_lexemes}
+        level_mode_lemma_ids = {
+            mode: {
+                _clean_text(item.get("lemmaId"))
+                for item in mode_by_level[level][mode]
+                if isinstance(item, dict)
+                and _clean_text(item.get("lemmaId")) in level_lemma_ids
+            }
+            for mode in DRILL_MODES
+        }
         index_items = []
         for order, lexeme in enumerate(level_lexemes):
             cloze_ids = cloze_ids_by_lemma.get(lexeme["lemmaId"], [])
@@ -3275,7 +3425,7 @@ def build_practice_shards(
             if cloze_ids:
                 modes.append("cloze")
             for drill_mode in DRILL_MODES:
-                if lexeme["lemmaId"] in mode_lemma_ids[level][drill_mode]:
+                if lexeme["lemmaId"] in level_mode_lemma_ids[drill_mode]:
                     modes.append(drill_mode)
             index_items.append(
                 {
@@ -3315,7 +3465,8 @@ def build_practice_shards(
                 "cloze": coverage,
                 **{
                     mode: round(
-                        len({item["lemmaId"] for item in mode_by_level[level][mode]}) / len(level_lexemes),
+                        len({item["lemmaId"] for item in mode_by_level[level][mode]})
+                        / len(level_lexemes),
                         4,
                     )
                     for mode in DRILL_MODES
@@ -3608,6 +3759,11 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
             continue
         if not isinstance(source_provenance, dict) or not isinstance(license_info, dict):
             continue
+        # Strip whitespace before this check: an OCR bullet/control at the
+        # beginning of a token must fail closed, not become a seemingly clean
+        # learner sentence after normalization.
+        if any(_contains_forbidden_text(value) for value in (lemma, sentence, target_form)):
+            continue
         # Treat hyphenated and apostrophe-bearing words as one source token;
         # ``сумка`` in ``сумка-пакет`` is not an independently blankable form.
         # Include ASCII hyphen and Unicode Pd-ish dashes U+2010–U+2015 so en/em
@@ -3626,18 +3782,23 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
             **source_fields,
             "license": license_info,
         }
-        candidates.append(
-            {
-                "clozeId": f"{lemma_id}:inventory:{index + 1}",
-                "lemma": lemma,
-                "lemmaId": lemma_id,
-                "sentence": blanked_sentence,
-                "form": target_form,
-                "cefr": _clean_text(row.get("cefr")),
-                "provenance": provenance,
-                "sourceType": "sentence_inventory",
-            }
-        )
+        candidate = {
+            "clozeId": f"{lemma_id}:inventory:{index + 1}",
+            "lemma": lemma,
+            "lemmaId": lemma_id,
+            "sentence": blanked_sentence,
+            "originalSentence": sentence,
+            "form": target_form,
+            "cefr": _clean_text(row.get("cefr")),
+            "provenance": provenance,
+            "sourceType": "sentence_inventory",
+        }
+        if row.get("curated") is True:
+            candidate["curated"] = True
+        candidates.append(candidate)
+    candidates = _prefer_inventory_sources(candidates)
+    for candidate in candidates:
+        candidate.pop("originalSentence", None)
     return candidates
 
 
@@ -3867,45 +4028,32 @@ def apply_size_budgets(
             mode_item_lemma_ids = {
                 _clean_text(item.get("lemmaId"))
                 for item in mode_items
-                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+                if isinstance(item, dict)
+                and _clean_text(item.get("lemmaId"))
             }
             mode_coverage[mode] = round(
                 len(mode_item_lemma_ids) / lexeme_count, 4
             ) if lexeme_count else 0
 
     def refresh_all_metadata() -> None:
-        """Rebuild mode links across cumulative lower-level lexeme shards.
-
-        Floor-placed synonym and heritage items can live in a higher-level
-        mode shard while their prompt/native lemma remains in a lower-level
-        lexeme shard.  Refreshing one level from only its local mode payload
-        loses the lower index tag after a trim; resolve every mode item against
-        the post-trim lexeme map before refreshing all indexes.
-        """
-        lexeme_level_by_id: dict[str, str] = {}
-        for level, level_shards in shards.items():
-            for lexeme in body_items(level_shards, "lexemes") or []:
-                if not isinstance(lexeme, dict):
-                    continue
-                lemma_id = _clean_text(lexeme.get("lemmaId"))
-                if lemma_id:
-                    lexeme_level_by_id[lemma_id] = level
-
+        """Rebuild mode links from each level's post-trim mode payload."""
         mode_lemma_ids_by_level: dict[str, dict[str, set[str]]] = {
             level: {mode: set() for mode in DRILL_MODES}
             for level in shards
         }
         for level, level_shards in shards.items():
+            level_lemma_ids = {
+                _clean_text(lexeme.get("lemmaId"))
+                for lexeme in body_items(level_shards, "lexemes") or []
+                if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+            }
             for mode in DRILL_MODES:
                 for item in body_items(level_shards, mode) or []:
                     if not isinstance(item, dict):
                         continue
                     lemma_id = _clean_text(item.get("lemmaId"))
-                    if not lemma_id:
-                        continue
-                    prompt_level = lexeme_level_by_id.get(lemma_id, level)
-                    if prompt_level in mode_lemma_ids_by_level:
-                        mode_lemma_ids_by_level[prompt_level][mode].add(lemma_id)
+                    if lemma_id in level_lemma_ids:
+                        mode_lemma_ids_by_level[level][mode].add(lemma_id)
 
         for level, level_shards in shards.items():
             refresh_level_metadata(level_shards, mode_lemma_ids_by_level[level])
