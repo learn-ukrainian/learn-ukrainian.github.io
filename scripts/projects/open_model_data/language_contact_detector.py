@@ -50,7 +50,6 @@ CANDIDATE_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/language
 RECEIPT_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/language_contact_receipt_v1.schema.json"
 DEFAULT_CONFIG_PATH = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
 DEFAULT_REGRESSION_FIXTURE = ROOT / "data/projects/open_model_data/detector/regression_fixture_v1.json"
-DEFAULT_R2U_CACHE = ROOT / "data/projects/open_model_data/detector/r2u_evidence_cache_v1.json"
 
 SCHEMA_VERSION = "language_contact_receipt_v1"
 CANDIDATE_SCHEMA_VERSION = "language_contact_candidate_v1"
@@ -1510,8 +1509,8 @@ def stream_detector(
             "expected_lexical_words": expected_words,
             "processed_rows": processed_rows,
             "processed_lexical_words": processed_words,
-            "dropped_rows": expected_rows - processed_rows,
-            "dropped_lexical_words": expected_words - processed_words,
+            "dropped_rows": max(0, expected_rows - processed_rows),
+            "dropped_lexical_words": max(0, expected_words - processed_words),
             "inaccessible_sources": sorted(inaccessible_sources, key=lambda item: (item["source_family"], item["reason"])),
             "source_results": sorted(source_results, key=lambda item: item["source_family"]),
         },

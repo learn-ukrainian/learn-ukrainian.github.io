@@ -137,6 +137,12 @@ no-signal bucket. This arithmetic is a fail-closed invariant, not a quality
 estimate. No precision or correctness claim follows from these counts; they
 are review-routing measurements.
 
+Snapshot growth is also fail-closed without becoming a schema crash. If live
+source counts exceed the frozen expectation, the per-source
+`matches_expected` value and aggregate `coverage.complete` become false while
+the non-negative dropped counters remain zero; a later operator must reconcile
+the newer snapshot before treating the run as coverage-complete.
+
 Runtime observations are deliberately outside the deterministic receipt.
 In the final concurrent paired run, pass 1 took 5,467.32 seconds and reached
 568,770,560 bytes maximum resident set according to macOS `/usr/bin/time -l`.

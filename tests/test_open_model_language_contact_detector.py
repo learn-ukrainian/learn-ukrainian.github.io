@@ -523,6 +523,35 @@ def test_prefilter_arithmetic_includes_records_without_lexical_tokens(
     assert prefilter["rows_with_signal"] + prefilter["rows_without_signal"] == 2
 
 
+def test_source_growth_marks_coverage_incomplete_without_negative_drop_counts(
+    tmp_path: Path,
+    config: dict,
+) -> None:
+    config_path = _mini_config(
+        tmp_path,
+        config,
+        ["Українська мова.", "Ця тема звучит у новинах."],
+    )
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    payload["sources"][0]["expected"] = {"rows": 1, "lexical_words": 1}
+    config_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+    result = detector.stream_detector(
+        config_path=config_path,
+        input_root=tmp_path,
+        summary_output=tmp_path / "receipt.json",
+        candidates_output=tmp_path / "candidates.jsonl",
+    )
+
+    coverage = result.summary["coverage"]
+    assert coverage["complete"] is False
+    assert coverage["processed_rows"] == 2
+    assert coverage["processed_lexical_words"] > coverage["expected_lexical_words"]
+    assert coverage["dropped_rows"] == 0
+    assert coverage["dropped_lexical_words"] == 0
+    assert coverage["source_results"][0]["matches_expected"] is False
+
+
 def test_receipt_promotion_failure_restores_prior_detector_artifacts(
     tmp_path: Path,
     config: dict,
