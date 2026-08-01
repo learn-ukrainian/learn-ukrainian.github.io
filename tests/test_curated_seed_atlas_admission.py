@@ -299,6 +299,7 @@ def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_pat
         "practice_skipped_not_admitted": 1,
         "practice_skipped_no_cefr": 1,
         "practice_cefr_sources": {"PULS": 2},
+        "local_only_missing_public_route": 0,
     }
     assert report["practice_skipped_no_cefr"] == [{"seedRow": 4, "lemma": "неоцінений", "url_slug": "неоцінений"}]
 
@@ -354,6 +355,105 @@ def test_private_local_candidates_admit_recognition_only_when_route_and_cefr_exi
     ]
     assert report["counts"]["practice_admitted_rows"] == 1
     assert report["counts"]["practice_skipped_no_cefr"] == 0
+
+
+def test_private_local_attested_phrase_without_public_route_uses_head_cefr(tmp_path: Path) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "виходити", "url_slug": "виходити", "pos": "verb", "enrichment": {"cefr": {"level": "A2", "source": "PULS"}}}],
+    )
+    rows = [
+        {
+            "seedRow": 9,
+            "lemma": "виходити з ладу",
+            "gloss": "to break down",
+            "sentenceStatus": "has_candidates",
+            "vesumAttestation": {"attested": True},
+            "admission": {"practice": True, "mode": "local_practice_private_teacher"},
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["localOnly"] is True
+    assert seed["entries"] == [
+        {
+            "seedRow": 9,
+            "lemma": "виходити з ладу",
+            "gloss": "to break down",
+            "slug": "local-teacher-9",
+            "cefr": "A2",
+            "cefrSource": "head_manifest:виходити:PULS",
+            "sentenceStatus": "has_candidates",
+            "admissionMode": "local_practice_private_teacher",
+            "localOnly": True,
+        }
+    ]
+    assert report["atlas_failures"] == []
+    assert report["local_only_missing_public_route"] == [
+        {
+            "seedRow": 9,
+            "lemma": "виходити з ладу",
+            "mode": "local_practice_private_teacher",
+            "practiceAdmitted": True,
+            "headSlug": "виходити",
+        }
+    ]
+
+
+def test_private_local_no_route_requires_explicit_vesum_attestation(tmp_path: Path) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "виходити", "url_slug": "виходити", "pos": "verb", "enrichment": {"cefr": "A2"}}],
+    )
+    rows = [
+        {
+            "seedRow": 9,
+            "lemma": "виходити з ладу",
+            "gloss": "to break down",
+            "sentenceStatus": "has_candidates",
+            "admission": {"practice": True, "mode": "local_practice_private_teacher"},
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["entries"] == []
+    assert report["atlas_failures"] == [{"seedRow": 9, "lemma": "виходити з ладу", "reason": "missing_public_route"}]
+
+
+def test_private_local_public_route_without_cefr_uses_soft_guidance(tmp_path: Path) -> None:
+    """Private teacher rows with a public route but empty enrichment still admit."""
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "кліщ", "url_slug": "кліщ", "pos": "noun", "enrichment": {}}],
+    )
+    rows = [
+        {
+            "seedRow": 820,
+            "lemma": "Кліщ",
+            "gloss": "Tick",
+            "sentenceStatus": "has_candidates",
+            "vesumAttestation": {"attested": True},
+            "admission": {"practice": True, "mode": "local_practice_private_teacher"},
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert report["practice_skipped_no_cefr"] == []
+    assert seed["entries"] == [
+        {
+            "seedRow": 820,
+            "lemma": "кліщ",
+            "slug": "кліщ",
+            "cefr": "B1",
+            "cefrSource": "public_route_unleveled:кліщ:local_practice_unleveled (guidance only)",
+            "sentenceStatus": "has_candidates",
+            "admissionMode": "local_practice_private_teacher",
+        }
+    ]
+    assert report["counts"]["practice_admitted_rows"] == 1
 
 
 def test_cli_allows_missing_routes_only_for_local_practice_output(tmp_path: Path) -> None:

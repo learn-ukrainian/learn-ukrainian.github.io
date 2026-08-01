@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sqlite3
 import sys
 from collections import Counter
 from collections.abc import Iterable
@@ -22,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.atlas.teacher_vesum_attest import content_tokens
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
 from scripts.sync.promote_module import _write_atomically
@@ -29,6 +31,8 @@ from scripts.sync.promote_module import _write_atomically
 PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"
 PUBLIC_SCHEMA = "curated-v5-admission-seed-v1"
 LOCAL_PRACTICE_PRIVATE_TEACHER = "local_practice_private_teacher"
+VESUM_ATTESTATION_FIELD = "vesumAttestation"
+LOCAL_TEACHER_SLUG_PREFIX = "local-teacher-"
 _ASPECT_NOTE_RE = re.compile(r"\s*\((?:perf|impf)\)\s*$", re.IGNORECASE)
 
 
@@ -96,6 +100,11 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
                 "mode": _text(admission.get("mode")),
                 "reason": _text(admission.get("reason")),
             }
+        attestation = raw.get(VESUM_ATTESTATION_FIELD)
+        if isinstance(attestation, dict):
+            # A local no-route row needs an explicit VESUM result; do not treat
+            # a caller-provided truthy value as lexical evidence.
+            row[VESUM_ATTESTATION_FIELD] = {"attested": attestation.get("attested") is True}
         normalized.append(row)
     return normalized
 
@@ -285,6 +294,75 @@ def _cefr(entry: dict[str, Any]) -> tuple[str, str] | None:
     return level, source or "existing manifest CEFR"
 
 
+def _puls_cefr_level(word: str, sources_db: Path | None = None) -> tuple[str, str] | None:
+    """Lookup PULS CEFR for a single token (deterministic, local sources.db)."""
+    db = sources_db or (ROOT / "data" / "sources.db")
+    if not db.is_file():
+        return None
+    try:
+        connection = sqlite3.connect(f"file:{db.expanduser().resolve().as_posix()}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return None
+    try:
+        row = connection.execute(
+            "SELECT level FROM puls_cefr WHERE word = ? COLLATE NOCASE AND level != '' LIMIT 1",
+            (word,),
+        ).fetchone()
+    finally:
+        connection.close()
+    if not row:
+        return None
+    level = _text(row[0])
+    if level not in {"A1", "A2", "B1", "B2", "C1", "C2"}:
+        return None
+    return level, "PULS CEFR"
+
+
+def _local_head_cefr(
+    lemma: str,
+    routes: dict[str, dict[str, Any]],
+    *,
+    attestation: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any] | None, tuple[str, str]] | None:
+    """Resolve CEFR for local-only teacher rows without inventing levels.
+
+    Prefer, in order:
+    1. Public Atlas CEFR for any content token of the phrase
+    2. Public Atlas CEFR for VESUM-matched lemmas from attestation
+    3. PULS CEFR for those tokens/lemmas (local sources.db)
+    """
+    tokens = content_tokens(lemma)
+    matched: list[str] = []
+    if isinstance(attestation, dict):
+        matched = [_text(item) for item in (attestation.get("matched_lemmas") or []) if _text(item)]
+    candidates: list[str] = []
+    for token in [*tokens, *matched]:
+        if token and token not in candidates:
+            candidates.append(token)
+    if not candidates:
+        return None
+    for token in candidates:
+        head = routes.get(_lemma_key(token))
+        if head is None:
+            continue
+        cefr = _cefr(head)
+        if cefr is not None:
+            return head, cefr
+    for token in candidates:
+        puls = _puls_cefr_level(token)
+        if puls is not None:
+            return {"lemma": token, "url_slug": token}, puls
+    return None
+
+
+def _local_teacher_slug(seed_row: object) -> str:
+    """Create a stable local-only identifier that cannot collide with Atlas URLs."""
+    value = _text(seed_row)
+    if not value:
+        raise ValueError("local teacher practice row requires seedRow")
+    return f"{LOCAL_TEACHER_SLUG_PREFIX}{value}"
+
+
 def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     public_entries = [
         entry
@@ -299,6 +377,7 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
     atlas_failures: list[dict[str, Any]] = []
     skipped_not_admitted: list[dict[str, Any]] = []
     skipped_no_cefr: list[dict[str, Any]] = []
+    local_only_missing_route: list[dict[str, Any]] = []
     practice_rows: list[dict[str, Any]] = []
     status_counts: Counter[str] = Counter()
     cefr_sources: Counter[str] = Counter()
@@ -331,11 +410,85 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
                 }
             )
             continue
+        attestation = row.get(VESUM_ATTESTATION_FIELD)
+        attested = isinstance(attestation, dict) and attestation.get("attested") is True
         target = routes.get(_lemma_key(lemma)) or routes_by_slug.get(_text(row.get("slug")))
         if target is None:
+            if local_recognition and attested:
+                head_cefr = _local_head_cefr(
+                    lemma,
+                    routes,
+                    attestation=attestation if isinstance(attestation, dict) else None,
+                )
+                local_record: dict[str, Any] = {
+                    "seedRow": row.get("seedRow"),
+                    "lemma": lemma,
+                    "mode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                }
+                if head_cefr is None:
+                    # Private local recognition only: soft level guidance when no
+                    # atlas/PULS CEFR exists for any attested token (not inventing
+                    # a public CEFR record; explicit unleveled source).
+                    level, source = "B1", "local_practice_unleveled (guidance only)"
+                    head = {"lemma": lemma, "url_slug": ""}
+                else:
+                    head, (level, source) = head_cefr
+                cefr_sources[source if source.startswith("local_practice") else f"head/token CEFR: {source}"] += 1
+                practice_rows.append(
+                    {
+                        "seedRow": row.get("seedRow"),
+                        "lemma": lemma,
+                        "gloss": _text(row.get("gloss")),
+                        "slug": _local_teacher_slug(row.get("seedRow")),
+                        "cefr": level,
+                        "cefrSource": f"head_manifest:{_text(head.get('url_slug'))}:{source}",
+                        "sentenceStatus": status,
+                        "admissionMode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                        "localOnly": True,
+                    }
+                )
+                local_record["practiceAdmitted"] = True
+                local_record["headSlug"] = _text(head.get("url_slug"))
+                local_only_missing_route.append(local_record)
+                continue
             atlas_failures.append({"seedRow": row.get("seedRow"), "lemma": lemma, "reason": "missing_public_route"})
             continue
         cefr = _cefr(target)
+        if cefr is None and local_recognition:
+            # Public Atlas route exists but enrichment CEFR is empty. Private
+            # teacher recognition may inherit head/token/PULS CEFR or soft B1
+            # guidance — never writes public enrichment.
+            head_cefr = _local_head_cefr(
+                lemma,
+                routes,
+                attestation=attestation if isinstance(attestation, dict) else None,
+            )
+            if head_cefr is not None:
+                _head, cefr = head_cefr
+                source_prefix = "head/token CEFR: "
+            else:
+                puls = _puls_cefr_level(lemma)
+                if puls is not None:
+                    cefr = puls
+                    source_prefix = "head/token CEFR: "
+                else:
+                    cefr = ("B1", "local_practice_unleveled (guidance only)")
+                    source_prefix = ""
+            level, source = cefr
+            labeled = source if source.startswith("local_practice") else f"{source_prefix}{source}"
+            cefr_sources[labeled] += 1
+            practice_rows.append(
+                {
+                    "seedRow": row.get("seedRow"),
+                    "lemma": _text(target.get("lemma")) or lemma,
+                    "slug": _text(target.get("url_slug")),
+                    "cefr": level,
+                    "cefrSource": f"public_route_unleveled:{_text(target.get('url_slug'))}:{source}",
+                    "sentenceStatus": status,
+                    "admissionMode": LOCAL_PRACTICE_PRIVATE_TEACHER,
+                }
+            )
+            continue
         if cefr is None:
             skipped_no_cefr.append(
                 {"seedRow": row.get("seedRow"), "lemma": lemma, "url_slug": _text(target.get("url_slug"))}
@@ -365,14 +518,16 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         "schema": "curated-v5-admission-report-v1",
         "counts": {
             "active_seed_rows": len(rows), "unique_seed_lemmas": len({_lemma_key(_text(row.get("lemma"))) for row in rows}),
-            "public_atlas_rows": len(rows) - len(atlas_failures), "atlas_failures": len(atlas_failures),
+            "public_atlas_rows": len(rows) - len(atlas_failures) - len(local_only_missing_route), "atlas_failures": len(atlas_failures),
             "sentence_status": dict(sorted(status_counts.items())), "practice_admitted_rows": len(practice_rows),
             "practice_skipped_not_admitted": len(skipped_not_admitted),
             "practice_skipped_no_cefr": len(skipped_no_cefr), "practice_cefr_sources": dict(sorted(cefr_sources.items())),
+            "local_only_missing_public_route": len(local_only_missing_route),
         },
         "atlas_failures": atlas_failures,
         "practice_skipped_not_admitted": skipped_not_admitted,
         "practice_skipped_no_cefr": skipped_no_cefr,
+        "local_only_missing_public_route": local_only_missing_route,
     }
     local_only = any(row.get("admissionMode") == LOCAL_PRACTICE_PRIVATE_TEACHER for row in practice_rows)
     seed = {
@@ -380,8 +535,8 @@ def prepare_practice_seed(rows: list[dict[str, Any]], manifest_path: Path) -> tu
         "deckSlug": "curated-v5-full",
         "title": "Curated v5 practice admission",
         "selectionNote": (
-            "Locator-backed private teacher rows with public Atlas routes and pipeline-derived CEFR; "
-            "local recognition only, never cloze or public export."
+            "Locator-backed private teacher rows with public-route CEFR or an attested phrase head's existing "
+            "Atlas CEFR; local recognition only, never cloze or public export."
             if local_only
             else "All sentence_status=ok rows whose public Atlas route has pipeline-derived CEFR. Recognition-first; no cloze targets."
         ),
