@@ -37,6 +37,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.api.config import LIVE_REPO_ROOT
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"
@@ -377,8 +379,14 @@ def public_refresh_view(state: dict) -> dict:
 # Scheduler + worker
 # --------------------------------------------------------------------------- #
 def _venv_python() -> str:
-    """Path to the venv Python binary for spawning the detached worker."""
-    return str(ROOT / ".venv" / "bin" / "python")
+    """Path to the live checkout's venv for the detached worker.
+
+    The supervised API imports this module from an immutable release snapshot,
+    which intentionally has no ``.venv``.  The supervisor-provided live root
+    owns the approved interpreter while ``ROOT`` remains the worker's snapshot
+    cwd so the detached process executes the exact deployed code.
+    """
+    return str(LIVE_REPO_ROOT / ".venv" / "bin" / "python")
 
 
 def _spawn_worker(run_id: str) -> bool:
