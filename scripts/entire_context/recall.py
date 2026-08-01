@@ -141,6 +141,7 @@ def _verified_card(
     *,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None,
     now: datetime | None,
 ) -> dict[str, Any]:
     """Re-check promotion state and re-resolve/recompute the canonical digest."""
@@ -148,7 +149,7 @@ def _verified_card(
     if fresh is None:
         raise GateReject(REASON_TOMBSTONED)
     try:
-        excerpt = reverify_link(fresh, repo=repo, acp_root=acp_root, now=now)
+        excerpt = reverify_link(fresh, repo=repo, acp_root=acp_root, rollover_root=rollover_root, now=now)
     except ResolutionError as exc:
         raise GateReject(exc.reason) from exc
     return {
@@ -177,6 +178,7 @@ def search_past_work(
     *,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None = None,
     limit: int = MAX_RESULTS,
     scan_limit: int = MAX_SCAN_ROWS,
     now: datetime | None = None,
@@ -202,7 +204,7 @@ def search_past_work(
             break
         locator_id = entry.link["locator_id"]
         try:
-            card = _verified_card(store, entry.link, repo=repo, acp_root=acp_root, now=now)
+            card = _verified_card(store, entry.link, repo=repo, acp_root=acp_root, rollover_root=rollover_root, now=now)
         except GateReject as exc:
             if len(omitted) < MAX_SEARCH_OMISSIONS:
                 omitted.append(_omitted(locator_id, exc.reason))
@@ -268,6 +270,7 @@ def explain_change(
     git_sha: str | None = None,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Traverse typed provenance joins from an exact seed identifier.
@@ -311,7 +314,9 @@ def explain_change(
     omitted: list[dict[str, str]] = []
     for node_id in sorted(nodes):
         try:
-            verified[node_id] = _verified_card(store, nodes[node_id], repo=repo, acp_root=acp_root, now=now)
+            verified[node_id] = _verified_card(
+                store, nodes[node_id], repo=repo, acp_root=acp_root, rollover_root=rollover_root, now=now
+            )
         except GateReject as exc:
             omitted.append(_omitted(node_id, exc.reason))
     kept_edges = [
@@ -345,6 +350,7 @@ def prepare_handoff(
     *,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Build a bounded capsule of verified locator cards and excerpts.
@@ -390,7 +396,7 @@ def prepare_handoff(
             append_omission(locator_id, REASON_SOURCE_MISSING)
             continue
         try:
-            card = _verified_card(store, link, repo=repo, acp_root=acp_root, now=now)
+            card = _verified_card(store, link, repo=repo, acp_root=acp_root, rollover_root=rollover_root, now=now)
         except GateReject as exc:
             append_omission(locator_id, exc.reason)
             continue

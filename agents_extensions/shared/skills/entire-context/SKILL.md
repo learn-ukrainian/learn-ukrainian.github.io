@@ -42,6 +42,7 @@ index commands, which write only to the projection SQLite file.
 # Explicit bootstrap/index of real public evidence (idempotent)
 .venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha> [--repo PATH] [--namespace NS]
 .venv/bin/python -m scripts.entire_context bootstrap-acp conversation_<32hex> [--git-sha SHA] [--acp-root PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-rollover --agent <agent> --lineage-id <lineage> --rollover-id <rollover> [--rollover-root PATH]
 
 # search-past-work: ranked verified locator cards (<= 10 results, <= 500 scanned)
 .venv/bin/python -m scripts.entire_context search --query "<needle>" [--repo PATH] [--acp-root PATH]
@@ -57,8 +58,11 @@ index commands, which write only to the projection SQLite file.
 ```
 
 Resolution flags: `--repo` (default: cwd) supplies the local git repository;
-`--acp-root` or `ENTIRE_CONTEXT_ACP_ROOT` supplies the ACP receipt plane root.
-Without an ACP root, ACP links fail closed as `source_missing`. `--db` or
+`--acp-root` or `ENTIRE_CONTEXT_ACP_ROOT` supplies the ACP receipt plane root;
+`--rollover-root` or `ENTIRE_CONTEXT_ROLLOVER_ROOT` supplies the rollover
+registry state root. Without an ACP root, ACP links fail closed as
+`source_missing`; without a rollover root, rollover links fail closed as
+`source_missing`. `--db` or
 `ENTIRE_CONTEXT_DB` overrides the projection path. `--consumer <label>` may be
 passed by any harness; it is validated, never persisted, and never echoed, so
 all harnesses receive byte-identical results for identical invocations.
@@ -72,8 +76,9 @@ closed as `digest_mismatch`.
 | --- | --- | --- |
 | `git_commit` | Real | Read-only local git plumbing: parents, touched paths, committer timestamp, author. No commit subject/body. |
 | `acp_conversation` | Real | Existing terminal receipt verifier (`verify_discussion_receipt`), metadata-only, `content_included: false`. |
+| `rollover` | Real | Existing read-only registry verifier (`rollover_registry.load_record`): strict body-free projection of schema/key, lifecycle state/boundary, sub-lifecycle states, `cleanup_authorized`, timestamps, and non-body routing (stream epic, issue number, lifecycle state). |
 | `github_issue` / `github_pr` | Unsupported | No local canonical store verifiable without network; fails closed. |
-| `fleet_receipt` / `rollover` / `formal_review` / `monitor_run` | Unsupported | No local canonical store verifiable without protected-rail access; fails closed. |
+| `fleet_receipt` / `formal_review` / `monitor_run` | Unsupported | No local canonical store verifiable without protected-rail access; fails closed. |
 
 ## How to consume results
 

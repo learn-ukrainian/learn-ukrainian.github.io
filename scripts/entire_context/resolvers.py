@@ -3,8 +3,9 @@
 Every resolver maps one exact, caller-supplied identifier to a body-free
 canonical projection: a deterministic digest over public metadata, never over
 subjects, prompts, transcripts, or any composed text. Resolution is fully
-local — read-only ``git`` plumbing and the existing body-free ACP terminal
-receipt verifier — and fails closed: a source that cannot be verified raises
+local — read-only ``git`` plumbing, the existing body-free ACP terminal
+receipt verifier, and the existing read-only rollover-registry verifier — and
+fails closed: a source that cannot be verified raises
 :class:`ResolutionError` with a machine reason and nothing is fabricated.
 
 Real resolvers in this slice:
@@ -15,12 +16,20 @@ Real resolvers in this slice:
 - ``acp_conversation`` — an exact ACP conversation ID resolves through
   :func:`scripts.agent_runtime.acpx_discuss.verify_discussion_receipt` to
   body-free terminal metadata with ``content_included: false``.
+- ``rollover`` — an exact ``(agent, lineage_id, rollover_id)`` triple resolves
+  through
+  :func:`scripts.orchestration.task_family.rollover_registry.load_record` to a
+  strict body-free projection of the registry record: schema/key, lifecycle
+  state/boundary, sub-lifecycle states, ``cleanup_authorized``, timestamps, and
+  non-body routing (stream epic, issue number, lifecycle state). Titles,
+  task/thread IDs, reasons, filesystem paths, history, receipts, evidence, and
+  nested native/readback payloads are excluded.
 
-``github_issue``, ``github_pr``, ``fleet_receipt``, ``rollover``,
-``formal_review``, and ``monitor_run`` remain explicitly unsupported here:
-this slice has no local canonical store for them that is verifiable without
-network access or protected-rail mutation, so they fail closed with
-``unsupported_kind`` instead of fabricating coverage.
+``github_issue``, ``github_pr``, ``fleet_receipt``, ``formal_review``, and
+``monitor_run`` remain explicitly unsupported here: this slice has no local
+canonical store for them that is verifiable without network access or
+protected-rail mutation, so they fail closed with ``unsupported_kind`` instead
+of fabricating coverage.
 """
 
 from __future__ import annotations
@@ -38,9 +47,16 @@ from scripts.agent_runtime.acpx_discuss import (
     AcpxDiscussionNotFoundError,
     verify_discussion_receipt,
 )
+from scripts.orchestration.task_family.rollover_registry import (
+    load_record as load_rollover_record,
+)
+from scripts.orchestration.task_family.rollover_registry import (
+    record_path as rollover_record_path,
+)
 
 from .model import (
     GIT_SHA_RE,
+    ROLLOVER_NAMESPACE,
     ContextLink,
     LinkKind,
     SchemaError,
@@ -58,7 +74,7 @@ GIT_TIMEOUT_SECONDS = 30
 ACP_CONVERSATION_ID_RE = re.compile(r"^conversation_[0-9a-f]{32}$")
 
 #: Kinds with a real local resolver in this slice. Everything else fails closed.
-SUPPORTED_RESOLVER_KINDS = frozenset({LinkKind.GIT_COMMIT, LinkKind.ACP_CONVERSATION})
+SUPPORTED_RESOLVER_KINDS = frozenset({LinkKind.GIT_COMMIT, LinkKind.ACP_CONVERSATION, LinkKind.ROLLOVER})
 
 #: Body-free machine reasons a resolution or re-verification can end with.
 REASON_SOURCE_MISSING = "source_missing"
@@ -374,6 +390,128 @@ def resolve_acp_conversation(
     return Resolution(link=link, verification=verification, excerpt=excerpt)
 
 
+# ── rollover ─────────────────────────────────────────────────────────────────
+
+
+#: Sub-lifecycle objects whose ``state`` field is body-free and digest-covered.
+_ROLLOVER_SUB_STATE_KEYS = (
+    "strict_recall",
+    "canary",
+    "confirmation",
+    "predecessor_archival",
+    "heartbeat",
+)
+
+
+def _split_rollover_canonical_id(identifier: str) -> tuple[str, str, str]:
+    """Split ``<agent>/<lineage_id>/<rollover_id>`` into its exact components."""
+    parts = identifier.split("/")
+    if len(parts) != 3 or not all(part.strip() for part in parts):
+        raise ResolutionError(
+            REASON_RESOLUTION_ERROR,
+            "rollover canonical ID must be '<agent>/<lineage_id>/<rollover_id>'",
+        )
+    return parts[0], parts[1], parts[2]
+
+
+def rollover_projection(record: dict[str, Any]) -> dict[str, Any]:
+    """Extract the strict body-free projection covered by the digest.
+
+    The allowlist is deliberately narrow: schema/key, lifecycle state and
+    boundary, the ``state`` sub-field of each sub-lifecycle object,
+    ``cleanup_authorized``, timestamps, and non-body routing (stream epic,
+    issue number, lifecycle state). Titles, task/thread IDs, reasons, paths,
+    history, receipts, evidence, scores, and nested native/readback payloads
+    are excluded.
+    """
+    key = record["key"]
+    identity = record["task_identity"]
+    projection: dict[str, Any] = {
+        "schema": "rollover-projection.v1",
+        "key": {
+            "agent": key["agent"],
+            "lineage_id": key["lineage_id"],
+            "rollover_id": key["rollover_id"],
+        },
+        "state": record["state"],
+        "last_successful_boundary": record["last_successful_boundary"],
+        "lifecycle_state": identity["lifecycle_state"],
+        "stream_epic": identity["stream_epic"],
+        "github_issue_number": identity["github_issue_number"],
+        "cleanup_authorized": record["heartbeat"]["cleanup_authorized"],
+        "prepared_at": record["timestamps"]["prepared_at"],
+        "updated_at": record["timestamps"]["updated_at"],
+    }
+    for sub_key in _ROLLOVER_SUB_STATE_KEYS:
+        projection[f"{sub_key}_state"] = record[sub_key]["state"]
+    return projection
+
+
+def rollover_projection_digest(projection: dict[str, Any]) -> str:
+    """Deterministic digest over the body-free rollover projection only."""
+    return "sha256:" + sha256_text(canonical_json(projection))
+
+
+def resolve_rollover(
+    agent: str,
+    lineage_id: str,
+    rollover_id: str,
+    *,
+    state_root: Path,
+    now: datetime | None = None,
+) -> Resolution:
+    """Resolve an exact ``(agent, lineage_id, rollover_id)`` triple.
+
+    Reads the canonical registry record through the existing read-only
+    :func:`load_record` verifier (which validates the schema, canonical path,
+    and task identity). The registry state root is never mutated.
+    """
+    try:
+        path = rollover_record_path(Path(state_root), agent=agent, lineage_id=lineage_id, rollover_id=rollover_id)
+    except ValueError as exc:
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "rollover identity is not canonical") from exc
+    if not path.is_file():
+        raise ResolutionError(REASON_SOURCE_MISSING)
+    try:
+        record = load_rollover_record(Path(state_root), agent=agent, lineage_id=lineage_id, rollover_id=rollover_id)
+    except ValueError as exc:
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "rollover record failed validation") from exc
+    canonical_id = f"{agent}/{lineage_id}/{rollover_id}"
+    projection = rollover_projection(record)
+    digest = rollover_projection_digest(projection)
+    facets: dict[str, Any] = {
+        "source_kind": "rollover",
+        "state": str(record["state"]),
+    }
+    stream_epic = record["task_identity"].get("stream_epic")
+    if isinstance(stream_epic, int):
+        facets["stream_epic"] = stream_epic
+    validate_facets(facets)
+    try:
+        link = ContextLink(
+            kind=LinkKind.ROLLOVER,
+            canonical_namespace=ROLLOVER_NAMESPACE,
+            canonical_id=canonical_id,
+            canonical_digest=digest,
+            facets=facets,
+        )
+        link.validate()
+    except SchemaError as exc:
+        raise ResolutionError(REASON_RESOLUTION_ERROR, f"projection violates body-free schema: {exc}") from exc
+    verification = VerificationEvidence(
+        verifier="rollover-registry",
+        canonical_digest=digest,
+        status=VerificationStatus.VERIFIED,
+        evidence_locator=f"{ROLLOVER_NAMESPACE}/{canonical_id}",
+        checked_at=isoformat_z(now or utc_now()),
+    )
+    excerpt = {
+        "source": f"{ROLLOVER_NAMESPACE}/{canonical_id}",
+        **projection,
+    }
+    return Resolution(link=link, verification=verification, excerpt=excerpt)
+
+
 # ── typed dispatch and re-verification gate ──────────────────────────────────
 
 
@@ -383,6 +521,7 @@ def resolve_bootstrap(
     *,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None = None,
     namespace: str | None = None,
     git_sha: str | None = None,
     now: datetime | None = None,
@@ -394,6 +533,11 @@ def resolve_bootstrap(
         if acp_root is None:
             raise ResolutionError(REASON_SOURCE_MISSING, "no ACP receipt root available")
         return resolve_acp_conversation(identifier, acp_root=acp_root, git_sha=git_sha, now=now)
+    if kind is LinkKind.ROLLOVER:
+        if rollover_root is None:
+            raise ResolutionError(REASON_SOURCE_MISSING, "no rollover registry root available")
+        agent, lineage_id, rollover_id = _split_rollover_canonical_id(identifier)
+        return resolve_rollover(agent, lineage_id, rollover_id, state_root=rollover_root, now=now)
     raise ResolutionError(REASON_UNSUPPORTED_KIND, kind.value)
 
 
@@ -402,6 +546,7 @@ def reverify_link(
     *,
     repo: Path,
     acp_root: Path | None,
+    rollover_root: Path | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Re-resolve one stored link and recompute its canonical digest.
@@ -419,6 +564,7 @@ def reverify_link(
         str(link["canonical_id"]),
         repo=repo,
         acp_root=acp_root,
+        rollover_root=rollover_root,
         namespace=str(link["canonical_namespace"]),
         git_sha=link.get("git_sha") if kind is LinkKind.ACP_CONVERSATION else None,
         now=now,
@@ -426,8 +572,9 @@ def reverify_link(
     fresh = resolution.link
     # Git namespaces may be explicit organizational labels, so re-resolution
     # deliberately preserves them instead of pretending to derive them anew.
-    # ACP namespaces are canonical resolver output and can be compared.
-    namespace_mismatch = kind is not LinkKind.GIT_COMMIT and fresh.canonical_namespace != link["canonical_namespace"]
+    # ACP and rollover namespaces are canonical resolver output and can be
+    # compared.
+    namespace_mismatch = kind not in (LinkKind.GIT_COMMIT,) and fresh.canonical_namespace != link["canonical_namespace"]
     if fresh.canonical_digest != link["canonical_digest"] or namespace_mismatch:
         raise ResolutionError(REASON_DIGEST_MISMATCH)
     return resolution.excerpt

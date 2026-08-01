@@ -40,9 +40,11 @@ from .recall import (
     search_past_work,
 )
 from .resolvers import (
+    REASON_SOURCE_MISSING,
     ResolutionError,
     resolve_acp_conversation,
     resolve_git_commit,
+    resolve_rollover,
 )
 from .store import AdmitOutcome, ContextLinkStore
 
@@ -54,6 +56,7 @@ DEFAULT_DB_RELATIVE = Path("batch_state") / "entire-context" / "v1" / "context-l
 ENV_DB = "ENTIRE_CONTEXT_DB"
 ENV_DISABLED = "ENTIRE_CONTEXT_DISABLED"
 ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
+ENV_ROLLOVER_ROOT = "ENTIRE_CONTEXT_ROLLOVER_ROOT"
 
 
 def _emit(payload: dict[str, Any]) -> None:
@@ -222,6 +225,14 @@ def _resolve_acp_root(args: argparse.Namespace) -> Path | None:
     return Path(env) if env else None
 
 
+def _resolve_rollover_root(args: argparse.Namespace) -> Path | None:
+    explicit = getattr(args, "rollover_root", None)
+    if explicit:
+        return Path(explicit)
+    env = os.environ.get(ENV_ROLLOVER_ROOT)
+    return Path(env) if env else None
+
+
 def _consumer_error(args: argparse.Namespace) -> dict[str, Any] | None:
     """Validate the optional consumer label; it is never persisted or echoed."""
     consumer = getattr(args, "consumer", None)
@@ -284,6 +295,35 @@ def cmd_bootstrap_acp(args: argparse.Namespace) -> int:
     return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
 
 
+def cmd_bootstrap_rollover(args: argparse.Namespace) -> int:
+    """Resolve an exact (agent, lineage, rollover) triple through the registry verifier."""
+    db_path = _resolve_db(args)
+    if _disabled():
+        return _refused("projection_disabled")
+    rollover_root = _resolve_rollover_root(args)
+    if rollover_root is None:
+        return _refused(REASON_SOURCE_MISSING)
+    try:
+        resolution = resolve_rollover(
+            args.agent,
+            args.lineage_id,
+            args.rollover_id,
+            state_root=rollover_root,
+        )
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    try:
+        result = ContextLinkStore(db_path).admit(resolution.link, resolution.verification, actor=args.actor)
+    except (SchemaError, sqlite3.Error, KeyError, TypeError, ValueError):
+        _emit(_unavailable_payload(db_path, "projection_unreadable"))
+        return EXIT_REFUSED
+    payload = result.to_dict()
+    if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED):
+        payload["excerpt"] = resolution.excerpt
+    _emit(payload)
+    return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
+
+
 def cmd_search(args: argparse.Namespace) -> int:
     """search-past-work: ranked, re-verified, body-free locator cards."""
     db_path, early = _guard(args)
@@ -300,6 +340,7 @@ def cmd_search(args: argparse.Namespace) -> int:
             args.query,
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
+            rollover_root=_resolve_rollover_root(args),
             limit=args.limit,
             scan_limit=args.scan_limit,
         )
@@ -332,6 +373,7 @@ def cmd_explain_change(args: argparse.Namespace) -> int:
             git_sha=args.sha,
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
+            rollover_root=_resolve_rollover_root(args),
         )
     except RecallInputError as exc:
         _emit({"error": str(exc)})
@@ -366,6 +408,7 @@ def cmd_handoff(args: argparse.Namespace) -> int:
                 args.query,
                 repo=_resolve_repo(args),
                 acp_root=_resolve_acp_root(args),
+                rollover_root=_resolve_rollover_root(args),
                 limit=MAX_RESULTS,
             )
             locator_ids.extend(card["locator_id"] for card in search["results"])
@@ -376,6 +419,7 @@ def cmd_handoff(args: argparse.Namespace) -> int:
             locator_ids,
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
+            rollover_root=_resolve_rollover_root(args),
         )
     except RecallInputError as exc:
         _emit({"error": str(exc)})
@@ -450,6 +494,14 @@ def build_parser() -> argparse.ArgumentParser:
             help=f"ACP receipt plane root (default: {ENV_ACP_ROOT}); required to verify ACP links",
         )
         command.add_argument(
+            "--rollover-root",
+            default=None,
+            help=(
+                f"Rollover registry state root (default: {ENV_ROLLOVER_ROOT}); "
+                "required to resolve and re-verify rollover links"
+            ),
+        )
+        command.add_argument(
             "--consumer",
             default=None,
             help="Optional harness label (codex, kimi, glm, ...); validated, never persisted or echoed",
@@ -491,6 +543,22 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"ACP receipt plane root (default: {ENV_ACP_ROOT})",
     )
     bootstrap_acp.set_defaults(func=cmd_bootstrap_acp)
+
+    bootstrap_rollover = sub.add_parser(
+        "bootstrap-rollover",
+        help="Resolve an exact (agent, lineage, rollover) triple through the registry verifier",
+    )
+    bootstrap_rollover.add_argument("--agent", required=True, help="Exact registry agent identifier")
+    bootstrap_rollover.add_argument("--lineage-id", required=True, help="Exact registry lineage identifier")
+    bootstrap_rollover.add_argument("--rollover-id", required=True, help="Exact registry rollover identifier")
+    bootstrap_rollover.add_argument(
+        "--rollover-root",
+        default=None,
+        help=f"Rollover registry state root (default: {ENV_ROLLOVER_ROOT})",
+    )
+    bootstrap_rollover.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_rollover)
+    bootstrap_rollover.set_defaults(func=cmd_bootstrap_rollover)
 
     search = sub.add_parser(
         "search",
