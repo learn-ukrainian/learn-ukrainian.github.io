@@ -1,0 +1,46 @@
+{
+  "base_model": {
+    "identifier": "google/gemma-4-31B",
+    "revision": "5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89"
+  },
+  "data_preparation": {
+    "rendering_template": "{{text}}",
+    "rendering_template_sha256": "b0453fe54c63b5f4e9cccc483d6e2ee51ffbb4a40f648e98b2e5c0dbd2324ab6",
+    "split": {
+      "modulus": 10000,
+      "namespace": "wikipedia-modern-cpt-v1",
+      "strategy": "sha256_record_id_modulo",
+      "validation_buckets": 100
+    },
+    "target_loss_policy": "unmasked_text_tokens"
+  },
+  "hyperparameters": {
+    "epochs": "1",
+    "gradient_accumulation_steps": 16,
+    "learning_rate": "1e-5",
+    "micro_batch_size": 1,
+    "packing": false,
+    "precision": "bf16",
+    "seed": 6169,
+    "sequence_length": 4096,
+    "weight_decay": "0.1"
+  },
+  "implementation": {
+    "code_revision": "89caefd080db8b705c02c7d3d82e88de01560133",
+    "dependency_lock_sha256": "c9f8337146ccf1f22fcc6e671a4dc7376304cf3ce7a7e1348af2250e23f7012b",
+    "framework": "transformers+torch",
+    "framework_version": "transformers=5.14.1;torch=2.13.0"
+  },
+  "objective": "causal_language_modeling",
+  "recipe_id": "wikipedia-modern-cpt-v1",
+  "run_policy": {
+    "execution_state": "not_run",
+    "training_authorized": false
+  },
+  "schema_version": "training_recipe_config_v1",
+  "tokenizer": {
+    "identifier": "google/gemma-4-31B",
+    "revision": "5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89"
+  },
+  "view_kind": "continued_pretraining"
+}
