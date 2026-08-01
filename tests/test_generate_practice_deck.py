@@ -44,6 +44,7 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_item,
     validate_paronym_pair,
     validate_synonym_item,
+    write_shards,
 )
 
 FIXTURES = Path("tests/fixtures")
@@ -1127,6 +1128,140 @@ def test_size_budget_warns_and_trims_per_level(capsys: pytest.CaptureFixture[str
     captured = capsys.readouterr()
     assert "WARN:" in captured.err
     assert shards["A1"]["index"]["counts"]["lexemes"] < 5
+
+
+def test_shard_json_is_compact_and_budget_matches_written_bytes(tmp_path: Path) -> None:
+    payload = {
+        "schema": "atlas-practice-cloze",
+        "schemaVersion": 1,
+        "deckVersion": "fixture",
+        "level": "A1",
+        "cloze": [{"lemmaId": "one", "sentence": "Це ___."}],
+    }
+
+    budget = generate_practice_deck._size_budget(payload, 1_000_000, 1_000_000)
+    write_shards({"A1": {"cloze": payload}}, tmp_path)
+    emitted = (tmp_path / "practice-cloze.A1.json").read_bytes()
+
+    assert emitted == generate_practice_deck._json_bytes(payload)
+    assert b"\n  " not in emitted
+    assert json.loads(emitted) == payload
+    assert budget["rawBytes"] == len(emitted)
+
+
+def test_size_budget_cloze_trim_prioritizes_unique_lemmas(capsys: pytest.CaptureFixture[str]) -> None:
+    cloze_items = [
+        {
+            "clozeId": f"{lemma_id}:cloze:{index}",
+            "lemmaId": lemma_id,
+            "form": lemma_id,
+            "padding": "x" * 1_500,
+        }
+        for index, lemma_id in enumerate(("a", "a", "b", "c"), start=1)
+    ]
+    index = {
+        "schema": "atlas-practice-index",
+        "items": [
+            {
+                "lemmaId": lemma_id,
+                "lemma": lemma_id,
+                "cefr": "A1",
+                "modes": ["flashcards", "cloze"],
+                "hasCloze": True,
+                "clozeIds": [f"{lemma_id}:cloze:1"],
+                "newOrder": order,
+            }
+            for order, lemma_id in enumerate(("a", "b", "c"))
+        ],
+        "counts": {
+            "lexemes": 3,
+            "cloze": 4,
+            "clozeEligibleLexemes": 3,
+            "clozeCoverage": 1.0,
+            "modeCounts": {"cloze": 4},
+            "modeCoverage": {"cloze": 1.0},
+        },
+    }
+    lexemes = {
+        "schema": "atlas-practice-lexemes",
+        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id} for lemma_id in ("a", "b", "c")],
+    }
+    cloze = {"schema": "atlas-practice-cloze", "cloze": cloze_items}
+    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze}}
+
+    probe = {**cloze, "cloze": cloze_items[:3]}
+    probe_budget = generate_practice_deck._size_budget(probe, 1_000_000, 1_000_000)
+    apply_size_budgets(
+        shards,
+        raw_limit=int(probe_budget["rawBytes"]) + 200,
+        gzip_limit=int(probe_budget["gzipBytes"]) + 200,
+    )
+
+    assert "trimmed cloze items 4 -> 3" in capsys.readouterr().err
+    assert {item["lemmaId"] for item in shards["A1"]["cloze"]["cloze"]} == {"a", "b", "c"}
+    assert shards["A1"]["index"]["counts"]["clozeEligibleLexemes"] == 3
+    assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
+    assert shards["A1"]["index"]["items"][0]["clozeIds"] == ["a:cloze:1"]
+
+
+def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.CaptureFixture[str]) -> None:
+    lemma_ids = ("a", "b", "c", "d")
+    cloze_lemma_ids = ("a", "c", "d")
+    index = {
+        "schema": "atlas-practice-index",
+        "items": [
+            {
+                "lemmaId": lemma_id,
+                "lemma": lemma_id,
+                "cefr": "A1",
+                "modes": ["flashcards", "cloze"] if lemma_id in cloze_lemma_ids else ["flashcards"],
+                "hasCloze": lemma_id in cloze_lemma_ids,
+                "clozeIds": [f"{lemma_id}:cloze:1"] if lemma_id in cloze_lemma_ids else [],
+                "newOrder": order,
+            }
+            for order, lemma_id in enumerate(lemma_ids)
+        ],
+        "counts": {
+            "lexemes": len(lemma_ids),
+            "cloze": len(cloze_lemma_ids),
+            "clozeEligibleLexemes": len(cloze_lemma_ids),
+            "clozeCoverage": 0.75,
+            "modeCounts": {"cloze": len(cloze_lemma_ids)},
+            "modeCoverage": {"cloze": 0.75},
+        },
+    }
+    lexemes = {
+        "schema": "atlas-practice-lexemes",
+        "lexemes": [
+            {"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500}
+            for lemma_id in lemma_ids
+        ],
+    }
+    cloze = {
+        "schema": "atlas-practice-cloze",
+        "cloze": [
+            {"clozeId": f"{lemma_id}:cloze:1", "lemmaId": lemma_id, "form": lemma_id}
+            for lemma_id in cloze_lemma_ids
+        ],
+    }
+    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze}}
+
+    probe_index = {**index, "items": index["items"][:2]}
+    probe_lexemes = {**lexemes, "lexemes": lexemes["lexemes"][:2]}
+    index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
+    lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
+    apply_size_budgets(
+        shards,
+        raw_limit=max(int(index_budget["rawBytes"]), int(lexeme_budget["rawBytes"])) + 200,
+        gzip_limit=max(int(index_budget["gzipBytes"]), int(lexeme_budget["gzipBytes"])) + 200,
+    )
+
+    assert "trimmed surface lexemes 4 -> 2" in capsys.readouterr().err
+    assert [item["lemmaId"] for item in shards["A1"]["index"]["items"]] == ["a", "c"]
+    assert [item["lemmaId"] for item in shards["A1"]["lexemes"]["lexemes"]] == ["a", "c"]
+    assert {item["lemmaId"] for item in shards["A1"]["cloze"]["cloze"]} == {"a", "c"}
+    assert shards["A1"]["index"]["counts"]["clozeEligibleLexemes"] == 2
+    assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
 
 
 def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
