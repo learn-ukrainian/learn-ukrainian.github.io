@@ -50,6 +50,12 @@ DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 DEFAULT_TARGET = 6000
 DEFAULT_RAW_LIMIT = 1_600_000
 DEFAULT_GZIP_LIMIT = 180_000
+# Cloze cards are the intentionally denser mode: their production emit drops
+# builder-only diagnostics before budgeting, while preserving every field used
+# by the client and static validators.  These limits are sized from the full
+# current canonical 6000-lemma build: B1 measures 1,949,044 raw / 209,612 gzip bytes.
+DEFAULT_CLOZE_RAW_LIMIT = 2_000_000
+DEFAULT_CLOZE_GZIP_LIMIT = 210_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
@@ -167,6 +173,8 @@ class BuildConfig:
     target: int = DEFAULT_TARGET
     raw_limit: int = DEFAULT_RAW_LIMIT
     gzip_limit: int = DEFAULT_GZIP_LIMIT
+    cloze_raw_limit: int = DEFAULT_CLOZE_RAW_LIMIT
+    cloze_gzip_limit: int = DEFAULT_CLOZE_GZIP_LIMIT
     fixture_note: str | None = None
     source_label: str = "manifest"
     seed_selection: str = "priority"
@@ -3928,6 +3936,36 @@ def _json_bytes(payload: dict[str, Any]) -> bytes:
     return text.encode("utf-8")
 
 
+def compact_cloze_emit_fields(
+    shards: dict[str, dict[str, dict[str, Any]]],
+) -> None:
+    """Remove builder-only cloze fields before measuring production shards.
+
+    The in-memory builder output deliberately retains diagnostic fields for
+    tests, audits, and downstream quality decisions.  The browser only needs
+    the sentence, answer, rules, attribution, and validated option metadata;
+    omitting the unused diagnostics from the static emit keeps the cloze
+    budget focused on distinct eligible lemmas.  Non-empty ``acceptedAlt``
+    remains part of the runtime answer contract.
+    """
+    for level_shards in shards.values():
+        payload = level_shards.get("cloze")
+        if not isinstance(payload, dict) or not isinstance(payload.get("cloze"), list):
+            continue
+        for item in payload["cloze"]:
+            if not isinstance(item, dict):
+                continue
+            if not item.get("acceptedAlt"):
+                item.pop("acceptedAlt", None)
+            for field in ("number", "cefr", "lemma"):
+                item.pop(field, None)
+            options = item.get("options")
+            if isinstance(options, list):
+                for option in options:
+                    if isinstance(option, dict):
+                        option.pop("strategy", None)
+
+
 def _size_budget(payload: dict[str, Any], raw_limit: int, gzip_limit: int) -> dict[str, int | bool]:
     raw = _json_bytes(payload)
     gzipped = gzip.compress(raw, mtime=0)
@@ -3944,6 +3982,9 @@ def apply_size_budgets(
     shards: dict[str, dict[str, dict[str, Any]]],
     raw_limit: int,
     gzip_limit: int,
+    *,
+    cloze_raw_limit: int | None = None,
+    cloze_gzip_limit: int | None = None,
 ) -> None:
     """Measure shards and trim only the payload that exceeds its own budget.
 
@@ -3965,8 +4006,14 @@ def apply_size_budgets(
             return None
         return payload[key]
 
-    def set_budget(payload: dict[str, Any]) -> dict[str, int | bool]:
-        budget = _size_budget(payload, raw_limit, gzip_limit)
+    def set_budget(payload: dict[str, Any], kind: str) -> dict[str, int | bool]:
+        effective_raw_limit = (
+            cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
+        )
+        effective_gzip_limit = (
+            cloze_gzip_limit if kind == "cloze" and cloze_gzip_limit is not None else gzip_limit
+        )
+        budget = _size_budget(payload, effective_raw_limit, effective_gzip_limit)
         payload["sizeBudget"] = budget
         return budget
 
@@ -4164,7 +4211,7 @@ def apply_size_budgets(
         def surface_fits(selected: list[Any]) -> bool:
             apply_selection(selected)
             return all(
-                set_budget(level_shards[kind])["ok"]
+                set_budget(level_shards[kind], kind)["ok"]
                 for kind in oversized_surface
                 if kind in level_shards
             )
@@ -4194,7 +4241,7 @@ def apply_size_budgets(
 
         def mode_fits(candidate: list[Any]) -> bool:
             items[:] = candidate
-            return bool(set_budget(payload)["ok"])
+            return bool(set_budget(payload, kind)["ok"])
 
         selected: list[Any] = []
         for _index, candidate in coverage_first_rows(original):
@@ -4205,7 +4252,7 @@ def apply_size_budgets(
         # order so deterministic deck sequencing and source ranking are stable.
         selected_ids = {id(item) for item in selected}
         items[:] = [item for item in original if id(item) in selected_ids]
-        set_budget(payload)
+        set_budget(payload, kind)
         kept = len(selected)
         if kept == len(original):
             return False
@@ -4221,7 +4268,7 @@ def apply_size_budgets(
         for kind, payload in level_shards.items():
             if not isinstance(payload, dict):
                 continue
-            if not set_budget(payload)["ok"]:
+            if not set_budget(payload, kind)["ok"]:
                 oversized_kinds.add(kind)
         if not oversized_kinds:
             continue
@@ -4236,7 +4283,7 @@ def apply_size_budgets(
         if trimmed:
             oversized_kinds = set()
             for kind, payload in level_shards.items():
-                if isinstance(payload, dict) and not set_budget(payload)["ok"]:
+                if isinstance(payload, dict) and not set_budget(payload, kind)["ok"]:
                     oversized_kinds.add(kind)
         mode_trimmed = False
         for kind in ("cloze", *DRILL_MODES):
@@ -4261,7 +4308,7 @@ def apply_size_budgets(
         for kind, payload in level_shards.items():
             if not isinstance(payload, dict):
                 continue
-            budget = set_budget(payload)
+            budget = set_budget(payload, kind)
             if not budget["ok"]:
                 print(
                     f"WARN: {payload.get('schema', kind)}.{level} remains over size budget "
@@ -4311,6 +4358,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
     parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT)
+    parser.add_argument("--cloze-raw-limit", type=int, default=DEFAULT_CLOZE_RAW_LIMIT)
+    parser.add_argument("--cloze-gzip-limit", type=int, default=DEFAULT_CLOZE_GZIP_LIMIT)
     parser.add_argument("--fixture-note", type=str)
     parser.add_argument(
         "--seed-selection",
@@ -4381,6 +4430,8 @@ def main(argv: list[str] | None = None) -> int:
         target=args.target,
         raw_limit=args.raw_limit,
         gzip_limit=args.gzip_limit,
+        cloze_raw_limit=args.cloze_raw_limit,
+        cloze_gzip_limit=args.cloze_gzip_limit,
         fixture_note=args.fixture_note,
         source_label="fixture" if args.vesum_fixture or args.manifest else "atlas.db",
         seed_selection=args.seed_selection,
@@ -4396,7 +4447,14 @@ def main(argv: list[str] | None = None) -> int:
         paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
     )
-    apply_size_budgets(shards, config.raw_limit, config.gzip_limit)
+    compact_cloze_emit_fields(shards)
+    apply_size_budgets(
+        shards,
+        config.raw_limit,
+        config.gzip_limit,
+        cloze_raw_limit=config.cloze_raw_limit,
+        cloze_gzip_limit=config.cloze_gzip_limit,
+    )
     written = write_shards(shards, args.out_dir)
     for path in written:
         print(path)

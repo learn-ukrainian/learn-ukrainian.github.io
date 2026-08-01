@@ -28,6 +28,7 @@ from scripts.audit.generate_practice_deck import (
     _stress_position,
     apply_size_budgets,
     build_practice_shards,
+    compact_cloze_emit_fields,
     main,
     merge_practice_seed_entries,
     read_cloze_sources,
@@ -1147,6 +1148,28 @@ def test_shard_json_is_compact_and_budget_matches_written_bytes(tmp_path: Path) 
     assert b"\n  " not in emitted
     assert json.loads(emitted) == payload
     assert budget["rawBytes"] == len(emitted)
+
+
+def test_cloze_emit_compacts_builder_diagnostics_without_dropping_runtime_fields() -> None:
+    shards = _build()
+    cloze_items = shards["A1"]["cloze"]["cloze"]
+    retained_alt = cloze_items[0]
+    dropped_alt = cloze_items[1]
+    retained_alt["acceptedAlt"] = ["книгу"]
+    dropped_alt["acceptedAlt"] = []
+
+    compact_cloze_emit_fields(shards)
+
+    assert retained_alt["acceptedAlt"] == ["книгу"]
+    assert "acceptedAlt" not in dropped_alt
+    for item in cloze_items:
+        assert all(field not in item for field in ("number", "cefr", "lemma"))
+        for option in item["options"]:
+            assert "strategy" not in option
+            assert all(
+                key in option
+                for key in ("optionId", "label", "lemmaId", "kind", "case", "pos")
+            )
 
 
 def test_size_budget_cloze_trim_prioritizes_unique_lemmas(capsys: pytest.CaptureFixture[str]) -> None:
