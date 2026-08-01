@@ -27,10 +27,224 @@ remains evidence until the qualified-human review contract is satisfied.
 | Qualified reviewer decision | `correction_reviewer_decision_v1.schema.json` |
 | Adjudicated record | `correction_record_v1.schema.json` |
 | Deterministic receipt | `correction_factory_receipt_v1.schema.json` |
+| Text-free full-corpus sampling item | `language_contact_frame_item_v1.schema.json` |
+| Sampling-frame receipt | `language_contact_frame_receipt_v1.schema.json` |
+| Operator-approved sampling plan | `language_contact_sampling_plan_v1.schema.json` |
+| Blind Ukrainian-human review item | `language_contact_blind_review_item_v1.schema.json` |
+| Blind Ukrainian-human response | `language_contact_blind_response_v1.schema.json` |
+| Prepared-wave receipt | `language_contact_wave_receipt_v1.schema.json` |
+| First-pass reliability summary | `language_contact_first_pass_summary_v1.schema.json` |
+| Campaign stop evaluation | `language_contact_campaign_receipt_v1.schema.json` |
+| Conflict resolver item/response | `language_contact_resolver_review_item_v1.schema.json` / `language_contact_resolver_response_v1.schema.json` |
+| Real-human gold freeze | `language_contact_gold_freeze_receipt_v1.schema.json` |
 
 All contracts are in `data/projects/open_model_data/contracts/`. The runtime
 validates the schemas before writing output and replaces existing artifacts
 only after all rows and receipts pass validation.
+
+## Full language-contact frame
+
+The language-contact detector output is 2.17 GB and cannot be treated as a
+small review packet. Build a text-free random-access frame over the complete
+artifact before choosing review targets:
+
+```bash
+.venv/bin/python \
+  scripts/projects/open_model_data/language_contact_adjudication.py \
+  build-frame \
+  --candidates /local/path/language-contact-candidates.jsonl \
+  --detector-receipt /local/path/language-contact-receipt.json \
+  --frame-output /local/path/language-contact-frame.jsonl \
+  --receipt-output /local/path/language-contact-frame.receipt.json
+```
+
+The verified v1 frame contains all 739,564 detector candidates. It is
+566,140,004 bytes, has SHA-256
+`ca4c8ed88daa3c5addcf2a13ba70bc5d1470073c0c366f8e2b699d174c30b2ad`,
+and binds the detector artifact with SHA-256
+`3b051594a00477cde0c3001a82fe85861ac6afee5f12c51bf9281828aded83a8`.
+Two complete builds were byte-identical. The first used 431.83 seconds and a
+140,869,632-byte maximum resident set; the repeat used 527.09 seconds and a
+140,197,888-byte maximum resident set.
+
+The measured calibration strata are:
+
+| Stratum | Candidates |
+| --- | ---: |
+| Modern-interference candidates | 38,187 |
+| Valid-word contact candidates | 1,511 |
+| False-positive rescue candidates | 297,791 |
+| Historical candidates | 298,238 |
+| Regional/dialectal candidates | 297,791 |
+| Conversational/marked candidates | 11,594 |
+| Quoted/multilingual candidates | 173,028 |
+| Uncertain candidates | 67,593 |
+| Technical/OCR candidates | 27,333 |
+| Proper names | 15,825 |
+
+These strata overlap. In particular, `regional_or_dialectal_candidate` is a
+review stratum derived from automatic protected-variation rescue; it is not a
+human-confirmed dialect label. Counts must not be summed as if they partition
+the corpus.
+
+## Freeze the review plan before sampling
+
+Create the measured pending plan without inventing sample counts, reviewer
+throughput, or a stopping threshold:
+
+```bash
+.venv/bin/python \
+  scripts/projects/open_model_data/language_contact_adjudication.py \
+  draft-plan \
+  --frame-receipt /local/path/language-contact-frame.receipt.json \
+  --plan-output /local/path/language-contact-sampling-plan.json \
+  --plan-id language-contact-v1 \
+  --issue-url https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168
+```
+
+An approved plan must name two distinct qualified Ukrainian first-pass
+reviewers and a distinct qualified resolver, record measured items per hour
+and hours available per wave, define calibration and production targets for
+every stratum, and freeze an explicit statistical stopping rule. Packet salts
+are operator secrets; only their hashes belong in the plan. Store each value
+in a local, uncommitted, owner-readable file. Salt values are never command-line
+arguments because process listings and shell history can expose them. A
+pending plan cannot produce a wave.
+
+## Prepare and conduct one blind wave
+
+After plan approval, `prepare-wave` streams the frame, retains the lowest
+deterministic ranks in each approved stratum, takes the unique union, verifies
+that it fits each first-pass reviewer's measured capacity, seeks only those
+rows in the 2.17 GB detector artifact, and produces two independently ordered
+blind packets plus two offline Ukrainian workspaces:
+
+```bash
+.venv/bin/python \
+  scripts/projects/open_model_data/language_contact_adjudication.py \
+  prepare-wave \
+  --candidates /local/path/language-contact-candidates.jsonl \
+  --detector-receipt /local/path/language-contact-receipt.json \
+  --frame /local/path/language-contact-frame.jsonl \
+  --frame-receipt /local/path/language-contact-frame.receipt.json \
+  --plan /local/path/approved-sampling-plan.json \
+  --input-root /local/path/corpus-root \
+  --stage calibration \
+  --wave-number 1 \
+  --salt-a-file /local/private/reviewer-a.salt \
+  --salt-b-file /local/private/reviewer-b.salt \
+  --selected-output /local/path/selected-frame.jsonl \
+  --correction-output /local/path/correction-candidates.jsonl \
+  --blind-a-output /local/path/blind-a.jsonl \
+  --blind-b-output /local/path/blind-b.jsonl \
+  --workspace-a-output /local/path/reviewer-a.html \
+  --workspace-b-output /local/path/reviewer-b.html \
+  --receipt-output /local/path/wave.receipt.json
+```
+
+Calibration is exactly wave 1 and has no prior-wave inputs. Every production
+wave must provide the calibration receipt/selected manifest and every earlier
+production receipt/selected manifest as paired, repeatable
+`--prior-wave-receipt` and `--prior-selected-manifest` arguments. The tool
+validates the complete numbered chain and excludes every earlier candidate;
+omitting a prior wave, repeating a candidate, or mixing plan/frame hashes fails
+closed. Packet IDs include stage and wave number, so later waves cannot be
+silently substituted for earlier reviewer output.
+
+Each offline workspace exports complete
+`language_contact_blind_response_v1` rows. It records the named reviewer's
+qualification evidence and independence attestation, per-item start and end
+time, evidence viewed, citations, language/representation/discourse axes,
+separate downstream views, uncertainty, and rationale. Detector categories,
+confidence, queue route, model votes, prior labels, and the other reviewer's
+answers remain hidden.
+
+Validate and assemble the two complete first passes:
+
+```bash
+.venv/bin/python \
+  scripts/projects/open_model_data/language_contact_adjudication.py \
+  assemble-first-pass \
+  --plan /local/path/approved-sampling-plan.json \
+  --stage calibration \
+  --wave-number 1 \
+  --wave-receipt /local/path/wave.receipt.json \
+  --selected-manifest /local/path/selected-frame.jsonl \
+  --correction-packet /local/path/correction-candidates.jsonl \
+  --blind-a /local/path/blind-a.jsonl \
+  --blind-b /local/path/blind-b.jsonl \
+  --responses-a /local/path/reviewer-a.responses.jsonl \
+  --responses-b /local/path/reviewer-b.responses.jsonl \
+  --decisions-output /local/path/first-pass-decisions.jsonl \
+  --summary-output /local/path/first-pass-summary.json
+```
+
+Agreement across the full adjudicative core becomes a first-pass agreement;
+both reviewers' citations, uncertainty, and rationale remain preserved in the
+merged projection. Any core difference remains an `unresolved_conflict`; the
+tool does not manufacture a linguistic consensus. A distinct qualified
+Ukrainian resolver is required before such a row can become adjudicated gold.
+
+Timing, evidence-view, and blinding attestations remain in the validated blind
+response artifacts. Assembly validates them before projecting reviewer identity
+and linguistic judgment into the frozen `correction_reviewer_decision_v1`
+shape. They are not copied into that older contract: doing so would silently
+break v1 consumers, and a third resolver necessarily sees the prior reviews.
+
+The summary records adjudicative-core agreement, decision agreement, conflict
+rate, and correction yield with identified Wilson intervals overall and for
+every overlapping stratum. The adjudicative core includes the decision,
+language, representation, discourse role, accepted correction and alternatives,
+and all view dispositions. Independent wording, citations, and uncertainty are
+merged and preserved rather than misclassified as linguistic disagreement.
+Insufficient data remains `null`; it is never rendered as zero agreement or a
+passing interval.
+
+For every conflict, build the conflict-only packet for the distinct resolver:
+
+```bash
+.venv/bin/python scripts/projects/open_model_data/language_contact_adjudication.py \
+  prepare-resolver \
+  --plan /local/path/approved-sampling-plan.json \
+  --stage calibration --wave-number 1 \
+  --wave-receipt /local/path/wave.receipt.json \
+  --first-pass-summary /local/path/first-pass-summary.json \
+  --decisions /local/path/first-pass-decisions.jsonl \
+  --blind-a /local/path/blind-a.jsonl \
+  --packet-output /local/path/resolver-packet.jsonl \
+  --workspace-output /local/path/resolver.html
+```
+
+The resolver sees the two anonymized primary projections but not detector/model
+authority. `resolve-conflicts` requires the predeclared distinct resolver,
+records that prior reviewer output was exposed, and promotes only a non-
+`unresolved` third-human projection. An unresolved resolver answer stays
+explicitly unresolved.
+
+After each numbered production wave, run `summarize-campaign` with the complete
+ordered sequence of `--first-pass-summary` and paired `--wave-receipt` inputs.
+It checks production category coverage, Wilson interval width, the predeclared
+per-stratum agreement stability threshold, and correction-yield learning-curve
+stability across the required consecutive waves. Calibration alone and too few
+production waves always return `stop_eligible: false` with explicit reasons.
+
+Only a stopped campaign can run `freeze-gold`. The freeze requires every wave's
+two response files, resolver packet/response and resolution summary, final
+decisions, and correction packet. It validates the complete non-overlapping
+chain, reruns the #6121 correction factory, binds the frozen evaluation
+registry, and writes one real-human freeze receipt. The frozen records remain
+`model_training_or_export_eligible: false`; rights, provenance, contamination,
+training preregistration, and Phase 4 export gates are separate controls.
+Calibration rows are reported as non-gold evidence; only adjudicated production
+rows enter the receipt's `headline_gold` count, and unresolved production rows
+remain explicitly `unresolved_non_gold`.
+
+Evidence enrichment is selected-only. A miss in the current bounded `r2u`
+cache means only that the exact query is absent from that cache; it is not a
+negative lookup against all of `r2u`. ULIF and a named underlying dictionary
+represented by `slovnyk.me` remain pending until their specific parsers and
+source receipts complete. No bulk scraping or raw grey-area payload is emitted
+into reviewer or model artifacts.
 
 ## Prepare a review packet
 

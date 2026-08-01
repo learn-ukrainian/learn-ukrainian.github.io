@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_frame_receipt_v1.schema.json",
+  "title": "Language-contact logical frame receipt v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "detector_candidate_input", "detector_receipt_sha256", "logical_frame_artifact", "counts", "identity_algorithm", "rank_algorithm", "claims", "determinism"],
+  "properties": {
+    "schema_version": {"const": "language_contact_frame_receipt_v1"},
+    "detector_candidate_input": {"$ref": "#/$defs/artifactWithBytes"},
+    "detector_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "logical_frame_artifact": {"$ref": "#/$defs/artifact"},
+    "counts": {"type": "object", "additionalProperties": false, "required": ["by_category", "by_source_family", "by_period", "by_register", "by_stratum"], "properties": {"by_category": {"$ref": "#/$defs/countMap"}, "by_source_family": {"$ref": "#/$defs/countMap"}, "by_period": {"$ref": "#/$defs/countMap"}, "by_register": {"$ref": "#/$defs/countMap"}, "by_stratum": {"$ref": "#/$defs/countMap"}}},
+    "identity_algorithm": {"type": "string", "minLength": 1}, "rank_algorithm": {"type": "string", "minLength": 1},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["labels_created", "gold_created", "training_performed", "publication_performed"], "properties": {"labels_created": {"const": false}, "gold_created": {"const": false}, "training_performed": {"const": false}, "publication_performed": {"const": false}}},
+    "determinism": {"$ref": "#/$defs/determinism"}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "count": {"type": "integer", "minimum": 0}, "countMap": {"type": "object", "additionalProperties": {"$ref": "#/$defs/count"}, "propertyNames": {"minLength": 1}}, "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "sha256"], "properties": {"records": {"$ref": "#/$defs/count"}, "sha256": {"$ref": "#/$defs/sha256"}}}, "artifactWithBytes": {"type": "object", "additionalProperties": false, "required": ["records", "bytes", "sha256"], "properties": {"records": {"$ref": "#/$defs/count"}, "bytes": {"$ref": "#/$defs/count"}, "sha256": {"$ref": "#/$defs/sha256"}}}, "determinism": {"type": "object", "additionalProperties": false, "required": ["serialization", "ordering", "timestamps_omitted"], "properties": {"serialization": {"type": "string", "minLength": 1}, "ordering": {"type": "string", "minLength": 1}, "timestamps_omitted": {"const": true}}}}
+}

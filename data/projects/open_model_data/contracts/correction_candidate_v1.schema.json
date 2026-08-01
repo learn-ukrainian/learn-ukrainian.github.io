@@ -14,7 +14,9 @@
       "required": ["profile_id", "candidate_schema_version", "candidate_sha256"],
       "properties": {
         "profile_id": {"$ref": "#/$defs/id"},
-        "candidate_schema_version": {"const": "review_candidate_v1"},
+        "candidate_schema_version": {
+          "enum": ["review_candidate_v1", "language_contact_candidate_v1"]
+        },
         "candidate_sha256": {"$ref": "#/$defs/sha256"}
       }
     },

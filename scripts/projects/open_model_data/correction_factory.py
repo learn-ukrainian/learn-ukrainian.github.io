@@ -10,6 +10,7 @@ detector result into gold and never produces a model-training export.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -427,6 +428,49 @@ def _projection(review: Mapping[str, Any]) -> Mapping[str, Any]:
     return value
 
 
+def adjudicative_core(projection: Mapping[str, Any]) -> dict[str, Any]:
+    """Canonical linguistic judgment, excluding independently authored evidence prose."""
+    return {
+        "acceptable_alternatives": sorted(projection["acceptable_alternatives"]),
+        "accepted_correction": projection["accepted_correction"],
+        "decision": projection["decision"],
+        "discourse_role": projection["discourse_role"],
+        "language_identity": projection["language_identity"],
+        "representation": projection["representation"],
+        "views": projection["views"],
+    }
+
+
+def first_pass_core_agreement(first: Sequence[Mapping[str, Any]]) -> bool:
+    """Whether two reviews agree on every adjudicative field."""
+    _require(len(first) == 2, "first-pass consensus requires exactly two reviews")
+    return adjudicative_core(_projection(first[0])) == adjudicative_core(_projection(first[1]))
+
+
+def merge_first_pass_agreement(first: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Merge independent evidence while preserving one agreed linguistic core."""
+    _require(first_pass_core_agreement(first), "cannot merge disagreeing first-pass reviews")
+    projections = [_projection(review) for review in first]
+    if projections[0] == projections[1]:
+        return copy.deepcopy(dict(projections[0]))
+    merged = copy.deepcopy(adjudicative_core(projections[0]))
+    for field in ("citations", "uncertainty"):
+        values: list[Any] = []
+        seen: set[str] = set()
+        for projection in projections:
+            for value in projection[field]:
+                encoded = canonical_json(value)
+                if encoded not in seen:
+                    seen.add(encoded)
+                    values.append(copy.deepcopy(value))
+        merged[field] = values
+    merged["rationale"] = "\n\n".join(
+        f"Первинний рецензент {label}: {projection['rationale']}"
+        for label, projection in zip(("A", "B"), projections, strict=True)
+    )
+    return merged
+
+
 def validate_decision(
     decision: Mapping[str, Any],
     candidate: Mapping[str, Any],
@@ -445,14 +489,16 @@ def validate_decision(
     _require(len(set(first_ids)) == 2, "first-pass reviewers must be distinct")
     first_fixtures = [item["reviewer"]["test_fixture"] for item in first]
     _require(allow_test_fixtures or not any(first_fixtures), "fixture reviewer cannot be a real adjudicator")
-    projections = [_projection(item) for item in first]
     resolution = decision["final_resolution"]
     final = decision["final"]
 
-    if projections[0] == projections[1]:
+    if first_pass_core_agreement(first):
         _require(resolution["kind"] == "first_pass_agreement", "matching first passes require agreement resolution")
         _require("third_review" not in resolution, "agreement resolution cannot contain a third review")
-        _require(final == projections[0], "final projection must preserve first-pass agreement")
+        _require(
+            final == merge_first_pass_agreement(first),
+            "final projection must preserve the agreed core and both reviewers' evidence",
+        )
     elif resolution["kind"] == "unresolved_conflict":
         _require("third_review" not in resolution, "unresolved conflict cannot contain a third review")
         _require(final["decision"] == "unresolved", "unresolved conflict requires unresolved final decision")

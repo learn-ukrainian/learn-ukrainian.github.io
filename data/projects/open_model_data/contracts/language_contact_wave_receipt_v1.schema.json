@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_wave_receipt_v1.schema.json",
+  "title": "Language-contact blind-review wave readiness receipt v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "stage", "wave_number", "input_sha256", "frame_sha256", "plan_sha256", "prior_waves", "selected_manifest", "adapted_correction_packet", "first_pass_blind_packets", "offline_html_workspaces", "packet_salt_sha256", "per_stratum_selected_counts", "claims", "determinism", "human_review_gate"],
+  "properties": {
+    "schema_version": {"const": "language_contact_wave_receipt_v1"}, "stage": {"enum": ["calibration", "production"]}, "wave_number": {"type": "integer", "minimum": 1}, "input_sha256": {"$ref": "#/$defs/sha256"}, "frame_sha256": {"$ref": "#/$defs/sha256"}, "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "prior_waves": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/priorWave"}},
+    "selected_manifest": {"$ref": "#/$defs/artifact"}, "adapted_correction_packet": {"$ref": "#/$defs/artifact"},
+    "first_pass_blind_packets": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/artifact"}},
+    "offline_html_workspaces": {"type": "object", "additionalProperties": false, "required": ["reviewer_a", "reviewer_b"], "properties": {"reviewer_a": {"$ref": "#/$defs/artifactWithBytes"}, "reviewer_b": {"$ref": "#/$defs/artifactWithBytes"}}},
+    "packet_salt_sha256": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+    "per_stratum_selected_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}, "propertyNames": {"enum": ["modern_interference", "valid_word_contact", "false_positive_rescue", "historical", "regional_or_dialectal_candidate", "conversational_or_marked", "quoted_or_multilingual", "uncertain", "technical_or_ocr", "proper_name"]}},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["labels_created", "gold_created", "training_performed", "publication_performed"], "properties": {"labels_created": {"const": false}, "gold_created": {"const": false}, "training_performed": {"const": false}, "publication_performed": {"const": false}}},
+    "determinism": {"type": "object", "additionalProperties": false, "required": ["selection_algorithm", "packet_ordering", "timestamps_omitted"], "properties": {"selection_algorithm": {"type": "string", "minLength": 1}, "packet_ordering": {"type": "string", "minLength": 1}, "timestamps_omitted": {"const": true}}},
+    "human_review_gate": {"type": "object", "additionalProperties": false, "required": ["qualified_reviewer_ids", "human_review_completed"], "properties": {"qualified_reviewer_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "human_review_completed": {"const": false}}}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}}, "artifactWithBytes": {"type": "object", "additionalProperties": false, "required": ["records", "bytes", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}}, "priorWave": {"type": "object", "additionalProperties": false, "required": ["stage", "wave_number", "receipt_sha256", "selected_manifest"], "properties": {"stage": {"enum": ["calibration", "production"]}, "wave_number": {"type": "integer", "minimum": 1}, "receipt_sha256": {"$ref": "#/$defs/sha256"}, "selected_manifest": {"$ref": "#/$defs/artifact"}}}}
+}

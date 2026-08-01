@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_gold_freeze_receipt_v1.schema.json",
+  "title": "Language-contact real-human gold freeze receipt v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "plan_sha256", "campaign_receipt_sha256", "evaluation_registry", "waves", "correction_records", "correction_factory_receipt", "totals", "claims"],
+  "properties": {
+    "schema_version": {"const": "language_contact_gold_freeze_receipt_v1"}, "plan_sha256": {"$ref": "#/$defs/sha256"}, "campaign_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "evaluation_registry": {"type": "object", "additionalProperties": false, "required": ["v0_1_1_manifest_sha256", "v0_2_packet_sha256"], "properties": {"v0_1_1_manifest_sha256": {"$ref": "#/$defs/sha256"}, "v0_2_packet_sha256": {"$ref": "#/$defs/sha256"}}},
+    "waves": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/wave"}}, "correction_records": {"$ref": "#/$defs/artifact"}, "correction_factory_receipt": {"$ref": "#/$defs/artifact"},
+    "totals": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["campaign_complete", "qualified_human_evidence", "gold_frozen", "model_training_or_export_eligible", "training_performed", "publication_performed"], "properties": {"campaign_complete": {"const": true}, "qualified_human_evidence": {"const": true}, "gold_frozen": {"const": true}, "model_training_or_export_eligible": {"const": false}, "training_performed": {"const": false}, "publication_performed": {"const": false}}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "wave": {"type": "object", "additionalProperties": false, "required": ["stage", "wave_number", "wave_receipt_sha256", "first_pass_summary_sha256", "responses_a_sha256", "responses_b_sha256", "resolver_packet_sha256", "resolver_responses_sha256", "resolution_summary_sha256", "correction_packet", "final_decisions"], "properties": {"stage": {"enum": ["calibration", "production"]}, "wave_number": {"type": "integer", "minimum": 1}, "wave_receipt_sha256": {"$ref": "#/$defs/sha256"}, "first_pass_summary_sha256": {"$ref": "#/$defs/sha256"}, "responses_a_sha256": {"$ref": "#/$defs/sha256"}, "responses_b_sha256": {"$ref": "#/$defs/sha256"}, "resolver_packet_sha256": {"$ref": "#/$defs/sha256"}, "resolver_responses_sha256": {"$ref": "#/$defs/sha256"}, "resolution_summary_sha256": {"$ref": "#/$defs/sha256"}, "correction_packet": {"$ref": "#/$defs/artifact"}, "final_decisions": {"$ref": "#/$defs/artifact"}}}
+  }
+}

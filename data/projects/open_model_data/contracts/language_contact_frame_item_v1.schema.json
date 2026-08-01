@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/language_contact_frame_item_v1.schema.json",
+  "title": "Language-contact logical sampling frame item v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "candidate_id", "input", "candidate_sha256", "rank_sha256", "source_record_id", "source_family", "locator", "category", "language_identity", "discourse_role", "period", "register", "queue_route", "calibration_strata"],
+  "properties": {
+    "schema_version": {"const": "language_contact_frame_item_v1"},
+    "candidate_id": {"type": "string", "pattern": "^lcc\\.[a-f0-9]{64}$"},
+    "input": {"type": "object", "additionalProperties": false, "required": ["byte_offset", "byte_length", "line_number"], "properties": {"byte_offset": {"type": "integer", "minimum": 0}, "byte_length": {"type": "integer", "minimum": 1}, "line_number": {"type": "integer", "minimum": 1}}},
+    "candidate_sha256": {"$ref": "#/$defs/sha256"},
+    "rank_sha256": {"$ref": "#/$defs/sha256"},
+    "source_record_id": {"type": "string", "minLength": 1},
+    "source_family": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "category": {"type": "string", "minLength": 1},
+    "language_identity": {"type": "string", "minLength": 1},
+    "discourse_role": {"type": "string", "minLength": 1},
+    "period": {"type": "string", "minLength": 1},
+    "register": {"type": "string", "minLength": 1},
+    "queue_route": {"type": "string", "minLength": 1},
+    "calibration_strata": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stratum"}}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "stratum": {"enum": ["modern_interference", "valid_word_contact", "false_positive_rescue", "historical", "regional_or_dialectal_candidate", "conversational_or_marked", "quoted_or_multilingual", "uncertain", "technical_or_ocr", "proper_name"]}}
+}
