@@ -26,8 +26,7 @@ def test_index_page_uses_shared_parchment_monitor_design():
     assert "#0d1117" not in html
     for href in [
         "/admin.html",
-        "/channels.html",
-        "/comms.html",
+        "/fleet.html",
         "/audit-dashboard.html",
         "/build-events.html",
         "/consultation.html",
@@ -51,8 +50,6 @@ def test_index_page_uses_shared_parchment_monitor_design():
     ("filename", "active_link", "heading"),
     [
         ("orient.html", '<a class="active" href="/orient.html">Orient</a>', "One-page session orientation snapshot"),
-        ("channels.html", '<a class="active" href="/channels.html">Channels</a>', "Agent Channels"),
-        ("comms.html", '<a class="active" href="/comms.html">Comms</a>', "Broker Ops"),
     ],
 )
 def test_playground_page_uses_shared_parchment_monitor_design(filename, active_link, heading):
@@ -67,20 +64,16 @@ def test_playground_page_uses_shared_parchment_monitor_design(filename, active_l
     assert "#0d1117" not in html
 
 
-def test_channels_page_has_shareable_deeplink_contract():
-    html = (DASHBOARDS / "channels.html").read_text(encoding="utf-8")
-    assert "new URLSearchParams(location.search)" in html
-    assert "params.get('channel')" in html
-    assert "params.get('thread')" in html
-    assert "history.replaceState" in html
-    assert "pendingThreadParam" in html
-    assert "startsWith(pendingThreadParam)" in html
+@pytest.mark.parametrize("filename", ["channels.html", "comms.html"])
+def test_retired_comms_pages_redirect_to_fleet(filename: str) -> None:
+    html = (DASHBOARDS / filename).read_text(encoding="utf-8")
+    assert 'content="0; url=/fleet.html"' in html
+    assert 'href="/fleet.html"' in html
 
 
 def test_channels_page_is_a_read_only_observer() -> None:
     html = (DASHBOARDS / "channels.html").read_text(encoding="utf-8")
-    assert "Read-only observer." in html
-    assert "agent TUI or the canonical project bridge CLI" in html
+    assert "Agent Channels is retired" in html
     for prohibited in ("post-form", "post-btn", "replyTo", "/post", "method: 'POST'"):
         assert prohibited not in html
 
@@ -313,14 +306,7 @@ def test_shared_monitor_css_targets_unified_nav_classes():
 
 def test_comms_page_keeps_secondary_dashboard_links():
     html = (DASHBOARDS / "comms.html").read_text(encoding="utf-8")
-    for href in [
-        "/audit-dashboard.html",
-        "/progress.html",
-        "/curriculum-dashboard.html",
-        "/quality.html",
-        "/track-health.html",
-    ]:
-        assert f'href="{href}"' in html
+    assert 'href="/fleet.html"' in html
 
 
 def test_progress_page_surfaces_freshness_and_dossiers():
@@ -420,9 +406,7 @@ def test_operational_track_filters_treat_empty_sets_as_valid():
 
 def test_comms_page_is_read_only_legacy_ops_without_duplicate_build_activity():
     html = (DASHBOARDS / "comms.html").read_text(encoding="utf-8")
-    assert "Read-only legacy operations." in html
-    assert 'href="/build-events.html"' in html
-    assert "Legacy Messages" in html
+    assert "Broker Ops is retired" in html
     for prohibited in (
         "Live Activity",
         "/api/build/events/active",
@@ -474,11 +458,13 @@ def test_artifacts_page_preserves_legacy_dashboard_links():
 
 def test_all_playground_pages_use_single_monitor_shell():
     for path in sorted(DASHBOARDS.glob("*.html")):
+        if path.name in {"channels.html", "comms.html"}:
+            continue
         html = path.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/monitor.css">' in html, path.name
         assert 'class="monitor-nav"' in html, path.name
         required_hrefs = PRIMARY_NAV_HREFS
-        if path.name == "fleet.html":
+        if path.name in {"fleet.html", "index.html"}:
             required_hrefs = [
                 href for href in PRIMARY_NAV_HREFS if href not in {"/channels.html", "/comms.html"}
             ] + ["/fleet.html"]
