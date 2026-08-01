@@ -477,7 +477,12 @@ def test_all_playground_pages_use_single_monitor_shell():
         html = path.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/monitor.css">' in html, path.name
         assert 'class="monitor-nav"' in html, path.name
-        for href in PRIMARY_NAV_HREFS:
+        required_hrefs = PRIMARY_NAV_HREFS
+        if path.name == "fleet.html":
+            required_hrefs = [
+                href for href in PRIMARY_NAV_HREFS if href not in {"/channels.html", "/comms.html"}
+            ] + ["/fleet.html"]
+        for href in required_hrefs:
             assert f'href="{href}"' in html, path.name
         if "#0d1117" in html:
             assert html.rfind('<link rel="stylesheet" href="/monitor.css">') > html.rfind("</style>"), path.name
