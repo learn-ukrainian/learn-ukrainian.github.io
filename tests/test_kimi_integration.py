@@ -51,27 +51,18 @@ def test_ask_kimi_parser_defaults_to_k3_and_check_model_accepts_kimi():
     assert probe.model == "k3"
 
 
-def test_ask_kimi_handler_routes_all_arguments(monkeypatch, tmp_path):
+def test_ask_kimi_formal_review_requires_sealed_review_pr(monkeypatch, tmp_path):
     payload = tmp_path / "payload.md"
     payload.write_text("attached", encoding="utf-8")
-    captured: dict[str, object] = {}
-    monkeypatch.setattr(_cli, "ask_kimi", lambda *args, **kwargs: captured.update(args=args, kwargs=kwargs))
-
-    _cli._handle_ask_kimi(
-        Namespace(
-            content="hello", task_id="kimi-ask", type="query", data=str(payload),
-            new_session=True, from_llm="codex", from_model="gpt-5.6-terra",
-            to_model="k2.7-coding", no_timeout=True, review=True, model="k3",
-            branch=None, pr=None, background=False,
+    with pytest.raises(SystemExit, match="formal_review_requires_review_pr_acp_sealed_snapshot"):
+        _cli._handle_ask_kimi(
+            Namespace(
+                content="hello", task_id="kimi-ask", type="query", data=str(payload),
+                new_session=True, from_llm="codex", from_model="gpt-5.6-terra",
+                to_model="k2.7-coding", no_timeout=True, review=True, model="k3",
+                branch=None, pr=None, background=False,
+            )
         )
-    )
-
-    assert captured["args"] == ("hello", "kimi-ask")
-    kwargs = captured["kwargs"]
-    assert kwargs["data"] == "attached"
-    assert kwargs["to_model"] == "k2.7-coding"
-    assert kwargs["model"] == "k3"
-    assert kwargs["review"] is True
 
 
 def test_ask_kimi_background_records_a_kimi_target(monkeypatch):

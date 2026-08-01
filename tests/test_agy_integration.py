@@ -13,6 +13,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -75,6 +76,10 @@ def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
     monkeypatch.setattr(_db, "DB_PATH", db_path)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.artifacts.default_plane_root",
+        lambda **_kwargs: tmp_path / "authority-plane",
+    )
     return db_path
 
 
@@ -155,72 +160,64 @@ def test_ab_channels_cli_marks_agy_cli_available():
     assert _channels_cli._cli_available_agent("agy") is True
 
 
-def test_ab_discuss_accepts_agy_in_with_list(
-    discuss_bridge, monkeypatch,
-):
-    """``ab discuss --with agy`` passes agent validation and invokes runtime."""
-    from types import SimpleNamespace
-
+def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkeypatch):
+    """ACP discussion accepts Agy as one member of a bounded participant set."""
     _ensure_scripts_path()
     from ai_agent_bridge import _channels_cli
 
-    invoked: list[str] = []
-    invoke_kwargs: list[dict] = []
+    observed: dict[str, object] = {}
 
-    def fake_invoke(agent_name: str, prompt: str, **kwargs):
-        invoked.append(agent_name)
-        invoke_kwargs.append(kwargs)
-        return SimpleNamespace(
-            ok=True,
-            response="[AGREE] agy first take",
-            stderr_excerpt="",
-            session_id="agy-session-1",
-        )
+    def fake_discussion(**kwargs):
+        observed.update(kwargs)
+        return {
+            "conversation_id": "conversation_" + ("a" * 32),
+            "state": "COMPLETE",
+            "rounds_completed": 1,
+            "synthesis": "ACP synthesis",
+        }
 
-    monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     args = SimpleNamespace(
         channel="agy-topic",
         body="Does STRICT grounding measure model discipline fairly?",
-        with_agents="agy",
+        with_agents="agy,pool",
         max_rounds=1,
         review=False,
         models=None,
     )
 
     assert _channels_cli._handle_discuss(args) == 0
-    assert invoked == ["agy"]
-    assert invoke_kwargs[0].get("model") is None
+    assert observed["participants"] == ("agy", "pool")
+    assert observed["models"] is None
 
 
-def test_ab_discuss_passes_agy_pro_model_override(discuss_bridge, monkeypatch):
-    """``--models agy:gemini-3.1-pro-high`` reaches runtime_invoke as model=."""
-    from types import SimpleNamespace
-
+def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch):
+    """The registered Agy ACP model pin reaches the durable controller."""
     _ensure_scripts_path()
     from ai_agent_bridge import _channels_cli
 
-    invoke_kwargs: list[dict] = []
+    observed: dict[str, object] = {}
 
-    def fake_invoke(agent_name: str, prompt: str, **kwargs):
-        invoke_kwargs.append(kwargs)
-        return SimpleNamespace(
-            ok=True,
-            response="[AGREE] pro take",
-            stderr_excerpt="",
-            session_id="agy-session-pro",
-        )
+    def fake_discussion(**kwargs):
+        observed.update(kwargs)
+        return {
+            "conversation_id": "conversation_" + ("b" * 32),
+            "state": "COMPLETE",
+            "rounds_completed": 1,
+            "synthesis": "ACP synthesis",
+        }
 
-    monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     args = SimpleNamespace(
         channel="agy-topic",
         body="STRICT bakeoff fairness?",
-        with_agents="agy",
+        with_agents="agy,pool",
         max_rounds=1,
         review=False,
-        models="agy:gemini-3.1-pro-high",
+        models="agy:gemini-3.6-flash-high",
     )
 
     assert _channels_cli._handle_discuss(args) == 0
-    assert invoke_kwargs[0]["model"] == "gemini-3.1-pro-high"
+    assert observed["models"] == {"agy": "gemini-3.6-flash-high"}

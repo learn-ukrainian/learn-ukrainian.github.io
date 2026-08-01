@@ -58,47 +58,33 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
             verify_citations=False,
         )
 
-    prompts: list[str] = []
-    round_responses: list[str] = []
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
+    observed: dict[str, object] = {}
 
-    def fake_invoke(agent_name: str, prompt: str, **kwargs):
-        prompts.append(prompt)
-        # Each round's reply carries a distinct marker token so we can
-        # assert later rounds see the earlier-round replies in their
-        # prompt history.
-        round_idx = len(prompts)
-        marker = f"ROUND_{round_idx}_REPLY_MARKER_{agent_name.upper()}"
-        body = f"{('x' * 200)} {marker}\n[DISAGREE]"
-        round_responses.append(body)
-        return SimpleNamespace(ok=True, response=body, stderr_excerpt="", session_id=None)
+    def fake_discussion(**kwargs):
+        observed.update(kwargs)
+        return {
+            "conversation_id": "conversation_" + "a" * 32,
+            "state": "COMPLETE",
+            "rounds_completed": 3,
+            "synthesis": "bounded ACP result",
+        }
 
-    monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     root_body = "ROOT QUESTION: preserve this exact discussion brief."
     args = SimpleNamespace(
         channel="architecture",
         body=root_body,
-        with_agents="codex",
+        with_agents="codex,claude",
         max_rounds=4,
         review=False,
     )
 
     assert _channels_cli._handle_discuss(args) == 0
-    assert len(prompts) == 4
-    # Round 4 prompt must include the root.
-    assert root_body in prompts[3]
-    # Round 4 prompt must include rounds 1-3 replies (thread-mode
-    # contract — peer round replies are load-bearing, never dropped).
-    for previous_round in (1, 2, 3):
-        marker = f"ROUND_{previous_round}_REPLY_MARKER_CODEX"
-        assert marker in prompts[3], (
-            f"Round 4 prompt is missing ROUND_{previous_round} reply marker — "
-            f"#1808 thread-mode regression"
-        )
-    # Channel noise from before the discussion started must NOT appear
-    # — thread mode skips the channel-wide tail entirely.
-    assert "prior message 0" not in prompts[3]
-    assert "prior message 204" not in prompts[3]
+    assert observed["rounds"] == 3
+    assert observed["participants"] == ("codex", "claude")
+    assert root_body in str(observed["prompt"])
 
 
 def test_discuss_claude_subagent_uses_restricted_tools_without_plan_mode(
@@ -139,22 +125,11 @@ def test_ask_codex_infers_from_claude_agent_name(
     monkeypatch.setenv("CLAUDE_AGENT_NAME", "claude")
     captured: dict[str, str | None] = {}
 
-    def fake_ask_codex(
-        content,
-        task_id,
-        msg_type,
-        data,
-        new_session,
-        from_llm,
-        from_model,
-        to_model,
-        no_timeout,
-        **kwargs,
-    ):
-        captured["from_llm"] = from_llm
-        return 123
+    def fake_compat(target, content, **kwargs):
+        captured["from_llm"] = kwargs["source"]
+        return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
 
-    monkeypatch.setattr(_cli, "ask_codex", fake_ask_codex)
+    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     parser = _cli._build_parser()
     args = parser.parse_args(["ask-codex", "hello", "--task-id", "task-1"])
 
@@ -182,33 +157,11 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
 ) -> None:
     captured: dict[str, object] = {}
 
-    def fake_ask_agy(
-        content,
-        task_id,
-        msg_type,
-        data,
-        new_session,
-        from_llm,
-        from_model,
-        to_model,
-        no_timeout,
-        **kwargs,
-    ):
-        captured.update(
-            content=content,
-            task_id=task_id,
-            msg_type=msg_type,
-            data=data,
-            new_session=new_session,
-            from_llm=from_llm,
-            from_model=from_model,
-            to_model=to_model,
-            no_timeout=no_timeout,
-            kwargs=kwargs,
-        )
-        return 123
+    def fake_compat(target, content, **kwargs):
+        captured.update(target=target, content=content, **kwargs)
+        return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
 
-    monkeypatch.setattr(_cli, "ask_agy", fake_ask_agy)
+    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     parser = _cli._build_parser()
     args = parser.parse_args(
         [
@@ -227,8 +180,7 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
     assert _cli._dispatch_command(args) is True
     assert captured["content"] == "hello"
     assert captured["task_id"] == "task-1"
-    assert captured["from_llm"] == "codex"
-    assert captured["to_model"] == "gemini-3.1-pro-high"
-    assert captured["new_session"] is False
-    assert captured["no_timeout"] is False
-    assert captured["kwargs"] == {"stdout_only": True, "output_path": None}
+    assert captured["source"] == "codex"
+    assert captured["model"] == "gemini-3.1-pro-high"
+    assert captured["target"] == "gemini"
+    assert captured["stdout_only"] is True

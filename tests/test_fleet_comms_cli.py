@@ -199,6 +199,10 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
     monkeypatch.setattr(_db, "DB_PATH", db_path)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.artifacts.default_plane_root",
+        lambda **_kwargs: tmp_path / "authority-plane",
+    )
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
     monkeypatch.setattr(
@@ -241,9 +245,15 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
     assert "transport: ACP (kimicc, pool)" in output
-    assert "/acp.html?conversation=conversation_" in output
-    messages = _channels.read("architecture", tail=10)
-    assert any("[ACP COMPLETE]" in message["body"] for message in messages)
+    assert "/fleet.html?conversation=conversation_" in output
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "authority-plane") as authority:
+        result = authority.store.connection.execute(
+            "SELECT body_inline FROM comms_messages WHERE kind = 'discussion-result'"
+        ).fetchone()
+    assert result is not None
+    assert "[ACP COMPLETE]" in str(result["body_inline"])
 
 
 def test_acp_discuss_cli_busy_is_body_free_no_queue_json(

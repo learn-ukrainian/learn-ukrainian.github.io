@@ -117,7 +117,7 @@ def test_detect_sender_gemini_beats_codex_session():
         assert detect_sender() == "gemini"
 
 
-def test_handle_ask_codex_reads_stdin():
+def test_handle_ask_codex_reads_stdin(monkeypatch):
     args = argparse.Namespace(
         content="-",
         task_id="issue-1177",
@@ -130,11 +130,15 @@ def test_handle_ask_codex_reads_stdin():
         no_timeout=False,
         chain=None,
     )
-    with patch("ai_agent_bridge._cli.ask_codex") as ask_codex_mock, patch("sys.stdin", io.StringIO("stdin prompt")):
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(
+        "ai_agent_bridge._acp_compat.run_compat_ask",
+        lambda *args, **kwargs: captured.update(args=args, kwargs=kwargs),
+    )
+    with patch("sys.stdin", io.StringIO("stdin prompt")):
         _handle_ask_codex(args)
-    ask_codex_mock.assert_called_once()
-    assert ask_codex_mock.call_args[0][0] == "stdin prompt"
-    assert ask_codex_mock.call_args.args[-1] is False
+    assert captured["args"] == ("codex", "stdin prompt")
+    assert captured["kwargs"]["task_id"] == "issue-1177"
 
 
 def test_handle_ask_codex_chain_rejects_explicit_task_id():
@@ -151,7 +155,7 @@ def test_handle_ask_codex_chain_rejects_explicit_task_id():
         chain=["1177"],
     )
 
-    with pytest.raises(SystemExit, match="omit --task-id"):
+    with pytest.raises(SystemExit, match="--chain is retired"):
         _handle_ask_codex(args)
 
 
@@ -173,7 +177,7 @@ def test_handle_ask_codex_requires_task_id_without_chain():
         _handle_ask_codex(args)
 
 
-def test_handle_ask_codex_chain_dispatches_through_helper():
+def test_handle_ask_codex_chain_is_retired():
     args = argparse.Namespace(
         content="Fix {issue_ref}",
         task_id=None,
@@ -187,20 +191,8 @@ def test_handle_ask_codex_chain_dispatches_through_helper():
         chain=["1177", "#1178"],
     )
 
-    with patch("ai_agent_bridge._cli.ask_codex_chain") as ask_codex_chain_mock:
+    with pytest.raises(SystemExit, match="--chain is retired"):
         _handle_ask_codex(args)
-
-    ask_codex_chain_mock.assert_called_once_with(
-        "Fix {issue_ref}",
-        ["1177", "#1178"],
-        "query",
-        None,
-        False,
-        "gemini",
-        None,
-        None,
-        True,
-    )
 
 
 def test_ask_codex_chain_dispatches_issues_sequentially():

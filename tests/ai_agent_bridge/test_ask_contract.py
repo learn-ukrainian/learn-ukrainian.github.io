@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ai_agent_bridge import _cli
+from ai_agent_bridge import _acp_compat, _cli
 from ai_agent_bridge._ask_contract import (
     EFFORT_CHOICES,
     resolve_model_selection,
@@ -19,32 +19,35 @@ from ai_agent_bridge._ask_contract import (
 )
 
 ASK_SEATS = (
-    ("ask-claude", "_handle_ask_claude", "ask_claude"),
-    ("ask-codex", "_handle_ask_codex", "ask_codex"),
-    ("ask-agy", "_handle_ask_agy", "ask_agy"),
-    ("ask-grok", "_handle_ask_grok_build", "ask_grok_build"),
-    ("ask-glm", "_handle_ask_glm", "ask_glm"),
-    ("ask-kimi", "_handle_ask_kimi", "ask_kimi"),
-    ("ask-cursor", "_handle_ask_cursor", "ask_cursor"),
-    ("ask-hermes", "_handle_ask_hermes", "ask_hermes"),
-    ("ask-opencode", "_handle_ask_opencode", "ask_opencode"),
-    ("ask-pool", "_handle_ask_pool", "ask_pool"),
-    ("ask-gemma", "_handle_ask_gemma", "ask_gemma"),
+    ("ask-claude", "_handle_ask_claude", "claude"),
+    ("ask-codex", "_handle_ask_codex", "codex"),
+    ("ask-agy", "_handle_ask_agy", "agy"),
+    ("ask-grok", "_handle_ask_grok_build", "grok"),
+    ("ask-glm", "_handle_ask_glm", "glm"),
+    ("ask-kimi", "_handle_ask_kimi", "kimi"),
+    ("ask-cursor", "_handle_ask_cursor", "cursor"),
+    ("ask-hermes", "_handle_ask_hermes", "hermes"),
+    ("ask-pool", "_handle_ask_pool", "pool"),
+)
+
+RETIRED_ASK_SEATS = (
+    ("ask-opencode", "_handle_ask_opencode", "opencode"),
+    ("ask-gemma", "_handle_ask_gemma", "gemma"),
 )
 
 
-@pytest.mark.parametrize(("command", "handler_name", "adapter_name"), ASK_SEATS)
-def test_effort_and_to_model_reach_every_ask_adapter(
-    command: str, handler_name: str, adapter_name: str, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize(("command", "handler_name", "target"), ASK_SEATS)
+def test_effort_and_to_model_reach_every_enabled_acp_route(
+    command: str, handler_name: str, target: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Every public ask parser forwards both contract controls to its adapter."""
+    """Every enabled compatibility parser forwards controls to the ACP shim."""
     captured: dict[str, object] = {}
 
-    def fake_adapter(*args, **kwargs):
+    def fake_compat(*args, **kwargs):
         captured["args"] = args
         captured.update(kwargs)
 
-    monkeypatch.setattr(_cli, adapter_name, fake_adapter)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", fake_compat)
     args = _cli._build_parser().parse_args(
         [
             command,
@@ -63,8 +66,20 @@ def test_effort_and_to_model_reach_every_ask_adapter(
     getattr(_cli, handler_name)(args)
 
     forwarded = tuple(captured.get("args", ())) + tuple(captured.values())
+    assert captured["args"][0] == target
     assert "requested-model" in forwarded
     assert captured["effort"] == "xhigh"
+
+
+@pytest.mark.parametrize(("command", "handler_name", "target"), RETIRED_ASK_SEATS)
+def test_ask_target_without_an_enabled_acp_route_fails_closed(
+    command: str, handler_name: str, target: str
+) -> None:
+    args = _cli._build_parser().parse_args(
+        [command, "question", "--task-id", "retired-seat"]
+    )
+    with pytest.raises(SystemExit, match=f"{target!r} has no enabled ACP route"):
+        getattr(_cli, handler_name)(args)
 
 
 @pytest.mark.parametrize("effort", EFFORT_CHOICES)
@@ -103,7 +118,10 @@ def test_unsupported_effort_emits_note_and_stamps_null(capsys: pytest.CaptureFix
     assert "NOTE: cursor cannot apply requested effort=xhigh" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("harness", [seat[0].removeprefix("ask-") for seat in ASK_SEATS])
+@pytest.mark.parametrize(
+    "harness",
+    [seat[0].removeprefix("ask-") for seat in (*ASK_SEATS, *RETIRED_ASK_SEATS)],
+)
 def test_every_response_provenance_shape_has_required_fields(harness: str) -> None:
     data, from_model = response_provenance(
         {"data": json.dumps({"to_model": "requested", "effort": "xhigh"})},

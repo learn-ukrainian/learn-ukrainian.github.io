@@ -40,6 +40,7 @@ commands handle the agent-calling side.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -599,7 +600,7 @@ def register_channel_commands(subparsers: Any) -> None:
     )
     discuss_parser.add_argument(
         "--max-rounds", type=int, default=2,
-        help="Maximum discussion rounds (default: 2, cap: 4)",
+        help="Maximum discussion rounds (default: 2, cap: 3)",
     )
     discuss_parser.add_argument(
         "--review", action="store_true",
@@ -611,6 +612,14 @@ def register_channel_commands(subparsers: Any) -> None:
         help=(
             "Optional per-participant model overrides as agent:model pairs "
             "(comma-separated), e.g. agy:gemini-3.1-pro-high"
+        ),
+    )
+    discuss_parser.add_argument(
+        "--efforts",
+        default=None,
+        help=(
+            "Optional per-participant effort overrides as agent:effort pairs "
+            "(comma-separated), e.g. codex:high,agy:high"
         ),
     )
 
@@ -626,6 +635,8 @@ def dispatch_channel_command(args) -> int:
     one of the channel commands.
     """
     command = args.command
+    if command in {"post", "p", "reconcile", "sync"} and _legacy_writes_retired():
+        return _retired_legacy_write(command)
     if command == "channel":
         return _dispatch_channel_group(args)
     if command == "inbox":
@@ -646,6 +657,10 @@ def dispatch_channel_command(args) -> int:
 
 def _dispatch_channel_group(args) -> int:
     sub = args.channel_command
+    if sub in {"new", "set-ttl"} and _legacy_writes_retired():
+        return _retired_legacy_write(f"channel {sub}")
+    if sub == "context" and getattr(args, "edit", False) and _legacy_writes_retired():
+        return _retired_legacy_write("channel context --edit")
     if sub == "new":
         return _handle_channel_new(args)
     if sub == "list":
@@ -667,6 +682,8 @@ def _dispatch_channel_group(args) -> int:
 def _dispatch_inbox_command(args) -> int:
     """Route `ab inbox ...` channel-worker subcommands."""
     sub = getattr(args, "inbox_command", None)
+    if sub in {"run", "ack"} and _legacy_writes_retired():
+        return _retired_legacy_write(f"inbox {sub}")
     if sub == "run":
         return _handle_inbox_run(args)
     if sub == "show":
@@ -674,6 +691,22 @@ def _dispatch_inbox_command(args) -> int:
     if sub == "ack":
         return _handle_inbox_ack(args)
     print("unknown subcommand: inbox", file=sys.stderr)
+    return 2
+
+
+def _legacy_writes_retired() -> bool:
+    """Return whether only Fleet Comms may mutate communication state."""
+    from scripts.fleet_comms.message_plane import resolve_plane_mode
+
+    return resolve_plane_mode(None) == "authority"
+
+
+def _retired_legacy_write(command: str) -> int:
+    print(
+        f"legacy `{command}` writes are retired in authority mode; "
+        "use `python -m scripts.fleet_comms channel ...`",
+        file=sys.stderr,
+    )
     return 2
 
 
@@ -708,6 +741,17 @@ def _parse_agent_models(s: str) -> dict[str, str]:
             )
         models[agent] = model
     return models
+
+
+def _parse_agent_efforts(s: str) -> dict[str, str]:
+    """Parse and validate ``agent:effort`` pairs for ACP discussions."""
+    efforts = _parse_agent_models(s)
+    allowed = {"minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
+    invalid = {agent: effort for agent, effort in efforts.items() if effort not in allowed}
+    if invalid:
+        rendered = ", ".join(f"{agent}:{effort}" for agent, effort in sorted(invalid.items()))
+        raise ValueError(f"invalid --efforts value(s): {rendered}")
+    return efforts
 
 
 def _now_utc() -> datetime:
@@ -1486,13 +1530,14 @@ def _handle_discuss(args) -> int:
 
     # ── validate inputs ────────────────────────────────────────────
     requested_transport = os.environ.get("LU_AGENT_COMM_TRANSPORT", "acp").strip().lower()
-    if requested_transport not in {"acp", "bridge"}:
+    if requested_transport != "acp":
         print(
-            "❌ LU_AGENT_COMM_TRANSPORT must be 'acp' or 'bridge'",
+            "❌ normal inter-agent communication requires LU_AGENT_COMM_TRANSPORT=acp; "
+            "the bridge provider transport is retired",
             file=sys.stderr,
         )
         return 1
-    acp_routine = requested_transport == "acp"
+    acp_routine = True
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     acp_participant_routes: dict[str, dict[str, str | None]] = (
@@ -1500,7 +1545,10 @@ def _handle_discuss(args) -> int:
     )
     with_agents = _parse_csv(args.with_agents)
     if not with_agents:
-        print("❌ --with requires at least one agent", file=sys.stderr)
+        print("❌ --with requires 2 to 6 agents", file=sys.stderr)
+        return 1
+    if len(with_agents) < 2:
+        print("❌ --with requires at least 2 agents", file=sys.stderr)
         return 1
     if len(with_agents) > 6:
         print(
@@ -1548,17 +1596,29 @@ def _handle_discuss(args) -> int:
             )
             return 1
 
-    MAX_ROUNDS_CAP = 4
+    agent_efforts: dict[str, str] = {}
+    if getattr(args, "efforts", None):
+        try:
+            agent_efforts = _parse_agent_efforts(args.efforts)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 1
+        unknown_efforts = [a for a in agent_efforts if a not in with_agents]
+        if unknown_efforts:
+            print(
+                "❌ --efforts names agent(s) not in --with: "
+                f"{', '.join(unknown_efforts)}",
+                file=sys.stderr,
+            )
+            return 1
+
+    MAX_ROUNDS_CAP = 3
     max_rounds = min(max(1, args.max_rounds), MAX_ROUNDS_CAP)
     if args.max_rounds > MAX_ROUNDS_CAP:
         print(
             f"ℹ️  clamping --max-rounds {args.max_rounds} to {MAX_ROUNDS_CAP} "
-            f"(hard cap — escalate to a human if 4 rounds don't converge)"
+            f"(hard cap — escalate to a human if 3 rounds don't converge)"
         )
-
-    if _channels.get_channel(args.channel) is None:
-        print(f"❌ channel '{args.channel}' does not exist", file=sys.stderr)
-        return 1
 
     body = _resolve_body(args.body)
     if not body.strip():
@@ -1575,21 +1635,57 @@ def _handle_discuss(args) -> int:
     # NOTE: do NOT pass to_agents here — discuss handles fanout itself
     # via runtime_invoke. Passing to_agents would create pending delivery
     # rows that the inbox worker would process redundantly.
+    from scripts.fleet_comms.authority import AuthorityService
+
+    authority = AuthorityService()
     try:
-        root = _channels.post(
-            args.channel,
-            "user",
-            body,
-            to_agents=None,
-            attachments=[{"kind": "review_protocol"}] if args.review else None,
-            auto_snapshot=True,
+        authority.create_channel(args.channel)
+        root = authority.publish_message(
+            sender=runtime_initiator or "operator",
+            body=body,
+            channel=args.channel,
+            recipients=with_agents,
+            kind="discussion-root",
+            provenance={
+                "Source": runtime_initiator or "operator",
+                "Agent": "ab-discuss",
+                "Via": "acp",
+            },
+            idempotency_key=f"discussion-root:{hashlib.sha256(body.encode('utf-8')).hexdigest()}",
         )
-    except ValueError as e:
+        root_id = root.message_id
+        correlation_id = root.thread_id
+        deadline_at = (datetime.now(UTC) + timedelta(seconds=1800)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+        authority_job = authority.enqueue_discussion(
+            channel=args.channel,
+            prompt=body,
+            participants=with_agents,
+            rounds=max_rounds,
+            task_digest=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+            correlation_id=correlation_id,
+            deadline_at=deadline_at,
+            idempotency_key=f"ab-discuss:{correlation_id}",
+        )
+        if authority_job.state in {"complete", "failed", "expired", "dead_lettered"}:
+            replay = authority.read_job_result(authority_job.job_id)
+            if authority_job.state != "complete" or replay is None:
+                print("❌ prior ACP discussion is terminal and failed", file=sys.stderr)
+                return 1
+            payload = json.loads(replay)
+            lease = None
+        else:
+            lease = authority.claim_job(
+                authority_job.job_id,
+                f"ab-discuss:{os.getpid()}",
+                lease_seconds=1830,
+            )
+    except (ValueError, RuntimeError) as e:
         print(f"❌ post failed: {e}", file=sys.stderr)
         return 1
-
-    root_id = root["message_id"]
-    correlation_id = root["thread_id"]  # one correlation per discussion
+    finally:
+        authority.close()
     print(
         f"📢 discuss #{args.channel} (max {max_rounds} round{'s' if max_rounds > 1 else ''}, "
         f"{len(with_agents)} participants)"
@@ -1597,105 +1693,103 @@ def _handle_discuss(args) -> int:
     print(f"   root message: {root_id[:12]} / thread {correlation_id[:12]}")
     print()
 
-    # Fleet launchers set this default. Keep the legacy implementation below
-    # only as an explicit, durably recorded exception for surfaces ACP does
-    # not yet cover; an ACP failure never silently replays provider calls over
-    # the bridge.
+    # ACP is the only provider transport for normal inter-agent discussion.
+    # A refusal, partial result, timeout, or cancellation never replays the
+    # provider call over the retired bridge path.
     if acp_routine:
-        exception_reason: str | None = None
-        if args.review:
-            exception_reason = "formal-review evidence transport is not migrated to ACP"
-        elif agent_models:
-            exception_reason = "per-participant model overrides are not supported by bounded ACP routes"
-        elif len(with_agents) != 2:
-            exception_reason = "bounded ACP discussions require exactly two participants"
-        else:
-            unsupported = [agent for agent in with_agents if agent not in acp_participant_routes]
-            if unsupported:
-                exception_reason = "unsupported ACP participant(s): " + ", ".join(unsupported)
-
-        if exception_reason is not None:
-            _channels.post(
-                args.channel,
-                "user",
-                f"[TRANSPORT_EXCEPTION bridge] {exception_reason}",
-                parent_id=root_id,
-                correlation_id=correlation_id,
-                kind="system",
-                auto_snapshot=False,
-                verify_citations=False,
+        unsupported = [agent for agent in with_agents if agent not in acp_participant_routes]
+        if unsupported:
+            print(
+                "❌ unsupported ACP participant(s): " + ", ".join(unsupported),
+                file=sys.stderr,
             )
-            print(f"   transport exception: bridge ({exception_reason})")
-        else:
-            from agent_runtime.acpx_discuss import run_discussion
+            return 1
+        from agent_runtime.acpx_discuss import run_discussion
 
-            acp_rounds = min(max_rounds, 3)
-            if max_rounds != acp_rounds:
-                print(f"   ACP bounded-round cap: {max_rounds} → {acp_rounds}")
+        acp_rounds = max_rounds
+        try:
+            if lease is None:
+                raise StopIteration
+            # ACP already persists and exchanges the current conversation.
+            # Keep a bounded slice of stable channel context plus the exact root.
+            channel_context = _channels.load_channel_context(args.channel)["body"].strip()
+            if len(channel_context) > 24_000:
+                channel_context = channel_context[:24_000] + "\n[context truncated]"
+            acp_prompt = (
+                (f"--- pinned channel context ---\n{channel_context}\n\n" if channel_context else "")
+                + f"--- discussion task ---\n{body}\n\n"
+                + "Produce an independent first take from the supplied text only. "
+                + "No tools, files, terminal, or external lookup are available."
+            )
+            previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
+            os.environ["LU_ACPX_TRANSPORT"] = "active"
             try:
-                # ACP already persists and exchanges the current conversation.
-                # Do not copy the bridge's volatile project-wide monitor dump
-                # into every participant leg: it dominated short discussions
-                # and multiplied token cost without changing the task. Keep a
-                # bounded slice of stable channel context plus the exact root.
-                channel_context = _channels.load_channel_context(args.channel)["body"].strip()
-                if len(channel_context) > 24_000:
-                    channel_context = channel_context[:24_000] + "\n[context truncated]"
-                acp_prompt = (
-                    (f"--- pinned channel context ---\n{channel_context}\n\n" if channel_context else "")
-                    + f"--- discussion task ---\n{body}\n\n"
-                    + "Produce an independent first take from the supplied text only. "
-                    + "No tools, files, terminal, or external lookup are available."
-                )
-                previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
-                os.environ["LU_ACPX_TRANSPORT"] = "active"
-                try:
-                    payload = run_discussion(
-                        prompt=acp_prompt,
-                        cwd=REPO_ROOT,
-                        task_id=f"discuss-{correlation_id[:8]}",
-                        correlation_id=correlation_id,
-                        idempotency_key=f"ab-discuss:{correlation_id}",
-                        rounds=acp_rounds,
-                        participants=tuple(with_agents),
-                        initiator=runtime_initiator,
-                    )
-                finally:
-                    if previous_transport is None:
-                        os.environ.pop("LU_ACPX_TRANSPORT", None)
-                    else:
-                        os.environ["LU_ACPX_TRANSPORT"] = previous_transport
-            except Exception as exc:
-                _channels.post(
-                    args.channel,
-                    "user",
-                    f"[ACP_FAILURE no-bridge-retry] {type(exc).__name__}: {exc}",
-                    parent_id=root_id,
+                payload = run_discussion(
+                    prompt=acp_prompt,
+                    cwd=REPO_ROOT,
+                    task_id=f"discuss-{correlation_id[:8]}",
                     correlation_id=correlation_id,
-                    kind="system",
-                    auto_snapshot=False,
-                    verify_citations=False,
+                    idempotency_key=f"ab-discuss:{correlation_id}",
+                    rounds=acp_rounds,
+                    participants=tuple(with_agents),
+                    models=agent_models or None,
+                    efforts=agent_efforts or None,
+                    source=runtime_initiator,
+                    initiator=runtime_initiator,
                 )
-                print(f"❌ ACP discussion failed without bridge retry: {exc}", file=sys.stderr)
-                return 1
+            finally:
+                if previous_transport is None:
+                    os.environ.pop("LU_ACPX_TRANSPORT", None)
+                else:
+                    os.environ["LU_ACPX_TRANSPORT"] = previous_transport
+        except StopIteration:
+            pass
+        except Exception as exc:
+            with AuthorityService() as failed_authority:
+                failed_authority.finish_job(
+                    authority_job.job_id,
+                    worker_id=f"ab-discuss:{os.getpid()}",
+                    fence_token=lease.fence_token,
+                    state="failed",
+                    result=json.dumps(
+                        {"error": type(exc).__name__, "transport": "acp"},
+                        sort_keys=True,
+                    ).encode("utf-8"),
+                )
+            print(f"❌ ACP discussion failed without bridge retry: {exc}", file=sys.stderr)
+            return 1
 
-            conversation_id = str(payload["conversation_id"])
-            state = str(payload["state"])
-            synthesis = str(payload.get("synthesis") or "[no synthesis available]")
-            _channels.post(
-                args.channel,
-                "codex",
-                f"[ACP {state}] conversation={conversation_id}\n\n{synthesis}",
-                parent_id=root_id,
-                correlation_id=correlation_id,
-                kind="reply",
-                auto_snapshot=False,
-                verify_citations=False,
-            )
-            print(f"   transport: ACP ({', '.join(with_agents)})")
-            print(f"   conversation: /acp.html?conversation={conversation_id}")
-            print(f"   state: {state}; rounds: {payload.get('rounds_completed', 0)}")
-            return 0 if state == "COMPLETE" else 1
+        conversation_id = str(payload["conversation_id"])
+        state = str(payload["state"])
+        synthesis = str(payload.get("synthesis") or "[no synthesis available]")
+        if lease is not None:
+            with AuthorityService() as completed_authority:
+                completed_authority.finish_job(
+                    authority_job.job_id,
+                    worker_id=f"ab-discuss:{os.getpid()}",
+                    fence_token=lease.fence_token,
+                    state="complete" if state == "COMPLETE" else "failed",
+                    result=json.dumps(payload, sort_keys=True).encode("utf-8"),
+                )
+                completed_authority.publish_message(
+                    sender="acp-controller",
+                    body=f"[ACP {state}] conversation={conversation_id}\n\n{synthesis}",
+                    channel=args.channel,
+                    kind="discussion-result",
+                    conversation_id=root.conversation_id,
+                    in_reply_to=root_id,
+                    correlation_id=correlation_id,
+                    provenance={
+                        "Source": "acp",
+                        "Agent": "controller",
+                        "Via": "fleet-comms",
+                    },
+                    idempotency_key=f"discussion-result:{authority_job.job_id}",
+                )
+        print(f"   transport: ACP ({', '.join(with_agents)})")
+        print(f"   conversation: /fleet.html?conversation={conversation_id}")
+        print(f"   state: {state}; rounds: {payload.get('rounds_completed', 0)}")
+        return 0 if state == "COMPLETE" else 1
 
     discussion_session_ids: dict[str, str] = {}
 

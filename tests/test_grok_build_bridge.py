@@ -6,6 +6,8 @@ from contextlib import contextmanager
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import pytest
+
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
@@ -137,44 +139,25 @@ def test_ask_grok_build_parser_accepts_first_class_args():
     assert args.review is True
 
 
-def test_ask_grok_build_cli_handler_routes_to_bridge(monkeypatch, tmp_path):
+def test_ask_grok_build_formal_review_requires_sealed_review_pr(monkeypatch, tmp_path):
     data_file = tmp_path / "payload.md"
     data_file.write_text("attached", encoding="utf-8")
-    calls = []
-
-    def fake_ask(*args, **kwargs):
-        calls.append((args, kwargs))
-        return 42
-
-    monkeypatch.setattr(_cli, "ask_grok_build", fake_ask)
-
-    _cli._handle_ask_grok_build(
-        Namespace(
-            content="hello",
-            task_id="task-1",
-            type="query",
-            data=str(data_file),
-            new_session=True,
-            from_llm="codex",
-            from_model="gpt-5.5",
-            to_model="grok-4.5",
-            no_timeout=True,
-            review=True,
-            model="grok-4.5",
+    with pytest.raises(SystemExit, match="formal_review_requires_review_pr_acp_sealed_snapshot"):
+        _cli._handle_ask_grok_build(
+            Namespace(
+                content="hello",
+                task_id="task-1",
+                type="query",
+                data=str(data_file),
+                new_session=True,
+                from_llm="codex",
+                from_model="gpt-5.5",
+                to_model="grok-4.5",
+                no_timeout=True,
+                review=True,
+                model="grok-4.5",
+            )
         )
-    )
-
-    args, kwargs = calls[0]
-    assert args[:3] == ("hello", "task-1",)
-    assert kwargs["msg_type"] == "query"
-    assert kwargs["data"] == "attached"
-    assert kwargs["new_session"] is True
-    assert kwargs["from_llm"] == "codex"
-    assert kwargs["from_model"] == "gpt-5.5"
-    assert kwargs["to_model"] == "grok-4.5"
-    assert kwargs["no_timeout"] is True
-    assert kwargs["review"] is True
-    assert kwargs["model"] == "grok-4.5"
 
 
 def test_process_grok_build_invokes_native_registry_key(monkeypatch):

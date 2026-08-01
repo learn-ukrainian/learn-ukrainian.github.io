@@ -11,8 +11,8 @@ from scripts.ai_agent_bridge._review_pr import (
 )
 
 
-def test_auto_and_codex_resolve_to_codex_transport():
-    assert resolve_reviewer("auto") == "codex"
+def test_auto_prefers_glm_for_cross_family_review():
+    assert resolve_reviewer("auto") == "glm"
     assert resolve_reviewer("codex") == "codex"
     assert resolve_reviewer("auto", claude_available=False) == "glm"
 
@@ -42,7 +42,7 @@ def test_review_pr_dry_run_emits_model_and_effort(capsys):
     rc = handle_review_pr(Args())
     assert rc == 0
     out = capsys.readouterr().out
-    assert "reviewer=codex" in out
-    assert "model=gpt-5.6-terra" in out
+    assert "reviewer=glm" in out
+    assert "model=glm-5.2" in out
     assert "effort=high" in out
-    assert "gpt-5.6-terra @ effort=high" in out
+    assert "glm-5.2 @ effort=high" in out

@@ -226,14 +226,14 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
         captured["kwargs"] = kwargs
         return 123
 
-    monkeypatch.setattr("ai_agent_bridge._cli.ask_agy", _fake_ask_agy)
+    monkeypatch.setattr("ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
 
     class _Args:
         content = "hello"
         task_id = "task-1"
         type = "query"
         data = None
-        model = PRO_MODEL
+        model = "gemini-3.6-flash"
         from_llm = "claude"
         from_model = None
         async_mode = False
@@ -247,7 +247,8 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
         auth = "api-key"
 
     _handle_ask_gemini(_Args())
-    assert captured["args"] == ("hello", "task-1", "query", None)
-    assert captured["kwargs"]["to_model"] == "gemini-3.1-pro-high"
+    assert captured["args"] == ("gemini", "hello")
+    assert captured["kwargs"]["task_id"] == "task-1"
+    assert captured["kwargs"]["model"] == "gemini-3.6-flash-high"
     assert captured["kwargs"]["stdout_only"] is False
     assert captured["kwargs"]["output_path"] is None
