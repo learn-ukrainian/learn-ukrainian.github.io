@@ -140,12 +140,22 @@ export interface PracticeClozeAttributionSentence {
   license: string;
 }
 
-export interface PracticeClozeAttribution {
+export interface PracticeClozeTatoebaAttribution {
   source: string;
   sourceUrl?: string;
   uk: PracticeClozeAttributionSentence;
   en: PracticeClozeAttributionSentence;
 }
+
+/** A visible bibliographic credit for a licensed inventory sentence. */
+export interface PracticeClozeSourceAttribution {
+  source: string;
+  label: string;
+  locator?: string;
+  title?: string;
+}
+
+export type PracticeClozeAttribution = PracticeClozeTatoebaAttribution | PracticeClozeSourceAttribution;
 
 export interface PracticeClozeItem {
   clozeId: string;
@@ -157,7 +167,7 @@ export interface PracticeClozeItem {
   lemma?: string;
   acceptedAlt?: string[];
   caseRule: PracticeCaseRule;
-  clozeEn: string;
+  clozeEn?: string;
   options: PracticeClozeOption[];
   attribution?: PracticeClozeAttribution;
 }

@@ -41,6 +41,7 @@ DEFAULT_ATLAS_DB = Path("data/atlas.db")
 DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
+DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
 DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
 DEFAULT_PARONYM_PAIRS = Path("data/lexicon/paronym_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
@@ -122,6 +123,13 @@ CASE_VESUM_TAGS = {
 }
 
 CASE_RULES = {
+    "nominative_identification": {
+        "case": "nominative",
+        "trigger": "dictionary form",
+        "triggerLabel": "словникова форма",
+        "feedbackTemplate": "словникова форма ({lemma} -> {form})",
+        "sameFormFeedbackTemplate": "словникова (називний) форма: {form}",
+    },
     "accusative_direct_object": {
         "case": "accusative",
         "trigger": "direct-object",
@@ -250,6 +258,35 @@ def _build_tatoeba_attribution(provenance: Any) -> dict[str, Any] | None:
     }
 
 
+def _license_requires_displayable_attribution(provenance: Any) -> bool:
+    if not isinstance(provenance, dict):
+        return False
+    license_info = provenance.get("license")
+    if not isinstance(license_info, dict):
+        return False
+    status = _clean_text(license_info.get("status"))
+    use_basis = _clean_text(license_info.get("useBasis"))
+    return status in {"not_openly_licensed", "copyrighted_source"} and bool(
+        use_basis and "attribution" in use_basis.casefold()
+    )
+
+
+def _build_source_attribution(provenance: Any) -> dict[str, str] | None:
+    """Map inventory bibliographic metadata into the cloze UI credit shape."""
+    if not isinstance(provenance, dict):
+        return None
+    source = _clean_text(provenance.get("source"))
+    label = _clean_text(provenance.get("label"))
+    if not source or not label:
+        return None
+    attribution = {"source": source, "label": label}
+    for key in ("locator", "title"):
+        value = _clean_text(provenance.get(key))
+        if value:
+            attribution[key] = value
+    return attribution
+
+
 def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "status": provenance["status"],
@@ -261,7 +298,19 @@ def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
         sentence_id = _string_or_int(path_sentence_id)
         if sentence_id is not None:
             payload["sentenceId"] = sentence_id
-    for key in ("cardId", "license", "author", "sentenceId", "enSentenceId", "enAuthor", "enLicense"):
+    for key in (
+        "cardId",
+        "author",
+        "sentenceId",
+        "enSentenceId",
+        "enAuthor",
+        "enLicense",
+        "source",
+        "label",
+        "locator",
+        "title",
+        "useBasis",
+    ):
         if key in payload:
             continue
         value = provenance.get(key)
@@ -271,6 +320,13 @@ def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
         text = _clean_text(value)
         if text:
             payload[key] = text
+    license_info = provenance.get("license")
+    if isinstance(license_info, dict):
+        payload["license"] = license_info
+    else:
+        license_text = _clean_text(license_info)
+        if license_text:
+            payload["license"] = license_text
     return payload
 
 
@@ -742,13 +798,16 @@ def _case_rule_payload(rule_id: str, lemma: str, form: str) -> dict[str, str] | 
     rule = CASE_RULES.get(rule_id)
     if not rule:
         return None
+    feedback_template = str(rule["feedbackTemplate"])
+    if _plain(lemma) == _plain(form):
+        feedback_template = str(rule.get("sameFormFeedbackTemplate", feedback_template))
     return {
         "ruleId": rule_id,
         "case": str(rule["case"]),
         "caseLabel": CASE_LABELS_UA[str(rule["case"])],
         "trigger": str(rule["trigger"]),
         "triggerLabel": str(rule["triggerLabel"]),
-        "feedback": str(rule["feedbackTemplate"]).format(lemma=lemma, form=form),
+        "feedback": feedback_template.format(lemma=lemma, form=form),
     }
 
 
@@ -759,6 +818,38 @@ def _candidate_sentence_level(candidate: dict[str, Any], fallback: str) -> str:
 def _cloze_candidate_ok_for_level(candidate: dict[str, Any], word_level: str) -> bool:
     sentence_level = _candidate_sentence_level(candidate, word_level)
     return CEFR_RANK[sentence_level] <= CEFR_RANK[word_level]
+
+
+def _inventory_form_details(
+    lemma_plain: str,
+    pos: str | None,
+    form: str,
+    verifier: VesumVerifier,
+) -> tuple[str, str] | None:
+    """Return the one VESUM-attested case and number for an inventory target.
+
+    Sentence-inventory rows deliberately preserve an attested surface form but
+    do not annotate morphology.  We only emit one when VESUM resolves that
+    exact form to one matching lemma and one case; no grammatical label is
+    inferred from sentence text.
+    """
+    matches = verifier.verify_words([form], _vesum_pos(pos)).get(form, [])
+    if len(matches) != 1:
+        return None
+    match = matches[0]
+    if _plain(str(match.get("lemma") or "")) != lemma_plain:
+        return None
+    cases = _match_cases(match)
+    if len(cases) != 1:
+        return None
+    tokens = set(str(match.get("tags") or "").replace(":", " ").split())
+    if "p" in tokens:
+        number = "plural"
+    elif {"m", "f", "n"} & tokens:
+        number = "singular"
+    else:
+        return None
+    return (next(iter(cases)), number)
 
 
 def _eligible_decoys(
@@ -779,7 +870,9 @@ def _eligible_decoys(
         if _headword(lexeme["gloss"]) == answer_head:
             continue
         decoy_form = _case_form(lexeme.get("paradigm", {}), case_name, number)
-        if decoy_form and _plain(decoy_form) != _plain(lexeme["lemma"]):
+        if decoy_form and (
+            case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])
+        ):
             candidates.append((lexeme, decoy_form))
     return candidates
 
@@ -919,13 +1012,19 @@ def _make_options(
     lexemes: list[dict[str, Any]],
     rng: random.Random,
 ) -> list[dict[str, str]]:
-    strategy = _option_strategy_for_level(answer["cefr"], rng)
+    # A nominative-identification cloze has the lemma itself as its answer.
+    # A two-pair set would therefore repeat that label as the same-root lemma
+    # distractor.  Use four distinct roots instead of constructing an invalid
+    # option set that validation must discard.
+    rule_id = cloze.get("caseRule", {}).get("ruleId") if isinstance(cloze.get("caseRule"), dict) else None
+    force_no_pair = rule_id == "nominative_identification"
+    strategy = "no-pair" if force_no_pair else _option_strategy_for_level(answer["cefr"], rng)
     options = (
         _make_no_pair_options(cloze, answer, lexemes, rng)
         if strategy == "no-pair"
         else _make_two_pair_options(cloze, answer, lexemes, rng)
     )
-    if not options:
+    if not options and not force_no_pair:
         strategy = "two-pair"
         options = _make_two_pair_options(cloze, answer, lexemes, rng)
     for option in options:
@@ -1134,24 +1233,51 @@ def _build_cloze_items(
         provenance = candidate.get("provenance")
         if not allowlist.allows(provenance):
             continue
-        case_name = _clean_text(candidate.get("blankCase"))
-        if not case_name or case_name not in CASE_LABELS_UA:
-            continue
-        rule_id = _candidate_rule_id(candidate, case_name)
-        if not rule_id:
-            continue
         if not _cloze_candidate_ok_for_level(candidate, lexeme["cefr"]):
             continue
         curated_form = _clean_text(candidate.get("form"))
-        number = _clean_text(candidate.get("number")) or _infer_number(
-            lexeme["paradigm"],
-            case_name,
-            curated_form,
-        )
+        inventory_candidate = candidate.get("sourceType") == "sentence_inventory"
+        if inventory_candidate:
+            # A sentence inventory row represents an attested source sentence;
+            # without its explicit target token, it cannot be safely blanked.
+            if not curated_form:
+                continue
+            inventory_details = _inventory_form_details(
+                lexeme["lemmaPlain"],
+                lexeme.get("pos"),
+                curated_form,
+                verifier,
+            )
+            if inventory_details is None:
+                continue
+            case_name, number = inventory_details
+            # The inventory is a source-backed example asset.  It supplies no
+            # authored grammar cue, so only a VESUM-unambiguous nominative
+            # singular form is eligible for the generic dictionary-form cloze.
+            # Nominative plurals are not dictionary forms for this rule.
+            if case_name != "nominative" or number != "singular":
+                continue
+            rule_id = "nominative_identification"
+        else:
+            case_name = _clean_text(candidate.get("blankCase"))
+            if not case_name or case_name not in CASE_LABELS_UA:
+                continue
+            rule_id = _candidate_rule_id(candidate, case_name)
+            if not rule_id:
+                continue
+            number = _clean_text(candidate.get("number")) or _infer_number(
+                lexeme["paradigm"],
+                case_name,
+                curated_form,
+            )
         if number not in NUMBER_KEYS:
             continue
+        if rule_id == "nominative_identification" and (
+            case_name != "nominative" or number != "singular"
+        ):
+            continue
         form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
-        if not form or _plain(form) == lexeme["lemmaPlain"]:
+        if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
             continue
         if not _verify_discriminative_form(
             lexeme["lemmaPlain"],
@@ -1163,7 +1289,7 @@ def _build_cloze_items(
             continue
         sentence = _clean_text(candidate.get("sentence"))
         cloze_en = _clean_text(candidate.get("clozeEn")) or _clean_text(candidate.get("translation"))
-        if not sentence or "___" not in sentence or not cloze_en:
+        if not sentence or "___" not in sentence or (not inventory_candidate and not cloze_en):
             continue
         frame_key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, rule_id))
         sentence_frame_id = "sf_" + hashlib.sha1(frame_key.encode("utf-8")).hexdigest()[:12]
@@ -1175,6 +1301,12 @@ def _build_cloze_items(
         attribution = _build_tatoeba_attribution(provenance)
         if _is_tatoeba_provenance(provenance) and attribution is None:
             continue
+        if inventory_candidate:
+            inventory_attribution = _build_source_attribution(provenance)
+            if _license_requires_displayable_attribution(provenance) and inventory_attribution is None:
+                continue
+            if inventory_attribution is not None:
+                attribution = inventory_attribution
         item = {
             "clozeId": cloze_id,
             "lemmaId": lexeme["lemmaId"],
@@ -1185,11 +1317,12 @@ def _build_cloze_items(
             "number": number,
             "lemma": lexeme["lemma"],
             "caseRule": case_rule,
-            "clozeEn": cloze_en,
             "cefr": _clean_text(candidate.get("cefr")) or lexeme["cefr"],
             "acceptedAlt": _accepted_alts(candidate),
             "provenance": _build_cloze_provenance(provenance),
         }
+        if cloze_en:
+            item["clozeEn"] = cloze_en
         if attribution is not None:
             item["attribution"] = attribution
         items.append(item)
@@ -2528,6 +2661,7 @@ def _select_practice_lexemes(
     entries: list[dict[str, Any]],
     verifier: VesumVerifier,
     config: BuildConfig,
+    priority_lemma_keys: set[str] | None = None,
 ) -> tuple[list[tuple[dict[str, Any], dict[str, Any]]], list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
     eligible = [entry for entry in entries if is_practice_eligible(entry)]
     # A practice seed is an explicit curriculum admission, not merely a source of
@@ -2545,9 +2679,19 @@ def _select_practice_lexemes(
     ]
     seed_entry_ids = {id(entry) for entry in seed_entries}
     non_seed_entries = [entry for entry in eligible if id(entry) not in seed_entry_ids]
-    course_entries = [entry for entry in non_seed_entries if _course_usage(entry)]
-    fill_entries = [entry for entry in non_seed_entries if not _course_usage(entry)]
+    priority_keys = priority_lemma_keys or set()
+    priority_entries = [
+        entry
+        for entry in non_seed_entries
+        if _stable_lemma_id(entry) in priority_keys
+        or (_clean_text(entry.get("lemma")) and _plain(str(entry["lemma"])) in priority_keys)
+    ]
+    priority_entry_ids = {id(entry) for entry in priority_entries}
+    remaining_entries = [entry for entry in non_seed_entries if id(entry) not in priority_entry_ids]
+    course_entries = [entry for entry in remaining_entries if _course_usage(entry)]
+    fill_entries = [entry for entry in remaining_entries if not _course_usage(entry)]
     seed_entries.sort(key=_stable_lemma_id)
+    priority_entries.sort(key=_stable_lemma_id)
     if config.seed_selection == "representative":
         seed_entries = _representative_seed_entries(seed_entries, config.target)
     course_entries.sort(key=_course_key)
@@ -2555,6 +2699,7 @@ def _select_practice_lexemes(
         key=lambda entry: (CEFR_RANK.get(_cefr_level(entry) or "", len(CEFR_RANK)), _stable_lemma_id(entry))
     )
     selected = list(seed_entries)
+    selected.extend(priority_entries)
     selected.extend(course_entries)
     if len(selected) < config.target:
         selected.extend(fill_entries[: config.target - len(selected)])
@@ -2571,6 +2716,41 @@ def _select_practice_lexemes(
     for lexeme in all_lexemes:
         by_plain_lemma.setdefault(_plain(lexeme["lemma"]), lexeme)
     return lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id
+
+
+def _practice_priority_keys(
+    cloze_sources: list[dict[str, Any]],
+    heritage_pairs: list[dict[str, Any]] | None,
+    paronym_pairs: list[dict[str, Any]] | None,
+    synonym_verdicts: dict[str, Any] | None,
+) -> set[str]:
+    """Keep source-backed thin-mode legs ahead of ordinary fill lexemes.
+
+    The size budget removes tail lexemes.  Place every existing cloze or
+    approved pair leg before the general course/fill population so a full
+    rebuild does not silently cut the thin modes first.
+    """
+    keys: set[str] = set()
+
+    def add(value: Any) -> None:
+        text = _clean_text(value)
+        if text:
+            keys.add(text)
+            keys.add(_plain(text))
+
+    for row in cloze_sources:
+        add(row.get("lemmaId"))
+        add(row.get("lemma"))
+    for pair in heritage_pairs or []:
+        add(pair.get("nativeSlug"))
+    for pair in paronym_pairs or []:
+        add(pair.get("slugA"))
+        add(pair.get("slugB"))
+    for pair in (synonym_verdicts or {}).get("approved", []):
+        if isinstance(pair, dict):
+            add(pair.get("a"))
+            add(pair.get("b"))
+    return keys
 
 
 def build_practice_shards(
@@ -2621,10 +2801,18 @@ def build_practice_shards(
     )
     rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
+    cloze_sources = cloze_sources or []
+    priority_lemma_keys = _practice_priority_keys(
+        cloze_sources,
+        heritage_pairs,
+        paronym_pairs,
+        synonym_verdicts,
+    )
     lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
         entries,
         verifier,
         config,
+        priority_lemma_keys,
     )
     # Paronym emit resolves adjudicated pair slugs against the selected pool
     # (main's _select_practice_lexemes refactor supplies the pool; this map is
@@ -2634,7 +2822,6 @@ def build_practice_shards(
         s = _clean_text(lexeme.get("url_slug")) or _clean_text(lexeme.get("slug")) or lexeme.get("lemmaId")
         if s:
             slug_to_lex[s] = lexeme
-    cloze_sources = cloze_sources or []
     cloze_by_lemma_id: dict[str, list[dict[str, Any]]] = {}
     cloze_by_lemma: dict[str, list[dict[str, Any]]] = {}
     for row in cloze_sources:
@@ -3115,6 +3302,71 @@ def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
     return rows
 
 
+def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
+    """Normalize public sentence-inventory examples into cloze candidates.
+
+    The inventory remains the source of truth: we preserve its sentence,
+    target form, CEFR, source metadata, and license.  A candidate is formed
+    only by replacing one exact attested target token with the exercise slot;
+    morphology is checked later against VESUM in ``_build_cloze_items``.
+    """
+    if path is None or not path.exists():
+        print("WARN: no public sentence inventory found; inventory cloze is unavailable", file=sys.stderr)
+        return []
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema") != "atlas-sentence-inventory":
+        raise ValueError("sentence inventory must use atlas-sentence-inventory schema")
+    rows = payload.get("rows")
+    if not isinstance(rows, list):
+        raise ValueError("sentence inventory rows must be a list")
+    try:
+        provenance_path = path.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        provenance_path = str(path)
+
+    candidates: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            continue
+        uses = row.get("uses")
+        if not isinstance(uses, list) or "example" not in uses:
+            continue
+        lemma = _clean_text(row.get("lemma"))
+        lemma_id = _clean_text(row.get("lemmaId"))
+        sentence = _clean_text(row.get("sentence"))
+        target_form = _clean_text(row.get("targetForm"))
+        source_provenance = row.get("provenance")
+        license_info = row.get("license")
+        if not all((lemma, lemma_id, sentence, target_form)):
+            continue
+        if not isinstance(source_provenance, dict) or not isinstance(license_info, dict):
+            continue
+        pattern = re.compile(rf"(?<!\w){re.escape(target_form)}(?!\w)")
+        blanked_sentence, replacements = pattern.subn("___", sentence)
+        if replacements != 1:
+            continue
+        source_fields = {key: value for key, value in source_provenance.items() if key not in {"status", "path"}}
+        provenance = {
+            "status": "sentence_inventory",
+            "path": provenance_path,
+            **source_fields,
+            "license": license_info,
+        }
+        candidates.append(
+            {
+                "clozeId": f"{lemma_id}:inventory:{index + 1}",
+                "lemma": lemma,
+                "lemmaId": lemma_id,
+                "sentence": blanked_sentence,
+                "form": target_form,
+                "cefr": _clean_text(row.get("cefr")),
+                "provenance": provenance,
+                "sourceType": "sentence_inventory",
+            }
+        )
+    return candidates
+
+
 def read_heritage_pairs(path: Path | None) -> list[dict[str, Any]]:
     if path is None or not path.exists():
         print("WARN: no curated heritage pairs found; emitting empty heritage deck", file=sys.stderr)
@@ -3256,21 +3508,23 @@ def apply_size_budgets(
     gzip_limit: int,
 ) -> None:
     for level, level_shards in shards.items():
+        oversized_kinds: set[str] = set()
+        trimmed = False
+        for kind, payload in level_shards.items():
+            payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
+            if not payload["sizeBudget"]["ok"]:
+                oversized_kinds.add(kind)
         while True:
-            oversized: list[dict[str, Any]] = []
-            for payload in level_shards.values():
-                payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
-                if not payload["sizeBudget"]["ok"]:
-                    oversized.append(payload)
-            if not oversized:
+            if not oversized_kinds:
                 break
 
-            schemas = ", ".join(f"{payload['schema']}.{level}" for payload in oversized)
+            schemas = ", ".join(f"{level_shards[kind]['schema']}.{level}" for kind in sorted(oversized_kinds))
             print(f"WARN: {schemas} exceeds size budget; trimming {level} shard", file=sys.stderr)
             index_items = level_shards.get("index", {}).get("items", [])
             if not isinstance(index_items, list) or not index_items:
                 break
             removed = index_items.pop()
+            trimmed = True
             removed_lemma_id = removed.get("lemmaId") if isinstance(removed, dict) else None
             if not removed_lemma_id:
                 break
@@ -3325,6 +3579,18 @@ def apply_size_budgets(
                             if lexemes
                             else 0
                         )
+            oversized_kinds = set()
+            for kind, payload in level_shards.items():
+                if payload.get("sizeBudget", {}).get("ok") is False:
+                    payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
+                    if not payload["sizeBudget"]["ok"]:
+                        oversized_kinds.add(kind)
+        if trimmed:
+            # Non-oversized shards were deliberately skipped in the trim loop:
+            # dropping lexemes cannot make them exceed a budget, but their final
+            # metadata must still describe the published payload.
+            for payload in level_shards.values():
+                payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
 
 
 def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) -> list[Path]:
@@ -3345,6 +3611,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
@@ -3405,7 +3672,7 @@ def main(argv: list[str] | None = None) -> int:
             read_practice_seed(args.local_practice_seed, allow_local_private=True),
         )
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
-    cloze_sources = read_cloze_sources(args.cloze_sources)
+    cloze_sources = [*read_cloze_sources(args.cloze_sources), *read_sentence_inventory(args.sentence_inventory)]
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)
     paronym_pairs = read_paronym_pairs(args.paronym_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)

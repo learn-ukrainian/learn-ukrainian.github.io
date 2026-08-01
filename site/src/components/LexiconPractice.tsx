@@ -4348,7 +4348,7 @@ function PracticeCloze({
           {sentenceEnglish}
         </p>
       ) : null}
-      {cloze.attribution ? (
+      {cloze.attribution && 'uk' in cloze.attribution ? (
         <p className="lexicon-cloze-attribution">
           <PracticeChromeLabel k="practice.sentenceWith" />{' '}
           {cloze.attribution.sourceUrl ? (
@@ -4363,6 +4363,12 @@ function PracticeCloze({
               / {cloze.attribution.en.author} ({cloze.attribution.en.license})
             </>
           ) : null}
+        </p>
+      ) : cloze.attribution ? (
+        <p className="lexicon-cloze-attribution" data-testid="practice-cloze-source-attribution">
+          <PracticeChromeLabel k="practice.sourcePrefix" /> {cloze.attribution.label} ({cloze.attribution.source})
+          {cloze.attribution.title ? ` — ${cloze.attribution.title}` : ''}
+          {cloze.attribution.locator ? `, ${cloze.attribution.locator}` : ''}
         </p>
       ) : null}
       <form

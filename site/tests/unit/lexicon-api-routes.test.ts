@@ -139,7 +139,8 @@ describe("lexicon static API routes", () => {
     expect(contract.surfaces.dailyWord.endpoint).toBe(contract.endpoints.dailyPool);
     expect(contract.surfaces.practice.totalLexemes).toBeGreaterThan(1000);
     expect(contract.surfaces.practice.levels).toEqual([...PRACTICE_LEVELS]);
-    expect(contract.surfaces.cloze.totalItems).toBe(22);
+    // Inventory-fed cloze publishes a 70-item deck.
+    expect(contract.surfaces.cloze.totalItems).toBe(70);
     expect(contract.surfaces.cloze.reviewedSourceRows).toBeGreaterThan(0);
     expect(contract.endpoints.practiceIndexTemplate).toBe(
       "/api/lexicon/practice-index.{level}.json",
@@ -186,7 +187,8 @@ describe("lexicon static API routes", () => {
     expect(index.counts.lexemes).toBe(lexemes.lexemes.length);
   expect(index.counts.cloze).toBe(cloze.cloze.length);
   expect(index.counts.lexemes).toBeGreaterThan(1000);
-    expect(index.counts.cloze).toBe(22);
+    // A1 contributes 59 items to the published 70-item cloze deck.
+    expect(index.counts.cloze).toBe(59);
   });
 
   test("materializes search shards for static /lexicon/search/{shard}.json URLs", async () => {

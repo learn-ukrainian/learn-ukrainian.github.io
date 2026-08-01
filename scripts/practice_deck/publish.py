@@ -27,6 +27,7 @@ DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointe
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
 DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
 DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
+DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-inventory.json"
 DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
 DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
@@ -70,6 +71,7 @@ def expected_deck_version(
     paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
+    sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
 ) -> str:
     if not atlas_db_path.exists():
         raise PracticeDeckPublishError(
@@ -83,6 +85,7 @@ def expected_deck_version(
             read_cloze_sources,
             read_heritage_pairs,
             read_paronym_pairs,
+            read_sentence_inventory,
             read_synonym_verdicts,
         )
         from scripts.practice_deck.io import compute_deck_version
@@ -91,7 +94,10 @@ def expected_deck_version(
         heritage_pairs = read_heritage_pairs(heritage_pairs_path)
         paronym_pairs = read_paronym_pairs(paronym_pairs_path)
         synonym_verdicts = read_synonym_verdicts(synonym_verdicts_path)
-        cloze_sources = read_cloze_sources(cloze_sources_path)
+        cloze_sources = [
+            *read_cloze_sources(cloze_sources_path),
+            *read_sentence_inventory(sentence_inventory_path),
+        ]
         return compute_deck_version(
             entries,
             heritage_pairs,
@@ -349,6 +355,7 @@ def publish_practice_deck(
     paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
+    sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
@@ -360,6 +367,7 @@ def publish_practice_deck(
         paronym_pairs_path=paronym_pairs_path,
         synonym_verdicts_path=synonym_verdicts_path,
         cloze_sources_path=cloze_sources_path,
+        sentence_inventory_path=sentence_inventory_path,
     )
     if deck_version != expected_version:
         raise PracticeDeckPublishError(
@@ -393,6 +401,7 @@ def main() -> int:
     parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
     parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
@@ -409,6 +418,7 @@ def main() -> int:
         paronym_pairs_path=args.paronym_pairs,
         synonym_verdicts_path=args.synonym_verdicts,
         cloze_sources_path=args.cloze_sources,
+        sentence_inventory_path=args.sentence_inventory,
         release_tag=args.release_tag,
         repo=args.repo,
         dry_run=args.dry_run,

@@ -86,6 +86,7 @@ def _write_publish_inputs(
     paronym_pairs: list[dict[str, object]] | None = None,
     synonym_verdicts: dict[str, object] | None = None,
     cloze_sources: list[dict[str, object]] | None = None,
+    sentence_inventory: dict[str, object] | None = None,
     public_flags: list[bool] | None = None,
 ) -> dict[str, Path]:
     paths = {
@@ -94,6 +95,7 @@ def _write_publish_inputs(
         "paronym_pairs_path": base_dir / "paronym_pairs.yaml",
         "synonym_verdicts_path": base_dir / "synonym_pair_verdicts.yaml",
         "cloze_sources_path": base_dir / "lexicon-practice-cloze-sources.json",
+        "sentence_inventory_path": base_dir / "lexicon-sentence-inventory.json",
     }
     _write_atlas_db(paths["atlas_db_path"], entries or [], public_flags=public_flags)
     if heritage_pairs is not None:
@@ -104,6 +106,12 @@ def _write_publish_inputs(
         _write_json(paths["synonym_verdicts_path"], synonym_verdicts)
     if cloze_sources is not None:
         _write_json(paths["cloze_sources_path"], cloze_sources)
+    _write_json(
+        paths["sentence_inventory_path"],
+        sentence_inventory
+        if sentence_inventory is not None
+        else {"schema": "atlas-sentence-inventory", "schemaVersion": 1, "rows": []},
+    )
     return paths
 
 
@@ -317,7 +325,7 @@ def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -
 
 @pytest.mark.parametrize(
     "stale_input",
-    ["entries", "heritage_pairs", "paronym_pairs", "synonym_verdicts", "cloze_sources"],
+    ["entries", "heritage_pairs", "paronym_pairs", "synonym_verdicts", "cloze_sources", "sentence_inventory"],
 )
 def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     tmp_path: Path,
@@ -383,9 +391,29 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         }
         _write_json(input_paths["synonym_verdicts_path"], stale_synonym_verdicts)
     else:
-        stale_cloze_sources = json.loads(json.dumps(cloze_sources))
-        stale_cloze_sources[0]["sentence"] = "Свіжа версія має інше речення з ___."
-        _write_json(input_paths["cloze_sources_path"], stale_cloze_sources)
+        if stale_input == "sentence_inventory":
+            _write_json(
+                input_paths["sentence_inventory_path"],
+                {
+                    "schema": "atlas-sentence-inventory",
+                    "schemaVersion": 1,
+                    "rows": [
+                        {
+                            "lemma": "книга",
+                            "lemmaId": "knyha",
+                            "sentence": "Це книга.",
+                            "targetForm": "книга",
+                            "uses": ["example"],
+                            "provenance": {"source": "fixture", "label": "Fixture"},
+                            "license": {"status": "fixture"},
+                        }
+                    ],
+                },
+            )
+        else:
+            stale_cloze_sources = json.loads(json.dumps(cloze_sources))
+            stale_cloze_sources[0]["sentence"] = "Свіжа версія має інше речення з ___."
+            _write_json(input_paths["cloze_sources_path"], stale_cloze_sources)
 
     with pytest.raises(PracticeDeckPublishError, match="does not match expected version"):
         publish_practice_deck(
