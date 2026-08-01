@@ -1,9 +1,9 @@
-"""ACPX experimental read-only shadow transport (#6027, #6043).
+"""ACPX bounded read-only transport (#6027, #6043, #6078, #6130, #6158).
 
 Wraps the project-local ``acpx@0.13.0`` headless CLI
 (https://www.npmjs.com/package/acpx) for the Agent Client Protocol (ACP).
 
-Two **separate** direct-only seats share this module:
+Direct-only seats in this module cover the fixed participant registry:
 
 - ``AcpxAdapter`` / ``acpx-codex-shadow`` (#6027) — fixed Codex participant
   via ``acpx … codex exec``
@@ -12,10 +12,13 @@ Two **separate** direct-only seats share this module:
   ``agent … --agent-profile <hash-pinned-no-tool-profile> --no-leader stdio``
   (never the built-in ``grok-build`` name, which cannot place parent flags
   before ``stdio``)
+- built-in ACP participants for Claude, Kimi, KimiCC K3, Cursor, and Pool
+- source-blind project ACP wrappers for AGY and DeepSeek
+- native OpenCode ACP for the Z.AI GLM subscription route
 
-Neither seat is registered for model selection, catalog, review eligibility,
-or failover (``cli_available: False``). They are not a second coordination
-plane: native Codex/Grok remain authoritative under shadow compare.
+No seat is registered for model selection, catalog, review eligibility, or
+failover (``cli_available: False``). They are not a second coordination plane:
+fleet-comms remains the durable authority and shadow comparison stays optional.
 
 Contract captured empirically from the pinned local ``acpx@0.13.0`` install
 (``node_modules/acpx``), not guessed:
@@ -63,7 +66,7 @@ any of these — a caller cannot pass permission/tool overrides through
 markers plus local correlation/idempotency metadata — and rejects anything
 else before spawn).
 
-Issues: #6027 (Codex pilot), #6043 (second Grok pilot).
+Issues: #6027, #6043, #6078, #6130, #6158.
 """
 
 from __future__ import annotations
@@ -83,7 +86,9 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
+from .glm import assert_glm_egress_allowed
 
 try:
     from scripts.guardrails import worktree_containment as _worktree_containment
@@ -100,15 +105,29 @@ except ImportError:  # pragma: no cover - stripped sys.path flavor
 
 _logger = logging.getLogger(__name__)
 
-# Env var gating the experimental transport. Anything other than exactly
-# "shadow" (including unset, "off", or an unrecognized value) refuses to
-# spawn. There is deliberately no "on"/"live" value in Stage 0/1 — this seat
-# is observability-only.
+# Env var gating the transport. ``shadow`` is the comparison path; ``active``
+# is accepted only inside the controller-owned context below. Unset, ``off``,
+# and unrecognized values refuse to spawn.
 TRANSPORT_ENV = "LU_ACPX_TRANSPORT"
 
 # Exact reviewed version. AC-PIN requires resolving ACPX at one exact
 # version with a deterministic preflight — never a floating "latest".
 PINNED_VERSION = "0.13.0"
+
+# Provider CLI versions validated with the text-only/native ACP participant
+# recipes introduced in #6158. These custom commands are part of the protocol
+# boundary, so an unreviewed CLI update fails before the prompt leaves ACPX.
+PINNED_AGY_VERSION = "1.1.9"
+PINNED_OPENCODE_VERSION = "1.17.13"
+PINNED_HERMES_VERSION = "0.18.2"
+AGY_ACP_MODEL = "gemini-3.6-flash-high"
+GLM_ACP_MODEL = "glm-5.2"
+GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.2"
+DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
+# OpenCode advertises its existing local login as ACP auth method
+# ``opencode-login``. ACPX maps that method ID deterministically to this
+# non-secret selector; the value is never a credential.
+GLM_AUTH_OPENCODE_LOGIN_ENV = "ACPX_AUTH_OPENCODE_LOGIN"
 
 # Project-local pinned binary. Deliberately NOT `shutil.which("acpx")`:
 # global/PATH resolution would let an unrelated or unreviewed global acpx
@@ -119,6 +138,12 @@ _DEFAULT_PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # Keep this separately patchable for hermetic adapter tests.  An explicit
 # override is authoritative and must never silently fall back to another tree.
 _PINNED_BINARY = _DEFAULT_PINNED_BINARY
+_TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
+_OPENCODE_DENY_ALL_CONFIG = json.dumps(
+    {"permission": {"*": "deny"}, "tools": {"*": False}},
+    separators=(",", ":"),
+    sort_keys=True,
+)
 
 # Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
 # Built-in acpx ``grok-build`` is intentionally unused: it expands to
@@ -145,8 +170,8 @@ _GROK_XAI_API_KEY_ENV_UNSETS: tuple[str, ...] = (
 # tool_config allowlist. Anything outside this set is rejected before spawn
 # — this is the enforcement point for "unsupported permission/tool config"
 # in the approved reject-before-spawn list. No key here can loosen
-# confinement; each seat re-affirms its own fixed target_agent ("codex" or
-# "grok"). "correlation_id"/"idempotency_key" are local runtime metadata only
+# confinement; each seat re-affirms its own fixed target_agent.
+# "correlation_id"/"idempotency_key" are local runtime metadata only
 # (see _require_local_metadata_field): never forwarded to the ACP wire protocol.
 _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
     {"acpx_shadow", "acpx_discussion", "target_agent", "correlation_id", "idempotency_key"}
@@ -165,6 +190,13 @@ ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
     "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
     "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
+    "agy": {"seat": "acpx-agy-shadow", "agent": "agy", "model": AGY_ACP_MODEL},
+    "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": GLM_ACP_MODEL},
+    "deepseek": {
+        "seat": "acpx-deepseek-shadow",
+        "agent": "deepseek",
+        "model": DEEPSEEK_ACP_MODEL,
+    },
 }
 
 # Active ACPX is deliberately not a generally selectable adapter mode.  The
@@ -576,6 +608,103 @@ def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
     )
 
 
+_SEMVER_RE = re.compile(r"(?<!\d)(\d+\.\d+\.\d+)(?![\d.])")
+
+
+@lru_cache(maxsize=16)
+def _probe_participant_cli_version(binary: str) -> str:
+    """Return the first exact semver from ``<binary> --version``."""
+    try:
+        proc = subprocess.run(
+            [binary, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    if proc.returncode != 0:
+        return ""
+    match = _SEMVER_RE.search(f"{proc.stdout or ''}\n{proc.stderr or ''}")
+    return match.group(1) if match else ""
+
+
+def _resolve_participant_binary(
+    executable: str,
+    *,
+    adapter_label: str,
+    expected_version: str,
+) -> str:
+    """Resolve and version-check one provider CLI before constructing argv."""
+    found = shutil.which(executable)
+    if not found:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: {executable} binary not found on PATH; expected exact "
+            f"version {expected_version!r}"
+        )
+    resolved = Path(found).resolve()
+    if not resolved.is_file():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: resolved {executable} path {resolved} is not a file"
+        )
+    observed = _probe_participant_cli_version(str(resolved))
+    if observed != expected_version:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: resolved {executable} binary reports version {observed!r} "
+            f"(expected pinned {expected_version!r}); refusing to spawn on a version mismatch"
+        )
+    return str(resolved)
+
+
+def _require_text_agent(*, adapter_label: str) -> str:
+    """Return the project-owned text ACP server path, or fail closed."""
+    if not _TEXT_AGENT_PATH.is_file():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: required text-only ACP server missing at {_TEXT_AGENT_PATH}"
+        )
+    return str(_TEXT_AGENT_PATH)
+
+
+def _build_text_agent_command(
+    *,
+    adapter_label: str,
+    provider: str,
+    model: str,
+    executable: str,
+    expected_version: str,
+) -> tuple[str, str]:
+    """Return shell-safe custom ACP command plus observed provider binary."""
+    provider_binary = _resolve_participant_binary(
+        executable,
+        adapter_label=adapter_label,
+        expected_version=expected_version,
+    )
+    node_binary = shutil.which("node")
+    if not node_binary:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: node binary not found on PATH; required by the text ACP server"
+        )
+    node_path = Path(node_binary).resolve()
+    if not node_path.is_file():
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: resolved node path {node_path} is not a file"
+        )
+    command = shlex.join(
+        [
+            str(node_path),
+            _require_text_agent(adapter_label=adapter_label),
+            "--provider",
+            provider,
+            "--model",
+            model,
+            "--binary",
+            provider_binary,
+        ]
+    )
+    return command, provider_binary
+
+
 class AcpxAdapter:
     """Adapter for ``acpx codex exec`` — read-only, stateless, shadow-only.
 
@@ -872,19 +1001,36 @@ class AcpxAdapter:
         return ()
 
 
-class _AcpxBuiltinDiscussionAdapter:
-    """Shared implementation for one fixed built-in ACPX discussion seat.
+class _AcpxDiscussionAdapter:
+    """Shared implementation for one fixed ACPX discussion seat.
 
-    Subclasses set constants only; callers cannot choose an ACP participant,
-    permissions, session, or (where pinned) model through this base class.
+    A subclass either names one ACPX built-in or returns one reviewed custom
+    ACP command. Callers cannot choose a participant, permissions, session,
+    or pinned model through this base class.
     """
 
     name: str
     target_agent: str
     fixed_model: str | None = None
+    acpx_model: str | None = None
+    fixed_effort: str | None = None
+    forward_model_to_acpx: bool = True
     auth_env: str | None = None
     default_model: str = "acpx-built-in-default"
     supported_modes: frozenset[str] = frozenset({"read-only"})
+
+    def _custom_agent_command(self, cwd: Path) -> str | None:
+        _ = cwd
+        return None
+
+    def _env_overrides(self) -> dict[str, str]:
+        return {} if self.auth_env is None else {self.auth_env: "1"}
+
+    def _env_unsets(self) -> tuple[str, ...]:
+        return ()
+
+    def _extra_metadata(self) -> dict[str, Any]:
+        return {}
 
     def build_invocation(
         self,
@@ -912,6 +1058,11 @@ class _AcpxBuiltinDiscussionAdapter:
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None "
                 f"or {self.fixed_model!r}"
             )
+        if self.fixed_effort is not None and effort not in {None, self.fixed_effort}:
+            raise AcpxShadowRefusalError(
+                f"{type(self).__name__}: effort={effort!r} rejected; caller may only pass None "
+                f"or {self.fixed_effort!r}"
+            )
         if session_id is not None:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: session_id must be None; this seat is one-shot `exec` only"
@@ -928,9 +1079,13 @@ class _AcpxBuiltinDiscussionAdapter:
         _require_non_primary_worktree(cwd, adapter_label=type(self).__name__)
         binary = _require_pinned_acpx_binary(adapter_label=type(self).__name__, cwd=cwd)
         cmd = _confinement_prefix_argv(binary, cwd)
-        if self.fixed_model is not None:
-            cmd.extend(["--model", self.fixed_model])
-        cmd.extend([self.target_agent, "exec", "-f", "-"])
+        if self.fixed_model is not None and self.forward_model_to_acpx:
+            cmd.extend(["--model", self.acpx_model or self.fixed_model])
+        custom_agent = self._custom_agent_command(cwd)
+        if custom_agent is None:
+            cmd.extend([self.target_agent, "exec", "-f", "-"])
+        else:
+            cmd.extend(["--agent", custom_agent, "exec", "-f", "-"])
         metadata: dict[str, Any] = {
             "acpx_discussion": True,
             "acpx_pinned_version": PINNED_VERSION,
@@ -941,14 +1096,18 @@ class _AcpxBuiltinDiscussionAdapter:
         }
         if self.fixed_model is not None:
             metadata["model"] = self.fixed_model
-        if effort is not None:
+        if self.fixed_effort is not None:
+            metadata["effort"] = self.fixed_effort
+        metadata.update(self._extra_metadata())
+        if effort is not None and self.fixed_effort is None:
             _logger.debug("%s: effort=%r has no ACPX flag equivalent; ignoring", type(self).__name__, effort)
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,
-            env_overrides={} if self.auth_env is None else {self.auth_env: "1"},
+            env_overrides=self._env_overrides(),
+            env_unsets=self._env_unsets(),
             liveness_paths=(),
             metadata=metadata,
         )
@@ -962,18 +1121,18 @@ class _AcpxBuiltinDiscussionAdapter:
         return ()
 
 
-class AcpxClaudeShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-claude-shadow"
     target_agent = "claude"
 
 
-class AcpxKimiShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-kimi-shadow"
     target_agent = "kimi"
     auth_env = "ACPX_AUTH_LOGIN"
 
 
-class AcpxKimiCcShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+class AcpxKimiCcShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-kimicc-shadow"
     target_agent = "kimi"
     fixed_model = "kimi-code/k3"
@@ -981,15 +1140,115 @@ class AcpxKimiCcShadowAdapter(_AcpxBuiltinDiscussionAdapter):
     auth_env = "ACPX_AUTH_LOGIN"
 
 
-class AcpxCursorShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-cursor-shadow"
     target_agent = "cursor"
     auth_env = "ACPX_AUTH_CURSOR_LOGIN"
 
 
-class AcpxPoolShadowAdapter(_AcpxBuiltinDiscussionAdapter):
+class AcpxPoolShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-pool-shadow"
     target_agent = "pool"
+
+
+class AcpxAgyShadowAdapter(_AcpxDiscussionAdapter):
+    """Text-only AGY/Gemini-family ACP participant (#6158)."""
+
+    name = "acpx-agy-shadow"
+    target_agent = "agy"
+    fixed_model = AGY_ACP_MODEL
+    default_model = fixed_model
+    fixed_effort = "high"
+    forward_model_to_acpx = False
+
+    def _custom_agent_command(self, cwd: Path) -> str:
+        _ = cwd
+        command, _binary = _build_text_agent_command(
+            adapter_label=type(self).__name__,
+            provider="agy",
+            model=AGY_ACP_MODEL,
+            executable="agy",
+            expected_version=PINNED_AGY_VERSION,
+        )
+        return command
+
+    def _extra_metadata(self) -> dict[str, Any]:
+        return {
+            "provider_cli": "agy",
+            "provider_cli_pinned_version": PINNED_AGY_VERSION,
+            "text_only_adapter": True,
+        }
+
+
+class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
+    """Native OpenCode ACP participant pinned to the Z.AI GLM subscription."""
+
+    name = "acpx-glm-shadow"
+    target_agent = "glm"
+    fixed_model = GLM_ACP_MODEL
+    acpx_model = GLM_ACP_INVOCATION_MODEL
+    default_model = fixed_model
+
+    def _custom_agent_command(self, cwd: Path) -> str:
+        _ = cwd
+        assert_glm_egress_allowed(type(self).__name__)
+        binary = _resolve_participant_binary(
+            "opencode",
+            adapter_label=type(self).__name__,
+            expected_version=PINNED_OPENCODE_VERSION,
+        )
+        return shlex.join([binary, "acp", "--pure"])
+
+    def _env_overrides(self) -> dict[str, str]:
+        return {
+            GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
+            "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
+        }
+
+    def _extra_metadata(self) -> dict[str, Any]:
+        return {
+            "provider_cli": "opencode",
+            "provider_cli_pinned_version": PINNED_OPENCODE_VERSION,
+            "provider_route": GLM_ACP_INVOCATION_MODEL,
+            "tool_policy": "deny-all",
+        }
+
+
+class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
+    """Text-only, first-party DeepSeek ACP participant via isolated Hermes."""
+
+    name = "acpx-deepseek-shadow"
+    target_agent = "deepseek"
+    fixed_model = DEEPSEEK_ACP_MODEL
+    default_model = fixed_model
+    forward_model_to_acpx = False
+
+    def _custom_agent_command(self, cwd: Path) -> str:
+        _ = cwd
+        if is_deepseek_first_party_forbidden_in_ci("deepseek", DEEPSEEK_ACP_MODEL):
+            raise AcpxShadowRefusalError(
+                deepseek_first_party_error(
+                    provider="deepseek",
+                    model=DEEPSEEK_ACP_MODEL,
+                    source=type(self).__name__,
+                )
+            )
+        command, _binary = _build_text_agent_command(
+            adapter_label=type(self).__name__,
+            provider="deepseek",
+            model=DEEPSEEK_ACP_MODEL,
+            executable="hermes",
+            expected_version=PINNED_HERMES_VERSION,
+        )
+        return command
+
+    def _extra_metadata(self) -> dict[str, Any]:
+        return {
+            "provider_cli": "hermes",
+            "provider_cli_pinned_version": PINNED_HERMES_VERSION,
+            "provider_route": "deepseek",
+            "text_only_adapter": True,
+        }
 
 
 class AcpxGrokShadowAdapter:

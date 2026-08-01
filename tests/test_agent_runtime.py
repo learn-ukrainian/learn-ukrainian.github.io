@@ -201,7 +201,10 @@ def test_registry_has_known_agents():
         "acpx-claude-shadow",
         "acpx-codex-shadow",
         "acpx-cursor-shadow",
+        "acpx-deepseek-shadow",
+        "acpx-glm-shadow",
         "acpx-grok-shadow",
+        "acpx-agy-shadow",
         "acpx-kimi-shadow",
         "acpx-kimicc-shadow",
         "acpx-pool-shadow",
@@ -289,6 +292,37 @@ def test_acpx_grok_shadow_entry_is_direct_only():
     assert entry["resume_policy"] == "never"
     assert entry["capabilities"] == frozenset()
     assert "acpx-grok-shadow" not in available_agents()
+
+
+@pytest.mark.parametrize(
+    ("seat", "adapter", "model"),
+    [
+        (
+            "acpx-agy-shadow",
+            "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
+            "gemini-3.6-flash-high",
+        ),
+        (
+            "acpx-glm-shadow",
+            "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
+            "glm-5.2",
+        ),
+        (
+            "acpx-deepseek-shadow",
+            "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
+            "deepseek-v4-pro",
+        ),
+    ],
+)
+def test_new_acpx_fleet_entries_are_direct_only(seat, adapter, model):
+    entry = get_agent_entry(seat)
+    assert entry["adapter"] == adapter
+    assert entry["default_model"] == model
+    assert entry["cli_available"] is False
+    assert entry["direct_only"] is True
+    assert entry["resume_policy"] == "never"
+    assert entry["capabilities"] == frozenset()
+    assert seat not in available_agents()
 
 
 def test_cursor_entry_is_well_formed():

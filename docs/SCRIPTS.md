@@ -1336,11 +1336,11 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Need | Tool | Write access? |
 | --- | --- | --- |
 | Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only; **not** formal CF) |
-| One-off drive-by question to another agent | **`ask-claude` / `ask-agy` / `ask-codex`** | No by default; opt-in via `--allow-write` |
+| One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
-| Experimental structured Codex / Grok invocation | **ACPX adapters** `acpx-codex-shadow` + `acpx-grok-shadow` (feature-flagged, default-off/shadow; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
+| Structured two-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
@@ -1348,11 +1348,18 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 
 **Rules of thumb:**
 - Channel-first for anything >1 turn. The pinned `context.md` eliminates re-pasting project setup on every round.
-- `ask-*` is not deprecated for genuine one-shots. `ask-gemini` is retired; use `ask-agy` for Gemini-family one-shots.
+- Supported two-seat `discuss` calls delegate to ACP; the command name is a
+  compatibility surface, not a second provider-launch engine.
+- `ask-*` remains a temporary compatibility path only until single-seat ACP
+  and initiator/quota telemetry land. Do not add new provider launch logic
+  there. `ask-gemini` is retired; AGY is the Gemini-family route.
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
 - **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
-- ACPX is optional experimental transport only (two direct-only seats: Codex pilot + Grok second pilot on broker-centrality evidence with limited direct-runtime sample); rollback is feature-flag off + native runtime. Grok + Codex ACPX is not a new coordination plane.
+- ACPX is the structured transport for supported bounded two-seat panels;
+  rollback is feature-flag off + native runtime. It is
+  not a new coordination plane, and fleet-comms/file handoffs remain durable
+  authority.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
 
 ### Channel bridge — preferred for multi-turn

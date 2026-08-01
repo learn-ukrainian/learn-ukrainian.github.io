@@ -349,6 +349,33 @@ AGENTS: dict[str, AgentEntry] = {
         "direct_only": True,
         "resume_policy": "never",
     },
+    "acpx-agy-shadow": {
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
+        "default_model": "gemini-3.6-flash-high",
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "direct_only": True,
+        "resume_policy": "never",
+    },
+    "acpx-glm-shadow": {
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
+        "default_model": "glm-5.2",
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "direct_only": True,
+        "resume_policy": "never",
+    },
+    "acpx-deepseek-shadow": {
+        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
+        "default_model": "deepseek-v4-pro",
+        "cost_tier": "unknown",
+        "capabilities": frozenset(),
+        "cli_available": False,
+        "direct_only": True,
+        "resume_policy": "never",
+    },
     "agy": {
         # Antigravity CLI shipping Gemini Flash 3.6 (was 3.5) on a separate meter from
         # gemini-cli. Added 2026-05-20 for the seminar-writer ADR bakeoff
