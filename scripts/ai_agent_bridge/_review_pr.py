@@ -139,6 +139,13 @@ or trailing `VERDICT:` line. It must contain `overall`
 (`correctness`, `explanation`, `confidence`) and every finding with its
 canonical location and evidence fields. Publication derives the GitHub gate
 verdict from this evidence and preserves the review body in the PR comment.
+Use `"correct"`, `"incorrect"`, or `"uncertain"` for `overall.correctness`.
+Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
+example, `0.95`), never a string such as `"high"`. A clean review therefore
+has exactly this shape (replace the explanation, not the field types):
+`{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
+For findings, use priorities `P0`..`P3`, a documented category, and claim type
+`"present"` or `"missing"`; do not invent enum aliases such as `"pass"`.
 """
 
 
