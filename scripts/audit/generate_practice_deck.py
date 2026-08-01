@@ -3574,7 +3574,7 @@ def apply_size_budgets(
                         )
             oversized_kinds = set()
             for kind, payload in level_shards.items():
-                if kind not in oversized_kinds and payload.get("sizeBudget", {}).get("ok") is False:
+                if payload.get("sizeBudget", {}).get("ok") is False:
                     payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
                     if not payload["sizeBudget"]["ok"]:
                         oversized_kinds.add(kind)

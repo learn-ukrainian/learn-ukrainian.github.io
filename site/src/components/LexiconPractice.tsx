@@ -4366,7 +4366,7 @@ function PracticeCloze({
         </p>
       ) : cloze.attribution ? (
         <p className="lexicon-cloze-attribution" data-testid="practice-cloze-source-attribution">
-          Джерело: {cloze.attribution.label} ({cloze.attribution.source})
+          <PracticeChromeLabel k="practice.sourcePrefix" /> {cloze.attribution.label} ({cloze.attribution.source})
           {cloze.attribution.title ? ` — ${cloze.attribution.title}` : ''}
           {cloze.attribution.locator ? `, ${cloze.attribution.locator}` : ''}
         </p>

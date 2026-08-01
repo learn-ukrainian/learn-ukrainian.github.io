@@ -2561,7 +2561,7 @@ describe('LexiconPractice', () => {
     expect(screen.getByText(/CC-BY 2.0 FR/)).toBeInTheDocument();
   });
 
-  test('cloze renders a visible source credit for an inventory sentence', () => {
+  test('cloze renders locale-aware source chrome for an inventory sentence', () => {
     seedRecognitionMastery('knyha');
     const deck = sampleDeck();
     deck.cloze[0] = {
@@ -2576,9 +2576,10 @@ describe('LexiconPractice', () => {
 
     render(<LexiconPractice initialDeck={deck} autoStart initialMode="cloze" />);
 
-    expect(screen.getByTestId('practice-cloze-source-attribution')).toHaveTextContent(
-      'Джерело: Підручник для початківців (textbook) — Урок 1, с. 12',
-    );
+    const attribution = screen.getByTestId('practice-cloze-source-attribution');
+    expect(attribution).toHaveTextContent('Source:');
+    expect(attribution).toHaveTextContent('Джерело:');
+    expect(attribution).toHaveTextContent('Підручник для початківців (textbook) — Урок 1, с. 12');
   });
 
   test('today scope uses review + capped-new denominator, not whole deck', async () => {
