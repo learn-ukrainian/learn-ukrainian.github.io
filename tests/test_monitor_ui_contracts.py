@@ -186,6 +186,8 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "Shared prompt" in html
     assert "Participant responses" in html
     assert "Final synthesis" in html
+    assert "No participant response message was recorded for this round." in html
+    assert "No final synthesis message was recorded." in html
     assert "Raw protocol messages" in html
     assert "make('details', 'protocol-log')" in html
     assert "text(value).toLowerCase() === 'root' ? 'Coordinator'" in html
@@ -251,14 +253,19 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
       {{kind: 'reply', body: 'Codex answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:01Z', ordinal: 4, round: 1}},
       {{kind: 'reply', body: 'Peer context', sender: 'grok', recipient: 'codex', created_at: '2026-01-01T00:00:03Z', ordinal: 5, round: 2}},
       {{kind: 'reply', body: 'Refined answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:04Z', ordinal: 6, round: 2}},
-      {{kind: 'synthesis', body: 'Final answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:05Z', ordinal: 7}}
+      {{kind: 'request', body: 'Unanswered prompt', sender: 'root', recipient: 'grok', created_at: '2026-01-01T00:00:05Z', ordinal: 7, round: 3}},
+      {{kind: 'synthesis', body: 'Final answer', sender: 'codex', recipient: 'root', created_at: '2026-01-01T00:00:06Z', ordinal: 8, round: 3}}
     ]}});
-    console.log(JSON.stringify(groupTranscript(messages)));
+    console.log(JSON.stringify({{
+      grouped: groupTranscript(messages),
+      withoutSynthesis: groupTranscript(messages.filter(message => message.kind !== 'synthesis'))
+    }}));
     """
     result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
-    grouped = json.loads(result.stdout)
+    output = json.loads(result.stdout)
+    grouped = output["grouped"]
 
-    assert [group["round"] for group in grouped["rounds"]] == [1, 2]
+    assert [group["round"] for group in grouped["rounds"]] == [1, 2, 3]
     assert grouped["rounds"][0]["prompts"] == [
         {
             "body": "Shared question",
@@ -274,7 +281,9 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
     ]
     assert [item["body"] for item in grouped["rounds"][1]["contexts"]] == ["Peer context"]
     assert [item["body"] for item in grouped["rounds"][1]["replies"]] == ["Refined answer"]
+    assert grouped["rounds"][2]["replies"] == []
     assert [item["body"] for item in grouped["finalization"]] == ["Final answer"]
+    assert output["withoutSynthesis"]["finalization"] == []
 
 
 def test_routing_page_uses_live_monitor_sources():

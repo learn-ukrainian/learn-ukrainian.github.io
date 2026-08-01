@@ -121,12 +121,13 @@ function groupTranscript(messages) {
   const rounds = new Map();
   const finalization = [];
   for (const message of messages) {
+    const kind = message.kind.toLowerCase();
+    if (kind === 'synthesis') { finalization.push(message); continue; }
     const round = messageRound(message);
     if (round === null) { finalization.push(message); continue; }
     if (!rounds.has(round)) rounds.set(round, { round, prompts: [], contexts: [], replies: [], other: [], messages: [] });
     const group = rounds.get(round);
     group.messages.push(message);
-    const kind = message.kind.toLowerCase();
     if (kind === 'request') {
       let prompt = group.prompts.find(candidate => candidate.body === message.body && candidate.sender === message.sender);
       if (!prompt) {
