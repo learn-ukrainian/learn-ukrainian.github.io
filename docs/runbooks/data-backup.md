@@ -61,6 +61,25 @@ SQLite documents why its [online backup API produces a consistent snapshot][sqli
 [restic-check]: https://restic.readthedocs.io/en/stable/045_working_with_repos.html#checking-integrity-and-consistency
 [sqlite-backup]: https://www.sqlite.org/backup.html
 
+## Open dependency: Google Drive OAuth client ID (2026)
+
+**Tracked:** [#6093](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6093) — *do not close until proven fixed.*
+
+The scheduled job (`com.learn-ukrainian.backup` → `~/.local/bin/learn-ukrainian-backup`) still
+succeeds, but rclone logs a **NOTICE** that the **shared** Google Drive `client_id` is being
+**retired during 2026**. When Google cuts it off, **new restic snapshots stop** until the
+`lu-gdrive` remote uses an **operator-owned** OAuth client and is re-authorized.
+
+- Config lives outside git (`~/.secrets/learn-ukrainian-backup.env`, dedicated rclone config).
+- Do **not** put client secrets, tokens, or password files in the repo, issues, or receipts.
+- Procedure: [rclone — making your own client_id](https://rclone.org/drive/#making-your-own-client-id),
+  then re-auth the remote and prove `backup-data.sh doctor`, one `backup --execute`,
+  `snapshots`, `verify`, and a green scheduled run (acceptance on #6093).
+
+Until #6093 is closed, treat this as a **time-bounded production risk**, not noise.
+
+---
+
 ## One-time setup
 
 Install current restic and rclone releases:
