@@ -5,9 +5,10 @@
 > realignment on 2026-07-30; recorded in
 > [PR #6060](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6060).
 > Operator approved the Ukrainian Data Foundry architecture, replacement issue
-> chain, and first implementation on 2026-07-31.
+> chain, and first implementation on 2026-07-31, then issued **GO REALIGN AND
+> EXECUTE PHASE 2–4** on 2026-08-01.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
-> refreshed 2026-07-31
+> refreshed 2026-08-01
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
 > **Does not authorize:** model training, dataset publication, or mixing
@@ -41,10 +42,13 @@ future training data.
 
 ## GitHub execution homes
 
-- [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
-  owns the Ukrainian Data Foundry: provenance and rights contracts,
-  full-corpus diagnostics, candidate review and adjudication, mechanically
-  disjoint consumer exports, recipes, and reference validation.
+- [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
+  owns Foundry Phase 2–4: real corpus admission, production contextual
+  language-contact detection, qualified-human gold, real model-ready exports,
+  one preregistered causal open-weight experiment, and a reproducible release
+  candidate. Closed [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
+  owns the completed interfaces, profiler, exporters, recipes, and synthetic
+  reference build on which this production program depends.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   owns the separately frozen public benchmark v0.2 design and release.
 - [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913)
@@ -234,27 +238,40 @@ status.
 
 ### Immediate work
 
-1. Define and implement the versioned Foundry interfaces from source and
-   provenance evidence through streaming normalization, language-span
-   handling, classification, morphology evidence, candidate generation,
-   qualified Ukrainian-human adjudication, and separate consumer views.
-2. Profile the complete locally accessible public/external human-authored
-   corpus before any admission decision. Report measured coverage and explicit
-   unknowns; do not convert inventory rows or VESUM forms into rights-cleared
-   contextual training text.
-3. Emit evidence-backed grammar, calque, collocation, and
-   Russian-interference review candidates. Keep every candidate unresolved
-   until contextual evidence and qualified Ukrainian-human adjudication exist.
-4. Build mechanically separate training, correction, preference,
-   quality-filter, and evaluation exporters with end-to-end lineage,
-   exact/near-duplicate controls, and frozen benchmark exclusions.
-5. Add reproducible preparation and training recipes, then validate an
-   end-to-end reference build against the frozen baseline harness. Recipes do
-   not authorize a training run.
-6. Independently acquire and adjudicate the coverage-complete v0.2 evaluation
-   inventory under its frozen evidence plan and qualified-review protocol.
+1. Admit or explicitly reject every real corpus family across the measured
+   189,150-record / 50,298,925-word denominator under complete source,
+   edition, acquisition, rights, permitted-use, origin, and contamination
+   evidence (#6166). The result must be useful-scale real data, not another
+   one-record demonstration.
+2. In parallel, run the production contextual language-contact detector across
+   that complete corpus (#6167). It must distinguish Russian quotation,
+   modern interference, phonetic Russian rendering, mixed-language spans,
+   historical usage, protected Ukrainian variation, and uncertainty while
+   retaining context and source lineage. VESUM absence is only one signal.
+3. Freeze sampling and stopping rules, then obtain real independent review by
+   qualified Ukrainian humans and conflict adjudication (#6168). GPT, Gemini,
+   and Claude may prepare evidence but cannot satisfy this human gate.
+4. Emit real, mechanically disjoint training, correction, preference,
+   quality-filter, and evaluation views with contamination and tokenizer/loss-
+   mask diagnostics (#6169). No universal tokenizer threshold is presumed.
+5. After present-tense operator approval of the exact model revision, compute
+   budget, and preregistration, run the smallest causal open-weight treatment
+   and ablation that can test whether the Foundry data changes Ukrainian
+   behavior (#6170). Report null or adverse results as first-class outcomes.
+6. Package a corpus-portable, rights-safe release candidate and have an
+   independent party reproduce it from clean instructions on their own corpus
+   (#6171). Publication remains a separate present-tense operator gate.
+7. Independently acquire and adjudicate the coverage-complete v0.2 evaluation
+   inventory under #6084. Public evaluation gold remains mechanically isolated
+   from every training or tuning view.
 
-### First Foundry reference build
+The accountable orchestrator continues from one completed child issue to the
+next. A merged implementation PR is progress, not a stopping condition. Work
+pauses only at the source-family admission decision, qualified-Ukrainian-human
+review, exact training preregistration/budget approval, or final publication
+approval named on #6164.
+
+### Completed Foundry v1 reference build
 
 The #6119–#6123 implementation chain now has an executable reference build. It
 reproduces the complete 189,150-record / 50,298,925-word morphology profile,
