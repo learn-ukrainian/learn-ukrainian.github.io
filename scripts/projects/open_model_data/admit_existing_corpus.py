@@ -575,6 +575,26 @@ def admit_corpus(
                 or rejection_counts != {"record_marked_excluded": source_record_artifact["records"]}
             ):
                 raise AdmissionError("pending source-record manifest failed the frozen admission contract")
+        expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in family_names)
+        expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in family_names)
+        complete = processed_rows == expected_rows and processed_words == expected_words and all(
+            item["matches_expected"] for item in family_results
+        )
+        receipt = {
+            "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
+            "coverage": {"complete": complete, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
+                         "processed_rows": processed_rows, "processed_lexical_words": processed_words, "inaccessible_families": []},
+            "dispositions": {name: {"rows": disposition_counts[name]["rows"], "lexical_words": disposition_counts[name]["lexical_words"]} for name in sorted(disposition_counts)},
+            "families": sorted(family_results, key=lambda item: item["source_family"]),
+            "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
+            "outputs": {"manifest": artifact, "source_records": source_record_artifact},
+            "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": sha256_file(SOURCE_RECORD_SCHEMA), "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
+            "training_eligible_emitted": False,
+        }
+        # The receipt is the commit marker for downstream consumers.  Validate
+        # it while both manifests still have temporary names so a receipt
+        # contract failure cannot leave rights-bearing outputs behind.
+        _validate(receipt, _validator(RECEIPT_SCHEMA), "admission receipt")
         manifest.replace()
         if source_records is not None:
             source_records.replace()
@@ -583,22 +603,6 @@ def admit_corpus(
         if source_records is not None:
             source_records.abort()
         raise
-
-    expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in family_names)
-    expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in family_names)
-    complete = processed_rows == expected_rows and processed_words == expected_words and all(item["matches_expected"] for item in family_results)
-    receipt = {
-        "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
-        "coverage": {"complete": complete, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
-                     "processed_rows": processed_rows, "processed_lexical_words": processed_words, "inaccessible_families": []},
-        "dispositions": {name: {"rows": disposition_counts[name]["rows"], "lexical_words": disposition_counts[name]["lexical_words"]} for name in sorted(disposition_counts)},
-        "families": sorted(family_results, key=lambda item: item["source_family"]),
-        "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
-        "outputs": {"manifest": artifact, "source_records": source_record_artifact},
-        "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": sha256_file(SOURCE_RECORD_SCHEMA), "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
-        "training_eligible_emitted": False,
-    }
-    _validate(receipt, _validator(RECEIPT_SCHEMA), "admission receipt")
     _atomic_json(receipt_output, receipt)
     if runtime_output is not None:
         _atomic_json(

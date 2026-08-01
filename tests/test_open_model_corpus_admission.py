@@ -238,6 +238,35 @@ def test_source_record_validation_failure_leaves_no_final_artifacts(
     assert not receipt.exists()
 
 
+def test_receipt_validation_failure_leaves_no_final_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _database(tmp_path / "sources.db", [("s1", "w1", "два слова", "Автор")])
+    _json(tmp_path / "profile.json", _profile(expected_rows=1, expected_words=2))
+    _json(tmp_path / "config.json", _config())
+    manifest = tmp_path / "manifest.jsonl"
+    receipt = tmp_path / "receipt.json"
+    original_validate = admission._validate
+
+    def fail_receipt(value: object, validator: object, label: str) -> None:
+        if label == "admission receipt":
+            raise admission.AdmissionError("forced receipt validation failure")
+        original_validate(value, validator, label)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(admission, "_validate", fail_receipt)
+    with pytest.raises(admission.AdmissionError, match="forced receipt validation failure"):
+        admission.admit_corpus(
+            config_path=tmp_path / "config.json",
+            input_root=tmp_path,
+            manifest_output=manifest,
+            receipt_output=receipt,
+        )
+
+    assert not manifest.exists()
+    assert not receipt.exists()
+
+
 def test_real_wikipedia_terms_receipts_and_operator_gate_are_frozen() -> None:
     contracts = ROOT / "data/projects/open_model_data/contracts"
     evidence = json.loads((ROOT / "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json").read_text())
