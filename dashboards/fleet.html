@@ -297,6 +297,18 @@ function queueRefresh() {
   refreshTimer = setTimeout(refreshFleet, 220);
 }
 
+function hydrateFiltersFromLocation() {
+  const params = new URLSearchParams(location.search);
+  for (const [name, fieldId] of [
+    ['agent', 'filter-agent'], ['source', 'filter-source'], ['kind', 'filter-kind'],
+    ['state', 'filter-state'], ['pr', 'filter-pr'], ['conversation', 'filter-conversation'],
+  ]) {
+    const value = params.get(name);
+    if (value) document.getElementById(fieldId).value = value;
+  }
+}
+
+hydrateFiltersFromLocation();
 refreshFleet();
 </script>
 </body>

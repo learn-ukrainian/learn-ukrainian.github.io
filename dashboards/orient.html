@@ -353,7 +353,7 @@ function renderDiscussions(data) {
   }
   document.getElementById('discussions-content').innerHTML = `<table><thead><tr><th>Thread</th><th>Agents</th><th>Status</th><th>Last activity</th></tr></thead><tbody>${
     discussions.map(item => {
-      const url = `/channels.html?channel=${encodeURIComponent(item.channel || '')}&thread=${encodeURIComponent(item.thread_id || '')}`;
+      const url = `/fleet.html?conversation=${encodeURIComponent(item.thread_id || '')}`;
       const statusClass = item.status === 'running' ? 'warn' : item.status === 'converged' ? 'ok' : 'gray';
       return `<tr onclick="location.href='${url}'" style="cursor:pointer">
         <td><strong>#${escapeHtml(item.channel || '—')}</strong><div class="mono" style="color:var(--text3);font-size:12px">${escapeHtml(String(item.thread_id || '').slice(0, 12))}</div></td>

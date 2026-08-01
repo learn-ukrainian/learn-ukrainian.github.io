@@ -37,6 +37,9 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "method: 'POST'" not in html
     assert 'method: "POST"' not in html
     assert "/api/fleet/" in html
+    assert "new URLSearchParams(location.search)" in html
+    assert "hydrateFiltersFromLocation();" in html
+    assert "['conversation', 'filter-conversation']" in html
 
 
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
@@ -70,7 +73,7 @@ def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     assert contract_for_page("fleet.html") is not None
 
 
-def test_fleet_page_and_legacy_pages_coexist_during_soak() -> None:
+def test_fleet_page_and_retired_entrypoints_coexist_during_cutover() -> None:
     client = TestClient(app, raise_server_exceptions=False)
 
     for path in [
@@ -91,7 +94,8 @@ def test_fleet_page_and_legacy_pages_coexist_during_soak() -> None:
         assert response.status_code == 200, f"{path} returned {response.status_code}: {response.text[:200]}"
 
     index = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
-    assert 'href="/channels.html"' in index
-    assert 'href="/comms.html"' in index
+    assert 'href="/fleet.html"' in index
+    assert 'href="/channels.html"' not in index
+    assert 'href="/comms.html"' not in index
     for legacy in ("/comms.html", "/channels.html", "/runtime.html", "/acp.html"):
         assert (DASHBOARDS / legacy.removeprefix("/")).is_file()
