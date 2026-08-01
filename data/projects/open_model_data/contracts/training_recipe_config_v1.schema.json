@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/training_recipe_config_v1.schema.json",
+  "title": "Ukrainian Data Foundry preparation/training recipe config v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "recipe_id", "view_kind", "objective", "base_model", "tokenizer", "implementation", "data_preparation", "hyperparameters", "run_policy"],
+  "properties": {
+    "schema_version": {"const": "training_recipe_config_v1"},
+    "recipe_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"},
+    "view_kind": {"enum": ["continued_pretraining", "correction_instruction", "preference", "quality_filter", "heldout_evaluation"]},
+    "objective": {"enum": ["causal_language_modeling", "supervised_correction", "pairwise_preference", "binary_quality_classification", "heldout_evaluation_only"]},
+    "base_model": {"$ref": "#/$defs/pinnedComponent"},
+    "tokenizer": {"$ref": "#/$defs/pinnedComponent"},
+    "implementation": {"type": "object", "additionalProperties": false, "required": ["framework", "framework_version", "code_revision", "dependency_lock_sha256"], "properties": {"framework": {"type": "string", "minLength": 1}, "framework_version": {"type": "string", "minLength": 1}, "code_revision": {"$ref": "#/$defs/revision"}, "dependency_lock_sha256": {"$ref": "#/$defs/sha256"}}},
+    "data_preparation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rendering_template", "rendering_template_sha256", "target_loss_policy", "split"],
+      "properties": {
+        "rendering_template": {"type": "string", "minLength": 1},
+        "rendering_template_sha256": {"$ref": "#/$defs/sha256"},
+        "target_loss_policy": {"enum": ["unmasked_text_tokens", "target_fields_only", "no_training_evaluation_only"]},
+        "split": {
+          "type": "object", "additionalProperties": false,
+          "required": ["strategy", "namespace", "modulus", "validation_buckets"],
+          "properties": {
+            "strategy": {"enum": ["sha256_record_id_modulo", "preserve_evaluation_release"]},
+            "namespace": {"type": "string", "minLength": 1},
+            "modulus": {"anyOf": [{"type": "integer", "minimum": 2}, {"type": "null"}]},
+            "validation_buckets": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]}
+          }
+        }
+      }
+    },
+    "hyperparameters": {"type": "object", "additionalProperties": false, "required": ["seed", "sequence_length", "micro_batch_size", "gradient_accumulation_steps", "learning_rate", "weight_decay", "epochs", "precision", "packing"], "properties": {"seed": {"type": "integer", "minimum": 0}, "sequence_length": {"type": "integer", "minimum": 1}, "micro_batch_size": {"type": "integer", "minimum": 1}, "gradient_accumulation_steps": {"type": "integer", "minimum": 1}, "learning_rate": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?([eE]-?[0-9]+)?$"}, "weight_decay": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?([eE]-?[0-9]+)?$"}, "epochs": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"}, "precision": {"enum": ["fp32", "fp16", "bf16"]}, "packing": {"type": "boolean"}}},
+    "run_policy": {"type": "object", "additionalProperties": false, "required": ["training_authorized", "execution_state"], "properties": {"training_authorized": {"const": false}, "execution_state": {"const": "not_run"}}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "revision": {"type": "string", "pattern": "^[a-f0-9]{40,64}$"},
+    "pinnedComponent": {"type": "object", "additionalProperties": false, "required": ["identifier", "revision"], "properties": {"identifier": {"type": "string", "minLength": 1}, "revision": {"$ref": "#/$defs/revision"}}}
+  }
+}

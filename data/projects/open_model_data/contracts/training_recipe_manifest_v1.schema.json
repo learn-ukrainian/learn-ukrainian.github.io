@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/training_recipe_manifest_v1.schema.json",
+  "title": "Ukrainian Data Foundry preparation/training recipe manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "config", "config_sha256", "view_artifact", "view_receipt", "schema_hashes", "preparation", "execution", "determinism"],
+  "properties": {
+    "schema_version": {"const": "training_recipe_manifest_v1"},
+    "manifest_id": {"type": "string", "pattern": "^recipe:[a-f0-9]{64}$"},
+    "config": {"$ref": "https://learn-ukrainian.github.io/schemas/open-model-data/training_recipe_config_v1.schema.json"},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "view_artifact": {"$ref": "#/$defs/artifact"},
+    "view_receipt": {"$ref": "#/$defs/artifact"},
+    "schema_hashes": {"type": "object", "minProperties": 3, "additionalProperties": {"$ref": "#/$defs/sha256"}},
+    "preparation": {"type": "object", "additionalProperties": false, "required": ["record_order", "shuffle", "loss_mask_projection", "input_validation", "model_training_eligible_records", "test_fixture_records"], "properties": {"record_order": {"const": "view artifact order bound by export receipt"}, "shuffle": {"enum": ["SHA-256(seed || record_id), ascending digest", "not applicable; preserve held-out artifact order"]}, "loss_mask_projection": {"enum": ["tokenizer projects character_mask_spans after tokenization; masked tokens receive zero loss", "not applicable to this view"]}, "input_validation": {"const": "validate every JSONL row against the bound view schema before preparation"}, "model_training_eligible_records": {"type": "integer", "minimum": 0}, "test_fixture_records": {"type": "integer", "minimum": 0}}},
+    "execution": {"type": "object", "additionalProperties": false, "required": ["training_authorized", "execution_state", "model_call_performed", "training_performed", "test_fixture_mode"], "properties": {"training_authorized": {"const": false}, "execution_state": {"const": "not_run"}, "model_call_performed": {"const": false}, "training_performed": {"const": false}, "test_fixture_mode": {"type": "boolean"}}},
+    "determinism": {"type": "object", "additionalProperties": false, "required": ["serialization", "timestamps_omitted"], "properties": {"serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"}, "timestamps_omitted": {"const": true}}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["records", "bytes", "sha256"], "properties": {"records": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}}
+  }
+}

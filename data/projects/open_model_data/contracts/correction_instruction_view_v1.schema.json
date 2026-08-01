@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_instruction_view_v1.schema.json",
+  "title": "Ukrainian Data Foundry correction/instruction view v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_id", "lineage", "origin", "payload", "permitted_destination", "denied_destinations", "eligibility"],
+  "properties": {
+    "schema_version": {"const": "correction_instruction_view_v1"},
+    "record_id": {"type": "string", "pattern": "^correction-view:[a-f0-9]{64}$"},
+    "lineage": {"$ref": "#/$defs/lineage"},
+    "origin": {"enum": ["human_authored", "machine_generated", "machine_translated", "human_revised_synthetic"]},
+    "payload": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_text", "target_text", "original_span", "accepted_correction", "acceptable_alternatives", "span_start_char", "span_end_char"],
+      "properties": {
+        "input_text": {"type": "string", "minLength": 1},
+        "target_text": {"type": "string", "minLength": 1},
+        "original_span": {"type": "string", "minLength": 1},
+        "accepted_correction": {"type": "string", "minLength": 1},
+        "acceptable_alternatives": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "span_start_char": {"type": "integer", "minimum": 0},
+        "span_end_char": {"type": "integer", "minimum": 1}
+      }
+    },
+    "permitted_destination": {"const": "supervised_correction"},
+    "denied_destinations": {"const": ["continued_pretraining", "pairwise_preference", "quality_filter", "heldout_evaluation"]},
+    "eligibility": {"$ref": "#/$defs/eligibility"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "lineage": {"type": "object", "additionalProperties": false, "required": ["source_record_id", "source_record_sha256", "source_content_sha256", "correction_record_id", "correction_record_sha256", "candidate_sha256", "decision_sha256"], "properties": {"source_record_id": {"type": "string", "minLength": 3}, "source_record_sha256": {"$ref": "#/$defs/sha256"}, "source_content_sha256": {"$ref": "#/$defs/sha256"}, "correction_record_id": {"type": "string", "minLength": 3}, "correction_record_sha256": {"$ref": "#/$defs/sha256"}, "candidate_sha256": {"$ref": "#/$defs/sha256"}, "decision_sha256": {"$ref": "#/$defs/sha256"}}},
+    "eligibility": {"type": "object", "additionalProperties": false, "required": ["source_contract_admitted", "qualified_adjudication", "test_fixture", "model_training_eligible"], "properties": {"source_contract_admitted": {"const": true}, "qualified_adjudication": {"const": true}, "test_fixture": {"type": "boolean"}, "model_training_eligible": {"type": "boolean"}}, "allOf": [{"if": {"properties": {"test_fixture": {"const": true}}}, "then": {"properties": {"model_training_eligible": {"const": false}}}, "else": {"properties": {"model_training_eligible": {"const": true}}}}]}
+  }
+}

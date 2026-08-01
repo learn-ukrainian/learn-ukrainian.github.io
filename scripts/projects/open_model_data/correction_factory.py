@@ -538,7 +538,14 @@ def _handoff(candidate: Mapping[str, Any], decision: Mapping[str, Any], blockers
     return "unresolved"
 
 
-def _record(candidate: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
+def build_correction_record(
+    candidate: dict[str, Any], decision: dict[str, Any]
+) -> dict[str, Any]:
+    """Build the canonical non-exportable #6121 handoff record.
+
+    Issue #6122 imports this function to recompute the handoff rather than
+    trusting caller-supplied blockers or export-control fields.
+    """
     candidate_hash = sha256_text(canonical_json(candidate))
     decision_hash = sha256_text(canonical_json(decision))
     blockers = _safety_blockers(candidate, decision)
@@ -564,6 +571,11 @@ def _record(candidate: dict[str, Any], decision: dict[str, Any]) -> dict[str, An
         "safety_blockers": blockers,
         "schema_version": "correction_record_v1",
     }
+
+
+def _record(candidate: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
+    """Backward-compatible internal alias for existing focused tests."""
+    return build_correction_record(candidate, decision)
 
 
 def _jsonl_bytes(rows: Sequence[Mapping[str, Any]]) -> bytes:
@@ -726,7 +738,7 @@ def adjudicate(
             validator=decision_validator,
             allow_test_fixtures=allow_test_fixtures,
         )
-        record = _record(candidate, decision)
+        record = build_correction_record(candidate, decision)
         _validate_schema(record, record_validator, label="correction record")
         records.append(record)
         counts["candidate_records"] += 1

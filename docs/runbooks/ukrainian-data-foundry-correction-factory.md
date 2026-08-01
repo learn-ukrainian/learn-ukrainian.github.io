@@ -121,9 +121,11 @@ Every record still carries:
 }
 ```
 
-Issue #6122 owns the separate consumer schemas and model-ready exporters. It
-must revalidate rights, contamination, view separation, and this handoff; it
-must not reinterpret an unresolved or protected record as correction data.
+Issue #6122 implements that separate consumer boundary in the
+[model-view and recipe runbook](ukrainian-data-foundry-model-views.md). Its
+exporter revalidates rights, contamination, view separation, and this handoff;
+it does not reinterpret an unresolved or protected record as correction data.
+The upstream `model_training_or_export_eligible: false` remains unchanged.
 
 ## ULIF completeness
 
