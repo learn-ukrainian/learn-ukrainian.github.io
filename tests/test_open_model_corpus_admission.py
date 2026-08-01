@@ -80,6 +80,27 @@ def test_complete_evidence_is_only_proposed_until_operator_acceptance(tmp_path: 
     assert result.receipt["training_eligible_emitted"] is False
 
 
+def test_operator_rejection_is_terminal_before_evidence_or_destination_checks() -> None:
+    incomplete_evidence = {
+        "provenance": "complete",
+        "acquisition": "complete",
+        "snapshot": "complete",
+        "rights": "not_reconstructed",
+        "origin": "complete",
+        "contamination": "complete",
+    }
+
+    disposition, reasons = admission._disposition(
+        evidence=incomplete_evidence,
+        destination=None,
+        contamination=None,
+        operator_status="rejected",
+    )
+
+    assert disposition == "excluded"
+    assert reasons == ["operator_rejection_recorded"]
+
+
 def test_evaluation_isolation_and_denominator_mismatch_are_explicit(tmp_path: Path) -> None:
     evaluation_text = v011_items(DEFAULT_V011_MANIFEST)[0]["source"]
     _database(tmp_path / "sources.db", [("s1", "w1", evaluation_text, "Автор"), ("s2", "w2", "ще два", "Автор")])

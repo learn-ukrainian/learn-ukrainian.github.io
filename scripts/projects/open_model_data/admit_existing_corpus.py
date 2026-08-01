@@ -438,6 +438,8 @@ def _disposition(
 ) -> tuple[str, list[str]]:
     if contamination is not None:
         return "excluded", [f"evaluation_contamination_{contamination}"]
+    if operator_status == "rejected":
+        return "excluded", ["operator_rejection_recorded"]
     reasons = _unresolved_reasons(evidence)
     if reasons:
         return "unresolved", reasons
@@ -445,8 +447,6 @@ def _disposition(
         return "investigation_only", ["destination_not_declared"]
     if operator_status == "accepted":
         return "admitted", ["operator_acceptance_recorded"]
-    if operator_status == "rejected":
-        return "excluded", ["operator_rejection_recorded"]
     return "proposed_admission", ["operator_acceptance_required"]
 
 
