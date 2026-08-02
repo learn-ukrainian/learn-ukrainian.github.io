@@ -28,7 +28,13 @@ import {
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, filterByCumulativeLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
-import { CUSTOM_SETS_STORAGE_KEY, filterTeacherClozeItems, type CustomSet } from '@site/src/lib/lexicon/custom-decks';
+import {
+  CUSTOM_SETS_STORAGE_KEY,
+  filterTeacherClozeItems,
+  getCachedLowercaseLemmaKeySet,
+  getTeacherLessonVirtualDeck,
+  type CustomSet,
+} from '@site/src/lib/lexicon/custom-decks';
 import { dateSeed, pickDaily, type DailyWord } from '@site/src/lib/lexicon/daily';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
@@ -801,6 +807,24 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('memoizes 10k curated-key membership checks instead of rebuilding their set', () => {
+    const keys = Array.from({ length: 5_000 }, (_, index) => `Ключ-${index}`);
+    const firstSet = getCachedLowercaseLemmaKeySet(keys);
+    const start = performance.now();
+    let matches = 0;
+    for (let index = 0; index < 10_000; index += 1) {
+      if (getCachedLowercaseLemmaKeySet(keys).has(`ключ-${index % keys.length}`)) matches += 1;
+    }
+    const elapsed = performance.now() - start;
+
+    // Identity proves the normalized Set was built once for this immutable key list;
+    // this budget protects the hot per-candidate membership path from quadratic work.
+    expect(getCachedLowercaseLemmaKeySet(keys)).toBe(firstSet);
+    expect(matches).toBe(10_000);
+    expect(elapsed).toBeLessThan(50);
+    expect(getTeacherLessonVirtualDeck()).toBe(getTeacherLessonVirtualDeck());
+  });
+
   test('filters excluded and private-name teacher cloze cards before they reach the practice deck', () => {
     expect(
       filterTeacherClozeItems([

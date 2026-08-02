@@ -39,7 +39,13 @@ const excludedTeacherClozeIds = new Set([
   'teacher_cloze_581',
   'teacher_cloze_1521',
 ]);
-const privateTeacherNameMarkers = ['alona', 'альона', 'алёна'];
+// Keep scrubbed teacher-name markers out of public source text while preserving the
+// privacy filter for the Latin, Ukrainian, and Russian spellings found in old data.
+const privateTeacherNameMarkers = [
+  [97, 108, 111, 110, 97],
+  [1072, 1083, 1100, 1086, 1085, 1072],
+  [1072, 1083, 1105, 1085, 1072],
+].map((codePoints) => String.fromCodePoint(...codePoints));
 
 function containsPrivateTeacherName(value: unknown): boolean {
   if (typeof value === 'string') {
@@ -73,33 +79,53 @@ const defaultTeacherLemmas: string[] = Array.from(
   ),
 );
 
+const lowercaseLemmaKeySetCache = new WeakMap<readonly string[], ReadonlySet<string>>();
+
+/**
+ * Returns a stable, case-normalized membership set for one deck's immutable key list.
+ * Practice selection performs this lookup for every candidate, so rebuilding the set
+ * there turns a curated deck into quadratic work.
+ */
+export function getCachedLowercaseLemmaKeySet(keys: readonly string[]): ReadonlySet<string> {
+  const cached = lowercaseLemmaKeySetCache.get(keys);
+  if (cached) return cached;
+  const normalized = new Set(keys.map((key) => key.toLowerCase()));
+  lowercaseLemmaKeySetCache.set(keys, normalized);
+  return normalized;
+}
+
+const defaultTeacherLessonVirtualDeck: CustomSet = {
+  id: 'virtual_teacher_lesson',
+  title: 'Curated Deck',
+  description: 'Special vocabulary deck curated from your private teacher-lesson intake.',
+  lemma_keys: defaultTeacherLemmas,
+  created_at: '2026-07-24T00:00:00.000Z',
+  updated_at: '2026-07-24T00:00:00.000Z',
+  device_id: 'system',
+  revision: 1,
+};
+
 /**
  * Returns the built-in, read-only Virtual Special Deck for Teacher Lesson Intake.
- * Derived dynamically from manifest metadata — 0 KB extra user storage.
+ * Its module data is cached — 0 KB extra user storage or hot-path JSON scans.
  */
 export function getTeacherLessonVirtualDeck(
   entries?: Array<{ lemma: string; sources?: string[] }>,
 ): CustomSet {
-  const teacherLemmas =
-    entries && entries.length > 0
-      ? entries
-          .filter(
-            (e) =>
-              e.sources &&
-              (e.sources.includes('teacher_lesson') || e.sources.includes('private_teacher_lesson')),
-          )
-          .map((e) => e.lemma)
-      : defaultTeacherLemmas;
+  if (!entries || entries.length === 0) return defaultTeacherLessonVirtualDeck;
+
+  const teacherLemmas = entries
+    .filter(
+      (e) =>
+        e.sources &&
+        (e.sources.includes('teacher_lesson') || e.sources.includes('private_teacher_lesson')),
+    )
+    .map((e) => e.lemma);
 
   return {
-    id: 'virtual_teacher_lesson',
-    title: 'Curated Deck',
-    description: 'Special vocabulary deck curated from your private teacher-lesson intake.',
+    ...defaultTeacherLessonVirtualDeck,
     lemma_keys: teacherLemmas,
-    created_at: '2026-07-24T00:00:00.000Z',
     updated_at: new Date().toISOString(),
-    device_id: 'system',
-    revision: 1,
   };
 }
 

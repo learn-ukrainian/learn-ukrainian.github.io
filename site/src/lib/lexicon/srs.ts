@@ -1551,10 +1551,18 @@ function applySpacingFilters(
       !last?.sentenceFrameId ||
       candidate.cloze.sentenceFrameId !== last.sentenceFrameId,
   );
+  // A new mixed session can contain several independently-scheduled modes for
+  // one lemma. When every eligible card is new, keep that lemma out until the
+  // learner has seen the available variety; otherwise the fixed eight-card
+  // window makes a small curated deck feel repetitive. Any due/lapsed card
+  // keeps the established bounded window and its SRS priority.
+  const spacingHistory = pool.every((candidate) => !candidate.cardState)
+    ? history
+    : history.slice(-wordRepeatWindow);
   const wordSpaced = filtered.filter(
     (candidate) =>
       candidate.lapsed ||
-      !history.slice(-wordRepeatWindow).some((item) => item.lemmaId === candidate.lemma.lemmaId),
+      !spacingHistory.some((item) => item.lemmaId === candidate.lemma.lemmaId),
   );
   return wordSpaced.length > 0 ? wordSpaced : filtered;
 }
