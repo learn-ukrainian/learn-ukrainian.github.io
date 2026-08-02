@@ -151,13 +151,15 @@ def upload_json(*, repo_id: str, path_in_repo: str, value: Mapping[str, Any], co
 def run_preflight(args: argparse.Namespace, files: list[dict[str, Any]]) -> dict[str, Any]:
     job_id = os.environ.get("JOB_ID", "")
     _require(JOB_ID_PATTERN.fullmatch(job_id) is not None, "missing or invalid Hugging Face Job ID")
-    _require(os.environ.get("ACCELERATOR") == "none", "CPU preflight unexpectedly has an accelerator")
+    accelerator = os.environ.get("ACCELERATOR")
+    _require(accelerator in {None, "", "none"}, "CPU preflight unexpectedly exposes a GPU accelerator")
     receipt = {
         "schema_version": TRANSPORT_RECEIPT_SCHEMA,
         "status": "passed",
         "mode": "preflight",
         "job_id": job_id,
         "hardware_flavor": "cpu-basic",
+        "accelerator_environment": accelerator,
         "container_reached_running": True,
         "transport": {
             "repository": args.transport_repo,

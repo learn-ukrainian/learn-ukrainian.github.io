@@ -286,7 +286,7 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
         hf_jobs_transport.verify_manifest(manifest, "b" * 64)
 
     monkeypatch.setenv("JOB_ID", "c" * 24)
-    monkeypatch.setenv("ACCELERATOR", "none")
+    monkeypatch.delenv("ACCELERATOR", raising=False)
     monkeypatch.setenv("HF_TOKEN", "not-a-real-token")
     monkeypatch.setattr(hf_jobs_transport, "upload_json", lambda **kwargs: "d" * 40)
     args = SimpleNamespace(
@@ -298,9 +298,13 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
     )
     receipt = hf_jobs_transport.run_preflight(args, files)
     assert receipt["status"] == "passed"
+    assert receipt["accelerator_environment"] is None
     assert receipt["transport"]["mounted_volumes"] == 0
     assert receipt["transport"]["all_hashes_verified"] is True
     assert receipt["facts"]["receipt_uploaded_directly"] is True
+    monkeypatch.setenv("ACCELERATOR", "l40sx1")
+    with pytest.raises(hf_jobs_transport.TransportError, match="GPU accelerator"):
+        hf_jobs_transport.run_preflight(args, files)
 
 
 def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
@@ -481,7 +485,6 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
         "status": {"stage": "COMPLETED", "expose_urls": None, "ssh_url": None},
         "durations": {"running_secs": 600},
         "secrets": ["HF_TOKEN"],
-        "volumes": [],
     }
     receipt = hf_jobs_baseline.reconcile_provider_inspection(
         inspection=inspection,

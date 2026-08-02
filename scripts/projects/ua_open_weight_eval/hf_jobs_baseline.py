@@ -643,7 +643,7 @@ def reconcile_provider_inspection(
     _require(isinstance(job_id, str) and JOB_ID_PATTERN.fullmatch(job_id) is not None, "provider job ID drift")
     expected_flavor = "cpu-basic" if mode == "preflight" else "l40sx1"
     _require(inspection.get("flavor") == expected_flavor, "provider hardware drift")
-    _require(inspection.get("volumes") == [], "provider attached a prohibited volume")
+    _require(inspection.get("volumes", []) == [], "provider attached a prohibited volume")
     _require(inspection.get("secrets") == ["HF_TOKEN"], "provider secret contract drift")
     labels = inspection.get("labels")
     _require(isinstance(labels, dict), "provider labels are missing")
