@@ -40,12 +40,23 @@ generation time, generated-token throughput, and mean case latency. The full
 run may launch only when both token-throughput and case-latency projections,
 with a 25% safety margin, fit the remaining part of the USD 6.00 authorization.
 
-No paid retry is automatic. A failed or unparseable launch response is
-reconciled through the unique job labels before another attempt is considered.
-A paid vLLM compatibility failure is preserved and requires new approval before
-a llama.cpp fallback attempt.
+The operator's 2026-08-03 superseding authorization permits retries for
+recoverable execution defects while the cumulative USD 6.00 ceiling and the
+buffered full-run projection continue to pass. A failed or unparseable launch
+response is reconciled through the unique job labels before another attempt.
+Changing the model, suite, hardware, privacy, or publication scope remains
+prohibited without new approval.
 
-Before any GPU launch, a five-minute CPU Basic transport preflight must pass.
+CPU job `6a6fbf1b6b79c09949c1fa46` is the accepted no-volume transport gate. It
+reached RUNNING, downloaded the complete pinned bundle, and verified every
+hash. Its later deterministic worker-default failure occurred after those
+facts and was fixed, tested, independently reviewed, and merged in PR #6294.
+The operator explicitly superseded the receipt-upload requirement and prohibited
+another CPU preflight. The accepted CPU charge is USD 0.000167 and is included
+in every subsequent aggregate budget calculation.
+
+The original five-minute CPU Basic transport preflight contract required it to
+pass before any GPU launch.
 Its maximum time-based charge is USD 0.000833 at USD 0.01/hour, below the
 operator's USD 0.001 preflight ceiling. The preflight must show that the
 container entered the provider runtime, downloaded the exact private staged

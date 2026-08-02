@@ -4,11 +4,24 @@
     "issue": 6273,
     "maximum_provider_cost_usd": 6.0,
     "no_volume_remedy_approved_at": "2026-08-02",
-    "no_automatic_paid_retry": true,
+    "no_automatic_paid_retry": false,
+    "prior_provider_cost_usd": 0.000167,
+    "recoverable_execution_retries_authorized": true,
+    "superseding_authorization_at": "2026-08-03",
+    "validated_cpu_transport": {
+      "accepted_by_operator": true,
+      "all_bundle_hashes_verified": true,
+      "complete_pinned_bundle_downloaded": true,
+      "container_reached_running": true,
+      "job_id": "6a6fbf1b6b79c09949c1fa46",
+      "provider_derived_cost_usd": 0.000167,
+      "validated_bundle_sha256": "08f74baba27d263331befbfe92da247c015462d95a62e562420176af4f912155"
+    },
     "provider": "Hugging Face Jobs"
   },
   "canary": {
     "case_count": 100,
+    "maximum_cost_usd": 0.6,
     "selection_algorithm": "category-balanced-greedy-track-v1",
     "timeout_seconds": 1200
   },

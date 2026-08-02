@@ -99,9 +99,35 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     hf_jobs_worker.verify_config(config)
     _require(config["authorization"]["issue"] == 6273, "authorization issue drift")
     _require(config["authorization"]["maximum_provider_cost_usd"] == 6.0, "cost ceiling drift")
-    _require(config["authorization"]["no_automatic_paid_retry"] is True, "retry policy drift")
+    authorization = config["authorization"]
+    _require(authorization["no_automatic_paid_retry"] is False, "retry policy drift")
+    _require(authorization["recoverable_execution_retries_authorized"] is True, "retry authorization drift")
+    prior_cost = float(authorization["prior_provider_cost_usd"])
+    _require(0 <= prior_cost < authorization["maximum_provider_cost_usd"], "prior provider cost drift")
+    cpu_validation = authorization["validated_cpu_transport"]
+    _require(cpu_validation["accepted_by_operator"] is True, "CPU transport acceptance drift")
+    _require(JOB_ID_PATTERN.fullmatch(cpu_validation["job_id"]) is not None, "CPU transport job ID drift")
+    _require(
+        cpu_validation["container_reached_running"] is True
+        and cpu_validation["complete_pinned_bundle_downloaded"] is True
+        and cpu_validation["all_bundle_hashes_verified"] is True,
+        "CPU transport evidence drift",
+    )
+    _require(
+        float(cpu_validation["provider_derived_cost_usd"]) == prior_cost,
+        "CPU transport cost does not match prior provider cost",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{64}", cpu_validation["validated_bundle_sha256"]) is not None,
+        "validated CPU bundle digest drift",
+    )
     preflight = config["transport"]["cpu_preflight"]
     _require(config["transport"]["mounted_volumes"] == 0, "volume transport is prohibited")
+    _require(
+        config["canary"]["timeout_seconds"] / 60 * config["pricing"]["usd_per_minute"]
+        <= config["canary"]["maximum_cost_usd"] == 0.6,
+        "canary timeout exceeds its cost ceiling",
+    )
     _require(preflight["flavor"] == "cpu-basic" and preflight["timeout_seconds"] == 300, "CPU preflight drift")
     _require(preflight["maximum_cost_usd"] == 0.001, "CPU preflight cost ceiling drift")
     _require(
@@ -414,6 +440,46 @@ def gate_gpu_canary(
     return payload
 
 
+def operator_gate_gpu_canary(
+    *, bundle_manifest: Mapping[str, Any], repo_id: str, transport_revision: str, config: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Bind the operator's superseding CPU-transport acceptance to an exact GPU bundle."""
+    _require(re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None, "transport revision must be immutable")
+    _require(
+        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/ua-open-weight-eval-staging-6273", repo_id) is not None,
+        "invalid staging repository",
+    )
+    authorization = config["authorization"]
+    validation = authorization["validated_cpu_transport"]
+    _require(validation["accepted_by_operator"] is True, "operator did not accept CPU transport validation")
+    _require(
+        validation["container_reached_running"] is True
+        and validation["complete_pinned_bundle_downloaded"] is True
+        and validation["all_bundle_hashes_verified"] is True,
+        "accepted CPU transport evidence is incomplete",
+    )
+    payload = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1",
+        "status": "passed",
+        "authorization_source": "operator_supersession_2026-08-03",
+        "accepted_preflight_job_id": validation["job_id"],
+        "accepted_preflight_cost_usd": validation["provider_derived_cost_usd"],
+        "validated_cpu_bundle_sha256": validation["validated_bundle_sha256"],
+        "bundle_sha256": bundle_manifest["bundle_sha256"],
+        "transport_repository": repo_id,
+        "transport_revision": transport_revision,
+        "bindings": {
+            "cases_sha256": config["suite"]["cases_sha256"],
+            "model_revision": config["model"]["revision"],
+            "model_sha256": config["model"]["artifact_sha256"],
+            "hardware_flavor": config["hardware"]["flavor"],
+            "mounted_volumes": config["transport"]["mounted_volumes"],
+        },
+    }
+    payload["gate_sha256"] = sha256_text(canonical_json(payload))
+    return payload
+
+
 def _bootstrap_source() -> str:
     return """import argparse,hashlib,json,os,sys
 from pathlib import Path
@@ -500,14 +566,36 @@ def job_command(
             _require(projection is None, "canary launch must not accept a full-run projection")
             _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
             _require(isinstance(preflight_gate, Mapping), "canary launch requires a passed CPU preflight gate")
+            gate_schema = preflight_gate.get("schema_version")
             _require(
-                preflight_gate.get("schema_version") == "ua_open_weight_eval_hf_jobs_canary_gate.v1"
+                gate_schema
+                in {
+                    "ua_open_weight_eval_hf_jobs_canary_gate.v1",
+                    "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1",
+                }
                 and preflight_gate.get("status") == "passed",
-                "canary launch requires a passed CPU preflight gate",
+                "canary launch requires a passed CPU transport gate",
             )
             _require(preflight_gate.get("bundle_sha256") == manifest["bundle_sha256"], "canary gate bundle drift")
             _require(preflight_gate.get("transport_repository") == transport_repo, "canary gate repository drift")
             _require(preflight_gate.get("transport_revision") == transport_revision, "canary gate revision drift")
+            if gate_schema == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1":
+                expected_bindings = {
+                    "cases_sha256": config["suite"]["cases_sha256"],
+                    "model_revision": config["model"]["revision"],
+                    "model_sha256": config["model"]["artifact_sha256"],
+                    "hardware_flavor": "l40sx1",
+                    "mounted_volumes": 0,
+                }
+                _require(preflight_gate.get("bindings") == expected_bindings, "operator canary gate binding drift")
+                validation = config["authorization"]["validated_cpu_transport"]
+                _require(
+                    preflight_gate.get("accepted_preflight_job_id") == validation["job_id"]
+                    and float(preflight_gate.get("accepted_preflight_cost_usd", math.inf))
+                    == float(validation["provider_derived_cost_usd"])
+                    and preflight_gate.get("validated_cpu_bundle_sha256") == validation["validated_bundle_sha256"],
+                    "operator canary gate CPU evidence drift",
+                )
             gate_sha256 = preflight_gate.get("gate_sha256")
             unsigned_gate = {key: value for key, value in preflight_gate.items() if key != "gate_sha256"}
             _require(
@@ -603,7 +691,7 @@ def launch_once(
         state = {"schema_version": "ua_open_weight_eval_hf_jobs_launch_state.v1", "runs": {}}
     runs = state.get("runs")
     _require(isinstance(runs, dict), "launch state drift")
-    _require(mode not in runs, f"{mode} already has a launch attempt; automatic retry is prohibited")
+    _require(mode not in runs, f"{mode} already has a launch attempt in this state; reconcile before retry")
     intent = {
         "status": "prepared",
         "command_sha256": sha256_text(canonical_json(list(command))),
@@ -616,9 +704,9 @@ def launch_once(
     completed = subprocess.run(command, check=False, capture_output=True, text=True)
     intent["launch_returncode"] = completed.returncode
     if completed.returncode != 0:
-        intent["status"] = "launch_response_failed_no_retry"
+        intent["status"] = "launch_response_failed_reconcile_required"
         write_atomic(state_path, state)
-        raise BaselineError("HF Jobs launch returned an error; state was preserved and no retry is allowed")
+        raise BaselineError("HF Jobs launch returned an error; reconcile provider state before retry")
     output = completed.stdout.strip()
     direct_match = JOB_ID_PATTERN.fullmatch(output)
     labelled_match = re.search(r"(?:^|\s)id[=:]\s*([a-f0-9]{20,64})(?:\s|$)", output)
@@ -626,7 +714,7 @@ def launch_once(
     if job_id is None and labelled_match is not None:
         job_id = labelled_match.group(1)
     if job_id is None:
-        intent["status"] = "launch_response_unparseable_no_retry"
+        intent["status"] = "launch_response_unparseable_reconcile_required"
         write_atomic(state_path, state)
         raise BaselineError("HF Jobs launch response has no parseable job ID; reconcile by labels before any retry")
     _require(isinstance(job_id, str) and JOB_ID_PATTERN.fullmatch(job_id) is not None, "launch response has no job ID")
@@ -680,6 +768,9 @@ def reconcile_provider_inspection(
     if mode == "preflight":
         hourly_price = float(config["transport"]["cpu_preflight"]["usd_per_hour"])
         maximum_cost = float(config["transport"]["cpu_preflight"]["maximum_cost_usd"])
+    elif mode == "canary":
+        hourly_price = float(config["pricing"]["usd_per_hour"])
+        maximum_cost = float(config["canary"]["maximum_cost_usd"])
     else:
         hourly_price = float(config["pricing"]["usd_per_hour"])
         maximum_cost = float(config["authorization"]["maximum_provider_cost_usd"])
@@ -736,7 +827,8 @@ def project_full_run(
     projected_full_cost = math.ceil(buffered_full_seconds / 60) * price_per_minute
     canary_cost = float(provider_receipt["provider_derived_cost_usd"])
     maximum = float(config["authorization"]["maximum_provider_cost_usd"])
-    remaining = round(maximum - canary_cost, 6)
+    prior_cost = float(config["authorization"]["prior_provider_cost_usd"])
+    remaining = round(maximum - prior_cost - canary_cost, 6)
     maximum_full_minutes = math.floor(remaining / price_per_minute)
     maximum_full_timeout_seconds = maximum_full_minutes * 60
     passed = projected_full_cost <= remaining and buffered_full_seconds <= maximum_full_timeout_seconds
@@ -768,9 +860,10 @@ def project_full_run(
         },
         "authorization": {
             "maximum_total_cost_usd": maximum,
+            "prior_provider_cost_usd": prior_cost,
             "remaining_after_canary_usd": remaining,
             "maximum_full_timeout_seconds": maximum_full_timeout_seconds,
-            "combined_projected_cost_usd": round(canary_cost + projected_full_cost, 6),
+            "combined_projected_cost_usd": round(prior_cost + canary_cost + projected_full_cost, 6),
         },
     }
 
@@ -1019,6 +1112,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     gate_canary.add_argument("--bundle", type=Path, required=True)
     gate_canary.add_argument("--repo", required=True)
     gate_canary.add_argument("--output", type=Path, required=True)
+    operator_gate = commands.add_parser("operator-gate-canary")
+    operator_gate.add_argument("--bundle", type=Path, required=True)
+    operator_gate.add_argument("--repo", required=True)
+    operator_gate.add_argument("--transport-revision", required=True)
+    operator_gate.add_argument("--output", type=Path, required=True)
     launch = commands.add_parser("launch")
     launch.add_argument("--mode", choices=sorted(LAUNCH_MODES), required=True)
     launch.add_argument("--namespace", required=True)
@@ -1077,6 +1175,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 provider_receipt=read_json(args.provider_receipt),
                 bundle_manifest=verify_bundle(args.bundle),
                 repo_id=args.repo,
+            )
+            write_atomic(args.output, result)
+        elif args.command == "operator-gate-canary":
+            result = operator_gate_gpu_canary(
+                bundle_manifest=verify_bundle(args.bundle),
+                repo_id=args.repo,
+                transport_revision=args.transport_revision,
+                config=load_config(),
             )
             write_atomic(args.output, result)
         elif args.command == "launch":

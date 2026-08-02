@@ -48,7 +48,11 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_hour"] == 1.8
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
-    assert config["authorization"]["no_automatic_paid_retry"] is True
+    assert config["canary"]["maximum_cost_usd"] == 0.6
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.000167
+    assert config["authorization"]["recoverable_execution_retries_authorized"] is True
+    assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
+    assert config["authorization"]["no_automatic_paid_retry"] is False
     assert config["runner"]["checkpoint_upload_every_cases"] == 25
     assert config["transport"] == {
         "cpu_preflight": {
@@ -242,7 +246,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         )
 
 
-def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
+def test_launch_preview_is_free_but_execute_requires_reconciliation_before_retry(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
@@ -259,7 +263,7 @@ def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
     )
     launched = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
     assert launched["status"] == "launched"
-    with pytest.raises(hf_jobs_baseline.BaselineError, match="automatic retry is prohibited"):
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="reconcile before retry"):
         hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
 
 
@@ -583,6 +587,31 @@ def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None
             bundle_manifest={"bundle_sha256": "b" * 64},
             repo_id="operator/ua-open-weight-eval-staging-6273",
         )
+
+
+def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundle() -> None:
+    config = hf_jobs_baseline.load_config()
+    manifest = {"bundle_sha256": "b" * 64}
+    gate = hf_jobs_baseline.operator_gate_gpu_canary(
+        bundle_manifest=manifest,
+        repo_id="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        config=config,
+    )
+    assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
+    assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
+    assert gate["accepted_preflight_cost_usd"] == 0.000167
+    assert gate["bundle_sha256"] == "b" * 64
+    assert gate["transport_revision"] == "c" * 40
+    assert gate["bindings"] == {
+        "cases_sha256": config["suite"]["cases_sha256"],
+        "model_revision": config["model"]["revision"],
+        "model_sha256": config["model"]["artifact_sha256"],
+        "hardware_flavor": "l40sx1",
+        "mounted_volumes": 0,
+    }
+    unsigned = {key: value for key, value in gate.items() if key != "gate_sha256"}
+    assert gate["gate_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
 
 
 def _complete_responses(config: dict) -> list[dict]:
