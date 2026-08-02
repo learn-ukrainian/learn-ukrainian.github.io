@@ -1,0 +1,72 @@
+{
+  "boundaries": {
+    "data_upload_performed": false,
+    "evaluation_data_used": false,
+    "model_or_checkpoint_upload_performed": false,
+    "model_quality_evaluation_performed": false,
+    "private_job_script_transport_allowed": true,
+    "publication_performed": false,
+    "treatment_data_used": false,
+    "treatment_stage_1_performed": false
+  },
+  "claims": {
+    "allowed": [
+      "exact_snapshot_l40s_fit_throughput_and_disposable_checkpoint_resume_mechanics"
+    ],
+    "prohibited": [
+      "stage_1_treatment_completion",
+      "causal_loss_mask_evidence",
+      "model_quality",
+      "general_ukrainian_fluency",
+      "deployment_readiness",
+      "model_or_checkpoint_publication"
+    ]
+  },
+  "execution": {
+    "adapter": "qlora_rank16_alpha32_dropout0.05",
+    "checkpoint_contents": "disposable_adapter_optimizer_rng",
+    "fixture": "deterministic_synthetic_token_ids_no_source_or_evaluation_data",
+    "optimizer_steps_after_clean_process_resume": 1,
+    "optimizer_steps_before_checkpoint": 1,
+    "quantization": "4bit_nf4_bf16_double_quantization",
+    "sequence_length": 4096
+  },
+  "issue": 6170,
+  "model": {
+    "identifier": "google/gemma-4-31B-it",
+    "loader_class": "transformers.AutoModelForMultimodalLM",
+    "processor_class": "transformers.AutoProcessor",
+    "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475"
+  },
+  "operator_ceiling": {
+    "all_inclusive": true,
+    "amount_eur": 3,
+    "currency": "EUR"
+  },
+  "probe_id": "gemma4-it-l40s-hf-jobs-hardware-probe-v1",
+  "provider": {
+    "billing_usd_per_minute": 0.03,
+    "exposed_ports": false,
+    "gpu_count": 1,
+    "gpu_name": "NVIDIA L40S",
+    "hardware_flavor": "l40sx1",
+    "maximum_provider_charge_usd": 1.8,
+    "paid_attempts": 1,
+    "provider": "Hugging Face Jobs",
+    "timeout_seconds": 3600
+  },
+  "purpose": "hardware_validation_non_treatment",
+  "reference_treatment": {
+    "bytes": 9948,
+    "logical_path": "data/projects/open_model_data/treatments/gemma4_it_wikipedia_mask_ablation_preregistration_v1.json",
+    "relationship": "reference_only_not_amended_not_a_stage_1_execution",
+    "sha256": "274ea63558fbd50ccdfe352a44dadcac0c37e224c589b5f9244d3fffe24f9aee"
+  },
+  "schema_version": "gemma_hardware_probe_plan_v1",
+  "snapshot_manifest": {
+    "bytes": 1994,
+    "logical_path": "data/projects/open_model_data/treatments/gemma4_it_model_snapshot_manifest_v1.json",
+    "sha256": "f0552bd6ee21764a0fc8c62b76d8458775f4f5e4969d701cf4c0d35c2f86fba1"
+  },
+  "state": "frozen_pending_operator_authorization"
+}

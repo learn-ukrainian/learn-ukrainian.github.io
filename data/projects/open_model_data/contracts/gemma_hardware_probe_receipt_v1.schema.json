@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/gemma_hardware_probe_receipt_v1.schema.json",
+  "title": "Gemma L40S hardware-validation non-treatment probe receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "probe_id", "plan", "authorization_sha256", "status", "attempt", "provider_job", "runtime", "environment", "gpu", "snapshot_verification", "throughput", "training_probe", "checkpoint_resume", "facts"],
+  "properties": {
+    "schema_version": {"const": "gemma_hardware_probe_receipt_v1"},
+    "probe_id": {"const": "gemma4-it-l40s-hf-jobs-hardware-probe-v1"},
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json"},
+        "bytes": {"const": 2537},
+        "sha256": {"const": "c78684279f5f34ff7b2c567e88182b4f8bcf6c154f570c12a6e72c492b4eef69"}
+      }
+    },
+    "authorization_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"enum": ["completed", "aborted"]},
+    "attempt": {"const": 1},
+    "provider_job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "job_id", "job_status", "hardware_flavor", "exposed_ports", "timeout_seconds", "billing_usd_per_minute", "maximum_provider_charge_usd", "provider_evidence_reconciled", "provider_running_seconds", "provider_derived_cost_usd", "actual_invoice_cost_usd", "actual_invoice_cost_eur"],
+      "properties": {
+        "provider": {"const": "Hugging Face Jobs"},
+        "job_id": {"type": "string", "minLength": 1},
+        "job_status": {"enum": ["worker_completed_pending_provider_reconciliation", "worker_aborted_pending_provider_reconciliation", "COMPLETED", "CANCELED", "ERROR", "DELETED"]},
+        "hardware_flavor": {"const": "l40sx1"},
+        "exposed_ports": {"const": false},
+        "timeout_seconds": {"const": 3600},
+        "billing_usd_per_minute": {"const": 0.03},
+        "maximum_provider_charge_usd": {"const": 1.8},
+        "provider_evidence_reconciled": {"type": "boolean"},
+        "provider_running_seconds": {"anyOf": [{"type": "integer", "minimum": 0, "maximum": 3600}, {"type": "null"}]},
+        "provider_derived_cost_usd": {"anyOf": [{"type": "number", "minimum": 0, "maximum": 1.8}, {"type": "null"}]},
+        "actual_invoice_cost_usd": {"type": "null"},
+        "actual_invoice_cost_eur": {"type": "null"}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "ended_at", "wall_seconds", "provider_timeout_enforced"],
+      "properties": {
+        "started_at": {"type": "string", "format": "date-time"},
+        "ended_at": {"type": "string", "format": "date-time"},
+        "wall_seconds": {"type": "number", "minimum": 0, "maximum": 3600},
+        "provider_timeout_enforced": {"const": true}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "packages_sha256", "cuda_runtime", "cuda_driver", "runner_sha256"],
+      "properties": {
+        "python": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "packages_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "cuda_runtime": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "cuda_driver": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "runner_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "gpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "name", "total_memory_bytes", "peak_allocated_bytes", "peak_reserved_bytes"],
+      "properties": {
+        "count": {"enum": [0, 1]},
+        "name": {"anyOf": [{"const": "NVIDIA L40S"}, {"type": "null"}]},
+        "total_memory_bytes": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "peak_allocated_bytes": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]},
+        "peak_reserved_bytes": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]}
+      }
+    },
+    "snapshot_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest", "all_files_sha256_match", "all_files_bytes_match"],
+      "properties": {
+        "manifest": {"$ref": "#/$defs/snapshot_manifest"},
+        "all_files_sha256_match": {"anyOf": [{"type": "boolean"}, {"type": "null"}]},
+        "all_files_bytes_match": {"anyOf": [{"type": "boolean"}, {"type": "null"}]}
+      }
+    },
+    "throughput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_sha256", "sequence_length", "tokens_processed", "elapsed_seconds", "tokens_per_second"],
+      "properties": {
+        "fixture_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "sequence_length": {"anyOf": [{"const": 4096}, {"const": 0}, {"type": "null"}]},
+        "tokens_processed": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]},
+        "elapsed_seconds": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "tokens_per_second": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]}
+      }
+    },
+    "training_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantization", "adapter", "optimizer_steps_before_checkpoint", "optimizer_steps_after_resume", "loss_before_checkpoint", "loss_after_resume", "nonfinite_detected"],
+      "properties": {
+        "quantization": {"const": "4bit_nf4_bf16_double_quantization"},
+        "adapter": {"const": "qlora_rank16_alpha32_dropout0.05"},
+        "optimizer_steps_before_checkpoint": {"type": "integer", "minimum": 0, "maximum": 1},
+        "optimizer_steps_after_resume": {"type": "integer", "minimum": 0, "maximum": 1},
+        "loss_before_checkpoint": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "loss_after_resume": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "nonfinite_detected": {"type": "boolean"}
+      }
+    },
+    "checkpoint_resume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["process_boundary", "adapter", "optimizer", "rng", "reload_passed"],
+      "properties": {
+        "process_boundary": {"type": "boolean"},
+        "adapter": {"anyOf": [{"$ref": "#/$defs/output_artifact"}, {"type": "null"}]},
+        "optimizer": {"anyOf": [{"$ref": "#/$defs/output_artifact"}, {"type": "null"}]},
+        "rng": {"anyOf": [{"$ref": "#/$defs/output_artifact"}, {"type": "null"}]},
+        "reload_passed": {"anyOf": [{"type": "boolean"}, {"type": "null"}]}
+      }
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "treatment_data_used", "evaluation_data_used", "treatment_stage_1_performed", "model_quality_evaluation_performed", "model_or_checkpoint_upload_performed", "data_upload_performed", "publication_performed", "private_job_script_transport_used", "synthetic_adapter_optimizer_updates_performed"],
+      "properties": {
+        "purpose": {"const": "hardware_validation_non_treatment"},
+        "treatment_data_used": {"const": false},
+        "evaluation_data_used": {"const": false},
+        "treatment_stage_1_performed": {"const": false},
+        "model_quality_evaluation_performed": {"const": false},
+        "model_or_checkpoint_upload_performed": {"const": false},
+        "data_upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "private_job_script_transport_used": {"type": "boolean"},
+        "synthetic_adapter_optimizer_updates_performed": {"type": "boolean"}
+      }
+    },
+    "abort_reason": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "completed"}}, "required": ["status"]},
+      "then": {
+        "required": ["abort_reason"],
+        "properties": {
+          "abort_reason": {"type": "null"},
+          "gpu": {"properties": {"count": {"const": 1}, "name": {"const": "NVIDIA L40S"}, "total_memory_bytes": {"type": "integer", "minimum": 1}, "peak_allocated_bytes": {"type": "integer", "minimum": 0}, "peak_reserved_bytes": {"type": "integer", "minimum": 0}}},
+          "environment": {"properties": {"python": {"type": "string", "minLength": 1}, "packages_sha256": {"$ref": "#/$defs/sha256"}, "cuda_runtime": {"type": "string", "minLength": 1}, "cuda_driver": {"type": "string", "minLength": 1}, "runner_sha256": {"$ref": "#/$defs/sha256"}}},
+          "snapshot_verification": {"properties": {"all_files_sha256_match": {"const": true}, "all_files_bytes_match": {"const": true}}},
+          "throughput": {"properties": {"fixture_sha256": {"$ref": "#/$defs/sha256"}, "sequence_length": {"const": 4096}, "tokens_processed": {"type": "integer", "minimum": 1}, "elapsed_seconds": {"type": "number", "exclusiveMinimum": 0}, "tokens_per_second": {"type": "number", "exclusiveMinimum": 0}}},
+          "training_probe": {"properties": {"optimizer_steps_before_checkpoint": {"const": 1}, "optimizer_steps_after_resume": {"const": 1}, "loss_before_checkpoint": {"type": "number", "minimum": 0}, "loss_after_resume": {"type": "number", "minimum": 0}, "nonfinite_detected": {"const": false}}},
+          "checkpoint_resume": {"properties": {"process_boundary": {"const": true}, "adapter": {"$ref": "#/$defs/output_artifact"}, "optimizer": {"$ref": "#/$defs/output_artifact"}, "rng": {"$ref": "#/$defs/output_artifact"}, "reload_passed": {"const": true}}}
+        }
+      },
+      "else": {"required": ["abort_reason"], "properties": {"abort_reason": {"type": "string", "minLength": 1}}}
+    },
+    {
+      "if": {"properties": {"provider_job": {"properties": {"provider_evidence_reconciled": {"const": true}}, "required": ["provider_evidence_reconciled"]}}, "required": ["provider_job"]},
+      "then": {"properties": {"provider_job": {"properties": {"job_status": {"enum": ["COMPLETED", "CANCELED", "ERROR", "DELETED"]}, "provider_running_seconds": {"type": "integer", "minimum": 0, "maximum": 3600}, "provider_derived_cost_usd": {"type": "number", "minimum": 0, "maximum": 1.8}}}}},
+      "else": {"properties": {"provider_job": {"properties": {"job_status": {"enum": ["worker_completed_pending_provider_reconciliation", "worker_aborted_pending_provider_reconciliation"]}, "provider_running_seconds": {"type": "null"}, "provider_derived_cost_usd": {"type": "null"}}}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "completed"}, "provider_job": {"properties": {"provider_evidence_reconciled": {"const": true}}, "required": ["provider_evidence_reconciled"]}}, "required": ["status", "provider_job"]},
+      "then": {"properties": {"provider_job": {"properties": {"job_status": {"const": "COMPLETED"}}}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "snapshot_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/treatments/gemma4_it_model_snapshot_manifest_v1.json"},
+        "bytes": {"const": 1994},
+        "sha256": {"const": "f0552bd6ee21764a0fc8c62b76d8458775f4f5e4969d701cf4c0d35c2f86fba1"}
+      }
+    },
+    "output_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "sha256"],
+      "properties": {"bytes": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    }
+  }
+}
