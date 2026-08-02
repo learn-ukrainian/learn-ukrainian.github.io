@@ -478,7 +478,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     verify_config(config)
     _require(args.mode in {"canary", "full"}, "unsupported run mode")
     _require((args.selection is not None) == (args.mode == "canary"), "selection/mode mismatch")
-    _require(os.environ.get("ACCELERATOR") == "l40sx1", "ACCELERATOR must be l40sx1")
+    _require(
+        os.environ.get("UA_EVAL_HARDWARE_FLAVOR") == "l40sx1",
+        "UA_EVAL_HARDWARE_FLAVOR must be l40sx1",
+    )
     job_id = os.environ.get("JOB_ID", "")
     _require(JOB_ID_PATTERN.fullmatch(job_id) is not None, "missing or invalid Hugging Face Job ID")
     artifact_store = HubArtifactStore(args.artifact_repo, args.artifact_prefix)

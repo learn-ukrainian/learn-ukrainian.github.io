@@ -733,7 +733,7 @@ def job_command(
     if mode in RUN_MODES:
         command.extend(
             [
-                "--env", "ACCELERATOR=l40sx1",
+                "--env", "UA_EVAL_HARDWARE_FLAVOR=l40sx1",
                 "--env", "VLLM_BATCH_INVARIANT=1",
                 "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0",
             ]

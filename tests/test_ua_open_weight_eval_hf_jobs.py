@@ -49,13 +49,13 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.090167
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.120167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fd2686b79c09949c1fb57",
+        "job_id": "6a6fd445a00abefd4b28e088",
         "mode": "canary",
         "provider_billed_minutes": 1,
         "provider_derived_cost_usd": 0.03,
-        "provider_running_seconds": 53,
+        "provider_running_seconds": 6,
         "stage": "ERROR",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
@@ -187,7 +187,8 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert "operator/ua-open-weight-eval-staging-6273" in joined
     assert "--secrets HF_TOKEN" in joined
     assert "HF_TOKEN=" not in joined
-    assert "--env ACCELERATOR=l40sx1" in joined
+    assert "--env UA_EVAL_HARDWARE_FLAVOR=l40sx1" in joined
+    assert "--env ACCELERATOR=" not in joined
     assert "--volume" not in command
     assert "-v" not in command
     assert "hf://buckets/" not in joined
@@ -233,7 +234,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert config["transport"]["cpu_preflight"]["container_amd64_digest"] in preflight_joined
     assert "--volume" not in preflight
     assert "--secrets HF_TOKEN" in preflight_joined
-    assert "ACCELERATOR=" not in preflight_joined
+    assert "UA_EVAL_HARDWARE_FLAVOR=" not in preflight_joined
     with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
         hf_jobs_baseline.job_command(
             mode="canary",
@@ -639,11 +640,12 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 0.090167
+    assert gate["prior_provider_cost_usd"] == 0.120167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
         "6a6fd2686b79c09949c1fb57",
+        "6a6fd445a00abefd4b28e088",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40

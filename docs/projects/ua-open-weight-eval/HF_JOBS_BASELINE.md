@@ -61,7 +61,13 @@ but job `6a6fd2686b79c09949c1fb57` then found the same missing alias in the
 transport-to-worker handoff after verifying the bundle and installing the
 plugin. Its one billed minute cost USD 0.030000. Every L40S interpreter handoff
 now invokes `python3` directly, and the cumulative USD 0.090167 is bound into
-the next operator gate and remains
+the next operator gate. Job `6a6fd445a00abefd4b28e088` then proved that the
+provider reserves the generic `ACCELERATOR` environment name: the provider
+inspection reported the authorized `l40sx1` flavor, but the runtime value was
+overwritten before the worker gate. The launch now uses the collision-resistant
+`UA_EVAL_HARDWARE_FLAVOR=l40sx1` binding while provider reconciliation remains
+the source of truth for actual hardware. That attempt's one billed minute cost
+USD 0.030000, so the cumulative USD 0.120167 remains
 in every subsequent aggregate budget calculation.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
