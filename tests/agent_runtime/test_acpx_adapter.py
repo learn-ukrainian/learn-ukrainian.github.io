@@ -26,6 +26,7 @@ import pytest
 
 from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
+    ACPX_PARSED_RESPONSE_LIMIT_BYTES,
     ACPX_SUPPORTED_PARTICIPANTS,
     AcpxAdapter,
     AcpxAgyShadowAdapter,
@@ -747,6 +748,30 @@ def test_parse_response_recognizes_max_tokens_stop_reason():
     assert result.ok is True
     assert result.response == "Hello world."
     assert result.stderr_excerpt is None
+
+
+def test_parse_response_rejects_oversized_answer_before_authority_receipt():
+    adapter = AcpxAdapter()
+    oversized = "я" * (ACPX_PARSED_RESPONSE_LIMIT_BYTES // 2 + 1)
+    stdout = (
+        '{"jsonrpc":"2.0","method":"session/update","params":{"update":'
+        '{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"'
+        + oversized
+        + '"}}}}\n'
+        '{"jsonrpc":"2.0","id":2,"result":{"stopReason":"end_turn"}}\n'
+    )
+
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert "parsed ACP response exceeds" in result.stderr_excerpt
+    assert str(ACPX_PARSED_RESPONSE_LIMIT_BYTES) in result.stderr_excerpt
 
 
 def test_parse_response_multiple_stop_reason_results_fails_closed():

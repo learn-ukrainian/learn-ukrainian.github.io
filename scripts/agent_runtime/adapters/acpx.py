@@ -238,6 +238,14 @@ ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
     "glm": "high",
 }
 
+# Raw ACPX JSON-RPC traffic has a separate, larger bound in runner.py because
+# provider protocol envelopes can be much larger than their final answer.
+# Never let that envelope allowance become an answer/body allowance: this cap
+# is applied after strict NDJSON parsing and before a Result can reach the
+# fleet-authority receipt.
+ACPX_PARSED_RESPONSE_LIMIT_BYTES = 512 * 1024
+
+
 @dataclass(frozen=True)
 class AcpxTransportProvenance:
     """Runner-sealed provenance for one ACP inter-agent invocation.
@@ -1142,9 +1150,19 @@ class AcpxAdapter:
                 f"acpx exec exited rc={returncode} despite stopReason={final_stop_reason!r}", stderr
             )
 
+        response = "".join(message_chunks)
+        response_bytes = len(response.encode("utf-8"))
+        if response_bytes > ACPX_PARSED_RESPONSE_LIMIT_BYTES:
+            return self._closed(
+                "parsed ACP response exceeds "
+                f"{ACPX_PARSED_RESPONSE_LIMIT_BYTES}-byte content limit "
+                f"(observed={response_bytes})",
+                stderr,
+            )
+
         return ParseResult(
             ok=True,
-            response="".join(message_chunks),
+            response=response,
             stderr_excerpt=None,
             rate_limited=False,
             session_id=None,

@@ -4331,6 +4331,40 @@ def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(
     assert error.value.observed_bytes > error.value.limit_bytes
 
 
+def test_acpx_protocol_envelope_above_legacy_cap_reaches_terminal(tmp_path):
+    from agent_runtime.adapters.acpx import AcpxAdapter
+
+    child = (
+        "import json; "
+        "print(json.dumps({'jsonrpc':'2.0','method':'progress','params':"
+        "{'text':'x'*(300*1024)}})); "
+        "print(json.dumps({'jsonrpc':'2.0','method':'session/update','params':"
+        "{'update':{'sessionUpdate':'agent_message_chunk','content':"
+        "{'type':'text','text':'ok'}}}})); "
+        "print(json.dumps({'jsonrpc':'2.0','id':2,'result':"
+        "{'stopReason':'end_turn'}}))"
+    )
+    execution = _execute_invocation_plan(
+        agent_name="acpx-grok-shadow",
+        adapter=AcpxAdapter(),
+        plan=InvocationPlan(cmd=[_TEST_PYTHON, "-c", child], cwd=tmp_path),
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="fixture",
+        session_id=None,
+        entrypoint="acpx-transport",
+        hard_timeout=30,
+        stall_timeout=30,
+    )
+
+    assert len(execution.stdout_text.encode("utf-8")) > 256 * 1024
+    assert execution.kill_reason is None
+    assert execution.parse.ok is True
+    assert execution.parse.response == "ok"
+
+
 def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
     from agent_runtime import runner as runtime_runner
 
@@ -4370,14 +4404,19 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
     assert execution.returncode == 0
 
 
-def test_glm_acp_route_has_a_separate_bounded_protocol_envelope():
+@pytest.mark.parametrize(
+    "agent_name",
+    [
+        "acpx-codex-shadow",
+        "acpx-grok-shadow",
+        "acpx-kimi-shadow",
+        "acpx-glm-shadow",
+    ],
+)
+def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
     from agent_runtime import runner as runtime_runner
 
     assert runtime_runner._streamed_output_limit(
-        agent_name="acpx-glm-shadow",
+        agent_name=agent_name,
         entrypoint="acpx-discuss",
     ) == 16 * 1024 * 1024
-    assert runtime_runner._streamed_output_limit(
-        agent_name="acpx-kimi-shadow",
-        entrypoint="acpx-discuss",
-    ) == 256 * 1024
