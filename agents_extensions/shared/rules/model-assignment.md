@@ -473,6 +473,8 @@ For **GitHub PR formal cross-family review**, do **not** use fat `ask-* --review
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
 # pins: codex→gpt-5.6-terra@high · --reviewer claude→claude-sonnet-5@high · --reviewer glm→glm-5.2
+# Budget rotation for Codex-authored PRs: prefer --reviewer claude when Claude rem% is healthy;
+# use --reviewer glm when Claude is near_cap/unavailable. Do not invent formal CF for kimi/agy/grok.
 # after sealed review returns a short verdict file:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
   --pr <N> --verdict-file /tmp/verdict.txt --model <model> --family <family> --harness <harness>

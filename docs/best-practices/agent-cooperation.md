@@ -812,3 +812,34 @@ Or use the process-escalations skill:
 ```
 
 Post on the relevant GH issue explaining what was stuck and why.
+
+## Dispatch handoff: Luna workers + fleet settle (2026-08-02)
+
+**Luna (`gpt-5.6-luna` @ max)** is a high-volume **bounded coding worker**, not a solo epic driver.
+Orchestrators keep acceptance (CF, merge, residual truth).
+
+### Briefing Luna
+Append [`docs/dispatch-briefs/luna-max-closeout-contract.md`](../dispatch-briefs/luna-max-closeout-contract.md)
+to every Luna dispatch brief. Require the `CLOSEOUT` ledger block.
+
+### Deterministic settle (no LLM)
+When a worker leaves commits without a PR, or dies with `status=running` and a dead PID:
+
+```bash
+.venv/bin/python -m scripts.orchestration.dispatch_settle task \
+  --task-id <task> --push --open-pr
+.venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
+```
+
+Formal CF and auto-merge stay with the orchestrator.
+
+### Formal CF budget rotation (Codex-authored PRs)
+Legal sealed reviewers remain `codex|claude|glm` only (`formal_review_eligible`; do **not** invent
+eligibility for kimi/agy/grok). For **Codex/Luna-authored** PRs, rotate **Claude vs GLM** using
+live routing-budget / CodexBar rem% — do not default-stack every PR on GLM when Claude has
+headroom, and do not burn a near-empty GLM seat on trivial PRs.
+
+### Parallel fleet utilization
+While one lane codes owned paths, free lanes should take **disjoint** non-CF work (recon, residual
+taxonomy notes, pedagogy samples, issue board updates). Idle free capacity with open in-scope work
+is a utilization failure.

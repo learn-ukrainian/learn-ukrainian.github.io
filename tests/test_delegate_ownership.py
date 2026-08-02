@@ -835,3 +835,32 @@ def test_refusal_message_counts_peers_not_claim_rows():
     )
     assert conflict.count("one(pid 777)") == 1, conflict
     assert "(+2 more paths)" in conflict, conflict
+
+
+def test_release_inactive_drops_dead_running_claims(tmp_path, monkeypatch):
+    """Public settle helper: dead running tasks free write claims."""
+    import json
+    import time
+
+    from scripts.guardrails.delegate_ownership import OwnershipLedger
+
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "dead-worker"
+    (task_dir / f"{task_id}.json").write_text(
+        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_991}),
+        encoding="utf-8",
+    )
+    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
+    # admit-style insert via private table after connect creates schema
+    with ledger._connect() as conn:
+        conn.execute(
+            "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?,?,?,?)",
+            (task_id, '{"kind":"file","norm":"scripts/a.py"}', 999_999_991, time.time() - 10_000),
+        )
+        conn.commit()
+    released = ledger.release_inactive()
+    assert task_id in released
+    with ledger._connect() as conn:
+        rows = conn.execute("SELECT * FROM write_claims WHERE task_id=?", (task_id,)).fetchall()
+    assert rows == []
