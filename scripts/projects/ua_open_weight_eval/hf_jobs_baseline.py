@@ -9,6 +9,7 @@ import json
 import math
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -29,6 +30,7 @@ from scripts.projects.ua_open_weight_eval import hf_jobs_worker, suite_cli
 
 CONFIG_PATH = ROOT / "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.json"
 WORKER_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_worker.py"
+TRANSPORT_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_transport.py"
 LICENSE_PATH = ROOT / "LICENSE"
 THIRD_PARTY_PATH = ROOT / "docs/projects/ua-open-weight-eval/THIRD_PARTY_NOTICES.md"
 PUBLIC_FILES = frozenset(
@@ -46,6 +48,7 @@ PUBLIC_FILES = frozenset(
 )
 CATEGORIES = ("error", "correct_control", "protected", "unresolved")
 RUN_MODES = frozenset({"canary", "full"})
+LAUNCH_MODES = frozenset({"preflight", *RUN_MODES})
 JOB_ID_PATTERN = re.compile(r"[a-f0-9]{20,64}")
 
 
@@ -97,6 +100,14 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     _require(config["authorization"]["issue"] == 6273, "authorization issue drift")
     _require(config["authorization"]["maximum_provider_cost_usd"] == 6.0, "cost ceiling drift")
     _require(config["authorization"]["no_automatic_paid_retry"] is True, "retry policy drift")
+    preflight = config["transport"]["cpu_preflight"]
+    _require(config["transport"]["mounted_volumes"] == 0, "volume transport is prohibited")
+    _require(preflight["flavor"] == "cpu-basic" and preflight["timeout_seconds"] == 300, "CPU preflight drift")
+    _require(preflight["maximum_cost_usd"] == 0.001, "CPU preflight cost ceiling drift")
+    _require(
+        preflight["timeout_seconds"] / 3600 * preflight["usd_per_hour"] <= preflight["maximum_cost_usd"],
+        "CPU preflight timeout exceeds its cost ceiling",
+    )
     _require(config["suite"]["cases_sha256"] == sha256_file(suite_cli.CASES_PATH), "frozen cases drift")
     _require(config["suite"]["tracks"] == suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"], "track drift")
     return config
@@ -174,6 +185,7 @@ def prepare_bundle(output_dir: Path, *, plugin_wheel: Path | None = None) -> dic
     write_atomic(output_dir / "canary_selection.json", selection)
     shutil.copyfile(CONFIG_PATH, output_dir / "run_config.json")
     shutil.copyfile(WORKER_PATH, output_dir / "hf_jobs_worker.py")
+    shutil.copyfile(TRANSPORT_PATH, output_dir / "hf_jobs_transport.py")
     plugin = config["runtime"]["vllm_gguf_plugin"]
     plugin_output = output_dir / plugin["filename"]
     if plugin_wheel is None:
@@ -192,6 +204,7 @@ def prepare_bundle(output_dir: Path, *, plugin_wheel: Path | None = None) -> dic
         "requests_sha256": sha256_file(requests),
         "selection_sha256": selection["selection_sha256"],
         "config_sha256": sha256_file(output_dir / "run_config.json"),
+        "transport_sha256": sha256_file(output_dir / "hf_jobs_transport.py"),
         "worker_sha256": sha256_file(output_dir / "hf_jobs_worker.py"),
     }
     manifest["bundle_sha256"] = sha256_text(canonical_json(manifest))
@@ -207,6 +220,7 @@ def verify_bundle(bundle: Path) -> dict[str, Any]:
     expected = {
         "BUNDLE_MANIFEST.json",
         "canary_selection.json",
+        "hf_jobs_transport.py",
         "hf_jobs_worker.py",
         "requests.jsonl",
         "run_config.json",
@@ -230,172 +244,359 @@ def verify_bundle(bundle: Path) -> dict[str, Any]:
     return manifest
 
 
+def verify_staged_transport(*, bundle: Path, repo_id: str, revision: str) -> dict[str, Any]:
+    from huggingface_hub import HfApi, hf_hub_download
+
+    manifest = verify_bundle(bundle)
+    _require(re.fullmatch(r"[a-f0-9]{40}", revision) is not None, "transport revision must be immutable")
+    prefix = f"bundles/{manifest['bundle_sha256']}"
+    api = HfApi(token=os.environ.get("HF_TOKEN"))
+    info = api.repo_info(repo_id=repo_id, repo_type="dataset", revision=revision)
+    _require(bool(getattr(info, "private", False)), "transport dataset must remain private")
+    expected = {path.name for path in bundle.iterdir() if path.is_file()}
+    observed = {
+        item.path.removeprefix(f"{prefix}/")
+        for item in api.list_repo_tree(repo_id=repo_id, repo_type="dataset", path_in_repo=prefix, revision=revision)
+        if getattr(item, "path", "").startswith(f"{prefix}/")
+    }
+    _require(observed == expected, "staged transport contains missing or extra files")
+    verified: list[dict[str, Any]] = []
+    for name in sorted(expected):
+        remote = Path(
+            hf_hub_download(
+                repo_id=repo_id,
+                repo_type="dataset",
+                revision=revision,
+                filename=f"{prefix}/{name}",
+                token=True,
+            )
+        )
+        local = bundle / name
+        _require(remote.stat().st_size == local.stat().st_size, f"staged byte drift: {name}")
+        digest = sha256_file(remote)
+        _require(digest == sha256_file(local), f"staged hash drift: {name}")
+        verified.append({"path": name, "bytes": remote.stat().st_size, "sha256": digest})
+    return {
+        "schema_version": "ua_open_weight_eval_hf_jobs_transport_stage.v1",
+        "status": "verified",
+        "repository": repo_id,
+        "revision": revision,
+        "prefix": prefix,
+        "bundle_sha256": manifest["bundle_sha256"],
+        "files": verified,
+        "private": True,
+    }
+
+
+def stage_transport_bundle(*, bundle: Path, repo_id: str) -> dict[str, Any]:
+    from huggingface_hub import CommitOperationAdd, HfApi
+
+    manifest = verify_bundle(bundle)
+    _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/ua-open-weight-eval-staging-6273", repo_id) is not None, "invalid staging repository")
+    token = os.environ.get("HF_TOKEN")
+    _require(bool(token), "HF_TOKEN is required to stage the private transport")
+    api = HfApi(token=token)
+    api.create_repo(repo_id=repo_id, repo_type="dataset", private=True, exist_ok=True)
+    _require(bool(api.repo_info(repo_id=repo_id, repo_type="dataset").private), "staging repository is not private")
+    prefix = f"bundles/{manifest['bundle_sha256']}"
+    operations = [
+        CommitOperationAdd(path_in_repo=f"{prefix}/{path.name}", path_or_fileobj=path)
+        for path in sorted(bundle.iterdir())
+        if path.is_file()
+    ]
+    commit = api.create_commit(
+        repo_id=repo_id,
+        repo_type="dataset",
+        operations=operations,
+        commit_message=f"stage reviewed no-volume bundle {manifest['bundle_sha256'][:12]}",
+    )
+    revision = getattr(commit, "oid", None)
+    _require(isinstance(revision, str), "staging commit is missing")
+    return verify_staged_transport(bundle=bundle, repo_id=repo_id, revision=revision)
+
+
+def verify_preflight_receipt(
+    *, bundle: Path, repo_id: str, revision: str, path_in_repo: str, job_id: str
+) -> dict[str, Any]:
+    from huggingface_hub import hf_hub_download
+
+    manifest = verify_bundle(bundle)
+    _require(JOB_ID_PATTERN.fullmatch(job_id) is not None, "invalid preflight job ID")
+    _require(re.fullmatch(r"[a-f0-9]{40}", revision) is not None, "preflight receipt revision must be immutable")
+    expected_path = f"artifacts/{manifest['bundle_sha256']}/preflight/{job_id}/transport_receipt.json"
+    _require(path_in_repo == expected_path, "preflight receipt path drift")
+    source = Path(
+        hf_hub_download(
+            repo_id=repo_id,
+            repo_type="dataset",
+            revision=revision,
+            filename=path_in_repo,
+            token=True,
+        )
+    )
+    receipt = read_json(source)
+    _require(
+        receipt.get("schema_version") == "ua_open_weight_eval_hf_jobs_transport_receipt.v1"
+        and receipt.get("status") == "passed"
+        and receipt.get("mode") == "preflight",
+        "preflight receipt status drift",
+    )
+    _require(receipt.get("job_id") == job_id and receipt.get("hardware_flavor") == "cpu-basic", "preflight identity drift")
+    transport = receipt.get("transport")
+    _require(isinstance(transport, Mapping), "preflight transport evidence is missing")
+    _require(transport.get("repository") == repo_id, "preflight repository drift")
+    _require(transport.get("bundle_sha256") == manifest["bundle_sha256"], "preflight bundle drift")
+    transport_revision = transport.get("revision")
+    _require(
+        isinstance(transport_revision, str) and re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None,
+        "preflight transport revision drift",
+    )
+    _require(transport.get("all_hashes_verified") is True, "preflight hash verification failed")
+    _require(transport.get("mounted_volumes") == 0, "preflight used a prohibited volume")
+    facts = receipt.get("facts")
+    _require(isinstance(facts, Mapping), "preflight facts are missing")
+    _require(facts.get("receipt_uploaded_directly") is True, "preflight direct upload was not proven")
+    _require(facts.get("model_execution_started") is False, "preflight unexpectedly started model execution")
+    return {
+        "schema_version": "ua_open_weight_eval_hf_jobs_preflight_verification.v1",
+        "status": "passed",
+        "job_id": job_id,
+        "repository": repo_id,
+        "revision": revision,
+        "path": path_in_repo,
+        "receipt_sha256": sha256_file(source),
+        "bundle_sha256": manifest["bundle_sha256"],
+        "transport_revision": transport_revision,
+    }
+
+
+def gate_gpu_canary(
+    *,
+    verification: Mapping[str, Any],
+    provider_receipt: Mapping[str, Any],
+    bundle_manifest: Mapping[str, Any],
+    repo_id: str,
+) -> dict[str, Any]:
+    _require(
+        verification.get("schema_version") == "ua_open_weight_eval_hf_jobs_preflight_verification.v1"
+        and verification.get("status") == "passed",
+        "CPU preflight verification did not pass",
+    )
+    _require(verification.get("bundle_sha256") == bundle_manifest["bundle_sha256"], "CPU preflight bundle drift")
+    _require(verification.get("repository") == repo_id, "CPU preflight repository drift")
+    _require(
+        provider_receipt.get("schema_version") == "ua_open_weight_eval_hf_jobs_provider_receipt.v1"
+        and provider_receipt.get("mode") == "preflight"
+        and provider_receipt.get("stage") == "COMPLETED",
+        "CPU preflight provider receipt did not complete",
+    )
+    _require(provider_receipt.get("job_id") == verification.get("job_id"), "CPU preflight job ID drift")
+    _require(provider_receipt.get("hardware_flavor") == "cpu-basic", "CPU preflight hardware drift")
+    _require(float(provider_receipt.get("provider_derived_cost_usd", math.inf)) <= 0.001, "CPU preflight cost exceeded")
+    labels = provider_receipt.get("labels")
+    _require(isinstance(labels, Mapping), "CPU preflight provider labels are missing")
+    transport_revision = verification.get("transport_revision")
+    _require(
+        isinstance(transport_revision, str) and re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None,
+        "CPU preflight transport revision drift",
+    )
+    _require(labels.get("transport") == transport_revision[:16], "CPU preflight transport label drift")
+    payload = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
+        "status": "passed",
+        "preflight_job_id": verification["job_id"],
+        "bundle_sha256": bundle_manifest["bundle_sha256"],
+        "transport_repository": repo_id,
+        "transport_revision": transport_revision,
+        "preflight_cost_usd": provider_receipt["provider_derived_cost_usd"],
+    }
+    payload["gate_sha256"] = sha256_text(canonical_json(payload))
+    return payload
+
+
+def _bootstrap_source() -> str:
+    return """import argparse,hashlib,json,os,sys
+from pathlib import Path
+from huggingface_hub import hf_hub_download
+p=argparse.ArgumentParser()
+p.add_argument('--mode',required=True)
+p.add_argument('--transport-repo',required=True)
+p.add_argument('--transport-revision',required=True)
+p.add_argument('--transport-prefix',required=True)
+p.add_argument('--artifact-prefix',required=True)
+p.add_argument('--bundle-sha256',required=True)
+p.add_argument('--requests-sha256')
+p.add_argument('--work-root',required=True)
+a,_=p.parse_known_args()
+mp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/BUNDLE_MANIFEST.json',token=True))
+m=json.loads(mp.read_text(encoding='utf-8'))
+u={k:v for k,v in m.items() if k!='bundle_sha256'}
+assert m.get('schema_version')=='ua_open_weight_eval_hf_jobs_bundle.v1'
+assert m.get('bundle_sha256')==a.bundle_sha256==hashlib.sha256(json.dumps(u,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+r=next(x for x in m['files'] if x['path']=='hf_jobs_transport.py')
+tp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/hf_jobs_transport.py',token=True))
+assert tp.stat().st_size==r['bytes'] and hashlib.sha256(tp.read_bytes()).hexdigest()==r['sha256']
+os.execvp('python',['python',str(tp),*sys.argv[1:]])
+"""
+
+
+def _verify_launch_inputs(
+    *, namespace: str, transport_repo: str, transport_revision: str, transport_prefix: str, manifest: Mapping[str, Any]
+) -> None:
+    _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", namespace) is not None, "invalid namespace")
+    _require(transport_repo == f"{namespace}/ua-open-weight-eval-staging-6273", "unexpected staging dataset repository")
+    _require(re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None, "transport revision must be immutable")
+    _require(
+        transport_prefix == f"bundles/{manifest['bundle_sha256']}",
+        "transport prefix is not bound to the bundle digest",
+    )
+
+
 def job_command(
     *,
     mode: str,
     namespace: str,
-    bucket: str,
     bundle: Path,
-    bundle_mount: str,
+    transport_repo: str,
+    transport_revision: str,
+    transport_prefix: str,
     hf_cli: Path,
     timeout_seconds: int,
     projection: Mapping[str, Any] | None = None,
+    preflight_gate: Mapping[str, Any] | None = None,
 ) -> list[str]:
-    _require(mode in RUN_MODES, "invalid run mode")
-    _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", namespace) is not None, "invalid namespace")
-    _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", bucket) is not None, "invalid bucket")
+    _require(mode in LAUNCH_MODES, "invalid launch mode")
     _require(hf_cli.is_absolute() and hf_cli.is_file() and os.access(hf_cli, os.X_OK), "HF CLI must be executable")
     manifest = verify_bundle(bundle)
     config = load_config(bundle / "run_config.json")
-    expected_mount_prefix = f"hf://buckets/{namespace}/jobs-artifacts/"
-    _require(bundle_mount.startswith(expected_mount_prefix), "input bundle mount is outside jobs-artifacts")
-    mount_name = bundle_mount.removeprefix(expected_mount_prefix)
-    _require(
-        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", mount_name) is not None,
-        "invalid input bundle mount",
+    _verify_launch_inputs(
+        namespace=namespace,
+        transport_repo=transport_repo,
+        transport_revision=transport_revision,
+        transport_prefix=transport_prefix,
+        manifest=manifest,
     )
-    _require(
-        mount_name.endswith(manifest["bundle_sha256"][:8]),
-        "input bundle mount digest suffix drift",
-    )
-    observed_cli = subprocess.run(
-        [str(hf_cli), "--version"], check=False, capture_output=True, text=True
-    )
+    observed_cli = subprocess.run([str(hf_cli), "--version"], check=False, capture_output=True, text=True)
     _require(observed_cli.returncode == 0, "HF CLI version probe failed")
     _require(
         observed_cli.stdout.strip() == config["runtime"]["huggingface_hub_cli_version"],
         "HF CLI version drift",
     )
-    bucket_probe = subprocess.run(
-        [str(hf_cli), "buckets", "list", f"{namespace}/{bucket}", "--format", "json"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    _require(bucket_probe.returncode == 0, "output bucket probe failed")
-    raw_bucket_entries = bucket_probe.stdout.strip()
-    try:
-        bucket_entries = json.loads(raw_bucket_entries) if raw_bucket_entries else []
-    except json.JSONDecodeError as exc:
-        raise BaselineError("output bucket probe was not JSON") from exc
-    _require(
-        isinstance(bucket_entries, list) and bool(bucket_entries),
-        "output bucket is not mount-ready",
-    )
-    if mode == "canary":
-        _require(projection is None, "canary launch must not accept a full-run projection")
-        _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
+    if mode == "preflight":
+        preflight = config["transport"]["cpu_preflight"]
+        _require(projection is None, "preflight must not accept a projection")
+        _require(preflight_gate is None, "preflight must not accept a canary gate")
+        _require(timeout_seconds == preflight["timeout_seconds"] == 300, "preflight timeout drift")
+        flavor = "cpu-basic"
+        image = f"{preflight['container_image']}@{preflight['container_amd64_digest']}"
+        installer = "python -m pip install --disable-pip-version-check --no-cache-dir"
+        artifact_prefix = f"artifacts/{manifest['bundle_sha256']}/preflight"
     else:
-        _require(isinstance(projection, Mapping), "full launch requires the passed canary projection")
-        _require(
-            projection.get("schema_version") == "ua_open_weight_eval_hf_jobs_projection.v1"
-            and projection.get("status") == "passed",
-            "full launch requires a passed projection",
-        )
-        expected_bindings = {
-            "cases_sha256": config["suite"]["cases_sha256"],
-            "model_revision": config["model"]["revision"],
-            "model_sha256": config["model"]["artifact_sha256"],
-        }
-        _require(projection.get("bindings") == expected_bindings, "full projection binding drift")
-        authorization = projection.get("authorization")
-        _require(isinstance(authorization, Mapping), "full projection authorization is missing")
-        _require(
-            float(authorization.get("maximum_total_cost_usd", -1))
-            == config["authorization"]["maximum_provider_cost_usd"],
-            "full projection cost ceiling drift",
-        )
-        _require(
-            float(authorization.get("combined_projected_cost_usd", math.inf))
-            <= config["authorization"]["maximum_provider_cost_usd"],
-            "full projection exceeds the total cost ceiling",
-        )
-        maximum_timeout = int(authorization.get("maximum_full_timeout_seconds", 0))
-        _require(
-            0 < timeout_seconds <= maximum_timeout,
-            "full timeout exceeds the remaining-budget projection",
-        )
+        flavor = "l40sx1"
+        image = f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
+        installer = "uv pip install --system"
+        artifact_prefix = f"artifacts/{manifest['bundle_sha256']}/{mode}"
+        if mode == "canary":
+            _require(projection is None, "canary launch must not accept a full-run projection")
+            _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
+            _require(isinstance(preflight_gate, Mapping), "canary launch requires a passed CPU preflight gate")
+            _require(
+                preflight_gate.get("schema_version") == "ua_open_weight_eval_hf_jobs_canary_gate.v1"
+                and preflight_gate.get("status") == "passed",
+                "canary launch requires a passed CPU preflight gate",
+            )
+            _require(preflight_gate.get("bundle_sha256") == manifest["bundle_sha256"], "canary gate bundle drift")
+            _require(preflight_gate.get("transport_repository") == transport_repo, "canary gate repository drift")
+            _require(preflight_gate.get("transport_revision") == transport_revision, "canary gate revision drift")
+            gate_sha256 = preflight_gate.get("gate_sha256")
+            unsigned_gate = {key: value for key, value in preflight_gate.items() if key != "gate_sha256"}
+            _require(
+                isinstance(gate_sha256, str)
+                and re.fullmatch(r"[a-f0-9]{64}", gate_sha256) is not None
+                and gate_sha256 == sha256_text(canonical_json(unsigned_gate)),
+                "canary gate SHA-256 drift",
+            )
+        else:
+            _require(preflight_gate is None, "full launch does not accept a CPU preflight gate")
+            _require(isinstance(projection, Mapping), "full launch requires the passed canary projection")
+            _require(
+                projection.get("schema_version") == "ua_open_weight_eval_hf_jobs_projection.v1"
+                and projection.get("status") == "passed",
+                "full launch requires a passed projection",
+            )
+            expected_bindings = {
+                "cases_sha256": config["suite"]["cases_sha256"],
+                "model_revision": config["model"]["revision"],
+                "model_sha256": config["model"]["artifact_sha256"],
+            }
+            _require(projection.get("bindings") == expected_bindings, "full projection binding drift")
+            authorization = projection.get("authorization")
+            _require(isinstance(authorization, Mapping), "full projection authorization is missing")
+            _require(
+                float(authorization.get("maximum_total_cost_usd", -1))
+                == config["authorization"]["maximum_provider_cost_usd"],
+                "full projection cost ceiling drift",
+            )
+            _require(
+                float(authorization.get("combined_projected_cost_usd", math.inf))
+                <= config["authorization"]["maximum_provider_cost_usd"],
+                "full projection exceeds the total cost ceiling",
+            )
+            maximum_timeout = int(authorization.get("maximum_full_timeout_seconds", 0))
+            _require(0 < timeout_seconds <= maximum_timeout, "full timeout exceeds the remaining-budget projection")
     _require(timeout_seconds > 0 and timeout_seconds % 60 == 0, "timeout must be positive whole minutes")
-    plugin_name = config["runtime"]["vllm_gguf_plugin"]["filename"]
-    worker_parts = [
-        "uv",
-        "pip",
-        "install",
-        "--system",
-        f"/workspace/{plugin_name}",
-        "&&",
-        "python",
-        "/workspace/hf_jobs_worker.py",
-        "--mode",
-        mode,
-        "--config",
-        "/workspace/run_config.json",
-        "--requests",
-        "/workspace/requests.jsonl",
-        "--requests-sha256",
-        manifest["requests_sha256"],
-        "--output-root",
-        f"/output/{mode}",
+    transport_args = [
+        "--mode", mode,
+        "--transport-repo", transport_repo,
+        "--transport-revision", transport_revision,
+        "--transport-prefix", transport_prefix,
+        "--artifact-prefix", artifact_prefix,
+        "--bundle-sha256", manifest["bundle_sha256"],
+        "--work-root", "/tmp/ua-open-weight-eval",
     ]
-    if mode == "canary":
-        worker_parts.extend(["--selection", "/workspace/canary_selection.json"])
-    shell_command = " ".join(worker_parts)
-    image = f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
+    if mode in RUN_MODES:
+        transport_args.extend(["--requests-sha256", manifest["requests_sha256"]])
+    bootstrap = shlex.join(["python", "-c", _bootstrap_source(), *transport_args])
+    shell_command = f"{installer} huggingface_hub=={config['runtime']['huggingface_hub_cli_version']} && {bootstrap}"
     labels = {
         "bundle_sha256": manifest["bundle_sha256"],
         "issue": "6273",
         "mode": mode,
         "suite": config["suite"]["cases_sha256"][:16],
         "timeout_seconds": str(timeout_seconds),
+        "transport": transport_revision[:16],
     }
     if projection is not None:
         labels["projection"] = sha256_text(canonical_json(projection))[:16]
     command = [
-        str(hf_cli),
-        "jobs",
-        "run",
-        "--detach",
-        "--flavor",
-        "l40sx1",
-        "--timeout",
-        f"{timeout_seconds // 60}m",
-        "--namespace",
-        namespace,
-        "--name",
-        f"ua-open-weight-eval-gemma4-{mode}",
+        str(hf_cli), "jobs", "run", "--detach",
+        "--flavor", flavor,
+        "--timeout", f"{timeout_seconds // 60}m",
+        "--namespace", namespace,
+        "--name", f"ua-open-weight-eval-gemma4-{mode}",
     ]
     for key, value in sorted(labels.items()):
         command.extend(["--label", f"{key}={value}"])
-    command.extend(
-        [
-            "--env",
-            "ACCELERATOR=l40sx1",
-            "--env",
-            "HF_HUB_DISABLE_TELEMETRY=1",
-            "--env",
-            "VLLM_BATCH_INVARIANT=1",
-            "--env",
-            "VLLM_ENABLE_V1_MULTIPROCESSING=0",
-            "--volume",
-            f"{bundle_mount}:/workspace:ro",
-            "--volume",
-            f"hf://buckets/{namespace}/{bucket}:/output:rw",
-            "--",
-            image,
-            "bash",
-            "-lc",
-            shell_command,
-        ]
-    )
+    command.extend(["--secrets", "HF_TOKEN", "--env", "HF_HUB_DISABLE_TELEMETRY=1"])
+    if mode in RUN_MODES:
+        command.extend(
+            [
+                "--env", "ACCELERATOR=l40sx1",
+                "--env", "VLLM_BATCH_INVARIANT=1",
+                "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0",
+            ]
+        )
+    command.extend(["--", image, "sh", "-lc", shell_command])
+    _require("--volume" not in command and "-v" not in command, "volume transport is prohibited")
     _require("--expose" not in command and "--ssh" not in command, "endpoint exposure drift")
-    _require(not any("token" in part.casefold() for part in command), "launch command contains a token-shaped argument")
+    _require(command.count("--secrets") == 1 and "HF_TOKEN=" not in " ".join(command), "secret transport drift")
     return command
 
 
 def launch_once(
     *, command: Sequence[str], mode: str, state_path: Path, execute: bool
 ) -> dict[str, Any]:
-    _require(mode in RUN_MODES, "invalid launch mode")
+    _require(mode in LAUNCH_MODES, "invalid launch mode")
     if state_path.exists():
         state = read_json(state_path)
     else:
@@ -435,12 +636,21 @@ def launch_once(
 
 
 def reconcile_provider_inspection(
-    *, inspection: Mapping[str, Any], mode: str, config: Mapping[str, Any], bundle_manifest: Mapping[str, Any]
+    *,
+    inspection: Mapping[str, Any],
+    mode: str,
+    config: Mapping[str, Any],
+    bundle_manifest: Mapping[str, Any],
+    transport_revision: str,
 ) -> dict[str, Any]:
-    _require(mode in RUN_MODES, "invalid reconciliation mode")
+    _require(mode in LAUNCH_MODES, "invalid reconciliation mode")
+    _require(re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None, "invalid transport revision")
     job_id = inspection.get("id")
     _require(isinstance(job_id, str) and JOB_ID_PATTERN.fullmatch(job_id) is not None, "provider job ID drift")
-    _require(inspection.get("flavor") == "l40sx1", "provider hardware drift")
+    expected_flavor = "cpu-basic" if mode == "preflight" else "l40sx1"
+    _require(inspection.get("flavor") == expected_flavor, "provider hardware drift")
+    _require(inspection.get("volumes", []) == [], "provider attached a prohibited volume")
+    _require(inspection.get("secrets") == ["HF_TOKEN"], "provider secret contract drift")
     labels = inspection.get("labels")
     _require(isinstance(labels, dict), "provider labels are missing")
     expected_labels = {
@@ -448,6 +658,7 @@ def reconcile_provider_inspection(
         "issue": "6273",
         "mode": mode,
         "suite": config["suite"]["cases_sha256"][:16],
+        "transport": transport_revision[:16],
     }
     _require(all(labels.get(key) == value for key, value in expected_labels.items()), "provider labels drift")
     allowed_labels = set(expected_labels) | {"name", "timeout_seconds"}
@@ -465,19 +676,28 @@ def reconcile_provider_inspection(
     _require(isinstance(running_seconds, int) and not isinstance(running_seconds, bool), "provider duration drift")
     timeout_seconds = int(labels.get("timeout_seconds", 0))
     _require(0 <= running_seconds <= timeout_seconds, "provider duration exceeds authorization")
-    cost = round(running_seconds * config["pricing"]["usd_per_minute"] / 60, 6)
-    _require(cost <= config["authorization"]["maximum_provider_cost_usd"], "provider cost exceeds authorization")
+    billed_minutes = math.ceil(running_seconds / 60) if running_seconds else 0
+    if mode == "preflight":
+        hourly_price = float(config["transport"]["cpu_preflight"]["usd_per_hour"])
+        maximum_cost = float(config["transport"]["cpu_preflight"]["maximum_cost_usd"])
+    else:
+        hourly_price = float(config["pricing"]["usd_per_hour"])
+        maximum_cost = float(config["authorization"]["maximum_provider_cost_usd"])
+    price_per_minute = hourly_price / 60
+    cost = round(billed_minutes * price_per_minute, 6)
+    _require(cost <= maximum_cost, "provider cost exceeds authorization")
     return {
         "schema_version": "ua_open_weight_eval_hf_jobs_provider_receipt.v1",
         "job_id": job_id,
         "mode": mode,
         "stage": stage,
-        "hardware_flavor": "l40sx1",
+        "hardware_flavor": expected_flavor,
         "ports_exposed": False,
         "ssh_enabled": False,
         "provider_running_seconds": running_seconds,
+        "provider_billed_minutes": billed_minutes,
         "provider_derived_cost_usd": cost,
-        "pricing_usd_per_minute": config["pricing"]["usd_per_minute"],
+        "pricing_usd_per_minute": price_per_minute,
         "timeout_seconds": timeout_seconds,
         "labels": expected_labels | {"timeout_seconds": str(timeout_seconds)},
     }
@@ -780,21 +1000,43 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     prepare.add_argument("--plugin-wheel", type=Path)
     verify = commands.add_parser("verify-bundle")
     verify.add_argument("--bundle", type=Path, required=True)
+    stage = commands.add_parser("stage-transport")
+    stage.add_argument("--bundle", type=Path, required=True)
+    stage.add_argument("--repo", required=True)
+    verify_transport = commands.add_parser("verify-transport")
+    verify_transport.add_argument("--bundle", type=Path, required=True)
+    verify_transport.add_argument("--repo", required=True)
+    verify_transport.add_argument("--revision", required=True)
+    verify_preflight = commands.add_parser("verify-preflight")
+    verify_preflight.add_argument("--bundle", type=Path, required=True)
+    verify_preflight.add_argument("--repo", required=True)
+    verify_preflight.add_argument("--revision", required=True)
+    verify_preflight.add_argument("--path", required=True)
+    verify_preflight.add_argument("--job-id", required=True)
+    gate_canary = commands.add_parser("gate-canary")
+    gate_canary.add_argument("--verification", type=Path, required=True)
+    gate_canary.add_argument("--provider-receipt", type=Path, required=True)
+    gate_canary.add_argument("--bundle", type=Path, required=True)
+    gate_canary.add_argument("--repo", required=True)
+    gate_canary.add_argument("--output", type=Path, required=True)
     launch = commands.add_parser("launch")
-    launch.add_argument("--mode", choices=sorted(RUN_MODES), required=True)
+    launch.add_argument("--mode", choices=sorted(LAUNCH_MODES), required=True)
     launch.add_argument("--namespace", required=True)
-    launch.add_argument("--bucket", required=True)
     launch.add_argument("--bundle", type=Path, required=True)
-    launch.add_argument("--bundle-mount", required=True)
+    launch.add_argument("--transport-repo", required=True)
+    launch.add_argument("--transport-revision", required=True)
+    launch.add_argument("--transport-prefix", required=True)
     launch.add_argument("--hf-cli", type=Path, required=True)
     launch.add_argument("--timeout-seconds", type=int, required=True)
     launch.add_argument("--projection", type=Path)
+    launch.add_argument("--preflight-gate", type=Path)
     launch.add_argument("--state", type=Path, required=True)
     launch.add_argument("--execute", action="store_true")
     reconcile = commands.add_parser("reconcile-provider")
     reconcile.add_argument("--inspection", type=Path, required=True)
-    reconcile.add_argument("--mode", choices=sorted(RUN_MODES), required=True)
+    reconcile.add_argument("--mode", choices=sorted(LAUNCH_MODES), required=True)
     reconcile.add_argument("--bundle", type=Path, required=True)
+    reconcile.add_argument("--transport-revision", required=True)
     reconcile.add_argument("--output", type=Path, required=True)
     project = commands.add_parser("project-full")
     project.add_argument("--worker-receipt", type=Path, required=True)
@@ -817,16 +1059,38 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = prepare_bundle(args.output, plugin_wheel=args.plugin_wheel)
         elif args.command == "verify-bundle":
             result = verify_bundle(args.bundle)
+        elif args.command == "stage-transport":
+            result = stage_transport_bundle(bundle=args.bundle, repo_id=args.repo)
+        elif args.command == "verify-transport":
+            result = verify_staged_transport(bundle=args.bundle, repo_id=args.repo, revision=args.revision)
+        elif args.command == "verify-preflight":
+            result = verify_preflight_receipt(
+                bundle=args.bundle,
+                repo_id=args.repo,
+                revision=args.revision,
+                path_in_repo=args.path,
+                job_id=args.job_id,
+            )
+        elif args.command == "gate-canary":
+            result = gate_gpu_canary(
+                verification=read_json(args.verification),
+                provider_receipt=read_json(args.provider_receipt),
+                bundle_manifest=verify_bundle(args.bundle),
+                repo_id=args.repo,
+            )
+            write_atomic(args.output, result)
         elif args.command == "launch":
             command = job_command(
                 mode=args.mode,
                 namespace=args.namespace,
-                bucket=args.bucket,
                 bundle=args.bundle,
-                bundle_mount=args.bundle_mount,
+                transport_repo=args.transport_repo,
+                transport_revision=args.transport_revision,
+                transport_prefix=args.transport_prefix,
                 hf_cli=args.hf_cli.resolve(),
                 timeout_seconds=args.timeout_seconds,
                 projection=read_json(args.projection) if args.projection is not None else None,
+                preflight_gate=read_json(args.preflight_gate) if args.preflight_gate is not None else None,
             )
             result = launch_once(command=command, mode=args.mode, state_path=args.state, execute=args.execute)
         elif args.command == "reconcile-provider":
@@ -835,6 +1099,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 mode=args.mode,
                 config=load_config(),
                 bundle_manifest=verify_bundle(args.bundle),
+                transport_revision=args.transport_revision,
             )
             write_atomic(args.output, result)
         elif args.command == "project-full":

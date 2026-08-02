@@ -5,24 +5,22 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-from scripts.projects.ua_open_weight_eval import hf_jobs_baseline, hf_jobs_worker, suite_cli
+from scripts.projects.ua_open_weight_eval import hf_jobs_baseline, hf_jobs_transport, hf_jobs_worker, suite_cli
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text("".join(suite_cli.canonical_json(row) + "\n" for row in rows), encoding="utf-8")
 
 
-def _write_fake_hf_cli(path: Path, *, bucket_rows: list[dict] | None = None) -> None:
-    rows = bucket_rows if bucket_rows is not None else [{"path": ".keep", "size": 55, "type": "file"}]
+def _write_fake_hf_cli(path: Path) -> None:
     path.write_text(
         "#!/bin/sh\n"
         'if [ "$1" = "--version" ]; then\n'
         "  echo 1.25.1\n"
-        'elif [ "$1" = "buckets" ]; then\n'
-        f"  echo '{json.dumps(rows)}'\n"
         "else\n"
         "  exit 1\n"
         "fi\n",
@@ -51,7 +49,20 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["authorization"]["no_automatic_paid_retry"] is True
-    assert "checkpoint_every_cases" not in config["runner"]
+    assert config["runner"]["checkpoint_upload_every_cases"] == 25
+    assert config["transport"] == {
+        "cpu_preflight": {
+            "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
+            "container_image": "python:3.12.8-slim",
+            "flavor": "cpu-basic",
+            "maximum_cost_usd": 0.001,
+            "timeout_seconds": 300,
+            "usd_per_hour": 0.01,
+        },
+        "mode": "private-dataset-direct-api",
+        "mounted_volumes": 0,
+        "staging_dataset_suffix": "ua-open-weight-eval-staging-6273",
+    }
 
 
 def test_balanced_canary_is_deterministic_category_balanced_and_track_covering() -> None:
@@ -123,7 +134,9 @@ def test_tokenizer_verifier_checks_git_blobs_and_lfs_hashes(tmp_path: Path) -> N
         hf_jobs_worker.verify_tokenizer_files(tmp_path, config)
 
 
-def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_job_commands_use_hash_first_private_transport_without_volumes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     config = hf_jobs_baseline.load_config()
     bundle = tmp_path / "bundle"
     bundle.mkdir()
@@ -133,55 +146,99 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
         "bundle_sha256": "b" * 64,
         "requests_sha256": "r" * 64,
     }
+    preflight_gate = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
+        "status": "passed",
+        "bundle_sha256": "b" * 64,
+        "transport_repository": "operator/ua-open-weight-eval-staging-6273",
+        "transport_revision": "a" * 40,
+    }
+    preflight_gate["gate_sha256"] = hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(preflight_gate))
     monkeypatch.setattr(hf_jobs_baseline, "verify_bundle", lambda _: manifest)
     monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
     command = hf_jobs_baseline.job_command(
         mode="canary",
         namespace="operator",
-        bucket="ua-open-weight-eval-6273",
         bundle=bundle,
-        bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="a" * 40,
+        transport_prefix=f"bundles/{'b' * 64}",
         hf_cli=hf_cli,
         timeout_seconds=1200,
+        preflight_gate=preflight_gate,
     )
     joined = " ".join(command)
     assert "--flavor l40sx1" in joined
     assert "--timeout 20m" in joined
     assert config["runtime"]["container_amd64_digest"] in joined
-    assert "hf://buckets/operator/ua-open-weight-eval-6273:/output:rw" in joined
-    assert "hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb:/workspace:ro" in joined
-    assert f"{bundle.resolve()}:/workspace:ro" not in joined
+    assert "operator/ua-open-weight-eval-staging-6273" in joined
+    assert "--secrets HF_TOKEN" in joined
+    assert "HF_TOKEN=" not in joined
+    assert "--env ACCELERATOR=l40sx1" in joined
+    assert "--volume" not in command
+    assert "-v" not in command
+    assert "hf://buckets/" not in joined
     assert "--expose" not in command
     assert "--ssh" not in command
     assert "--json" not in command
-    assert "HF_TOKEN" not in joined
-    assert "--selection /workspace/canary_selection.json" in joined
     separator = command.index("--")
     assert command[separator + 1] == (
         f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
     )
-    assert command[separator + 2 : separator + 4] == ["bash", "-lc"]
-    _write_fake_hf_cli(hf_cli, bucket_rows=[])
-    with pytest.raises(hf_jobs_baseline.BaselineError, match="not mount-ready"):
+    assert command[separator + 2 : separator + 4] == ["sh", "-lc"]
+    tampered_gate = {**preflight_gate, "preflight_cost_usd": 0.002}
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="gate SHA-256 drift"):
         hf_jobs_baseline.job_command(
             mode="canary",
             namespace="operator",
-            bucket="ua-open-weight-eval-6273",
             bundle=bundle,
-            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="a" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+            preflight_gate=tampered_gate,
+        )
+
+    preflight = hf_jobs_baseline.job_command(
+        mode="preflight",
+        namespace="operator",
+        bundle=bundle,
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="a" * 40,
+        transport_prefix=f"bundles/{'b' * 64}",
+        hf_cli=hf_cli,
+        timeout_seconds=300,
+    )
+    preflight_joined = " ".join(preflight)
+    assert "--flavor cpu-basic" in preflight_joined
+    assert "--timeout 5m" in preflight_joined
+    assert config["transport"]["cpu_preflight"]["container_amd64_digest"] in preflight_joined
+    assert "--volume" not in preflight
+    assert "--secrets HF_TOKEN" in preflight_joined
+    assert "ACCELERATOR=" not in preflight_joined
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bundle=bundle,
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="a" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
             hf_cli=hf_cli,
             timeout_seconds=1200,
         )
-    _write_fake_hf_cli(hf_cli)
-    with pytest.raises(hf_jobs_baseline.BaselineError, match="digest suffix drift"):
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="bound to the bundle"):
         hf_jobs_baseline.job_command(
             mode="canary",
             namespace="operator",
-            bucket="ua-open-weight-eval-6273",
             bundle=bundle,
-            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-deadbeef",
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="a" * 40,
+            transport_prefix="bundles/deadbeef",
             hf_cli=hf_cli,
             timeout_seconds=1200,
+            preflight_gate=preflight_gate,
         )
 
 
@@ -204,6 +261,82 @@ def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
     assert launched["status"] == "launched"
     with pytest.raises(hf_jobs_baseline.BaselineError, match="automatic retry is prohibited"):
         hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
+
+
+def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    files = [
+        {"path": name, "bytes": 1, "sha256": "a" * 64}
+        for name in (
+            "canary_selection.json",
+            "hf_jobs_transport.py",
+            "hf_jobs_worker.py",
+            "requests.jsonl",
+            "run_config.json",
+        )
+    ]
+    unsigned = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_bundle.v1",
+        "issue": 6273,
+        "files": files,
+    }
+    digest = hf_jobs_transport.sha256_bytes(hf_jobs_transport.canonical_json(unsigned).encode())
+    manifest = {**unsigned, "bundle_sha256": digest}
+    assert hf_jobs_transport.verify_manifest(manifest, digest) == files
+    with pytest.raises(hf_jobs_transport.TransportError, match="digest drift"):
+        hf_jobs_transport.verify_manifest(manifest, "b" * 64)
+
+    monkeypatch.setenv("JOB_ID", "c" * 24)
+    monkeypatch.delenv("ACCELERATOR", raising=False)
+    monkeypatch.setenv("HF_TOKEN", "not-a-real-token")
+    monkeypatch.setattr(hf_jobs_transport, "upload_json", lambda **kwargs: "d" * 40)
+    args = SimpleNamespace(
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="e" * 40,
+        transport_prefix=f"bundles/{digest}",
+        artifact_prefix=f"artifacts/{digest}/preflight",
+        bundle_sha256=digest,
+    )
+    receipt = hf_jobs_transport.run_preflight(args, files)
+    assert receipt["status"] == "passed"
+    assert receipt["accelerator_environment"] is None
+    assert receipt["transport"]["mounted_volumes"] == 0
+    assert receipt["transport"]["all_hashes_verified"] is True
+    assert receipt["facts"]["receipt_uploaded_directly"] is True
+    monkeypatch.setenv("ACCELERATOR", "l40sx1")
+    with pytest.raises(hf_jobs_transport.TransportError, match="GPU accelerator"):
+        hf_jobs_transport.run_preflight(args, files)
+
+
+def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import huggingface_hub
+
+    class PublicRepoApi:
+        def __init__(self, *, token: str) -> None:
+            assert token == "not-a-real-token"
+
+        def repo_info(self, *, repo_id: str, repo_type: str) -> SimpleNamespace:
+            assert repo_id == "operator/ua-open-weight-eval-staging-6273"
+            assert repo_type == "dataset"
+            return SimpleNamespace(private=False)
+
+    monkeypatch.setenv("HF_TOKEN", "not-a-real-token")
+    monkeypatch.setattr(huggingface_hub, "HfApi", PublicRepoApi)
+    with pytest.raises(hf_jobs_transport.TransportError, match="not private"):
+        hf_jobs_transport.upload_json(
+            repo_id="operator/ua-open-weight-eval-staging-6273",
+            path_in_repo="artifacts/receipt.json",
+            value={"harmless": True},
+            commit_message="test receipt",
+        )
+    with pytest.raises(hf_jobs_worker.WorkerError, match="not private"):
+        hf_jobs_worker.HubArtifactStore(
+            "operator/ua-open-weight-eval-staging-6273",
+            "artifacts/bundle/canary",
+        )
 
 
 def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
@@ -313,9 +446,10 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
     command = hf_jobs_baseline.job_command(
         mode="full",
         namespace="operator",
-        bucket="ua-open-weight-eval-6273",
         bundle=bundle,
-        bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="a" * 40,
+        transport_prefix=f"bundles/{'b' * 64}",
         hf_cli=hf_cli,
         timeout_seconds=maximum_timeout,
         projection=projection,
@@ -325,9 +459,10 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
         hf_jobs_baseline.job_command(
             mode="full",
             namespace="operator",
-            bucket="ua-open-weight-eval-6273",
             bundle=bundle,
-            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="a" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
             hf_cli=hf_cli,
             timeout_seconds=maximum_timeout + 60,
             projection=projection,
@@ -347,15 +482,18 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
             "name": "ua-open-weight-eval-gemma4-canary",
             "suite": config["suite"]["cases_sha256"][:16],
             "timeout_seconds": "1200",
+            "transport": "c" * 16,
         },
         "status": {"stage": "COMPLETED", "expose_urls": None, "ssh_url": None},
         "durations": {"running_secs": 600},
+        "secrets": ["HF_TOKEN"],
     }
     receipt = hf_jobs_baseline.reconcile_provider_inspection(
         inspection=inspection,
         mode="canary",
         config=config,
         bundle_manifest=manifest,
+        transport_revision="c" * 40,
     )
     assert receipt["provider_derived_cost_usd"] == 0.3
     inspection["labels"]["c"] = ""
@@ -365,6 +503,7 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
             mode="canary",
             config=config,
             bundle_manifest=manifest,
+            transport_revision="c" * 40,
         )
     inspection["labels"].pop("c")
     inspection["status"]["expose_urls"] = ["https://example.invalid"]
@@ -374,6 +513,75 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
             mode="canary",
             config=config,
             bundle_manifest=manifest,
+            transport_revision="c" * 40,
+        )
+
+
+def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None:
+    config = hf_jobs_baseline.load_config()
+    inspection = {
+        "id": "a" * 24,
+        "flavor": "cpu-basic",
+        "labels": {
+            "bundle_sha256": "b" * 64,
+            "issue": "6273",
+            "mode": "preflight",
+            "name": "ua-open-weight-eval-gemma4-preflight",
+            "suite": config["suite"]["cases_sha256"][:16],
+            "timeout_seconds": "300",
+            "transport": "c" * 16,
+        },
+        "status": {"stage": "COMPLETED", "expose_urls": None, "ssh_url": None},
+        "durations": {"running_secs": 61},
+        "secrets": ["HF_TOKEN"],
+        "volumes": [],
+    }
+    receipt = hf_jobs_baseline.reconcile_provider_inspection(
+        inspection=inspection,
+        mode="preflight",
+        config=config,
+        bundle_manifest={"bundle_sha256": "b" * 64},
+        transport_revision="c" * 40,
+    )
+    assert receipt["provider_billed_minutes"] == 2
+    assert receipt["provider_derived_cost_usd"] == 0.000333
+    assert receipt["provider_derived_cost_usd"] <= 0.001
+
+    verification = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_preflight_verification.v1",
+        "status": "passed",
+        "job_id": "a" * 24,
+        "bundle_sha256": "b" * 64,
+        "repository": "operator/ua-open-weight-eval-staging-6273",
+        "transport_revision": "c" * 40,
+    }
+    gate = hf_jobs_baseline.gate_gpu_canary(
+        verification=verification,
+        provider_receipt=receipt,
+        bundle_manifest={"bundle_sha256": "b" * 64},
+        repo_id="operator/ua-open-weight-eval-staging-6273",
+    )
+    assert gate["status"] == "passed"
+    assert gate["preflight_cost_usd"] == 0.000333
+    assert gate["transport_revision"] == "c" * 40
+    assert gate["gate_sha256"] == hf_jobs_baseline.sha256_text(
+        hf_jobs_baseline.canonical_json({key: value for key, value in gate.items() if key != "gate_sha256"})
+    )
+    malformed = {**receipt, "labels": None}
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="labels are missing"):
+        hf_jobs_baseline.gate_gpu_canary(
+            verification=verification,
+            provider_receipt=malformed,
+            bundle_manifest={"bundle_sha256": "b" * 64},
+            repo_id="operator/ua-open-weight-eval-staging-6273",
+        )
+    failed = {**receipt, "stage": "ERROR"}
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="did not complete"):
+        hf_jobs_baseline.gate_gpu_canary(
+            verification=verification,
+            provider_receipt=failed,
+            bundle_manifest={"bundle_sha256": "b" * 64},
+            repo_id="operator/ua-open-weight-eval-staging-6273",
         )
 
 
