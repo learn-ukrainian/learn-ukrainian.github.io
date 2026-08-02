@@ -133,13 +133,13 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
         "acpx-transport",
     }
 )
-_ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 256 * 1024
-# Native OpenCode ACP emits a larger JSON-RPC envelope than the text-only and
-# built-in seats. Keep it bounded, but above the production-observed 4,204,632
-# bytes that otherwise killed a valid concise GLM response before its terminal
-# frame arrived (#6159). The parsed response and formal verdict retain their
-# separate, tighter content/evidence bounds.
-_ACPX_GLM_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
+# ACP transports can emit a large JSON-RPC envelope around a concise answer.
+# Production observations now include GLM at 4,204,632 bytes (#6159), plus
+# Kimi and Grok crossing the former 256 KiB cap before their terminal frames
+# (#6235). Keep every enabled ACP route bounded by the same proven envelope;
+# the adapter independently caps parsed answer text before it can be returned
+# to fleet authority.
+_ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -184,8 +184,6 @@ def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
         agent_name in acpx_seats
         and entrypoint in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}
     ):
-        if agent_name == "acpx-glm-shadow":
-            return _ACPX_GLM_OUTPUT_LIMIT_BYTES
         return _ACPX_DIRECT_OUTPUT_LIMIT_BYTES
     return None
 

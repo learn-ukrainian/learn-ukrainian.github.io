@@ -307,6 +307,13 @@ unrestricted loop, hidden failover, or retry. Each model call is capped at 300
 seconds, the whole conversation at 1,200 seconds, and content at 160k reliable
 tokens or 512 KiB.
 
+Raw ACP JSON-RPC traffic and parsed answer content have separate hard bounds.
+Each enabled participant may emit at most a 16 MiB protocol envelope so a
+valid terminal frame is not killed by provider-specific progress events. The
+strict parser then admits at most 512 KiB of answer text to the caller or
+fleet-authority receipt. Exceeding either bound fails terminally without a
+provider retry or bridge fallback.
+
 Replay suppression is durable and occurs before scheduling. An orphaned
 reservation is terminal: never retry it. The single-host repository admission
 file lock covers the conversation, including model I/O; no SQLite transaction
