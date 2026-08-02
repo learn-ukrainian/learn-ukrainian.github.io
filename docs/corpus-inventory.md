@@ -220,14 +220,20 @@ in pipeline outputs.
   [existing-corpus audit](research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md)
   and machine-readable ledger reconcile all 229 literary JSONL source stems to
   the 229 database groups, separate 49,193 public textbook rows from 5,786
-  private rows, and identify two database textbook sources whose raw chunk is
-  unresolved. No collection is thereby training-admitted or
-  redistribution-cleared.
+  private rows, and identify two database textbook sources whose raw chunk was
+  unresolved at that snapshot. The later
+  [training-usability decision](research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md)
+  found source locators on all 137,723 literary raw rows and verified retained
+  textbook chunks, PDFs, selection metadata, and URL mappings. The operator
+  approved local research and model learning after required preprocessing;
+  raw-source redistribution and publication remain separate decisions.
 - **#4594 — deterministic gap audit:** see
   [docs/corpus-gap-audit.md](corpus-gap-audit.md) for the 2026-07-06 register × domain ×
   CEFR/track evidence table and DRAFT consumer-driven acquisition queue.
-- **#2901 — `source_url` dropped:** ~92% of `literary_texts` rows have NULL `source_url`, so we can't
-  always link a chunk back to its public web page (only izbornyk + new narod carry URLs).
+- **#2901 — `source_url` dropped during ingestion:** ~92% of
+  `literary_texts` database rows have NULL `source_url`, but all 137,723 raw
+  literary JSONL rows retain `source_url` or `source`. Restore links from the
+  raw records; do not classify these rows as source-unknown.
 - **Folk genre primaries are thin** — standalone folk texts are only the 35 narod chunks; the rest of
   folk is embedded in scholarly works. Expanding the narod scrape further (more genres: байки, вертеп)
   or ingesting Грушевський/Драгоманов folk anthologies as tagged primaries would deepen #3162.

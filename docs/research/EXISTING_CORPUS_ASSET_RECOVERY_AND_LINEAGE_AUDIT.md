@@ -5,6 +5,16 @@
 > **Scope:** Existing assets only. No acquisition, OCR, scraping, ingestion,
 > restoration, generation, model inference, training, upload, or publication.
 
+> **2026-08-02 correction:** This document is a recovery snapshot, not the
+> current training-usability decision. A later audit of the raw Google Drive
+> JSONL files found source locators and core bibliographic metadata on all
+> 137,723 literary rows. The 11,064-row figure below describes locators retained
+> in the SQLite ingestion, not the raw source evidence. The current decision is
+> [CONTINUE](UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md): the corpus is
+> usable for the clean-Ukrainian tool and, after preprocessing, local continued
+> training of an existing model. Raw-source redistribution remains a separate
+> capability decision.
+
 ## Outcome
 
 The project still possesses a substantial Ukrainian-language asset base. The
@@ -15,9 +25,11 @@ literary JSONL source files, and their filename-stem identities reconcile
 rows and 50,298,925 lexical words. A separate private-reference view contains
 5,786 rows and 681,925 lexical words.
 
-The material is not training-ready or redistribution-cleared. No collection has
-a complete `source-record-v1` admission record in this audit, so the current
-training-admission quantity is exactly zero. The durable result is a
+This snapshot did not mark the material training-ready or
+redistribution-cleared. No collection had a complete `source-record-v1`
+admission record under the then-combined gate, so its reported admission
+quantity was exactly zero. That number was a control-plane state, not a finding
+that the text could not support local model learning. The durable result is a
 metadata-only, schema-validated recovery ledger that keeps origin and boundary
 classes separate and points to the evidence needed for later reconstruction.
 
@@ -80,8 +92,11 @@ some collections.
 The literary collection represents 229 source groups and 3,307 distinct
 `work_id` values. Other collections do not expose one comparable, deduplicated
 work identity, so 3,307 is a literary-work count, not a claim about all corpus
-works. Only 11,064 literary rows across 24 source groups currently carry a
-`source_url`; 126,659 rows require another provenance locator.
+works. Only 11,064 literary database rows across 24 source groups currently
+carry `source_url`. The later raw-source audit found `source_url` or `source` on
+all 137,723 raw JSONL rows, showing that ingestion dropped most locators. The
+database field must be repaired from those retained raw records rather than
+treating 126,659 rows as source-unknown.
 
 Ten human-authored dictionary/morphology collections contribute 525,303
 lexical rows plus 6,691,276 VESUM form rows. VESUM contains 408,974 distinct
