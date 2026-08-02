@@ -224,9 +224,12 @@ Durable sinks for the dual-write (not private deploy trees):
 ```
 
 **Cold-start companion (not a substitute for the file):** after §0 orient,
-`status` + `search --query "<epic keywords>"` (and optional `handoff --query`) so
-promoted SHAs surface before dispatch. Empty results mean “nothing indexed for that
-needle,” not “no work” — fall through to GH issues + file handoff.
+`status` + `search --query "<path-or-sha-needle>"` (and optional `handoff --query`)
+so promoted SHAs surface before dispatch. Ranking is **one substring** (prefer path
+tokens like `practice` or a full SHA — not multi-word sentences). Empty search =
+nothing indexed for that needle; `handoff --query` with zero hits may return
+`seed_invalid` — use `--locator-id` from bootstrap/search instead. Fall through to
+GH issues + file handoff.
 
 ### 8a. Required live-driver inbox drain — before handoff
 Immediately before writing or signalling handoff, make one final live-loop drain. Read
