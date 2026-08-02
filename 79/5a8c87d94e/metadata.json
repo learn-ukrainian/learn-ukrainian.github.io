@@ -3,11 +3,14 @@
   "checkpoint_id": "795a8c87d94e",
   "strategy": "manual-commit",
   "branch": "glm/6183-entire-typed-resolvers-glm",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
+    "agents_extensions/shared/skills/entire-context/SKILL.md",
+    "docs/entire/PUBLIC-SOURCE-PILOT.md",
     "scripts/entire_context/cli.py",
     "scripts/entire_context/recall.py",
-    "scripts/entire_context/resolvers.py"
+    "scripts/entire_context/resolvers.py",
+    "tests/test_entire_context_recall.py"
   ],
   "sessions": [
     {
@@ -16,13 +19,19 @@
       "compact_transcript": "/79/5a8c87d94e/0/transcript.jsonl",
       "content_hash": "/79/5a8c87d94e/0/content_hash.txt",
       "prompt": ""
+    },
+    {
+      "metadata": "/79/5a8c87d94e/1/metadata.json",
+      "transcript": "/79/5a8c87d94e/1/full.jsonl",
+      "content_hash": "/79/5a8c87d94e/1/content_hash.txt",
+      "prompt": "/79/5a8c87d94e/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 176919,
+    "input_tokens": 266473,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 5187264,
-    "output_tokens": 17087,
-    "api_call_count": 41
+    "cache_read_tokens": 6798272,
+    "output_tokens": 27656,
+    "api_call_count": 64
   }
 }

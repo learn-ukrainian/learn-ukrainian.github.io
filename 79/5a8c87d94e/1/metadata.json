@@ -1,0 +1,57 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "795a8c87d94e",
+  "session_id": "session_589f994c-17e0-49ea-9063-fef45c82fe11",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T12:09:26.451187Z",
+  "branch": "glm/6183-entire-typed-resolvers-glm",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/entire-context/SKILL.md",
+    "docs/entire/PUBLIC-SOURCE-PILOT.md",
+    "scripts/entire_context/cli.py",
+    "scripts/entire_context/recall.py",
+    "scripts/entire_context/resolvers.py",
+    "tests/test_entire_context_recall.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3",
+  "turn_id": "4599ecbd8f40",
+  "token_usage": {
+    "input_tokens": 89554,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1611008,
+    "output_tokens": 10569,
+    "api_call_count": 23
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T12:09:26.426906Z",
+    "agent_lines": 624,
+    "agent_removed": 44,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 20,
+    "total_committed": 624,
+    "total_lines_changed": 688,
+    "agent_percentage": 97.09302325581395,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1004,
+      "user_lines_removed": 20,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "scripts/entire_context/cli.py": 42,
+        "scripts/entire_context/recall.py": 53,
+        "scripts/entire_context/resolvers.py": 909
+      },
+      "user_removed_per_file": {
+        "scripts/entire_context/recall.py": 4,
+        "scripts/entire_context/resolvers.py": 16
+      }
+    }
+  ]
+}
