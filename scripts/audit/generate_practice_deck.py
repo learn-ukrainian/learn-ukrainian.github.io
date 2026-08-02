@@ -34,6 +34,11 @@ from scripts.lexicon.curated_membership import (
     apply_membership,
     read_membership,
 )
+from scripts.practice_deck.end_dictionaries import (
+    coverage_intersection_report,
+    load_inventory,
+    read_end_dictionary_stress_overlay,
+)
 from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
@@ -46,6 +51,7 @@ DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
+DEFAULT_END_DICTIONARY_INVENTORY = Path("data/lexicon/textbook-end-dictionaries/inventory.json")
 DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
 DEFAULT_PARONYM_PAIRS = Path("data/lexicon/paronym_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
@@ -1764,7 +1770,11 @@ def _build_cloze_items(
     return items
 
 
-def _stress_payload(entry: dict[str, Any]) -> dict[str, Any] | None:
+def _stress_payload(
+    entry: dict[str, Any],
+    *,
+    end_dictionary_stress: dict[str, dict[str, str]] | None = None,
+) -> dict[str, Any] | None:
     stress = entry.get("enrichment", {}).get("stress") if isinstance(entry.get("enrichment"), dict) else None
     if isinstance(stress, dict):
         form = _clean_text(stress.get("form"))
@@ -1772,6 +1782,14 @@ def _stress_payload(entry: dict[str, Any]) -> dict[str, Any] | None:
     else:
         form = _clean_text(stress)
         source = None
+    # End-dictionary overlay fills only when atlas enrichment has no stressed form.
+    # Combining-acute forms only — lemma-only stress lists do not invent stress.
+    if not form and end_dictionary_stress:
+        lemma = _clean_text(entry.get("lemma")) or ""
+        overlay = end_dictionary_stress.get(_plain(lemma))
+        if isinstance(overlay, dict):
+            form = _clean_text(overlay.get("form"))
+            source = _clean_text(overlay.get("source")) or source
     if not form:
         return None
     unstressed, stress_index = _stress_position(form)
@@ -3231,6 +3249,7 @@ def build_practice_shards(
     heritage_pairs: list[dict[str, Any]] | None = None,
     paronym_pairs: list[dict[str, Any]] | None = None,
     synonym_verdicts: dict[str, Any] | None = None,
+    end_dictionary_stress: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
@@ -3322,7 +3341,7 @@ def build_practice_shards(
                 continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
-        stress = _stress_payload(_entry)
+        stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
         if stress:
             mode_by_level[lexeme["cefr"]]["stress"].append(
                 {
@@ -4460,6 +4479,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
     parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
+    parser.add_argument(
+        "--end-dictionary-inventory",
+        type=Path,
+        default=DEFAULT_END_DICTIONARY_INVENTORY,
+        help=(
+            "Textbook end-dictionary inventory sidecar. Supplies optional stress "
+            "overlay when combining acute is present; never fabricates cloze."
+        ),
+    )
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
@@ -4537,6 +4565,17 @@ def main(argv: list[str] | None = None) -> int:
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)
     paronym_pairs = read_paronym_pairs(args.paronym_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
+    end_dictionary_stress = read_end_dictionary_stress_overlay(args.end_dictionary_inventory)
+    end_payload: dict[str, Any] | None = None
+    if args.end_dictionary_inventory and args.end_dictionary_inventory.exists():
+        end_payload = load_inventory(args.end_dictionary_inventory)
+        print(
+            "end-dictionary inventory "
+            f"sections={end_payload.get('counts', {}).get('sections')} "
+            f"entries={end_payload.get('counts', {}).get('entries')} "
+            f"stressOverlay={len(end_dictionary_stress)} "
+            "(lemma/gloss rows do not unlock cloze)"
+        )
 
     if args.nominate_a2:
         if not synonym_verdicts:
@@ -4581,7 +4620,50 @@ def main(argv: list[str] | None = None) -> int:
         heritage_pairs=heritage_pairs,
         paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
+        end_dictionary_stress=end_dictionary_stress or None,
     )
+    if end_payload is not None:
+        practice_by_level: dict[str, set[str]] = {}
+        eligible_by_level: dict[str, set[str]] = {}
+        for level, level_shards in shards.items():
+            lexeme_rows = level_shards.get("lexemes", {}).get("items") or []
+            cloze_rows = level_shards.get("cloze", {}).get("items") or []
+            practice_by_level[level] = {
+                _plain(str(row.get("lemmaPlain") or row.get("lemma") or ""))
+                for row in lexeme_rows
+                if isinstance(row, dict)
+            } - {""}
+            eligible_ids = {
+                _clean_text(row.get("lemmaId"))
+                for row in cloze_rows
+                if isinstance(row, dict) and _clean_text(row.get("lemmaId"))
+            }
+            eligible_by_level[level] = {
+                _plain(str(row.get("lemmaPlain") or row.get("lemma") or ""))
+                for row in lexeme_rows
+                if isinstance(row, dict) and _clean_text(row.get("lemmaId")) in eligible_ids
+            } - {""}
+        report = coverage_intersection_report(
+            practice_by_level,
+            eligible_by_level,
+            end_payload.get("entries") or [],
+        )
+        print(
+            "end-dictionary residual intersection "
+            + json.dumps(
+                {
+                    "uniqueLemmas": report["endDictionaryUniqueLemmas"],
+                    "levels": {
+                        level: {
+                            "residual": stats["residual"],
+                            "residualInEndDictionary": stats["residualInEndDictionary"],
+                        }
+                        for level, stats in report["levels"].items()
+                    },
+                },
+                ensure_ascii=False,
+            )
+        )
     compact_cloze_emit_fields(shards)
     apply_size_budgets(
         shards,
