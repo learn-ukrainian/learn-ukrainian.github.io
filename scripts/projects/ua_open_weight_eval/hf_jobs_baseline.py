@@ -346,6 +346,11 @@ def verify_preflight_receipt(
     _require(isinstance(transport, Mapping), "preflight transport evidence is missing")
     _require(transport.get("repository") == repo_id, "preflight repository drift")
     _require(transport.get("bundle_sha256") == manifest["bundle_sha256"], "preflight bundle drift")
+    transport_revision = transport.get("revision")
+    _require(
+        isinstance(transport_revision, str) and re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None,
+        "preflight transport revision drift",
+    )
     _require(transport.get("all_hashes_verified") is True, "preflight hash verification failed")
     _require(transport.get("mounted_volumes") == 0, "preflight used a prohibited volume")
     facts = receipt.get("facts")
@@ -361,6 +366,7 @@ def verify_preflight_receipt(
         "path": path_in_repo,
         "receipt_sha256": sha256_file(source),
         "bundle_sha256": manifest["bundle_sha256"],
+        "transport_revision": transport_revision,
     }
 
 
@@ -387,13 +393,21 @@ def gate_gpu_canary(
     _require(provider_receipt.get("job_id") == verification.get("job_id"), "CPU preflight job ID drift")
     _require(provider_receipt.get("hardware_flavor") == "cpu-basic", "CPU preflight hardware drift")
     _require(float(provider_receipt.get("provider_derived_cost_usd", math.inf)) <= 0.001, "CPU preflight cost exceeded")
+    labels = provider_receipt.get("labels")
+    _require(isinstance(labels, Mapping), "CPU preflight provider labels are missing")
+    transport_revision = verification.get("transport_revision")
+    _require(
+        isinstance(transport_revision, str) and re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None,
+        "CPU preflight transport revision drift",
+    )
+    _require(labels.get("transport") == transport_revision[:16], "CPU preflight transport label drift")
     payload = {
         "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
         "status": "passed",
         "preflight_job_id": verification["job_id"],
         "bundle_sha256": bundle_manifest["bundle_sha256"],
         "transport_repository": repo_id,
-        "transport_revision": provider_receipt["labels"]["transport"],
+        "transport_revision": transport_revision,
         "preflight_cost_usd": provider_receipt["provider_derived_cost_usd"],
     }
     payload["gate_sha256"] = sha256_text(canonical_json(payload))
@@ -493,7 +507,15 @@ def job_command(
             )
             _require(preflight_gate.get("bundle_sha256") == manifest["bundle_sha256"], "canary gate bundle drift")
             _require(preflight_gate.get("transport_repository") == transport_repo, "canary gate repository drift")
-            _require(preflight_gate.get("transport_revision") == transport_revision[:16], "canary gate revision drift")
+            _require(preflight_gate.get("transport_revision") == transport_revision, "canary gate revision drift")
+            gate_sha256 = preflight_gate.get("gate_sha256")
+            unsigned_gate = {key: value for key, value in preflight_gate.items() if key != "gate_sha256"}
+            _require(
+                isinstance(gate_sha256, str)
+                and re.fullmatch(r"[a-f0-9]{64}", gate_sha256) is not None
+                and gate_sha256 == sha256_text(canonical_json(unsigned_gate)),
+                "canary gate SHA-256 drift",
+            )
         else:
             _require(preflight_gate is None, "full launch does not accept a CPU preflight gate")
             _require(isinstance(projection, Mapping), "full launch requires the passed canary projection")

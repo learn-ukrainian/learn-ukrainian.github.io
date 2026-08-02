@@ -97,6 +97,8 @@ class HubArtifactStore:
     """Direct authenticated persistence for private checkpoints and receipts."""
 
     def __init__(self, repo_id: str, prefix: str) -> None:
+        from huggingface_hub import HfApi
+
         _require(
             re.fullmatch(
                 r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/[A-Za-z0-9][A-Za-z0-9_.-]{0,95}",
@@ -110,6 +112,11 @@ class HubArtifactStore:
         _require(bool(os.environ.get("HF_TOKEN")), "HF_TOKEN is required for direct checkpoint upload")
         self.repo_id = repo_id
         self.prefix = prefix.strip("/")
+        self.api = HfApi(token=os.environ["HF_TOKEN"])
+        _require(
+            bool(self.api.repo_info(repo_id=repo_id, repo_type="dataset").private),
+            "artifact repository is not private",
+        )
 
     def remote_path(self, name: str) -> str:
         _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", name) is not None, "invalid artifact name")
@@ -135,10 +142,8 @@ class HubArtifactStore:
         return True
 
     def upload(self, path: Path, name: str) -> str:
-        from huggingface_hub import HfApi
-
         _require(path.is_file(), f"artifact is missing: {name}")
-        info = HfApi(token=os.environ["HF_TOKEN"]).upload_file(
+        info = self.api.upload_file(
             path_or_fileobj=path,
             path_in_repo=self.remote_path(name),
             repo_id=self.repo_id,

@@ -151,8 +151,9 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         "status": "passed",
         "bundle_sha256": "b" * 64,
         "transport_repository": "operator/ua-open-weight-eval-staging-6273",
-        "transport_revision": "a" * 16,
+        "transport_revision": "a" * 40,
     }
+    preflight_gate["gate_sha256"] = hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(preflight_gate))
     monkeypatch.setattr(hf_jobs_baseline, "verify_bundle", lambda _: manifest)
     monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
     command = hf_jobs_baseline.job_command(
@@ -184,6 +185,19 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
     )
     assert command[separator + 2 : separator + 4] == ["sh", "-lc"]
+    tampered_gate = {**preflight_gate, "preflight_cost_usd": 0.002}
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="gate SHA-256 drift"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bundle=bundle,
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="a" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+            preflight_gate=tampered_gate,
+        )
 
     preflight = hf_jobs_baseline.job_command(
         mode="preflight",
@@ -287,6 +301,36 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
     assert receipt["transport"]["mounted_volumes"] == 0
     assert receipt["transport"]["all_hashes_verified"] is True
     assert receipt["facts"]["receipt_uploaded_directly"] is True
+
+
+def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import huggingface_hub
+
+    class PublicRepoApi:
+        def __init__(self, *, token: str) -> None:
+            assert token == "not-a-real-token"
+
+        def repo_info(self, *, repo_id: str, repo_type: str) -> SimpleNamespace:
+            assert repo_id == "operator/ua-open-weight-eval-staging-6273"
+            assert repo_type == "dataset"
+            return SimpleNamespace(private=False)
+
+    monkeypatch.setenv("HF_TOKEN", "not-a-real-token")
+    monkeypatch.setattr(huggingface_hub, "HfApi", PublicRepoApi)
+    with pytest.raises(hf_jobs_transport.TransportError, match="not private"):
+        hf_jobs_transport.upload_json(
+            repo_id="operator/ua-open-weight-eval-staging-6273",
+            path_in_repo="artifacts/receipt.json",
+            value={"harmless": True},
+            commit_message="test receipt",
+        )
+    with pytest.raises(hf_jobs_worker.WorkerError, match="not private"):
+        hf_jobs_worker.HubArtifactStore(
+            "operator/ua-open-weight-eval-staging-6273",
+            "artifacts/bundle/canary",
+        )
 
 
 def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
@@ -504,6 +548,7 @@ def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None
         "job_id": "a" * 24,
         "bundle_sha256": "b" * 64,
         "repository": "operator/ua-open-weight-eval-staging-6273",
+        "transport_revision": "c" * 40,
     }
     gate = hf_jobs_baseline.gate_gpu_canary(
         verification=verification,
@@ -513,6 +558,18 @@ def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None
     )
     assert gate["status"] == "passed"
     assert gate["preflight_cost_usd"] == 0.000333
+    assert gate["transport_revision"] == "c" * 40
+    assert gate["gate_sha256"] == hf_jobs_baseline.sha256_text(
+        hf_jobs_baseline.canonical_json({key: value for key, value in gate.items() if key != "gate_sha256"})
+    )
+    malformed = {**receipt, "labels": None}
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="labels are missing"):
+        hf_jobs_baseline.gate_gpu_canary(
+            verification=verification,
+            provider_receipt=malformed,
+            bundle_manifest={"bundle_sha256": "b" * 64},
+            repo_id="operator/ua-open-weight-eval-staging-6273",
+        )
     failed = {**receipt, "stage": "ERROR"}
     with pytest.raises(hf_jobs_baseline.BaselineError, match="did not complete"):
         hf_jobs_baseline.gate_gpu_canary(

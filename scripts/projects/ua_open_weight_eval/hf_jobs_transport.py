@@ -134,7 +134,9 @@ def upload_json(*, repo_id: str, path_in_repo: str, value: Mapping[str, Any], co
     from huggingface_hub import HfApi
 
     payload = (json.dumps(dict(value), ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
-    info = HfApi(token=os.environ["HF_TOKEN"]).upload_file(
+    api = HfApi(token=os.environ["HF_TOKEN"])
+    _require(bool(api.repo_info(repo_id=repo_id, repo_type="dataset").private), "artifact repository is not private")
+    info = api.upload_file(
         path_or_fileobj=io.BytesIO(payload),
         path_in_repo=_safe_path(path_in_repo, label="upload path"),
         repo_id=repo_id,
