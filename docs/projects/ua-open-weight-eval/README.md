@@ -10,9 +10,12 @@ proposal. It needs no paid annotator, closed API, or model judge.
 The repository implementation shipped in PR #6268. The public package uses the
 non-colliding tag `ua-open-weight-eval-v0.1.0`; its generated
 `PUBLICATION_MANIFEST.json` and `SHA256SUMS` define the canonical released
-bytes. GitHub and Hugging Face publication, real-model results, and external
-adoption are separate facts tracked in issue #6273. An adapter or local fixture
-does not demonstrate adoption.
+bytes. The GitHub release is public. The operator-approved official Gemma 4 QAT
+Q4_0 baseline on Hugging Face Jobs, its results-dataset publication, and
+independent external adoption remain separate facts tracked in issue #6273.
+The exact bounded execution contract is in the
+[HF Jobs baseline runbook](HF_JOBS_BASELINE.md). An adapter, local fixture, or
+our own completed run does not demonstrate independent adoption.
 
 ## What ships
 
