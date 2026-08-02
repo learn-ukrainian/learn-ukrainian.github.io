@@ -6,7 +6,12 @@ from pathlib import Path
 
 
 def main_checkout_root(repo_root: Path) -> Path:
-    """Return the primary checkout root that owns the shared .git dir."""
+    """Return the primary checkout root that owns the shared ``.git`` dir.
+
+    Only a ``gitdir:`` target with Git's exact ``.git/worktrees/<name>`` shape
+    redirects a path. Primary checkouts, release snapshots, and every other
+    malformed or non-Git root remain anchored to themselves.
+    """
     git_path = repo_root / ".git"
     if git_path.is_dir():
         return repo_root

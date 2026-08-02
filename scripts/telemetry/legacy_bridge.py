@@ -20,10 +20,21 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Literal
 
+from scripts.common.repo_root import main_checkout_root
+
 logger = logging.getLogger(__name__)
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-_DB_PATH = _REPO_ROOT / "data" / "telemetry" / "legacy_comms_routes.db"
+_SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _shared_telemetry_db_path(source_repo_root: Path | None = None) -> Path:
+    """Anchor one fleet-wide store to the primary checkout, never a worktree."""
+    source_root = (source_repo_root or _SOURCE_REPO_ROOT).resolve()
+    primary_root = main_checkout_root(source_root)
+    return primary_root / "data" / "telemetry" / "legacy_comms_routes.db"
+
+
+_DB_PATH = _shared_telemetry_db_path()
 _RETENTION_DAYS = 90
 _WINDOWS = {
     "1h": timedelta(hours=1),
