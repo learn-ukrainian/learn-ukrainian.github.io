@@ -44,6 +44,9 @@ trap 'rm -rf "${scratch_dir}"' EXIT
 mkdir -p "${install_dir}"
 install -m 0755 "${scratch_dir}/entire-agent-fleet" "${install_dir}/entire-agent-fleet"
 "${install_dir}/entire-agent-fleet" install-hooks
-"${entire_command}" agent add cursor
-"${python_command}" "${repo_root}/scripts/entire/cursor_session_start_shim.py" install
+cursor_shim="${repo_root}/scripts/entire/cursor_session_start_shim.py"
+if ! "${python_command}" "${cursor_shim}" check >/dev/null 2>&1; then
+  "${entire_command}" agent add cursor
+  "${python_command}" "${cursor_shim}" install
+fi
 echo "Installed Entire fleet adapter and native Cursor integration"
