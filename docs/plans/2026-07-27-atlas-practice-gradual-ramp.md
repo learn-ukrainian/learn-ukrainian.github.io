@@ -67,13 +67,24 @@
 
 A **32–50 gold slice** is only a **factory smoke test**. It must never be treated as the teacher-list delivery.
 
+### Operator membership + sources policy (2026-08-02 — binding)
+
+Canonical detail: [`docs/practice/curated-membership-and-sources.md`](../practice/curated-membership-and-sources.md).
+
+| Decision | Binding text |
+| --- | --- |
+| **Union membership** | Homework table (**~1k**, mandatory) ∪ teacher inventory Curated Deck (**~5k**, **keep**) ∪ inspiration lemmas (Ohoiko 1000 / 500 verbs / ULP) — **never drop the 5k to “focus on 1k”** |
+| **Multi-mode** | Most modes need **no sentence** (flashcards, matching, choice, stress, classify, paradigm, synonym, heritage); **cloze** alone requires rights-clear sentences |
+| **IP** | Ohoiko/ULP → lemma + soft **level priors** only; **no** verbatim book/note prose in public product |
+| **Sentences** | Public textbooks / sentence inventory / reviewed allowlist / open licenses / our modules — not private teacher or Ohoiko prose on the live site |
+
 ---
 
 ## 1. Product north star
 
 | Horizon | Learner experience |
 | --- | --- |
-| **Now (Track T)** | Practice the **teacher’s full Curated private teacher-lesson lemma list** in the app |
+| **Now (Track T)** | Practice the **teacher’s full homework-table lemma list** **and** the broader curated inventory (~5k) in the app — multi-mode, not cloze-only |
 | **Now (product)** | Browse a large Word Atlas; practice pool smaller than atlas |
 | **Near** | Curated decks feel complete; CTA works for those lemmas |
 | **Mid** | Most “everyday” atlas **lemmas** are practiceable; banner becomes rare |
@@ -86,12 +97,16 @@ A **32–50 gold slice** is only a **factory smoke test**. It must never be trea
 - Rights-aware examples (no fake sentences, no textbook exercise traps)
 - CODE decides **lemma** validity (VESUM / triage), not LLM dictionary judgment
 - Non-commercial permanent project
+- **Membership union + multi-mode source policy** (2026-08-02) — see `docs/practice/curated-membership-and-sources.md`
 
 **Should we ramp the whole atlas (Track A)?**
 **Yes — gradually.**
 
 **Should the Curated private teacher-lesson teacher list wait for that ramp?**
 **No.** Track T is unblocked homework priority and runs **ahead of** Wave 1–4 calendar language.
+
+**Should we discard the ~5k curated inventory to prioritize homework?**
+**No.** Add missing homework lemmas; **keep** the 5k; expand further via inspiration lists under IP rules.
 
 ---
 
