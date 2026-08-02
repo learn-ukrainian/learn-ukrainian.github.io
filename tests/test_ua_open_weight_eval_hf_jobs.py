@@ -49,14 +49,14 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.210167
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.300167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fd5aa6b79c09949c1fbc9",
+        "job_id": "6a6fd8236b79c09949c1fc35",
         "mode": "canary",
-        "provider_billed_minutes": 3,
+        "provider_billed_minutes_upper_bound": 3,
         "provider_derived_cost_usd": 0.09,
-        "provider_running_seconds": 145,
-        "stage": "ERROR",
+        "provider_duration_unavailable": True,
+        "stage": "CANCELED",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
     assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
@@ -160,8 +160,11 @@ def test_text_runtime_config_is_derived_after_verification_without_mutating_sour
         "vision_config": {"model_type": "gemma4_vision"},
     }
     (tokenizer / "config.json").write_text(json.dumps(source_config), encoding="utf-8")
+    (tokenizer / "tokenizer_config.json").write_text(
+        json.dumps({"tokenizer_class": "GemmaTokenizer"}), encoding="utf-8"
+    )
     (tokenizer / "tokenizer.json").write_text("{}", encoding="utf-8")
-    runtime_root, runtime_hash = hf_jobs_worker.prepare_text_runtime_tokenizer(tokenizer)
+    runtime_root, runtime_hash, runtime_tokenizer_hash = hf_jobs_worker.prepare_text_runtime_tokenizer(tokenizer)
     assert json.loads((tokenizer / "config.json").read_text(encoding="utf-8")) == source_config
     runtime_config = json.loads((runtime_root / "config.json").read_text(encoding="utf-8"))
     assert runtime_config == {
@@ -172,6 +175,9 @@ def test_text_runtime_config_is_derived_after_verification_without_mutating_sour
     }
     assert "vision_config" not in runtime_config
     assert runtime_hash == hf_jobs_worker.sha256_file(runtime_root / "config.json")
+    runtime_tokenizer_config = json.loads((runtime_root / "tokenizer_config.json").read_text(encoding="utf-8"))
+    assert runtime_tokenizer_config["fix_mistral_regex"] is True
+    assert runtime_tokenizer_hash == hf_jobs_worker.sha256_file(runtime_root / "tokenizer_config.json")
 
 
 def test_job_commands_use_hash_first_private_transport_without_volumes(
@@ -668,13 +674,14 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 0.210167
+    assert gate["prior_provider_cost_usd"] == 0.300167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
         "6a6fd2686b79c09949c1fb57",
         "6a6fd445a00abefd4b28e088",
         "6a6fd5aa6b79c09949c1fbc9",
+        "6a6fd8236b79c09949c1fc35",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40

@@ -77,6 +77,13 @@ runtime config from the official `text_config`. The original files and model
 bytes remain unchanged; vision tensors are skipped because this evaluation
 prohibits use of the multimodal projector. That attempt's three billed minutes
 cost USD 0.090000, so cumulative cost is USD 0.210167.
+Job `6a6fd8236b79c09949c1fc35` resolved the text-only architecture but emitted
+the upstream tokenizer warning requiring `fix_mistral_regex=True`; it was
+canceled before generation. The derived runtime tokenizer config now binds
+that flag, and the worker passes it explicitly to its renderer. The provider
+omitted terminal duration fields for the canceled job, so budget accounting
+conservatively reserves three billed minutes (USD 0.090000), raising cumulative
+accounted cost to USD 0.300167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
