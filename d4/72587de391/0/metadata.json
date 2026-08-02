@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d472587de391",
+  "session_id": "ses_03e398e10ffe3mpxn0IlWdsd4t",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T10:01:37.747763Z",
+  "branch": "codex/6260-kimi-entire-agent",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [
+    ".venv"
+  ],
+  "agent": "OpenCode",
+  "model": "kimi-k2.7-code",
+  "turn_id": "877d715d10ce",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T10:01:37.744586Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 2181,
+    "human_modified": 1,
+    "human_removed": 0,
+    "total_committed": 2182,
+    "total_lines_changed": 2536,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}

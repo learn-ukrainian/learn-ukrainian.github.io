@@ -1,0 +1,137 @@
+{
+  "info": {
+    "id": "ses_03e398e10ffe3mpxn0IlWdsd4t",
+    "slug": "gentle-eagle",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding",
+    "path": "",
+    "title": "entire-host-canary-6256-kimi",
+    "agent": "build",
+    "model": {
+      "id": "kimi-k2.7-code",
+      "providerID": "github-copilot",
+      "variant": "default"
+    },
+    "version": "1.17.13",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1785662435823,
+      "updated": 1785662439769
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1785662435849
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "github-copilot",
+          "modelID": "kimi-k2.7-code"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_fc1c67209001ZeEb13F0sDSCft",
+        "sessionID": "ses_03e398e10ffe3mpxn0IlWdsd4t"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"Respond exactly ENTIRE_KIMI_CANARY_OK. Do not call tools.\"",
+          "id": "prt_fc1c6720d001PYVy1NQqh8mCsB",
+          "sessionID": "ses_03e398e10ffe3mpxn0IlWdsd4t",
+          "messageID": "msg_fc1c67209001ZeEb13F0sDSCft"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_fc1c67209001ZeEb13F0sDSCft",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "kimi-k2.7-code",
+        "providerID": "github-copilot",
+        "time": {
+          "created": 1785662439562,
+          "completed": 1785662442895
+        },
+        "error": {
+          "name": "APIError",
+          "data": {
+            "message": "Forbidden: unauthorized: not licensed to use Copilot",
+            "statusCode": 403,
+            "isRetryable": false,
+            "responseHeaders": {
+              "content-length": "42",
+              "content-security-policy": "default-src 'none'; sandbox",
+              "content-type": "text/plain; charset=utf-8",
+              "date": "Sun, 02 Aug 2026 09:20:41 GMT",
+              "strict-transport-security": "max-age=31536000",
+              "x-content-type-options": "nosniff",
+              "x-copilot-service-request-id": "20e3ce55-92b3-4f51-a8ae-d7f6d9b2e748",
+              "x-github-backend": "Kubernetes",
+              "x-github-edge-region": "iad",
+              "x-github-request-id": "CEBC:1EDE20:18FFA9D:1FA4EED:6A6F0BE7"
+            },
+            "responseBody": "unauthorized: not licensed to use Copilot\n",
+            "metadata": {
+              "url": "https://api.githubcopilot.com/chat/completions"
+            }
+          }
+        },
+        "id": "msg_fc1c6808a0012Or2h1pw1ch1TW",
+        "sessionID": "ses_03e398e10ffe3mpxn0IlWdsd4t"
+      },
+      "parts": []
+    }
+  ]
+}
