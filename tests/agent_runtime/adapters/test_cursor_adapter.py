@@ -206,6 +206,46 @@ def test_cursor_adapter_parse_response_success(adapter):
     assert result.tool_calls[0]["name"] == "mcp__sources__search_text"
 
 
+def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(adapter):
+    """Prompt/tool text is part of stream-json stdout, not a provider signal."""
+    stdout = "\n".join(
+        [
+            json.dumps(
+                {
+                    "type": "user",
+                    "message": {
+                        "role": "user",
+                        "content": "Inspect tests/test_agent_runtime_rate_limit.py",
+                    },
+                }
+            ),
+            json.dumps(
+                {
+                    "type": "message",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Completed successfully; a prior task was rate limited.",
+                        }
+                    ],
+                }
+            ),
+        ]
+    )
+
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.rate_limited is False
+    assert result.response == "Completed successfully; a prior task was rate limited."
+
+
 def test_cursor_agent_trivial_invoke_smoke():
     if os.environ.get("CI"):
         pytest.skip("real cursor-agent smoke test is skipped in CI")

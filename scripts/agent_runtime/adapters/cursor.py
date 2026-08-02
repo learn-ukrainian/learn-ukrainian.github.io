@@ -33,7 +33,7 @@ from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
 
-# Stderr/stdout phrases that indicate the provider rate-limited us.
+# Stderr phrases that indicate the provider rate-limited a failed call.
 _RATE_LIMIT_PATTERNS = (
     r"usage limit reached",
     r"rate limit",
@@ -301,9 +301,6 @@ class CursorAdapter:
         _ = plan
         _ = call_start_time
 
-        # Detect rate limits
-        rate_limited = bool(_RATE_LIMIT_RE.search(f"{stdout}\n{stderr}"))
-
         # Parse JSONL events
         events = parse_json_events(stdout, source="cursor", logger=_logger)
         tool_calls = normalize_tool_calls(events)
@@ -349,6 +346,19 @@ class CursorAdapter:
             if transcript_response:
                 response = transcript_response
                 tool_calls = normalize_tool_calls(transcript_events)
+
+        # Cursor's stream-json stdout contains much more than the assistant's
+        # response: it can echo the user prompt and tool output verbatim. Those
+        # successful payloads routinely mention rate-limit state or files such
+        # as ``test_agent_runtime_rate_limit.py``. Treating any matching stdout
+        # token as a provider failure discards completed work and poisons the
+        # lane's cooldown history. Cursor does not document a dedicated rate-
+        # limit exit code, so follow the same conservative boundary as the
+        # Claude adapter: only a failed/empty-response call with a matching
+        # stderr diagnostic is rate-limited.
+        usable_response = bool(response)
+        failed_call = returncode != 0 or not usable_response
+        rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
