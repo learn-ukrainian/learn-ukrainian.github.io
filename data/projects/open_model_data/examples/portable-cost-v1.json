@@ -1,0 +1,11 @@
+{
+  "schema_version": "foundry_cost_config_v1",
+  "train_tokens": "1000000",
+  "epochs": "1",
+  "measured_aggregate_tokens_per_second": "100",
+  "accelerator_count": "1",
+  "provider_rate_usd_per_accelerator_hour": "2.50",
+  "storage_usd": "1.00",
+  "evaluation_usd": "2.00",
+  "failed_run_allowance_percent": "10"
+}

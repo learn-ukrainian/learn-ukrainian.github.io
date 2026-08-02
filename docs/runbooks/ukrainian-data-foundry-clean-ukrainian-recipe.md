@@ -57,11 +57,11 @@ approved these retained human-authored families for downstream research and
 model learning toward the project goal.
 
 Downstream model learning, raw-source redistribution, public dataset release,
-and public weight or adapter release are independent capabilities. The last
-three remain separately gated; they do not block preparation or downstream
-continued training. The existing exporter still implements the older combined
-gate and must be corrected before it can emit the newly approved downstream
-training-eligible view.
+public weight or adapter release, and public release are independent
+capabilities. The last four remain separately gated; they do not block an
+independently allowed local-learning preparation. The portable v1 input
+contract records these decisions separately while preserving the existing
+admission receipts byte-for-byte.
 
 Historical and literary text must not be flattened into contemporary standard
 Ukrainian. A training consumer receives explicit strata and chooses the mixture:
@@ -109,8 +109,12 @@ The production CLI is:
   --candidates-output batch_state/foundry/language-contact-candidates.jsonl
 ```
 
-The release candidate must add a documented adapter for a consumer-owned
-JSONL corpus so that a team does not need this project's private database.
+For a consumer-owned JSONL corpus, use the single public entry point documented
+in the
+[consumer quickstart](ukrainian-data-foundry-consumer-quickstart.md). It emits
+admission, evidence, disjoint views, tokenizer diagnostics, cost arithmetic,
+recipe, limitations, and reproduction receipts without this project's private
+database.
 
 ### 3. Attach evidence without inventing gold
 

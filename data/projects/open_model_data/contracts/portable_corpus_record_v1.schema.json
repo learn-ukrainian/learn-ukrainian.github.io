@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/portable_corpus_record_v1.schema.json",
+  "title": "Ukrainian Data Foundry portable corpus record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "text",
+    "source",
+    "context",
+    "capabilities",
+    "usage_role"
+  ],
+  "properties": {
+    "schema_version": {"const": "portable_corpus_record_v1"},
+    "record_id": {"$ref": "#/$defs/id"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 1000000},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "title", "license_expression", "locators"],
+      "properties": {
+        "family": {"$ref": "#/$defs/id"},
+        "title": {"type": "string", "minLength": 1},
+        "license_expression": {"type": ["string", "null"]},
+        "locators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/locator"}
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period", "region", "register", "origin"],
+      "properties": {
+        "period": {
+          "enum": ["modern", "historical", "archaic", "middle_ukrainian", "old_east_slavic", "unknown"]
+        },
+        "region": {"type": "string", "minLength": 1},
+        "register": {
+          "enum": ["neutral", "literary", "educational", "reference", "conversational", "dialectal", "regional", "marked", "unknown"]
+        },
+        "origin": {
+          "enum": ["human_authored", "machine_generated", "machine_translated", "human_revised_synthetic", "unknown"]
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "local_model_learning",
+        "raw_source_redistribution",
+        "dataset_publication",
+        "model_publication",
+        "public_release"
+      ],
+      "properties": {
+        "local_model_learning": {"$ref": "#/$defs/capability"},
+        "raw_source_redistribution": {"$ref": "#/$defs/capability"},
+        "dataset_publication": {"$ref": "#/$defs/capability"},
+        "model_publication": {"$ref": "#/$defs/capability"},
+        "public_release": {"$ref": "#/$defs/capability"}
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["start_char", "end_char", "replacement", "track", "evidence_grade", "evidence"],
+        "properties": {
+          "start_char": {"type": "integer", "minimum": 0},
+          "end_char": {"type": "integer", "minimum": 1},
+          "replacement": {"type": "string"},
+          "track": {"$ref": "#/$defs/track"},
+          "evidence_grade": {"$ref": "#/$defs/evidenceGrade"},
+          "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/locator"}}
+        }
+      }
+    },
+    "usage_role": {"enum": ["learning_candidate", "evaluation_only", "excluded"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{1,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "uri", "retrieved_on"],
+      "properties": {
+        "kind": {"enum": ["url", "urn", "file", "dataset_row", "document_page", "other"]},
+        "uri": {"type": "string", "minLength": 1},
+        "retrieved_on": {"type": "string", "format": "date"},
+        "sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "basis", "evidence"],
+      "properties": {
+        "status": {"enum": ["allowed", "denied", "unknown", "not_applicable"]},
+        "basis": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "track": {
+      "enum": [
+        "grammar",
+        "morphology",
+        "calques",
+        "russian_interference",
+        "quoted_russian",
+        "surzhyk",
+        "historical_archaic",
+        "regional_dialect",
+        "register",
+        "ocr",
+        "proper_names",
+        "ambiguity",
+        "overcorrection",
+        "protected_text",
+        "other_language"
+      ]
+    },
+    "evidenceGrade": {"enum": ["human_gold", "source_backed_silver", "controlled_silver", "unresolved"]},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track", "start_char", "end_char", "route", "evidence_grade", "sources"],
+      "properties": {
+        "track": {"$ref": "#/$defs/track"},
+        "start_char": {"type": "integer", "minimum": 0},
+        "end_char": {"type": "integer", "minimum": 1},
+        "route": {"enum": ["candidate_error", "correct_control", "protected", "unresolved"]},
+        "evidence_grade": {"$ref": "#/$defs/evidenceGrade"},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/locator"}},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}
