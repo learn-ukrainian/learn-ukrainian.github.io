@@ -2,11 +2,22 @@
 
 > **Owner:** [#6170](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6170)
 > under [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
+> **Status:** Parked optional compatibility experiment; not a prerequisite for
+> the clean-Ukrainian tool, training recipe, or release candidate in #6171
 > **Current boundary:** Stage 0 is reproducible and no-cost. A separately
 > bounded, non-treatment hardware validation is specified below but cannot
 > launch: local Hugging Face authentication/model access is not configured and
 > its exact probe authorization artifact is absent. Model-weight download and
 > treatment training still require the exact operator authorization receipt.
+
+This runbook preserves a reproducible experiment design; it is not the Foundry
+critical path. No model download, hardware probe, accelerator rental, or
+training is currently planned or authorized. The required deliverable is the
+model-neutral [clean-Ukrainian tool and training recipe](ukrainian-data-foundry-clean-ukrainian-recipe.md).
+If a future operator explicitly activates this exact Gemma revision, first
+refresh provider pricing and replace throughput estimates with a measured
+microbenchmark. Otherwise the preregistration remains useful frozen evidence
+and no further action is required.
 
 ## What this experiment can decide
 
