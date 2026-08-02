@@ -17,3 +17,7 @@ The public issue receipt in #6165 records the checkpoint identifier, source
 commit, private destination ref, leakage verdict, retry result, and authenticated
 Entire activity result without reproducing a prompt, response, transcript, or
 generated summary.
+
+Before rollout, run
+`.venv/bin/python scripts/entire/validate_checkpoint_routing.py` to prove that
+the product setting and egress allowlist still name one identical destination.
