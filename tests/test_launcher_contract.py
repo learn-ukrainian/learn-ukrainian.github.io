@@ -380,7 +380,11 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         shutil.copy2(REPO / relative, destination)
     python_bin = root / ".venv" / "bin" / "python"
     python_bin.parent.mkdir(parents=True)
-    python_bin.symlink_to(REPO / ".venv" / "bin" / "python")
+    python_bin.write_text(
+        f"#!/usr/bin/env bash\nexec {os.fspath(REPO / '.venv' / 'bin' / 'python')!r} \"$@\"\n",
+        encoding="utf-8",
+    )
+    python_bin.chmod(0o755)
     provider = root / "provider.sh"
     provider.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
     provider.chmod(0o755)
