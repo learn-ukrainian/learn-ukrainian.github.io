@@ -48,14 +48,19 @@ Ukrainian source material:
 | **Total** | **189,150** | **50,298,925** |
 
 This is recovered Ukrainian source data, mechanically distinct from the
-project's synthetic and translated collections. Its `human_authored_source`
-origin is an inventory classification, not source-by-source proof. A fail-
-closed admission status is a legal and lineage statement for a named use, not
-a judgment that the text is inauthentic. At present, only the Ukrainian
-Wikipedia family has been destination-admitted for continued pretraining.
-Textbooks and literature remain valuable source families, but they cannot enter
-a redistributable training view until their edition, origin, acquisition
-lineage, rights, and permitted-use evidence pass the same gate.
+project's synthetic and translated collections. The
+[training-usability decision](../research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md)
+verified all 137,723 raw literary rows against retained source locators and
+core metadata, and verified the textbook family against 158 chunk files, 170
+PDFs, the selection ledger, downloader, and page-URL map. The operator has
+approved these retained human-authored families for local research and model
+learning toward the project goal.
+
+Local model learning, raw-source redistribution, public dataset release, and
+public weight or adapter release are independent capabilities. The last three
+remain separately gated; they do not block preparation or local continued
+training. The existing exporter still implements the older combined gate and
+must be corrected before it can emit the newly approved local-training view.
 
 Historical and literary text must not be flattened into contemporary standard
 Ukrainian. A training consumer receives explicit strata and chooses the mixture:
@@ -73,13 +78,16 @@ the only copy.
 
 ## End-to-end recipe
 
-### 1. Admit sources for the intended use
+### 1. Admit sources for the intended capability
 
-Validate source identity, provenance, rights, privacy, human or synthetic
-origin, redistribution, contamination, and the exact destination. Keep
-machine-generated lessons, translations, and synthetic research evidence in
-separate origins. Do not promote benchmark text or its derivatives into a
-training view.
+Validate source identity, provenance, privacy, human or synthetic origin,
+contamination, and the exact destination. Record permissions separately for
+local model training, raw-source redistribution, dataset publication, and
+model publication; an unknown redistribution status must not be converted into
+a denial of an independently approved local-training use. Keep machine-
+generated lessons, translations, and synthetic research evidence in separate
+origins. Do not promote benchmark text or its derivatives into a training
+view.
 
 ### 2. Route language-contact evidence
 
@@ -193,10 +201,9 @@ one long near-duplicate, as recorded in the
 [model-view runbook](ukrainian-data-foundry-model-views.md). Applying the
 post-dedup observed ratio to the pre-dedup 50,298,925-word corpus inventory
 gives a rough **planning extrapolation of about 139.35 million tokens for one
-pass**. It is not a current training artifact: most
-source families are not yet destination-admitted, their eventual deduplication
-will change the denominator, and literary/historical genres may tokenize
-differently.
+pass**. It is not a current training artifact: the exact local-training views
+have not yet been exported, their deduplication and masking will change the
+denominator, and literary/historical genres may tokenize differently.
 
 Using Hugging Face Jobs list prices retrieved on 2026-08-02 of USD 2.50/hour
 for one A100 80 GB and USD 1.80/hour for one L40S 48 GB, a one-GPU, one-epoch

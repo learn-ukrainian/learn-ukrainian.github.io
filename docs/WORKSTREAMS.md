@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-02 (Foundry critical path realigned to the #6171 clean-Ukrainian tool, recipe, and no-training release candidate) |
+| **Last refreshed** | 2026-08-02 (corpus verdict CONTINUE; #6171 now separates local model learning from raw-source and publication capabilities) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -65,7 +65,7 @@ is the single source of truth for membership (auditor:
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| open-model-data | #6164 (successor to closed #6056) | Ukrainian Data Foundry Phase 2–4: admit useful-scale real data, detect contextual Ukrainian language-contact failures, produce evidence-backed silver with optional human-gold upgrades, export model-ready views, and ship a corpus-portable clean-Ukrainian tool, training recipe, and reproducible release candidate; paid model treatment is optional |
+| open-model-data | #6164 (successor to closed #6056) | Ukrainian Data Foundry Phase 2–4: apply the [CONTINUE corpus-usability decision](research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md), separate local learning from raw-source/publication permissions, detect contextual Ukrainian language-contact failures, produce evidence-backed silver with optional human-gold upgrades, export model-ready views, and ship a corpus-portable clean-Ukrainian tool, training recipe, and reproducible release candidate; paid model treatment is optional |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |

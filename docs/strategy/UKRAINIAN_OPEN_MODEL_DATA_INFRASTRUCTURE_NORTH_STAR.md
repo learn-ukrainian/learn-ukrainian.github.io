@@ -261,23 +261,23 @@ which reconcile by filename stem to all 229 literary database source groups.
 The repository also retains 12,347 tracked archive files and six historical
 FOLK package versions with Git recovery locators.
 
-This is an inventory, not an admission decision. The baseline records zero
-source-record admissions and zero redistribution-cleared assets. It keeps
+This inventory preceded the current capability-specific decision. Its zero
+source-record admissions and zero redistribution-cleared assets described the
+old combined gate, not corpus authenticity or local training fitness. It keeps
 human-authored, machine-generated direct Ukrainian, machine-translated,
 private-reference, evaluation-only, and unknown-origin material mechanically
 separate. The invalid 5,000-record export may locate an underlying work but
 cannot establish source, edition, rights, acquisition lineage, or contamination
 status.
 
-The public/external collection is recovered Ukrainian source data, inventory-
-classified as `human_authored_source` and mechanically separate from the
-project's synthetic and translated collections. It includes 137,723 literary
-records / 36,031,758 lexical words and 49,193 school-textbook records /
-9,564,143 lexical words across grades 1–11. The classification is not source-
-by-source proof of origin. A family being unresolved for a destination does not
-mean that its Ukrainian content is fake or useless; it means that the project
-has not yet proved the edition, origin, acquisition lineage, rights, and
-permitted use required for that destination.
+The subsequent
+[training-usability audit](../research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md)
+found source locators and core metadata on all 137,723 raw literary rows and
+reconciled the textbook family to retained chunks, PDFs, acquisition code,
+selection metadata, and page URLs. The operator approved these retained human-
+authored sources for local research and continued model learning. Raw-source
+redistribution, dataset publication, and model publication remain independent
+later decisions. The project verdict is **CONTINUE**.
 
 ### Already available
 
@@ -294,9 +294,11 @@ permitted use required for that destination.
 
 ### Immediate work
 
-1. Maintain the complete fail-closed disposition of all 189,150 records and
-   extend real destination-specific admission beyond the accepted 1,029-record
-   Ukrainian Wikipedia family whenever primary evidence permits (#6166).
+1. Replace the combined admission disposition with capability-specific states:
+   local research/model learning, raw-source redistribution, dataset release,
+   and model release. Apply the operator-approved local-training decision to
+   the retained human-authored corpus while preserving later release gates
+   (#6171).
 2. Preserve and use the completed production detector's 739,564 contextual
    candidates across Russian quotation, modern interference, phonetic Russian,
    mixed, historical, protected, and uncertain routes (#6167). VESUM absence
@@ -305,10 +307,12 @@ permitted use required for that destination.
    unresolved records without requiring reviewer labour (#6168). Preserve the
    existing blind human campaign as an optional gold-upgrade path and add an
    optional, privacy-safe Hramatka feedback intake.
-4. Start the admitted source-text continued-pretraining view immediately and
-   add separately manifested silver correction, preference, and quality-filter
-   views only when their evidence and destination gates pass (#6169). Report an
-   empty or blocked view honestly; never fill it with benchmark or fixture data.
+4. Restore raw literary locators lost during ingestion, reconcile remaining
+   textbook filename variations, and start the approved local source-text
+   continued-pretraining view immediately. Add separately manifested silver
+   correction, preference, and quality-filter views only when their evidence
+   and destination gates pass (#6169). Never fill a view with benchmark or
+   fixture data.
 5. Package the production detector, evidence factory, model-view exporters,
    tokenizer diagnostics, and evaluation firewall as one corpus-portable
    clean-Ukrainian tool. It must cover the Foundry's calque, grammar, and
@@ -353,9 +357,12 @@ The integration fixture is the observed `звучит` → `звучить` fail
 VESUM, Russian morphology, `r2u`, ULIF, a heritage source, per-dictionary
 `slovnyk.me` provenance, and Ukrainian corpus context. It remains synthetic:
 fixture reviewers are not qualified-human evidence and all four fixture rows
-remain training-ineligible. Separately, the operator has admitted 1,029 real
-Ukrainian Wikipedia records / 2,865,506 lexical words for the declared
-continued-pretraining destination; the remaining corpus is still unresolved.
+remain training-ineligible. Separately, the older combined gate admitted 1,029
+real Ukrainian Wikipedia records / 2,865,506 lexical words for the declared
+continued-pretraining destination. The later usability decision approves the
+retained human-authored corpus for local research and model learning after
+required preprocessing; it does not authorize raw-source, dataset, adapter, or
+weight publication.
 
 The reference build is proof that teams can run the Foundry interfaces and
 obtain reproducible evidence. It is not a released dataset, a trained model,

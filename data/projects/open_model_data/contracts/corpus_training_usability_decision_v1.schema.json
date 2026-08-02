@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/corpus_training_usability_decision_v1.schema.json",
+  "title": "Ukrainian Data Foundry corpus training-usability decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "snapshot_date", "project_verdict", "corpus", "lineage", "operator_attestations", "target_use_decisions", "required_preprocessing", "capability_decisions", "input_artifacts", "claims"],
+  "properties": {
+    "schema_version": {"const": "corpus_training_usability_decision_v1"},
+    "decision_id": {"type": "string", "minLength": 3},
+    "snapshot_date": {"type": "string", "format": "date"},
+    "project_verdict": {"const": "continue"},
+    "corpus": {"type": "object", "additionalProperties": false, "required": ["records", "lexical_words", "modern_lexical_words", "middle_ukrainian_lexical_words", "old_east_slavic_lexical_words", "vesum_attested_tokens", "vesum_unknown_tokens", "language_contact_candidates"], "properties": {"records": {"$ref": "#/$defs/count"}, "lexical_words": {"$ref": "#/$defs/count"}, "modern_lexical_words": {"$ref": "#/$defs/count"}, "middle_ukrainian_lexical_words": {"$ref": "#/$defs/count"}, "old_east_slavic_lexical_words": {"$ref": "#/$defs/count"}, "vesum_attested_tokens": {"$ref": "#/$defs/count"}, "vesum_unknown_tokens": {"$ref": "#/$defs/count"}, "language_contact_candidates": {"$ref": "#/$defs/count"}}},
+    "lineage": {"type": "object", "additionalProperties": false, "required": ["literary", "textbooks", "external_articles", "wikipedia"], "properties": {"literary": {"$ref": "#/$defs/literary"}, "textbooks": {"$ref": "#/$defs/textbooks"}, "external_articles": {"$ref": "#/$defs/profiledFamily"}, "wikipedia": {"$ref": "#/$defs/profiledFamily"}}},
+    "operator_attestations": {"type": "object", "additionalProperties": false, "required": ["literary_sources", "textbooks"], "properties": {"literary_sources": {"type": "string", "minLength": 1}, "textbooks": {"type": "string", "minLength": 1}}},
+    "target_use_decisions": {"type": "object", "additionalProperties": false, "required": ["clean_ukrainian_tool", "continued_training_of_existing_open_model", "foundation_model_training_from_scratch", "automatic_correction_or_preference_gold", "heldout_evaluation"], "properties": {"clean_ukrainian_tool": {"const": "usable_now"}, "continued_training_of_existing_open_model": {"const": "usable_after_required_preprocessing"}, "foundation_model_training_from_scratch": {"const": "insufficient_scale"}, "automatic_correction_or_preference_gold": {"const": "insufficient_without_evidence_validation"}, "heldout_evaluation": {"const": "usable_with_evaluation_firewall"}}},
+    "required_preprocessing": {"type": "array", "minItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "capability_decisions": {"type": "object", "additionalProperties": false, "required": ["local_research_and_model_training", "raw_source_redistribution", "public_dataset_release", "public_model_or_adapter_release"], "properties": {"local_research_and_model_training": {"const": "operator_approved_for_project_goal"}, "raw_source_redistribution": {"const": "separate_decision_required"}, "public_dataset_release": {"const": "separate_decision_required"}, "public_model_or_adapter_release": {"const": "separate_decision_required"}}},
+    "input_artifacts": {"type": "object", "additionalProperties": false, "required": ["corpus_profile_receipt_sha256", "language_contact_receipt_sha256", "textbook_url_map_sha256"], "properties": {"corpus_profile_receipt_sha256": {"$ref": "#/$defs/sha256"}, "language_contact_receipt_sha256": {"$ref": "#/$defs/sha256"}, "textbook_url_map_sha256": {"$ref": "#/$defs/sha256"}}},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["base_model_training_performed", "dataset_published", "raw_sources_redistribution_authorized", "perfect_ukrainian_guaranteed"], "properties": {"base_model_training_performed": {"const": false}, "dataset_published": {"const": false}, "raw_sources_redistribution_authorized": {"const": false}, "perfect_ukrainian_guaranteed": {"const": false}}}
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "countMap": {"type": "object", "additionalProperties": {"$ref": "#/$defs/count"}},
+    "literary": {"type": "object", "additionalProperties": false, "required": ["files", "file_families", "rows", "rows_with_source_locator", "rows_with_metadata"], "properties": {"files": {"$ref": "#/$defs/count"}, "file_families": {"$ref": "#/$defs/countMap"}, "rows": {"$ref": "#/$defs/count"}, "rows_with_source_locator": {"$ref": "#/$defs/count"}, "rows_with_metadata": {"$ref": "#/$defs/countMap"}}},
+    "textbooks": {"type": "object", "additionalProperties": false, "required": ["below_0_8_clean_ratio_rows", "chunk_files", "clean_rows", "exact_chunk_stem_pdf_matches", "exact_chunk_stem_url_matches", "mean_clean_ratio", "mojibake_files", "mojibake_rows", "not_clean_rows", "page_url_mappings", "pdf_files", "raw_chunk_rows"], "properties": {"below_0_8_clean_ratio_rows": {"$ref": "#/$defs/count"}, "chunk_files": {"$ref": "#/$defs/count"}, "clean_rows": {"$ref": "#/$defs/count"}, "exact_chunk_stem_pdf_matches": {"$ref": "#/$defs/count"}, "exact_chunk_stem_url_matches": {"$ref": "#/$defs/count"}, "mean_clean_ratio": {"type": "number", "minimum": 0, "maximum": 1}, "mojibake_files": {"$ref": "#/$defs/count"}, "mojibake_rows": {"$ref": "#/$defs/count"}, "not_clean_rows": {"$ref": "#/$defs/count"}, "page_url_mappings": {"$ref": "#/$defs/count"}, "pdf_files": {"$ref": "#/$defs/count"}, "raw_chunk_rows": {"$ref": "#/$defs/count"}}},
+    "profiledFamily": {"type": "object", "additionalProperties": false, "required": ["records", "lexical_words", "status"], "properties": {"records": {"$ref": "#/$defs/count"}, "lexical_words": {"$ref": "#/$defs/count"}, "status": {"type": "string", "minLength": 1}}}
+  }
+}
