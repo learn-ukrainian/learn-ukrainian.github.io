@@ -103,6 +103,18 @@ def test_runtime_page_keeps_primary_monitor_nav():
         assert f'href="{href}"' in html
 
 
+def test_runtime_page_puts_agent_process_and_capacity_monitor_first():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+    container = html.index('<div class="container">')
+    monitor = html.index('id="agent-monitor-heading"')
+    agents = html.index("Installed adapters and defaults")
+
+    assert container < monitor < agents
+    assert html.count('id="agent-monitor-heading"') == 1
+    assert html.count('id="agent-monitor-status-badge"') == 1
+    assert 'aria-live="polite"' in html[monitor:agents]
+
+
 def test_runtime_page_renders_read_only_acpx_shadow_transport_overview():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
 

@@ -110,6 +110,19 @@ tr:last-child td { border-bottom: none; }
 </div>
 
 <div class="container">
+  <section class="card green" aria-labelledby="agent-monitor-heading">
+    <div class="card-header">
+      <h2 id="agent-monitor-heading">&#9889; Agent Process &amp; Host Capacity Monitor</h2>
+      <span id="agent-monitor-status-badge" class="pill ok" role="status" aria-live="polite">Checking...</span>
+    </div>
+    <div id="agent-monitor-details" class="headroom-grid">
+      <div class="headroom-card">Available RAM: <strong id="ram-avail">-</strong></div>
+      <div class="headroom-card">System Load: <strong id="sys-load">-</strong></div>
+      <div class="headroom-card">Active Agent Leases: <strong id="active-leases-count">-</strong></div>
+      <div class="headroom-card">Reserved RAM: <strong id="reserved-ram">-</strong></div>
+    </div>
+  </section>
+
   <section class="card">
     <div class="card-header"><h2>&#128736; Agents</h2><div class="muted">Installed adapters and defaults</div></div>
     <div class="banner" id="agents-banner"></div>
@@ -476,20 +489,6 @@ loadRuntime();
 startRefresh();
 </script>
 
-  <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 16px 24px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="margin:0; font-size:16px; color:var(--text);">⚡ Agent Process & Host Capacity Monitor</h3>
-      <span id="agent-monitor-status-badge" style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; background:var(--bg3); color:var(--green);">Checking...</span>
-    </div>
-    <div id="agent-monitor-details" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:13px;">
-      <div>Available RAM: <strong id="ram-avail">-</strong></div>
-      <div>System Load: <strong id="sys-load">-</strong></div>
-      <div>Active Agent Leases: <strong id="active-leases-count">-</strong></div>
-      <div>Reserved RAM: <strong id="reserved-ram">-</strong></div>
-    </div>
-  </div>
-
-
 <script>
 async function refreshAgentMonitor() {
   try {
@@ -499,7 +498,7 @@ async function refreshAgentMonitor() {
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) {
       badge.textContent = data.severity.toUpperCase();
-      badge.style.color = data.severity === 'healthy' ? 'var(--green)' : (data.severity === 'critical' ? 'var(--red)' : 'var(--yellow)');
+      badge.className = `pill ${data.severity === 'healthy' ? 'ok' : (data.severity === 'critical' ? 'err' : 'warn')}`;
     }
     const ram = document.getElementById('ram-avail');
     if (ram) ram.textContent = `${data.ram.available_mb} MB / ${data.ram.total_mb} MB (${data.ram.used_percent.toFixed(0)}% used)`;
