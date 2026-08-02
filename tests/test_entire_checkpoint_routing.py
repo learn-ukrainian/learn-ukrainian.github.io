@@ -29,6 +29,10 @@ def test_accepts_matching_single_private_destination(tmp_path: Path) -> None:
     assert validate(tmp_path) is None
 
 
+def test_live_public_config_is_consistent() -> None:
+    assert validate(Path(__file__).resolve().parents[1]) is None
+
+
 def test_rejects_routing_drift(tmp_path: Path) -> None:
     _write_config(tmp_path, configured="org/private", allowed=["org/other"])
 
