@@ -2480,3 +2480,21 @@ def test_paronym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pyte
     entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
     shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), paronym_pairs=[])
     assert shards["B1"]["paronym"]["paronym"] == []
+
+
+def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
+    live_path = Path("data/lexicon/paronym_pairs.yaml")
+    assert live_path.exists()
+    pairs = read_paronym_pairs(live_path)
+    assert len(pairs) == 55, f"Expected 55 paronym pairs (20 baseline + 35 promoted), got {len(pairs)}"
+    seen_pairs: set[tuple[str, str]] = set()
+    for index, pair in enumerate(pairs):
+        errors = validate_paronym_pair(pair)
+        assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
+        import unicodedata
+        a = unicodedata.normalize("NFC", pair["slugA"].strip().lower())
+        b = unicodedata.normalize("NFC", pair["slugB"].strip().lower())
+        key = tuple(sorted([a, b]))
+        assert key not in seen_pairs, f"Duplicate paronym pair key {key}"
+        seen_pairs.add(key)
+
