@@ -1,5 +1,8 @@
 {
   "permissions": {
+    "deny": [
+      "Read(./.entire/metadata/**)"
+    ],
     "read": {
       "rules": [
         {
@@ -631,6 +634,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"\\n\\nEntire CLI is enabled but not installed or not on PATH.\\nInstallation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; exec entire hooks claude-code session-start'",
+            "timeout": 30
           }
         ]
       }
@@ -685,6 +693,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code pre-task'",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -709,6 +727,26 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/thread-lease-heartbeat.sh",
             "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code post-task'",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "TodoWrite",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code post-todo'",
+            "timeout": 30
           }
         ]
       }
@@ -736,6 +774,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-gemini-inbox.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code user-prompt-submit'",
+            "timeout": 30
           }
         ]
       }
@@ -781,6 +824,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/goal-driver-stop.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code stop'",
+            "timeout": 30
           }
         ]
       }
@@ -803,6 +851,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/release-thread-lease.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks claude-code session-end'",
+            "timeout": 30
           }
         ]
       }

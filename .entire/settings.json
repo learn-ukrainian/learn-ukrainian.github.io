@@ -1,4 +1,5 @@
 {
+  "enabled": true,
   "strategy_options": {
     "checkpoint_remote": {
       "provider": "github",
