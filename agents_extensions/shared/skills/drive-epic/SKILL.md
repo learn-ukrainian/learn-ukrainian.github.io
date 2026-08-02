@@ -182,19 +182,34 @@ End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemi
 the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
 file handoff current — it stays authoritative through every plane mode (below).
 
+**Skill source of truth is git, not deploy trees.** Edit only
+`agents_extensions/shared/skills/drive-epic/SKILL.md` (this file). Never implement or
+“fix” process in `.claude/skills/` or other deploy-rsync targets — those copies are
+overwritten on the next agents_extensions deploy and are not durable.
+
 **Entire dual-write (Option A — operator GO 2026-08-02; file remains SSOT):** on every
 session handoff, also project public continuity into entire-context. This is
 **supplemental** (ADR-018): body-free locators only; never store residual narratives,
 task ids, or OPSEC-sensitive prose only in Entire; never treat Entire as handoff
 authority or retire the file on your own.
 
+Durable sinks for the dual-write (not private deploy trees):
+
+| Sink | What to write | Survives |
+| --- | --- | --- |
+| **File handoff** (local operational SSOT; gitignored `.claude/<epic>-epic/*` or `docs/session-state/` when the epic uses a tracked pointer) | Next queue, residual narrative | Local session / tracked pointer as applicable |
+| **entire-context projection** (`batch_state/entire-context/…` via CLI) | `bootstrap-git` + capsule via `handoff` + `record-use` | Rebuildable local projection |
+| **Fleet-comms channel** | Issue/PR numbers only | Plane authority |
+| **GitHub issues** | Residual / next work | Public queue SSOT |
+
 ```bash
-# 1) Index merge SHAs from this drive (idempotent)
+# 1) Index merge SHAs from this drive (idempotent) — writes the local projection
 .venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha>   # repeat per merge
 
-# 2) Body-free capsule (≤5 items); optional: pass --locator-id clink_… from bootstrap
-.venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>" \
-  | tee "${SESSION_HANDOFF_DIR:-.claude}/${SESSION_EPIC:-epic}-epic/entire-handoff-capsule.json"
+# 2) Body-free capsule to stdout (≤5 items). Optional: --locator-id clink_… from bootstrap.
+#    Do NOT treat a tee into .claude/ as durable process storage (deploy-wiped).
+#    Optional scratch only: batch_state/ (gitignored runtime), never skills trees.
+.venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>"
 
 # 3) Attest consumption when locators informed the handoff
 .venv/bin/python -m scripts.entire_context record-use \
