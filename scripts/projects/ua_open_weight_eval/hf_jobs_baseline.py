@@ -353,6 +353,7 @@ def job_command(
             f"{bundle.resolve()}:/workspace:ro",
             "--volume",
             f"hf://buckets/{namespace}/{bucket}:/output:rw",
+            "--",
             image,
             "bash",
             "-lc",
@@ -422,6 +423,10 @@ def reconcile_provider_inspection(
         "suite": config["suite"]["cases_sha256"][:16],
     }
     _require(all(labels.get(key) == value for key, value in expected_labels.items()), "provider labels drift")
+    allowed_labels = set(expected_labels) | {"name", "timeout_seconds"}
+    if mode == "full":
+        allowed_labels.add("projection")
+    _require(set(labels) == allowed_labels, "provider has unexpected labels")
     status = inspection.get("status")
     _require(isinstance(status, dict), "provider status is missing")
     stage = status.get("stage")

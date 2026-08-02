@@ -137,6 +137,11 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     assert "--json" not in command
     assert "HF_TOKEN" not in joined
     assert "--selection /workspace/canary_selection.json" in joined
+    separator = command.index("--")
+    assert command[separator + 1] == (
+        f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
+    )
+    assert command[separator + 2 : separator + 4] == ["bash", "-lc"]
 
 
 def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
@@ -280,6 +285,7 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
             "bundle_sha256": "b" * 64,
             "issue": "6273",
             "mode": "canary",
+            "name": "ua-open-weight-eval-gemma4-canary",
             "suite": config["suite"]["cases_sha256"][:16],
             "timeout_seconds": "1200",
         },
@@ -293,6 +299,15 @@ def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() ->
         bundle_manifest=manifest,
     )
     assert receipt["provider_derived_cost_usd"] == 0.3
+    inspection["labels"]["c"] = ""
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="unexpected labels"):
+        hf_jobs_baseline.reconcile_provider_inspection(
+            inspection=inspection,
+            mode="canary",
+            config=config,
+            bundle_manifest=manifest,
+        )
+    inspection["labels"].pop("c")
     inspection["status"]["expose_urls"] = ["https://example.invalid"]
     with pytest.raises(hf_jobs_baseline.BaselineError, match="exposed"):
         hf_jobs_baseline.reconcile_provider_inspection(
