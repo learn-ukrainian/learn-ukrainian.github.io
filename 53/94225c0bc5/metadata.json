@@ -3,7 +3,7 @@
   "checkpoint_id": "5394225c0bc5",
   "strategy": "manual-commit",
   "branch": "codex/6256-entire-native-onboarding",
-  "checkpoints_count": 4,
+  "checkpoints_count": 5,
   "files_touched": [
     "agents_extensions/codex/config.toml",
     "agents_extensions/codex/hooks.json",
@@ -33,13 +33,20 @@
       "compact_transcript": "/53/94225c0bc5/2/transcript.jsonl",
       "content_hash": "/53/94225c0bc5/2/content_hash.txt",
       "prompt": "/53/94225c0bc5/2/prompt.txt"
+    },
+    {
+      "metadata": "/53/94225c0bc5/3/metadata.json",
+      "transcript": "/53/94225c0bc5/3/full.jsonl",
+      "compact_transcript": "/53/94225c0bc5/3/transcript.jsonl",
+      "content_hash": "/53/94225c0bc5/3/content_hash.txt",
+      "prompt": "/53/94225c0bc5/3/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 90,
+    "input_tokens": 29702,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 59264,
-    "output_tokens": 18,
-    "api_call_count": 3
+    "cache_read_tokens": 59328,
+    "output_tokens": 26,
+    "api_call_count": 4
   }
 }

@@ -1,0 +1,2 @@
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"user","ts":"2026-08-02T09:17:02.234Z","content":[{"id":"prt_fc1c32f9f001XrKTACHyj3KINz","text":"\"Respond exactly ENTIRE_HOST_CANARY_OK. Do not call tools.\""}]}
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"assistant","ts":"2026-08-02T09:17:05.635Z","id":"msg_fc1c33ce3001BoxZvu0KUZryxo","input_tokens":29612,"output_tokens":8,"content":[{"text":"ENTIRE_HOST_CANARY_OK","type":"text"}]}
