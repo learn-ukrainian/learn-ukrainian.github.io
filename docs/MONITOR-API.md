@@ -1535,6 +1535,11 @@ HTTP route telemetry. A valid invocation records `started` before authority or
 provider work. Its terminal result increments `succeeded` or `failed`; a
 process termination or crash remains visible as `unfinished`.
 
+Linked dispatch worktrees resolve this store through Git's primary checkout,
+so their invocations converge on the same fleet-wide local evidence plane read
+by the supervised Monitor API. Disposable worktree removal does not remove or
+fragment the observation history.
+
 The recorder persists only the normalized target (`agy`, `claude`, `codex`,
 `cursor`, `deepseek`, `glm`, `grok`, `kimi`, or `pool`), a fixed caller family,
 counts, and first/last timestamps. It never stores prompts, task IDs,

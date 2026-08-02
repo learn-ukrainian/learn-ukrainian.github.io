@@ -48,6 +48,21 @@ def _store_bytes(path: Path) -> bytes:
     )
 
 
+def test_default_store_resolves_from_a_linked_worktree_to_the_primary_checkout(
+    tmp_path: Path,
+) -> None:
+    primary = tmp_path / "primary"
+    worktree = tmp_path / "dispatch" / "task"
+    worktree_git_dir = primary / ".git" / "worktrees" / "task"
+    worktree_git_dir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {worktree_git_dir}\n", encoding="utf-8")
+
+    assert legacy_bridge._shared_telemetry_db_path(worktree) == (
+        primary / "data" / "telemetry" / "legacy_comms_routes.db"
+    )
+
+
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
