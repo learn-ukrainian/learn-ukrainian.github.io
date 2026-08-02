@@ -197,7 +197,7 @@ def run_worker(args: argparse.Namespace, root: Path) -> int:
     _require(install.returncode == 0, "verified plugin installation failed")
     output = root / "output"
     command = [
-        "python",
+        "python3",
         str(root / "hf_jobs_worker.py"),
         "--mode",
         args.mode,

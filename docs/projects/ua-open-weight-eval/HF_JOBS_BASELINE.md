@@ -57,7 +57,11 @@ in the phase total. The first authorized L40S canary
 `6a6fcc80a00abefd4b28dfb6` reached `RUNNING` but exited before model work because
 the pinned image exposes `python3` without a `python` alias. Its two billed
 minutes cost USD 0.060000. The replacement bootstrap invokes `python3` directly,
-and the cumulative USD 0.060167 is bound into its operator gate and remains
+but job `6a6fd2686b79c09949c1fb57` then found the same missing alias in the
+transport-to-worker handoff after verifying the bundle and installing the
+plugin. Its one billed minute cost USD 0.030000. Every L40S interpreter handoff
+now invokes `python3` directly, and the cumulative USD 0.090167 is bound into
+the next operator gate and remains
 in every subsequent aggregate budget calculation.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
