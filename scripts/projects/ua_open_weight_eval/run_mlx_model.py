@@ -20,6 +20,13 @@ from typing import Any
 REQUEST_SCHEMA = "ua_open_weight_eval_requests.v1"
 RESPONSE_SCHEMA = "ua_open_weight_eval_responses.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
+OFFLINE_ENVIRONMENT = {
+    "HF_DATASETS_OFFLINE": "1",
+    "HF_HUB_DISABLE_TELEMETRY": "1",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "UA_EVAL_NETWORK_ALLOWED": "0",
+}
 
 
 class RunnerError(ValueError):
@@ -55,6 +62,11 @@ def sha256_path(path: Path) -> str:
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise RunnerError(message)
+
+
+def enforce_offline_environment() -> None:
+    """Force supported model libraries into offline mode for every entry path."""
+    os.environ.update(OFFLINE_ENVIRONMENT)
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -191,6 +203,7 @@ def write_responses(path: Path, header: Mapping[str, Any], records: Sequence[Map
 
 
 def load_mlx_generator(model_path: Path, max_tokens: int) -> Callable[[str], str]:
+    enforce_offline_environment()
     try:
         import mlx.core as mx
         from mlx_lm import generate, load
@@ -212,6 +225,7 @@ def load_mlx_generator(model_path: Path, max_tokens: int) -> Callable[[str], str
 
 
 def run(args: argparse.Namespace, generator: Callable[[str], str] | None = None) -> dict[str, Any]:
+    enforce_offline_environment()
     model_path = args.model.expanduser().resolve()
     _require(model_path.is_dir(), "model must be an existing local directory")
     _require(

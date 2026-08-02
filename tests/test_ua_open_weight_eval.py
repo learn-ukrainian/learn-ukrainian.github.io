@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -367,3 +368,10 @@ def test_mlx_runner_rejects_gold_and_ambiguous_model_replies(tmp_path: Path) -> 
     _write_jsonl(request_path, [header, *requests])
     with pytest.raises(run_mlx_model.RunnerError, match="gold field"):
         run_mlx_model.load_requests(request_path)
+
+
+def test_mlx_runner_forces_offline_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in run_mlx_model.OFFLINE_ENVIRONMENT:
+        monkeypatch.setenv(name, "unsafe-value")
+    run_mlx_model.enforce_offline_environment()
+    assert {name: os.environ[name] for name in run_mlx_model.OFFLINE_ENVIRONMENT} == (run_mlx_model.OFFLINE_ENVIRONMENT)
