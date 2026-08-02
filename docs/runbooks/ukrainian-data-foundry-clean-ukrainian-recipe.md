@@ -186,11 +186,17 @@ sequence length, precision, optimizer, and adapter/full-parameter policy before
 approving the full run.
 
 The pinned Gemma 4 IT tokenizer produced 7,696,734 non-special tokens from
-2,778,111 lexical words in the admitted Wikipedia view: 2.7705 total text
-tokens per lexical word. Applying that observed ratio to all 50,298,925 corpus
-words gives a **planning extrapolation of about 139.35 million tokens for one
-pass**. It is not a current training artifact: most source families are not yet
-destination-admitted, and literary/historical genres may tokenize differently.
+2,778,111 lexical words in the 1,028-record, deduplicated training-eligible
+Wikipedia view: 2.7705 total text tokens per lexical word. The admitted source
+family has 1,029 records / 2,865,506 lexical words; the view exporter excludes
+one long near-duplicate, as recorded in the
+[model-view runbook](ukrainian-data-foundry-model-views.md). Applying the
+post-dedup observed ratio to the pre-dedup 50,298,925-word corpus inventory
+gives a rough **planning extrapolation of about 139.35 million tokens for one
+pass**. It is not a current training artifact: most
+source families are not yet destination-admitted, their eventual deduplication
+will change the denominator, and literary/historical genres may tokenize
+differently.
 
 Using Hugging Face Jobs list prices retrieved on 2026-08-02 of USD 2.50/hour
 for one A100 80 GB and USD 1.80/hour for one L40S 48 GB, a one-GPU, one-epoch
