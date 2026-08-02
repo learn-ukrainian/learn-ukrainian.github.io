@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/foundry_run_receipt_v1.schema.json",
+  "title": "Ukrainian Data Foundry portable run receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "tool",
+    "input",
+    "capability_summary",
+    "evidence_summary",
+    "views",
+    "evaluation_firewall",
+    "tokenizer",
+    "cost",
+    "recipe",
+    "limitations",
+    "reproduction",
+    "safety"
+  ],
+  "properties": {
+    "schema_version": {"const": "foundry_run_receipt_v1"},
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "command"],
+      "properties": {
+        "name": {"const": "ukrainian-data-foundry"},
+        "version": {"type": "string", "minLength": 1},
+        "command": {"const": "prepare"}
+      }
+    },
+    "input": {"$ref": "#/$defs/artifact"},
+    "capability_summary": {"type": "object"},
+    "evidence_summary": {"type": "object"},
+    "views": {
+      "type": "object",
+      "minProperties": 7,
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    },
+    "evaluation_firewall": {"type": "object"},
+    "tokenizer": {"type": "object"},
+    "cost": {"type": "object"},
+    "recipe": {"type": "object"},
+    "limitations": {"type": "object"},
+    "reproduction": {"type": "object"},
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original_text_preserved",
+        "automatic_rewrite_performed",
+        "model_call_performed",
+        "model_download_performed",
+        "training_performed",
+        "optimizer_executed",
+        "adapter_created",
+        "weights_uploaded",
+        "closed_api_required",
+        "publication_authorized"
+      ],
+      "properties": {
+        "original_text_preserved": {"const": true},
+        "automatic_rewrite_performed": {"const": false},
+        "model_call_performed": {"const": false},
+        "model_download_performed": {"const": false},
+        "training_performed": {"const": false},
+        "optimizer_executed": {"const": false},
+        "adapter_created": {"const": false},
+        "weights_uploaded": {"const": false},
+        "closed_api_required": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "records", "sha256"],
+      "properties": {
+        "logical_path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "records": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
