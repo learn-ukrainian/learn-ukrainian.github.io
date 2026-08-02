@@ -53,6 +53,11 @@ hash. Its later deterministic worker-default failure occurred after those
 facts and was fixed, tested, independently reviewed, and merged in PR #6294.
 The operator explicitly superseded the receipt-upload requirement and prohibited
 another CPU preflight. The accepted CPU charge is USD 0.000167 and is included
+in the phase total. The first authorized L40S canary
+`6a6fcc80a00abefd4b28dfb6` reached `RUNNING` but exited before model work because
+the pinned image exposes `python3` without a `python` alias. Its two billed
+minutes cost USD 0.060000. The replacement bootstrap invokes `python3` directly,
+and the cumulative USD 0.060167 is bound into its operator gate and remains
 in every subsequent aggregate budget calculation.
 
 Historically, the five-minute CPU Basic contract required a complete receipt

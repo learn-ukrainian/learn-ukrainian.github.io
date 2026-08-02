@@ -117,6 +117,24 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     _require(authorization["recoverable_execution_retries_authorized"] is True, "retry authorization drift")
     prior_cost = float(authorization["prior_provider_cost_usd"])
     _require(0 <= prior_cost < authorization["maximum_provider_cost_usd"], "prior provider cost drift")
+    incurred_costs = authorization["incurred_provider_costs"]
+    _require(isinstance(incurred_costs, list) and incurred_costs, "incurred provider cost ledger drift")
+    _require(
+        len({entry.get("job_id") for entry in incurred_costs}) == len(incurred_costs)
+        and all(
+            isinstance(entry, dict)
+            and JOB_ID_PATTERN.fullmatch(str(entry.get("job_id", ""))) is not None
+            and entry.get("stage") in {"COMPLETED", "ERROR", "CANCELED"}
+            and float(entry.get("provider_derived_cost_usd", -1)) >= 0
+            for entry in incurred_costs
+        ),
+        "incurred provider cost ledger entry drift",
+    )
+    _require(
+        round(sum(float(entry["provider_derived_cost_usd"]) for entry in incurred_costs), 6)
+        == round(prior_cost, 6),
+        "incurred provider costs do not match prior provider cost",
+    )
     cpu_validation = authorization["validated_cpu_transport"]
     _require(cpu_validation["accepted_by_operator"] is True, "CPU transport acceptance drift")
     _require(JOB_ID_PATTERN.fullmatch(cpu_validation["job_id"]) is not None, "CPU transport job ID drift")
@@ -126,9 +144,12 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         and cpu_validation["all_bundle_hashes_verified"] is True,
         "CPU transport evidence drift",
     )
+    cpu_cost_entries = [entry for entry in incurred_costs if entry["job_id"] == cpu_validation["job_id"]]
+    _require(len(cpu_cost_entries) == 1, "CPU transport cost is missing from incurred provider cost ledger")
     _require(
-        float(cpu_validation["provider_derived_cost_usd"]) == prior_cost,
-        "CPU transport cost does not match prior provider cost",
+        float(cpu_validation["provider_derived_cost_usd"])
+        == float(cpu_cost_entries[0]["provider_derived_cost_usd"]),
+        "CPU transport cost does not match incurred provider cost ledger",
     )
     _require(
         re.fullmatch(r"[a-f0-9]{64}", cpu_validation["validated_bundle_sha256"]) is not None,
@@ -491,6 +512,8 @@ def operator_gate_gpu_canary(
         "authorization_source": f"operator_supersession_{authorization['superseding_authorization_at']}",
         "accepted_preflight_job_id": validation["job_id"],
         "accepted_preflight_cost_usd": validation["provider_derived_cost_usd"],
+        "prior_provider_cost_usd": authorization["prior_provider_cost_usd"],
+        "incurred_provider_job_ids": [entry["job_id"] for entry in authorization["incurred_provider_costs"]],
         "validated_cpu_bundle_sha256": validation["validated_bundle_sha256"],
         "accepted_cpu_fix_merge_commit": validation["fixed_by_merge_commit"],
         "bundle_sha256": bundle_manifest["bundle_sha256"],
@@ -531,7 +554,7 @@ assert m.get('bundle_sha256')==a.bundle_sha256==hashlib.sha256(json.dumps(u,ensu
 r=next(x for x in m['files'] if x['path']=='hf_jobs_transport.py')
 tp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/hf_jobs_transport.py',token=True))
 assert tp.stat().st_size==r['bytes'] and hashlib.sha256(tp.read_bytes()).hexdigest()==r['sha256']
-os.execvp('python',['python',str(tp),*sys.argv[1:]])
+os.execvp('python3',['python3',str(tp),*sys.argv[1:]])
 """
 
 
@@ -626,6 +649,13 @@ def job_command(
                     "operator canary gate CPU evidence drift",
                 )
                 _require(
+                    float(preflight_gate.get("prior_provider_cost_usd", math.inf))
+                    == float(config["authorization"]["prior_provider_cost_usd"])
+                    and preflight_gate.get("incurred_provider_job_ids")
+                    == [entry["job_id"] for entry in config["authorization"]["incurred_provider_costs"]],
+                    "operator canary gate cumulative cost evidence drift",
+                )
+                _require(
                     preflight_gate.get("accepted_cpu_fix_merge_commit") == validation["fixed_by_merge_commit"]
                     and preflight_gate.get("bundle_source_commit") == manifest["source_commit"],
                     "operator canary gate source provenance drift",
@@ -678,7 +708,7 @@ def job_command(
     ]
     if mode in RUN_MODES:
         transport_args.extend(["--requests-sha256", manifest["requests_sha256"]])
-    bootstrap = shlex.join(["python", "-c", _bootstrap_source(), *transport_args])
+    bootstrap = shlex.join(["python3", "-c", _bootstrap_source(), *transport_args])
     shell_command = f"{installer} huggingface_hub=={config['runtime']['huggingface_hub_cli_version']} && {bootstrap}"
     labels = {
         "bundle_sha256": manifest["bundle_sha256"],

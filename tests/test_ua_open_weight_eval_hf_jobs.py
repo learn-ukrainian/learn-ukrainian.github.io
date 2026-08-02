@@ -49,7 +49,15 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.000167
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.060167
+    assert config["authorization"]["incurred_provider_costs"][-1] == {
+        "job_id": "6a6fcc80a00abefd4b28dfb6",
+        "mode": "canary",
+        "provider_billed_minutes": 2,
+        "provider_derived_cost_usd": 0.06,
+        "provider_running_seconds": 61,
+        "stage": "ERROR",
+    }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
     assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert config["authorization"]["no_automatic_paid_retry"] is False
@@ -191,6 +199,10 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
     )
     assert command[separator + 2 : separator + 4] == ["sh", "-lc"]
+    shell_command = command[separator + 4]
+    assert "python3 -c" in shell_command
+    assert " python -c" not in shell_command
+    assert "os.execvp('python3',['python3'" in hf_jobs_baseline._bootstrap_source()
     tampered_gate = {**preflight_gate, "preflight_cost_usd": 0.002}
     with pytest.raises(hf_jobs_baseline.BaselineError, match="gate SHA-256 drift"):
         hf_jobs_baseline.job_command(
@@ -602,6 +614,11 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
+    assert gate["prior_provider_cost_usd"] == 0.060167
+    assert gate["incurred_provider_job_ids"] == [
+        "6a6fbf1b6b79c09949c1fa46",
+        "6a6fcc80a00abefd4b28dfb6",
+    ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40
     assert gate["accepted_cpu_fix_merge_commit"] == "80a6a273aa5619b41f2a9a21ea69c5b253e180b4"
