@@ -1,5 +1,5 @@
 {
-  "fingerprint": "0c09127315dce53aa386a2ab7a22cd5a4eda21c7721944bca33f3c7c2494d3a2",
+  "fingerprint": "1b4af7c9822020a9eeeb6794451f2a022644248b8f2f03ad2793a7be68b4df56",
   "inputs": {
     "lexicon_code": [
       {
@@ -64,7 +64,7 @@
       },
       {
         "path": "scripts/lexicon/curated_membership.py",
-        "sha256": "a3f9dde7cb8792e0952701d301a0afa51a5a003fdff9767900be5928f9827916"
+        "sha256": "45a81e21d503eeed19a770eb367dc794cac40f8dd60314ca51273b60a8b3f149"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
