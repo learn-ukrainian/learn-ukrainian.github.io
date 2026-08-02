@@ -1180,7 +1180,8 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
     ).dump_stream("epic:5703")
     assert len(stream["sessions"]) == 1
-    assert stream["sessions"][0]["state"] == "open"
+    assert stream["sessions"][0]["state"] == "closed"
+    assert stream["lease"]["state"] == "released"
     assert stream["lease"]["holder_agent"] == first_provider
 
 
@@ -1200,9 +1201,10 @@ def test_real_grok_driver_recovers_dead_unexpired_holder_via_session_supervisor(
     assert launched.returncode == 0, launched.stderr + launched.stdout
     assert started["grok"].exists()
     stream = store.dump_stream("epic:5703")
-    assert sorted(session["state"] for session in stream["sessions"]) == ["closed", "open"]
+    assert [session["state"] for session in stream["sessions"]] == ["closed", "closed"]
     assert stream["lease"]["generation"] == 2
     assert stream["lease"]["holder_agent"] == "grok"
+    assert stream["lease"]["state"] == "released"
 
 
 def test_real_grok_driver_refuses_expired_app_thread_holder_before_provider_executes(
@@ -1274,5 +1276,6 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
     stream = SessionStreamStore(
         SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3")
     ).dump_stream("epic:5703")
-    assert [session["state"] for session in stream["sessions"]] == ["open"]
+    assert [session["state"] for session in stream["sessions"]] == ["closed"]
     assert stream["lease"]["holder_agent"] == "grok"
+    assert stream["lease"]["state"] == "released"
