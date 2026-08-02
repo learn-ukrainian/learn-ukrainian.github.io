@@ -11,7 +11,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.entire import cursor_session_start_shim as shim
+from scripts.entire import cursor_native_hook_shim as shim
 
 
 def _repo_root(tmp_path: Path) -> Path:
@@ -224,8 +224,9 @@ def test_workspace_mismatch_and_symlink_escape_are_rejected(
         )
 
 
+@pytest.mark.parametrize("verb", ["before-submit-prompt", "stop"])
 def test_hook_delegates_exact_normalized_payload_without_reading_transcript(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, verb: str
 ) -> None:
     root = _repo_root(tmp_path)
     home = tmp_path / "home"
@@ -243,7 +244,11 @@ def test_hook_delegates_exact_normalized_payload_without_reading_transcript(
         SimpleNamespace(
             buffer=SimpleNamespace(
                 read=lambda _limit: json.dumps(
-                    {"conversation_id": "session-6", "workspace_roots": [str(root)]}
+                    {
+                        "conversation_id": "session-6",
+                        "workspace_roots": [str(root)],
+                        "prompt": "preserved prompt",
+                    }
                 ).encode()
             )
         ),
@@ -256,25 +261,160 @@ def test_hook_delegates_exact_normalized_payload_without_reading_transcript(
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr(shim.subprocess, "run", fake_run)
-    assert shim._hook() == 0
-    assert calls[0][0] == ["/fake/entire", "hooks", "cursor", "session-start"]
-    assert json.loads(calls[0][1]["input"])["transcript_path"] == str(
+    assert shim._hook(verb) == 0
+    assert calls[0][0] == ["/fake/entire", "hooks", "cursor", verb]
+    delegated = json.loads(calls[0][1]["input"])
+    assert delegated["transcript_path"] == str(
         nested / "session-6.jsonl"
     )
+    assert delegated["prompt"] == "preserved prompt"
     assert calls[0][1]["cwd"] == root
 
 
-@pytest.mark.parametrize("failure", [FileNotFoundError(), subprocess.TimeoutExpired("x", 1)])
-def test_hook_failures_are_silent_and_fail_open(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: Exception
+def test_session_start_without_candidate_makes_no_entire_call(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    root = _repo_root(tmp_path)
+    home = tmp_path / "home"
+    _cursor_base(home, root)
+    calls: list[list[str]] = []
+    monkeypatch.setattr(shim.Path, "home", lambda: home)
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
     monkeypatch.setattr(
         shim.sys,
         "stdin",
-        SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: b"not-json")),
+        SimpleNamespace(
+            buffer=SimpleNamespace(
+                read=lambda _limit: json.dumps(
+                    {"conversation_id": "not-created", "workspace_roots": [str(root)]}
+                ).encode()
+            )
+        ),
     )
-    monkeypatch.setattr(shim.subprocess, "run", lambda *_args, **_kwargs: (_ for _ in ()).throw(failure))
-    assert shim._hook() == 0
+
+    def fake_run(command, **_kwargs):
+        if command[0] == "git":
+            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
+        calls.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(shim.subprocess, "run", fake_run)
+    assert shim._hook("session-start") == 0
+    assert calls == []
+
+
+def test_repeated_turns_delegate_without_synthetic_session_start(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _repo_root(tmp_path)
+    home = tmp_path / "home"
+    nested = _cursor_base(home, root) / "session-repeat"
+    nested.mkdir()
+    _patch_git_root(monkeypatch, root)
+    raw = json.dumps(
+        {
+            "conversation_id": "session-repeat",
+            "workspace_roots": [str(root)],
+            "prompt": "same identity",
+        }
+    ).encode()
+    calls: list[list[str]] = []
+    monkeypatch.setattr(shim.Path, "home", lambda: home)
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
+    monkeypatch.setattr(
+        shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw))
+    )
+
+    def fake_run(command, **_kwargs):
+        if command[0] == "git":
+            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
+        calls.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(shim.subprocess, "run", fake_run)
+    assert shim._hook("before-submit-prompt") == 0
+    assert shim._hook("before-submit-prompt") == 0
+    assert calls == [
+        ["/fake/entire", "hooks", "cursor", "before-submit-prompt"],
+        ["/fake/entire", "hooks", "cursor", "before-submit-prompt"],
+    ]
+
+
+def test_nonempty_stop_payload_is_delegated_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _repo_root(tmp_path)
+    raw = b'{ "conversation_id": "native-stop", "transcript_path": "/native/path" }\n'
+    calls: list[bytes] = []
+    monkeypatch.setattr(shim.Path, "home", lambda: tmp_path / "home")
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
+    monkeypatch.setattr(
+        shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw))
+    )
+
+    def fake_run(command, **kwargs):
+        if command[0] == "git":
+            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
+        calls.append(kwargs["input"])
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(shim.subprocess, "run", fake_run)
+    assert shim._hook("stop") == 0
+    assert calls == [raw]
+
+
+def test_missing_entire_is_silent_and_fail_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _repo_root(tmp_path)
+    monkeypatch.setattr(
+        shim.sys, "stdin", SimpleNamespace(
+            buffer=SimpleNamespace(
+                read=lambda _limit: b'{"conversation_id":"x","transcript_path":"/native"}'
+            )
+        )
+    )
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: None)
+    _patch_git_root(monkeypatch, root)
+    assert shim._hook("before-submit-prompt") == 0
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [FileNotFoundError(), subprocess.TimeoutExpired("entire", 1)],
+)
+def test_entire_process_failures_are_silent_and_fail_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: Exception
+) -> None:
+    root = _repo_root(tmp_path)
+    raw = b'{"conversation_id":"x","transcript_path":"/native"}'
+    monkeypatch.setattr(
+        shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw))
+    )
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
+
+    def fake_run(command, **_kwargs):
+        if command[0] == "git":
+            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
+        raise failure
+
+    monkeypatch.setattr(shim.subprocess, "run", fake_run)
+    assert shim._hook("before-submit-prompt") == 0
+
+
+@pytest.mark.parametrize("raw", [b"not-json", b"x" * ((1 << 20) + 1)])
+def test_malformed_or_oversized_input_is_silent_and_fail_open(
+    monkeypatch: pytest.MonkeyPatch, raw: bytes
+) -> None:
+    monkeypatch.setattr(
+        shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw))
+    )
+    assert shim._hook("stop") == 0
 
 
 def test_install_uninstall_are_atomic_idempotent_and_preserve_config(tmp_path: Path) -> None:
@@ -284,15 +424,20 @@ def test_install_uninstall_are_atomic_idempotent_and_preserve_config(tmp_path: P
     assert shim._reconcile(path, "install") is True
     installed = json.loads(path.read_text(encoding="utf-8"))
     assert installed["custom"] == {"operator": [1, 2, 3]}
-    assert installed["hooks"]["sessionStart"][0]["command"] == shim._SHIM_COMMAND
+    for hook_name, command in shim._MANAGED_COMMANDS.items():
+        assert installed["hooks"][hook_name][0]["command"] == command
     assert installed["hooks"]["sessionStart"][1]["command"] == "operator-session-hook"
+    for hook_name in set(shim._STOCK_COMMANDS) - set(shim._MANAGED_HOOKS):
+        assert installed["hooks"][hook_name][0]["command"] == shim._STOCK_COMMANDS[
+            hook_name
+        ]
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
     assert shim._reconcile(path, "install") is False
     assert shim._reconcile(path, "check") is False
     assert shim._reconcile(path, "uninstall") is True
-    assert json.loads(path.read_text())["hooks"]["sessionStart"][0]["command"] == (
-        shim._STOCK_COMMANDS["sessionStart"]
-    )
+    restored = json.loads(path.read_text())
+    for hook_name in shim._MANAGED_HOOKS:
+        assert restored["hooks"][hook_name][0]["command"] == shim._STOCK_COMMANDS[hook_name]
     assert shim._reconcile(path, "uninstall") is False
 
 
@@ -306,7 +451,18 @@ def test_reconciliation_rejects_ambiguous_session_start(tmp_path: Path, drift: s
     elif drift == "duplicate":
         entries.insert(0, {"command": shim._STOCK_COMMANDS["sessionStart"]})
     else:
-        entries.insert(0, {"command": shim._SHIM_COMMAND})
+        entries.insert(0, {"command": shim._MANAGED_COMMANDS["sessionStart"]})
     path.write_text(json.dumps(parsed), encoding="utf-8")
     with pytest.raises(shim.ReconciliationError):
+        shim._reconcile(path, "install")
+
+
+def test_reconciliation_rejects_mixed_target_state(tmp_path: Path) -> None:
+    path = tmp_path / "hooks.json"
+    parsed = _native_hooks()
+    parsed["hooks"]["sessionStart"][0]["command"] = shim._MANAGED_COMMANDS[
+        "sessionStart"
+    ]
+    path.write_text(json.dumps(parsed), encoding="utf-8")
+    with pytest.raises(shim.ReconciliationError, match="mixed"):
         shim._reconcile(path, "install")

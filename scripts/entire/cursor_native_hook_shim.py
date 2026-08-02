@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Repair Entire 0.8.42's native Cursor session-start transcript locator.
+"""Repair Entire 0.8.42's native Cursor transcript locators.
 
-Cursor remains the lifecycle owner.  This shim only fills the transcript path
-that current Cursor releases omit, then delegates the original event to the
-pinned native Entire hook.  Hook-mode failures are deliberately silent and
-fail-open so optional capture can never change Cursor behavior.
+Cursor remains the lifecycle owner. This shim only fills the transcript path
+that current Cursor releases omit from session-start, before-submit-prompt, and
+stop, then delegates to the corresponding pinned native Entire hook. Hook-mode
+failures are deliberately silent and fail-open.
 """
 
 from __future__ import annotations
@@ -42,13 +42,26 @@ _STOCK_COMMANDS = {
     )
     for key, verb in _STOCK_HOOKS.items()
 }
-_SHIM_COMMAND = (
-    "sh -c 'root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0; "
-    'common=$(git -C "$root" rev-parse --path-format=absolute --git-common-dir '
-    '2>/dev/null) || exit 0; py="$(dirname "$common")/.venv/bin/python"; '
-    '[ -x "$py" ] || exit 0; "$py" '
-    '"$root/scripts/entire/cursor_session_start_shim.py"; exit 0\''
-)
+_MANAGED_HOOKS = {
+    "sessionStart": "session-start",
+    "beforeSubmitPrompt": "before-submit-prompt",
+    "stop": "stop",
+}
+
+
+def _managed_command(verb: str) -> str:
+    return (
+        "sh -c 'root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0; "
+        'common=$(git -C "$root" rev-parse --path-format=absolute --git-common-dir '
+        '2>/dev/null) || exit 0; py="$(dirname "$common")/.venv/bin/python"; '
+        '[ -x "$py" ] || exit 0; "$py" '
+        f'"$root/scripts/entire/cursor_native_hook_shim.py" {verb}; exit 0\''
+    )
+
+
+_MANAGED_COMMANDS = {
+    hook_name: _managed_command(verb) for hook_name, verb in _MANAGED_HOOKS.items()
+}
 
 
 class ReconciliationError(RuntimeError):
@@ -156,7 +169,7 @@ def _normalize(raw: bytes, *, cwd: Path, home: Path) -> tuple[bytes, Path]:
     return encoded, repo_root
 
 
-def _hook() -> int:
+def _hook(verb: str) -> int:
     try:
         raw = sys.stdin.buffer.read(_MAX_INPUT_BYTES + 1)
         if not raw or len(raw) > _MAX_INPUT_BYTES:
@@ -166,7 +179,7 @@ def _hook() -> int:
         if not entire:
             return 0
         subprocess.run(
-            [entire, "hooks", "cursor", "session-start"],
+            [entire, "hooks", "cursor", verb],
             input=payload,
             check=False,
             capture_output=True,
@@ -201,16 +214,24 @@ def _command_indexes(entries: list[dict[str, Any]], command: str) -> list[int]:
     return [index for index, entry in enumerate(entries) if entry.get("command") == command]
 
 
-def _validate_native_hooks(parsed: dict[str, Any]) -> None:
+def _validate_native_hooks(parsed: dict[str, Any]) -> str:
+    managed_states: set[str] = set()
     for hook_name, stock_command in _STOCK_COMMANDS.items():
         entries = _native_entry(parsed, hook_name)
-        if hook_name == "sessionStart":
+        if hook_name in _MANAGED_COMMANDS:
             stock = _command_indexes(entries, stock_command)
-            shim = _command_indexes(entries, _SHIM_COMMAND)
-            if (len(stock), len(shim)) not in {(1, 0), (0, 1)}:
-                raise ReconciliationError("Cursor sessionStart ownership is ambiguous")
+            managed = _command_indexes(entries, _MANAGED_COMMANDS[hook_name])
+            if (len(stock), len(managed)) == (1, 0):
+                managed_states.add("stock")
+            elif (len(stock), len(managed)) == (0, 1):
+                managed_states.add("managed")
+            else:
+                raise ReconciliationError(f"Cursor {hook_name} ownership is ambiguous")
         elif len(_command_indexes(entries, stock_command)) != 1:
             raise ReconciliationError(f"native Cursor hook {hook_name} drifted")
+    if len(managed_states) != 1:
+        raise ReconciliationError("Cursor managed hook state is mixed")
+    return managed_states.pop()
 
 
 def _atomic_write_hooks(path: Path, parsed: dict[str, Any]) -> None:
@@ -231,22 +252,26 @@ def _atomic_write_hooks(path: Path, parsed: dict[str, Any]) -> None:
 
 def _reconcile(path: Path, action: str) -> bool:
     parsed = _load_hooks(path)
-    _validate_native_hooks(parsed)
-    entries = _native_entry(parsed, "sessionStart")
-    shim = _command_indexes(entries, _SHIM_COMMAND)
+    state = _validate_native_hooks(parsed)
     if action == "check":
-        if len(shim) != 1:
-            raise ReconciliationError("Cursor sessionStart shim is not installed")
+        if state != "managed":
+            raise ReconciliationError("Cursor native hook shim is not installed")
         return False
-    source, target = (
-        (_STOCK_COMMANDS["sessionStart"], _SHIM_COMMAND)
-        if action == "install"
-        else (_SHIM_COMMAND, _STOCK_COMMANDS["sessionStart"])
-    )
-    indexes = _command_indexes(entries, source)
-    if not indexes:
+    if (action == "install" and state == "managed") or (
+        action == "uninstall" and state == "stock"
+    ):
         return False
-    entries[indexes[0]]["command"] = target
+    for hook_name in _MANAGED_HOOKS:
+        entries = _native_entry(parsed, hook_name)
+        source, target = (
+            (_STOCK_COMMANDS[hook_name], _MANAGED_COMMANDS[hook_name])
+            if action == "install"
+            else (_MANAGED_COMMANDS[hook_name], _STOCK_COMMANDS[hook_name])
+        )
+        indexes = _command_indexes(entries, source)
+        if len(indexes) != 1:
+            raise ReconciliationError(f"Cursor {hook_name} reconciliation drifted")
+        entries[indexes[0]]["command"] = target
     _atomic_write_hooks(path, parsed)
     return True
 
@@ -263,11 +288,15 @@ def _admin(action: str) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
-    if not args:
-        return _hook()
+    if len(args) == 1 and args[0] in set(_MANAGED_HOOKS.values()):
+        return _hook(args[0])
     if len(args) == 1 and args[0] in {"install", "uninstall", "check"}:
         return _admin(args[0])
-    print("usage: cursor_session_start_shim.py [install|uninstall|check]", file=sys.stderr)
+    print(
+        "usage: cursor_native_hook_shim.py "
+        "<session-start|before-submit-prompt|stop|install|uninstall|check>",
+        file=sys.stderr,
+    )
     return 2
 
 

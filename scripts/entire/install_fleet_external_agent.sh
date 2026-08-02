@@ -44,7 +44,7 @@ trap 'rm -rf "${scratch_dir}"' EXIT
 mkdir -p "${install_dir}"
 install -m 0755 "${scratch_dir}/entire-agent-fleet" "${install_dir}/entire-agent-fleet"
 "${install_dir}/entire-agent-fleet" install-hooks
-cursor_shim="${repo_root}/scripts/entire/cursor_session_start_shim.py"
+cursor_shim="${repo_root}/scripts/entire/cursor_native_hook_shim.py"
 if ! "${python_command}" "${cursor_shim}" check >/dev/null 2>&1; then
   "${entire_command}" agent add cursor
   "${python_command}" "${cursor_shim}" install
