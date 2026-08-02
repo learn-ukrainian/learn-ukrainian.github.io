@@ -212,6 +212,11 @@ def test_inventory_rejects_non_positive_sentence_cap(tmp_path) -> None:
         build_inventory([], _sources_db(tmp_path), max_per_lemma=0)
 
 
+def test_inventory_rejects_non_positive_textbook_search_limit(tmp_path) -> None:
+    with pytest.raises(ValueError, match="textbook search limit"):
+        build_inventory([], _sources_db(tmp_path), textbook_search_limit=0)
+
+
 def test_candidate_sentences_reject_formula_and_worksheet_fragments() -> None:
     rejected = (
         ("а", "2) Якщо а > 0, то нерівність перепишемо у вигляді ."),
@@ -356,6 +361,41 @@ def test_residual_target_filter_and_inventory_merge_preserve_existing_rows(tmp_p
     new_row = {**existing, "lemma": "місто", "lemmaId": "misto", "sentence": "Це місто."}
     merged = merge_inventory_rows(load_inventory_rows(inventory), [new_row])
     assert [row["lemmaId"] for row in merged] == ["dim", "misto"]
+
+
+def test_residual_target_filter_includes_additive_sidecar(tmp_path) -> None:
+    inventory = tmp_path / "inventory.json"
+    sidecar = tmp_path / "inventory.residual.json"
+    write_inventory(
+        [
+            {
+                "lemma": "дім",
+                "lemmaId": "dim",
+                "sentence": "Це дім.",
+                "targetForm": "дім",
+            }
+        ],
+        inventory,
+    )
+    write_inventory(
+        [
+            {
+                "lemma": "місто",
+                "lemmaId": "misto",
+                "sentence": "Це місто.",
+                "targetForm": "місто",
+            }
+        ],
+        sidecar,
+    )
+
+    targets = [
+        {"lemma": "дім", "lemmaId": "dim", "cefr": "A1"},
+        {"lemma": "місто", "lemmaId": "misto", "cefr": "A1"},
+        {"lemma": "школа", "lemmaId": "shkola", "cefr": "A1"},
+    ]
+    assert filter_residual_targets(targets, inventory) == [targets[2]]
+    assert {row["lemmaId"] for row in load_inventory_rows(inventory)} == {"dim", "misto"}
 
 
 def _practice_shard(path, level, rows):

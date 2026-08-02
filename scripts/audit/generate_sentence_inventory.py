@@ -478,7 +478,10 @@ def _fts_rows(
     where_sql: str = "",
     preferred_subjects: tuple[str, ...] = (),
     excluded_source_prefixes: tuple[str, ...] = (),
+    search_limit: int = TEXTBOOK_SEARCH_LIMIT,
 ) -> Iterable[sqlite3.Row]:
+    if search_limit < 1:
+        raise ValueError("textbook search limit must be positive")
     query = f'"{lemma.replace(chr(34), "")}"'
     parameters: list[str] = [query]
     columns = {str(row[1]) for row in conn.execute(f"PRAGMA table_info({content_table})")}
@@ -505,8 +508,9 @@ def _fts_rows(
         JOIN {content_table} AS source ON source.id = fts.rowid
         WHERE {fts_table} MATCH ? {combined_where}
         ORDER BY {order_prefix}bm25({fts_table}), source.id
-        LIMIT {TEXTBOOK_SEARCH_LIMIT}
+        LIMIT ?
     """
+    parameters.append(str(search_limit))
     yield from conn.execute(sql, parameters)
 
 
@@ -517,9 +521,12 @@ def _source_sentences(
     source_kind: str,
     limit: int,
     vesum: VesumSentenceVerifier | None = None,
+    search_limit: int = TEXTBOOK_SEARCH_LIMIT,
 ) -> list[dict[str, Any]]:
     if limit < 1:
         raise ValueError("source sentence limit must be positive")
+    if search_limit < 1:
+        raise ValueError("textbook search limit must be positive")
     lemma = target["lemma"]
     if source_kind == "textbook":
         rows = _fts_rows(
@@ -529,6 +536,7 @@ def _source_sentences(
             lemma=lemma,
             preferred_subjects=PREFERRED_TEXTBOOK_SUBJECTS,
             excluded_source_prefixes=("ulp",),
+            search_limit=search_limit,
         )
         source_label = "Ukrainian school textbook"
         license_info = TEXTBOOK_LICENSE
@@ -681,19 +689,22 @@ def load_practice_targets(paths: Iterable[Path]) -> list[dict[str, str]]:
 
 def load_inventory_rows(path: Path) -> list[dict[str, Any]]:
     """Load a committed inventory strictly enough for residual accounting."""
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema") != "atlas-sentence-inventory":
-        raise ValueError("sentence inventory must use atlas-sentence-inventory schema")
-    rows = payload.get("rows")
-    if not isinstance(rows, list):
-        raise ValueError("sentence inventory rows must be a list")
     result: list[dict[str, Any]] = []
-    for index, row in enumerate(rows):
-        if not isinstance(row, dict):
-            raise ValueError(f"sentence inventory row {index + 1} must be an object")
-        if _text(row.get("lemmaId")) is None:
-            raise ValueError(f"sentence inventory row {index + 1} requires lemmaId")
-        result.append(row)
+    residual_path = path.with_name(f"{path.stem}.residual{path.suffix}")
+    paths = [path, residual_path] if residual_path.exists() else [path]
+    for source_path in paths:
+        payload = json.loads(source_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or payload.get("schema") != "atlas-sentence-inventory":
+            raise ValueError("sentence inventory must use atlas-sentence-inventory schema")
+        rows = payload.get("rows")
+        if not isinstance(rows, list):
+            raise ValueError("sentence inventory rows must be a list")
+        for index, row in enumerate(rows):
+            if not isinstance(row, dict):
+                raise ValueError(f"sentence inventory row {index + 1} must be an object")
+            if _text(row.get("lemmaId")) is None:
+                raise ValueError(f"sentence inventory row {index + 1} requires lemmaId")
+            result.append(row)
     return result
 
 
@@ -731,9 +742,12 @@ def build_inventory(
     include_ulp: bool = False,
     vesum_db: Path | None = None,
     max_per_lemma: int = 1,
+    textbook_search_limit: int = TEXTBOOK_SEARCH_LIMIT,
 ) -> list[dict[str, Any]]:
     if max_per_lemma < 1:
         raise ValueError("max_per_lemma must be positive")
+    if textbook_search_limit < 1:
+        raise ValueError("textbook search limit must be positive")
     conn = sqlite3.connect(sources_db)
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
@@ -746,6 +760,7 @@ def build_inventory(
                 source_kind="textbook",
                 limit=max_per_lemma,
                 vesum=vesum,
+                search_limit=textbook_search_limit,
             )
             if not source_rows and include_ulp:
                 source_rows = _source_sentences(
@@ -790,6 +805,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--include-ulp", action="store_true")
     parser.add_argument(
+        "--textbook-search-limit",
+        type=int,
+        default=TEXTBOOK_SEARCH_LIMIT,
+        help=(
+            "Maximum ranked textbook chunks to inspect per lemma; the default "
+            "is conservative, while residual re-funnels may raise it explicitly."
+        ),
+    )
+    parser.add_argument(
         "--max-per-lemma",
         type=int,
         default=1,
@@ -831,6 +855,7 @@ def main(argv: list[str] | None = None) -> int:
         include_ulp=args.include_ulp,
         vesum_db=args.vesum_db,
         max_per_lemma=args.max_per_lemma,
+        textbook_search_limit=args.textbook_search_limit,
     )
     if args.merge_existing is not None:
         rows = merge_inventory_rows(load_inventory_rows(args.merge_existing), rows)
