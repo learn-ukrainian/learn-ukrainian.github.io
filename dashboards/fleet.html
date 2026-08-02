@@ -42,6 +42,10 @@ button, input, select { font: inherit; }
 .field { display: grid; gap: 4px; min-width: 0; }.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.field input, .field select { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; }
 .filter-note { align-self: end; color: var(--text3); font-size: 11px; line-height: 1.35; max-width: 170px; padding-bottom: 5px; }
 .operations-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 18px; }
+.legacy-diagnostics { background: rgba(168, 132, 43, .06); border: 1px solid var(--border); margin: 0 0 18px; }
+.legacy-diagnostics summary { cursor: pointer; font-family: Charter, Georgia, serif; font-size: 18px; font-weight: 700; padding: 13px 16px; }
+.legacy-diagnostics > p { color: var(--text3); font-size: 12px; line-height: 1.45; margin: -4px 16px 14px; }
+.legacy-diagnostics .operations-grid { margin: 0; padding: 0 16px 16px; }
 .operations-stats { background: var(--border); display: grid; gap: 1px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .operation-stat { background: var(--bg2); padding: 14px 16px; }
 .operation-stat strong { display: block; font-family: Charter, Georgia, serif; font-size: 25px; line-height: 1; }
@@ -107,31 +111,35 @@ button, input, select { font: inherit; }
     <div class="field"><label for="filter-state">State</label><input id="filter-state" placeholder="queued, complete…" oninput="queueRefresh()"></div>
     <div class="field"><label for="filter-pr">PR</label><input id="filter-pr" inputmode="numeric" placeholder="6159" oninput="queueRefresh()"></div>
     <div class="field"><label for="filter-conversation">Conversation</label><input id="filter-conversation" placeholder="opaque ID" oninput="queueRefresh()"></div>
-    <div class="filter-note">Filters only narrow the observer’s GET requests. They never signal or alter the plane.</div>
+    <div class="filter-note">Filters narrow current authority evidence only. Historical compatibility diagnostics remain unfiltered.</div>
   </section>
 
-  <section class="operations-grid" aria-label="Read-only fleet operations">
-    <article class="panel ledger cyan" aria-labelledby="broker-operations-heading">
-      <div class="panel-head"><h3 id="broker-operations-heading">Broker health</h3><p>Read-only · no migrations or cleanup</p></div>
-      <div id="broker-operations-content" class="empty">Loading sanitized broker health…</div>
-    </article>
-    <article class="panel ledger orange" aria-labelledby="zombie-operations-heading">
-      <div class="panel-head"><h3 id="zombie-operations-heading">Zombie signals</h3><p>Bounded counts · identifiers omitted</p></div>
-      <div id="zombie-operations-content" class="empty">Loading sanitized zombie signals…</div>
-    </article>
-    <article class="panel ledger purple" aria-labelledby="batch-operations-heading">
-      <div class="panel-head"><h3 id="batch-operations-heading">Batch progress</h3><p>Bounded tracks · logs and commands omitted</p></div>
-      <div id="batch-operations-content" class="empty">Loading sanitized batch progress…</div>
-    </article>
-  </section>
+  <details class="legacy-diagnostics">
+    <summary>Historical compatibility diagnostics — excluded from authority health</summary>
+    <p id="legacy-requests-note">Legacy broker and scanner data remain readable for retirement work. They do not describe current ACP authority health.</p>
+    <section class="operations-grid" aria-label="Historical compatibility diagnostics">
+      <article class="panel ledger cyan" aria-labelledby="broker-operations-heading">
+        <div class="panel-head"><h3 id="broker-operations-heading">Legacy broker archive</h3><p>Historical · read-only · excluded from health</p></div>
+        <div id="broker-operations-content" class="empty">Loading sanitized legacy broker data…</div>
+      </article>
+      <article class="panel ledger orange" aria-labelledby="zombie-operations-heading">
+        <div class="panel-head"><h3 id="zombie-operations-heading">Legacy broker signals</h3><p>Historical detector · identifiers omitted</p></div>
+        <div id="zombie-operations-content" class="empty">Loading sanitized legacy signals…</div>
+      </article>
+      <article class="panel ledger purple" aria-labelledby="batch-operations-heading">
+        <div class="panel-head"><h3 id="batch-operations-heading">Legacy batch scanner</h3><p>Compatibility view · logs and commands omitted</p></div>
+        <div id="batch-operations-content" class="empty">Loading sanitized scanner data…</div>
+      </article>
+    </section>
+  </details>
 
   <section class="grid">
     <article class="panel ledger" aria-labelledby="requests-heading">
-      <div class="panel-head"><h3 id="requests-heading">Request ledger</h3><p>Queued → running → terminal</p></div>
+      <div class="panel-head"><h3 id="requests-heading">Authority requests</h3><p>Current fleet-comms jobs · queued → terminal</p></div>
       <div id="requests-content" class="empty">Loading requests…</div>
     </article>
     <article class="panel ledger cyan" aria-labelledby="authority-heading">
-      <div class="panel-head"><h3 id="authority-heading">Authority queue</h3><p>Metadata only · payloads and results remain sealed</p></div>
+      <div class="panel-head"><h3 id="authority-heading">Authority queue</h3><p>Safe failure codes · payloads and results remain sealed</p></div>
       <div id="authority-content" class="empty">Loading authority jobs…</div>
     </article>
     <article class="panel ledger blue" aria-labelledby="reviews-heading">
@@ -160,7 +168,7 @@ button, input, select { font: inherit; }
     <table><thead><tr><th>Source</th><th>Agent</th><th>Via</th></tr></thead></table>
   </template>
 
-  <p class="footnote"><strong>Authority posture:</strong> the Fleet Observer is the consolidated evidence surface for durable requests, messages, ACP conversations, formal reviews, deliveries, retries, dead letters, and sanitized operations health. The operations panels are observational only: they cannot clean queues, expire delivery, start providers, or mutate fleet state. Legacy Channels and Comms URLs redirect here during the compatibility soak.</p>
+  <p class="footnote"><strong>Authority posture:</strong> the Fleet Observer is the consolidated evidence surface. Current request counts and health come only from fleet-comms authority jobs and authority dead letters. The collapsed compatibility section preserves legacy evidence for retirement work but never changes the current health verdict. This page cannot clean queues, retry providers, or mutate fleet state.</p>
 </main>
 
 <script>
@@ -202,9 +210,9 @@ function filters() {
   };
 }
 
-function query(base, allowed) {
+function query(base, allowed, fixed = {}) {
   const values = filters();
-  const params = new URLSearchParams({ limit: '12' });
+  const params = new URLSearchParams({ limit: '12', ...fixed });
   allowed.forEach(key => { if (values[key]) params.set(key, values[key]); });
   return `${base}?${params}`;
 }
@@ -237,10 +245,12 @@ function summaryDetail(bucket) {
 
 function renderHealth(health) {
   const mode = short(health.mode, 'unknown').replaceAll('_', ' ');
-  const enabled = health.enabled === true;
+  const authority = health.authority_health || {};
+  const authorityState = short(authority.state, 'unavailable').replaceAll('_', ' ');
+  const healthy = authority.ok === true;
   document.getElementById('plane-mode').textContent = `${mode} · durable authority`;
-  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Schema v${short(health.schema.applied_version, 'not applied')} observed` : 'Durable database not present yet';
-  document.getElementById('plane-dot').className = `signal-dot ${enabled ? 'live' : 'warn'}`;
+  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Authority ${authorityState} · ${short(authority.jobs?.total, '0')} jobs in the last ${short(authority.window?.hours, '24')}h` : 'Durable database not present yet';
+  document.getElementById('plane-dot').className = `signal-dot ${healthy ? 'live' : 'warn'}`;
 }
 
 function renderOverview(data) {
@@ -254,6 +264,8 @@ function renderOverview(data) {
   document.getElementById('reviews-detail').textContent = summaryDetail(counts.reviews?.by_state);
   document.getElementById('acp-detail').textContent = counts.acp_conversations?.total ? 'Event timelines available' : 'No durable ACP rows yet';
   document.getElementById('dead-detail').textContent = counts.dead_letters?.total ? 'Follow-up evidence available' : 'No dead letters observed';
+  const legacy = counts.legacy_requests || {};
+  document.getElementById('legacy-requests-note').textContent = `${short(legacy.total, '0')} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
 }
 
 function renderOperations(data) {
@@ -281,13 +293,13 @@ function renderOperations(data) {
 }
 
 function renderRequests(data) {
-  const rows = (data.requests || []).map(item => `<tr><td class="mono">${escapeHtml(item.request_id)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.requested_recipient))} → ${escapeHtml(short(item.resolved_recipient))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
-  document.getElementById('requests-content').innerHTML = table(['Request', 'State', 'Endpoint', 'Source', 'Updated'], rows, 'No requests match the current observer filters.');
+  const rows = (data.jobs || []).map(item => `<tr><td class="mono">${escapeHtml(item.job_id)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.source))}<br><span class="muted mono">${escapeHtml(short(item.task_id))}</span></td><td>${escapeHtml(item.failure ? `${item.failure.phase} · ${item.failure.code.replaceAll('_', ' ')}` : '—')}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  document.getElementById('requests-content').innerHTML = table(['Request', 'State', 'Agent', 'Source / task', 'Failure', 'Updated'], rows, 'No authority requests match the current observer filters.');
 }
 
 function renderAuthorityJobs(data) {
-  const rows = (data.jobs || []).map(item => `<tr><td class="mono">${escapeHtml(item.job_id)}</td><td>${pill(item.kind)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
-  document.getElementById('authority-content').innerHTML = table(['Job', 'Kind', 'State', 'Source', 'Agent', 'Updated'], rows, 'No authority jobs match the current observer filters.');
+  const rows = (data.jobs || []).map(item => `<tr><td class="mono">${escapeHtml(item.job_id)}</td><td>${pill(item.kind)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(item.failure ? `${item.failure.phase} · ${item.failure.code.replaceAll('_', ' ')}` : '—')}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  document.getElementById('authority-content').innerHTML = table(['Job', 'Kind', 'State', 'Source', 'Agent', 'Failure', 'Updated'], rows, 'No authority jobs match the current observer filters.');
 }
 
 function renderReviews(data) {
@@ -321,7 +333,7 @@ async function refreshFleet() {
     const common = ['state', 'agent', 'source', 'conversation'];
     const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, activity, messages] = await Promise.all([
       fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
-      fetchJson(query('/api/fleet/requests', ['kind', ...common])),
+      fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
       fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
       fetchJson(query('/api/fleet/acp/conversations', common)),

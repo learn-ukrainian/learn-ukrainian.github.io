@@ -24,7 +24,7 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "/api/fleet/health" in html
     assert "/api/fleet/overview" in html
     assert "/api/fleet/operations" in html
-    assert "/api/fleet/requests" in html
+    assert "/api/fleet/requests" not in html
     assert "/api/fleet/authority/jobs" in html
     assert "/api/fleet/messages" in html
     assert "/api/fleet/reviews" in html
@@ -34,10 +34,16 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "<th>Agent</th>" in html
     assert "<th>Via</th>" in html
     assert "Refresh data" in html
-    assert "Read-only fleet operations" in html
-    assert "no migrations or cleanup" in html
+    assert "Historical compatibility diagnostics" in html
+    assert "Historical · read-only · excluded from health" in html
     assert "identifiers omitted" in html
     assert "logs and commands omitted" in html
+    assert "Authority requests" in html
+    assert "Historical compatibility diagnostics — excluded from authority health" in html
+    assert "Legacy broker archive" in html
+    assert "health.authority_health" in html
+    assert "item.failure.phase" in html
+    assert "{ kind: 'request' }" in html
     assert "<form" not in html
     assert "method: 'POST'" not in html
     assert 'method: "POST"' not in html

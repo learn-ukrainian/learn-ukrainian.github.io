@@ -138,7 +138,7 @@ def _seed_plane(root: Path) -> None:
                 provenance_json, imported_source, created_at
             ) VALUES (
                 'authority-message', NULL, 'authority-thread', NULL, '{}',
-                '{"Source":"legacy-bridge","Agent":"codex","Via":"queue"}',
+                '{"Source":"legacy-bridge","Agent":"codex","Via":"queue","task_id":"task-authority-1"}',
                 'legacy-bridge', '2026-08-01T12:07:00Z'
             );
 
@@ -240,6 +240,16 @@ def test_plane_health_and_overview_expose_active_authority_posture(
     assert health["cutover"] == "authority_active"
     assert overview["authority"] == health["authority"]
     assert overview["cutover"] == health["cutover"]
+    assert overview["counts"]["requests"] == {
+        "total": 1,
+        "by_state": {"queued": 1},
+        "source": "authority_jobs",
+    }
+    assert overview["counts"]["legacy_requests"] == {
+        "total": 1,
+        "by_state": {"complete": 1},
+        "excluded_from_authority_health": True,
+    }
     assert overview["counts"]["dead_letters"]["total"] == 1
 
     dead_letters = client.get(
@@ -249,6 +259,46 @@ def test_plane_health_and_overview_expose_active_authority_posture(
     assert dead_letters["total"] == 1
     assert dead_letters["dead_letters"][0]["reason"] == "attempts_exhausted"
     assert dead_letters["dead_letters"][0]["via"] == "queue"
+
+
+def test_authority_health_uses_only_recent_authority_evidence(
+    fleet_root: Path,
+) -> None:
+    _seed_plane(fleet_root)
+    observed_at = fleet_router.datetime(2026, 8, 2, 12, 0, tzinfo=fleet_router.UTC)
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    connection.row_factory = sqlite3.Row
+    try:
+        connection.execute(
+            """UPDATE authority_jobs
+               SET state = 'failed', updated_at = '2026-08-02T11:00:00Z',
+                   completed_at = '2026-08-02T11:00:00Z'"""
+        )
+        connection.execute(
+            "UPDATE authority_dead_letters SET created_at = '2026-07-01T00:00:00Z'"
+        )
+        connection.commit()
+        degraded = fleet_router._authority_health_snapshot(
+            connection, now=observed_at
+        )
+
+        connection.execute(
+            """UPDATE authority_jobs
+               SET updated_at = '2026-07-01T00:00:00Z',
+                   completed_at = '2026-07-01T00:00:00Z'"""
+        )
+        connection.commit()
+        idle = fleet_router._authority_health_snapshot(connection, now=observed_at)
+    finally:
+        connection.close()
+
+    assert degraded["state"] == "degraded"
+    assert degraded["ok"] is False
+    assert degraded["jobs"] == {"total": 1, "by_state": {"failed": 1}}
+    assert degraded["dead_letters"] == 0
+    assert idle["state"] == "idle"
+    assert idle["ok"] is True
+    assert idle["jobs"] == {"total": 0, "by_state": {}}
 
 
 def test_message_and_request_filters_are_stable_and_bodies_are_bounded(
@@ -363,9 +413,50 @@ def test_discussion_review_and_dead_letter_metadata_stay_read_only(
     assert authority_job["source"] == "legacy-bridge"
     assert authority_job["agent"] == "codex"
     assert authority_job["via"] == "queue"
+    assert authority_job["task_id"] == "task-authority-1"
+    assert authority_job["failure"] is None
     assert authority_job["payload_content"] == "omitted"
     assert "payload_artifact_id" not in authority_job
     assert "idempotency_key" not in authority_job
+
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute(
+            """INSERT INTO authority_job_events(
+                event_id, job_id, fence_token, event_type, state, metadata_json, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (
+                "authority-event-finished",
+                "authority-job-1",
+                1,
+                "finished",
+                "failed",
+                json.dumps(
+                    {
+                        "failure": {
+                            "phase": "provider",
+                            "code": "provider_unavailable",
+                            "retryable": True,
+                        },
+                        "raw_error": "password=must-not-leak",
+                    }
+                ),
+                "2026-08-01T12:09:00Z",
+            ),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    failed_projection = client.get(
+        "/api/fleet/authority/jobs", params={"kind": "request"}
+    ).json()["jobs"][0]
+    assert failed_projection["failure"] == {
+        "phase": "provider",
+        "code": "provider_unavailable",
+        "retryable": True,
+    }
+    assert "must-not-leak" not in json.dumps(failed_projection)
 
     review_detail = client.get("/api/fleet/reviews/review-1")
     assert review_detail.status_code == 200

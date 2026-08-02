@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from ai_agent_bridge import _channels, _channels_cli, _cli, _db
+from ai_agent_bridge._acp_compat import _discussion_failure_metadata
 
 
 def _clear_identity_env(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -85,6 +86,8 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
     assert observed["rounds"] == 3
     assert observed["participants"] == ("codex", "claude")
     assert root_body in str(observed["prompt"])
+    assert str(observed["task_id"]).startswith("discuss-architecture-")
+    assert str(observed["reserved_conversation_id"]).startswith("conversation_")
 
 
 def test_discuss_claude_subagent_uses_restricted_tools_without_plan_mode(
@@ -103,6 +106,22 @@ def test_discuss_claude_subagent_uses_restricted_tools_without_plan_mode(
     assert "--permission-mode" not in plan.cmd
     assert "--tools" in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
+
+
+def test_discussion_timeout_maps_to_body_free_retryable_failure() -> None:
+    failure = _discussion_failure_metadata(
+        {
+            "classification": "partial",
+            "participant_outcomes": [
+                {"participant": "glm", "outcome": "ok"},
+                {"participant": "kimi", "outcome": "timeout"},
+            ],
+            "synthesis": "raw response must not enter failure metadata",
+        }
+    )
+
+    assert failure == {"phase": "transport", "code": "timeout", "retryable": True}
+    assert "response" not in str(failure)
 
 
 def test_ask_codex_without_from_fails_when_sender_cannot_be_inferred(

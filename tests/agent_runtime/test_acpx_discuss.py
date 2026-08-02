@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 import sqlite3
 import subprocess
@@ -14,6 +15,7 @@ from scripts.agent_runtime import acpx_discuss
 from scripts.agent_runtime.errors import AgentTimeoutError
 from scripts.agent_runtime.result import Result
 from scripts.fleet_comms.artifacts import ArtifactStore
+from scripts.fleet_comms.authority import AuthorityService
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import resolve_main_root
 
@@ -95,6 +97,98 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     edges = {(str(row[0]), str(row[1])) for row in rows}
     assert {("root", "codex"), ("root", "grok"), ("codex", "root"), ("grok", "root"), ("codex", "grok"), ("grok", "codex")} <= edges
     assert any(row[2] is not None for row in rows)
+
+
+def test_controller_adopts_exact_authority_reservation_without_second_conversation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "plane"
+    prompt = "Compare the bounded fixture."
+    task_id = "task-6243"
+    correlation_id = "correlation-6243"
+    idempotency_key = "discussion-6243"
+    with AuthorityService(root=root) as service:
+        job = service.enqueue_discussion(
+            channel="acp-health",
+            prompt=prompt,
+            participants=("kimi", "glm"),
+            rounds=1,
+            task_digest=hashlib.sha256(task_id.encode()).hexdigest(),
+            correlation_id=correlation_id,
+            deadline_at="2036-06-01T01:00:00Z",
+            source="codex",
+            task_id=task_id,
+            idempotency_key=idempotency_key,
+        )
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda agent, *_a, **_k: _result(agent, f"{agent} evidence"),
+        lambda agent, *_a, **_k: _result(agent, "synthesis"),
+    )
+    try:
+        payload = controller.run(
+            prompt=prompt,
+            cwd=Path.cwd(),
+            task_id=task_id,
+            correlation_id=correlation_id,
+            idempotency_key=idempotency_key,
+            rounds=1,
+            participants=("kimi", "glm"),
+            source="codex",
+            reserved_conversation_id=job.subject_id,
+        )
+        conversation_count = controller.conn.execute(
+            "SELECT COUNT(*) FROM acp_conversations"
+        ).fetchone()[0]
+        created_count = controller.conn.execute(
+            """SELECT COUNT(*) FROM acp_conversation_events
+               WHERE conversation_id = ? AND event_type = 'CREATED'""",
+            (job.subject_id,),
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    assert payload["conversation_id"] == job.subject_id
+    assert payload["classification"] == "complete"
+    assert conversation_count == 1
+    assert created_count == 1
+
+
+def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "plane"
+    with AuthorityService(root=root) as service:
+        job = service.enqueue_discussion(
+            channel="acp-health",
+            prompt="Recover without calling providers.",
+            participants=("kimi", "glm"),
+            rounds=1,
+            task_digest=hashlib.sha256(b"task-6243-orphan").hexdigest(),
+            correlation_id="correlation-6243-orphan",
+            deadline_at="2000-01-01T00:00:00Z",
+            source="codex",
+            task_id="task-6243-orphan",
+            idempotency_key="discussion-6243-orphan",
+        )
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: pytest.fail("orphan recovery must not call a participant"),
+        lambda *_a, **_k: pytest.fail("orphan recovery must not synthesize"),
+    )
+    try:
+        with acpx_discuss._discussion_admission(controller.store.root):
+            recovered = controller.recover_expired_reservations()
+        terminal = controller._state(job.subject_id)
+    finally:
+        controller.close()
+
+    assert recovered == [job.subject_id]
+    assert terminal == "PARTIAL_COMPLETE"
 
 
 def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(

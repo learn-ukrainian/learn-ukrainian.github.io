@@ -562,6 +562,64 @@ class AcpxDiscussionController:
         )
         return self._replay(conversation_id)
 
+    def _adopt_authority_reservation(
+        self,
+        conversation_id: str,
+        *,
+        task_digest: str,
+        correlation_digest: str,
+        idempotency_digest: str,
+        rounds: int,
+        participants: tuple[str, ...],
+        source: str | None,
+    ) -> str:
+        """Adopt the exact reservation created atomically with an authority job."""
+        if _CONVERSATION_ID.fullmatch(conversation_id) is None:
+            raise AcpxDiscussionError("reserved conversation_id is not canonical")
+        row = self.conn.execute(
+            """SELECT acp.task_digest, acp.correlation_digest,
+                      acp.idempotency_digest, acp.rounds_requested,
+                      acp.participants_json, conversation.source
+               FROM acp_conversations AS acp
+               JOIN conversations AS conversation
+                 ON conversation.conversation_id = acp.conversation_id
+               WHERE acp.conversation_id = ?""",
+            (conversation_id,),
+        ).fetchone()
+        if row is None:
+            raise AcpxDiscussionError("reserved ACP conversation was not found")
+        try:
+            reserved_participants = tuple(json.loads(str(row[4])))
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise AcpxDiscussionError("reserved ACP participants are invalid") from exc
+        expected = (
+            task_digest,
+            correlation_digest,
+            idempotency_digest,
+            rounds,
+            tuple(sorted(participants)),
+            source or "operator",
+        )
+        observed = (
+            str(row[0]),
+            str(row[1]),
+            str(row[2]),
+            int(row[3]),
+            reserved_participants,
+            str(row[5]),
+        )
+        if observed != expected:
+            raise AcpxDiscussionError("reserved ACP conversation does not match invocation")
+        events = self.conn.execute(
+            """SELECT sequence, event_type, state
+               FROM acp_conversation_events
+               WHERE conversation_id = ? ORDER BY sequence""",
+            (conversation_id,),
+        ).fetchall()
+        if len(events) != 1 or tuple(events[0]) != (1, "CREATED", "CREATED"):
+            raise AcpxDiscussionError("reserved ACP conversation has invalid initial state")
+        return conversation_id
+
     def recover_expired_reservations(self, *, now: datetime | None = None) -> list[str]:
         """Terminalize expired nonterminal reservations without provider I/O.
 
@@ -581,7 +639,14 @@ class AcpxDiscussionController:
                FROM acp_conversations AS acp
                JOIN conversations AS conversation
                  ON conversation.conversation_id = acp.conversation_id
-               WHERE conversation.source = 'acpx-discuss'"""
+               WHERE conversation.source = 'acpx-discuss'
+                  OR EXISTS (
+                      SELECT 1 FROM acp_conversation_events AS initial
+                      WHERE initial.conversation_id = acp.conversation_id
+                        AND initial.sequence = 1
+                        AND initial.event_type = 'CREATED'
+                        AND initial.metadata_json = '{"authority_reserved":true}'
+                  )"""
         ).fetchall()
         recovered: list[str] = []
         for row in rows:
@@ -819,6 +884,7 @@ class AcpxDiscussionController:
         efforts: Mapping[str, str] | None = None,
         source: str | None = None,
         initiator: str | None = None,
+        reserved_conversation_id: str | None = None,
     ) -> dict[str, Any]:
         if os.environ.get(TRANSPORT_ENV, "off").strip().lower() != "active":
             raise AcpxDiscussionError("LU_ACPX_TRANSPORT=active is required by acp-discuss")
@@ -890,6 +956,7 @@ class AcpxDiscussionController:
                 models=model_overrides,
                 efforts=effort_overrides,
                 source=transport_source,
+                reserved_conversation_id=reserved_conversation_id,
             )
 
     def _run_admitted(
@@ -906,18 +973,33 @@ class AcpxDiscussionController:
         models: Mapping[str, str],
         efforts: Mapping[str, str],
         source: str | None,
+        reserved_conversation_id: str | None,
     ) -> dict[str, Any]:
         started = self.clock()
         deadline = started + WHOLE_TIMEOUT_SECONDS
         deadline_at = (datetime.now(UTC) + timedelta(seconds=WHOLE_TIMEOUT_SECONDS)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        conversation_id, replay = self._reserve(
-            task_digest=_digest(task_id),
-            correlation_digest=_digest(correlation_id),
-            idempotency_digest=idempotency_digest,
-            rounds=rounds,
-            participants=participants,
-            deadline_at=deadline_at,
-        )
+        task_digest = _digest(task_id)
+        correlation_digest = _digest(correlation_id)
+        if reserved_conversation_id is None:
+            conversation_id, replay = self._reserve(
+                task_digest=task_digest,
+                correlation_digest=correlation_digest,
+                idempotency_digest=idempotency_digest,
+                rounds=rounds,
+                participants=participants,
+                deadline_at=deadline_at,
+            )
+        else:
+            conversation_id = self._adopt_authority_reservation(
+                reserved_conversation_id,
+                task_digest=task_digest,
+                correlation_digest=correlation_digest,
+                idempotency_digest=idempotency_digest,
+                rounds=rounds,
+                participants=participants,
+                source=source,
+            )
+            replay = None
         if replay is not None:
             return replay
         if self.cancelled():

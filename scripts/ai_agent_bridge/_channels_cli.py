@@ -1630,6 +1630,7 @@ def _handle_discuss(args) -> int:
         if caller_attribution.initiator != "unknown"
         else None
     )
+    discussion_source = runtime_initiator or "operator"
 
     # ── post the root question ────────────────────────────────────
     # NOTE: do NOT pass to_agents here — discuss handles fanout itself
@@ -1641,13 +1642,13 @@ def _handle_discuss(args) -> int:
     try:
         authority.create_channel(args.channel)
         root = authority.publish_message(
-            sender=runtime_initiator or "operator",
+            sender=discussion_source,
             body=body,
             channel=args.channel,
             recipients=with_agents,
             kind="discussion-root",
             provenance={
-                "Source": runtime_initiator or "operator",
+                "Source": discussion_source,
                 "Agent": "ab-discuss",
                 "Via": "acp",
             },
@@ -1658,15 +1659,32 @@ def _handle_discuss(args) -> int:
         deadline_at = (datetime.now(UTC) + timedelta(seconds=1800)).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         )
+        task_channel = re.sub(r"[^A-Za-z0-9._:-]+", "-", args.channel).strip("-._:")
+        task_digest = hashlib.sha256(correlation_id.encode("utf-8")).hexdigest()[:10]
+        acp_task_id = f"discuss-{task_channel[:48] or 'channel'}-{task_digest}"
+        discussion_budget: dict[str, int] = {}
+        if acp_routine:
+            from agent_runtime.acpx_discuss import (
+                CONTENT_BUDGET_BYTES,
+                TOKEN_BUDGET,
+            )
+
+            discussion_budget = {
+                "token_budget": TOKEN_BUDGET,
+                "content_budget_bytes": CONTENT_BUDGET_BYTES,
+            }
         authority_job = authority.enqueue_discussion(
             channel=args.channel,
             prompt=body,
             participants=with_agents,
             rounds=max_rounds,
-            task_digest=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+            task_digest=hashlib.sha256(acp_task_id.encode("utf-8")).hexdigest(),
             correlation_id=correlation_id,
             deadline_at=deadline_at,
             idempotency_key=f"ab-discuss:{correlation_id}",
+            source=discussion_source,
+            task_id=acp_task_id,
+            **discussion_budget,
         )
         if authority_job.state in {"complete", "failed", "expired", "dead_lettered"}:
             replay = authority.read_job_result(authority_job.job_id)
@@ -1706,6 +1724,9 @@ def _handle_discuss(args) -> int:
             return 1
         from agent_runtime.acpx_discuss import run_discussion
 
+        from ._acp_compat import _discussion_failure_metadata, _failure_metadata
+        from ._acp_execution import acp_execution_cwd
+
         acp_rounds = max_rounds
         try:
             if lease is None:
@@ -1724,19 +1745,21 @@ def _handle_discuss(args) -> int:
             previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
             os.environ["LU_ACPX_TRANSPORT"] = "active"
             try:
-                payload = run_discussion(
-                    prompt=acp_prompt,
-                    cwd=REPO_ROOT,
-                    task_id=f"discuss-{correlation_id[:8]}",
-                    correlation_id=correlation_id,
-                    idempotency_key=f"ab-discuss:{correlation_id}",
-                    rounds=acp_rounds,
-                    participants=tuple(with_agents),
-                    models=agent_models or None,
-                    efforts=agent_efforts or None,
-                    source=runtime_initiator,
-                    initiator=runtime_initiator,
-                )
+                with acp_execution_cwd(REPO_ROOT, task_id=acp_task_id) as execution_cwd:
+                    payload = run_discussion(
+                        prompt=acp_prompt,
+                        cwd=execution_cwd,
+                        task_id=acp_task_id,
+                        correlation_id=correlation_id,
+                        idempotency_key=f"ab-discuss:{correlation_id}",
+                        rounds=acp_rounds,
+                        participants=tuple(with_agents),
+                        models=agent_models or None,
+                        efforts=agent_efforts or None,
+                        source=discussion_source,
+                        initiator=discussion_source,
+                        reserved_conversation_id=authority_job.subject_id,
+                    )
             finally:
                 if previous_transport is None:
                     os.environ.pop("LU_ACPX_TRANSPORT", None)
@@ -1755,6 +1778,7 @@ def _handle_discuss(args) -> int:
                         {"error": type(exc).__name__, "transport": "acp"},
                         sort_keys=True,
                     ).encode("utf-8"),
+                    failure=_failure_metadata(error=exc),
                 )
             print(f"❌ ACP discussion failed without bridge retry: {exc}", file=sys.stderr)
             return 1
@@ -1770,6 +1794,11 @@ def _handle_discuss(args) -> int:
                     fence_token=lease.fence_token,
                     state="complete" if state == "COMPLETE" else "failed",
                     result=json.dumps(payload, sort_keys=True).encode("utf-8"),
+                    failure=(
+                        None
+                        if state == "COMPLETE"
+                        else _discussion_failure_metadata(payload)
+                    ),
                 )
                 completed_authority.publish_message(
                     sender="acp-controller",

@@ -314,6 +314,25 @@ strict parser then admits at most 512 KiB of answer text to the caller or
 fleet-authority receipt. Exceeding either bound fails terminally without a
 provider retry or bridge fallback.
 
+Calls initiated from the protected primary checkout keep the same containment
+guard. The compatibility entrypoints create a short-lived detached,
+`--no-checkout` worktree below `.worktrees/dispatch/acp/`, execute there, and
+remove it on exit. Git locks the worktree for the call lifetime so scheduled
+hygiene cannot prune it between participant completion and synthesis. They do
+not weaken or bypass primary-checkout protection.
+
+Route pins are strict admission inputs. An omitted pin or the exact configured
+model/effort is accepted; a conflicting model or effort fails visibly before a
+provider call. No ACP entrypoint silently normalizes a caller's conflicting
+route.
+
+Authority jobs record failures with only a closed phase, code, and retryable
+flag. Raw prompts, responses, exception text, stderr, paths, and credentials
+remain outside the observer projection. A discussion enqueue atomically creates
+the authority job, its one ACP conversation reservation, and the initial
+`CREATED` event; the controller must adopt that exact reservation rather than
+creating a second conversation.
+
 Replay suppression is durable and occurs before scheduling. An orphaned
 reservation is terminal: never retry it. The single-host repository admission
 file lock covers the conversation, including model I/O; no SQLite transaction

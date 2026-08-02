@@ -142,6 +142,54 @@ def test_request_message_persists_initiating_source_and_target_agent(tmp_path: P
     assert message.provenance == {"Source": "codex", "Agent": "agy", "Via": "queue"}
 
 
+def test_discussion_enqueue_atomically_creates_initial_state_and_provenance(
+    tmp_path: Path,
+) -> None:
+    root = _root(tmp_path)
+    with AuthorityService(root=root) as service:
+        job = service.enqueue_discussion(
+            channel="bounded-consultation",
+            prompt="Compare the two bounded options.",
+            participants=("kimi", "glm"),
+            rounds=2,
+            task_digest=_sha("task-6243"),
+            correlation_id="correlation-6243",
+            deadline_at="2036-06-01T01:00:00Z",
+            source="codex",
+            task_id="task-6243",
+            idempotency_key="discussion-6243",
+        )
+        conversation = service.store.connection.execute(
+            "SELECT source FROM conversations WHERE conversation_id = ?",
+            (job.subject_id,),
+        ).fetchone()
+        events = service.store.connection.execute(
+            """SELECT sequence, event_type, state, metadata_json
+               FROM acp_conversation_events WHERE conversation_id = ?""",
+            (job.subject_id,),
+        ).fetchall()
+        message = service.store.connection.execute(
+            """SELECT metadata.provenance_json
+               FROM comms_messages AS message
+               JOIN authority_message_metadata AS metadata
+                 ON metadata.message_id = message.message_id
+               WHERE message.conversation_id = ? AND message.kind = 'discussion'""",
+            (job.subject_id,),
+        ).fetchone()
+
+    assert conversation is not None and conversation["source"] == "codex"
+    assert len(events) == 1
+    assert tuple(events[0][:3]) == (1, "CREATED", "CREATED")
+    assert json.loads(events[0]["metadata_json"]) == {"authority_reserved": True}
+    assert message is not None
+    assert json.loads(message["provenance_json"]) == {
+        "Agent": "acp-controller",
+        "Source": "codex",
+        "Via": "queue",
+        "task_id": "task-6243",
+    }
+
+
 def test_exact_claim_and_terminal_result_replay_do_not_take_unrelated_work(tmp_path: Path) -> None:
     root = _root(tmp_path)
     with AuthorityService(root=root) as service:
@@ -210,6 +258,60 @@ def test_failed_job_retry_preserves_identity_and_attempt_history(tmp_path: Path)
             )
         ]
         assert events == ["enqueued", "claimed", "finished", "retried", "claimed"]
+
+
+def test_failed_job_event_accepts_only_closed_body_free_failure_metadata(
+    tmp_path: Path,
+) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job = service.enqueue_request(
+            recipient="glm",
+            body="bounded request",
+            idempotency_key="safe-failure",
+        )
+        lease = service.claim_job(job.job_id, "worker", now="2036-06-01T00:00:00Z")
+        service.finish_job(
+            job.job_id,
+            worker_id="worker",
+            fence_token=lease.fence_token,
+            state="failed",
+            failure={"phase": "provider", "code": "rate_limited", "retryable": True},
+            now="2036-06-01T00:00:01Z",
+        )
+        terminal = service.store.connection.execute(
+            """SELECT metadata_json FROM authority_job_events
+               WHERE job_id = ? AND event_type = 'finished'""",
+            (job.job_id,),
+        ).fetchone()
+
+        second = service.enqueue_request(
+            recipient="kimi",
+            body="another bounded request",
+            idempotency_key="unsafe-failure",
+        )
+        second_lease = service.claim_job(
+            second.job_id, "worker", now="2036-06-01T00:00:02Z"
+        )
+        with pytest.raises(AuthorityServiceError, match="failure_metadata_fields_invalid"):
+            service.finish_job(
+                second.job_id,
+                worker_id="worker",
+                fence_token=second_lease.fence_token,
+                state="failed",
+                failure={
+                    "phase": "provider",
+                    "code": "unknown",
+                    "retryable": False,
+                    "exception": "password=must-not-persist",
+                },
+                now="2036-06-01T00:00:03Z",
+            )
+
+    assert terminal is not None
+    assert json.loads(terminal["metadata_json"]) == {
+        "failure": {"code": "rate_limited", "phase": "provider", "retryable": True},
+        "worker_id": "worker",
+    }
 
 
 def test_expired_job_retry_keeps_dead_letter_receipt(tmp_path: Path) -> None:
