@@ -15,7 +15,7 @@ when-to-use: >
 effort: low
 ---
 
-# Entire context recall (public, body-free)
+# Entire context recall (body-free intake + private native tools)
 
 **Automatic intake:** On any non-trivial task, the accountable root runs
 `status` + `search` once **before** prioritization or dispatch. If the results
@@ -45,10 +45,11 @@ it never mutates them.
   intake prompt or distributed capsule. Human investigation with optional
   Entire product tools remains private and manual; its output is not promoted
   automatically.
-- **No Entire dependency.** Entire CLI 0.8.42 stays pinned, optional, and
-  non-load-bearing. This workflow makes **zero** Entire CLI invocations and
-  zero network calls. Do not run `entire` login, search, checkpoint, attach,
-  resume, push, or create `refs/entire/*`.
+- **No Entire dependency for automatic intake.** Entire CLI 0.8.42 stays
+  pinned, optional, and non-load-bearing. The automatic body-free workflow
+  makes **zero** Entire CLI invocations and zero network calls. Native Entire
+  tools are a separate private, operator-authorized mode defined below; they
+  never create public `refs/entire/*` or become fleet evidence.
 - **Fail closed.** Missing, stale, tombstoned, partial-terminal, unsupported,
   or digest-mismatched evidence is omitted with a machine reason. Never inject
   an omitted item into your context, and never fabricate coverage for a kind
@@ -134,21 +135,42 @@ or call GitHub, Fleet, Monitor, Entire, or the network. Missing, malformed,
 nonterminal, stale, unpublished, hash-mismatched, or digest-drifted inputs are
 omitted fail-closed.
 
-## Product prompt workflow and optional Entire tools
+## Product prompt workflow and private native Entire mode
 
 For product-style prompts, invoke the local body-free workflow in this order:
 `search` for search-past-work, `explain-change` for an exact provenance path,
 and `handoff` for a bounded capsule. Use the `.venv/bin/python` commands above;
 they are the canonical recall path.
 
-Native `entire blame --json` is allowed only for local attribution. Prompt-
-bearing `entire why`, logged-in cloud search, generated recap, investigate
-findings, session handoff, and Entire review are optional **human/operator
-investigation tools**. They may help a person search past agent work, recap a
-private session, explain why code exists, investigate a change, or prepare a
-private handoff. Their output never automatically enters a canonical capsule,
-changes fleet state, or proves review. Entire review is supplemental and never
-satisfies the sealed Fleet formal-review gate.
+The operator-authorized private mode in `.entire/private-recall.json` permits
+the accountable root to use native Entire search, explain, recap, dispatch,
+and private handoff when those tools materially help the task. Before first
+use, run `.venv/bin/python -m scripts.entire.private_mode_preflight` and require
+its body-free receipt to report `"ready": true`. It verifies routing, private
+checkpoint visibility, public-ref absence, authentication, exact private
+Entire ACLs on both mirrors, mirror readiness, and the exact 0.8.42 pin without
+printing command output or local paths. Use only these shapes:
+
+```bash
+entire search "<query>" --json --limit <1-10> \
+  --repo learn-ukrainian/learn-ukrainian.github.io
+entire checkpoint explain <checkpoint-id-or-sha> --json
+entire checkpoint explain <checkpoint-id-or-sha> --full --no-pager
+entire recap --static <--day|--week|--month|--90>
+entire dispatch --local --all-branches --since <window>
+```
+
+`dispatch` is also the native private handoff surface. The accountable root may
+consume search and explain results inside its private task context. Never place
+prompt-bearing output in automatic intake, a distributed capsule, a public
+issue/PR, or formal-review evidence; external disclosure requires operator
+review. Full explain requires a task that needs exact continuity and must not
+be fanned out to workers. Full explain, recap/dispatch, and worktree-mutating
+resume/rewind require a present operator request. `--all-repos`, `--code`,
+`--generate`, `--force`, `--raw-transcript`, and `--transcript` remain
+forbidden. Entire review is supplemental and never satisfies the sealed Fleet
+formal-review gate. Provider failure, an empty search index, or a rate limit
+must be reported truthfully and never changes the canonical workflow outcome.
 
 Current official product references:
 
@@ -204,3 +226,8 @@ A missing, disabled, or unreadable projection yields a body-free status
 payload (`"available": false`) with exit code 0 for read commands — recall is
 optional and must never block or mutate your canonical workflow. If recall is
 unavailable, continue with the authoritative systems directly.
+
+A failed private-mode preflight has the same posture: report its body-free
+issue code, fall back to local body-free recall, and continue. Never weaken the
+private destination, public-ref, authentication, mirror ACL/readiness, or
+pinned-version checks to make a native command run.

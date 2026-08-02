@@ -1,0 +1,78 @@
+{
+  "schema": "entire-private-recall.v1",
+  "enabled": true,
+  "required_cli_version": "0.8.42",
+  "source_repo": "learn-ukrainian/learn-ukrainian.github.io",
+  "checkpoint_repo": "learn-ukrainian/entire-checkpoints-private",
+  "entire_access_principals": [
+    {"handle": "github:krisztiankoos", "role": "writer"}
+  ],
+  "authoritative": false,
+  "automatic_intake": false,
+  "public_promotion": false,
+  "preflight": ["scripts/entire/private_mode_preflight.py"],
+  "operations": {
+    "search": [
+      "search",
+      "<query>",
+      "--json",
+      "--limit",
+      "<1-10>",
+      "--repo",
+      "learn-ukrainian/learn-ukrainian.github.io"
+    ],
+    "explain_metadata": ["checkpoint", "explain", "<id-or-sha>", "--json"],
+    "explain_full": [
+      "checkpoint",
+      "explain",
+      "<id-or-sha>",
+      "--full",
+      "--no-pager"
+    ],
+    "recap": ["recap", "--static", "<--day|--week|--month|--90>"],
+    "dispatch": [
+      "dispatch",
+      "--local",
+      "--all-branches",
+      "--since",
+      "<window>"
+    ],
+    "handoff": [
+      "dispatch",
+      "--local",
+      "--all-branches",
+      "--since",
+      "<window>"
+    ],
+    "resume": ["session", "resume", "<branch>"]
+  },
+  "external_disclosure_requires_operator_review": [
+    "search",
+    "explain_full",
+    "recap",
+    "dispatch",
+    "handoff"
+  ],
+  "operator_request_required": [
+    "explain_full",
+    "recap",
+    "dispatch",
+    "handoff",
+    "resume"
+  ],
+  "private_context_operations": [
+    "search",
+    "explain_full",
+    "recap",
+    "dispatch",
+    "handoff"
+  ],
+  "forbidden_flags": [
+    "--all-repos",
+    "--code",
+    "--generate",
+    "--force",
+    "--raw-transcript",
+    "--transcript"
+  ]
+}

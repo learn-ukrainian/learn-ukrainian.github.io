@@ -42,7 +42,7 @@ caps or live modes.
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
-| **Entire context recall** | Optional, body-free historical discovery and provenance through verified local locator cards | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
+| **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Entire recall onboarding matrix
@@ -72,8 +72,12 @@ For each non-trivial task, the accountable root performs this contract:
    materially help, create at most one `handoff` capsule (five cards, 8 KiB)
    and give that same capsule to the participants that need it.
 3. Keep raw prompts, transcripts, responses, session bodies, generated recaps,
-   and generated summaries out of automatic context. Do not run cloud Entire
-   commands from the public skill.
+   and generated summaries out of the shared automatic capsule. When richer
+   private history is useful, run
+   `.venv/bin/python -m scripts.entire.private_mode_preflight`; after a green
+   receipt (including operator-only Entire ACLs for both mirrors) the
+   accountable root may use bounded native Entire search/explain without
+   distributing raw bodies to other seats.
 4. Run `record-use` only for locators that were verified and materially
    informed the task. Search delivery alone is not use.
 5. Continue normally when recall is unavailable. Git/GitHub remain
@@ -81,14 +85,19 @@ For each non-trivial task, the accountable root performs this contract:
    discussion and terminal receipts; Monitor for runtime state; rollover for
    continuity; sealed Fleet review for the formal review gate.
 
-The operator may privately use Entire's product workflows for
+After the private preflight passes, the accountable root or operator may use
+Entire's product workflows for
 [skills](https://docs.entire.io/learn/skills),
 [search](https://docs.entire.io/learn/search-past-agent-work),
 [review and recap](https://docs.entire.io/learn/review-and-recap-agent-work), or
 [why/blame/investigation and session handoff](https://docs.entire.io/learn/investigate-why-code-exists).
 These are investigation aids, not fleet evidence. Their prompts, results,
-transcripts, generated explanations, and summaries are not admitted to the
-automatic capsule and do not change task, review, or merge disposition.
+transcripts, generated explanations, and summaries stay in the accountable
+root's private context, are not admitted to the shared automatic capsule, and
+do not change task, review, or merge disposition. Full explain and generated
+summaries require a task that actually needs them; raw-transcript flags remain
+prohibited. Session resume or rewind additionally requires an explicit operator
+request because it mutates a worktree.
 
 ### Human overview pages
 

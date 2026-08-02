@@ -26,8 +26,8 @@ Do not run `entire agent add codex`, `entire agent add claude-code`, or
 JSON installers drop project timeout/status metadata, while its stock OpenCode
 plugin requires the tracked `entire-exit.ts` termination companion for
 OpenCode 1.17.13. Change the canonical sources
-under `agents_extensions/`, run the project deployment workflow under the
-required rail receipt, and keep the onboarding contract tests green. A separate
+under `agents_extensions/`, run the normal worktree/PR/review deployment
+workflow, and keep the onboarding contract tests green. A separate
 `entire-agent-<harness>` adapter is justified only by a failed source-blind
 native-host canary.
 
@@ -51,11 +51,31 @@ scripts.entire_context`. These commands read local verified projections and
 produce locator cards or bounded capsules; they do not invoke Entire or the
 network.
 
-Native `entire blame --json` is allowed for local attribution. Prompt-bearing
-`entire why`, cloud `entire search`, generated recap, investigate findings, and
-Entire review remain optional manual tools. None automatically enters a canonical
-capsule. Entire review is supplemental and never satisfies the Fleet
-formal-review gate.
+The operator-authorized private mode is declared in
+`.entire/private-recall.json`. Before a prompt-bearing native operation,
+`.venv/bin/python -m scripts.entire.private_mode_preflight` proves the GitHub
+repository is private, the public origin has zero Entire branches, the private
+checkpoint ref exists, authentication works, both mirrors are ready and expose
+an operator-only Entire ACL, and the CLI remains pinned. The public GitHub
+source remains public, but its Entire mirror is not pullable by other Entire
+users. A green receipt permits repository-scoped native search,
+metadata or task-required full explain, static recap, and local
+dispatch/handoff. The accountable root may consume results in its private task
+context. They never automatically enter a shared capsule or public GitHub
+evidence, and external disclosure requires operator review. Entire review is
+supplemental and never satisfies the Fleet formal-review gate.
+
+The 2026-08-02 source-blind canary proved: authenticated Entire activity saw
+eight checkpoints across the public/private source repositories; the public
+branch listed three checkpoints; exact checkpoint explain returned a
+metadata-only JSON envelope; and static recap returned non-empty output without
+printing its body. Source-scoped cloud checkpoint search was reachable but
+returned zero checkpoint/session matches, while cloud dispatch was unavailable
+(source-repository 404 followed by private-target rate limiting). Local native
+full explain is now proved readable without emitting its body, so exact private
+session continuity does not depend on cloud search quality. Empty cloud search
+and provider rate limits remain truthful optional-provider states, not
+canonical workflow failures.
 
 The typed local resolver inventory is deliberately narrow: an open GitHub issue
 must have exactly one fresh issue-stream membership; a GitHub PR needs a
