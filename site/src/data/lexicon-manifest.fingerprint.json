@@ -1,5 +1,5 @@
 {
-  "fingerprint": "ea5ce97e64eab3e237b7c60309f959689ea9fe47c5f3789fff49b1a3d73f9be1",
+  "fingerprint": "0c09127315dce53aa386a2ab7a22cd5a4eda21c7721944bca33f3c7c2494d3a2",
   "inputs": {
     "lexicon_code": [
       {
@@ -61,6 +61,10 @@
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
         "sha256": "b2f1b2cab47fe23d34590355ba0c5c67a008bbb4e773852ce37c65aaf3d09a39"
+      },
+      {
+        "path": "scripts/lexicon/curated_membership.py",
+        "sha256": "a3f9dde7cb8792e0952701d301a0afa51a5a003fdff9767900be5928f9827916"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
@@ -223,6 +227,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 54
+    "lexicon_code_files": 55
   }
 }
