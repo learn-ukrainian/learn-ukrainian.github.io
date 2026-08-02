@@ -6,5 +6,6 @@
       "repo": "learn-ukrainian/entire-checkpoints-private"
     }
   },
-  "telemetry": false
+  "telemetry": false,
+  "external_agents": true
 }

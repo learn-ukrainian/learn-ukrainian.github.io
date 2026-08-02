@@ -39,6 +39,7 @@ def test_entire_settings_are_pinned_private_and_nontelemetric() -> None:
     settings = json.loads(ENTIRE_SETTINGS.read_text(encoding="utf-8"))
     assert settings == {
         "enabled": True,
+        "external_agents": True,
         "strategy_options": {
             "checkpoint_remote": {
                 "provider": "github",

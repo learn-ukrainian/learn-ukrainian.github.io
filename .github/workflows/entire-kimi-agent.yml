@@ -1,0 +1,40 @@
+name: Entire Kimi external agent
+
+on:
+  pull_request:
+    paths:
+      - ".entire/settings.json"
+      - ".github/workflows/entire-kimi-agent.yml"
+      - "scripts/entire/external_agents/entire-agent-kimi/**"
+      - "scripts/entire/install_kimi_external_agent.sh"
+  push:
+    branches:
+      - main
+    paths:
+      - ".entire/settings.json"
+      - ".github/workflows/entire-kimi-agent.yml"
+      - "scripts/entire/external_agents/entire-agent-kimi/**"
+      - "scripts/entire/install_kimi_external_agent.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version: "1.26.0"
+          cache-dependency-path: scripts/entire/external_agents/entire-agent-kimi/go.mod
+      - name: Unit and race tests
+        working-directory: scripts/entire/external_agents/entire-agent-kimi
+        run: go test -race ./...
+      - name: Build protocol binary
+        working-directory: scripts/entire/external_agents/entire-agent-kimi
+        run: go build -trimpath -o entire-agent-kimi ./cmd/entire-agent-kimi
+      - name: Entire protocol-v1 compliance
+        uses: entireio/external-agents-tests@3220ca8cc7ba2fbfc5a951ce4a5937ca1a5ca26e
+        with:
+          binary-path: scripts/entire/external_agents/entire-agent-kimi/entire-agent-kimi
