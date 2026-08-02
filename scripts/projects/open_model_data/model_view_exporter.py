@@ -77,6 +77,7 @@ DEFAULT_EVALUATION_ARTIFACTS = (
     ROOT / "data/projects/ua_eval_harness/scoring_dispositions_v1.json",
     ROOT / "data/projects/ua_eval_harness/development/taxonomy.yaml",
     ROOT / "data/projects/ua_eval_harness/minimal_edit_prompt_v1.txt",
+    ROOT / "data/projects/ua_open_weight_eval/v0.1.0/cases.jsonl",
 )
 
 VIEW_SCHEMAS = {

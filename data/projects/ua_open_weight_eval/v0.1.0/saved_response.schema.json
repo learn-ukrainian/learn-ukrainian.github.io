@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:learn-ukrainian:ua-open-weight-eval:saved-response:v1",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "abstain",
+        "correct",
+        "preserve"
+      ]
+    },
+    "item_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "output_text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "item_id",
+    "action",
+    "output_text"
+  ],
+  "title": "UA Open-Weight Eval saved response",
+  "type": "object"
+}

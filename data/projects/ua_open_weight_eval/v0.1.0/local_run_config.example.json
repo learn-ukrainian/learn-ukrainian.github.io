@@ -1,0 +1,15 @@
+{
+  "backend": "llama.cpp",
+  "command": [
+    "/absolute/path/to/local-runner",
+    "--requests",
+    "{requests}",
+    "--responses",
+    "{responses}"
+  ],
+  "model_path": "/absolute/path/to/already-downloaded-model.gguf",
+  "model_revision": "consumer-pinned-revision",
+  "model_sha256": "replace-with-64-character-sha256-before-use------------------",
+  "network_allowed": false,
+  "provider": "local"
+}
