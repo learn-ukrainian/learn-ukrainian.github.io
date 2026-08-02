@@ -53,7 +53,7 @@
 | **Gemini 3.1 Pro** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane |
 | **K3** | Long-horizon coding; frontend/visual ideation | Maintainability ≠ demo; Moonshot route/egress | Moonshot | UI + long implement |
 | **GLM-5.2** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
-| **DeepSeek V4 Flash High** | Preliminary top-7 Arena frontend/agentic coding result; fast and inexpensive | Frontend-specific evidence; not critical authority or a UA/folk gate | DeepSeek first-party through Hermes; shared effort = `high` | Frontier-practical frontend/code worker + CF review |
+| **DeepSeek V4 Flash High** | Preliminary top-7 Arena frontend/agentic coding result; fast and inexpensive | Frontend-specific evidence; not critical authority or a UA/folk gate | First-party OpenCode high for Entire-aware review; Hermes high for rich tool execution | Frontier-practical frontend/code worker + CF review |
 | **DeepSeek V4 Pro** | Economical coding and PR review | Not folk/UA cultural gate | Route-dependent (first-party vs openrouter) | Infra/code CF |
 | **Cursor Composer 2.5** | IDE-native implementation | **Harness**; pin backing **family** for CF | Cursor | Worker |
 

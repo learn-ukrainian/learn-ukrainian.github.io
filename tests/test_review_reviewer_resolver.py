@@ -356,7 +356,7 @@ def test_health_breaks_ties_only_within_the_same_remaining_quality_rung():
     assert resolution.selected.health == "near_cap"
 
 
-def test_deepseek_receipt_carries_required_silence_timeout():
+def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -377,8 +377,11 @@ def test_deepseek_receipt_carries_required_silence_timeout():
         )
     )
     assert resolution.selected.name == "deepseek-v4-flash"
-    assert resolution.selected.requires_silence_timeout is True
-    assert "--agent deepseek" in resolution.selected.invocation
+    assert resolution.selected.transport == "opencode"
+    assert resolution.selected.requires_silence_timeout is False
+    assert resolution.selected.invocation.endswith(
+        "opencode run --model deepseek-direct/deepseek-v4-flash --variant high"
+    )
 
 
 def test_folk_content_excludes_both_deepseek_models():

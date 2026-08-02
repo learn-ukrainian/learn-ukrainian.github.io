@@ -566,11 +566,10 @@ review_candidates:
   deepseek-v4-flash:
     model_id: deepseek-v4-flash
     route: deepseek
-    transport: hermes
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash --effort high
+    transport: opencode
+    invocation: opencode run --model deepseek-direct/deepseek-v4-flash --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
-    requires_silence_timeout: true
     domain_excluded_from: [folk_content]
   gemini-3.5-flash:
     model_id: gemini-3.5-flash-high

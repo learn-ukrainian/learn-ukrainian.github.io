@@ -60,8 +60,9 @@ from ._review_safety import (
 )
 from .routing_guard import assert_model_routing_allowed
 
-# deepseek-flash is the dominant real usage of this lane (frontier-practical
-# frontend/code review at config-scoped high effort, with a low-cost API). The
+# deepseek-flash is the dominant Hermes implementation/tool-heavy seat
+# (config-scoped high effort, rich skills/MCPs, low-cost API). OpenCode is the
+# Entire-native review/research route. The
 # previous default (qwen/qwen3.6-plus) violated the
 # standing qwen exclusion — every bare ask-hermes silently burned the banned
 # model (deepseek review 2026-07-05, PR #4473 finding 1).

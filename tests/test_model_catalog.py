@@ -96,8 +96,10 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     assert {"frontend_agentic_coding", "strong_code_review"} <= set(flash["roles"])
     assert "not_critical_authority" in flash["weaknesses"]
     assert "https://arena.ai/leaderboard/code" in flash["sources"]
-    assert candidate["transport"] == "hermes"
-    assert candidate["invocation"].endswith("--model deepseek-v4-flash --effort high")
+    assert candidate["transport"] == "opencode"
+    assert candidate["invocation"].endswith(
+        "opencode run --model deepseek-direct/deepseek-v4-flash --variant high"
+    )
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
     assert practical.index("glm-5.2") < practical.index("deepseek-v4-flash")
