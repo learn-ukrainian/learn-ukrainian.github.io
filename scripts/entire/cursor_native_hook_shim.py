@@ -170,6 +170,8 @@ def _normalize(raw: bytes, *, cwd: Path, home: Path) -> tuple[bytes, Path]:
 
 
 def _hook(verb: str) -> int:
+    if os.environ.get("LU_ENTIRE_CAPTURE_OWNER") == "fleet":
+        return 0
     try:
         raw = sys.stdin.buffer.read(_MAX_INPUT_BYTES + 1)
         if not raw or len(raw) > _MAX_INPUT_BYTES:

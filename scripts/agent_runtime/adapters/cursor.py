@@ -174,7 +174,15 @@ class CursorAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,  # Cursor writes to stdout
+            env_overrides={"LU_ENTIRE_CAPTURE_OWNER": "fleet"},
             liveness_paths=(),  # rely on stdout streaming
+            metadata={
+                "entire_fleet": {
+                    "requested_model": model or self.default_model,
+                    "actual_model_known": "false",
+                }
+            },
+            host_harness="cursor-headless",
         )
 
     def _should_approve_mcps(self, config: dict, *, default: bool) -> bool:

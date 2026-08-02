@@ -26,7 +26,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root
 
 _LOGGER = logging.getLogger(__name__)
-_OWNED_HOSTS = frozenset({"agy", "grok", "hermes"})
+_OWNED_HOSTS = frozenset({"agy", "cursor-headless", "grok", "hermes"})
 _SESSION_RE = re.compile(r"^fleet-[0-9a-f]{32}$")
 _SAFE_META_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@+ -]{0,255}$")
 _HOOK_TIMEOUT_SECONDS = 5
@@ -290,7 +290,12 @@ class FleetCapture:
         if self._closed:
             return
         self._closed = True
-        actual = str(actual_model or self.requested_model).strip()
+        actual_known = str(
+            (route_metadata or {}).get("actual_model_known", "true")
+        ).lower() != "false"
+        actual = str(
+            actual_model or (self.requested_model if actual_known else "")
+        ).strip()
         metadata: dict[str, object] = {
             "actual_model": actual,
             "outcome": str(outcome).strip(),
@@ -344,7 +349,10 @@ def resolved_route(
         raw = plan_metadata.get("entire_fleet")
         if isinstance(raw, Mapping):
             requested = str(raw.get("requested_model") or requested).strip()
-            actual = str(raw.get("actual_model") or requested).strip()
+            known = str(raw.get("actual_model_known", "true")).lower() != "false"
+            actual = str(raw.get("actual_model") or (requested if known else "")).strip()
+            if not known:
+                route["actual_model_known"] = "false"
         hermes = plan_metadata.get("hermes")
         if isinstance(hermes, Mapping):
             route["requested_provider"] = hermes.get("requested_provider") or ""

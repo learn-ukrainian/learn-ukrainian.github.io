@@ -229,7 +229,7 @@ func (a *Agent) ParseHook(hook string, input []byte) (*protocol.Event, error) {
 		metadata[key] = text
 	}
 	model := metadata["actual_model"]
-	if model == "" {
+	if model == "" && metadata["actual_model_known"] != "false" {
 		model = metadata["requested_model"]
 	}
 	event := &protocol.Event{

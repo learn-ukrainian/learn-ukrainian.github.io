@@ -55,6 +55,26 @@ func TestSessionAnalysisAndHookMapping(t *testing.T) {
 	}
 }
 
+func TestUnknownActualModelDoesNotFabricateRequestedSelector(t *testing.T) {
+	agent, ref, _ := fixtureAgent(t)
+	payload, _ := json.Marshal(protocol.HookInput{
+		SessionID:  fixtureSessionID,
+		SessionRef: ref,
+		RawData: map[string]any{
+			"harness":            "cursor-headless",
+			"requested_model":    "auto",
+			"actual_model_known": "false",
+		},
+	})
+	event, err := agent.ParseHook("turn-end", payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if event.Model != "" {
+		t.Fatalf("model=%q, want unknown", event.Model)
+	}
+}
+
 func TestTraversalAndSymlinkEscapeFailClosed(t *testing.T) {
 	agent, _, _ := fixtureAgent(t)
 	root, _ := captureRoot()
