@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import sys
+import types
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -90,6 +92,191 @@ def _write_acp_db(root, conversations: list[tuple], events: list[tuple]) -> None
         connection.commit()
     finally:
         connection.close()
+
+
+def test_routing_assignments_api_projects_authority_records(monkeypatch):
+    """Runtime renders the optional ledger as body-free routing history."""
+    ledger = types.SimpleNamespace(
+        list_routing_decisions=lambda **_kwargs: [
+            {
+                "reservation_id": "reservation-001",
+                "authority_key": "route-key-1",
+                "initiator": "codex",
+                "author_model": "gpt-5.6-terra",
+                "author_family": "openai",
+                "requested_role": "implementation",
+                "requested_profile": "standard",
+                "requested_risk": "medium",
+                "requested_route": "codex",
+                "route_mode": "auto",
+                "resolved_candidate": "codex-terra",
+                "resolved_route": "codex",
+                "resolved_model": "gpt-5.6-terra",
+                "resolved_family": "openai",
+                "quota_bucket": "codex_weekly",
+                "policy_version": "routing-v1",
+                "selection_reason": "capacity available",
+                "selection_trace": "rank=1",
+                "quota_snapshot": {"source": "codexbar", "freshness": "fresh", "headroom": "70%"},
+                "estimated_input_bytes": 400,
+                "actual_input_bytes": 380,
+                "actual_output_bytes": 120,
+                "actual_tokens": 95,
+                "created_at": "2026-08-02T09:00:00Z",
+                "expires_at": "2026-08-02T09:05:00Z",
+                "started_at": "2026-08-02T09:00:10Z",
+                "settled_at": "2026-08-02T09:00:25Z",
+                "status": "complete",
+                "retry_chain": "none",
+                "failover_chain": "none",
+                "replay_status": "new",
+                "cache_status": "miss",
+            },
+            {
+                "reservation_id": "reservation-002",
+                "initiator": "operator",
+                "route_mode": "explicit",
+                "resolved_route": "claude",
+                "created_at": "2026-08-02T08:00:00Z",
+                "status": "failed",
+                "failure_classification": "provider_unavailable",
+            },
+        ]
+    )
+    monkeypatch.setitem(sys.modules, "scripts.fleet_comms.routing_reservations", ledger)
+    monkeypatch.setattr(
+        runtime_router,
+        "_routing_plane_status",
+        lambda: {
+            "mode": "shadow",
+            "enabled": True,
+            "authority": "file_handoffs_authoritative",
+            "cutover": "pre_flip_operator_gated",
+        },
+    )
+
+    response = client.get("/api/runtime/routing-assignments?limit=10")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["availability"] == "available"
+    assert data["plane"]["mode"] == "shadow"
+    assert data["plane"]["authority"] == "file_handoffs_authoritative"
+    automatic, explicit = data["assignments"]
+    assert automatic["source_authority_id"] == "reservation-001"
+    assert automatic["initiator"] == "codex"
+    assert automatic["automatic"] is True
+    assert automatic["quota_freshness"] == "fresh"
+    assert automatic["duration_s"] == 15.0
+    assert explicit["initiator"] == "operator"
+    assert explicit["automatic"] is False
+    assert explicit["failure_classification"] == "provider_unavailable"
+
+
+def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch):
+    def missing_reader(_name: str):
+        raise ImportError
+
+    monkeypatch.setattr(runtime_router.importlib, "import_module", missing_reader)
+    missing = runtime_router.list_routing_assignments()
+    assert missing["availability"] == "unavailable"
+    assert missing["assignments"] == []
+
+    malformed = types.SimpleNamespace(list_routing_decisions=lambda **_kwargs: {"not": "a list"})
+    monkeypatch.setattr(runtime_router.importlib, "import_module", lambda _name: malformed)
+    result = runtime_router.list_routing_assignments()
+    assert result["availability"] == "malformed"
+    assert result["assignments"] == []
+
+
+def test_routing_assignment_serializer_accepts_authority_ledger_shape():
+    item = runtime_router._routing_assignment_item(
+        {
+            "decision_id": "decision-1",
+            "event_type": "settled",
+            "state": "complete",
+            "reservation_id": "authority-1",
+            "authority_key": "head-role",
+            "created_at": "2026-08-02T10:00:00Z",
+            "evidence": {"reason": "headroom available"},
+            "requested": {
+                "initiator": "dispatcher",
+                "author_model": "gpt-5.6-sol",
+                "author_family": "openai",
+                "role": "review",
+                "profile": "strict",
+                "risk": "high",
+                "route_mode": "explicit",
+                "estimated_input_bytes": 0,
+            },
+            "resolved": {
+                "candidate": "claude-opus",
+                "route": "claude",
+                "model": "claude-opus-4-6",
+                "family": "anthropic",
+                "policy_version": "routing-v2",
+                "trace": {
+                    "gates": "cross-family review required",
+                    "task_fit": "strong review capability",
+                    "tie_breakers": "quota fresh",
+                    "cheaper_or_idle_not_selected": "candidate lacks required family",
+                },
+            },
+            "quota": {"bucket": "claude-weekly", "snapshot": {"source": "codexbar", "headroom": 0}, "fresh_at": "2026-08-02T09:59:00Z"},
+            "retry": {"attempt": 2, "terminal_status": "complete", "failure_classification": None},
+            "replay": {"authority_key": "head-role", "idempotency_key": "idempotent", "completed": True},
+            "lifecycle": {
+                "status": "complete",
+                "created_at": "2026-08-02T10:00:00Z",
+                "expires_at": "2026-08-02T10:05:00Z",
+                "started_at": "2026-08-02T10:00:05Z",
+                "settled_at": "2026-08-02T10:00:15Z",
+                "actual_bytes": 0,
+                "actual_tokens": 0,
+                "failure_classification": None,
+            },
+        }
+    )
+
+    assert item["decision_id"] == "decision-1"
+    assert item["decision_event"] == "settled"
+    assert item["decision_state"] == "complete"
+    assert item["source_authority_id"] == "authority-1"
+    assert item["initiator"] == "dispatcher"
+    assert item["automatic"] is False
+    assert item["resolved_model"] == "claude-opus-4-6"
+    assert item["quota_headroom"] == 0
+    assert item["estimated_input_bytes"] == 0
+    assert item["actual_input_bytes"] is None
+    assert item["actual_work_bytes"] == 0
+    assert item["actual_tokens"] == 0
+    assert item["duration_s"] == 10.0
+    assert item["retry_chain"]["attempt"] == 2
+    assert item["replay_status"]["completed"] is True
+    assert item["selection_reasoning"] == {
+        "hard_eligibility": "cross-family review required",
+        "task_fit_quality": "strong review capability",
+        "tie_breakers": "quota fresh",
+        "cheaper_or_idle_not_selected": "candidate lacks required family",
+    }
+
+
+def test_runtime_dashboard_labels_routing_authority_and_explicitness():
+    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
+    for expected in (
+        "/api/runtime/routing-assignments?limit=100",
+        "Decision ID",
+        "Event / state",
+        "Source authority ID",
+        "Initiator",
+        "AUTOMATIC",
+        "EXPLICIT",
+        "Suitability-first decision evidence",
+        "Why cheaper or idle alternative was not selected",
+        "Plane:",
+        "plane.authority",
+    ):
+        assert expected in html
 
 
 def test_agents_endpoint_returns_known_adapters():

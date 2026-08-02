@@ -18,6 +18,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from ai_agent_bridge import _agy, _claude, _cli, _codex, _grok_build
 from ai_agent_bridge import _review_worktree as review_worktree
 
+from scripts.agent_runtime.adapters.acpx import (
+    AcpxShadowRefusalError,
+    _validate_sealed_review_mcp_config,
+)
 from scripts.review.isolation import create_review_temp_root
 from scripts.review.snapshot import (
     ReviewSnapshot,
@@ -291,6 +295,65 @@ def test_review_prompt_evidence_is_complete_hash_bound_and_json_escaped(
     grok_dossier = json.loads(grok_line)
     assert "content" not in grok_dossier["files"][0]
     assert grok_dossier["sealed_snapshot_root"] == str(small_checkout.path)
+
+
+def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path: Path) -> None:
+    content = "evidence-line\n" * 20_000
+    checkout = _prompt_evidence_checkout(tmp_path / "acp-snapshot", present_content=content)
+
+    prompt = checkout.review_prompt_evidence("acp")
+    dossier = json.loads(next(line for line in prompt.splitlines() if line.startswith("{")))
+
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" not in prompt
+    assert dossier["changed_file_content_mode"] == "complete_via_sealed_snapshot_read_tools"
+    assert dossier["clean_verdict_gate"] == "complete_tool_trace_coverage_required"
+    assert dossier["read_protocol"]["tool"] == "mcp__sealed_review__read_file"
+    assert dossier["read_protocol"]["preferred_complete_tool"] == (
+        "sealed_review_read_required_all"
+    )
+    assert "exactly once" in dossier["read_protocol"]["preferred_complete_instruction"]
+    assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
+    assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] > 200_000
+    assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == dossier["evidence_metrics"][
+        "legacy_inline_serialized_bytes"
+    ]
+    assert len(prompt.encode("utf-8")) < 10_000
+
+
+def test_sealed_acp_config_is_parent_owned_and_snapshot_pinned(tmp_path: Path) -> None:
+    snapshot_root = create_review_temp_root(prefix="lu-review-view-", dir=tmp_path)
+    checkout = _prompt_evidence_checkout(snapshot_root)
+    write_root = create_review_temp_root(prefix="lu-review-write-", dir=tmp_path)
+    exec_root = create_review_temp_root(prefix="lu-review-exec-", dir=tmp_path)
+    checkout = replace(checkout, write_root=write_root, exec_root=exec_root)
+
+    config_path = checkout.sealed_acp_tool_config()
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    server = config["mcpServers"][0]
+
+    assert stat.S_IMODE(config_path.stat().st_mode) == 0o400
+    assert server["name"] == "sealed_review"
+    assert server["command"].endswith("/.venv/bin/python")
+    assert server["args"][:2] == ["-I", "-S"]
+    assert server["args"][3] == str(checkout.path)
+    assert server["env"] == []
+    assert Path(server["args"][2]).read_text(encoding="utf-8").startswith("#!/usr/bin/python3\nimport hashlib")
+    assert _validate_sealed_review_mcp_config(
+        str(config_path), adapter_label="fixture"
+    ) == str(config_path)
+    assert checkout.sealed_acp_tool_config() == config_path
+
+    write_root.chmod(0o777)
+    with pytest.raises(AcpxShadowRefusalError, match="helper/snapshot failed validation"):
+        _validate_sealed_review_mcp_config(str(config_path), adapter_label="fixture")
+    write_root.chmod(0o700)
+
+    config_path.chmod(0o600)
+    config["mcpServers"].append({"name": "attacker", "command": "/bin/sh", "args": [], "env": {}})
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+    config_path.chmod(0o400)
+    with pytest.raises(AcpxShadowRefusalError, match="exactly one server"):
+        _validate_sealed_review_mcp_config(str(config_path), adapter_label="fixture")
 
 
 def _codex_read_calls(
@@ -600,6 +663,80 @@ def test_codex_read_payload_accepts_normalized_content_list(tmp_path: Path) -> N
         changed_paths=checkout.changed_paths,
     )
     assert proof["covered_path_count"] == 3
+
+
+def test_acp_title_only_trace_authenticates_hash_bound_sealed_payloads(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "acp-title-only-result")
+    calls = _codex_read_calls(checkout)
+    for call in calls:
+        call["name"] = ""
+        call["title"] = "Read sealed review evidence"
+        call["arguments"] = {}
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="acp",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["mode"] == "hash_bound_byte_chunks"
+    assert proof["covered_path_count"] == 3
+
+
+def test_acp_opencode_output_wrapper_authenticates_sealed_payloads(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "acp-opencode-output-result")
+    calls = _codex_read_calls(checkout)
+    for call in calls:
+        wrapped = call["result"]
+        assert isinstance(wrapped, dict)
+        content = wrapped["content"]
+        assert isinstance(content, list)
+        call["name"] = ""
+        call["title"] = "Read sealed review evidence"
+        call["arguments"] = {}
+        call["result"] = {
+            "output": content[0]["text"],
+            "metadata": {"truncated": False},
+        }
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="acp",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+
+    assert proof["mode"] == "hash_bound_byte_chunks"
+    assert proof["covered_path_count"] == 3
+
+
+def test_acp_completed_status_keeps_source_error_markers_inert(tmp_path: Path) -> None:
+    checkout = _prompt_evidence_checkout(
+        tmp_path / "acp-inert-error-markers",
+        present_content='MARKERS = "<persisted-output> tool result was too large"\n',
+    )
+    calls = _codex_read_calls(checkout)
+    for call in calls:
+        call["status"] = "completed"
+
+    proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=calls),
+        engine="acp",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+    assert proof["covered_path_count"] == 3
+
+    for call in calls:
+        call.pop("status")
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="reads_incomplete"):
+        review_worktree.verify_clean_review_evidence_reads(
+            SimpleNamespace(tool_calls=calls),
+            engine="acp",
+            evidence_root=checkout.path,
+            changed_paths=checkout.changed_paths,
+        )
 
 
 def test_codex_exec_read_trace_accepts_only_canonical_nested_mcp_calls(tmp_path: Path) -> None:

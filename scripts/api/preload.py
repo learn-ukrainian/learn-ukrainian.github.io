@@ -69,7 +69,8 @@ DYNAMIC_LOADERS = {
         "description": "Loads agent runtime adapters dynamically from scripts/agent_runtime/adapters/",
         "strategy": "walk_adapters",
         "calls": [
-            {"func": "import_module", "caller": "list_runtime_agents"}
+            {"func": "import_module", "caller": "list_runtime_agents"},
+            {"func": "import_module", "caller": "list_routing_assignments"},
         ]
     },
     "scripts.api.comms_router": {

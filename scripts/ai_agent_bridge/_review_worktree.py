@@ -233,11 +233,21 @@ def _tool_result_succeeded(call: dict[str, Any]) -> bool:
     result = call.get("result")
     if result is None:
         return False
+    status = str(call.get("status") or "").strip().lower()
+    if status in {"error", "failed", "cancelled", "canceled"}:
+        return False
     if isinstance(result, dict):
         if result.get("isError") is True or result.get("is_error") is True:
             return False
         if "error" in result and result.get("error") not in {None, ""}:
             return False
+    # ACP completion status is harness-authored transport evidence. Once it
+    # says the call completed, do not scan the returned source bytes for error
+    # marker strings: reviewed code can legitimately contain the verifier's
+    # own markers, and treating those inert bytes as control data drops whole
+    # authentic chunks from the coverage receipt.
+    if status in {"completed", "complete", "success", "succeeded"}:
+        return True
     texts = _tool_result_texts(result)
     lowered = "\n".join(texts).lower()
     if any(
@@ -264,7 +274,7 @@ def _tool_result_texts(value: Any) -> list[str]:
         return texts
     if isinstance(value, dict):
         texts = []
-        for key in ("text", "content", "result"):
+        for key in ("text", "content", "result", "output"):
             if key in value:
                 texts.extend(_tool_result_texts(value[key]))
         return texts
@@ -292,7 +302,7 @@ def _mcp_chunk_payloads(result: Any) -> list[dict[str, Any]]:
             }.issubset(candidate):
                 payloads.append(candidate)
                 return
-            for key in ("text", "content", "result", "chunks"):
+            for key in ("text", "content", "result", "output", "chunks"):
                 if key in candidate:
                     visit(candidate[key], depth=depth + 1)
             return
@@ -427,8 +437,11 @@ def _codex_sealed_read_requests(
     arguments = call.get("arguments")
     if not isinstance(arguments, dict):
         return []
-    if name == "read_file" or name.endswith("sealed_review__read_file") or name.endswith(
-        "sealed_review.read_file"
+    if (
+        name == "read_file"
+        or name.endswith("sealed_review__read_file")
+        or name.endswith("sealed_review.read_file")
+        or name.endswith("sealed_review_read_file")
     ):
         request = _validated_codex_read_request(
             raw_path=arguments.get("path"),
@@ -437,8 +450,11 @@ def _codex_sealed_read_requests(
             evidence_root=evidence_root,
         )
         return [request] if request is not None else []
-    if name == "read_required" or name.endswith("sealed_review__read_required") or name.endswith(
-        "sealed_review.read_required"
+    if (
+        name == "read_required"
+        or name.endswith("sealed_review__read_required")
+        or name.endswith("sealed_review.read_required")
+        or name.endswith("sealed_review_read_required")
     ):
         return _required_stream_requests(
             evidence_root=evidence_root,
@@ -448,7 +464,9 @@ def _codex_sealed_read_requests(
         )
     if name == "read_required_all" or name.endswith(
         "sealed_review__read_required_all"
-    ) or name.endswith("sealed_review.read_required_all"):
+    ) or name.endswith("sealed_review.read_required_all") or name.endswith(
+        "sealed_review_read_required_all"
+    ):
         return _all_required_requests(
             evidence_root=evidence_root,
             required_paths=required_paths,
@@ -540,6 +558,7 @@ def _verify_codex_review_reads(
     _validate_review_read_sizes(evidence_root, required_paths)
     file_bytes = {path: (evidence_root / path).read_bytes() for path in required_paths}
     coverage: dict[str, list[tuple[int, int]]] = {path: [] for path in required_paths}
+    delivered_bytes: dict[str, int] = {path: 0 for path in required_paths}
     empty_reads: set[str] = set()
     for call in tool_calls:
         if not _tool_result_succeeded(call):
@@ -549,7 +568,7 @@ def _verify_codex_review_reads(
             evidence_root=evidence_root,
             required_paths=required_paths,
         )
-        if not requests:
+        if not requests and str(call.get("name") or ""):
             continue
         by_identity = {
             (request["path"], request["offset"]): request
@@ -559,6 +578,26 @@ def _verify_codex_review_reads(
         for payload in _mcp_chunk_payloads(call.get("result")):
             identity = (payload.get("path"), payload.get("offset"))
             request = by_identity.get(identity)
+            # ``name`` is an unstable optional ACP field. OpenCode currently
+            # emits the standard human-readable ``title`` plus rawInput and
+            # rawOutput, so authenticate a name-less call from the sealed
+            # payload itself. The payload remains bound to the parent snapshot
+            # by exact path, full-file digest, chunk digest, offsets, content,
+            # and the public chunk cap; title text alone never grants coverage.
+            if request is None and not str(call.get("name") or ""):
+                payload_path = payload.get("path")
+                payload_offset = payload.get("offset")
+                if (
+                    payload_path in coverage
+                    and isinstance(payload_offset, int)
+                    and not isinstance(payload_offset, bool)
+                    and payload_offset >= 0
+                ):
+                    request = {
+                        "path": payload_path,
+                        "offset": payload_offset,
+                        "max_bytes": SEALED_READ_CHUNK_BYTES,
+                    }
             if request is None:
                 continue
             rel_path = request["path"]
@@ -600,6 +639,7 @@ def _verify_codex_review_reads(
                 coverage[rel_path].append((0, 0))
             elif chunk_bytes:
                 coverage[rel_path].append((offset, next_offset))
+            delivered_bytes[rel_path] += chunk_bytes
 
     missing = [
         path
@@ -608,10 +648,16 @@ def _verify_codex_review_reads(
     ]
     if missing:
         raise ReviewWorktreeError("review_evidence_reads_incomplete:" + ",".join(missing))
+    unique_bytes = sum(len(file_bytes[path]) for path in required_paths)
+    total_delivered_bytes = sum(delivered_bytes.values())
     return {
         "mode": "hash_bound_byte_chunks",
         "covered_paths": list(required_paths),
         "covered_path_count": len(required_paths),
+        "bytes_delivered_per_artifact": delivered_bytes,
+        "unique_evidence_bytes": unique_bytes,
+        "total_delivered_bytes": total_delivered_bytes,
+        "duplicate_delivered_bytes": max(0, total_delivered_bytes - unique_bytes),
     }
 
 
@@ -712,7 +758,7 @@ def verify_clean_review_evidence_reads(
         raise ReviewWorktreeError("review_evidence_tool_trace_missing")
     required_paths = _required_review_read_paths(evidence_root, changed_paths)
     engine_key = engine.strip().lower().replace("-build", "")
-    if engine_key == "codex":
+    if engine_key in {"acp", "codex"}:
         proof = _verify_codex_review_reads(
             raw_calls,
             evidence_root=evidence_root,
@@ -962,6 +1008,57 @@ class ProvisionedReviewWorktree:
             cfg.pop("review_exec_root", None)
         return cfg
 
+    def sealed_acp_tool_config(self) -> Path:
+        """Stage one parent-owned MCP config exposing only sealed snapshot reads.
+
+        The reviewed tree never supplies the helper, interpreter, or MCP
+        configuration.  The adapter independently validates this exact shape
+        before it relaxes its default no-tools posture.
+        """
+        if self.write_root is None or self.exec_root is None:
+            raise ReviewWorktreeError("sealed_acp_roots_missing")
+        from scripts.review.isolation import _stage_sealed_read_mcp
+
+        python_bin = _REPO_ROOT / ".venv" / "bin" / "python"
+        if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
+            raise ReviewWorktreeError(f"sealed_acp_python_missing:{python_bin}")
+        helper = self.exec_root / "sealed-read-mcp.py"
+        if not helper.exists():
+            helper = _stage_sealed_read_mcp(self.exec_root)
+        config_path = self.write_root / "sealed-review-acpx-mcp.json"
+        config = {
+            "mcpServers": [
+                {
+                    "name": "sealed_review",
+                    "command": str(python_bin),
+                    "args": ["-I", "-S", str(helper), str(self.path)],
+                    # ACPX's MCP schema requires an array even when no
+                    # environment entries are delegated to the child.
+                    "env": [],
+                }
+            ]
+        }
+        payload = (json.dumps(config, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+        try:
+            fd = os.open(
+                config_path,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                0o400,
+            )
+        except FileExistsError:
+            if config_path.read_bytes() != payload:
+                raise ReviewWorktreeError("sealed_acp_config_changed") from None
+            return config_path
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(payload)
+        return config_path
+
+    def sealed_evidence_input_bytes(self) -> int:
+        """Portable assignment unit: unique bytes the reviewer must consume."""
+        required_paths = _required_review_read_paths(self.path, self.changed_paths)
+        _validate_review_read_sizes(self.path, required_paths)
+        return sum((self.path / path).stat().st_size for path in required_paths)
+
     def review_prompt_evidence(self, engine: str) -> str:
         """Return bounded, hash-bound metadata for sealed review artifacts.
 
@@ -1098,14 +1195,24 @@ class ProvisionedReviewWorktree:
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
+        legacy_inline_bytes = 0
         if engine_key in {"acp", "codex", "claude"}:
-            inline_serialized, inline_proof = _inline_required_evidence(
+            candidate_inline, inline_proof = _inline_required_evidence(
                 self.path,
                 required_read_paths,
             )
-            if engine_key == "codex":
+            legacy_inline_bytes = len(candidate_inline.encode("utf-8"))
+            if engine_key in {"acp", "codex"}:
                 read_protocol = {
                     "tool": "mcp__sealed_review__read_file",
+                    "preferred_complete_tool": "sealed_review_read_required_all",
+                    "preferred_complete_instruction": (
+                        "Call sealed_review_read_required_all exactly once. If it fails "
+                        "closed with required_evidence_split_required, call "
+                        "sealed_review_read_required with index=0 and offset=0 and follow "
+                        "next_index/next_offset until eof=true. Use read_file for required "
+                        "paths only if the required stream fails."
+                    ),
                     "unit": "utf8_bytes",
                     "start_offset": 0,
                     "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
@@ -1141,7 +1248,10 @@ class ProvisionedReviewWorktree:
                     "codex_exec_batch_limit": MAX_CODEX_SEALED_READ_BATCH,
                     "required_paths": list(required_read_paths),
                 }
+                if engine_key == "codex":
+                    inline_serialized = candidate_inline
             else:
+                inline_serialized = candidate_inline
                 read_protocol = {
                     "tool": "Read",
                     "unit": "lines",
@@ -1186,7 +1296,7 @@ class ProvisionedReviewWorktree:
             },
             "changed_file_content_mode": (
                 "complete_inline_parent_bound"
-                if engine_key in {"acp", "codex", "claude"}
+                if engine_key in {"codex", "claude"}
                 else "complete_via_sealed_snapshot_read_tools"
             ),
             "sealed_snapshot_root": str(self.path),
@@ -1207,10 +1317,16 @@ class ProvisionedReviewWorktree:
             "patch_path": ".review-bundle/patch.diff",
             "patch_bytes": patch_stat.st_size,
             "files": files,
+            "evidence_metrics": {
+                "manifest_bytes": manifest_stat.st_size,
+                "patch_bytes": patch_stat.st_size,
+                "unique_evidence_bytes": sum((self.path / path).stat().st_size for path in required_read_paths),
+                "legacy_inline_serialized_bytes": legacy_inline_bytes,
+            },
             "read_protocol": read_protocol,
             "clean_verdict_gate": (
                 "parent_bound_inline_complete"
-                if engine_key in {"acp", "codex", "claude"}
+                if engine_key in {"codex", "claude"}
                 else "complete_tool_trace_coverage_required"
             ),
         }
@@ -1220,6 +1336,19 @@ class ProvisionedReviewWorktree:
             separators=(",", ":"),
             sort_keys=True,
         )
+        for _ in range(3):
+            serialized_bytes = len(serialized.encode("utf-8"))
+            dossier["evidence_metrics"]["serialized_prompt_bytes"] = serialized_bytes
+            dossier["evidence_metrics"]["duplicate_bytes_avoided"] = legacy_inline_bytes
+            updated = json.dumps(
+                dossier,
+                ensure_ascii=True,
+                separators=(",", ":"),
+                sort_keys=True,
+            )
+            if updated == serialized:
+                break
+            serialized = updated
         serialized_bytes = len(serialized.encode("utf-8"))
         if serialized_bytes > MAX_REVIEW_PROMPT_EVIDENCE_BYTES:
             raise ReviewWorktreeError(
@@ -1232,7 +1361,7 @@ class ProvisionedReviewWorktree:
             "the parent-bound inline section below; inspect all files before verdict. "
             "Do not re-read those required paths with tools. The sealed tools remain "
             "available only for targeted unchanged-context proof. "
-            if engine_key in {"acp", "codex", "claude"}
+            if engine_key in {"codex", "claude"}
             else ""
         )
         prompt_evidence = (
@@ -1246,6 +1375,8 @@ class ProvisionedReviewWorktree:
             "use a detached worktree, git, gh, or other shell command. "
             "Use the parent-bound evidence transport declared by the dossier. A clean "
             "verdict is rejected unless the trusted receipt proves complete delivery. "
+            "For ACP evidence, follow read_protocol.preferred_complete_instruction; it "
+            "avoids duplicate reads while preserving complete byte coverage. "
             f"{inline_instruction}"
             "The dossier "
             "authenticates those complete "
