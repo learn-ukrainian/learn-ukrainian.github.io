@@ -21,3 +21,6 @@ generated summary.
 Before rollout, run
 `.venv/bin/python scripts/entire/validate_checkpoint_routing.py` to prove that
 the product setting and egress allowlist still name one identical destination.
+
+The deployed source commit must carry `Entire-Checkpoint` as a real Git trailer.
+Escaped newline text is not a trailer and will not enter Entire's activity index.
