@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/gemma_hardware_probe_authorization_v1.schema.json",
+  "title": "Operator authorization for the exact Gemma L40S hardware probe v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "probe_id", "plan", "runner", "operator_decision", "authorization", "boundaries"],
+  "properties": {
+    "schema_version": {"const": "gemma_hardware_probe_authorization_v1"},
+    "probe_id": {"const": "gemma4-it-l40s-hf-jobs-hardware-probe-v1"},
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/treatments/gemma4_it_l40s_hf_jobs_probe_plan_v1.json"},
+        "bytes": {"const": 2537},
+        "sha256": {"const": "c78684279f5f34ff7b2c567e88182b4f8bcf6c154f570c12a6e72c492b4eef69"}
+      }
+    },
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"const": "scripts/projects/open_model_data/gemma_hardware_probe.py"},
+        "bytes": {"const": 58901},
+        "sha256": {"const": "bd8f973570140b32e7e3c8f74f80f905dea4afd02cb09f2061b4f13213e32504"}
+      }
+    },
+    "operator_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved", "source", "approved_at"],
+      "properties": {
+        "approved": {"const": true},
+        "source": {"type": "string", "minLength": 10},
+        "approved_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_download_authorized", "provider_job_launch_authorized", "provider", "hardware_flavor", "timeout_seconds", "maximum_provider_charge_usd", "operator_all_inclusive_ceiling_eur", "paid_attempts"],
+      "properties": {
+        "model_download_authorized": {"const": true},
+        "provider_job_launch_authorized": {"const": true},
+        "provider": {"const": "Hugging Face Jobs"},
+        "hardware_flavor": {"const": "l40sx1"},
+        "timeout_seconds": {"const": 3600},
+        "maximum_provider_charge_usd": {"const": 1.8},
+        "operator_all_inclusive_ceiling_eur": {"const": 3},
+        "paid_attempts": {"const": 1}
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["synthetic_fixture_only", "treatment_data_authorized", "evaluation_data_authorized", "stage_1_treatment_authorized", "model_quality_claim_authorized", "model_or_checkpoint_upload_authorized", "data_upload_authorized", "publication_authorized", "private_job_script_transport_authorized"],
+      "properties": {
+        "synthetic_fixture_only": {"const": true},
+        "treatment_data_authorized": {"const": false},
+        "evaluation_data_authorized": {"const": false},
+        "stage_1_treatment_authorized": {"const": false},
+        "model_quality_claim_authorized": {"const": false},
+        "model_or_checkpoint_upload_authorized": {"const": false},
+        "data_upload_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "private_job_script_transport_authorized": {"const": true}
+      }
+    }
+  }
+}

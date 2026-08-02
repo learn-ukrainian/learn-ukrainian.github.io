@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/gemma_hardware_probe_plan_v1.schema.json",
+  "title": "Gemma L40S hardware-validation non-treatment probe plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "probe_id", "issue", "state", "purpose", "reference_treatment", "model", "snapshot_manifest", "provider", "operator_ceiling", "execution", "boundaries", "claims"],
+  "properties": {
+    "schema_version": {"const": "gemma_hardware_probe_plan_v1"},
+    "probe_id": {"const": "gemma4-it-l40s-hf-jobs-hardware-probe-v1"},
+    "issue": {"const": 6170},
+    "state": {"const": "frozen_pending_operator_authorization"},
+    "purpose": {"const": "hardware_validation_non_treatment"},
+    "reference_treatment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256", "relationship"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/treatments/gemma4_it_wikipedia_mask_ablation_preregistration_v1.json"},
+        "bytes": {"const": 9948},
+        "sha256": {"const": "274ea63558fbd50ccdfe352a44dadcac0c37e224c589b5f9244d3fffe24f9aee"},
+        "relationship": {"const": "reference_only_not_amended_not_a_stage_1_execution"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identifier", "revision", "loader_class", "processor_class"],
+      "properties": {
+        "identifier": {"const": "google/gemma-4-31B-it"},
+        "revision": {"const": "842da3794eaa0b77d5f08bae87a17459d91ff475"},
+        "loader_class": {"const": "transformers.AutoModelForMultimodalLM"},
+        "processor_class": {"const": "transformers.AutoProcessor"}
+      }
+    },
+    "snapshot_manifest": {"$ref": "#/$defs/snapshot_manifest"},
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "hardware_flavor", "gpu_count", "gpu_name", "exposed_ports", "timeout_seconds", "billing_usd_per_minute", "maximum_provider_charge_usd", "paid_attempts"],
+      "properties": {
+        "provider": {"const": "Hugging Face Jobs"},
+        "hardware_flavor": {"const": "l40sx1"},
+        "gpu_count": {"const": 1},
+        "gpu_name": {"const": "NVIDIA L40S"},
+        "exposed_ports": {"const": false},
+        "timeout_seconds": {"const": 3600},
+        "billing_usd_per_minute": {"const": 0.03},
+        "maximum_provider_charge_usd": {"const": 1.8},
+        "paid_attempts": {"const": 1}
+      }
+    },
+    "operator_ceiling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "amount_eur", "all_inclusive"],
+      "properties": {
+        "currency": {"const": "EUR"},
+        "amount_eur": {"const": 3},
+        "all_inclusive": {"const": true}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture", "sequence_length", "quantization", "adapter", "optimizer_steps_before_checkpoint", "optimizer_steps_after_clean_process_resume", "checkpoint_contents"],
+      "properties": {
+        "fixture": {"const": "deterministic_synthetic_token_ids_no_source_or_evaluation_data"},
+        "sequence_length": {"const": 4096},
+        "quantization": {"const": "4bit_nf4_bf16_double_quantization"},
+        "adapter": {"const": "qlora_rank16_alpha32_dropout0.05"},
+        "optimizer_steps_before_checkpoint": {"const": 1},
+        "optimizer_steps_after_clean_process_resume": {"const": 1},
+        "checkpoint_contents": {"const": "disposable_adapter_optimizer_rng"}
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["treatment_data_used", "evaluation_data_used", "treatment_stage_1_performed", "model_quality_evaluation_performed", "model_or_checkpoint_upload_performed", "data_upload_performed", "publication_performed", "private_job_script_transport_allowed"],
+      "properties": {
+        "treatment_data_used": {"const": false},
+        "evaluation_data_used": {"const": false},
+        "treatment_stage_1_performed": {"const": false},
+        "model_quality_evaluation_performed": {"const": false},
+        "model_or_checkpoint_upload_performed": {"const": false},
+        "data_upload_performed": {"const": false},
+        "publication_performed": {"const": false},
+        "private_job_script_transport_allowed": {"const": true}
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "prohibited"],
+      "properties": {
+        "allowed": {"const": ["exact_snapshot_l40s_fit_throughput_and_disposable_checkpoint_resume_mechanics"]},
+        "prohibited": {"const": ["stage_1_treatment_completion", "causal_loss_mask_evidence", "model_quality", "general_ukrainian_fluency", "deployment_readiness", "model_or_checkpoint_publication"]}
+      }
+    }
+  },
+  "$defs": {
+    "snapshot_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/treatments/gemma4_it_model_snapshot_manifest_v1.json"},
+        "bytes": {"const": 1994},
+        "sha256": {"const": "f0552bd6ee21764a0fc8c62b76d8458775f4f5e4969d701cf4c0d35c2f86fba1"}
+      }
+    }
+  }
+}
