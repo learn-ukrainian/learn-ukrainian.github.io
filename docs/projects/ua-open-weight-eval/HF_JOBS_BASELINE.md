@@ -45,18 +45,30 @@ reconciled through the unique job labels before another attempt is considered.
 A paid vLLM compatibility failure is preserved and requires new approval before
 a llama.cpp fallback attempt.
 
+Before any GPU launch, a five-minute CPU Basic transport preflight must pass.
+Its maximum time-based charge is USD 0.000833 at USD 0.01/hour, below the
+operator's USD 0.001 preflight ceiling. The preflight must show that the
+container entered the provider runtime, downloaded the exact private staged
+bundle at an immutable commit, verified every file hash, and directly uploaded
+one harmless receipt. A failed preflight prohibits a GPU launch.
+
 ## Durable and private progress
 
-Hugging Face Jobs deletes its ephemeral filesystem at termination. The worker
-therefore writes an exact-prefix append-only checkpoint to a private mounted
-Hugging Face Bucket after every completed request. Its header binds the suite,
-request selection, model and tokenizer revisions, artifact hash, runner hash,
-runtime versions, and decoding settings. A resume is accepted only when all
-bindings match and the checkpoint rows are the exact expected request-order
-prefix.
+Hugging Face Jobs deletes its ephemeral filesystem at termination. This launch
+therefore has no repository or bucket mounts and passes zero `--volume`
+arguments. After the container enters the provider runtime, a minimal bootstrap
+downloads the exact reviewed transport from the private staging dataset at an
+immutable commit, verifies its hash, and executes it. The transport then
+downloads and verifies the frozen code, suite, configuration, and pinned plugin
+before model execution.
 
-The bucket mount is authorized when the Job is created, so no token is passed
-to the Job. The public model is downloaded without a token. See the official
+The worker uploads its exact-prefix append-only checkpoint directly to the
+private staging dataset through the authenticated Hub API after each 25-case
+batch. Its header binds the suite, request selection, model and tokenizer
+revisions, artifact hash, runner hash, runtime versions, decoding settings, and
+private artifact prefix. A resume is accepted only when all bindings match and
+the checkpoint rows are the exact expected request-order prefix. The prior
+bucket-mount remedy is disproven and must not be retried. See the official
 [Jobs persistence guidance](https://huggingface.co/docs/hub/en/jobs-manage).
 
 Raw generations, parse failures, private checkpoints, and provider logs remain
@@ -80,8 +92,13 @@ environment:
 
 The prepared source-only request packet has SHA-256
 `9f624c54857ea8517162c555bc876f34f76a783e3f9feeaf9db4d6c91a9a18bd`.
-The complete ignored job bundle has SHA-256
-`c7efff840695dc0d9e8c7de236f0f787e30ae41c5a60d246f61202436bcf24f5`.
+The reviewed bundle is staged only after its exact Git head passes independent
+review and CI. `stage-transport` creates or reuses the private
+`krisztiankoos/ua-open-weight-eval-staging-6273` dataset, uploads the bundle
+under `bundles/<bundle-sha256>`, and returns the immutable dataset commit used
+by both the CPU preflight and any authorized GPU launch. `verify-transport`
+then re-downloads the staged files and verifies their exact set, sizes, and
+hashes before a provider job is submitted.
 
 ## Result publication boundary
 

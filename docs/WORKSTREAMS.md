@@ -65,7 +65,7 @@ is the single source of truth for membership (auditor:
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| open-model-data | closed #6164 (successor to closed #6056); active child #6273 | The Foundry implementation, portable tool, model-ready exports, open-weight evaluation suite, and adoption adapters are shipped. #6273 owns the official Gemma 4 QAT Q4_0 HF Jobs baseline, results publication, a separate Lapa-baseline follow-up, and the remaining external receipt boundary. Training and researcher outreach remain out of scope for the baseline task. |
+| open-model-data | closed #6164 (successor to closed #6056); active child #6273 | The Foundry implementation, portable tool, model-ready exports, open-weight evaluation suite, and adoption adapters are shipped. #6273 owns the official Gemma 4 QAT Q4_0 HF Jobs baseline through a CPU-gated, zero-volume direct-upload transport, results publication, a separate Lapa-baseline follow-up, and the remaining external receipt boundary. Training and researcher outreach remain out of scope for the baseline task. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |

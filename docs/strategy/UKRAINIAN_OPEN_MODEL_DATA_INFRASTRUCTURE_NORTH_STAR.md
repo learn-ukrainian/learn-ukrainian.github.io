@@ -16,9 +16,12 @@
 > operator separately authorized release and external-validation work under
 > #6273 on 2026-08-02, then superseded the proposed local M1/MLX baseline with
 > an official Gemma 4 QAT Q4_0 evaluation on one Hugging Face Jobs L40S. That
-> decision authorizes one 100-case canary and, only after a 25%-buffered budget
-> projection passes, one full 4,000-case run within USD 6.00 total provider
-> cost. Researcher outreach and model training remain prohibited in this task.
+> decision authorizes a no-volume CPU Basic transport preflight, one 100-case
+> L40S canary only after that preflight passes, and, only after a 25%-buffered
+> budget projection passes, one full 4,000-case run within USD 6.00 total
+> provider cost. Private checkpoints use authenticated direct dataset uploads;
+> repository and bucket mounts are prohibited. Researcher outreach and model
+> training remain prohibited in this task.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
 > refreshed 2026-08-02
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
@@ -107,7 +110,10 @@ the Foundry release.
   is the active post-completion release and external-validation child of #6164.
   It owns rights-complete publication, a real fourteen-track open-weight result,
   concrete Lapa and lang-uk submissions after approval, and the external run
-  receipt required before an adoption claim.
+  receipt required before an adoption claim. Its current provider path is a
+  hash-first, zero-volume HF Jobs transport: a five-minute CPU Basic preflight
+  must prove private download, hash verification, and direct receipt upload
+  before the authorized L40S canary can launch.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   is closed as not planned under the solo-operator model while preserving the
   completed v0.2 error analysis and frozen design. Its reviewer-intensive

@@ -2,9 +2,10 @@
 """Run the frozen UA Open-Weight Eval packet on one Hugging Face GPU Job.
 
 The worker is deliberately self-contained so the exact reviewed file can be
-mounted into a Job. It downloads one pinned public GGUF artifact, verifies its
-bytes before loading it, writes resumable private checkpoint state to a durable
-bucket mount, and emits complete parsed responses without an LLM judge.
+downloaded into a Job and hash-verified before execution. It downloads one
+pinned public GGUF artifact, verifies its bytes before loading it, uploads
+resumable private checkpoint state directly to a private Hub dataset, and emits
+complete parsed responses without an LLM judge.
 """
 
 from __future__ import annotations
@@ -36,7 +37,6 @@ JOB_ID_PATTERN = re.compile(r"[a-f0-9]{20,64}")
 OFFLINE_GENERATION_ENVIRONMENT = {
     "HF_DATASETS_OFFLINE": "1",
     "HF_HUB_DISABLE_TELEMETRY": "1",
-    "HF_HUB_OFFLINE": "1",
     "TRANSFORMERS_OFFLINE": "1",
     "VLLM_BATCH_INVARIANT": "1",
     "VLLM_ENABLE_V1_MULTIPROCESSING": "0",
@@ -91,6 +91,63 @@ def append_durable(path: Path, value: Mapping[str, Any]) -> None:
         handle.write(canonical_json(dict(value)) + "\n")
         handle.flush()
         os.fsync(handle.fileno())
+
+
+class HubArtifactStore:
+    """Direct authenticated persistence for private checkpoints and receipts."""
+
+    def __init__(self, repo_id: str, prefix: str) -> None:
+        _require(
+            re.fullmatch(
+                r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/[A-Za-z0-9][A-Za-z0-9_.-]{0,95}",
+                repo_id,
+            )
+            is not None,
+            "invalid artifact repository",
+        )
+        _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.\-/]{0,255}", prefix) is not None, "invalid artifact prefix")
+        _require(".." not in prefix.split("/"), "unsafe artifact prefix")
+        _require(bool(os.environ.get("HF_TOKEN")), "HF_TOKEN is required for direct checkpoint upload")
+        self.repo_id = repo_id
+        self.prefix = prefix.strip("/")
+
+    def remote_path(self, name: str) -> str:
+        _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", name) is not None, "invalid artifact name")
+        return f"{self.prefix}/{name}"
+
+    def download_optional(self, name: str, destination: Path) -> bool:
+        from huggingface_hub import hf_hub_download
+        from huggingface_hub.errors import EntryNotFoundError
+
+        try:
+            source = Path(
+                hf_hub_download(
+                    repo_id=self.repo_id,
+                    repo_type="dataset",
+                    filename=self.remote_path(name),
+                    token=True,
+                )
+            )
+        except EntryNotFoundError:
+            return False
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(source.read_bytes())
+        return True
+
+    def upload(self, path: Path, name: str) -> str:
+        from huggingface_hub import HfApi
+
+        _require(path.is_file(), f"artifact is missing: {name}")
+        info = HfApi(token=os.environ["HF_TOKEN"]).upload_file(
+            path_or_fileobj=path,
+            path_in_repo=self.remote_path(name),
+            repo_id=self.repo_id,
+            repo_type="dataset",
+            commit_message=f"persist {name} for {os.environ.get('JOB_ID', 'unknown-job')}",
+        )
+        oid = getattr(info, "oid", None)
+        _require(isinstance(oid, str) and re.fullmatch(r"[a-f0-9]{40}", oid) is not None, "artifact upload commit drift")
+        return oid
 
 
 def generation_totals(records: Sequence[Mapping[str, Any]], resumed_count: int) -> dict[str, float | int]:
@@ -251,6 +308,8 @@ def verify_config(config: Mapping[str, Any]) -> None:
     _require(config.get("model", {}).get("multimodal_projector_used") is False, "projector must remain excluded")
     _require(config.get("runner", {}).get("temperature") == 0.0, "temperature drift")
     _require(config.get("runner", {}).get("seed") == 0, "seed drift")
+    _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
+    _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
 
 
 def verify_tokenizer_files(root: Path, tokenizer_config: Mapping[str, Any]) -> dict[str, Any]:
@@ -417,6 +476,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     _require(os.environ.get("ACCELERATOR") == "l40sx1", "ACCELERATOR must be l40sx1")
     job_id = os.environ.get("JOB_ID", "")
     _require(JOB_ID_PATTERN.fullmatch(job_id) is not None, "missing or invalid Hugging Face Job ID")
+    artifact_store = HubArtifactStore(args.artifact_repo, args.artifact_prefix)
 
     request_header, requests = load_requests(args.requests)
     _require(sha256_file(args.requests) == args.requests_sha256, "request packet SHA-256 drift")
@@ -455,14 +515,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "max_tokens": config["runner"]["max_tokens"],
             "parse_retries": config["runner"]["parse_retries"],
         },
-        "network_during_generation": False,
+        "network_during_generation": "private_checkpoint_upload_only",
     }
     checkpoint_path = args.output_root / "checkpoint.jsonl"
+    artifact_store.download_optional("checkpoint.jsonl", checkpoint_path)
     records = load_checkpoint(checkpoint_path, checkpoint_header, selected)
+    checkpoint_commit = artifact_store.upload(checkpoint_path, "checkpoint.jsonl")
     resumed_count = len(records)
     batch_seconds: list[float] = []
     retry_seconds: list[float] = []
     batch_size = int(config["runner"]["batch_size"])
+    _require(
+        batch_size == int(config["runner"]["checkpoint_upload_every_cases"]),
+        "checkpoint upload cadence must equal the batch size",
+    )
     retries = int(config["runner"]["parse_retries"])
     position = len(records)
     while position < len(selected):
@@ -512,6 +578,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             append_durable(checkpoint_path, record)
             records.append(record)
         position += len(batch)
+        checkpoint_commit = artifact_store.upload(checkpoint_path, "checkpoint.jsonl")
         print(f"hf-jobs-worker: completed {position}/{len(selected)}", file=sys.stderr, flush=True)
     generation = generation_totals(records, resumed_count)
     generation_seconds = float(generation["generation_seconds"])
@@ -531,7 +598,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "backend": "vllm",
         "backend_version": versions["vllm"],
         "decoding": checkpoint_header["decoding"],
-        "network_allowed_during_generation": False,
+        "network_allowed_during_generation": True,
+        "network_use": "private_checkpoint_upload_only",
         "closed_api_used": False,
         "job_id": job_id,
         "hardware_flavor": "l40sx1",
@@ -541,6 +609,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     responses_text = "".join(canonical_json(row) + "\n" for row in response_rows)
     responses_path = args.output_root / "responses.jsonl"
     write_atomic(responses_path, responses_text)
+    responses_commit = artifact_store.upload(responses_path, "responses.jsonl")
     ended_at = time.time()
     total_seconds = time.monotonic() - started_monotonic
     receipt = {
@@ -597,6 +666,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "checkpoint_sha256": sha256_file(checkpoint_path),
             "responses_sha256": sha256_file(responses_path),
             "response_count": len(records),
+            "private_artifact_repository": artifact_store.repo_id,
+            "private_artifact_prefix": artifact_store.prefix,
+            "checkpoint_upload_commit": checkpoint_commit,
+            "responses_upload_commit": responses_commit,
         },
         "facts": {
             "closed_model_judge_used": False,
@@ -607,7 +680,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "training_performed": False,
         },
     }
-    write_atomic(args.output_root / "worker_receipt.json", receipt)
+    receipt_path = args.output_root / "worker_receipt.json"
+    write_atomic(receipt_path, receipt)
+    artifact_store.upload(receipt_path, "worker_receipt.json")
     return receipt
 
 
@@ -619,6 +694,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--requests-sha256", required=True)
     parser.add_argument("--selection", type=Path)
     parser.add_argument("--output-root", type=Path, required=True)
+    parser.add_argument("--artifact-repo", required=True)
+    parser.add_argument("--artifact-prefix", required=True)
     return parser.parse_args(argv)
 
 
@@ -636,8 +713,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             "error": str(exc),
             "traceback": traceback.format_exc(),
         }
+        failure_path = args.output_root / "failure.private.json"
         with contextlib.suppress(OSError):
-            write_atomic(args.output_root / "failure.private.json", failure)
+            write_atomic(failure_path, failure)
+        with contextlib.suppress(BaseException):
+            HubArtifactStore(args.artifact_repo, args.artifact_prefix).upload(failure_path, "failure.private.json")
         print(canonical_json({key: value for key, value in failure.items() if key != "traceback"}), file=sys.stderr)
         return 2
     print(canonical_json({"status": result["status"], "mode": result["mode"], "job_id": result["job"]["id"]}))

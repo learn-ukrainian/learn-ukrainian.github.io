@@ -3,6 +3,7 @@
     "approved_at": "2026-08-02",
     "issue": 6273,
     "maximum_provider_cost_usd": 6.0,
+    "no_volume_remedy_approved_at": "2026-08-02",
     "no_automatic_paid_retry": true,
     "provider": "Hugging Face Jobs"
   },
@@ -45,6 +46,7 @@
   "runner": {
     "backend": "vllm",
     "batch_size": 25,
+    "checkpoint_upload_every_cases": 25,
     "fallback_backend": "llama.cpp",
     "fallback_requires_new_approval_after_paid_failure": true,
     "gpu_memory_utilization": 0.9,
@@ -92,6 +94,19 @@
       "overcorrection",
       "protected_text"
     ]
+  },
+  "transport": {
+    "cpu_preflight": {
+      "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
+      "container_image": "python:3.12.8-slim",
+      "flavor": "cpu-basic",
+      "maximum_cost_usd": 0.001,
+      "timeout_seconds": 300,
+      "usd_per_hour": 0.01
+    },
+    "mode": "private-dataset-direct-api",
+    "mounted_volumes": 0,
+    "staging_dataset_suffix": "ua-open-weight-eval-staging-6273"
   },
   "tokenizer": {
     "allowed_files": {
