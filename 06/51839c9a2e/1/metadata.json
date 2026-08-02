@@ -1,0 +1,76 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0651839c9a2e",
+  "session_id": "fleet-72850ad5dd2845bcb2aa86ab52cbafe1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T22:54:45.420329Z",
+  "branch": "codex/6291-entire-fleet-capture",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/agy.py",
+    "scripts/agent_runtime/adapters/base.py",
+    "scripts/agent_runtime/adapters/grok_build.py",
+    "scripts/agent_runtime/adapters/hermes_deepseek.py",
+    "scripts/agent_runtime/adapters/hermes_grok.py",
+    "scripts/agent_runtime/adapters/hermes_qwen.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "tests/ai_agent_bridge/test_hermes_review_isolation.py",
+    "tests/test_ask_hermes.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "1fd179ecc5b9",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T22:54:45.416667Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 455,
+    "human_modified": 92,
+    "human_removed": 0,
+    "total_committed": 455,
+    "total_lines_changed": 547,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1579,
+      "user_lines_removed": 88,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "scripts/agent_runtime/adapters/agy.py": 7,
+        "scripts/agent_runtime/adapters/base.py": 7,
+        "scripts/agent_runtime/adapters/grok_build.py": 7,
+        "scripts/agent_runtime/adapters/hermes_deepseek.py": 1,
+        "scripts/agent_runtime/adapters/hermes_grok.py": 1,
+        "scripts/agent_runtime/adapters/hermes_qwen.py": 1,
+        "scripts/agent_runtime/runner.py": 60,
+        "scripts/agent_runtime/telemetry.py": 39,
+        "scripts/ai_agent_bridge/_hermes.py": 30,
+        "scripts/entire/external_agents/entire-agent-kimi/cmd/entire-agent-fleet/main.go": 16,
+        "scripts/entire/external_agents/entire-agent-kimi/internal/fleet/agent.go": 545,
+        "scripts/entire/external_agents/entire-agent-kimi/internal/fleet/agent_test.go": 164,
+        "scripts/entire/fleet_capture.py": 361,
+        "scripts/entire/install_fleet_external_agent.sh": 42,
+        "tests/ai_agent_bridge/test_hermes_review_isolation.py": 15,
+        "tests/test_ask_hermes.py": 43,
+        "tests/test_entire_fleet_capture.py": 240
+      },
+      "user_removed_per_file": {
+        "scripts/agent_runtime/runner.py": 1,
+        "scripts/agent_runtime/telemetry.py": 28,
+        "scripts/ai_agent_bridge/_hermes.py": 29,
+        "tests/test_ask_hermes.py": 30
+      }
+    }
+  ]
+}

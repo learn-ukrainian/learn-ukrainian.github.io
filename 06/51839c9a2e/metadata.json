@@ -3,7 +3,7 @@
   "checkpoint_id": "0651839c9a2e",
   "strategy": "manual-commit",
   "branch": "codex/6291-entire-fleet-capture",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
     "scripts/agent_runtime/adapters/agy.py",
     "scripts/agent_runtime/adapters/base.py",
@@ -24,6 +24,13 @@
       "compact_transcript": "/06/51839c9a2e/0/transcript.jsonl",
       "content_hash": "/06/51839c9a2e/0/content_hash.txt",
       "prompt": "/06/51839c9a2e/0/prompt.txt"
+    },
+    {
+      "metadata": "/06/51839c9a2e/1/metadata.json",
+      "transcript": "/06/51839c9a2e/1/full.jsonl",
+      "compact_transcript": "/06/51839c9a2e/1/transcript.jsonl",
+      "content_hash": "/06/51839c9a2e/1/content_hash.txt",
+      "prompt": "/06/51839c9a2e/1/prompt.txt"
     }
   ]
 }
