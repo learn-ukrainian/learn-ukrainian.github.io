@@ -961,6 +961,44 @@ describe('lexicon SRS facade', () => {
     expect(differentSeedRun).not.toEqual(firstRun);
   });
 
+  test('a curated mixed session keeps explicit item and lemma variety while every card is new', () => {
+    const allowedIds = Array.from({ length: 48 }, (_, index) => `curated-${index}`);
+    const fullDeck = modeDeck([
+      ...allowedIds.map((id) => ({ id, modes: ['flashcards', 'matching', 'choice'] as PracticeMode[] })),
+      ...Array.from({ length: 48 }, (_, index) => ({
+        id: `outside-${index}`,
+        modes: ['flashcards', 'matching', 'choice'] as PracticeMode[],
+      })),
+    ]);
+    const allowed = new Set(allowedIds);
+    const curatedDeck = {
+      ...fullDeck,
+      index: fullDeck.index.filter((item) => allowed.has(item.lemmaId)),
+    };
+    const history: SelectionHistoryItem[] = [];
+    const selections: PracticeSelection[] = [];
+
+    // No cards are rated in this simulation: all draws remain new and due. Across
+    // 24 draws, the selector must still avoid a repetitive curated-session opening.
+    for (let draw = 0; draw < 24; draw += 1) {
+      const selection = selectNextPracticeItem(curatedDeck, {
+        now: NOW,
+        history,
+        modeFilter: 'mixed',
+        sessionSeed: 6251,
+      });
+      if (!selection) throw new Error(`expected curated selection ${draw}`);
+      selections.push(selection);
+      history.push(selectionHistory(selection));
+    }
+
+    const uniqueItemRatio = new Set(selections.map((selection) => selection.itemId)).size / selections.length;
+    const uniqueLemmaRatio = new Set(selections.map((selection) => selection.lemma.lemmaId)).size / selections.length;
+    expect(uniqueItemRatio).toBeGreaterThanOrEqual(0.95);
+    expect(uniqueLemmaRatio).toBeGreaterThanOrEqual(0.9);
+    expect(selections.every((selection) => allowed.has(selection.lemma.lemmaId))).toBe(true);
+  });
+
   test('selector returns immutable snapshots of cached candidates', () => {
     const testDeck = flashcardDeck([{ id: 'snapshot' }]);
     const first = selectNextPracticeItem(testDeck, {

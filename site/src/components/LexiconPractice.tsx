@@ -86,6 +86,7 @@ import {
 import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../lib/lexicon/daily';
 import {
   filterTeacherClozeItems,
+  getCachedLowercaseLemmaKeySet,
   getTeacherLessonVirtualDeck,
   readLocalCustomSets,
   saveLocalCustomSet,
@@ -1234,19 +1235,10 @@ function sessionScopeIndexForMode(
 function deckFilterAllowsLemma(
   lemmaId: string,
   lemma: string,
-  deckFilter: string,
-  customSets: CustomSet[],
+  allowedKeys: ReadonlySet<string> | null,
 ): boolean {
-  if (deckFilter === 'all') return true;
-  const idLower = lemmaId.toLowerCase();
-  const lemmaLower = lemma.toLowerCase();
-  const keys =
-    deckFilter === 'virtual_teacher_lesson'
-      ? getTeacherLessonVirtualDeck().lemma_keys
-      : (customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? null);
-  if (!keys) return true;
-  const keysLower = new Set(keys.map((k) => k.toLowerCase()));
-  return keysLower.has(idLower) || keysLower.has(lemmaLower);
+  if (!allowedKeys) return true;
+  return allowedKeys.has(lemmaId.toLowerCase()) || allowedKeys.has(lemma.toLowerCase());
 }
 
 /** Narrow a level's practice index to the active deck filter BEFORE computing session
@@ -1257,11 +1249,26 @@ function deckFilterAllowsLemma(
  * full level index). */
 function filterIndexByDeckFilter(
   index: PracticeIndexItem[],
+  allowedKeys: ReadonlySet<string> | null,
+): PracticeIndexItem[] {
+  if (!allowedKeys) return index;
+  return index.filter((item) => deckFilterAllowsLemma(item.lemmaId, item.lemma, allowedKeys));
+}
+
+/**
+ * Resolves the active deck once per render. `null` deliberately preserves the
+ * existing fail-open behaviour for "all" and a deleted custom-deck selection.
+ */
+function resolveDeckLemmaKeySet(
   deckFilter: string,
   customSets: CustomSet[],
-): PracticeIndexItem[] {
-  if (deckFilter === 'all') return index;
-  return index.filter((item) => deckFilterAllowsLemma(item.lemmaId, item.lemma, deckFilter, customSets));
+): ReadonlySet<string> | null {
+  if (deckFilter === 'all') return null;
+  if (deckFilter === 'virtual_teacher_lesson') {
+    return getCachedLowercaseLemmaKeySet(getTeacherLessonVirtualDeck().lemma_keys);
+  }
+  const customSet = customSets.find((set) => set.id === deckFilter);
+  return customSet ? getCachedLowercaseLemmaKeySet(customSet.lemma_keys) : null;
 }
 
 /**
@@ -1470,6 +1477,10 @@ function LexiconPracticeIsland({
   const [pendingDeckSwitch, setPendingDeckSwitch] = useState<
     { kind: 'deck'; value: string } | { kind: 'level'; value: CefrLevel } | null
   >(null);
+  const deckLemmaKeySet = useMemo(
+    () => resolveDeckLemmaKeySet(selectedDeckFilter, customSets),
+    [customSets, selectedDeckFilter],
+  );
 
   const handleGoogleDriveSync = useCallback(async () => {
     setIsDriveSyncing(true);
@@ -1695,7 +1706,7 @@ function LexiconPracticeIsland({
     }
 
     const plan = computeSessionScope(
-      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, selectedDeckFilter, customSets), mode),
+      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, deckLemmaKeySet), mode),
       sessionBudget,
       { dailyNewCount },
     );
@@ -1728,7 +1739,17 @@ function LexiconPracticeIsland({
     };
     writePracticeSessionSnapshot(mode, snapshot);
     setResumeSnapshots((snapshots) => ({ ...snapshots, [mode]: snapshot }));
-  }, [autoStart, focusedLemmaId, dailyNewCount, deck, mode, plannedTotal, sessionBudget, learnerLevel]);
+  }, [
+    autoStart,
+    deck,
+    deckLemmaKeySet,
+    dailyNewCount,
+    focusedLemmaId,
+    learnerLevel,
+    mode,
+    plannedTotal,
+    sessionBudget,
+  ]);
 
   useEffect(() => {
     const page = document.querySelector('.lexicon-practice-page');
@@ -2043,14 +2064,14 @@ function LexiconPracticeIsland({
   // — instead of mixed silently collapsing toward whichever modes happen to have
   // content and leaving an empty tap as the only way to discover a mode has nothing.
   const modeCounts = useMemo(() => {
-    const filtered = filterIndexByDeckFilter(indexForStats, selectedDeckFilter, customSets);
+    const filtered = filterIndexByDeckFilter(indexForStats, deckLemmaKeySet);
     const counts: Partial<Record<VisiblePracticeModeFilter, number>> = { mixed: filtered.length };
     for (const visibleMode of MODE_CARD_ORDER) {
       if (visibleMode === 'mixed') continue;
       counts[visibleMode] = filtered.filter((item) => item.modes.includes(visibleMode)).length;
     }
     return counts;
-  }, [indexForStats, selectedDeckFilter, customSets]);
+  }, [deckLemmaKeySet, indexForStats]);
 
   const sessionPoolConstraints = useMemo(
     () =>
@@ -2069,23 +2090,26 @@ function LexiconPracticeIsland({
       // A weak-area focus session narrows the pool to items matching the tapped
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
-
-      // Filter by selected deck (Curated Deck or a custom set).
-      const candLemmaId = candidate.indexItem?.lemmaId || candidate.lemma?.lemmaId || '';
-      const candLemma = candidate.lemma?.lemma || candidate.indexItem?.lemma || '';
-      if (!deckFilterAllowsLemma(candLemmaId, candLemma, selectedDeckFilter, customSets)) {
-        return false;
-      }
       return true;
     },
-    [focusWeakness, sessionPoolConstraints, selectedDeckFilter, customSets],
+    [focusWeakness, sessionPoolConstraints],
   );
+
+  // Pass a deck-scoped index into the selector, rather than constructing every
+  // candidate and rejecting it later in poolFilter. The wrapper is memoized by the
+  // loaded deck and active key-set, so FSRS revision ticks still refresh due state
+  // without rebuilding the full all-level candidate universe for curated/custom decks.
+  const selectionDeck = useMemo(() => {
+    if (!deck || !deckLemmaKeySet) return deck;
+    const index = filterIndexByDeckFilter(deck.index, deckLemmaKeySet);
+    return index.length === deck.index.length ? deck : { ...deck, index };
+  }, [deck, deckLemmaKeySet]);
 
   const weakChips = useMemo(() => weakCaseChips(reviewLog), [reviewLog]);
 
   const selection = useMemo(() => {
-    if (!deck || sessionPhase !== 'active') return null;
-    const fresh = selectNextPracticeItem(deck, {
+    if (!selectionDeck || sessionPhase !== 'active') return null;
+    const fresh = selectNextPracticeItem(selectionDeck, {
       history,
       modeFilter: mode,
       now: new Date(),
@@ -2103,12 +2127,12 @@ function LexiconPracticeIsland({
       committed.historyLen === history.length &&
       fresh &&
       fresh.itemId !== committed.selection.itemId &&
-      itemIdPresentInDeck(deck, committed.selection.itemId)
+      itemIdPresentInDeck(selectionDeck, committed.selection.itemId)
     ) {
       return committed.selection;
     }
     return fresh;
-  }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
+  }, [history, mode, poolFilter, revision, selectionDeck, sessionPhase, sessionSeed]);
 
   // Pin the board for the life of the selection to avoid mid-board changes.
   const pairsRef = useRef<{ itemId: string; pairs: ReturnType<typeof matchingPairs> } | null>(null);
@@ -2660,7 +2684,10 @@ function LexiconPracticeIsland({
     // message) so the active status line reads «Сесія …» cleanly.
     setFeedback(null);
     const index = sessionScopeIndexForMode(
-      filterIndexByDeckFilter(loadedDeck.index, effectiveDeckFilter, customSets),
+      filterIndexByDeckFilter(
+        loadedDeck.index,
+        resolveDeckLemmaKeySet(effectiveDeckFilter, customSets),
+      ),
       nextMode,
     );
     const plan = computeSessionScope(index, budget, { dailyNewCount });
@@ -3096,12 +3123,12 @@ function LexiconPracticeIsland({
     () =>
       indexForStats.length
         ? computeSessionScope(
-            filterIndexByDeckFilter(indexForStats, selectedDeckFilter, customSets),
+            filterIndexByDeckFilter(indexForStats, deckLemmaKeySet),
             sessionBudget,
             { dailyNewCount },
           )
         : null,
-    [customSets, dailyNewCount, indexForStats, selectedDeckFilter, sessionBudget],
+    [dailyNewCount, deckLemmaKeySet, indexForStats, sessionBudget],
   );
   const dailyRows = useMemo(
     () =>
