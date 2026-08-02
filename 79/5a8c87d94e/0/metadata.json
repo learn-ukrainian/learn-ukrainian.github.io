@@ -3,15 +3,17 @@
   "checkpoint_id": "795a8c87d94e",
   "session_id": "ses_03dbb9a11ffeO6R9sUIk3fXlX7",
   "strategy": "manual-commit",
-  "created_at": "2026-08-02T12:21:25.270966Z",
+  "created_at": "2026-08-02T12:28:36.772319Z",
   "branch": "glm/6183-entire-typed-resolvers-glm",
   "checkpoints_count": 1,
   "files_touched": [
     "agents_extensions/shared/skills/entire-context/SKILL.md",
     "docs/entire/PUBLIC-SOURCE-PILOT.md",
+    "scripts/api/entire_context_router.py",
     "scripts/entire_context/cli.py",
     "scripts/entire_context/recall.py",
     "scripts/entire_context/resolvers.py",
+    "tests/test_entire_context_live.py",
     "tests/test_entire_context_recall.py"
   ],
   "agent": "OpenCode",
@@ -28,14 +30,14 @@
     "api_call_count": 0
   },
   "initial_attribution": {
-    "calculated_at": "2026-08-02T12:21:25.203764Z",
-    "agent_lines": 276,
-    "agent_removed": 58,
+    "calculated_at": "2026-08-02T12:28:36.705878Z",
+    "agent_lines": 77,
+    "agent_removed": 0,
     "human_added": 0,
     "human_modified": 0,
     "human_removed": 0,
-    "total_committed": 276,
-    "total_lines_changed": 334,
+    "total_committed": 77,
+    "total_lines_changed": 77,
     "agent_percentage": 100,
     "metric_version": 2
   }

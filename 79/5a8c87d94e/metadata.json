@@ -7,9 +7,11 @@
   "files_touched": [
     "agents_extensions/shared/skills/entire-context/SKILL.md",
     "docs/entire/PUBLIC-SOURCE-PILOT.md",
+    "scripts/api/entire_context_router.py",
     "scripts/entire_context/cli.py",
     "scripts/entire_context/recall.py",
     "scripts/entire_context/resolvers.py",
+    "tests/test_entire_context_live.py",
     "tests/test_entire_context_recall.py"
   ],
   "sessions": [
