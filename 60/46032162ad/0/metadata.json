@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6046032162ad",
+  "session_id": "session_5edcfe8f-a7d6-4ad3-beb6-c2c46a56a03a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T10:07:47.121341Z",
+  "branch": "kimi/6260-entire-canary",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "entire-kimi-canary.txt"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3",
+  "turn_id": "4809f2aa0911",
+  "token_usage": {
+    "input_tokens": 25262,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 47360,
+    "output_tokens": 127,
+    "api_call_count": 2
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T10:07:47.113717Z",
+    "agent_lines": 1,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 1,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6046032162ad",
+  "strategy": "manual-commit",
+  "branch": "kimi/6260-entire-canary",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "entire-kimi-canary.txt"
+  ],
+  "sessions": [
+    {
+      "metadata": "/60/46032162ad/0/metadata.json",
+      "transcript": "/60/46032162ad/0/full.jsonl",
+      "content_hash": "/60/46032162ad/0/content_hash.txt",
+      "prompt": "/60/46032162ad/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 25262,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 47360,
+    "output_tokens": 127,
+    "api_call_count": 2
+  }
+}

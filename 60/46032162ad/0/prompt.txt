@@ -1,0 +1,1 @@
+Create a file named entire-kimi-canary.txt in the repository root containing exactly: Entire standalone Kimi capture canary. Do not change any other file. Then stop.
