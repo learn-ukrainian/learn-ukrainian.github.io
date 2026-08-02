@@ -292,6 +292,13 @@ class AgyAdapter:
             env_overrides={_AGY_LOG_ENV: str(log_path)},
             env_unsets=(),
             liveness_paths=(log_path,),
+            metadata={
+                "entire_fleet": {
+                    "requested_model": model or self.default_model,
+                    "actual_model": resolved_model or model or self.default_model,
+                }
+            },
+            host_harness="agy",
         )
 
     def _resolve_model_flag(self, model: str | None) -> str | None:

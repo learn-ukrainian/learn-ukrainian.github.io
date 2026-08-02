@@ -66,6 +66,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
 from .attribution import InvocationAttribution, resolve_invocation_attribution
@@ -1281,6 +1282,8 @@ def _execute_invocation_plan(
     output_limit = _streamed_output_limit(agent_name=agent_name, entrypoint=entrypoint)
     observed_output_stdout_lines = 0
     streamed_output_bytes = 0
+    fleet_capture: FleetCapture | None = None
+    kill_reason: str | None = None
 
     try:
         try:
@@ -1338,6 +1341,34 @@ def _execute_invocation_plan(
             stderr_master_fd=stderr_master_fd,
             track_process_activity=bool(stdout_silence_timeout is not None and stdout_silence_timeout > 0),
         )
+        capture_repo_raw = None
+        if tool_config:
+            capture_repo_raw = (
+                tool_config.get("repo_read_root")
+                or tool_config.get("review_snapshot_root")
+            )
+        capture_repo = Path(
+            str(capture_repo_raw or getattr(plan, "cwd", None) or cwd)
+        )
+        try:
+            fleet_capture = FleetCapture.start(
+                host_harness=getattr(plan, "host_harness", None),
+                runner_agent=agent_name,
+                entrypoint=entrypoint,
+                requested_model=model,
+                prompt=prompt,
+                repo_path=capture_repo,
+                runtime_repo_root=_RUNNER_REPO_TREE,
+                plan_metadata=getattr(plan, "metadata", None),
+            )
+        except Exception as exc:
+            # Entire is optional: capture setup can never alter the provider call.
+            _logger.warning(
+                "Entire fleet capture start failed for %s: %s",
+                agent_name,
+                type(exc).__name__,
+            )
+            fleet_capture = None
         mcp_observer = _McpRuntimeObserver.from_tool_config(
             agent_name=agent_name,
             task_id=task_id,
@@ -1349,7 +1380,6 @@ def _execute_invocation_plan(
         observed_stderr_lines = 0
 
         early_reap_check = getattr(adapter, "check_early_reap", None)
-        kill_reason: str | None = None
         returncode: int | None = None
         while True:
             if output_limit is not None:
@@ -1487,6 +1517,20 @@ def _execute_invocation_plan(
                 tool_calls=parse.tool_calls,
                 substitution=parse.substitution,
             )
+        if fleet_capture is not None:
+            actual_model, route_metadata = resolved_route(
+                requested_model=model,
+                plan_metadata=getattr(plan, "metadata", None),
+                substitution=parse.substitution,
+            )
+            fleet_capture.finish(
+                response=parse.response,
+                outcome=kill_reason or ("ok" if parse.ok else "error"),
+                returncode=final_returncode,
+                actual_model=actual_model,
+                route_metadata=route_metadata,
+            )
+            fleet_capture = None
         return _ExecutionOutcome(
             parse=parse,
             duration_s=duration_s,
@@ -1504,6 +1548,21 @@ def _execute_invocation_plan(
         if proc is not None and proc.poll() is None:
             with contextlib.suppress(Exception):
                 _kill_process_tree(proc)
+
+        if fleet_capture is not None:
+            actual_model, route_metadata = resolved_route(
+                requested_model=model,
+                plan_metadata=getattr(plan, "metadata", None),
+                substitution=None,
+            )
+            fleet_capture.finish(
+                response="",
+                outcome=kill_reason or "runner_exception",
+                returncode=None if proc is None else proc.returncode,
+                actual_model=actual_model,
+                route_metadata=route_metadata,
+            )
+            fleet_capture = None
 
         if watchdog_state is not None:
             stop_watchdog(

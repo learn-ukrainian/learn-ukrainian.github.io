@@ -1,10 +1,28 @@
-"""Tests for ab ask-hermes bridge subcommand (PR-D1)."""
+"""Tests for the ask-hermes bridge runtime path."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
+from scripts.agent_runtime.errors import AgentUnavailableError
+from scripts.agent_runtime.result import Result
 from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
+
+
+def _result(*, ok: bool = True, response: str = "response body") -> Result:
+    return Result(
+        ok=ok,
+        agent="deepseek",
+        model="deepseek-v4-flash",
+        mode="read-only",
+        response=response,
+        stderr_excerpt=None,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0 if ok else 1,
+    )
 
 
 def test_hermes_default_model_is_deepseek_flash():
@@ -13,43 +31,38 @@ def test_hermes_default_model_is_deepseek_flash():
     assert HERMES_DEFAULT_MODEL == "deepseek-v4-flash"
 
 
-def test_invoke_hermes_constructs_correct_argv(tmp_path):
-    """Hermes subprocess is invoked with -z PROMPT -m MODEL."""
-    with patch("scripts.ai_agent_bridge._hermes.shutil.which", return_value="/fake/hermes"):
-        with patch("scripts.ai_agent_bridge._hermes.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
-            _invoke_hermes("hello", "deepseek-v4-flash")
-            argv = run_mock.call_args[0][0]
-            assert argv[0] == "/fake/hermes"
-            assert "-z" in argv
-            assert "hello" in argv
-            assert "-m" in argv
-            assert "deepseek-v4-flash" in argv
+def test_invoke_hermes_uses_shared_runtime():
+    with patch("scripts.agent_runtime.runner.invoke", return_value=_result()) as invoke_mock:
+        assert _invoke_hermes("hello", "deepseek-v4-flash", task_id="task-1") == "response body"
+    args, kwargs = invoke_mock.call_args
+    assert args == ("deepseek", "hello")
+    assert kwargs["model"] == "deepseek-v4-flash"
+    assert kwargs["task_id"] == "task-1"
+    assert kwargs["entrypoint"] == "bridge"
+    assert kwargs["mode"] == "read-only"
+    assert kwargs["tool_config"]["repo_read_root"]
 
 
 def test_invoke_hermes_attaches_data_file(tmp_path):
     data_file = tmp_path / "context.md"
     data_file.write_text("# Context\nSome content.")
-    with patch("scripts.ai_agent_bridge._hermes.shutil.which", return_value="/fake/hermes"):
-        with patch("scripts.ai_agent_bridge._hermes.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_hermes("review this", "deepseek-v4-flash", data=str(data_file))
-            argv = run_mock.call_args[0][0]
-            # data should be in the prompt, not as a separate flag
-            prompt_arg = argv[argv.index("-z") + 1]
-            assert "Some content." in prompt_arg
-            assert "review this" in prompt_arg
+    with patch("scripts.agent_runtime.runner.invoke", return_value=_result(response="ok")) as invoke_mock:
+        _invoke_hermes("review this", "deepseek-v4-flash", data=str(data_file))
+    prompt = invoke_mock.call_args.args[1]
+    assert "Some content." in prompt
+    assert "review this" in prompt
 
 
 def test_invoke_hermes_raises_when_binary_missing():
-    with patch("scripts.ai_agent_bridge._hermes.shutil.which", return_value=None):
-        with pytest.raises(SystemExit, match="hermes CLI not found"):
+    with patch(
+        "scripts.agent_runtime.runner.invoke",
+        side_effect=AgentUnavailableError("missing"),
+    ):
+        with pytest.raises(SystemExit, match="AgentUnavailableError"):
             _invoke_hermes("hello", "deepseek-v4-flash")
 
 
 def test_invoke_hermes_raises_on_nonzero_exit():
-    with patch("scripts.ai_agent_bridge._hermes.shutil.which", return_value="/fake/hermes"):
-        with patch("scripts.ai_agent_bridge._hermes.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=1, stdout="", stderr="auth failed")
-            with pytest.raises(SystemExit, match="hermes exited 1"):
-                _invoke_hermes("hello", "deepseek-v4-flash")
+    with patch("scripts.agent_runtime.runner.invoke", return_value=_result(ok=False, response="")):
+        with pytest.raises(SystemExit, match="no usable response"):
+            _invoke_hermes("hello", "deepseek-v4-flash")

@@ -21,9 +21,6 @@ Isolation (Sol #213 / fleet-comms Phase 0):
 from __future__ import annotations
 
 import json
-import os
-import shutil
-import subprocess
 from pathlib import Path
 
 from ._ask_contract import (
@@ -243,11 +240,8 @@ def _invoke_hermes(
     task_id: str | None = None,
     msg_type: str | None = None,
 ) -> str:
-    """Run hermes -z PROMPT -m MODEL from a safe cwd; return captured stdout."""
-    del task_id, msg_type  # reserved for future sealed PR target wiring
-    hermes_bin = shutil.which("hermes")
-    if not hermes_bin:
-        raise SystemExit("ask-hermes: hermes CLI not found in PATH")
+    """Run Hermes through the shared agent runtime from a safe cwd."""
+    del msg_type
 
     prompt = content
     if review or is_review_class_ask(content=content):
@@ -274,11 +268,11 @@ def _invoke_hermes(
         with neutral_review_scratch() as scratch:
             cwd = assert_review_cwd_safe(scratch, repo_root=REPO_ROOT)
             return _run_hermes_subprocess(
-                hermes_bin,
                 prompt,
                 model,
                 cwd=cwd,
                 timeout=timeout,
+                task_id=task_id,
             )
 
     # Escape hatch only for non-review consults.
@@ -288,41 +282,48 @@ def _invoke_hermes(
         f"{cwd} (forbidden for review-class asks)"
     )
     return _run_hermes_subprocess(
-        hermes_bin,
         prompt,
         model,
         cwd=cwd,
         timeout=timeout,
+        task_id=task_id,
     )
 
 
 def _run_hermes_subprocess(
-    hermes_bin: str,
     prompt: str,
     model: str,
     *,
     cwd: Path,
     timeout: int | None,
+    task_id: str | None,
 ) -> str:
-    env = os.environ.copy()
-    # Discourage git from walking into the operator repo via accidental discovery.
-    env.setdefault("GIT_CEILING_DIRECTORIES", str(REPO_ROOT.parent))
+    from scripts.agent_runtime import runner as agent_runner
+    from scripts.agent_runtime.errors import AgentRuntimeError
+
+    hard_timeout = timeout or 86_400
     try:
-        result = subprocess.run(
-            [hermes_bin, "-z", prompt, "-m", model],
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            cwd=str(cwd),
-            env=env,
+        result = agent_runner.invoke(
+            "deepseek",
+            prompt,
+            mode="read-only",
+            cwd=cwd,
+            model=model,
+            task_id=task_id or "ask-hermes",
+            session_id=None,
+            tool_config={
+                "bridge_repo_read": True,
+                "repo_read_root": str(REPO_ROOT),
+            },
+            entrypoint="bridge",
+            hard_timeout=hard_timeout,
+            stall_timeout=min(600, hard_timeout),
         )
-    except subprocess.TimeoutExpired as exc:
-        raise SystemExit(f"ask-hermes: hermes timed out after {timeout}s") from exc
-
-    if result.returncode != 0:
+    except AgentRuntimeError as exc:
         raise SystemExit(
-            f"ask-hermes: hermes exited {result.returncode}\n"
-            f"stderr: {result.stderr[-2000:]}"
-        )
+            f"ask-hermes: Hermes runtime failed: {type(exc).__name__}"
+        ) from exc
+    if not result.ok or not result.response.strip():
+        raise SystemExit("ask-hermes: Hermes runtime returned no usable response")
 
-    return result.stdout.strip()
+    return result.response.strip()
