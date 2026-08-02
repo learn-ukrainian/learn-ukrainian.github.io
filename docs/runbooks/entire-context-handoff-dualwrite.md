@@ -44,7 +44,16 @@ Do **not** tee capsules into `.claude/` as process storage. Optional scratch onl
 ```
 
 Empty search = nothing indexed for that needle — fall through to GH + file handoff.
-Query ranking is a single substring (prefer path tokens / SHAs, not full sentences).
+
+**Needle rules (tool-proved):** ranking treats the query as **one substring**, not
+tokenized English. Prefer path fragments / SHAs (`practice`, `generate_practice`,
+full 40-hex). Multi-word phrases like `practice membership` often score 0.
+
+- `search --query "practice"` → hits when paths contain `practice`
+- `handoff --query "practice"` → capsule when ≥1 scored hit
+- `handoff --query "practice membership"` → can return `{"error":"seed_invalid"}`
+  when the full phrase matches nothing — then pass `--locator-id clink_…` from
+  `bootstrap-git` / `search` instead
 
 ## Atlas snapshot (2026-08-02, tool-backed)
 
