@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "94d236e99a5b",
+  "strategy": "manual-commit",
+  "branch": "codex/6285-deepseek-flash-high",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-role-scorecard.md",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "scripts/config/model_catalog.yaml",
+    "tests/test_ask_hermes.py",
+    "tests/test_model_catalog.py",
+    "tests/test_review_reviewer_resolver.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/94/d236e99a5b/0/metadata.json",
+      "transcript": "/94/d236e99a5b/0/full.jsonl",
+      "compact_transcript": "/94/d236e99a5b/0/transcript.jsonl",
+      "content_hash": "/94/d236e99a5b/0/content_hash.txt",
+      "prompt": "/94/d236e99a5b/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 30862,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 13,
+    "api_call_count": 1
+  }
+}

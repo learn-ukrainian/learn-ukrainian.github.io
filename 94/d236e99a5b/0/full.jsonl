@@ -1,0 +1,166 @@
+{
+  "info": {
+    "id": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+    "slug": "playful-mountain",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6285-deepseek-flash-high",
+    "path": "",
+    "title": "DEEPSEEK_FLASH_HIGH_OPENCODE_OK",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-v4-flash",
+      "providerID": "deepseek-direct",
+      "variant": "high"
+    },
+    "version": "1.17.13",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 30862,
+      "output": 13,
+      "reasoning": 20,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1785703094902,
+      "updated": 1785703107361
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1785703094926
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek-direct",
+          "modelID": "deepseek-v4-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_fc432da8e00130fzF5j17DmFU0",
+        "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"Return exactly: DEEPSEEK_FLASH_HIGH_OPENCODE_OK\"",
+          "id": "prt_fc432da9d001pg2AujvcdqxSFi",
+          "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+          "messageID": "msg_fc432da8e00130fzF5j17DmFU0"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_fc432da8e00130fzF5j17DmFU0",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6285-deepseek-flash-high",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6285-deepseek-flash-high"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 30895,
+          "input": 30862,
+          "output": 13,
+          "reasoning": 20,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1785703098239,
+          "completed": 1785703109943
+        },
+        "finish": "stop",
+        "id": "msg_fc432e77f001dsXYUls5LHvoCJ",
+        "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7"
+      },
+      "parts": [
+        {
+          "snapshot": "8cfc9a61a6b83812e773cff4d2e30b593d502f8e",
+          "type": "step-start",
+          "id": "prt_fc433108b001r24UhTfjrQi4RY",
+          "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+          "messageID": "msg_fc432e77f001dsXYUls5LHvoCJ"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user wants me to return exactly: DEEPSEEK_FLASH_HIGH_OPENCODE_OK",
+          "time": {
+            "start": 1785703109534,
+            "end": 1785703109742
+          },
+          "id": "prt_fc433139e001en2TP3BnsCX6Fb",
+          "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+          "messageID": "msg_fc432e77f001dsXYUls5LHvoCJ"
+        },
+        {
+          "type": "text",
+          "text": "DEEPSEEK_FLASH_HIGH_OPENCODE_OK",
+          "time": {
+            "start": 1785703109744,
+            "end": 1785703109800
+          },
+          "id": "prt_fc4331470001gv2j8zI03DGxa2",
+          "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+          "messageID": "msg_fc432e77f001dsXYUls5LHvoCJ"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "8cfc9a61a6b83812e773cff4d2e30b593d502f8e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 30895,
+            "input": 30862,
+            "output": 13,
+            "reasoning": 20,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_fc43314f4001vlM2KXheWgHnor",
+          "sessionID": "ses_03bcd2589ffeh0hElPpIZPw4K7",
+          "messageID": "msg_fc432e77f001dsXYUls5LHvoCJ"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"user","ts":"2026-08-02T20:38:14.926Z","content":[{"id":"prt_fc432da9d001pg2AujvcdqxSFi","text":"\"Return exactly: DEEPSEEK_FLASH_HIGH_OPENCODE_OK\""}]}
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"assistant","ts":"2026-08-02T20:38:18.239Z","id":"msg_fc432e77f001dsXYUls5LHvoCJ","input_tokens":30862,"output_tokens":13,"content":[{"text":"DEEPSEEK_FLASH_HIGH_OPENCODE_OK","type":"text"}]}
