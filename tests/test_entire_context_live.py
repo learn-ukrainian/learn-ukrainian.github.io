@@ -195,6 +195,238 @@ def test_provider_refresh_is_allowlisted_cached_and_version_pinned(
     assert loaded["stale"] is True
 
 
+def _write_provider_policy(root: Path) -> None:
+    entire = root / ".entire"
+    entire.mkdir(exist_ok=True)
+    (entire / "private-recall.json").write_text(
+        json.dumps({"source_repo": "learn-ukrainian/learn-ukrainian.github.io"}),
+        encoding="utf-8",
+    )
+
+
+def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _write_provider_policy(tmp_path)
+    query = "PRIVATE_CANARY_TERM"
+    observed: dict[str, object] = {}
+    monkeypatch.setattr(
+        provider,
+        "private_mode_preflight",
+        lambda _root: {
+            "ready": True,
+            "checks": {"routing_allowlist": True, "source_mirror_ready": True},
+            "issues": [],
+            "forbidden_body": "must not persist",
+        },
+    )
+
+    def fake_run(_root: Path, *args: str):
+        observed["search_args"] = args
+        return subprocess.CompletedProcess(
+            list(args),
+            0,
+            json.dumps(
+                {
+                    "total": 9,
+                    "counts": {
+                        "repos": 1,
+                        "checkpoints": 2,
+                        "commits": 3,
+                        "prs": 4,
+                        "sessions": 5,
+                    },
+                    "results": [{"body": "provider search body must not persist"}],
+                }
+            ),
+            "",
+        )
+
+    def fake_run_with_input(_root: Path, args: list[str], input_text: str):
+        observed["dispatch_args"] = args
+        observed["dispatch_input"] = json.loads(input_text)
+        return subprocess.CompletedProcess(
+            args,
+            0,
+            json.dumps(
+                {
+                    "totals": {
+                        "checkpoints": 3,
+                        "used_checkpoint_count": 3,
+                        "branches": 1,
+                        "files_touched": 7,
+                    },
+                    "warnings": {"failed_count": 0},
+                    "generated_markdown": "provider dispatch body must not persist",
+                }
+            ),
+            "HTTP/2.0 200 OK\nContent-Type: application/json\n",
+        )
+
+    monkeypatch.setattr(provider, "_run", fake_run)
+    monkeypatch.setattr(provider, "_run_with_input", fake_run_with_input)
+    target = tmp_path / "provider-capabilities.json"
+
+    refreshed = provider.refresh_provider_capabilities(
+        tmp_path,
+        query=query,
+        output_path=target,
+    )
+    loaded = provider.load_provider_capabilities(
+        tmp_path,
+        capabilities_path=target,
+        now=datetime.now(UTC) + timedelta(seconds=3601),
+    )
+    cached = target.read_text(encoding="utf-8")
+
+    assert refreshed["private_boundary"]["ready"] is True
+    assert refreshed["cloud"]["search"]["indexed_history"] is True
+    assert refreshed["cloud"]["dispatch"]["history_available"] is True
+    assert query in observed["search_args"]
+    assert observed["dispatch_input"]["generate"] is False
+    assert "--include" in observed["dispatch_args"]
+    assert loaded["stale"] is True
+    assert query not in cached
+    assert "provider search body" not in cached
+    assert "provider dispatch body" not in cached
+    assert "forbidden_body" not in cached
+
+
+def test_provider_capability_refresh_reports_empty_index_and_region_failure(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _write_provider_policy(tmp_path)
+    monkeypatch.setattr(
+        provider,
+        "private_mode_preflight",
+        lambda _root: {"ready": True, "checks": {"boundary": True}, "issues": []},
+    )
+    monkeypatch.setattr(
+        provider,
+        "_run",
+        lambda _root, *_args: subprocess.CompletedProcess(
+            [],
+            0,
+            json.dumps(
+                {
+                    "total": 0,
+                    "counts": {
+                        "repos": 1,
+                        "checkpoints": 0,
+                        "commits": 0,
+                        "sessions": 0,
+                    },
+                }
+            ),
+            "",
+        ),
+    )
+    monkeypatch.setattr(
+        provider,
+        "_run_with_input",
+        lambda _root, args, _input: subprocess.CompletedProcess(
+            args,
+            1,
+            '{"message":"provider body must not persist"}',
+            "HTTP/2.0 404 Not Found\n",
+        ),
+    )
+    target = tmp_path / "provider-capabilities.json"
+
+    refreshed = provider.refresh_provider_capabilities(
+        tmp_path,
+        query="CANARY",
+        output_path=target,
+    )
+    loaded = provider.load_provider_capabilities(
+        tmp_path,
+        capabilities_path=target,
+    )
+
+    assert refreshed["cloud"]["search"] == {
+        "reachable": True,
+        "indexed_history": False,
+        "reason": "no_indexed_history",
+        "result_count": 0,
+        "counts": {
+            "repos": 1,
+            "checkpoints": 0,
+            "commits": 0,
+            "prs": 0,
+            "sessions": 0,
+        },
+    }
+    assert refreshed["cloud"]["dispatch"] == {
+        "reachable": False,
+        "history_available": False,
+        "reason": "repository_unavailable_or_region",
+        "http_status": 404,
+    }
+    assert "totals" not in loaded["cloud"]["dispatch"]
+    assert "warnings" not in loaded["cloud"]["dispatch"]
+    assert "provider body" not in target.read_text(encoding="utf-8")
+
+
+def test_provider_capability_loader_fails_closed_on_malformed_cache(tmp_path: Path) -> None:
+    target = tmp_path / "provider-capabilities.json"
+    target.write_text(
+        json.dumps(
+            {
+                "schema": "entire-provider-capabilities.v1",
+                "available": True,
+                "generated_at": "2026-08-02T12:00:00Z",
+                "private_boundary": {"ready": True, "checks": ["not", "a", "mapping"]},
+                "cloud": {"probed": False},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert provider.load_provider_capabilities(tmp_path, capabilities_path=target) == {
+        "available": False,
+        "reason": "provider_capabilities_unreadable",
+    }
+
+
+def test_provider_capability_refresh_fails_closed_before_cloud_on_malformed_preflight(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _write_provider_policy(tmp_path)
+    monkeypatch.setattr(
+        provider,
+        "private_mode_preflight",
+        lambda _root: {"ready": True, "checks": ["malformed"], "issues": []},
+    )
+    monkeypatch.setattr(
+        provider,
+        "_run",
+        lambda *_args: (_ for _ in ()).throw(AssertionError("cloud search must not run")),
+    )
+    monkeypatch.setattr(
+        provider,
+        "_run_with_input",
+        lambda *_args: (_ for _ in ()).throw(AssertionError("cloud dispatch must not run")),
+    )
+    target = tmp_path / "provider-capabilities.json"
+
+    refreshed = provider.refresh_provider_capabilities(
+        tmp_path,
+        query="CANARY",
+        output_path=target,
+    )
+
+    assert refreshed["private_boundary"] == {
+        "ready": False,
+        "reason": "preflight_unavailable",
+        "checks": {},
+        "issue_count": 1,
+    }
+    assert refreshed["cloud"] == {
+        "probed": False,
+        "reason": "private_boundary_not_ready",
+    }
+
+
 def test_monitor_status_distinguishes_capture_recall_and_use(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -216,6 +448,28 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
             "installed_agents": ["Codex"],
         },
     )
+    monkeypatch.setattr(
+        entire_context_router,
+        "load_provider_capabilities",
+        lambda _root: {
+            "available": True,
+            "private_boundary": {"ready": True, "checks": {"routing_allowlist": True}},
+            "cloud": {
+                "probed": True,
+                "search": {
+                    "reachable": True,
+                    "indexed_history": False,
+                    "reason": "no_indexed_history",
+                },
+                "dispatch": {
+                    "reachable": False,
+                    "history_available": False,
+                    "reason": "repository_unavailable_or_region",
+                    "http_status": 404,
+                },
+            },
+        },
+    )
 
     response = TestClient(app).get("/api/ops/entire-context/status")
     payload = response.json()
@@ -225,6 +479,8 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
     assert payload["recall"]["available"] is True
     assert payload["use"]["proven"] is True
     assert payload["use"]["by_consumer"] == {"codex": 1}
+    assert payload["provider"]["capabilities"]["private_boundary"]["ready"] is True
+    assert payload["provider"]["capabilities"]["cloud"]["search"]["indexed_history"] is False
     assert "projection_path" not in response.text
 
 

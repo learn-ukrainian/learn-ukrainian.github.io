@@ -10,7 +10,7 @@ from typing import Any
 from fastapi import APIRouter, Query
 
 from scripts.entire_context.paths import projection_path, shared_repository_root
-from scripts.entire_context.provider import load_provider_status
+from scripts.entire_context.provider import load_provider_capabilities, load_provider_status
 from scripts.entire_context.recall import RecallInputError, search_past_work
 from scripts.entire_context.resolvers import (
     default_fleet_root,
@@ -171,6 +171,7 @@ def entire_context_status() -> dict[str, Any]:
     root = _repo_root()
     projection = _public_projection_status(_projection_status(root))
     provider = load_provider_status(root)
+    capabilities = load_provider_capabilities(root)
     counts = projection.get("counts", {}) if projection.get("available") else {}
     installed_agents = (
         provider.get("installed_agents", [])
@@ -214,6 +215,7 @@ def entire_context_status() -> dict[str, Any]:
             "enabled": isinstance(provider, dict) and provider.get("enabled") is True,
             "stale": isinstance(provider, dict) and provider.get("stale") is True,
             "version": _safe_text(provider.get("version")) if isinstance(provider, dict) else None,
+            "capabilities": capabilities,
         },
     }
 

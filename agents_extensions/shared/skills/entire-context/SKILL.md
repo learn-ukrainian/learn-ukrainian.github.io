@@ -62,7 +62,7 @@ it never mutates them.
 
 Recall commands are local and read-only. Explicit `bootstrap-*`,
 `reconcile-acp`, and `record-use` commands write only to the rebuildable local
-projection; `refresh-provider-status` writes only a sanitized local cache.
+projection; provider refreshes write only sanitized local caches.
 
 ```bash
 # Projection state (body-free aggregate)
@@ -98,7 +98,18 @@ projection; `refresh-provider-status` writes only a sanitized local cache.
 
 # Explicit Entire 0.8.42 probe for Monitor's sanitized local cache
 .venv/bin/python -m scripts.entire_context refresh-provider-status [--repo PATH]
+
+# Explicit cloud capability probe after private preflight; query/provider bodies are never cached
+.venv/bin/python -m scripts.entire_context refresh-provider-capabilities --query "<non-sensitive checkpoint canary>" [--repo PATH]
 ```
+
+The capability probe is operator/root initiated, never part of automatic
+intake. It repeats the private-boundary preflight, runs repository-scoped
+search, and sends a `generate:false` dispatch request. It persists only
+booleans, reason codes, HTTP status, and aggregate counts. Monitor reads that
+cache without a synchronous Entire call. An empty index or dispatch routing
+failure is a degraded provider feature, not a failure of local body-free
+recall or of the canonical workflow.
 
 Resolution flags: `--repo` (default: cwd) supplies the local git repository;
 `--acp-root` or `ENTIRE_CONTEXT_ACP_ROOT` supplies the ACP receipt plane root;
