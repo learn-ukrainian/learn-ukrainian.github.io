@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-02 (corpus verdict CONTINUE; #6171 is the sole required Foundry lane; the project stops before model download, rental, or training) |
+| **Last refreshed** | 2026-08-02 (Foundry implementation complete; release and external validation tracked separately in #6273; training remains prohibited) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -65,7 +65,7 @@ is the single source of truth for membership (auditor:
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| open-model-data | #6164 (successor to closed #6056) | Ukrainian Data Foundry Phase 2–4: apply the [CONTINUE corpus-usability decision](research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md), separate downstream model-learning eligibility from raw-source/publication permissions, detect contextual Ukrainian language-contact failures, produce evidence-backed silver with optional human-gold upgrades, export model-ready views, and ship a corpus-portable clean-Ukrainian tool, consumer training recipe, and reproducible no-training release candidate; project-funded or project-operated model training is out of scope |
+| open-model-data | closed #6164 (successor to closed #6056); active child #6273 | The Foundry implementation, portable tool, model-ready exports, open-weight evaluation suite, and adoption adapters are shipped. #6273 owns rights-complete publication, one reproducible real-model evaluation, concrete upstream submissions, and an external run receipt. Training remains out of scope. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -97,7 +97,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| open-model-data | ACTIVE | Execute #6171: package the production detector/evidence/views as a corpus-portable clean-Ukrainian tool, ship the model-neutral consumer training recipe and validated cost formula, and reproduce the no-training release candidate in a clean environment. Closed #6170 is historical and not planned; it is not a next step. | A stranger can run the admitted-source, contextual interference/calque/grammar/morphology, protected-variation, silver-evidence, disjoint-view, tokenizer, recipe, cost, and evaluation-firewall path on a bounded consumer-owned corpus; committed receipts prove the clean run and limitations. The project stops before an optimizer, accelerator rental, model-weight download, adapter, or model upload. Publication remains operator-gated. |
+| open-model-data | ACTIVE | Execute #6273: publish the rights-complete UA Open-Weight Eval v0.1.0 package, run one approved or already-local open-weight model across the frozen 4,000 cases, prepare concrete Lapa/lang-uk submissions, and obtain independent external execution evidence. #6171 and #6164 remain completed implementation history. | The GitHub release and exact hashes are public; the Hugging Face package is published after approval or has an exact approval blocker; fourteen-track real-model results are reproducible; and an independently produced run receipt exists before adoption is claimed. No training, global quality score, or evaluation-to-learning leakage occurs. |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

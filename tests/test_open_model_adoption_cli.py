@@ -38,11 +38,11 @@ def broad_report_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
     responses_path = output / "responses.jsonl"
     response_rows = [
         {
-            "item_id": case["case_id"],
+            "item_id": suite_cli.request_item_id(position),
             "action": case["expected"]["action"],
             "output_text": case["expected"]["accepted_texts"][0],
         }
-        for case in suite_cli.read_jsonl(suite_cli.CASES_PATH)
+        for position, case in enumerate(suite_cli.read_jsonl(suite_cli.CASES_PATH), 1)
     ]
     responses_path.write_text(suite_cli.encode_jsonl(response_rows), encoding="utf-8")
     report_path = output / "broad-report.json"
@@ -54,8 +54,15 @@ def _write_lang_uk_results(path: Path) -> None:
     path.write_text(
         json.dumps(
             {
-                "config_general": {"model_name": "local/open-weight-fixture"},
-                "results": {"example_task": {"acc": 0.5, "qg_meta": {"seed": 42}}},
+                "model_name": "local/open-weight-fixture",
+                "n-shot": {"example_task": 0},
+                "results": {
+                    "example_task": {
+                        "alias": "example_task",
+                        "acc,none": 0.5,
+                        "qg_meta": {"seed": 42},
+                    }
+                },
             }
         ),
         encoding="utf-8",
@@ -148,9 +155,7 @@ def test_lang_uk_adapter_validates_saved_results_and_broad_tracks(
     )
     assert (output / results_path.name).read_bytes() == results_path.read_bytes()
     assert sidecar["model_name"] == "local/open-weight-fixture"
-    assert sidecar["broad_evaluation"]["tracks"] == sorted(
-        suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"]
-    )
+    assert sidecar["broad_evaluation"]["tracks"] == sorted(suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"])
     assert sidecar["broad_evaluation"]["global_score"] is None
     assert sidecar["closed_api_or_judge_used"] is False
     assert sidecar["external_submission_performed"] is False
@@ -205,8 +210,30 @@ def test_lang_uk_adapter_rejects_non_numeric_metrics(tmp_path: Path) -> None:
     with pytest.raises(adoption_cli.AdoptionError, match="numeric"):
         adoption_cli._validate_lang_uk_results(
             {
-                "config_general": {"model_name": "fixture"},
-                "results": {"task": {"acc": "not-a-number"}},
+                "model_name": "fixture",
+                "n-shot": {"task": 0},
+                "results": {"task": {"alias": "task", "acc,none": "not-a-number"}},
+            }
+        )
+
+
+def test_lang_uk_adapter_requires_authentic_lm_eval_top_level_shape() -> None:
+    with pytest.raises(adoption_cli.AdoptionError, match="missing lang-uk model_name"):
+        adoption_cli._validate_lang_uk_results(
+            {
+                "config_general": {"model_name": "legacy-fixture"},
+                "results": {"task": {"acc": 0.5}},
+            }
+        )
+
+
+def test_lang_uk_adapter_rejects_task_set_drift() -> None:
+    with pytest.raises(adoption_cli.AdoptionError, match="n-shot task set drift"):
+        adoption_cli._validate_lang_uk_results(
+            {
+                "model_name": "fixture",
+                "n-shot": {"different-task": 0},
+                "results": {"task": {"alias": "task", "acc,none": 0.5}},
             }
         )
 
