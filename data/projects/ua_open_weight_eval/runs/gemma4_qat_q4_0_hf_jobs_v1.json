@@ -1,0 +1,127 @@
+{
+  "authorization": {
+    "approved_at": "2026-08-02",
+    "issue": 6273,
+    "maximum_provider_cost_usd": 6.0,
+    "no_automatic_paid_retry": true,
+    "provider": "Hugging Face Jobs"
+  },
+  "canary": {
+    "case_count": 100,
+    "selection_algorithm": "category-balanced-greedy-track-v1",
+    "timeout_seconds": 1200
+  },
+  "hardware": {
+    "accelerator": "Nvidia L40S",
+    "ephemeral_storage_gb": 380,
+    "flavor": "l40sx1",
+    "gpu_memory_gb": 48,
+    "memory_gb": 62,
+    "ports_exposed": false,
+    "ssh_enabled": false
+  },
+  "model": {
+    "artifact_bytes": 17651001568,
+    "artifact_filename": "gemma-4-31B_q4_0-it.gguf",
+    "artifact_sha256": "179cfb99212709597eae5929112cfca677e1bbf566178b479ae1da0c4772874b",
+    "license": "apache-2.0",
+    "multimodal_projector_used": false,
+    "repository": "google/gemma-4-31B-it-qat-q4_0-gguf",
+    "revision": "59dde24573e7e61570dba08b18a2e1fe246955ed"
+  },
+  "pricing": {
+    "currency": "USD",
+    "retrieved_at": "2026-08-02T17:12:00Z",
+    "source": "https://huggingface.co/docs/hub/jobs-pricing",
+    "usd_per_hour": 1.8,
+    "usd_per_minute": 0.03
+  },
+  "publication": {
+    "dataset_suffix": "ua-open-weight-eval-results",
+    "include_complete_responses": true,
+    "include_model_weights": false,
+    "visibility_after_verification": "public"
+  },
+  "runner": {
+    "backend": "vllm",
+    "batch_size": 25,
+    "fallback_backend": "llama.cpp",
+    "fallback_requires_new_approval_after_paid_failure": true,
+    "gpu_memory_utilization": 0.9,
+    "max_model_len": 8192,
+    "max_tokens": 160,
+    "parse_retries": 2,
+    "seed": 0,
+    "temperature": 0.0,
+    "vllm_batch_invariant": true
+  },
+  "runtime": {
+    "container_amd64_digest": "sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b",
+    "container_image": "vllm/vllm-openai",
+    "container_manifest_digest": "sha256:ffb2d59b1c059a5bd8d781320c9f5189de8293693b7d95da54befddaa54abf52",
+    "huggingface_hub_cli_version": "1.25.1",
+    "vllm_build_commit": "ffd46bfab2128bb84146050e98b51a617c6575ab",
+    "vllm_release_commit": "568afb3a13806beb53bb2e6bd518269357b237c0",
+    "vllm_version": "0.26.0",
+    "vllm_gguf_plugin": {
+      "filename": "vllm_gguf_plugin-0.0.4-cp310-abi3-manylinux_2_28_x86_64.whl",
+      "sha256": "6960f3125d8b16a507c6d2067cf63b754c7c5a1f3186a310d73986e3d2837b44",
+      "url": "https://files.pythonhosted.org/packages/af/38/d75ef3a6ccad4bc28002da1b98a93c66ab93bee88f8b26a3384e92fd48a7/vllm_gguf_plugin-0.0.4-cp310-abi3-manylinux_2_28_x86_64.whl",
+      "version": "0.0.4"
+    }
+  },
+  "schema_version": "ua_open_weight_eval_hf_jobs_config.v1",
+  "suite": {
+    "case_count": 4000,
+    "cases_sha256": "2164d7ba31322bf3cfbed8045ad3a5b6e759395175b2c1ab11172b9c0f1237db",
+    "release_id": "ua_open_weight_eval.v0.1.0",
+    "release_tag": "ua-open-weight-eval-v0.1.0",
+    "tracks": [
+      "grammar",
+      "morphology",
+      "calques",
+      "russian_interference",
+      "quoted_russian",
+      "surzhyk",
+      "historical_archaic",
+      "regional_dialect",
+      "register",
+      "ocr",
+      "proper_names",
+      "ambiguity",
+      "overcorrection",
+      "protected_text"
+    ]
+  },
+  "tokenizer": {
+    "allowed_files": {
+      "chat_template.jinja": {
+        "blob_id": "4741bf6e4132ba23a5537f9d6e74e9a6d613d7cd",
+        "bytes": 18683
+      },
+      "config.json": {
+        "blob_id": "bd78055902be7a657e1c9852f7a812094dd813e0",
+        "bytes": 4613
+      },
+      "generation_config.json": {
+        "blob_id": "5a376e9fca28bfac73fe81b623bd6e4d00bb0817",
+        "bytes": 203
+      },
+      "processor_config.json": {
+        "blob_id": "5465974d23e1eca2c46c2809b26c997946ce0d90",
+        "bytes": 1689
+      },
+      "tokenizer.json": {
+        "blob_id": "1ff9f3e3439a939b971f9919e821bf87e835a503",
+        "bytes": 32169626,
+        "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+      },
+      "tokenizer_config.json": {
+        "blob_id": "bd297dce3d66737f7d6f9136691db3ad05991a2f",
+        "bytes": 3729
+      }
+    },
+    "repository": "google/gemma-4-31B-it-qat-q4_0-unquantized",
+    "revision": "1e4d8beecacb8b7590c1d8bedd7335f687bf311f"
+  }
+}

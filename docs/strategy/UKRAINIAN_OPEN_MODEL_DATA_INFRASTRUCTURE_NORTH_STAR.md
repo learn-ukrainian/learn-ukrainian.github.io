@@ -14,15 +14,18 @@
 > recipe without project-funded or project-operated model training. Training
 > belongs to downstream teams that choose to use the released artifacts. The
 > operator separately authorized release and external-validation work under
-> #6273 on 2026-08-02, with just-in-time approval gates for account use,
-> uploads, external submissions, model downloads, and compute or storage cost.
+> #6273 on 2026-08-02, then superseded the proposed local M1/MLX baseline with
+> an official Gemma 4 QAT Q4_0 evaluation on one Hugging Face Jobs L40S. That
+> decision authorizes one 100-case canary and, only after a 25%-buffered budget
+> projection passes, one full 4,000-case run within USD 6.00 total provider
+> cost. Researcher outreach and model training remain prohibited in this task.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
 > refreshed 2026-08-02
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
-> **Does not authorize:** model training or mixing evaluation gold into
-> training data; Hugging Face publication and external submissions retain the
-> explicit approval gates in #6273
+> **Does not authorize:** model training, mixing evaluation gold into training
+> data, model-weight publication, external researcher contact, or a paid retry
+> beyond the authorized canary and conditional full run
 
 ## North star
 
@@ -49,10 +52,10 @@ This direction prioritizes transferable data, grammar, lexical naturalness,
 and evidence over owning or producing model weights. Foundry implementation
 completion stops before model download, accelerator rental, optimizer
 execution, adapter production, or weight upload. The separate release-and-
-validation issue #6273 may run evaluation only with an already-local model, or
-after explicit approval for a model download and bounded compute. It does not
-authorize training. The accepted boundary between public evaluation gold,
-private product data, and training data remains intact.
+validation issue #6273 may run the specifically authorized official Gemma 4
+QAT Q4_0 baseline on Hugging Face Jobs. It does not authorize training. The
+accepted boundary between public evaluation gold, private product data, and
+training data remains intact.
 
 ## Solo-operator execution model
 
@@ -324,15 +327,17 @@ Issue #6273 is the separate release-and-validation lane. It must:
 1. publish only rights-classified bytes under a non-colliding tag with exact
    hashes, attribution, English/Ukrainian instructions, limitations, and the
    contamination boundary;
-2. prepare the Hugging Face dataset package and request operator approval
-   immediately before account use or upload;
-3. evaluate one real open-weight model across all 4,000 frozen cases, using an
-   already-local artifact or explicit approval before download or cost;
-4. publish all fourteen track results with exact model/tokenizer revisions,
-   decoding settings, saved outputs, and a local-run receipt; and
-5. prepare exact Lapa and lang-uk patches, request approval before external
-   submission, and require an independently produced run receipt before saying
-   adoption is demonstrated.
+2. run one balanced deterministic 100-case canary of the official
+   `google/gemma-4-31B-it-qat-q4_0-gguf` artifact on one Hugging Face Jobs
+   L40S, with a 20-minute timeout;
+3. launch the full 4,000-case run only if canary cost plus the 25%-buffered
+   projection fits the USD 6.00 total provider ceiling;
+4. publish complete parsed responses and all fourteen track results with exact
+   model/tokenizer revisions, decoding settings, hashes, runtime, throughput,
+   provider cost, and deterministic receipts; and
+5. create a separate linked Lapa-baseline follow-up without running it or
+   contacting researchers under this budget, while still requiring an
+   independently produced receipt before saying adoption is demonstrated.
 
 The 4,000 cases are not 4,000 independent human judgments. The suite contains
 1,000 UA Eval 0.1.1 human-gold error anchors, 1,000 deterministic controls
@@ -384,11 +389,11 @@ rule.
 
 ## Downstream validation policy
 
-The Foundry project does not run training experiments. Under #6273 it may run a
-bounded evaluation-only baseline with an already-local open-weight model, or
-after explicit approval for the exact download, storage, runtime, and maximum
-cost. It still ships frozen artifacts that downstream teams can reproduce
-without a closed-model judge.
+The Foundry project does not run training experiments. Under #6273 it may run
+the bounded official Gemma 4 QAT Q4_0 evaluation authorized on 2026-08-02,
+subject to its canary, projection, timeout, and USD 6.00 hard ceiling. It still
+ships frozen artifacts that downstream teams can reproduce without a
+closed-model judge.
 
 A downstream result is useful evidence only when it answers a named question,
 such as:
