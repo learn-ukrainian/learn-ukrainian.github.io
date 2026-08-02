@@ -1,10 +1,26 @@
 ---
 name: entire-context
-description: Provider-neutral recall over the public body-free context-link index (ADR-018). Invoke at task intake when prior work may matter, before consequential design changes, when explaining a commit or ACP discussion, and when preparing a bounded handoff. Works identically for Codex, Kimi, GLM, Claude, and other harnesses; GitHub, Fleet Comms, Monitor, session streams, rollover, and formal review remain authoritative.
+description: >
+  ALWAYS run at cold start / task intake for non-trivial work (no operator prompt
+  required). Provider-neutral body-free context-link recall (ADR-018): status,
+  search-past-work, explain-change, prepare-handoff, record-use. Also use before
+  consequential design changes, when explaining a commit or ACP discussion, and
+  when preparing a handoff. Works for Codex, Kimi, GLM, Claude, Grok, and other
+  harnesses. GitHub, Fleet Comms, Monitor, session streams, rollover, and formal
+  review remain authoritative. Never skip search on multi-step drives.
+when-to-use: >
+  session start; cold start; orient; task intake; continue; resume; handoff;
+  what happened; prior work; explain commit; ACP discussion; epic drive; before
+  dispatch; before design change; entire; entire.io; entire-context; memory
 effort: low
 ---
 
 # Entire context recall (public, body-free)
+
+**Automatic intake:** On any non-trivial task, run `status` + `search` (and
+`record-use` when locators inform the plan) **before** prioritization or
+dispatch. Do not wait for the operator to say “use Entire.” Skip only for pure
+one-line questions or when the module is missing/disabled (note that once).
 
 This skill is the canonical agent-facing contract for the public context layer.
 It runs one provider-neutral CLI — `python -m scripts.entire_context` — over the
