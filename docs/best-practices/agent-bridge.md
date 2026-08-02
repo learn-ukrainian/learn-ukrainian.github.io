@@ -215,13 +215,9 @@ review is too large for GitHub, the publisher retains the overall explanation,
 truncates findings last, and names the full structured record. The command
 prints a ≤2 KiB status summary; use `--dry-run` to verify the payload locally.
 
-For a sealed `APPROVED` verdict, the publisher re-reads the live PR head and
-complete changed-path list before it publishes the review gate. Non-rail PRs
-receive `fleet/rail-approval=success` directly. Rail PRs receive that exact-head
-status only after the PR-body locator is re-fetched from the provisioned
-Monitor/bridge and its task, head, expiry, issuer, and exact protected-path set
-all validate. A missing, stale, or unreadable receipt is published as a failed
-rail status and the successful cross-family status is withheld.
+For a sealed `APPROVED` verdict, the publisher re-reads the live PR head before
+it publishes `fleet/cross-family-review=success`. A head change invalidates the
+review publication and requires review evidence for the new head.
 
 `--verdict-file` remains a legacy escape hatch, but its published comment
 explicitly says that no review evidence was supplied. It is not equivalent to

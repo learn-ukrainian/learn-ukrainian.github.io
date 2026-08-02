@@ -2873,7 +2873,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
     assert any(c[:2] == ["git", "fetch"] for c in calls)
-    # Rail admission and worktree creation share one immutable resolved SHA.
+    # Dispatch admission and worktree creation share one immutable resolved SHA.
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == "deadbeef", (
         f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
