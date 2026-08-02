@@ -60,6 +60,11 @@ projection; `refresh-provider-status` writes only a sanitized local cache.
 .venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha> [--repo PATH] [--namespace NS]
 .venv/bin/python -m scripts.entire_context bootstrap-acp conversation_<32hex> [--git-sha SHA] [--acp-root PATH]
 .venv/bin/python -m scripts.entire_context bootstrap-rollover --agent <agent> --lineage-id <lineage> --rollover-id <rollover> [--rollover-root PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-github-issue <number> [--issue-cache PATH] [--repo PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-github-pr <number> --head-sha <40-hex-sha> --repository <owner/repo> [--fleet-root PATH] [--repo PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-formal-review <review-id> [--fleet-root PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-fleet-receipt <request-id> [--fleet-root PATH]
+.venv/bin/python -m scripts.entire_context bootstrap-monitor-run <lease-token> [--monitor-root PATH]
 
 # Recover terminal ACP receipts missed by the automatic post-commit callback
 .venv/bin/python -m scripts.entire_context reconcile-acp --acp-root PATH
@@ -88,7 +93,9 @@ Resolution flags: `--repo` (default: cwd) supplies the local git repository;
 `--rollover-root` or `ENTIRE_CONTEXT_ROLLOVER_ROOT` supplies the rollover
 registry state root. Without an ACP root, ACP links fail closed as
 `source_missing`; without a rollover root, rollover links fail closed as
-`source_missing`. `--db` or
+`source_missing`. `--fleet-root`, `--monitor-root`, and `--issue-cache` select
+existing local canonical stores for fixtures or operators; otherwise linked
+worktrees use the primary shared `batch_state` stores. `--db` or
 `ENTIRE_CONTEXT_DB` overrides the projection path. By default every linked
 worktree resolves the same primary-checkout `batch_state/entire-context/v1`
 projection through Git's common directory. `--consumer <label>` may be
@@ -105,8 +112,30 @@ closed as `digest_mismatch`.
 | `git_commit` | Real | Read-only local git plumbing: parents, touched paths, committer timestamp, author. No commit subject/body. |
 | `acp_conversation` | Real | Existing terminal receipt verifier (`verify_discussion_receipt`), metadata-only, `content_included: false`. |
 | `rollover` | Real | Existing read-only registry verifier (`rollover_registry.load_record`): strict body-free projection of schema/key, lifecycle state/boundary, sub-lifecycle states, `cleanup_authorized`, timestamps, and non-body routing (stream epic, issue number, lifecycle state). |
-| `github_issue` / `github_pr` | Unsupported | No local canonical store verifiable without network; fails closed. |
-| `fleet_receipt` / `formal_review` / `monitor_run` | Unsupported | No local canonical store verifiable without protected-rail access; fails closed. |
+| `github_issue` | Real | Fresh `issue_stream_audit.json`: exact open issue plus one unique stream/epic membership. Cache freshness is verification evidence, never locator identity. No body or title. |
+| `github_pr` | Real | Completed local formal-review job, matching durable `github_publications` row for the exact head and gate context, plus a local Git commit object. |
+| `formal_review` | Real | Completed job; read-only hash-verified sealed verdict strictly parsed and bound again to its job. Exposes only review/repository/PR/head/gate/state/verdict/model/family/harness/attempt/publication state. |
+| `fleet_receipt` | Real | Exact terminal Fleet `requests` row only; no invocation specification or messages. |
+| `monitor_run` | Real | Exact terminal Agent Process Monitor lease only; no PID or process-create time. |
+
+All resolver source reads are local and read-only. SQLite opens with URI
+`mode=ro`; resolvers never migrate, change WAL mode, prune, start a service,
+or call GitHub, Fleet, Monitor, Entire, or the network. Missing, malformed,
+nonterminal, stale, unpublished, hash-mismatched, or digest-drifted inputs are
+omitted fail-closed.
+
+## Product prompt workflow and optional Entire tools
+
+For product-style prompts, invoke the local body-free workflow in this order:
+`search` for search-past-work, `explain-change` for an exact provenance path,
+and `handoff` for a bounded capsule. Use the `.venv/bin/python` commands above;
+they are the canonical recall path.
+
+Native `entire blame --json` is allowed only for local attribution. Prompt-
+bearing `entire why`, cloud `entire search`, generated recap, investigate
+findings, and Entire review are optional manual tools. They never automatically
+enter a canonical capsule. Entire review is supplemental and never satisfies
+the Fleet formal-review gate.
 
 ## How to consume results
 

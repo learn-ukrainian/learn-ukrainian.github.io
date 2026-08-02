@@ -44,13 +44,22 @@ from scripts.entire_context.recall import (
 )
 from scripts.entire_context.resolvers import (
     REASON_DIGEST_MISMATCH,
+    REASON_PARTIAL_TERMINAL,
+    REASON_PUBLICATION_MISSING,
     REASON_RESOLUTION_ERROR,
     REASON_SOURCE_MISSING,
-    REASON_UNSUPPORTED_KIND,
     ResolutionError,
+    default_monitor_db,
+    default_monitor_root,
+    github_pr_projection,
     resolve_acp_conversation,
     resolve_bootstrap,
+    resolve_fleet_receipt,
+    resolve_formal_review,
     resolve_git_commit,
+    resolve_github_issue,
+    resolve_github_pr,
+    resolve_monitor_run,
     resolve_rollover,
     rollover_projection,
     rollover_projection_digest,
@@ -755,7 +764,7 @@ def test_acp_commit_join_requires_canonical_correlation(tmp_path: Path, git_repo
     assert excinfo.value.reason == REASON_DIGEST_MISMATCH
 
 
-def test_unsupported_kind_fails_closed(tmp_path: Path, git_repo: dict[str, object]) -> None:
+def test_github_issue_missing_fresh_cache_fails_closed(tmp_path: Path, git_repo: dict[str, object]) -> None:
     with pytest.raises(ResolutionError) as excinfo:
         resolve_bootstrap(
             LinkKind.GITHUB_ISSUE,
@@ -763,28 +772,7 @@ def test_unsupported_kind_fails_closed(tmp_path: Path, git_repo: dict[str, objec
             repo=git_repo["repo"],
             acp_root=None,
         )
-    assert excinfo.value.reason == REASON_UNSUPPORTED_KIND
-
-    # A promoted link of an unsupported kind is omitted from recall, never emitted.
-    store = make_store(tmp_path)
-    link = ContextLink(
-        kind=LinkKind.GITHUB_ISSUE,
-        canonical_namespace="github:learn-ukrainian/learn-ukrainian.github.io",
-        canonical_id="issue/6183",
-        canonical_digest="sha256:" + "c" * 64,
-    )
-    verification = VerificationEvidence(
-        verifier="test",
-        canonical_digest=link.canonical_digest,
-        status=VerificationStatus.VERIFIED,
-        evidence_locator="github:issue/6183",
-        checked_at=isoformat_z(utc_now()),
-    )
-    admitted = store.admit(link, verification, actor="test")
-    assert admitted.outcome is AdmitOutcome.PROMOTED
-    result = recall.search_past_work(store, "6183", repo=tmp_path, acp_root=None)
-    assert result["results"] == []
-    assert result["omitted"] == [{"locator_id": admitted.locator_id, "reason": REASON_UNSUPPORTED_KIND}]
+    assert excinfo.value.reason == REASON_SOURCE_MISSING
 
 
 def test_entire_cli_is_never_invoked(
@@ -1635,24 +1623,473 @@ def test_rollover_canaries_never_leak(tmp_path: Path) -> None:
     _assert_no_rollover_canaries(combined)
 
 
-def test_remaining_unsupported_kinds_still_fail_closed(tmp_path: Path) -> None:
-    """Every kind except git/acp/rollover fails closed with unsupported_kind."""
-    for kind in (
-        LinkKind.GITHUB_ISSUE,
-        LinkKind.GITHUB_PR,
-        LinkKind.FLEET_RECEIPT,
-        LinkKind.FORMAL_REVIEW,
-        LinkKind.MONITOR_RUN,
+def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, Path, Path]:
+    """Create canonical local-only cache/store fixtures with body canaries."""
+    fleet_root = tmp_path / "fleet"
+    blob_root = fleet_root / "blobs" / "sha256"
+    fleet_root.mkdir()
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.executescript(
+            """
+            CREATE TABLE formal_review_jobs (
+                review_id TEXT PRIMARY KEY, repository TEXT NOT NULL, pr_number INTEGER NOT NULL,
+                head_sha TEXT NOT NULL, gate_kind TEXT NOT NULL, state TEXT NOT NULL,
+                sealed_verdict_artifact_id TEXT, created_at TEXT NOT NULL
+            );
+            CREATE TABLE formal_review_attempts (
+                review_attempt_id TEXT PRIMARY KEY, review_id TEXT NOT NULL, attempt_number INTEGER NOT NULL,
+                completion_state TEXT NOT NULL, raw_capture_artifact_id TEXT, created_at TEXT NOT NULL
+            );
+            CREATE TABLE github_publications (
+                publication_id TEXT PRIMARY KEY, review_id TEXT NOT NULL, head_sha TEXT NOT NULL,
+                status_context TEXT NOT NULL, published_at TEXT NOT NULL
+            );
+            CREATE TABLE artifacts (artifact_id TEXT PRIMARY KEY, sha256 TEXT NOT NULL);
+            CREATE TABLE requests (
+                request_id TEXT PRIMARY KEY, requested_recipient TEXT NOT NULL,
+                resolved_recipient TEXT NOT NULL, state TEXT NOT NULL, completion_state TEXT NOT NULL,
+                expires_at TEXT NOT NULL, invocation_spec_json TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+            );
+            """
+        )
+        review_id = "review_" + "a" * 32
+        sealed = {
+            "review_id": review_id,
+            "repository": "learn-ukrainian/learn-ukrainian.github.io",
+            "pr_number": 6183,
+            "head_sha": head_sha,
+            "gate_kind": "cross-family-review",
+            "verdict": "APPROVED",
+            "model": "gpt-5.6-terra",
+            "family": "openai",
+            "harness": "codex",
+            "private_payload_canary": "typed-secret-canary",
+        }
+        sealed_bytes = json.dumps(sealed).encode("utf-8")
+        sealed_digest = hashlib.sha256(sealed_bytes).hexdigest()
+        blob_path = blob_root / sealed_digest[:2] / sealed_digest
+        blob_path.parent.mkdir(parents=True)
+        blob_path.write_bytes(sealed_bytes)
+        connection.execute(
+            "INSERT INTO formal_review_jobs VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                review_id,
+                "learn-ukrainian/learn-ukrainian.github.io",
+                6183,
+                head_sha,
+                "cross-family-review",
+                "complete",
+                "artifact_sealed_canary",
+                "2026-08-02T10:00:00Z",
+            ),
+        )
+        connection.execute("INSERT INTO artifacts VALUES (?, ?)", ("artifact_sealed_canary", sealed_digest))
+        connection.execute(
+            "INSERT INTO formal_review_attempts VALUES (?, ?, ?, ?, ?, ?)",
+            ("attempt_1", review_id, 1, "complete", "artifact_raw_canary", "2026-08-02T10:01:00Z"),
+        )
+        connection.execute(
+            "INSERT INTO github_publications VALUES (?, ?, ?, ?, ?)",
+            ("publication_1", review_id, head_sha, "fleet/cross-family-review", "2026-08-02T10:02:00Z"),
+        )
+        connection.execute(
+            "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "request_" + "b" * 32,
+                "codex",
+                "agy",
+                "complete",
+                "complete",
+                "2026-08-02T10:30:00Z",
+                '{"prompt":"fleet-prompt-canary"}',
+                "2026-08-02T10:03:00Z",
+                "2026-08-02T10:04:00Z",
+            ),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    monitor_root = tmp_path / "monitor"
+    monitor_root.mkdir()
+    connection = sqlite3.connect(monitor_root / "agent_monitor.sqlite3")
+    try:
+        connection.execute(
+            """CREATE TABLE agent_leases (
+                lease_token TEXT PRIMARY KEY, agent_id TEXT NOT NULL, task_name TEXT NOT NULL,
+                pid INTEGER NOT NULL, process_create_time REAL NOT NULL, reserved_ram_mb INTEGER NOT NULL,
+                status TEXT NOT NULL, created_at REAL NOT NULL, last_heartbeat REAL NOT NULL
+            )"""
+        )
+        connection.execute(
+            "INSERT INTO agent_leases VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "lease_" + "c" * 32,
+                "codex/6183",
+                "typed-recall",
+                424242,
+                111.25,
+                1024,
+                "RELEASED",
+                1_754_000_000.0,
+                1_754_000_010.0,
+            ),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    issue_cache = tmp_path / "issue_stream_audit.json"
+    issue_cache.write_text(
+        json.dumps(
+            {
+                "generated_at": utc_now().timestamp(),
+                "open_issue_numbers": [6183],
+                "effective_membership": {
+                    "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}
+                },
+                "issue_body_canary": "github-body-canary",
+            }
+        ),
+        encoding="utf-8",
+    )
+    return fleet_root, monitor_root, issue_cache
+
+
+def test_typed_local_resolvers_bootstrap_reverify_and_keep_issue_locator_stable(
+    tmp_path: Path,
+    git_repo: dict[str, object],
+    capsys: pytest.CaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """All typed caches pass bootstrap → search → explain → handoff without bodies."""
+    repo = Path(git_repo["repo"])
+    head_sha = str(git_repo["sha2"])
+    fleet_root, monitor_root, issue_cache = _write_typed_source_fixtures(tmp_path, head_sha)
+    db = str(tmp_path / "db.sqlite3")
+    review_id = "review_" + "a" * 32
+    request_id = "request_" + "b" * 32
+    lease_token = "lease_" + "c" * 32
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    marker = tmp_path / "entire-was-called"
+    stub = bin_dir / "entire"
+    stub.write_text('#!/bin/sh\n/bin/touch "$ENTIRE_STUB_MARKER"\nexit 1\n', encoding="utf-8")
+    stub.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("ENTIRE_STUB_MARKER", str(marker))
+    before_sources = {
+        "fleet": _snapshot_files(fleet_root),
+        "monitor": _snapshot_files(monitor_root),
+        "issue_cache": issue_cache.stat().st_mtime_ns,
+    }
+
+    commands = (
+        ("bootstrap-github-issue", "6183", "--repo", str(repo), "--issue-cache", str(issue_cache), "--db", db),
+        (
+            "bootstrap-github-pr", "6183", "--head-sha", head_sha,
+            "--repository", "learn-ukrainian/learn-ukrainian.github.io", "--fleet-root", str(fleet_root),
+            "--repo", str(repo), "--db", db,
+        ),
+        ("bootstrap-formal-review", review_id, "--fleet-root", str(fleet_root), "--db", db),
+        ("bootstrap-fleet-receipt", request_id, "--fleet-root", str(fleet_root), "--db", db),
+        ("bootstrap-monitor-run", lease_token, "--monitor-root", str(monitor_root), "--db", db),
+    )
+    locators: list[str] = []
+    for command in commands:
+        code, out = run_cli(capsys, *command)
+        assert code == 0
+        payload = json.loads(out)
+        assert payload["outcome"] == "promoted"
+        assert_body_free(out)
+        assert "424242" not in out
+        assert "111.25" not in out
+        locators.append(payload["locator_id"])
+    assert _snapshot_files(fleet_root) == before_sources["fleet"]
+    assert _snapshot_files(monitor_root) == before_sources["monitor"]
+    assert issue_cache.stat().st_mtime_ns == before_sources["issue_cache"]
+    assert not marker.exists()
+
+    # A renewed cache verifies the same issue identity rather than minting a new locator.
+    report = json.loads(issue_cache.read_text(encoding="utf-8"))
+    report["generated_at"] = utc_now().timestamp()
+    issue_cache.write_text(json.dumps(report), encoding="utf-8")
+    code, out = run_cli(capsys, *commands[0])
+    assert code == 0
+    assert json.loads(out)["outcome"] == "already_promoted"
+    assert json.loads(out)["locator_id"] == locators[0]
+
+    for locator_id in locators:
+        code, out = run_cli(
+            capsys,
+            "explain-change",
+            "--locator-id", locator_id,
+            "--repo", str(repo),
+            "--fleet-root", str(fleet_root),
+            "--monitor-root", str(monitor_root),
+            "--issue-cache", str(issue_cache),
+            "--db", db,
+        )
+        assert code == 0
+        assert json.loads(out)["found"] is True
+        assert_body_free(out)
+
+    for needle, kind in zip(
+        ("6183", "6183", review_id, request_id, lease_token),
+        ("github_issue", "github_pr", "formal_review", "fleet_receipt", "monitor_run"),
+        strict=True,
     ):
+        code, out = run_cli(
+            capsys,
+            "search", "--query", needle, "--repo", str(repo), "--fleet-root", str(fleet_root),
+            "--monitor-root", str(monitor_root), "--issue-cache", str(issue_cache), "--db", db,
+        )
+        assert code == 0
+        assert kind in {card["kind"] for card in json.loads(out)["results"]}
+        assert_body_free(out)
+
+    handoff_args = ["handoff", "--repo", str(repo), "--fleet-root", str(fleet_root), "--monitor-root", str(monitor_root), "--issue-cache", str(issue_cache), "--db", db]
+    for locator_id in locators:
+        handoff_args.extend(("--locator-id", locator_id))
+    code, out = run_cli(capsys, *handoff_args)
+    assert code == 0
+    assert {item["kind"] for item in json.loads(out)["items"]} == {
+        "github_issue", "github_pr", "formal_review", "fleet_receipt", "monitor_run"
+    }
+    assert_body_free(out)
+
+
+def test_github_namespace_and_monitor_default_paths_fail_closed_or_stay_unambiguous(
+    tmp_path: Path, git_repo: dict[str, object]
+) -> None:
+    """Only real github.com origins can derive a public typed GitHub identity."""
+    cache = tmp_path / "issue_stream_audit.json"
+    cache.write_text(
+        json.dumps(
+            {
+                "generated_at": utc_now().timestamp(),
+                "open_issue_numbers": [6183],
+                "effective_membership": {
+                    "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    repo = Path(git_repo["repo"])
+    assert resolve_github_issue(6183, cache_path=cache, repo=repo).link.canonical_namespace == (
+        "github:learn-ukrainian/learn-ukrainian.github.io"
+    )
+    git(repo, "remote", "set-url", "origin", "git@github.com:learn-ukrainian/learn-ukrainian.github.io.git")
+    assert resolve_github_issue(6183, cache_path=cache, repo=repo).link.canonical_namespace == (
+        "github:learn-ukrainian/learn-ukrainian.github.io"
+    )
+    for origin in ("https://gitlab.com/example/private.git", str(tmp_path / "local-remote.git")):
+        git(repo, "remote", "set-url", "origin", origin)
         with pytest.raises(ResolutionError) as excinfo:
-            resolve_bootstrap(
-                kind,
-                "test-identifier",
-                repo=tmp_path,
-                acp_root=None,
-                rollover_root=None,
-            )
-        assert excinfo.value.reason == REASON_UNSUPPORTED_KIND
+            resolve_github_issue(6183, cache_path=cache, repo=repo)
+        assert excinfo.value.reason == REASON_SOURCE_MISSING
+    git(repo, "remote", "remove", "origin")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(6183, cache_path=cache, repo=repo)
+    assert excinfo.value.reason == REASON_SOURCE_MISSING
+    assert resolve_github_issue(
+        6183,
+        cache_path=cache,
+        repo=tmp_path,
+        namespace="github:learn-ukrainian/learn-ukrainian.github.io",
+    ).link.canonical_namespace == "github:learn-ukrainian/learn-ukrainian.github.io"
+
+    assert default_monitor_db(tmp_path) == default_monitor_root(tmp_path) / "agent_monitor.sqlite3"
+    projection = github_pr_projection(
+        repository="learn-ukrainian/learn-ukrainian.github.io",
+        pr_number=6183,
+        head_sha="e" * 40,
+        gate_kind="cross-family-review",
+        job_state="complete",
+        published=True,
+        publication_context="fleet/cross-family-review",
+        published_at="2026-08-02T10:00:00Z",
+    )
+    assert list(projection).count("head_sha") == 1
+
+
+def test_typed_resolvers_reject_publication_drift_and_nonterminal_sources(
+    tmp_path: Path, git_repo: dict[str, object]
+) -> None:
+    """Publication head/context, terminal state, and malformed cache all fail closed."""
+    repo = Path(git_repo["repo"])
+    head_sha = str(git_repo["sha2"])
+    fleet_root, monitor_root, issue_cache = _write_typed_source_fixtures(tmp_path, head_sha)
+    review_id = "review_" + "a" * 32
+    request_id = "request_" + "b" * 32
+    lease_token = "lease_" + "c" * 32
+
+    # The successful baseline is intentional: it proves the later mutations are the rejection cause.
+    assert resolve_github_pr(
+        "learn-ukrainian/learn-ukrainian.github.io", 6183, head_sha, fleet_root=fleet_root, repo=repo
+    ).excerpt["published"] is True
+    assert resolve_formal_review(review_id, fleet_root=fleet_root).excerpt["verdict"] == "APPROVED"
+
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute("UPDATE github_publications SET head_sha = ?", ("d" * 40,))
+        connection.execute("UPDATE requests SET state = 'running'")
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_pr(
+            "learn-ukrainian/learn-ukrainian.github.io", 6183, head_sha, fleet_root=fleet_root, repo=repo
+        )
+    assert excinfo.value.reason == REASON_PUBLICATION_MISSING
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute(
+            "UPDATE github_publications SET head_sha = ?, status_context = ?",
+            (head_sha, "unexpected-context"),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_pr(
+            "learn-ukrainian/learn-ukrainian.github.io", 6183, head_sha, fleet_root=fleet_root, repo=repo
+        )
+    assert excinfo.value.reason == REASON_PUBLICATION_MISSING
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_fleet_receipt(request_id, fleet_root=fleet_root)
+    assert excinfo.value.reason == REASON_PARTIAL_TERMINAL
+
+    connection = sqlite3.connect(monitor_root / "agent_monitor.sqlite3")
+    try:
+        connection.execute("UPDATE agent_leases SET status = 'APPROVED'")
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_monitor_run(lease_token, monitor_root=monitor_root)
+    assert excinfo.value.reason == REASON_PARTIAL_TERMINAL
+
+    issue_cache.write_text(
+        json.dumps({"generated_at": utc_now().timestamp(), "open_issue_numbers": ["6183"]}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(6183, cache_path=issue_cache, repo=repo)
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+
+    issue_cache.write_text('{"generated_at": 0}', encoding="utf-8")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(6183, cache_path=issue_cache, repo=repo)
+    assert excinfo.value.reason == REASON_PARTIAL_TERMINAL
+
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute(
+            "UPDATE github_publications SET status_context = ?",
+            ("fleet/cross-family-review",),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    # The formal job is independently resolved from its sealed, hash-checked verdict.
+    assert resolve_formal_review(review_id, fleet_root=fleet_root).excerpt["verdict"] == "APPROVED"
+    blob = next(path for path in (fleet_root / "blobs" / "sha256").rglob("*") if path.is_file())
+    blob.write_bytes(b"sealed-verdict-drift")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_formal_review(review_id, fleet_root=fleet_root)
+    assert excinfo.value.reason == REASON_DIGEST_MISMATCH
+
+
+def test_typed_resolvers_refuse_unsafe_database_values_without_echo(
+    tmp_path: Path, git_repo: dict[str, object]
+) -> None:
+    """Projected DB/cache values pass the shared identity guard before output."""
+    repo = Path(git_repo["repo"])
+    head_sha = str(git_repo["sha2"])
+    fleet_root, monitor_root, issue_cache = _write_typed_source_fixtures(tmp_path, head_sha)
+    review_id = "review_" + "a" * 32
+    request_id = "request_" + "b" * 32
+    lease_token = "lease_" + "c" * 32
+
+    report = json.loads(issue_cache.read_text(encoding="utf-8"))
+    report["effective_membership"]["6183"]["streams"] = ["free form stream canary"]
+    issue_cache.write_text(json.dumps(report), encoding="utf-8")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(6183, cache_path=issue_cache, repo=repo)
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "free form stream canary" not in str(excinfo.value)
+
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute("UPDATE requests SET requested_recipient = ?", ("x" * 64,))
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_fleet_receipt(request_id, fleet_root=fleet_root)
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "x" * 64 not in str(excinfo.value)
+
+    connection = sqlite3.connect(monitor_root / "agent_monitor.sqlite3")
+    try:
+        connection.execute("UPDATE agent_leases SET task_name = ?", ("free form task canary",))
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_monitor_run(lease_token, monitor_root=monitor_root)
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "free form task canary" not in str(excinfo.value)
+
+    blob = next(path for path in (fleet_root / "blobs" / "sha256").rglob("*") if path.is_file())
+    sealed = json.loads(blob.read_text(encoding="utf-8"))
+    sealed["model"] = "ghp_" + "x" * 20
+    mutated = json.dumps(sealed).encode("utf-8")
+    mutated_digest = hashlib.sha256(mutated).hexdigest()
+    mutated_blob = fleet_root / "blobs" / "sha256" / mutated_digest[:2] / mutated_digest
+    mutated_blob.parent.mkdir(parents=True)
+    mutated_blob.write_bytes(mutated)
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute("UPDATE artifacts SET sha256 = ?", (mutated_digest,))
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_formal_review(review_id, fleet_root=fleet_root)
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert sealed["model"] not in str(excinfo.value)
+
+    mismatched = json.dumps(
+        {
+            "review_id": review_id,
+            "repository": "learn-ukrainian/learn-ukrainian.github.io",
+            "pr_number": 6183,
+            "head_sha": "e" * 40,
+            "gate_kind": "cross-family-review",
+            "verdict": "APPROVED",
+            "model": "gpt-5.6-terra",
+            "family": "openai",
+            "harness": "codex",
+        }
+    ).encode("utf-8")
+    mismatched_digest = hashlib.sha256(mismatched).hexdigest()
+    mismatched_blob = fleet_root / "blobs" / "sha256" / mismatched_digest[:2] / mismatched_digest
+    mismatched_blob.parent.mkdir(parents=True)
+    mismatched_blob.write_bytes(mismatched)
+    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
+    try:
+        connection.execute("UPDATE artifacts SET sha256 = ?", (mismatched_digest,))
+        connection.commit()
+    finally:
+        connection.close()
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_formal_review(review_id, fleet_root=fleet_root)
+    assert excinfo.value.reason == REASON_DIGEST_MISMATCH
 
 
 def test_rollover_resolution_never_invokes_entire_or_writes_state_root(

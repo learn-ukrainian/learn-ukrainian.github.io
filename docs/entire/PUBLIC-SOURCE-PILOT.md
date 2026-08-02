@@ -42,3 +42,25 @@ the product setting and egress allowlist still name one identical destination.
 
 The deployed source commit must carry `Entire-Checkpoint` as a real Git trailer.
 Escaped newline text is not a trailer and will not enter Entire's activity index.
+
+## Product workflow boundary
+
+Product-style prompts use the local body-free context workflow: search-past-work,
+explain-change, and prepare-handoff through `.venv/bin/python -m
+scripts.entire_context`. These commands read local verified projections and
+produce locator cards or bounded capsules; they do not invoke Entire or the
+network.
+
+Native `entire blame --json` is allowed for local attribution. Prompt-bearing
+`entire why`, cloud `entire search`, generated recap, investigate findings, and
+Entire review remain optional manual tools. None automatically enters a canonical
+capsule. Entire review is supplemental and never satisfies the Fleet
+formal-review gate.
+
+The typed local resolver inventory is deliberately narrow: an open GitHub issue
+must have exactly one fresh issue-stream membership; a GitHub PR needs a
+completed local formal-review job, matching durable publication receipt, and
+local head commit; formal review requires a hash-verified sealed verdict; Fleet
+and Monitor require exact terminal receipts. Resolver reads use existing local
+caches only, including SQLite URI `mode=ro`; they do not migrate, change WAL,
+prune, start services, or contact GitHub, Fleet, Monitor, or Entire.
