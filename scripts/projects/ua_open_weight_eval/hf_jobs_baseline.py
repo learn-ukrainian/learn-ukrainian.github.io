@@ -12,7 +12,6 @@ import re
 import shutil
 import subprocess
 import sys
-import tempfile
 import urllib.request
 from collections import Counter
 from collections.abc import Mapping, Sequence
