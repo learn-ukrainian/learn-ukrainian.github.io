@@ -255,6 +255,22 @@ def job_command(
         observed_cli.stdout.strip() == config["runtime"]["huggingface_hub_cli_version"],
         "HF CLI version drift",
     )
+    bucket_probe = subprocess.run(
+        [str(hf_cli), "buckets", "list", f"{namespace}/{bucket}", "--format", "json"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    _require(bucket_probe.returncode == 0, "output bucket probe failed")
+    raw_bucket_entries = bucket_probe.stdout.strip()
+    try:
+        bucket_entries = json.loads(raw_bucket_entries) if raw_bucket_entries else []
+    except json.JSONDecodeError as exc:
+        raise BaselineError("output bucket probe was not JSON") from exc
+    _require(
+        isinstance(bucket_entries, list) and bool(bucket_entries),
+        "output bucket is not mount-ready",
+    )
     if mode == "canary":
         _require(projection is None, "canary launch must not accept a full-run projection")
         _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")

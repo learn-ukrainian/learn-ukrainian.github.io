@@ -15,6 +15,22 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text("".join(suite_cli.canonical_json(row) + "\n" for row in rows), encoding="utf-8")
 
 
+def _write_fake_hf_cli(path: Path, *, bucket_rows: list[dict] | None = None) -> None:
+    rows = bucket_rows if bucket_rows is not None else [{"path": ".keep", "size": 55, "type": "file"}]
+    path.write_text(
+        "#!/bin/sh\n"
+        'if [ "$1" = "--version" ]; then\n'
+        "  echo 1.25.1\n"
+        'elif [ "$1" = "buckets" ]; then\n'
+        f"  echo '{json.dumps(rows)}'\n"
+        "else\n"
+        "  exit 1\n"
+        "fi\n",
+        encoding="utf-8",
+    )
+    path.chmod(0o700)
+
+
 def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     config = hf_jobs_baseline.load_config()
     assert config["model"] == {
@@ -111,8 +127,7 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     bundle = tmp_path / "bundle"
     bundle.mkdir()
     hf_cli = tmp_path / "hf"
-    hf_cli.write_text("#!/bin/sh\necho 1.25.1\n", encoding="utf-8")
-    hf_cli.chmod(0o700)
+    _write_fake_hf_cli(hf_cli)
     manifest = {
         "bundle_sha256": "b" * 64,
         "requests_sha256": "r" * 64,
@@ -142,6 +157,16 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
         f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
     )
     assert command[separator + 2 : separator + 4] == ["bash", "-lc"]
+    _write_fake_hf_cli(hf_cli, bucket_rows=[])
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="not mount-ready"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bucket="ua-open-weight-eval-6273",
+            bundle=bundle,
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+        )
 
 
 def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
@@ -245,8 +270,7 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
     bundle = tmp_path / "bundle"
     bundle.mkdir()
     hf_cli = tmp_path / "hf"
-    hf_cli.write_text("#!/bin/sh\necho 1.25.1\n", encoding="utf-8")
-    hf_cli.chmod(0o700)
+    _write_fake_hf_cli(hf_cli)
     monkeypatch.setattr(
         hf_jobs_baseline,
         "verify_bundle",
