@@ -63,6 +63,21 @@ def test_default_store_resolves_from_a_linked_worktree_to_the_primary_checkout(
     )
 
 
+def test_release_snapshot_store_uses_its_primary_data_symlink(tmp_path: Path) -> None:
+    primary_data = tmp_path / "primary" / "data"
+    (primary_data / "telemetry").mkdir(parents=True)
+    release = tmp_path / "release"
+    release.mkdir()
+    (release / "data").symlink_to(primary_data, target_is_directory=True)
+
+    path = legacy_bridge._shared_telemetry_db_path(release)
+
+    assert path == release / "data" / "telemetry" / "legacy_comms_routes.db"
+    assert path.resolve() == (
+        primary_data / "telemetry" / "legacy_comms_routes.db"
+    ).resolve()
+
+
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
