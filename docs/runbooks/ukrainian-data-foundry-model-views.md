@@ -49,9 +49,12 @@ a model, or run training.
 ## Phase 3 real production result
 
 The first real production instantiation uses the operator-accepted Ukrainian
-Wikipedia continued-pretraining family. It does not replace the larger
-literary, textbook, historical, or external-article inventories; those remain
-separately gated until their exact rights and destination evidence is complete.
+Wikipedia continued-pretraining family. It is the frozen v1 implementation,
+not the current program limit. The later #6248 usability decision approves the
+retained literary, textbook, historical, and external-article corpus for local
+model learning after required preprocessing. #6171 must still separate that
+local capability from raw redistribution and publication, restore retained
+locators, and export the larger faithful and modern-learning views.
 
 `model_ready_view_production.py prepare-payloads` joins all 1,029 admitted
 source records to their exact `sources.db` content hashes and the complete
@@ -104,14 +107,16 @@ admitted Wikipedia payload scope (423 protected and 978 unresolved); these
 payload categories overlap because one article can contain both kinds of span.
 They are not interchangeable counts.
 
-The final phase-3 feasibility verdict is `REVISE`: real control and
+The historical phase-3 feasibility verdict is `REVISE`: real control and
 loss-masked continued-pretraining inputs, evaluation isolation, protected/no-
 change inventory, recipes, and tokenizer diagnostics exist, but an exact
-treatment preregistration and operator compute ceiling do not. #6170 may start
-only after those two present-tense gates are frozen. The current recipe
-manifests retain `training_authorized: false` and `execution_state: not_run`.
-Projected training runtime and cost remain null—not zero—until #6170 pins the
-hardware, treatment, and ceiling; local artifact storage is measured exactly.
+treatment preregistration and operator compute ceiling do not. #6170 is now
+parked optional validation and may reopen only after those two present-tense
+gates are frozen. The current recipe manifests retain
+`training_authorized: false` and `execution_state: not_run`. Projected training
+runtime and cost remain null—not zero—until an exact local or rented runner
+pins the hardware, treatment, and ceiling; local artifact storage is measured
+exactly.
 
 ## Required inputs
 

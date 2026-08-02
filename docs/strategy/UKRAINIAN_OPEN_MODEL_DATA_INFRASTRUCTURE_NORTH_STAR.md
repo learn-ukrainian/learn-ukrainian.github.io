@@ -74,10 +74,11 @@ experiment. It must never be reported as human gold, native-speaker acceptance,
 reviewer reliability, or proof that every proposed correction is correct.
 
 The Foundry can credibly promise reusable preparation, diagnostics, evidence,
-and a controlled test of whether those artifacts help. It cannot promise in
-advance that a treatment will make an LLM fluent. The cheapest falsifying check
-always precedes a more expensive run, and a failed prerequisite or null result
-is reported immediately rather than converted into more work.
+and, if separately authorized, a controlled test of whether those artifacts
+help. It cannot promise in advance that a treatment will make an LLM fluent.
+The cheapest falsifying check always precedes a more expensive run, and a
+failed prerequisite or null result is reported immediately rather than
+converted into more work.
 
 ## GitHub execution homes
 
@@ -324,12 +325,14 @@ later decisions. The project verdict is **CONTINUE**.
    controls. Reproduce the complete no-training path in a clean independent
    environment (#6171). The canonical recipe and cost model are documented in
    the [clean-Ukrainian runbook](../runbooks/ukrainian-data-foundry-clean-ukrainian-recipe.md).
-7. Keep the preregistered Gemma 4 treatment (#6170) parked as optional,
-   present-tense operator-gated compatibility validation. It is not a
-   prerequisite for #6171, and neither model download nor accelerator spend is
-   authorized. If it is ever activated, first replace planning estimates with
-   an exact microbenchmark and report null, mixed, unsafe, or negative results
-   as valid terminal outcomes.
+7. Keep the preregistered Gemma 4 31B cloud treatment (#6170) parked as
+   optional, present-tense operator-gated compatibility validation. After
+   #6171, inventory the operator's unused M1 and prefer a smaller Gemma 4
+   Apple-Silicon QLoRA candidate when it can prove the complete path without
+   rental cost. Neither route is a prerequisite for #6171, and neither model
+   download nor training is authorized. Before either route runs, replace
+   planning estimates with an exact model, revision, tokenizer, machine,
+   framework, memory, throughput, evaluation, and stop-rule record.
 8. Use frozen v0.1.1 and compatible licensed external human-authored
    evaluations for recipe validation and any optional future experiment. The
    reviewer-intensive v0.2
@@ -337,6 +340,45 @@ later decisions. The project verdict is **CONTINUE**.
    suitable consented evidence without becoming a project staffing dependency.
    Public evaluation gold remains mechanically isolated from every training or
    tuning view.
+
+### Optional local Apple-Silicon proof after #6171
+
+The proof question is whether the shipped Foundry path changes a model's
+measured Ukrainian behavior, not whether a particular large checkpoint can be
+forced onto a laptop. The first zero-rental-cost candidate is the operator's
+unused M1, after its exact chip variant, unified memory, free storage, and macOS
+version are recorded.
+
+Google's current
+[Gemma 4 memory table](https://ai.google.dev/gemma/docs/core#parameter-sizes-and-quantization)
+lists approximate Q4 inference loads of 2.9 GB for E2B, 4.5 GB for E4B,
+6.7 GB for 12B, 14.4 GB for 26B A4B, and 17.5 GB for 31B. Those figures cover
+base weights and loading overhead, not context or fine-tuning. The 31B model
+therefore cannot be a 16 GB M1 training target, and the A4B model does not fit
+like a 4B model because all 26 billion parameters must remain loaded.
+
+Candidate routing is conditional rather than a model selection:
+
+| M1 unified memory | First Gemma 4 candidate to benchmark | Boundary |
+| ---: | --- | --- |
+| 8 GB | E2B Q4 | Runtime preflight and short full-path proof only until peak memory is measured |
+| 16 GB | E4B Q4; E2B fallback | 31B is excluded; 12B requires a measured margin before consideration |
+| 32 GB | 12B Q4; E4B fallback | Prefer 12B only if one-step training, reload, and evaluation fit safely |
+| 64 GB or more | 12B first; 31B may be benchmarked | Do not choose 31B before its measured speed and peak-memory cost justify it |
+
+Apple's [MLX-LM](https://github.com/ml-explore/mlx-lm) supports Apple-Silicon
+LoRA and QLoRA; release `v0.31.2` added Gemma 4, and the
+[LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md)
+documents quantized-model training. The existing #6170 runner is CUDA/L40S
+specific and must remain unchanged. A local proof needs a separately pinned
+MLX runner and a new tokenizer receipt for the selected checkpoint.
+
+The first meaningful local result must traverse the complete path: frozen
+baseline evaluation, real stratified Foundry data, adapter training, clean
+reload, the same held-out evaluation, and protected-variation checks. A
+synthetic one-step update is only the hardware preflight. A full-corpus pass is
+considered only after the exact local throughput turns the existing token count
+into an acceptable wall-time estimate.
 
 The accountable orchestrator continues through the #6171 no-training release
 candidate. A merged implementation PR is progress, not a stopping condition.

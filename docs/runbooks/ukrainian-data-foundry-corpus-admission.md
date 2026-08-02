@@ -5,15 +5,24 @@ a local, content-blind row manifest and a portable aggregate receipt. It is an
 admission-disposition step, never training, publication, acquisition, OCR, or
 rights certification.
 
+> **Implementation status after #6248:** this runbook records the frozen
+> 2026-08-01 capability-combined admission run. The later
+> [corpus-usability decision](../research/UKRAINIAN_CORPUS_TRAINING_USABILITY_DECISION.md)
+> approves the retained human-authored corpus for local research and continued
+> model learning after required preprocessing. #6171 must still separate that
+> local-learning decision from raw-source redistribution, dataset publication,
+> and model publication in the executable contract.
+
 ## Inputs and boundaries
 
 The checked-in configuration is
 `data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json`.
 It binds the four public/external families to the frozen profile denominator:
 189,150 rows and 50,298,925 lexical words. A public location, corpus
-membership, author death, or a family name is not permission. Three families
-remain unresolved. On 2026-08-01, the operator accepted exactly the 1,029-row
-Ukrainian Wikipedia family for the source-admission destination
+membership, author death, or a family name is not permission. In the frozen
+v1 output, three families remained unresolved because the runner required one
+combined disposition. On 2026-08-01, the operator accepted exactly the
+1,029-row Ukrainian Wikipedia family for the source-admission destination
 `open_weight_ukrainian_continued_pretraining_text_v1`. The recorded acceptance
 does not authorize payload export, training, upload, model release, dataset
 redistribution, or publication.
@@ -122,8 +131,8 @@ local and uncommitted.
 | Admitted Wikipedia `source_record_v1` manifest | 1,029 | 2,865,506 | `6b91e718622911a5a2c9a907e53dee7f3cf4c2805b0d3350c49e619f5422da68` |
 | Aggregate admission receipt | 189,150 | 50,298,925 | `1359e2d2067795c4246be93cb4187d708b22a9d7af406e089d5ac087095c09d4` |
 | Operator decision packet | 1 accepted family | 1,029 rows | `53b12ed59d06929ed3218b3243f07b4aa0724812935b725e2999d44c726444cd` |
-| `admitted` | 1,029 | 2,865,506 | Wikipedia only |
-| `unresolved` | 188,121 | 47,433,419 | Literary, public-textbook, and external-article families |
+| `admitted` in the frozen v1 run | 1,029 | 2,865,506 | Wikipedia only |
+| `unresolved` in the frozen v1 run | 188,121 | 47,433,419 | Literary, public-textbook, and external-article families |
 | Evaluation exact/near exclusions | 0 | 0 | Frozen registry applied |
 
 All 1,029 generated source records satisfy the frozen JSON contract and now
@@ -161,6 +170,9 @@ The accepted scope retains all attribution, share-alike, modification,
 no-additional-restrictions, lineage, and downstream-review obligations. It
 advances only to separately controlled exporter and training gates.
 
-The other 188,121 rows remain unresolved. Acceptance does not authorize export,
-training, upload, model release, redistribution, or publication and does not
-emit `training_eligible`.
+The other 188,121 rows remain unresolved in the frozen v1 output. #6248 later
+approved those retained human-authored families for the distinct local-learning
+capability after preprocessing; that decision does not authorize export,
+upload, model release, redistribution, or publication. Until #6171 implements
+capability-specific admission, this runner still does not emit them as
+`training_eligible`.
