@@ -3,7 +3,7 @@
   "checkpoint_id": "795a8c87d94e",
   "session_id": "ses_03dbb9a11ffeO6R9sUIk3fXlX7",
   "strategy": "manual-commit",
-  "created_at": "2026-08-02T12:28:36.772319Z",
+  "created_at": "2026-08-02T12:30:55.965558Z",
   "branch": "glm/6183-entire-typed-resolvers-glm",
   "checkpoints_count": 1,
   "files_touched": [
@@ -30,14 +30,14 @@
     "api_call_count": 0
   },
   "initial_attribution": {
-    "calculated_at": "2026-08-02T12:28:36.705878Z",
-    "agent_lines": 77,
-    "agent_removed": 0,
+    "calculated_at": "2026-08-02T12:30:55.90169Z",
+    "agent_lines": 14,
+    "agent_removed": 2,
     "human_added": 0,
     "human_modified": 0,
     "human_removed": 0,
-    "total_committed": 77,
-    "total_lines_changed": 77,
+    "total_committed": 14,
+    "total_lines_changed": 16,
     "agent_percentage": 100,
     "metric_version": 2
   }
