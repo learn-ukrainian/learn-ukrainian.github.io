@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "build_config": "70abf29e77c94f47f477c9811705724d6155eb98a3017a218aa94454b5b58eef",
+    "cases": "2164d7ba31322bf3cfbed8045ad3a5b6e759395175b2c1ab11172b9c0f1237db",
+    "controlled_seeds": "aee8372bdab9d8b634affbb5324ffa09ab7fd261bb53d5586cc5abb52ada0350",
+    "foundry_firewall": "a1c2f3693a8672f7ab1d8e745fafd75c5c45eab2ba2bcd5e17d9ac4739635aee",
+    "local_run_config_example": "0e3fc35c1e8631b6aba1258141ac7d3d33726493481ca783deec15f474a5fa55",
+    "saved_response_schema": "652e2ce89d170d5011a4fcfdf4fdd02fe7e1728d19c6b8a7479e38fc58b4cdb2",
+    "suite_cli": "401cbe4bd416d38b0ce9aad6391b96beca30e1fce3c4c3f6275afd3c9d40a048"
+  },
+  "counts": {
+    "by_category": {
+      "correct_control": 1000,
+      "error": 1000,
+      "protected": 1000,
+      "unresolved": 1000
+    },
+    "by_evidence_grade": {
+      "controlled_silver": 999,
+      "human_gold": 1000,
+      "human_gold_derived_control": 1000,
+      "source_backed_silver": 857,
+      "unresolved": 144
+    },
+    "by_track": {
+      "ambiguity": 142,
+      "calques": 678,
+      "grammar": 1762,
+      "historical_archaic": 142,
+      "morphology": 1028,
+      "ocr": 142,
+      "overcorrection": 142,
+      "proper_names": 142,
+      "protected_text": 142,
+      "quoted_russian": 144,
+      "regional_dialect": 142,
+      "register": 142,
+      "russian_interference": 678,
+      "surzhyk": 144
+    },
+    "total": 4000
+  },
+  "policy": {
+    "closed_api_required": false,
+    "closed_model_judge_allowed": false,
+    "foundry_learning_eligible": false,
+    "human_gold_anchor": "ua_eval_harness.v0.1.1",
+    "human_gold_anchor_mutated": false,
+    "parked_v0.2_mutated": false,
+    "single_quality_score_produced": false
+  },
+  "release_id": "ua_open_weight_eval.v0.1.0",
+  "schema_version": "ua_open_weight_eval_release_receipt.v1",
+  "upstream_freezes": {
+    "data/projects/ua_eval_harness/heldout_manifest_v1.json": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd",
+    "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json": "b95edea210ae9133059181a4e2d161c8682108bfcacdde50f98adaae2221e65f",
+    "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl": "9b436a1a6c7c442f3dafaa468d358446a8cb66995562749e2801eac07b211add"
+  }
+}

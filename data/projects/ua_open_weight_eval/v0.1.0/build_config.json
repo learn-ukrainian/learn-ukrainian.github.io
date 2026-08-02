@@ -1,0 +1,36 @@
+{
+  "case_count": 4000,
+  "category_counts": {
+    "correct_control": 1000,
+    "error": 1000,
+    "protected": 1000,
+    "unresolved": 1000
+  },
+  "contexts": [
+    ["", ""],
+    ["У записі сказано: ", ""],
+    ["Редактор занотував: ", ""],
+    ["У фрагменті подано: ", ""],
+    ["Контекст прикладу — ", ""],
+    ["Автор пише: «", "»"],
+    ["У повідомленні читаємо: «", "»"],
+    ["Цитований фрагмент: «", "»"]
+  ],
+  "release_id": "ua_open_weight_eval.v0.1.0",
+  "tracks": [
+    "grammar",
+    "morphology",
+    "calques",
+    "russian_interference",
+    "quoted_russian",
+    "surzhyk",
+    "historical_archaic",
+    "regional_dialect",
+    "register",
+    "ocr",
+    "proper_names",
+    "ambiguity",
+    "overcorrection",
+    "protected_text"
+  ]
+}
