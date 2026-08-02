@@ -30,6 +30,10 @@ if str(AUDIT_DIR) not in sys.path:
 
 from lexeme_filter import SURFACE_CLOZE, SURFACE_PRACTICE, is_practice_eligible, is_surface_admitted
 
+from scripts.lexicon.curated_membership import (
+    apply_membership,
+    read_membership,
+)
 from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
@@ -3138,6 +3142,7 @@ def _select_practice_lexemes(
         if (
             isinstance(entry.get("practice_example"), dict)
             or entry.get("local_practice_private_teacher") is True
+            or entry.get("curated_membership") is True
         )
         and is_surface_admitted(entry, SURFACE_PRACTICE)
     ]
@@ -4459,6 +4464,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument(
+        "--curated-membership",
+        type=Path,
+        help="Lemma-only Curated Practice A union B membership overlay.",
+    )
+    parser.add_argument(
         "--practice-seed",
         type=Path,
         help="Reviewed practice admission overlay; each row must already exist in Atlas.",
@@ -4507,6 +4517,12 @@ def main(argv: list[str] | None = None) -> int:
         return run_broken_validator_fixtures()
 
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
+    if args.curated_membership:
+        entries, membership_report = apply_membership(entries, read_membership(args.curated_membership))
+        print(
+            "curated membership "
+            f"members={membership_report['members']} resolved={membership_report['resolved']}"
+        )
     if args.practice_seed and args.local_practice_seed:
         parser.error("--practice-seed and --local-practice-seed are mutually exclusive")
     if args.practice_seed:

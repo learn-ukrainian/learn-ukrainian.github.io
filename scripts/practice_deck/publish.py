@@ -31,6 +31,7 @@ DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-
 DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
 DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
+DEFAULT_CURATED_MEMBERSHIP = ROOT / "site" / "src" / "data" / "lexicon-teacher-curated-membership.json"
 DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-practice-deck.json.gz"
@@ -72,6 +73,7 @@ def expected_deck_version(
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
+    curated_membership_path: Path | None = None,
 ) -> str:
     if not atlas_db_path.exists():
         raise PracticeDeckPublishError(
@@ -88,9 +90,12 @@ def expected_deck_version(
             read_sentence_inventory,
             read_synonym_verdicts,
         )
+        from scripts.lexicon.curated_membership import apply_membership, read_membership
         from scripts.practice_deck.io import compute_deck_version
 
         entries = read_atlas_db(atlas_db_path)
+        if curated_membership_path is not None:
+            entries, _membership_report = apply_membership(entries, read_membership(curated_membership_path))
         heritage_pairs = read_heritage_pairs(heritage_pairs_path)
         paronym_pairs = read_paronym_pairs(paronym_pairs_path)
         synonym_verdicts = read_synonym_verdicts(synonym_verdicts_path)
@@ -356,6 +361,7 @@ def publish_practice_deck(
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
+    curated_membership_path: Path | None = None,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
@@ -368,6 +374,7 @@ def publish_practice_deck(
         synonym_verdicts_path=synonym_verdicts_path,
         cloze_sources_path=cloze_sources_path,
         sentence_inventory_path=sentence_inventory_path,
+        curated_membership_path=curated_membership_path,
     )
     if deck_version != expected_version:
         raise PracticeDeckPublishError(
@@ -405,6 +412,7 @@ def main() -> int:
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
+    parser.add_argument("--curated-membership", type=Path)
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
     parser.add_argument("--repo", default=DEFAULT_REPO)
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading/writing pointer")
@@ -417,6 +425,7 @@ def main() -> int:
         heritage_pairs_path=args.heritage_pairs,
         paronym_pairs_path=args.paronym_pairs,
         synonym_verdicts_path=args.synonym_verdicts,
+        curated_membership_path=args.curated_membership,
         cloze_sources_path=args.cloze_sources,
         sentence_inventory_path=args.sentence_inventory,
         release_tag=args.release_tag,

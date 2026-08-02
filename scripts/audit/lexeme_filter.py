@@ -111,16 +111,16 @@ def _has_cefr_level(entry: dict[str, Any]) -> bool:
     return _has_text(root_level)
 
 
-def is_practice_eligible(entry: dict[str, Any]) -> bool:
-    """True when *entry* is a clean study card for the practice deck.
+def practice_ineligibility_reason(entry: dict[str, Any]) -> str | None:
+    """Return the policy reason an entry cannot be a practice card, if any.
 
     Lexeme + glossed + curriculum-anchored (course usage or a CEFR level), excluding
     inflected duplicates and surzhyk-to-avoid forms.
     """
     if not is_lexeme_entry(entry):
-        return False
+        return "not_lexeme_entry"
     if not _has_text(entry.get("gloss")):
-        return False
+        return "missing_gloss"
     # Three-way policy for form-derived provenance:
     # 1. Any actual ``form_of`` relation is an alias/form row, so exclude it.
     # 2. ``built_vocabulary_form`` is an alias route by construction, including
@@ -129,11 +129,18 @@ def is_practice_eligible(entry: dict[str, Any]) -> bool:
     #    without ``form_of`` can be canonical lemmas, so admit them when the
     #    remaining practice checks pass.
     if entry.get("form_of"):
-        return False
+        return "form_of"
     if entry.get("primary_source") == "built_vocabulary_form":
-        return False
+        return "built_vocabulary_form"
     if entry.get("primary_source") == SURZHYK_SOURCE:
-        return False
+        return "surzhyk_to_avoid"
     if not is_surface_admitted(entry, SURFACE_PRACTICE):
-        return False
-    return _has_course_usage(entry) or _has_cefr_level(entry)
+        return "surface_not_admitted"
+    if not (_has_course_usage(entry) or _has_cefr_level(entry)):
+        return "missing_curriculum_anchor"
+    return None
+
+
+def is_practice_eligible(entry: dict[str, Any]) -> bool:
+    """True when *entry* is a clean study card for the practice deck."""
+    return practice_ineligibility_reason(entry) is None
