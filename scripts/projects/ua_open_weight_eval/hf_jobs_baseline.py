@@ -236,6 +236,7 @@ def job_command(
     namespace: str,
     bucket: str,
     bundle: Path,
+    bundle_mount: str,
     hf_cli: Path,
     timeout_seconds: int,
     projection: Mapping[str, Any] | None = None,
@@ -246,6 +247,17 @@ def job_command(
     _require(hf_cli.is_absolute() and hf_cli.is_file() and os.access(hf_cli, os.X_OK), "HF CLI must be executable")
     manifest = verify_bundle(bundle)
     config = load_config(bundle / "run_config.json")
+    expected_mount_prefix = f"hf://buckets/{namespace}/jobs-artifacts/"
+    _require(bundle_mount.startswith(expected_mount_prefix), "input bundle mount is outside jobs-artifacts")
+    mount_name = bundle_mount.removeprefix(expected_mount_prefix)
+    _require(
+        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", mount_name) is not None,
+        "invalid input bundle mount",
+    )
+    _require(
+        mount_name.endswith(manifest["bundle_sha256"][:8]),
+        "input bundle mount digest suffix drift",
+    )
     observed_cli = subprocess.run(
         [str(hf_cli), "--version"], check=False, capture_output=True, text=True
     )
@@ -365,7 +377,7 @@ def job_command(
             "--env",
             "VLLM_ENABLE_V1_MULTIPROCESSING=0",
             "--volume",
-            f"{bundle.resolve()}:/workspace:ro",
+            f"{bundle_mount}:/workspace:ro",
             "--volume",
             f"hf://buckets/{namespace}/{bucket}:/output:rw",
             "--",
@@ -773,6 +785,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     launch.add_argument("--namespace", required=True)
     launch.add_argument("--bucket", required=True)
     launch.add_argument("--bundle", type=Path, required=True)
+    launch.add_argument("--bundle-mount", required=True)
     launch.add_argument("--hf-cli", type=Path, required=True)
     launch.add_argument("--timeout-seconds", type=int, required=True)
     launch.add_argument("--projection", type=Path)
@@ -810,6 +823,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 namespace=args.namespace,
                 bucket=args.bucket,
                 bundle=args.bundle,
+                bundle_mount=args.bundle_mount,
                 hf_cli=args.hf_cli.resolve(),
                 timeout_seconds=args.timeout_seconds,
                 projection=read_json(args.projection) if args.projection is not None else None,

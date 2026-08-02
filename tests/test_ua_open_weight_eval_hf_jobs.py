@@ -140,6 +140,7 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
         namespace="operator",
         bucket="ua-open-weight-eval-6273",
         bundle=bundle,
+        bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
         hf_cli=hf_cli,
         timeout_seconds=1200,
     )
@@ -148,6 +149,8 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     assert "--timeout 20m" in joined
     assert config["runtime"]["container_amd64_digest"] in joined
     assert "hf://buckets/operator/ua-open-weight-eval-6273:/output:rw" in joined
+    assert "hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb:/workspace:ro" in joined
+    assert f"{bundle.resolve()}:/workspace:ro" not in joined
     assert "--expose" not in command
     assert "--ssh" not in command
     assert "--json" not in command
@@ -165,6 +168,18 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
             namespace="operator",
             bucket="ua-open-weight-eval-6273",
             bundle=bundle,
+            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+        )
+    _write_fake_hf_cli(hf_cli)
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="digest suffix drift"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bucket="ua-open-weight-eval-6273",
+            bundle=bundle,
+            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-deadbeef",
             hf_cli=hf_cli,
             timeout_seconds=1200,
         )
@@ -300,6 +315,7 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
         namespace="operator",
         bucket="ua-open-weight-eval-6273",
         bundle=bundle,
+        bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
         hf_cli=hf_cli,
         timeout_seconds=maximum_timeout,
         projection=projection,
@@ -311,6 +327,7 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
             namespace="operator",
             bucket="ua-open-weight-eval-6273",
             bundle=bundle,
+            bundle_mount="hf://buckets/operator/jobs-artifacts/hf-job-bundle-v4-bbbbbbbb",
             hf_cli=hf_cli,
             timeout_seconds=maximum_timeout + 60,
             projection=projection,
