@@ -29,11 +29,14 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from typing import Literal
 
+from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
 from scripts.audit import model_families
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, load_model_catalog
+from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
+_SEALED_REVIEW_EXECUTABLE = "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
 
 # --- family resolution -------------------------------------------------------
 
@@ -152,6 +155,7 @@ class ReviewerCandidate:
     transport: str
     invocation: str
     quality_tier: str
+    model_roles: frozenset[str] = field(default_factory=frozenset)
     health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
@@ -168,15 +172,36 @@ class ReviewerCandidate:
     # hard-excluded on a same-family match (e.g. openai_frontier for an
     # OpenAI-family author: still consulted, never the formal gate).
     advisory_only_for_author_families: frozenset[str] = field(default_factory=frozenset)
+    endpoint: str = ""
+    formal_review_eligible: bool = False
+    formal_review_exclusion_reason: str = ""
+    participant: str = ""
+    adapter_transport: str = ""
+    catalog_transport: str = ""
+    sealed_executable: str = ""
+    quota_bucket: str = ""
+    credential_bucket: str = ""
+    quota_limit: int = 0
+    credential_limit: int = 0
+    capacity_weight: float = 1.0
 
 
 _MODEL_CATALOG = load_model_catalog()
+_SCHEDULER_POLICY = _MODEL_CATALOG["review_scheduler"]
+_SCHEDULER_POLICY_VERSION = _SCHEDULER_POLICY["policy_version"]
 
 
 def _catalog_candidate(name: str) -> ReviewerCandidate:
     raw = _MODEL_CATALOG["review_candidates"][name]
     model_id = raw["model_id"]
     model = _MODEL_CATALOG["models"][model_id]
+    endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(raw["route"], {})
+    endpoint_models = endpoint.get("models", [])
+    endpoint_formal = bool(endpoint.get("formal_review_eligible", False))
+    model_formal = isinstance(endpoint_models, list) and model_id in endpoint_models
+    exclusion_reason = str(endpoint.get("formal_review_exclusion_reason", ""))
+    if endpoint_formal and not model_formal:
+        exclusion_reason = f"sealed endpoint {raw['route']!r} is not pinned for model {model_id!r}"
     return ReviewerCandidate(
         name=name,
         family=model["family"],
@@ -185,6 +210,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         transport=raw["transport"],
         invocation=raw["invocation"],
         quality_tier=model["tier"],
+        model_roles=frozenset(model["roles"]),
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
@@ -192,6 +218,18 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         capabilities=frozenset(raw.get("capabilities", [])),
         domain_excluded_from=frozenset(raw.get("domain_excluded_from", [])),
         advisory_only_for_author_families=frozenset(raw.get("advisory_only_for_author_families", [])),
+        endpoint=raw["route"],
+        formal_review_eligible=endpoint_formal and model_formal,
+        formal_review_exclusion_reason=exclusion_reason,
+        participant=endpoint.get("participant", ""),
+        adapter_transport=endpoint.get("adapter_transport", ""),
+        catalog_transport=endpoint.get("catalog_transport", ""),
+        sealed_executable=endpoint.get("sealed_executable", ""),
+        quota_bucket=endpoint.get("quota_bucket", ""),
+        credential_bucket=endpoint.get("credential_bucket", ""),
+        quota_limit=int(endpoint.get("quota_limit", 0)),
+        credential_limit=int(endpoint.get("credential_limit", 0)),
+        capacity_weight=float(endpoint.get("capacity_weight", 0)),
     )
 
 
@@ -249,6 +287,9 @@ _HEALTH_ALIASES: dict[str, str | None] = {
     "warm": "degraded",
     "near_cap": "near_cap",
     "hot": "near_cap",
+    # routing-budget emits this when CodexBar cannot authenticate/produce a
+    # capacity reading. It is operationally unavailable, never fail-open.
+    "unavailable": "unhealthy",
     # The endpoint uses unknown when budget evidence is absent. Preserve the
     # module's fail-open convention by treating it exactly like a missing key.
     "unknown": None,
@@ -302,6 +343,10 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
         if status is None and isinstance(health, Mapping) and health.get("healthy") is True:
             normalized[str(route)] = "healthy"
             continue
+        if status is None:
+            # A transaction-local scheduler snapshot may carry only pressure
+            # counters. Health remains fail-open when it is genuinely absent.
+            continue
         normalized_status = _normalize_health_status(status, label=f"agents.{route}")
         if normalized_status is not None:
             normalized[str(route)] = normalized_status
@@ -318,6 +363,9 @@ class ResolverInputs:
     risk: str = "medium"
     domain: str = "code"
     required_capabilities: frozenset[str] = field(default_factory=frozenset)
+    # Optional exact catalog model role (for example ``security_review``).
+    # When omitted, profile/risk role suitability comes from model_catalog.
+    requested_role: str | None = None
     # Fail-closed: None/unrecognized means the strictest reading, not "anything goes."
     data_egress_policy: str | None = None
     isolation_required: bool = False
@@ -330,6 +378,17 @@ class ResolverInputs:
     # bare ambiguous-harness author_model; optional corroboration otherwise —
     # a mismatch against the resolved family is a fail-closed conflict.
     author_family: str | None = None
+    # Exact PR head used solely for a stable final tie-break among equal
+    # quality/pressure candidates. It never relaxes a hard policy gate.
+    exact_head: str | None = None
+    # Formal review is the resolver's normal mode. Advisory callers may opt
+    # out only when they are not attempting to satisfy the cross-family gate.
+    formal_review: bool = True
+    # An explicit pin is an exceptional pressure override. It still receives
+    # every safety, independence, egress, isolation, executable and circuit
+    # gate; a missing reason fails closed.
+    pinned_candidate: str | None = None
+    pressure_override_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -345,6 +404,53 @@ class CandidateResult:
     status: CandidateStatus
     reason: str | None
     health: str | None
+    suitability_rank: int | None = None
+    # Pure deterministic balancing receipt for eligible candidates. The tuple
+    # is deliberately opaque-but-stable so ledger callers can persist the
+    # exact decision without this resolver acquiring storage authority.
+    selection_score: tuple[object, ...] | None = None
+
+    @property
+    def quota_bucket(self) -> str:
+        """Canonical quota bucket for persistence with this pure receipt."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return str(endpoint.get("quota_bucket", ""))
+
+    @property
+    def credential_bucket(self) -> str:
+        """Credential-sharing bucket bound to the sealed ACP participant."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return str(endpoint.get("credential_bucket", ""))
+
+    @property
+    def quota_limit(self) -> int:
+        """Rolling-window accounting capacity supplied to ledger admission."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return int(endpoint.get("quota_limit", 0))
+
+    @property
+    def credential_limit(self) -> int:
+        """Shared credential admission capacity supplied to the ledger."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return int(endpoint.get("credential_limit", 0))
+
+    @property
+    def participant(self) -> str:
+        """Exact ACPX participant used by the sealed review executable."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return str(endpoint.get("participant", ""))
+
+    @property
+    def adapter_transport(self) -> str:
+        """Runner-owned adapter transport, distinct from catalog model transport."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return str(endpoint.get("adapter_transport", ""))
+
+    @property
+    def sealed_executable(self) -> str:
+        """Canonical review-pr execution boundary that invokes the participant."""
+        endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
+        return str(endpoint.get("sealed_executable", ""))
 
 
 @dataclass(frozen=True)
@@ -385,6 +491,33 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    if inputs.formal_review:
+        if not candidate.formal_review_eligible:
+            return candidate.formal_review_exclusion_reason or (
+                "formal-review transport is not eligible for a sealed cross-family gate"
+            )
+        if not candidate.endpoint or candidate.endpoint != candidate.route:
+            return "sealed endpoint identity is missing or does not match the candidate route"
+        if not candidate.participant or not candidate.sealed_executable:
+            return "sealed ACP participant or review executable identity is missing"
+        if candidate.adapter_transport != "acp":
+            return "formal-review candidate is not bound to the ACP adapter transport"
+        if candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
+            return "candidate is not bound to the sealed review-pr ACP executable"
+        if candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
+            return "candidate ACP participant is not enabled by the runner-owned adapter registry"
+        if ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
+            return "candidate catalog transport does not match its runner-owned ACP participant"
+        if candidate.transport != candidate.catalog_transport:
+            return "candidate transport does not match its ACPX catalog transport"
+        if (
+            not candidate.quota_bucket
+            or not candidate.credential_bucket
+            or candidate.quota_limit < 1
+            or candidate.credential_limit < 1
+            or candidate.capacity_weight <= 0
+        ):
+            return "formal-review capacity configuration is invalid"
     review_profile = inputs.review_profile.strip().casefold()
     if review_profile not in candidate.review_profiles:
         return (
@@ -407,6 +540,28 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         return f"missing required capabilities: {sorted(missing)}"
     if inputs.isolation_required and "isolation" not in candidate.capabilities:
         return "isolation required but candidate does not support process isolation"
+    return None
+
+
+def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> int | None:
+    """Return catalog-backed semantic suitability, or fail closed.
+
+    This intentionally precedes quality and all resource pressure. It is not a
+    probabilistic score and has no rotation term: a lower integer means a
+    better profile/risk role match among candidates that passed hard gates.
+    """
+    requested_role = (inputs.requested_role or "").strip()
+    if requested_role:
+        return 0 if requested_role in candidate.model_roles else None
+    profile = inputs.review_profile.strip().casefold()
+    risk = inputs.risk.strip().casefold()
+    try:
+        ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
+    except (KeyError, TypeError):
+        return None
+    for rank, role in enumerate(ordered_roles):
+        if role in candidate.model_roles:
+            return rank
     return None
 
 
@@ -473,6 +628,21 @@ def evaluate_candidate(
             reason=reason,
             health=health,
         )
+    circuit_reason = circuit_exclusion_reason(candidate, inputs.routing_snapshot)
+    if circuit_reason:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason=circuit_reason,
+            health=health,
+        )
     if health == "unhealthy":
         return CandidateResult(
             name=candidate.name,
@@ -485,6 +655,37 @@ def evaluate_candidate(
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason="lane health is unhealthy — route is operationally unavailable",
+            health=health,
+        )
+    if health == "near_cap" and inputs.pinned_candidate != candidate.name:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason="quota bucket is near cap — automatic assignments are prohibited",
+            health=health,
+        )
+
+    suitability_rank = _suitability_rank(candidate, inputs)
+    if suitability_rank is None:
+        requested = inputs.requested_role or f"{inputs.review_profile}/{inputs.risk} catalog suitability"
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason=f"missing required review role suitability: {requested}",
             health=health,
         )
 
@@ -500,15 +701,20 @@ def evaluate_candidate(
         status="eligible",
         reason=None,
         health=health,
+        suitability_rank=suitability_rank,
     )
 
 
 def resolve_reviewer(
     inputs: ResolverInputs,
     ladder: tuple[tuple[ReviewerCandidate, ...], ...] | None = None,
+    *,
+    runtime_state: Mapping[str, object] | None = None,
+    excluded_quota_buckets: frozenset[str] = frozenset(),
 ) -> ReviewerResolution:
-    """Walk the ladder in order; the first rung with an eligible candidate
-    wins (health breaks ties within that rung). Advisory-only candidates
+    """Apply hard policy then balance the best eligible quality tier.
+
+    Advisory-only candidates
     (e.g. ``openai_frontier`` for an OpenAI-family author) are always
     surfaced separately, regardless of which rung is selected.
 
@@ -518,6 +724,10 @@ def resolve_reviewer(
     disambiguation, or a conflicting override). See
     :func:`resolve_author_family`.
     """
+    if runtime_state is not None:
+        # The state owner injects a transaction-consistent snapshot. This
+        # module never reads a database or service to fill it in.
+        inputs = replace(inputs, routing_snapshot=runtime_state)
     risk = (inputs.risk or "").strip().lower()
     review_profile = (inputs.review_profile or "").strip().casefold()
     if review_profile not in VALID_REVIEW_PROFILES:
@@ -526,7 +736,7 @@ def resolve_reviewer(
             advisory=(),
             trace=(),
             substitution_note=None,
-            policy_version=_MODEL_CATALOG["schema_version"],
+            policy_version=_SCHEDULER_POLICY_VERSION,
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=(
@@ -542,26 +752,25 @@ def resolve_reviewer(
             advisory=(),
             trace=(),
             substitution_note=None,
-            policy_version=_MODEL_CATALOG["schema_version"],
+            policy_version=_SCHEDULER_POLICY_VERSION,
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=(f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"),
         )
     active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
     try:
-        normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
+        normalize_routing_snapshot(inputs.routing_snapshot)
     except ValueError as exc:
         return ReviewerResolution(
             selected=None,
             advisory=(),
             trace=(),
             substitution_note=None,
-            policy_version=_MODEL_CATALOG["schema_version"],
+            policy_version=_SCHEDULER_POLICY_VERSION,
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=f"invalid routing snapshot: {exc}",
         )
-    inputs = replace(inputs, routing_snapshot=normalized_snapshot)
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
     if author_family in UNRESOLVED_AUTHOR_FAMILIES:
@@ -583,57 +792,134 @@ def resolve_reviewer(
             advisory=(),
             trace=(),
             substitution_note=None,
-            policy_version=_MODEL_CATALOG["schema_version"],
+            policy_version=_SCHEDULER_POLICY_VERSION,
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=reason,
+        )
+
+    if inputs.pinned_candidate and not (inputs.pressure_override_reason or "").strip():
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_SCHEDULER_POLICY_VERSION,
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason="explicit reviewer pin requires a non-empty pressure_override_reason",
         )
 
     trace: list[CandidateResult] = []
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
     selected_rung_index: int | None = None
+    # A ladder orders fallbacks, not traffic. Candidates in separate YAML
+    # rungs with the same semantic suitability and catalog tier form one
+    # balancing set, so insertion order cannot pin traffic or promote an idle
+    # weaker model over a better task fit.
+    eligible_by_fit_and_tier: dict[tuple[int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]] = {}
+    tier_for_candidate = {
+        name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
+        for name, candidate in REVIEW_CANDIDATES.items()
+    }
 
     for rung_index, rung in enumerate(active_ladder):
-        rung_eligible: list[CandidateResult] = []
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
+            if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
+                result = replace(
+                    result,
+                    status="excluded",
+                    reason=(
+                        f"quota bucket {candidate.quota_bucket!r} is already reserved by an active formal review"
+                    ),
+                )
+            if result.status == "eligible":
+                result = replace(
+                    result,
+                    selection_score=selection_key(
+                        candidate,
+                        snapshot=inputs.routing_snapshot,
+                        exact_head=inputs.exact_head,
+                        policy_version=_SCHEDULER_POLICY_VERSION,
+                    ),
+                )
             trace.append(result)
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
-                rung_eligible.append(result)
+                fit_key = (result.suitability_rank or 0, tier_for_candidate[candidate.name])
+                eligible_by_fit_and_tier.setdefault(fit_key, []).append((candidate, result, rung_index))
 
-        if selected is None and rung_eligible:
-            best = min(rung_eligible, key=lambda r: _health_rank(r.health))
-            promoted = CandidateResult(
-                name=best.name,
-                concrete_model=best.concrete_model,
-                family=best.family,
-                route=best.route,
-                transport=best.transport,
-                invocation=best.invocation,
-                quality_tier=best.quality_tier,
-                requires_silence_timeout=best.requires_silence_timeout,
-                status="selected",
-                reason=None,
-                health=best.health,
+    if inputs.pinned_candidate:
+        pinned = [
+            item for entries in eligible_by_fit_and_tier.values() for item in entries if item[0].name == inputs.pinned_candidate
+        ]
+        if not pinned:
+            return ReviewerResolution(
+                selected=None,
+                advisory=tuple(advisory),
+                trace=tuple(trace),
+                substitution_note=None,
+                policy_version=_SCHEDULER_POLICY_VERSION,
+                catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+                resolved_risk=risk,
+                fail_closed_reason=f"explicit reviewer pin {inputs.pinned_candidate!r} failed a hard eligibility gate",
             )
-            for i, entry in enumerate(trace):
-                if entry is best:
-                    trace[i] = promoted
-                    break
-            selected = promoted
-            selected_rung_index = rung_index
+        candidate, best, selected_rung_index = pinned[0]
+        selected = best
+    elif eligible_by_fit_and_tier:
+        best_fit_and_tier = min(eligible_by_fit_and_tier)
+        candidate, best, selected_rung_index = min(
+            eligible_by_fit_and_tier[best_fit_and_tier],
+            key=lambda item: item[1].selection_score or (),
+        )
+        selected = best
+
+    if selected is not None:
+        promoted = CandidateResult(
+            name=best.name,
+            concrete_model=best.concrete_model,
+            family=best.family,
+            route=best.route,
+            transport=best.transport,
+            invocation=best.invocation,
+            quality_tier=best.quality_tier,
+            requires_silence_timeout=best.requires_silence_timeout,
+            status="selected",
+            reason=None,
+            health=best.health,
+            suitability_rank=best.suitability_rank,
+            selection_score=best.selection_score,
+        )
+        for i, entry in enumerate(trace):
+            if entry is best:
+                trace[i] = promoted
+                break
+        selected = promoted
 
     substitution_notes: list[str] = []
     if selected is not None and selected_rung_index is not None:
-        if selected_rung_index > 0:
+        higher_quality_tier_exists = any(
+            _suitability_rank(candidate, inputs) == selected.suitability_rank
+            and _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
+            < _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
+            for rung in active_ladder
+            for candidate in rung
+        )
+        if higher_quality_tier_exists:
             substitution_notes.append(
                 f"fell back to {selected.name}: no eligible candidate remained in "
-                f"{selected_rung_index} higher-quality rung(s)"
+                "a higher-quality tier"
             )
-        selected_rung_names = {candidate.name for candidate in active_ladder[selected_rung_index]}
+        selected_tier = _MODEL_CATALOG["quality_tiers"][selected.quality_tier]
+        selected_rung_names = {
+            candidate.name
+            for rung in active_ladder
+            for candidate in rung
+            if _MODEL_CATALOG["quality_tiers"][candidate.quality_tier] == selected_tier
+        }
         rung_results = [entry for entry in trace if entry.name in selected_rung_names]
         unavailable = [
             entry.name
@@ -641,19 +927,13 @@ def resolve_reviewer(
             if entry.status == "excluded"
             and entry.reason == "lane health is unhealthy — route is operationally unavailable"
         ]
-        better_health_than = [
-            entry.name
-            for entry in rung_results
-            if entry.status == "eligible" and _health_rank(selected.health) < _health_rank(entry.health)
-        ]
         if unavailable:
             substitution_notes.append(
                 f"selected {selected.name}: same-quality route(s) unavailable by health: {', '.join(unavailable)}"
             )
-        if better_health_than:
+        if inputs.pinned_candidate:
             substitution_notes.append(
-                f"selected {selected.name} over {', '.join(better_health_than)} by lane health "
-                "within the same quality rung"
+                f"explicit pressure override selected {selected.name}: {inputs.pressure_override_reason.strip()}"
             )
 
     return ReviewerResolution(
@@ -661,7 +941,7 @@ def resolve_reviewer(
         advisory=tuple(advisory),
         trace=tuple(trace),
         substitution_note="; ".join(substitution_notes) or None,
-        policy_version=_MODEL_CATALOG["schema_version"],
+        policy_version=_SCHEDULER_POLICY_VERSION,
         catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
         resolved_risk=risk,
     )

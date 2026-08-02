@@ -88,7 +88,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | codex | true |
 | cursor | false |
 | gemini | false |
-| glm-local | false |
+| glm-local | true |
 | grok | false |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->

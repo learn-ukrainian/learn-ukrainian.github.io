@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import threading
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -10,6 +12,7 @@ from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
 from scripts.api.codexbar_usage import _normalize_provider_data
+from scripts.api.state_helpers import cache_invalidate
 
 # Real Claude usage JSON snapshot
 CLAUDE_FIXTURE = """[
@@ -809,3 +812,70 @@ def test_dashboard_routing_html_renders_unavailable_explicitly():
     assert "unavailable" in out
     assert 'class="bar unavailable"' in out
 
+
+def test_failed_refresh_never_poison_last_known_good_capacity(monkeypatch):
+    """The two-second timeout regression keeps the prior usable capacity."""
+    provider = "codex"
+    cache_invalidate("codexbar_usage:")
+    codexbar_usage_mod._last_good_data.pop(provider, None)
+    codexbar_usage_mod._last_failure_data.pop(provider, None)
+    healthy = _normalize_provider_data(provider, json.loads(CODEX_FIXTURE)[0])
+    timeout = codexbar_usage_mod._normalize_provider_error(
+        provider,
+        {"kind": "timeout", "code": "TIMEOUT", "message": "timed out after 2s"},
+    )
+    results = iter([healthy, timeout])
+    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", lambda *_args, **_kwargs: next(results))
+
+    assert provider in codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0)
+    # Expire the short TTL to force use of the LKG branch rather than the
+    # still-valid cache entry. The timeout must remain diagnostic-only.
+    cache_invalidate(f"codexbar_usage:{provider}")
+    assert codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0) == {}
+
+    result = codexbar_usage_mod.get_provider_usage_data(provider)
+    assert result["freshness"] == "stale_last_good"
+    assert result["weekly_used_pct"] == 62.0
+    assert result["failure_kind"] == "timeout"
+    assert result["last_failure_at"]
+
+
+def test_malformed_or_provider_failure_is_unavailable_without_lkg(monkeypatch):
+    provider = "kimi"
+    cache_invalidate("codexbar_usage:")
+    codexbar_usage_mod._last_good_data.pop(provider, None)
+    codexbar_usage_mod._last_failure_data.pop(provider, None)
+    malformed = codexbar_usage_mod._normalize_provider_error(
+        provider,
+        {"kind": "malformed_json", "code": "MALFORMED_JSON", "message": "malformed"},
+    )
+    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", lambda *_args, **_kwargs: malformed)
+
+    assert codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0) == {}
+    result = codexbar_usage_mod.get_provider_usage_data(provider)
+    assert result["freshness"] == "unavailable"
+    assert result["failure_kind"] == "malformed_json"
+    assert result["last_failure_at"]
+
+
+def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
+    provider = "grok"
+    cache_invalidate("codexbar_usage:")
+    codexbar_usage_mod._last_good_data.pop(provider, None)
+    codexbar_usage_mod._last_failure_data.pop(provider, None)
+    monkeypatch.setattr(codexbar_usage_mod, "_refresh_thread", None)
+    entered = threading.Event()
+    release = threading.Event()
+
+    def slow_background() -> None:
+        entered.set()
+        release.wait(timeout=1.0)
+
+    monkeypatch.setattr(codexbar_usage_mod, "_run_all_refreshes", slow_background)
+    started = time.monotonic()
+    result = codexbar_usage_mod.get_provider_usage_data(provider)
+    elapsed = time.monotonic() - started
+    release.set()
+    assert entered.wait(timeout=0.5)
+    assert elapsed < 0.2
+    assert result["freshness"] == "unavailable"

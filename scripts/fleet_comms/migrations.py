@@ -424,6 +424,99 @@ _V5_STATEMENTS = (
        END""",
 )
 
+# #6293: shared, transactionally admitted routing reservations.  This is
+# intentionally part of the Fleet Comms authority SQLite rather than a
+# worktree-local cache: quota admission must serialize across every initiator.
+_V6_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS routing_reservations (
+        reservation_id TEXT PRIMARY KEY,
+        authority_key TEXT NOT NULL,
+        attempt INTEGER NOT NULL CHECK (attempt > 0),
+        idempotency_key TEXT NOT NULL,
+        request_sha256 TEXT NOT NULL,
+        initiator TEXT NOT NULL,
+        author_model TEXT NOT NULL,
+        author_family TEXT NOT NULL,
+        requested_role TEXT NOT NULL,
+        requested_profile TEXT NOT NULL,
+        requested_risk TEXT NOT NULL,
+        route_mode TEXT NOT NULL CHECK (route_mode IN ('auto', 'explicit')),
+        resolved_candidate TEXT NOT NULL,
+        resolved_route TEXT NOT NULL,
+        resolved_model TEXT NOT NULL,
+        resolved_family TEXT NOT NULL,
+        quota_bucket TEXT NOT NULL,
+        policy_version TEXT NOT NULL,
+        estimated_input_bytes INTEGER NOT NULL CHECK (estimated_input_bytes >= 0),
+        quota_snapshot_json TEXT NOT NULL,
+        quota_fresh_at TEXT,
+        trace_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        started_at TEXT,
+        settled_at TEXT,
+        status TEXT NOT NULL CHECK (status IN (
+            'reserved', 'running', 'complete', 'failed', 'expired', 'cancelled'
+        )),
+        actual_bytes INTEGER,
+        actual_tokens INTEGER,
+        failure_classification TEXT,
+        terminal_sha256 TEXT,
+        UNIQUE (authority_key, attempt),
+        UNIQUE (authority_key, idempotency_key)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_routing_reservations_active_bucket ON routing_reservations(quota_bucket, status, expires_at)",
+    "CREATE INDEX IF NOT EXISTS idx_routing_reservations_authority ON routing_reservations(authority_key, attempt DESC)",
+    """CREATE TABLE IF NOT EXISTS routing_reservation_decisions (
+        decision_id TEXT PRIMARY KEY,
+        reservation_id TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        state TEXT NOT NULL,
+        evidence_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (reservation_id) REFERENCES routing_reservations(reservation_id)
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_routing_reservation_decisions_reservation ON routing_reservation_decisions(reservation_id, created_at)",
+    """CREATE TRIGGER IF NOT EXISTS routing_reservation_decisions_immutable_update
+       BEFORE UPDATE ON routing_reservation_decisions
+       BEGIN
+         SELECT RAISE(ABORT, 'routing_reservation_decision_immutable');
+       END""",
+    """CREATE TRIGGER IF NOT EXISTS routing_reservation_decisions_immutable_delete
+       BEFORE DELETE ON routing_reservation_decisions
+       BEGIN
+         SELECT RAISE(ABORT, 'routing_reservation_decision_immutable');
+       END""",
+    """CREATE TABLE IF NOT EXISTS routing_circuit_state (
+        route_key TEXT PRIMARY KEY,
+        recent_failure_count INTEGER NOT NULL DEFAULT 0 CHECK (recent_failure_count >= 0),
+        last_failure_at TEXT,
+        last_failure_classification TEXT,
+        open_until TEXT,
+        updated_at TEXT NOT NULL
+    )""",
+)
+
+# #6293 follow-up: admission is credential-scoped while accounting remains
+# quota-scoped.  Keep this forward-only because v6 may already exist in a
+# shared authority database when a process restarts.
+_V7_STATEMENTS = (
+    "ALTER TABLE routing_reservations ADD COLUMN credential_bucket TEXT NOT NULL DEFAULT ''",
+    "UPDATE routing_reservations SET credential_bucket = quota_bucket WHERE credential_bucket = ''",
+    "ALTER TABLE routing_reservations ADD COLUMN semantic_sha256 TEXT NOT NULL DEFAULT ''",
+    "UPDATE routing_reservations SET semantic_sha256 = request_sha256 WHERE semantic_sha256 = ''",
+    "ALTER TABLE routing_reservations ADD COLUMN requested_reviewer TEXT",
+    "ALTER TABLE routing_reservations ADD COLUMN fallback_from TEXT",
+    "ALTER TABLE routing_reservations ADD COLUMN retry_attempt INTEGER NOT NULL DEFAULT 0",
+    "ALTER TABLE routing_reservations ADD COLUMN quota_source TEXT NOT NULL DEFAULT 'unknown'",
+    "ALTER TABLE routing_reservations ADD COLUMN quota_headroom_band TEXT NOT NULL DEFAULT 'unknown'",
+    "ALTER TABLE routing_reservations ADD COLUMN actual_input_bytes INTEGER",
+    "ALTER TABLE routing_reservations ADD COLUMN actual_output_bytes INTEGER",
+    "ALTER TABLE routing_reservations ADD COLUMN actual_input_tokens INTEGER",
+    "ALTER TABLE routing_reservations ADD COLUMN actual_output_tokens INTEGER",
+    "CREATE INDEX IF NOT EXISTS idx_routing_reservations_active_credential ON routing_reservations(credential_bucket, status, expires_at)",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -441,6 +534,16 @@ MIGRATIONS = (
         version=5,
         name="fleet-comms-v5-authority-immutability",
         statements=_V5_STATEMENTS,
+    ),
+    Migration(
+        version=6,
+        name="fleet-comms-v6-routing-reservations",
+        statements=_V6_STATEMENTS,
+    ),
+    Migration(
+        version=7,
+        name="fleet-comms-v7-routing-credential-admission",
+        statements=_V7_STATEMENTS,
     ),
 )
 

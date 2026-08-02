@@ -99,7 +99,7 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     # Practical formal CF default: Terra @ medium risk (Sol only on critical).
     assert resolution["selected"]["name"] == "gpt-5.6-terra"
     assert resolution["selected"]["route"] == "codex"
-    assert resolution["policy_version"] == "model-catalog.v1"
+    assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     assert resolution["resolved_risk"] == "medium"
 
     raise_proc = _run_cli(

@@ -783,10 +783,15 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
     cb_sourced_any = False
     cb_stale = False
     cb_max_age_s = None
+    cb_freshness: dict[str, str] = {}
     refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
         cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
+        if isinstance(cb_data, dict):
+            cb_freshness[lane] = str(cb_data.get("freshness") or (
+                "stale_last_good" if cb_data.get("stale") else "fresh"
+            ))
         if cb_data and cb_data.get("weekly_used_pct") is not None:
             cb_sourced_any = True
             weekly_used = cb_data["weekly_used_pct"]
@@ -832,7 +837,14 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "will_last_to_reset": cb_data.get("will_last_to_reset"),
                 "pace_summary": cb_data.get("pace_summary"),
                 "stale": cb_data.get("stale", False),
+                "freshness": cb_data.get("freshness") or (
+                    "stale_last_good" if cb_data.get("stale") else "fresh"
+                ),
+                "age_s": cb_data.get("age_s"),
                 "fetched_at": cb_data.get("fetched_at"),
+                "failure_kind": cb_data.get("failure_kind"),
+                "last_failure_at": cb_data.get("last_failure_at"),
+                "last_failure_code": cb_data.get("last_failure_code"),
             }
 
             # Update authoritative keys in agents
@@ -895,11 +907,16 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "will_last_to_reset": None,
                 "pace_summary": None,
                 "stale": cb_data.get("stale", False) if isinstance(cb_data, dict) else False,
+                "freshness": cb_data.get("freshness", "unavailable") if isinstance(cb_data, dict) else "unavailable",
+                "age_s": cb_data.get("age_s") if isinstance(cb_data, dict) else None,
                 "fetched_at": cb_data.get("fetched_at") if isinstance(cb_data, dict) else None,
                 "status": "unavailable",
                 "auth_error": err_msg,
                 "error_kind": err_kind,
                 "error_code": err_code,
+                "failure_kind": cb_data.get("failure_kind", err_kind) if isinstance(cb_data, dict) else err_kind,
+                "last_failure_at": cb_data.get("last_failure_at") if isinstance(cb_data, dict) else None,
+                "last_failure_code": cb_data.get("last_failure_code", err_code) if isinstance(cb_data, dict) else err_code,
             }
             if lane == "claude":
                 agents[lane]["interactive"]["status"] = "unavailable"
@@ -1146,6 +1163,8 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             "stale_threshold_s": 900,
             "reset_imminent_hours": reset_hours,
             "codexbar_data_available": cb_sourced_any,
+            "codexbar_freshness": cb_freshness,
+            "codexbar_max_age_s": cb_max_age_s,
             "fresh_codexbar_requested": fresh_codexbar,
             "runtime_data_available": runtime_sourced_any,
             "usage_sources": {

@@ -32,8 +32,69 @@ PROVIDER_TO_LANE = {
 
 # In-memory storage for the last successfully fetched usage data (lasts the lifetime of the process)
 _last_good_data: dict[str, tuple[float, dict[str, Any]]] = {}
+_last_failure_data: dict[str, dict[str, Any]] = {}
 _refresh_lock = threading.Lock()
 _refresh_thread: threading.Thread | None = None
+
+
+def _is_usable_capacity(data: dict[str, Any] | None) -> bool:
+    """Return whether a probe supplied authoritative capacity, not merely JSON."""
+    if not isinstance(data, dict) or data.get("status") != "healthy":
+        return False
+    weekly_used = data.get("weekly_used_pct")
+    return isinstance(weekly_used, (int, float)) and not isinstance(weekly_used, bool)
+
+
+def _failure_metadata(data: dict[str, Any]) -> dict[str, Any]:
+    """Keep failed-probe details separate from usable capacity observations."""
+    return {
+        "failure_kind": data.get("error_kind") or "unavailable",
+        "failure_code": data.get("error_code"),
+        "failure_message": data.get("auth_error") or "CodexBar usage data unavailable",
+        "last_failure_at": data.get("fetched_at") or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+
+
+def _record_probe_result(provider: str, data: dict[str, Any] | None) -> bool:
+    """Persist only usable capacity; retain failures as diagnostic metadata.
+
+    A CodexBar error is an observation about the failed probe, not a capacity
+    value.  In particular, it must never replace a valid last-known-good
+    sample, otherwise a single timeout turns a usable lane into unavailable.
+    """
+    if not _is_usable_capacity(data):
+        if isinstance(data, dict):
+            _last_failure_data[provider] = _failure_metadata(data)
+        return False
+
+    assert data is not None  # narrowed by _is_usable_capacity
+    snapshot = dict(data)
+    cache_set(f"codexbar_usage:{provider}", snapshot)
+    _last_good_data[provider] = (time.monotonic(), snapshot)
+    return True
+
+
+def _with_observation_metadata(
+    data: dict[str, Any],
+    *,
+    freshness: str,
+    age_s: float | None,
+    provider: str,
+) -> dict[str, Any]:
+    """Add a stable freshness/failure contract without changing capacity data."""
+    result = dict(data)
+    failure = _last_failure_data.get(provider) or {}
+    result.update(
+        {
+            "freshness": freshness,
+            "stale": freshness == "stale_last_good",
+            "age_s": age_s,
+            "failure_kind": failure.get("failure_kind"),
+            "last_failure_at": failure.get("last_failure_at"),
+            "last_failure_code": failure.get("failure_code"),
+        }
+    )
+    return result
 
 
 def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 2.0) -> dict[str, dict[str, Any]]:
@@ -56,13 +117,25 @@ def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 
         for provider, future in futures.items():
             try:
                 data = future.result()
-            except Exception:
-                data = None
-            if data is None:
-                continue
-            cache_set(f"codexbar_usage:{provider}", data)
-            _last_good_data[provider] = (time.monotonic(), data)
-            refreshed[provider] = data
+            except Exception as exc:
+                data = _normalize_provider_error(
+                    provider,
+                    {
+                        "message": f"CodexBar refresh failed: {exc}",
+                        "kind": "fetch_error",
+                        "code": "FETCH_ERROR",
+                    },
+                )
+            if _record_probe_result(provider, data):
+                # The explicit fresh caller may use only a confirmed capacity
+                # sample. Failed probes remain available through
+                # get_provider_usage_data() as diagnostic metadata.
+                refreshed[provider] = _with_observation_metadata(
+                    data,
+                    freshness="fresh",
+                    age_s=0.0,
+                    provider=provider,
+                )
     return refreshed
 
 
@@ -458,7 +531,7 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
 
 
 def trigger_background_refresh() -> None:
-    """Spawns a background thread to update the cache for all providers sequentially."""
+    """Start bounded parallel refreshes without making an API request wait."""
     global _refresh_thread
     with _refresh_lock:
         if _refresh_thread is not None and _refresh_thread.is_alive():
@@ -468,17 +541,10 @@ def trigger_background_refresh() -> None:
 
 
 def _run_all_refreshes() -> None:
-    # List of unique providers to refresh
+    # The background path must not serially spend six long CLI timeouts. Its
+    # bounded probes are parallel and failed probes cannot poison LKG data.
     providers = ["claude", "codex", "cursor", "gemini", "grok", "kimi"]
-    for provider in providers:
-        try:
-            data = fetch_codexbar_usage(provider)
-            if data is not None:
-                cache_key = f"codexbar_usage:{provider}"
-                cache_set(cache_key, data)
-                _last_good_data[provider] = (time.monotonic(), data)
-        except Exception:
-            pass
+    refresh_provider_usage_data(providers, timeout_s=2.0)
 
 
 def get_provider_usage_data(provider: str) -> dict[str, Any]:
@@ -492,11 +558,13 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
 
     if cached is not None:
         val, age = cached
-        if isinstance(val, dict):
-            res = dict(val)
-            res["stale"] = False
-            res["age_s"] = age
-            return res
+        if _is_usable_capacity(val):
+            return _with_observation_metadata(
+                val,
+                freshness="fresh",
+                age_s=age,
+                provider=provider,
+            )
 
     # Cache miss or expired: trigger update background thread
     trigger_background_refresh()
@@ -504,10 +572,12 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
     # Serve last good data as stale fallback
     if provider in _last_good_data:
         t_mono, val = _last_good_data[provider]
-        res = dict(val)
-        res["stale"] = True
-        res["age_s"] = time.monotonic() - t_mono
-        return res
+        return _with_observation_metadata(
+            val,
+            freshness="stale_last_good",
+            age_s=time.monotonic() - t_mono,
+            provider=provider,
+        )
 
     # Completely unavailable fallback
     lane = PROVIDER_TO_LANE.get(provider, provider)
@@ -518,7 +588,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "window_minutes": None,
         "reset_description": None,
     }
-    return {
+    result = {
         "lane": lane,
         "primary_used_pct": None,
         "primary_remaining_pct": None,
@@ -537,6 +607,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "pace_summary": None,
         "source": "codexbar",
         "fetched_at": None,
+        "freshness": "unavailable",
         "stale": False,
         "age_s": None,
         "status": "unavailable",
@@ -544,3 +615,18 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
         "error_kind": "unavailable",
         "error_code": None,
     }
+    failure = _last_failure_data.get(provider)
+    if failure:
+        result.update(
+            {
+                "auth_error": failure["failure_message"],
+                "error_kind": failure["failure_kind"],
+                "error_code": failure["failure_code"],
+                "failure_kind": failure["failure_kind"],
+                "last_failure_at": failure["last_failure_at"],
+                "last_failure_code": failure["failure_code"],
+            }
+        )
+    else:
+        result.update({"failure_kind": "unavailable", "last_failure_at": None, "last_failure_code": None})
+    return result

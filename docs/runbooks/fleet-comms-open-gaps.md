@@ -98,8 +98,27 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 
 ## Formal CF defaults (orchestrator-ready)
 
-Machine eligibility SSOT: `scripts/config/fleet_communications.yaml` →
-`endpoints[*].formal_review_eligible` (fail-closed until #5555–#5557).
+Machine eligibility and routing SSOT: `scripts/config/model_catalog.yaml` →
+`review_scheduler.endpoints`. It binds the exact model, family, sealed ACP
+participant, formal eligibility, and quota/credential bucket. The booleans in
+`fleet_communications.yaml` are a tested legacy status projection, not a
+second policy source.
+
+The orchestrator supplies semantic requirements: author model/family, role,
+profile, risk, capabilities, egress, isolation, and whether an exceptional pin
+is justified. The deterministic scheduler then applies this order:
+
+1. hard safety, availability, isolation, egress, context, and cross-family gates;
+2. task-role suitability and the best acceptable quality tier;
+3. only among equally suitable candidates in that tier, normalized rolling
+   assigned bytes, reserved bytes, capacity weight, verified quota headroom,
+   in-flight work, failures, and finally the exact-head stable hash.
+
+This is not round-robin and no LLM participates in routing. An idle or cheap
+model never outranks a stronger model for the requested job. Subscription calls
+still consume scarce quota and future optionality, so pressure can choose only
+inside an equivalent suitable pool or trigger a documented eligible fallback.
+Near-cap and open-circuit buckets receive no automatic work.
 
 <!-- fleet-roster-projection:begin formal_review_eligible -->
 | endpoint | formal_review_eligible |
@@ -109,7 +128,7 @@ Machine eligibility SSOT: `scripts/config/fleet_communications.yaml` →
 | codex | true |
 | cursor | false |
 | gemini | false |
-| glm-local | false |
+| glm-local | true |
 | grok | false |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
@@ -117,15 +136,57 @@ Machine eligibility SSOT: `scripts/config/fleet_communications.yaml` →
 Practical seats @ **high** — not Sol/Fable on routine PRs:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # glm-5.2 LOCAL-ONLY
-# Authority escalate (critical / hard judgment only):
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --model gpt-5.6-sol --effort xhigh
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
+  --initiator codex/orchestrator \
+  --author-model gpt-5.6-sol --author-family openai \
+  --review-profile code --risk high
+
+# Exceptional pin: still passes every hard gate and uses the same reservation ledger.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
+  --initiator codex/orchestrator \
+  --author-model gpt-5.6-sol --author-family openai \
+  --reviewer claude --override-reason "operator-requested Anthropic dissent"
+
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light
 ```
+
+Automatic selection and admission occur in one `BEGIN IMMEDIATE` transaction
+in the shared Fleet Comms authority database. Reservations have a TTL; startup
+recovery expires orphaned holders. Retryable automatic transport failures
+settle and open the failed quota/credential circuit before another eligible
+bucket is selected. Explicit pins never switch provider unless
+`--allow-explicit-fallback` was also supplied. A completed identical exact-head
+request replays the durable verdict without a provider call or reservation.
+
+### Diagnose quota concentration
+
+- Open `runtime.html` → **Routing assignments**. `AUTOMATIC` and `EXPLICIT`
+  records are visually distinct and show initiator, author, task fit, selected
+  model/family, quota and credential bucket, quota freshness/headroom, work,
+  lifecycle, retry chain, replay state, and authority record ID.
+- Query `/api/runtime/routing-assignments` for the same read-only evidence.
+- Compare the decision trace's hard-gate and suitability reasons before blaming
+  load: a deliberately stronger suitable model may receive more work.
+- Confirm provider headroom with CodexBar. A timeout or malformed probe retains
+  the last known good record and exposes failure metadata separately.
+- Concentration among truly equivalent suitable candidates indicates stale
+  reservations, a shared credential bucket, circuit failures, or bad capacity
+  weights—not a reason to weaken the quality floor.
+
+### Migration, restart, and rollback
+
+Fleet Comms migration v7 is additive, idempotent, and applied on authority-store
+startup. During rollout, stop old orchestrator processes, restart the Fleet
+Comms/Runtime API processes with the repository's existing service launcher,
+then verify authority mode and the routing-assignment endpoint before resuming
+formal reviews. Do not delete or downgrade the v7 tables.
+
+To roll back, stop formal-review callers, revert the scheduler/bridge application
+change, restart those same processes, and leave the additive ledger tables in
+place for audit/recovery. The explicit message-plane environment override
+remains the separate Fleet Comms authority rollback control; changing it does
+not erase routing evidence.
 
 ### Poolside Laguna model types (exact IDs)
 
