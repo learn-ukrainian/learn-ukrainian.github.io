@@ -3,7 +3,8 @@
 Phase-1 commands: ``status``, ``lookup``, ``explain``, ``rebuild``, ``admit``.
 Phase-2 commands: ``bootstrap-git``, ``bootstrap-acp``, ``search``,
 ``explain-change``, ``handoff``. Live commands: ``reconcile-acp``,
-``record-use``, and explicit ``refresh-provider-status``.
+``record-use``, explicit ``refresh-provider-status``, and an operator-run
+``refresh-provider-capabilities`` probe.
 
 Recall and projection commands are local-only: none calls Entire, GitHub,
 Fleet, ACP providers, Monitor, or the network. The explicit provider-status
@@ -35,7 +36,7 @@ from .model import (
     validate_identity,
 )
 from .paths import ENV_ACP_ROOT, acp_root, projection_path
-from .provider import refresh_provider_status
+from .provider import refresh_provider_capabilities, refresh_provider_status
 from .recall import (
     MAX_RESULTS,
     MAX_SCAN_ROWS,
@@ -605,6 +606,13 @@ def cmd_refresh_provider_status(args: argparse.Namespace) -> int:
     return EXIT_OK if payload.get("available") is True else EXIT_REFUSED
 
 
+def cmd_refresh_provider_capabilities(args: argparse.Namespace) -> int:
+    """Probe cloud feature truth while persisting no query or provider body."""
+    payload = refresh_provider_capabilities(_resolve_repo(args), query=args.query)
+    _emit(payload)
+    return EXIT_OK if payload.get("available") is True else EXIT_REFUSED
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.entire_context",
@@ -891,6 +899,23 @@ def build_parser() -> argparse.ArgumentParser:
     )
     provider_status.add_argument("--repo", default=None, help="Source repository (default: cwd)")
     provider_status.set_defaults(func=cmd_refresh_provider_status)
+
+    provider_capabilities = sub.add_parser(
+        "refresh-provider-capabilities",
+        help=(
+            "Explicit private-boundary, cloud-index, and generate:false dispatch probe; writes a body-free local cache"
+        ),
+    )
+    provider_capabilities.add_argument(
+        "--query",
+        required=True,
+        help=(
+            "Non-sensitive checkpoint canary term "
+            "(max 256 bytes; never persisted or echoed)"
+        ),
+    )
+    provider_capabilities.add_argument("--repo", default=None, help="Source repository (default: cwd)")
+    provider_capabilities.set_defaults(func=cmd_refresh_provider_capabilities)
 
     return parser
 

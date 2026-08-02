@@ -11,6 +11,7 @@ from scripts.fleet_comms.paths import default_plane_root
 DEFAULT_STATE_RELATIVE = Path("batch_state") / "entire-context" / "v1"
 DEFAULT_DB_NAME = "context-links.sqlite3"
 DEFAULT_PROVIDER_STATUS_NAME = "provider-status.json"
+DEFAULT_PROVIDER_CAPABILITIES_NAME = "provider-capabilities.json"
 ENV_DB = "ENTIRE_CONTEXT_DB"
 ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
 
@@ -76,3 +77,7 @@ def acp_root(cwd: Path | str, explicit: Path | str | None = None) -> Path:
 
 def provider_status_path(cwd: Path | str) -> Path:
     return state_directory(cwd) / DEFAULT_PROVIDER_STATUS_NAME
+
+
+def provider_capabilities_path(cwd: Path | str) -> Path:
+    return state_directory(cwd) / DEFAULT_PROVIDER_CAPABILITIES_NAME

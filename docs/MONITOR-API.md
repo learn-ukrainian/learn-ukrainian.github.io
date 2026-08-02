@@ -2948,3 +2948,27 @@ To prevent runtime crashes and version skew caused by git mutations (e.g., switc
 
 ### PR-B Symlink & Snapshot Follow-Up
 In the follow-up PR-B release, this guarantee is reinforced by serving the API from immutable, release-dir code snapshots (with staging→rename symlink promotion), ensuring complete separation between running code and the live repository data.
+
+## Entire context — `/api/ops/entire-context`
+
+`GET /api/ops/entire-context/status` separates four facts that must not be
+conflated: native capture configuration, verified local recall, recorded agent
+consumption, and optional Entire cloud capability. Monitor never invokes
+Entire synchronously. It reads the local projection plus two explicitly
+refreshed body-free caches.
+
+Run `.venv/bin/python -m scripts.entire_context refresh-provider-status` for
+installed CLI/capture state. After the private preflight is green, an
+accountable root may run
+`.venv/bin/python -m scripts.entire_context refresh-provider-capabilities
+--query "<non-sensitive checkpoint canary>"`. The latter performs scoped search
+and a `generate:false` dispatch-routing probe. The query and every provider
+body are discarded; the cache contains only booleans, bounded reason codes,
+HTTP status, and aggregate counts.
+
+`provider.capabilities.private_boundary.ready` proves the routing/ACL gate.
+`provider.capabilities.cloud.search.indexed_history` and
+`provider.capabilities.cloud.dispatch.history_available` report product
+feature truth independently. Their failure never changes
+`recall.available`, task disposition, or any canonical GitHub/Fleet/Monitor
+state. Cache age and `stale` are returned explicitly.
