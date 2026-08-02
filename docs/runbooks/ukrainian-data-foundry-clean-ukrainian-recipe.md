@@ -159,7 +159,7 @@ epochs, and an explicit `training_authorized: false` state. The existing
 `training_recipe_config_v1` and `training_recipe_manifest_v1` contracts are
 preparation contracts; generating them does not start training.
 
-A proper program normally separates three experiments:
+If a separately authorized model experiment occurs, keep these roles separate:
 
 1. continued pretraining on destination-admitted human-authored text;
 2. optional correction/instruction or preference tuning on eligible,
@@ -167,8 +167,8 @@ A proper program normally separates three experiments:
 3. evaluation on mechanically isolated grammar, calque, interference,
    morphology, no-change, and protected-variation inventories.
 
-Do not combine these into one run: otherwise a result cannot identify which
-data treatment helped or caused harm.
+Do not combine these roles in an authorized run: otherwise a result cannot
+identify which data treatment helped or caused harm.
 
 ### 7. Reproduce without an accelerator
 
@@ -222,6 +222,56 @@ efficient; their hourly costs multiply. Full-parameter continued pretraining
 has a very different memory and compute envelope from QLoRA. The exact clean
 microbenchmark and model revision must replace this table before any spending
 decision.
+
+## Could the proof run on an unused M1?
+
+Yes, if the proof uses a Gemma 4 size that matches the machine's unified memory
+and uses an Apple-Silicon training stack. It does not mean the current Gemma 4
+31B CUDA treatment can be copied to the Mac.
+
+Google's current
+[Gemma 4 memory table](https://ai.google.dev/gemma/docs/core#parameter-sizes-and-quantization)
+gives approximate Q4 inference loads of 2.9 GB for E2B, 4.5 GB for E4B,
+6.7 GB for 12B, 14.4 GB for 26B A4B, and 17.5 GB for 31B. Context and
+fine-tuning add memory beyond those values. Record the exact M1 variant,
+unified memory, free storage, and macOS version before selecting anything.
+
+| M1 unified memory | First candidate | What it can establish |
+| ---: | --- | --- |
+| 8 GB | Gemma 4 E2B Q4 | Whether the complete local pipeline can execute at all |
+| 16 GB | Gemma 4 E4B Q4; E2B fallback | A real small-model Ukrainian before/after proof; not 31B compatibility |
+| 32 GB | Gemma 4 12B Q4; E4B fallback | A stronger local proof if peak memory and reload pass |
+| 64 GB or more | Benchmark 12B first; consider 31B second | 31B remains conditional on measured training memory and speed |
+
+Apple's [MLX-LM](https://github.com/ml-explore/mlx-lm) supports LoRA and QLoRA
+on Apple silicon. Release `v0.31.2` added Gemma 4 support, while the
+[MLX-LM LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md)
+documents quantized-model training and memory controls. The existing #6170
+runner is not portable: it pins CUDA, an NVIDIA L40S, BitsAndBytes NF4, and a
+31B checkpoint. Preserve that runner and create a separately pinned MLX path
+only after the exact Mac and checkpoint are approved.
+
+A useful local proof has five measured steps:
+
+1. capture machine, model, tokenizer, framework, quantization, and storage
+   receipts;
+2. run the frozen baseline evaluation and protected-variation probes;
+3. perform a synthetic one-step update, save, restart, reload, and re-evaluate
+   only as a hardware preflight;
+4. train on a real, stratified Foundry slice and compare the reloaded adapter
+   with the untouched checkpoint on exactly the same held-out evidence; and
+5. run a full-corpus pass only if the measured throughput, peak memory, and
+   preliminary Ukrainian result justify its wall time.
+
+The fourth step is the minimum linguistic proof. A successful synthetic update
+alone proves only that MLX can write and reload an adapter.
+
+Gemma 4 is the first candidate because the project already has its tokenizer,
+baseline, and treatment contracts. Another Western open-weight model is a
+fallback only if the same frozen Ukrainian baseline, tokenizer diagnostics,
+memory preflight, and license check make it a more credible proof target. A
+fallback result validates the Foundry path for that model; it does not prove a
+Gemma 4 treatment.
 
 For scale, Lapa reports about 30 billion filtered pretraining tokens and a
 56-H100 training setup for its Gemma 3 adaptation. Our 139-million-token
