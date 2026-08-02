@@ -1,6 +1,11 @@
 # Weak-driver rail system — completion build memo (Sol, 2026-07-28)
 
-> **Status: ADOPTED pending the three operator decisions in §Required operator decisions.**
+> **Historical design record.** The receipt-based rail-approval system described
+> here was retired by operator decision under #6272 and removed in #6274. This
+> memo is not an active workflow or deployment requirement.
+>
+> **Historical status at publication:** ADOPTED pending the three operator
+> decisions in §Required operator decisions.
 > Advisor memo (gpt-5.6-sol xhigh, task `rail-system-finish-design`, reply 5810) verbatim below;
 > counter-read by the Fable anchor seat same day. Tracking: #5885. Packages P1-P14 route per §5.
 
