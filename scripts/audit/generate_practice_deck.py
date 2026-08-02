@@ -3806,6 +3806,20 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
     rows = payload.get("rows")
     if not isinstance(rows, list):
         raise ValueError("sentence inventory rows must be a list")
+    # Small additive residual inventories stay CF-reviewable as separate files
+    # while the multi-MB base inventory remains stable on main.
+    residual_path = path.with_name(path.stem + ".residual" + path.suffix)
+    if residual_path.exists():
+        residual_payload = json.loads(residual_path.read_text(encoding="utf-8"))
+        if (
+            not isinstance(residual_payload, dict)
+            or residual_payload.get("schema") != "atlas-sentence-inventory"
+        ):
+            raise ValueError("residual sentence inventory must use atlas-sentence-inventory schema")
+        residual_rows = residual_payload.get("rows")
+        if not isinstance(residual_rows, list):
+            raise ValueError("residual sentence inventory rows must be a list")
+        rows = [*rows, *residual_rows]
     try:
         provenance_path = path.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
     except ValueError:
