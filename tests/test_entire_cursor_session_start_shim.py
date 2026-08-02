@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import stat
 import subprocess
 from pathlib import Path
@@ -20,10 +21,35 @@ def _repo_root(tmp_path: Path) -> Path:
 
 
 def _cursor_base(home: Path, root: Path) -> Path:
-    project = shim._NON_ALPHANUMERIC_RE.sub("-", str(root).lstrip("/"))
+    project = shim._cursor_project_name(root)
     base = home / ".cursor" / "projects" / project / "agent-transcripts"
     base.mkdir(parents=True)
     return base
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("/a//b/.worktrees/dispatch", "a-b-worktrees-dispatch"),
+        ("///Users/operator/repo///", "Users-operator-repo"),
+        ("/a/.-_ b/c", "a-b-c"),
+    ],
+)
+def test_project_name_uses_current_cursor_separator_contract(
+    raw: str, expected: str
+) -> None:
+    assert shim._cursor_project_name(Path(raw)) == expected
+
+
+def test_project_name_matches_runtime_cursor_adapter() -> None:
+    from scripts.agent_runtime.adapters.cursor import CursorAdapter
+
+    for raw in (
+        "/Users/operator/repo",
+        "/Users/operator/repo/.worktrees/dispatch/codex/canary",
+        "/private/tmp/a  b/repo",
+    ):
+        assert shim._cursor_project_name(Path(raw)) == CursorAdapter()._encode_workspace_path(raw)
 
 
 def _patch_git_root(monkeypatch: pytest.MonkeyPatch, root: Path) -> None:
@@ -89,6 +115,55 @@ def test_existing_nested_directory_authorizes_future_file(
     payload = {"conversation_id": "session-2", "workspace_roots": [str(root)]}
     normalized, _ = shim._normalize(json.dumps(payload).encode(), cwd=root, home=home)
     assert json.loads(normalized)["transcript_path"] == str(nested / "session-2.jsonl")
+
+
+def test_current_collapsed_base_wins_and_legacy_base_is_never_used(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "repo" / ".worktrees" / "dispatch"
+    root.mkdir(parents=True)
+    root = root.resolve()
+    home = tmp_path / "home"
+    current = _cursor_base(home, root)
+    current_nested = current / "session-current"
+    current_nested.mkdir()
+    legacy_name = re.sub(r"[^a-zA-Z0-9]", "-", str(root).lstrip("/"))
+    legacy = home / ".cursor" / "projects" / legacy_name / "agent-transcripts"
+    legacy_nested = legacy / "session-current"
+    legacy_nested.mkdir(parents=True)
+    _patch_git_root(monkeypatch, root)
+    normalized, _ = shim._normalize(
+        json.dumps(
+            {"conversation_id": "session-current", "workspace_roots": [str(root)]}
+        ).encode(),
+        cwd=root,
+        home=home,
+    )
+    assert json.loads(normalized)["transcript_path"] == str(
+        current_nested / "session-current.jsonl"
+    )
+    legacy.rename(home / ".cursor" / "projects" / "legacy-not-consulted")
+
+
+def test_legacy_only_base_is_not_a_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "repo" / ".worktrees" / "dispatch"
+    root.mkdir(parents=True)
+    root = root.resolve()
+    home = tmp_path / "home"
+    legacy_name = re.sub(r"[^a-zA-Z0-9]", "-", str(root).lstrip("/"))
+    legacy = home / ".cursor" / "projects" / legacy_name / "agent-transcripts"
+    (legacy / "session-legacy").mkdir(parents=True)
+    _patch_git_root(monkeypatch, root)
+    with pytest.raises(FileNotFoundError):
+        shim._normalize(
+            json.dumps(
+                {"conversation_id": "session-legacy", "workspace_roots": [str(root)]}
+            ).encode(),
+            cwd=root,
+            home=home,
+        )
 
 
 def test_flat_path_is_used_without_nested_candidate(

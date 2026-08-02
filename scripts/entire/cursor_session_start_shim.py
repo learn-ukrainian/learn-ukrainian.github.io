@@ -24,7 +24,7 @@ _MAX_INPUT_BYTES = 1 << 20
 _MAX_HOOKS_BYTES = 1 << 20
 _HOOK_TIMEOUT_SECONDS = 10
 _SESSION_COMPONENT_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
-_NON_ALPHANUMERIC_RE = re.compile(r"[^a-zA-Z0-9]")
+_CURSOR_SEPARATOR_RE = re.compile(r"[^a-zA-Z0-9]+")
 
 _STOCK_HOOKS = {
     "beforeSubmitPrompt": "before-submit-prompt",
@@ -98,12 +98,16 @@ def _validate_workspace_roots(raw: object, repo_root: Path) -> None:
         raise ValueError("hook worktree is absent from Cursor workspace roots")
 
 
+def _cursor_project_name(repo_root: Path) -> str:
+    return _CURSOR_SEPARATOR_RE.sub("-", str(repo_root)).strip("-")
+
+
 def _cursor_transcript_path(
     payload: dict[str, Any], *, repo_root: Path, home: Path
 ) -> Path:
     conversation_id = _valid_session_component(payload.get("conversation_id"))
     _validate_workspace_roots(payload.get("workspace_roots"), repo_root)
-    project = _NON_ALPHANUMERIC_RE.sub("-", str(repo_root).lstrip("/"))
+    project = _cursor_project_name(repo_root)
     base = (home / ".cursor" / "projects" / project / "agent-transcripts").resolve(
         strict=True
     )
