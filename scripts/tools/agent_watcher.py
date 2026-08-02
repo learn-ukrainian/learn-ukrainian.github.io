@@ -49,7 +49,7 @@ from ai_agent_bridge._env import build_agent_env
 # must not inherit shell secrets: they can run `env` and copy output into
 # comments/logs.
 # ---------------------------------------------------------------------------
-def _get_login_env() -> dict:
+def _capture_login_env() -> dict:
     """Capture login shell env, then reduce it to non-secret runtime values."""
     try:
         result = subprocess.run(
@@ -66,7 +66,21 @@ def _get_login_env() -> dict:
     except Exception:
         return build_agent_env(os.environ, repo_root=Path(__file__).parent.parent.parent)
 
-LOGIN_ENV = _get_login_env()
+
+_LOGIN_ENV_CACHE: dict | None = None
+
+
+def _get_login_env() -> dict:
+    """Lazily capture and memoize the login shell env.
+
+    Deferred (not computed at import time) so importing this module never
+    shells out on its own — only `trigger_agent`, which actually needs it,
+    triggers the `bash -l -c env` subprocess call.
+    """
+    global _LOGIN_ENV_CACHE
+    if _LOGIN_ENV_CACHE is None:
+        _LOGIN_ENV_CACHE = _capture_login_env()
+    return _LOGIN_ENV_CACHE
 
 # Configuration
 VENV_PYTHON = Path(__file__).parent.parent.parent / ".venv" / "bin" / "python"
@@ -331,7 +345,7 @@ def trigger_agent(agent: str, message_id: int, task_id: str | None = None, from_
             text=True,
             timeout=360,  # 6 min (safety net for bridge's 5 min sync timeout)
             cwd=str(Path(__file__).parent.parent.parent),
-            env=LOGIN_ENV,
+            env=_get_login_env(),
         )
 
         if result.returncode == 0:
