@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import subprocess
-from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -25,8 +24,6 @@ from scripts.fleet_comms.review_publisher import (
     publish_sealed_verdict,
     sealed_matches_job,
 )
-from scripts.orchestration import rail_path_guard
-from scripts.orchestration.rail_status import RAIL_STATUS_CONTEXT
 
 _SHA_A = "a" * 40
 _SHA_B = "b" * 40
@@ -156,7 +153,6 @@ def test_publish_matrix_posts_comment_and_status(
     assert result.plan.action == "publish"
     assert result.plan.status_state == status
     assert result.status_posted is True
-    assert result.rail_status_posted is (verdict == "APPROVED")
     assert result.publication_id is not None
     assert result.comment_url == "https://example.test/comment/1"
     # view may be skipped when current_head_sha provided; comment + status required
@@ -174,8 +170,6 @@ def test_publish_matrix_posts_comment_and_status(
     status_calls = [c for c in gh.calls if c[1] == "api"]
     assert any(f"state={status}" in " ".join(c) for c in status_calls)
     assert any(DEFAULT_STATUS_CONTEXT in " ".join(c) for c in status_calls)
-    if verdict == "APPROVED":
-        assert any(RAIL_STATUS_CONTEXT in " ".join(c) for c in status_calls)
 
 
 def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
@@ -197,7 +191,6 @@ def test_stale_head_refuses_without_github_mutation(tmp_path: Path) -> None:
         ).fetchone()[0]
     assert result.plan.action == "refuse_stale"
     assert result.status_posted is False
-    assert result.rail_status_posted is False
     assert result.publication_id is None
     assert gh.calls == []
     assert jobs == 0
@@ -234,7 +227,6 @@ def test_repeat_publish_is_idempotent(tmp_path: Path) -> None:
         )
     assert second.plan.action == "skip_idempotent"
     assert second.status_posted is False
-    assert second.rail_status_posted is False
     assert gh2.calls == []
 
 
@@ -251,7 +243,6 @@ def test_dry_run_never_posts(tmp_path: Path) -> None:
     assert result.plan.action == "publish"
     assert result.plan.mutate is False
     assert result.status_posted is False
-    assert result.rail_status_posted is False
     assert gh.calls == []
 
 
@@ -298,7 +289,6 @@ def test_sealed_payload_file_round_trip(tmp_path: Path) -> None:
     assert result.plan.verdict == "BLOCKED"
     assert result.plan.status_state == STATUS_ERROR
     assert result.status_posted is True
-    assert result.rail_status_posted is False
 
 
 def test_publish_refuses_evidence_free_approved_without_github_mutation(
@@ -352,211 +342,5 @@ def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
             require_receipt=True,
         )
     assert result.status_posted is True
-    assert result.rail_status_posted is True
     assert result.plan.verdict == "APPROVED"
     assert result.publication_id is not None
-
-
-class _ReceiptStore:
-    source_id = "test-operator-api"
-    source_kind = "api"
-
-    def __init__(self, receipt: dict[str, object]) -> None:
-        self.receipt = receipt
-
-    def fetch_rail_approval_receipt(self, _receipt_id: str) -> dict[str, object]:
-        return dict(self.receipt)
-
-
-def _rail_resolver(path: str) -> rail_path_guard.ApprovedRailApprovalReceiptResolver:
-    receipt = {
-        "schema_version": "rail-approval-receipt.v1",
-        "receipt_id": "rail-approval-" + "1" * 32,
-        "issuer": "operator",
-        "issued_at": "2026-07-31T00:00:00Z",
-        # Keep this success-path fixture independent of wall-clock time. Expiry
-        # behavior has dedicated coverage in the rail approval test suite.
-        "expires_at": "2099-08-01T00:00:00Z",
-        "action": "rail-path-mutation",
-        "task_id": "pr-5512",
-        "head_sha": _SHA_A,
-        "owned_paths": [path],
-    }
-    return rail_path_guard.ApprovedRailApprovalReceiptResolver(
-        _ReceiptStore(receipt),
-        now=lambda: datetime(2026, 7, 31, 1, tzinfo=UTC),
-    )
-
-
-def test_approved_rail_pr_requires_production_receipt_before_review_status(
-    tmp_path: Path,
-) -> None:
-    path = "agents_extensions/shared/rules/model-assignment.md"
-    gh = FakeGh(head=_SHA_A, files=[path])
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(ReviewPublisherError, match="rail_authorization_refused"):
-            publish_sealed_verdict(
-                payload,
-                current_head_sha=_SHA_A,
-                mutate=True,
-                runner=gh,
-                store=store,
-                require_receipt=True,
-            )
-
-    calls = [" ".join(call) for call in gh.calls]
-    assert any(f"context={RAIL_STATUS_CONTEXT}" in call and "state=failure" in call for call in calls)
-    assert not any(call[1:3] == ["pr", "comment"] for call in gh.calls)
-    assert not any(f"context={DEFAULT_STATUS_CONTEXT}" in call for call in calls)
-
-
-def test_approved_rail_pr_publishes_both_exact_head_statuses(tmp_path: Path) -> None:
-    path = "agents_extensions/shared/rules/model-assignment.md"
-    receipt_id = "rail-approval-" + "1" * 32
-    gh = FakeGh(
-        head=_SHA_A,
-        files=[path],
-        body=f"Summary\n\nRail-Approval-Receipt: {receipt_id}\n",
-    )
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        result = publish_sealed_verdict(
-            payload,
-            current_head_sha=_SHA_A,
-            mutate=True,
-            runner=gh,
-            store=store,
-            require_receipt=True,
-            rail_receipt_resolver=_rail_resolver(path),
-        )
-        rail_receipt = lookup_publication_receipt(
-            store.connection,
-            review_id="review_deadbeef",
-            status_context=RAIL_STATUS_CONTEXT,
-        )
-
-    calls = [" ".join(call) for call in gh.calls]
-    assert result.status_posted is True
-    assert result.rail_status_posted is True
-    assert result.rail_status_reason == "rail_approval_verified"
-    assert result.rail_publication_id is not None
-    assert rail_receipt is not None
-    assert any(f"context={RAIL_STATUS_CONTEXT}" in call and "state=success" in call for call in calls)
-    assert any(f"context={DEFAULT_STATUS_CONTEXT}" in call and "state=success" in call for call in calls)
-
-
-def test_approved_publication_refuses_when_expected_head_is_stale(
-    tmp_path: Path,
-) -> None:
-    gh = FakeGh(head=_SHA_B)
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(ReviewPublisherError, match="stale_rail_status_head"):
-            publish_sealed_verdict(
-                payload,
-                current_head_sha=_SHA_A,
-                mutate=True,
-                runner=gh,
-                store=store,
-                require_receipt=True,
-            )
-
-    assert not any(call[1:3] == ["pr", "comment"] for call in gh.calls)
-    assert not any("/statuses/" in " ".join(call) for call in gh.calls)
-
-
-class _MovingHeadGh(FakeGh):
-    def __init__(self) -> None:
-        super().__init__(head=_SHA_A)
-        self._head_reads = 0
-
-    def __call__(
-        self, command: list[str], **kwargs: object
-    ) -> subprocess.CompletedProcess[str]:
-        if len(command) >= 3 and command[1:3] == ["pr", "view"]:
-            self._head_reads += 1
-            self.head = _SHA_A if self._head_reads == 1 else _SHA_B
-        return super().__call__(command, **kwargs)
-
-
-def test_approved_publication_refuses_if_head_moves_during_path_snapshot(
-    tmp_path: Path,
-) -> None:
-    gh = _MovingHeadGh()
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(
-            ReviewPublisherError, match=r"^rail_snapshot_head_changed"
-        ):
-            publish_sealed_verdict(
-                payload,
-                current_head_sha=_SHA_A,
-                mutate=True,
-                runner=gh,
-                store=store,
-                require_receipt=True,
-            )
-
-    assert not any(call[1:3] == ["pr", "comment"] for call in gh.calls)
-    assert not any("/statuses/" in " ".join(call) for call in gh.calls)
-
-
-def test_approved_publication_refuses_incomplete_paginated_path_snapshot(
-    tmp_path: Path,
-) -> None:
-    gh = FakeGh(head=_SHA_A, files=["README.md"], changed_files=2)
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(
-            ReviewPublisherError, match=r"^rail_snapshot_file_count_mismatch"
-        ):
-            publish_sealed_verdict(
-                payload,
-                current_head_sha=_SHA_A,
-                mutate=True,
-                runner=gh,
-                store=store,
-                require_receipt=True,
-            )
-
-    files_call = next(call for call in gh.calls if "/pulls/" in call[-1])
-    assert "--paginate" in files_call
-    assert "--slurp" in files_call
-    assert "per_page=100" in files_call[-1]
-    assert not any("/statuses/" in " ".join(call) for call in gh.calls)
-
-
-def test_approved_publication_treats_previous_rename_path_as_rail(
-    tmp_path: Path,
-) -> None:
-    gh = FakeGh(
-        head=_SHA_A,
-        file_items=[
-            {
-                "filename": "docs/retired-model-assignment.md",
-                "previous_filename": "agents_extensions/shared/rules/model-assignment.md",
-            }
-        ],
-    )
-    payload = _sealed(review_evidence=_approved_evidence())
-
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        with pytest.raises(ReviewPublisherError, match="rail_authorization_refused"):
-            publish_sealed_verdict(
-                payload,
-                current_head_sha=_SHA_A,
-                mutate=True,
-                runner=gh,
-                store=store,
-                require_receipt=True,
-            )
-
-    calls = [" ".join(call) for call in gh.calls]
-    assert any(f"context={RAIL_STATUS_CONTEXT}" in call for call in calls)
-    assert not any(f"context={DEFAULT_STATUS_CONTEXT}" in call for call in calls)

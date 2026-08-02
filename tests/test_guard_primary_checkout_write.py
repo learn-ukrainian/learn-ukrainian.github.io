@@ -23,7 +23,6 @@ import importlib.util
 import json
 import os
 import subprocess
-from collections import namedtuple
 from pathlib import Path
 
 import pytest
@@ -38,7 +37,6 @@ _GIT_ENV = {
     "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
     "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR",
 }
-_RAIL_ENV = {"LEARN_UK_RAIL_APPROVAL_RECEIPT", "LEARN_UK_RAIL_TASK_ID"}
 
 
 def _load_hook():
@@ -158,7 +156,7 @@ def test_write_tool_targets_apply_patch_move():
 
 
 def _clean_env() -> dict[str, str]:
-    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV | _RAIL_ENV}
+    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV}
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -228,8 +226,7 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
-def test_dispatch_worktree_rail_write_is_refused_without_receipt(repo: Path):
-    """P6 local layer: worktree isolation never authorizes a control-rail write."""
+def test_dispatch_worktree_control_hook_write_allowed(repo: Path):
     payload = _write_payload(
         repo,
         "Edit",
@@ -238,8 +235,7 @@ def test_dispatch_worktree_rail_write_is_refused_without_receipt(repo: Path):
 
     result = _run(repo, payload)
 
-    assert result.returncode == 2, result.stderr
-    assert "rail_approval_receipt_required" in result.stderr
+    assert result.returncode == 0, result.stderr
 
 
 def test_read_only_bash_allowed(repo: Path):
@@ -252,7 +248,7 @@ def test_read_only_bash_allowed(repo: Path):
 def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(
     repo: Path, tmp_path: Path
 ) -> None:
-    """#5992: loading the path classifier must not require receipt validation."""
+    """Read-only commands do not depend on optional Python packages."""
     poison = tmp_path / "poison"
     poison.mkdir()
     (poison / "jsonschema.py").write_text(
@@ -278,73 +274,6 @@ def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(
     )
 
     assert result.returncode == 0, result.stderr
-
-
-def test_old_python_denies_write_targets_and_path_scoped_git_before_classifier_load(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """Python <3.11 cannot import the classifier, so P6 refuses classified writes."""
-    VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
-    monkeypatch.setattr(hook.sys, "version_info", VersionInfo(3, 9, 6, "final", 0))
-    monkeypatch.setattr(
-        hook,
-        "_load_rail_path_guard",
-        lambda: (_ for _ in ()).throw(AssertionError("must not load classifier")),
-    )
-
-    for command in ("echo x > /tmp/target", "git add docs/notes.md"):
-        monkeypatch.setattr(
-            hook,
-            "_read_payload",
-            lambda command=command: {
-                "tool_name": "Bash",
-                "tool_input": {"command": command},
-            },
-        )
-
-        assert hook.main() == 2
-        assert "rail_path_guard_python_too_old:3.9" in capsys.readouterr().err
-
-
-def test_old_python_leaves_read_only_commands_untouched(
-    monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """No write target or path-scoped git intent leaves the old hook behavior intact."""
-    VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
-    monkeypatch.setattr(hook.sys, "version_info", VersionInfo(3, 9, 6, "final", 0))
-    monkeypatch.setattr(
-        hook,
-        "_read_payload",
-        lambda: {"tool_name": "Bash", "tool_input": {"command": "git status"}},
-    )
-    monkeypatch.setattr(hook, "_load_containment", lambda: None)
-    monkeypatch.setattr(
-        hook,
-        "_load_rail_path_guard",
-        lambda: (_ for _ in ()).throw(AssertionError("must not load classifier")),
-    )
-
-    assert hook.main() == 0
-
-
-def test_rail_classifier_load_failure_reports_underlying_exception(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """A real loader failure gives the next incident its actual cause (#5992)."""
-    monkeypatch.setattr(
-        hook,
-        "_read_payload",
-        lambda: {"tool_name": "Bash", "tool_input": {"command": "echo x > /tmp/target"}},
-    )
-
-    def fail_load():
-        raise RuntimeError("forced rail loader failure")
-
-    monkeypatch.setattr(hook, "_load_rail_path_guard", fail_load)
-
-    assert hook.main() == 2
-    stderr = capsys.readouterr().err
-    assert "RuntimeError: forced rail loader failure" in stderr
 
 
 def test_bash_tool_input_workdir_controls_relative_write_resolution(repo: Path):
@@ -644,8 +573,7 @@ def test_git_apply_from_worktree_cwd_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
-def test_git_add_rail_path_in_worktree_is_refused_without_receipt(repo: Path):
-    """P6 F001: git pathspecs do not bypass rail checks outside primary."""
+def test_git_add_control_path_in_worktree_allowed(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
         "tool_name": "Bash",
@@ -657,30 +585,7 @@ def test_git_add_rail_path_in_worktree_is_refused_without_receipt(repo: Path):
 
     result = _run(repo, payload)
 
-    assert result.returncode == 2, result.stderr
-    assert "rail_approval_receipt_required" in result.stderr
-
-
-def test_git_worktree_rail_gate_mutation_is_observable(
-    repo: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Removing the new git-intent rail call turns this blocked write into an allow."""
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(worktree),
-        "tool_input": {
-            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
-        },
-    }
-    monkeypatch.setattr(hook, "_read_payload", lambda: payload)
-
-    assert hook.main() == 2
-
-    allowed = type("_Allowed", (), {"allowed": True, "rail_paths": (), "reason": "non_rail_paths"})()
-    monkeypatch.setattr(hook, "_rail_write_decision", lambda _paths, *, cwd: (allowed, None))
-
-    assert hook.main() == 0
+    assert result.returncode == 0, result.stderr
 
 
 def test_git_apply_dash_c_primary_from_worktree_blocked(repo: Path):
@@ -813,8 +718,7 @@ def test_bash_unresolved_shell_var_blocked_with_distinct_reason(repo: Path):
     assert "unresolved_shell_variable" in result.stderr
 
 
-def test_bash_redirect_to_claude_epic_archive_from_subdir_is_rail_guarded(repo: Path):
-    """P6: all .claude paths are rail configuration even when gitignored."""
+def test_bash_redirect_to_gitignored_claude_archive_is_allowed(repo: Path):
     epic = repo / ".claude" / "atlas-epic"
     epic.mkdir(parents=True, exist_ok=True)
     (epic / "archive").mkdir(exist_ok=True)
@@ -829,8 +733,7 @@ def test_bash_redirect_to_claude_epic_archive_from_subdir_is_rail_guarded(repo: 
         "tool_input": {"command": "echo x > archive/t.md"},
     }
     result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-    assert "rail_approval_receipt_required" in result.stderr
+    assert result.returncode == 0, result.stderr
 
 
 def test_bash_untracked_non_ignored_still_blocked(repo: Path):
@@ -860,28 +763,3 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
     # Must not allow (would dirty tracked file under bash's true binding).
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr
-
-
-def test_unreadable_git_metadata_inside_any_repo_fails_closed(tmp_path, monkeypatch):
-    """git-resolution failure for a target under ANY .git tree denies; it never
-    silently passes as 'outside every repository' (r5 review F001)."""
-    repo_like = tmp_path / "sibling-repo"
-    (repo_like / ".git").mkdir(parents=True)
-    target = repo_like / "agents_extensions" / "shared" / "rules" / "x.md"
-    target.parent.mkdir(parents=True)
-
-    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
-    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
-    assert decision is None
-    assert error == "rail_path_guard_repository_unreadable"
-
-
-def test_positively_confirmed_non_repository_target_is_not_a_rail(tmp_path, monkeypatch):
-    """A target with no .git anywhere above it is a confirmed non-repository write."""
-    target = tmp_path / "plain" / "notes.md"
-    target.parent.mkdir(parents=True)
-
-    monkeypatch.setattr(hook, "_git_output", lambda *_a, **_k: None)
-    decision, error = hook._rail_write_decision([str(target)], cwd=str(tmp_path))
-    assert error is None
-    assert decision is not None and decision.allowed

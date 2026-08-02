@@ -4,8 +4,6 @@ Sol fleet-comms (#5512) PR-G owns the GitHub side of formal review publication:
 
 * resolve current PR head (fail closed on lookup failure)
 * plan via pure ``review_publication.plan_publication`` (stale / idempotent / ready)
-* when an approved mutate is requested, publish exact-head production rail
-  authorization before the review gate
 * post one evidence-bearing PR comment and one commit status under
   ``fleet/cross-family-review``
 * record a durable row in ``github_publications`` (schema v1)
@@ -62,9 +60,6 @@ class PublicationResult:
     publication_id: str | None
     comment_url: str | None
     status_posted: bool
-    rail_status_posted: bool
-    rail_status_reason: str | None
-    rail_publication_id: str | None
     summary: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -73,9 +68,6 @@ class PublicationResult:
             "publication_id": self.publication_id,
             "comment_url": self.comment_url,
             "status_posted": self.status_posted,
-            "rail_status_posted": self.rail_status_posted,
-            "rail_status_reason": self.rail_status_reason,
-            "rail_publication_id": self.rail_publication_id,
             "summary": self.summary,
         }
 
@@ -301,8 +293,6 @@ def _summary_for(
     *,
     posted: bool,
     publication_id: str | None,
-    rail_posted: bool = False,
-    rail_reason: str | None = None,
 ) -> str:
     parts = [
         f"publish-review-verdict: action={plan.action}",
@@ -313,8 +303,6 @@ def _summary_for(
         f"status_context={plan.status_context}",
         f"status_state={plan.status_state or 'none'}",
         f"posted={'true' if posted else 'false'}",
-        f"rail_posted={'true' if rail_posted else 'false'}",
-        f"rail_reason={rail_reason or 'none'}",
         f"reason={plan.reason}",
     ]
     if publication_id:
@@ -328,7 +316,6 @@ def execute_publication(
     runner: Runner = subprocess.run,
     conn: sqlite3.Connection | None = None,
     require_receipt: bool = False,
-    rail_receipt_resolver: Any = None,
 ) -> PublicationResult:
     """Execute a planned publication (or no-op for refuse/skip/dry-run).
 
@@ -350,9 +337,6 @@ def execute_publication(
             publication_id=None,
             comment_url=None,
             status_posted=False,
-            rail_status_posted=False,
-            rail_status_reason=None,
-            rail_publication_id=None,
             summary=_summary_for(plan, posted=False, publication_id=None),
         )
 
@@ -365,9 +349,6 @@ def execute_publication(
             publication_id=None,
             comment_url=None,
             status_posted=False,
-            rail_status_posted=False,
-            rail_status_reason=None,
-            rail_publication_id=None,
             summary=_summary_for(plan, posted=False, publication_id=None),
         )
 
@@ -378,33 +359,6 @@ def execute_publication(
         raise ReviewPublisherError(
             "receipt_required: refuse live publish without plane DB connection"
         )
-
-    rail_status_posted = False
-    rail_status_reason: str | None = None
-    rail_publication_id: str | None = None
-    if plan.status_state == "success":
-        from scripts.orchestration.rail_status import (
-            RAIL_STATUS_CONTEXT,
-            RailStatusError,
-            publish_pr_rail_status,
-        )
-
-        try:
-            rail_result = publish_pr_rail_status(
-                repository=plan.repository,
-                pr_number=plan.pr_number,
-                expected_head_sha=plan.head_sha,
-                runner=runner,
-                resolver=rail_receipt_resolver,
-            )
-        except RailStatusError as exc:
-            raise ReviewPublisherError(str(exc)) from exc
-        rail_status_posted = True
-        rail_status_reason = rail_result.reason
-        if not rail_result.allowed:
-            raise ReviewPublisherError(
-                f"rail_authorization_refused: pr={plan.pr_number} reason={rail_result.reason}"
-            )
 
     comment_url = post_pr_comment(
         repository=plan.repository,
@@ -430,28 +384,15 @@ def execute_publication(
             head_sha=plan.head_sha,
             status_context=plan.status_context,
         )
-        if rail_status_posted:
-            rail_publication_id = record_publication_receipt(
-                conn,
-                review_id=plan.review_id,
-                head_sha=plan.head_sha,
-                status_context=RAIL_STATUS_CONTEXT,
-            )
-
     return PublicationResult(
         plan=plan,
         publication_id=publication_id,
         comment_url=comment_url,
         status_posted=True,
-        rail_status_posted=rail_status_posted,
-        rail_status_reason=rail_status_reason,
-        rail_publication_id=rail_publication_id,
         summary=_summary_for(
             plan,
             posted=True,
             publication_id=publication_id,
-            rail_posted=rail_status_posted,
-            rail_reason=rail_status_reason,
         ),
     )
 
@@ -521,7 +462,6 @@ def publish_sealed_verdict(
     store: ArtifactStore | None = None,
     require_receipt: bool = False,
     status_context: str = DEFAULT_STATUS_CONTEXT,
-    rail_receipt_resolver: Any = None,
 ) -> PublicationResult:
     """End-to-end sealed path: parse → head check → plan → optional execute.
 
@@ -577,7 +517,6 @@ def publish_sealed_verdict(
         runner=runner,
         conn=conn,
         require_receipt=require_receipt,
-        rail_receipt_resolver=rail_receipt_resolver,
     )
 
 

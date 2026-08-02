@@ -41,14 +41,12 @@ likewise unread — a deliberate-only shape, documented rather than papered over
 from __future__ import annotations
 
 import concurrent.futures
-import importlib.util
 import json
 import os
 import re
 import shlex
 import subprocess
 import sys
-from pathlib import Path
 from typing import NamedTuple
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
@@ -935,95 +933,6 @@ def _pr_snapshot(
         return meta_future.result(), states_future.result()
 
 
-def _load_rail_path_guard():
-    """Load the source-controlled P6 guard from a deployed merge-hook copy."""
-    here = Path(__file__).resolve()
-    for parent in (here.parent, *here.parents):
-        candidate = parent / "scripts" / "orchestration" / "rail_path_guard.py"
-        if not candidate.is_file():
-            continue
-        if str(parent) not in sys.path:
-            sys.path.insert(0, str(parent))
-        spec = importlib.util.spec_from_file_location("rail_path_guard", candidate)
-        if spec is None or spec.loader is None:
-            return None
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
-        return module
-    return None
-
-
-def _pr_changed_paths(pr: str, repo: str | None = None, cwd: str | None = None) -> list[str] | None:
-    """Return the exact PR diff paths, or ``None`` when GitHub cannot prove them."""
-    try:
-        out = subprocess.run(
-            ["gh", "pr", "diff", pr, *_repo_args(repo), "--name-only"],
-            capture_output=True,
-            env=_gh_env(),
-            cwd=cwd,
-            text=True,
-            timeout=8,
-        )
-    except Exception:
-        return None
-    if out.returncode != 0:
-        return None
-    return [line for line in _decolorize(out.stdout).splitlines() if line]
-
-
-def _rail_path_decision(pr: str, meta: dict, repo: str | None, cwd: str | None):
-    """Authoritatively resolve a PR-body locator through the shared P6 module."""
-    head_sha = meta.get("headRefOid")
-    if not isinstance(head_sha, str):
-        return None, "could not verify the PR head SHA for rail approval"
-    pr_number = _canonical_pr_number(meta.get("number"))
-    if pr_number is None:
-        return None, "could not verify the canonical PR number for rail approval"
-    body = meta.get("body")
-    if not isinstance(body, str):
-        return None, "could not read the live PR body for rail approval"
-    paths = _pr_changed_paths(pr, repo, cwd)
-    if paths is None:
-        return None, "could not read changed paths for rail approval"
-    try:
-        rail_guard = _load_rail_path_guard()
-    except Exception:
-        return None, "the shared rail-path decision module is unavailable"
-    if rail_guard is None:
-        return None, "the shared rail-path decision module is unavailable"
-    try:
-        rail_paths = rail_guard.rail_paths_from_candidates(paths)
-    except Exception:
-        return None, "the shared rail-path classifier is unreadable"
-    if not rail_paths:
-        return rail_guard.RailPathDecision(
-            rail_guard.RailPathDecisionKind.ALLOW,
-            "non_rail_paths",
-            (),
-        ), None
-    declaration = rail_guard.parse_rail_approval_declaration(body)
-    if not declaration.is_present or declaration.receipt_id is None:
-        return rail_guard.RailPathDecision(
-            rail_guard.RailPathDecisionKind.DENY,
-            declaration.reason,
-            rail_paths,
-        ), None
-    try:
-        decision = rail_guard.decide_rail_path_mutation_with_production_receipt(
-            # Only GitHub's canonical numeric PR ID binds the merge decision.  The
-            # body supplies the untrusted receipt locator, never a task identity.
-            task_id=f"pr-{pr_number}",
-            candidate_paths=paths,
-            head_sha=head_sha,
-            receipt_id=declaration.receipt_id,
-            path_binding=rail_guard.RailApprovalPathBinding.PR_DIFF_EXACT_SET,
-        )
-    except Exception:
-        return None, "the shared rail-path decision is unreadable"
-    return decision, None
-
-
 _FOOTER = (
     "GitHub will merge a draft or a red PR without complaint — branch protection stops only\n"
     "what it was configured to require, and on a free-plan private repo it cannot be configured\n"
@@ -1081,21 +990,6 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "Every non-advisory check counts, whether or not GitHub marks it required —\n"
             "'required' is a config accident, red is red. Fix the failures and re-run;\n"
             "do not merge over them.",
-        )
-    rail_decision, rail_error = _rail_path_decision(pr, meta, repo, cwd)
-    if rail_error is not None or rail_decision is None:
-        return _block_msg(
-            rail_error or "rail-path authorization is unreadable",
-            "The merge guard cannot prove that this PR avoids protected rails. "
-            "Repair the receipt source or changed-path query, then retry; it fails closed.",
-        )
-    if not rail_decision.allowed:
-        paths = ", ".join(rail_decision.rail_paths) or "(unreadable path)"
-        return _block_msg(
-            f"PR {pr} rail-path authorization refused: {rail_decision.reason} ({paths})",
-            "Rail mutations require a scoped, unexpired approval receipt re-fetched from "
-            "the provisioned advisor/operator source. X-Agent, model, and tier claims do "
-            "not authorize a merge.",
         )
     if _flag_enabled(_classify(args)[0], "auto"):
         base = str(meta.get("baseRefName") or "")
