@@ -492,7 +492,11 @@ def project_full_run(
     generation_projection = max(token_projection, case_projection)
     provider_seconds = int(provider_receipt["provider_running_seconds"])
     worker_wall = float(timing["wall_seconds"])
-    worker_non_generation = max(0.0, worker_wall - generation_seconds - float(timing["download_seconds"]))
+    current_generation_seconds = float(timing.get("current_generation_seconds", generation_seconds))
+    worker_non_generation = max(
+        0.0,
+        worker_wall - current_generation_seconds - float(timing["download_seconds"]),
+    )
     provider_outside_worker = max(0.0, provider_seconds - worker_wall)
     fixed_seconds = float(timing["download_seconds"]) + worker_non_generation + provider_outside_worker
     safety_margin = 0.25

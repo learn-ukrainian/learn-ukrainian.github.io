@@ -93,6 +93,23 @@ def append_durable(path: Path, value: Mapping[str, Any]) -> None:
         os.fsync(handle.fileno())
 
 
+def generation_totals(records: Sequence[Mapping[str, Any]], resumed_count: int) -> dict[str, float | int]:
+    _require(0 <= resumed_count <= len(records), "invalid resumed record count")
+    try:
+        seconds = [float(record["generation_seconds"]) for record in records]
+        tokens = [int(record["generated_tokens"]) for record in records]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise WorkerError("checkpoint generation metrics are invalid") from exc
+    _require(all(value >= 0 for value in seconds), "checkpoint generation seconds must be non-negative")
+    _require(all(value >= 0 for value in tokens), "checkpoint generated tokens must be non-negative")
+    return {
+        "generated_tokens": sum(tokens),
+        "generation_seconds": sum(seconds),
+        "current_generation_seconds": sum(seconds[resumed_count:]),
+        "resumed_case_count": resumed_count,
+    }
+
+
 def read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -442,9 +459,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
     checkpoint_path = args.output_root / "checkpoint.jsonl"
     records = load_checkpoint(checkpoint_path, checkpoint_header, selected)
+    resumed_count = len(records)
     batch_seconds: list[float] = []
-    generated_tokens = sum(int(record.get("generated_tokens", 0)) for record in records)
-    generation_started = time.monotonic()
+    retry_seconds: list[float] = []
     batch_size = int(config["runner"]["batch_size"])
     retries = int(config["runner"]["parse_retries"])
     position = len(records)
@@ -455,10 +472,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         generations = generator(rendered)
         elapsed = time.monotonic() - batch_started
         batch_seconds.append(elapsed)
+        per_request_batch_seconds = elapsed / len(batch)
         for request, (raw_generation, token_count), base_prompt in zip(batch, generations, rendered, strict=True):
             last_error = ""
             parsed: dict[str, str] | None = None
             retry_count = 0
+            request_retry_seconds = 0.0
             current_generation = raw_generation
             current_tokens = token_count
             for attempt in range(retries + 1):
@@ -476,7 +495,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     )
                     retry_started = time.monotonic()
                     [(current_generation, retry_tokens)] = generator([retry_prompt])
-                    batch_seconds.append(time.monotonic() - retry_started)
+                    retry_elapsed = time.monotonic() - retry_started
+                    retry_seconds.append(retry_elapsed)
+                    request_retry_seconds += retry_elapsed
                     current_tokens += retry_tokens
             _require(parsed is not None, f"cannot parse model reply for {request['item_id']}: {last_error}")
             record = {
@@ -485,14 +506,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "raw_generation": current_generation,
                 "response": parsed,
                 "generated_tokens": current_tokens,
+                "generation_seconds": per_request_batch_seconds + request_retry_seconds,
                 "parse_retries_used": retry_count,
             }
             append_durable(checkpoint_path, record)
             records.append(record)
-            generated_tokens += current_tokens
         position += len(batch)
         print(f"hf-jobs-worker: completed {position}/{len(selected)}", file=sys.stderr, flush=True)
-    generation_seconds = time.monotonic() - generation_started
+    generation = generation_totals(records, resumed_count)
+    generation_seconds = float(generation["generation_seconds"])
+    generated_tokens = int(generation["generated_tokens"])
 
     response_header = {
         "type": "run",
@@ -557,10 +580,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "ended_at_unix": ended_at,
             "download_seconds": download_seconds,
             "generation_seconds": generation_seconds,
+            "current_generation_seconds": generation["current_generation_seconds"],
+            "resumed_case_count": generation["resumed_case_count"],
             "wall_seconds": total_seconds,
             "mean_seconds_per_case": generation_seconds / len(selected),
             "batch_seconds_p50": statistics.median(batch_seconds) if batch_seconds else None,
             "batch_seconds_p95": _quantile(batch_seconds, 0.95),
+            "retry_seconds_total": sum(retry_seconds),
         },
         "throughput": {
             "generated_tokens": generated_tokens,

@@ -51,6 +51,7 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["authorization"]["no_automatic_paid_retry"] is True
+    assert "checkpoint_every_cases" not in config["runner"]
 
 
 def test_balanced_canary_is_deterministic_category_balanced_and_track_covering() -> None:
@@ -210,6 +211,21 @@ def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
     assert hf_jobs_worker.load_checkpoint(checkpoint, header, selected) == records
 
 
+def test_generation_totals_keep_resumed_time_and_tokens_in_throughput() -> None:
+    records = [
+        {"generated_tokens": 10, "generation_seconds": 4.0},
+        {"generated_tokens": 20, "generation_seconds": 6.0},
+    ]
+    assert hf_jobs_worker.generation_totals(records, resumed_count=1) == {
+        "generated_tokens": 30,
+        "generation_seconds": 10.0,
+        "current_generation_seconds": 6.0,
+        "resumed_case_count": 1,
+    }
+    with pytest.raises(hf_jobs_worker.WorkerError, match="metrics are invalid"):
+        hf_jobs_worker.generation_totals([{"generated_tokens": 10}], resumed_count=0)
+
+
 def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds: int) -> tuple[dict, dict]:
     worker = {
         "status": "completed",
@@ -239,6 +255,7 @@ def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds
 def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
     config = hf_jobs_baseline.load_config()
     worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
+    worker["timing"]["current_generation_seconds"] = 60.0
     passed = hf_jobs_baseline.project_full_run(
         worker_receipt=worker,
         provider_receipt=provider,
@@ -246,6 +263,7 @@ def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
     )
     assert passed["status"] == "passed"
     assert passed["projection"]["safety_margin_fraction"] == 0.25
+    assert passed["projection"]["fixed_seconds"] == 150.0
     assert passed["authorization"]["combined_projected_cost_usd"] <= 6.0
 
     worker, provider = _canary_receipts(config, generation_seconds=1100.0, running_seconds=1190)

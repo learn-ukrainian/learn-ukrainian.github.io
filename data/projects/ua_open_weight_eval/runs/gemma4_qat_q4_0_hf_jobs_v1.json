@@ -45,7 +45,6 @@
   "runner": {
     "backend": "vllm",
     "batch_size": 25,
-    "checkpoint_every_cases": 25,
     "fallback_backend": "llama.cpp",
     "fallback_requires_new_approval_after_paid_failure": true,
     "gpu_memory_utilization": 0.9,
