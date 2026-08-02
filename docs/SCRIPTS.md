@@ -1560,3 +1560,7 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 | Sync landing pages | `npm run sync:landing` |
 | Compile one wiki article | `.venv/bin/python scripts/wiki/compile.py --track {track} --slug {slug}` |
 | Compile a wiki track with review | `.venv/bin/python scripts/wiki/compile.py --track {track} --all --review` |
+
+### Dispatch settle (Luna handoff)
+
+`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned.
