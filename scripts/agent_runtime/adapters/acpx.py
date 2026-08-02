@@ -148,12 +148,18 @@ _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     sort_keys=True,
 )
 
-# Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
+# Rolling native Grok CLI compatibility contract for the Grok ACPX seat.
 # Built-in acpx ``grok-build`` is intentionally unused: it expands to
-# ``grok agent stdio`` without a place for parent flags required by Grok
-# 0.2.118 (``--model`` / ``--reasoning-effort`` / ``--no-leader`` must appear
-# before ``stdio``).
-PINNED_GROK_VERSION = "0.2.118"
+# ``grok agent stdio`` without a place for the parent flags required by this
+# adapter. The CLI version is observed for telemetry, but compatibility is
+# decided from the command and flags we actually invoke rather than semver.
+GROK_CLI_COMPATIBILITY_CONTRACT = "agent-stdio-v1"
+_GROK_REQUIRED_AGENT_FLAGS: tuple[str, ...] = (
+    "--model",
+    "--reasoning-effort",
+    "--agent-profile",
+    "--no-leader",
+)
 GROK_SHADOW_MODEL = "grok-4.5"
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
@@ -680,12 +686,11 @@ def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
 _GROK_VERSION_RE = re.compile(r"\Agrok\s+(\d+\.\d+\.\d+)(?:\s|$)")
 
 
-@lru_cache(maxsize=4)
 def _probe_grok_version(binary: str) -> str:
-    """Return exact semver from ``<binary> --version``, or "" on any failure.
+    """Return observed semver from ``<binary> --version``, or "" on failure.
 
-    Native Grok 0.2.118 prints ``grok 0.2.118 (<sha>)``. Wrong,
-    missing, or unparseable output fails closed before prompt.
+    This value is telemetry only. Capability validation, not this version
+    string, controls whether the adapter may spawn the CLI.
     """
     try:
         proc = subprocess.run(
@@ -704,6 +709,45 @@ def _probe_grok_version(binary: str) -> str:
     return match.group(1) if match else ""
 
 
+def _probe_grok_help(binary: str, *args: str) -> str:
+    """Return help text for one Grok command, or "" when it is unavailable."""
+    try:
+        proc = subprocess.run(
+            [binary, *args, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    if proc.returncode != 0:
+        return ""
+    return "\n".join(part for part in (proc.stdout, proc.stderr) if part).strip()
+
+
+def _probe_grok_cli_compatibility(binary: str) -> tuple[str, tuple[str, ...]]:
+    """Return ``(observed_version, missing_capabilities)`` for the native CLI.
+
+    The probe runs before every spawn so an in-place CLI upgrade is accepted
+    immediately when it retains the command surface this adapter needs, and
+    refused before prompt delivery when that surface changes incompatibly.
+    """
+    version = _probe_grok_version(binary) or "unknown"
+    agent_help = _probe_grok_help(binary, "agent")
+    stdio_help = _probe_grok_help(binary, "agent", "stdio")
+    missing: list[str] = []
+    if not agent_help:
+        missing.append("agent")
+    else:
+        missing.extend(
+            flag for flag in _GROK_REQUIRED_AGENT_FLAGS if flag not in agent_help
+        )
+    if not stdio_help:
+        missing.append("agent stdio")
+    return version, tuple(missing)
+
+
 def _resolve_grok_binary() -> str:
     """Resolve the installed ``grok`` CLI to an absolute path, or refuse.
 
@@ -714,8 +758,7 @@ def _resolve_grok_binary() -> str:
     if not found:
         raise AcpxShadowRefusalError(
             "AcpxGrokShadowAdapter: grok binary not found on PATH; install the "
-            f"native Grok CLI at exact semver {PINNED_GROK_VERSION} before using "
-            "the acpx-grok-shadow seat"
+            "native Grok CLI before using the acpx-grok-shadow seat"
         )
     resolved = Path(found).resolve()
     if not resolved.is_file():
@@ -745,7 +788,7 @@ def _require_grok_profile() -> str:
 
 
 def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
-    """Shell-safe single ``--agent`` value with required Grok 0.2.118 argv order.
+    """Shell-safe single ``--agent`` value with required Grok argv order.
 
     Exact token order (parent flags before ``stdio``)::
 
@@ -1469,9 +1512,8 @@ class AcpxGrokShadowAdapter:
     Builds one confined shape only:
 
     - project-local ``acpx@0.13.0``
-    - custom ``--agent`` command from the absolute installed Grok binary at
-      exact semver :data:`PINNED_GROK_VERSION`, never the built-in
-      ``grok-build`` name
+    - custom ``--agent`` command from the absolute installed Grok binary after
+      a fail-closed capability probe, never the built-in ``grok-build`` name
     - exact hash-pinned project profile with no tools plus an explicit
       write/shell/subagent/web/MCP/memory denylist
     - fixed model/effort ``grok-4.5`` / ``high`` inside that agent command
@@ -1512,7 +1554,7 @@ class AcpxGrokShadowAdapter:
         - ``session_id`` is not None
         - ``cwd`` is the protected primary checkout
         - project-local acpx missing / wrong version
-        - Grok binary missing / wrong / unparseable version
+        - Grok binary missing or lacking the required command/flag surface
         - no-tool profile missing or changed from its reviewed digest
         - caller ``model`` is not ``None`` or ``grok-4.5``
         - caller ``effort`` is not ``None`` or ``high``
@@ -1565,12 +1607,12 @@ class AcpxGrokShadowAdapter:
         acpx_binary = _require_pinned_acpx_binary(adapter_label="AcpxGrokShadowAdapter", cwd=cwd)
 
         grok_binary = _resolve_grok_binary()
-        observed_grok = _probe_grok_version(grok_binary)
-        if observed_grok != PINNED_GROK_VERSION:
+        observed_grok, missing_capabilities = _probe_grok_cli_compatibility(grok_binary)
+        if missing_capabilities:
             raise AcpxShadowRefusalError(
-                f"AcpxGrokShadowAdapter: resolved grok binary reports version "
-                f"{observed_grok!r} (expected pinned {PINNED_GROK_VERSION!r}); "
-                "refusing to spawn on a version mismatch"
+                "AcpxGrokShadowAdapter: resolved grok binary is incompatible with "
+                f"{GROK_CLI_COMPATIBILITY_CONTRACT!r}; missing capabilities: "
+                f"{', '.join(missing_capabilities)}; refusing to spawn"
             )
 
         profile_path = _require_grok_profile()
@@ -1584,7 +1626,8 @@ class AcpxGrokShadowAdapter:
         metadata: dict[str, Any] = {
             "acpx_shadow": tc.get("acpx_transport") is not True,
             "acpx_pinned_version": PINNED_VERSION,
-            "grok_pinned_version": PINNED_GROK_VERSION,
+            "grok_cli_version": observed_grok,
+            "grok_cli_compatibility": GROK_CLI_COMPATIBILITY_CONTRACT,
             "grok_profile_sha256": _GROK_PROFILE_SHA256,
             "target_agent": "grok",
             # Effective values are fixed; never fabricate caller-supplied

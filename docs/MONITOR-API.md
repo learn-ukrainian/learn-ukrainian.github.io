@@ -1290,8 +1290,13 @@ with no records reports `no_evidence`; that is not a provider-health claim.
   },
   "pins": {
     "acpx": "0.13.0",
-    "grok_cli": "0.2.118",
     "validation": "before_spawn"
+  },
+  "compatibility": {
+    "grok_cli": {
+      "contract": "agent-stdio-v1",
+      "validation": "before_spawn"
+    }
   },
   "comparison_evidence": {
     "window_days": 7,
@@ -1358,6 +1363,13 @@ with no records reports `no_evidence`; that is not a provider-health claim.
   }
 }
 ```
+
+`acpx` remains an exact project dependency. The native Grok CLI intentionally
+has no semver pin: immediately before each spawn, the adapter verifies the
+`agent stdio` command and the model, reasoning-effort, profile, and no-leader
+flags it invokes. Compatible CLI upgrades therefore work without a repository
+change; an incompatible command-surface change is refused before prompt
+delivery. The observed CLI version is retained in per-call telemetry.
 
 ### `GET /api/runtime/acp/conversations`
 

@@ -247,8 +247,13 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
     }
     assert data["pins"] == {
         "acpx": "0.13.0",
-        "grok_cli": "0.2.118",
         "validation": "before_spawn",
+    }
+    assert data["compatibility"] == {
+        "grok_cli": {
+            "contract": "agent-stdio-v1",
+            "validation": "before_spawn",
+        }
     }
     assert data["safety"]["max_in_flight"] == 1
     assert data["safety"]["explicit_pilot_only"] is True

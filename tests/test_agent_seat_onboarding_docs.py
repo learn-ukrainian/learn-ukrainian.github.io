@@ -373,7 +373,8 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "minutes=120" in onboarding
     assert "not permanent routing weights" in lower
     assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
-    assert "0.2.118" in onboarding
+    assert "agent-stdio-v1" in onboarding
+    assert "observed" in lower and "not an allowlist" in lower
     assert "grok-4.5" in onboarding
     assert "--no-leader" in onboarding
     assert "--agent-profile" in onboarding

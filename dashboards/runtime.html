@@ -265,6 +265,7 @@ function renderAcpx(snapshot) {
   const seatSlots = [seats[0], seats[1]];
   const safety = snapshot.safety || {};
   const pins = snapshot.pins || {};
+  const grokCompatibility = (snapshot.compatibility || {}).grok_cli || {};
   const comparison = snapshot.comparison_evidence || {};
   const calls = shadowCallCount(seats);
   const comparisons = Number(comparison.comparisons);
@@ -282,8 +283,11 @@ function renderAcpx(snapshot) {
     ['Duplicates suppressed', comparison.duplicates_suppressed],
     ['Busy refusals', comparison.busy_refusals],
     ['ACPX pin', pins.acpx ? `v${pins.acpx}` : null],
-    ['Grok CLI pin', pins.grok_cli ? `v${pins.grok_cli}` : null],
-    ['Pin validation', pins.validation ? displayLabel(pins.validation) : null],
+    ['ACPX validation', pins.validation ? displayLabel(pins.validation) : null],
+    ['Grok CLI policy', grokCompatibility.contract ? 'Rolling compatibility' : null],
+    ['Grok CLI contract', grokCompatibility.contract],
+    ['Grok validation', grokCompatibility.validation
+      ? displayLabel(grokCompatibility.validation) : null],
     ['Snapshot', formatTs(snapshot.generated_at)],
   ];
   const seatMarkup = seatSlots.map((seat, index) => {

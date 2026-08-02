@@ -1039,13 +1039,23 @@ def test_parse_response_nonzero_exit_with_end_turn_still_fails():
 # ---------------------------------------------------------------------------
 
 
-def _stub_grok(monkeypatch, tmp_path: Path, *, version: str = "0.2.118") -> Path:
-    """Point the Grok seat at a fake absolute grok binary + version probe."""
+def _stub_grok(
+    monkeypatch,
+    tmp_path: Path,
+    *,
+    version: str = "0.2.118",
+    missing: tuple[str, ...] = (),
+) -> Path:
+    """Point the Grok seat at a fake binary + compatibility probe."""
     grok = tmp_path / "fake-grok-bin"
     grok.write_text("#!/bin/sh\necho stub-grok\n", encoding="utf-8")
     grok.chmod(0o755)
     monkeypatch.setattr(acpx_module, "_resolve_grok_binary", lambda: str(grok.resolve()))
-    monkeypatch.setattr(acpx_module, "_probe_grok_version", lambda _binary: version)
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_grok_cli_compatibility",
+        lambda _binary: (version, missing),
+    )
     return grok.resolve()
 
 
@@ -1228,23 +1238,41 @@ def test_grok_build_invocation_rejects_acpx_version_mismatch(tmp_path, monkeypat
         _build_grok(adapter, cwd=tmp_path)
 
 
-def test_grok_build_invocation_rejects_grok_version_mismatch(tmp_path, monkeypatch):
+def test_grok_build_invocation_accepts_rolling_cli_version(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path, version="0.2.100")
+    _stub_grok(monkeypatch, tmp_path, version="0.3.7")
     adapter = AcpxGrokShadowAdapter()
 
-    with pytest.raises(AcpxShadowRefusalError, match="grok binary reports version"):
-        _build_grok(adapter, cwd=tmp_path)
+    plan = _build_grok(adapter, cwd=tmp_path)
+
+    assert plan.metadata["grok_cli_version"] == "0.3.7"
+    assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
 
 
-def test_grok_build_invocation_rejects_unparseable_grok_version(tmp_path, monkeypatch):
+def test_grok_build_invocation_accepts_unknown_version_when_capabilities_pass(
+    tmp_path, monkeypatch
+):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path, version="")
+    _stub_grok(monkeypatch, tmp_path, version="unknown")
     adapter = AcpxGrokShadowAdapter()
 
-    with pytest.raises(AcpxShadowRefusalError, match="version"):
+    plan = _build_grok(adapter, cwd=tmp_path)
+
+    assert plan.metadata["grok_cli_version"] == "unknown"
+
+
+def test_grok_build_invocation_rejects_missing_cli_capability(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path, version="0.3.7", missing=("--agent-profile",))
+    adapter = AcpxGrokShadowAdapter()
+
+    with pytest.raises(
+        AcpxShadowRefusalError,
+        match="missing capabilities: --agent-profile",
+    ):
         _build_grok(adapter, cwd=tmp_path)
 
 
@@ -1322,7 +1350,8 @@ def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, 
         assert plan.metadata["model"] == "grok-4.5"
         assert plan.metadata["effort"] == "high"
         assert plan.metadata["target_agent"] == "grok"
-        assert plan.metadata["grok_pinned_version"] == "0.2.118"
+        assert plan.metadata["grok_cli_version"] == "0.2.118"
+        assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
         assert plan.metadata["acpx_pinned_version"] == "0.13.0"
 
 
@@ -1775,7 +1804,7 @@ def test_grok_profile_is_exact_and_digest_mismatch_fails_closed(tmp_path, monkey
         acpx_module._require_grok_profile()
 
 
-def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path):
+def test_probe_grok_version_parses_semver_or_returns_empty(monkeypatch, tmp_path):
     binary = tmp_path / "grok"
     binary.write_text("#!/bin/sh\n", encoding="utf-8")
     binary.chmod(0o755)
@@ -1791,7 +1820,6 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
         "run",
         lambda *_a, **_k: _Proc("grok 0.2.118 (1e1687c1cf6a)\n"),
     )
-    acpx_module._probe_grok_version.cache_clear()
     assert acpx_module._probe_grok_version(str(binary)) == "0.2.118"
 
     monkeypatch.setattr(
@@ -1799,7 +1827,6 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
         "run",
         lambda *_a, **_k: _Proc("not a version string"),
     )
-    acpx_module._probe_grok_version.cache_clear()
     assert acpx_module._probe_grok_version(str(binary)) == ""
 
     monkeypatch.setattr(
@@ -1809,7 +1836,6 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
             "wrapper 9.9.9; grok 0.2.118 (1e1687c1cf6a)\n"
         ),
     )
-    acpx_module._probe_grok_version.cache_clear()
     assert acpx_module._probe_grok_version(str(binary)) == ""
 
     monkeypatch.setattr(
@@ -1821,12 +1847,55 @@ def test_probe_grok_version_parses_semver_and_fails_closed(monkeypatch, tmp_path
             returncode=1,
         ),
     )
-    acpx_module._probe_grok_version.cache_clear()
     assert acpx_module._probe_grok_version(str(binary)) == ""
 
     def _boom(*_a, **_k):
         raise OSError("missing")
 
     monkeypatch.setattr(acpx_module.subprocess, "run", _boom)
-    acpx_module._probe_grok_version.cache_clear()
     assert acpx_module._probe_grok_version(str(binary)) == ""
+
+
+def test_probe_grok_cli_compatibility_checks_required_command_surface(monkeypatch):
+    class _Proc:
+        def __init__(self, stdout: str, returncode: int = 0):
+            self.stdout = stdout
+            self.stderr = ""
+            self.returncode = returncode
+
+    agent_help = " ".join(acpx_module._GROK_REQUIRED_AGENT_FLAGS)
+
+    def _compatible(argv, **_kwargs):
+        if argv[-1] == "--version":
+            return _Proc("grok 0.3.7 (rolling)\n")
+        if argv[1:] == ["agent", "--help"]:
+            return _Proc(agent_help)
+        if argv[1:] == ["agent", "stdio", "--help"]:
+            return _Proc("Run the agent over stdio")
+        raise AssertionError(argv)
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _compatible)
+    assert acpx_module._probe_grok_cli_compatibility("/tmp/grok") == ("0.3.7", ())
+
+    def _missing_profile(argv, **kwargs):
+        proc = _compatible(argv, **kwargs)
+        if argv[1:] == ["agent", "--help"]:
+            proc.stdout = agent_help.replace("--agent-profile", "")
+        return proc
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _missing_profile)
+    assert acpx_module._probe_grok_cli_compatibility("/tmp/grok") == (
+        "0.3.7",
+        ("--agent-profile",),
+    )
+
+    def _missing_stdio(argv, **kwargs):
+        if argv[1:] == ["agent", "stdio", "--help"]:
+            return _Proc("", returncode=2)
+        return _compatible(argv, **kwargs)
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _missing_stdio)
+    assert acpx_module._probe_grok_cli_compatibility("/tmp/grok") == (
+        "0.3.7",
+        ("agent stdio",),
+    )

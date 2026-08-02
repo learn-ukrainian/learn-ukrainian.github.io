@@ -25,9 +25,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,
+    GROK_CLI_COMPATIBILITY_CONTRACT,
     GROK_SHADOW_EFFORT,
     GROK_SHADOW_MODEL,
-    PINNED_GROK_VERSION,
     AcpxAdapter,
     AcpxGrokShadowAdapter,
 )
@@ -414,8 +414,13 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
         },
         "pins": {
             "acpx": ACPX_PINNED_VERSION,
-            "grok_cli": PINNED_GROK_VERSION,
             "validation": "before_spawn",
+        },
+        "compatibility": {
+            "grok_cli": {
+                "contract": GROK_CLI_COMPATIBILITY_CONTRACT,
+                "validation": "before_spawn",
+            },
         },
         "comparison_evidence": {
             "window_days": window_days,

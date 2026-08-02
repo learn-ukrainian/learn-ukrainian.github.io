@@ -141,7 +141,7 @@ Gemini 11, OpenCode 6, GLM 4, and AGY 1. The same-day direct-runtime sample
 had Grok 1. This dated evidence justified the second pilot. These are
 not permanent routing weights and do not override current CodexBar headroom.
 
-**Exact contract (#6027, #6043, #6078, #6130, #6158):**
+**Exact contract (#6027, #6043, #6078, #6130, #6158, #6249):**
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` is the unchanged comparison pilot. `active` is accepted only by the
@@ -153,10 +153,12 @@ not permanent routing weights and do not override current CodexBar headroom.
   dispatch, routing, review, or failover.
 - Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
   resolved binary version.
-- Custom participant commands additionally preflight their reviewed provider
-  CLI versions: Grok `0.2.118`, AGY `1.1.9`, OpenCode/GLM `1.17.13`, and
-  Hermes/DeepSeek `0.18.2`. Each version is parsed only from its reviewed CLI
-  output shape, and the project text ACP server is digest-checked before use.
+- The Grok command follows the rolling `agent-stdio-v1` compatibility
+  contract: immediately before spawn it must expose `agent stdio`, `--model`,
+  `--reasoning-effort`, `--agent-profile`, and `--no-leader`. The observed
+  version is recorded but is not an allowlist. AGY `1.1.9`, OpenCode/GLM
+  `1.17.13`, and Hermes/DeepSeek `0.18.2` remain version-pinned. The project
+  text ACP server is digest-checked before use.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.

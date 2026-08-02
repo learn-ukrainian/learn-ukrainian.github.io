@@ -76,7 +76,7 @@ controller-scheduled bounded conversation DAG whose durable state and timeline
 are written through existing fleet-comms. The expanded participant registry is
 not a new coordination plane.
 
-Approved boundary (#6027, #6043, #6078, #6130, #6158):
+Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` retains the comparison pilot below. `active` is accepted only by
@@ -92,10 +92,12 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158):
   candidates.
 - Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); every adapter refuses to
   spawn on any other resolved version.
-- Custom seats also pin their provider CLIs: Grok `0.2.118`, AGY `1.1.9`,
-  OpenCode/GLM `1.17.13`, and Hermes/DeepSeek `0.18.2`. Provider version
-  parsing is anchored to each reviewed CLI output format, and the project text
-  ACP server is SHA-256 digest-checked before spawn.
+- Grok uses a rolling CLI with the `agent-stdio-v1` compatibility contract:
+  before each spawn, the adapter requires `agent stdio` plus the exact model,
+  reasoning-effort, profile, and no-leader flags it invokes. Its observed
+  version is telemetry, not an allowlist. AGY `1.1.9`, OpenCode/GLM `1.17.13`,
+  and Hermes/DeepSeek `0.18.2` remain version-pinned. The project text ACP
+  server is SHA-256 digest-checked before spawn.
 - Codex participant:
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
