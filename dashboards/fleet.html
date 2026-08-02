@@ -41,6 +41,11 @@ button, input, select { font: inherit; }
 .filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: 1.2fr repeat(5, minmax(110px, 1fr)) auto; margin: 22px 0 18px; padding: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.field input, .field select { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; }
 .filter-note { align-self: end; color: var(--text3); font-size: 11px; line-height: 1.35; max-width: 170px; padding-bottom: 5px; }
+.operations-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 18px; }
+.operations-stats { background: var(--border); display: grid; gap: 1px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.operation-stat { background: var(--bg2); padding: 14px 16px; }
+.operation-stat strong { display: block; font-family: Charter, Georgia, serif; font-size: 25px; line-height: 1; }
+.operation-stat span { color: var(--text3); display: block; font-size: 10px; font-weight: 800; letter-spacing: .08em; margin-top: 6px; text-transform: uppercase; }
 .grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.22fr) minmax(390px, .78fr); }
 .panel { background: var(--bg2); border: 1px solid var(--border); min-width: 0; padding: 0; }
 .panel.wide { grid-column: 1 / -1; }.panel-head { align-items: baseline; border-bottom: 1px solid var(--border); display: flex; gap: 12px; justify-content: space-between; padding: 13px 16px; }.panel-head h3 { font-family: Charter, Georgia, serif; font-size: 19px; margin: 0; }.panel-head p { color: var(--text3); font-size: 11px; margin: 0; text-align: right; }
@@ -48,7 +53,7 @@ button, input, select { font: inherit; }
 .table-wrap { max-height: 360px; overflow: auto; }.table { border-collapse: collapse; font-size: 12px; width: 100%; }.table th { background: var(--bg2); border-bottom: 1px solid var(--border); color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; padding: 8px 10px; position: sticky; text-align: left; text-transform: uppercase; top: 0; }.table td { border-bottom: 1px solid rgba(212, 205, 184, .68); max-width: 230px; padding: 9px 10px; vertical-align: top; }.table tr:last-child td { border-bottom: 0; }.table tr:hover td { background: rgba(122, 28, 32, .035); }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; overflow-wrap: anywhere; }.preview { color: var(--text2); line-height: 1.35; }.muted { color: var(--text3); }.empty { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 22px 16px; }.pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }.pill.complete, .pill.live { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }.pill.running, .pill.queued { background: rgba(42, 86, 128, .11); border-color: rgba(42, 86, 128, .28); color: var(--blue); }.pill.failed, .pill.dead_lettered { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }.pill.incomplete, .pill.expired, .pill.partial { background: rgba(168, 132, 43, .12); border-color: rgba(168, 132, 43, .3); color: var(--yellow); }
 .footnote { color: var(--text3); font-size: 11px; line-height: 1.5; margin: 22px 0 0; }.footnote strong { color: var(--text2); }.error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); font-size: 13px; margin-bottom: 16px; padding: 10px 12px; }.hidden { display: none; }
-@media (max-width: 1120px) { .summary { grid-template-columns: repeat(3, 1fr); }.grid { grid-template-columns: 1fr; }.filter-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }.filter-note { grid-column: 1 / -1; max-width: none; } }
+@media (max-width: 1120px) { .summary { grid-template-columns: repeat(3, 1fr); }.operations-grid, .grid { grid-template-columns: 1fr; }.filter-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }.filter-note { grid-column: 1 / -1; max-width: none; } }
 @media (max-width: 720px) { .topbar { align-items: flex-start; flex-wrap: wrap; }.brand { min-width: 0; }.hero { grid-template-columns: 1fr; }.summary { grid-template-columns: repeat(2, 1fr); }.filter-strip { grid-template-columns: 1fr 1fr; }.table-wrap { max-height: none; }.wrap { padding: 20px 14px 48px; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
 </style>
@@ -105,6 +110,21 @@ button, input, select { font: inherit; }
     <div class="filter-note">Filters only narrow the observer’s GET requests. They never signal or alter the plane.</div>
   </section>
 
+  <section class="operations-grid" aria-label="Read-only fleet operations">
+    <article class="panel ledger cyan" aria-labelledby="broker-operations-heading">
+      <div class="panel-head"><h3 id="broker-operations-heading">Broker health</h3><p>Read-only · no migrations or cleanup</p></div>
+      <div id="broker-operations-content" class="empty">Loading sanitized broker health…</div>
+    </article>
+    <article class="panel ledger orange" aria-labelledby="zombie-operations-heading">
+      <div class="panel-head"><h3 id="zombie-operations-heading">Zombie signals</h3><p>Bounded counts · identifiers omitted</p></div>
+      <div id="zombie-operations-content" class="empty">Loading sanitized zombie signals…</div>
+    </article>
+    <article class="panel ledger purple" aria-labelledby="batch-operations-heading">
+      <div class="panel-head"><h3 id="batch-operations-heading">Batch progress</h3><p>Bounded tracks · logs and commands omitted</p></div>
+      <div id="batch-operations-content" class="empty">Loading sanitized batch progress…</div>
+    </article>
+  </section>
+
   <section class="grid">
     <article class="panel ledger" aria-labelledby="requests-heading">
       <div class="panel-head"><h3 id="requests-heading">Request ledger</h3><p>Queued → running → terminal</p></div>
@@ -140,7 +160,7 @@ button, input, select { font: inherit; }
     <table><thead><tr><th>Source</th><th>Agent</th><th>Via</th></tr></thead></table>
   </template>
 
-  <p class="footnote"><strong>Authority posture:</strong> the Fleet Observer is the consolidated evidence surface for durable requests, messages, ACP conversations, formal reviews, deliveries, retries, and dead letters. Legacy Channels and Comms URLs redirect here during the compatibility soak.</p>
+  <p class="footnote"><strong>Authority posture:</strong> the Fleet Observer is the consolidated evidence surface for durable requests, messages, ACP conversations, formal reviews, deliveries, retries, dead letters, and sanitized operations health. The operations panels are observational only: they cannot clean queues, expire delivery, start providers, or mutate fleet state. Legacy Channels and Comms URLs redirect here during the compatibility soak.</p>
 </main>
 
 <script>
@@ -236,6 +256,30 @@ function renderOverview(data) {
   document.getElementById('dead-detail').textContent = counts.dead_letters?.total ? 'Follow-up evidence available' : 'No dead letters observed';
 }
 
+function renderOperations(data) {
+  const broker = data.broker || {};
+  const processValue = broker.live_process_count == null ? 'Unavailable' : short(broker.live_process_count, '0');
+  document.getElementById('broker-operations-content').innerHTML = `
+    <div class="operations-stats">
+      <div class="operation-stat"><strong>${escapeHtml(short(broker.unacknowledged_depth, '0'))}</strong><span>Unacknowledged</span></div>
+      <div class="operation-stat"><strong>${escapeHtml(processValue)}</strong><span>Live processes</span></div>
+      <div class="operation-stat"><strong>${escapeHtml(short(broker.size_kb, '0'))}</strong><span>Database KiB</span></div>
+      <div class="operation-stat"><strong>${escapeHtml(short(broker.availability))}</strong><span>Read status</span></div>
+    </div>`;
+
+  const zombies = data.zombies || {};
+  const zombieRows = (zombies.items || []).map(item => `<tr><td>${pill(item.severity)}</td><td>${escapeHtml(short(item.type).replaceAll('_', ' '))}</td><td>${escapeHtml(short(item.age_hours ?? item.message_count_1h ?? item.error_count))}</td></tr>`);
+  const zombieEmpty = zombies.availability === 'unavailable' ? 'Zombie read model unavailable.' : 'No zombie signals observed in the available read models.';
+  const zombieBound = zombies.truncated ? `<div class="empty">Showing ${escapeHtml(short(zombies.returned, '0'))} of ${escapeHtml(short(zombies.total, '0'))} sanitized signals.</div>` : '';
+  document.getElementById('zombie-operations-content').innerHTML = zombieBound + table(['Severity', 'Type', 'Bounded metric'], zombieRows, zombieEmpty);
+
+  const batches = data.batches || {};
+  const batchRows = (batches.tracks || []).map(item => `<tr><td class="mono">${escapeHtml(short(item.track))}</td><td>${pill(item.health)}</td><td>${escapeHtml(short(item.research_done, '0'))}/${escapeHtml(short(item.total_expected, '0'))}</td><td>${escapeHtml(short(item.remaining, '0'))}</td><td>${escapeHtml(short(item.throughput_per_hour, '0'))}/h</td></tr>`);
+  const batchEmpty = batches.availability === 'unavailable' ? 'Batch read model unavailable.' : 'No batch tracks observed in the available read models.';
+  const batchBound = batches.truncated ? `<div class="empty">Showing ${escapeHtml(short(batches.returned, '0'))} of ${escapeHtml(short(batches.total, '0'))} sanitized tracks.</div>` : '';
+  document.getElementById('batch-operations-content').innerHTML = batchBound + table(['Track', 'Health', 'Research', 'Remaining', 'Throughput'], batchRows, batchEmpty);
+}
+
 function renderRequests(data) {
   const rows = (data.requests || []).map(item => `<tr><td class="mono">${escapeHtml(item.request_id)}</td><td>${pill(item.state)}</td><td>${escapeHtml(short(item.requested_recipient))} → ${escapeHtml(short(item.resolved_recipient))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
   document.getElementById('requests-content').innerHTML = table(['Request', 'State', 'Endpoint', 'Source', 'Updated'], rows, 'No requests match the current observer filters.');
@@ -275,8 +319,8 @@ async function refreshFleet() {
   setError('');
   try {
     const common = ['state', 'agent', 'source', 'conversation'];
-    const [health, overview, requests, authorityJobs, reviews, acp, deadLetters, activity, messages] = await Promise.all([
-      fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'),
+    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, activity, messages] = await Promise.all([
+      fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
       fetchJson(query('/api/fleet/requests', ['kind', ...common])),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
       fetchJson(query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr'])),
@@ -285,7 +329,7 @@ async function refreshFleet() {
       fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
       fetchJson(query('/api/fleet/messages', ['kind', ...common])),
     ]);
-    renderHealth(health); renderOverview(overview); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
+    renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
     renderAcp(acp); renderDeadLetters(deadLetters); renderActivity(activity); renderMessages(messages);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);

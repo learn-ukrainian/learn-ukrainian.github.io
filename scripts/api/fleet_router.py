@@ -8,10 +8,13 @@ authoritative during the pre-flip soak.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
+import math
 import re
 import sqlite3
+from collections import Counter
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -25,6 +28,7 @@ from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
 
+from . import comms_router as legacy_comms
 from .config import PROJECT_ROOT
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
@@ -38,6 +42,14 @@ MAX_BODY_DETAIL_CHARS = 2_048
 MAX_DETAIL_ROWS = 100
 MAX_ACP_SCAN = 500
 MAX_ACTIVITY_SCAN = 500
+MAX_OPERATIONS_ITEMS = 50
+
+_ZOMBIE_TYPES = frozenset(
+    {"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"}
+)
+_ZOMBIE_SEVERITIES = frozenset({"warning", "critical"})
+_BATCH_HEALTH = frozenset({"complete", "healthy", "stalled", "dead", "unknown"})
+_TRACK_LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$")
 
 _SAFE_METADATA_KEYS = frozenset(
     {
@@ -348,6 +360,280 @@ def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> 
     except sqlite3.Error:
         return {}
     return {_safe_text(row[0], fallback="unknown"): int(row[1]) for row in rows}
+
+
+def _non_negative_int(value: Any) -> int:
+    """Normalize legacy numeric fields without reflecting arbitrary values."""
+    if isinstance(value, bool):
+        return int(value)
+    try:
+        return max(0, int(value))
+    except (TypeError, ValueError, OverflowError):
+        return 0
+
+
+def _non_negative_float(value: Any) -> float:
+    try:
+        number = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return 0.0
+    if not math.isfinite(number):
+        return 0.0
+    return max(0.0, round(number, 1))
+
+
+def _legacy_broker_snapshot() -> dict[str, Any]:
+    """Read the legacy broker with an explicit query-only connection.
+
+    The legacy health route opens a normal connection so that it can report
+    writability. This consolidated observer deliberately does not reuse that
+    behavior: a GET must never create, migrate, or journal the broker database.
+    """
+    db_path = Path(legacy_comms.MESSAGE_DB)
+    result: dict[str, Any] = {
+        "availability": "db_missing",
+        "db_exists": False,
+        "readable": False,
+        "size_kb": 0.0,
+        "unacknowledged_depth": 0,
+    }
+    if not db_path.is_file():
+        return result
+
+    result["db_exists"] = True
+    try:
+        result["size_kb"] = round(db_path.stat().st_size / 1024, 1)
+        connection = sqlite3.connect(
+            f"{db_path.resolve().as_uri()}?mode=ro",
+            uri=True,
+            timeout=0.25,
+        )
+        try:
+            connection.execute("PRAGMA query_only = ON")
+            result["readable"] = True
+            if not _table_exists(connection, "messages"):
+                result["availability"] = "table_missing"
+                return result
+            row = connection.execute(
+                "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
+            ).fetchone()
+            result["unacknowledged_depth"] = _non_negative_int(row[0] if row else 0)
+            result["availability"] = "available"
+        finally:
+            connection.close()
+    except (OSError, ValueError, sqlite3.Error):
+        logger.warning("Fleet operations could not read the legacy broker database")
+        result["availability"] = "db_unavailable"
+        result["readable"] = False
+    return result
+
+
+def _safe_zombie_projection(raw: Any) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        return {
+            "availability": "unavailable",
+            "total": 0,
+            "returned": 0,
+            "limit": MAX_OPERATIONS_ITEMS,
+            "truncated": False,
+            "by_type": {},
+            "by_severity": {},
+            "items": [],
+        }
+
+    source = raw.get("zombies")
+    source_items = source if isinstance(source, list) else []
+    items: list[dict[str, Any]] = []
+    by_type: Counter[str] = Counter()
+    by_severity: Counter[str] = Counter()
+    for entry in source_items:
+        if not isinstance(entry, dict):
+            continue
+        zombie_type = entry.get("type")
+        if zombie_type not in _ZOMBIE_TYPES:
+            zombie_type = "unknown"
+        severity = entry.get("severity")
+        if severity not in _ZOMBIE_SEVERITIES:
+            severity = "unknown"
+        by_type[zombie_type] += 1
+        by_severity[severity] += 1
+        if len(items) >= MAX_OPERATIONS_ITEMS:
+            continue
+        item: dict[str, Any] = {"type": zombie_type, "severity": severity}
+        for field in ("message_count_1h", "error_count"):
+            if field in entry:
+                item[field] = _non_negative_int(entry[field])
+        if "age_hours" in entry:
+            item["age_hours"] = _non_negative_float(entry["age_hours"])
+        items.append(item)
+
+    return {
+        "availability": "available",
+        "total": sum(by_type.values()),
+        "returned": len(items),
+        "limit": MAX_OPERATIONS_ITEMS,
+        "truncated": sum(by_type.values()) > len(items),
+        "by_type": dict(sorted(by_type.items())),
+        "by_severity": dict(sorted(by_severity.items())),
+        "items": items,
+    }
+
+
+def _safe_batch_projection(raw: Any) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        return {
+            "availability": "unavailable",
+            "total": 0,
+            "returned": 0,
+            "limit": MAX_OPERATIONS_ITEMS,
+            "truncated": False,
+            "running_processes": 0,
+            "by_health": {},
+            "tracks": [],
+        }
+
+    source = raw.get("tracks")
+    source_tracks = source if isinstance(source, dict) else {}
+    tracks: list[dict[str, Any]] = []
+    by_health: Counter[str] = Counter()
+    for raw_track, entry in sorted(source_tracks.items(), key=lambda item: str(item[0])):
+        if not isinstance(entry, dict):
+            continue
+        track = str(raw_track)
+        if not _TRACK_LABEL.fullmatch(track):
+            track = "unknown"
+        health = entry.get("health")
+        if health not in _BATCH_HEALTH:
+            health = "unknown"
+        by_health[health] += 1
+        if len(tracks) >= MAX_OPERATIONS_ITEMS:
+            continue
+        tracks.append(
+            {
+                "track": track,
+                "health": health,
+                "total_expected": _non_negative_int(entry.get("total_expected")),
+                "research_done": _non_negative_int(entry.get("research_done")),
+                "remaining": _non_negative_int(entry.get("remaining")),
+                "recent_30min": _non_negative_int(entry.get("recent_30min")),
+                "throughput_per_hour": _non_negative_float(
+                    entry.get("throughput_per_hour")
+                ),
+            }
+        )
+
+    return {
+        "availability": "available",
+        "total": sum(by_health.values()),
+        "returned": len(tracks),
+        "limit": MAX_OPERATIONS_ITEMS,
+        "truncated": sum(by_health.values()) > len(tracks),
+        "running_processes": _non_negative_int(raw.get("running_processes")),
+        "by_health": dict(sorted(by_health.items())),
+        "tracks": tracks,
+    }
+
+
+def _legacy_batch_snapshot() -> dict[str, Any]:
+    """Collect the existing batch read models without populating their cache."""
+    logs = legacy_comms._scan_preseed_logs()
+    processes = legacy_comms._check_build_processes()
+    all_tracks = {
+        str(item.get("track"))
+        for item in [*logs, *processes]
+        if isinstance(item, dict) and item.get("track")
+    }
+    tracks: dict[str, dict[str, Any]] = {}
+    for track in sorted(all_tracks):
+        progress = legacy_comms._scan_track_progress(track)
+        log = next(
+            (item for item in logs if isinstance(item, dict) and item.get("track") == track),
+            None,
+        )
+        process = next(
+            (
+                item
+                for item in processes
+                if isinstance(item, dict) and item.get("track") == track
+            ),
+            None,
+        )
+        if log and log.get("complete"):
+            health = "complete"
+        elif process:
+            recent = _non_negative_int(progress.get("recent_30min"))
+            log_is_recent = bool(
+                log
+                and "age_seconds" in log
+                and _non_negative_int(log.get("age_seconds")) < 900
+            )
+            health = "healthy" if recent > 0 or log_is_recent else "stalled"
+        elif (
+            log
+            and not log.get("complete")
+            and _non_negative_int(log.get("age_seconds")) > 600
+        ):
+            health = "dead"
+        else:
+            health = "unknown"
+        tracks[track] = {**progress, "health": health}
+    return {"running_processes": len(processes), "tracks": tracks}
+
+
+@router.get("/operations")
+async def fleet_operations() -> dict[str, Any]:
+    """Sanitized legacy broker, zombie, and batch operations projection."""
+    broker_result, process_result, zombie_result, batch_result = await asyncio.gather(
+        asyncio.to_thread(_legacy_broker_snapshot),
+        legacy_comms.active_processes(),
+        legacy_comms.detect_zombies(stale_hours=2.0, pingpong_threshold=5),
+        asyncio.to_thread(_legacy_batch_snapshot),
+        return_exceptions=True,
+    )
+
+    broker = (
+        broker_result
+        if isinstance(broker_result, dict)
+        else {
+            "availability": "db_unavailable",
+            "db_exists": False,
+            "readable": False,
+            "size_kb": 0.0,
+            "unacknowledged_depth": 0,
+        }
+    )
+    if isinstance(process_result, dict):
+        broker["live_process_count"] = _non_negative_int(process_result.get("alive"))
+        broker["process_availability"] = "available"
+    else:
+        broker["live_process_count"] = None
+        broker["process_availability"] = "unavailable"
+        if broker["availability"] == "available":
+            broker["availability"] = "partial"
+
+    zombies = _safe_zombie_projection(
+        zombie_result if not isinstance(zombie_result, BaseException) else None
+    )
+    batches = _safe_batch_projection(
+        batch_result if not isinstance(batch_result, BaseException) else None
+    )
+    sections = (broker["availability"], zombies["availability"], batches["availability"])
+    if all(section == "available" for section in sections):
+        availability = "available"
+    elif all(section in {"unavailable", "db_unavailable"} for section in sections):
+        availability = "unavailable"
+    else:
+        availability = "partial"
+
+    return {
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "read_only": True,
+        "writes_enabled": False,
+        "availability": availability,
+        "broker": broker,
+        "zombies": zombies,
+        "batches": batches,
+    }
 
 
 @router.get("/health")
