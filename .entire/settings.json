@@ -1,0 +1,9 @@
+{
+  "strategy_options": {
+    "checkpoint_remote": {
+      "provider": "github",
+      "repo": "learn-ukrainian/entire-checkpoints-private"
+    }
+  },
+  "telemetry": false
+}
