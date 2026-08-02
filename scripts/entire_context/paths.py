@@ -6,10 +6,13 @@ import os
 import subprocess
 from pathlib import Path
 
+from scripts.fleet_comms.paths import default_plane_root
+
 DEFAULT_STATE_RELATIVE = Path("batch_state") / "entire-context" / "v1"
 DEFAULT_DB_NAME = "context-links.sqlite3"
 DEFAULT_PROVIDER_STATUS_NAME = "provider-status.json"
 ENV_DB = "ENTIRE_CONTEXT_DB"
+ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
 
 
 def shared_repository_root(cwd: Path | str) -> Path:
@@ -54,6 +57,21 @@ def projection_path(cwd: Path | str, explicit: Path | str | None = None) -> Path
     if configured:
         return Path(configured).expanduser().resolve()
     return state_directory(cwd) / DEFAULT_DB_NAME
+
+
+def acp_root(cwd: Path | str, explicit: Path | str | None = None) -> Path:
+    """Resolve the shared canonical ACP plane used by Fleet services.
+
+    Caller-supplied and Entire-specific overrides win.  The default delegates
+    to Fleet Comms' canonical resolver so the CLI, API, primary checkout, and
+    linked worktrees cannot drift onto different receipt databases.
+    """
+    if explicit is not None:
+        return Path(explicit).expanduser().resolve()
+    configured = os.environ.get(ENV_ACP_ROOT)
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return default_plane_root(repo_root=Path(cwd))
 
 
 def provider_status_path(cwd: Path | str) -> Path:

@@ -17,10 +17,15 @@ effort: low
 
 # Entire context recall (public, body-free)
 
-**Automatic intake:** On any non-trivial task, run `status` + `search` (and
-`record-use` when locators inform the plan) **before** prioritization or
-dispatch. Do not wait for the operator to say “use Entire.” Skip only for pure
-one-line questions or when the module is missing/disabled (note that once).
+**Automatic intake:** On any non-trivial task, the accountable root runs
+`status` + `search` once **before** prioritization or dispatch. If the results
+matter, the root creates at most one verified `handoff` capsule (at most five
+cards and 8 KiB) and gives that same capsule to every participant that needs
+it. Children consume the capsule; they do not repeat a fleet-wide search merely
+because they use a different provider. Run `record-use` only when verified
+locators materially informed the work. Do not wait for the operator to say
+“use Entire.” Skip only for pure one-line questions or when the module is
+missing/disabled (note that once).
 
 This skill is the canonical agent-facing contract for the public context layer.
 It runs one provider-neutral CLI — `python -m scripts.entire_context` — over the
@@ -35,6 +40,11 @@ it never mutates them.
   `content_included: false`). Never request, emit, or persist transcripts,
   prompts, responses, subjects, artifacts, raw captures, secrets, or
   AI-generated summaries.
+- **Automatic context stays body-free.** Never place raw prompts, transcripts,
+  responses, session bodies, generated recaps, or generated summaries in an
+  intake prompt or distributed capsule. Human investigation with optional
+  Entire product tools remains private and manual; its output is not promoted
+  automatically.
 - **No Entire dependency.** Entire CLI 0.8.42 stays pinned, optional, and
   non-load-bearing. This workflow makes **zero** Entire CLI invocations and
   zero network calls. Do not run `entire` login, search, checkpoint, attach,
@@ -132,28 +142,41 @@ and `handoff` for a bounded capsule. Use the `.venv/bin/python` commands above;
 they are the canonical recall path.
 
 Native `entire blame --json` is allowed only for local attribution. Prompt-
-bearing `entire why`, cloud `entire search`, generated recap, investigate
-findings, and Entire review are optional manual tools. They never automatically
-enter a canonical capsule. Entire review is supplemental and never satisfies
-the Fleet formal-review gate.
+bearing `entire why`, logged-in cloud search, generated recap, investigate
+findings, session handoff, and Entire review are optional **human/operator
+investigation tools**. They may help a person search past agent work, recap a
+private session, explain why code exists, investigate a change, or prepare a
+private handoff. Their output never automatically enters a canonical capsule,
+changes fleet state, or proves review. Entire review is supplemental and never
+satisfies the sealed Fleet formal-review gate.
+
+Current official product references:
+
+- [Entire Skills](https://docs.entire.io/learn/skills)
+- [Review and recap agent work](https://docs.entire.io/learn/review-and-recap-agent-work)
+- [Search past agent work](https://docs.entire.io/learn/search-past-agent-work)
+- [Investigate why code exists](https://docs.entire.io/learn/investigate-why-code-exists)
 
 ## How to consume results
 
-1. Prefer exact identifiers when you have them (commit SHA, conversation ID,
+1. The accountable root owns recall for the task: run one status/search intake,
+   select only materially relevant verified cards, create no more than one
+   bounded capsule, and distribute it to the relevant participants.
+2. Prefer exact identifiers when you have them (commit SHA, conversation ID,
    locator ID) — exact canonical ID or SHA matches rank first.
-2. Treat every card as a **locator**: read the canonical source itself
+3. Treat every card as a **locator**: read the canonical source itself
    (`git show`, the ACP receipt, the GitHub issue) before relying on details.
    The card's `canonical_digest` proves the locator matches the canonical
    evidence at recall time.
-3. Check `omitted` before concluding absence: an omitted card names the
+4. Check `omitted` before concluding absence: an omitted card names the
    locator and a machine reason (`source_missing`, `digest_mismatch`,
    `partial_terminal`, `tombstoned`, `unsupported_kind`, `capsule_budget`).
-4. A handoff capsule with `"complete": false` intentionally dropped items to
+5. A handoff capsule with `"complete": false` intentionally dropped items to
    stay within the item/byte caps; it is still valid JSON and safe to pass on.
-5. Ranking is deterministic and Unicode-casefold based with `locator_id` as
+6. Ranking is deterministic and Unicode-casefold based with `locator_id` as
    the final tie-break, so identical fixtures give identical results to every
    harness.
-6. Search delivery is not evidence of use. When verified cards materially
+7. Search delivery is not evidence of use. When verified cards materially
    informed intake, architecture, implementation, explanation, review, or
    handoff, run `record-use` with the exact task, harness, purpose, and locator
    IDs. The body-free idempotent receipt is the only basis for Monitor's
@@ -167,6 +190,10 @@ the Fleet formal-review gate.
   integration.
 - Codex CLI and Codex Desktop first use the installed native `codex`
   integration and the same project hooks. Do not invent a `codex-gui` agent.
+- Claude models hosted by Claude Code use `claude-code`; any supported model
+  hosted by OpenCode uses `opencode`. Grok and AGY follow the integration of
+  the harness that actually launches them. A provider/model label does not
+  identify a capture integration.
 - Add an external `entire-agent-<harness>` adapter only after a source-blind
   canary proves that the actual unsupported harness has no native capture
   path. A model name alone is never evidence that an adapter is required.

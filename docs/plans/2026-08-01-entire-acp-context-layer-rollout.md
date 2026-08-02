@@ -1,22 +1,24 @@
 # Entire 0.8.42 context-layer and ACP integration rollout
 
-**Status:** Plan of record for staged implementation
+**Status:** Plan of record; local body-free context links and recall implemented,
+remaining product/cloud capabilities deferred
 **Owner:** Infra harness stream, #4707
-**Tracking:** [#6162](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162)
+**Tracking:** [#6162](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162),
+[#6183](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6183)
 **Decision:** [ADR-018](../architecture/adr/adr-018-entire-acp-context-layer.md)
 **Version boundary:** stable Entire CLI 0.8.42 only
 
 ## Outcome
 
-Entire will be used for more than recovery, but it will not become another
-controller. Its useful job is to help an agent find prior work across sessions
-and commits, connect that history to ACP/Fleet/Monitor receipts, and then load a
-small amount of verified canonical context into the current task.
+Entire may be used for more than recovery, but it will not become another
+controller. The implemented project path helps an agent find prior work in a
+local body-free projection, connect that history to ACP/Fleet/Monitor receipts,
+and load a small amount of verified canonical context into the current task.
 
 The rollout has four product outcomes:
 
-1. **Active recall:** an LLM can search prior checkpoints before or during work
-   and receive a bounded, cited hydration capsule.
+1. **Active recall:** an accountable root can search verified local locator
+   cards before work and distribute one bounded, cited hydration capsule.
 2. **Intent and provenance:** a reviewer can move from a commit or code line to
    its Entire checkpoint and then to the exact issue, ACP discussion, review,
    or rollover receipt.
@@ -29,46 +31,30 @@ Recovery remains a supported fallback, not the definition of the product.
 
 ## What the official guidance changes
 
-Entire's own guidance describes an agent-facing context layer rather than only
-a journal:
+Entire's current guidance describes agent-facing workflows rather than only a
+journal:
 
-- [Entire Skills](https://docs.entire.io/guides/skills/overview) define
-  workflows for explain, recall, replay, review, search, session handoff,
-  session-to-skill, teach, and what-happened.
-- [Search from an agent](https://docs.entire.io/guides/search/semantic-search/search-from-your-agent)
-  is intended to run before or during code changes, not only after a failure.
-- [Agent hooks](https://entire.io/blog/agent-hooks-the-integration-layer-between-entire-cli-and-your-agent)
-  normalize session and turn lifecycle events and are designed to be
-  idempotent and fail-open.
-- [External agent plugins](https://entire.io/blog/bring-your-own-agents-to-entire)
-  let a stateless executable translate another agent's events and transcripts
-  into Entire's common lifecycle.
-- [Recap and review](https://entire.io/blog/new-cli-commands-recap-review-labs)
-  expose team/session/token/tool/skill activity and checkpoint-informed review.
-- [Agent-help](https://entire.io/blog/introducing-entire-agent-help) makes the
-  installed CLI, rather than current web documentation, the command source of
-  truth.
-- [Ref-based storage](https://entire.io/blog/introducing-ref-based-checkpoint-storage)
-  is available in 0.8.42 and avoids shared-branch contention, but it is an
-  opt-in backend that still requires project-specific routing proof.
-- [Security guidance](https://docs.entire.io/security) says redaction is
-  best-effort, checkpoint metadata can live in another private repository,
-  commit trailers are permanent, and local shadow refs can hold raw source
-  snapshots.
-- [The CLI architecture](https://entire.io/blog/the-entire-cli-how-it-works-and-where-its-headed)
-  treats checkpoint IDs as Git-linked semantic identifiers that survive common
-  history rewrites.
+- [Entire Skills](https://docs.entire.io/learn/skills) groups the product's
+  search, explanation, investigation, review/recap, and handoff workflows.
+- [Search past agent work](https://docs.entire.io/learn/search-past-agent-work)
+  describes logged-in semantic search across prior work.
+- [Review and recap agent work](https://docs.entire.io/learn/review-and-recap-agent-work)
+  describes generated review and recap workflows.
+- [Investigate why code exists](https://docs.entire.io/learn/investigate-why-code-exists)
+  describes explain/why/blame/investigate-style provenance work.
 
-These sources establish the opportunity and the risk. They do not prove that
-every current documentation feature exists safely under the pinned 0.8.42
-binary, so installed help and disposable canaries remain decisive.
+These sources establish useful private investigation workflows. They do not
+authorize project automation to send prompts, transcripts, responses, session
+bodies, or generated summaries to an agent. The public workflow therefore
+remains stricter, local, body-free, and independent of logged-in cloud search.
 
 ## Installed 0.8.42 capability matrix
 
 The following table distinguishes observed command surfaces from authorized
-use. `entire agent-help --json` in this checkout reports 0.8.42 and the public
-repository identity derived from `origin`; `entire status` reports that this
-public checkout is not enabled.
+use. The repository pins the private checkpoint destination, disables Entire
+telemetry, and composes fail-open hooks for supported host harnesses. Runtime
+availability still requires an explicit probe; configuration is not a health
+claim.
 
 | Capability | 0.8.42 evidence | Rollout disposition |
 | --- | --- | --- |
@@ -84,8 +70,11 @@ public checkout is not enabled.
 | Dispatch | `dispatch --local` or server summary | Prohibited because project policy forbids AI-generated session summaries. |
 | Generated explanation | `checkpoint explain --generate` | Prohibited for the same reason. |
 | Labs review/investigate/import/why/blame/experts | Listed by `entire labs`; explicitly experimental | Advisory canaries only; never authoritative. |
-| External-agent plugin | Official protocol; no project implementation | Deferred until the receipt-based join proves a missing capability. |
+| External-agent plugin | Standalone Kimi Code adapter implemented; no ACP-wide plugin | Use only for the actual standalone `kimi` harness; the general ACP plugin remains deferred. |
 | Agent Skills | Official cross-agent workflows | Pin and review only the required workflows; wrap them in project policy. |
+| Local context-link recall | `scripts/entire_context/`; tests for search, explain, handoff, typed resolvers, and use receipts | Implemented public path; body-free, bounded, local, and non-authoritative. |
+| Monitor projection | Read-only `/api/ops/entire-context/status` and `/api/ops/entire-context/search` | Implemented; no synchronous Entire call. |
+| Host-harness capture | Composed `codex`, `claude-code`, and `opencode` hooks; standalone Kimi adapter | Implemented where installed; follows the harness, not the model label, and remains separate from recall. |
 
 ## System roles
 
@@ -93,23 +82,27 @@ public checkout is not enabled.
 flowchart LR
     Agent["Codex, Claude, Kimi, GLM, or another seat"]
     Skill["Project entire-context workflow"]
-    Entire["Entire 0.8.42 private checkpoint index"]
+    Projection["Local body-free context-link projection"]
+    Entire["Optional private Entire product tools"]
     Resolver["Context-link resolver and digest gate"]
     Canonical["GitHub · Fleet/ACP · Monitor · rollover · formal review"]
     Capsule["Bounded hydration capsule with citations"]
 
     Agent -->|"bounded query"| Skill
-    Skill -->|"metadata-only search"| Entire
-    Entire -->|"checkpoint/commit locators"| Skill
+    Skill -->|"bounded local search"| Projection
+    Projection -->|"verified locator candidates"| Skill
     Skill --> Resolver
     Resolver -->|"fetch exact evidence"| Canonical
     Canonical -->|"canonical bytes + digest"| Resolver
     Resolver -->|"verified excerpts only"| Capsule
     Capsule --> Agent
+    Entire -.->|"manual operator investigation only"| Agent
 ```
 
-Entire ranks possible history. The resolver decides whether a result is safe
-and true. Canonical systems provide every byte that enters the LLM's context.
+The local projection ranks possible history. The resolver decides whether a
+result is safe and true. Canonical systems provide every byte that enters the
+LLM's automatic context. Optional Entire product output stays outside that
+automatic path.
 
 ## Search corpus and context-link contract
 
@@ -119,14 +112,13 @@ The initial index uses only fields copied mechanically from canonical records:
 
 - checkpoint ID, commit SHA, source kind, canonical ID, timestamp;
 - public repository, stream epic, track, state, labels, touched paths;
-- model, harness, participant names, token-count bucket;
-- an already-public GitHub issue/PR title; and
-- exact approved document path, heading, and Git SHA.
+- allowlisted model/harness and non-body routing fields exposed by typed
+  canonical resolvers.
 
-No bridge component writes an `intent`, `outcome`, `rationale`, `summary`, or
-other synthesized field. A private ACP subject is not treated as a public
-title. Each search field must name the canonical field from which it was
-copied.
+No bridge component writes an `intent`, `outcome`, `rationale`, title, heading,
+`summary`, or other synthesized field. Prompts, transcripts, responses,
+session bodies, and private ACP subjects are excluded. Each search field must
+name the canonical field from which it was copied.
 
 The project does not assume that Entire 0.8.42 can ingest arbitrary typed
 metadata cards. The baseline join works from supported Entire checkpoint and
@@ -170,6 +162,24 @@ The projection is disposable and rebuildable from canonical receipts.
 
 ## Staged rollout
 
+Implementation status as of 2026-08-02:
+
+| Phase | Evidence-backed status |
+| --- | --- |
+| Phase 0 | Private routing, fail-open host hooks, and no-public-ref configuration have automated coverage; the broader remote leakage and outage canary set below remains a gate, not a completed claim. |
+| Phase 1 | The `#6174` local context-link schema, append-only projection, typed resolvers, ACP reconciliation, and read-only Monitor surface are implemented. |
+| Phase 2 | The `#6183` local `status`, `search`, `explain-change`, `handoff`, and `record-use` path is implemented with hard body/result/budget limits. Cloud semantic search is not automated. |
+| Phase 3 | Body-free use receipts are implemented; curated body admission and product analytics remain deferred. |
+| Phase 4 | ACP plugin remains deferred; current ACP terminal receipts already project into the local context index. |
+
+The implemented provider-neutral intake contract is one root `status` +
+`search`, at most one verified five-card/8-KiB capsule distributed to relevant
+participants, and `record-use` only when verified locators materially informed
+the task. Participants do not repeat broad recall by model. Capture attaches to
+the host harness (`codex`, `claude-code`, `opencode`, or an explicitly proved
+external harness adapter), not to Codex, Claude, Kimi, GLM, Grok, or AGY model
+labels.
+
 ### Phase 0 — containment and capability proof
 
 No product checkout is enabled during this phase.
@@ -201,12 +211,13 @@ Any private-routing or leakage failure stops the program.
 
 ### Phase 1 — supported checkpoints and canonical joins
 
-Capture only supported accountable Codex/Claude integration sessions. Do not
-attempt native Kimi/GLM capture yet. This phase begins only if the Phase 0
-remote inspection proves that the chosen 0.8.42 path stores no forbidden
-transcript or prompt bodies. If native capture cannot satisfy that rule, hooks
-remain disabled and the capability is recorded as blocked; the project does
-not weaken the privacy contract or manufacture synthetic sessions.
+Capture follows supported host-harness integrations, not model labels. Codex
+CLI/Desktop use `codex`; Claude Code-hosted models use `claude-code`; OpenCode-
+hosted models use `opencode`; and the explicit standalone Kimi Code adapter is
+only for the actual `kimi` harness. This phase proceeds only where private-
+route and content canaries satisfy the boundary. A failed canary disables that
+capture route; the project does not weaken the privacy contract or manufacture
+synthetic sessions.
 
 Deliverables:
 
@@ -241,11 +252,9 @@ Initial workflows:
 - `review-with-intent`: supply verified context to the reviewer without
   changing the formal-review gate.
 
-Search is enabled only after a separate egress decision establishes what is
-sent to Entire, where it is retained, and which returned fields are admitted.
-If cloud search is not approved, the workflow still supports known-ID
-explanation and project-local cross-link lookup; it does not pretend to provide
-semantic search.
+Local body-free search is implemented. Logged-in cloud Entire search remains a
+manual operator investigation tool and is never invoked by the public skill.
+Its results do not enter automatic capsules.
 
 Exit gate:
 
@@ -359,9 +368,12 @@ review of the finished documentation remains a separate gate.
 ## Ordered implementation issues
 
 1. Phase 0 destination, leakage, and exact-version canary harness.
-2. Phase 1 context-link schema, outbox lifecycle, and Monitor projection.
-3. Phase 2 reviewed `entire-context` workflow and egress decision.
-4. Phase 3 curated workflow-source admission and utility evaluation.
+2. Phase 1 context-link schema, outbox lifecycle, and Monitor projection
+   (implemented local slice; continue verification/operations hardening).
+3. Phase 2 provider-neutral `entire-context` onboarding and judged local recall
+   evaluation (core workflow implemented under #6183).
+4. Phase 3 curated workflow-source admission and utility evaluation, only
+   after a separately approved body policy.
 5. Phase 4 ACP plugin only if evidence proves a residual need.
 
 These issues may run only after dependency and ownership checks. They do not

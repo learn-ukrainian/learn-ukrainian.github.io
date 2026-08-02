@@ -1216,3 +1216,40 @@ def test_racing_reservations_never_expose_a_conversation_without_created_event(t
         ).fetchone()[0] == 1
     finally:
         conn.close()
+
+
+def test_optional_projection_failure_never_changes_complete_discussion_result(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    from scripts.entire_context import reconcile
+
+    expected = {
+        "conversation_id": "conversation_" + "a" * 32,
+        "state": "COMPLETE",
+        "classification": "complete",
+    }
+
+    class FakeController:
+        def __init__(self, *, root: Path):
+            self.root = root
+
+        def run(self, **kwargs):
+            del kwargs
+            return dict(expected)
+
+        def close(self):
+            return None
+
+    def fail_projection(**kwargs):
+        del kwargs
+        raise sqlite3.DatabaseError("projection-only failure")
+
+    monkeypatch.setattr(acpx_discuss, "AcpxDiscussionController", FakeController)
+    monkeypatch.setattr(reconcile, "project_terminal_acp_receipt", fail_projection)
+
+    result = acpx_discuss.run_discussion(cwd=tmp_path)
+
+    assert result == expected
+    assert "optional ACP context projection failed: DatabaseError" in caplog.text

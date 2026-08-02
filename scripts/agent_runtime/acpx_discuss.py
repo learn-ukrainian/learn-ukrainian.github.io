@@ -1247,11 +1247,16 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
             # best-effort and cannot change the discussion result.
             from scripts.entire_context.reconcile import project_terminal_acp_receipt
 
-            project_terminal_acp_receipt(
+            projection = project_terminal_acp_receipt(
                 conversation_id=str(result["conversation_id"]),
                 acp_root=root,
                 repo_root=Path(kwargs["cwd"]),
             )
+            if projection.get("outcome") not in {"promoted", "already_promoted"}:
+                logger.warning(
+                    "optional ACP context projection skipped: %s",
+                    projection.get("reason") or projection.get("outcome") or "unknown",
+                )
         except Exception as exc:
             logger.warning(
                 "optional ACP context projection failed: %s", type(exc).__name__
