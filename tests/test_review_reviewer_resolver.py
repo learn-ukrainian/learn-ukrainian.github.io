@@ -185,7 +185,7 @@ def test_low_risk_pool_author_gets_terra_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "model-catalog.v1"
-    assert resolution.catalog_reviewed_on == "2026-08-01"
+    assert resolution.catalog_reviewed_on == "2026-08-02"
     assert resolution.resolved_risk == "high"
 
 

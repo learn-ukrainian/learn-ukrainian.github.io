@@ -28,10 +28,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-08-01"
-    assert catalog_age_days(catalog, as_of=date(2026, 8, 1)) == 0
+    assert catalog["reviewed_on"] == "2026-08-02"
+    assert catalog_age_days(catalog, as_of=date(2026, 8, 2)) == 0
     assert not catalog_is_stale(catalog, as_of=date(2026, 8, 31))
-    assert catalog_is_stale(catalog, as_of=date(2026, 9, 1))
+    assert catalog_is_stale(catalog, as_of=date(2026, 9, 2))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -85,6 +85,26 @@ def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
     for ladder in load_model_catalog()["review_ladders"].values():
         candidates = {candidate for rung in ladder for candidate in rung}
         assert {"kimi-k3", "glm-5.2"} <= candidates
+
+
+def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priority() -> None:
+    catalog = load_model_catalog()
+    flash = catalog["models"]["deepseek-v4-flash"]
+    candidate = catalog["review_candidates"]["deepseek-v4-flash"]
+
+    assert flash["tier"] == "frontier_practical"
+    assert {"frontend_agentic_coding", "strong_code_review"} <= set(flash["roles"])
+    assert "not_critical_authority" in flash["weaknesses"]
+    assert "https://arena.ai/leaderboard/code" in flash["sources"]
+    assert candidate["transport"] == "hermes"
+    assert candidate["invocation"].endswith("--model deepseek-v4-flash --effort high")
+
+    practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
+    assert practical.index("glm-5.2") < practical.index("deepseek-v4-flash")
+    assert practical.index("deepseek-v4-flash") < practical.index("deepseek-v4-pro")
+
+    critical = [rung[0] for rung in catalog["review_ladders"]["critical"] if len(rung) == 1]
+    assert critical.index("deepseek-v4-pro") < critical.index("deepseek-v4-flash")
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
@@ -362,7 +382,7 @@ def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
 
 def test_catalog_enforces_quality_floor_and_homogeneous_rungs():
     broken = deepcopy(load_model_catalog())
-    broken["review_ladders"]["high"][0].append("deepseek-v4-flash")
+    broken["review_ladders"]["high"][0].append("pool-xs")
     with pytest.raises(ModelCatalogError, match="mixes quality tiers"):
         validate_catalog(broken)
 

@@ -22,7 +22,7 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
 that tier → cost among equivalent fits**. For formal code review, everyday routine PRs use practical seats
-(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM**). Escalatory authority reviews select from the advisor quality prior (**Sol → Opus
+(**Sonnet 5 → Terra → Gemini 3.6 Flash → GLM → DeepSeek V4 Flash High**). Escalatory authority reviews select from the advisor quality prior (**Sol → Opus
 → Fable → Pro**) (#5293). `gpt-5.6-terra` is **not an advisor**: it remains a practical/routine review seat.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
@@ -42,6 +42,9 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **Codex seat**: `gpt-5.6-terra` (standard practical review)
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
+  * **DeepSeek seat**: `deepseek-v4-flash` through Hermes with the shared
+    `agent.reasoning_effort: high` setting. Its current Arena evidence is preliminary and
+    frontend-specific, so this promotion does not grant critical or advisory authority.
 * **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
   * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, and
     non-binding advisory consultation). Operator directive 2026-07-31: when requesting
@@ -70,11 +73,14 @@ the canonical reviewer resolver. A routing-table change must never grant approva
 or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
-- **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort
+* **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort
   (`low`/`mid`/`high`) — set effort explicitly per dispatch; authoring/review seats run `high`.
-- **cursor**: **composer-2.5-fast is retired** — cursor has no cheap-fast tier; route quick
+* **cursor**: **composer-2.5-fast is retired** — cursor has no cheap-fast tier; route quick
   mechanical edits to agy/glm instead. Composer 2.5 (standard) remains the pinned-model choice
   where family independence matters.
+* **deepseek** (operator 2026-08-02): `deepseek-v4-flash` is a frontier-practical code seat at
+  Hermes `high` effort. Prefer it to Pro on practical code-review ladders; keep Pro ahead on the
+  critical fallback ladder. Neither is a language, folk-content, or approval-authority seat.
 
 | Task | Tool + model |
 | --- | --- |
@@ -271,7 +277,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **Luna @ `max`** for bounded work with exact owned paths + an objective scope ceiling; use a complete Sol envelope when consequential boundaries need definition. **Terra @ `high`** for broader autonomous integration or unresolved ambiguity | **agy** — default `gemini-3.6-flash-high` (agentic workhorse ≈ Terra/Sonnet class); Pro only for deep | cursor · grok | claude seat = only ≤5-LOC CI-fix-I-caused; Luna never sole authority |
-| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.6-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.2 · DeepSeek V4 Pro · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · DeepSeek Flash · Gemini 3.5 Flash | `review-pr` pins Terra/Sonnet5/GLM @ **high**; resolve-reviewer walks `model_catalog.yaml` ladders; cost never lowers quality floor within a risk rung |
+| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.6-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.2 · **DeepSeek V4 Flash @ Hermes high** · DeepSeek V4 Pro · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · Gemini 3.5 Flash | Flash stays behind Pro on the critical fallback ladder and is never critical authority; resolve-reviewer walks `model_catalog.yaml` ladders |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | **grok-4.5** | **LANGUAGE-LANES RULE below binds**: only these four; cursor/deepseek/kimi/pool/glm/gemma excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex** · **grok-4.5** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; NO grok as a QG judge seat (separate standing ban); FOLK stays cross-family GPT↔Claude per the folk rubric |
 | **Research / recon / triage** | **Luna @ `max`** with exact owned paths + an objective scope ceiling; add a Sol envelope when the boundaries themselves need judgment | Terra @ `high` for broader or ambiguous work | agy | Luna never sole authority on consequential calls |
@@ -287,8 +293,8 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
 
-- **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.6 Flash default; Gemini 3.1 Pro for deep) · **GPT-5.6 Terra/Sol by risk** · **claude** · **grok-4.5**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
-- **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.6 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Composer 2.5** · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Pro** · **Pool Laguna S 2.1** (free review volume) · **GLM-5.2** (deep security/bug review + large-context coherence; LOCAL-ONLY) · **Gemma 4** (surface review only). Pin Cursor's concrete model whenever family independence matters.
+* **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.6 Flash default; Gemini 3.1 Pro for deep) · **GPT-5.6 Terra/Sol by risk** · **claude** · **grok-4.5**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
+* **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.6 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Composer 2.5** · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Flash @ high** (practical frontend/code; Pro remains explicit for long-context or critical fallback) · **Pool Laguna S 2.1** (free review volume) · **GLM-5.2** (deep security/bug review + large-context coherence audits; LOCAL-ONLY) · **Gemma 4** (surface review only). Pin Cursor's concrete model whenever family independence matters.
 
 Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.6-flash-high` (orchestrator/routine default; `--to-model gemini-3.1-pro-high` only for deep) · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek --model deepseek-v4-pro` (first-party by default; `--provider openrouter` for opt-in per #4358). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
 
@@ -357,7 +363,7 @@ several models are reachable through more than one. Know both axes before routin
 
 | Harness | What it adds to ANY model it hosts | Models routed through it | Entry points¹ |
 | --- | --- | --- | --- |
-| **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
+| **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns · reasoning effort is shared/config-scoped (`~/.hermes/config.yaml`, currently `high`), not a true per-dispatch knob | deepseek (API key) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer deepseek-tools\|qwen-tools` (all hermes-backed) |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
 | **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes; native CLI = interactive/operator seat (effort control) + drive wiring; **opencode hosting sanctioned for orchestrator seats** (operator 2026-07-27, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native Kimi Code OAuth seat (models `k3` · `k2.7-coding` · `k2.7-coding-highspeed`) | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) · orchestrator grok via `ab ask-opencode --model xai/grok-4.5` |
 

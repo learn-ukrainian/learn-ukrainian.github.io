@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-08-01
+reviewed_on: 2026-08-02
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -312,15 +312,16 @@ models:
       - https://api-docs.deepseek.com/quick_start/pricing
   deepseek-v4-flash:
     family: deepseek
-    tier: economical
+    tier: frontier_practical
     lifecycle: active
-    roles: [routine_review, bounded_agentic_work]
+    roles: [frontend_agentic_coding, strong_code_review, bounded_agentic_work]
     transports: [hermes, opencode]
-    strengths: [very_low_cost, speed]
-    weaknesses: [not_sole_high_risk_reviewer, silent_stall_history, not_for_folk_content]
+    strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
+    weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content]
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
+      - https://arena.ai/leaderboard/code
   # Poolside Laguna family (exact vendor IDs — do not invent "laguna-s2" / "laguna.m1"):
   #   Gen-1:  laguna-m.1   (prior; technical report M.1 / XS.2 era)
   #   Gen-2:  laguna-s-2.1 (strongest current — pool formal/volume default)
@@ -566,7 +567,7 @@ review_candidates:
     model_id: deepseek-v4-flash
     route: deepseek
     transport: hermes
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash --effort high
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
@@ -704,11 +705,11 @@ review_ladders:
     - [kimi-k3]
     - [glm-5.2]
     - [deepseek-v4-pro]
+    - [deepseek-v4-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
     - [pool-xs, gemini-3.5-flash]
-    - [deepseek-v4-flash]
   high: &practical_first_code_review
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
@@ -717,11 +718,11 @@ review_ladders:
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
     - [glm-5.2]
+    - [deepseek-v4-flash]
     - [deepseek-v4-pro]
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
     - [pool-xs, gemini-3.5-flash]
-    - [deepseek-v4-flash]
   medium: *practical_first_code_review
   low: *practical_first_code_review
