@@ -68,7 +68,15 @@ overwritten before the worker gate. The launch now uses the collision-resistant
 `UA_EVAL_HARDWARE_FLAVOR=l40sx1` binding while provider reconciliation remains
 the source of truth for actual hardware. That attempt's one billed minute cost
 USD 0.030000, so the cumulative USD 0.120167 remains
-in every subsequent aggregate budget calculation.
+in every subsequent aggregate budget calculation. Job
+`6a6fd5aa6b79c09949c1fbc9` verified the model and tokenizer hashes and reached
+vLLM model initialization, where the generic multimodal configuration made the
+pinned GGUF plugin demand unused vision-tower parameters. After verification,
+the worker now derives and records the hash of a local `Gemma4ForCausalLM`
+runtime config from the official `text_config`. The original files and model
+bytes remain unchanged; vision tensors are skipped because this evaluation
+prohibits use of the multimodal projector. That attempt's three billed minutes
+cost USD 0.090000, so cumulative cost is USD 0.210167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

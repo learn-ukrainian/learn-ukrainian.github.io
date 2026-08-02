@@ -19,6 +19,7 @@ import math
 import os
 import platform
 import re
+import shutil
 import statistics
 import sys
 import tempfile
@@ -385,6 +386,24 @@ def gpu_evidence() -> dict[str, Any]:
     }
 
 
+def prepare_text_runtime_tokenizer(tokenizer_root: Path) -> tuple[Path, str]:
+    """Derive a text-only runtime config after the official files verify."""
+    source_config = read_json(tokenizer_root / "config.json")
+    _require(source_config.get("model_type") == "gemma4", "official Gemma 4 config drift")
+    _require(
+        source_config.get("architectures") == ["Gemma4ForConditionalGeneration"],
+        "official Gemma 4 architecture drift",
+    )
+    text_config = source_config.get("text_config")
+    _require(isinstance(text_config, dict), "official Gemma 4 text config is missing")
+    runtime_config = {**text_config, "architectures": ["Gemma4ForCausalLM"]}
+    _require(runtime_config.get("model_type") == "gemma4_text", "Gemma 4 text model type drift")
+    runtime_root = tokenizer_root.parent / "tokenizer-text-runtime"
+    shutil.copytree(tokenizer_root, runtime_root)
+    write_atomic(runtime_root / "config.json", runtime_config)
+    return runtime_root, sha256_file(runtime_root / "config.json")
+
+
 def load_generator(
     *, config: Mapping[str, Any], model_path: Path, tokenizer_root: Path
 ) -> tuple[Callable[[Sequence[str]], list[tuple[str, int]]], dict[str, str], Callable[[str], str]]:
@@ -494,11 +513,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     work_root = Path(tempfile.mkdtemp(prefix="ua-open-weight-eval-hf-job-"))
     model_path, tokenizer_manifest, download_seconds = download_and_verify_model(config, work_root)
+    tokenizer_root = Path(tokenizer_manifest.pop("root"))
+    runtime_tokenizer_root, runtime_config_sha256 = prepare_text_runtime_tokenizer(tokenizer_root)
+    tokenizer_manifest["text_runtime_config_sha256"] = runtime_config_sha256
     gpu = gpu_evidence()
     generator, versions, render = load_generator(
         config=config,
         model_path=model_path,
-        tokenizer_root=Path(tokenizer_manifest.pop("root")),
+        tokenizer_root=runtime_tokenizer_root,
     )
     runner_sha256 = sha256_file(Path(__file__).resolve())
     checkpoint_header = {
@@ -513,6 +535,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "repository": config["tokenizer"]["repository"],
             "revision": config["tokenizer"]["revision"],
             "tree_sha256": tokenizer_manifest["tree_sha256"],
+            "text_runtime_config_sha256": tokenizer_manifest["text_runtime_config_sha256"],
         },
         "backend": "vllm",
         "versions": versions,
