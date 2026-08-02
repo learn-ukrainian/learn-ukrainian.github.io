@@ -2,8 +2,8 @@
 
 > **Owner:** [#6171](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6171)
 > under [Foundry Phase 2–4 #6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
-> **Status:** Release contract; paid training is optional and is not on the
-> critical path
+> **Status:** No-training release contract; project-funded or project-operated
+> model training is out of scope
 > **Does not authorize:** model download, accelerator rental, training, upload,
 > dataset publication, or automatic rewriting of source text
 
@@ -53,14 +53,15 @@ project's synthetic and translated collections. The
 verified all 137,723 raw literary rows against retained source locators and
 core metadata, and verified the textbook family against 158 chunk files, 170
 PDFs, the selection ledger, downloader, and page-URL map. The operator has
-approved these retained human-authored families for local research and model
-learning toward the project goal.
+approved these retained human-authored families for downstream research and
+model learning toward the project goal.
 
-Local model learning, raw-source redistribution, public dataset release, and
-public weight or adapter release are independent capabilities. The last three
-remain separately gated; they do not block preparation or local continued
-training. The existing exporter still implements the older combined gate and
-must be corrected before it can emit the newly approved local-training view.
+Downstream model learning, raw-source redistribution, public dataset release,
+and public weight or adapter release are independent capabilities. The last
+three remain separately gated; they do not block preparation or downstream
+continued training. The existing exporter still implements the older combined
+gate and must be corrected before it can emit the newly approved downstream
+training-eligible view.
 
 Historical and literary text must not be flattened into contemporary standard
 Ukrainian. A training consumer receives explicit strata and chooses the mixture:
@@ -82,9 +83,9 @@ the only copy.
 
 Validate source identity, provenance, privacy, human or synthetic origin,
 contamination, and the exact destination. Record permissions separately for
-local model training, raw-source redistribution, dataset publication, and
+downstream model learning, raw-source redistribution, dataset publication, and
 model publication; an unknown redistribution status must not be converted into
-a denial of an independently approved local-training use. Keep machine-
+a denial of an independently approved downstream-learning use. Keep machine-
 generated lessons, translations, and synthetic research evidence in separate
 origins. Do not promote benchmark text or its derivatives into a training
 view.
@@ -159,7 +160,7 @@ epochs, and an explicit `training_authorized: false` state. The existing
 `training_recipe_config_v1` and `training_recipe_manifest_v1` contracts are
 preparation contracts; generating them does not start training.
 
-If a separately authorized model experiment occurs, keep these roles separate:
+A downstream consumer should keep these roles separate:
 
 1. continued pretraining on destination-admitted human-authored text;
 2. optional correction/instruction or preference tuning on eligible,
@@ -167,7 +168,7 @@ If a separately authorized model experiment occurs, keep these roles separate:
 3. evaluation on mechanically isolated grammar, calque, interference,
    morphology, no-change, and protected-variation inventories.
 
-Do not combine these roles in an authorized run: otherwise a result cannot
+Do not combine these roles in one run: otherwise a result cannot
 identify which data treatment helped or caused harm.
 
 ### 7. Reproduce without an accelerator
@@ -176,9 +177,10 @@ From a fresh checkout or clean environment, rebuild schemas, receipts,
 admissions, detector regression cases, silver evidence, views, recipe
 manifests, tokenizer diagnostics where tokenizer files are locally available,
 and evaluation-firewall checks. This no-training reproduction is the required
-release gate. A trained adapter is an optional later artifact.
+and final project release gate. A downstream consumer may train from the frozen
+artifacts, but the Foundry project does not produce the adapter.
 
-## How long and how much would training take?
+## Consumer-side time and cost interface
 
 The recipe makes the cost measurable; it does not make one unmeasured price
 honest. For a particular checkpoint and hardware configuration:
@@ -191,7 +193,8 @@ compute cost = wall-clock hours × accelerator count × provider price per hour
 Add storage, data transfer, evaluation inference, taxes, and a declared failed-
 run allowance separately. Measure aggregate throughput with the exact model,
 sequence length, precision, optimizer, and adapter/full-parameter policy before
-approving the full run.
+approving its run. These calculations are a consumer planning surface, not a
+Foundry spending plan.
 
 The pinned Gemma 4 IT tokenizer produced 7,696,734 non-special tokens from
 2,778,111 lexical words in the 1,028-record, deduplicated training-eligible
@@ -201,9 +204,10 @@ one long near-duplicate, as recorded in the
 [model-view runbook](ukrainian-data-foundry-model-views.md). Applying the
 post-dedup observed ratio to the pre-dedup 50,298,925-word corpus inventory
 gives a rough **planning extrapolation of about 139.35 million tokens for one
-pass**. It is not a current training artifact: the exact local-training views
-have not yet been exported, their deduplication and masking will change the
-denominator, and literary/historical genres may tokenize differently.
+pass**. It is not a current training artifact: the exact downstream
+training-eligible views have not yet been exported, their deduplication and
+masking will change the denominator, and literary/historical genres may
+tokenize differently.
 
 Using Hugging Face Jobs list prices retrieved on 2026-08-02 of USD 2.50/hour
 for one A100 80 GB and USD 1.80/hour for one L40S 48 GB, a one-GPU, one-epoch
@@ -223,55 +227,13 @@ has a very different memory and compute envelope from QLoRA. The exact clean
 microbenchmark and model revision must replace this table before any spending
 decision.
 
-## Could the proof run on an unused M1?
+## Downstream model use
 
-Yes, if the proof uses a Gemma 4 size that matches the machine's unified memory
-and uses an Apple-Silicon training stack. It does not mean the current Gemma 4
-31B CUDA treatment can be copied to the Mac.
-
-Google's current
-[Gemma 4 memory table](https://ai.google.dev/gemma/docs/core#parameter-sizes-and-quantization)
-gives approximate Q4 inference loads of 2.9 GB for E2B, 4.5 GB for E4B,
-6.7 GB for 12B, 14.4 GB for 26B A4B, and 17.5 GB for 31B. Context and
-fine-tuning add memory beyond those values. Record the exact M1 variant,
-unified memory, free storage, and macOS version before selecting anything.
-
-| M1 unified memory | First candidate | What it can establish |
-| ---: | --- | --- |
-| 8 GB | Gemma 4 E2B Q4 | Whether the complete local pipeline can execute at all |
-| 16 GB | Gemma 4 E4B Q4; E2B fallback | A real small-model Ukrainian before/after proof; not 31B compatibility |
-| 32 GB | Gemma 4 12B Q4; E4B fallback | A stronger local proof if peak memory and reload pass |
-| 64 GB or more | Benchmark 12B first; consider 31B second | 31B remains conditional on measured training memory and speed |
-
-Apple's [MLX-LM](https://github.com/ml-explore/mlx-lm) supports LoRA and QLoRA
-on Apple silicon. Release `v0.31.2` added Gemma 4 support, while the
-[MLX-LM LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md)
-documents quantized-model training and memory controls. The existing #6170
-runner is not portable: it pins CUDA, an NVIDIA L40S, BitsAndBytes NF4, and a
-31B checkpoint. Preserve that runner and create a separately pinned MLX path
-only after the exact Mac and checkpoint are approved.
-
-A useful local proof has five measured steps:
-
-1. capture machine, model, tokenizer, framework, quantization, and storage
-   receipts;
-2. run the frozen baseline evaluation and protected-variation probes;
-3. perform a synthetic one-step update, save, restart, reload, and re-evaluate
-   only as a hardware preflight;
-4. train on a real, stratified Foundry slice and compare the reloaded adapter
-   with the untouched checkpoint on exactly the same held-out evidence; and
-5. run a full-corpus pass only if the measured throughput, peak memory, and
-   preliminary Ukrainian result justify its wall time.
-
-The fourth step is the minimum linguistic proof. A successful synthetic update
-alone proves only that MLX can write and reload an adapter.
-
-Gemma 4 is the first candidate because the project already has its tokenizer,
-baseline, and treatment contracts. Another Western open-weight model is a
-fallback only if the same frozen Ukrainian baseline, tokenizer diagnostics,
-memory preflight, and license check make it a more credible proof target. A
-fallback result validates the Foundry path for that model; it does not prove a
-Gemma 4 treatment.
+The release does not select, download, fine-tune, or publish a model. A consumer
+with compute selects its checkpoint and records the exact revision, tokenizer,
+framework, precision, hardware, throughput, objective, evaluation, and stop
+rules in the non-authorizing recipe. The consumer then owns the training run,
+its costs, and any model or adapter release decision.
 
 For scale, Lapa reports about 30 billion filtered pretraining tokens and a
 56-H100 training setup for its Gemma 3 adaptation. Our 139-million-token
@@ -280,7 +242,7 @@ valuable for its curated textbooks, literature, historical strata, provenance,
 and failure evidence; it is not by itself a replacement for a tens-of-billions-
 of-tokens language corpus.
 
-## Why Gemma 4 can lead and still make bad Ukrainian
+## Why the Foundry remains model-neutral
 
 Gemma 4 can improve an aggregate Ukrainian leaderboard because it is a newer
 general model with stronger reasoning, instruction following, architecture,
@@ -301,14 +263,13 @@ protected-variation evidence, data views, tokenizer census, and training recipe
 can be rerun for Gemma 4, Gemma 5, or another open model. A local adapter ages
 quickly; the means to prepare and measure Ukrainian transfer forward.
 
-## Decision rule
+## Project completion rule
 
 Ship the tool, contracts, recipes, clean-run receipt, limitations, and consumer
-guide first. Do not wait for paid training. Consider a model run only when a
-specific team or operator needs compatibility evidence for an exact current
-checkpoint, the admitted data are large enough for the named question, a
-microbenchmark supplies the real cost, and present-tense authorization covers
-that exact spend. A newer model release changes the checkpoint, not this plan.
+guide, then close #6171. The project does not run a model as a release gate or
+follow-up milestone. A downstream team's later model result may validate the
+recipe externally, but it does not reopen the Foundry implementation plan. A
+newer model release changes a consumer checkpoint, not this plan.
 
 ## Primary references
 

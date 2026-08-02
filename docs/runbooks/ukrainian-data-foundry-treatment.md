@@ -2,22 +2,20 @@
 
 > **Owner:** [#6170](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6170)
 > under [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
-> **Status:** Parked optional compatibility experiment; not a prerequisite for
-> the clean-Ukrainian tool, training recipe, or release candidate in #6171
-> **Current boundary:** Stage 0 is reproducible and no-cost. A separately
-> bounded, non-treatment hardware validation is specified below but cannot
-> launch: local Hugging Face authentication/model access is not configured and
-> its exact probe authorization artifact is absent. Model-weight download and
-> treatment training still require the exact operator authorization receipt.
+> **Status:** Archived historical preregistration; #6170 is closed as not
+> planned and this is not a future #6164 execution lane
+> **Archived boundary:** No project action is planned. The details below record
+> the frozen historical design; they are not a current hardware, download, or
+> training queue.
 
-This runbook preserves a reproducible experiment design; it is not the Foundry
-critical path. No model download, hardware probe, accelerator rental, or
-training is currently planned or authorized. The required deliverable is the
-model-neutral [clean-Ukrainian tool and training recipe](ukrainian-data-foundry-clean-ukrainian-recipe.md).
-If a future operator explicitly activates this exact Gemma revision, first
-refresh provider pricing and replace throughput estimates with a measured
-microbenchmark. Otherwise the preregistration remains useful frozen evidence
-and no further action is required.
+This runbook preserves a reproducible historical experiment design; it is not
+the Foundry critical path or backlog. No model download, hardware probe,
+accelerator rental, or training is planned under #6164. The required deliverable
+is the model-neutral
+[clean-Ukrainian tool and consumer recipe](ukrainian-data-foundry-clean-ukrainian-recipe.md).
+The preregistration remains frozen evidence and no further project action is
+required. A downstream team may design its own experiment from the released
+consumer artifacts without reopening #6170.
 
 ## What this experiment can decide
 
@@ -126,11 +124,17 @@ fails. A hard process kill in the instruction-scale interval between the
 optimizer call returning and the Python flag assignment cannot be proven after
 the fact; that residual is reported conservatively rather than inferred.
 
-Launch remains impossible until both blockers are cleared: local Hugging Face
-authentication and access to the exact model are not configured, and an exact
-operator authorization artifact for this one-attempt probe does not exist.
+## Archived command record — non-operational
 
-Once that exact authorization exists, validate it without launching anything:
+At archival, launch remained blocked because local Hugging Face authentication,
+exact-model access, and an operator authorization artifact did not exist.
+
+> **Do not run these commands under closed #6170.** Reuse requires a new issue,
+> new present-tense operator scope, and a newly reviewed design. The blocks are
+> retained only to document what the historical preregistration specified.
+
+The historical design would first have validated authorization without
+launching anything:
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.gemma_hardware_probe \
@@ -140,9 +144,12 @@ Once that exact authorization exists, validate it without launching anything:
   --output batch_state/6170/hf-probe-preparation.json
 ```
 
-The only paid entry point is the separate `launch` command. It creates one
-detached Job with the frozen 3,600-second provider timeout and records the Job
-ID immediately:
+The historical paid entry point was the separate `launch` command. It would
+have created one detached Job with the frozen 3,600-second provider timeout and
+recorded the Job ID immediately.
+
+> **Historical command—do not execute.** Closed #6170 cannot authorize a paid
+> job; a new issue and new operator approval would be required.
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.gemma_hardware_probe \
@@ -165,13 +172,17 @@ idempotency key, so this authorization is deliberately single-operator and must
 not be launched concurrently from different hosts; sequential cross-host reuse
 is rejected by the provider authorization-hash label.
 
-After that Job reaches a terminal state, collect its logs, provider inspection,
-resource-statistics observation, and completed-or-aborted worker receipt. The
-collector rejects non-terminal state, flavor/label/endpoint drift, duration
+Had that Job reached a terminal state, the historical collector would have
+recorded its logs, provider inspection, resource-statistics observation, and
+completed-or-aborted worker receipt. The collector rejects non-terminal state,
+flavor/label/endpoint drift, duration
 over 3,600 seconds, a mismatched runner, or a server-derived compute charge over
 USD 1.80. The receipt records the provider-derived charge from server-reported
 running seconds; it leaves invoice-exact USD/EUR fields null because the Jobs
 inspection API does not return the settled invoice:
+
+> **Historical command—do not execute.** It documents the archived evidence
+> contract and is not a current collection instruction.
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.gemma_hardware_probe \
