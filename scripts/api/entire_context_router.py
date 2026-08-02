@@ -9,9 +9,14 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
-from scripts.entire_context.paths import projection_path
+from scripts.entire_context.paths import projection_path, shared_repository_root
 from scripts.entire_context.provider import load_provider_status
 from scripts.entire_context.recall import RecallInputError, search_past_work
+from scripts.entire_context.resolvers import (
+    default_fleet_root,
+    default_issue_cache,
+    default_monitor_root,
+)
 from scripts.entire_context.store import ContextLinkStore
 from scripts.fleet_comms.message_plane import default_plane_root
 
@@ -26,6 +31,12 @@ def _repo_root() -> Path:
         project_root=Path(PROJECT_ROOT),
         live_repo_root=Path(LIVE_REPO_ROOT),
     )
+
+
+def _rollover_root(root: Path) -> Path:
+    """Resolve the existing shared rollover registry, with an explicit service override."""
+    configured = os.environ.get("ENTIRE_CONTEXT_ROLLOVER_ROOT")
+    return Path(configured) if configured else shared_repository_root(root)
 
 
 def _projection_status(root: Path) -> dict[str, Any]:
@@ -98,7 +109,10 @@ def entire_context_search(
             q,
             repo=root,
             acp_root=acp_root,
-            rollover_root=None,
+            rollover_root=_rollover_root(root),
+            fleet_root=default_fleet_root(root),
+            monitor_root=default_monitor_root(root),
+            issue_cache_path=default_issue_cache(root),
             limit=limit,
         )
     except RecallInputError as exc:

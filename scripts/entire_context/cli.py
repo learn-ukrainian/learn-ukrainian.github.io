@@ -46,10 +46,19 @@ from .recall import (
 )
 from .reconcile import MAX_RECONCILE_ROWS, reconcile_terminal_acp_receipts
 from .resolvers import (
+    DEFAULT_GATE_KIND,
     REASON_SOURCE_MISSING,
     ResolutionError,
+    default_fleet_root,
+    default_issue_cache,
+    default_monitor_root,
     resolve_acp_conversation,
+    resolve_fleet_receipt,
+    resolve_formal_review,
     resolve_git_commit,
+    resolve_github_issue,
+    resolve_github_pr,
+    resolve_monitor_run,
     resolve_rollover,
 )
 from .store import AdmitOutcome, ContextLinkStore
@@ -61,6 +70,9 @@ EXIT_REFUSED = 2
 ENV_DISABLED = "ENTIRE_CONTEXT_DISABLED"
 ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
 ENV_ROLLOVER_ROOT = "ENTIRE_CONTEXT_ROLLOVER_ROOT"
+ENV_FLEET_ROOT = "ENTIRE_CONTEXT_FLEET_ROOT"
+ENV_MONITOR_ROOT = "ENTIRE_CONTEXT_MONITOR_ROOT"
+ENV_ISSUE_CACHE = "ENTIRE_CONTEXT_ISSUE_CACHE"
 
 
 def _emit(payload: dict[str, Any]) -> None:
@@ -232,6 +244,36 @@ def _resolve_rollover_root(args: argparse.Namespace) -> Path | None:
     return Path(env) if env else None
 
 
+def _resolve_fleet_root(args: argparse.Namespace) -> Path | None:
+    explicit = getattr(args, "fleet_root", None)
+    if explicit:
+        return Path(explicit)
+    env = os.environ.get(ENV_FLEET_ROOT)
+    if env:
+        return Path(env)
+    return default_fleet_root(_resolve_repo(args))
+
+
+def _resolve_monitor_root(args: argparse.Namespace) -> Path | None:
+    explicit = getattr(args, "monitor_root", None)
+    if explicit:
+        return Path(explicit)
+    env = os.environ.get(ENV_MONITOR_ROOT)
+    if env:
+        return Path(env)
+    return default_monitor_root(_resolve_repo(args))
+
+
+def _resolve_issue_cache(args: argparse.Namespace) -> Path | None:
+    explicit = getattr(args, "issue_cache", None)
+    if explicit:
+        return Path(explicit)
+    env = os.environ.get(ENV_ISSUE_CACHE)
+    if env:
+        return Path(env)
+    return default_issue_cache(_resolve_repo(args))
+
+
 def _consumer_error(args: argparse.Namespace) -> dict[str, Any] | None:
     """Validate the optional consumer label; it is never persisted or echoed."""
     consumer = getattr(args, "consumer", None)
@@ -323,6 +365,91 @@ def cmd_bootstrap_rollover(args: argparse.Namespace) -> int:
     return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
 
 
+def _admit_typed_resolution(args: argparse.Namespace, resolution) -> int:
+    """Admit a completed local typed resolution using the normal idempotent gate."""
+    try:
+        result = ContextLinkStore(_resolve_db(args)).admit(
+            resolution.link,
+            resolution.verification,
+            actor=args.actor,
+        )
+    except (SchemaError, sqlite3.Error, KeyError, TypeError, ValueError):
+        _emit(_unavailable_payload(_resolve_db(args), "projection_unreadable"))
+        return EXIT_REFUSED
+    payload = result.to_dict()
+    if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED):
+        payload["excerpt"] = resolution.excerpt
+    _emit(payload)
+    return EXIT_OK if result.outcome in (AdmitOutcome.PROMOTED, AdmitOutcome.ALREADY_PROMOTED) else EXIT_REFUSED
+
+
+def cmd_bootstrap_github_issue(args: argparse.Namespace) -> int:
+    """Resolve an exact open issue through the fresh local membership cache."""
+    if _disabled():
+        return _refused("projection_disabled")
+    try:
+        resolution = resolve_github_issue(
+            args.issue_number,
+            cache_path=_resolve_issue_cache(args),
+            repo=_resolve_repo(args),
+            namespace=args.namespace,
+        )
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    return _admit_typed_resolution(args, resolution)
+
+
+def cmd_bootstrap_github_pr(args: argparse.Namespace) -> int:
+    """Resolve an exact reviewed local PR head and its durable publication."""
+    if _disabled():
+        return _refused("projection_disabled")
+    try:
+        resolution = resolve_github_pr(
+            args.repository,
+            args.pr_number,
+            args.head_sha,
+            gate_kind=args.gate_kind,
+            fleet_root=_resolve_fleet_root(args),
+            repo=_resolve_repo(args),
+        )
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    return _admit_typed_resolution(args, resolution)
+
+
+def cmd_bootstrap_formal_review(args: argparse.Namespace) -> int:
+    """Resolve one completed, sealed local formal-review job."""
+    if _disabled():
+        return _refused("projection_disabled")
+    try:
+        resolution = resolve_formal_review(args.review_id, fleet_root=_resolve_fleet_root(args))
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    return _admit_typed_resolution(args, resolution)
+
+
+def cmd_bootstrap_fleet_receipt(args: argparse.Namespace) -> int:
+    """Resolve one terminal Fleet request row without reading its body fields."""
+    if _disabled():
+        return _refused("projection_disabled")
+    try:
+        resolution = resolve_fleet_receipt(args.request_id, fleet_root=_resolve_fleet_root(args))
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    return _admit_typed_resolution(args, resolution)
+
+
+def cmd_bootstrap_monitor_run(args: argparse.Namespace) -> int:
+    """Resolve one terminal Agent Process Monitor lease locally."""
+    if _disabled():
+        return _refused("projection_disabled")
+    try:
+        resolution = resolve_monitor_run(args.lease_token, monitor_root=_resolve_monitor_root(args))
+    except ResolutionError as exc:
+        return _refused(exc.reason)
+    return _admit_typed_resolution(args, resolution)
+
+
 def cmd_search(args: argparse.Namespace) -> int:
     """search-past-work: ranked, re-verified, body-free locator cards."""
     db_path, early = _guard(args)
@@ -340,6 +467,9 @@ def cmd_search(args: argparse.Namespace) -> int:
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
             rollover_root=_resolve_rollover_root(args),
+            fleet_root=_resolve_fleet_root(args),
+            monitor_root=_resolve_monitor_root(args),
+            issue_cache_path=_resolve_issue_cache(args),
             limit=args.limit,
             scan_limit=args.scan_limit,
         )
@@ -373,6 +503,9 @@ def cmd_explain_change(args: argparse.Namespace) -> int:
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
             rollover_root=_resolve_rollover_root(args),
+            fleet_root=_resolve_fleet_root(args),
+            monitor_root=_resolve_monitor_root(args),
+            issue_cache_path=_resolve_issue_cache(args),
         )
     except RecallInputError as exc:
         _emit({"error": str(exc)})
@@ -408,6 +541,9 @@ def cmd_handoff(args: argparse.Namespace) -> int:
                 repo=_resolve_repo(args),
                 acp_root=_resolve_acp_root(args),
                 rollover_root=_resolve_rollover_root(args),
+                fleet_root=_resolve_fleet_root(args),
+                monitor_root=_resolve_monitor_root(args),
+                issue_cache_path=_resolve_issue_cache(args),
                 limit=MAX_RESULTS,
             )
             locator_ids.extend(card["locator_id"] for card in search["results"])
@@ -419,6 +555,9 @@ def cmd_handoff(args: argparse.Namespace) -> int:
             repo=_resolve_repo(args),
             acp_root=_resolve_acp_root(args),
             rollover_root=_resolve_rollover_root(args),
+            fleet_root=_resolve_fleet_root(args),
+            monitor_root=_resolve_monitor_root(args),
+            issue_cache_path=_resolve_issue_cache(args),
         )
     except RecallInputError as exc:
         _emit({"error": str(exc)})
@@ -544,6 +683,21 @@ def build_parser() -> argparse.ArgumentParser:
             ),
         )
         command.add_argument(
+            "--fleet-root",
+            default=None,
+            help=f"Fleet Comms root (default: {ENV_FLEET_ROOT} or shared primary batch_state)",
+        )
+        command.add_argument(
+            "--monitor-root",
+            default=None,
+            help=f"Agent Monitor state root (default: {ENV_MONITOR_ROOT} or shared primary batch_state)",
+        )
+        command.add_argument(
+            "--issue-cache",
+            default=None,
+            help=f"Issue-stream audit cache (default: {ENV_ISSUE_CACHE} or shared primary batch_state)",
+        )
+        command.add_argument(
             "--consumer",
             default=None,
             help="Optional harness label (codex, kimi, glm, ...); validated, never persisted or echoed",
@@ -601,6 +755,62 @@ def build_parser() -> argparse.ArgumentParser:
     bootstrap_rollover.add_argument("--actor", default="cli", help="Body-free actor identity")
     add_db_flag(bootstrap_rollover)
     bootstrap_rollover.set_defaults(func=cmd_bootstrap_rollover)
+
+    bootstrap_issue = sub.add_parser(
+        "bootstrap-github-issue",
+        help="Resolve one exact open issue from the fresh local membership cache",
+    )
+    bootstrap_issue.add_argument("issue_number", type=int, help="Exact positive GitHub issue number")
+    bootstrap_issue.add_argument("--namespace", default=None, help="Canonical GitHub namespace override")
+    bootstrap_issue.add_argument("--repo", default=None, help="Local git repository (default: cwd)")
+    bootstrap_issue.add_argument("--issue-cache", default=None, help="Fresh local issue-stream-audit JSON cache")
+    bootstrap_issue.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_issue)
+    bootstrap_issue.set_defaults(func=cmd_bootstrap_github_issue)
+
+    bootstrap_pr = sub.add_parser(
+        "bootstrap-github-pr",
+        help="Resolve an exact reviewed local PR head and durable publication receipt",
+    )
+    bootstrap_pr.add_argument("pr_number", type=int, help="Exact positive pull-request number")
+    bootstrap_pr.add_argument("--head-sha", required=True, help="Exact local 40-hex reviewed commit")
+    bootstrap_pr.add_argument("--repository", required=True, help="Exact owner/repository identity")
+    bootstrap_pr.add_argument("--gate-kind", default=DEFAULT_GATE_KIND, help="Formal-review gate kind")
+    bootstrap_pr.add_argument("--fleet-root", default=None, help="Fleet Comms root")
+    bootstrap_pr.add_argument("--repo", default=None, help="Local git repository (default: cwd)")
+    bootstrap_pr.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_pr)
+    bootstrap_pr.set_defaults(func=cmd_bootstrap_github_pr)
+
+    bootstrap_review = sub.add_parser(
+        "bootstrap-formal-review",
+        help="Resolve one completed sealed local formal-review job",
+    )
+    bootstrap_review.add_argument("review_id", help="Exact formal-review identifier")
+    bootstrap_review.add_argument("--fleet-root", default=None, help="Fleet Comms root")
+    bootstrap_review.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_review)
+    bootstrap_review.set_defaults(func=cmd_bootstrap_formal_review)
+
+    bootstrap_receipt = sub.add_parser(
+        "bootstrap-fleet-receipt",
+        help="Resolve one exact terminal Fleet request receipt",
+    )
+    bootstrap_receipt.add_argument("request_id", help="Exact Fleet request identifier")
+    bootstrap_receipt.add_argument("--fleet-root", default=None, help="Fleet Comms root")
+    bootstrap_receipt.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_receipt)
+    bootstrap_receipt.set_defaults(func=cmd_bootstrap_fleet_receipt)
+
+    bootstrap_monitor = sub.add_parser(
+        "bootstrap-monitor-run",
+        help="Resolve one exact terminal Agent Process Monitor lease",
+    )
+    bootstrap_monitor.add_argument("lease_token", help="Exact monitor lease token")
+    bootstrap_monitor.add_argument("--monitor-root", default=None, help="Agent Monitor state root")
+    bootstrap_monitor.add_argument("--actor", default="cli", help="Body-free actor identity")
+    add_db_flag(bootstrap_monitor)
+    bootstrap_monitor.set_defaults(func=cmd_bootstrap_monitor_run)
 
     search = sub.add_parser(
         "search",

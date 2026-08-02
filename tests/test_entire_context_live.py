@@ -21,6 +21,12 @@ from scripts.entire_context.model import (
     isoformat_z,
 )
 from scripts.entire_context.paths import projection_path, shared_repository_root
+from scripts.entire_context.resolvers import (
+    default_fleet_root,
+    default_issue_cache,
+    default_monitor_root,
+    resolve_github_issue,
+)
 from scripts.entire_context.store import ContextLinkStore
 
 
@@ -220,3 +226,72 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
     assert payload["use"]["proven"] is True
     assert payload["use"]["by_consumer"] == {"codex": 1}
     assert "projection_path" not in response.text
+
+
+def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Monitor search supplies shared typed roots and omits stale issue evidence."""
+    primary = tmp_path / "primary"
+    linked = tmp_path / "linked"
+    primary.mkdir()
+    _run_git(primary, "init", "-q")
+    _run_git(primary, "config", "user.email", "test@example.invalid")
+    _run_git(primary, "config", "user.name", "tester")
+    (primary / "seed.txt").write_text("seed\n", encoding="utf-8")
+    _run_git(primary, "add", "seed.txt")
+    _run_git(primary, "commit", "-qm", "seed")
+    _run_git(primary, "worktree", "add", "-q", "-b", "linked", str(linked))
+
+    issue_cache = default_issue_cache(linked)
+    issue_cache.parent.mkdir(parents=True)
+    report = {
+        "generated_at": datetime.now(UTC).timestamp(),
+        "open_issue_numbers": [6183],
+        "effective_membership": {
+            "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}
+        },
+    }
+    issue_cache.write_text(json.dumps(report), encoding="utf-8")
+    store = ContextLinkStore(projection_path(linked))
+    resolution = resolve_github_issue(
+        6183,
+        cache_path=issue_cache,
+        repo=linked,
+        namespace="github:learn-ukrainian/learn-ukrainian.github.io",
+    )
+    admitted = store.admit(resolution.link, resolution.verification, actor="test")
+
+    observed: dict[str, Path] = {}
+    real_search = entire_context_router.search_past_work
+
+    def observe_search(*args, **kwargs):
+        observed["fleet_root"] = kwargs["fleet_root"]
+        observed["monitor_root"] = kwargs["monitor_root"]
+        observed["issue_cache_path"] = kwargs["issue_cache_path"]
+        observed["rollover_root"] = kwargs["rollover_root"]
+        return real_search(*args, **kwargs)
+
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: linked)
+    monkeypatch.setattr(entire_context_router, "search_past_work", observe_search)
+    response = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"})
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert [card["kind"] for card in payload["results"]] == ["github_issue"]
+    assert observed == {
+        "fleet_root": default_fleet_root(primary),
+        "monitor_root": default_monitor_root(primary),
+        "issue_cache_path": default_issue_cache(primary),
+        "rollover_root": primary.resolve(),
+    }
+    override = tmp_path / "rollover-override"
+    monkeypatch.setenv("ENTIRE_CONTEXT_ROLLOVER_ROOT", str(override))
+    assert entire_context_router._rollover_root(linked) == override
+    monkeypatch.delenv("ENTIRE_CONTEXT_ROLLOVER_ROOT")
+
+    report["generated_at"] = 0
+    issue_cache.write_text(json.dumps(report), encoding="utf-8")
+    stale = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"}).json()
+    assert stale["results"] == []
+    assert stale["omitted"] == [{"locator_id": admitted.locator_id, "reason": "partial_terminal"}]
