@@ -39,6 +39,29 @@ Stream leases are already claimed by launchers.
 
 ---
 
+## Entire context recall — automatic intake (binding; ADR-018)
+
+**Do not wait for the operator to mention Entire / entire.io.** Skill
+`entire-context` (`agents_extensions/shared/skills/entire-context/SKILL.md`).
+
+On non-trivial work, before prioritization or dispatch:
+
+```bash
+.venv/bin/python -m scripts.entire_context status
+.venv/bin/python -m scripts.entire_context search --query "<task keywords>"
+# if locators inform the plan:
+.venv/bin/python -m scripts.entire_context record-use \
+  --task-id <task> --consumer <harness> --purpose <planning|handoff|review|debug> \
+  --locator-id <clink_…>
+```
+
+Body-free only; no load-bearing `entire` CLI network search; supplemental to GH /
+Fleet Comms / Monitor / formal CF. Skip only pure one-liners or when the module is
+missing/disabled (state once). Grok seats also load a stronger always-on copy of
+this duty from `~/.grok/Agents.md`.
+
+---
+
 ## Project Research Registry — Orchestrator Duty (binding)
 
 Before every delegated task, the accountable orchestrator must deliberately classify
