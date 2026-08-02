@@ -164,6 +164,7 @@ launcher_defaults() {
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
   LC_EPIC=""
   LC_GOVERNOR="0"
+  LC_DRIVER_LEASE_CLAIMED=0
   LC_FORWARD_ARGS=()
 }
 
@@ -360,6 +361,7 @@ launcher_claim_driver_lease() {
   task_id="${SESSION_TASK_ID:-launcher-${LC_PROVIDER}-driver}"
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
   claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
+  LC_DRIVER_LEASE_CLAIMED=1
 }
 
 launcher_close_driver_lease() {
@@ -410,7 +412,9 @@ launcher_exec_command() {
   # Interactive sessions retain the direct exec contract. A lease-owning
   # driver keeps this small supervisor shell alive so normal exit and
   # termination signals can atomically close the exact fenced session.
-  if [ "$LC_MODE" != "driver" ] || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ]; then
+  if [ "$LC_MODE" != "driver" ] \
+      || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ] \
+      || [ "${LC_DRIVER_LEASE_CLAIMED:-0}" != "1" ]; then
     exec "$@"
   fi
 
