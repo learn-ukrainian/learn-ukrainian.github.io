@@ -10,6 +10,12 @@
             "timeout": 15,
             "statusMessage": "Checking learn-ukrainian session state",
             "additionalContextLimit": 1200
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"Entire CLI is enabled but not installed or not on PATH. Installation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; exec entire hooks codex session-start'",
+            "timeout": 30,
+            "statusMessage": "Starting optional Entire checkpoint capture"
           }
         ]
       },
@@ -48,6 +54,12 @@
             "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use",
             "timeout": 5,
             "statusMessage": "Recording Codex tool result"
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex post-tool-use'",
+            "timeout": 30,
+            "statusMessage": "Recording optional Entire tool context"
           }
         ]
       }
@@ -60,6 +72,12 @@
             "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit",
             "timeout": 5,
             "statusMessage": "Checking cross-agent inbox"
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex user-prompt-submit'",
+            "timeout": 30,
+            "statusMessage": "Recording optional Entire turn context"
           }
         ]
       }
@@ -72,6 +90,12 @@
             "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/goal-driver-stop.sh\"",
             "timeout": 5,
             "statusMessage": "Checking goal-driver state"
+          },
+          {
+            "type": "command",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks codex stop'",
+            "timeout": 30,
+            "statusMessage": "Closing optional Entire checkpoint capture"
           }
         ]
       }

@@ -102,6 +102,7 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     assert "model" not in config
     assert "model_reasoning_effort" not in config
     assert config["features"] == {
+        "hooks": True,
         "multi_agent": True,
         "remote_compaction_v2": True,
         "memories": False,
@@ -328,7 +329,7 @@ def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
     assert "CLAUDE-DRIVER-HANDOFF.md" not in context
 
 
-def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
+def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:
     hooks = _manifest()["hooks"]
 
     pre_groups = hooks["PreToolUse"]
@@ -341,8 +342,10 @@ def test_codex_tool_events_have_one_deterministic_command_hook() -> None:
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
-    assert len(post_groups[0]["hooks"]) == 1
+    assert len(post_groups[0]["hooks"]) == 2
     assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
+    assert "entire hooks codex post-tool-use" in post_groups[0]["hooks"][1]["command"]
+    assert post_groups[0]["hooks"][1]["timeout"] == 30
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
