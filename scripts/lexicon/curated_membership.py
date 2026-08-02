@@ -15,8 +15,6 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from scripts.lexicon.curated_seed_atlas_admission import _read_jsonl, prepare_practice_seed
-
 SCHEMA = "curated-practice-membership-v1"
 DEFAULT_MEMBERSHIP_PATH = Path("site/src/data/lexicon-teacher-curated-membership.json")
 
@@ -71,6 +69,11 @@ def build_membership(
     sometimes carry a last-token cloze target, which must not be promoted as a
     guessed multiword headword.
     """
+    # Deferred: the admission resolver pulls in the VESUM/grow_lexicon chain
+    # (and its `requests` dependency), which callers that only need
+    # apply_membership/read_membership must not have to install.
+    from scripts.lexicon.curated_seed_atlas_admission import _read_jsonl, prepare_practice_seed
+
     homework_rows = _read_jsonl(homework_seed_path)
     practice_seed, homework_report = prepare_practice_seed(homework_rows, manifest_path)
     entries = read_manifest_entries(manifest_path)
