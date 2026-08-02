@@ -579,7 +579,13 @@ def job_command(
         command.extend(["--label", f"{key}={value}"])
     command.extend(["--secrets", "HF_TOKEN", "--env", "HF_HUB_DISABLE_TELEMETRY=1"])
     if mode in RUN_MODES:
-        command.extend(["--env", "VLLM_BATCH_INVARIANT=1", "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0"])
+        command.extend(
+            [
+                "--env", "ACCELERATOR=l40sx1",
+                "--env", "VLLM_BATCH_INVARIANT=1",
+                "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0",
+            ]
+        )
     command.extend(["--", image, "sh", "-lc", shell_command])
     _require("--volume" not in command and "-v" not in command, "volume transport is prohibited")
     _require("--expose" not in command and "--ssh" not in command, "endpoint exposure drift")

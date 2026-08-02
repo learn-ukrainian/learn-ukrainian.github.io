@@ -174,6 +174,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert "operator/ua-open-weight-eval-staging-6273" in joined
     assert "--secrets HF_TOKEN" in joined
     assert "HF_TOKEN=" not in joined
+    assert "--env ACCELERATOR=l40sx1" in joined
     assert "--volume" not in command
     assert "-v" not in command
     assert "hf://buckets/" not in joined
@@ -215,6 +216,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert config["transport"]["cpu_preflight"]["container_amd64_digest"] in preflight_joined
     assert "--volume" not in preflight
     assert "--secrets HF_TOKEN" in preflight_joined
+    assert "ACCELERATOR=" not in preflight_joined
     with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
         hf_jobs_baseline.job_command(
             mode="canary",
