@@ -96,6 +96,85 @@ def _replay_result(raw: bytes) -> object:
     )
 
 
+def _failure_metadata(
+    *, error: BaseException | None = None, result: object | None = None
+) -> dict[str, object]:
+    """Classify a terminal ACP failure without persisting free text."""
+    if error is not None:
+        error_name = type(error).__name__
+        error_text = str(error).casefold()
+        if error_name in {"AgentTimeoutError", "AgentStalledError"}:
+            return {"phase": "transport", "code": "timeout", "retryable": True}
+        if error_name == "RateLimitedError":
+            return {"phase": "provider", "code": "rate_limited", "retryable": True}
+        if error_name == "AgentUnavailableError":
+            return {
+                "phase": "provider",
+                "code": "provider_unavailable",
+                "retryable": True,
+            }
+        if error_name == "AgentOutputLimitError":
+            return {
+                "phase": "transport",
+                "code": "protocol_output_limit",
+                "retryable": False,
+            }
+        if "protected primary checkout" in error_text:
+            return {
+                "phase": "admission",
+                "code": "primary_cwd_rejected",
+                "retryable": False,
+            }
+        if "model pin" in error_text or "registered model" in error_text:
+            return {
+                "phase": "admission",
+                "code": "route_model_conflict",
+                "retryable": False,
+            }
+        if "effort pin" in error_text or "registered effort" in error_text:
+            return {
+                "phase": "admission",
+                "code": "route_effort_conflict",
+                "retryable": False,
+            }
+        if "state event" in error_text or "initial state" in error_text:
+            return {
+                "phase": "admission",
+                "code": "conversation_state_missing",
+                "retryable": False,
+            }
+        if error_name in {"AcpxShadowRefusalError", "AcpExecutionWorkspaceError"}:
+            return {
+                "phase": "admission",
+                "code": "adapter_refused",
+                "retryable": False,
+            }
+        return {"phase": "transport", "code": "transport_error", "retryable": False}
+
+    outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
+    if outcome == "rate_limited" or bool(getattr(result, "rate_limited", False)):
+        return {"phase": "provider", "code": "rate_limited", "retryable": True}
+    return {"phase": "result_parse", "code": "result_invalid", "retryable": False}
+
+
+def _discussion_failure_metadata(payload: object) -> dict[str, object]:
+    """Classify a non-complete discussion from its bounded outcome vocabulary."""
+    outcomes: set[str] = set()
+    if isinstance(payload, dict):
+        rows = payload.get("participant_outcomes")
+        if isinstance(rows, list):
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("outcome"), str):
+                    outcomes.add(row["outcome"].casefold())
+    if "timeout" in outcomes or "stalled" in outcomes:
+        return {"phase": "transport", "code": "timeout", "retryable": True}
+    if "rate_limited" in outcomes:
+        return {"phase": "provider", "code": "rate_limited", "retryable": True}
+    if "error" in outcomes:
+        return {"phase": "provider", "code": "unknown", "retryable": False}
+    return {"phase": "postprocess", "code": "result_invalid", "retryable": False}
+
+
 def _idempotency_key(
     *, participant: str, task_id: str, content: str, model: str | None, effort: str | None
 ) -> str:
@@ -227,18 +306,21 @@ def _run_compat_ask_impl(
             previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
             os.environ["LU_ACPX_TRANSPORT"] = "active"
             try:
-                result = invoke_inter_agent(
-                    participant,
-                    prompt,
-                    cwd=REPO_ROOT,
-                    task_id=task_id,
-                    correlation_id=task_id,
-                    idempotency_key=key,
-                    source=source,
-                    model=model,
-                    effort=effort,
-                    hard_timeout=hard_timeout,
-                )
+                from ._acp_execution import acp_execution_cwd
+
+                with acp_execution_cwd(REPO_ROOT, task_id=task_id) as execution_cwd:
+                    result = invoke_inter_agent(
+                        participant,
+                        prompt,
+                        cwd=execution_cwd,
+                        task_id=task_id,
+                        correlation_id=task_id,
+                        idempotency_key=key,
+                        source=source,
+                        model=model,
+                        effort=effort,
+                        hard_timeout=hard_timeout,
+                    )
             except BaseException as exc:
                 authority.finish_job(
                     job.job_id,
@@ -262,6 +344,7 @@ def _run_compat_ask_impl(
                         },
                         sort_keys=True,
                     ).encode("utf-8"),
+                    failure=_failure_metadata(error=exc),
                 )
                 raise
             finally:
@@ -275,6 +358,11 @@ def _run_compat_ask_impl(
                 fence_token=lease.fence_token,
                 state="complete" if bool(getattr(result, "ok", False)) else "failed",
                 result=_result_receipt(result),
+                failure=(
+                    None
+                    if bool(getattr(result, "ok", False))
+                    else _failure_metadata(result=result)
+                ),
             )
     response = str(getattr(result, "response", ""))
     if output_path:

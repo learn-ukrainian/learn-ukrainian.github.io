@@ -17,7 +17,7 @@ import sqlite3
 from collections import Counter
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +43,7 @@ MAX_DETAIL_ROWS = 100
 MAX_ACP_SCAN = 500
 MAX_ACTIVITY_SCAN = 500
 MAX_OPERATIONS_ITEMS = 50
+AUTHORITY_HEALTH_WINDOW_HOURS = 24
 
 _ZOMBIE_TYPES = frozenset(
     {"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"}
@@ -50,6 +51,25 @@ _ZOMBIE_TYPES = frozenset(
 _ZOMBIE_SEVERITIES = frozenset({"warning", "critical"})
 _BATCH_HEALTH = frozenset({"complete", "healthy", "stalled", "dead", "unknown"})
 _TRACK_LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$")
+_SAFE_FAILURE_PHASES = frozenset(
+    {"admission", "transport", "provider", "result_parse", "postprocess"}
+)
+_SAFE_FAILURE_CODES = frozenset(
+    {
+        "adapter_refused",
+        "conversation_state_missing",
+        "primary_cwd_rejected",
+        "protocol_output_limit",
+        "provider_unavailable",
+        "rate_limited",
+        "result_invalid",
+        "route_effort_conflict",
+        "route_model_conflict",
+        "timeout",
+        "transport_error",
+        "unknown",
+    }
+)
 
 _SAFE_METADATA_KEYS = frozenset(
     {
@@ -362,6 +382,100 @@ def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> 
     return {_safe_text(row[0], fallback="unknown"): int(row[1]) for row in rows}
 
 
+def _count_by_state_where(
+    connection: sqlite3.Connection,
+    table: str,
+    column: str,
+    *,
+    where: str,
+    params: tuple[Any, ...] = (),
+) -> dict[str, int]:
+    if not _table_exists(connection, table):
+        return {}
+    try:
+        rows = connection.execute(
+            f"SELECT {column}, COUNT(*) FROM {table} WHERE {where} "
+            f"GROUP BY {column} ORDER BY {column}",
+            params,
+        ).fetchall()
+    except sqlite3.Error:
+        return {}
+    return {_safe_text(row[0], fallback="unknown"): int(row[1]) for row in rows}
+
+
+def _authority_health_snapshot(
+    connection: sqlite3.Connection | None,
+    *,
+    now: datetime | None = None,
+    availability: str = "available",
+) -> dict[str, Any]:
+    """Derive current health only from a fixed authority evidence window."""
+    observed_at = (now or datetime.now(UTC)).astimezone(UTC)
+    since = observed_at - timedelta(hours=AUTHORITY_HEALTH_WINDOW_HOURS)
+    window = {
+        "hours": AUTHORITY_HEALTH_WINDOW_HOURS,
+        "since": since.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "until": observed_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    unavailable = {
+        "state": "unavailable",
+        "ok": False,
+        "availability": availability,
+        "window": window,
+        "jobs": {"total": 0, "by_state": {}},
+        "overdue_nonterminal": 0,
+        "dead_letters": 0,
+    }
+    if connection is None or not _table_exists(connection, "authority_jobs"):
+        return unavailable
+    try:
+        states = _count_by_state_where(
+            connection,
+            "authority_jobs",
+            "state",
+            where="updated_at >= ?",
+            params=(window["since"],),
+        )
+        overdue = int(
+            connection.execute(
+                """SELECT COUNT(*) FROM authority_jobs
+                   WHERE state IN ('queued', 'running')
+                     AND deadline_at IS NOT NULL AND deadline_at < ?""",
+                (window["until"],),
+            ).fetchone()[0]
+        )
+        dead_letters = 0
+        if _table_exists(connection, "authority_dead_letters"):
+            dead_letters = int(
+                connection.execute(
+                    "SELECT COUNT(*) FROM authority_dead_letters WHERE created_at >= ?",
+                    (window["since"],),
+                ).fetchone()[0]
+            )
+    except sqlite3.Error:
+        logger.warning("Fleet observer could not derive authority health")
+        return unavailable
+    total = sum(states.values())
+    failures = sum(
+        states.get(name, 0) for name in ("failed", "expired", "dead_lettered")
+    )
+    if failures or overdue or dead_letters:
+        state = "degraded"
+    elif total:
+        state = "healthy"
+    else:
+        state = "idle"
+    return {
+        "state": state,
+        "ok": state in {"healthy", "idle"},
+        "availability": "available",
+        "window": window,
+        "jobs": {"total": total, "by_state": states},
+        "overdue_nonterminal": overdue,
+        "dead_letters": dead_letters,
+    }
+
+
 def _non_negative_int(value: Any) -> int:
     """Normalize legacy numeric fields without reflecting arbitrary values."""
     if isinstance(value, bool):
@@ -640,11 +754,26 @@ async def fleet_operations() -> dict[str, Any]:
 def fleet_health() -> dict[str, Any]:
     """Read-only health, mode, schema, and current authority posture."""
     status = _safe_plane_status()
+    with _read_connection() as (connection, availability):
+        authority_health = (
+            _authority_health_snapshot(connection, availability=availability)
+            if status["mode"] == "authority"
+            else {
+                "state": "not_applicable",
+                "ok": True,
+                "availability": availability,
+                "window": None,
+                "jobs": {"total": 0, "by_state": {}},
+                "overdue_nonterminal": 0,
+                "dead_letters": 0,
+            }
+        )
     return {
-        "ok": True,
+        "ok": bool(status["enabled"]) and bool(authority_health["ok"]),
         "observer": "fleet-comms-v1",
         "read_only": True,
         "writes_enabled": False,
+        "authority_health": authority_health,
         **status,
     }
 
@@ -660,6 +789,7 @@ def fleet_overview() -> dict[str, Any]:
         "health": status,
         "counts": {
             "requests": {"total": 0, "by_state": {}},
+            "legacy_requests": {"total": 0, "by_state": {}},
             "messages": {"total": 0, "by_kind": {}},
             "reviews": {"total": 0, "by_state": {}},
             "dead_letters": {"total": 0},
@@ -673,11 +803,31 @@ def fleet_overview() -> dict[str, Any]:
             result["availability"] = availability
             return result
         counts = result["counts"]
-        request_states = _count_by_state(connection, "requests", "state")
+        legacy_request_states = _count_by_state(connection, "requests", "state")
+        if status["mode"] == "authority":
+            request_states = _count_by_state_where(
+                connection,
+                "authority_jobs",
+                "state",
+                where="job_kind = 'request'",
+            )
+            request_source = "authority_jobs"
+        else:
+            request_states = legacy_request_states
+            request_source = "legacy_requests"
         message_kinds = _count_by_state(connection, "comms_messages", "kind")
         review_states = _count_by_state(connection, "formal_review_jobs", "state")
         authority_job_states = _count_by_state(connection, "authority_jobs", "state")
-        counts["requests"] = {"total": sum(request_states.values()), "by_state": request_states}
+        counts["requests"] = {
+            "total": sum(request_states.values()),
+            "by_state": request_states,
+            "source": request_source,
+        }
+        counts["legacy_requests"] = {
+            "total": sum(legacy_request_states.values()),
+            "by_state": legacy_request_states,
+            "excluded_from_authority_health": True,
+        }
         counts["messages"] = {"total": sum(message_kinds.values()), "by_kind": message_kinds}
         counts["reviews"] = {"total": sum(review_states.values()), "by_state": review_states}
         counts["authority_jobs"] = {
@@ -698,6 +848,11 @@ def fleet_overview() -> dict[str, Any]:
         result["availability"] = "available" if any(
             section["total"] for section in counts.values()
         ) else "empty"
+        result["authority_health"] = (
+            _authority_health_snapshot(connection)
+            if status["mode"] == "authority"
+            else None
+        )
     return result
 
 
@@ -967,6 +1122,7 @@ def _authority_job_item(row: sqlite3.Row) -> dict[str, Any]:
         agent=data.get("message_sender") or default_agent,
         via="queue",
     )
+    failure = _safe_authority_failure(data.get("terminal_event_metadata_json"))
     return {
         "job_id": data["job_id"],
         "kind": job_kind,
@@ -977,6 +1133,8 @@ def _authority_job_item(row: sqlite3.Row) -> dict[str, Any]:
         "state": data["state"],
         "deadline_at": data.get("deadline_at"),
         "attempt_count": int(data.get("attempt_count") or 0),
+        "task_id": metadata.get("task_id"),
+        "failure": failure,
         "created_at": data["created_at"],
         "updated_at": data["updated_at"],
         "completed_at": data.get("completed_at"),
@@ -985,6 +1143,31 @@ def _authority_job_item(row: sqlite3.Row) -> dict[str, Any]:
         "read_only": True,
         **provenance,
     }
+
+
+def _safe_authority_failure(value: Any) -> dict[str, Any] | None:
+    """Project only the closed body-free failure record from a terminal event."""
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        event_metadata = json.loads(value)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return None
+    if not isinstance(event_metadata, dict):
+        return None
+    failure = event_metadata.get("failure")
+    if not isinstance(failure, dict) or set(failure) != {"phase", "code", "retryable"}:
+        return None
+    phase = failure.get("phase")
+    code = failure.get("code")
+    retryable = failure.get("retryable")
+    if (
+        phase not in _SAFE_FAILURE_PHASES
+        or code not in _SAFE_FAILURE_CODES
+        or not isinstance(retryable, bool)
+    ):
+        return None
+    return {"phase": phase, "code": code, "retryable": retryable}
 
 
 @router.get("/authority/jobs")
@@ -1026,16 +1209,21 @@ def fleet_authority_jobs(
         has_metadata = _table_exists(connection, "authority_message_metadata")
         has_conversations = _table_exists(connection, "conversations")
         has_reviews = _table_exists(connection, "formal_review_jobs")
+        has_job_events = _table_exists(connection, "authority_job_events")
         from_sql = " FROM authority_jobs AS job"
         message_sender_select = "NULL AS message_sender"
         conversation_select = "NULL AS conversation_id"
         conversation_source_select = "NULL AS conversation_source"
         provenance_select = "NULL AS authority_provenance_json"
         review_select = "NULL AS review_id, NULL AS pr_number"
+        terminal_metadata_select = "NULL AS terminal_event_metadata_json"
         if has_messages:
             from_sql += (
                 " LEFT JOIN comms_messages AS message"
-                " ON job.job_kind = 'request' AND message.message_id = job.subject_id"
+                " ON (job.job_kind = 'request' AND message.message_id = job.subject_id)"
+                " OR (job.job_kind = 'discussion'"
+                " AND message.conversation_id = job.subject_id"
+                " AND message.kind = 'discussion')"
             )
             message_sender_select = "message.sender AS message_sender"
             conversation_select = "message.conversation_id AS conversation_id"
@@ -1067,6 +1255,13 @@ def fleet_authority_jobs(
                 " ON job.job_kind = 'formal_review' AND review.review_id = job.subject_id"
             )
             review_select = "review.review_id AS review_id, review.pr_number AS pr_number"
+        if has_job_events:
+            terminal_metadata_select = (
+                "(SELECT event.metadata_json FROM authority_job_events AS event "
+                "WHERE event.job_id = job.job_id AND event.event_type = 'finished' "
+                "ORDER BY event.created_at DESC, event.rowid DESC LIMIT 1) "
+                "AS terminal_event_metadata_json"
+            )
         clauses: list[str] = []
         params: list[Any] = []
         if kind is not None:
@@ -1141,7 +1336,7 @@ def fleet_authority_jobs(
                 "SELECT job.job_id, job.job_kind, job.subject_id, job.state, job.deadline_at, "
                 "job.attempt_count, job.created_at, job.updated_at, job.completed_at, "
                 f"{message_sender_select}, {conversation_select}, {conversation_source_select}, "
-                f"{provenance_select}, {review_select}"
+                f"{provenance_select}, {review_select}, {terminal_metadata_select}"
             ),
             from_sql=from_sql,
             clauses=clauses,

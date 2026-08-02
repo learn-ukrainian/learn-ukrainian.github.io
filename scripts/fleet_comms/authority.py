@@ -44,6 +44,25 @@ _JOB_TERMINAL = frozenset({"complete", "failed", "expired", "dead_lettered"})
 _DELIVERY_TERMINAL = frozenset({"acknowledged", "failed", "expired", "dead_lettered"})
 _WAKE_STATES = {"emitted": 0, "received": 1, "consumed": 2}
 _AUTHORITY_SCHEMA_VERSION = 5
+_FAILURE_PHASES = frozenset(
+    {"admission", "transport", "provider", "result_parse", "postprocess"}
+)
+_FAILURE_CODES = frozenset(
+    {
+        "adapter_refused",
+        "conversation_state_missing",
+        "primary_cwd_rejected",
+        "protocol_output_limit",
+        "provider_unavailable",
+        "rate_limited",
+        "result_invalid",
+        "route_effort_conflict",
+        "route_model_conflict",
+        "timeout",
+        "transport_error",
+        "unknown",
+    }
+)
 
 
 def _utc_now() -> datetime:
@@ -101,6 +120,25 @@ def _safe_json_mapping(value: Mapping[str, Any] | None) -> dict[str, Any]:
     if not isinstance(loaded, dict):  # pragma: no cover - dict(value) guarantees this
         raise AuthorityServiceError("metadata_must_be_object")
     return loaded
+
+
+def _safe_failure_metadata(value: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """Validate one body-free terminal failure record."""
+    if value is None:
+        return None
+    loaded = _safe_json_mapping(value)
+    if set(loaded) != {"phase", "code", "retryable"}:
+        raise AuthorityServiceError("failure_metadata_fields_invalid")
+    phase = loaded.get("phase")
+    code = loaded.get("code")
+    retryable = loaded.get("retryable")
+    if phase not in _FAILURE_PHASES:
+        raise AuthorityServiceError("failure_phase_invalid")
+    if code not in _FAILURE_CODES:
+        raise AuthorityServiceError("failure_code_invalid")
+    if not isinstance(retryable, bool):
+        raise AuthorityServiceError("failure_retryable_must_be_boolean")
+    return {"phase": phase, "code": code, "retryable": retryable}
 
 
 class AuthorityServiceError(RuntimeError):
@@ -520,9 +558,10 @@ class AuthorityService:
         key = idempotency_key or new_id("authority-request-key")
         recipient_name = _nonempty(recipient, field="recipient")
         self._ensure_channel(channel)
+        request_metadata = _safe_json_mapping(metadata)
         payload = {
             "recipient": recipient_name,
-            "metadata": _safe_json_mapping(metadata),
+            "metadata": request_metadata,
             "message_body_sha256": _sha256_bytes(body.encode("utf-8")),
         }
         with self._write_transaction():
@@ -530,13 +569,21 @@ class AuthorityService:
             if existing is not None:
                 self._assert_job_payload(existing, payload)
                 return existing
+            provenance: dict[str, Any] = {
+                "Source": sender,
+                "Agent": recipient_name,
+                "Via": "queue",
+            }
+            task_id = request_metadata.get("task_id")
+            if isinstance(task_id, str) and task_id.strip():
+                provenance["task_id"] = task_id.strip()[:160]
             message = self._publish_message_tx(
                 sender=sender,
                 body=body,
                 channel=channel,
                 recipients=(recipient_name,),
                 kind="request",
-                provenance={"Source": sender, "Agent": recipient_name, "Via": "queue"},
+                provenance=provenance,
                 deadline_at=deadline_at,
                 idempotency_key=f"request-message:{key}",
             )
@@ -560,6 +607,8 @@ class AuthorityService:
         deadline_at: str,
         token_budget: int = 8_000,
         content_budget_bytes: int = 24_000,
+        source: str = "authority-discussion",
+        task_id: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
         """Queue a bounded (one-to-three round) discussion without invoking it."""
@@ -574,6 +623,8 @@ class AuthorityService:
             raise AuthorityServiceError("discussion_budget_must_be_nonnegative")
         digest = _nonempty(task_digest, field="task_digest")
         correlation = _nonempty(correlation_id, field="correlation_id")
+        source_name = _nonempty(source, field="source")
+        task_name = _nonempty(task_id, field="task_id") if task_id is not None else None
         deadline = self._normalize_deadline(deadline_at)
         self._ensure_channel(channel_name)
         payload = {
@@ -584,6 +635,8 @@ class AuthorityService:
             "prompt_sha256": _sha256_bytes(prompt.encode("utf-8")),
             "token_budget": token_budget,
             "content_budget_bytes": content_budget_bytes,
+            "source": source_name,
+            "task_id": task_name,
         }
         with self._write_transaction():
             existing = self._find_job_by_key_tx("discussion", key)
@@ -594,8 +647,8 @@ class AuthorityService:
             now = _iso()
             self._conn.execute(
                 """INSERT INTO conversations(conversation_id, created_at, source, title)
-                   VALUES (?, ?, 'authority-discussion', ?)""",
-                (conversation_id, now, channel_name),
+                   VALUES (?, ?, ?, ?)""",
+                (conversation_id, now, source_name, channel_name),
             )
             self._conn.execute(
                 """INSERT INTO acp_conversations(
@@ -616,6 +669,25 @@ class AuthorityService:
                     content_budget_bytes,
                 ),
             )
+            self._conn.execute(
+                """INSERT INTO acp_conversation_events(
+                    event_id, conversation_id, sequence, event_type, state,
+                    metadata_json, created_at
+                ) VALUES (?, ?, 1, 'CREATED', 'CREATED', ?, ?)""",
+                (
+                    new_id("acp-event"),
+                    conversation_id,
+                    _canonical_json({"authority_reserved": True}),
+                    now,
+                ),
+            )
+            provenance: dict[str, Any] = {
+                "Source": source_name,
+                "Agent": "acp-controller",
+                "Via": "queue",
+            }
+            if task_name is not None:
+                provenance["task_id"] = task_name[:160]
             self._publish_message_tx(
                 sender="authority-service",
                 body=prompt,
@@ -624,7 +696,7 @@ class AuthorityService:
                 kind="discussion",
                 conversation_id=conversation_id,
                 correlation_id=correlation,
-                provenance={"Source": "authority", "Agent": "authority-service", "Via": "queue"},
+                provenance=provenance,
                 deadline_at=deadline,
                 idempotency_key=f"discussion-message:{key}",
             )
@@ -887,6 +959,7 @@ class AuthorityService:
         state: Literal["complete", "failed"],
         result: bytes | None = None,
         result_artifact_id: str | None = None,
+        failure: Mapping[str, Any] | None = None,
         now: str | None = None,
     ) -> AuthorityJob:
         """Terminalize a lease once; exact replay is harmless, divergence fails."""
@@ -894,6 +967,9 @@ class AuthorityService:
             raise AuthorityServiceError("invalid_job_terminal_state")
         if (result is not None) and (result_artifact_id is not None):
             raise AuthorityServiceError("provide_result_or_result_artifact_id_not_both")
+        failure_metadata = _safe_failure_metadata(failure)
+        if state == "complete" and failure_metadata is not None:
+            raise AuthorityServiceError("complete_job_cannot_have_failure_metadata")
         jid = _nonempty(job_id, field="job_id")
         worker = _nonempty(worker_id, field="worker_id")
         if fence_token < 1:
@@ -923,7 +999,12 @@ class AuthorityService:
                    WHERE job_id = ?""",
                 (state, artifact.artifact_id if artifact else None, terminal_sha, now_value, now_value, jid),
             )
-            self._append_job_event_tx(jid, fence_token, "finished", state, {"worker_id": worker})
+            event_metadata: dict[str, Any] = {"worker_id": worker}
+            if failure_metadata is not None:
+                event_metadata["failure"] = failure_metadata
+            self._append_job_event_tx(
+                jid, fence_token, "finished", state, event_metadata
+            )
             return self.get_job(jid)
 
     def reclaim_expired_jobs(self, *, now: str | None = None) -> int:
