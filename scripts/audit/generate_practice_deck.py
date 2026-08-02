@@ -1145,7 +1145,7 @@ def _eligible_dictionary_decoys(
         if _headword(lexeme["gloss"]) == answer_head:
             continue
         label = _clean_text(lexeme.get("lemma"))
-        if not label or _plain(label) in seen_labels:
+        if not label or _meaning_label_is_phrase(label) or _plain(label) in seen_labels:
             continue
         seen_labels.add(_plain(label))
         candidates.append((lexeme, label))
@@ -1288,29 +1288,32 @@ def _make_no_pair_options(
         rng.shuffle(decoys)
         answer_cap = _initial_capitalization(cloze.get("form"))
         selected_decoys: list[tuple[dict[str, Any], str]] = []
-        matching_cap: list[tuple[dict[str, Any], str]] = []
-        if answer_cap is not None:
-            # Preserve the capitalization gate while making the selection
-            # surface-aware: one matching-capitalization decoy is enough to
-            # prevent a sentence-initial answer from being revealed, even
-            # when fewer than three matching candidates exist.
-            matching_cap = [
+        # A greedy scan can choose a long decoy first and then strand the
+        # card with fewer than three compatible labels.  Search the small
+        # length windows that contain the answer instead; candidates were
+        # shuffled above, so the first valid window remains seeded and varied.
+        for lower_length in range(max(1, answer_length - 3), answer_length + 1):
+            upper_length = lower_length + 3
+            window = [
                 candidate
                 for candidate in decoys
-                if _initial_capitalization(candidate[1]) == answer_cap
+                if lower_length <= len(candidate[1]) <= upper_length
             ]
-            if matching_cap:
-                selected_decoys.append(matching_cap[0])
-                decoys = [candidate for candidate in decoys if candidate != matching_cap[0]]
-        for candidate in decoys:
-            labels = [cloze["form"], *(item[1] for item in selected_decoys), candidate[1]]
-            if max(map(len, labels)) - min(map(len, labels)) > 3:
-                continue
-            selected_decoys.append(candidate)
-            if len(selected_decoys) == 3:
+            if answer_cap is not None:
+                matching_cap = [
+                    candidate
+                    for candidate in window
+                    if _initial_capitalization(candidate[1]) == answer_cap
+                ]
+                if not matching_cap:
+                    continue
+                first = matching_cap[0]
+                selected_decoys = [first, *(candidate for candidate in window if candidate != first)]
+            else:
+                selected_decoys = window
+            if len(selected_decoys) >= 3:
+                selected_decoys = selected_decoys[:3]
                 break
-        if answer_cap is not None and not matching_cap:
-            selected_decoys = []
         if len(selected_decoys) < 3:
             return []
         rng.shuffle(selected_decoys)
