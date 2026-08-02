@@ -110,9 +110,9 @@ They are not interchangeable counts.
 The historical phase-3 feasibility verdict is `REVISE`: real control and
 loss-masked continued-pretraining inputs, evaluation isolation, protected/no-
 change inventory, recipes, and tokenizer diagnostics exist, but an exact
-treatment preregistration and operator compute ceiling do not. #6170 is now
-parked optional validation and may reopen only after those two present-tense
-gates are frozen. The current recipe manifests retain
+treatment preregistration and operator compute ceiling do not. #6170 is closed
+as not planned and retained only as historical preregistration evidence. The
+current recipe manifests retain
 `training_authorized: false` and `execution_state: not_run`. Projected training
 runtime and cost remain null—not zero—until an exact local or rented runner
 pins the hardware, treatment, and ceiling; local artifact storage is measured

@@ -10,8 +10,9 @@
 > that this is a solo project with neither budget nor access to a three-person
 > Ukrainian review panel and directed the Foundry to remove that unavailable
 > labour from the critical path. On 2026-08-02, the operator directed the
-> Foundry to ship the clean-Ukrainian preparation tool and training recipe
-> before considering optional paid model validation.
+> Foundry to ship the clean-Ukrainian preparation tool and consumer training
+> recipe without project-funded or project-operated model training. Training
+> belongs to downstream teams that choose to use the released artifacts.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
 > refreshed 2026-08-02
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
@@ -41,15 +42,18 @@ Curated data, provenance, evaluation, and tooling transfer to every new model
 generation.
 
 This direction prioritizes transferable data, grammar, lexical naturalness,
-and evidence over owning model weights. A bounded model treatment is permitted
-only to test whether those artifacts help. The accepted boundary between public
-evaluation gold, private product data, and training data remains intact.
+and evidence over owning or producing model weights. Project completion stops
+before model download, accelerator rental, optimizer execution, adapter
+production, or weight upload. A downstream team may independently use the
+Foundry recipe and report results, but that is consumer validation rather than
+a Foundry execution lane. The accepted boundary between public evaluation gold,
+private product data, and training data remains intact.
 
 ## Solo-operator execution model
 
 The Foundry must be executable by one operator. It cannot make paid or donated
-review labour a prerequisite for useful source preparation, model-ready data,
-or a bounded causal experiment.
+review labour or accelerator access a prerequisite for useful source
+preparation, model-ready data, or a complete release.
 
 The production evidence lanes are therefore distinct:
 
@@ -74,11 +78,10 @@ experiment. It must never be reported as human gold, native-speaker acceptance,
 reviewer reliability, or proof that every proposed correction is correct.
 
 The Foundry can credibly promise reusable preparation, diagnostics, evidence,
-and, if separately authorized, a controlled test of whether those artifacts
-help. It cannot promise in advance that a treatment will make an LLM fluent.
-The cheapest falsifying check always precedes a more expensive run, and a
-failed prerequisite or null result is reported immediately rather than
-converted into more work.
+model-ready views, evaluation isolation, and reproducible consumer recipes. It
+cannot promise that a downstream treatment will make an LLM fluent. Consumer
+training results are external evidence and are never a prerequisite for closing
+the Foundry release.
 
 ## GitHub execution homes
 
@@ -86,9 +89,9 @@ converted into more work.
   owns Foundry Phase 2–4: real corpus admission, production contextual
   language-contact detection, evidence-backed silver with an optional
   qualified-human upgrade, real model-ready exports, a model-neutral clean-
-  Ukrainian tool, reproducible training recipe, and release
-  candidate. An open-weight treatment is an optional compatibility check, not
-  a completion dependency. Closed
+  Ukrainian tool, reproducible consumer training recipe, and no-training
+  release candidate. Project-operated open-weight treatment is out of scope.
+  Closed
   [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
   owns the completed interfaces, profiler, exporters, recipes, and synthetic
   reference build on which this production program depends.
@@ -264,7 +267,8 @@ FOLK package versions with Git recovery locators.
 
 This inventory preceded the current capability-specific decision. Its zero
 source-record admissions and zero redistribution-cleared assets described the
-old combined gate, not corpus authenticity or local training fitness. It keeps
+old combined gate, not corpus authenticity or downstream training fitness. It
+keeps
 human-authored, machine-generated direct Ukrainian, machine-translated,
 private-reference, evaluation-only, and unknown-origin material mechanically
 separate. The invalid 5,000-record export may locate an underlying work but
@@ -276,7 +280,8 @@ The subsequent
 found source locators and core metadata on all 137,723 raw literary rows and
 reconciled the textbook family to retained chunks, PDFs, acquisition code,
 selection metadata, and page URLs. The operator approved these retained human-
-authored sources for local research and continued model learning. Raw-source
+authored sources for downstream research and continued model learning.
+Raw-source
 redistribution, dataset publication, and model publication remain independent
 later decisions. The project verdict is **CONTINUE**.
 
@@ -293,99 +298,42 @@ later decisions. The project verdict is **CONTINUE**.
   reconstructing original-source evidence; it is not provenance authority or a
   candidate training collection.
 
-### Immediate work
+### Completed foundations and sole remaining lane
 
-1. Replace the combined admission disposition with capability-specific states:
-   local research/model learning, raw-source redistribution, dataset release,
-   and model release. Apply the operator-approved local-training decision to
-   the retained human-authored corpus while preserving later release gates
-   (#6171).
-2. Preserve and use the completed production detector's 739,564 contextual
-   candidates across Russian quotation, modern interference, phonetic Russian,
-   mixed, historical, protected, and uncertain routes (#6167). VESUM absence
-   remains one signal rather than a verdict.
-3. Produce real evidence-graded silver correction, retention, protection, and
-   unresolved records without requiring reviewer labour (#6168). Preserve the
-   existing blind human campaign as an optional gold-upgrade path and add an
-   optional, privacy-safe Hramatka feedback intake.
-4. Restore raw literary locators lost during ingestion, reconcile remaining
-   textbook filename variations, and start the approved local source-text
-   continued-pretraining view immediately. Add separately manifested silver
-   correction, preference, and quality-filter views only when their evidence
-   and destination gates pass (#6169). Never fill a view with benchmark or
-   fixture data.
-5. Package the production detector, evidence factory, model-view exporters,
-   tokenizer diagnostics, and evaluation firewall as one corpus-portable
-   clean-Ukrainian tool. It must cover the Foundry's calque, grammar, and
-   morphology axes, incorporate Oleksiy's recorded ULIF synonym-source
-   recommendation, and protect historical, regional, dialectal, and quoted
-   material (#6171).
-6. Ship a model-neutral, stranger-runnable training recipe with exact
-   admission, mixture, tokenizer, split, objective, evaluation, cost, and stop
-   controls. Reproduce the complete no-training path in a clean independent
-   environment (#6171). The canonical recipe and cost model are documented in
-   the [clean-Ukrainian runbook](../runbooks/ukrainian-data-foundry-clean-ukrainian-recipe.md).
-7. Keep the preregistered Gemma 4 31B cloud treatment (#6170) parked as
-   optional, present-tense operator-gated compatibility validation. After
-   #6171, inventory the operator's unused M1 and prefer a smaller Gemma 4
-   Apple-Silicon QLoRA candidate when it can prove the complete path without
-   rental cost. Neither route is a prerequisite for #6171, and neither model
-   download nor training is authorized. Before either route runs, replace
-   planning estimates with an exact model, revision, tokenizer, machine,
-   framework, memory, throughput, evaluation, and stop-rule record.
-8. Use frozen v0.1.1 and compatible licensed external human-authored
-   evaluations for recipe validation and any optional future experiment. The
-   reviewer-intensive v0.2
-   acquisition may resume only if Hramatka or a future collaboration supplies
-   suitable consented evidence without becoming a project staffing dependency.
-   Public evaluation gold remains mechanically isolated from every training or
-   tuning view.
+The production corpus audit, admission baseline, full-corpus detector,
+evidence-grade silver/protection factory, separate model views, tokenizer
+diagnostics, and reference build are complete under #6166–#6169. PR #6248
+supplies the later corpus-usability decision that defines #6171's remaining
+capability-separation work. Together they establish that the project has the
+source material and component interfaces needed to finish the Foundry.
 
-### Optional local Apple-Silicon proof after #6171
+Issue #6171 is the sole remaining Foundry execution lane. It must, in order:
 
-The proof question is whether the shipped Foundry path changes a model's
-measured Ukrainian behavior, not whether a particular large checkpoint can be
-forced onto a laptop. The first zero-rental-cost candidate is the operator's
-unused M1, after its exact chip variant, unified memory, free storage, and macOS
-version are recorded.
+1. separate downstream local-learning eligibility from raw-source
+   redistribution, dataset publication, and model publication in the executable
+   admission contract, while restoring retained source locators;
+2. expose one bounded consumer-owned JSONL input and one documented public CLI
+   over admission, contextual language contact, evidence, model views,
+   tokenizer diagnostics, cost calculation, and the evaluation firewall;
+3. preserve original text and the Russian-quotation, modern-interference,
+   phonetic-Russian, mixed, historical, regional, dialectal, protected, OCR,
+   other-language, and unresolved routes;
+4. expose the calque, grammar/government, morphology/OOV, VESUM, R2U, ULIF, and
+   heritage evidence surfaces without promoting any one source to an automatic
+   verdict;
+5. emit deterministic faithful-source, modern-learning, silver correction,
+   preference, filter, evaluation, tokenizer, recipe, and limitation receipts
+   with benchmark contamination denied; and
+6. reproduce the complete bounded path in a fresh environment with no model
+   download, accelerator, optimizer, hidden database, or project-private path.
 
-Google's current
-[Gemma 4 memory table](https://ai.google.dev/gemma/docs/core#parameter-sizes-and-quantization)
-lists approximate Q4 inference loads of 2.9 GB for E2B, 4.5 GB for E4B,
-6.7 GB for 12B, 14.4 GB for 26B A4B, and 17.5 GB for 31B. Those figures cover
-base weights and loading overhead, not context or fine-tuning. The 31B model
-therefore cannot be a 16 GB M1 training target, and the A4B model does not fit
-like a 4B model because all 26 billion parameters must remain loaded.
-
-Candidate routing is conditional rather than a model selection:
-
-| M1 unified memory | First Gemma 4 candidate to benchmark | Boundary |
-| ---: | --- | --- |
-| 8 GB | E2B Q4 | Runtime preflight and short full-path proof only until peak memory is measured |
-| 16 GB | E4B Q4; E2B fallback | 31B is excluded; 12B requires a measured margin before consideration |
-| 32 GB | 12B Q4; E4B fallback | Prefer 12B only if one-step training, reload, and evaluation fit safely |
-| 64 GB or more | 12B first; 31B may be benchmarked | Do not choose 31B before its measured speed and peak-memory cost justify it |
-
-Apple's [MLX-LM](https://github.com/ml-explore/mlx-lm) supports Apple-Silicon
-LoRA and QLoRA; release `v0.31.2` added Gemma 4, and the
-[LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md)
-documents quantized-model training. The existing #6170 runner is CUDA/L40S
-specific and must remain unchanged. A local proof needs a separately pinned
-MLX runner and a new tokenizer receipt for the selected checkpoint.
-
-The first meaningful local result must traverse the complete path: frozen
-baseline evaluation, real stratified Foundry data, adapter training, clean
-reload, the same held-out evaluation, and protected-variation checks. A
-synthetic one-step update is only the hardware preflight. A full-corpus pass is
-considered only after the exact local throughput turns the existing token count
-into an acceptable wall-time estimate.
-
-The accountable orchestrator continues through the #6171 no-training release
-candidate. A merged implementation PR is progress, not a stopping condition.
-Work pauses only at a source-family admission decision or final publication
-approval named on #6164. Paid training is outside the critical path and begins
-only through a new present-tense model/revision/budget authorization. Choosing
-to claim human gold pauses only that optional upgrade lane.
+The project stops at that no-training release. Closed #6170 is retained only as
+historical preregistration evidence and is not a future Foundry task. Downstream
+teams with compute may select a model, run the frozen recipe on their own
+corpus, and return results if they choose; the Foundry neither funds nor
+operates that work. The reviewer-intensive v0.2 acquisition remains closed as
+not planned. Public evaluation gold remains mechanically isolated from every
+model-learning or derived-rule view.
 
 ### Completed Foundry v1 reference build
 
@@ -402,7 +350,7 @@ fixture reviewers are not qualified-human evidence and all four fixture rows
 remain training-ineligible. Separately, the older combined gate admitted 1,029
 real Ukrainian Wikipedia records / 2,865,506 lexical words for the declared
 continued-pretraining destination. The later usability decision approves the
-retained human-authored corpus for local research and model learning after
+retained human-authored corpus for downstream research and model learning after
 required preprocessing; it does not authorize raw-source, dataset, adapter, or
 weight publication.
 
@@ -420,16 +368,20 @@ After a usable reference build exists, it may be validated with Lapa,
 - failure-focused evaluation with protected legitimate variation; and
 - evidence-backed annotation guidelines.
 
-External feedback may prioritize later adapters, acquisition, or release work.
+External feedback may prioritize later evidence adapters, acquisition, or
+release work.
 It is not a prerequisite for building the architecture, full-corpus profiler,
-silver correction intake, separate exporters, recipes, experiment, or reference
-validation. Hramatka teacher feedback follows the same optional-evidence rule.
+silver correction intake, separate exporters, recipes, or reference validation.
+Hramatka teacher feedback follows the same optional-evidence rule.
 
-## Model-running policy
+## Downstream validation policy
 
-Model baselines are experiments, not the mission.
+The Foundry project does not run model baselines or training experiments. It
+ships frozen artifacts that let a downstream team run them without asking this
+project to operate or fund compute.
 
-Run a model only when the result answers a named question, such as:
+A downstream result is useful evidence only when it answers a named question,
+such as:
 
 - Does a new open-weight generation remove a specific failure category?
 - Does a tokenizer change improve Ukrainian fertility and downstream quality?
@@ -438,9 +390,9 @@ Run a model only when the result answers a named question, such as:
 - Does a detailed Ukrainian prompt expose a capability that a generic prompt
   hides?
 
-Open-weight models are the primary integration target because researchers can
-inspect, reproduce, adapt, and redistribute their work. Closed models remain
-useful as comparison ceilings, candidate annotators, or prompt-sensitivity
+Open-weight consumers are the primary integration target because researchers
+can inspect, reproduce, and adapt their work. Closed models remain useful to
+consumers as comparison ceilings, candidate annotators, or prompt-sensitivity
 probes. A closed-model score is not itself a durable community contribution.
 
 Do not compare scores across different benchmarks as if they measured the same

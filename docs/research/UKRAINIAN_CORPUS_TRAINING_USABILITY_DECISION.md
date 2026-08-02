@@ -18,8 +18,8 @@ The corpus is sufficient to:
 1. build and validate the corpus-portable clean-Ukrainian tool;
 2. prepare a high-value Ukrainian adaptation mixture for an existing open
    model; and
-3. run a controlled continued-training experiment if the operator later
-   approves a model, revision, hardware, and budget.
+3. give downstream teams deterministic model-ready views, evaluation controls,
+   cost arithmetic, and a reproducible training recipe.
 
 It is not large enough to train a competitive general foundation model from
 scratch. It also cannot automatically turn every detector candidate into a
@@ -76,18 +76,19 @@ describe different retained units rather than a lost-text discrepancy.
 | Intended use | Decision | Conditions |
 | --- | --- | --- |
 | Run the clean-Ukrainian detector and evidence tool | **Use now** | Preserve uncertainty; VESUM absence alone is never an error verdict |
-| Continue training an existing open model locally | **Use after preprocessing** | Deduplicate, stratify, filter/mask damage, preserve lineage, and isolate evaluation |
+| Continue training an existing open model downstream | **Use after preprocessing** | Deduplicate, stratify, filter/mask damage, preserve lineage, and isolate evaluation |
 | Prepare a reproducible training recipe for another Ukrainian team | **Use now** | Emit manifests and receipts without embedding private paths or republishing source files |
 | Train a general foundation model from scratch | **Do not use as the only corpus** | The roughly 139-million-token planning scale is far below foundation-model scale |
 | Create automatic correction/preference gold | **Not from raw detector output** | Use evidence-graded silver; call it gold only after adequate validation |
-| Publish raw books or textbook PDFs | **Separate decision** | Not required for local learning, derived receipts, tool publication, or the recipe |
+| Publish raw books or textbook PDFs | **Separate decision** | Not required for downstream learning, derived receipts, tool publication, or the recipe |
 | Publish weights or an adapter | **Separate decision** | Evaluate capability, regressions, memorization, obligations, and release terms first |
 
-The operator has approved the retained human-authored source corpus for local
-research and model-learning work toward the project goal. This decision does
+The operator has approved the retained human-authored source corpus for
+downstream research and model-learning work toward the project goal. This
+decision does
 not claim a blanket right to rehost the raw source books, publish a dataset, or
 release weights. Those are separate capabilities and must not be used to block
-the local training lane.
+an otherwise approved downstream model-learning view.
 
 ## Required learning mixture
 
@@ -134,16 +135,17 @@ multilingual and resource-constrained settings. See
 
 ## Execution order from this decision
 
-1. Correct the current admission/export contract so local model training,
-   raw-source redistribution, dataset publication, and weight publication are
-   independent capabilities.
+1. Correct the current admission/export contract so downstream model-learning
+   eligibility, raw-source redistribution, dataset publication, and weight
+   publication are independent capabilities.
 2. Restore raw literary locators into generated source records and reconcile
    the remaining textbook filename variations against retained PDFs and URLs.
 3. Produce modern-learning and faithful-source views with OCR, historical, and
    quoted-language masks; keep source text immutable.
 4. Measure exact tokenizer counts and run the complete no-accelerator recipe.
-5. Only after those artifacts pass validation, propose an optional bounded
-   model experiment with an exact cost and stop rule for operator approval.
+5. Hand the validated artifacts, cost method, and limitations to downstream
+   teams that have their own compute; the Foundry project stops before model
+   download, accelerator rental, or optimizer execution.
 
 No new broad corpus acquisition is required before steps 1–4. No paid training
 is required to finish the tool and recipe.

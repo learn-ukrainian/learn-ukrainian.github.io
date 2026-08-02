@@ -5,7 +5,7 @@
 > (production successor to completed foundation
 > [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056))
 > **Architecture issue:** [#6119](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6119)
-> **Recorded:** 2026-07-31; production execution chain refreshed 2026-08-01
+> **Recorded:** 2026-07-31; delivery boundary refreshed 2026-08-02
 > **Does not authorize:** model training, fine-tuning, weight publication,
 > dataset upload or release, redistribution, researcher outreach, private-data
 > disclosure, or OCR
@@ -26,7 +26,8 @@ The Foundry's job is to make evidence and boundaries explicit:
 - what VESUM can and cannot attest about its forms;
 - which passages need contextual grammar, calque, collocation, or
   Russian-interference review;
-- which decisions were made by qualified Ukrainian humans; and
+- which decisions are evidence-graded silver, protected, unresolved, or
+  optional qualified-human gold; and
 - which mechanically disjoint view, if any, may consume the record.
 
 It is not a project-owned general-purpose model and does not claim that one
@@ -46,7 +47,9 @@ VESUM morphology and unknown-form evidence
         ↓
 Grammar · calque · collocation · Russian-interference candidates
         ↓
-Qualified Ukrainian-human adjudication
+Evidence-tiered silver · protection · unresolved routing
+        ↓
+Optional qualified Ukrainian-human gold upgrade
         ↓
 Mechanically separate training · correction · preference · evaluation views
         ↓
@@ -190,35 +193,37 @@ multilingual candidates are protected from automatic correction. Grammar,
 calque, collocation, government, syntax, and semantic layers may consume these
 candidates later, but must retain their provenance and uncertainty.
 
-### 5. Qualified adjudication
+### 5. Evidence-tiered decisions and optional human gold
 
-Only a separate correction-data contract may promote a candidate. It must
-record qualified Ukrainian-human reviewer evidence, independent first-pass
-decisions, conflict handling, citations, rationale, uncertainty, protected
-variation, and export disposition.
+Only a separate correction-data contract may promote a candidate. The
+production path records source-specific evidence, rationale, uncertainty,
+protected variation, evidence grade, and destination-specific disposition as
+silver. It never labels automated or model-supported evidence as human gold.
+Qualified Ukrainian-human review remains an optional upgrade path.
 
-The promotion path is fail closed:
+The silver promotion path is fail closed:
 
 ```text
 profiled candidate
   → provenance and rights screened
   → exact/near-duplicate and evaluation contamination clear
-  → independent qualified Ukrainian-human reviews
-  → conflict resolved by a distinct qualified Ukrainian human or unresolved
+  → source-specific evidence and protection rules applied
+  → silver evidence grade or unresolved
   → destination-specific export eligibility
 ```
 
-An unresolved or protected record remains non-exportable. Synthetic fixtures
-and model outputs cannot stand in for qualified human decisions.
+An unresolved record remains non-exportable to labeled-learning views. A
+protected record remains a keep/no-change example only where its destination
+contract permits that role. Synthetic fixtures and model outputs cannot stand
+in for qualified human decisions or be called human gold.
 
 The implemented #6121 boundary is the
 [correction-factory runbook](../runbooks/ukrainian-data-foundry-correction-factory.md).
-Its four versioned schemas and deterministic CLI enforce original span
-preservation, source-specific evidence, evaluation-contamination joins, two
-independent Ukrainian-human first passes, a distinct third-human conflict
-path, and fail-closed handoff. Every resulting record remains explicitly
-ineligible for model training or export; #6122 owns that separate consumer
-boundary.
+Its versioned contracts and deterministic CLI enforce original span
+preservation, source-specific evidence, evaluation-contamination joins,
+optional human-gold review, and fail-closed handoff. The completed #6168
+evidence factory adds the production silver/protection path without claiming
+human gold; consumer eligibility remains a separate destination decision.
 
 ### 6. Consumer views
 
@@ -235,7 +240,7 @@ A non-evaluation view requires all of the following:
 - exact and near-duplicate disposition;
 - contamination checks against all frozen evaluation inventories and derived
   rules; and
-- the required qualified adjudication state for that destination.
+- the required evidence or adjudication state for that destination.
 
 Failure or absence at any gate yields an investigation, private, evaluation,
 unresolved, or excluded state—not `training_eligible`.
@@ -372,42 +377,19 @@ any step above. Dataset release, upload, redistribution, model training, weight
 publication, private-data disclosure, researcher contact, and OCR each require
 separate present-tense authorization.
 
-## Phase 2–4 production execution chain
+## Phase 2–4 delivery state
 
-The v1 interfaces are foundations, not delivery of the Foundry's ultimate
-outcome. At the start of Phase 2, the corpus profiler covers 189,150 records and
-50,298,925 lexical words, but no real record is training-admitted and the only
-end-to-end correction is a synthetic fixture. Production therefore proceeds
-through the following hard-gated chain under #6164:
+Issues #6166–#6169 are complete: corpus admission evidence, the full-corpus
+contextual detector, evidence-tiered silver/protection data, and real disjoint
+consumer views now exist. Closed #6170 preserves a historical treatment design
+but is not planned and is not part of the delivery chain.
 
-1. [#6166](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6166)
-   resolves source, edition, acquisition, rights, permitted-use, origin, and
-   contamination evidence for every real corpus family and admits useful-scale
-   real data where the evidence permits it.
-2. [#6167](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6167)
-   runs a contextual detector across the complete corpus and preserves the
-   difference between Russian quotation, modern interference, phonetic
-   rendering, mixed or historical language, protected Ukrainian variation,
-   and uncertainty.
-3. [#6168](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6168)
-   freezes sampling and stopping rules before labeling, then obtains two
-   independent qualified-Ukrainian-human judgments plus distinct conflict
-   adjudication. Model judgments never substitute for this gate.
-4. [#6169](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6169)
-   emits real disjoint consumer views with lineage, benchmark isolation,
-   tokenizer diagnostics, and loss-mask evidence.
-5. [#6170](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6170)
-   runs one operator-approved, preregistered open-weight treatment and causal
-   ablation only after real data, frozen gold, an exact model revision, and a
-   compute budget exist.
-6. [#6171](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6171)
-   packages the corpus-portable, rights-safe release candidate and requires a
-   clean independent reproduction before publication is considered.
-
-Admission and full-corpus detection begin in parallel. Later stages consume
-their frozen evidence in order. The orchestrator does not stop at intermediate
-PR merges; only the source-family admission, qualified-human review, exact
-training preregistration/budget, and final publication approvals are deliberate
-human gates. No arbitrary row count, agreement score, tokenizer ratio,
-significance threshold, or effect size may be invented to replace evidence-led
-criteria frozen in the owning issue.
+Issue #6171 is the sole remaining Foundry lane. It must correct the executable
+capability separation, restore retained source locators, expose one bounded
+consumer JSONL adapter and one public CLI, preserve every contextual and
+protected-variation route, emit deterministic model-ready views and receipts,
+and reproduce the whole bounded path from a clean environment. The project
+then stops before model download, accelerator rental, optimizer execution,
+adapter creation, upload, or publication. Optional qualified-human gold and
+downstream model results may strengthen later evidence, but neither blocks the
+Foundry release.
