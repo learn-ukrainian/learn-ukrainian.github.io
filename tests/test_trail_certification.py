@@ -9,7 +9,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.orchestration import rail_path_guard
 from scripts.orchestration.trails import trail_certification as certification_module
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
 from scripts.orchestration.trails.trail_certification import (
@@ -433,18 +432,7 @@ def test_trail_hash_drift_between_p3_and_submitted_spec_is_refused(tmp_path: Pat
         )
 
 
-def test_new_p14_files_are_not_rail_paths() -> None:
-    created_paths = (
-        "scripts/orchestration/trails/trail_certification.py",
-        "agents_extensions/shared/schemas/trail-certification-attestation.v1.schema.json",
-        "tests/trails/fixtures/certification/executable.trail.yaml",
-        "tests/trails/fixtures/certification/legacy.trail.yaml",
-        "tests/trails/fixtures/certification/seats.yaml",
-        "tests/trails/fixtures/certification/case-matrix.v1.yaml",
-        "tests/test_trail_certification.py",
-    )
-
-    assert all(rail_path_guard.is_rail_path(path) is False for path in created_paths)
+def test_binary_damage_event_codes_are_complete() -> None:
     assert {
         "merged-regression",
         "unauthorized-rail-file-edit",

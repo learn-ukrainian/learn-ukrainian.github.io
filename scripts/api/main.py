@@ -82,7 +82,6 @@ from .knowledge_router import router as knowledge_router
 from .ops_router import router as ops_router
 from .preload import preload_all
 from .rag_router import router as rag_router
-from .rail_approval_router import router as rail_approval_router
 from .repository_authority import build_repository_authority
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
@@ -183,7 +182,6 @@ app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
 app.include_router(rag_router, prefix="/api/rag")
-app.include_router(rail_approval_router, prefix="/api/rail-approvals", tags=["rail-approvals"])
 # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
 # can discover it alongside the other state-query endpoints.
 app.include_router(
