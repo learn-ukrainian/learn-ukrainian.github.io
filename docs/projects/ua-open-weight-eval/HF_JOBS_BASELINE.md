@@ -49,7 +49,7 @@ a llama.cpp fallback attempt.
 
 Hugging Face Jobs deletes its ephemeral filesystem at termination. The worker
 therefore writes an exact-prefix append-only checkpoint to a private mounted
-Hugging Face Bucket after each 25-case batch. Its header binds the suite,
+Hugging Face Bucket after every completed request. Its header binds the suite,
 request selection, model and tokenizer revisions, artifact hash, runner hash,
 runtime versions, and decoding settings. A resume is accepted only when all
 bindings match and the checkpoint rows are the exact expected request-order
