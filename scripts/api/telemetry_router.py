@@ -19,6 +19,8 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from scripts.telemetry.legacy_bridge import bridge_usage_summary
+
 from .config import PROJECT_ROOT
 from .resilience import connect_sqlite
 from .telemetry.legacy_comms import legacy_comms_summary
@@ -382,6 +384,14 @@ def read_legacy_comms_routes(
 ):
     """Return body-free legacy-route aggregates with explicit coverage truth."""
     return legacy_comms_summary(window)
+
+
+@router.get("/legacy-bridge-asks")
+def read_legacy_bridge_asks(
+    window: Literal["1h", "24h", "7d", "30d", "90d"] = Query("7d"),
+):
+    """Return body-free one-shot bridge usage and coverage truth."""
+    return bridge_usage_summary(window)
 
 
 @router.post("/module-builds")
