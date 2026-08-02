@@ -10,6 +10,12 @@ version: 1
 message_plane:
   default_mode: authority
 
+# Projection only. Formal-review policy, model pins, sealed participants, and
+# quota/credential buckets are canonical in model_catalog.yaml under
+# review_scheduler.endpoints. Keep these endpoint booleans synchronized for
+# legacy endpoint-status consumers; reviewer_resolver never reads this copy.
+formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_scheduler.endpoints
+
 # formal_review_eligible is fail-closed until sealed CF isolation is proven and
 # the matching isolation issue closes (#5555 AGY, #5556 Kimi, #5557 Grok). GLM,
 # Claude, and Codex enter through the sealed exact-head ACP review path; other live lanes stay
@@ -121,5 +127,5 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    formal_review_eligible: false
+    formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver

@@ -40,6 +40,152 @@ policy:
       grok routes remain banned).
     - Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.
 
+# Canonical sealed formal-review transports. Resolver policy consumes these
+# endpoint records before considering balance. A route with
+# formal_review_eligible: false may support advisory or implementation work,
+# but it is never selected as the formal cross-family gate.
+review_scheduler:
+  schema_version: review-scheduler.v1
+  policy_version: deterministic-formal-routing.v2
+  # Suitability is a semantic gate/rank, not a traffic-rotation weight. These
+  # ordered catalog roles are read from the selected model's `roles` field:
+  # an absent role fails closed, and pressure only breaks ties at one exact
+  # profile/risk suitability + quality tier.
+  profile_risk_role_order:
+    code:
+      critical: [critical_review]
+      high: [strong_review, standard_review, long_context_review, critical_review]
+      medium: [standard_review, strong_review, long_context_review, routine_review, critical_review]
+      low: [routine_review, standard_review, strong_review, long_context_review, critical_review]
+    infra:
+      critical: [critical_review, security_review]
+      high: [strong_review, security_review, standard_review, long_context_review, critical_review]
+      medium: [standard_review, strong_review, security_review, long_context_review, routine_review, critical_review]
+      low: [routine_review, standard_review, strong_review, security_review, long_context_review, critical_review]
+  automatic_near_cap_assignments: false
+  endpoints:
+    claude:
+      formal_review_eligible: true
+      models: [claude-fable-5, claude-sonnet-5]
+      participant: claude
+      adapter_transport: acp
+      catalog_transport: native_claude
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: claude
+      credential_bucket: claude
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    codex:
+      formal_review_eligible: true
+      models: [gpt-5.6-sol, gpt-5.6-terra]
+      participant: codex
+      adapter_transport: acp
+      catalog_transport: native_codex
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: codex
+      credential_bucket: codex
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    glm:
+      formal_review_eligible: true
+      models: [glm-5.2]
+      participant: glm
+      adapter_transport: acp
+      catalog_transport: opencode
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: glm
+      credential_bucket: glm
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    agy:
+      formal_review_eligible: false
+      formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
+      models: [gemini-3.6-flash-high]
+      participant: agy
+      adapter_transport: acp
+      catalog_transport: agy
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: agy
+      credential_bucket: agy
+      quota_limit: 2
+      credential_limit: 2
+      capacity_weight: 1.0
+    grok:
+      formal_review_eligible: false
+      formal_review_exclusion_reason: native Grok ACP sealed MCP consumption is not yet authenticated end-to-end
+      models: [grok-4.5]
+      participant: grok
+      adapter_transport: acp
+      catalog_transport: native_grok
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: grok
+      credential_bucket: grok
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    kimi:
+      formal_review_eligible: false
+      formal_review_exclusion_reason: bare Kimi launcher is not the canonical K3 participant
+      models: []
+      participant: kimi
+      adapter_transport: acp
+      catalog_transport: native_kimi
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: kimi
+      credential_bucket: kimi
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    kimicc:
+      formal_review_eligible: false
+      formal_review_exclusion_reason: KimiCC K3 sealed MCP consumption is not yet authenticated end-to-end
+      models: [kimi-code/k3]
+      participant: kimicc
+      adapter_transport: acp
+      catalog_transport: native_kimi
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: kimi
+      credential_bucket: kimi
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    cursor:
+      formal_review_eligible: false
+      participant: cursor
+      adapter_transport: acp
+      catalog_transport: cursor
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: cursor
+      credential_bucket: cursor
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    deepseek:
+      formal_review_eligible: false
+      participant: deepseek
+      adapter_transport: acp
+      catalog_transport: hermes
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: deepseek
+      credential_bucket: deepseek
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+    pool:
+      formal_review_eligible: false
+      participant: pool
+      adapter_transport: acp
+      catalog_transport: opencode
+      sealed_executable: scripts.ai_agent_bridge._review_pr:invoke_inter_agent
+      quota_bucket: pool
+      credential_bucket: pool
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
+
 # Bounded execution routing after a frontier advisory pass. This is deliberately
 # separate from review_ladders: it selects an implementation/investigation lane,
 # not a formal reviewer or a release authority.
@@ -448,7 +594,7 @@ review_candidates:
     transport: native_codex
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
   gpt-5.6-terra:
     model_id: gpt-5.6-terra
@@ -456,14 +602,14 @@ review_candidates:
     transport: native_codex
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-terra
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-fable-5:
     model_id: claude-fable-5
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-fable-5-cursor-fallback:
     model_id: claude-fable-5
     route: cursor
@@ -504,9 +650,12 @@ review_candidates:
     capabilities: [code_review]
   kimi-k3:
     model_id: kimi-code/k3
-    route: kimi
+    # kimicc is the concrete K3 ACP participant; bare `kimi` is a launcher
+    # family and must never be serialized as the participant identity.
+    route: kimicc
     transport: native_kimi
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
+    health_keys: [kimi]
     review_profiles: [code, infra]
     capabilities: [code_review]
   glm-5.2:
@@ -515,7 +664,7 @@ review_candidates:
     transport: opencode
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
     requires_data_egress_policy: local_interactive
   claude-opus-5:
     model_id: claude-opus-5
@@ -530,7 +679,7 @@ review_candidates:
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   deepseek-v4-pro:
     model_id: deepseek-v4-pro
     route: deepseek

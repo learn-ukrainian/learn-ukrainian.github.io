@@ -220,7 +220,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | codex | true |
   | cursor | false |
   | gemini | false |
-  | glm-local | false |
+  | glm-local | true |
   | grok | false |
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->

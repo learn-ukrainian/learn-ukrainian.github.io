@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -17,6 +20,7 @@ from scripts.review.reviewer_resolver import (
     KIMI_K3,
     POOL,
     QWEN,
+    REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     TERRA,
     UNKNOWN_AUTHOR_FAMILY,
@@ -59,6 +63,21 @@ def test_family_resolution_across_model_and_harness_aliases():
     }
     for seat, expected_family in cases.items():
         assert resolve_family(seat) == expected_family, seat
+
+
+def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
+    root = Path(__file__).resolve().parent.parent
+    catalog = yaml.safe_load((root / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
+    fleet = yaml.safe_load((root / "scripts/config/fleet_communications.yaml").read_text(encoding="utf-8"))
+    assert fleet["formal_review_eligibility_source"].endswith("#review_scheduler.endpoints")
+    policy = catalog["review_scheduler"]["endpoints"]
+    aliases = {"glm-local": "glm"}
+    for endpoint in fleet["endpoints"]:
+        policy_name = aliases.get(endpoint["name"], endpoint["name"])
+        if policy_name in policy:
+            assert endpoint["formal_review_eligible"] is policy[policy_name]["formal_review_eligible"]
+        else:
+            assert endpoint["formal_review_eligible"] is False
 
 
 def test_family_resolution_unknown_and_bare_cursor_are_not_fabricated():
@@ -141,9 +160,10 @@ def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
         )
     )
 
-    assert resolution.selected.name == "claude-fable-5-cursor-fallback"
-    assert resolution.selected.concrete_model == "claude-fable-5"
-    assert resolution.selected.transport == "cursor"
+    assert resolution.selected is None
+    fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-cursor-fallback")
+    assert fallback.status == "excluded"
+    assert "formal-review transport" in fallback.reason
     native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5")
     assert native.status == "excluded"
     assert "unhealthy" in native.reason
@@ -165,7 +185,7 @@ def test_fable_keeps_native_claude_when_native_health_is_degraded():
 
 def test_high_risk_kimi_author_gets_claude_not_composer():
     resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
-    assert resolution.selected.name == "openai_frontier"
+    assert resolution.selected.name == "claude-fable-5"
     composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
     assert composer.status == "excluded"
     assert "same family" in composer.reason
@@ -174,7 +194,7 @@ def test_high_risk_kimi_author_gets_claude_not_composer():
 def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
     assert resolution.selected.name == "claude-sonnet-5"
-    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "eligible"
+    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "excluded"
 
 
 def test_low_risk_pool_author_gets_terra_before_economical_routes():
@@ -184,7 +204,7 @@ def test_low_risk_pool_author_gets_terra_before_economical_routes():
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
-    assert resolution.policy_version == "model-catalog.v1"
+    assert resolution.policy_version == "deterministic-formal-routing.v2"
     assert resolution.catalog_reviewed_on == "2026-08-02"
     assert resolution.resolved_risk == "high"
 
@@ -274,10 +294,10 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium"))
     assert unknown.selected.name == missing.selected.name == "claude-sonnet-5"
-    assert "no eligible candidate" in unknown.substitution_note
+    assert unknown.substitution_note is None
 
 
-def test_near_cap_cannot_promote_a_lower_quality_tier():
+def test_near_cap_receives_no_new_automatic_assignment():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="claude",
@@ -285,9 +305,10 @@ def test_near_cap_cannot_promote_a_lower_quality_tier():
             routing_snapshot={"codex": "near_cap", "cursor": "healthy"},
         )
     )
-    assert resolution.selected.name == "gpt-5.6-terra"
-    assert resolution.selected.health == "near_cap"
-    assert resolution.substitution_note is None
+    assert resolution.selected is None
+    terra = next(item for item in resolution.trace if item.name == "gpt-5.6-terra")
+    assert terra.status == "excluded"
+    assert "automatic assignments are prohibited" in terra.reason
 
 
 def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
@@ -302,7 +323,7 @@ def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="kimi-code/k3", risk="critical", routing_snapshot=snapshot)
     )
-    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected is None
 
 
 def test_native_grok_dark_falls_to_explicit_cursor_grok():
@@ -317,9 +338,8 @@ def test_native_grok_dark_falls_to_explicit_cursor_grok():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="claude", risk="high", routing_snapshot=snapshot)
     )
-    assert resolution.selected.name == "grok-4.5-cursor-fallback"
-    assert resolution.selected.transport == "cursor"
-    assert resolution.selected.concrete_model == "grok-4.5"
+    assert resolution.selected is None
+    assert next(item for item in resolution.trace if item.name == "grok-4.5-cursor-fallback").status == "excluded"
 
 
 def test_missing_health_signal_is_fail_open():
@@ -352,8 +372,7 @@ def test_health_breaks_ties_only_within_the_same_remaining_quality_rung():
             },
         )
     )
-    assert resolution.selected.name == "kimi-k3"
-    assert resolution.selected.health == "near_cap"
+    assert resolution.selected is None
 
 
 def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
@@ -376,19 +395,15 @@ def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
             data_egress_policy="local_interactive",
         )
     )
-    assert resolution.selected.name == "deepseek-v4-flash"
-    assert resolution.selected.transport == "opencode"
-    assert resolution.selected.requires_silence_timeout is False
-    assert resolution.selected.invocation.endswith(
-        "opencode run --model deepseek-direct/deepseek-v4-flash --variant high"
-    )
+    assert resolution.selected is None
+    assert next(item for item in resolution.trace if item.name == "deepseek-v4-flash").status == "excluded"
 
 
 def test_folk_content_excludes_both_deepseek_models():
     for candidate in (DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH):
         result = evaluate_candidate(
             candidate,
-            ResolverInputs(author_model="claude", domain="folk_content"),
+            ResolverInputs(author_model="claude", domain="folk_content", formal_review=False),
             author_family="anthropic",
         )
         assert result.status == "excluded"
@@ -405,7 +420,9 @@ def test_glm_data_egress_gate_is_fail_closed():
         assert result.status == "excluded"
     eligible = evaluate_candidate(
         GLM,
-        ResolverInputs(author_model="claude", data_egress_policy="local_interactive"),
+        ResolverInputs(
+            author_model="claude", data_egress_policy="local_interactive", requested_role="security_review"
+        ),
         author_family="anthropic",
     )
     assert eligible.status == "eligible"
@@ -424,7 +441,9 @@ def test_qwen_is_excluded_from_automatic_routing():
 def test_required_capabilities_and_isolation_fail_closed():
     missing = evaluate_candidate(
         POOL,
-        ResolverInputs(author_model="claude", required_capabilities=frozenset({"vesum_mcp"})),
+        ResolverInputs(
+            author_model="claude", required_capabilities=frozenset({"vesum_mcp"}), formal_review=False
+        ),
         author_family="anthropic",
     )
     assert missing.status == "excluded"
@@ -432,7 +451,7 @@ def test_required_capabilities_and_isolation_fail_closed():
 
     isolation = evaluate_candidate(
         GROK_4_5,
-        ResolverInputs(author_model="claude", isolation_required=True),
+        ResolverInputs(author_model="claude", isolation_required=True, formal_review=False),
         author_family="anthropic",
     )
     assert isolation.status == "excluded"
@@ -442,7 +461,7 @@ def test_required_capabilities_and_isolation_fail_closed():
 def test_review_profile_is_a_hard_eligibility_filter():
     result = evaluate_candidate(
         GROK_4_5,
-        ResolverInputs(author_model="claude", review_profile="content"),
+        ResolverInputs(author_model="claude", review_profile="content", formal_review=False),
         author_family="anthropic",
     )
     assert result.status == "excluded"
@@ -466,6 +485,248 @@ def test_custom_ladder_still_supported_for_focused_callers():
     )
     assert resolution.selected is None
     assert resolution.trace[0].status == "excluded"
+
+
+def test_same_tier_balancing_is_stable_and_yaml_order_independent():
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    inputs = ResolverInputs(author_model="gemini", exact_head="a" * 40)
+    forward = resolve_reviewer(inputs, ladder=((TERRA, sonnet),))
+    reverse = resolve_reviewer(inputs, ladder=((sonnet, TERRA),))
+
+    assert forward.selected is not None
+    assert forward.selected.name == reverse.selected.name
+    assert forward.selected.selection_score == reverse.selected.selection_score
+    assert forward.selected.selection_score is not None
+
+
+def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier():
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    ladder = ((TERRA, sonnet),)
+    inputs = ResolverInputs(author_model="gemini", exact_head="b" * 40, requested_role="implementation")
+    capacity_weighted = {
+        "agents": {
+            "codex": {"scheduler": {"completed_input_bytes": 500, "active_reserved_input_bytes": 0}},
+            "claude": {"scheduler": {"completed_input_bytes": 600, "active_reserved_input_bytes": 0}},
+        }
+    }
+    weighted_terra = replace(TERRA, capacity_weight=2.0)
+    weighted = resolve_reviewer(inputs, ladder=((weighted_terra, sonnet),), runtime_state=capacity_weighted)
+    assert weighted.selected.name == "gpt-5.6-terra"
+
+    headroom = {
+        "agents": {
+            "codex": {"scheduler": {"completed_input_bytes": 10, "quota_remaining_pct": 5}},
+            "claude": {"scheduler": {"completed_input_bytes": 10, "quota_remaining_pct": 90}},
+        }
+    }
+    selected = resolve_reviewer(inputs, ladder=ladder, runtime_state=headroom)
+    assert selected.selected.name == "claude-sonnet-5"
+
+    stale_codex = {
+        "agents": {
+            "codex": {"scheduler": {"completed_input_bytes": 10, "quota_stale": True}},
+            "claude": {"scheduler": {"completed_input_bytes": 10, "quota_stale": False}},
+        }
+    }
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_codex).selected.name == "claude-sonnet-5"
+
+    # A stale route with deceptively low recorded load must not outrank a
+    # fresh, verified route solely because its last-known-good counter is old.
+    stale_low_load = {
+        "agents": {
+            "codex": {
+                "scheduler": {
+                    "completed_input_bytes": 0,
+                    "quota_remaining_pct": 90,
+                    "quota_stale": True,
+                }
+            },
+            "claude": {
+                "scheduler": {
+                    "completed_input_bytes": 100,
+                    "quota_remaining_pct": 90,
+                    "quota_stale": False,
+                }
+            },
+        }
+    }
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_low_load).selected.name == "claude-sonnet-5"
+
+
+def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authority_models():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    fable = replace(REVIEW_CANDIDATES["claude-fable-5"], capacity_weight=2.0)
+    counts = {"openai_frontier": 0, "claude-fable-5": 0}
+    assigned_bytes = {"codex": 0, "claude": 0}
+
+    for index in range(120):
+        snapshot = {
+            "agents": {
+                route: {
+                    "status": "healthy",
+                    "scheduler": {
+                        "completed_input_bytes": assigned,
+                        "active_reserved_input_bytes": 0,
+                        "quota_remaining_pct": 75,
+                    },
+                }
+                for route, assigned in assigned_bytes.items()
+            }
+        }
+        resolution = resolve_reviewer(
+            ResolverInputs(author_model="gemini", risk="critical", exact_head=f"{index:040x}"),
+            ladder=((sol, fable),),
+            runtime_state=snapshot,
+        )
+        selected = resolution.selected
+        assert selected is not None
+        counts[selected.name] += 1
+        assigned_bytes[selected.route] += 1_000
+
+    assert counts == {"openai_frontier": 40, "claude-fable-5": 80}
+    assert assigned_bytes == {"codex": 40_000, "claude": 80_000}
+
+
+def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier():
+    weaker = REVIEW_CANDIDATES["pool-xs"]
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="gemini", formal_review=False, exact_head="e" * 40),
+        ladder=((TERRA,), (weaker,)),
+        runtime_state={
+            "agents": {
+                "codex": {
+                    "scheduler": {
+                        "completed_input_bytes": 9_000_000,
+                        "active_reserved_input_bytes": 1_000_000,
+                        "quota_remaining_pct": 1,
+                    }
+                },
+                "pool": {
+                    "scheduler": {
+                        "completed_input_bytes": 0,
+                        "active_reserved_input_bytes": 0,
+                        "quota_remaining_pct": 100,
+                    }
+                },
+            }
+        },
+    )
+    assert resolution.selected.name == "gpt-5.6-terra"
+    assert resolution.selected.quality_tier == "frontier_practical"
+    weaker_trace = next(item for item in resolution.trace if item.name == "pool-xs")
+    assert weaker_trace.status == "excluded"
+    assert "suitability" in weaker_trace.reason
+
+
+def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate():
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="gemini", risk="high"),
+        ladder=((sonnet, TERRA),),
+        runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
+    )
+    assert resolution.selected.name == "gpt-5.6-terra"
+    sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5")
+    assert sonnet_trace.status == "excluded"
+    assert "near cap" in sonnet_trace.reason
+
+
+def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing():
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    ladder = ((TERRA, sonnet),)
+    inputs = ResolverInputs(author_model="gemini", exact_head="c" * 40)
+    circuit = resolve_reviewer(
+        inputs,
+        ladder=ladder,
+        runtime_state={"agents": {"codex": {"scheduler": {"circuit_open": True}}}},
+    )
+    assert circuit.selected.name == "claude-sonnet-5"
+    assert "circuit is open" in next(item.reason for item in circuit.trace if item.name == "gpt-5.6-terra")
+
+    bucket = resolve_reviewer(inputs, ladder=ladder, excluded_quota_buckets=frozenset({"codex"}))
+    assert bucket.selected.name == "claude-sonnet-5"
+    assert "already reserved" in next(item.reason for item in bucket.trace if item.name == "gpt-5.6-terra")
+
+    full_credential = resolve_reviewer(
+        inputs,
+        ladder=ladder,
+        runtime_state={"agents": {"codex": {"scheduler": {"capacity_exhausted": True}}}},
+    )
+    assert full_credential.selected.name == "claude-sonnet-5"
+    assert "no unreserved concurrency slot" in next(
+        item.reason for item in full_credential.trace if item.name == "gpt-5.6-terra"
+    )
+
+
+def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate():
+    sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
+    missing_reason = resolve_reviewer(
+        ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name), ladder=((TERRA, sonnet),)
+    )
+    assert missing_reason.selected is None
+    assert "pressure_override_reason" in missing_reason.fail_closed_reason
+
+    unsafe = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini",
+            pinned_candidate="grok-4.5-cursor-fallback",
+            pressure_override_reason="native capacity incident",
+        ),
+        ladder=((REVIEW_CANDIDATES["grok-4.5-cursor-fallback"],),),
+    )
+    assert unsafe.selected is None
+    assert "hard eligibility" in unsafe.fail_closed_reason
+
+
+def test_formal_ineligible_and_k3_participant_identity_are_explicit():
+    k3 = REVIEW_CANDIDATES["kimi-k3"]
+    assert k3.route == "kimicc"
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex"), ladder=((k3,),))
+    assert resolution.selected is None
+    assert "not yet authenticated end-to-end" in resolution.trace[0].reason
+
+
+def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is_unavailable():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-sol",
+            author_family="openai",
+            review_profile="infra",
+            risk="high",
+            data_egress_policy="local_interactive",
+            exact_head="f" * 40,
+        ),
+        runtime_state={
+            "agents": {
+                "codex": {"status": "unavailable"},
+                "claude": {"status": "unavailable"},
+            }
+        },
+    )
+
+    assert resolution.selected is not None
+    assert resolution.selected.name == "glm-5.2"
+    assert resolution.selected.family == "zhipu"
+    assert resolution.selected.suitability_rank == 1
+
+
+def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing():
+    resolution = resolve_reviewer(ResolverInputs(author_model="claude", exact_head="d" * 40))
+    selected = resolution.selected
+    assert selected is not None
+    assert selected.participant == "codex"
+    assert selected.adapter_transport == "acp"
+    assert selected.sealed_executable == "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
+    assert selected.quota_bucket == "codex"
+    assert selected.credential_bucket == "codex"
+    assert selected.quota_limit == selected.credential_limit == 1
+
+    # K3 is the explicit kimicc ACPX participant, and it shares Kimi's
+    # credential/quota buckets rather than creating a fictitious account.
+    kimi = REVIEW_CANDIDATES["kimi-k3"]
+    assert kimi.participant == "kimicc"
+    assert kimi.quota_bucket == kimi.credential_bucket == "kimi"
+    assert kimi.quota_limit == kimi.credential_limit == 1
 
 
 def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
