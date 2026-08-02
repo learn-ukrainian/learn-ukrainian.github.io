@@ -149,6 +149,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     manifest = {
         "bundle_sha256": "b" * 64,
         "requests_sha256": "r" * 64,
+        "source_commit": "d" * 40,
     }
     preflight_gate = {
         "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
@@ -591,7 +592,7 @@ def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None
 
 def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundle() -> None:
     config = hf_jobs_baseline.load_config()
-    manifest = {"bundle_sha256": "b" * 64}
+    manifest = {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, "source_commit": "d" * 40}
     gate = hf_jobs_baseline.operator_gate_gpu_canary(
         bundle_manifest=manifest,
         repo_id="operator/ua-open-weight-eval-staging-6273",
@@ -602,6 +603,8 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
     assert gate["bundle_sha256"] == "b" * 64
+    assert gate["bundle_source_commit"] == "d" * 40
+    assert gate["accepted_cpu_fix_merge_commit"] == "80a6a273aa5619b41f2a9a21ea69c5b253e180b4"
     assert gate["transport_revision"] == "c" * 40
     assert gate["bindings"] == {
         "cases_sha256": config["suite"]["cases_sha256"],
@@ -612,6 +615,53 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     }
     unsigned = {key: value for key, value in gate.items() if key != "gate_sha256"}
     assert gate["gate_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
+
+
+def test_job_command_accepts_only_untampered_operator_canary_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = hf_jobs_baseline.load_config()
+    manifest = {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, "source_commit": "d" * 40}
+    gate = hf_jobs_baseline.operator_gate_gpu_canary(
+        bundle_manifest=manifest,
+        repo_id="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        config=config,
+    )
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    hf_cli = tmp_path / "hf"
+    _write_fake_hf_cli(hf_cli)
+    monkeypatch.setattr(hf_jobs_baseline, "verify_bundle", lambda _: manifest)
+    monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
+    command = hf_jobs_baseline.job_command(
+        mode="canary",
+        namespace="operator",
+        bundle=bundle,
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        transport_prefix=f"bundles/{'b' * 64}",
+        hf_cli=hf_cli,
+        timeout_seconds=1200,
+        preflight_gate=gate,
+    )
+    assert "--flavor l40sx1" in " ".join(command)
+    tampered = {**gate, "bundle_source_commit": "e" * 40}
+    tampered["gate_sha256"] = hf_jobs_baseline.sha256_text(
+        hf_jobs_baseline.canonical_json({key: value for key, value in tampered.items() if key != "gate_sha256"})
+    )
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="source provenance drift"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bundle=bundle,
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="c" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+            preflight_gate=tampered,
+        )
 
 
 def _complete_responses(config: dict) -> list[dict]:

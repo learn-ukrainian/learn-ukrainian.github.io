@@ -13,6 +13,7 @@
       "all_bundle_hashes_verified": true,
       "complete_pinned_bundle_downloaded": true,
       "container_reached_running": true,
+      "fixed_by_merge_commit": "80a6a273aa5619b41f2a9a21ea69c5b253e180b4",
       "job_id": "6a6fbf1b6b79c09949c1fa46",
       "provider_derived_cost_usd": 0.000167,
       "validated_bundle_sha256": "08f74baba27d263331befbfe92da247c015462d95a62e562420176af4f912155"

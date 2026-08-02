@@ -77,6 +77,19 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def source_commit() -> str:
+    completed = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    commit = completed.stdout.strip()
+    _require(completed.returncode == 0 and re.fullmatch(r"[a-f0-9]{40}", commit) is not None, "source commit drift")
+    return commit
+
+
 def write_atomic(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.tmp")
@@ -120,6 +133,10 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     _require(
         re.fullmatch(r"[a-f0-9]{64}", cpu_validation["validated_bundle_sha256"]) is not None,
         "validated CPU bundle digest drift",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", cpu_validation["fixed_by_merge_commit"]) is not None,
+        "CPU transport fix commit drift",
     )
     preflight = config["transport"]["cpu_preflight"]
     _require(config["transport"]["mounted_volumes"] == 0, "volume transport is prohibited")
@@ -229,6 +246,7 @@ def prepare_bundle(output_dir: Path, *, plugin_wheel: Path | None = None) -> dic
         "files": files,
         "requests_sha256": sha256_file(requests),
         "selection_sha256": selection["selection_sha256"],
+        "source_commit": source_commit(),
         "config_sha256": sha256_file(output_dir / "run_config.json"),
         "transport_sha256": sha256_file(output_dir / "hf_jobs_transport.py"),
         "worker_sha256": sha256_file(output_dir / "hf_jobs_worker.py"),
@@ -243,6 +261,7 @@ def verify_bundle(bundle: Path) -> dict[str, Any]:
     config = load_config(bundle / "run_config.json")
     manifest = read_json(bundle / "BUNDLE_MANIFEST.json")
     _require(manifest.get("schema_version") == "ua_open_weight_eval_hf_jobs_bundle.v1", "bundle schema drift")
+    _require(re.fullmatch(r"[a-f0-9]{40}", str(manifest.get("source_commit", ""))) is not None, "bundle source commit drift")
     expected = {
         "BUNDLE_MANIFEST.json",
         "canary_selection.json",
@@ -458,14 +477,24 @@ def operator_gate_gpu_canary(
         and validation["all_bundle_hashes_verified"] is True,
         "accepted CPU transport evidence is incomplete",
     )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", validation["fixed_by_merge_commit"]) is not None,
+        "accepted CPU transport fix commit drift",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", str(bundle_manifest.get("source_commit", ""))) is not None,
+        "GPU bundle source commit drift",
+    )
     payload = {
         "schema_version": "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1",
         "status": "passed",
-        "authorization_source": "operator_supersession_2026-08-03",
+        "authorization_source": f"operator_supersession_{authorization['superseding_authorization_at']}",
         "accepted_preflight_job_id": validation["job_id"],
         "accepted_preflight_cost_usd": validation["provider_derived_cost_usd"],
         "validated_cpu_bundle_sha256": validation["validated_bundle_sha256"],
+        "accepted_cpu_fix_merge_commit": validation["fixed_by_merge_commit"],
         "bundle_sha256": bundle_manifest["bundle_sha256"],
+        "bundle_source_commit": bundle_manifest["source_commit"],
         "transport_repository": repo_id,
         "transport_revision": transport_revision,
         "bindings": {
@@ -584,8 +613,8 @@ def job_command(
                     "cases_sha256": config["suite"]["cases_sha256"],
                     "model_revision": config["model"]["revision"],
                     "model_sha256": config["model"]["artifact_sha256"],
-                    "hardware_flavor": "l40sx1",
-                    "mounted_volumes": 0,
+                    "hardware_flavor": config["hardware"]["flavor"],
+                    "mounted_volumes": config["transport"]["mounted_volumes"],
                 }
                 _require(preflight_gate.get("bindings") == expected_bindings, "operator canary gate binding drift")
                 validation = config["authorization"]["validated_cpu_transport"]
@@ -595,6 +624,11 @@ def job_command(
                     == float(validation["provider_derived_cost_usd"])
                     and preflight_gate.get("validated_cpu_bundle_sha256") == validation["validated_bundle_sha256"],
                     "operator canary gate CPU evidence drift",
+                )
+                _require(
+                    preflight_gate.get("accepted_cpu_fix_merge_commit") == validation["fixed_by_merge_commit"]
+                    and preflight_gate.get("bundle_source_commit") == manifest["source_commit"],
+                    "operator canary gate source provenance drift",
                 )
             gate_sha256 = preflight_gate.get("gate_sha256")
             unsigned_gate = {key: value for key, value in preflight_gate.items() if key != "gate_sha256"}

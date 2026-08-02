@@ -55,13 +55,12 @@ The operator explicitly superseded the receipt-upload requirement and prohibited
 another CPU preflight. The accepted CPU charge is USD 0.000167 and is included
 in every subsequent aggregate budget calculation.
 
-The original five-minute CPU Basic transport preflight contract required it to
-pass before any GPU launch.
-Its maximum time-based charge is USD 0.000833 at USD 0.01/hour, below the
-operator's USD 0.001 preflight ceiling. The preflight must show that the
-container entered the provider runtime, downloaded the exact private staged
-bundle at an immutable commit, verified every file hash, and directly uploaded
-one harmless receipt. A failed preflight prohibits a GPU launch.
+Historically, the five-minute CPU Basic contract required a complete receipt
+before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
+0.01/hour. That receipt requirement is superseded only for this accepted CPU
+job and its reviewed post-#6294 execution replacement. A later authorization
+outside this bounded phase must define its own transport gate; this document
+does not silently waive one.
 
 ## Durable and private progress
 
