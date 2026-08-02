@@ -12,6 +12,7 @@ caller-supplied database file.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from contextlib import contextmanager, suppress
@@ -65,6 +66,16 @@ CREATE TABLE IF NOT EXISTS context_links (
     promoted_at TEXT,
     tombstone_reason TEXT
 );
+CREATE TABLE IF NOT EXISTS use_receipts (
+    receipt_id TEXT PRIMARY KEY,
+    task_id TEXT NOT NULL,
+    consumer TEXT NOT NULL,
+    purpose TEXT NOT NULL,
+    locator_ids_json TEXT NOT NULL,
+    recorded_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_use_receipts_recorded_at
+    ON use_receipts(recorded_at, receipt_id);
 """
 
 
@@ -389,11 +400,92 @@ class ContextLinkStore:
                 "SELECT state, COUNT(*) AS n FROM context_links GROUP BY state ORDER BY state"
             ).fetchall()
             events = connection.execute("SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM link_events").fetchone()
+            uses = connection.execute(
+                "SELECT COUNT(*) AS n, MAX(recorded_at) AS last_at FROM use_receipts"
+            ).fetchone()
+            use_consumers = connection.execute(
+                "SELECT consumer, COUNT(*) AS n FROM use_receipts"
+                " GROUP BY consumer ORDER BY consumer"
+            ).fetchall()
         return {
             "schema_version": SCHEMA_VERSION,
             "counts": {str(row["state"]): int(row["n"]) for row in counts},
             "events": int(events["n"]) if events else 0,
             "last_event_at": events["last_at"] if events else None,
+            "use_receipts": int(uses["n"]) if uses else 0,
+            "last_use_at": uses["last_at"] if uses else None,
+            "uses_by_consumer": {
+                str(row["consumer"]): int(row["n"]) for row in use_consumers
+            },
+        }
+
+    def record_use(
+        self,
+        *,
+        task_id: str,
+        consumer: str,
+        purpose: str,
+        locator_ids: list[str] | tuple[str, ...],
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Record an explicit, body-free agent-use attestation.
+
+        This is deliberately separate from search and handoff. A search result
+        proves only delivery; a use receipt is written only when the caller
+        explicitly attests that the verified locators informed its work.
+        Replays of the same task/consumer/purpose/locator set are idempotent.
+        """
+        validate_identity(task_id, field_name="task_id")
+        validate_identity(consumer, field_name="consumer")
+        validate_identity(purpose, field_name="purpose")
+        normalized = tuple(sorted(set(locator_ids)))
+        if not normalized or len(normalized) > 10:
+            raise SchemaError("locator_ids must contain between 1 and 10 unique locators")
+        if any(LOCATOR_ID_RE.fullmatch(locator_id) is None for locator_id in normalized):
+            raise SchemaError("locator_ids contains an invalid locator")
+        material = {
+            "schema": "entire-context-use.v1",
+            "task_id": task_id,
+            "consumer": consumer,
+            "purpose": purpose,
+            "locator_ids": list(normalized),
+        }
+        receipt_id = "ecuse_" + hashlib.sha256(
+            canonical_json(material).encode("utf-8")
+        ).hexdigest()
+        timestamp = isoformat_z(now or utc_now())
+        with self._transaction() as connection:
+            rows = connection.execute(
+                "SELECT locator_id FROM context_links"
+                f" WHERE state = 'promoted' AND locator_id IN ({','.join('?' for _ in normalized)})",
+                normalized,
+            ).fetchall()
+            promoted = {str(row["locator_id"]) for row in rows}
+            if promoted != set(normalized):
+                raise SchemaError("use receipt requires promoted locators")
+            cursor = connection.execute(
+                "INSERT OR IGNORE INTO use_receipts("
+                "receipt_id, task_id, consumer, purpose, locator_ids_json, recorded_at"
+                ") VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    receipt_id,
+                    task_id,
+                    consumer,
+                    purpose,
+                    canonical_json(list(normalized)),
+                    timestamp,
+                ),
+            )
+            stored = connection.execute(
+                "SELECT recorded_at FROM use_receipts WHERE receipt_id = ?",
+                (receipt_id,),
+            ).fetchone()
+        return {
+            "schema": "entire-context-use.v1",
+            "receipt_id": receipt_id,
+            "created": cursor.rowcount == 1,
+            "locator_count": len(normalized),
+            "recorded_at": str(stored["recorded_at"]),
         }
 
     # ── recall candidate scan and provenance joins ─────────────────────────────

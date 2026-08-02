@@ -96,6 +96,7 @@ FORBIDDEN_VALUE_PATTERNS = (
 )
 
 OPAQUE_RUN_RE = re.compile(r"[A-Za-z0-9_+-]+")
+PATH_OPAQUE_RUN_RE = re.compile(r"[A-Za-z0-9+-]+")
 GIT_EVIDENCE_LOCATOR_RE = re.compile(r"^git:commit/[0-9a-f]{40}$")
 
 MAX_STRING_BYTES = 1024
@@ -217,9 +218,29 @@ def validate_facets(facets: dict[str, Any]) -> None:
             if len(value) > MAX_LIST_ITEMS:
                 raise SchemaError(f"facet {key!r} rejected by list-size rule")
             for item in value:
-                _validate_scalar(key, item, reject_long_opaque=True)
+                if key == "touched_paths":
+                    _validate_touched_path(item)
+                else:
+                    _validate_scalar(key, item, reject_long_opaque=True)
         else:
             _validate_scalar(key, value, reject_long_opaque=True)
+
+
+def _validate_touched_path(value: Any) -> None:
+    """Allow real semantic Git paths without admitting opaque path tokens."""
+    _validate_scalar("touched_paths", value, reject_long_opaque=False)
+    if not isinstance(value, str):
+        raise SchemaError("field 'touched_paths' must be a string")
+    if value.startswith("/") or "\\" in value or any(
+        segment in {"", ".", ".."} for segment in value.split("/")
+    ):
+        raise SchemaError("field 'touched_paths' must be a relative Git path")
+    opaque_runs = [match.group(0) for match in PATH_OPAQUE_RUN_RE.finditer(value)]
+    split_runs = [run for run in opaque_runs if len(run) >= 16]
+    if any(len(run) >= 48 for run in opaque_runs) or (
+        len(split_runs) >= 2 and sum(map(len, split_runs)) >= 48
+    ):
+        raise SchemaError("field 'touched_paths' rejected by long-opaque-token rule")
 
 
 @dataclass(frozen=True, slots=True)

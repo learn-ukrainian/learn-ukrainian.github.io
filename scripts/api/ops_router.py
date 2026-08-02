@@ -9,10 +9,12 @@ from pathlib import Path
 from fastapi import APIRouter
 
 from .config import PROJECT_ROOT
+from .entire_context_router import router as entire_context_router
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["ops"])
+router.include_router(entire_context_router, prefix="/entire-context")
 
 DEFAULT_PLAN_DIR = PROJECT_ROOT / "batch_state" / "fleet-comms" / "retention"
 

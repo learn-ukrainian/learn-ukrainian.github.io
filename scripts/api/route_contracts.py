@@ -70,6 +70,18 @@ class PageContract:
 
 ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
+        "/api/ops/entire-context",
+        "prefix",
+        "http",
+        "Body-free capture, local recall, and explicit agent-use evidence.",
+        "Rebuildable local context-link SQLite projection plus an explicitly refreshed sanitized Entire 0.8.42 CLI status cache.",
+        "Projection and provider-cache reads are live per request; provider responses expose cache age/staleness and never invoke Entire synchronously.",
+        ("agents", "Monitor", "operators"),
+        "Complements canonical Git, ACP, rollover, Fleet, and formal-review sources; it never replaces them.",
+        "high if capture, recall delivery, and proven agent use are conflated",
+        "keep as a non-authoritative locator and observability surface",
+    ),
+    RouteContract(
         "/api/contracts/routes",
         "exact",
         "http",

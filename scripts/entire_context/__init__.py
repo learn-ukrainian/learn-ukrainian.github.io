@@ -16,9 +16,10 @@ This package implements the local-only slice of the Entire context layer:
   LLM-facing result or handoff capsule (:mod:`.recall`);
 - a provider-neutral CLI (``python -m scripts.entire_context``).
 
-Nothing in this package calls Entire, GitHub, Fleet, ACP providers, Monitor,
-or the network, and nothing here mutates any canonical authority system. The
-projection is disposable and disabled/non-load-bearing by default.
+Recall, reconciliation, and Monitor reads call no Entire, GitHub, Fleet, ACP
+provider, or network service and mutate no canonical authority system. The
+explicit provider-status refresh is the sole Entire CLI call and writes only a
+sanitized local cache. The projection is disposable and non-load-bearing.
 """
 
 from .model import (
