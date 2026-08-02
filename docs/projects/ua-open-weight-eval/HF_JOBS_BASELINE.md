@@ -71,17 +71,17 @@ environment:
 ```bash
 /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
   -m scripts.projects.ua_open_weight_eval.hf_jobs_baseline prepare-bundle \
-  --output /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v1
+  --output /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v2
 
 /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
   -m scripts.projects.ua_open_weight_eval.hf_jobs_baseline verify-bundle \
-  --bundle /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v1
+  --bundle /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v2
 ```
 
 The prepared source-only request packet has SHA-256
 `9f624c54857ea8517162c555bc876f34f76a783e3f9feeaf9db4d6c91a9a18bd`.
 The complete ignored job bundle has SHA-256
-`e2d4bb637da61a15f703f46b3b6f5668dc5cc3e61711a92275c047dd224cdc17`.
+`b1c49a00b4d8b44ebc4ea773b78a8695179ace581cbb90ae5580fe41bc92e2f7`.
 
 ## Result publication boundary
 

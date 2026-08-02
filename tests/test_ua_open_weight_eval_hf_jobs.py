@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -136,13 +137,43 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     assert "--selection /workspace/canary_selection.json" in joined
 
 
-def test_launch_state_prevents_any_second_attempt(tmp_path: Path) -> None:
+def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     state = tmp_path / "state.json"
     command = ["/absolute/hf", "jobs", "run"]
     first = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=False)
     assert first["status"] == "prepared"
+    assert not state.exists()
+    monkeypatch.setattr(
+        hf_jobs_baseline.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, '{"id":"aaaaaaaaaaaaaaaaaaaaaaaa"}', ""),
+    )
+    launched = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
+    assert launched["status"] == "launched"
     with pytest.raises(hf_jobs_baseline.BaselineError, match="automatic retry is prohibited"):
-        hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=False)
+        hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
+
+
+def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
+    header = {"schema_version": "checkpoint.v1", "mode": "full"}
+    selected = [
+        {"item_id": f"item-{index}", "request_sha256": str(index) * 64}
+        for index in range(1, 4)
+    ]
+    records = [
+        {
+            "item_id": request["item_id"],
+            "request_sha256": request["request_sha256"],
+            "raw_generation": '{"action":"preserve","output_text":"Текст"}',
+            "response": {"action": "preserve", "output_text": "Текст"},
+        }
+        for request in selected[:2]
+    ]
+    checkpoint = tmp_path / "checkpoint.jsonl"
+    _write_jsonl(checkpoint, [header, *records])
+    assert hf_jobs_worker.load_checkpoint(checkpoint, header, selected) == records
 
 
 def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds: int) -> tuple[dict, dict]:
@@ -191,6 +222,48 @@ def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
     )
     assert blocked["status"] == "blocked"
     assert blocked["authorization"]["combined_projected_cost_usd"] > 6.0
+
+
+def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    config = hf_jobs_baseline.load_config()
+    worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
+    projection = hf_jobs_baseline.project_full_run(
+        worker_receipt=worker,
+        provider_receipt=provider,
+        config=config,
+    )
+    maximum_timeout = projection["authorization"]["maximum_full_timeout_seconds"]
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    hf_cli = tmp_path / "hf"
+    hf_cli.write_text("#!/bin/sh\n", encoding="utf-8")
+    hf_cli.chmod(0o700)
+    monkeypatch.setattr(
+        hf_jobs_baseline,
+        "verify_bundle",
+        lambda _: {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64},
+    )
+    monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
+    command = hf_jobs_baseline.job_command(
+        mode="full",
+        namespace="operator",
+        bucket="ua-open-weight-eval-6273",
+        bundle=bundle,
+        hf_cli=hf_cli,
+        timeout_seconds=maximum_timeout,
+        projection=projection,
+    )
+    assert f"--timeout {maximum_timeout // 60}m" in " ".join(command)
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="remaining-budget projection"):
+        hf_jobs_baseline.job_command(
+            mode="full",
+            namespace="operator",
+            bucket="ua-open-weight-eval-6273",
+            bundle=bundle,
+            hf_cli=hf_cli,
+            timeout_seconds=maximum_timeout + 60,
+            projection=projection,
+        )
 
 
 def test_provider_reconciliation_uses_server_duration_and_refuses_endpoints() -> None:

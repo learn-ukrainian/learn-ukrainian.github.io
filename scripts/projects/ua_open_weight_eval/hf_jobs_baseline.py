@@ -239,6 +239,7 @@ def job_command(
     bundle: Path,
     hf_cli: Path,
     timeout_seconds: int,
+    projection: Mapping[str, Any] | None = None,
 ) -> list[str]:
     _require(mode in RUN_MODES, "invalid run mode")
     _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", namespace) is not None, "invalid namespace")
@@ -247,7 +248,38 @@ def job_command(
     manifest = verify_bundle(bundle)
     config = load_config(bundle / "run_config.json")
     if mode == "canary":
+        _require(projection is None, "canary launch must not accept a full-run projection")
         _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
+    else:
+        _require(isinstance(projection, Mapping), "full launch requires the passed canary projection")
+        _require(
+            projection.get("schema_version") == "ua_open_weight_eval_hf_jobs_projection.v1"
+            and projection.get("status") == "passed",
+            "full launch requires a passed projection",
+        )
+        expected_bindings = {
+            "cases_sha256": config["suite"]["cases_sha256"],
+            "model_revision": config["model"]["revision"],
+            "model_sha256": config["model"]["artifact_sha256"],
+        }
+        _require(projection.get("bindings") == expected_bindings, "full projection binding drift")
+        authorization = projection.get("authorization")
+        _require(isinstance(authorization, Mapping), "full projection authorization is missing")
+        _require(
+            float(authorization.get("maximum_total_cost_usd", -1))
+            == config["authorization"]["maximum_provider_cost_usd"],
+            "full projection cost ceiling drift",
+        )
+        _require(
+            float(authorization.get("combined_projected_cost_usd", math.inf))
+            <= config["authorization"]["maximum_provider_cost_usd"],
+            "full projection exceeds the total cost ceiling",
+        )
+        maximum_timeout = int(authorization.get("maximum_full_timeout_seconds", 0))
+        _require(
+            0 < timeout_seconds <= maximum_timeout,
+            "full timeout exceeds the remaining-budget projection",
+        )
     _require(timeout_seconds > 0 and timeout_seconds % 60 == 0, "timeout must be positive whole minutes")
     plugin_name = config["runtime"]["vllm_gguf_plugin"]["filename"]
     worker_parts = [
@@ -281,6 +313,8 @@ def job_command(
         "suite": config["suite"]["cases_sha256"][:16],
         "timeout_seconds": str(timeout_seconds),
     }
+    if projection is not None:
+        labels["projection"] = sha256_text(canonical_json(projection))[:16]
     command = [
         str(hf_cli),
         "jobs",
@@ -339,10 +373,10 @@ def launch_once(
         "command_sha256": sha256_text(canonical_json(list(command))),
         "prepared_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     }
-    runs[mode] = intent
-    write_atomic(state_path, state)
     if not execute:
         return {"status": "prepared", "mode": mode, "command": list(command), **intent}
+    runs[mode] = intent
+    write_atomic(state_path, state)
     completed = subprocess.run(command, check=False, capture_output=True, text=True)
     intent["launch_returncode"] = completed.returncode
     if completed.returncode != 0:
@@ -443,6 +477,11 @@ def project_full_run(
     return {
         "schema_version": "ua_open_weight_eval_hf_jobs_projection.v1",
         "status": "passed" if passed else "blocked",
+        "bindings": {
+            "cases_sha256": config["suite"]["cases_sha256"],
+            "model_revision": config["model"]["revision"],
+            "model_sha256": config["model"]["artifact_sha256"],
+        },
         "canary": {
             "cases": cases,
             "provider_running_seconds": provider_seconds,
@@ -696,6 +735,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     launch.add_argument("--bundle", type=Path, required=True)
     launch.add_argument("--hf-cli", type=Path, required=True)
     launch.add_argument("--timeout-seconds", type=int, required=True)
+    launch.add_argument("--projection", type=Path)
     launch.add_argument("--state", type=Path, required=True)
     launch.add_argument("--execute", action="store_true")
     reconcile = commands.add_parser("reconcile-provider")
@@ -732,6 +772,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 bundle=args.bundle,
                 hf_cli=args.hf_cli.resolve(),
                 timeout_seconds=args.timeout_seconds,
+                projection=read_json(args.projection) if args.projection is not None else None,
             )
             result = launch_once(command=command, mode=args.mode, state_path=args.state, execute=args.execute)
         elif args.command == "reconcile-provider":

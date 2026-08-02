@@ -373,7 +373,7 @@ def load_checkpoint(path: Path, header: Mapping[str, Any], selected: Sequence[Ma
     _require(len(records) <= len(selected), "checkpoint has too many rows")
     expected_ids = [str(row["item_id"]) for row in selected[: len(records)]]
     _require([record.get("item_id") for record in records] == expected_ids, "checkpoint is not an exact prefix")
-    for request, record in zip(selected, records, strict=True):
+    for request, record in zip(selected[: len(records)], records, strict=True):
         _require(record.get("request_sha256") == request["request_sha256"], "checkpoint request hash drift")
         response = record.get("response")
         _require(isinstance(response, dict), "checkpoint response is missing")
