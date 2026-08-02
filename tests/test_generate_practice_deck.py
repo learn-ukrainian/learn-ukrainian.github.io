@@ -1781,6 +1781,52 @@ def test_inventory_identity_decoys_are_seeded_and_length_matched() -> None:
     assert first_decoys != second_decoys
 
 
+def test_inventory_identity_decoys_exclude_phrase_labels() -> None:
+    answer = {
+        "lemmaId": "po-druhe",
+        "lemma": "по-друге",
+        "lemmaPlain": "по-друге",
+        "gloss": "secondly",
+        "pos": "phrase",
+        "cefr": "A2",
+    }
+    clean_decoys = [
+        {
+            "lemmaId": lemma,
+            "lemma": lemma,
+            "gloss": "fixture",
+            "pos": "phrase",
+            "cefr": "A1",
+        }
+        for lemma in ("Привіт", "Нормально", "Чудово")
+    ]
+    phrase_decoys = [
+        {
+            "lemmaId": lemma,
+            "lemma": lemma,
+            "gloss": "fixture",
+            "pos": "phrase",
+            "cefr": "A1",
+        }
+        for lemma in ("Звідки ти?", "Як справи?")
+    ]
+    cloze = {
+        "clozeId": "po-druhe:inventory:1",
+        "form": "По-друге",
+        "lemma": "по-друге",
+        "provenance": {"status": "sentence_inventory"},
+        "caseRule": {"ruleId": "nominative_identification"},
+    }
+
+    options = generate_practice_deck._make_no_pair_options(
+        cloze, answer, [answer, *clean_decoys, *phrase_decoys], random.Random(0)
+    )
+
+    assert len(options) == 4
+    assert all("?" not in option["label"] for option in options)
+    assert validate_option_set({**cloze, "options": options}) == []
+
+
 def test_inventory_identity_decoys_use_attested_surface_capitalization() -> None:
     lexemes = _fixture_lexemes()
     answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")

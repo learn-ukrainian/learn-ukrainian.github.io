@@ -129,6 +129,84 @@ def test_inventory_can_keep_multiple_unique_sentences_per_lemma(tmp_path) -> Non
     }
 
 
+def test_textbook_search_prefers_language_books_and_skips_ranked_noise(tmp_path) -> None:
+    db = _sources_db(tmp_path)
+    conn = sqlite3.connect(db)
+    conn.execute("ALTER TABLE textbooks ADD COLUMN subject TEXT DEFAULT 'ukrmova'")
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, subject) VALUES (?, ?, ?, ?, ?)",
+        (2, "physics-noise", "Physics", "Місто спить, а люди читають.", "fizyka"),
+    )
+    conn.execute(
+        "INSERT INTO textbooks_fts(rowid, title, text) VALUES (?, ?, ?)",
+        (2, "Physics", "Місто спить, а люди читають."),
+    )
+    for row_id in range(3, 23):
+        noise = "Прочитай місто і запиши відповідь."
+        conn.execute(
+            "INSERT INTO textbooks (id, chunk_id, title, text, subject) VALUES (?, ?, ?, ?, ?)",
+            (row_id, f"noise-{row_id}", "Ukrainian textbook", noise, "ukrmova"),
+        )
+        conn.execute(
+            "INSERT INTO textbooks_fts(rowid, title, text) VALUES (?, ?, ?)",
+            (row_id, "Ukrainian textbook", noise),
+        )
+    clean = "Місто спить, а люди читають."
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, subject) VALUES (?, ?, ?, ?, ?)",
+        (23, "language-clean", "Ukrainian textbook", clean, "ukrmova"),
+    )
+    conn.execute(
+        "INSERT INTO textbooks_fts(rowid, title, text) VALUES (?, ?, ?)",
+        (23, "Ukrainian textbook", clean),
+    )
+    conn.commit()
+    conn.close()
+
+    rows = build_inventory([{"lemma": "місто", "lemmaId": "misto", "cefr": "A1"}], db)
+
+    assert rows[0]["sentence"] == clean
+    assert rows[0]["provenance"]["locator"] == "language-clean"
+
+
+def test_textbook_search_excludes_ulp_mirrors(tmp_path) -> None:
+    db = _sources_db(tmp_path)
+    conn = sqlite3.connect(db)
+    conn.execute("ALTER TABLE textbooks ADD COLUMN source_file TEXT DEFAULT 'grade-1'")
+    conn.execute("ALTER TABLE textbooks ADD COLUMN subject TEXT DEFAULT 'ukrmova'")
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, source_file, subject) VALUES (?, ?, ?, ?, ?, ?)",
+        (
+            2,
+            "ulp-noise",
+            "Podcast notes",
+            "Публічний транскрипт містить приклади.",
+            "ulp-5-00-lesson-notes",
+            "ukrmova",
+        ),
+    )
+    conn.execute(
+        "INSERT INTO textbooks_fts(rowid, title, text) VALUES (?, ?, ?)",
+        (2, "Podcast notes", "Публічний транскрипт містить приклади."),
+    )
+    clean = "Цей транскрипт містить приклади з підручника."
+    conn.execute(
+        "INSERT INTO textbooks (id, chunk_id, title, text, source_file, subject) VALUES (?, ?, ?, ?, ?, ?)",
+        (3, "language-clean", "Ukrainian textbook", clean, "4-klas-ukrmova", "ukrmova"),
+    )
+    conn.execute(
+        "INSERT INTO textbooks_fts(rowid, title, text) VALUES (?, ?, ?)",
+        (3, "Ukrainian textbook", clean),
+    )
+    conn.commit()
+    conn.close()
+
+    rows = build_inventory([{"lemma": "транскрипт", "lemmaId": "transkript", "cefr": "C1"}], db)
+
+    assert rows[0]["sentence"] == clean
+    assert rows[0]["provenance"]["locator"] == "language-clean"
+
+
 def test_inventory_rejects_non_positive_sentence_cap(tmp_path) -> None:
     with pytest.raises(ValueError, match="max_per_lemma"):
         build_inventory([], _sources_db(tmp_path), max_per_lemma=0)
@@ -174,6 +252,17 @@ def test_candidate_sentences_reject_source_bookkeeping_and_ocr_fragments() -> No
         ("відповідність", "854.• Кожному числу поставили у відповідність відстань від точки."),
         ("скільки", "21.10.• Скільки трицифрових чисел можна записати?"),
         ("ціле", "Кожен елемент візерунка містить нескінченне ціле; • духовні якості переважають."),
+        ("воло", "Воло..ий горіх ще називають гре..им."),
+        ("вид", "Вид односкладного речення Приклад 1 безособове 2 означено-особове."),
+        ("воно", "Г воно доходить до моєї кімнати."),
+        ("о", "Джейн — О, я знаю."),
+        ("умова", "Умова: написання міста має відповідати темі уроку."),
+        ("сім", "Краще один раз побачити, Де сім господинь, там хата не метена."),
+        ("наголосити", "Щоб наголосити на результаті, використовуємо форму: Підсніжники зірвано."),
+        ("мільярд", "Числівники тисяча, мільйон, мільярд відмінюємо як іменники і т."),
+        ("теперішній", "Форми часу: теперішній, минулий та майбутній."),
+        ("репортаж", "Ви маєте зробити репортаж про події."),
+        ("ютуб", "Слова: ютуб, нік, омбудсмен."),
     )
     for lemma, sentence in rejected:
         assert list(_candidate_sentences(sentence, lemma)) == []

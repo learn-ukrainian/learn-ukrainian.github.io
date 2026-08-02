@@ -17,10 +17,13 @@ Regenerate it from the hydrated Practice lexeme shards with:
 
 The default target set is all A1-C1 `practice-lexemes.*.json` shards under
 `site/public/lexicon/`; the extractor searches textbook FTS for an exact
-practice-lemma surface, accepts only short sentence-shaped matches with a
-VESUM-attested verb, rejects a VESUM-identified leading imperative exercise
-command, and keeps one blankable sentence per target lemma. The inventory
-records the source label, locator, and licence status for every row.
+practice-lemma surface, ranks Ukrainian-language textbooks (`ukrmova` and
+`bukvar`) first, and examines up to 250 ranked chunks so worksheet noise does
+not hide a later usable sentence. It accepts only short sentence-shaped
+matches with a VESUM-attested verb, rejects a VESUM-identified leading
+imperative exercise command, and keeps one blankable sentence per target
+lemma. The inventory records the source label, locator, and licence status for
+every row.
 `--include-ulp` may add ULP fallback rows, but its provenance is intentionally
 only the safe source-family label — never a local file, transcript id, URL, or
 private locator. `targetForm` preserves the exact source capitalization so the

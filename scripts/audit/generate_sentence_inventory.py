@@ -21,6 +21,11 @@ DEFAULT_SOURCES_DB = Path("data/sources.db")
 DEFAULT_VESUM_DB = Path("data/vesum.db")
 DEFAULT_OUT = Path("site/src/data/lexicon-sentence-inventory.json")
 PRACTICE_LEVELS = ("A1", "A2", "B1", "B2", "C1")
+# Textbook FTS often ranks exercise prompts and dictionary fragments ahead of a
+# usable sentence.  Search far enough past that noise to make a residual
+# result meaningful, while keeping common function-word queries bounded.
+TEXTBOOK_SEARCH_LIMIT = 250
+PREFERRED_TEXTBOOK_SUBJECTS = ("ukrmova", "bukvar")
 APOSTROPHE_TRANSLATION = str.maketrans(
     {
         "’": "'",
@@ -40,7 +45,7 @@ NON_UKRAINIAN_ALPHA_RE = re.compile(r"[^\W\d_А-ЩЬЮЯЄІЇҐа-щьюяєі�
 COMBINING_MARK_RE = re.compile(r"[\u0300-\u036f]")
 MIDWORD_JOIN_RE = re.compile(r"[а-щьюяєіїґ][А-ЩЬЮЯЄІЇҐ]")
 ENUMERATION_RE = re.compile(
-    r"(?<!\w)[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){3,}[.!?]$"
+    r"(?<!\w)[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){2,}[.!?]$"
 )
 TITLE_CASE_RUN_RE = re.compile(
     r"^\s*(?:[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\s+){3,}"
@@ -140,6 +145,108 @@ SHORT_TOKEN_RUN_RE = re.compile(
 )
 TRAILING_SINGLE_TOKEN_RE = re.compile(r"(?:^|\s)[А-ЩЬЮЯЄІЇҐ]\s*[.!?]$")
 UPPERCASE_HEADING_RE = re.compile(r"\b[А-ЩЬЮЯЄІЇҐ]{4,}\b")
+DOTTED_OCR_RE = re.compile(
+    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]\.{2,}[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]"
+)
+DIGIT_RE = re.compile(r"\d")
+SEMICOLON_RE = re.compile(r";")
+BROKEN_APOSTROPHE_RE = re.compile(
+    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ][’'][–-]|[–-][’'][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]"
+)
+# A standalone ``Г`` followed by a lowercase word is an answer-choice marker
+# in the textbook corpus; ordinary one-letter sentence starters such as ``Я``
+# and ``В`` must remain valid.
+LEADING_OPTION_RE = re.compile(r"^\s*Г\s+[а-щьюяєіїґ]")
+LEADING_STRUCTURED_LABEL_RE = re.compile(
+    r"^\s*(?:вид|елементи сюжету|репліка|часи дієслів|"
+    r"доконаний вид|недоконаний вид|теперішній час|минулий час|"
+    r"майбутній час|умова)\b",
+    re.IGNORECASE,
+)
+INTERNAL_CAPITAL_RE = re.compile(r",\s+[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+\b")
+DIALOGUE_ASIDE_RE = re.compile(r"[—–]\s*[ОАЕІЙУ]\s*,")
+EXPLANATORY_COLON_RE = re.compile(
+    r"\b(?:використовуємо|означають|називають|розрізняють|позначають)\b"
+    r"[^.!?]{0,100}:\s*[А-ЩЬЮЯЄІЇҐ]",
+    re.IGNORECASE,
+)
+COLON_FRAGMENT_RE = re.compile(
+    r"^\s*[А-ЩЬЮЯЄІЇҐ][а-щьюяєіїґ]+"
+    r"(?:\s+(?:та|і|й)\s+[а-щьюяєіїґ]+){0,2}\s*:"
+)
+COLON_LIST_RE = re.compile(
+    r":\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+"
+    r"(?:,\s*[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+){2,}(?:\s+тощо)?[.!?]$"
+)
+ABBREVIATED_END_RE = re.compile(r"\b(?:ім|т|р|ст|с|п)\.$")
+DOUBLE_TERMINAL_RE = re.compile(r"[.!?]{2,}$|[!?]\.$")
+TASK_PROMPT_RE = re.compile(
+    r"\b(?:маєте|треба|потрібно)\s+[а-щьюяєіїґ]+\b",
+    re.IGNORECASE,
+)
+MISSING_BOUNDARY_RE = re.compile(
+    r"(?<=[а-щьюяєіїґ])\s+"
+    r"(?:Як|Щоб|Коли|Але|Тому|Далі|Який)\b"
+)
+DIRECT_SPEECH_RE = re.compile(
+    r"\b(?:спитав|запитав|питає|сказав|каже|відповів|відповіла)\s+"
+    r"[А-ЩЬЮЯЄІЇҐ]"
+)
+NUMERAL_LIST_RE = re.compile(
+    r"\b(?:тисяча|мільйон|мільярд)\b[^.!?]{0,80}"
+    r"\b(?:тисяча|мільйон|мільярд)\b",
+    re.IGNORECASE,
+)
+GRAMMAR_TABLE_RE = re.compile(
+    r"(?:\b(?:теперішній|минулий|майбутній)\b.*"
+    r"\b(?:теперішній|минулий|майбутній)\b|"
+    r"\b(?:доконаний|недоконаний)\b.*\b(?:доконаний|недоконаний)\b|"
+    r"\b(?:доконан|недоконан)\w*\b.*\b(?:доконан|недоконан)\w*\b|"
+    r"\b(?:доконан|недоконан)\w*\b.*\b(?:недоконан|доконан)\w*\b|"
+    r"\b(?:форми часу|види дієслів|дієприслівники|час дієслів)\b.*"
+    r"\b(?:питання|приклади)\b|"
+    r"\bчислівники\b[^.!?]{0,80}\b(?:тисяча|мільйон|мільярд)\b)",
+    re.IGNORECASE,
+)
+MISSING_SHORT_WORDS = frozenset(
+    {
+        "а",
+        "і",
+        "й",
+        "та",
+        "в",
+        "у",
+        "з",
+        "із",
+        "зі",
+        "на",
+        "до",
+        "за",
+        "не",
+        "ні",
+        "по",
+        "о",
+        "як",
+        "що",
+        "це",
+        "то",
+        "є",
+        "час",
+        "слух",
+        "бій",
+        "йти",
+        "іти",
+        "я",
+        "ти",
+        "ми",
+        "ви",
+        "він",
+        "вона",
+        "вони",
+        "нас",
+        "мене",
+    }
+)
 
 TEXTBOOK_LICENSE = {
     "status": "not_openly_licensed",
@@ -189,6 +296,7 @@ def _single_target_surface(sentence: str, lemma: str) -> str | None:
 def _is_source_sentence_noise(
     sentence: str,
     *,
+    lemma: str | None = None,
     vesum: VesumSentenceVerifier | None = None,
 ) -> bool:
     """Reject textbook worksheet, formula, and OCR fragments before mining.
@@ -213,6 +321,18 @@ def _is_source_sentence_noise(
         and vesum.has_imperative(tokens[0])
     ):
         return True
+    if lemma is not None:
+        target = _canonical_surface(lemma)
+        for index, token in enumerate(tokens[:-1]):
+            if _canonical_surface(token) != target:
+                continue
+            following = _canonical_surface(tokens[index + 1])
+            if len(following) <= 4 and following not in MISSING_SHORT_WORDS:
+                # OCR occasionally inserts a space inside a word (for
+                # example ``воло гих``).  Keep ordinary short function words,
+                # but fail closed on an unexpected short continuation of the
+                # exact target surface.
+                return True
     return any(
         (
             CONTROL_CHAR_RE.search(sentence),
@@ -242,6 +362,24 @@ def _is_source_sentence_noise(
             SHORT_TOKEN_RUN_RE.search(sentence),
             TRAILING_SINGLE_TOKEN_RE.search(sentence),
             UPPERCASE_HEADING_RE.search(sentence),
+            DOTTED_OCR_RE.search(sentence),
+            DIGIT_RE.search(sentence),
+            SEMICOLON_RE.search(sentence),
+            BROKEN_APOSTROPHE_RE.search(sentence),
+            LEADING_OPTION_RE.search(sentence),
+            LEADING_STRUCTURED_LABEL_RE.search(sentence),
+            INTERNAL_CAPITAL_RE.search(sentence),
+            DIALOGUE_ASIDE_RE.search(sentence),
+            EXPLANATORY_COLON_RE.search(sentence),
+            COLON_FRAGMENT_RE.search(sentence),
+            COLON_LIST_RE.search(sentence),
+            ABBREVIATED_END_RE.search(sentence),
+            DOUBLE_TERMINAL_RE.search(sentence),
+            GRAMMAR_TABLE_RE.search(sentence),
+            TASK_PROMPT_RE.search(sentence),
+            MISSING_BOUNDARY_RE.search(sentence),
+            DIRECT_SPEECH_RE.search(sentence),
+            NUMERAL_LIST_RE.search(sentence),
         )
     )
 
@@ -323,7 +461,7 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
         if (
             "http" in sentence.casefold()
             or sentence.count("*") > 1
-            or _is_source_sentence_noise(sentence, vesum=vesum)
+            or _is_source_sentence_noise(sentence, lemma=lemma, vesum=vesum)
         ):
             continue
         if vesum is not None and not vesum.has_verb(tokens):
@@ -338,17 +476,38 @@ def _fts_rows(
     content_table: str,
     lemma: str,
     where_sql: str = "",
+    preferred_subjects: tuple[str, ...] = (),
+    excluded_source_prefixes: tuple[str, ...] = (),
 ) -> Iterable[sqlite3.Row]:
     query = f'"{lemma.replace(chr(34), "")}"'
+    parameters: list[str] = [query]
+    columns = {str(row[1]) for row in conn.execute(f"PRAGMA table_info({content_table})")}
+    where_parts = [where_sql] if where_sql else []
+    if excluded_source_prefixes and "source_file" in columns:
+        for prefix in excluded_source_prefixes:
+            where_parts.append("AND lower(coalesce(source.source_file, '')) NOT LIKE ?")
+            parameters.append(f"{prefix.casefold()}%")
+    combined_where = " ".join(where_parts)
+    order_prefix = ""
+    # Older fixture databases do not carry the production ``subject`` column.
+    # Keep them valid while preferring Ukrainian-language school books whenever
+    # the hydrated corpus exposes that metadata.
+    if preferred_subjects and "subject" in columns:
+        placeholders = ", ".join("?" for _ in preferred_subjects)
+        order_prefix = (
+            "CASE WHEN lower(coalesce(source.subject, '')) "
+            f"IN ({placeholders}) THEN 0 ELSE 1 END, "
+        )
+        parameters.extend(subject.casefold() for subject in preferred_subjects)
     sql = f"""
         SELECT source.text, source.title, source.chunk_id
         FROM {fts_table} AS fts
         JOIN {content_table} AS source ON source.id = fts.rowid
-        WHERE {fts_table} MATCH ? {where_sql}
-        ORDER BY bm25({fts_table})
-        LIMIT 20
+        WHERE {fts_table} MATCH ? {combined_where}
+        ORDER BY {order_prefix}bm25({fts_table}), source.id
+        LIMIT {TEXTBOOK_SEARCH_LIMIT}
     """
-    yield from conn.execute(sql, (query,))
+    yield from conn.execute(sql, parameters)
 
 
 def _source_sentences(
@@ -368,6 +527,8 @@ def _source_sentences(
             fts_table="textbooks_fts",
             content_table="textbooks",
             lemma=lemma,
+            preferred_subjects=PREFERRED_TEXTBOOK_SUBJECTS,
+            excluded_source_prefixes=("ulp",),
         )
         source_label = "Ukrainian school textbook"
         license_info = TEXTBOOK_LICENSE
