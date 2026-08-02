@@ -1,10 +1,11 @@
 # Entire 0.8.42 context-layer and ACP integration rollout
 
-**Status:** Plan of record; local body-free context links and recall implemented,
-remaining product/cloud capabilities deferred
+**Status:** Plan of record; local body-free context links and private native
+Entire workflows implemented, with provider search/dispatch canaries tracked
 **Owner:** Infra harness stream, #4707
 **Tracking:** [#6162](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162),
-[#6183](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6183)
+[#6183](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6183),
+[#6278](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6278)
 **Decision:** [ADR-018](../architecture/adr/adr-018-entire-acp-context-layer.md)
 **Version boundary:** stable Entire CLI 0.8.42 only
 
@@ -43,10 +44,11 @@ journal:
 - [Investigate why code exists](https://docs.entire.io/learn/investigate-why-code-exists)
   describes explain/why/blame/investigate-style provenance work.
 
-These sources establish useful private investigation workflows. They do not
-authorize project automation to send prompts, transcripts, responses, session
-bodies, or generated summaries to an agent. The public workflow therefore
-remains stricter, local, body-free, and independent of logged-in cloud search.
+These sources establish useful private investigation workflows. Automatic
+intake remains stricter, local, body-free, and independent of logged-in cloud
+search. The operator-authorized private mode may give native Entire output to
+the accountable root, but never promotes prompt-bearing output to public or
+distributed evidence without operator review.
 
 ## Installed 0.8.42 capability matrix
 
@@ -63,11 +65,11 @@ claim.
 | Branch checkpoint backend | Existing private pilot | Proven pilot baseline. |
 | Ref-per-checkpoint backend | `configure --checkpoint-backend refs`; official 0.8.42 announcement | Canary for concurrency, routing, cleanup, and leakage before adoption. |
 | Checkpoint metadata | `checkpoint explain --json` promises no transcript bytes in command output | Allowed only after remote-storage inspection; safe output does not prove safe stored bytes. |
-| Full/raw transcript output | `--full`, `--raw-transcript`, `--transcript` | Prohibited in automation. |
-| Search | `checkpoint search --json`; requires Entire login and service | Disabled until egress, retention, result-shape, and privacy approval. |
+| Full/raw transcript output | `--full`, `--raw-transcript`, `--transcript` | Full explain is operator-authorized for exact private continuity; raw transcript flags remain prohibited. |
+| Search | `entire search --json`; requires Entire login and service | Allowed for the exact source repo after the private preflight; output stays in the accountable root's task context. |
 | Attach and resume | `session attach`; `session resume`; private pilot attach retry was idempotent | Recovery use proven; broader use remains canary-gated. |
-| Recap | `recap --static` reports sessions/checkpoints/tokens/files/tools/skills | Disabled until cloud/local behavior and field policy are proved. |
-| Dispatch | `dispatch --local` or server summary | Prohibited because project policy forbids AI-generated session summaries. |
+| Recap | `recap --static` reports sessions/checkpoints/tokens/files/tools/skills | Operator-authorized in private context; external disclosure requires operator review. |
+| Dispatch | `dispatch --local` or server summary | Operator-authorized private handoff; never canonical or formal-review evidence. |
 | Generated explanation | `checkpoint explain --generate` | Prohibited for the same reason. |
 | Labs review/investigate/import/why/blame/experts | Listed by `entire labs`; explicitly experimental | Advisory canaries only; never authoritative. |
 | External-agent plugin | Standalone Kimi Code adapter implemented; no ACP-wide plugin | Use only for the actual standalone `kimi` harness; the general ACP plugin remains deferred. |
@@ -96,13 +98,13 @@ flowchart LR
     Canonical -->|"canonical bytes + digest"| Resolver
     Resolver -->|"verified excerpts only"| Capsule
     Capsule --> Agent
-    Entire -.->|"manual operator investigation only"| Agent
+    Entire -.->|"preflight-gated private recall"| Agent
 ```
 
 The local projection ranks possible history. The resolver decides whether a
 result is safe and true. Canonical systems provide every byte that enters the
-LLM's automatic context. Optional Entire product output stays outside that
-automatic path.
+shared automatic context. Preflight-gated Entire product output may enter the
+accountable root's private context but stays outside shared capsules.
 
 ## Search corpus and context-link contract
 
@@ -252,13 +254,13 @@ Initial workflows:
 - `review-with-intent`: supply verified context to the reviewer without
   changing the formal-review gate.
 
-Local body-free search is implemented. Logged-in cloud Entire search remains a
-manual operator investigation tool and is never invoked by the public skill.
-Its results do not enter automatic capsules.
+Local body-free search and preflight-gated private Entire search are
+implemented. Native results may enter the accountable root's private context
+but do not enter automatic shared capsules or public evidence by default.
 
 Exit gate:
 
-- zero transcript bytes in command output consumed by the workflow;
+- zero transcript bytes in the shared automatic workflow;
 - hard query/result/context size caps;
 - every injected excerpt carries canonical namespace, ID, and digest;
 - a judged query set shows recall@10 of at least 0.70 for questions answerable
@@ -325,7 +327,7 @@ if any of the following occurs:
 - a push targets a product or unapproved remote;
 - a public product remote gains an Entire shadow ref;
 - a prompt, transcript, AI-generated summary, secret, or raw private body
-  reaches the checkpoint remote or a search result;
+  reaches a public or unauthorized destination;
 - an Entire failure changes an ACP, Fleet, Monitor, lease, rollover, review, or
   GitHub outcome;
 - hydration injects an unresolved or digest-mismatched item; or
