@@ -30,6 +30,7 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
         "sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b"
     )
     assert config["runtime"]["vllm_version"] == "0.26.0"
+    assert config["runtime"]["huggingface_hub_cli_version"] == "1.25.1"
     assert config["pricing"]["usd_per_hour"] == 1.8
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
@@ -110,7 +111,7 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     bundle = tmp_path / "bundle"
     bundle.mkdir()
     hf_cli = tmp_path / "hf"
-    hf_cli.write_text("#!/bin/sh\n", encoding="utf-8")
+    hf_cli.write_text("#!/bin/sh\necho 1.25.1\n", encoding="utf-8")
     hf_cli.chmod(0o700)
     manifest = {
         "bundle_sha256": "b" * 64,
@@ -133,6 +134,7 @@ def test_job_command_is_pinned_private_and_has_no_secret_surface(tmp_path: Path,
     assert "hf://buckets/operator/ua-open-weight-eval-6273:/output:rw" in joined
     assert "--expose" not in command
     assert "--ssh" not in command
+    assert "--json" not in command
     assert "HF_TOKEN" not in joined
     assert "--selection /workspace/canary_selection.json" in joined
 
@@ -148,7 +150,9 @@ def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
     monkeypatch.setattr(
         hf_jobs_baseline.subprocess,
         "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, '{"id":"aaaaaaaaaaaaaaaaaaaaaaaa"}', ""),
+        lambda *args, **kwargs: subprocess.CompletedProcess(
+            args[0], 0, "id=aaaaaaaaaaaaaaaaaaaaaaaa url=https://huggingface.co/jobs/operator/id\n", ""
+        ),
     )
     launched = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
     assert launched["status"] == "launched"
@@ -236,7 +240,7 @@ def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monke
     bundle = tmp_path / "bundle"
     bundle.mkdir()
     hf_cli = tmp_path / "hf"
-    hf_cli.write_text("#!/bin/sh\n", encoding="utf-8")
+    hf_cli.write_text("#!/bin/sh\necho 1.25.1\n", encoding="utf-8")
     hf_cli.chmod(0o700)
     monkeypatch.setattr(
         hf_jobs_baseline,
@@ -387,6 +391,11 @@ def test_results_package_includes_complete_responses_but_not_private_generations
     )
     assert result["status"] == "passed"
     assert result["responses"] == 4000
+    public_receipt = json.loads((output / "run_receipt.public.json").read_text(encoding="utf-8"))
+    assert public_receipt["environment"]["launch_client"] == {
+        "name": "huggingface_hub",
+        "version": "1.25.1",
+    }
     assert {path.name for path in output.iterdir()} == hf_jobs_baseline.PUBLIC_FILES
     published = suite_cli.read_jsonl(output / "responses.jsonl")
     assert len(published) == 4001

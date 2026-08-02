@@ -60,6 +60,7 @@
     "container_amd64_digest": "sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b",
     "container_image": "vllm/vllm-openai",
     "container_manifest_digest": "sha256:ffb2d59b1c059a5bd8d781320c9f5189de8293693b7d95da54befddaa54abf52",
+    "huggingface_hub_cli_version": "1.25.1",
     "vllm_build_commit": "ffd46bfab2128bb84146050e98b51a617c6575ab",
     "vllm_release_commit": "568afb3a13806beb53bb2e6bd518269357b237c0",
     "vllm_version": "0.26.0",

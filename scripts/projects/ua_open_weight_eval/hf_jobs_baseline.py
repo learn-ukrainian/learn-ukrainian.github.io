@@ -247,6 +247,14 @@ def job_command(
     _require(hf_cli.is_absolute() and hf_cli.is_file() and os.access(hf_cli, os.X_OK), "HF CLI must be executable")
     manifest = verify_bundle(bundle)
     config = load_config(bundle / "run_config.json")
+    observed_cli = subprocess.run(
+        [str(hf_cli), "--version"], check=False, capture_output=True, text=True
+    )
+    _require(observed_cli.returncode == 0, "HF CLI version probe failed")
+    _require(
+        observed_cli.stdout.strip() == config["runtime"]["huggingface_hub_cli_version"],
+        "HF CLI version drift",
+    )
     if mode == "canary":
         _require(projection is None, "canary launch must not accept a full-run projection")
         _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
@@ -319,7 +327,6 @@ def job_command(
         str(hf_cli),
         "jobs",
         "run",
-        "--json",
         "--detach",
         "--flavor",
         "l40sx1",
@@ -383,13 +390,16 @@ def launch_once(
         intent["status"] = "launch_response_failed_no_retry"
         write_atomic(state_path, state)
         raise BaselineError("HF Jobs launch returned an error; state was preserved and no retry is allowed")
-    try:
-        payload = json.loads(completed.stdout)
-    except json.JSONDecodeError as exc:
+    output = completed.stdout.strip()
+    direct_match = JOB_ID_PATTERN.fullmatch(output)
+    labelled_match = re.search(r"(?:^|\s)id[=:]\s*([a-f0-9]{20,64})(?:\s|$)", output)
+    job_id = direct_match.group(0) if direct_match is not None else None
+    if job_id is None and labelled_match is not None:
+        job_id = labelled_match.group(1)
+    if job_id is None:
         intent["status"] = "launch_response_unparseable_no_retry"
         write_atomic(state_path, state)
-        raise BaselineError("HF Jobs launch response was not JSON; reconcile by labels before any retry") from exc
-    job_id = payload.get("id")
+        raise BaselineError("HF Jobs launch response has no parseable job ID; reconcile by labels before any retry")
     _require(isinstance(job_id, str) and JOB_ID_PATTERN.fullmatch(job_id) is not None, "launch response has no job ID")
     intent.update({"status": "launched", "job_id": job_id})
     write_atomic(state_path, state)
@@ -617,7 +627,13 @@ def package_results(
         },
         "model": worker_receipt["model"],
         "tokenizer": worker_receipt["tokenizer"],
-        "environment": worker_receipt["environment"],
+        "environment": worker_receipt["environment"]
+        | {
+            "launch_client": {
+                "name": "huggingface_hub",
+                "version": config["runtime"]["huggingface_hub_cli_version"],
+            }
+        },
         "decoding": worker_receipt["decoding"],
         "timing": worker_receipt["timing"],
         "throughput": worker_receipt["throughput"],
