@@ -1100,6 +1100,20 @@ def _option_pos_bucket(pos: Any) -> str:
     if not value:
         return ""
     normalized = value.casefold()
+    # The hydrated manifest uses these standard shorthand/form labels for
+    # lexical categories already represented by the broader buckets below.
+    # Keep this list deliberately narrow: semantic labels such as
+    # ``predicative`` and ``sequence word`` remain separate until their
+    # exercise contract is reviewed.
+    if normalized in {
+        "imperative",
+        "infinitive",
+    }:
+        return "verb"
+    if normalized == "intj":
+        return "interjection"
+    if normalized == "numr":
+        return "numeral"
     if "pronoun" in normalized or normalized in {"pron", "negative pronoun"}:
         return "pronoun"
     if "adverb" in normalized or normalized == "adv":

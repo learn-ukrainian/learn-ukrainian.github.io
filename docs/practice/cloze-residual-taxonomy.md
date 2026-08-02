@@ -2,30 +2,30 @@
 
 Run date: 2026-08-02
 
-Scope: hydrated release `atlas-practice-v1-72aefaf645e8d390`, the A1-C1
+Scope: hydrated release `atlas-practice-v1-b39bcdd93d232ad7`, the A1-C1
 `practice-lexemes.*.json` shards, the base sentence inventory, and its additive
 `lexicon-sentence-inventory.residual.json` sidecar. The before comparison is
-the v12 build from release `atlas-practice-v1-4369ff38d9b16567`; this is a
-current-state taxonomy, not a completion claim for #6188.
+the v13 release `atlas-practice-v1-72aefaf645e8d390`; this is a current-state
+taxonomy, not a completion claim for #6188.
 
 ## Current coverage
 
-The published v13 release has 4,440 cloze-eligible practice lemmas out of
-6,000. The uncovered set is therefore 1,560 lemmas.
+The published v14 release has 4,475 cloze-eligible practice lemmas out of
+6,000. The uncovered set is therefore 1,525 lemmas.
 
 | Level | Practice lemmas | Cloze-eligible | Residual | Coverage |
 | --- | ---: | ---: | ---: | ---: |
-| A1 | 1,470 | 1,080 | 390 | 73.47% |
-| A2 | 1,444 | 1,154 | 290 | 79.92% |
-| B1 | 1,617 | 1,296 | 321 | 80.15% |
-| B2 | 940 | 723 | 217 | 76.91% |
+| A1 | 1,470 | 1,103 | 367 | 75.03% |
+| A2 | 1,444 | 1,164 | 280 | 80.61% |
+| B1 | 1,617 | 1,295 | 322 | 80.09% |
+| B2 | 940 | 726 | 214 | 77.23% |
 | C1 | 529 | 187 | 342 | 35.35% |
-| **All** | **6,000** | **4,440** | **1,560** | **74.00%** |
+| **All** | **6,000** | **4,475** | **1,525** | **74.58%** |
 
 The inventory contains 5,135 base rows and 51 sidecar rows. They are 5,186
 unique inventory IDs; 5,185 intersect the current Practice set. Within the
-1,560 final residual lemmas, 442 have an inventory-reader candidate and 1,118
-have no candidate. The 442 includes function/multiword IDs that are assigned
+1,525 final residual lemmas, 407 have an inventory-reader candidate and 1,118
+have no candidate. The 407 includes function/multiword IDs that are assigned
 to those higher-precedence buckets below.
 
 ## #6188 before/after measurement
@@ -39,21 +39,32 @@ cloze item exists.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | v12, before fix | 4 | 300 | 205 | 0 | 0 | 0 |
 | v13, same 509 IDs, before budget | 4 | 75 | 205 | 0 | 0 | 225 |
+| v14 alias trace, same 344 IDs, before budget | 4 | 36 | 205 | 0 | 0 | 99 |
 
 The v13 change only renders normalized dictionary decoys at the source
 surface's initial-capital state before applying the existing length, POS,
 CEFR, answer-leak, and option validators. It does not lower any quality gate.
-All 225 recovered option sets validated before budgeting. The published deck
-retains 222 of those original-509 cards; three are in the B1 budget-trimmed
+All 225 recovered option sets validated before budgeting. The v13 published
+deck retained 222 of those original-509 cards; three were in the B1
+budget-trimmed residual.
+
+The v14 follow-up normalizes only unambiguous manifest POS aliases already
+covered by the existing option buckets: `infinitive` and `imperative` to verb,
+`numr` to numeral, and `intj` to interjection. The authority-consistent,
+VESUM-backed build over the 344 post-precedence candidate IDs measured 36
+remaining identity-option failures and 99 valid no-budget candidates. The
+published pointer is now `atlas-practice-v1-b39bcdd93d232ad7`; no quality,
+VESUM, function-identity, length, or size limit was changed. The published
+v14 deck retains 33 of those 99 valid candidates and leaves 66 in the budget
 residual.
 
-The published coverage change is 4,264 to 4,440 eligible lemmas (+176) and
-1,736 to 1,560 residual lemmas (-176). B1 is the only level that needed
-budget trimming: the no-budget v13 B1 cloze payload measured 2,336,106 raw /
-250,806 gzip bytes, while the published payload is within the 2,250,000 /
-240,000 limits. The 60 final `would_emit-still-trimmed` IDs comprise the three
-original-509 cards plus 57 previously published B1 IDs displaced by the
-larger v13 payload.
+Against the pinned v13 hydration, the published v14 deck measures 4,440 to
+4,475 eligible lemmas (+35) and 1,560 to 1,525 residual lemmas (-35). B1 is
+the only level that needed budget trimming: the no-budget v14 B1 cloze payload
+measured 2,344,437 raw / 251,462 gzip bytes, while the published payload is
+within the 2,250,000 / 240,000 limits. The 66 final
+`would_emit-still-trimmed` IDs are valid no-budget candidates omitted by the
+current B1 budget.
 
 ## Mutually exclusive partition
 
@@ -70,20 +81,20 @@ sourced.”
 
 | Bucket | Count | Definition in this snapshot |
 | --- | ---: | --- |
-| function-POS | 110 | Residual lexeme `pos` is in the builder’s function-POS set. |
+| function-POS | 108 | Residual lexeme `pos` is in the builder's function-POS set. |
 | multiword-id | 170 | Multi-token/slash-form residual after the function-POS precedence rule. |
 | no public sentence | 936 | No current candidate remains after the function/multiword precedence rules. |
-| inventory-present-build-empty | 284 | Remaining inventory candidates rejected by the v13 quality, VESUM, level, or option gates: 4 quality-gate empty, 75 identity-option fail, 205 VESUM miss, 0 level mismatch, and 0 other. |
-| would_emit-still-trimmed | 60 | A no-budget v13 trace produced a valid cloze/options set, but the default budget omitted the ID from the published index. All five published `sizeBudget.ok` values remain true. |
+| inventory-present-build-empty | 245 | Remaining inventory candidates rejected by the v14 quality, VESUM, level, or option gates: 4 quality-gate empty, 36 identity-option fail, 205 VESUM miss, 0 level mismatch, and 0 other. |
+| would_emit-still-trimmed | 66 | A no-budget v14 trace produced a valid cloze/options set, but the default budget omitted the ID from the published index. All five published `sizeBudget.ok` values remain true. |
 | other | 0 | No unclassified residual remains after the stated partition. |
-| **Total** | **1,560** | **Exact residual set.** |
+| **Total** | **1,525** | **Exact residual set.** |
 
 The function-POS and multiword classifications overlap in three raw IDs; the
 precedence rule assigns those three to `function-POS`. The multiword bucket has
 173 raw shape matches before that rule and 170 primary assignments. The final
-inventory-present candidate set is 344 IDs: 4 quality-gate empty, 75
-identity-option failures, 205 VESUM misses, and 60 valid-but-budget-trimmed
-IDs. The 284/60 split above keeps the budget residual separate from genuine
+inventory-present candidate set is 311 IDs: 4 quality-gate empty, 36
+identity-option failures, 205 VESUM misses, and 66 valid-but-budget-trimmed
+IDs. The 245/66 split above keeps the budget residual separate from genuine
 builder-empty failures.
 
 ## Budget check
@@ -93,15 +104,15 @@ limits of 2,250,000 raw bytes and 240,000 gzip bytes:
 
 | Level | Raw bytes | Gzip bytes | `sizeBudget.ok` |
 | --- | ---: | ---: | --- |
-| A1 | 1,871,315 | 204,492 | true |
-| A2 | 1,979,290 | 211,996 | true |
-| B1 | 2,218,308 | 237,387 | true |
-| B2 | 1,257,264 | 135,573 | true |
-| C1 | 327,274 | 35,679 | true |
+| A1 | 1,910,346 | 208,380 | true |
+| A2 | 1,996,446 | 213,580 | true |
+| B1 | 2,215,600 | 236,912 | true |
+| B2 | 1,262,065 | 135,932 | true |
+| C1 | 327,248 | 35,686 | true |
 
-The current maximum is B1, with 31,692 raw bytes and 2,613 gzip bytes of
+The current maximum is B1, with 34,400 raw bytes and 3,088 gzip bytes of
 metadata-reported headroom. The post-budget payloads fit, but the no-budget
-trace above proves that 60 cards remain capacity-trimmed; a future deck build
+trace above proves that 66 cards remain capacity-trimmed; a future deck build
 must remeasure both the untrimmed and post-budget sets.
 
 ## Residual-only textbook FTS probe (baseline evidence)
@@ -145,17 +156,17 @@ residual sidecar.
   The next useful source work is a new public, rights-aware corpus or a
   dedicated, reviewed textbook end-dictionary extractor; the baseline FTS
   probe did not yield a quality-gated tranche here.
-- **Function-POS (110):** automatic identity clozes remain gated by the current
+- **Function-POS (108):** automatic identity clozes remain gated by the current
   function-POS policy. Any exception needs an explicitly reviewed exercise
   contract, not a blanket gate removal.
 - **Multiword IDs (170):** these need a multiword-aware cloze/source contract.
   Treating a phrase or paired-form ID as one single-token identity answer would
   violate the existing blankability and option-quality gates.
-- **Inventory-present-build-empty (284):** the remaining failures are 4
-  quality-gate empty, 75 identity-option fail, and 205 VESUM miss. The current
-  evidence does not authorize lowering VESUM, source, capitalization, or option
-  gates.
-- **Still-trimmed (60):** these are valid no-budget candidates omitted by the
+- **Inventory-present-build-empty (245 in the published v14 snapshot):** the
+  published build retains 4 quality-gate empty, 36 identity-option fail, and
+  205 VESUM miss. The current evidence does not authorize lowering VESUM,
+  source, capitalization, or option gates.
+- **Still-trimmed (66):** these are valid no-budget candidates omitted by the
   current B1 size budget. Do not raise limits or claim their coverage without a
   fresh quality review and untrimmed/post-budget comparison.
 
@@ -164,11 +175,11 @@ pattern from #6230 and the quality gates from #6212 remain unchanged.
 
 ## Commands and evidence used
 
-Hydrate the pinned release:
+Hydrate the published release:
 
 ```bash
 .venv/bin/python -m scripts.practice_deck.io
-# Hydrated Atlas practice deck atlas-practice-v1-72aefaf645e8d390 (45 shards).
+# Hydrated Atlas practice deck atlas-practice-v1-b39bcdd93d232ad7 (45 shards).
 ```
 
 Read the published coverage counts:
@@ -185,17 +196,17 @@ The residual-set and inventory-reader measurement used the builder’s
 five hydrated cloze shards, and both inventory files. It produced:
 
 ```text
-residual 1560 inventory_reader_candidates 442 no_candidate 1118
-function 110 function_candidate 98 function_no_candidate 12
+residual 1525 inventory_reader_candidates 407 no_candidate 1118
+function 108 function_candidate 96 function_no_candidate 12
 multiword_shape 173 multiword_raw 0 multiword_reader 0 multiword_no_inventory 173 overlap_function 3
-partition {'no public sentence': 936, 'inventory-present-build-empty': 284,
-           'multiword-id': 170, 'function-POS': 110,
-           'would_emit-still-trimmed': 60, 'other': 0}
-partition_sum 1560
+partition {'no public sentence': 936, 'inventory-present-build-empty': 245,
+           'multiword-id': 170, 'function-POS': 108,
+           'would_emit-still-trimmed': 66, 'other': 0}
+partition_sum 1525
 ```
 
 The budget check read each hydrated `practice-cloze.<level>.json` payload’s
 `sizeBudget` object and confirmed `ok=true` for A1 through C1. The separate
-no-budget build trace produced 60 valid option sets absent from the final
+no-budget build trace produced 66 valid option sets absent from the final
 published index, which is why `would_emit-still-trimmed` is nonzero even though
 the published payload metadata is truthful.

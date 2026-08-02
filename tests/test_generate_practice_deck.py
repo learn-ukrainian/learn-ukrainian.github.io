@@ -1879,6 +1879,21 @@ def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> 
     assert validate_option_set({**cloze, "options": options}) == []
 
 
+@pytest.mark.parametrize(
+    ("manifest_pos", "expected_bucket"),
+    [
+        ("infinitive", "verb"),
+        ("imperative", "verb"),
+        ("numr", "numeral"),
+        ("intj", "interjection"),
+    ],
+)
+def test_option_pos_bucket_normalizes_unambiguous_manifest_aliases(
+    manifest_pos: str, expected_bucket: str
+) -> None:
+    assert generate_practice_deck._option_pos_bucket(manifest_pos) == expected_bucket
+
+
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
