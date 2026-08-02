@@ -141,7 +141,7 @@ Gemini 11, OpenCode 6, GLM 4, and AGY 1. The same-day direct-runtime sample
 had Grok 1. This dated evidence justified the second pilot. These are
 not permanent routing weights and do not override current CodexBar headroom.
 
-**Exact contract (#6027, #6043, #6078, #6130, #6158):**
+**Exact contract (#6027, #6043, #6078, #6130, #6158, #6249):**
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` is the unchanged comparison pilot. `active` is accepted only by the
@@ -151,12 +151,16 @@ not permanent routing weights and do not override current CodexBar headroom.
   `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, and `acpx-deepseek-shadow`; never registered for
   dispatch, routing, review, or failover.
-- Local pin `acpx@0.13.0` — both adapters refuse to spawn on any other
-  resolved binary version.
-- Custom participant commands additionally preflight their reviewed provider
-  CLI versions: Grok `0.2.118`, AGY `1.1.9`, OpenCode/GLM `1.17.13`, and
-  Hermes/DeepSeek `0.18.2`. Each version is parsed only from its reviewed CLI
-  output shape, and the project text ACP server is digest-checked before use.
+- ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts.
+  Immediately before spawn, each adapter checks the exact command and flags
+  it will invoke; versions are recorded for telemetry but are not allowlists.
+  An observed version is diagnostic evidence, not an allowlist or runtime pin.
+  The contracts are `json-one-shot-v1` (ACPX), `agent-stdio-v1` (Grok),
+  `text-plan-sandbox-v1` (AGY), `native-acp-pure-v1` (OpenCode), and
+  `text-oneshot-isolated-v1` (Hermes).
+  ACPX built-ins are checked through their `<seat> exec --file` surface rather
+  than by duplicating pins for the hidden provider executables. The project
+  text ACP server remains digest-checked before use.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.
@@ -281,9 +285,11 @@ review, and plane-status checks.
 
 ### Shared ACPX install and E2E/replay verification
 
-ACPX is installed once at the shared primary checkout as the pinned local
-`acpx@0.13.0`; a dispatch worktree resolves that primary install and must not
-create its own global or floating ACPX installation. For an E2E/replay check,
+ACPX is installed once at the shared primary checkout as a project-local
+dependency; a dispatch worktree resolves that primary install and must not
+create its own global ACPX installation. The manifest accepts versions from
+`0.13.0` onward, the lockfile preserves reproducibility, and the runtime probe
+rejects incompatible command-surface drift before prompt delivery. For an E2E/replay check,
 run the real stdin-only `acp-discuss` command from a registered worktree with
 one bounded read-only task, then repeat the **identical** task, correlation,
 and idempotency values. The first terminal result is evidence; the second must

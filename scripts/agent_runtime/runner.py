@@ -140,6 +140,18 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
 # the adapter independently caps parsed answer text before it can be returned
 # to fleet authority.
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
+_SAFE_ACP_FAILURE_CODES = frozenset(
+    {
+        "adapter_refused",
+        "protocol_output_limit",
+        "provider_unavailable",
+        "rate_limited",
+        "result_invalid",
+        "timeout",
+        "transport_error",
+        "unknown",
+    }
+)
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
@@ -764,6 +776,7 @@ def _build_usage_record(
     stderr_excerpt: str | None,
     tokens: int | None,
     substitution: dict[str, Any] | None = None,
+    failure_code: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
@@ -780,6 +793,13 @@ def _build_usage_record(
     )
     transport = _INTER_AGENT_TRANSPORT.get()
 
+    failure_code = _privacy_safe_failure_code(
+        outcome=outcome,
+        rate_limited=rate_limited,
+        stalled=stalled,
+        returncode=returncode,
+        explicit_code=failure_code,
+    )
     record = {
         "ts": datetime.now(UTC).isoformat(),
         "agent": agent,
@@ -805,6 +825,7 @@ def _build_usage_record(
         "outcome": outcome,
         "rate_limited": rate_limited,
         "stalled": stalled,
+        "failure_code": failure_code,
         "stderr_excerpt": (
             None
             if privacy_limited
@@ -820,6 +841,29 @@ def _build_usage_record(
         # metadata is permitted to supply or overwrite these fields.
         record["transport"] = transport.metadata()
     return record
+
+
+def _privacy_safe_failure_code(
+    *,
+    outcome: str,
+    rate_limited: bool,
+    stalled: bool,
+    returncode: int | None,
+    explicit_code: str | None = None,
+) -> str | None:
+    """Classify a failure without persisting provider text or dynamic detail."""
+    normalized_outcome = str(outcome or "").casefold()
+    if normalized_outcome == "ok":
+        return None
+    if explicit_code in _SAFE_ACP_FAILURE_CODES:
+        return explicit_code
+    if rate_limited or normalized_outcome == "rate_limited":
+        return "rate_limited"
+    if stalled or normalized_outcome in {"timeout", "hard_timeout", "stalled"}:
+        return "timeout"
+
+    code = "transport_error" if returncode not in (None, 0) else "unknown"
+    return code if code in _SAFE_ACP_FAILURE_CODES else "unknown"
 
 
 def _safe_substitution_record(
@@ -1279,6 +1323,7 @@ def _execute_invocation_plan(
                 stalled=False,
                 stderr_excerpt=(f"Popen failed: {type(exc).__name__}: {exc}")[:500],
                 tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+                failure_code="provider_unavailable",
             )
             write_record(record)
             raise AgentUnavailableError(f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}") from exc
@@ -1545,6 +1590,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,
             substitution=record_substitution,
+            failure_code="protocol_output_limit",
         )
         write_record(record)
         raise AgentOutputLimitError(agent_name, limit_bytes, observed_bytes)
@@ -1567,6 +1613,7 @@ def _raise_for_kill_reason(
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            failure_code="timeout",
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -1613,6 +1660,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            failure_code="timeout",
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -1655,6 +1703,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            failure_code="timeout",
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -2323,6 +2372,7 @@ def _invoke_with_runner_failover(
             stderr_excerpt=parse.stderr_excerpt,
             tokens=parse.tokens,
             substitution=substitution,
+            failure_code=parse.failure_code,
         )
         write_record(record)
 
@@ -2667,6 +2717,7 @@ def _invoke_impl(
         stderr_excerpt=parse.stderr_excerpt,
         tokens=parse.tokens,
         substitution=substitution,
+        failure_code=parse.failure_code,
     )
     write_record(record)
 

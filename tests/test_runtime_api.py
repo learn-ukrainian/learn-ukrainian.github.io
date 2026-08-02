@@ -245,10 +245,32 @@ def test_acpx_overview_is_read_only_and_aggregates_hyphenated_seats(
         "posture": "evidence_only",
         "writable": False,
     }
-    assert data["pins"] == {
-        "acpx": "0.13.0",
-        "grok_cli": "0.2.118",
-        "validation": "before_spawn",
+    assert data["compatibility"] == {
+        "acpx": {
+            "contract": "json-one-shot-v1",
+            "validation": "before_spawn",
+            "version_policy": "telemetry_only",
+        },
+        "agy_cli": {
+            "contract": "text-plan-sandbox-v1",
+            "validation": "before_spawn",
+            "version_policy": "telemetry_only",
+        },
+        "grok_cli": {
+            "contract": "agent-stdio-v1",
+            "validation": "before_spawn",
+            "version_policy": "telemetry_only",
+        },
+        "hermes_cli": {
+            "contract": "text-oneshot-isolated-v1",
+            "validation": "before_spawn",
+            "version_policy": "telemetry_only",
+        },
+        "opencode_cli": {
+            "contract": "native-acp-pure-v1",
+            "validation": "before_spawn",
+            "version_policy": "telemetry_only",
+        },
     }
     assert data["safety"]["max_in_flight"] == 1
     assert data["safety"]["explicit_pilot_only"] is True
@@ -814,10 +836,12 @@ def test_recent_limits_results(tmp_path, monkeypatch):
     assert records[0]["outcome"] == "timeout"
     assert records[0]["source"] == "unknown"
     assert records[0]["via"] == "dispatch"
+    assert records[0]["failure_code"] == "timeout"
     assert records[1]["agent"] == "gemini"
     assert records[1]["source"] == "codex"
     assert records[1]["source_provenance"] == "explicit"
     assert records[1]["source_task_id"] == "review-6159"
+    assert records[1]["failure_code"] is None
 
 
 def test_runtime_page_labels_caller_source_separately_from_transport():
@@ -826,8 +850,10 @@ def test_runtime_page_labels_caller_source_separately_from_transport():
     assert "<th>Source</th>" in html
     assert "<th>Agent</th>" in html
     assert "<th>Via</th>" in html
+    assert "<th>Failure</th>" in html
     assert "record.source || 'unknown'" in html
     assert "record.via || record.entrypoint" in html
+    assert "record.failure_code || '—'" in html
 
 
 def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):

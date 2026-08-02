@@ -1288,10 +1288,32 @@ with no records reports `no_evidence`; that is not a provider-health claim.
     "posture": "evidence_only",
     "writable": false
   },
-  "pins": {
-    "acpx": "0.13.0",
-    "grok_cli": "0.2.118",
-    "validation": "before_spawn"
+  "compatibility": {
+    "acpx": {
+      "contract": "json-one-shot-v1",
+      "validation": "before_spawn",
+      "version_policy": "telemetry_only"
+    },
+    "agy_cli": {
+      "contract": "text-plan-sandbox-v1",
+      "validation": "before_spawn",
+      "version_policy": "telemetry_only"
+    },
+    "grok_cli": {
+      "contract": "agent-stdio-v1",
+      "validation": "before_spawn",
+      "version_policy": "telemetry_only"
+    },
+    "hermes_cli": {
+      "contract": "text-oneshot-isolated-v1",
+      "validation": "before_spawn",
+      "version_policy": "telemetry_only"
+    },
+    "opencode_cli": {
+      "contract": "native-acp-pure-v1",
+      "validation": "before_spawn",
+      "version_policy": "telemetry_only"
+    }
   },
   "comparison_evidence": {
     "window_days": 7,
@@ -1359,6 +1381,14 @@ with no records reports `no_evidence`; that is not a provider-health claim.
 }
 ```
 
+ACPX, Grok, AGY, OpenCode, and Hermes intentionally use command-surface
+compatibility rather than runtime semver pins. Immediately before each spawn,
+the adapter verifies the exact command and flags it invokes. Compatible CLI
+upgrades therefore work without adapter churn; an incompatible surface is
+refused before prompt delivery. Versions remain per-call telemetry only. The
+ACPX manifest range accepts versions from `0.13.0` onward, while the committed
+lockfile keeps installs reproducible until an intentional lock refresh.
+
 ### `GET /api/runtime/acp/conversations`
 
 Read-only, body-free metadata for controller-scheduled ACP conversations. The
@@ -1402,13 +1432,17 @@ Newest usage records from today's runtime logs, newest first.
 `source` is the initiating orchestrator, while `agent` is the destination and
 `via` is the transport. The runtime persists only bounded identifiers and
 reports legacy or unattributable records as `unknown`; it never guesses the
-caller from the destination agent.
+caller from the destination agent. Failed calls also expose one body-free
+`failure_code`: `adapter_refused`, `protocol_output_limit`,
+`provider_unavailable`, `rate_limited`, `result_invalid`, `timeout`,
+`transport_error`, or `unknown`. Raw stderr, prompts, paths, credentials,
+signals, and provider text remain private.
 
 ```json
 {
   "records": [
-    {"ts": "2026-04-11T00:10:00Z", "source": "claude", "agent": "codex", "via": "delegate", "outcome": "ok"},
-    {"ts": "2026-04-11T00:09:00Z", "source": "codex", "agent": "gemini", "via": "bridge", "outcome": "timeout"}
+    {"ts": "2026-04-11T00:10:00Z", "source": "claude", "agent": "codex", "via": "delegate", "outcome": "ok", "failure_code": null},
+    {"ts": "2026-04-11T00:09:00Z", "source": "codex", "agent": "gemini", "via": "bridge", "outcome": "timeout", "failure_code": "timeout"}
   ]
 }
 ```

@@ -154,6 +154,18 @@ def _failure_metadata(
     outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
     if outcome == "rate_limited" or bool(getattr(result, "rate_limited", False)):
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
+    usage_record = getattr(result, "usage_record", None)
+    code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
+    if code == "protocol_output_limit":
+        return {"phase": "transport", "code": code, "retryable": False}
+    if code == "timeout":
+        return {"phase": "transport", "code": code, "retryable": True}
+    if code == "provider_unavailable":
+        return {"phase": "provider", "code": code, "retryable": True}
+    if code == "adapter_refused":
+        return {"phase": "admission", "code": code, "retryable": False}
+    if code == "transport_error":
+        return {"phase": "transport", "code": code, "retryable": False}
     return {"phase": "result_parse", "code": "result_invalid", "retryable": False}
 
 

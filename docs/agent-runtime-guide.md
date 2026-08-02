@@ -76,7 +76,7 @@ controller-scheduled bounded conversation DAG whose durable state and timeline
 are written through existing fleet-comms. The expanded participant registry is
 not a new coordination plane.
 
-Approved boundary (#6027, #6043, #6078, #6130, #6158):
+Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
 
 - Feature flag `LU_ACPX_TRANSPORT=off|shadow|active`, **default `off`**.
   `shadow` retains the comparison pilot below. `active` is accepted only by
@@ -90,12 +90,17 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158):
   `acpx-glm-shadow`, and `acpx-deepseek-shadow`). They are never returned by
   `available_agents()` and never become dispatch/routing/review/failover
   candidates.
-- Local pin `acpx@0.13.0` (`node_modules/.bin/acpx`); every adapter refuses to
-  spawn on any other resolved version.
-- Custom seats also pin their provider CLIs: Grok `0.2.118`, AGY `1.1.9`,
-  OpenCode/GLM `1.17.13`, and Hermes/DeepSeek `0.18.2`. Provider version
-  parsing is anchored to each reviewed CLI output format, and the project text
-  ACP server is SHA-256 digest-checked before spawn.
+- The project-local ACPX dependency and every directly invoked provider CLI
+  use rolling compatibility contracts. Before each spawn, the adapter probes
+  the exact command/flag surface it will invoke; observed versions are
+  telemetry, never allowlists. The contracts are `json-one-shot-v1` (ACPX),
+  `agent-stdio-v1` (Grok), `text-plan-sandbox-v1` (AGY),
+  `native-acp-pure-v1` (OpenCode/GLM), and
+  `text-oneshot-isolated-v1` (Hermes/DeepSeek).
+- ACPX built-ins are validated at the ACPX boundary (`<seat> exec --file`);
+  the project does not duplicate ACPX's responsibility by pinning hidden
+  Claude, Kimi, Codex, Cursor, or Pool executables. The project text ACP server
+  remains SHA-256 digest-checked before spawn.
 - Codex participant:
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
@@ -177,9 +182,11 @@ file handoffs, which remain authoritative. The task, participant responses,
 credentials, paths, sessions, tool data, and raw model content do not enter
 metadata APIs.
 
-The shared primary checkout owns the one pinned local `acpx@0.13.0` install;
-dispatch worktrees resolve that install rather than creating a global or
-floating copy. For E2E/replay verification, run the real stdin-only
+The shared primary checkout owns the one project-local ACPX install; dispatch
+worktrees resolve that install rather than creating a global copy. The
+manifest accepts compatible updates from `0.13.0` onward, while the lockfile
+keeps installs reproducible and the runtime capability probe decides whether
+the installed version may execute. For E2E/replay verification, run the real stdin-only
 `acp-discuss` command once from a registered worktree, then repeat the
 identical task, correlation, and idempotency values. The second call must
 replay the recorded terminal disposition without scheduling model work.

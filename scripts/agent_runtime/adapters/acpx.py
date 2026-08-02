@@ -1,6 +1,6 @@
 """ACPX bounded read-only transport (#6027, #6043, #6078, #6130, #6158).
 
-Wraps the project-local ``acpx@0.13.0`` headless CLI
+Wraps the project-local ``acpx`` headless CLI
 (https://www.npmjs.com/package/acpx) for the Agent Client Protocol (ACP).
 
 Direct-only seats in this module cover the fixed participant registry:
@@ -20,7 +20,7 @@ No seat is registered for model selection, catalog, review eligibility, or
 failover (``cli_available: False``). They are not a second coordination plane:
 fleet-comms remains the durable authority and shadow comparison stays optional.
 
-Contract captured empirically from the pinned local ``acpx@0.13.0`` install
+Contract captured empirically from the local ``acpx@0.13.0`` install
 (``node_modules/acpx``), not guessed:
 
 - ``exec`` is always one-shot and never reuses a saved session or queue
@@ -36,7 +36,7 @@ Contract captured empirically from the pinned local ``acpx@0.13.0`` install
   NDJSON on stdout, one message per line, and suppresses non-JSON noise on
   stderr. On failure the CLI's own top-level handler appends one final
   ``{"jsonrpc":"2.0","id":null,"error":{...,"data":{"acpxCode":...}}}`` line
-  (verified live against the pinned binary: a ``--timeout`` breach produced
+  (verified live against the compatibility-probed binary: a ``--timeout`` breach produced
   exactly this shape with ``data.acpxCode == "TIMEOUT"``, exit code 3; a bad
   ``--agent`` path produced ``data.acpxCode == "RUNTIME"``, exit code 1).
   ``data.acpxCode``/``data.detailCode`` are drawn from
@@ -53,7 +53,7 @@ Contract captured empirically from the pinned local ``acpx@0.13.0`` install
   per-process selectors such as ``ACPX_AUTH_CHAT_GPT=1`` (Codex ChatGPT login)
   and ``ACPX_AUTH_CACHED_TOKEN=1`` (Grok cached native login). Never invent
   additional selectors; never read/store/log credentials. The Grok selector
-  was verified live against the pinned custom ``--agent`` command: the
+  was verified live against the fixed custom ``--agent`` command: the
   selector produced a successful one-shot response, while the same runtime
   path with the selector stripped failed closed as ``AUTH_REQUIRED``.
 
@@ -82,7 +82,6 @@ import subprocess
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -111,16 +110,47 @@ _logger = logging.getLogger(__name__)
 # and unrecognized values refuse to spawn.
 TRANSPORT_ENV = "LU_ACPX_TRANSPORT"
 
-# Exact reviewed version. AC-PIN requires resolving ACPX at one exact
-# version with a deterministic preflight — never a floating "latest".
-PINNED_VERSION = "0.13.0"
+# Rolling compatibility contracts. Versions are observed for telemetry only;
+# every executable is admitted from the exact command/flag surface this module
+# will invoke. A compatible in-place upgrade is accepted immediately, while a
+# changed surface fails before prompt delivery.
+ACPX_CLI_COMPATIBILITY_CONTRACT = "json-one-shot-v1"
+AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
+OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
+HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
 
-# Provider CLI versions validated with the text-only/native ACP participant
-# recipes introduced in #6158. These custom commands are part of the protocol
-# boundary, so an unreviewed CLI update fails before the prompt leaves ACPX.
-PINNED_AGY_VERSION = "1.1.9"
-PINNED_OPENCODE_VERSION = "1.17.13"
-PINNED_HERMES_VERSION = "0.18.2"
+_ACPX_REQUIRED_GLOBAL_FLAGS: tuple[str, ...] = (
+    "--agent",
+    "--cwd",
+    "--format",
+    "--json-strict",
+    "--auth-policy",
+    "--deny-all",
+    "--non-interactive-permissions",
+    "--no-fs",
+    "--no-terminal",
+    "--allowed-tools",
+    "--max-turns",
+    "--prompt-retries",
+    "--model",
+)
+_AGY_REQUIRED_FLAGS: tuple[str, ...] = (
+    "--print",
+    "--mode",
+    "--sandbox",
+    "--disable-slash-commands",
+    "--print-timeout",
+    "--output-format",
+    "--model",
+    "--log-file",
+)
+_OPENCODE_REQUIRED_ACP_FLAGS: tuple[str, ...] = ("--pure",)
+_HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
+    "--ignore-rules",
+    "--oneshot",
+    "--model",
+    "--provider",
+)
 AGY_ACP_MODEL = "gemini-3.6-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5"
 GLM_ACP_MODEL = "glm-5.2"
@@ -131,15 +161,15 @@ DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
 # non-secret selector; the value is never a credential.
 GLM_AUTH_OPENCODE_LOGIN_ENV = "ACPX_AUTH_OPENCODE_LOGIN"
 
-# Project-local pinned binary. Deliberately NOT `shutil.which("acpx")`:
+# Project-local dependency binary. Deliberately NOT `shutil.which("acpx")`:
 # global/PATH resolution would let an unrelated or unreviewed global acpx
 # install silently take over. "No global binary authority" per the approved
 # Stage 0/1 contract.
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_DEFAULT_PINNED_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
+_DEFAULT_ACPX_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # Keep this separately patchable for hermetic adapter tests.  An explicit
 # override is authoritative and must never silently fall back to another tree.
-_PINNED_BINARY = _DEFAULT_PINNED_BINARY
+_ACPX_BINARY = _DEFAULT_ACPX_BINARY
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
 _TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
@@ -148,12 +178,18 @@ _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     sort_keys=True,
 )
 
-# Exact reviewed native Grok CLI semver for the Grok ACPX shadow seat (#6043).
+# Rolling native Grok CLI compatibility contract for the Grok ACPX seat.
 # Built-in acpx ``grok-build`` is intentionally unused: it expands to
-# ``grok agent stdio`` without a place for parent flags required by Grok
-# 0.2.118 (``--model`` / ``--reasoning-effort`` / ``--no-leader`` must appear
-# before ``stdio``).
-PINNED_GROK_VERSION = "0.2.118"
+# ``grok agent stdio`` without a place for the parent flags required by this
+# adapter. The CLI version is observed for telemetry, but compatibility is
+# decided from the command and flags we actually invoke rather than semver.
+GROK_CLI_COMPATIBILITY_CONTRACT = "agent-stdio-v1"
+_GROK_REQUIRED_AGENT_FLAGS: tuple[str, ...] = (
+    "--model",
+    "--reasoning-effort",
+    "--agent-profile",
+    "--no-leader",
+)
 GROK_SHADOW_MODEL = "grok-4.5"
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
@@ -410,16 +446,8 @@ class AcpxShadowRefusalError(ValueError):
     """
 
 
-@lru_cache(maxsize=4)
 def _probe_acpx_version(binary: str) -> str:
-    """Return ``<binary> --version`` output, or "" on any probe failure.
-
-    Cached per binary path (mirrors ``ClaudeAdapter._probe_claude_cli_version``)
-    since every shadow invocation re-checks the pin. Returning "" on failure
-    (rather than raising) lets the single version-mismatch branch in
-    ``build_invocation`` handle "binary missing", "binary crashed", and
-    "wrong version" uniformly — all three must fail closed the same way.
-    """
+    """Return ``<binary> --version`` output, or ``"unknown"`` on failure."""
     try:
         proc = subprocess.run(
             [binary, "--version"],
@@ -429,8 +457,50 @@ def _probe_acpx_version(binary: str) -> str:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
+        return "unknown"
+    observed = "\n".join(part for part in (proc.stdout, proc.stderr) if part).strip()
+    return observed.splitlines()[0][:100] if proc.returncode == 0 and observed else "unknown"
+
+
+def _probe_cli_help(binary: str, *args: str) -> str:
+    """Return one exact command's help surface, or an empty string."""
+    try:
+        proc = subprocess.run(
+            [binary, *args, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
         return ""
-    return (proc.stdout or "").strip()
+    if proc.returncode != 0:
+        return ""
+    return "\n".join(part for part in (proc.stdout, proc.stderr) if part).strip()
+
+
+def _probe_acpx_cli_compatibility(
+    binary: str,
+    *,
+    builtin_agent: str | None,
+) -> tuple[str, tuple[str, ...]]:
+    """Probe the ACPX flags and one-shot surface used by one adapter seat."""
+    version = _probe_acpx_version(binary)
+    root_help = _probe_cli_help(binary)
+    exec_args = (builtin_agent, "exec") if builtin_agent else ("exec",)
+    exec_help = _probe_cli_help(binary, *exec_args)
+    missing: list[str] = []
+    if not root_help:
+        missing.append("root help")
+    else:
+        missing.extend(flag for flag in _ACPX_REQUIRED_GLOBAL_FLAGS if flag not in root_help)
+        if builtin_agent and f"{builtin_agent} " not in root_help:
+            missing.append(f"built-in {builtin_agent}")
+    if not exec_help:
+        missing.append(f"{builtin_agent + ' ' if builtin_agent else ''}exec")
+    elif "--file" not in exec_help:
+        missing.append("exec --file")
+    return version, tuple(missing)
 
 
 def _require_local_metadata_field(
@@ -604,20 +674,25 @@ def _require_non_primary_worktree(cwd: Path, *, adapter_label: str) -> None:
         )
 
 
-def _require_pinned_acpx_binary(*, adapter_label: str, cwd: Path) -> str:
-    """Resolve the exact local ACPX pin, sharing the primary install with worktrees.
+def _require_compatible_acpx_binary(
+    *,
+    adapter_label: str,
+    cwd: Path,
+    builtin_agent: str | None,
+) -> tuple[str, str]:
+    """Resolve and capability-check local ACPX, sharing it with worktrees.
 
     A source worktree normally has no independent ``node_modules`` tree.  If
     this module's default local candidate is absent, resolve the canonical
     primary checkout from the invocation cwd and accept only that checkout's
-    identically pinned binary.  Never consult PATH or a global install.
+    dependency binary. Never consult PATH or a global install.
 
-    Tests may explicitly patch :data:`_PINNED_BINARY`; an override remains
+    Tests may explicitly patch :data:`_ACPX_BINARY`; an override remains
     authoritative so an isolated test cannot accidentally borrow a developer
     checkout's installation.
     """
-    candidate = _PINNED_BINARY
-    if not candidate.is_file() and candidate == _DEFAULT_PINNED_BINARY:
+    candidate = _ACPX_BINARY
+    if not candidate.is_file() and candidate == _DEFAULT_ACPX_BINARY:
         try:
             main_root = resolve_main_root(cwd)
         except NotAGitRepositoryError:
@@ -629,7 +704,7 @@ def _require_pinned_acpx_binary(*, adapter_label: str, cwd: Path) -> str:
 
     if not candidate.is_file():
         primary_hint = ""
-        if _PINNED_BINARY == _DEFAULT_PINNED_BINARY:
+        if _ACPX_BINARY == _DEFAULT_ACPX_BINARY:
             try:
                 primary_hint = (
                     f"; canonical primary candidate is "
@@ -638,18 +713,22 @@ def _require_pinned_acpx_binary(*, adapter_label: str, cwd: Path) -> str:
             except NotAGitRepositoryError:
                 primary_hint = "; cwd is not inside a Git checkout, so no canonical primary install is available"
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: pinned binary not found at {candidate}{primary_hint}; run "
-            f"`npm install acpx@{PINNED_VERSION} --save-exact --save-dev` in the canonical primary checkout. "
+            f"{adapter_label}: project-local acpx binary not found at {candidate}{primary_hint}; run "
+            "`npm install` in the canonical primary checkout. "
             "A global/PATH acpx binary is never used as a substitute."
         )
     binary = str(candidate)
-    observed_version = _probe_acpx_version(binary)
-    if observed_version != PINNED_VERSION:
+    observed_version, missing = _probe_acpx_cli_compatibility(
+        binary,
+        builtin_agent=builtin_agent,
+    )
+    if missing:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: resolved acpx binary reports version {observed_version!r} "
-            f"(expected pinned {PINNED_VERSION!r}); refusing to spawn on a version mismatch"
+            f"{adapter_label}: resolved acpx binary is incompatible with "
+            f"{ACPX_CLI_COMPATIBILITY_CONTRACT!r}; missing capabilities: "
+            f"{', '.join(missing)}; refusing to spawn"
         )
-    return binary
+    return binary, observed_version
 
 
 def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
@@ -680,12 +759,11 @@ def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
 _GROK_VERSION_RE = re.compile(r"\Agrok\s+(\d+\.\d+\.\d+)(?:\s|$)")
 
 
-@lru_cache(maxsize=4)
 def _probe_grok_version(binary: str) -> str:
-    """Return exact semver from ``<binary> --version``, or "" on any failure.
+    """Return observed semver from ``<binary> --version``, or "" on failure.
 
-    Native Grok 0.2.118 prints ``grok 0.2.118 (<sha>)``. Wrong,
-    missing, or unparseable output fails closed before prompt.
+    This value is telemetry only. Capability validation, not this version
+    string, controls whether the adapter may spawn the CLI.
     """
     try:
         proc = subprocess.run(
@@ -704,6 +782,33 @@ def _probe_grok_version(binary: str) -> str:
     return match.group(1) if match else ""
 
 
+def _probe_grok_help(binary: str, *args: str) -> str:
+    """Return help text for one Grok command, or "" when it is unavailable."""
+    return _probe_cli_help(binary, *args)
+
+
+def _probe_grok_cli_compatibility(binary: str) -> tuple[str, tuple[str, ...]]:
+    """Return ``(observed_version, missing_capabilities)`` for the native CLI.
+
+    The probe runs before every spawn so an in-place CLI upgrade is accepted
+    immediately when it retains the command surface this adapter needs, and
+    refused before prompt delivery when that surface changes incompatibly.
+    """
+    version = _probe_grok_version(binary) or "unknown"
+    agent_help = _probe_grok_help(binary, "agent")
+    stdio_help = _probe_grok_help(binary, "agent", "stdio")
+    missing: list[str] = []
+    if not agent_help:
+        missing.append("agent")
+    else:
+        missing.extend(
+            flag for flag in _GROK_REQUIRED_AGENT_FLAGS if flag not in agent_help
+        )
+    if not stdio_help:
+        missing.append("agent stdio")
+    return version, tuple(missing)
+
+
 def _resolve_grok_binary() -> str:
     """Resolve the installed ``grok`` CLI to an absolute path, or refuse.
 
@@ -714,8 +819,7 @@ def _resolve_grok_binary() -> str:
     if not found:
         raise AcpxShadowRefusalError(
             "AcpxGrokShadowAdapter: grok binary not found on PATH; install the "
-            f"native Grok CLI at exact semver {PINNED_GROK_VERSION} before using "
-            "the acpx-grok-shadow seat"
+            "native Grok CLI before using the acpx-grok-shadow seat"
         )
     resolved = Path(found).resolve()
     if not resolved.is_file():
@@ -745,7 +849,7 @@ def _require_grok_profile() -> str:
 
 
 def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
-    """Shell-safe single ``--agent`` value with required Grok 0.2.118 argv order.
+    """Shell-safe single ``--agent`` value with required Grok argv order.
 
     Exact token order (parent flags before ``stdio``)::
 
@@ -777,7 +881,6 @@ _PROVIDER_VERSION_PATTERNS = {
 }
 
 
-@lru_cache(maxsize=16)
 def _probe_participant_cli_version(binary: str, executable: str) -> str:
     """Return a version anchored to the reviewed provider output format."""
     try:
@@ -799,31 +902,63 @@ def _probe_participant_cli_version(binary: str, executable: str) -> str:
     return match.group(1) if match else ""
 
 
+def _probe_participant_cli_compatibility(
+    binary: str,
+    executable: str,
+) -> tuple[str, tuple[str, ...]]:
+    """Return version telemetry and missing exact command-surface features."""
+    version = _probe_participant_cli_version(binary, executable) or "unknown"
+    if executable == "agy":
+        help_text = _probe_cli_help(binary)
+        required = _AGY_REQUIRED_FLAGS
+        label = "root help"
+    elif executable == "opencode":
+        help_text = _probe_cli_help(binary, "acp")
+        required = _OPENCODE_REQUIRED_ACP_FLAGS
+        label = "acp"
+    elif executable == "hermes":
+        help_text = _probe_cli_help(binary)
+        required = _HERMES_REQUIRED_FLAGS
+        label = "root help"
+    else:  # pragma: no cover - internal callers pass the closed set above
+        return version, ("unsupported executable",)
+    if not help_text:
+        return version, (label,)
+    return version, tuple(flag for flag in required if flag not in help_text)
+
+
+_PARTICIPANT_COMPATIBILITY_CONTRACTS = {
+    "agy": AGY_CLI_COMPATIBILITY_CONTRACT,
+    "opencode": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
+    "hermes": HERMES_CLI_COMPATIBILITY_CONTRACT,
+}
+
+
 def _resolve_participant_binary(
     executable: str,
     *,
     adapter_label: str,
-    expected_version: str,
-) -> str:
-    """Resolve and version-check one provider CLI before constructing argv."""
+) -> tuple[str, str]:
+    """Resolve and capability-check one provider CLI before constructing argv."""
+    contract = _PARTICIPANT_COMPATIBILITY_CONTRACTS[executable]
     found = shutil.which(executable)
     if not found:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: {executable} binary not found on PATH; expected exact "
-            f"version {expected_version!r}"
+            f"{adapter_label}: {executable} binary not found on PATH; required for "
+            f"compatibility contract {contract!r}"
         )
     resolved = Path(found).resolve()
     if not resolved.is_file():
         raise AcpxShadowRefusalError(
             f"{adapter_label}: resolved {executable} path {resolved} is not a file"
         )
-    observed = _probe_participant_cli_version(str(resolved), executable)
-    if observed != expected_version:
+    observed, missing = _probe_participant_cli_compatibility(str(resolved), executable)
+    if missing:
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: resolved {executable} binary reports version {observed!r} "
-            f"(expected pinned {expected_version!r}); refusing to spawn on a version mismatch"
+            f"{adapter_label}: resolved {executable} binary is incompatible with "
+            f"{contract!r}; missing capabilities: {', '.join(missing)}; refusing to spawn"
         )
-    return str(resolved)
+    return str(resolved), observed
 
 
 def _require_text_agent(*, adapter_label: str) -> str:
@@ -852,13 +987,11 @@ def _build_text_agent_command(
     provider: str,
     model: str,
     executable: str,
-    expected_version: str,
-) -> tuple[str, str]:
-    """Return shell-safe custom ACP command plus observed provider binary."""
-    provider_binary = _resolve_participant_binary(
+) -> tuple[str, str, str]:
+    """Return shell-safe custom ACP command, binary, and version telemetry."""
+    provider_binary, observed_version = _resolve_participant_binary(
         executable,
         adapter_label=adapter_label,
-        expected_version=expected_version,
     )
     node_binary = shutil.which("node")
     if not node_binary:
@@ -882,7 +1015,7 @@ def _build_text_agent_command(
             provider_binary,
         ]
     )
-    return command, provider_binary
+    return command, provider_binary, observed_version
 
 
 class AcpxAdapter:
@@ -931,8 +1064,8 @@ class AcpxAdapter:
         - ``session_id`` is not None (this seat never resumes a session).
         - ``mode`` is not ``"read-only"``.
         - ``cwd`` resolves to the protected primary checkout.
-        - the resolved local binary is missing, unversionable, or reports a
-          version other than :data:`PINNED_VERSION`.
+        - the resolved local binary is missing or lacks the exact ACPX
+          command/flag surface used by this seat.
         - ``task_id``, ``tool_config["correlation_id"]``, or
           ``tool_config["idempotency_key"]`` is missing, blank, oversized, or
           contains characters outside the local-identifier charset (see
@@ -967,7 +1100,11 @@ class AcpxAdapter:
             )
 
         _require_non_primary_worktree(cwd, adapter_label="AcpxAdapter")
-        binary = _require_pinned_acpx_binary(adapter_label="AcpxAdapter", cwd=cwd)
+        binary, acpx_version = _require_compatible_acpx_binary(
+            adapter_label="AcpxAdapter",
+            cwd=cwd,
+            builtin_agent="codex",
+        )
 
         cmd: list[str] = _confinement_prefix_argv(binary, cwd)
         if model:
@@ -981,7 +1118,8 @@ class AcpxAdapter:
 
         metadata: dict[str, Any] = {
             "acpx_shadow": tc.get("acpx_transport") is not True,
-            "acpx_pinned_version": PINNED_VERSION,
+            "acpx_cli_version": acpx_version,
+            "acpx_cli_compatibility": ACPX_CLI_COMPATIBILITY_CONTRACT,
             "task_id": validated_task_id,
             "correlation_id": correlation_id,
             "idempotency_key": idempotency_key,
@@ -1004,19 +1142,19 @@ class AcpxAdapter:
         )
 
     @classmethod
-    def _resolve_pinned_binary(cls) -> str:
-        """Resolve the project-local acpx binary path without version probing.
+    def _resolve_acpx_binary(cls) -> str:
+        """Resolve the project-local acpx binary path without probing.
 
-        Kept for callers/tests that only need the path check. Version pin
-        enforcement lives in :func:`_require_pinned_acpx_binary`.
+        Kept for callers/tests that only need the path check. Compatibility
+        enforcement lives in :func:`_require_compatible_acpx_binary`.
         """
-        if not _PINNED_BINARY.is_file():
+        if not _ACPX_BINARY.is_file():
             raise AcpxShadowRefusalError(
-                f"AcpxAdapter: pinned binary not found at {_PINNED_BINARY}; run "
-                f"`npm install acpx@{PINNED_VERSION} --save-exact --save-dev` first. "
+                f"AcpxAdapter: project-local acpx binary not found at {_ACPX_BINARY}; run "
+                "`npm install` first. "
                 "A global/PATH acpx binary is never used as a substitute."
             )
-        return str(_PINNED_BINARY)
+        return str(_ACPX_BINARY)
 
     def parse_response(
         self,
@@ -1131,7 +1269,17 @@ class AcpxAdapter:
             data = final_error.get("data") or {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
             message = final_error.get("message", "acpx error")
-            return self._closed(f"acpx {label}: {message}", stderr)
+            if label == "TIMEOUT":
+                failure_code = "timeout"
+            elif label in {"AUTH_REQUIRED", "AGENT_DISCONNECTED"}:
+                failure_code = "provider_unavailable"
+            else:
+                failure_code = "transport_error"
+            return self._closed(
+                f"acpx {label}: {message}",
+                stderr,
+                failure_code=failure_code,
+            )
 
         if final_stop_reason is _MISSING_STOP_REASON:
             return self._closed(f"acpx exec stream ended without a terminal response (rc={returncode})", stderr)
@@ -1143,11 +1291,17 @@ class AcpxAdapter:
             )
 
         if final_stop_reason == _STOP_REASON_CANCELLED:
-            return self._closed("acpx prompt turn cancelled (stopReason=cancelled)", stderr)
+            return self._closed(
+                "acpx prompt turn cancelled (stopReason=cancelled)",
+                stderr,
+                failure_code="transport_error",
+            )
 
         if returncode != 0:
             return self._closed(
-                f"acpx exec exited rc={returncode} despite stopReason={final_stop_reason!r}", stderr
+                f"acpx exec exited rc={returncode} despite stopReason={final_stop_reason!r}",
+                stderr,
+                failure_code="transport_error",
             )
 
         response = "".join(message_chunks)
@@ -1158,6 +1312,7 @@ class AcpxAdapter:
                 f"{ACPX_PARSED_RESPONSE_LIMIT_BYTES}-byte content limit "
                 f"(observed={response_bytes})",
                 stderr,
+                failure_code="protocol_output_limit",
             )
 
         return ParseResult(
@@ -1171,7 +1326,12 @@ class AcpxAdapter:
         )
 
     @staticmethod
-    def _closed(reason: str, stderr: str) -> ParseResult:
+    def _closed(
+        reason: str,
+        stderr: str,
+        *,
+        failure_code: str = "result_invalid",
+    ) -> ParseResult:
         """Build a fail-closed ``ParseResult`` with a bounded stderr excerpt."""
         tail = (stderr or "").strip()
         excerpt = reason if not tail else f"{reason}\n[acpx stderr]\n{tail}"
@@ -1183,6 +1343,7 @@ class AcpxAdapter:
             session_id=None,
             tokens=None,
             tool_calls=[],
+            failure_code=failure_code,
         )
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
@@ -1215,7 +1376,7 @@ class _AcpxDiscussionAdapter:
     default_model: str = "acpx-built-in-default"
     supported_modes: frozenset[str] = frozenset({"read-only"})
 
-    def _custom_agent_command(self, cwd: Path) -> str | None:
+    def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]] | None:
         _ = cwd
         return None
 
@@ -1273,18 +1434,26 @@ class _AcpxDiscussionAdapter:
             "idempotency_key", tc.get("idempotency_key"), adapter_label=type(self).__name__
         )
         _require_non_primary_worktree(cwd, adapter_label=type(self).__name__)
-        binary = _require_pinned_acpx_binary(adapter_label=type(self).__name__, cwd=cwd)
+        custom_agent = self._custom_agent_command(cwd)
+        builtin_agent = self.target_agent if custom_agent is None else None
+        binary, acpx_version = _require_compatible_acpx_binary(
+            adapter_label=type(self).__name__,
+            cwd=cwd,
+            builtin_agent=builtin_agent,
+        )
         cmd = _confinement_prefix_argv(binary, cwd)
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
-        custom_agent = self._custom_agent_command(cwd)
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
+            custom_metadata: dict[str, Any] = {}
         else:
-            cmd.extend(["--agent", custom_agent, "exec", "-f", "-"])
+            custom_command, custom_metadata = custom_agent
+            cmd.extend(["--agent", custom_command, "exec", "-f", "-"])
         metadata: dict[str, Any] = {
             "acpx_discussion": True,
-            "acpx_pinned_version": PINNED_VERSION,
+            "acpx_cli_version": acpx_version,
+            "acpx_cli_compatibility": ACPX_CLI_COMPATIBILITY_CONTRACT,
             "target_agent": self.target_agent,
             "task_id": validated_task_id,
             "correlation_id": correlation_id,
@@ -1297,6 +1466,7 @@ class _AcpxDiscussionAdapter:
             metadata["model"] = self.fixed_model
         if self.fixed_effort is not None:
             metadata["effort"] = self.fixed_effort
+        metadata.update(custom_metadata)
         metadata.update(self._extra_metadata())
         if tc.get("acpx_transport") is True:
             # Keep the runner-sealed transport fields authoritative even if a
@@ -1368,21 +1538,18 @@ class AcpxAgyShadowAdapter(_AcpxDiscussionAdapter):
     fixed_effort = "high"
     forward_model_to_acpx = False
 
-    def _custom_agent_command(self, cwd: Path) -> str:
+    def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
-        command, _binary = _build_text_agent_command(
+        command, _binary, version = _build_text_agent_command(
             adapter_label=type(self).__name__,
             provider="agy",
             model=AGY_ACP_MODEL,
             executable="agy",
-            expected_version=PINNED_AGY_VERSION,
         )
-        return command
-
-    def _extra_metadata(self) -> dict[str, Any]:
-        return {
+        return command, {
             "provider_cli": "agy",
-            "provider_cli_pinned_version": PINNED_AGY_VERSION,
+            "provider_cli_version": version,
+            "provider_cli_compatibility": AGY_CLI_COMPATIBILITY_CONTRACT,
             "text_only_adapter": True,
         }
 
@@ -1397,30 +1564,26 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
     default_model = fixed_model
     fixed_effort = "high"
 
-    def _custom_agent_command(self, cwd: Path) -> str:
+    def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
         assert_glm_egress_allowed(type(self).__name__)
-        binary = _resolve_participant_binary(
+        binary, version = _resolve_participant_binary(
             "opencode",
             adapter_label=type(self).__name__,
-            expected_version=PINNED_OPENCODE_VERSION,
         )
-        return shlex.join([binary, "acp", "--pure"])
+        return shlex.join([binary, "acp", "--pure"]), {
+            "provider_cli": "opencode",
+            "provider_cli_version": version,
+            "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
+            "provider_route": GLM_ACP_INVOCATION_MODEL,
+            "tool_policy": "deny-all",
+        }
 
     def _env_overrides(self) -> dict[str, str]:
         return {
             GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
             "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
         }
-
-    def _extra_metadata(self) -> dict[str, Any]:
-        return {
-            "provider_cli": "opencode",
-            "provider_cli_pinned_version": PINNED_OPENCODE_VERSION,
-            "provider_route": GLM_ACP_INVOCATION_MODEL,
-            "tool_policy": "deny-all",
-        }
-
 
 class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     """Text-only, first-party DeepSeek ACP participant via isolated Hermes."""
@@ -1431,7 +1594,7 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     default_model = fixed_model
     forward_model_to_acpx = False
 
-    def _custom_agent_command(self, cwd: Path) -> str:
+    def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
         if is_deepseek_first_party_forbidden_in_ci("deepseek", DEEPSEEK_ACP_MODEL):
             raise AcpxShadowRefusalError(
@@ -1441,19 +1604,16 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
                     source=type(self).__name__,
                 )
             )
-        command, _binary = _build_text_agent_command(
+        command, _binary, version = _build_text_agent_command(
             adapter_label=type(self).__name__,
             provider="deepseek",
             model=DEEPSEEK_ACP_MODEL,
             executable="hermes",
-            expected_version=PINNED_HERMES_VERSION,
         )
-        return command
-
-    def _extra_metadata(self) -> dict[str, Any]:
-        return {
+        return command, {
             "provider_cli": "hermes",
-            "provider_cli_pinned_version": PINNED_HERMES_VERSION,
+            "provider_cli_version": version,
+            "provider_cli_compatibility": HERMES_CLI_COMPATIBILITY_CONTRACT,
             "provider_route": "deepseek",
             "text_only_adapter": True,
         }
@@ -1468,10 +1628,9 @@ class AcpxGrokShadowAdapter:
 
     Builds one confined shape only:
 
-    - project-local ``acpx@0.13.0``
-    - custom ``--agent`` command from the absolute installed Grok binary at
-      exact semver :data:`PINNED_GROK_VERSION`, never the built-in
-      ``grok-build`` name
+    - project-local, compatibility-probed ``acpx``
+    - custom ``--agent`` command from the absolute installed Grok binary after
+      a fail-closed capability probe, never the built-in ``grok-build`` name
     - exact hash-pinned project profile with no tools plus an explicit
       write/shell/subagent/web/MCP/memory denylist
     - fixed model/effort ``grok-4.5`` / ``high`` inside that agent command
@@ -1511,8 +1670,8 @@ class AcpxGrokShadowAdapter:
         - ``target_agent`` is not ``"grok"``
         - ``session_id`` is not None
         - ``cwd`` is the protected primary checkout
-        - project-local acpx missing / wrong version
-        - Grok binary missing / wrong / unparseable version
+        - project-local acpx missing or lacking the required command surface
+        - Grok binary missing or lacking the required command/flag surface
         - no-tool profile missing or changed from its reviewed digest
         - caller ``model`` is not ``None`` or ``grok-4.5``
         - caller ``effort`` is not ``None`` or ``high``
@@ -1562,15 +1721,19 @@ class AcpxGrokShadowAdapter:
             )
 
         _require_non_primary_worktree(cwd, adapter_label="AcpxGrokShadowAdapter")
-        acpx_binary = _require_pinned_acpx_binary(adapter_label="AcpxGrokShadowAdapter", cwd=cwd)
+        acpx_binary, acpx_version = _require_compatible_acpx_binary(
+            adapter_label="AcpxGrokShadowAdapter",
+            cwd=cwd,
+            builtin_agent=None,
+        )
 
         grok_binary = _resolve_grok_binary()
-        observed_grok = _probe_grok_version(grok_binary)
-        if observed_grok != PINNED_GROK_VERSION:
+        observed_grok, missing_capabilities = _probe_grok_cli_compatibility(grok_binary)
+        if missing_capabilities:
             raise AcpxShadowRefusalError(
-                f"AcpxGrokShadowAdapter: resolved grok binary reports version "
-                f"{observed_grok!r} (expected pinned {PINNED_GROK_VERSION!r}); "
-                "refusing to spawn on a version mismatch"
+                "AcpxGrokShadowAdapter: resolved grok binary is incompatible with "
+                f"{GROK_CLI_COMPATIBILITY_CONTRACT!r}; missing capabilities: "
+                f"{', '.join(missing_capabilities)}; refusing to spawn"
             )
 
         profile_path = _require_grok_profile()
@@ -1583,8 +1746,10 @@ class AcpxGrokShadowAdapter:
 
         metadata: dict[str, Any] = {
             "acpx_shadow": tc.get("acpx_transport") is not True,
-            "acpx_pinned_version": PINNED_VERSION,
-            "grok_pinned_version": PINNED_GROK_VERSION,
+            "acpx_cli_version": acpx_version,
+            "acpx_cli_compatibility": ACPX_CLI_COMPATIBILITY_CONTRACT,
+            "grok_cli_version": observed_grok,
+            "grok_cli_compatibility": GROK_CLI_COMPATIBILITY_CONTRACT,
             "grok_profile_sha256": _GROK_PROFILE_SHA256,
             "target_agent": "grok",
             # Effective values are fixed; never fabricate caller-supplied

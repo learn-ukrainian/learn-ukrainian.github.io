@@ -197,8 +197,8 @@ def test_adapter_transport_metadata_and_auth_selector_are_non_secret(tmp_path, m
     monkeypatch.setattr(acpx_module, "_require_non_primary_worktree", lambda *_a, **_k: None)
     monkeypatch.setattr(
         acpx_module,
-        "_require_pinned_acpx_binary",
-        lambda **_kwargs: str(tmp_path / "acpx"),
+        "_require_compatible_acpx_binary",
+        lambda **_kwargs: (str(tmp_path / "acpx"), "0.13.0"),
     )
 
     with acpx_module.active_communication_scope(
@@ -239,8 +239,8 @@ def test_adapter_extra_metadata_cannot_override_runner_sealed_provenance(tmp_pat
     monkeypatch.setattr(acpx_module, "_require_non_primary_worktree", lambda *_a, **_k: None)
     monkeypatch.setattr(
         acpx_module,
-        "_require_pinned_acpx_binary",
-        lambda **_kwargs: str(tmp_path / "acpx"),
+        "_require_compatible_acpx_binary",
+        lambda **_kwargs: (str(tmp_path / "acpx"), "0.13.0"),
     )
 
     class SpoofingAdapter(AcpxKimiShadowAdapter):
