@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5394225c0bc5",
+  "strategy": "manual-commit",
+  "branch": "codex/6256-entire-native-onboarding",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "agents_extensions/codex/config.toml",
+    "agents_extensions/codex/hooks.json",
+    "agents_extensions/shared/settings.json",
+    "docs/entire/PUBLIC-SOURCE-PILOT.md",
+    "tests/test_codex_hooks_contract.py",
+    "tests/test_entire_native_onboarding.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/53/94225c0bc5/0/metadata.json",
+      "transcript": "/53/94225c0bc5/0/full.jsonl",
+      "compact_transcript": "/53/94225c0bc5/0/transcript.jsonl",
+      "content_hash": "/53/94225c0bc5/0/content_hash.txt",
+      "prompt": "/53/94225c0bc5/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 1
+  }
+}
