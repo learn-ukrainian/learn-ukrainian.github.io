@@ -9,9 +9,11 @@
 > EXECUTE PHASE 2–4** on 2026-08-01. On the same date, the operator recorded
 > that this is a solo project with neither budget nor access to a three-person
 > Ukrainian review panel and directed the Foundry to remove that unavailable
-> labour from the critical path.
+> labour from the critical path. On 2026-08-02, the operator directed the
+> Foundry to ship the clean-Ukrainian preparation tool and training recipe
+> before considering optional paid model validation.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
-> refreshed 2026-08-01
+> refreshed 2026-08-02
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
 > **Does not authorize:** model training, dataset publication, or mixing
@@ -82,8 +84,10 @@ is reported immediately rather than converted into more work.
 - [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns Foundry Phase 2–4: real corpus admission, production contextual
   language-contact detection, evidence-backed silver with an optional
-  qualified-human upgrade, real model-ready exports, one preregistered causal
-  open-weight experiment, and a reproducible release candidate. Closed
+  qualified-human upgrade, real model-ready exports, a model-neutral clean-
+  Ukrainian tool, reproducible training recipe, and release
+  candidate. An open-weight treatment is an optional compatibility check, not
+  a completion dependency. Closed
   [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
   owns the completed interfaces, profiler, exporters, recipes, and synthetic
   reference build on which this production program depends.
@@ -249,9 +253,10 @@ Those exports must stay distinct and carry lineage back to the source record.
 
 The [existing-corpus recovery audit](../research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md)
 now establishes a deterministic baseline before any acquisition. The
-public/external human-authored text view contains 189,150 database rows and
-50,298,925 lexical words; the separate private-reference view contains 5,786
-rows and 681,925 words. Google Drive retains 229 literary JSONL source files,
+public/external inventory-classified `human_authored_source` view contains
+189,150 database rows and 50,298,925 lexical words; the separate private-
+reference view contains 5,786 rows and 681,925 words. Google Drive retains 229
+literary JSONL source files,
 which reconcile by filename stem to all 229 literary database source groups.
 The repository also retains 12,347 tracked archive files and six historical
 FOLK package versions with Git recovery locators.
@@ -263,6 +268,16 @@ private-reference, evaluation-only, and unknown-origin material mechanically
 separate. The invalid 5,000-record export may locate an underlying work but
 cannot establish source, edition, rights, acquisition lineage, or contamination
 status.
+
+The public/external collection is recovered Ukrainian source data, inventory-
+classified as `human_authored_source` and mechanically separate from the
+project's synthetic and translated collections. It includes 137,723 literary
+records / 36,031,758 lexical words and 49,193 school-textbook records /
+9,564,143 lexical words across grades 1–11. The classification is not source-
+by-source proof of origin. A family being unresolved for a destination does not
+mean that its Ukrainian content is fake or useless; it means that the project
+has not yet proved the edition, origin, acquisition lineage, rights, and
+permitted use required for that destination.
 
 ### Already available
 
@@ -294,31 +309,37 @@ status.
    add separately manifested silver correction, preference, and quality-filter
    views only when their evidence and destination gates pass (#6169). Report an
    empty or blocked view honestly; never fill it with benchmark or fixture data.
-5. Before any paid or large model run, freeze a text-free feasibility receipt:
-   nonzero eligible inputs, source diversity, evaluation isolation, protected-
-   variation safety probes, tokenizer/mask diagnostics, expected runtime/cost,
-   and the exact decision the run can change. A failed prerequisite stops or
-   redirects the treatment immediately.
-6. After present-tense operator approval of the exact model revision, compute
-   ceiling, and preregistration, run the smallest decision-useful control and
-   ablation (#6170). Keep admitted-text and silver interventions separable and
-   report null, mixed, unsafe, or negative results as valid terminal outcomes.
-7. Package a corpus-portable, rights-safe release candidate and reproduce it in
-   a clean independent environment (#6171). Publication remains a separate
-   present-tense operator gate; qualified-human review is required only for an
-   artifact or claim explicitly designated human gold.
+5. Package the production detector, evidence factory, model-view exporters,
+   tokenizer diagnostics, and evaluation firewall as one corpus-portable
+   clean-Ukrainian tool. It must cover the Foundry's calque, grammar, and
+   morphology axes, incorporate Oleksiy's recorded ULIF synonym-source
+   recommendation, and protect historical, regional, dialectal, and quoted
+   material (#6171).
+6. Ship a model-neutral, stranger-runnable training recipe with exact
+   admission, mixture, tokenizer, split, objective, evaluation, cost, and stop
+   controls. Reproduce the complete no-training path in a clean independent
+   environment (#6171). The canonical recipe and cost model are documented in
+   the [clean-Ukrainian runbook](../runbooks/ukrainian-data-foundry-clean-ukrainian-recipe.md).
+7. Keep the preregistered Gemma 4 treatment (#6170) parked as optional,
+   present-tense operator-gated compatibility validation. It is not a
+   prerequisite for #6171, and neither model download nor accelerator spend is
+   authorized. If it is ever activated, first replace planning estimates with
+   an exact microbenchmark and report null, mixed, unsafe, or negative results
+   as valid terminal outcomes.
 8. Use frozen v0.1.1 and compatible licensed external human-authored
-   evaluations for the current experiment. The reviewer-intensive v0.2
+   evaluations for recipe validation and any optional future experiment. The
+   reviewer-intensive v0.2
    acquisition may resume only if Hramatka or a future collaboration supplies
    suitable consented evidence without becoming a project staffing dependency.
    Public evaluation gold remains mechanically isolated from every training or
    tuning view.
 
-The accountable orchestrator continues from one completed child issue to the
-next. A merged implementation PR is progress, not a stopping condition. Work
-pauses only at a source-family admission decision, an exact training
-preregistration/budget approval, or final publication approval named on #6164.
-Choosing to claim human gold pauses only that optional upgrade lane.
+The accountable orchestrator continues through the #6171 no-training release
+candidate. A merged implementation PR is progress, not a stopping condition.
+Work pauses only at a source-family admission decision or final publication
+approval named on #6164. Paid training is outside the critical path and begins
+only through a new present-tense model/revision/budget authorization. Choosing
+to claim human gold pauses only that optional upgrade lane.
 
 ### Completed Foundry v1 reference build
 
@@ -411,3 +432,14 @@ Claims that Gemma 4 currently leads a particular Ukrainian leaderboard must be
 tied to a frozen leaderboard snapshot and its exact task aggregate before
 external publication. The operator's observation is strategically useful, but
 the rank and benchmark definition must remain reproducible.
+
+Gemma 4 can outperform Gemma 3 adaptations on an aggregate leaderboard because
+of stronger general reasoning, instruction following, architecture, and broad
+multilingual transfer without having solved clean Ukrainian. The public
+[`lang-uk` methodology](https://huggingface.co/spaces/lang-uk/ukrainian-llm-leaderboard/blob/main/README.md)
+aggregates translation, summarization, QA, reasoning/knowledge, mathematics,
+and instruction following; it does not comprehensively measure surzhyk,
+semantic calques, Russian morphology, government, or unwanted normalization of
+heritage Ukrainian. Google's Gemma 4 card does not disclose a Ukrainian-
+specific pretraining share. A top aggregate rank therefore cannot substitute
+for the Foundry's targeted clean-Ukrainian diagnostics.
