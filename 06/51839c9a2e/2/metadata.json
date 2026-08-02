@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0651839c9a2e",
+  "session_id": "fleet-bac95e05028547819e117cb5e585190a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T22:54:45.466344Z",
+  "branch": "codex/6291-entire-fleet-capture",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/agy.py",
+    "scripts/agent_runtime/adapters/base.py",
+    "scripts/agent_runtime/adapters/grok_build.py",
+    "scripts/agent_runtime/adapters/hermes_deepseek.py",
+    "scripts/agent_runtime/adapters/hermes_grok.py",
+    "scripts/agent_runtime/adapters/hermes_qwen.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "tests/ai_agent_bridge/test_hermes_review_isolation.py",
+    "tests/test_ask_hermes.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "61c989a1ae4e",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T22:54:45.462829Z",
+    "agent_lines": 207,
+    "agent_removed": 88,
+    "human_added": 1911,
+    "human_modified": 4,
+    "human_removed": 0,
+    "total_committed": 2122,
+    "total_lines_changed": 2210,
+    "agent_percentage": 13.34841628959276,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
