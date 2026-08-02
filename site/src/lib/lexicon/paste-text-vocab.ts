@@ -6,10 +6,9 @@
  * doubles as a client-side attestation source with zero extra bundle cost.
  * A pasted word is "atlas_attested" only when it resolves to a real Atlas
  * row; everything else is "unverified" and deselected by default so no
- * unattested string is ever silently treated as confirmed vocabulary. An
- * attested row with no parseable CEFR level is also left deselected — it
- * needs manual review, and no level is ever invented (e.g. defaulting it
- * to A1) just to make it selectable.
+ * unattested string is ever silently treated as confirmed vocabulary. CEFR is
+ * optional guidance: an attested row with a real learner gloss remains
+ * selectable even when no CEFR level is published, without inventing one.
  */
 
 import { CEFR_LEVELS, parseCefrLevel, type CefrLevel } from './levels';
@@ -78,8 +77,9 @@ export function classifyPasteCandidates(
         status: 'atlas_attested',
         atlasSlug: row.s,
         gloss: cleanGloss(row.g),
-        // No parseable CEFR level → leave deselected for manual review, never invent one.
-        selected: cefr !== null,
+        // Missing CEFR is still eligible guidance-wise when the row has a real
+        // gloss; preserve the legacy attested selection for rows with CEFR.
+        selected: cefr !== null || cleanGloss(row.g) !== null,
       };
     }
     return {
@@ -95,13 +95,14 @@ export function classifyPasteCandidates(
 
 /**
  * A candidate is safe to persist into a saved deck only when it resolves to a
- * real Atlas row with a real CEFR level. Unverified words and attested rows
- * with no parseable CEFR level are never save-eligible — nothing downstream
- * (e.g. a practice-session level fallback) may invent a level just because a
- * bulk toggle or a stray click left `selected` true on an unqualified row.
+ * real Atlas row. A missing-CEFR row additionally needs a real learner gloss so
+ * it is displayable without a level fallback; known-CEFR rows retain the
+ * existing attested path. CEFR remains nullable and no downstream fallback may
+ * invent a level just because a bulk toggle or stray click left `selected` true.
  */
 export function isSaveEligiblePasteCandidate(candidate: PasteCandidate): boolean {
-  return candidate.status === 'atlas_attested' && candidate.cefr !== null;
+  return candidate.status === 'atlas_attested' &&
+    (candidate.cefr !== null || candidate.gloss !== null);
 }
 
 /**

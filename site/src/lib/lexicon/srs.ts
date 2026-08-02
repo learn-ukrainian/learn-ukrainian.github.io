@@ -106,7 +106,8 @@ export interface PracticeDeckEntry extends PracticeLexeme {
 export interface PracticeIndexItem {
   lemmaId: string;
   lemma: string;
-  cefr: string;
+  /** Nullable lexical guidance; null means no CEFR was attested. */
+  cefr: string | null;
   modes: PracticeMode[];
   hasCloze: boolean;
   clozeIds: string[];
@@ -1594,17 +1595,17 @@ function urgencyBucket(candidate: PracticeSelection, nowTime: number): number {
 }
 
 /**
- * Prefer items at the selected learner level. The penalty is one rank per CEFR
- * step below the selected level, so B1 sessions prefer B1 over A2 and A2 over A1
- * when urgency and variety are otherwise tied. It never applies to items above
- * the selected level because `levelsUpTo` never loads them, and it is a tiebreak
- * only — a genuinely more-due lower-level card still wins.
+ * Prefer items near the selected learner level. CEFR is a tiebreak only: due and
+ * lapsed urgency still wins, higher/lower levels remain eligible, and an unknown
+ * level receives no invented placement and sorts after known guidance.
  */
 function levelMatchBias(candidate: PracticeSelection, deckLevel: string): number {
   const deckRank = cefrRank(deckLevel);
   const itemRank = cefrRank(candidate.indexItem.cefr);
-  if (deckRank < 0 || itemRank < 0) return 0;
-  return Math.max(0, deckRank - itemRank);
+  if (deckRank >= CEFR_LEVELS.length) return 0;
+  if (itemRank >= CEFR_LEVELS.length) return CEFR_LEVELS.length * 2 + 1;
+  // Prefer the learner's level, then the lower level when equally distant.
+  return Math.abs(deckRank - itemRank) * 2 + (itemRank > deckRank ? 1 : 0);
 }
 
 function applyPoolFilter(
@@ -2075,7 +2076,7 @@ export function combinePracticeShards(
 }
 
 /**
- * Extend a base deck (initially the selected level only) with lower-level decks.
+ * Extend a base deck (initially the selected level only) with other level decks.
  * Produces a new deck object so WeakMap selector caches (#4656) key off the new identity.
  */
 export function extendWithLowerDecks(base: PracticeDeckData, lowers: PracticeDeckData[]): PracticeDeckData {
@@ -2590,8 +2591,9 @@ export function validateDailyPracticeDeckSnapshot(
   return snapshot;
 }
 
-function cefrRank(cefr: string): number {
-  return CEFR_LEVELS.indexOf(cefr as CefrLevel);
+function cefrRank(cefr: string | null | undefined): number {
+  const rank = CEFR_LEVELS.indexOf(cefr as CefrLevel);
+  return rank >= 0 ? rank : CEFR_LEVELS.length;
 }
 
 export function selectDailyPracticeDeckItems(
@@ -2605,10 +2607,10 @@ export function selectDailyPracticeDeckItems(
     lemmaId: string;
     lemma: string;
     earliestDue: number;
-    cefr: string;
+    cefr: string | null;
     newOrder: number;
   }> = [];
-  const newLemmas: Array<{ lemmaId: string; lemma: string; cefr: string; newOrder: number }> = [];
+  const newLemmas: Array<{ lemmaId: string; lemma: string; cefr: string | null; newOrder: number }> = [];
 
   for (const item of indexItems) {
     const { lemmaId, lemma, cefr, newOrder, modes } = item;

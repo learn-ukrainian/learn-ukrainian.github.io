@@ -13,6 +13,7 @@ import { parsePlainTextWithTranslations } from '@site/src/lib/lexicon/document-i
 const SAMPLE_ROWS: AtlasAttestationRow[] = [
   { l: 'привіт', s: 'pryvit', g: 'hello', c: 'A1' },
   { l: 'книжка', s: 'knyzhka', g: 'book', c: 'A2' },
+  { l: 'ґудзик', s: 'gudzyk', g: 'button', c: undefined },
   { l: 'абракадабра', s: 'abrakadabra-slug', g: null, c: undefined },
 ];
 
@@ -62,7 +63,17 @@ describe('classifyPasteCandidates', () => {
     });
   });
 
-  test('never invents a CEFR level for an Atlas row missing one, and leaves it deselected', () => {
+  test('keeps a glossed Atlas row with no CEFR selected without inventing a level', () => {
+    const [candidate] = classifyPasteCandidates(['ґудзик'], index);
+    expect(candidate).toMatchObject({
+      status: 'atlas_attested',
+      cefr: null,
+      gloss: 'button',
+      selected: true,
+    });
+  });
+
+  test('keeps an attested row with no CEFR and no gloss deselected', () => {
     const [candidate] = classifyPasteCandidates(['абракадабра'], index);
     expect(candidate).toMatchObject({
       status: 'atlas_attested',
@@ -97,18 +108,18 @@ describe('summarizePasteCandidates', () => {
     expect(summary.byLevel.B1).toBe(0);
   });
 
-  test('does not count an attested word with no CEFR level as selected or leveled', () => {
+  test('counts a glossed attested word with no CEFR as selected but not leveled', () => {
     const index = buildAtlasAttestationIndex(SAMPLE_ROWS);
     const candidates = classifyPasteCandidates(
-      ['привіт', 'абракадабра'],
+      ['привіт', 'ґудзик', 'абракадабра'],
       index,
     );
     const summary = summarizePasteCandidates(candidates);
-    expect(summary.total).toBe(2);
-    // both resolve to real Atlas rows, so both count as attested...
-    expect(summary.attested).toBe(2);
-    // ...but the one with no parseable CEFR level is deselected, not invented as A1
-    expect(summary.selected).toBe(1);
+    expect(summary.total).toBe(3);
+    // all three resolve to real Atlas rows, so all count as attested...
+    expect(summary.attested).toBe(3);
+    // ...the glossed no-CEFR row remains selected but is not invented as A1
+    expect(summary.selected).toBe(2);
     expect(summary.byLevel.A1).toBe(1);
   });
 
@@ -132,12 +143,17 @@ describe('isSaveEligiblePasteCandidate (#6073 F001 — fail-closed save gate)', 
     expect(isSaveEligiblePasteCandidate(candidate)).toBe(true);
   });
 
+  test('an atlas-attested word with a real gloss but no CEFR is save-eligible', () => {
+    const [candidate] = classifyPasteCandidates(['ґудзик'], index);
+    expect(isSaveEligiblePasteCandidate(candidate)).toBe(true);
+  });
+
   test('an unverified word is never save-eligible, even if manually selected', () => {
     const [candidate] = classifyPasteCandidates(['вигаданеслово'], index);
     expect(isSaveEligiblePasteCandidate({ ...candidate, selected: true })).toBe(false);
   });
 
-  test('an atlas-attested word with no parseable CEFR level is never save-eligible, even if manually selected', () => {
+  test('an attested word without a gloss is never save-eligible, even if manually selected', () => {
     const [candidate] = classifyPasteCandidates(['абракадабра'], index);
     expect(isSaveEligiblePasteCandidate({ ...candidate, selected: true })).toBe(false);
   });
@@ -148,7 +164,7 @@ describe('selectSaveEligiblePasteCandidates (#6073 F001 — final materializatio
 
   test('keeps only selected candidates that are also save-eligible', () => {
     const candidates: PasteCandidate[] = classifyPasteCandidates(
-      ['привіт', 'книжка', 'вигаданеслово', 'абракадабра'],
+      ['привіт', 'книжка', 'ґудзик', 'вигаданеслово', 'абракадабра'],
       index,
     );
     // Simulate a bulk-select/individual-click bug upstream that force-selected
@@ -156,7 +172,7 @@ describe('selectSaveEligiblePasteCandidates (#6073 F001 — final materializatio
     const corrupted = candidates.map((c) => ({ ...c, selected: true }));
     const materialized = selectSaveEligiblePasteCandidates(corrupted);
 
-    expect(materialized.map((c) => c.text)).toEqual(['привіт', 'книжка']);
+    expect(materialized.map((c) => c.text)).toEqual(['привіт', 'книжка', 'ґудзик']);
   });
 
   test('drops a save-eligible candidate the user deselected', () => {

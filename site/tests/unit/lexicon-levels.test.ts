@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest';
 import {
-  filterByCumulativeLevel,
   filterRowsByLevel,
   populatedUkrainianLetters,
+  prioritizeByLearnerLevel,
 } from '@site/src/lib/lexicon/levels';
 
-describe('filterByCumulativeLevel', () => {
+describe('prioritizeByLearnerLevel', () => {
   const rows = [
     { lemma: 'ранок', cefr: 'A1' },
     { lemma: 'площа', cefr: 'A2' },
@@ -14,20 +14,19 @@ describe('filterByCumulativeLevel', () => {
     { lemma: 'невідоме' },
   ];
 
-  test('defaults invalid or missing selections to the A1 floor', () => {
-    expect(filterByCumulativeLevel(rows, undefined).map((row) => row.lemma)).toEqual([
-      'ранок',
-    ]);
-    expect(filterByCumulativeLevel(rows, 'C0').map((row) => row.lemma)).toEqual([
-      'ранок',
-    ]);
+  test('defaults invalid or missing selections to an A1 preference without excluding rows', () => {
+    const expected = ['ранок', 'площа', 'громада', 'відтінок', 'невідоме'];
+    expect(prioritizeByLearnerLevel(rows, undefined).map((row) => row.lemma)).toEqual(expected);
+    expect(prioritizeByLearnerLevel(rows, 'C0').map((row) => row.lemma)).toEqual(expected);
   });
 
-  test('includes all lower levels through the selected cap', () => {
-    expect(filterByCumulativeLevel(rows, 'B1').map((row) => row.lemma)).toEqual([
-      'ранок',
-      'площа',
+  test('prefers the selected level and keeps higher and unlevelled rows eligible', () => {
+    expect(prioritizeByLearnerLevel(rows, 'B1').map((row) => row.lemma)).toEqual([
       'громада',
+      'площа',
+      'відтінок',
+      'ранок',
+      'невідоме',
     ]);
   });
 });

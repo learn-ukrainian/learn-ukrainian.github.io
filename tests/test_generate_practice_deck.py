@@ -1103,6 +1103,33 @@ def test_real_manifest_shapes_still_yield_recognition_lexemes() -> None:
     assert shards["B1"]["index"]["items"][0]["lemmaId"] == "pamiat"
 
 
+def test_course_anchored_lexeme_without_cefr_stays_recognition_eligible() -> None:
+    entry = {
+        "lemma": "ґудзик",
+        "url_slug": "gudzik",
+        "gloss": "button",
+        "pos": "noun",
+        "primary_source": "course_vocab",
+        "course_usage": [{"module_num": 2, "slug": "clothes"}],
+    }
+
+    shards = build_practice_shards(
+        [entry],
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier({}),
+        config=BuildConfig(target=1),
+        synonym_verdicts={"approved": [], "rejected": []},
+    )
+
+    index_item = shards["A1"]["index"]["items"][0]
+    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
+    assert index_item["lemmaId"] == "gudzik"
+    assert index_item["cefr"] is None
+    assert index_item["modes"] == ["flashcards", "matching", "choice"]
+    assert lexeme["cefr"] is None
+    assert shards["A1"]["cloze"]["cloze"] == []
+
+
 def test_option_sets_are_valid_and_anti_gaming() -> None:
     shards = _build()
     for cloze in shards["A1"]["cloze"]["cloze"]:
@@ -2501,8 +2528,6 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate paronym pair key {key}"
         seen_pairs.add(key)
-
-
 def test_antonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
     entries = [
         {"lemmaId": "день", "lemma": "день", "gloss": "day", "pos": "noun", "cefr": "A1", "url_slug": "день", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
@@ -2591,5 +2616,3 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate antonym pair key {key}"
         seen_pairs.add(key)
-
-

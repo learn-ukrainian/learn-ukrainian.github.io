@@ -27,7 +27,7 @@ import {
   type PracticeRating,
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
-import { LEARNER_LEVEL_STORAGE_KEY, filterByCumulativeLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { LEARNER_LEVEL_STORAGE_KEY, prioritizeByLearnerLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
 import {
   CUSTOM_SETS_STORAGE_KEY,
   filterTeacherClozeItems,
@@ -1276,7 +1276,7 @@ describe('LexiconPractice', () => {
       });
 
       const dayOnePool = dailyPoolFixture({ A1: 24 });
-      const eligiblePool = filterByCumulativeLevel(dayOnePool, 'A1');
+      const eligiblePool = prioritizeByLearnerLevel(dayOnePool, 'A1');
       const expectedDayTwoDefaultIds = pickDaily(
         eligiblePool,
         dateSeed(new Date(2026, 5, 24)),
@@ -1694,7 +1694,7 @@ describe('LexiconPractice', () => {
     );
   });
 
-  test('caps the practice pool at the learner level (cumulative, never higher levels)', async () => {
+  test('keeps higher published levels eligible while preferring the learner level', async () => {
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
@@ -1703,18 +1703,19 @@ describe('LexiconPractice', () => {
 
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
-    // A1+A2+B1 load (cumulative); B2/C1 are above the learner level and must never be fetched.
+    // The selected B1 shard is eager; all other published levels remain eligible
+    // and are fetched in the background.
     await waitFor(() =>
       expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true),
     );
     expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true);
-    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(false);
-    expect(requested.some((u) => u.includes('practice-index.C1'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.C1'))).toBe(true);
   });
 
-  test('level selector re-caps the pool and persists the shared learner-level key', async () => {
+  test('level selector changes the soft preference and persists the shared learner-level key', async () => {
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
@@ -1730,7 +1731,7 @@ describe('LexiconPractice', () => {
     );
     expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
-    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(true);
   });
 
   test('flashcard rating persists mode-specific SRS progress', async () => {

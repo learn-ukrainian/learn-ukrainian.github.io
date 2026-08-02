@@ -24,6 +24,7 @@ if str(AUDIT_DIR) not in sys.path:
 
 from generate_practice_deck import (
     THIN_WARN_THRESHOLDS,
+    UNKNOWN_CEFR_TRANSPORT_LEVEL,
     validate_classify_item,
     validate_classify_session_cap,
     validate_heritage_item,
@@ -79,6 +80,11 @@ MODE_BODY_KEYS = {
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
 MODE_SHARD_KINDS = ("cloze", *DRILL_MODES)
 COVERAGE_MODES = MODE_SHARD_KINDS
+
+
+def _cefr_matches_transport(value: object, level: str) -> bool:
+    """Accept a nullable lexical CEFR only in the documented transport shard."""
+    return value == level or (level == UNKNOWN_CEFR_TRANSPORT_LEVEL and value is None)
 
 
 def _read_json(path: Path, errors: list[str]) -> Any:
@@ -383,7 +389,7 @@ def _check_level(
             errors.append(f"{prefix} missing lemmaId")
         elif str(lemma_id) not in lexeme_by_id:
             errors.append(f"{prefix} lemmaId {lemma_id!r} missing from lexeme shard")
-        if item.get("cefr") != level:
+        if not _cefr_matches_transport(item.get("cefr"), level):
             errors.append(f"{prefix} cefr {item.get('cefr')!r} != {level!r}")
         modes = item.get("modes")
         if not isinstance(modes, list) or "flashcards" not in modes:
@@ -411,7 +417,7 @@ def _check_level(
         for field in ("lemmaId", "lemma", "lemmaPlain", "gloss"):
             if not _has_text(lexeme.get(field)):
                 errors.append(f"{prefix} missing {field}")
-        if lexeme.get("cefr") != level:
+        if not _cefr_matches_transport(lexeme.get("cefr"), level):
             errors.append(f"{prefix} cefr {lexeme.get('cefr')!r} != {level!r}")
 
     for index, item in enumerate(cloze_items):

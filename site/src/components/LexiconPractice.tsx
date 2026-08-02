@@ -79,7 +79,7 @@ import {
 import {
   CEFR_LEVELS,
   LEARNER_LEVEL_STORAGE_KEY,
-  filterByCumulativeLevel,
+  prioritizeByLearnerLevel,
   normalizeCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
@@ -303,7 +303,7 @@ function ensureDeckCustomSetCoverage(
       newIndexItems.push({
         lemmaId: atlas?.slug ?? key,
         lemma: atlas?.lemma ?? cleanKey,
-        cefr: atlas?.cefr ?? 'A1',
+        cefr: atlas?.cefr ?? null,
         modes: hasCloze
           ? ['flashcards', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
           : ['flashcards', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
@@ -319,7 +319,7 @@ function ensureDeckCustomSetCoverage(
         ipa: null,
         gloss: atlas?.gloss ?? cleanKey,
         pos: null,
-        cefr: atlas?.cefr ?? 'A1',
+        cefr: atlas?.cefr ?? null,
         heritage: null,
         severity: null,
         paradigm: { cases: {} },
@@ -889,13 +889,14 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
       paradigm: legacy.paradigm ?? { cases: {} },
     };
   });
+  const deckGuidanceLevel = lexemes.find((entry) => entry.cefr)?.cefr ?? 'unknown';
   return {
     deckVersion: 'test-fixture',
-    level: lexemes[0]?.cefr ?? 'A1',
+    level: deckGuidanceLevel,
     index: lexemes.map((entry, index) => ({
       lemmaId: entry.lemmaId,
       lemma: entry.lemma,
-      cefr: entry.cefr ?? 'A1',
+      cefr: entry.cefr ?? null,
       modes: entry.meaningMcEligible ? ['flashcards', 'matching', 'choice'] : ['flashcards'],
       hasCloze: false,
       clozeIds: [],
@@ -968,8 +969,9 @@ function orderedChoiceOptions(
   return options;
 }
 
-function cefrRank(level: string): number {
-  return CEFR_LEVELS.indexOf(level as CefrLevel);
+function cefrRank(level: string | null | undefined): number {
+  const rank = CEFR_LEVELS.indexOf(level as CefrLevel);
+  return rank >= 0 ? rank : CEFR_LEVELS.length;
 }
 
 export function meaningDistractors(
@@ -979,7 +981,7 @@ export function meaningDistractors(
 ): PracticeLexeme[] {
   const answerHeadword = glossHeadword(answer);
   const answerLength = glossLabel(answer).length;
-  const answerRank = cefrRank(answer.cefr ?? 'A1');
+  const answerRank = cefrRank(answer.cefr);
   const candidatePool = deck.lexemes.filter(
     (candidate) =>
       candidate.lemmaId !== answer.lemmaId &&
@@ -993,7 +995,7 @@ export function meaningDistractors(
   // distractors or an A1 answer from being ambushed by C1 vocabulary.
   const rings = new Map<number, PracticeLexeme[]>();
   for (const candidate of candidatePool) {
-    const gap = Math.abs(cefrRank(candidate.cefr ?? 'A1') - answerRank);
+    const gap = Math.abs(cefrRank(candidate.cefr) - answerRank);
     const bucket = rings.get(gap) ?? [];
     bucket.push(candidate);
     rings.set(gap, bucket);
@@ -1302,10 +1304,9 @@ function writeLearnerLevel(level: CefrLevel): void {
   }
 }
 
-/** CEFR levels at or below `level` (cumulative: B1 -> A1, A2, B1). */
-function levelsUpTo(level: CefrLevel): CefrLevel[] {
-  const cap = CEFR_LEVELS.indexOf(level);
-  return CEFR_LEVELS.slice(0, cap + 1);
+/** All published practice shards; learner level is a preference, not a hard cap. */
+function levelsForPractice(): CefrLevel[] {
+  return [...PUBLISHED_PRACTICE_LEVELS] as CefrLevel[];
 }
 
 /** Concatenate per-level decks into one cumulative deck (CEFR shards are disjoint). */
@@ -1584,7 +1585,7 @@ function LexiconPracticeIsland({
   const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
   const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
-  // background lower-level shards). While history length is unchanged we keep returning the
+  // background level shards). While history length is unchanged we keep returning the
   // prior selection object so a B1 card is not yanked when an A1/A2 shard lands mid-item.
   const committedSelectionRef = useRef<{ selection: PracticeSelection; historyLen: number } | null>(null);
   // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
@@ -1788,7 +1789,7 @@ function LexiconPracticeIsland({
     void (async () => {
       try {
         const batches = await Promise.all(
-          levelsUpTo(learnerLevel).map(async (shardLevel) => {
+          levelsForPractice().map(async (shardLevel) => {
             const url = `${shardBaseUrl}/practice-index.${shardLevel}.json`;
             try {
               const shard = await getShardJson<PracticeIndexShard>(url, shardJsonCacheRef.current);
@@ -1809,7 +1810,7 @@ function LexiconPracticeIsland({
   }, [deck, learnerLevel, shardBaseUrl]);
 
   // D2 (design delta 2026-07-26): the Words-of-the-Day zone renders the SAME 12
-  // lemmas as /words-of-the-day/ — pickDaily(filterByCumulativeLevel(pool, level),
+  // lemmas as /words-of-the-day/ — pickDaily(prioritizeByLearnerLevel(pool, level),
   // dateSeed(now), 12) over /lexicon/daily-pool.json. This is recomputed fresh
   // from (pool, level, date) on every run rather than reused from a persisted
   // snapshot, so there is no stale cache to silently pin the carousel on one
@@ -1865,7 +1866,7 @@ function LexiconPracticeIsland({
             '/lexicon/daily-pool.json',
             shardJsonCacheRef.current,
           );
-          const eligiblePool = filterByCumulativeLevel(pool, learnerLevel);
+          const eligiblePool = prioritizeByLearnerLevel(pool, learnerLevel);
           picks = pickDaily(
             eligiblePool,
             dateSeed(now) + reRollSeed(dailyReRollCount),
@@ -1877,17 +1878,16 @@ function LexiconPracticeIsland({
           // pool is empty.
           const levelsForDailyPreview = picks.length > 0
             ? picks.map((word) => word.cefr)
-            : levelsUpTo(learnerLevel);
+            : levelsForPractice();
           representedLevels = new Set(
             levelsForDailyPreview.filter((cefr): cefr is string => Boolean(cefr)),
           );
         } else {
           // A deck's words can sit at any level (or none — an unverified custom
           // import). Resolve its keys across the learner's complete accessible
-          // range, the same A1..learnerLevel set `filterByCumulativeLevel`
-          // uses for atlas-global picks. That gives level-less custom keys their
-          // verified metadata without loading shards above the learner's level.
-          representedLevels = new Set<string>(levelsUpTo(learnerLevel));
+          // range used for atlas-global picks. That gives level-less custom keys
+          // their verified metadata without treating a missing CEFR as A1.
+          representedLevels = new Set<string>(levelsForPractice());
         }
 
         // The atlas branch can skip this fetch once `deck` already covers the
@@ -2116,7 +2116,7 @@ function LexiconPracticeIsland({
       sessionSeed,
       poolFilter: sessionPhase === 'active' ? poolFilter : undefined,
     });
-    // Stabilize in-flight selection across live merges from background lower-level shards.
+    // Stabilize in-flight selection across live merges from background level shards.
     // The selector cache (per deck identity) produces a new pool, but we keep the exact
     // prior selection object (for same history length) so the user is not yanked mid-item
     // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
@@ -2263,18 +2263,17 @@ function LexiconPracticeIsland({
     try {
       let nextDeck = current;
       let nextClozeLoaded = clozeLoaded;
-      const levels = levelsUpTo(level);
-      const targetLevel = level;
-      const lowerLevels = levels.slice(0, -1);
+      const levels = levelsForPractice();
+      const targetLevel = levels.includes(level) ? level : levels[0]!;
+      const otherLevels = levels.filter((lv) => lv !== targetLevel);
       const needDrills = includeCloze && (force || !clozeLoaded);
       const deckLemmaKeys = resolveDeckLemmaKeys(deckFilter, customSets);
       let deckKeyResolutions: Map<string, DeckKeyResolution> | null = null;
 
       if (!nextDeck) {
         // PROGRESSIVE: Load the SELECTED level's core shards (index + lexemes) FIRST.
-        // The session can start on this deck immediately; lower levels are backgrounded.
-        // This eliminates the 21-shard/8.9MB wait for B1 (and general multi-level).
-        // A1 is unaffected (no lower levels).
+        // The session can start on this deck immediately; every other published level
+        // is backgrounded because the learner level is a preference, not a cap.
         const indexUrl = `${shardBaseUrl}/practice-index.${targetLevel}.json`;
         const lexUrl = `${shardBaseUrl}/practice-lexemes.${targetLevel}.json`;
         const [indexShard, lexemeShard] = await Promise.all([
@@ -2291,19 +2290,19 @@ function LexiconPracticeIsland({
           nextDeck = ensureDeckCustomSetCoverage(nextDeck, deckLemmaKeys, deckKeyResolutions);
         }
         // The first committed deck must already contain Atlas-enriched custom
-        // entries; background lower-level growth may safely extend it after this.
+        // entries; background growth may safely extend it after this.
         if (deckRequestId.current === requestId) setDeck(nextDeck);
 
-        // Fire-and-forget background load of lower-level *cores*. Merge into live pool
+        // Fire-and-forget background load of the remaining *cores*. Merge into live pool
         // as they arrive; selector cache per deck identity (#4656) receives the new deck
         // object and recomputes candidates for the grown pool on next select (stabilized
         // for in-flight item).
-        if (lowerLevels.length > 0) {
+        if (otherLevels.length > 0) {
           void (async () => {
             const bgId = deckRequestId.current;
-            const lowerCores = (
+            const otherCores = (
               await Promise.all(
-                lowerLevels.map(async (lv) => {
+                otherLevels.map(async (lv) => {
                   try {
                     const iUrl = `${shardBaseUrl}/practice-index.${lv}.json`;
                     const lUrl = `${shardBaseUrl}/practice-lexemes.${lv}.json`;
@@ -2319,10 +2318,10 @@ function LexiconPracticeIsland({
                 }),
               )
             ).filter((d): d is PracticeDeckData => d !== null);
-            if (deckRequestId.current !== bgId || lowerCores.length === 0) return;
+            if (deckRequestId.current !== bgId || otherCores.length === 0) return;
             setDeck((prev) => {
-              if (!prev) return mergeDecks(lowerCores, level);
-              return extendWithLowerDecks(prev, lowerCores);
+              if (!prev) return mergeDecks(otherCores, level);
+              return extendWithLowerDecks(prev, otherCores);
             });
           })();
         }
@@ -2330,7 +2329,7 @@ function LexiconPracticeIsland({
 
       if (needDrills) {
         // Load drill shards for the *selected* level (may block this call if mode requires
-        // them, e.g. initialMode=cloze or mixed). Lower drill shards are always background.
+        // them, e.g. initialMode=cloze or mixed). Other drill shards are background.
         // This also defers drill-kind shards for basic modes (flashcards etc) until a
         // drill mode surfaces (optional path kept clean).
         const drillUrls = [
@@ -2397,12 +2396,12 @@ function LexiconPracticeIsland({
 
         nextClozeLoaded = true;
 
-        // Background lower drills (merge live when they land).
-        if (lowerLevels.length > 0) {
+        // Background drills for the remaining published levels (merge live when they land).
+        if (otherLevels.length > 0) {
           void (async () => {
             const bgId = deckRequestId.current;
-            const lowerDrillBatches = await Promise.all(
-              lowerLevels.map(async (lv) => {
+            const otherDrillBatches = await Promise.all(
+              otherLevels.map(async (lv) => {
                 const urls = [
                   `${shardBaseUrl}/practice-cloze.${lv}.json`,
                   `${shardBaseUrl}/practice-stress.${lv}.json`,
@@ -2433,14 +2432,14 @@ function LexiconPracticeIsland({
               if (!prev) return prev;
               return {
                 ...prev,
-                cloze: [...(prev.cloze ?? []), ...lowerDrillBatches.flatMap((b) => b.cloze)],
-                stress: [...(prev.stress ?? []), ...lowerDrillBatches.flatMap((b) => b.stress)],
-                classify: [...(prev.classify ?? []), ...lowerDrillBatches.flatMap((b) => b.classify)],
-                paradigm: [...(prev.paradigm ?? []), ...lowerDrillBatches.flatMap((b) => b.paradigm)],
-                synonym: [...(prev.synonym ?? []), ...lowerDrillBatches.flatMap((b) => b.synonym)],
-                paronym: [...(prev.paronym ?? []), ...lowerDrillBatches.flatMap((b) => b.paronym)],
-                heritage: [...(prev.heritage ?? []), ...lowerDrillBatches.flatMap((b) => b.heritage)],
-                antonym: [...(prev.antonym ?? []), ...lowerDrillBatches.flatMap((b) => b.antonym)],
+                cloze: [...(prev.cloze ?? []), ...otherDrillBatches.flatMap((b) => b.cloze)],
+                stress: [...(prev.stress ?? []), ...otherDrillBatches.flatMap((b) => b.stress)],
+                classify: [...(prev.classify ?? []), ...otherDrillBatches.flatMap((b) => b.classify)],
+                paradigm: [...(prev.paradigm ?? []), ...otherDrillBatches.flatMap((b) => b.paradigm)],
+                synonym: [...(prev.synonym ?? []), ...otherDrillBatches.flatMap((b) => b.synonym)],
+                paronym: [...(prev.paronym ?? []), ...otherDrillBatches.flatMap((b) => b.paronym)],
+                heritage: [...(prev.heritage ?? []), ...otherDrillBatches.flatMap((b) => b.heritage)],
+                antonym: [...(prev.antonym ?? []), ...otherDrillBatches.flatMap((b) => b.antonym)],
               };
             });
           })();
@@ -2491,7 +2490,7 @@ function LexiconPracticeIsland({
       let matchedIndexItem = initialMatch;
       if (!matchedIndexItem) {
         const indexShards = await Promise.all(
-          levelsUpTo(learnerLevel).map((level) =>
+          levelsForPractice().map((level) =>
             getShardJson<PracticeIndexShard>(
               `${shardBaseUrl}/practice-index.${level}.json`,
               shardJsonCacheRef.current,
@@ -2511,9 +2510,12 @@ function LexiconPracticeIsland({
         return;
       }
 
-      // The cumulative index is small. Load only the resolved level's core deck next,
-      // retaining the progressive lower-level loading strategy for practice content.
-      const matchedLevel = normalizeCefrLevel(matchedIndexItem.cefr, learnerLevel);
+      // The cumulative index is small. A null lexical CEFR is transported in
+      // the first published shard; keep that transport fact separate from the
+      // missing lexical metadata rather than assigning it A1.
+      const matchedLevel = matchedIndexItem.cefr
+        ? normalizeCefrLevel(matchedIndexItem.cefr, learnerLevel)
+        : levelsForPractice()[0]!;
       let loadedDeck = initialMatch
         ? initialDeck
         : await ensureDeck(shouldLoadCloze('mixed'), { level: matchedLevel, force: true });
