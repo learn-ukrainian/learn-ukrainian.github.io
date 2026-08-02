@@ -30,12 +30,12 @@ durable, body-free receipts. Making Entire authoritative would duplicate those
 systems and enlarge the failure and privacy domains.
 
 The privacy boundary is strict. Checkpoint storage may use only
-`learn-ukrainian/entire-checkpoints-private`. Public Entire shadow refs,
-transcript or prompt bodies, and AI-generated summaries are forbidden. Entire
-documents redaction as best-effort and states that local shadow refs can contain
-raw working-tree snapshots. The public checkout's `origin` is the public
-product repository, so an explicit private-destination guard is a prerequisite,
-not a follow-up.
+`learn-ukrainian/entire-checkpoints-private`. Public Entire shadow refs and
+public disclosure of transcript, prompt, or generated-summary bodies are
+forbidden. Entire documents redaction as best-effort and states that local
+shadow refs can contain raw working-tree snapshots. The public checkout's
+`origin` is the public product repository, so an explicit private-destination
+guard is a prerequisite, not a follow-up.
 
 ## Decision
 
@@ -70,12 +70,12 @@ its Entire mirror public to other Entire users: the preflight checks the live
 Entire control-plane collaborator list and fails unless only the operator can
 pull either mirror.
 
-After that receipt, the accountable root may use bounded repository-scoped
-search, explain, recap, local dispatch, and explicit handoff for real session
-continuity. Full explain stays within the root's private working context;
-raw-transcript flags remain prohibited. Generated summaries and worktree-
-mutating resume/rewind remain operator-directed. Native Entire remains optional
-and non-authoritative.
+After that receipt, the accountable root automatically runs bounded,
+repository-scoped search and may use explain for real session continuity. Full
+explain stays within the root's private working context; raw-transcript flags
+remain prohibited. Generated recap/dispatch and worktree-mutating
+resume/rewind remain operator-directed. Native Entire remains optional and
+non-authoritative.
 
 ### Authority boundary
 
@@ -135,9 +135,10 @@ The first implementation stores these relationships in an existing
 authoritative receipt path or a rebuildable local projection after a separate
 schema review. It does not invent synthetic Entire sessions. Arbitrary
 metadata-card ingestion into Entire itself is optional and may be added only if
-a 0.8.42 canary proves a supported body-free path. If native session capture
-necessarily stores forbidden transcript or prompt bodies, hooks remain disabled
-and the phase is recorded as blocked by the pinned product capability.
+a 0.8.42 canary proves a documented path. Native session capture stores
+redacted prompt and transcript bodies in the private checkpoint repository;
+that is permitted by the operator amendment and remains isolated from the
+shared automatic corpus.
 
 ### Searchable corpus
 
@@ -212,15 +213,15 @@ plugin could technically be written.
   as native Codex or Claude seats.
 - Entire adds ranked cross-system discovery without becoming another source of
   truth.
-- Every context byte injected into an agent still comes from a canonical local
+- Every shared or published context byte still comes from a canonical local
   system and carries a verifiable locator.
 
 **Negative / risks**:
 
-- Metadata-only search has intentionally narrower semantic value than indexing
-  transcripts; the no-body policy is a real product limitation.
-- Search that requires Entire login introduces a cloud-egress decision and may
-  remain disabled.
+- Native semantic search and full explain increase the private egress and
+  access-control surface; the live preflight must remain green before use.
+- Provider indexing can return empty or delayed results even when local
+  checkpoint explain works, so native search remains optional.
 - Context-link reconciliation and digest verification add a new projection to
   operate and test.
 - The feature is useful only where the agent or its accountable harness can
@@ -261,8 +262,8 @@ The decision is successful only if staged canaries prove all of the following:
 
 - every push-capable Entire operation targets the approved private repository;
 - product repositories retain zero public Entire shadow refs;
-- checkpoint samples contain zero forbidden bodies, prompts, summaries, or
-  secrets;
+- checkpoint samples stay only in the approved private repository and contain
+  no unredacted secrets;
 - duplicate and retry paths create one context link;
 - an Entire outage leaves canonical workflow outputs byte-for-byte unchanged;
 - every hydrated item resolves and matches its canonical digest;

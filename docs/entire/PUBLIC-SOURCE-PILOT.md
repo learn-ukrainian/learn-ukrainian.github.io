@@ -52,16 +52,17 @@ produce locator cards or bounded capsules; they do not invoke Entire or the
 network.
 
 The operator-authorized private mode is declared in
-`.entire/private-recall.json`. Before a prompt-bearing native operation,
+`.entire/private-recall.json`. At non-trivial task intake and before a
+prompt-bearing native operation,
 `.venv/bin/python -m scripts.entire.private_mode_preflight` proves the GitHub
 repository is private, the public origin has zero Entire branches, the private
 checkpoint ref exists, authentication works, both mirrors are ready and expose
 an operator-only Entire ACL, and the CLI remains pinned. The public GitHub
 source remains public, but its Entire mirror is not pullable by other Entire
-users. A green receipt permits repository-scoped native search,
-metadata or task-required full explain, static recap, and local
-dispatch/handoff. The accountable root may consume results in its private task
-context. They never automatically enter a shared capsule or public GitHub
+users. A green receipt enables automatic repository-scoped native search and
+metadata or task-required full explain in the accountable root's private task
+context. Static recap and local dispatch/handoff remain operator-requested.
+Native results never automatically enter a shared capsule or public GitHub
 evidence, and external disclosure requires operator review. Entire review is
 supplemental and never satisfies the Fleet formal-review gate.
 

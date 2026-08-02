@@ -72,12 +72,11 @@ For each non-trivial task, the accountable root performs this contract:
    materially help, create at most one `handoff` capsule (five cards, 8 KiB)
    and give that same capsule to the participants that need it.
 3. Keep raw prompts, transcripts, responses, session bodies, generated recaps,
-   and generated summaries out of the shared automatic capsule. When richer
-   private history is useful, run
+   and generated summaries out of the shared automatic capsule. At intake run
    `.venv/bin/python -m scripts.entire.private_mode_preflight`; after a green
-   receipt (including operator-only Entire ACLs for both mirrors) the
-   accountable root may use bounded native Entire search/explain without
-   distributing raw bodies to other seats.
+   receipt (including operator-only Entire ACLs for both mirrors), the
+   accountable root runs bounded native Entire search and may explain a
+   relevant checkpoint without distributing raw bodies to other seats.
 4. Run `record-use` only for locators that were verified and materially
    informed the task. Search delivery alone is not use.
 5. Continue normally when recall is unavailable. Git/GitHub remain

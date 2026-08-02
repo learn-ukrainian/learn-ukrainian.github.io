@@ -8,7 +8,7 @@
     {"handle": "github:krisztiankoos", "role": "writer"}
   ],
   "authoritative": false,
-  "automatic_intake": false,
+  "automatic_intake": true,
   "public_promotion": false,
   "preflight": ["scripts/entire/private_mode_preflight.py"],
   "operations": {
@@ -54,7 +54,6 @@
     "handoff"
   ],
   "operator_request_required": [
-    "explain_full",
     "recap",
     "dispatch",
     "handoff",

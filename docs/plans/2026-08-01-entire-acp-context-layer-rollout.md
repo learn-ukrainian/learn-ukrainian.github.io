@@ -98,13 +98,13 @@ flowchart LR
     Canonical -->|"canonical bytes + digest"| Resolver
     Resolver -->|"verified excerpts only"| Capsule
     Capsule --> Agent
-    Entire -.->|"manual operator investigation only"| Agent
+    Entire -.->|"preflight-gated private recall"| Agent
 ```
 
 The local projection ranks possible history. The resolver decides whether a
 result is safe and true. Canonical systems provide every byte that enters the
-LLM's automatic context. Optional Entire product output stays outside that
-automatic path.
+shared automatic context. Preflight-gated Entire product output may enter the
+accountable root's private context but stays outside shared capsules.
 
 ## Search corpus and context-link contract
 
@@ -254,13 +254,13 @@ Initial workflows:
 - `review-with-intent`: supply verified context to the reviewer without
   changing the formal-review gate.
 
-Local body-free search is implemented. Logged-in cloud Entire search remains a
-manual operator investigation tool and is never invoked by the public skill.
-Its results do not enter automatic capsules.
+Local body-free search and preflight-gated private Entire search are
+implemented. Native results may enter the accountable root's private context
+but do not enter automatic shared capsules or public evidence by default.
 
 Exit gate:
 
-- zero transcript bytes in command output consumed by the workflow;
+- zero transcript bytes in the shared automatic workflow;
 - hard query/result/context size caps;
 - every injected excerpt carries canonical namespace, ID, and digest;
 - a judged query set shows recall@10 of at least 0.70 for questions answerable
@@ -327,7 +327,7 @@ if any of the following occurs:
 - a push targets a product or unapproved remote;
 - a public product remote gains an Entire shadow ref;
 - a prompt, transcript, AI-generated summary, secret, or raw private body
-  reaches the checkpoint remote or a search result;
+  reaches a public or unauthorized destination;
 - an Entire failure changes an ACP, Fleet, Monitor, lease, rollover, review, or
   GitHub outcome;
 - hydration injects an unresolved or digest-mismatched item; or

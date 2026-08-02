@@ -55,13 +55,13 @@ def test_private_native_recall_policy_is_exact_and_non_authoritative() -> None:
 
     assert policy == EXPECTED_PRIVATE_RECALL
     assert validate(ROOT) is None
-    assert policy["automatic_intake"] is False
+    assert policy["automatic_intake"] is True
     assert policy["public_promotion"] is False
     assert policy["authoritative"] is False
     assert "--all-repos" in policy["forbidden_flags"]
     assert policy["operations"]["search"][-1] == ("learn-ukrainian/learn-ukrainian.github.io")
     assert "--full" in policy["operations"]["explain_full"]
-    assert "explain_full" in policy["operator_request_required"]
+    assert "explain_full" not in policy["operator_request_required"]
     assert "--raw-transcript" in policy["forbidden_flags"]
     assert "--transcript" in policy["forbidden_flags"]
 
@@ -97,9 +97,9 @@ def _write_routing_fixture(root: Path, policy: dict) -> None:
     (entire_dir / "private-recall.json").write_text(json.dumps(policy), encoding="utf-8")
 
 
-def test_private_recall_validator_rejects_automatic_intake(tmp_path: Path) -> None:
+def test_private_recall_validator_rejects_disabled_automatic_intake(tmp_path: Path) -> None:
     policy = copy.deepcopy(EXPECTED_PRIVATE_RECALL)
-    policy["automatic_intake"] = True
+    policy["automatic_intake"] = False
     _write_routing_fixture(tmp_path, policy)
 
     assert validate(tmp_path) == ("private recall policy does not match the canonical private-only contract")

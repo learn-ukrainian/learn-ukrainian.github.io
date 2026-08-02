@@ -14,7 +14,7 @@ EXPECTED_PRIVATE_RECALL = {
     "checkpoint_repo": PRIVATE_CHECKPOINT_REPO,
     "entire_access_principals": [{"handle": "github:krisztiankoos", "role": "writer"}],
     "authoritative": False,
-    "automatic_intake": False,
+    "automatic_intake": True,
     "public_promotion": False,
     "preflight": ["scripts/entire/private_mode_preflight.py"],
     "operations": {
@@ -48,7 +48,6 @@ EXPECTED_PRIVATE_RECALL = {
         "handoff",
     ],
     "operator_request_required": [
-        "explain_full",
         "recap",
         "dispatch",
         "handoff",
