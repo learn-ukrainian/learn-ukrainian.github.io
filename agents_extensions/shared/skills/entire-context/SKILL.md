@@ -1,6 +1,6 @@
 ---
 name: entire-context
-description: Provider-neutral recall over the public body-free context-link index (ADR-018, Phase 2). Invoke when a task needs to find prior public work, explain why a commit or ACP discussion exists, or prepare a bounded handoff capsule for another seat. Works identically for Codex, Kimi, GLM, Claude, and other harnesses — no model-specific semantics, no Entire plugin, no Entire CLI call. Local-only; GitHub, Fleet Comms, Monitor, session streams, rollover, and formal review remain authoritative.
+description: Provider-neutral recall over the public body-free context-link index (ADR-018). Invoke at task intake when prior work may matter, before consequential design changes, when explaining a commit or ACP discussion, and when preparing a bounded handoff. Works identically for Codex, Kimi, GLM, Claude, and other harnesses; GitHub, Fleet Comms, Monitor, session streams, rollover, and formal review remain authoritative.
 effort: low
 ---
 
@@ -32,8 +32,9 @@ it never mutates them.
 
 ## Commands
 
-All commands are local and read-only except the two explicit `bootstrap-*`
-index commands, which write only to the projection SQLite file.
+Recall commands are local and read-only. Explicit `bootstrap-*`,
+`reconcile-acp`, and `record-use` commands write only to the rebuildable local
+projection; `refresh-provider-status` writes only a sanitized local cache.
 
 ```bash
 # Projection state (body-free aggregate)
@@ -43,6 +44,9 @@ index commands, which write only to the projection SQLite file.
 .venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha> [--repo PATH] [--namespace NS]
 .venv/bin/python -m scripts.entire_context bootstrap-acp conversation_<32hex> [--git-sha SHA] [--acp-root PATH]
 .venv/bin/python -m scripts.entire_context bootstrap-rollover --agent <agent> --lineage-id <lineage> --rollover-id <rollover> [--rollover-root PATH]
+
+# Recover terminal ACP receipts missed by the automatic post-commit callback
+.venv/bin/python -m scripts.entire_context reconcile-acp --acp-root PATH
 
 # search-past-work: ranked verified locator cards (<= 10 results, <= 500 scanned)
 .venv/bin/python -m scripts.entire_context search --query "<needle>" [--repo PATH] [--acp-root PATH]
@@ -55,6 +59,12 @@ index commands, which write only to the projection SQLite file.
 # prepare-handoff: bounded capsule of verified locators/excerpts (<= 5 items, <= 8 KiB)
 .venv/bin/python -m scripts.entire_context handoff --locator-id clink_<64hex> [--locator-id ...]
 .venv/bin/python -m scripts.entire_context handoff --query "<needle>"
+
+# After verified locators actually informed the task, attest that use explicitly
+.venv/bin/python -m scripts.entire_context record-use --task-id <task> --consumer <harness> --purpose <category> --locator-id clink_<64hex> [--locator-id ...]
+
+# Explicit Entire 0.8.42 probe for Monitor's sanitized local cache
+.venv/bin/python -m scripts.entire_context refresh-provider-status [--repo PATH]
 ```
 
 Resolution flags: `--repo` (default: cwd) supplies the local git repository;
@@ -63,7 +73,9 @@ Resolution flags: `--repo` (default: cwd) supplies the local git repository;
 registry state root. Without an ACP root, ACP links fail closed as
 `source_missing`; without a rollover root, rollover links fail closed as
 `source_missing`. `--db` or
-`ENTIRE_CONTEXT_DB` overrides the projection path. `--consumer <label>` may be
+`ENTIRE_CONTEXT_DB` overrides the projection path. By default every linked
+worktree resolves the same primary-checkout `batch_state/entire-context/v1`
+projection through Git's common directory. `--consumer <label>` may be
 passed by any harness; it is validated, never persisted, and never echoed, so
 all harnesses receive byte-identical results for identical invocations.
 An ACP `--git-sha` join is admitted only when hashing that exact SHA matches
@@ -96,6 +108,23 @@ closed as `digest_mismatch`.
 5. Ranking is deterministic and Unicode-casefold based with `locator_id` as
    the final tie-break, so identical fixtures give identical results to every
    harness.
+6. Search delivery is not evidence of use. When verified cards materially
+   informed intake, architecture, implementation, explanation, review, or
+   handoff, run `record-use` with the exact task, harness, purpose, and locator
+   IDs. The body-free idempotent receipt is the only basis for Monitor's
+   `use.proven` state.
+
+## Harness semantics
+
+- Entire integrates with the **host harness**, not each model label. Kimi or
+  GLM running inside Claude Code use the installed `claude-code` integration;
+  those models running inside OpenCode use the installed `opencode`
+  integration.
+- Codex CLI and Codex Desktop first use the installed native `codex`
+  integration and the same project hooks. Do not invent a `codex-gui` agent.
+- Add an external `entire-agent-<harness>` adapter only after a source-blind
+  canary proves that the actual unsupported harness has no native capture
+  path. A model name alone is never evidence that an adapter is required.
 
 ## Failure posture
 

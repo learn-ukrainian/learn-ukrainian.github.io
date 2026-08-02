@@ -12,6 +12,7 @@ import errno
 import fcntl
 import hashlib
 import json
+import logging
 import os
 import re
 import sqlite3
@@ -50,6 +51,8 @@ from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import classify_repo_path
+
+logger = logging.getLogger(__name__)
 
 PARTICIPANTS = ("codex", "grok")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
@@ -1233,9 +1236,27 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
     root = Path(root_arg) if root_arg is not None else default_plane_root(repo_root=Path(kwargs["cwd"]))
     controller = AcpxDiscussionController(root=root)
     try:
-        return controller.run(**kwargs)
+        result = controller.run(**kwargs)
     finally:
         controller.close()
+    if result.get("state") == "COMPLETE":
+        try:
+            # Local import avoids making ACP depend on the optional projection
+            # during module initialization. The authoritative ACP terminal
+            # commit has already completed; this callback is strictly
+            # best-effort and cannot change the discussion result.
+            from scripts.entire_context.reconcile import project_terminal_acp_receipt
+
+            project_terminal_acp_receipt(
+                conversation_id=str(result["conversation_id"]),
+                acp_root=root,
+                repo_root=Path(kwargs["cwd"]),
+            )
+        except Exception as exc:
+            logger.warning(
+                "optional ACP context projection failed: %s", type(exc).__name__
+            )
+    return result
 
 
 def recover_expired_discussions(*, root: Path) -> list[str]:

@@ -2,11 +2,14 @@
 
 Phase-1 commands: ``status``, ``lookup``, ``explain``, ``rebuild``, ``admit``.
 Phase-2 commands: ``bootstrap-git``, ``bootstrap-acp``, ``search``,
-``explain-change``, ``handoff``.
+``explain-change``, ``handoff``. Live commands: ``reconcile-acp``,
+``record-use``, and explicit ``refresh-provider-status``.
 
-Every command is local-only: none of them calls Entire, GitHub, Fleet, ACP
-providers, Monitor, or the network. Resolution uses read-only local ``git``
-plumbing and the body-free ACP terminal receipt verifier. A missing or
+Recall and projection commands are local-only: none calls Entire, GitHub,
+Fleet, ACP providers, Monitor, or the network. The explicit provider-status
+refresh is the sole Entire CLI call and writes an allowlisted cache. Resolution
+uses read-only local ``git`` plumbing and the body-free ACP terminal receipt
+verifier. A missing or
 disabled projection is reported as a body-free status payload, never as a
 traceback, and read commands never create local state. Query text and
 consumer labels are accepted but never persisted or echoed, so Codex, Kimi,
@@ -31,6 +34,8 @@ from .model import (
     canonical_json,
     validate_identity,
 )
+from .paths import projection_path
+from .provider import refresh_provider_status
 from .recall import (
     MAX_RESULTS,
     MAX_SCAN_ROWS,
@@ -39,6 +44,7 @@ from .recall import (
     prepare_handoff,
     search_past_work,
 )
+from .reconcile import MAX_RECONCILE_ROWS, reconcile_terminal_acp_receipts
 from .resolvers import (
     REASON_SOURCE_MISSING,
     ResolutionError,
@@ -52,8 +58,6 @@ EXIT_OK = 0
 EXIT_NOT_FOUND = 1
 EXIT_REFUSED = 2
 
-DEFAULT_DB_RELATIVE = Path("batch_state") / "entire-context" / "v1" / "context-links.sqlite3"
-ENV_DB = "ENTIRE_CONTEXT_DB"
 ENV_DISABLED = "ENTIRE_CONTEXT_DISABLED"
 ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
 ENV_ROLLOVER_ROOT = "ENTIRE_CONTEXT_ROLLOVER_ROOT"
@@ -64,12 +68,7 @@ def _emit(payload: dict[str, Any]) -> None:
 
 
 def _resolve_db(args: argparse.Namespace) -> Path:
-    if getattr(args, "db", None):
-        return Path(args.db)
-    env = os.environ.get(ENV_DB)
-    if env:
-        return Path(env)
-    return Path.cwd() / DEFAULT_DB_RELATIVE
+    return projection_path(Path.cwd(), getattr(args, "db", None))
 
 
 def _disabled() -> bool:
@@ -433,6 +432,49 @@ def cmd_handoff(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def cmd_record_use(args: argparse.Namespace) -> int:
+    """Persist an explicit agent attestation after verified recall informed work."""
+    db_path, early = _guard(args)
+    if early is not None:
+        _emit(early)
+        return EXIT_REFUSED
+    try:
+        receipt = ContextLinkStore(db_path).record_use(
+            task_id=args.task_id,
+            consumer=args.consumer,
+            purpose=args.purpose,
+            locator_ids=args.locator_id,
+        )
+    except (SchemaError, sqlite3.Error, KeyError, TypeError, ValueError):
+        _emit({"outcome": "refused", "reason": "use_receipt_invalid"})
+        return EXIT_REFUSED
+    _emit({"outcome": "recorded", **receipt})
+    return EXIT_OK
+
+
+def cmd_reconcile_acp(args: argparse.Namespace) -> int:
+    """Recover complete ACP terminal receipts missed by the live callback."""
+    acp_root = _resolve_acp_root(args)
+    if acp_root is None:
+        return _refused("source_missing")
+    payload = reconcile_terminal_acp_receipts(
+        acp_root=acp_root,
+        repo_root=_resolve_repo(args),
+        db_path=_resolve_db(args),
+        limit=args.limit,
+        actor=args.actor,
+    )
+    _emit(payload)
+    return EXIT_OK if payload["outcome"] == "reconciled" else EXIT_REFUSED
+
+
+def cmd_refresh_provider_status(args: argparse.Namespace) -> int:
+    """Explicitly refresh the sanitized Entire CLI cache used by Monitor."""
+    payload = refresh_provider_status(_resolve_repo(args))
+    _emit(payload)
+    return EXIT_OK if payload.get("available") is True else EXIT_REFUSED
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.entire_context",
@@ -447,7 +489,7 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument(
             "--db",
             default=None,
-            help=f"Projection SQLite path (default: {ENV_DB} or {DEFAULT_DB_RELATIVE})",
+            help="Projection SQLite path (default: shared primary batch_state projection)",
         )
 
     status = sub.add_parser("status", help="Body-free aggregate projection status")
@@ -606,6 +648,48 @@ def build_parser() -> argparse.ArgumentParser:
     add_resolution_flags(handoff)
     add_db_flag(handoff)
     handoff.set_defaults(func=cmd_handoff)
+
+    record_use = sub.add_parser(
+        "record-use",
+        help="Record an explicit body-free attestation that verified recall informed a task",
+    )
+    record_use.add_argument("--task-id", required=True, help="Exact path-safe task identity")
+    record_use.add_argument("--consumer", required=True, help="Harness identity (codex, kimi, glm, ...)")
+    record_use.add_argument(
+        "--purpose",
+        required=True,
+        help="Path-safe use category such as intake, architecture, implementation, or handoff",
+    )
+    record_use.add_argument(
+        "--locator-id",
+        action="append",
+        required=True,
+        help="Verified promoted locator that informed the task (repeatable, max 10)",
+    )
+    add_db_flag(record_use)
+    record_use.set_defaults(func=cmd_record_use)
+
+    reconcile_acp = sub.add_parser(
+        "reconcile-acp",
+        help="Idempotently project terminal COMPLETE ACP receipts missed by the live callback",
+    )
+    reconcile_acp.add_argument(
+        "--acp-root",
+        default=None,
+        help=f"ACP receipt plane root (default: {ENV_ACP_ROOT})",
+    )
+    reconcile_acp.add_argument("--repo", default=None, help="Repository/worktree used to resolve shared state")
+    reconcile_acp.add_argument("--actor", default="acp-reconcile", help="Body-free actor identity")
+    reconcile_acp.add_argument("--limit", type=int, default=MAX_RECONCILE_ROWS, help="Max receipts (cap 500)")
+    add_db_flag(reconcile_acp)
+    reconcile_acp.set_defaults(func=cmd_reconcile_acp)
+
+    provider_status = sub.add_parser(
+        "refresh-provider-status",
+        help="Explicit bounded Entire 0.8.42 status probe; writes a sanitized local cache",
+    )
+    provider_status.add_argument("--repo", default=None, help="Source repository (default: cwd)")
+    provider_status.set_defaults(func=cmd_refresh_provider_status)
 
     return parser
 

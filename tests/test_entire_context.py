@@ -257,6 +257,29 @@ def test_long_natural_language_facet_remains_allowed() -> None:
     assert ContextLink.from_dict(payload).facets == payload["facets"]
 
 
+def test_real_semantic_long_touched_path_remains_allowed() -> None:
+    payload = make_link().to_dict()
+    path = "docs/research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md"
+    payload["facets"] = {"touched_paths": [path]}
+    assert ContextLink.from_dict(payload).facets == {"touched_paths": [path]}
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "docs/" + "A" * 64 + ".md",
+        "docs/" + "A" * 24 + "_" + "B" * 24 + ".md",
+        "../outside.md",
+        "/absolute/path.md",
+    ],
+)
+def test_touched_paths_reject_opaque_or_nonrelative_values(path: str) -> None:
+    payload = make_link().to_dict()
+    payload["facets"] = {"touched_paths": [path]}
+    with pytest.raises(SchemaError):
+        ContextLink.from_dict(payload)
+
+
 @pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
 def test_non_facet_identity_fields_reject_token_like_values(field: str) -> None:
     payload = make_link().to_dict()
