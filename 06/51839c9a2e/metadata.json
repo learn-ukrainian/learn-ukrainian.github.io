@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0651839c9a2e",
+  "strategy": "manual-commit",
+  "branch": "codex/6291-entire-fleet-capture",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/agy.py",
+    "scripts/agent_runtime/adapters/base.py",
+    "scripts/agent_runtime/adapters/grok_build.py",
+    "scripts/agent_runtime/adapters/hermes_deepseek.py",
+    "scripts/agent_runtime/adapters/hermes_grok.py",
+    "scripts/agent_runtime/adapters/hermes_qwen.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "tests/ai_agent_bridge/test_hermes_review_isolation.py",
+    "tests/test_ask_hermes.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/06/51839c9a2e/0/metadata.json",
+      "transcript": "/06/51839c9a2e/0/full.jsonl",
+      "compact_transcript": "/06/51839c9a2e/0/transcript.jsonl",
+      "content_hash": "/06/51839c9a2e/0/content_hash.txt",
+      "prompt": "/06/51839c9a2e/0/prompt.txt"
+    }
+  ]
+}

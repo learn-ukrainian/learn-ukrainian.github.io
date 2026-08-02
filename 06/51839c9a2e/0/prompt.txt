@@ -1,0 +1,1 @@
+Return exactly ENTIRE_FLEET_AGY_OK and nothing else.
