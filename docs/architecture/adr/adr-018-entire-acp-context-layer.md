@@ -7,6 +7,7 @@
 **Related**: [#4707](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4707),
 [#5880](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5880),
 [#6162](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162),
+[#6183](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6183),
 [architecture research and advisor receipt](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6162#issuecomment-5150430545),
 [rollout plan](../../plans/2026-08-01-entire-acp-context-layer-rollout.md)
 
@@ -43,6 +44,13 @@ content. An LLM may use an Entire search result only as a locator; before any
 context is injected, the locator is resolved against the authoritative local
 system and its digest is verified.
 
+The public agent workflow is deliberately stricter than the optional product
+experience described in Entire's documentation. It uses the repository's
+local, body-free projection and makes no cloud Entire call. Human operators may
+privately use Entire search, recap/review, why/blame/investigate, and session
+handoff for investigation, but those bodies and generated findings do not enter
+automatic agent context or become fleet evidence.
+
 ### Authority boundary
 
 | Concern | Authority | Entire's permitted role |
@@ -53,22 +61,23 @@ system and its digest is verified.
 | Stream ownership and fencing | Session streams | Record a non-secret locator; never grant, renew, close, or reroute a lease. |
 | Cross-session continuity | Rollover receipts and hydration capsules | Rank possible history; canonical receipts still perform hydration. |
 | Formal review | Sealed cross-family review receipt | Supply context to a reviewer; never approve or satisfy the gate. |
-| Session/checkpoint history | Entire private checkpoint store | Index only sessions that pass the body-free storage gate and relate them to commits. |
+| Session/checkpoint history | Host-harness session record; Git commit for code | Optionally index a private checkpoint locator; never hydrate session bodies automatically. |
 
 ### Active retrieval, not passive capture
 
-Entire does not give an LLM memory merely because hooks captured a session. A
-repository-owned `entire-context` workflow will make the memory active:
+Entire does not give an LLM memory merely because hooks captured a session. The
+implemented repository-owned `entire-context` workflow makes verified local
+history available without automating Entire's cloud CLI:
 
-1. Consult `entire agent-help --json` so command selection matches installed
-   CLI 0.8.42.
-2. Search with a bounded query and request machine-readable metadata only.
-3. Resolve the selected checkpoint or commit through a project-owned context
+1. The accountable root checks projection `status` and performs one bounded
+   local `search` before prioritization or dispatch.
+2. Resolve each selected locator through a project-owned context
    link into GitHub, Fleet/ACP, Monitor, review, or rollover evidence.
-4. Verify the canonical identifier and digest. Missing or mismatched evidence
+3. Verify the canonical identifier and digest. Missing or mismatched evidence
    is dropped and reported; it is never injected.
-5. Build a size-bounded hydration capsule from canonical local evidence.
-6. Record which locator IDs the task consumed so later audits can distinguish
+4. Build at most one capsule of no more than five cards and 8 KiB, then give
+   the same capsule to the relevant participants.
+5. Record which locator IDs materially informed the task so later audits can distinguish
    capture from actual use.
 
 This path is available to any seat, including Kimi and GLM. A non-native seat
@@ -106,18 +115,19 @@ and the phase is recorded as blocked by the pinned product capability.
 
 ### Searchable corpus
 
-The smallest useful corpus is headers-only and mechanically extracted:
+The automatic corpus is body-free and mechanically extracted:
 
-- opaque IDs, timestamps, source kind, repository, commit SHA, actor/model,
-  stream epic, track, state, labels, and touched paths;
-- an already-public GitHub issue or PR title; or
-- the heading and immutable Git SHA of an operator-approved ADR or runbook.
+- opaque IDs, timestamps, source kind, canonical namespace and identifier,
+  canonical digest, repository, commit SHA, actor/model/harness, state, and
+  touched paths where the typed resolver admits them; and
+- allowlisted non-body routing metadata from verified ACP, rollover, GitHub,
+  formal-review, Fleet-receipt, and Monitor-run sources.
 
-The bridge does not compose intent, outcome, rationale, or summaries. Private
-ACP prompts and subjects are not promoted into search fields. Richer reusable
-memory is a separate, later tier consisting only of human-approved ADRs,
-runbooks, decision records, and skills. Entire ranks their locators; the agent
-reads their canonical repository versions.
+The bridge does not compose intent, outcome, rationale, titles, headings, or
+summaries. Prompts, transcripts, responses, session bodies, ACP subjects, and
+generated recaps remain outside automatic context. Richer reusable memory is a
+deferred tier consisting only of approved canonical repository artifacts; it
+does not authorize automatic body ingestion.
 
 ### Failure and privacy rules
 
@@ -131,8 +141,9 @@ reads their canonical repository versions.
   checkpoint destination.
 - `checkpoint explain --full`, `--raw-transcript`, `--transcript`, generated
   explanations, and Entire Dispatch are prohibited in automated integration.
-- Semantic search and recap remain disabled until their login, cloud egress,
-  retention, and returned-field behavior pass explicit canaries.
+- Logged-in semantic search, recap, review, why/blame/investigate, and session
+  handoff remain manual operator tools. Their bodies and generated output are
+  excluded from the public automated workflow.
 - Entire's own review or investigate workflows may assist discussion, but they
   never satisfy the repository formal-review gate.
 
@@ -194,6 +205,24 @@ plugin could technically be written.
   contract is proved.
 - CLI upgrades require a new compatibility review; this decision does not
   authorize moving beyond 0.8.42.
+
+### Implemented slice (2026-08-02)
+
+The current repository implements the local, non-authoritative slice rather
+than the original cloud-search sketch:
+
+| Evidence | Current disposition |
+| --- | --- |
+| `scripts/entire_context/` | Local projection, typed verification, bounded search/explain/handoff, use receipts, and explicit sanitized provider-status refresh. |
+| `scripts/api/entire_context_router.py` | Read-only Monitor status and search at `/api/ops/entire-context/status` and `/api/ops/entire-context/search`; no synchronous Entire call. |
+| `tests/test_entire_context.py`, `tests/test_entire_context_recall.py`, `tests/test_entire_context_live.py` | Schema/lifecycle, fail-closed resolution, body-leakage, recall-budget, provider-cache, and live-router coverage. |
+| `tests/test_entire_native_onboarding.py` | Composed fail-open capture hooks for the host harnesses `codex`, `claude-code`, and `opencode`, with private routing checks. |
+| `scripts/entire/external_agents/entire-agent-kimi/` | Explicit standalone Kimi Code adapter; hosted Kimi/GLM continue to use their host integration. |
+
+This evidence does not prove cloud semantic-search privacy, generated recap
+safety, arbitrary metadata-card ingestion, or a need for an ACP plugin. Those
+capabilities remain outside automatic recall and do not change the authority
+table.
 
 ## Verification
 

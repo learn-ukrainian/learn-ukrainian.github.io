@@ -23,10 +23,12 @@ import os
 import sqlite3
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from scripts.entire_context import cli, recall
+from scripts.entire_context import reconcile as reconcile_module
 from scripts.entire_context.model import (
     ContextLink,
     LinkKind,
@@ -36,11 +38,16 @@ from scripts.entire_context.model import (
     isoformat_z,
     utc_now,
 )
+from scripts.entire_context.paths import ENV_ACP_ROOT, acp_root
 from scripts.entire_context.recall import (
     MAX_CAPSULE_BYTES,
     MAX_HANDOFF_ITEMS,
     MAX_SEARCH_OMISSIONS,
     rank_candidate,
+)
+from scripts.entire_context.reconcile import (
+    project_terminal_acp_receipt,
+    reconcile_terminal_acp_receipts,
 )
 from scripts.entire_context.resolvers import (
     REASON_DIGEST_MISMATCH,
@@ -64,7 +71,7 @@ from scripts.entire_context.resolvers import (
     rollover_projection,
     rollover_projection_digest,
 )
-from scripts.entire_context.store import AdmitOutcome, ContextLinkStore
+from scripts.entire_context.store import AdmitOutcome, AdmitResult, ContextLinkStore
 from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import rollover, rollover_registry
 
@@ -386,6 +393,53 @@ def test_git_bootstrap_then_search_recall(
     assert_body_free(out)
 
 
+def test_acp_root_reuses_canonical_fleet_resolution_and_override_order(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    primary = make_git_repo(tmp_path, name="primary")
+    commit_files(primary, {"tracked.txt": "one\n"}, "primary")
+    worktree = primary / ".worktrees" / "dispatch" / "codex" / "root-proof"
+    git(primary, "worktree", "add", "-q", "-b", "root-proof", str(worktree))
+    expected = primary / "batch_state" / "fleet-comms" / "v1"
+
+    monkeypatch.delenv(ENV_ACP_ROOT, raising=False)
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    assert acp_root(primary) == expected
+    assert acp_root(worktree) == expected
+
+    entire_override = tmp_path / "entire-override"
+    explicit_override = tmp_path / "explicit-override"
+    monkeypatch.setenv(ENV_ACP_ROOT, str(entire_override))
+    assert acp_root(worktree) == entire_override
+    assert acp_root(worktree, explicit_override) == explicit_override
+
+    isolated = tmp_path / "isolated"
+    isolated.mkdir()
+    monkeypatch.delenv(ENV_ACP_ROOT)
+    assert acp_root(isolated) == isolated / "batch_state" / "fleet-comms" / "v1"
+
+
+def test_cli_automatically_uses_service_acp_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    plane = make_acp_plane(tmp_path)
+    db = tmp_path / "projection.sqlite3"
+    monkeypatch.delenv(ENV_ACP_ROOT, raising=False)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
+
+    code, out = run_cli(capsys, "bootstrap-acp", CONV_ID, "--db", str(db))
+    assert code == 0
+    assert json.loads(out)["outcome"] == "promoted"
+    code, out = run_cli(capsys, "search", "--query", CONV_ID, "--db", str(db))
+    assert code == 0
+    payload = json.loads(out)
+    assert [item["canonical_id"] for item in payload["results"]] == [CONV_ID]
+    assert payload["omitted"] == []
+
+
 def test_git_projection_supports_merge_parents_and_rejects_tree(tmp_path: Path) -> None:
     repo = make_git_repo(tmp_path)
     base = commit_files(repo, {"base.txt": "base\n"}, "base")
@@ -456,6 +510,247 @@ def test_acp_bootstrap_then_recall(tmp_path: Path, capsys: pytest.CaptureFixture
     assert code == 0
     assert [c["canonical_id"] for c in json.loads(out)["results"]] == [CONV_ID]
     assert_body_free(out)
+
+
+def test_acp_reconciliation_is_bounded_idempotent_and_converges_stale_links(
+    tmp_path: Path,
+) -> None:
+    plane = make_acp_plane(tmp_path)
+    db = tmp_path / "projection.sqlite3"
+
+    first = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    replay = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    assert first["counts"]["promoted"] == 1
+    assert first["lag_seconds"] == 0
+    assert replay["counts"]["already_promoted"] == 1
+    old_locator = ContextLinkStore(db).candidates()[0]["locator_id"]
+
+    append_acp_state_event(plane)
+    refreshed = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    assert refreshed["counts"]["promoted"] == 1
+    assert refreshed["counts"]["tombstoned"] == 1
+    store = ContextLinkStore(db)
+    promoted = store.candidates()
+    assert len(promoted) == 1
+    assert promoted[0]["locator_id"] != old_locator
+    assert store.explain(old_locator)["tombstone_reason"] == "digest_mismatch"
+
+    with sqlite3.connect(plane / "comms.sqlite3") as connection:
+        _insert_acp_event(
+            connection,
+            CONV_ID,
+            6,
+            "STATE",
+            state="PARTIAL_COMPLETE",
+            created_at="2026-08-01T10:06:00Z",
+        )
+    partial = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    assert partial["counts"]["tombstoned"] == 1
+    assert partial["reasons"] == {"partial_terminal": 1}
+    assert store.candidates() == []
+    health = store.status()["projection_health"]
+    assert health["dangling"] == 0
+    assert health["tombstones_by_reason"] == {"digest_mismatch": 1, "partial_terminal": 1}
+    assert health["acp"]["attempts"] == 4
+    assert health["acp"]["last_reconciliation"]["examined"] == 1
+
+
+def test_acp_reconciliation_tombstones_removed_source_and_fails_closed_on_bad_db(
+    tmp_path: Path,
+) -> None:
+    plane = make_acp_plane(tmp_path)
+    db = tmp_path / "projection.sqlite3"
+    reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    locator_id = ContextLinkStore(db).candidates()[0]["locator_id"]
+    with sqlite3.connect(plane / "comms.sqlite3") as connection:
+        connection.execute("DELETE FROM acp_conversation_events WHERE conversation_id = ?", (CONV_ID,))
+        connection.execute("DELETE FROM acp_conversations WHERE conversation_id = ?", (CONV_ID,))
+
+    removed = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    assert removed["counts"]["tombstoned"] == 1
+    assert removed["reasons"] == {"source_missing": 1}
+    assert ContextLinkStore(db).explain(locator_id)["state"] == "tombstoned"
+
+    missing = reconcile_terminal_acp_receipts(
+        acp_root=tmp_path / "missing-plane",
+        repo_root=tmp_path,
+        db_path=db,
+    )
+    assert missing == {"outcome": "skipped", "reason": "source_missing"}
+    malformed_root = tmp_path / "malformed-plane"
+    malformed_root.mkdir()
+    (malformed_root / "comms.sqlite3").write_bytes(b"not sqlite")
+    malformed = reconcile_terminal_acp_receipts(
+        acp_root=malformed_root,
+        repo_root=tmp_path,
+        db_path=db,
+    )
+    assert malformed == {"outcome": "skipped", "reason": "source_unreadable"}
+
+
+def test_acp_reconciliation_reports_zero_limit_without_work(tmp_path: Path) -> None:
+    plane = make_acp_plane(tmp_path)
+    result = reconcile_terminal_acp_receipts(
+        acp_root=plane,
+        repo_root=tmp_path,
+        db_path=tmp_path / "projection.sqlite3",
+        limit=0,
+    )
+    assert result["examined"] == 0
+    assert result["limit"] == 0
+    assert result["truncated"] is True
+    assert result["counts"]["promoted"] == 0
+
+
+def test_acp_reconciliation_rotates_bounded_windows_until_all_ids_converge(
+    tmp_path: Path,
+) -> None:
+    plane = make_acp_plane(tmp_path)
+    with sqlite3.connect(plane / "comms.sqlite3") as connection:
+        for suffix in ("2", "3"):
+            conversation_id = "conversation_" + suffix * 32
+            connection.execute(
+                "INSERT INTO acp_conversations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    conversation_id,
+                    "task-digest",
+                    "correlation-digest",
+                    f"idem-{suffix}",
+                    1,
+                    json.dumps(["claude", "kimi"]),
+                    "2026-08-01T10:00:00Z",
+                    "2026-08-01T11:00:00Z",
+                    10_000,
+                    1_024,
+                ),
+            )
+            _insert_acp_event(
+                connection,
+                conversation_id,
+                1,
+                "CALL_TERMINAL",
+                sender="claude",
+                round_no=1,
+                outcome="ok",
+                created_at="2026-08-01T10:00:01Z",
+            )
+            _insert_acp_event(
+                connection,
+                conversation_id,
+                2,
+                "CALL_TERMINAL",
+                sender="kimi",
+                round_no=1,
+                outcome="ok",
+                created_at="2026-08-01T10:00:02Z",
+            )
+            _insert_acp_event(
+                connection,
+                conversation_id,
+                3,
+                "SYNTHESIS_TERMINAL",
+                outcome="ok",
+                created_at="2026-08-01T10:00:03Z",
+            )
+            _insert_acp_event(
+                connection,
+                conversation_id,
+                4,
+                "STATE",
+                state="COMPLETE",
+                duration_ms=25,
+                token_count=150,
+                created_at="2026-08-01T10:00:04Z",
+            )
+    db = tmp_path / "projection.sqlite3"
+    results = [
+        reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db, limit=1)
+        for _ in range(5)
+    ]
+    assert all(result["examined"] == 1 and result["truncated"] is True for result in results)
+    assert len(ContextLinkStore(db).candidates()) == 3
+
+
+def test_acp_reconciliation_pages_beyond_max_without_starvation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    plane = tmp_path / "large-plane"
+    plane.mkdir()
+    conversation_ids = [f"conversation_{index:032x}" for index in range(501)]
+    with sqlite3.connect(plane / "comms.sqlite3") as connection:
+        connection.execute(
+            "CREATE TABLE acp_conversation_events("
+            "conversation_id TEXT, sequence INTEGER, state TEXT, created_at TEXT)"
+        )
+        connection.executemany(
+            "INSERT INTO acp_conversation_events VALUES (?, 1, 'COMPLETE', ?)",
+            [(conversation_id, "2026-08-01T10:00:04Z") for conversation_id in conversation_ids],
+        )
+
+    def resolve(conversation_id: str, *, acp_root: Path):
+        del acp_root
+        digest = "sha256:" + hashlib.sha256(conversation_id.encode("utf-8")).hexdigest()
+        link = ContextLink(
+            kind=LinkKind.ACP_CONVERSATION,
+            canonical_namespace="acp:conversations",
+            canonical_id=conversation_id,
+            canonical_digest=digest,
+            facets={
+                "source_kind": "acp_conversation",
+                "state": "COMPLETE",
+                "event_ts": "2026-08-01T10:00:04Z",
+            },
+        )
+        verification = VerificationEvidence(
+            verifier="acp-receipt",
+            canonical_digest=digest,
+            status=VerificationStatus.VERIFIED,
+            evidence_locator=f"acp:conversation/{conversation_id}",
+            checked_at=isoformat_z(utc_now()),
+        )
+        return SimpleNamespace(link=link, verification=verification)
+
+    monkeypatch.setattr(reconcile_module, "resolve_acp_conversation", resolve)
+    db = tmp_path / "projection.sqlite3"
+    first = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+    second = reconcile_terminal_acp_receipts(acp_root=plane, repo_root=tmp_path, db_path=db)
+
+    assert first["examined"] == 500 and first["truncated"] is True
+    assert second["examined"] == 500 and second["truncated"] is True
+    assert first["lag_seconds"] is None and second["lag_seconds"] is None
+    with sqlite3.connect(db) as connection:
+        promoted_count = connection.execute(
+            "SELECT COUNT(*) FROM context_links WHERE state = 'promoted'"
+        ).fetchone()[0]
+    assert promoted_count == 501
+
+
+def test_live_projection_refusal_is_observed_as_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    plane = make_acp_plane(tmp_path)
+    db = tmp_path / "projection.sqlite3"
+    original = ContextLinkStore.admit
+
+    def refuse(self, link, verification, *, actor="unknown", now=None):
+        del self, verification, actor, now
+        return AdmitResult(link.locator_id, AdmitOutcome.REFUSED, "verification_stale", "tombstoned")
+
+    monkeypatch.setattr(ContextLinkStore, "admit", refuse)
+    result = project_terminal_acp_receipt(
+        conversation_id=CONV_ID,
+        acp_root=plane,
+        repo_root=tmp_path,
+        db_path=db,
+    )
+    monkeypatch.setattr(ContextLinkStore, "admit", original)
+    assert result["outcome"] == "refused"
+    health = ContextLinkStore(db).status()["projection_health"]["acp"]
+    assert health["attempts"] == 1
+    assert health["failures"] == 1
+    assert health["last_failure_reason"] == "verification_stale"
 
 
 # ── provider neutrality ──────────────────────────────────────────────────────

@@ -53,6 +53,29 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "['conversation', 'filter-conversation']" in html
 
 
+def test_fleet_page_exposes_body_free_context_and_safe_acp_navigation() -> None:
+    html = (DASHBOARDS / "fleet.html").read_text(encoding="utf-8")
+
+    assert "Context projection" in html
+    assert "Context used" in html
+    assert "Related verified discussions, commits, and checkpoints" in html
+    assert "/api/ops/entire-context/status" in html
+    assert "/api/ops/entire-context/search" in html
+    assert "projection_health" in html
+    assert "uses_by_consumer" not in html  # Browser consumes the public `use.by_consumer` view.
+    assert "allowlistedSafeUrl" in html
+    assert "parsed.origin !== location.origin" in html
+    assert "parsed.pathname !== '/acp.html'" in html
+    assert "Open authoritative ACP conversation" in html
+    assert "navigation unavailable (no allowlisted local route)" in html
+    assert "source_missing" in html
+    assert "projection_request_failed" in html
+    assert "No prompt or transcript body is queried by this panel" in html
+    assert "initiating_orchestrator_authoritative === true" in html
+    assert "method: 'POST'" not in html
+    assert 'method: "POST"' not in html
+
+
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     observer_app = FastAPI()
     observer_app.include_router(fleet_router, prefix="/api/fleet")

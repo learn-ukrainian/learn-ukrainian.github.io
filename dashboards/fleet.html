@@ -41,6 +41,23 @@ button, input, select { font: inherit; }
 .filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: 1.2fr repeat(5, minmax(110px, 1fr)) auto; margin: 22px 0 18px; padding: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }.field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.field input, .field select { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; }
 .filter-note { align-self: end; color: var(--text3); font-size: 11px; line-height: 1.35; max-width: 170px; padding-bottom: 5px; }
+.context-grid { display: grid; gap: 16px; grid-template-columns: minmax(300px, .72fr) minmax(0, 1.28fr); margin: 0 0 18px; }
+.health-grid { display: grid; gap: 1px; grid-template-columns: repeat(2, minmax(0, 1fr)); background: var(--border); }
+.health-item { background: var(--bg2); min-width: 0; padding: 12px 14px; }
+.health-item strong { display: block; font-family: Charter, Georgia, serif; font-size: 21px; overflow-wrap: anywhere; }
+.health-item span { color: var(--text3); display: block; font-size: 10px; font-weight: 800; letter-spacing: .07em; margin-top: 5px; text-transform: uppercase; }
+.context-section { border-top: 1px solid var(--border); padding: 13px 16px 3px; }
+.context-section:first-child { border-top: 0; }
+.context-section h4 { font-family: Charter, Georgia, serif; font-size: 15px; margin: 0 0 9px; }
+.context-cards { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px; }
+.context-card { border: 1px solid var(--border); min-width: 0; padding: 11px; }
+.context-card-head { align-items: center; display: flex; flex-wrap: wrap; gap: 7px; justify-content: space-between; }
+.context-card strong, .context-card .mono { overflow-wrap: anywhere; word-break: break-word; }
+.context-facts { color: var(--text2); display: grid; font-size: 11px; gap: 5px; line-height: 1.4; margin-top: 8px; }
+.context-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+.context-actions a { border: 1px solid var(--border); border-radius: 3px; color: var(--accent); font-size: 11px; font-weight: 700; padding: 5px 7px; text-decoration: none; }
+.context-actions a:hover, .context-actions a:focus-visible { border-color: var(--accent); text-decoration: underline; }
+.context-failure { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); font-size: 12px; line-height: 1.45; margin: 0 16px 14px; padding: 9px 10px; }
 .operations-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 18px; }
 .legacy-diagnostics { background: rgba(168, 132, 43, .06); border: 1px solid var(--border); margin: 0 0 18px; }
 .legacy-diagnostics summary { cursor: pointer; font-family: Charter, Georgia, serif; font-size: 18px; font-weight: 700; padding: 13px 16px; }
@@ -57,8 +74,8 @@ button, input, select { font: inherit; }
 .table-wrap { max-height: 360px; overflow: auto; }.table { border-collapse: collapse; font-size: 12px; width: 100%; }.table th { background: var(--bg2); border-bottom: 1px solid var(--border); color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; padding: 8px 10px; position: sticky; text-align: left; text-transform: uppercase; top: 0; }.table td { border-bottom: 1px solid rgba(212, 205, 184, .68); max-width: 230px; padding: 9px 10px; vertical-align: top; }.table tr:last-child td { border-bottom: 0; }.table tr:hover td { background: rgba(122, 28, 32, .035); }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; overflow-wrap: anywhere; }.preview { color: var(--text2); line-height: 1.35; }.muted { color: var(--text3); }.empty { color: var(--text3); font-size: 13px; line-height: 1.5; padding: 22px 16px; }.pill { border: 1px solid var(--border); border-radius: 999px; color: var(--text2); display: inline-block; font-size: 10px; font-weight: 750; padding: 2px 6px; white-space: nowrap; }.pill.complete, .pill.live { background: rgba(61, 107, 74, .12); border-color: rgba(61, 107, 74, .3); color: var(--green); }.pill.running, .pill.queued { background: rgba(42, 86, 128, .11); border-color: rgba(42, 86, 128, .28); color: var(--blue); }.pill.failed, .pill.dead_lettered { background: rgba(156, 40, 40, .11); border-color: rgba(156, 40, 40, .3); color: var(--red); }.pill.incomplete, .pill.expired, .pill.partial { background: rgba(168, 132, 43, .12); border-color: rgba(168, 132, 43, .3); color: var(--yellow); }
 .footnote { color: var(--text3); font-size: 11px; line-height: 1.5; margin: 22px 0 0; }.footnote strong { color: var(--text2); }.error { background: rgba(156, 40, 40, .08); border-left: 3px solid var(--red); color: var(--red); font-size: 13px; margin-bottom: 16px; padding: 10px 12px; }.hidden { display: none; }
-@media (max-width: 1120px) { .summary { grid-template-columns: repeat(3, 1fr); }.operations-grid, .grid { grid-template-columns: 1fr; }.filter-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }.filter-note { grid-column: 1 / -1; max-width: none; } }
-@media (max-width: 720px) { .topbar { align-items: flex-start; flex-wrap: wrap; }.brand { min-width: 0; }.hero { grid-template-columns: 1fr; }.summary { grid-template-columns: repeat(2, 1fr); }.filter-strip { grid-template-columns: 1fr 1fr; }.table-wrap { max-height: none; }.wrap { padding: 20px 14px 48px; } }
+@media (max-width: 1120px) { .summary { grid-template-columns: repeat(3, 1fr); }.operations-grid, .grid, .context-grid { grid-template-columns: 1fr; }.filter-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }.filter-note { grid-column: 1 / -1; max-width: none; } }
+@media (max-width: 720px) { .topbar { align-items: flex-start; flex-wrap: wrap; }.brand { min-width: 0; }.hero { grid-template-columns: 1fr; }.summary { grid-template-columns: repeat(2, 1fr); }.filter-strip, .context-cards { grid-template-columns: 1fr; }.health-grid { grid-template-columns: 1fr 1fr; }.table-wrap { max-height: none; }.wrap { padding: 20px 14px 48px; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
 </style>
 </head>
@@ -112,6 +129,17 @@ button, input, select { font: inherit; }
     <div class="field"><label for="filter-pr">PR</label><input id="filter-pr" inputmode="numeric" placeholder="6159" oninput="queueRefresh()"></div>
     <div class="field"><label for="filter-conversation">Conversation</label><input id="filter-conversation" placeholder="opaque ID" oninput="queueRefresh()"></div>
     <div class="filter-note">Filters narrow current authority evidence only. Historical compatibility diagnostics remain unfiltered.</div>
+  </section>
+
+  <section class="context-grid" aria-label="Entire context observability">
+    <article class="panel ledger cyan" aria-labelledby="context-health-heading">
+      <div class="panel-head"><h3 id="context-health-heading">Context projection</h3><p>Local · body-free · non-authoritative</p></div>
+      <div id="context-health-content" class="empty" aria-live="polite">Loading projection health…</div>
+    </article>
+    <article class="panel ledger purple" aria-labelledby="context-used-heading">
+      <div class="panel-head"><h3 id="context-used-heading">Context used</h3><p>Reverified locators for the selected ACP conversation</p></div>
+      <div id="context-used-content" class="empty" aria-live="polite">Select an exact conversation ID to inspect verified context.</div>
+    </article>
   </section>
 
   <details class="legacy-diagnostics">
@@ -202,6 +230,28 @@ function table(headers, rows, empty) {
   return `<div class="table-wrap"><table class="table"><thead><tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
 }
 
+function objectValue(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function listValue(value) {
+  return Array.isArray(value) ? value.filter(item => item && typeof item === 'object') : [];
+}
+
+function allowlistedSafeUrl(value) {
+  if (typeof value !== 'string' || !value) return null;
+  try {
+    const parsed = new URL(value, location.origin);
+    if (parsed.origin !== location.origin || parsed.pathname !== '/acp.html') return null;
+    const keys = [...parsed.searchParams.keys()];
+    const conversation = parsed.searchParams.get('conversation');
+    if (keys.length !== 1 || keys[0] !== 'conversation' || !/^conversation_[0-9a-f]{32}$/.test(conversation || '')) return null;
+    return `${parsed.pathname}?conversation=${encodeURIComponent(conversation)}`;
+  } catch {
+    return null;
+  }
+}
+
 function filters() {
   const value = id => document.getElementById(id).value.trim();
   return {
@@ -268,6 +318,147 @@ function renderOverview(data) {
   document.getElementById('legacy-requests-note').textContent = `${short(legacy.total, '0')} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
 }
 
+function renderContextHealth(status) {
+  const target = document.getElementById('context-health-content');
+  const recall = objectValue(status.recall);
+  const projection = objectValue(recall.projection);
+  if (projection.available !== true) {
+    const reason = short(projection.reason || recall.reason, 'projection unavailable').replaceAll('_', ' ');
+    target.innerHTML = `<div class="context-failure">Projection unavailable · ${escapeHtml(reason)}. Canonical ACP and Fleet evidence remain authoritative.</div>`;
+    return;
+  }
+  const counts = objectValue(projection.counts);
+  const health = objectValue(projection.projection_health);
+  const acp = objectValue(health.acp);
+  const use = objectValue(status.use);
+  const consumers = Object.entries(objectValue(use.by_consumer));
+  const consumerCopy = consumers.length
+    ? consumers.map(([consumer, count]) => `${escapeHtml(consumer)} ${escapeHtml(short(count, '0'))}`).join(' · ')
+    : 'No proven use receipts';
+  const lag = acp.lag_seconds == null ? 'Not reported' : `${escapeHtml(short(acp.lag_seconds, '0'))}s`;
+  const reconciliation = acp.last_reconciliation_at
+    ? formatTime(acp.last_reconciliation_at)
+    : 'Not reported';
+  target.innerHTML = `
+    <div class="health-grid">
+      <div class="health-item"><strong>${escapeHtml(short(counts.promoted, '0'))}</strong><span>Verified locators</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(health.pending ?? counts.pending, '0'))}</strong><span>Pending claims</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(health.tombstoned ?? counts.tombstoned, '0'))}</strong><span>Tombstoned</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(health.dangling, 'Not reported'))}</strong><span>Dangling locators</span></div>
+      <div class="health-item"><strong>${lag}</strong><span>Projection lag</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(acp.retries, 'Not reported'))}</strong><span>ACP retries</span></div>
+    </div>
+    <div class="context-section"><h4>Reconciliation</h4><div class="context-facts"><span>Last reconciliation: ${escapeHtml(reconciliation)}</span><span>Last projected event: ${escapeHtml(formatTime(projection.last_event_at))}</span><span>Failures: ${escapeHtml(short(acp.failures, 'Not reported'))}</span></div></div>
+    <div class="context-section"><h4>Proven use by consumer</h4><div class="context-facts"><span>${consumerCopy}</span><span>${escapeHtml(short(use.receipts, '0'))} body-free use receipts · last ${escapeHtml(formatTime(use.last_use_at))}</span><span>Initiating orchestrator is shown only when a canonical source explicitly supplies it; it is never inferred here.</span></div></div>`;
+}
+
+function contextSourceLabel(kind) {
+  const labels = {
+    acp_conversation: 'ACP discussion', fleet_receipt: 'Fleet receipt', formal_review: 'Formal review',
+    git_commit: 'Git commit', github_issue: 'GitHub issue', github_pr: 'GitHub pull request',
+    monitor_run: 'Monitor run', rollover: 'Rollover checkpoint',
+  };
+  return labels[kind] || short(kind, 'Unknown source').replaceAll('_', ' ');
+}
+
+function sourceEventTime(card) {
+  const excerpt = objectValue(card.excerpt);
+  const facets = objectValue(card.facets);
+  return excerpt.updated_at || excerpt.commit_ts || excerpt.published_at || facets.event_ts || null;
+}
+
+function authoritativeOrchestrator(card) {
+  const excerpt = objectValue(card.excerpt);
+  return excerpt.initiating_orchestrator_authoritative === true && typeof excerpt.initiating_orchestrator === 'string'
+    ? excerpt.initiating_orchestrator
+    : null;
+}
+
+function contextCard(card) {
+  const kind = short(card.kind, 'unknown');
+  const excerpt = objectValue(card.excerpt);
+  const facets = objectValue(card.facets);
+  const checkpointId = typeof card.entire_checkpoint_id === 'string' ? card.entire_checkpoint_id : null;
+  const gitSha = typeof card.git_sha === 'string' ? card.git_sha : null;
+  const sourceState = excerpt.state || facets.state || 'verified';
+  const eventTime = sourceEventTime(card);
+  const orchestrator = authoritativeOrchestrator(card);
+  const actions = [];
+  if (kind === 'acp_conversation' && /^conversation_[0-9a-f]{32}$/.test(String(card.canonical_id || ''))) {
+    const href = allowlistedSafeUrl(`/acp.html?conversation=${encodeURIComponent(card.canonical_id)}`);
+    if (href) actions.push(`<a href="${escapeHtml(href)}">Open authoritative ACP conversation</a>`);
+  }
+  return `<article class="context-card">
+    <div class="context-card-head"><strong>${escapeHtml(contextSourceLabel(kind))}</strong>${pill(sourceState)}</div>
+    <div class="context-facts">
+      <span class="mono">Source ID · ${escapeHtml(short(card.canonical_id))}</span>
+      <span>Verification · reverified from the canonical local source on this refresh${eventTime ? ` · source updated ${escapeHtml(formatTime(eventTime))}` : ''}</span>
+      <span class="mono">Receipt / locator · ${escapeHtml(short(card.locator_id))}</span>
+      ${gitSha ? `<span class="mono">Commit · ${escapeHtml(gitSha)}</span>` : ''}
+      ${checkpointId ? `<span class="mono">Entire checkpoint · ${escapeHtml(checkpointId)} · navigation unavailable (no allowlisted local route)</span>` : ''}
+      ${orchestrator ? `<span>Initiating orchestrator · ${escapeHtml(orchestrator)}</span>` : ''}
+    </div>
+    ${actions.length ? `<div class="context-actions">${actions.join('')}</div>` : ''}
+  </article>`;
+}
+
+function renderConversationContext(conversationId, payload, relatedPayload) {
+  const target = document.getElementById('context-used-content');
+  if (!conversationId) {
+    target.innerHTML = '<div class="empty">Select an exact conversation ID to inspect verified context. No prompt or transcript body is queried by this panel.</div>';
+    return;
+  }
+  if (payload.available !== true) {
+    const reason = short(payload.reason, 'projection unavailable').replaceAll('_', ' ');
+    target.innerHTML = `<div class="context-failure">Context projection failure · ${escapeHtml(reason)}. The ACP receipt remains authoritative.</div>`;
+    return;
+  }
+  const direct = listValue(payload.results);
+  const exact = direct.find(card => card.kind === 'acp_conversation' && card.canonical_id === conversationId);
+  const omissions = [...listValue(payload.omitted), ...listValue(relatedPayload.omitted)];
+  if (!exact) {
+    const sourceMissing = omissions.some(item => item.reason === 'source_missing');
+    const malformed = omissions.some(item => item.reason === 'resolution_error' || item.reason === 'digest_mismatch');
+    const reason = sourceMissing ? 'source_missing' : malformed ? 'verification_failed' : 'not_projected';
+    target.innerHTML = `<div class="context-failure">No verified locator is available for this ACP conversation · ${escapeHtml(reason.replaceAll('_', ' '))}. Search never falls back to an unverified or tombstoned claim.</div>`;
+    return;
+  }
+  const byLocator = new Map();
+  for (const card of [...direct, ...listValue(relatedPayload.results)]) {
+    if (typeof card.locator_id === 'string') byLocator.set(card.locator_id, card);
+  }
+  const related = [...byLocator.values()].filter(card => card.locator_id !== exact.locator_id);
+  const omissionCopy = omissions.length
+    ? `<div class="context-failure">${escapeHtml(short(omissions.length))} related locator${omissions.length === 1 ? '' : 's'} omitted after re-verification · ${escapeHtml([...new Set(omissions.map(item => short(item.reason, 'verification failed').replaceAll('_', ' ')))].join(' · '))}</div>`
+    : '';
+  target.innerHTML = `
+    <div class="context-section"><h4>Selected conversation</h4><div class="context-cards">${contextCard(exact)}</div></div>
+    <div class="context-section"><h4>Related verified discussions, commits, and checkpoints</h4>${related.length ? `<div class="context-cards">${related.map(contextCard).join('')}</div>` : '<div class="empty">No additional promoted source shares this conversation\'s verified commit correlation.</div>'}</div>
+    ${omissionCopy}`;
+}
+
+async function refreshConversationContext(contextStatus) {
+  renderContextHealth(contextStatus);
+  const conversationId = filters().conversation;
+  if (!conversationId) {
+    renderConversationContext('', {}, {});
+    return;
+  }
+  try {
+    const params = new URLSearchParams({ q: conversationId, limit: '10' });
+    const payload = await fetchJson(`/api/ops/entire-context/search?${params}`);
+    const exact = listValue(payload.results).find(card => card.kind === 'acp_conversation' && card.canonical_id === conversationId);
+    let relatedPayload = { results: [], omitted: [] };
+    if (exact && typeof exact.git_sha === 'string') {
+      const related = new URLSearchParams({ q: exact.git_sha, limit: '10' });
+      relatedPayload = await fetchJson(`/api/ops/entire-context/search?${related}`);
+    }
+    renderConversationContext(conversationId, payload, relatedPayload);
+  } catch {
+    renderConversationContext(conversationId, { available: false, reason: 'projection_request_failed' }, {});
+  }
+}
+
 function renderOperations(data) {
   const broker = data.broker || {};
   const processValue = broker.live_process_count == null ? 'Unavailable' : short(broker.live_process_count, '0');
@@ -308,7 +499,15 @@ function renderReviews(data) {
 }
 
 function renderAcp(data) {
-  const rows = (data.conversations || []).map(item => `<tr><td class="mono">${escapeHtml(item.conversation_id)}</td><td>${pill(item.classification)}</td><td>${escapeHtml((item.participants || []).join(' / ') || '—')}</td><td>${escapeHtml(item.rounds_completed)}/${escapeHtml(item.rounds_requested)}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`);
+  const rows = (data.conversations || []).map(item => {
+    const conversationId = short(item.conversation_id, '');
+    const selected = `/fleet.html?conversation=${encodeURIComponent(conversationId)}`;
+    const authoritative = allowlistedSafeUrl(`/acp.html?conversation=${encodeURIComponent(conversationId)}`);
+    const links = authoritative
+      ? `<a href="${escapeHtml(selected)}">Inspect context</a><br><a href="${escapeHtml(authoritative)}">Open conversation</a>`
+      : `<a href="${escapeHtml(selected)}">Inspect context</a>`;
+    return `<tr><td class="mono">${escapeHtml(conversationId)}<br><span class="context-actions">${links}</span></td><td>${pill(item.classification)}</td><td>${escapeHtml((item.participants || []).join(' / ') || '—')}</td><td>${escapeHtml(item.rounds_completed)}/${escapeHtml(item.rounds_requested)}</td><td>${escapeHtml(formatTime(item.updated_at))}</td></tr>`;
+  });
   document.getElementById('acp-content').innerHTML = table(['Conversation', 'State', 'Participants', 'Rounds', 'Updated'], rows, 'No ACP conversations match the current observer filters.');
 }
 
@@ -331,7 +530,11 @@ async function refreshFleet() {
   setError('');
   try {
     const common = ['state', 'agent', 'source', 'conversation'];
-    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, activity, messages] = await Promise.all([
+    const contextStatusRequest = fetchJson('/api/ops/entire-context/status').catch(() => ({
+      recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
+      use: {},
+    }));
+    const [health, overview, operations, requests, authorityJobs, reviews, acp, deadLetters, activity, messages, contextStatus] = await Promise.all([
       fetchJson('/api/fleet/health'), fetchJson('/api/fleet/overview'), fetchJson('/api/fleet/operations'),
       fetchJson(query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' })),
       fetchJson(query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation'])),
@@ -340,9 +543,11 @@ async function refreshFleet() {
       fetchJson(query('/api/fleet/dead-letters', ['state', 'agent', 'source'])),
       fetchJson(query('/api/fleet/activity', ['state', 'agent', 'source'])),
       fetchJson(query('/api/fleet/messages', ['kind', ...common])),
+      contextStatusRequest,
     ]);
     renderHealth(health); renderOverview(overview); renderOperations(operations); renderRequests(requests); renderAuthorityJobs(authorityJobs); renderReviews(reviews);
     renderAcp(acp); renderDeadLetters(deadLetters); renderActivity(activity); renderMessages(messages);
+    await refreshConversationContext(contextStatus);
   } catch (error) {
     setError(`Observer data could not be read: ${error.message}`);
   }

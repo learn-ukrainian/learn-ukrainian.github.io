@@ -228,6 +228,101 @@ def test_monitor_status_distinguishes_capture_recall_and_use(
     assert "projection_path" not in response.text
 
 
+def test_monitor_status_allowlists_reconciliation_health_and_malformed_aggregates(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        entire_context_router,
+        "_projection_status",
+        lambda _root: {
+            "available": True,
+            "schema_version": 1,
+            "counts": {"promoted": "4", "pending": True, "tombstoned": None},
+            "events": "8",
+            "last_event_at": "2026-08-02T12:00:00Z",
+            "use_receipts": "2",
+            "last_use_at": "2026-08-02T12:01:00Z",
+            "uses_by_consumer": {"codex": "2", "broken": object()},
+            "projection_path": "/private/worktree/context.sqlite3",
+            "prompt": "must never cross the API boundary",
+            "projection_health": {
+                "pending": 1,
+                "tombstoned": 2,
+                "dangling": 3,
+                "tombstones_by_reason": {"source_missing": 2},
+                "acp": {
+                    "attempts": 5,
+                    "failures": 1,
+                    "retries": 2,
+                    "last_attempt_at": "2026-08-02T12:00:00Z",
+                    "last_success_at": "2026-08-02T11:59:00Z",
+                    "last_failure_at": "2026-08-02T11:58:00Z",
+                    "last_failure_reason": "source_missing",
+                    "last_reconciliation_at": "2026-08-02T12:00:00Z",
+                    "source_latest_at": "2026-08-02T11:59:55Z",
+                    "lag_seconds": 5,
+                    "last_reconciliation": {
+                        "examined": 7,
+                        "changed": 1,
+                        "skipped": 6,
+                        "truncated": False,
+                        "limit": 500,
+                        "local_path": "/forbidden",
+                    },
+                },
+            },
+        },
+    )
+    monkeypatch.setattr(
+        entire_context_router,
+        "load_provider_status",
+        lambda _root: {
+            "available": True,
+            "enabled": True,
+            "installed_agents": "malformed",
+            "prompt": "forbidden",
+        },
+    )
+
+    response = TestClient(app).get("/api/ops/entire-context/status")
+    payload = response.json()
+    projection = payload["recall"]["projection"]
+
+    assert response.status_code == 200
+    assert payload["capture"]["installed_agents"] == []
+    assert payload["recall"]["promoted_links"] == 4
+    assert payload["use"]["by_consumer"] == {"codex": 2}
+    assert projection["counts"] == {"pending": 0, "promoted": 4, "tombstoned": 0}
+    assert projection["projection_health"] == {
+        "pending": 1,
+        "tombstoned": 2,
+        "dangling": 3,
+        "tombstones_by_reason": {"source_missing": 2},
+        "acp": {
+            "attempts": 5,
+            "failures": 1,
+            "lag_seconds": 5,
+            "retries": 2,
+            "last_attempt_at": "2026-08-02T12:00:00Z",
+            "last_failure_at": "2026-08-02T11:58:00Z",
+            "last_failure_reason": "source_missing",
+            "last_reconciliation_at": "2026-08-02T12:00:00Z",
+            "last_success_at": "2026-08-02T11:59:00Z",
+            "source_latest_at": "2026-08-02T11:59:55Z",
+            "last_reconciliation": {
+                "examined": 7,
+                "changed": 1,
+                "skipped": 6,
+                "truncated": False,
+                "limit": 500,
+            },
+        },
+    }
+    assert "/private/" not in response.text
+    assert "prompt" not in response.text
+
+
 def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
     tmp_path: Path, monkeypatch
 ) -> None:

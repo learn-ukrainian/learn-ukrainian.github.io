@@ -34,7 +34,7 @@ from .model import (
     canonical_json,
     validate_identity,
 )
-from .paths import projection_path
+from .paths import ENV_ACP_ROOT, acp_root, projection_path
 from .provider import refresh_provider_status
 from .recall import (
     MAX_RESULTS,
@@ -68,7 +68,6 @@ EXIT_NOT_FOUND = 1
 EXIT_REFUSED = 2
 
 ENV_DISABLED = "ENTIRE_CONTEXT_DISABLED"
-ENV_ACP_ROOT = "ENTIRE_CONTEXT_ACP_ROOT"
 ENV_ROLLOVER_ROOT = "ENTIRE_CONTEXT_ROLLOVER_ROOT"
 ENV_FLEET_ROOT = "ENTIRE_CONTEXT_FLEET_ROOT"
 ENV_MONITOR_ROOT = "ENTIRE_CONTEXT_MONITOR_ROOT"
@@ -228,12 +227,8 @@ def _resolve_repo(args: argparse.Namespace) -> Path:
     return Path(getattr(args, "repo", None) or Path.cwd())
 
 
-def _resolve_acp_root(args: argparse.Namespace) -> Path | None:
-    explicit = getattr(args, "acp_root", None)
-    if explicit:
-        return Path(explicit)
-    env = os.environ.get(ENV_ACP_ROOT)
-    return Path(env) if env else None
+def _resolve_acp_root(args: argparse.Namespace) -> Path:
+    return acp_root(_resolve_repo(args), getattr(args, "acp_root", None))
 
 
 def _resolve_rollover_root(args: argparse.Namespace) -> Path | None:
@@ -318,8 +313,6 @@ def cmd_bootstrap_acp(args: argparse.Namespace) -> int:
     if _disabled():
         return _refused("projection_disabled")
     acp_root = _resolve_acp_root(args)
-    if acp_root is None:
-        return _refused("source_missing")
     try:
         resolution = resolve_acp_conversation(args.conversation_id, acp_root=acp_root, git_sha=args.git_sha)
     except ResolutionError as exc:
@@ -594,8 +587,6 @@ def cmd_record_use(args: argparse.Namespace) -> int:
 def cmd_reconcile_acp(args: argparse.Namespace) -> int:
     """Recover complete ACP terminal receipts missed by the live callback."""
     acp_root = _resolve_acp_root(args)
-    if acp_root is None:
-        return _refused("source_missing")
     payload = reconcile_terminal_acp_receipts(
         acp_root=acp_root,
         repo_root=_resolve_repo(args),
@@ -672,7 +663,7 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument(
             "--acp-root",
             default=None,
-            help=f"ACP receipt plane root (default: {ENV_ACP_ROOT}); required to verify ACP links",
+            help=f"ACP receipt plane root (default: {ENV_ACP_ROOT}, then canonical Fleet root)",
         )
         command.add_argument(
             "--rollover-root",
@@ -736,7 +727,7 @@ def build_parser() -> argparse.ArgumentParser:
     bootstrap_acp.add_argument(
         "--acp-root",
         default=None,
-        help=f"ACP receipt plane root (default: {ENV_ACP_ROOT})",
+        help=f"ACP receipt plane root (default: {ENV_ACP_ROOT}, then canonical Fleet root)",
     )
     bootstrap_acp.set_defaults(func=cmd_bootstrap_acp)
 
@@ -886,7 +877,7 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile_acp.add_argument(
         "--acp-root",
         default=None,
-        help=f"ACP receipt plane root (default: {ENV_ACP_ROOT})",
+        help=f"ACP receipt plane root (default: {ENV_ACP_ROOT}, then canonical Fleet root)",
     )
     reconcile_acp.add_argument("--repo", default=None, help="Repository/worktree used to resolve shared state")
     reconcile_acp.add_argument("--actor", default="acp-reconcile", help="Body-free actor identity")

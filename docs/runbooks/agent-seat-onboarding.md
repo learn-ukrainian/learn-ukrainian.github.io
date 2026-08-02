@@ -29,6 +29,8 @@ caps or live modes.
    [`docs/SCRIPTS.md`](../SCRIPTS.md).
 6. Cooperation detail (deliberation, Green Team, V2):
    [`docs/best-practices/agent-cooperation.md`](../best-practices/agent-cooperation.md).
+7. Provider-neutral historical recall:
+   [`entire-context`](../../agents_extensions/shared/skills/entire-context/SKILL.md).
 
 ---
 
@@ -40,7 +42,53 @@ caps or live modes.
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **Entire context recall** | Optional, body-free historical discovery and provenance through verified local locator cards | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
+
+### Entire recall onboarding matrix
+
+Capture belongs to the **host harness**, not to a model label. The same model
+may therefore use a different capture integration when it runs under a
+different host. Capture is also separate from recall: every listed seat can
+consume the same project-generated body-free capsule even when that seat has no
+native Entire capture path.
+
+| Seat or model | Host-harness capture route | Cold-start recall behavior |
+| --- | --- | --- |
+| Codex CLI or Desktop | Installed `codex` integration and shared project hooks | The accountable root runs local `status` + `search` once; Codex consumes the root's verified capsule. |
+| Claude in Claude Code | Installed `claude-code` integration | Same shared-capsule contract; no Claude-specific search or authority. |
+| Any supported model in OpenCode, including Claude or GLM | Installed `opencode` integration | Same shared-capsule contract; the model name does not select capture. |
+| Kimi in Claude Code or OpenCode | The active host's `claude-code` or `opencode` integration | Same shared-capsule contract; do not install a Kimi adapter for a hosted Kimi model. |
+| Standalone Kimi Code | Project `entire-agent-kimi` adapter only when explicitly installed for the actual standalone `kimi` harness | Same shared-capsule contract; adapter capture never replaces local verified recall. |
+| GLM outside a proved native host | No model-named integration is inferred | Consume the root's capsule; add no adapter without a source-blind unsupported-harness canary. |
+| Grok | Integration of the harness that actually launches Grok; none is inferred from `grok` alone | Consume the root's capsule; ACP remains live discussion and terminal receipts. |
+| AGY / Gemini | Integration of the harness that actually launches AGY; none is inferred from `agy` or a Gemini model label | Consume the root's capsule; the AGY bridge remains execution/discussion transport. |
+
+For each non-trivial task, the accountable root performs this contract:
+
+1. Run `.venv/bin/python -m scripts.entire_context status` and one bounded
+   `search --query "<task keywords>"` before prioritization or dispatch.
+2. Resolve any useful locator against its canonical local source. If results
+   materially help, create at most one `handoff` capsule (five cards, 8 KiB)
+   and give that same capsule to the participants that need it.
+3. Keep raw prompts, transcripts, responses, session bodies, generated recaps,
+   and generated summaries out of automatic context. Do not run cloud Entire
+   commands from the public skill.
+4. Run `record-use` only for locators that were verified and materially
+   informed the task. Search delivery alone is not use.
+5. Continue normally when recall is unavailable. Git/GitHub remain
+   authoritative for code; Fleet/file handoffs for coordination; ACP for live
+   discussion and terminal receipts; Monitor for runtime state; rollover for
+   continuity; sealed Fleet review for the formal review gate.
+
+The operator may privately use Entire's product workflows for
+[skills](https://docs.entire.io/learn/skills),
+[search](https://docs.entire.io/learn/search-past-agent-work),
+[review and recap](https://docs.entire.io/learn/review-and-recap-agent-work), or
+[why/blame/investigation and session handoff](https://docs.entire.io/learn/investigate-why-code-exists).
+These are investigation aids, not fleet evidence. Their prompts, results,
+transcripts, generated explanations, and summaries are not admitted to the
+automatic capsule and do not change task, review, or merge disposition.
 
 ### Human overview pages
 

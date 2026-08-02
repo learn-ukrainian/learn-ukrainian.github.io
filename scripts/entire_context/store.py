@@ -26,6 +26,7 @@ from .model import (
     LOCATOR_ID_RE,
     SCHEMA_VERSION,
     ContextLink,
+    LinkKind,
     SchemaError,
     VerificationEvidence,
     VerificationStatus,
@@ -76,6 +77,26 @@ CREATE TABLE IF NOT EXISTS use_receipts (
 );
 CREATE INDEX IF NOT EXISTS idx_use_receipts_recorded_at
     ON use_receipts(recorded_at, receipt_id);
+CREATE TABLE IF NOT EXISTS projection_sync_state (
+    source_kind TEXT PRIMARY KEY,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    failures INTEGER NOT NULL DEFAULT 0,
+    retries INTEGER NOT NULL DEFAULT 0,
+    last_outcome TEXT NOT NULL DEFAULT '',
+    last_attempt_at TEXT,
+    last_success_at TEXT,
+    last_failure_at TEXT,
+    last_failure_reason TEXT,
+    last_reconciliation_at TEXT,
+    source_latest_at TEXT,
+    lag_seconds INTEGER,
+    last_examined INTEGER NOT NULL DEFAULT 0,
+    last_changed INTEGER NOT NULL DEFAULT 0,
+    last_skipped INTEGER NOT NULL DEFAULT 0,
+    last_truncated INTEGER NOT NULL DEFAULT 0,
+    last_limit INTEGER NOT NULL DEFAULT 0,
+    dangling INTEGER NOT NULL DEFAULT 0
+);
 """
 
 
@@ -329,6 +350,40 @@ class ContextLinkStore:
             return "verification_stale"
         return None
 
+    def tombstone(
+        self,
+        locator_id: str,
+        *,
+        reason: str,
+        actor: str,
+        now: datetime | None = None,
+    ) -> bool:
+        """Converge one projected locator to a terminal body-free tombstone.
+
+        Returns ``True`` only when this call applied the transition. Missing
+        and already-tombstoned locators are idempotent no-ops.
+        """
+        if LOCATOR_ID_RE.fullmatch(locator_id) is None:
+            raise SchemaError("locator_id is invalid")
+        validate_identity(reason, field_name="reason")
+        validate_identity(actor, field_name="actor")
+        timestamp = isoformat_z(now or utc_now())
+        with self._transaction() as connection:
+            state = self._current_state(connection, locator_id)
+            if state is None or state == "tombstoned":
+                return False
+            connection.execute(
+                "INSERT INTO link_events(locator_id, event_type, payload_json, reason, actor, recorded_at)"
+                " VALUES (?, 'tombstoned', '{}', ?, ?, ?)",
+                (locator_id, reason, actor, timestamp),
+            )
+            connection.execute(
+                "UPDATE context_links SET state = 'tombstoned', tombstone_reason = ?"
+                " WHERE locator_id = ?",
+                (reason, locator_id),
+            )
+        return True
+
     # ── reads ────────────────────────────────────────────────────────────────
 
     @staticmethod
@@ -407,9 +462,66 @@ class ContextLinkStore:
                 "SELECT consumer, COUNT(*) AS n FROM use_receipts"
                 " GROUP BY consumer ORDER BY consumer"
             ).fetchall()
+            tombstone_reasons = connection.execute(
+                "SELECT tombstone_reason, COUNT(*) AS n FROM context_links"
+                " WHERE state = 'tombstoned' GROUP BY tombstone_reason"
+                " ORDER BY tombstone_reason"
+            ).fetchall()
+            sync_table = connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table'"
+                " AND name = 'projection_sync_state'"
+            ).fetchone()
+            acp_sync = None
+            if sync_table is not None:
+                acp_sync = connection.execute(
+                    "SELECT * FROM projection_sync_state WHERE source_kind = ?",
+                    (LinkKind.ACP_CONVERSATION.value,),
+                ).fetchone()
+        count_map = {str(row["state"]): int(row["n"]) for row in counts}
+        acp_health = {
+            "attempts": 0,
+            "failures": 0,
+            "retries": 0,
+            "last_attempt_at": None,
+            "last_success_at": None,
+            "last_failure_at": None,
+            "last_failure_reason": None,
+            "last_reconciliation_at": None,
+            "source_latest_at": None,
+            "lag_seconds": None,
+            "last_reconciliation": {
+                "examined": 0,
+                "changed": 0,
+                "skipped": 0,
+                "truncated": False,
+                "limit": 0,
+            },
+        }
+        dangling = 0
+        if acp_sync is not None:
+            dangling = int(acp_sync["dangling"])
+            acp_health = {
+                "attempts": int(acp_sync["attempts"]),
+                "failures": int(acp_sync["failures"]),
+                "retries": int(acp_sync["retries"]),
+                "last_attempt_at": acp_sync["last_attempt_at"],
+                "last_success_at": acp_sync["last_success_at"],
+                "last_failure_at": acp_sync["last_failure_at"],
+                "last_failure_reason": acp_sync["last_failure_reason"],
+                "last_reconciliation_at": acp_sync["last_reconciliation_at"],
+                "source_latest_at": acp_sync["source_latest_at"],
+                "lag_seconds": acp_sync["lag_seconds"],
+                "last_reconciliation": {
+                    "examined": int(acp_sync["last_examined"]),
+                    "changed": int(acp_sync["last_changed"]),
+                    "skipped": int(acp_sync["last_skipped"]),
+                    "truncated": bool(acp_sync["last_truncated"]),
+                    "limit": int(acp_sync["last_limit"]),
+                },
+            }
         return {
             "schema_version": SCHEMA_VERSION,
-            "counts": {str(row["state"]): int(row["n"]) for row in counts},
+            "counts": count_map,
             "events": int(events["n"]) if events else 0,
             "last_event_at": events["last_at"] if events else None,
             "use_receipts": int(uses["n"]) if uses else 0,
@@ -417,6 +529,186 @@ class ContextLinkStore:
             "uses_by_consumer": {
                 str(row["consumer"]): int(row["n"]) for row in use_consumers
             },
+            "projection_health": {
+                "pending": count_map.get("pending", 0),
+                "tombstoned": count_map.get("tombstoned", 0),
+                "dangling": dangling,
+                "tombstones_by_reason": {
+                    str(row["tombstone_reason"]): int(row["n"])
+                    for row in tombstone_reasons
+                    if row["tombstone_reason"]
+                },
+                "acp": acp_health,
+            },
+        }
+
+    def promoted_for_kind(
+        self,
+        kind: LinkKind,
+        *,
+        limit: int,
+        attempt: int = 0,
+    ) -> tuple[list[dict[str, Any]], bool]:
+        """Return a bounded deterministic page that rotates across retries."""
+        if not isinstance(kind, LinkKind):
+            raise SchemaError("kind must be an allowlisted LinkKind")
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
+        with self._connect(write=False) as connection:
+            total = int(
+                connection.execute(
+                    "SELECT COUNT(*) FROM context_links WHERE state = 'promoted' AND kind = ?",
+                    (kind.value,),
+                ).fetchone()[0]
+            )
+            rows: list[sqlite3.Row] = []
+            if capped and total:
+                offset = (max(0, int(attempt)) * capped) % total
+                rows = connection.execute(
+                    "SELECT * FROM context_links WHERE state = 'promoted' AND kind = ?"
+                    " ORDER BY canonical_id, locator_id LIMIT ? OFFSET ?",
+                    (kind.value, capped, offset),
+                ).fetchall()
+                if len(rows) < min(capped, total):
+                    rows.extend(
+                        connection.execute(
+                            "SELECT * FROM context_links WHERE state = 'promoted' AND kind = ?"
+                            " ORDER BY canonical_id, locator_id LIMIT ?",
+                            (kind.value, min(capped, total) - len(rows)),
+                        ).fetchall()
+                    )
+        return [self._row_to_link_dict(row) for row in rows], total > capped
+
+    def promoted_for_canonical(
+        self,
+        kind: LinkKind,
+        canonical_id: str,
+        *,
+        limit: int = MAX_RELATED_SCAN_ROWS,
+    ) -> tuple[list[dict[str, Any]], bool]:
+        """Return bounded promoted locators for one exact canonical identity."""
+        if not isinstance(kind, LinkKind):
+            raise SchemaError("kind must be an allowlisted LinkKind")
+        capped = max(0, min(int(limit), MAX_RELATED_SCAN_ROWS))
+        with self._connect(write=False) as connection:
+            rows = connection.execute(
+                "SELECT * FROM context_links WHERE state = 'promoted' AND kind = ?"
+                " AND canonical_id = ? ORDER BY locator_id LIMIT ?",
+                (kind.value, canonical_id, capped + 1),
+            ).fetchall()
+        return [self._row_to_link_dict(row) for row in rows[:capped]], len(rows) > capped
+
+    def record_projection_sync(
+        self,
+        *,
+        source_kind: LinkKind,
+        operation: str,
+        outcome: str,
+        reason: str = "",
+        source_latest_at: str | None = None,
+        examined: int = 0,
+        changed: int = 0,
+        skipped: int = 0,
+        truncated: bool = False,
+        limit: int = 0,
+        dangling: int = 0,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Persist bounded body-free sync health in this disposable projection."""
+        if not isinstance(source_kind, LinkKind):
+            raise SchemaError("source_kind must be an allowlisted LinkKind")
+        if operation not in {"live", "reconcile"}:
+            raise SchemaError("operation must be live or reconcile")
+        if outcome not in {"succeeded", "failed"}:
+            raise SchemaError("outcome must be succeeded or failed")
+        if reason:
+            validate_identity(reason, field_name="reason")
+        values = (examined, changed, skipped, limit, dangling)
+        if any(not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in values):
+            raise SchemaError("projection sync counts must be non-negative integers")
+        if limit > MAX_RELATED_SCAN_ROWS:
+            raise SchemaError("projection sync limit exceeds the bounded maximum")
+        timestamp = isoformat_z(now or utc_now())
+        normalized_source_at = None
+        lag_seconds = None
+        if source_latest_at is not None:
+            normalized_source_at = isoformat_z(parse_timestamp(source_latest_at))
+            # This metric is projection backlog lag, not source age. A
+            # successful non-truncated pass with no dangling records proves
+            # catch-up; otherwise lag is unknown rather than misleading.
+            lag_seconds = 0 if outcome == "succeeded" and not truncated and dangling == 0 else None
+        with self._transaction() as connection:
+            prior = connection.execute(
+                "SELECT * FROM projection_sync_state WHERE source_kind = ?",
+                (source_kind.value,),
+            ).fetchone()
+            attempts = (int(prior["attempts"]) if prior is not None else 0) + 1
+            failures = (int(prior["failures"]) if prior is not None else 0) + (
+                1 if outcome == "failed" else 0
+            )
+            retries = (int(prior["retries"]) if prior is not None else 0) + (
+                1 if prior is not None and prior["last_outcome"] == "failed" else 0
+            )
+            last_success_at = (
+                timestamp if outcome == "succeeded" else (prior["last_success_at"] if prior is not None else None)
+            )
+            last_failure_at = (
+                timestamp if outcome == "failed" else (prior["last_failure_at"] if prior is not None else None)
+            )
+            last_failure_reason = (
+                reason if outcome == "failed" else (prior["last_failure_reason"] if prior is not None else None)
+            )
+            reconciliation_at = (
+                timestamp
+                if operation == "reconcile"
+                else (prior["last_reconciliation_at"] if prior is not None else None)
+            )
+            reconciliation_values = (
+                (examined, changed, skipped, int(truncated), limit)
+                if operation == "reconcile"
+                else (
+                    (
+                        int(prior["last_examined"]),
+                        int(prior["last_changed"]),
+                        int(prior["last_skipped"]),
+                        int(prior["last_truncated"]),
+                        int(prior["last_limit"]),
+                    )
+                    if prior is not None
+                    else (0, 0, 0, 0, 0)
+                )
+            )
+            connection.execute(
+                "INSERT OR REPLACE INTO projection_sync_state("
+                "source_kind, attempts, failures, retries, last_outcome, last_attempt_at,"
+                "last_success_at, last_failure_at, last_failure_reason, last_reconciliation_at,"
+                "source_latest_at, lag_seconds, last_examined, last_changed, last_skipped,"
+                "last_truncated, last_limit, dangling) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    source_kind.value,
+                    attempts,
+                    failures,
+                    retries,
+                    outcome,
+                    timestamp,
+                    last_success_at,
+                    last_failure_at,
+                    last_failure_reason,
+                    reconciliation_at,
+                    normalized_source_at
+                    if normalized_source_at is not None
+                    else (prior["source_latest_at"] if prior is not None else None),
+                    lag_seconds
+                    if source_latest_at is not None
+                    else (prior["lag_seconds"] if prior is not None else None),
+                    *reconciliation_values,
+                    dangling,
+                ),
+            )
+        return {
+            "attempts": attempts,
+            "failures": failures,
+            "retries": retries,
+            "last_attempt_at": timestamp,
         }
 
     def record_use(
