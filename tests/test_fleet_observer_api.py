@@ -448,3 +448,234 @@ def test_endpoints_and_migrations_omit_configuration_secrets(
     assert [entry["version"] for entry in migrations.json()["migrations"]] == [
         migration.version for migration in MIGRATIONS
     ]
+
+
+def test_operations_projection_is_bounded_read_only_and_source_blind(
+    client: TestClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker_path = tmp_path / "legacy-broker.db"
+    connection = sqlite3.connect(broker_path)
+    try:
+        connection.execute(
+            "CREATE TABLE messages(id INTEGER PRIMARY KEY, acknowledged INTEGER NOT NULL)"
+        )
+        connection.executemany(
+            "INSERT INTO messages(acknowledged) VALUES (?)",
+            [(0,), (0,), (1,)],
+        )
+        connection.commit()
+    finally:
+        connection.close()
+    before = broker_path.read_bytes()
+    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+
+    async def fake_processes() -> dict:
+        return {
+            "alive": 2,
+            "processes": [
+                {"pid": 99123, "file": "secret-pid.json", "task_id": "private-task"}
+            ],
+        }
+
+    async def fake_zombies(*, stale_hours: float, pingpong_threshold: int) -> dict:
+        assert stale_hours == 2.0
+        assert pingpong_threshold == 5
+        return {
+            "count": 55,
+            "zombies": [
+                {
+                    "type": "stale_message",
+                    "severity": "critical",
+                    "age_hours": index + 0.25,
+                    "message_id": index,
+                    "task_id": "private-task",
+                    "preview": "Bearer source-secret",
+                    "from": "private-sender",
+                    "to": "private-recipient",
+                }
+                for index in range(55)
+            ],
+        }
+
+    def fake_batches() -> dict:
+        return {
+            "generated_at": "2026-08-02T00:00:00Z",
+            "running_processes": 3,
+            "tracks": {
+                f"track-{index:02d}": {
+                    "track": f"track-{index:02d}",
+                    "health": "healthy",
+                    "total_expected": 100,
+                    "research_done": index,
+                    "remaining": 100 - index,
+                    "recent_30min": 1,
+                    "throughput_per_hour": 2,
+                    "last_created": {"slug": "private-slug"},
+                    "log": {"last_line": "password=source-secret", "log_file": "private.log"},
+                    "process": {"pid": 4455, "cmd": "provider --token source-secret"},
+                }
+                for index in range(55)
+            },
+        }
+
+    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", fake_processes)
+    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", fake_zombies)
+    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", fake_batches)
+
+    response = client.get("/api/fleet/operations")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["read_only"] is True
+    assert payload["writes_enabled"] is False
+    assert payload["availability"] == "available"
+    assert payload["broker"] == {
+        "availability": "available",
+        "db_exists": True,
+        "readable": True,
+        "size_kb": pytest.approx(broker_path.stat().st_size / 1024, abs=0.1),
+        "unacknowledged_depth": 2,
+        "live_process_count": 2,
+        "process_availability": "available",
+    }
+    assert payload["zombies"]["total"] == 55
+    assert payload["zombies"]["returned"] == fleet_router.MAX_OPERATIONS_ITEMS
+    assert payload["zombies"]["truncated"] is True
+    assert set(payload["zombies"]["items"][0]) == {"type", "severity", "age_hours"}
+    assert payload["batches"]["total"] == 55
+    assert payload["batches"]["returned"] == fleet_router.MAX_OPERATIONS_ITEMS
+    assert payload["batches"]["truncated"] is True
+    assert set(payload["batches"]["tracks"][0]) == {
+        "track",
+        "health",
+        "total_expected",
+        "research_done",
+        "remaining",
+        "recent_30min",
+        "throughput_per_hour",
+    }
+    for forbidden in (
+        "source-secret",
+        "private-task",
+        "private-sender",
+        "private-recipient",
+        "private-slug",
+        "private.log",
+        "secret-pid.json",
+        "provider --token",
+    ):
+        assert forbidden not in response.text
+    assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
+
+
+def test_operations_missing_store_does_not_create_it(
+    client: TestClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker_path = tmp_path / "missing" / "legacy-broker.db"
+    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+
+    async def empty_processes() -> dict:
+        return {"alive": 0, "processes": []}
+
+    async def empty_zombies(**_kwargs: object) -> dict:
+        return {"count": 0, "zombies": []}
+
+    def empty_batches() -> dict:
+        return {"running_processes": 0, "tracks": {}}
+
+    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
+    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
+    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", empty_batches)
+
+    payload = client.get("/api/fleet/operations").json()
+
+    assert payload["availability"] == "partial"
+    assert payload["broker"]["availability"] == "db_missing"
+    assert payload["broker"]["db_exists"] is False
+    assert payload["zombies"]["items"] == []
+    assert payload["batches"]["tracks"] == []
+    assert not broker_path.exists()
+    assert not broker_path.parent.exists()
+
+
+def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
+    client: TestClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker_path = tmp_path / "broken-broker.db"
+    broker_path.write_bytes(b"not-a-sqlite-database private-outage-detail")
+    monkeypatch.setattr(fleet_router.legacy_comms, "MESSAGE_DB", broker_path)
+
+    async def unavailable(*_args: object, **_kwargs: object) -> dict:
+        raise RuntimeError("private dependency path and credential")
+
+    def unavailable_batch() -> dict:
+        raise RuntimeError("private dependency path and credential")
+
+    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", unavailable)
+    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", unavailable)
+    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", unavailable_batch)
+
+    response = client.get("/api/fleet/operations")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["availability"] == "unavailable"
+    assert payload["broker"]["availability"] == "db_unavailable"
+    assert payload["broker"]["live_process_count"] is None
+    assert payload["zombies"]["availability"] == "unavailable"
+    assert payload["batches"]["availability"] == "unavailable"
+    assert "private" not in response.text
+    assert "credential" not in response.text
+
+
+def test_operations_batch_snapshot_reuses_uncached_read_models(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_preseed_logs",
+        lambda: [
+            {
+                "track": "hist",
+                "complete": False,
+                "age_seconds": 30,
+                "last_line": "private log line",
+            },
+            {"track": "bio", "complete": True, "age_seconds": 10},
+        ],
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_check_build_processes",
+        lambda: [{"track": "hist", "pid": 123, "cmd": "private command"}],
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_track_progress",
+        lambda track: {
+            "track": track,
+            "total_expected": 10,
+            "research_done": 3,
+            "remaining": 7,
+            "recent_30min": 0,
+            "throughput_per_hour": 0,
+            "last_created": {"slug": "private-slug"},
+        },
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "cache_set",
+        lambda *_args, **_kwargs: pytest.fail("operations snapshot must not write cache state"),
+    )
+
+    snapshot = fleet_router._legacy_batch_snapshot()
+
+    assert snapshot["running_processes"] == 1
+    assert snapshot["tracks"]["hist"]["health"] == "healthy"
+    assert snapshot["tracks"]["bio"]["health"] == "complete"

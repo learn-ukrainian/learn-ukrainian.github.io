@@ -23,6 +23,7 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "Fleet Observer is the consolidated evidence surface" in html
     assert "/api/fleet/health" in html
     assert "/api/fleet/overview" in html
+    assert "/api/fleet/operations" in html
     assert "/api/fleet/requests" in html
     assert "/api/fleet/authority/jobs" in html
     assert "/api/fleet/messages" in html
@@ -33,6 +34,10 @@ def test_fleet_page_is_a_read_only_consolidated_observer() -> None:
     assert "<th>Agent</th>" in html
     assert "<th>Via</th>" in html
     assert "Refresh data" in html
+    assert "Read-only fleet operations" in html
+    assert "no migrations or cleanup" in html
+    assert "identifiers omitted" in html
+    assert "logs and commands omitted" in html
     assert "<form" not in html
     assert "method: 'POST'" not in html
     assert 'method: "POST"' not in html
@@ -51,6 +56,7 @@ def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     expected = {
         "/api/fleet/health",
         "/api/fleet/overview",
+        "/api/fleet/operations",
         "/api/fleet/agents",
         "/api/fleet/endpoints",
         "/api/fleet/requests",
@@ -70,6 +76,9 @@ def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
     assert expected <= paths
     assert all(set(openapi[path]) == {"get"} for path in paths)
     assert contract_for_route("/api/fleet/messages", "http") is not None
+    operations_contract = contract_for_route("/api/fleet/operations", "http")
+    assert operations_contract is not None
+    assert operations_contract.pattern == "/api/fleet/operations"
     assert contract_for_page("fleet.html") is not None
 
 
@@ -99,3 +108,9 @@ def test_fleet_page_and_retired_entrypoints_coexist_during_cutover() -> None:
     assert 'href="/comms.html"' not in index
     for legacy in ("/comms.html", "/channels.html", "/runtime.html", "/acp.html"):
         assert (DASHBOARDS / legacy.removeprefix("/")).is_file()
+
+    for retired in ("channels.html", "comms.html"):
+        contract = contract_for_page(retired)
+        assert contract is not None
+        assert "redirect" in contract.purpose.lower()
+        assert "/fleet.html" in contract.source_of_truth
