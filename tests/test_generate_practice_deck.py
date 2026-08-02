@@ -1856,6 +1856,29 @@ def test_inventory_identity_decoys_use_attested_surface_capitalization() -> None
     assert validate_option_set({**cloze, "options": options}) == []
 
 
+def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> None:
+    lexemes = _fixture_lexemes()
+    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
+    cloze = {
+        "clozeId": "knyha:inventory:normalized-case",
+        "form": "Книга",
+        "lemma": "книга",
+        "provenance": {"status": "sentence_inventory"},
+        "caseRule": {"ruleId": "nominative_identification"},
+    }
+
+    options = generate_practice_deck._make_no_pair_options(
+        cloze, answer, lexemes, random.Random(0)
+    )
+
+    assert len(options) == 4
+    assert all(
+        generate_practice_deck._initial_capitalization(option["label"])
+        for option in options
+    )
+    assert validate_option_set({**cloze, "options": options}) == []
+
+
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

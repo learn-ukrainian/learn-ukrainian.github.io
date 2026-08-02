@@ -1275,6 +1275,16 @@ def _make_no_pair_options(
     )
     if is_inventory_identity:
         decoys = _eligible_dictionary_decoys(answer, lexemes, cloze.get("form"))
+        # Dictionary lemmas are normalized lowercase, while an inventory
+        # target may preserve sentence-initial capitalization.  Render the
+        # option labels at the source surface's initial-capital state before
+        # applying the existing length and answer-leak gates; otherwise a
+        # safe same-POS decoy is discarded solely because its dictionary
+        # spelling is lowercase.
+        decoys = [
+            (decoy_lexeme, _match_initial_capitalization(decoy_form, cloze.get("form")))
+            for decoy_lexeme, decoy_form in decoys
+        ]
         answer_length = len(str(cloze.get("form") or ""))
         decoys = [
             candidate
@@ -1412,6 +1422,19 @@ def _initial_capitalization(value: Any) -> bool | None:
         if char.isalpha():
             return char.upper() == char and char.lower() != char
     return None
+
+
+def _match_initial_capitalization(value: str, exemplar: Any) -> str:
+    """Render a dictionary option with the source surface's initial case."""
+    desired = _initial_capitalization(exemplar)
+    if desired is None:
+        return value
+    chars = list(value)
+    for index, char in enumerate(chars):
+        if char.isalpha():
+            chars[index] = char.upper() if desired else char.lower()
+            return "".join(chars)
+    return value
 
 
 def validate_option_set(cloze: dict[str, Any]) -> list[str]:
