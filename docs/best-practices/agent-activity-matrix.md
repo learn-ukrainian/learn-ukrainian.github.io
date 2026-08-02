@@ -29,7 +29,7 @@ Each cell carries:
 | **Claude** ⭐ | Opus 4.8 (frontier authority), Fable 5 (native Claude first; pinned Cursor fallback only), Sonnet 5 (strong practical) | Native Claude CLI first for Fable; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | **TOP-PRIORITY judgment lane.** Architecture, hard-bug reasoning, and adversarial review. Route Fable through native Claude first and use Cursor only when native Claude does not expose Fable; use Sonnet for routine work. |
 | **Codex** ⭐ | GPT-5.6 Terra (default), Sol (frontier authority), Luna (bounded fast work) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
 | **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | **Orchestrator seat** (fleet-comms #5512, pin `gemini-3.6-flash-high` @ high) + support lane: scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. Sealed formal CF still #5555. |
-| **DeepSeek** | deepseek-v4-pro (strong code/content review + VESUM via `sources` MCP); deepseek-v4-flash (low-risk economical review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane.** Pro is the medium/high-quality choice; Flash is never the sole medium/high gate. |
+| **DeepSeek** | deepseek-v4-flash @ high (frontier-practical frontend/code); deepseek-v4-pro retained for explicit long-context or critical fallback | Review/research: `opencode run --model deepseek-direct/deepseek-v4-flash --variant high` (native Entire capture). Tool-heavy execution: `delegate.py --agent deepseek --model deepseek-v4-flash --effort high` (Hermes skills/MCPs). | Cheap | **Hybrid CODE lane.** Flash precedes Pro on practical code ladders but remains behind Pro on critical fallback; neither is a Ukrainian-language or approval-authority seat. |
 | **Grok** | **Grok 4.5** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | **Kimi** | K3 (`kimi-code/k3`; max effort) for consequential work; K2.7 coding variants for routine work | Native Kimi Code CLI OAuth: `scripts/delegate.py dispatch --agent kimi` | Subscription; CodexBar request windows | **Active frontier-practical coding/review lane.** K3 may be a formal cross-family gate outside Moonshot lineage; Ukrainian content remains separately gated. |
 | **cursor** | cursor-agent | `scripts/delegate.py dispatch --agent cursor` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
@@ -186,11 +186,12 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-07-17 | `scripts/config/model_catalog.yaml` | Resolve by risk. Critical/high starts with the frontier-authority peer tier; medium starts with the strong peer tier; low starts with Pool/Gemini Flash. |
-| Historical result | DeepSeek-flash (deepseek-v4-flash) | "E:A+ 15s" — cheap second-opinion via `delegate.py dispatch --agent deepseek --model deepseek-v4-flash` | 2026-05-15 | MEMORY #M-0 | Low-risk economical lane only; never the sole medium/high gate. |
+| Current practical seat | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Frontier-practical frontend/code lane: OpenCode high for Entire-aware review, Hermes high for rich tool execution; not critical authority. |
 | Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 
-**Known weakness (DeepSeek-flash):** new lane; long-tail of evaluation pending.
-**Known strength:** 15-second turnaround; very low cost; surfaces obvious regressions.
+**Known weakness (DeepSeek-flash):** current promotion evidence is preliminary and frontend-specific;
+repo-native long-tail and non-frontend evaluation remain incomplete.
+**Known strength:** top-7 Arena frontend coding result, 15-second historical turnaround, and very low cost.
 
 ---
 
@@ -360,7 +361,7 @@ Listed by priority for next-session fill:
 | Rank | Model | Cost | Quality status |
 | --- | --- | --- | --- |
 | Policy | Risk-specific catalog ladder | varies | Machine-enforced quality floor; see `scripts/config/model_catalog.yaml`. |
-| Historical ✅ | DeepSeek-v4-flash | $ | E:A+ 15s in the 2026-05-13 bakeoff; retained only as a low-risk economical candidate. |
+| Historical ✅ | DeepSeek-v4-flash | $ | E:A+ 15s in the 2026-05-13 bakeoff; low-risk economical classification at that time, superseded by the 2026-08-02 practical-code promotion. |
 | Historical ✅ | Codex GPT-5.5 | $$ | Architectural catches; cannot independently review OpenAI-authored work. |
 | Excluded | Qwen-3.6-flash | $ | User-excluded from active routing. |
 

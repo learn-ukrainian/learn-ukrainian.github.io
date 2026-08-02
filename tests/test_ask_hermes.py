@@ -9,7 +9,7 @@ from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
 
 def test_hermes_default_model_is_deepseek_flash():
     """Default changed from qwen/qwen3.6-plus (PR #4473): qwen is banned by
-    standing user spend order; deepseek-flash is the lane's dominant usage."""
+    standing user spend order; deepseek-flash is the Hermes tool-heavy default."""
     assert HERMES_DEFAULT_MODEL == "deepseek-v4-flash"
 
 
