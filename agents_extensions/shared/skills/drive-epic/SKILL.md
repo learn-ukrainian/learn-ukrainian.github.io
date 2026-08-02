@@ -182,6 +182,37 @@ End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemi
 the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
 file handoff current — it stays authoritative through every plane mode (below).
 
+**Entire dual-write (Option A — operator GO 2026-08-02; file remains SSOT):** on every
+session handoff, also project public continuity into entire-context. This is
+**supplemental** (ADR-018): body-free locators only; never store residual narratives,
+task ids, or OPSEC-sensitive prose only in Entire; never treat Entire as handoff
+authority or retire the file on your own.
+
+```bash
+# 1) Index merge SHAs from this drive (idempotent)
+.venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha>   # repeat per merge
+
+# 2) Body-free capsule (≤5 items); optional: pass --locator-id clink_… from bootstrap
+.venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>" \
+  | tee "${SESSION_HANDOFF_DIR:-.claude}/${SESSION_EPIC:-epic}-epic/entire-handoff-capsule.json"
+
+# 3) Attest consumption when locators informed the handoff
+.venv/bin/python -m scripts.entire_context record-use \
+  --task-id <epic-or-stream-id> --consumer <harness> --purpose handoff \
+  --locator-id clink_…   # repeat up to the locators used
+
+# 4) Fleet receipt: issue/PR numbers only (no residual tables, no secrets)
+.venv/bin/python -m scripts.fleet_comms channel publish <stream-channel> \
+  "handoff dual-write: file=SSOT entire=capsule. Next issues #… Merged PRs #…" \
+  --sender "$SESSION_HANDOFF_AGENT" --source <harness> --kind state \
+  --idempotency-key "handoff-<epic>-<date>"
+```
+
+**Cold-start companion (not a substitute for the file):** after §0 orient,
+`status` + `search --query "<epic keywords>"` (and optional `handoff --query`) so
+promoted SHAs surface before dispatch. Empty results mean “nothing indexed for that
+needle,” not “no work” — fall through to GH issues + file handoff.
+
 ### 8a. Required live-driver inbox drain — before handoff
 Immediately before writing or signalling handoff, make one final live-loop drain. Read
 and apply every `unread` or `read-but-not-live-consumed` entry, then run:
@@ -191,6 +222,7 @@ and apply every `unread` or `read-but-not-live-consumed` entry, then run:
 ```
 Record any action or unresolved request in the authoritative file handoff after this
 drain; never claim the handoff is complete because a one-shot worker acknowledged it.
+Then run the Entire dual-write steps in §8.
 
 ---
 
