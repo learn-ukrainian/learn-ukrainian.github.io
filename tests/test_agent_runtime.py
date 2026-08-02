@@ -261,6 +261,7 @@ def test_acpx_pilot_usage_records_strip_sensitive_context(
         stalled=False,
         stderr_excerpt="secret stderr",
         tokens=3,
+        failure_code="result_invalid",
     )
 
     for key in (
@@ -280,6 +281,7 @@ def test_acpx_pilot_usage_records_strip_sensitive_context(
     assert record["outcome"] == "error"
     assert record["duration_s"] == 1.25
     assert record["tokens"] == 3
+    assert record["failure_code"] == "result_invalid"
 
 
 def test_usage_attribution_is_explicit_and_privacy_safe(monkeypatch):
@@ -4420,3 +4422,29 @@ def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
         agent_name=agent_name,
         entrypoint="acpx-discuss",
     ) == 16 * 1024 * 1024
+
+
+@pytest.mark.parametrize(
+    ("outcome", "rate_limited", "stalled", "explicit", "returncode", "expected"),
+    [
+        ("ok", False, False, None, 0, None),
+        ("error", False, False, "protocol_output_limit", -9, "protocol_output_limit"),
+        ("hard_timeout", False, False, None, -9, "timeout"),
+        ("error", False, False, "result_invalid", 1, "result_invalid"),
+        ("error", False, False, "provider_unavailable", None, "provider_unavailable"),
+        ("error", False, False, None, 1, "transport_error"),
+        ("rate_limited", True, False, None, 1, "rate_limited"),
+    ],
+)
+def test_privacy_safe_acp_failure_code_is_closed_and_body_free(
+    outcome, rate_limited, stalled, explicit, returncode, expected
+):
+    from agent_runtime import runner as runtime_runner
+
+    assert runtime_runner._privacy_safe_failure_code(
+        outcome=outcome,
+        rate_limited=rate_limited,
+        stalled=stalled,
+        returncode=returncode,
+        explicit_code=explicit,
+    ) == expected

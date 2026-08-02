@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from ai_agent_bridge import _channels, _channels_cli, _cli, _db
-from ai_agent_bridge._acp_compat import _discussion_failure_metadata
+from ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
 
 
 def _clear_identity_env(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -122,6 +122,28 @@ def test_discussion_timeout_maps_to_body_free_retryable_failure() -> None:
 
     assert failure == {"phase": "transport", "code": "timeout", "retryable": True}
     assert "response" not in str(failure)
+
+
+@pytest.mark.parametrize(
+    ("code", "expected"),
+    [
+        ("protocol_output_limit", {"phase": "transport", "code": "protocol_output_limit", "retryable": False}),
+        ("timeout", {"phase": "transport", "code": "timeout", "retryable": True}),
+        ("provider_unavailable", {"phase": "provider", "code": "provider_unavailable", "retryable": True}),
+        ("result_invalid", {"phase": "result_parse", "code": "result_invalid", "retryable": False}),
+    ],
+)
+def test_acp_result_preserves_only_closed_failure_code(code, expected) -> None:
+    result = SimpleNamespace(
+        transport_outcome="error",
+        rate_limited=False,
+        usage_record={"failure_code": code, "stderr_excerpt": "must not persist"},
+    )
+
+    failure = _failure_metadata(result=result)
+
+    assert failure == expected
+    assert "stderr" not in str(failure)
 
 
 def test_ask_codex_without_from_fails_when_sender_cannot_be_inferred(

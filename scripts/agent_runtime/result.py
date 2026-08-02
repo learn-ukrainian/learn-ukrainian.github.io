@@ -54,6 +54,9 @@ class ParseResult:
             Hermes adapters populate this with requested_provider/model and
             actual_provider/model so silent provider/model substitution cannot
             disappear between parse, usage telemetry, and delegate state.
+        failure_code: Optional closed, body-free failure classification. ACP
+            adapters use this to preserve diagnostics while privacy-limited
+            usage records discard raw stderr and provider text.
     """
     ok: bool
     response: str
@@ -64,6 +67,7 @@ class ParseResult:
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
     substitution: dict[str, Any] | None = None
     response_envelope: ResponseEnvelope | None = None
+    failure_code: str | None = None
 
 
 @dataclass(frozen=True)

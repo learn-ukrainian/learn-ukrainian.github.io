@@ -136,7 +136,9 @@ def test_runtime_page_renders_read_only_acpx_shadow_transport_overview():
     assert "Native runtime authoritative" in html
     assert "ACPX evidence is observational only." in html
     assert "No shadow calls or comparisons in window" in html
-    assert "ACPX pin" in html
+    assert "ACPX contract" in html
+    assert "AGY contract" in html
+    assert "OpenCode contract" in html
     assert "No dispatch authority" in html
     assert 'class="acpx-rail"' in html
     assert "@media (max-width: 820px)" in html

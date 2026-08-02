@@ -158,8 +158,14 @@ _INVALID_USAGE_NDJSON = (
 )
 
 
-def _stub_binary(monkeypatch, tmp_path: Path, *, version: str = "0.13.0") -> Path:
-    """Point the adapter at a fake pinned binary + version probe.
+def _stub_binary(
+    monkeypatch,
+    tmp_path: Path,
+    *,
+    version: str = "0.13.0",
+    missing: tuple[str, ...] = (),
+) -> Path:
+    """Point the adapter at a fake local binary + compatibility probe.
 
     Avoids depending on the real npm-installed ``node_modules/.bin/acpx``
     being present in whatever environment runs this suite.
@@ -167,8 +173,12 @@ def _stub_binary(monkeypatch, tmp_path: Path, *, version: str = "0.13.0") -> Pat
     binary = tmp_path / "fake-acpx-bin"
     binary.write_text("#!/bin/sh\necho stub\n", encoding="utf-8")
     binary.chmod(0o755)
-    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", binary)
-    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: version)
+    monkeypatch.setattr(acpx_module, "_ACPX_BINARY", binary)
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_acpx_cli_compatibility",
+        lambda _binary, *, builtin_agent: (version, missing),
+    )
     return binary
 
 
@@ -254,7 +264,7 @@ def test_build_invocation_succeeds_when_flag_shadow(tmp_path, monkeypatch):
     adapter = AcpxAdapter()
 
     plan = _build(adapter, cwd=tmp_path)
-    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
 def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch):
@@ -273,7 +283,7 @@ def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch
 
     with acpx_module.active_discussion_scope():
         plan = _build(adapter, cwd=tmp_path, tool_config=tool_config)
-    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
 # ---------------------------------------------------------------------------
@@ -469,32 +479,41 @@ def test_build_invocation_never_uses_session_or_prompt_subcommand(tmp_path, monk
 
 
 # ---------------------------------------------------------------------------
-# Version pin
+# Rolling compatibility
 # ---------------------------------------------------------------------------
 
 
-def test_build_invocation_rejects_version_mismatch(tmp_path, monkeypatch):
+def test_build_invocation_accepts_compatible_future_version(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, version="0.12.1")
-    adapter = AcpxAdapter()
+    _stub_binary(monkeypatch, tmp_path, version="0.14.7")
 
-    with pytest.raises(AcpxShadowRefusalError, match="version"):
-        _build(adapter, cwd=tmp_path)
+    plan = _build(AcpxAdapter(), cwd=tmp_path)
+
+    assert plan.metadata["acpx_cli_version"] == "0.14.7"
+    assert plan.metadata["acpx_cli_compatibility"] == "json-one-shot-v1"
+
+
+def test_build_invocation_rejects_missing_acpx_capability(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path, version="0.14.7", missing=("--deny-all",))
+
+    with pytest.raises(AcpxShadowRefusalError, match="--deny-all"):
+        _build(AcpxAdapter(), cwd=tmp_path)
 
 
 def test_build_invocation_rejects_missing_binary(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
-    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", tmp_path / "does-not-exist")
+    monkeypatch.setattr(acpx_module, "_ACPX_BINARY", tmp_path / "does-not-exist")
     adapter = AcpxAdapter()
 
-    with pytest.raises(AcpxShadowRefusalError, match="pinned binary not found"):
+    with pytest.raises(AcpxShadowRefusalError, match="project-local acpx binary not found"):
         _build(adapter, cwd=tmp_path)
 
 
 def _set_default_binary_candidate(monkeypatch, candidate: Path) -> None:
     """Make a test-local module candidate eligible for primary fallback."""
-    monkeypatch.setattr(acpx_module, "_DEFAULT_PINNED_BINARY", candidate)
-    monkeypatch.setattr(acpx_module, "_PINNED_BINARY", candidate)
+    monkeypatch.setattr(acpx_module, "_DEFAULT_ACPX_BINARY", candidate)
+    monkeypatch.setattr(acpx_module, "_ACPX_BINARY", candidate)
 
 
 def test_build_invocation_resolves_primary_pin_from_linked_worktree(tmp_path, monkeypatch):
@@ -509,7 +528,11 @@ def test_build_invocation_resolves_primary_pin_from_linked_worktree(tmp_path, mo
     primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
     primary_binary.chmod(0o755)
     monkeypatch.setattr(acpx_module, "resolve_main_root", lambda cwd: primary)
-    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: "0.13.0")
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_acpx_cli_compatibility",
+        lambda _binary, *, builtin_agent: ("0.13.0", ()),
+    )
 
     plan = _build(AcpxAdapter(), cwd=worktree)
 
@@ -555,7 +578,7 @@ def test_build_invocation_refuses_when_primary_pin_is_missing(tmp_path, monkeypa
         _build(AcpxAdapter(), cwd=tmp_path)
 
 
-def test_build_invocation_rejects_primary_pin_version_mismatch(tmp_path, monkeypatch):
+def test_build_invocation_rejects_primary_binary_capability_drift(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
     primary = tmp_path / "primary"
@@ -565,19 +588,23 @@ def test_build_invocation_rejects_primary_pin_version_mismatch(tmp_path, monkeyp
     primary_binary.chmod(0o755)
     _set_default_binary_candidate(monkeypatch, candidate)
     monkeypatch.setattr(acpx_module, "resolve_main_root", lambda _cwd: primary)
-    monkeypatch.setattr(acpx_module, "_probe_acpx_version", lambda _binary: "0.12.1")
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_acpx_cli_compatibility",
+        lambda _binary, *, builtin_agent: ("0.14.0", ("exec --file",)),
+    )
 
-    with pytest.raises(AcpxShadowRefusalError, match="version"):
+    with pytest.raises(AcpxShadowRefusalError, match="exec --file"):
         _build(AcpxAdapter(), cwd=tmp_path)
 
 
-def test_build_invocation_rejects_unreadable_version_probe(tmp_path, monkeypatch):
+def test_build_invocation_accepts_unknown_version_when_capabilities_pass(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, version="")
-    adapter = AcpxAdapter()
+    _stub_binary(monkeypatch, tmp_path, version="unknown")
 
-    with pytest.raises(AcpxShadowRefusalError, match="version"):
-        _build(adapter, cwd=tmp_path)
+    plan = _build(AcpxAdapter(), cwd=tmp_path)
+
+    assert plan.metadata["acpx_cli_version"] == "unknown"
 
 
 # ---------------------------------------------------------------------------
@@ -772,6 +799,7 @@ def test_parse_response_rejects_oversized_answer_before_authority_receipt():
     assert result.response == ""
     assert "parsed ACP response exceeds" in result.stderr_excerpt
     assert str(ACPX_PARSED_RESPONSE_LIMIT_BYTES) in result.stderr_excerpt
+    assert result.failure_code == "protocol_output_limit"
 
 
 def test_parse_response_multiple_stop_reason_results_fails_closed():
@@ -876,6 +904,7 @@ def test_parse_response_timeout_fails_closed():
     assert result.response == ""
     assert "TIMEOUT" in result.stderr_excerpt
     assert result.rate_limited is False
+    assert result.failure_code == "timeout"
 
 
 # ---------------------------------------------------------------------------
@@ -906,6 +935,7 @@ def test_parse_response_agent_disconnected_fails_closed():
     )
     assert result.ok is False
     assert result.response == ""
+    assert result.failure_code == "provider_unavailable"
     assert "AGENT_DISCONNECTED" in result.stderr_excerpt
 
 
@@ -1014,6 +1044,7 @@ def test_parse_response_auth_required_fails_closed():
     assert result.response == ""
     assert "AUTH_REQUIRED" in result.stderr_excerpt
     assert result.rate_limited is False
+    assert result.failure_code == "provider_unavailable"
 
 
 # ---------------------------------------------------------------------------
@@ -1133,7 +1164,7 @@ def test_grok_build_invocation_active_requires_controller_scope(tmp_path, monkey
 
     with acpx_module.active_discussion_scope():
         plan = _build_grok(adapter, cwd=tmp_path, tool_config=tool_config)
-    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
 def test_grok_build_invocation_requires_explicit_shadow_marker(tmp_path, monkeypatch):
@@ -1228,14 +1259,23 @@ def test_grok_build_invocation_refuses_primary_checkout(tmp_path, monkeypatch):
         _build_grok(adapter, cwd=tmp_path)
 
 
-def test_grok_build_invocation_rejects_acpx_version_mismatch(tmp_path, monkeypatch):
+def test_grok_build_invocation_accepts_compatible_acpx_version_drift(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, version="0.12.1")
+    _stub_binary(monkeypatch, tmp_path, version="0.14.0")
     _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
 
-    with pytest.raises(AcpxShadowRefusalError, match="version"):
-        _build_grok(adapter, cwd=tmp_path)
+    plan = _build_grok(AcpxGrokShadowAdapter(), cwd=tmp_path)
+
+    assert plan.metadata["acpx_cli_version"] == "0.14.0"
+
+
+def test_grok_build_invocation_rejects_missing_acpx_capability(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path, missing=("--agent",))
+    _stub_grok(monkeypatch, tmp_path)
+
+    with pytest.raises(AcpxShadowRefusalError, match="--agent"):
+        _build_grok(AcpxGrokShadowAdapter(), cwd=tmp_path)
 
 
 def test_grok_build_invocation_accepts_rolling_cli_version(tmp_path, monkeypatch):
@@ -1284,7 +1324,7 @@ def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch)
 
     plan = _build_grok(adapter, cwd=tmp_path, prompt="shadow compare prompt")
 
-    assert plan.cmd[0] == str(acpx_module._PINNED_BINARY)
+    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
     assert Path(plan.cmd[0]).is_absolute() or plan.cmd[0].startswith(str(tmp_path))
     assert "grok-build" not in plan.cmd
     assert "codex" not in plan.cmd
@@ -1352,7 +1392,8 @@ def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, 
         assert plan.metadata["target_agent"] == "grok"
         assert plan.metadata["grok_cli_version"] == "0.2.118"
         assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
-        assert plan.metadata["acpx_pinned_version"] == "0.13.0"
+        assert plan.metadata["acpx_cli_version"] == "0.13.0"
+        assert plan.metadata["acpx_cli_compatibility"] == "json-one-shot-v1"
 
 
 def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(
@@ -1657,8 +1698,8 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     monkeypatch.setattr(acpx_module.shutil, "which", lambda name: binaries.get(name))
     monkeypatch.setattr(
         acpx_module,
-        "_probe_participant_cli_version",
-        lambda _path, _executable: version,
+        "_probe_participant_cli_compatibility",
+        lambda _path, _executable: (version, ()),
     )
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     for name in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
@@ -1689,7 +1730,12 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     assert provider_binary in " ".join(command_tokens)
     assert plan.cmd[-3:] == ["exec", "-f", "-"]
     assert plan.metadata["model"] == model
-    assert plan.metadata["provider_cli_pinned_version"] == version
+    assert plan.metadata["provider_cli_version"] == version
+    assert plan.metadata["provider_cli_compatibility"] == {
+        "agy": "text-plan-sandbox-v1",
+        "glm": "native-acp-pure-v1",
+        "deepseek": "text-oneshot-isolated-v1",
+    }[participant]
     assert "--deny-all" in plan.cmd
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
@@ -1712,7 +1758,7 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         assert plan.env_overrides == {}
 
 
-def test_new_fleet_discussion_seat_rejects_provider_cli_version_drift(tmp_path, monkeypatch):
+def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, monkeypatch):
     _stub_binary(monkeypatch, tmp_path)
     agy = tmp_path / "agy"
     node = tmp_path / "node"
@@ -1726,13 +1772,51 @@ def test_new_fleet_discussion_seat_rejects_provider_cli_version_drift(tmp_path, 
     )
     monkeypatch.setattr(
         acpx_module,
-        "_probe_participant_cli_version",
-        lambda _path, _executable: "9.9.9",
+        "_probe_participant_cli_compatibility",
+        lambda _path, _executable: ("9.9.9", ()),
+    )
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+
+    with acpx_module.active_discussion_scope():
+        plan = AcpxAgyShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="gemini-3.6-flash-high",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "agy",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+    assert plan.metadata["provider_cli_version"] == "9.9.9"
+
+
+def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    agy = tmp_path / "agy"
+    node = tmp_path / "node"
+    for path in (agy, node):
+        path.write_text("#!/bin/sh\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(
+        acpx_module.shutil,
+        "which",
+        lambda name: str({"agy": agy, "node": node}[name]),
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_compatibility",
+        lambda _path, _executable: ("2.0.0", ("--sandbox",)),
     )
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
 
     with acpx_module.active_discussion_scope(), pytest.raises(
-        AcpxShadowRefusalError, match="version mismatch"
+        AcpxShadowRefusalError, match="--sandbox"
     ):
         AcpxAgyShadowAdapter().build_invocation(
             prompt="ping",
@@ -1760,6 +1844,83 @@ def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path)
     binary.chmod(0o755)
 
     assert acpx_module._probe_participant_cli_version(str(binary), "hermes") == "0.18.2"
+
+
+def test_acpx_compatibility_probe_checks_global_and_builtin_exec_surfaces(monkeypatch):
+    class _Proc:
+        def __init__(self, stdout: str, returncode: int = 0):
+            self.stdout = stdout
+            self.stderr = ""
+            self.returncode = returncode
+
+    root_help = " ".join((*acpx_module._ACPX_REQUIRED_GLOBAL_FLAGS, "codex participant"))
+
+    def _compatible(argv, **_kwargs):
+        if argv[-1] == "--version":
+            return _Proc("0.14.7\n")
+        if argv[1:] == ["--help"]:
+            return _Proc(root_help)
+        if argv[1:] == ["codex", "exec", "--help"]:
+            return _Proc("one-shot --file input")
+        raise AssertionError(argv)
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _compatible)
+    assert acpx_module._probe_acpx_cli_compatibility(
+        "/tmp/acpx", builtin_agent="codex"
+    ) == ("0.14.7", ())
+
+    def _missing_json_strict(argv, **kwargs):
+        proc = _compatible(argv, **kwargs)
+        if argv[1:] == ["--help"]:
+            proc.stdout = root_help.replace("--json-strict", "")
+        return proc
+
+    monkeypatch.setattr(acpx_module.subprocess, "run", _missing_json_strict)
+    assert acpx_module._probe_acpx_cli_compatibility(
+        "/tmp/acpx", builtin_agent="codex"
+    ) == ("0.14.7", ("--json-strict",))
+
+
+@pytest.mark.parametrize(
+    ("executable", "help_args", "required_flag"),
+    [
+        ("agy", (), "--sandbox"),
+        ("opencode", ("acp",), "--pure"),
+        ("hermes", (), "--ignore-rules"),
+    ],
+)
+def test_participant_compatibility_probes_exact_invoked_surface(
+    monkeypatch, executable, help_args, required_flag
+):
+    required = {
+        "agy": acpx_module._AGY_REQUIRED_FLAGS,
+        "opencode": acpx_module._OPENCODE_REQUIRED_ACP_FLAGS,
+        "hermes": acpx_module._HERMES_REQUIRED_FLAGS,
+    }[executable]
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_participant_cli_version",
+        lambda _binary, _executable: "9.9.9",
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_cli_help",
+        lambda _binary, *args: " ".join(required) if args == help_args else "",
+    )
+
+    assert acpx_module._probe_participant_cli_compatibility(
+        f"/tmp/{executable}", executable
+    ) == ("9.9.9", ())
+
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_cli_help",
+        lambda _binary, *args: "usage "
+        + " ".join(flag for flag in required if flag != required_flag),
+    )
+    assert acpx_module._probe_participant_cli_compatibility(
+        f"/tmp/{executable}", executable
+    ) == ("9.9.9", (required_flag,))
 
 
 def test_text_agent_digest_mismatch_refuses_before_spawn(tmp_path, monkeypatch):

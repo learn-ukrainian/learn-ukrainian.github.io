@@ -264,8 +264,7 @@ function renderAcpx(snapshot) {
   const seats = normalizeSeats(snapshot);
   const seatSlots = [seats[0], seats[1]];
   const safety = snapshot.safety || {};
-  const pins = snapshot.pins || {};
-  const grokCompatibility = (snapshot.compatibility || {}).grok_cli || {};
+  const compatibility = snapshot.compatibility || {};
   const comparison = snapshot.comparison_evidence || {};
   const calls = shadowCallCount(seats);
   const comparisons = Number(comparison.comparisons);
@@ -282,12 +281,14 @@ function renderAcpx(snapshot) {
     ['Class mismatches', Number.isFinite(mismatches) ? mismatches : null],
     ['Duplicates suppressed', comparison.duplicates_suppressed],
     ['Busy refusals', comparison.busy_refusals],
-    ['ACPX pin', pins.acpx ? `v${pins.acpx}` : null],
-    ['ACPX validation', pins.validation ? displayLabel(pins.validation) : null],
-    ['Grok CLI policy', grokCompatibility.contract ? 'Rolling compatibility' : null],
-    ['Grok CLI contract', grokCompatibility.contract],
-    ['Grok validation', grokCompatibility.validation
-      ? displayLabel(grokCompatibility.validation) : null],
+    ['CLI policy', Object.keys(compatibility).length ? 'Rolling compatibility' : null],
+    ['ACPX contract', compatibility.acpx?.contract],
+    ['AGY contract', compatibility.agy_cli?.contract],
+    ['Grok contract', compatibility.grok_cli?.contract],
+    ['Hermes contract', compatibility.hermes_cli?.contract],
+    ['OpenCode contract', compatibility.opencode_cli?.contract],
+    ['Validation', compatibility.acpx?.validation
+      ? displayLabel(compatibility.acpx.validation) : null],
     ['Snapshot', formatTs(snapshot.generated_at)],
   ];
   const seatMarkup = seatSlots.map((seat, index) => {
@@ -392,7 +393,7 @@ function renderRecent(records) {
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
-    <thead><tr><th>Time</th><th>Source</th><th>Agent</th><th>Via</th><th>Model</th><th>Outcome</th><th>Duration</th></tr></thead>
+    <thead><tr><th>Time</th><th>Source</th><th>Agent</th><th>Via</th><th>Model</th><th>Outcome</th><th>Failure</th><th>Duration</th></tr></thead>
     <tbody>${records.map(record => {
       const cls = record.outcome === 'ok' ? 'ok' : record.outcome === 'rate_limited' ? 'warn' : record.outcome === 'timeout' ? 'gray' : 'err';
       return `<tr>
@@ -405,6 +406,7 @@ function renderRecent(records) {
         <td class="mono">${escapeHtml(record.via || record.entrypoint || '—')}</td>
         <td class="mono">${escapeHtml(record.model || '—')}</td>
         <td><span class="pill ${cls}">${escapeHtml(record.outcome || 'unknown')}</span></td>
+        <td class="mono">${escapeHtml(record.failure_code || '—')}</td>
         <td>${formatDuration(record.duration_s)}</td>
       </tr>`;
     }).join('')}</tbody>

@@ -24,15 +24,16 @@ from .config import BATCH_STATE_DIR
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from agent_runtime.adapters.acpx import (
+    ACPX_CLI_COMPATIBILITY_CONTRACT,
     ACPX_SUPPORTED_PARTICIPANTS,
+    AGY_CLI_COMPATIBILITY_CONTRACT,
     GROK_CLI_COMPATIBILITY_CONTRACT,
     GROK_SHADOW_EFFORT,
     GROK_SHADOW_MODEL,
+    HERMES_CLI_COMPATIBILITY_CONTRACT,
+    OPENCODE_CLI_COMPATIBILITY_CONTRACT,
     AcpxAdapter,
     AcpxGrokShadowAdapter,
-)
-from agent_runtime.adapters.acpx import (
-    PINNED_VERSION as ACPX_PINNED_VERSION,
 )
 from agent_runtime.adapters.acpx import (
     TRANSPORT_ENV as ACPX_TRANSPORT_ENV,
@@ -56,6 +57,18 @@ USAGE_DIR = BATCH_STATE_DIR / "api_usage"
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
 _RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
 _RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
+_RUNTIME_FAILURE_CODES = frozenset(
+    {
+        "adapter_refused",
+        "protocol_output_limit",
+        "provider_unavailable",
+        "rate_limited",
+        "result_invalid",
+        "timeout",
+        "transport_error",
+        "unknown",
+    }
+)
 _ACP_LEGACY_PARTICIPANTS = ("codex", "grok")
 _ACP_ENABLED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 _ACP_STATES = frozenset({
@@ -412,14 +425,31 @@ def acpx_shadow_overview(*, days: int = 7) -> dict[str, Any]:
             "posture": "evidence_only",
             "writable": False,
         },
-        "pins": {
-            "acpx": ACPX_PINNED_VERSION,
-            "validation": "before_spawn",
-        },
         "compatibility": {
+            "acpx": {
+                "contract": ACPX_CLI_COMPATIBILITY_CONTRACT,
+                "validation": "before_spawn",
+                "version_policy": "telemetry_only",
+            },
+            "agy_cli": {
+                "contract": AGY_CLI_COMPATIBILITY_CONTRACT,
+                "validation": "before_spawn",
+                "version_policy": "telemetry_only",
+            },
             "grok_cli": {
                 "contract": GROK_CLI_COMPATIBILITY_CONTRACT,
                 "validation": "before_spawn",
+                "version_policy": "telemetry_only",
+            },
+            "hermes_cli": {
+                "contract": HERMES_CLI_COMPATIBILITY_CONTRACT,
+                "validation": "before_spawn",
+                "version_policy": "telemetry_only",
+            },
+            "opencode_cli": {
+                "contract": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
+                "validation": "before_spawn",
+                "version_policy": "telemetry_only",
             },
         },
         "comparison_evidence": {
@@ -458,6 +488,15 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
         source_task_id = record.get("attribution_task_id")
         if not isinstance(source_task_id, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(source_task_id):
             source_task_id = None
+        failure_code = record.get("failure_code")
+        if failure_code not in _RUNTIME_FAILURE_CODES:
+            outcome = record.get("outcome")
+            if outcome in {"timeout", "hard_timeout", "stalled"}:
+                failure_code = "timeout"
+            elif outcome == "rate_limited":
+                failure_code = "rate_limited"
+            else:
+                failure_code = "unknown" if outcome not in {"ok", None} else None
         summaries.append({
             "ts": _isoformat_z(ts) if ts else record.get("ts"),
             "agent": record.get("agent"),
@@ -468,6 +507,7 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
             "source_task_id": source_task_id,
             "model": record.get("model"),
             "outcome": record.get("outcome"),
+            "failure_code": failure_code,
             "duration_s": record.get("duration_s"),
         })
     summaries.sort(key=lambda item: _parse_iso_datetime(item.get("ts")) or datetime.min.replace(tzinfo=UTC), reverse=True)
