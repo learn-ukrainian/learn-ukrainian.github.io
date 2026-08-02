@@ -1,0 +1,15 @@
+{
+  "lang_uk_leaderboard": {
+    "commit": "bd3d8431e97b3ff86e4f25381ac6b5ecccadad5f",
+    "repository": "https://github.com/lang-uk/ukrainian-llm-leaderboard",
+    "result_dataset_revision": "3da506fe31f69d7e88754a665d1de01d774913a2",
+    "target_contract": "results_<created_at>.json plus Foundry evidence sidecar"
+  },
+  "lapa": {
+    "commit": "7e695c2bb9deaa214421a657ae23c85968947305",
+    "license": "MIT",
+    "repository": "https://github.com/UNLP-AI/lapa",
+    "target_path": "training/lapa-12b-pt-template.yml"
+  },
+  "schema_version": "foundry_upstream_integration_locks.v1"
+}
