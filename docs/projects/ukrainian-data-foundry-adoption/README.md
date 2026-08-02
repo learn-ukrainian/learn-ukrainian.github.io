@@ -42,7 +42,9 @@ command documented in the
 
 The pinned integration target is Lapa commit
 `7e695c2bb9deaa214421a657ae23c85968947305`, file
-`training/lapa-12b-pt-template.yml`. Generate the handoff:
+`training/lapa-12b-pt-template.yml`, in
+[`lapa-llm/lapa-llm`](https://github.com/lapa-llm/lapa-llm). Generate the
+handoff:
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.adoption_cli lapa \
@@ -62,9 +64,12 @@ reviewable provenance instead of receiving an empty outreach request.
 
 The pinned target is the Ukrainian LLM leaderboard commit
 `bd3d8431e97b3ff86e4f25381ac6b5ecccadad5f`, with result-dataset revision
-`3da506fe31f69d7e88754a665d1de01d774913a2`. Start with a saved lm-eval-shaped
-file containing `config_general.model_name` and numeric metrics under
-`results`, plus a complete Foundry broad-evaluation report:
+`3da506d82b7f960275ed90716da8a8c5c6299f42`. Start with an authentic saved
+lm-eval result containing top-level `model_name`, a per-task `n-shot` mapping,
+and task dictionaries under `results`. Each task may carry its string `alias`
+but must include numeric metrics. Use the upstream filename and destination
+`aggregated/results_<created_at>.json`, plus a complete Foundry broad-evaluation
+report:
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.adoption_cli lang-uk \
@@ -74,7 +79,8 @@ file containing `config_general.model_name` and numeric metrics under
   --output batch_state/lang-uk-foundry-handoff
 ```
 
-The standard result file is copied byte-for-byte. Its adjacent Foundry sidecar
+The standard result file is copied byte-for-byte. Its adjacent, non-consumed
+Foundry sidecar
 binds the model name, result hash, Foundry run, broad-suite release and case
 hashes, all fourteen tracks, and the pinned upstream revisions. Packaging does
 not submit anything; maintainers receive a complete artifact pair they can

@@ -148,7 +148,9 @@ def export_lapa(*, foundry_run: Path, output_dir: Path) -> dict[str, Any]:
         lineage: list[dict[str, str]] = []
         for row in rows:
             _require(row.get("schema_version") == "foundry_faithful_source_view_v1", "not a faithful Foundry view")
-            _require(row.get("character_mask_spans") == [], "masked or rewritten row cannot enter Lapa pretraining export")
+            _require(
+                row.get("character_mask_spans") == [], "masked or rewritten row cannot enter Lapa pretraining export"
+            )
             text = row.get("text")
             _require(isinstance(text, str) and text, "empty Lapa text row")
             _require(foundry_cli.sha256_text(text) == row.get("text_sha256"), "Foundry text hash mismatch")
@@ -183,18 +185,31 @@ def export_lapa(*, foundry_run: Path, output_dir: Path) -> dict[str, Any]:
 
 
 def _validate_lang_uk_results(results: Mapping[str, Any]) -> str:
-    general = results.get("config_general")
+    model_name = results.get("model_name")
+    shots = results.get("n-shot")
     metrics = results.get("results")
-    _require(isinstance(general, dict) and isinstance(general.get("model_name"), str), "missing lang-uk model_name")
+    _require(isinstance(model_name, str) and model_name, "missing lang-uk model_name")
+    _require(isinstance(shots, dict) and shots, "missing lang-uk n-shot mapping")
     _require(isinstance(metrics, dict) and metrics, "missing lang-uk results")
+    _require(set(shots) == set(metrics), "lang-uk n-shot task set drift")
+    _require(
+        all(isinstance(value, int) and not isinstance(value, bool) and value >= 0 for value in shots.values()),
+        "lang-uk n-shot values must be nonnegative integers",
+    )
     for task_name, task_metrics in metrics.items():
         _require(isinstance(task_name, str) and isinstance(task_metrics, dict), "invalid lang-uk task")
+        numeric_metrics = 0
         for metric_name, value in task_metrics.items():
+            if metric_name == "alias":
+                _require(isinstance(value, str) and value, "lang-uk alias must be a string")
+                continue
             if metric_name == "qg_meta":
                 _require(isinstance(value, dict), "qg_meta must be an object")
                 continue
             _require(isinstance(value, int | float) and not isinstance(value, bool), "lang-uk metric must be numeric")
-    return general["model_name"]
+            numeric_metrics += 1
+        _require(numeric_metrics > 0, f"lang-uk task has no numeric metrics: {task_name}")
+    return model_name
 
 
 def package_lang_uk(
@@ -214,9 +229,14 @@ def package_lang_uk(
     broad_report = _read_json(broad_report_path)
     _require(broad_report.get("schema_version") == suite_cli.REPORT_SCHEMA, "wrong broad evaluation report schema")
     scoring = broad_report.get("scoring")
-    _require(isinstance(scoring, dict) and scoring.get("global_quality_score") is None, "broad report has a global score")
+    _require(
+        isinstance(scoring, dict) and scoring.get("global_quality_score") is None, "broad report has a global score"
+    )
     _require(scoring.get("closed_model_judge_used") is False, "closed model judge report rejected")
-    _require(set(broad_report.get("tracks", {})) == set(suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"]), "broad report track set drift")
+    _require(
+        set(broad_report.get("tracks", {})) == set(suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"]),
+        "broad report track set drift",
+    )
     _require(
         broad_report.get("cases_sha256") == suite_cli.sha256_file(suite_cli.CASES_PATH),
         "broad report is not bound to the current frozen case file",

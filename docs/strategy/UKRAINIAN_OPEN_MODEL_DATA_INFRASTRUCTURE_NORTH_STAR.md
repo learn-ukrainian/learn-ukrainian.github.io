@@ -12,13 +12,17 @@
 > labour from the critical path. On 2026-08-02, the operator directed the
 > Foundry to ship the clean-Ukrainian preparation tool and consumer training
 > recipe without project-funded or project-operated model training. Training
-> belongs to downstream teams that choose to use the released artifacts.
+> belongs to downstream teams that choose to use the released artifacts. The
+> operator separately authorized release and external-validation work under
+> #6273 on 2026-08-02, with just-in-time approval gates for account use,
+> uploads, external submissions, model downloads, and compute or storage cost.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
 > refreshed 2026-08-02
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
-> **Does not authorize:** model training, dataset publication, or mixing
-> evaluation gold into training data
+> **Does not authorize:** model training or mixing evaluation gold into
+> training data; Hugging Face publication and external submissions retain the
+> explicit approval gates in #6273
 
 ## North star
 
@@ -42,11 +46,12 @@ Curated data, provenance, evaluation, and tooling transfer to every new model
 generation.
 
 This direction prioritizes transferable data, grammar, lexical naturalness,
-and evidence over owning or producing model weights. Project completion stops
-before model download, accelerator rental, optimizer execution, adapter
-production, or weight upload. A downstream team may independently use the
-Foundry recipe and report results, but that is consumer validation rather than
-a Foundry execution lane. The accepted boundary between public evaluation gold,
+and evidence over owning or producing model weights. Foundry implementation
+completion stops before model download, accelerator rental, optimizer
+execution, adapter production, or weight upload. The separate release-and-
+validation issue #6273 may run evaluation only with an already-local model, or
+after explicit approval for a model download and bounded compute. It does not
+authorize training. The accepted boundary between public evaluation gold,
 private product data, and training data remains intact.
 
 ## Solo-operator execution model
@@ -85,16 +90,21 @@ the Foundry release.
 
 ## GitHub execution homes
 
-- [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
-  owns Foundry Phase 2–4: real corpus admission, production contextual
+- Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
+  owns the completed Foundry Phase 2–4 implementation: real corpus admission, production contextual
   language-contact detection, evidence-backed silver with an optional
   qualified-human upgrade, real model-ready exports, a model-neutral clean-
   Ukrainian tool, reproducible consumer training recipe, and no-training
-  release candidate. Project-operated open-weight treatment is out of scope.
+  release candidate. It closed after PRs #6266, #6268, and #6271.
   Closed
   [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
   owns the completed interfaces, profiler, exporters, recipes, and synthetic
   reference build on which this production program depends.
+- [#6273](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6273)
+  is the active post-completion release and external-validation child of #6164.
+  It owns rights-complete publication, a real fourteen-track open-weight result,
+  concrete Lapa and lang-uk submissions after approval, and the external run
+  receipt required before an adoption claim.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   is closed as not planned under the solo-operator model while preserving the
   completed v0.2 error analysis and frozen design. Its reviewer-intensive
@@ -298,42 +308,39 @@ later decisions. The project verdict is **CONTINUE**.
   reconstructing original-source evidence; it is not provenance authority or a
   candidate training collection.
 
-### Completed foundations and sole remaining lane
+### Completed Foundry implementation and release-validation lane
 
 The production corpus audit, admission baseline, full-corpus detector,
 evidence-grade silver/protection factory, separate model views, tokenizer
-diagnostics, and reference build are complete under #6166–#6169. PR #6248
-supplies the later corpus-usability decision that defines #6171's remaining
-capability-separation work. Together they establish that the project has the
-source material and component interfaces needed to finish the Foundry.
+diagnostics, and reference build completed under #6166–#6169. PR #6248 supplied
+the corpus-usability decision. #6171 and PR #6266 then completed capability-
+specific admission, restored locators, the consumer JSONL and public CLI,
+contextual non-erasure routes, evidence surfaces, disjoint views, receipts, and
+clean reproduction. PR #6268 added the frozen 4,000-case, fourteen-track open-
+weight evaluation; PR #6271 added the Lapa and lang-uk adapters.
 
-Issue #6171 is the sole remaining Foundry execution lane. It must, in order:
+Issue #6273 is the separate release-and-validation lane. It must:
 
-1. separate downstream local-learning eligibility from raw-source
-   redistribution, dataset publication, and model publication in the executable
-   admission contract, while restoring retained source locators;
-2. expose one bounded consumer-owned JSONL input and one documented public CLI
-   over admission, contextual language contact, evidence, model views,
-   tokenizer diagnostics, cost calculation, and the evaluation firewall;
-3. preserve original text and the Russian-quotation, modern-interference,
-   phonetic-Russian, mixed, historical, regional, dialectal, protected, OCR,
-   other-language, and unresolved routes;
-4. expose the calque, grammar/government, morphology/OOV, VESUM, R2U, ULIF, and
-   heritage evidence surfaces without promoting any one source to an automatic
-   verdict;
-5. emit deterministic faithful-source, modern-learning, silver correction,
-   preference, filter, evaluation, tokenizer, recipe, and limitation receipts
-   with benchmark contamination denied; and
-6. reproduce the complete bounded path in a fresh environment with no model
-   download, accelerator, optimizer, hidden database, or project-private path.
+1. publish only rights-classified bytes under a non-colliding tag with exact
+   hashes, attribution, English/Ukrainian instructions, limitations, and the
+   contamination boundary;
+2. prepare the Hugging Face dataset package and request operator approval
+   immediately before account use or upload;
+3. evaluate one real open-weight model across all 4,000 frozen cases, using an
+   already-local artifact or explicit approval before download or cost;
+4. publish all fourteen track results with exact model/tokenizer revisions,
+   decoding settings, saved outputs, and a local-run receipt; and
+5. prepare exact Lapa and lang-uk patches, request approval before external
+   submission, and require an independently produced run receipt before saying
+   adoption is demonstrated.
 
-The project stops at that no-training release. Closed #6170 is retained only as
-historical preregistration evidence and is not a future Foundry task. Downstream
-teams with compute may select a model, run the frozen recipe on their own
-corpus, and return results if they choose; the Foundry neither funds nor
-operates that work. The reviewer-intensive v0.2 acquisition remains closed as
-not planned. Public evaluation gold remains mechanically isolated from every
-model-learning or derived-rule view.
+The 4,000 cases are not 4,000 independent human judgments. The suite contains
+1,000 UA Eval 0.1.1 human-gold error anchors, 1,000 deterministic controls
+derived from accepted targets, and 2,000 evidence-graded protected or unresolved
+silver cases. Closed #6170 remains historical preregistration only. The
+reviewer-intensive v0.2 acquisition remains closed as not planned. Public
+evaluation data remains mechanically isolated from every model-learning or
+derived-rule view.
 
 ### Completed Foundry v1 reference build
 
@@ -360,7 +367,7 @@ or a claim that the 677-item benchmark measures general Ukrainian fluency.
 
 ### Later validation and collaboration
 
-After a usable reference build exists, it may be validated with Lapa,
+The shipped reference build and evaluation may be validated with Lapa,
 `lang-uk`, UA-GEC, and other open-weight Ukrainian teams through:
 
 - data slices they can inspect and reproduce;
@@ -368,17 +375,20 @@ After a usable reference build exists, it may be validated with Lapa,
 - failure-focused evaluation with protected legitimate variation; and
 - evidence-backed annotation guidelines.
 
-External feedback may prioritize later evidence adapters, acquisition, or
-release work.
-It is not a prerequisite for building the architecture, full-corpus profiler,
-silver correction intake, separate exporters, recipes, or reference validation.
-Hramatka teacher feedback follows the same optional-evidence rule.
+External feedback may prioritize later evidence adapters or acquisition. It was
+not a prerequisite for the completed Foundry implementation. It is, however,
+required before #6273 can claim that external adoption has been demonstrated.
+An adapter, fixture, internal CI run, or unanswered upstream submission is not
+adoption evidence. Hramatka teacher feedback follows the same optional-evidence
+rule.
 
 ## Downstream validation policy
 
-The Foundry project does not run model baselines or training experiments. It
-ships frozen artifacts that let a downstream team run them without asking this
-project to operate or fund compute.
+The Foundry project does not run training experiments. Under #6273 it may run a
+bounded evaluation-only baseline with an already-local open-weight model, or
+after explicit approval for the exact download, storage, runtime, and maximum
+cost. It still ships frozen artifacts that downstream teams can reproduce
+without a closed-model judge.
 
 A downstream result is useful evidence only when it answers a named question,
 such as:

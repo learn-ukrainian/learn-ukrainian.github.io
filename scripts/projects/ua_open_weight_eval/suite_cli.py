@@ -13,8 +13,10 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
+import zipfile
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -34,6 +36,76 @@ RECEIPT_PATH = RELEASE_ROOT / "release_receipt.json"
 V011_FREEZE = ROOT / "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json"
 V011_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
+PUBLICATION_TAG = "ua-open-weight-eval-v0.1.0"
+PUBLICATION_DOC_ROOT = ROOT / "docs/projects/ua-open-weight-eval"
+PUBLICATION_FILES = (
+    (CONFIG_PATH, "build_config.json", "MIT", "deterministic build configuration"),
+    (CASES_PATH, "cases.jsonl", "LicenseRef-Row-Specific", "frozen evaluation cases"),
+    (SEEDS_PATH, "controlled_seeds.jsonl", "MIT", "project-authored silver seeds"),
+    (
+        RELEASE_ROOT / "local_run_config.example.json",
+        "local_run_config.example.json",
+        "MIT",
+        "offline runner configuration example",
+    ),
+    (
+        RECEIPT_PATH,
+        "release_receipt.json",
+        "MIT",
+        "frozen release and upstream hash receipt",
+    ),
+    (
+        RELEASE_ROOT / "saved_response.schema.json",
+        "saved_response.schema.json",
+        "MIT",
+        "saved-output JSON Schema",
+    ),
+    (
+        PUBLICATION_DOC_ROOT / "HUGGING_FACE_README.md",
+        "README.md",
+        "MIT",
+        "Hugging Face dataset card and bilingual quickstart",
+    ),
+    (
+        PUBLICATION_DOC_ROOT / "DATA_CARD.md",
+        "DATA_CARD.md",
+        "MIT",
+        "full data card and limitations",
+    ),
+    (
+        PUBLICATION_DOC_ROOT / "CONTAMINATION_POLICY.md",
+        "CONTAMINATION_POLICY.md",
+        "MIT",
+        "evaluation and learning-view separation policy",
+    ),
+    (
+        PUBLICATION_DOC_ROOT / "THIRD_PARTY_NOTICES.md",
+        "THIRD_PARTY_NOTICES.md",
+        "MIT",
+        "license, attribution, and modification notices",
+    ),
+    (
+        ROOT / "scripts/projects/ua_open_weight_eval/run_mlx_model.py",
+        "run_mlx_model.py",
+        "MIT",
+        "resumable source-only MLX open-weight runner",
+    ),
+    (ROOT / "LICENSE", "LICENSE-MIT.txt", "MIT", "repository-authored byte license text"),
+)
+CASE_RIGHTS_RULES = [
+    {
+        "case_id_prefix": "uaw-011-",
+        "cases": 2000,
+        "license_expression": "CC-BY-4.0",
+        "notice": "UA-GEC-derived error and control rows; retain attribution and modification notice.",
+    },
+    {
+        "case_id_prefix": "uaw-silver-",
+        "cases": 2000,
+        "license_expression": "MIT",
+        "notice": "Project-authored controlled or source-backed silver rows; external evidence bytes are not included.",
+    },
+]
 
 FROZEN_UPSTREAM_HASHES = {
     "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json": (
@@ -334,7 +406,9 @@ def _validate_cases(cases: Sequence[Mapping[str, Any]], config: Mapping[str, Any
         _require(case.get("source_sha256") == sha256_text(source), "case source hash mismatch")
         expected = case.get("expected")
         _require(isinstance(expected, dict) and expected.get("action") in ALLOWED_ACTIONS, "invalid expected action")
-        _require(case.get("data_handling", {}).get("foundry_learning_eligible") is False, "evaluation leakage flag drift")
+        _require(
+            case.get("data_handling", {}).get("foundry_learning_eligible") is False, "evaluation leakage flag drift"
+        )
         without_hash = dict(case)
         claimed = without_hash.pop("case_sha256", None)
         _require(claimed == sha256_text(canonical_json(without_hash)), "case hash mismatch")
@@ -360,20 +434,14 @@ def build_release() -> dict[str, Any]:
         "counts": {
             "total": len(cases),
             "by_category": dict(sorted(Counter(case["category"] for case in cases).items())),
-            "by_evidence_grade": dict(
-                sorted(Counter(case["evidence"]["grade"] for case in cases).items())
-            ),
-            "by_track": dict(
-                sorted(Counter(track for case in cases for track in case["tracks"]).items())
-            ),
+            "by_evidence_grade": dict(sorted(Counter(case["evidence"]["grade"] for case in cases).items())),
+            "by_track": dict(sorted(Counter(track for case in cases for track in case["tracks"]).items())),
         },
         "artifacts": {
             "build_config": sha256_file(CONFIG_PATH),
             "controlled_seeds": sha256_file(SEEDS_PATH),
             "cases": sha256_text(encoded),
-            "foundry_firewall": sha256_file(
-                ROOT / "scripts/projects/open_model_data/model_view_exporter.py"
-            ),
+            "foundry_firewall": sha256_file(ROOT / "scripts/projects/open_model_data/model_view_exporter.py"),
             "local_run_config_example": sha256_file(RELEASE_ROOT / "local_run_config.example.json"),
             "saved_response_schema": sha256_file(RELEASE_ROOT / "saved_response.schema.json"),
             "suite_cli": sha256_file(Path(__file__)),
@@ -407,6 +475,181 @@ def verify_release() -> dict[str, Any]:
     return receipt
 
 
+def _validate_source_revision(source_revision: str) -> None:
+    _require(
+        len(source_revision) == 40 and all(character in "0123456789abcdef" for character in source_revision),
+        "source revision must be a full lowercase Git SHA",
+    )
+
+
+def publication_manifest(source_revision: str) -> dict[str, Any]:
+    """Return the complete, hash-bound public payload manifest."""
+    _validate_source_revision(source_revision)
+    receipt = verify_release()
+    cases = read_jsonl(CASES_PATH)
+    rights_counts = Counter(
+        "CC-BY-4.0" if str(case.get("case_id", "")).startswith("uaw-011-") else "MIT" for case in cases
+    )
+    _require(
+        rights_counts == {"CC-BY-4.0": 2000, "MIT": 2000},
+        "case rights selectors do not cover the frozen suite exactly",
+    )
+
+    files: list[dict[str, Any]] = []
+    output_names: set[str] = set()
+    for source, output_name, license_expression, role in PUBLICATION_FILES:
+        _require(source.is_file(), f"missing publication source: {source.relative_to(ROOT)}")
+        _require(output_name not in output_names, f"duplicate publication output: {output_name}")
+        _require(
+            Path(output_name).name == output_name,
+            f"nested publication output forbidden: {output_name}",
+        )
+        output_names.add(output_name)
+        files.append(
+            {
+                "bytes": source.stat().st_size,
+                "license_expression": license_expression,
+                "output_path": output_name,
+                "role": role,
+                "sha256": sha256_file(source),
+                "source_path": source.relative_to(ROOT).as_posix(),
+            }
+        )
+
+    return {
+        "schema_version": "ua_open_weight_eval_publication_manifest.v1",
+        "release_id": receipt["release_id"],
+        "release_tag": PUBLICATION_TAG,
+        "source_revision": source_revision,
+        "files": files,
+        "case_rights": {
+            "manifest_scope": "cases.jsonl",
+            "rules": CASE_RIGHTS_RULES,
+        },
+        "exclusions": [
+            "model weights and adapters",
+            "provider raw output and failed-attempt logs",
+            "private corpus and Google Drive bytes",
+            "non-redistributable literary or textbook content",
+            "VESUM dictionary data and derived evidence artifacts",
+            "UA Eval v0.2 pending-review material",
+        ],
+        "policies": {
+            "closed_model_judge_allowed": False,
+            "foundry_learning_eligible": False,
+            "global_quality_score_allowed": False,
+            "independent_human_judgments_claimed": 1000,
+            "total_cases": 4000,
+        },
+    }
+
+
+def _write_deterministic_zip(package_dir: Path, archive_path: Path) -> None:
+    _require(not archive_path.exists(), f"refusing to replace archive: {archive_path}")
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    prefix = PUBLICATION_TAG
+    temporary = archive_path.with_name(f".{archive_path.name}.tmp")
+    _require(not temporary.exists(), f"temporary archive already exists: {temporary}")
+    try:
+        with zipfile.ZipFile(
+            temporary,
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
+            compresslevel=9,
+        ) as archive:
+            for path in sorted(item for item in package_dir.iterdir() if item.is_file()):
+                info = zipfile.ZipInfo(f"{prefix}/{path.name}", date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                archive.writestr(
+                    info,
+                    path.read_bytes(),
+                    compress_type=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
+                )
+        temporary.replace(archive_path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def package_publication(*, output_dir: Path, source_revision: str, archive_path: Path | None = None) -> dict[str, Any]:
+    """Create the exact GitHub/Hugging Face publication payload."""
+    _require(not output_dir.exists(), f"refusing to replace output directory: {output_dir}")
+    manifest = publication_manifest(source_revision)
+    output_dir.mkdir(parents=True)
+    try:
+        for item in manifest["files"]:
+            shutil.copyfile(ROOT / item["source_path"], output_dir / item["output_path"])
+        manifest_path = output_dir / "PUBLICATION_MANIFEST.json"
+        write_text_atomic(
+            manifest_path,
+            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        )
+        checksum_files = sorted(path for path in output_dir.iterdir() if path.is_file())
+        checksums = "".join(f"{sha256_file(path)}  {path.name}\n" for path in checksum_files)
+        write_text_atomic(output_dir / "SHA256SUMS", checksums)
+        verification = verify_publication_package(output_dir)
+        if archive_path is not None:
+            _write_deterministic_zip(output_dir, archive_path)
+            verification["archive"] = {
+                "path": str(archive_path),
+                "bytes": archive_path.stat().st_size,
+                "sha256": sha256_file(archive_path),
+            }
+        return verification
+    except Exception:
+        shutil.rmtree(output_dir, ignore_errors=True)
+        raise
+
+
+def verify_publication_package(package_dir: Path) -> dict[str, Any]:
+    """Verify a staged publication directory and reject extra bytes."""
+    _require(package_dir.is_dir(), "publication package directory is missing")
+    manifest_path = package_dir / "PUBLICATION_MANIFEST.json"
+    checksums_path = package_dir / "SHA256SUMS"
+    manifest = read_json(manifest_path)
+    _require(
+        manifest.get("schema_version") == "ua_open_weight_eval_publication_manifest.v1",
+        "publication manifest schema drift",
+    )
+    _require(manifest.get("release_tag") == PUBLICATION_TAG, "publication tag drift")
+    _validate_source_revision(str(manifest.get("source_revision", "")))
+    case_rights = manifest.get("case_rights")
+    _require(
+        isinstance(case_rights, dict) and case_rights.get("rules") == CASE_RIGHTS_RULES,
+        "publication case-rights drift",
+    )
+    files = manifest.get("files")
+    _require(isinstance(files, list) and files, "publication file manifest is empty")
+    expected_names = {item["output_path"] for item in files}
+    expected_names.update({manifest_path.name, checksums_path.name})
+    package_children = list(package_dir.iterdir())
+    _require(all(path.is_file() for path in package_children), "publication package has nested data")
+    actual_names = {path.name for path in package_children}
+    _require(actual_names == expected_names, "publication package has missing or extra files")
+    for item in files:
+        path = package_dir / item["output_path"]
+        _require(path.stat().st_size == item["bytes"], f"publication byte count drift: {path.name}")
+        _require(sha256_file(path) == item["sha256"], f"publication hash drift: {path.name}")
+    expected_checksums = "".join(
+        f"{sha256_file(path)}  {path.name}\n"
+        for path in sorted(
+            (package_dir / name for name in expected_names if name != checksums_path.name),
+            key=lambda path: path.name,
+        )
+    )
+    _require(checksums_path.read_text(encoding="utf-8") == expected_checksums, "SHA256SUMS drift")
+    return {
+        "status": "passed",
+        "release_id": manifest["release_id"],
+        "release_tag": manifest["release_tag"],
+        "source_revision": manifest["source_revision"],
+        "files": len(expected_names),
+        "manifest_sha256": sha256_file(manifest_path),
+        "sha256sums_sha256": sha256_file(checksums_path),
+    }
+
+
 def prepare_requests(output: Path) -> dict[str, Any]:
     verify_release()
     cases = read_jsonl(CASES_PATH)
@@ -427,9 +670,9 @@ def prepare_requests(output: Path) -> dict[str, Any]:
             "instruction_sha256": sha256_text(instruction),
         }
     ]
-    for case in cases:
+    for position, case in enumerate(cases, 1):
         payload = {
-            "item_id": case["case_id"],
+            "item_id": request_item_id(position),
             "source": case["source"],
             "source_sha256": case["source_sha256"],
             "instruction_sha256": sha256_text(instruction),
@@ -438,6 +681,11 @@ def prepare_requests(output: Path) -> dict[str, Any]:
     encoded = encode_jsonl(rows)
     write_text_atomic(output, encoded)
     return {"requests": len(cases), "path": str(output), "sha256": sha256_text(encoded)}
+
+
+def request_item_id(position: int) -> str:
+    _require(position > 0, "request position must be positive")
+    return f"uaw-request-{position:04d}"
 
 
 def validate_run_config(path: Path) -> dict[str, Any]:
@@ -460,12 +708,23 @@ def validate_run_config(path: Path) -> dict[str, Any]:
     )
     _require(sha256_path(model_path) == claimed_hash, "model path hash mismatch")
     command = config.get("command")
-    _require(isinstance(command, list) and command and all(isinstance(part, str) for part in command), "command must be a nonempty string array")
-    _require("{requests}" in command and "{responses}" in command, "command requires requests and responses placeholders")
+    _require(
+        isinstance(command, list) and command and all(isinstance(part, str) for part in command),
+        "command must be a nonempty string array",
+    )
+    _require(
+        "{requests}" in command and "{responses}" in command, "command requires requests and responses placeholders"
+    )
     executable = Path(command[0]).expanduser()
     _require(executable.is_absolute() and executable.is_file(), "runner executable must be an existing absolute file")
-    _require(executable.name.casefold() not in FORBIDDEN_COMMAND_EXECUTABLES, "network or closed-service client cannot be a local runner")
-    _require(not any("http://" in part.casefold() or "https://" in part.casefold() for part in command), "runner command cannot contain a network URL")
+    _require(
+        executable.name.casefold() not in FORBIDDEN_COMMAND_EXECUTABLES,
+        "network or closed-service client cannot be a local runner",
+    )
+    _require(
+        not any("http://" in part.casefold() or "https://" in part.casefold() for part in command),
+        "runner command cannot contain a network URL",
+    )
     _require(config.get("network_allowed") is False, "network_allowed must be false")
     return config
 
@@ -474,16 +733,10 @@ def run_local(config_path: Path, requests: Path, responses: Path, receipt_path: 
     config = validate_run_config(config_path)
     _require(requests.is_file(), "request packet is missing")
     command = [
-        part.replace("{requests}", str(requests.resolve())).replace(
-            "{responses}", str(responses.resolve())
-        )
+        part.replace("{requests}", str(requests.resolve())).replace("{responses}", str(responses.resolve()))
         for part in config["command"]
     ]
-    environment = {
-        key: os.environ[key]
-        for key in ("LANG", "LC_ALL", "PATH", "TMPDIR")
-        if key in os.environ
-    }
+    environment = {key: os.environ[key] for key in ("LANG", "LC_ALL", "PATH", "TMPDIR") if key in os.environ}
     environment.update(
         {
             "HF_HUB_OFFLINE": "1",
@@ -517,7 +770,7 @@ def _normalized_text(value: str) -> str:
 
 def score_saved(responses_path: Path, output: Path) -> dict[str, Any]:
     verify_release()
-    cases = {row["case_id"]: row for row in read_jsonl(CASES_PATH)}
+    cases = {request_item_id(position): row for position, row in enumerate(read_jsonl(CASES_PATH), 1)}
     raw_rows = read_jsonl(responses_path)
     if raw_rows[0].get("type") == "run":
         header = raw_rows.pop(0)
@@ -587,6 +840,18 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("build", help="rebuild the deterministic 4,000-case release")
     commands.add_parser("verify", help="verify frozen inputs and exact reproduction")
+    package = commands.add_parser(
+        "package-publication",
+        help="build the verified GitHub and Hugging Face payload",
+    )
+    package.add_argument("--output", type=Path, required=True)
+    package.add_argument("--source-revision", required=True)
+    package.add_argument("--archive", type=Path)
+    verify_package = commands.add_parser(
+        "verify-publication-package",
+        help="verify a staged publication payload",
+    )
+    verify_package.add_argument("--package", type=Path, required=True)
     prepare = commands.add_parser("prepare", help="write a source-only request packet")
     prepare.add_argument("--output", type=Path, required=True)
     validate = commands.add_parser("validate-run-config", help="validate an offline open-weight runner config")
@@ -609,6 +874,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = build_release()
         elif args.command == "verify":
             result = verify_release()
+        elif args.command == "package-publication":
+            result = package_publication(
+                output_dir=args.output,
+                source_revision=args.source_revision,
+                archive_path=args.archive,
+            )
+        elif args.command == "verify-publication-package":
+            result = verify_publication_package(args.package)
         elif args.command == "prepare":
             result = prepare_requests(args.output)
         elif args.command == "validate-run-config":
