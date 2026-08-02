@@ -1,0 +1,65 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5394225c0bc5",
+  "session_id": "ses_03e3b457fffesPsXu554jb5Jrr",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-02T09:23:22.871805Z",
+  "branch": "codex/6256-entire-native-onboarding",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "agents_extensions/codex/config.toml",
+    "agents_extensions/codex/hooks.json",
+    "agents_extensions/shared/settings.json",
+    "docs/entire/PUBLIC-SOURCE-PILOT.md",
+    "tests/test_codex_hooks_contract.py"
+  ],
+  "agent": "OpenCode",
+  "model": "glm-5.2",
+  "turn_id": "01c46796b504",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 44,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 29632,
+    "output_tokens": 8,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-02T09:23:22.869148Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 56,
+    "human_modified": 6,
+    "human_removed": 0,
+    "total_committed": 57,
+    "total_lines_changed": 62,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 534,
+      "user_lines_removed": 6,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".opencode/plugins/entire.ts": 278,
+        "agents_extensions/codex/config.toml": 2,
+        "agents_extensions/codex/hooks.json": 24,
+        "agents_extensions/shared/settings.json": 53,
+        "docs/entire/PUBLIC-SOURCE-PILOT.md": 21,
+        "tests/test_codex_hooks_contract.py": 5,
+        "tests/test_entire_native_onboarding.py": 151
+      },
+      "user_removed_per_file": {
+        "docs/entire/PUBLIC-SOURCE-PILOT.md": 4,
+        "tests/test_codex_hooks_contract.py": 2
+      }
+    }
+  ]
+}

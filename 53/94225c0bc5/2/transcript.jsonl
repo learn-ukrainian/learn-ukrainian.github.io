@@ -1,0 +1,2 @@
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"user","ts":"2026-08-02T09:18:43.354Z","content":[{"id":"prt_fc1c4ba9f001FZzy2uFqwFmo10","text":"\"Respond exactly ENTIRE_EXIT_CANARY_OK. Do not call tools.\""}]}
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"assistant","ts":"2026-08-02T09:18:46.682Z","id":"msg_fc1c4c79a001Fdes2bPW25Zroa","input_tokens":44,"output_tokens":8,"content":[{"text":"ENTIRE_EXIT_CANARY_OK","type":"text"}]}

@@ -1,0 +1,153 @@
+{
+  "info": {
+    "id": "ses_03e3b457fffesPsXu554jb5Jrr",
+    "slug": "sunny-tiger",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding",
+    "path": "",
+    "title": "entire-host-canary-6256-exit",
+    "agent": "build",
+    "model": {
+      "id": "glm-5.2",
+      "providerID": "zai-coding-plan",
+      "variant": "default"
+    },
+    "version": "1.17.13",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 44,
+      "output": 8,
+      "reasoning": 0,
+      "cache": {
+        "read": 29632,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1785662323328,
+      "updated": 1785662326902
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1785662323354
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "zai-coding-plan",
+          "modelID": "glm-5.2"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_fc1c4ba9a0012G5MohPKkwABj1",
+        "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"Respond exactly ENTIRE_EXIT_CANARY_OK. Do not call tools.\"",
+          "id": "prt_fc1c4ba9f001FZzy2uFqwFmo10",
+          "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr",
+          "messageID": "msg_fc1c4ba9a0012G5MohPKkwABj1"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_fc1c4ba9a0012G5MohPKkwABj1",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/6256-entire-native-onboarding"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 29684,
+          "input": 44,
+          "output": 8,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 29632
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1785662326682,
+          "completed": 1785662338207
+        },
+        "finish": "stop",
+        "id": "msg_fc1c4c79a001Fdes2bPW25Zroa",
+        "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr"
+      },
+      "parts": [
+        {
+          "snapshot": "79717a35c37ad95858c9d551b7ba57a0acde9b77",
+          "type": "step-start",
+          "id": "prt_fc1c4f3e7001vHhQcsym3UDDA5",
+          "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr",
+          "messageID": "msg_fc1c4c79a001Fdes2bPW25Zroa"
+        },
+        {
+          "type": "text",
+          "text": "ENTIRE_EXIT_CANARY_OK",
+          "time": {
+            "start": 1785662338032,
+            "end": 1785662338036
+          },
+          "id": "prt_fc1c4f3f0001smoNZ6gE045cdu",
+          "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr",
+          "messageID": "msg_fc1c4c79a001Fdes2bPW25Zroa"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "79717a35c37ad95858c9d551b7ba57a0acde9b77",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29684,
+            "input": 44,
+            "output": 8,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 29632
+            }
+          },
+          "cost": 0,
+          "id": "prt_fc1c4f450001JTC21AgFxLSel1",
+          "sessionID": "ses_03e3b457fffesPsXu554jb5Jrr",
+          "messageID": "msg_fc1c4c79a001Fdes2bPW25Zroa"
+        }
+      ]
+    }
+  ]
+}

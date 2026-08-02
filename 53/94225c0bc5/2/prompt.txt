@@ -1,0 +1,1 @@
+"Respond exactly ENTIRE_EXIT_CANARY_OK. Do not call tools."
