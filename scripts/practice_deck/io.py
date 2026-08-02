@@ -34,7 +34,7 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 13  # 12→13: render normalized identity decoys at source case (#6188)
+PRACTICE_DECK_BUILDER_VERSION = 14  # 13→14: normalize unambiguous identity-option POS aliases (#6188)
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
