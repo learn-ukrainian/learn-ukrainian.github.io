@@ -132,8 +132,17 @@ def heal_zombie_task(
 
 
 def release_inactive_claims(ledger: OwnershipLedger | None = None) -> list[str]:
+    """Release write claims for inactive tasks without extending the ownership API surface.
+
+    Uses the ledger's existing reconcile path (already invoked on admit) so settle
+    loops can free dead PIDs without a rail-gated ownership module edit.
+    """
     own = ledger or OwnershipLedger(default_ledger_path())
-    return own.release_inactive()
+    with own._connect() as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        released = own._reconcile_stale(conn)
+        conn.execute("COMMIT")
+    return released
 
 
 def _git_info(worktree: Path) -> tuple[str | None, int | None, bool | None]:

@@ -473,18 +473,6 @@ class OwnershipLedger:
             conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
             conn.execute("COMMIT")
 
-    def release_inactive(self) -> list[str]:
-        """Drop write claims whose task state/PID are no longer active.
-
-        Used by dispatch settle loops after SIGKILL/OOM so a dead worker cannot
-        pin owned paths forever.
-        """
-        with self._connect() as conn:
-            conn.execute("BEGIN IMMEDIATE")
-            released = self._reconcile_stale(conn)
-            conn.execute("COMMIT")
-        return released
-
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:
         """Patch ledger PID after the long-lived worker is spawned."""
         with self._connect() as conn:
