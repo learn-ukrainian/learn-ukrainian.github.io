@@ -14,6 +14,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     RealVesumVerifier,
     ReviewedSourceAllowlist,
+    _build_antonym_items,
     _build_classify_items,
     _build_cloze_items,
     _build_heritage_items,
@@ -31,12 +32,15 @@ from scripts.audit.generate_practice_deck import (
     compact_cloze_emit_fields,
     main,
     merge_practice_seed_entries,
+    read_antonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
     read_paronym_pairs,
     read_practice_seed,
     read_sentence_inventory,
+    validate_antonym_item,
+    validate_antonym_pair,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
@@ -2497,4 +2501,95 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate paronym pair key {key}"
         seen_pairs.add(key)
+
+
+def test_antonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
+    entries = [
+        {"lemmaId": "день", "lemma": "день", "gloss": "day", "pos": "noun", "cefr": "A1", "url_slug": "день", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+        {"lemmaId": "ніч", "lemma": "ніч", "gloss": "night", "pos": "noun", "cefr": "A1", "url_slug": "ніч", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+    ]
+    pair = {
+        "slugA": "день",
+        "slugB": "ніч",
+        "distinction_gloss_uk": "День протилежний ночі.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {"sentence_with_slot": "Настав ___.", "answer_form": "день", "confusable_form": "ніч", "origin": "t"},
+            {"sentence_with_slot": "Прийшла ___.", "answer_form": "ніч", "confusable_form": "день", "origin": "t2"},
+        ],
+    }
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), antonym_pairs=[pair])
+    a1_items = shards.get("A1", {}).get("antonym", {}).get("antonym", [])
+    assert len(a1_items) >= 1, "antonym should emit at least one item"
+    assert validate_antonym_pair(pair) == []
+    for it in a1_items:
+        assert validate_antonym_item(it) == []
+
+
+def test_antonym_builder_copies_optional_curated_prompt_en() -> None:
+    lex_a = {"lemmaId": "великий", "lemma": "великий", "cefr": "A1"}
+    lex_b = {"lemmaId": "малий", "lemma": "малий", "cefr": "A1"}
+    pair = {
+        "slugA": "великий",
+        "slugB": "малий",
+        "distinction_gloss_uk": "Великий проти малий.",
+        "citations": ["fixture-test"],
+        "frames": [{
+            "sentence_with_slot": "Це ___ будинок.",
+            "prompt_en": "This is a ___ house.",
+            "answer_form": "великий",
+            "confusable_form": "малий",
+            "origin": "fixture",
+        }],
+    }
+
+    item = _build_antonym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert item["promptEn"] == "This is a ___ house."
+
+    pair["frames"][0].pop("prompt_en")
+    item_without_en = _build_antonym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert "promptEn" not in item_without_en
+
+
+def test_antonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
+    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
+    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), antonym_pairs=[pair])
+    assert shards["B1"]["antonym"]["antonym"] == []
+    err = capsys.readouterr().err
+    assert "not in practice lexemes; emitted 0 items" in err
+
+
+def test_antonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    p = tmp_path / "empty-ant.yaml"
+    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
+    rows = read_antonym_pairs(p)
+    assert rows == []
+    err = capsys.readouterr().err
+    assert "curated antonym pairs empty" in err
+    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
+    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), antonym_pairs=[])
+    assert shards["B1"]["antonym"]["antonym"] == []
+
+
+def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
+    live_path = Path("data/lexicon/antonym_pairs.yaml")
+    assert live_path.exists()
+    pairs = read_antonym_pairs(live_path)
+    assert len(pairs) == 392, f"Expected 392 reviewed antonym pairs, got {len(pairs)}"
+    seen_pairs: set[tuple[str, str]] = set()
+    for index, pair in enumerate(pairs):
+        errors = validate_antonym_pair(pair)
+        assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
+        import unicodedata
+        a = unicodedata.normalize("NFC", pair["slugA"].strip().lower())
+        b = unicodedata.normalize("NFC", pair["slugB"].strip().lower())
+        key = tuple(sorted([a, b]))
+        assert key not in seen_pairs, f"Duplicate antonym pair key {key}"
+        seen_pairs.add(key)
+
 

@@ -2341,13 +2341,14 @@ function LexiconPracticeIsland({
           `${shardBaseUrl}/practice-synonym.${targetLevel}.json`,
           `${shardBaseUrl}/practice-paronym.${targetLevel}.json`,
           `${shardBaseUrl}/practice-heritage.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-antonym.${targetLevel}.json`,
         ];
         const drillResults = await Promise.all(
           drillUrls.map((u) =>
             getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({})),
           ),
         );
-        const [clozeR, stressR, classifyR, paradigmR, synonymR, paronymR, heritageR] = drillResults;
+        const [clozeR, stressR, classifyR, paradigmR, synonymR, paronymR, heritageR, antonymR] = drillResults;
         nextDeck = {
           ...nextDeck!,
           cloze: [...(nextDeck!.cloze ?? []), ...((clozeR as { cloze?: PracticeClozeItem[] }).cloze ?? [])],
@@ -2357,6 +2358,7 @@ function LexiconPracticeIsland({
           synonym: [...(nextDeck!.synonym ?? []), ...((synonymR as { synonym?: any[] }).synonym ?? [])],
           paronym: [...(nextDeck!.paronym ?? []), ...((paronymR as { paronym?: any[] }).paronym ?? [])],
           heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
+          antonym: [...(nextDeck!.antonym ?? []), ...((antonymR as { antonym?: any[] }).antonym ?? [])],
         };
 
         // Merge teacher deck pre-generated cloze items if active
@@ -2409,6 +2411,7 @@ function LexiconPracticeIsland({
                   `${shardBaseUrl}/practice-synonym.${lv}.json`,
                   `${shardBaseUrl}/practice-paronym.${lv}.json`,
                   `${shardBaseUrl}/practice-heritage.${lv}.json`,
+                  `${shardBaseUrl}/practice-antonym.${lv}.json`,
                 ];
                 const rs = await Promise.all(
                   urls.map((u) => getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({}))),
@@ -2421,6 +2424,7 @@ function LexiconPracticeIsland({
                   synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
                   paronym: (rs[5] as { paronym?: any[] }).paronym ?? [],
                   heritage: (rs[6] as { heritage?: any[] }).heritage ?? [],
+                  antonym: (rs[7] as { antonym?: any[] }).antonym ?? [],
                 };
               }),
             );
@@ -2436,6 +2440,7 @@ function LexiconPracticeIsland({
                 synonym: [...(prev.synonym ?? []), ...lowerDrillBatches.flatMap((b) => b.synonym)],
                 paronym: [...(prev.paronym ?? []), ...lowerDrillBatches.flatMap((b) => b.paronym)],
                 heritage: [...(prev.heritage ?? []), ...lowerDrillBatches.flatMap((b) => b.heritage)],
+                antonym: [...(prev.antonym ?? []), ...lowerDrillBatches.flatMap((b) => b.antonym)],
               };
             });
           })();

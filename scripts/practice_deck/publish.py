@@ -30,6 +30,7 @@ DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze
 DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-inventory.json"
 DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
 DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
+DEFAULT_ANTONYM_PAIRS = ROOT / "data" / "lexicon" / "antonym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
 DEFAULT_CURATED_MEMBERSHIP = ROOT / "site" / "src" / "data" / "lexicon-teacher-curated-membership.json"
 DEFAULT_RELEASE_TAG = "atlas-practice-deck"
@@ -46,6 +47,7 @@ KINDS = {
     "synonym": ("practice-synonym.{level}.json", "atlas-practice-synonym"),
     "heritage": ("practice-heritage.{level}.json", "atlas-practice-heritage"),
     "paronym": ("practice-paronym.{level}.json", "atlas-practice-paronym"),
+    "antonym": ("practice-antonym.{level}.json", "atlas-practice-antonym"),
 }
 
 
@@ -70,6 +72,7 @@ def expected_deck_version(
     *,
     heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
     paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
+    antonym_pairs_path: Path | None = DEFAULT_ANTONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
@@ -83,6 +86,7 @@ def expected_deck_version(
     try:
         from scripts.audit.generate_practice_deck import (
             SCHEMA_VERSION,
+            read_antonym_pairs,
             read_atlas_db,
             read_cloze_sources,
             read_heritage_pairs,
@@ -98,6 +102,7 @@ def expected_deck_version(
             entries, _membership_report = apply_membership(entries, read_membership(curated_membership_path))
         heritage_pairs = read_heritage_pairs(heritage_pairs_path)
         paronym_pairs = read_paronym_pairs(paronym_pairs_path)
+        antonym_pairs = read_antonym_pairs(antonym_pairs_path)
         synonym_verdicts = read_synonym_verdicts(synonym_verdicts_path)
         cloze_sources = [
             *read_cloze_sources(cloze_sources_path),
@@ -110,6 +115,7 @@ def expected_deck_version(
             synonym_verdicts,
             cloze_sources,
             SCHEMA_VERSION,
+            antonym_pairs=antonym_pairs,
         )
     except Exception as exc:
         raise PracticeDeckPublishError(
@@ -358,6 +364,7 @@ def publish_practice_deck(
     atlas_db_path: Path = DEFAULT_ATLAS_DB,
     heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
     paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
+    antonym_pairs_path: Path | None = DEFAULT_ANTONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
@@ -371,6 +378,7 @@ def publish_practice_deck(
         atlas_db_path,
         heritage_pairs_path=heritage_pairs_path,
         paronym_pairs_path=paronym_pairs_path,
+        antonym_pairs_path=antonym_pairs_path,
         synonym_verdicts_path=synonym_verdicts_path,
         cloze_sources_path=cloze_sources_path,
         sentence_inventory_path=sentence_inventory_path,
@@ -411,6 +419,7 @@ def main() -> int:
     parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
+    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--curated-membership", type=Path)
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
@@ -424,6 +433,7 @@ def main() -> int:
         atlas_db_path=args.atlas_db,
         heritage_pairs_path=args.heritage_pairs,
         paronym_pairs_path=args.paronym_pairs,
+        antonym_pairs_path=args.antonym_pairs,
         synonym_verdicts_path=args.synonym_verdicts,
         curated_membership_path=args.curated_membership,
         cloze_sources_path=args.cloze_sources,
