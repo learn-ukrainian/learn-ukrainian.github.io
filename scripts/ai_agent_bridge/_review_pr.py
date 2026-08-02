@@ -329,7 +329,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     result = invoke_inter_agent(
                         participant,
                         sealed_prompt,
-                        cwd=Path(REPO_ROOT),
+                        cwd=checkout.path,
                         task_id=task_id,
                         correlation_id=formal_job.review_id,
                         idempotency_key=authority_key,
