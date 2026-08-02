@@ -4,10 +4,18 @@ from __future__ import annotations
 
 import os
 import shutil
+import signal
 import subprocess
+import time
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
+
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
+from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.session_supervisor import LaunchRole, SessionSupervisor
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -211,6 +219,253 @@ def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -
     # absent and recreates the six-hour lease leak for every provider driver.
     assert close_marker.is_file()
     assert "PROVIDER_EXEC" not in result.stdout
+
+
+def _core_driver_exit_fixture(
+    tmp_path: Path,
+    *,
+    provider_body: str,
+    failed_close_attempts: int = 0,
+) -> tuple[Path, Path, Path, Path]:
+    """Build a provider-neutral driver with observable close attempts."""
+    root = tmp_path / "repo"
+    for relative in (
+        "start-claude-driver.sh",
+        "scripts/lib/handoff_identity.sh",
+        "scripts/lib/launcher_core.sh",
+        "scripts/lib/session_supervisor.sh",
+        "scripts/lib/deploy_extensions.sh",
+    ):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, destination)
+
+    close_attempts = tmp_path / "close-attempts"
+    close_marker = tmp_path / "lease-closed"
+    child_started = tmp_path / "child-started"
+    python_stub = root / ".venv" / "bin" / "python"
+    python_stub.parent.mkdir(parents=True)
+    python_stub.write_text(
+        f'''#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  cat <<'JSON'
+{{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
+JSON
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "agents_extensions.shared.session_streams" ]]; then
+  count=0
+  if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
+  count=$((count + 1))
+  printf '%s\n' "$count" > {os.fspath(close_attempts)!r}
+  if [[ "$count" -le {failed_close_attempts} ]]; then exit 1; fi
+  touch {os.fspath(close_marker)!r}
+  exit 0
+fi
+exec {os.fspath(REPO / ".venv" / "bin" / "python")!r} "$@"
+''',
+        encoding="utf-8",
+    )
+    python_stub.chmod(0o755)
+
+    provider = root / "provider.sh"
+    provider.write_text(
+        f"#!/usr/bin/env bash\ntouch {os.fspath(child_started)!r}\n{provider_body}\n",
+        encoding="utf-8",
+    )
+    provider.chmod(0o755)
+
+    adapter = root / "scripts" / "launchers" / "claude.sh"
+    adapter.parent.mkdir(parents=True, exist_ok=True)
+    adapter.write_text(
+        f"""#!/usr/bin/env bash
+launcher_adapter_validate() {{ :; }}
+launcher_adapter_preflight() {{ :; }}
+launcher_adapter_canary() {{ return 0; }}
+launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
+""",
+        encoding="utf-8",
+    )
+    adapter.chmod(0o755)
+    initialized = subprocess.run(
+        ["git", "init", "-q", "-b", "main", os.fspath(root)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert initialized.returncode == 0, initialized.stderr
+    return root / "start-claude-driver.sh", close_attempts, close_marker, child_started
+
+
+def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path) -> None:
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body="exit 7",
+        failed_close_attempts=1,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 7
+    assert child_started.is_file()
+    assert close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+
+
+@pytest.mark.parametrize(
+    ("termination_signal", "expected_exit"),
+    ((signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)),
+)
+def test_driver_termination_forwards_signal_and_closes_exact_lease(
+    tmp_path: Path,
+    termination_signal: signal.Signals,
+    expected_exit: int,
+) -> None:
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body="trap 'exit 0' INT TERM HUP\nwhile :; do sleep 0.1; done",
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    process = subprocess.Popen(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    for _ in range(100):
+        if child_started.is_file():
+            break
+        process.poll()
+        if process.returncode is not None:
+            break
+        time.sleep(0.02)
+    assert child_started.is_file()
+
+    process.send_signal(termination_signal)
+    stdout, stderr = process.communicate(timeout=10)
+    assert process.returncode == expected_exit, stdout + stderr
+    assert close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+
+
+def test_all_driver_adapters_use_common_closure_wrapper() -> None:
+    for provider in ("claude", "codex", "gemini", "grok"):
+        body = (REPO / "scripts" / "launchers" / f"{provider}.sh").read_text(encoding="utf-8")
+        assert 'launcher_exec_command "${cmd[@]}"' in body
+
+
+def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    for relative in (
+        "start-claude-driver.sh",
+        "scripts/lib/handoff_identity.sh",
+        "scripts/lib/launcher_core.sh",
+        "scripts/lib/session_supervisor.sh",
+        "scripts/lib/deploy_extensions.sh",
+        "scripts/config/issue_streams.yaml",
+    ):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, destination)
+    python_bin = root / ".venv" / "bin" / "python"
+    python_bin.parent.mkdir(parents=True)
+    python_bin.symlink_to(REPO / ".venv" / "bin" / "python")
+    provider = root / "provider.sh"
+    provider.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    provider.chmod(0o755)
+    adapter = root / "scripts" / "launchers" / "claude.sh"
+    adapter.parent.mkdir(parents=True, exist_ok=True)
+    adapter.write_text(
+        f"""#!/usr/bin/env bash
+launcher_adapter_validate() {{ :; }}
+launcher_adapter_preflight() {{ :; }}
+launcher_adapter_canary() {{ return 0; }}
+launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
+""",
+        encoding="utf-8",
+    )
+    adapter.chmod(0o755)
+    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env["PYTHONPATH"] = os.fspath(REPO)
+
+    result = subprocess.run(
+        ["bash", os.fspath(root / "start-claude-driver.sh"), "--epic", "devops"],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+
+    database = SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3")
+    store = SessionStreamStore(database)
+    history = store.dump_stream("epic:5703")
+    assert history["sessions"][0]["state"] == "closed"
+    assert history["lease"]["state"] == "released"
+    assert [event["event_type"] for event in history["lease_events"]] == ["acquired", "released"]
+
+    supervisor = SessionSupervisor(store, repo_root=root)
+    successor = supervisor.open_driver(
+        role=LaunchRole.DRIVER,
+        stream_id="epic:5703",
+        holder=LeaseHolder(
+            agent="codex",
+            harness="codex-cli",
+            instance_id="successor-after-clean-close",
+            process_id=os.getpid(),
+        ),
+        lineage_id="lineage-successor-after-clean-close",
+        ttl_seconds=300,
+    )
+    assert successor.generation == 2
+    assert successor.fencing_token == 2
+    assert supervisor.close_driver(role=LaunchRole.DRIVER, lease=successor) == "closed"
+
+    expired_stream = "epic:4708"
+    store.open_session(
+        stream_id=expired_stream,
+        holder=LeaseHolder(
+            agent="grok",
+            harness="grok-tui",
+            instance_id="expired-dead-holder",
+            process_id=999_999_009,
+        ),
+        lineage_id="lineage-expired-dead-holder",
+        ttl_seconds=30,
+        now=utc_now() - timedelta(minutes=5),
+    )
+    rerouted = supervisor.open_driver(
+        role=LaunchRole.DRIVER,
+        stream_id=expired_stream,
+        holder=LeaseHolder(
+            agent="codex",
+            harness="codex-cli",
+            instance_id="ttl-reroute-successor",
+            process_id=os.getpid(),
+        ),
+        lineage_id="lineage-ttl-reroute-successor",
+        ttl_seconds=300,
+    )
+    assert rerouted.generation == 2
+    assert rerouted.fencing_token == 2
+    recovered_history = store.dump_stream(expired_stream)
+    assert [session["state"] for session in recovered_history["sessions"]] == ["closed", "open"]
+    assert "force_closed" in [event["event_type"] for event in recovered_history["lease_events"]]
+    assert supervisor.close_driver(role=LaunchRole.DRIVER, lease=rerouted) == "closed"
 
 
 def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> None:

@@ -362,14 +362,89 @@ launcher_claim_driver_lease() {
   claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
 }
 
+launcher_close_driver_lease() {
+  # Close only the exact exported, fenced lease. The store operation is
+  # idempotent, so a bounded retry is safe when the first client invocation is
+  # interrupted after the transaction commits but before it returns.
+  [ "${LC_DRIVER_LEASE_CLOSED:-0}" = "1" ] && return 0
+
+  local attempt
+  for attempt in 1 2; do
+    if "$LC_SESSION_ROOT/.venv/bin/python" \
+        -m agents_extensions.shared.session_streams hook close >/dev/null 2>&1; then
+      LC_DRIVER_LEASE_CLOSED=1
+      return 0
+    fi
+    if [ "$attempt" -eq 1 ]; then
+      continue
+    else
+      break
+    fi
+  done
+  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts."
+  return 1
+}
+
 launcher_close_failed_driver_lease() {
   # A provider canary runs after the lease claim. Close the exact exported
   # session-stream envelope before refusing the launch, so another certified
   # driver is not blocked behind this failed cold start until its TTL expires.
-  if ! "$LC_SESSION_ROOT/.venv/bin/python" \
-      -m agents_extensions.shared.session_streams hook close >/dev/null 2>&1; then
-    launcher_error "failed to close the ${LC_PROVIDER} driver lease after provider canary failure."
+  launcher_close_driver_lease || true
+}
+
+launcher_forward_driver_signal() {
+  local signal="$1"
+  local exit_code="$2"
+  trap - "$signal"
+  if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
+    kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+    wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
   fi
+  LC_DRIVER_CHILD_PID=""
+  launcher_close_driver_lease || true
+  trap - EXIT INT TERM HUP
+  exit "$exit_code"
+}
+
+launcher_exec_command() {
+  # Interactive sessions retain the direct exec contract. A lease-owning
+  # driver keeps this small supervisor shell alive so normal exit and
+  # termination signals can atomically close the exact fenced session.
+  if [ "$LC_MODE" != "driver" ] || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ]; then
+    exec "$@"
+  fi
+
+  local provider_rc=0
+  local close_rc=0
+  LC_DRIVER_CHILD_PID=""
+  LC_DRIVER_LEASE_CLOSED=0
+  trap 'launcher_close_driver_lease || true' EXIT
+  trap 'launcher_forward_driver_signal INT 130' INT
+  trap 'launcher_forward_driver_signal TERM 143' TERM
+  trap 'launcher_forward_driver_signal HUP 129' HUP
+
+  # Explicitly duplicate stdin: Bash otherwise redirects asynchronous commands
+  # from /dev/null when job control is disabled, which would break TUIs. Reset
+  # the background subshell's inherited signal dispositions before exec so
+  # forwarded INT/TERM/HUP reach the provider rather than being ignored.
+  (
+    trap - INT TERM HUP
+    exec "$@"
+  ) 0<&0 &
+  LC_DRIVER_CHILD_PID=$!
+  if wait "$LC_DRIVER_CHILD_PID"; then
+    provider_rc=0
+  else
+    provider_rc=$?
+  fi
+  LC_DRIVER_CHILD_PID=""
+  launcher_close_driver_lease || close_rc=$?
+  trap - EXIT INT TERM HUP
+
+  if [ "$close_rc" -ne 0 ] && [ "$provider_rc" -eq 0 ]; then
+    return "$close_rc"
+  fi
+  return "$provider_rc"
 }
 
 launcher_bind_drive_epic() {
