@@ -312,6 +312,8 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
         "sealed_review_read_required_all"
     )
     assert "exactly once" in dossier["read_protocol"]["preferred_complete_instruction"]
+    assert "max_chunks=1" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "Claude ACP must instead" in prompt
     assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
     assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
     assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == checkout.sealed_evidence_input_bytes()

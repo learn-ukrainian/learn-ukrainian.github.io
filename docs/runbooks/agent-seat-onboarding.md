@@ -492,7 +492,8 @@ counts and outcomes.
 | `acp_adapter_missing` / `acp_adapter_incompatible` | Run `npm install` in the canonical primary checkout and verify the locked `@agentclientprotocol/claude-agent-acp` package; do not use a global install or permit dynamic package execution |
 | `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
 | `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
-| `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn; sealed reviews are capped at three agentic API round-trips, the minimum needed by the Claude sealed evidence-and-verdict path. Keep prompt retries at zero |
+| `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Claude sealed reviews derive an exact cap from the number of parent-owned 64 KiB evidence chunks: one ToolSearch turn, one turn per chunk, and one final verdict turn. Prompt retries stay at zero |
+| `acp_review_evidence_invalid` / `acp_review_evidence_too_large` | Repair the parent-owned sealed snapshot or route the oversized formal review to another eligible provider; Claude ACP refuses scopes above its reviewed 64-chunk ceiling before spawn |
 | `acp_permission_denied` / `acp_permission_unavailable` | Fix the bounded permission configuration; do not broaden the no-tool or sealed-review allowlist |
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |

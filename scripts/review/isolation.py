@@ -1161,23 +1161,27 @@ def required_paths():
         result.append(raw)
     return result
 
-def read_required(index=0, offset=0):
+def read_required(index=0, offset=0, max_chunks=MAX_REQUIRED_CHUNKS):
     paths = required_paths()
     if (
         not isinstance(index, int)
         or isinstance(index, bool)
         or not isinstance(offset, int)
         or isinstance(offset, bool)
+        or not isinstance(max_chunks, int)
+        or isinstance(max_chunks, bool)
         or index < 0
         or index > len(paths)
         or offset < 0
         or (index == len(paths) and offset != 0)
+        or max_chunks < 1
+        or max_chunks > MAX_REQUIRED_CHUNKS
     ):
         raise ValueError("invalid_required_cursor")
     start_index = index
     start_offset = offset
     chunks = []
-    while index < len(paths) and len(chunks) < MAX_REQUIRED_CHUNKS:
+    while index < len(paths) and len(chunks) < max_chunks:
         chunk = read_chunk(paths[index], offset, MAX_CHUNK_BYTES)
         chunks.append(chunk)
         if chunk["eof"]:
@@ -1264,7 +1268,7 @@ def search_file(raw, query):
 TOOLS = [
     {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
     {"name":"read_file","description":"Read one hash-bound UTF-8 byte chunk. Start at offset 0 and repeat from next_offset until eof=true.","inputSchema":{"type":"object","properties":{"path":{"type":"string"},"offset":{"type":"integer","minimum":0},"max_bytes":{"type":"integer","minimum":1,"maximum":65536}},"required":["path"],"additionalProperties":False}},
-    {"name":"read_required","description":"Read the next six hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0}},"additionalProperties":False}},
+    {"name":"read_required","description":"Read the next bounded hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true. Set max_chunks=1 for Claude ACP so results stay inline.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0},"max_chunks":{"type":"integer","minimum":1,"maximum":6}},"additionalProperties":False}},
     {"name":"read_required_all","description":"Read every hash-bound chunk from an authoritative required review scope of at most 2 MiB. Larger scopes fail closed and must be split.","inputSchema":{"type":"object","properties":{},"additionalProperties":False}},
     {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
 ]
@@ -1281,7 +1285,11 @@ def call_tool(name, args):
             args.get("max_bytes", MAX_CHUNK_BYTES),
         )
     elif name == "read_required":
-        payload = read_required(args.get("index", 0), args.get("offset", 0))
+        payload = read_required(
+            args.get("index", 0),
+            args.get("offset", 0),
+            args.get("max_chunks", MAX_REQUIRED_CHUNKS),
+        )
     elif name == "read_required_all":
         payload = read_required_all()
     elif name == "search_text":

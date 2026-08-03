@@ -1438,7 +1438,8 @@ caller from the destination agent. Failed calls also expose one body-free
 `transport_error`, `unknown`, or a bounded ACP class:
 `acp_adapter_missing`, `acp_adapter_incompatible`, `acp_agent_startup`,
 `acp_agent_disconnected`, `acp_auth_required`, `acp_session_create_timeout`,
-`acp_permission_denied`, `acp_permission_unavailable`, or `acp_turn_limit`. Raw stderr, prompts,
+`acp_permission_denied`, `acp_permission_unavailable`, `acp_turn_limit`,
+`acp_review_evidence_invalid`, or `acp_review_evidence_too_large`. Raw stderr, prompts,
 paths, credentials, signals, and provider text remain private.
 
 ```json

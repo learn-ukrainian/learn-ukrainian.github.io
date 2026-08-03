@@ -430,6 +430,7 @@ def _required_stream_requests(
     required_paths: tuple[str, ...],
     index: Any,
     offset: Any,
+    max_chunks: Any = MAX_CODEX_REQUIRED_READ_CHUNKS,
 ) -> list[dict[str, Any]]:
     """Derive the exact chunks emitted by one parent-owned required read."""
     if (
@@ -440,10 +441,14 @@ def _required_stream_requests(
         or index < 0
         or index >= len(required_paths)
         or offset < 0
+        or not isinstance(max_chunks, int)
+        or isinstance(max_chunks, bool)
+        or max_chunks < 1
+        or max_chunks > MAX_CODEX_REQUIRED_READ_CHUNKS
     ):
         return []
     requests: list[dict[str, Any]] = []
-    while index < len(required_paths) and len(requests) < MAX_CODEX_REQUIRED_READ_CHUNKS:
+    while index < len(required_paths) and len(requests) < max_chunks:
         rel_path = required_paths[index]
         data = (evidence_root / rel_path).read_bytes()
         if offset > len(data):
@@ -544,6 +549,9 @@ def _codex_sealed_read_requests(
             required_paths=required_paths,
             index=arguments.get("index", 0),
             offset=arguments.get("offset", 0),
+            max_chunks=arguments.get(
+                "max_chunks", MAX_CODEX_REQUIRED_READ_CHUNKS
+            ),
         )
     if name == "read_required_all" or name.endswith(
         "sealed_review__read_required_all"
@@ -1295,6 +1303,15 @@ class ProvisionedReviewWorktree:
                     "next_index/next_offset until eof=true. Use read_file for required "
                     "paths only if the required stream fails."
                 ),
+                "claude_acp_instruction": (
+                    "Claude Agent SDK externalizes the complete tool result. Do not "
+                    "call sealed_review_read_required_all. Call "
+                    "sealed_review_read_required with index=0, offset=0, and "
+                    "max_chunks=1, then "
+                    "repeat from next_index/next_offset until eof=true. Each call "
+                    "returns exactly one bounded chunk. Do not call shell, Python, "
+                    "or any other evidence tool."
+                ),
                 "unit": "utf8_bytes",
                 "start_offset": 0,
                 "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
@@ -1490,8 +1507,9 @@ class ProvisionedReviewWorktree:
             "use a detached worktree, git, gh, or other shell command. "
             "Use the parent-bound evidence transport declared by the dossier. A clean "
             "verdict is rejected unless the trusted receipt proves complete delivery. "
-            "For ACP evidence, follow read_protocol.preferred_complete_instruction; it "
-            "avoids duplicate reads while preserving complete byte coverage. "
+            "For ACP evidence, follow read_protocol.preferred_complete_instruction; "
+            "Claude ACP must instead follow read_protocol.claude_acp_instruction. "
+            "These avoid duplicate reads while preserving complete byte coverage. "
             f"{inline_instruction}"
             "The dossier "
             "authenticates those complete "

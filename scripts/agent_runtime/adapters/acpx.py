@@ -82,7 +82,7 @@ import subprocess
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from ..result import ParseResult
@@ -120,7 +120,9 @@ AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
 ACPX_DEFAULT_MAX_TURNS = 1
-ACPX_SEALED_REVIEW_MAX_TURNS = 3
+_CLAUDE_ACP_SEALED_READ_CHUNK_BYTES = 64 * 1024
+_CLAUDE_ACP_MAX_SEALED_READ_CHUNKS = 64
+_CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD = 2
 
 _ACPX_REQUIRED_GLOBAL_FLAGS: tuple[str, ...] = (
     "--agent",
@@ -366,6 +368,90 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     ):
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP helper/snapshot failed validation")
     return str(config_path)
+
+
+def _claude_sealed_review_max_turns(config_path: str) -> int:
+    """Derive Claude's exact sealed-read turn budget from parent-owned bytes.
+
+    Claude Agent SDK defers MCP discovery behind one ToolSearch round-trip and
+    externalizes large single tool results to a provider-private file.  The
+    sealed protocol therefore streams one UTF-8 chunk per model round-trip;
+    one final round-trip remains for the canonical verdict.  Refuse scopes
+    above the helper's reviewed 64-chunk ceiling instead of granting an
+    unbounded agent loop.
+    """
+    try:
+        config = json.loads(Path(config_path).read_text(encoding="utf-8"))
+        server = config["mcpServers"][0]
+        snapshot = Path(server["args"][3]).resolve(strict=True)
+        manifest = json.loads(
+            (snapshot / ".review-bundle" / "manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        changed_paths = manifest["changed_paths"]
+    except (IndexError, KeyError, OSError, TypeError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence manifest is invalid",
+            failure_code="acp_review_evidence_invalid",
+        ) from exc
+    if not isinstance(changed_paths, list) or not all(
+        isinstance(item, str) for item in changed_paths
+    ):
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review changed paths are invalid",
+            failure_code="acp_review_evidence_invalid",
+        )
+
+    required = [".review-bundle/manifest.json", ".review-bundle/patch.diff"]
+    seen = set(required)
+    for raw in changed_paths:
+        parsed = PurePosixPath(raw)
+        if (
+            not raw
+            or "\\" in raw
+            or parsed.is_absolute()
+            or any(part in {"", ".", ".."} for part in parsed.parts)
+        ):
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path is unsafe",
+                failure_code="acp_review_evidence_invalid",
+            )
+        candidate = snapshot.joinpath(*parsed.parts)
+        if candidate.is_symlink() or not candidate.exists():
+            continue
+        if not candidate.is_file() or raw in seen:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path is invalid",
+                failure_code="acp_review_evidence_invalid",
+            )
+        seen.add(raw)
+        required.append(raw)
+
+    chunk_count = 0
+    effective_chunk_bytes = _CLAUDE_ACP_SEALED_READ_CHUNK_BYTES - 3
+    try:
+        for raw in required:
+            target = snapshot.joinpath(*PurePosixPath(raw).parts)
+            metadata = target.lstat()
+            if not stat.S_ISREG(metadata.st_mode) or target.is_symlink():
+                raise OSError("required evidence is not a regular file")
+            chunk_count += max(
+                1,
+                (metadata.st_size + effective_chunk_bytes - 1)
+                // effective_chunk_bytes,
+            )
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence is unreadable",
+            failure_code="acp_review_evidence_invalid",
+        ) from exc
+    if chunk_count > _CLAUDE_ACP_MAX_SEALED_READ_CHUNKS:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence exceeds the bounded Claude ACP chunk budget",
+            failure_code="acp_review_evidence_too_large",
+        )
+    return chunk_count + _CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD
 
 # Fixed ACPX built-ins available only through the runner-owned inter-agent
 # transport boundary (or its bounded discussion controller).  This is
@@ -1011,13 +1097,9 @@ def _confinement_prefix_argv(
     cwd: Path,
     *,
     sealed_review_mcp_config: str | None = None,
+    max_turns: int = ACPX_DEFAULT_MAX_TURNS,
 ) -> list[str]:
     """Shared confinement, optionally admitting only sealed review tools."""
-    max_turns = (
-        ACPX_SEALED_REVIEW_MAX_TURNS
-        if sealed_review_mcp_config is not None
-        else ACPX_DEFAULT_MAX_TURNS
-    )
     permission_args = ["--deny-all", "--allowed-tools", ""]
     if sealed_review_mcp_config is not None:
         permission_policy = json.dumps(
@@ -1800,6 +1882,10 @@ class _AcpxDiscussionAdapter:
         _ = acpx_binary
         return {}
 
+    def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
+        _ = sealed_review_mcp_config
+        return ACPX_DEFAULT_MAX_TURNS
+
     def build_invocation(
         self,
         *,
@@ -1866,6 +1952,7 @@ class _AcpxDiscussionAdapter:
             binary,
             cwd,
             sealed_review_mcp_config=sealed_review_mcp_config,
+            max_turns=self._max_turns(sealed_review_mcp_config),
         )
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
@@ -1935,6 +2022,11 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     allowed_models = CLAUDE_ACP_MODELS
     default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
+
+    def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
+        if sealed_review_mcp_config is None:
+            return ACPX_DEFAULT_MAX_TURNS
+        return _claude_sealed_review_max_turns(sealed_review_mcp_config)
 
     def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
         return _require_local_claude_acp_adapter(

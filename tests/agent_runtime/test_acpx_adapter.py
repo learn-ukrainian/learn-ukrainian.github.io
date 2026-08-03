@@ -1559,7 +1559,7 @@ def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypat
     pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
     assert ("--mcp-config", sealed_config) in pairs
     assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
-    assert ("--max-turns", "3") in pairs
+    assert ("--max-turns", "1") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert plan.metadata["grok_profile_sha256"] == acpx_module._GROK_SEALED_REVIEW_PROFILE_SHA256
     assert plan.metadata["tool_policy"] == "sealed-review-only"
@@ -1815,6 +1815,34 @@ def test_claude_adapter_preflight_accepts_installed_rolling_dependency(tmp_path)
     }
 
 
+def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_path):
+    snapshot = tmp_path / "lu-review-view-test"
+    bundle = snapshot / ".review-bundle"
+    bundle.mkdir(parents=True)
+    (snapshot / "src").mkdir()
+    (bundle / "patch.diff").write_bytes(b"p" * 70_000)
+    (snapshot / "src" / "app.py").write_bytes(b"x" * 10)
+    manifest = {"changed_paths": ["src/app.py"]}
+    (bundle / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    config = {
+        "mcpServers": [
+            {
+                "name": "sealed_review",
+                "command": "/ignored",
+                "args": ["-I", "-S", "/ignored", str(snapshot)],
+                "env": [],
+            }
+        ]
+    }
+    config_path = tmp_path / "sealed.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    # ToolSearch + four required chunks + final verdict.
+    assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 6
+    assert AcpxClaudeShadowAdapter()._max_turns(None) == 1
+    assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 6
+
+
 def test_claude_adapter_preflight_refuses_missing_dynamic_package_fallback(tmp_path):
     binary = tmp_path / "node_modules" / ".bin" / "acpx"
     binary.parent.mkdir(parents=True)
@@ -1890,7 +1918,7 @@ def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monke
     assert ("--model", "kimi-code/k3") in pairs
     assert ("--mcp-config", sealed_config) in pairs
     assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
-    assert ("--max-turns", "3") in pairs
+    assert ("--max-turns", "1") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert plan.metadata["tool_policy"] == "sealed-review-only"
     assert plan.metadata["model"] == "kimi-code/k3"
