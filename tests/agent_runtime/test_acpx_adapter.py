@@ -1843,6 +1843,38 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 11
 
 
+def test_claude_sealed_review_turn_budget_rejects_intermediate_symlink_escape(
+    tmp_path,
+):
+    snapshot = tmp_path / "lu-review-view-test"
+    bundle = snapshot / ".review-bundle"
+    bundle.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "escaped.py").write_text("secret = True\n", encoding="utf-8")
+    (snapshot / "linked").symlink_to(outside, target_is_directory=True)
+    (bundle / "patch.diff").write_text("patch\n", encoding="utf-8")
+    (bundle / "manifest.json").write_text(
+        json.dumps({"changed_paths": ["linked/escaped.py"]}), encoding="utf-8"
+    )
+    config_path = tmp_path / "sealed.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": [
+                    {"args": ["-I", "-S", "/ignored", str(snapshot)]}
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(AcpxShadowRefusalError, match="escapes the snapshot") as raised:
+        acpx_module._claude_sealed_review_max_turns(str(config_path))
+
+    assert raised.value.failure_code == "acp_review_evidence_invalid"
+
+
 def test_claude_adapter_preflight_refuses_missing_dynamic_package_fallback(tmp_path):
     binary = tmp_path / "node_modules" / ".bin" / "acpx"
     binary.parent.mkdir(parents=True)

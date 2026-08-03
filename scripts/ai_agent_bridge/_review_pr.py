@@ -251,7 +251,9 @@ canonical location and evidence fields. Publication derives the GitHub gate
 verdict from this evidence and preserves the review body in the PR comment.
 Use `"correct"`, `"incorrect"`, or `"uncertain"` for `overall.correctness`.
 Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
-example, `0.95`), never a string such as `"high"`. A clean review therefore
+example, `0.95`), never a string such as `"high"`. Every finding priority MUST
+be exactly one of `"P0"`, `"P1"`, `"P2"`, or `"P3"`; labels such as `"high"`,
+`"medium"`, and `"low"` invalidate the whole review. A clean review therefore
 has exactly this shape (replace the explanation, not the field types):
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
 Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,

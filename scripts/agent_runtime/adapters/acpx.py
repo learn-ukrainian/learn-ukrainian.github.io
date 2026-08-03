@@ -421,6 +421,13 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
                 failure_code="acp_review_evidence_invalid",
             )
         candidate = snapshot.joinpath(*parsed.parts)
+        try:
+            candidate.resolve(strict=False).relative_to(snapshot)
+        except (OSError, ValueError) as exc:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path escapes the snapshot",
+                failure_code="acp_review_evidence_invalid",
+            ) from exc
         if candidate.is_symlink() or not candidate.exists():
             continue
         if not candidate.is_file() or raw in seen:
