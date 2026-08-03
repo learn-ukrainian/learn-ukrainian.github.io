@@ -134,7 +134,9 @@ launcher_clear_foreign_route_state() {
 launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
-      LC_MODEL="${LAUNCHER_MODEL:-claude-fable-5}"
+      # Interactive leaves the TUI model alone unless --model / LAUNCHER_MODEL
+      # is set. Driver wrappers pin their own default via LAUNCHER_MODEL.
+      LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
@@ -254,11 +256,12 @@ launcher_parse() {
 }
 
 launcher_normalize_model() {
-  # D1 makes Fable the default and retains `--model sonnet` as the deliberate
-  # alternate choice. Certify against the explicit roster identifiers.
+  # Interactive omits --model unless asked; driver pins Opus 5 via
+  # start-claude-driver.sh. Short aliases normalize to roster identifiers.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5' ;;
     claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
+    claude:opus|claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
 }
 
@@ -324,7 +327,7 @@ launcher_validate_driver_certification() {
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
       return 0
       ;;
     *)
