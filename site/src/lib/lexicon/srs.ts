@@ -46,22 +46,20 @@ const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
-export const PRACTICE_MODE_DECK_VERSION = 3;
+export const PRACTICE_MODE_DECK_VERSION = 4;
 export const PRACTICE_MODES = [
   'flashcards',
   'matching',
   'choice',
   'cloze',
-  // Spec v5 (§9, PR #4503) union: all six approved modes are VALID card modes now, so deck
-  // rollouts never need another srs.ts change and older clients never quarantine newer-mode
-  // cards. Wave-1 decks: paradigm/stress/synonym/classify; heritage/paronym ship fail-closed
-  // as curated pairs land. idiom/listening stay out (not approved card modes).
+  // Spec v5 (§9, PR #4503) union: all seven approved modes are VALID card modes now.
   'paradigm',
   'stress',
   'heritage',
   'synonym',
   'classify',
   'paronym',
+  'antonym',
 ] as const;
 const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
 
@@ -280,6 +278,28 @@ export interface PracticeParonymItem {
   promptEn?: string;
   answer: string;
   options: PracticeParonymOption[];
+  origin?: string;
+  citations?: string[];
+}
+
+export interface PracticeAntonymOption {
+  label: string;
+}
+
+export interface PracticeAntonymItem {
+  antonymId: string;
+  lemmaId: string;
+  srsKey: string;
+  lemma: string;
+  confusable: string;
+  distinction_gloss_uk: string;
+  frameIndex: number;
+  cefr: string;
+  prompt: string;
+  /** Optional English meaning of the Ukrainian prompt sentence. */
+  promptEn?: string;
+  answer: string;
+  options: PracticeAntonymOption[];
   origin?: string;
   citations?: string[];
 }

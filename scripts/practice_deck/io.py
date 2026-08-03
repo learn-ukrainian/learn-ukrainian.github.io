@@ -17,6 +17,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
+DEFAULT_ANTONYM_PAIRS = ROOT / "data" / "lexicon" / "antonym_pairs.yaml"
 RECOVERY_COMMAND = ".venv/bin/python -m scripts.practice_deck.io"
 
 REQUIRED_POINTER_KEYS = (
@@ -34,7 +35,7 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 14  # 13→14: normalize unambiguous identity-option POS aliases (#6188)
+PRACTICE_DECK_BUILDER_VERSION = 15  # 14→15: antonym practice drill mode (#6139)
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
@@ -57,6 +58,7 @@ def compute_deck_inputs_fingerprint(
     synonym_verdicts: dict[str, Any] | None,
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
+    antonym_pairs: list[dict[str, Any]] | None = None,
 ) -> str:
     """Canonical hash of the deck DATA inputs only (no builder version).
 
@@ -70,6 +72,7 @@ def compute_deck_inputs_fingerprint(
         "entries": entries or [],
         "heritage_pairs": heritage_pairs or [],
         "paronym_pairs": paronym_pairs or [],
+        "antonym_pairs": antonym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }
@@ -84,6 +87,7 @@ def compute_deck_version(
     synonym_verdicts: dict[str, Any] | None,
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
+    antonym_pairs: list[dict[str, Any]] | None = None,
 ) -> str:
     payload = {
         "builder_version": PRACTICE_DECK_BUILDER_VERSION,
@@ -91,6 +95,7 @@ def compute_deck_version(
         "entries": entries or [],
         "heritage_pairs": heritage_pairs or [],
         "paronym_pairs": paronym_pairs or [],
+        "antonym_pairs": antonym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }

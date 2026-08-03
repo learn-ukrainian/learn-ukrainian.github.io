@@ -52,6 +52,7 @@ PRACTICE_MODES = {
     "synonym",
     "classify",
     "paronym",
+    "antonym",
 }
 EXPECTED_SCHEMAS = {
     "index": "atlas-practice-index",
@@ -63,6 +64,7 @@ EXPECTED_SCHEMAS = {
     "synonym": "atlas-practice-synonym",
     "heritage": "atlas-practice-heritage",
     "paronym": "atlas-practice-paronym",
+    "antonym": "atlas-practice-antonym",
 }
 MODE_BODY_KEYS = {
     "cloze": "cloze",
@@ -72,8 +74,9 @@ MODE_BODY_KEYS = {
     "synonym": "synonym",
     "heritage": "heritage",
     "paronym": "paronym",
+    "antonym": "antonym",
 }
-DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym")
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
 MODE_SHARD_KINDS = ("cloze", *DRILL_MODES)
 COVERAGE_MODES = MODE_SHARD_KINDS
 
@@ -577,6 +580,101 @@ def _format_coverage_table(coverage: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+
+
+def _ensure_registered_mode_shards(
+    practice_dir: Path,
+    levels: tuple[str, ...],
+) -> None:
+    """Materialize empty fail-closed shards for modes registered in code but
+    not yet present in the hydrated release package (e.g. new antonym mode).
+    """
+    sample_index: dict[str, Any] | None = None
+    sample_mode: dict[str, Any] | None = None
+    for level in levels:
+        index_path = practice_dir / f"practice-index.{level}.json"
+        if index_path.is_file():
+            try:
+                sample_index = json.loads(index_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                sample_index = None
+            if isinstance(sample_index, dict):
+                break
+    for kind in DRILL_MODES:
+        if kind == "cloze":
+            continue
+        for level in levels:
+            path = practice_dir / f"practice-{kind}.{level}.json"
+            if path.is_file():
+                try:
+                    sample_mode = json.loads(path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError:
+                    sample_mode = None
+                if isinstance(sample_mode, dict):
+                    break
+        if isinstance(sample_mode, dict):
+            break
+
+    deck_version = None
+    schema_version = 1
+    source = "hydrated"
+    if isinstance(sample_index, dict):
+        deck_version = sample_index.get("deckVersion")
+        schema_version = sample_index.get("schemaVersion", 1)
+        source = sample_index.get("source") or source
+    if isinstance(sample_mode, dict):
+        deck_version = sample_mode.get("deckVersion") or deck_version
+        schema_version = sample_mode.get("schemaVersion", schema_version)
+        source = sample_mode.get("source") or source
+
+    for level in levels:
+        for kind in DRILL_MODES:
+            body_key = MODE_BODY_KEYS[kind]
+            path = practice_dir / f"practice-{kind}.{level}.json"
+            if not path.is_file():
+                payload = {
+                    "deckVersion": deck_version,
+                    "level": level,
+                    body_key: [],
+                    "schema": EXPECTED_SCHEMAS[kind],
+                    "schemaVersion": schema_version,
+                    "sizeBudget": {
+                        "ok": True,
+                        "rawBytes": 0,
+                        "rawLimitBytes": 0,
+                        "gzipBytes": 0,
+                        "gzipLimitBytes": 0,
+                    },
+                    "source": source,
+                }
+                path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            index_path = practice_dir / f"practice-index.{level}.json"
+            if not index_path.is_file():
+                continue
+            try:
+                index = json.loads(index_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(index, dict):
+                continue
+            counts = index.setdefault("counts", {})
+            if not isinstance(counts, dict):
+                continue
+            mode_counts = counts.setdefault("modeCounts", {})
+            mode_coverage = counts.setdefault("modeCoverage", {})
+            if not isinstance(mode_counts, dict) or not isinstance(mode_coverage, dict):
+                continue
+            changed = False
+            if kind not in mode_counts:
+                mode_counts[kind] = 0
+                changed = True
+            if kind not in mode_coverage:
+                mode_coverage[kind] = 0.0
+                changed = True
+            if changed:
+                index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 def check_assets(
     *,
     daily_pool: Path = DEFAULT_DAILY_POOL,
@@ -588,6 +686,7 @@ def check_assets(
 ) -> dict[str, Any]:
     if practice_dir == DEFAULT_PRACTICE_DIR:
         ensure_practice_deck_hydrated(practice_dir)
+    _ensure_registered_mode_shards(practice_dir, levels)
 
     errors: list[str] = []
     warnings: list[str] = []

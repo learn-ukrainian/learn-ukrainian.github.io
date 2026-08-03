@@ -13,6 +13,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
     build_practice_shards,
+    read_antonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
@@ -35,6 +36,7 @@ VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
+ANTONYM_PAIRS = FIXTURES / "lexicon-practice-antonym-pairs.yaml"
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -84,6 +86,7 @@ def _write_publish_inputs(
     entries: list[dict[str, object]] | None = None,
     heritage_pairs: list[dict[str, object]] | None = None,
     paronym_pairs: list[dict[str, object]] | None = None,
+    antonym_pairs: list[dict[str, object]] | None = None,
     synonym_verdicts: dict[str, object] | None = None,
     cloze_sources: list[dict[str, object]] | None = None,
     sentence_inventory: dict[str, object] | None = None,
@@ -93,6 +96,7 @@ def _write_publish_inputs(
         "atlas_db_path": base_dir / "atlas.db",
         "heritage_pairs_path": base_dir / "heritage_pairs.yaml",
         "paronym_pairs_path": base_dir / "paronym_pairs.yaml",
+        "antonym_pairs_path": base_dir / "antonym_pairs.yaml",
         "synonym_verdicts_path": base_dir / "synonym_pair_verdicts.yaml",
         "cloze_sources_path": base_dir / "lexicon-practice-cloze-sources.json",
         "sentence_inventory_path": base_dir / "lexicon-sentence-inventory.json",
@@ -102,6 +106,8 @@ def _write_publish_inputs(
         _write_json(paths["heritage_pairs_path"], {"pairs": heritage_pairs})
     if paronym_pairs is not None:
         _write_json(paths["paronym_pairs_path"], {"pairs": paronym_pairs})
+    if antonym_pairs is not None:
+        _write_json(paths["antonym_pairs_path"], {"pairs": antonym_pairs})
     if synonym_verdicts is not None:
         _write_json(paths["synonym_verdicts_path"], synonym_verdicts)
     if cloze_sources is not None:
@@ -325,7 +331,7 @@ def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -
 
 @pytest.mark.parametrize(
     "stale_input",
-    ["entries", "heritage_pairs", "paronym_pairs", "synonym_verdicts", "cloze_sources", "sentence_inventory"],
+    ["entries", "heritage_pairs", "paronym_pairs", "antonym_pairs", "synonym_verdicts", "cloze_sources", "sentence_inventory"],
 )
 def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     tmp_path: Path,
@@ -339,12 +345,14 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     cloze_sources = read_cloze_sources(CLOZE_SOURCES)
     heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
     paronym_pairs = read_paronym_pairs(PARONYM_PAIRS)
+    antonym_pairs = read_antonym_pairs(ANTONYM_PAIRS)
     synonym_verdicts = {"approved": [], "rejected": []}
     input_paths = _write_publish_inputs(
         tmp_path / "inputs",
         entries=entries,
         heritage_pairs=heritage_pairs,
         paronym_pairs=paronym_pairs,
+        antonym_pairs=antonym_pairs,
         synonym_verdicts=synonym_verdicts,
         cloze_sources=cloze_sources,
     )
@@ -357,6 +365,7 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         heritage_pairs=heritage_pairs,
         paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
+        antonym_pairs=antonym_pairs,
     )
     write_shards(shards, practice_dir)
 
@@ -384,6 +393,10 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         stale_paronym_pairs = json.loads(json.dumps(paronym_pairs))
         stale_paronym_pairs[0]["distinction_gloss_uk"] = "змінене розрізнення для тесту"
         _write_json(input_paths["paronym_pairs_path"], {"pairs": stale_paronym_pairs})
+    elif stale_input == "antonym_pairs":
+        stale_antonym_pairs = json.loads(json.dumps(antonym_pairs))
+        stale_antonym_pairs[0]["distinction_gloss_uk"] = "змінене розрізнення антонімів"
+        _write_json(input_paths["antonym_pairs_path"], {"pairs": stale_antonym_pairs})
     elif stale_input == "synonym_verdicts":
         stale_synonym_verdicts = {
             "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
