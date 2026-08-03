@@ -2,16 +2,21 @@
 
 > **Owner:** [#6171](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6171)
 > under [Foundry Phase 2–4 #6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
-> **Status:** No-training release contract; project-funded or project-operated
-> model training is out of scope
+> **Current successor:** [prepared-data epic #6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
+> and [receipt audit #6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
+> **Status:** Foundry engine release contract; useful prepared-data products
+> remain active work; project-funded or project-operated model training is out
+> of scope
 > **Does not authorize:** model download, accelerator rental, training, upload,
 > dataset publication, or automatic rewriting of source text
 
 ## What we are shipping
 
-The primary product is a corpus-portable preparation tool and recipe that help
-an open-weight team teach a current or future base model cleaner Ukrainian. It
-does not depend on Gemma 4 and remains useful when a stronger model appears.
+This document describes the corpus-portable preparation engine and recipe. The
+community product is the engine **plus** rights-classified, evidence-bearing
+prepared data, protected-variation safeguards, and reproducible evaluation.
+Downstream teams may use those products to adapt a current or future base
+model, but training and adoption are not project success criteria.
 
 The tool must let a consumer:
 
@@ -33,6 +38,13 @@ real Ukrainian. The current evidence stack includes VESUM, Russian morphology,
 R2U, Ukrainian corpus context, local Грінченко/ЕСУМ/СУМ-11 evidence, and
 bounded ULIF or per-dictionary `slovnyk.me` evidence. No single source is a
 verdict.
+
+The current production receipt contains 1,028 admitted Wikipedia records in
+each continued-pretraining view. It contains zero eligible correction,
+preference, or quality-filter records; all 739,503 silver records remain
+protected or unresolved. These are product-readiness facts, not evidence that
+the corpus lacks useful material. Phase 0 #6322 audits the blocking contracts
+and receipts before any new data claim.
 
 ## What our corpus is
 
@@ -241,18 +253,17 @@ its costs, and any model or adapter release decision.
 
 For scale, Lapa reports about 30 billion filtered pretraining tokens and a
 56-H100 training setup for its Gemma 3 adaptation. Our 139-million-token
-one-pass extrapolation is roughly 1/215 of that token volume. Our collection is
+one-pass extrapolation is roughly 1/215 of that token volume, but it is a
+planning estimate rather than a released dataset. Our collection is
 valuable for its curated textbooks, literature, historical strata, provenance,
 and failure evidence; it is not by itself a replacement for a tens-of-billions-
 of-tokens language corpus.
 
 ## Why the Foundry remains model-neutral
 
-Gemma 4 can improve an aggregate Ukrainian leaderboard because it is a newer
-general model with stronger reasoning, instruction following, architecture,
-and broad multilingual transfer. That does not prove that it received a
-better clean-Ukrainian training mixture; Google does not publish a Ukrainian-
-specific pretraining share.
+Gemma 4 may improve an aggregate Ukrainian leaderboard without proving that it
+received a better clean-Ukrainian training mixture; Google does not publish a
+Ukrainian-specific pretraining share.
 
 The `lang-uk` leaderboard aggregates translation, summarization, question
 answering, reasoning and knowledge, mathematics, and instruction following.
@@ -267,13 +278,15 @@ protected-variation evidence, data views, tokenizer census, and training recipe
 can be rerun for Gemma 4, Gemma 5, or another open model. A local adapter ages
 quickly; the means to prepare and measure Ukrainian transfer forward.
 
-## Project completion rule
+## Engine completion and successor rule
 
-Ship the tool, contracts, recipes, clean-run receipt, limitations, and consumer
-guide, then close #6171. The project does not run a model as a release gate or
-follow-up milestone. A downstream team's later model result may validate the
-recipe externally, but it does not reopen the Foundry implementation plan. A
-newer model release changes a consumer checkpoint, not this plan.
+Issue #6171 correctly closed after shipping the tool, contracts, recipes,
+clean-run receipt, limitations, and consumer guide. That completed the engine,
+not the ultimate prepared-data contribution. Epic #6321 owns the successor
+data products, starting with an exact receipt audit under #6322. The project
+does not run a model as a release gate. A downstream result may validate a
+recipe externally, but adoption remains secondary evidence. A newer model
+release changes a consumer checkpoint, not the data-product mission.
 
 ## Primary references
 

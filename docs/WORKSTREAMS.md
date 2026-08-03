@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-02 (Foundry implementation complete; release and external validation tracked separately in #6273; training remains prohibited) |
+| **Last refreshed** | 2026-08-03 (Foundry engine complete; evidence-bearing prepared-data program active under #6321; training remains prohibited) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -28,10 +28,10 @@ stream must trace to this chain:
    or register variation.
 2. **Products**: the LU curriculum site (learners) and Hramatka (teachers).
 3. **Reusable community infrastructure**: audited, provenance-rich source data;
-   the Ukrainian Data Foundry's admitted real data, contextual language-contact
-   diagnostics, evidence-backed silver corrections with optional human-gold
-   upgrades, model-ready exports, and consumer-runnable recipes (#6164;
-   completed foundation #6056); and
+   the Ukrainian Data Foundry engine, contextual language-contact diagnostics,
+   protected/unresolved evidence, and consumer-runnable recipes (completed
+   #6164 and #6056), plus evidence-bearing prepared data products under active
+   successor #6321; and
    narrow, contamination-resistant public evaluation (closed #2156; frozen
    future design preserved in closed #6057).
 4. **Kept honest by**: internal QG machinery (#4913), frozen evidence grades and
@@ -65,7 +65,7 @@ is the single source of truth for membership (auditor:
 | infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
-| open-model-data | closed #6164 (successor to closed #6056); #6273 closed invalid | The Foundry implementation, portable tool, model-ready exports, open-weight evaluation suite, and adoption adapters are shipped. The later Gemma 4 HF Jobs output failed source-aware integrity replay and is retained only as an invalid runtime-failure receipt. No project-owned model run, training, or outreach is active. |
+| open-model-data | #6321 (successor to closed #6164 and #6056) | Build evidence-bearing prepared Ukrainian data products on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence. Current truth: 1,028 admitted Wikipedia CPT rows, zero eligible correction/preference/filter rows, and 739,503 protected or unresolved silver records. The invalid Gemma run authorizes no retry. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
@@ -97,7 +97,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
-| open-model-data | COMPLETED | Keep the Foundry tools, frozen UA Open-Weight Eval suite, and adoption adapters reusable. Preserve the failed Gemma run as an invalid incident receipt; do not schedule another project-owned baseline. | The shipped artifacts remain reproducible, evaluation-to-learning leakage stays blocked, and no internal run or fixture is called external adoption. A future downstream team may use the public suite independently without creating a project spending lane. |
+| open-model-data | ACTIVE | Phase 0 #6322: audit every model-ready receipt, explain the three empty correction-family lanes, and freeze product-readiness truth before new data claims. | A strict deterministic receipt reconciles all current counts and hashes, distinguishes local eligibility from payload/publication rights, rejects at least 20 planted mutations, and defines executable entry conditions for Evidence and Canaries v0 without model operation or paid compute. |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
 | atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |

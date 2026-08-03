@@ -12,32 +12,29 @@
 > labour from the critical path. On 2026-08-02, the operator directed the
 > Foundry to ship the clean-Ukrainian preparation tool and consumer training
 > recipe without project-funded or project-operated model training. Training
-> belongs to downstream teams that choose to use the released artifacts. The
-> operator separately authorized release and external-validation work under
-> #6273 on 2026-08-02, then superseded the proposed local M1/MLX baseline with
-> an official Gemma 4 QAT Q4_0 evaluation on one Hugging Face Jobs L40S. That
-> decision authorizes a no-volume CPU Basic transport preflight, one 100-case
-> L40S canary only after that preflight passes, and, only after a 25%-buffered
-> budget projection passes, one full 4,000-case run within USD 6.00 total
-> provider cost. Private checkpoints use authenticated direct dataset uploads;
-> repository and bucket mounts are prohibited. Researcher outreach and model
-> training remain prohibited in this task.
+> belongs to downstream teams that choose to use the released artifacts. On
+> 2026-08-03, after the only project-owned Gemma 4 run was reclassified as an
+> invalid runtime-failure receipt, the operator clarified that community-useful
+> prepared data is the goal and adoption is only a possible side effect. The
+> completed Foundry engine therefore remains a foundation for successor epic
+> #6321 rather than the end of the prepared-data program.
 > **Recorded:** 2026-07-30; Foundry direction and existing-asset baseline
-> refreshed 2026-08-02
+> refreshed 2026-08-03
 > **Applies to:** Ukrainian model evaluation, dataset work, training-data
 > preparation, and UNLP ecosystem monitoring
 > **Does not authorize:** model training, mixing evaluation gold into training
-> data, model-weight publication, external researcher contact, or a paid retry
-> beyond the authorized canary and conditional full run
+> data, model-weight publication, external researcher contact, provider
+> inference, or paid compute
 
 ## North star
 
 Our ultimate goal is to help AI produce measurably better, authentically
 Ukrainian language.
 
-We will pursue that goal through an open Ukrainian Data Foundry: reusable
-infrastructure that Ukrainian and open-weight model teams can run on our
-corpus, their corpora, or other licensed collections. The Foundry provides:
+We will pursue that goal through evidence-bearing prepared Ukrainian data
+products built on an open Ukrainian Data Foundry. Ukrainian and open-weight
+model teams must be able to run the infrastructure on our corpus, their
+corpora, or other licensed collections. The program provides:
 
 - trusted and well-documented data;
 - morphology-aware coverage and diagnostics;
@@ -45,6 +42,10 @@ corpus, their corpora, or other licensed collections. The Foundry provides:
 - reproducible preparation and training recipes; and
 - evidence that distinguishes standardization errors from legitimate
   historical, regional, dialectal, and register variation.
+
+Community linguistic usefulness is the success criterion. External adoption
+is welcome evidence that the products are usable, but it is not the product and
+not a completion gate.
 
 We are not trying to win by training and maintaining our own general-purpose
 model weights. Base models can leapfrog a local fine-tune in one release.
@@ -84,36 +85,50 @@ The production evidence lanes are therefore distinct:
   project later chooses to claim qualified-human gold; no current milestone or
   release requires that claim.
 
-Evidence-backed silver may be used in an explicitly silver, provenance-complete
-experiment. It must never be reported as human gold, native-speaker acceptance,
-reviewer reliability, or proof that every proposed correction is correct.
+A future evidence-backed silver product may be used in an explicitly silver,
+provenance-complete downstream experiment only after its destination admission
+passes. The current 739,503 protected or unresolved records are not admitted
+correction data. Silver must never be reported as human gold, native-speaker
+acceptance, reviewer reliability, or proof that every proposed correction is
+correct.
 
-The Foundry can credibly promise reusable preparation, diagnostics, evidence,
-model-ready views, evaluation isolation, and reproducible consumer recipes. It
-cannot promise that a downstream treatment will make an LLM fluent. Consumer
-training results are external evidence and are never a prerequisite for closing
-the Foundry release.
+The Foundry engine can credibly promise reusable preparation, diagnostics,
+evidence, model-ready interfaces, evaluation isolation, and reproducible
+consumer recipes. It cannot promise that a downstream treatment will make an
+LLM fluent. The successor program must now turn those interfaces into useful,
+rights-classified data products. Consumer training results remain external
+evidence and are never a prerequisite for completing an internal data product.
 
 ## GitHub execution homes
 
+- [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
+  owns the active evidence-bearing prepared-data program. Its ordered path is
+  receipt audit, deterministic evidence and canaries, rights-gated corpus
+  complements, authoritative clean-Ukrainian correction/protection data, and
+  only then optional downstream ablation under separate authorization. The
+  governing decision is the
+  [UNLP prepared-data product decision](../research/UNLP_PREPARED_DATA_PRODUCT_DECISION.md).
+- [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
+  owns the blocking Phase 0 receipt audit. It must explain the three empty
+  correction-family lanes and freeze current product truth before new data is
+  advertised.
+
 - Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
-  owns the completed Foundry Phase 2–4 implementation: real corpus admission, production contextual
-  language-contact detection, evidence-backed silver with an optional
-  qualified-human upgrade, real model-ready exports, a model-neutral clean-
-  Ukrainian tool, reproducible consumer training recipe, and no-training
-  release candidate. It closed after PRs #6266, #6268, and #6271.
+  owns the completed Foundry-engine Phase 2–4 implementation: real corpus
+  admission, production contextual language-contact detection, evidence-backed
+  silver with an optional qualified-human upgrade, model-ready interfaces and
+  bounded CPT receipts, a model-neutral clean-Ukrainian tool, reproducible
+  consumer training recipe, and no-training release candidate. It closed after
+  PRs #6266, #6268, and #6271.
   Closed
   [#6056](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6056)
   owns the completed interfaces, profiler, exporters, recipes, and synthetic
   reference build on which this production program depends.
-- [#6273](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6273)
-  is the active post-completion release and external-validation child of #6164.
-  It owns rights-complete publication, a real fourteen-track open-weight result,
-  concrete Lapa and lang-uk submissions after approval, and the external run
-  receipt required before an adoption claim. Its current provider path is a
-  hash-first, zero-volume HF Jobs transport: a five-minute CPU Basic preflight
-  must prove private download, hash verification, and direct receipt upload
-  before the authorized L40S canary can launch.
+- Closed [#6273](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6273)
+  owns the public evaluation release and invalid Gemma 4 runtime-failure
+  correction. The frozen suite remains valid; the saved model output is not
+  scoreable and proves neither Gemma ability nor adoption. No rerun is
+  authorized.
 - [#6057](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6057)
   is closed as not planned under the solo-operator model while preserving the
   completed v0.2 error analysis and frozen design. Its reviewer-intensive
@@ -317,7 +332,7 @@ later decisions. The project verdict is **CONTINUE**.
   reconstructing original-source evidence; it is not provenance authority or a
   candidate training collection.
 
-### Completed Foundry implementation and release-validation lane
+### Completed Foundry engine and evaluation release
 
 The production corpus audit, admission baseline, full-corpus detector,
 evidence-grade silver/protection factory, separate model views, tokenizer
@@ -328,22 +343,11 @@ contextual non-erasure routes, evidence surfaces, disjoint views, receipts, and
 clean reproduction. PR #6268 added the frozen 4,000-case, fourteen-track open-
 weight evaluation; PR #6271 added the Lapa and lang-uk adapters.
 
-Issue #6273 is the separate release-and-validation lane. It must:
-
-1. publish only rights-classified bytes under a non-colliding tag with exact
-   hashes, attribution, English/Ukrainian instructions, limitations, and the
-   contamination boundary;
-2. run one balanced deterministic 100-case canary of the official
-   `google/gemma-4-31B-it-qat-q4_0-gguf` artifact on one Hugging Face Jobs
-   L40S, with a 20-minute timeout;
-3. launch the full 4,000-case run only if canary cost plus the 25%-buffered
-   projection fits the USD 6.00 total provider ceiling;
-4. publish complete parsed responses and all fourteen track results with exact
-   model/tokenizer revisions, decoding settings, hashes, runtime, throughput,
-   provider cost, and deterministic receipts; and
-5. create a separate linked Lapa-baseline follow-up without running it or
-   contacting researchers under this budget, while still requiring an
-   independently produced receipt before saying adoption is demonstrated.
+Issue #6273 later published the frozen evaluation package. Its attempted Gemma
+4 execution completed at the provider and transport level but failed the
+source-aware semantic integrity replay on every row. The saved bytes are an
+invalid runtime-failure receipt, not a baseline, model result, or adoption
+receipt. Issue #6273 is closed and authorizes no rerun.
 
 The 4,000 cases are not 4,000 independent human judgments. The suite contains
 1,000 UA Eval 0.1.1 human-gold error anchors, 1,000 deterministic controls
@@ -357,9 +361,12 @@ derived-rule view.
 
 The #6119–#6123 implementation chain now has an executable reference build. It
 reproduces the complete 189,150-record / 50,298,925-word morphology profile,
-joins source and language-span lineage through correction evidence and five
-separate consumer views, and re-scores the frozen 677-item saved baseline
-without a model call or gold leakage.
+joins source and language-span lineage through the five consumer-view
+interfaces, and re-scores the frozen 677-item saved baseline without a model
+call or gold leakage. Its real data output is narrower than those interfaces:
+1,028 admitted Wikipedia rows populate each continued-pretraining view, while
+correction, preference, and quality-filter views contain zero eligible rows.
+The 739,503 silver records remain protected or unresolved.
 
 The integration fixture is the observed `звучит` → `звучить` failure. It uses
 VESUM, Russian morphology, `r2u`, ULIF, a heritage source, per-dictionary
@@ -376,21 +383,23 @@ The reference build is proof that teams can run the Foundry interfaces and
 obtain reproducible evidence. It is not a released dataset, a trained model,
 or a claim that the 677-item benchmark measures general Ukrainian fluency.
 
-### Later validation and collaboration
+### Prepared-data product program
 
-The shipped reference build and evaluation may be validated with Lapa,
-`lang-uk`, UA-GEC, and other open-weight Ukrainian teams through:
+Successor epic #6321 turns the engine into data products that can be compared
+with or consumed alongside Lapa, `lang-uk`, UA-GEC, and other open-weight
+Ukrainian work through:
 
 - data slices they can inspect and reproduce;
 - diagnostics they can run on any new base model;
 - failure-focused evaluation with protected legitimate variation; and
 - evidence-backed annotation guidelines.
 
-External feedback may prioritize later evidence adapters or acquisition. It was
-not a prerequisite for the completed Foundry implementation. No external
-adoption is currently claimed: an adapter, fixture, internal CI run, or failed
-project-run output is not adoption evidence. Hramatka teacher feedback follows
-the same optional-evidence rule.
+External feedback may prioritize later evidence adapters or acquisition, but
+it is not required to prove deterministic receipts, source lineage, rights
+decisions, or contamination controls. No external adoption is currently
+claimed: an adapter, fixture, internal CI run, or failed project-run output is
+not adoption evidence. Hramatka teacher feedback follows the same optional-
+evidence rule.
 
 ## Downstream validation policy
 
@@ -454,9 +463,8 @@ tied to a frozen leaderboard snapshot and its exact task aggregate before
 external publication. The operator's observation is strategically useful, but
 the rank and benchmark definition must remain reproducible.
 
-Gemma 4 can outperform Gemma 3 adaptations on an aggregate leaderboard because
-of stronger general reasoning, instruction following, architecture, and broad
-multilingual transfer without having solved clean Ukrainian. The public
+Gemma 4 may outperform a Gemma 3 adaptation on an aggregate leaderboard without
+having solved clean Ukrainian. The public
 [`lang-uk` methodology](https://huggingface.co/spaces/lang-uk/ukrainian-llm-leaderboard/blob/main/README.md)
 aggregates translation, summarization, QA, reasoning/knowledge, mathematics,
 and instruction following; it does not comprehensively measure surzhyk,
@@ -464,3 +472,12 @@ semantic calques, Russian morphology, government, or unwanted normalization of
 heritage Ukrainian. Google's Gemma 4 card does not disclose a Ukrainian-
 specific pretraining share. A top aggregate rank therefore cannot substitute
 for the Foundry's targeted clean-Ukrainian diagnostics.
+
+Lapa's public training assets predate the 2026-04-02 Gemma 4 launch. Its later
+v0.1.3 release is described as an alignment and pipeline maintenance update;
+no public Lapa Gemma-4 port or team-intent statement was located as of
+2026-08-03. Gemma 4 does provide pretrained weights, but Lapa's Gemma-3 token
+identifiers, embedding transfer, and training configurations are not a
+drop-in Gemma 4 recipe. See the
+[prepared-data product decision](../research/UNLP_PREPARED_DATA_PRODUCT_DECISION.md)
+for the facts, bounded inference, and unknowns.

@@ -1,9 +1,15 @@
-# Ukrainian Data Foundry adoption kit
+# Ukrainian Data Foundry community-use and handoff kit
 
 This kit turns the shipped Foundry and open-weight evaluation artifacts into a
 small local trial and concrete Lapa or lang-uk handoff packages. It needs no
 API key and performs no download, training, optimizer run, weight-adapter
 creation, upload, or external submission.
+
+The name of the directory is historical. Generating a trial or handoff package
+does not prove adoption, and adoption is not the goal of the prepared-data
+program. The kit demonstrates a local interface only. Community-useful,
+rights-classified prepared data is tracked under
+[#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321).
 
 ## Install without an API
 
