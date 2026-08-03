@@ -154,6 +154,7 @@ review_scheduler:
       capacity_weight: 1.0
     cursor:
       formal_review_eligible: false
+      formal_review_exclusion_reason: generic multi-model harness lacks an attested concrete model/family
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
@@ -165,6 +166,7 @@ review_scheduler:
       capacity_weight: 1.0
     deepseek:
       formal_review_eligible: false
+      formal_review_exclusion_reason: text-only child cannot consume parent-owned sealed-review MCP
       participant: deepseek
       adapter_transport: acp
       catalog_transport: hermes
@@ -176,6 +178,7 @@ review_scheduler:
       capacity_weight: 1.0
     pool:
       formal_review_eligible: false
+      formal_review_exclusion_reason: ACP participant does not yet pin and attest the concrete Laguna model
       participant: pool
       adapter_transport: acp
       catalog_transport: opencode
@@ -788,9 +791,10 @@ orchestrator_seats:
     escalate_when: deep_single_shot_or_architecture
     note: Google-family orchestrator; Flash default loop; Pro escalate only
 
-# Formal CF transport defaults for review-pr (model + effort). Authority seats
-# (Sol/Opus) are critical-ladder only — not routine review-pr pins. Fable is no
-# longer on the routine ladder at all (usage cost, user 2026-07-24).
+# Formal CF transport defaults for review-pr (model + effort). Advisor/authority
+# seats (Sol/Fable and other designated-authority seats) are critical-ladder only —
+# not routine review-pr pins (operator 2026-08-03 + Sol GO). Fable remains off the
+# routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
@@ -836,8 +840,8 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low use frontier_practical defaults (Terra / Sonnet 5 / 3.6 Flash /
-  # Grok / K3 / GLM / DS-Pro / pool S 2.1) — not Sol/Fable on routine PRs.
+  # high/medium/low: Terra → Sonnet → GLM first (Sol GO 2026-08-03), then Flash /
+  # Grok / K3 / DS / pool — not Sol/Fable/advisor seats on routine PRs.
   critical:
     - [openai_frontier]
     # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
@@ -859,13 +863,15 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
+    # Routine CF order (Sol GO 2026-08-03): Terra → Sonnet → GLM, then other workhorses.
+    # Advisors (Sol/Fable) stay off this ladder (critical only).
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
+    - [glm-5.2]
     - [gemini-3.6-flash]
     - [grok-4.5]
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
-    - [glm-5.2]
     - [deepseek-v4-flash]
     - [deepseek-v4-pro]
     - [composer-2.5]
