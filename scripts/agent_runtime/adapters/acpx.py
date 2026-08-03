@@ -119,6 +119,8 @@ CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT = "installed>=0.64.2<1"
 AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
+ACPX_DEFAULT_MAX_TURNS = 1
+ACPX_SEALED_REVIEW_MAX_TURNS = 2
 
 _ACPX_REQUIRED_GLOBAL_FLAGS: tuple[str, ...] = (
     "--agent",
@@ -1011,6 +1013,11 @@ def _confinement_prefix_argv(
     sealed_review_mcp_config: str | None = None,
 ) -> list[str]:
     """Shared confinement, optionally admitting only sealed review tools."""
+    max_turns = (
+        ACPX_SEALED_REVIEW_MAX_TURNS
+        if sealed_review_mcp_config is not None
+        else ACPX_DEFAULT_MAX_TURNS
+    )
     permission_args = ["--deny-all", "--allowed-tools", ""]
     if sealed_review_mcp_config is not None:
         permission_policy = json.dumps(
@@ -1052,7 +1059,7 @@ def _confinement_prefix_argv(
         "--no-terminal",
         *permission_args,
         "--max-turns",
-        "1",
+        str(max_turns),
         "--prompt-retries",
         "0",
     ]
@@ -1624,15 +1631,25 @@ class AcpxAdapter:
             data = final_error.get("data") or {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
             message = final_error.get("message", "acpx error")
-            failure_code = {
-                "AGENT_DISCONNECTED": "acp_agent_disconnected",
-                "AGENT_STARTUP_FAILED": "acp_agent_startup",
-                "AUTH_REQUIRED": "acp_auth_required",
-                "CLAUDE_ACP_SESSION_CREATE_TIMEOUT": "acp_session_create_timeout",
-                "PERMISSION_DENIED": "acp_permission_denied",
-                "PERMISSION_PROMPT_UNAVAILABLE": "acp_permission_unavailable",
-                "TIMEOUT": "timeout",
-            }.get(label, "transport_error")
+            if (
+                label == "RUNTIME"
+                and isinstance(message, str)
+                and re.fullmatch(
+                    r"Internal error: Reached maximum number of turns \([1-9][0-9]*\)",
+                    message,
+                )
+            ):
+                failure_code = "acp_turn_limit"
+            else:
+                failure_code = {
+                    "AGENT_DISCONNECTED": "acp_agent_disconnected",
+                    "AGENT_STARTUP_FAILED": "acp_agent_startup",
+                    "AUTH_REQUIRED": "acp_auth_required",
+                    "CLAUDE_ACP_SESSION_CREATE_TIMEOUT": "acp_session_create_timeout",
+                    "PERMISSION_DENIED": "acp_permission_denied",
+                    "PERMISSION_PROMPT_UNAVAILABLE": "acp_permission_unavailable",
+                    "TIMEOUT": "timeout",
+                }.get(label, "transport_error")
             return self._closed(
                 f"acpx {label}: {message}",
                 stderr,

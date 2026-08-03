@@ -1153,7 +1153,7 @@ def test_recent_preserves_typed_body_free_acp_failure(tmp_path, monkeypatch):
                 "attribution_source": "explicit",
                 "model": "claude-sonnet-5",
                 "outcome": "error",
-                "failure_code": "acp_session_create_timeout",
+                "failure_code": "acp_turn_limit",
                 "stderr_excerpt": None,
             }
         ],
@@ -1163,7 +1163,7 @@ def test_recent_preserves_typed_body_free_acp_failure(tmp_path, monkeypatch):
 
     assert response.status_code == 200
     record = response.json()["records"][0]
-    assert record["failure_code"] == "acp_session_create_timeout"
+    assert record["failure_code"] == "acp_turn_limit"
     assert "stderr_excerpt" not in record
 
 

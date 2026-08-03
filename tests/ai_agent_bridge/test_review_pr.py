@@ -370,6 +370,8 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
         "mcp__sealed_review__search_text",
     ]
     assert "--no-fs" in command and "--no-terminal" in command
+    assert command[command.index("--max-turns") + 1] == "2"
+    assert command[command.index("--prompt-retries") + 1] == "0"
     policy = json.loads(command[command.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
         *allowed,
@@ -380,6 +382,16 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
         "sealed_review__search_text",
     ]
     assert policy["defaultAction"] == "deny"
+
+
+def test_failure_classification_preserves_typed_acp_failure() -> None:
+    result = type(
+        "ResultFixture",
+        (),
+        {"rate_limited": False, "stalled": False, "usage_record": {"failure_code": "acp_turn_limit"}},
+    )()
+
+    assert review_pr._failure_classification(result) == "acp_turn_limit"
 
 
 def test_automatic_failover_and_explicit_no_silent_provider_change() -> None:

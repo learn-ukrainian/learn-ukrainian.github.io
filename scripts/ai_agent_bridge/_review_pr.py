@@ -391,6 +391,15 @@ def _failure_classification(result: Any | None, exc: BaseException | None = None
             "rate_limited",
             "timeout",
             "transport_error",
+            "acp_adapter_incompatible",
+            "acp_adapter_missing",
+            "acp_agent_disconnected",
+            "acp_agent_startup",
+            "acp_auth_required",
+            "acp_permission_denied",
+            "acp_permission_unavailable",
+            "acp_session_create_timeout",
+            "acp_turn_limit",
         }:
             return str(record["failure_code"])
         if bool(getattr(result, "stalled", False)):

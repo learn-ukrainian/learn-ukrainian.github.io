@@ -152,6 +152,7 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
         "acp_permission_denied",
         "acp_permission_unavailable",
         "acp_session_create_timeout",
+        "acp_turn_limit",
         "adapter_refused",
         "protocol_output_limit",
         "provider_unavailable",

@@ -4433,6 +4433,7 @@ def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
         ("error", False, False, "result_invalid", 1, "result_invalid"),
         ("error", False, False, "provider_unavailable", None, "provider_unavailable"),
         ("error", False, False, "acp_agent_startup", 1, "acp_agent_startup"),
+        ("error", False, False, "acp_turn_limit", 1, "acp_turn_limit"),
         ("error", False, False, "acp_adapter_missing", None, "acp_adapter_missing"),
         ("error", False, False, None, 1, "transport_error"),
         ("rate_limited", True, False, None, 1, "rate_limited"),
