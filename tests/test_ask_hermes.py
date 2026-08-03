@@ -459,7 +459,11 @@ def test_entire_process_failures_are_silent_and_fail_open(
     assert shim._hook("before-submit-prompt") == 0
 
 
-@pytest.mark.parametrize("raw", [b"not-json", b"x" * ((1 << 20) + 1)])
+@pytest.mark.parametrize(
+    "raw",
+    [b"not-json", b"x" * ((1 << 20) + 1)],
+    ids=["malformed", "oversized"],
+)
 def test_malformed_or_oversized_input_is_silent_and_fail_open(
     monkeypatch: pytest.MonkeyPatch, raw: bytes
 ) -> None:
