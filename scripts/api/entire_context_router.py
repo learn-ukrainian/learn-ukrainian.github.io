@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import sqlite3
 from pathlib import Path
@@ -24,6 +25,7 @@ from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 from .repository_authority import preparation_data_root
 
 router = APIRouter(tags=["entire-context"])
+logger = logging.getLogger(__name__)
 
 _PROJECTION_COUNT_STATES = ("pending", "promoted", "tombstoned")
 _ACP_HEALTH_NUMBER_FIELDS = ("attempts", "failures", "lag_seconds", "retries")
@@ -251,10 +253,27 @@ def entire_context_search(
             limit=limit,
         )
     except RecallInputError as exc:
+        # Map to a closed set of stable API codes; never return raw exception
+        # text to HTTP clients (CodeQL py/stack-trace-exposure).
+        code = "invalid_request"
+        if exc.args:
+            for candidate in (
+                "query_invalid",
+                "seed_invalid",
+                "locator_id_invalid",
+                "handoff_seed_limit",
+            ):
+                if exc.args[0] == candidate:
+                    code = candidate
+                    break
+            else:
+                logger.exception(
+                    "unexpected RecallInputError in entire-context search"
+                )
         return {
             "schema": "ec-search.v1",
             "available": True,
-            "error": str(exc),
+            "error": code,
             "results": [],
         }
     except (sqlite3.Error, KeyError, TypeError, ValueError):
