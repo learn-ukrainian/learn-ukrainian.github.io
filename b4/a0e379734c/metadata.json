@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b4a0e379734c",
+  "strategy": "manual-commit",
+  "branch": "agy/homonym-paronym-promote",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitignore",
+    "data/lexicon/homonym_pairs.yaml",
+    "data/lexicon/paronym_pairs.yaml",
+    "scripts/audit/check_static_practice_assets.py",
+    "scripts/audit/generate_practice_deck.py",
+    "scripts/practice_deck/io.py",
+    "scripts/practice_deck/publish.py",
+    "site/src/lib/lexicon/srs.ts",
+    "site/tests/unit/lexicon-srs.test.ts",
+    "tests/test_check_static_practice_assets.py",
+    "tests/test_generate_practice_deck.py",
+    "tests/test_practice_deck_io.py",
+    "tests/test_publish_practice_deck.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b4/a0e379734c/0/metadata.json",
+      "transcript": "/b4/a0e379734c/0/full.jsonl",
+      "compact_transcript": "/b4/a0e379734c/0/transcript.jsonl",
+      "content_hash": "/b4/a0e379734c/0/content_hash.txt",
+      "prompt": "/b4/a0e379734c/0/prompt.txt"
+    }
+  ]
+}
