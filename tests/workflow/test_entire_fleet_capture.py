@@ -1,4 +1,4 @@
-"""Lifecycle, privacy, and native Cursor compatibility tests for Entire."""
+"""Entire fleet-capture lifecycle, privacy, and native Cursor workflow tests."""
 
 from __future__ import annotations
 
@@ -774,7 +774,7 @@ def test_resolved_route_preserves_truthful_substitution() -> None:
 def test_runner_starts_after_spawn_and_always_finishes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[2] / "scripts"))
     from agent_runtime import runner as runtime_runner
 
     events: list[tuple[str, dict[str, object]]] = []
@@ -796,7 +796,7 @@ def test_runner_starts_after_spawn_and_always_finishes(
             return ParseResult(ok=True, response="provider-ok")
 
     monkeypatch.setattr(runtime_runner, "FleetCapture", FakeCapture)
-    python = Path(__file__).resolve().parents[1] / ".venv" / "bin" / "python"
+    python = Path(__file__).resolve().parents[2] / ".venv" / "bin" / "python"
     outcome = runtime_runner._execute_invocation_plan(
         agent_name="deepseek",
         adapter=Adapter(),
@@ -825,7 +825,7 @@ def test_runner_starts_after_spawn_and_always_finishes(
 def test_spawn_refusal_creates_no_entire_session(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[2] / "scripts"))
     from agent_runtime import runner as runtime_runner
 
     class NoCapture:
