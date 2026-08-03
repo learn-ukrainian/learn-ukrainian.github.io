@@ -48,7 +48,7 @@ function okJson(body: unknown): Response {
 }
 
 function notFoundResponse(): Response {
-  return { ok: false, json: async () => ({}) } as unknown as Response;
+  return { ok: false, status: 404, json: async () => ({}) } as unknown as Response;
 }
 
 /** D2: the Words-of-the-Day zone now fetches this pool directly (see `dailyPoolFixture`). */
@@ -1323,7 +1323,7 @@ describe('LexiconPractice', () => {
     expect(screen.getAllByText(withPos!.pos!).length).toBeGreaterThan(0);
   });
 
-  test('resolves a level-less custom deck key from the learner cumulative shards', async () => {
+  test('resolves a level-less custom deck key across the published practice shards', async () => {
     const cat = lexeme('кіт', 'кіт', 'cat', {
       nominative: 'кіт',
       accusative: 'кота',
@@ -1387,7 +1387,9 @@ describe('LexiconPractice', () => {
       'href',
       '/lexicon/%D0%BA%D1%96%D1%82/',
     );
-    expect(requested.some((url) => url.includes('practice-lexemes.A2.json'))).toBe(false);
+    // Soft CEFR (#6143): the learner level is a preference, not a cap, so the
+    // level-less custom key resolves against all published shards (A2 included).
+    expect(requested.some((url) => url.includes('practice-lexemes.A2.json'))).toBe(true);
   });
 
   test('falls back to the Atlas index for a custom deck word outside practice lexemes', async () => {

@@ -1380,7 +1380,13 @@ async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>
   let p = cache.get(url) as Promise<T> | undefined;
   if (!p) {
     p = fetch(url).then((res) => {
-      if (!res.ok) throw new Error(`Shard fetch failed: ${url}`);
+      if (!res.ok) {
+        // Tag the HTTP status so callers can tell an unpublished shard (404,
+        // soft-skippable) from a real load fault (network / server error).
+        const err = new Error(`Shard fetch failed: ${url}`) as Error & { status?: number };
+        err.status = res.status;
+        throw err;
+      }
       return res.json() as Promise<T>;
     });
     // On failure allow retry next time
@@ -2490,15 +2496,24 @@ function LexiconPracticeIsland({
       let matchedIndexItem = initialMatch;
       if (!matchedIndexItem) {
         const indexShards = await Promise.all(
-          levelsForPractice().map((level) =>
-            getShardJson<PracticeIndexShard>(
-              `${shardBaseUrl}/practice-index.${level}.json`,
-              shardJsonCacheRef.current,
-            ),
-          ),
+          levelsForPractice().map(async (level) => {
+            try {
+              return await getShardJson<PracticeIndexShard>(
+                `${shardBaseUrl}/practice-index.${level}.json`,
+                shardJsonCacheRef.current,
+              );
+            } catch (err) {
+              // A 404 means the level is not published yet: skip it and keep
+              // scanning the remaining shards — the focused lemma may live in
+              // another published level. Any other fault is a real load failure
+              // and must surface as the fetch-error fallback.
+              if ((err as { status?: number } | null)?.status === 404) return null;
+              throw err;
+            }
+          }),
         );
         matchedIndexItem = resolvePracticeIndexItem(
-          indexShards.flatMap((shard) => shard.items ?? []),
+          indexShards.flatMap((shard) => shard?.items ?? []),
           target,
         );
       }
