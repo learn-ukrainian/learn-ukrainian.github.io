@@ -332,6 +332,10 @@ def verify_config(config: Mapping[str, Any]) -> None:
         "structured output contract drift",
     )
     _require(
+        config.get("runner", {}).get("structured_outputs_backend") == "xgrammar",
+        "structured output backend drift",
+    )
+    _require(
         config.get("runner", {}).get("structured_outputs_disable_any_whitespace") is True,
         "structured output whitespace contract drift",
     )
@@ -456,9 +460,30 @@ def build_sampling_params(
         max_tokens=int(runner["max_tokens"]),
         structured_outputs=structured_outputs_type(
             json=RESPONSE_JSON_SCHEMA,
-            disable_any_whitespace=bool(runner["structured_outputs_disable_any_whitespace"]),
-            disable_additional_properties=True,
         ),
+    )
+
+
+def build_llm(
+    *,
+    model_path: Path,
+    tokenizer_root: Path,
+    runner: Mapping[str, Any],
+    llm_type: Callable[..., Any],
+) -> Any:
+    return llm_type(
+        model=str(model_path),
+        tokenizer=str(tokenizer_root),
+        quantization="gguf",
+        seed=int(runner["seed"]),
+        max_model_len=int(runner["max_model_len"]),
+        gpu_memory_utilization=float(runner["gpu_memory_utilization"]),
+        trust_remote_code=False,
+        enforce_eager=True,
+        structured_outputs_config={
+            "backend": str(runner["structured_outputs_backend"]),
+            "disable_any_whitespace": bool(runner["structured_outputs_disable_any_whitespace"]),
+        },
     )
 
 
@@ -499,15 +524,11 @@ def load_generator(
         _require(isinstance(rendered, str) and rendered, "tokenizer did not render a prompt")
         return rendered
 
-    model = LLM(
-        model=str(model_path),
-        tokenizer=str(tokenizer_root),
-        quantization="gguf",
-        seed=int(runner["seed"]),
-        max_model_len=int(runner["max_model_len"]),
-        gpu_memory_utilization=float(runner["gpu_memory_utilization"]),
-        trust_remote_code=False,
-        enforce_eager=True,
+    model = build_llm(
+        model_path=model_path,
+        tokenizer_root=tokenizer_root,
+        runner=runner,
+        llm_type=LLM,
     )
     sampling = build_sampling_params(
         runner,
@@ -617,6 +638,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "max_tokens": config["runner"]["max_tokens"],
             "parse_retries": config["runner"]["parse_retries"],
             "structured_outputs": config["runner"]["structured_outputs"],
+            "structured_outputs_backend": config["runner"]["structured_outputs_backend"],
             "structured_outputs_disable_any_whitespace": config["runner"][
                 "structured_outputs_disable_any_whitespace"
             ],

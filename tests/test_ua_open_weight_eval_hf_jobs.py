@@ -50,13 +50,13 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.870167
+    assert config["authorization"]["prior_provider_cost_usd"] == 1.050167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fe7676b79c09949c1fe54",
+        "job_id": "6a6fe9a26b79c09949c1fe68",
         "mode": "canary",
-        "provider_billed_minutes": 5,
-        "provider_derived_cost_usd": 0.15,
-        "provider_running_seconds": 289,
+        "provider_billed_minutes": 6,
+        "provider_derived_cost_usd": 0.18,
+        "provider_running_seconds": 333,
         "stage": "ERROR",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
@@ -64,6 +64,7 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["authorization"]["no_automatic_paid_retry"] is False
     assert config["runner"]["checkpoint_upload_every_cases"] == 25
     assert config["runner"]["structured_outputs"] == "json_schema"
+    assert config["runner"]["structured_outputs_backend"] == "xgrammar"
     assert config["runner"]["structured_outputs_disable_any_whitespace"] is True
     assert config["transport"] == {
         "cpu_preflight": {
@@ -136,10 +137,17 @@ def test_worker_structured_output_schema_keeps_the_strict_response_contract() ->
     assert sampling.kwargs["max_tokens"] == 160
     structured = sampling.kwargs["structured_outputs"]
     assert isinstance(structured, Capture)
-    assert structured.kwargs == {
-        "json": schema,
+    assert structured.kwargs == {"json": schema}
+
+    model = hf_jobs_worker.build_llm(
+        model_path=Path("/verified/model.gguf"),
+        tokenizer_root=Path("/verified/tokenizer"),
+        runner=config["runner"],
+        llm_type=Capture,
+    )
+    assert model.kwargs["structured_outputs_config"] == {
+        "backend": "xgrammar",
         "disable_any_whitespace": True,
-        "disable_additional_properties": True,
     }
 
 
@@ -727,7 +735,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 0.870167
+    assert gate["prior_provider_cost_usd"] == 1.050167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
@@ -739,6 +747,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
         "6a6fe1ba6b79c09949c1fe21",
         "6a6fe50b6b79c09949c1fe42",
         "6a6fe7676b79c09949c1fe54",
+        "6a6fe9a26b79c09949c1fe68",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40

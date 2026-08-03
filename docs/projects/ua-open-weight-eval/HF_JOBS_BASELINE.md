@@ -110,10 +110,15 @@ cumulative cost to USD 0.720167.
 The authenticated private receipt from diagnostic job
 `6a6fe7676b79c09949c1fe54` showed that all three attempts consumed the full
 160-token allowance on schema-permitted whitespace after `{` or `{"action":`.
-The worker now sets vLLM's `disable_any_whitespace` structured-output flag, so
-the same JSON schema cannot spend tokens on formatting while the unchanged
-strict parser still validates the completed object. Five billed minutes cost
-USD 0.150000, raising cumulative cost to USD 0.870167.
+Job `6a6fe9a26b79c09949c1fe68` proved that vLLM 0.26.0 ignores the identically
+named request-level flag: its engine log retained
+`disable_any_whitespace=False`, and the authenticated private receipt showed
+the same whitespace-only exhaustion. The pinned xgrammar backend reads this
+setting from the engine's `StructuredOutputsConfig`, so the worker now passes
+`backend=xgrammar` and `disable_any_whitespace=True` to the `LLM` constructor.
+The request still carries the same JSON schema, and the unchanged strict parser
+still validates every completed object. Six billed minutes cost USD 0.180000,
+raising cumulative cost to USD 1.050167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
