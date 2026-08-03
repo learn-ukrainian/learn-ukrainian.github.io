@@ -26,7 +26,8 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **hramatka** (teacher lesson service) | Grok 4.5 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
 | **folk** (curriculum track) | Grok 4.5 † | `./start-grok-driver.sh --epic folk` |
 | **bio** (curriculum track) | Grok 4.5 | `./start-grok-driver.sh --epic bio` |
-| **any epic** — incident · architecture cutover · contested review | Fable 5 (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
+| **any epic** — incident · architecture cutover · contested review | Opus 5 @ xhigh (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
+| **any epic** — Fable alternate | Fable 5 | `./start-claude-driver.sh --epic <epic> --model claude-fable-5` |
 | **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
 
 **Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
@@ -37,14 +38,12 @@ process starts. Codex additionally performs its transport-health probe during
 adapter preflight, before it claims the lease; a degraded probe refuses the
 launch without acquiring a lane.
 
-**Fable 5 is the DEFAULT Anthropic driver seat** (operator decision 2026-07-28).
-`./start-claude-driver.sh --epic <epic>` pins Fable by default; pass
-`--model claude-sonnet-5` for the supported routine alternate. Opus 5 is not an
-orchestrator seat. Fable is reserved for the rare
-hardest-judgment session (live incident, architecture cutover, contested verdict) in the
-SUMMONED cadence — 1-2 short scheduled sessions/day, dispatch-heavy, never a resident
-polling loop (see model-assignment.md § Orchestration operating pattern). It prints a
-reserved-seat notice on launch so the cost is never spent by habit. Both Anthropic wrappers
+**Opus 5 @ xhigh is the DEFAULT Anthropic driver seat** (operator decision 2026-08-03).
+`./start-claude-driver.sh --epic <epic>` pins Opus 5 with `--effort xhigh` by default;
+pass `--model claude-fable-5` or `--model claude-sonnet-5` for supported alternates
+(and `--effort …` after `--epic` to override effort). Keep the SUMMONED cadence —
+1-2 short scheduled sessions/day, dispatch-heavy, never a resident polling loop
+(see model-assignment.md § Orchestration operating pattern). Both Anthropic wrappers
 resolve to the same `claude-<lane>` handoff slot, so the stream lease still allows only one
 Anthropic driver per lane. The legacy `scripts/start-bio-driver.sh` runs Claude + the
 `curriculum-track-orchestrator` agent-def if you specifically want that agent.

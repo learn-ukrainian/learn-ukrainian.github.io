@@ -121,7 +121,8 @@ def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
     result = run_launcher("start-claude.sh", env={"PATH": provider_free_path})
     assert result.returncode == 0, result.stderr
     assert "LAUNCHER_DRY_RUN=1: would require binary claude" in result.stdout
-    assert "would exec claude --model claude-fable-5" in result.stdout
+    assert "would exec claude " in result.stdout
+    assert "would exec claude --model" not in result.stdout
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
