@@ -3,6 +3,7 @@
 > **Decision date:** 2026-08-03
 > **Owner:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **First gate:** [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
+> **Active phase:** [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
 > **Decision:** Continue with evidence-bearing prepared Ukrainian data products;
 > do not operate or train a project model
 
@@ -117,19 +118,70 @@ not invent a motive or claim that no port is planned.
 ## Execution order
 
 1. Audit current receipts and explain every empty model-ready lane without
-   changing any disposition.
+   changing any disposition. **Completed under #6322.**
 2. Freeze Evidence and Canaries v0 with deterministic document signals and
-   deliberately planted failures.
+   deliberately planted failures. **Completed under #6324 over all 189,150
+   public/external human-authored records.**
 3. Establish rights and redistribution decisions per source family and product
-   capability.
+   capability, and build the deterministic complement plan. **Active under
+   #6327.**
 4. Prepare continued-pretraining complements with exact lineage, strata,
-   deduplication, contamination, and limitation receipts.
+   deduplication, contamination, and limitation receipts. This is part of
+   #6327 and may emit source bytes only for independently evidenced
+   capabilities under a separate publication authorization.
 5. Build correction/protection categories only from authoritative sources and
    Ukrainian-strong linguistic review.
 6. Consider Lapa classifier ablation or downstream model validation only when
    it answers a preregistered decision and receives separate authorization.
 
 No step requires project-owned training or paid compute.
+
+## Phase 2 product contract
+
+Phase 2 is an evidence-resolution and prepared-data planning product, not an IP
+bypass. It must ship:
+
+1. a capability-decision ledger covering every recovered source family, with
+   local preparation, local model learning, raw and derived redistribution,
+   dataset publication, and model publication kept independent;
+2. a deterministic source-stratified complement manifest reconciling all
+   189,150 Phase 1 rows and binding the Phase 1 hashes and receipts;
+3. text-free corpus profiles and resolvability keys that let a consumer assess
+   coverage and align independently acquired sources without implying that the
+   consumer has permission to learn from them;
+4. an evidence-resolution worklist naming the exact missing artifact for every
+   unresolved source or stratum; and
+5. a gated model-neutral processing specification that reuses the existing
+   exporter and evaluation firewall only after the requested capability is
+   independently evidenced.
+
+The project rejects a local-hydration workaround for unresolved sources.
+Possessing or being able to download a source is not itself evidence for local
+model learning, and moving the operation to a consumer machine does not resolve
+that gap. Likewise, the project does not export evaluation fingerprints or
+invent Phase 2 span labels. Historical Ukrainian, dialect, regional language,
+quotation, Surzhyk, and phonetic Russian are protected contextual phenomena,
+not automatic errors; new linguistic decisions remain Phase 3 work.
+
+The first non-Wikipedia evidence-resolution target will be selected from facts:
+the source family whose underlying-work, edition, acquisition, and capability
+evidence can be established first. Neither public-domain literary status nor
+institutional textbook openness is assumed in advance.
+
+The Phase 2 advisor review also rejected opaque hashes as the only consumer
+alignment mechanism. The project therefore publishes a text-free source/work
+locator index with canonical URLs where they are actually known, allowlisted
+bibliographic metadata, and exact Phase 1-compatible identifiers. A locator
+makes an evidence task actionable; it does not grant learning, redistribution,
+download, dataset-publication, or model-publication permission.
+
+The complete Phase 2 build resolves the earlier planning ambiguity without
+weakening a gate. It covers all 189,150 records and binds 42,302 locator rows.
+Current evidence supports faithful local preparation and local model learning
+for 1,029 Wikipedia records; 188,121 records remain metadata-only for those
+capabilities, and all records remain metadata-only for redistribution and
+publication. The 3,511-item worklist names the missing evidence at source/work
+level. These are capability decisions, not Ukrainian-quality labels.
 
 ## How usefulness will be demonstrated
 
@@ -199,6 +251,9 @@ Stop or redesign a lane if it would:
 
 This decision combines repository receipts, the public UNLP 2025 and 2026
 proceedings, official Lapa artifacts, official Google Gemma 4 release material,
-and a two-round Fable/K3 adversarial discussion. The model discussion advised
-the architecture; it is not Ukrainian human gold and does not replace formal
-exact-head review of implementation.
+a two-round Fable/K3 Phase 0 adversarial discussion, and the two-round Fable 5
+plus Gemini 3.6 Flash High Phase 2 discussion recorded as ACP conversation
+`conversation_145b502a2a5d4a80ad3f486d66d960ea`. The model discussions advised
+the architecture and Ukrainian-community fit; they are not legal verdicts or
+Ukrainian human gold and do not replace formal exact-head implementation
+review.

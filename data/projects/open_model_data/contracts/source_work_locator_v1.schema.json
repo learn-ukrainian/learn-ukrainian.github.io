@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/source_work_locator_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "locator_id", "source_family", "inventory_asset_id", "source_id", "work_id", "source_locator", "work_locator", "canonical_url", "metadata", "metadata_publication", "affected_records", "missing_evidence_keys"],
+  "properties": {
+    "schema_version": {"const": "source_work_locator_v1"},
+    "locator_id": {"$ref": "#/$defs/locatorId"},
+    "source_family": {"enum": ["literary", "public_textbooks", "external_articles", "wikipedia"]},
+    "inventory_asset_id": {"type": "string", "minLength": 3},
+    "source_id": {"$ref": "#/$defs/sourceId"},
+    "work_id": {"$ref": "#/$defs/workId"},
+    "source_locator": {"$ref": "#/$defs/metadataObject"},
+    "work_locator": {"$ref": "#/$defs/metadataObject"},
+    "canonical_url": {"type": ["string", "null"], "format": "uri"},
+    "metadata": {"$ref": "#/$defs/metadataObject"},
+    "metadata_publication": {"$ref": "#/$defs/publicationObject"},
+    "affected_records": {"type": "integer", "minimum": 1},
+    "missing_evidence_keys": {"type": "array", "uniqueItems": true, "items": {"enum": ["canonical_source_url"]}}
+  },
+  "allOf": [
+    {"$ref": "#/$defs/literaryRow"},
+    {"$ref": "#/$defs/textbookRow"},
+    {"$ref": "#/$defs/externalRow"},
+    {"$ref": "#/$defs/wikipediaRow"}
+  ],
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+    "publicValue": {"type": ["string", "null"]},
+    "metadataObject": {"type": "object", "additionalProperties": {"$ref": "#/$defs/publicValue"}},
+    "publicationObject": {"type": "object", "additionalProperties": {"enum": ["public_metadata", "missing"]}},
+    "sourceId": {"type": "string", "pattern": "^source\\.(?:literary|public_textbooks|external_articles|wikipedia)\\.[a-f0-9]{24}$"},
+    "workId": {"type": "string", "pattern": "^work\\.(?:literary|public_textbooks|external_articles|wikipedia)\\.[a-f0-9]{24}$"},
+    "locatorId": {"type": "string", "pattern": "^locator\\.[a-f0-9]{24}$"},
+    "strictObject": {"type": "object", "additionalProperties": false},
+    "literaryRow": {
+      "if": {"properties": {"source_family": {"const": "literary"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.literary_texts"},
+        "source_id": {"pattern": "^source\\.literary\\.[a-f0-9]{24}$"}, "work_id": {"pattern": "^work\\.literary\\.[a-f0-9]{24}$"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["source_file"], "properties": {"source_file": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["work_id"], "properties": {"work_id": {"$ref": "#/$defs/publicValue"}}},
+        "metadata": {"type": "object", "additionalProperties": false, "required": ["title", "author", "year"], "properties": {"title": {"$ref": "#/$defs/publicValue"}, "author": {"$ref": "#/$defs/publicValue"}, "year": {"$ref": "#/$defs/publicValue"}}},
+        "metadata_publication": {"type": "object", "additionalProperties": false, "required": ["title", "author", "year"], "properties": {"title": {"enum": ["public_metadata", "missing"]}, "author": {"enum": ["public_metadata", "missing"]}, "year": {"enum": ["public_metadata", "missing"]}}}
+      }}
+    },
+    "textbookRow": {
+      "if": {"properties": {"source_family": {"const": "public_textbooks"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.textbooks.public"}, "source_id": {"pattern": "^source\\.public_textbooks\\.[a-f0-9]{24}$"}, "work_id": {"pattern": "^work\\.public_textbooks\\.[a-f0-9]{24}$"}, "canonical_url": {"type": "null"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["source_file"], "properties": {"source_file": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"$ref": "#/$defs/publicValue"}}},
+        "metadata": {"type": "object", "additionalProperties": false, "required": ["title", "author", "author_uk", "grade", "subject"], "properties": {"title": {"$ref": "#/$defs/publicValue"}, "author": {"$ref": "#/$defs/publicValue"}, "author_uk": {"$ref": "#/$defs/publicValue"}, "grade": {"$ref": "#/$defs/publicValue"}, "subject": {"$ref": "#/$defs/publicValue"}}},
+        "metadata_publication": {"type": "object", "additionalProperties": false, "required": ["title", "author", "author_uk", "grade", "subject"], "properties": {"title": {"enum": ["public_metadata", "missing"]}, "author": {"enum": ["public_metadata", "missing"]}, "author_uk": {"enum": ["public_metadata", "missing"]}, "grade": {"enum": ["public_metadata", "missing"]}, "subject": {"enum": ["public_metadata", "missing"]}}}
+      }}
+    },
+    "externalRow": {
+      "if": {"properties": {"source_family": {"const": "external_articles"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.external_articles"}, "source_id": {"pattern": "^source\\.external_articles\\.[a-f0-9]{24}$"}, "work_id": {"pattern": "^work\\.external_articles\\.[a-f0-9]{24}$"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["source_file"], "properties": {"source_file": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["url_normalized", "url"], "properties": {"url_normalized": {"$ref": "#/$defs/publicValue"}, "url": {"$ref": "#/$defs/publicValue"}}},
+        "metadata": {"type": "object", "additionalProperties": false, "required": ["title", "speaker", "domain", "publish_date", "channel_id"], "properties": {"title": {"$ref": "#/$defs/publicValue"}, "speaker": {"$ref": "#/$defs/publicValue"}, "domain": {"$ref": "#/$defs/publicValue"}, "publish_date": {"$ref": "#/$defs/publicValue"}, "channel_id": {"$ref": "#/$defs/publicValue"}}},
+        "metadata_publication": {"type": "object", "additionalProperties": false, "required": ["title", "speaker", "domain", "publish_date", "channel_id"], "properties": {"title": {"enum": ["public_metadata", "missing"]}, "speaker": {"enum": ["public_metadata", "missing"]}, "domain": {"enum": ["public_metadata", "missing"]}, "publish_date": {"enum": ["public_metadata", "missing"]}, "channel_id": {"enum": ["public_metadata", "missing"]}}}
+      }}
+    },
+    "wikipediaRow": {
+      "if": {"properties": {"source_family": {"const": "wikipedia"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.wikipedia"}, "source_id": {"pattern": "^source\\.wikipedia\\.[a-f0-9]{24}$"}, "work_id": {"pattern": "^work\\.wikipedia\\.[a-f0-9]{24}$"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["fetched_at"], "properties": {"fetched_at": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"$ref": "#/$defs/publicValue"}}},
+        "metadata": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"$ref": "#/$defs/publicValue"}}},
+        "metadata_publication": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"enum": ["public_metadata", "missing"]}}}
+      }}
+    },
+    "config": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "normalization_spec", "database", "families"],
+      "properties": {
+        "schema_version": {"const": "source_work_locator_config_v1"}, "normalization_spec": {"const": "phase1-opaque-id-v1"}, "database": {"const": "data/sources.db"},
+        "families": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/configFamily"}, "allOf": [{"contains": {"properties": {"source_family": {"const": "literary"}}}}, {"contains": {"properties": {"source_family": {"const": "public_textbooks"}}}}, {"contains": {"properties": {"source_family": {"const": "external_articles"}}}}, {"contains": {"properties": {"source_family": {"const": "wikipedia"}}}}]}
+      }
+    },
+    "configFamily": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_family", "inventory_asset_id", "table", "source_column", "work_column", "source_locator_columns", "work_locator_columns", "canonical_url_column", "metadata_columns", "exclude"],
+      "properties": {"source_family": {"enum": ["literary", "public_textbooks", "external_articles", "wikipedia"]}, "inventory_asset_id": {"type": "string"}, "table": {"$ref": "#/$defs/identifier"}, "source_column": {"$ref": "#/$defs/identifier"}, "work_column": {"$ref": "#/$defs/identifier"}, "source_locator_columns": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true}, "work_locator_columns": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true}, "canonical_url_column": {"type": ["string", "null"]}, "metadata_columns": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true}, "exclude": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}
+      ,
+      "allOf": [
+        {"if": {"properties": {"source_family": {"const": "literary"}}}, "then": {"properties": {"inventory_asset_id": {"const": "db.literary_texts"}, "table": {"const": "literary_texts"}, "source_column": {"const": "source_file"}, "work_column": {"const": "work_id"}, "source_locator_columns": {"const": ["source_file"]}, "work_locator_columns": {"const": ["work_id"]}, "canonical_url_column": {"const": "source_url"}, "metadata_columns": {"const": ["title", "author", "year"]}, "exclude": {"const": []}}}},
+        {"if": {"properties": {"source_family": {"const": "public_textbooks"}}}, "then": {"properties": {"inventory_asset_id": {"const": "db.textbooks.public"}, "table": {"const": "textbooks"}, "source_column": {"const": "source_file"}, "work_column": {"const": "title"}, "source_locator_columns": {"const": ["source_file"]}, "work_locator_columns": {"const": ["title"]}, "canonical_url_column": {"type": "null"}, "metadata_columns": {"const": ["title", "author", "author_uk", "grade", "subject"]}, "exclude": {"const": ["anna-ohoiko-1000-words-2nd-ed", "anna-ohoiko-500-verbs", "ulp-1-00-lesson-notes", "ulp-2-00-lesson-notes", "ulp-3-00-lesson-notes", "ulp-4-00-lesson-notes", "ulp-5-00-lesson-notes", "ulp-6-00-lesson-notes"]}}}},
+        {"if": {"properties": {"source_family": {"const": "external_articles"}}}, "then": {"properties": {"inventory_asset_id": {"const": "db.external_articles"}, "table": {"const": "external_articles"}, "source_column": {"const": "source_file"}, "work_column": {"const": "url_normalized"}, "source_locator_columns": {"const": ["source_file"]}, "work_locator_columns": {"const": ["url_normalized", "url"]}, "canonical_url_column": {"const": "url_normalized"}, "metadata_columns": {"const": ["title", "speaker", "domain", "publish_date", "channel_id"]}, "exclude": {"const": []}}}},
+        {"if": {"properties": {"source_family": {"const": "wikipedia"}}}, "then": {"properties": {"inventory_asset_id": {"const": "db.wikipedia"}, "table": {"const": "wikipedia"}, "source_column": {"const": "fetched_at"}, "work_column": {"const": "title"}, "source_locator_columns": {"const": ["fetched_at"]}, "work_locator_columns": {"const": ["title"]}, "canonical_url_column": {"const": "url"}, "metadata_columns": {"const": ["title"]}, "exclude": {"const": []}}}}
+      ]
+    }
+  }
+}

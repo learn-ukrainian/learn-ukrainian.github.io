@@ -1,0 +1,72 @@
+{
+  "schema_version": "source_capability_policy_v1",
+  "policy_id": "public-consumer-capability-policy-v1",
+  "context": {
+    "actor_scope": "public downstream consumer operating locally",
+    "destination_scope": "local preparation and local model learning only unless separately evidenced",
+    "jurisdiction_scope": "not jurisdiction-specific; obtain applicable advice before use",
+    "decision_authority": "evidence_record_not_legal_advice"
+  },
+  "capabilities": ["acquisition_retention", "local_preparation", "local_model_learning", "raw_redistribution", "derived_redistribution", "dataset_publication", "model_publication"],
+  "evidence_catalog": [
+    {
+      "evidence_id": "evidence.wikipedia_primary_rights_v1",
+      "kind": "rights_admission",
+      "citation": "Wikipedia primary rights evidence packet for the existing local public-consumer capture cohort.",
+      "repo_locator": "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json",
+      "retrieved_on": "2026-08-01",
+      "sha256": "be71135b39a7972d6dfe75a2a0f0dec7726b02ff728641f6b2c8cef3ea8b5ec1"
+    }
+  ],
+  "family_defaults": [
+    {
+      "source_family": "literary", "scope_id": "scope.literary.public-consumer",
+      "decisions": {
+        "acquisition_retention": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["canonical_source_url", "host_terms_url"]},
+        "local_preparation": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["underlying_work_status", "transcription_or_digitization_status"]},
+        "local_model_learning": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["underlying_work_status", "edition_rights_status", "explicit_license_or_permission"]},
+        "raw_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "host_terms_url"]},
+        "derived_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission"]},
+        "dataset_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "edition_identity"]},
+        "model_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "content_sha256"]}
+      }
+    },
+    {
+      "source_family": "public_textbooks", "scope_id": "scope.public-textbooks.public-consumer",
+      "decisions": {
+        "acquisition_retention": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["canonical_source_url", "host_terms_url"]},
+        "local_preparation": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["edition_identity", "edition_rights_status"]},
+        "local_model_learning": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["edition_rights_status", "explicit_license_or_permission"]},
+        "raw_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "host_terms_url"]},
+        "derived_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission"]},
+        "dataset_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "edition_identity"]},
+        "model_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "content_sha256"]}
+      }
+    },
+    {
+      "source_family": "external_articles", "scope_id": "scope.external-articles.public-consumer",
+      "decisions": {
+        "acquisition_retention": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["canonical_source_url", "host_terms_url"]},
+        "local_preparation": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["canonical_source_url", "explicit_license_or_permission"]},
+        "local_model_learning": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["underlying_work_status", "explicit_license_or_permission"]},
+        "raw_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "host_terms_url"]},
+        "derived_redistribution": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission"]},
+        "dataset_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "canonical_source_url"]},
+        "model_publication": {"state": "unresolved", "evidence_refs": [], "missing_evidence_keys": ["explicit_license_or_permission", "content_sha256"]}
+      }
+    },
+    {
+      "source_family": "wikipedia", "scope_id": "scope.wikipedia.public-consumer",
+      "decisions": {
+        "acquisition_retention": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
+        "local_preparation": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
+        "local_model_learning": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
+        "raw_redistribution": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},
+        "derived_redistribution": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},
+        "dataset_publication": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},
+        "model_publication": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]}
+      }
+    }
+  ],
+  "source_overrides": []
+}

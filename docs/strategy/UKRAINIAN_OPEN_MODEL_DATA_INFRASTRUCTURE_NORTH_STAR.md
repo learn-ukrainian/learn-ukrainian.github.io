@@ -109,9 +109,20 @@ evidence and are never a prerequisite for completing an internal data product.
   governing decision is the
   [UNLP prepared-data product decision](../research/UNLP_PREPARED_DATA_PRODUCT_DECISION.md).
 - [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
-  owns the blocking Phase 0 receipt audit. It must explain the three empty
-  correction-family lanes and freeze current product truth before new data is
-  advertised.
+  owns the completed Phase 0 receipt audit. It explained the three empty
+  correction-family lanes and froze product truth without weakening a
+  disposition.
+- [#6324](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6324)
+  owns completed Evidence and Canaries v0: a deterministic, text-free signal
+  manifest over all 189,150 public/external human-authored records.
+- [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
+  owns active Phase 2: capability decisions, source-stratified complement
+  planning, resolvability keys, and the evidence-resolution worklist. It does
+  not authorize source publication, training, or a local-hydration bypass for
+  unresolved learning rights. Its complete production build covers all 189,150
+  Phase 1 records, binds 42,302 text-free source/work locators, and creates
+  3,511 exact evidence-resolution tasks. This is a capability map and plan, not
+  a corpus publication or a Ukrainian-quality judgment.
 
 - Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns the completed Foundry-engine Phase 2–4 implementation: real corpus
