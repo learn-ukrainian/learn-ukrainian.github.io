@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "94d62a456470",
+  "strategy": "manual-commit",
+  "branch": "codex/6293-routing-closeout",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "dashboards/runtime.html",
+    "scripts/api/runtime_router.py",
+    "scripts/fleet_comms/routing_reservations.py",
+    "tests/test_fleet_comms_routing_reservations.py",
+    "tests/test_runtime_api.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/94/d62a456470/0/metadata.json",
+      "transcript": "/94/d62a456470/0/full.jsonl",
+      "content_hash": "/94/d62a456470/0/content_hash.txt",
+      "prompt": "/94/d62a456470/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 11727,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 26112,
+    "output_tokens": 2084,
+    "api_call_count": 1
+  }
+}

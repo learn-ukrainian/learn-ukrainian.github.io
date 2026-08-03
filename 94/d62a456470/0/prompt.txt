@@ -1,0 +1,54 @@
+Original task:
+--- discussion task ---
+We are closing issue 6293 properly. Live evidence shows 29 recent formal-review reservations all resolved to GLM, with 15 failed. For OpenAI-authored reviews Codex is same-family, Claude may be unavailable, and AGY, Grok, and KimiCC K3 are marked formal-review-ineligible because sealed parent-owned MCP evidence consumption has not been authenticated end to end. The deterministic scheduler itself is non-LLM and atomic. We must avoid simply flipping eligibility flags or overengineering. Evaluate this proposed completion boundary: make KimiCC K3 and Grok eligible only after a provider-specific source-blind authenticated canary proves the existing sealed MCP helper is invoked, full coverage receipts are returned, no prompt body contains review artifacts, exact-head binding passes, replay causes zero provider calls, and failure/circuit behavior is correct; keep AGY ineligible if its wrapper truly cannot expose parent-owned MCP. Also fix the Runtime serializer and group decision events by reservation. Give concrete acceptance criteria, the strongest counterargument, and the minimum safe implementation order. Distinguish configuration gaps from transport gaps. End with AGREE only if this is the right non-overengineered boundary.
+
+
+Produce an independent first take from the supplied text only. No tools, files, terminal, or external lookup are available.
+
+glm's prior response:
+## First take — completion boundary for #6293
+
+### Config vs transport gaps (the distinction that anchors the boundary)
+
+- **AGY ineligible → transport gap (hard).** If the AGY wrapper genuinely cannot surface parent-owned MCP, no config flag can fix it. Keeping it ineligible is the only honest state until the wrapper is rewritten. This is *not* a policy decision; it's a transport impossibility.
+- **KimiCC K3 / Grok ineligible → verification gap, not transport gap.** The sealed MCP helper exists and is shared; what's missing is *authenticated end-to-end proof per provider* that the helper is actually invoked under reservation pressure, not bypassed by a prompt-body shortcut or a cached replay. Closing this gap is what unlocks a config flip — but the flip is downstream of proof, not co-equal with it.
+- **15/29 failures routing only to GLM → capacity/availability symptom, not a config gap.** The narrow eligible set forces GLM to absorb all formal-review load; failures are the expected consequence of a one-lane eligible pool. Expanding eligibility (post-canary) treats the cause, not the symptom.
+
+### Concrete acceptance criteria (each must be tool-backed, not claimed)
+
+1. **Canary harness is source-blind by construction**: the reviewer-side prompt body is diffed against a review-artifact corpus and contains zero overlap; evidence reaches the provider only through the sealed MCP head, never inline.
+2. **Sealed MCP helper invocation is attested**: a signed/parent-owned receipt exists per canary run proving the helper was entered, not merely that the provider returned a plausible review.
+3. **Exact-head binding**: the evidence head bound to the reservation is the head consumed; substitution or re-binding is rejected and the rejection is observable in the run log.
+4. **Replay idempotency**: a second canary invocation against the same sealed head makes **zero** outbound provider calls; the seal is real, not a cache layer pretending to be MCP.
+5. **Coverage receipts are complete**: every expected evidence shard returns a receipt; missing shards trip the canary, not a soft-fallback.
+6. **Failure/circuit correctness**: when the MCP helper is intentionally faulted, the provider returns no review (hard fail) rather than synthesizing one from prompt context; the circuit opens and the reservation re-queues.
+7. **Two consecutive green canary runs per provider** before the eligibility flag flips; flag flip is a separate, reviewable change from the canary proof.
+8. **Runtime serializer** correctly round-trips reservation state (no `None`-coerced fields, no `"plan": null` regressions); existing serializer tests pass and a new regression test covers the failing case.
+9. **Decision events grouped by reservation ID**: querying a reservation returns its full decision lifecycle as an ordered group; no orphan events.
+
+### Strongest counterargument
+
+**The boundary may be solving the wrong failure mode.** 15/29 reservations failed *after* resolving to GLM — the proposal assumes those failures are caused by the narrow eligible set (GLM capacity exhausted / unavailable / circuit-open). But if GLM is failing for a quality or transport reason independent of load (e.g., GLM's own sealed-MCP path is broken, or the reservation logic is mis-routing), then adding KimiCC K3 and Grok merely creates *more* lanes that fail the same way, and the 15 failures persist. The boundary should be preceded by a deterministic diagnosis of *why* the 15 failed (empty eligible set? GLM circuit-open? serializer corruption causing reservation loss?) before expanding eligibility. Without that diagnosis, the canary proves the new lanes work in isolation but doesn't prove the dispatcher will actually route to them under failure pressure — the same atomic scheduler that's "non-LLM and correct" may still have a fallback-selection bug that sends everything to GLM regardless of newly-eligible lanes.
+
+This is the boundary's real exposure: it's a *provider-eligibility* fix dressed next to a *routing/fallback* symptom, and the two are coupled only if the diagnosis confirms capacity is the cause.
+
+### Minimum safe implementation order
+
+1. **Diagnose the 15 failures** (read-only, no code change). Categorize each as: empty-eligible-set, GLM-unavailable, GLM-circuit-open, serializer-corruption, scheduler-misroute. This determines whether eligibility expansion is even load-bearing.
+2. **Fix the Runtime serializer** + add regression test. Pure bug fix, no eligibility impact, ships independently. Unblocks correct reservation-state reads for everything that follows.
+3. **Group decision events by reservation**. Also independent of eligibility; pure observability/serialization fix.
+4. **Land the source-blind authenticated canary harness** (provider-agnostic framework, no flag flips yet). Adds the *capability* to prove sealed-MCP end-to-end without changing any production routing.
+5. **Run KimiCC K3 canary** twice; on two greens, flip KimiCC K3 `formal_review_eligible` in a *separate* change with the canary receipts attached.
+6. **Run Grok canary** twice; same pattern, separate flip.
+7. **Confirm AGY transport gap**: write a one-paragraph attestation (wrapper inspection) that parent-owned MCP is unreachable; keep AGY ineligible with the reason documented in config commentary, not just a flag value.
+8. **Re-open reservation telemetry post-flip**: confirm GLM load drops and the failure rate falls; if failures persist at the same rate, the diagnosis in step 1 missed a routing bug and the boundary was incomplete.
+
+Steps 2–3 can run in parallel. Steps 5–6 must be sequential (one provider at a time, with rollback if reservation metrics regress). No step flips a flag without prior tool-backed proof, satisfying operator rule #7.
+
+### Verdict
+
+The boundary correctly refuses the cheap move (blind flag flip), refuses the expensive move (rewriting AGY's wrapper or building a new sealed-channel framework), and gates the cheap move behind the right proof. The six canary criteria each map to a distinct bypass mode; none are gold-plating. The two non-eligibility fixes (serializer, grouping) are independently correct and should ship regardless. The only thing the boundary *omits* is the upfront diagnosis of why GLM-only is failing — which is why step 1 of the implementation order exists. With that diagnosis in place, this is the right non-overengineered boundary.
+
+[AGREE]
+
+Respond with your critique or refinement.
