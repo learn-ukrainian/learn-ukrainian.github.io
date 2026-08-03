@@ -21,6 +21,7 @@ from scripts.fleet_comms.message_plane import MessagePlane, resolve_plane_mode
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 from scripts.fleet_comms.review_publisher import record_publication_receipt
 from scripts.fleet_comms.routing_reservations import (
+    RoutingReservationError,
     RoutingReservationLedger,
     RoutingReservationRequest,
     RoutingReservationUnavailable,
@@ -41,6 +42,23 @@ def _root(tmp_path: Path) -> Path:
 
 def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _historic_routing_semantic_sha(request: RoutingReservationRequest) -> str:
+    """Return the pre-#6342 request identity without envelope dimensions."""
+    payload = {
+        "author_family": request.author_family,
+        "author_model": request.author_model,
+        "authority_key": request.authority_key,
+        "estimated_input_bytes": request.estimated_input_bytes,
+        "requested_profile": request.requested_profile,
+        "requested_reviewer": request.requested_reviewer,
+        "requested_risk": request.requested_risk,
+        "requested_role": request.requested_role,
+        "route_mode": request.route_mode,
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
 def test_authority_mode_resolves_without_changing_existing_modes() -> None:
@@ -921,6 +939,11 @@ def _failed_formal_substitution_fixture(
         )
         if legacy_envelope:
             ledger._append_decision_tx = original_append
+            ledger._conn.execute(
+                "UPDATE routing_reservations SET semantic_sha256 = ? WHERE reservation_id = ?",
+                (_historic_routing_semantic_sha(original_request), original.reservation_id),
+            )
+            ledger._conn.commit()
         ledger.settle(
             original.reservation_id,
             status="failed",
@@ -1038,6 +1061,43 @@ def test_authority_identical_substitution_replay_returns_existing_reservation(tm
             ttl_seconds=60,
             now="2035-01-01T00:00:03Z",
         ) == first
+
+
+def test_authority_refuses_replay_after_substitution_reservation_ttl_expiry(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+        substitute = service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=1,
+            now="2035-01-01T00:00:02Z",
+        )
+        with RoutingReservationLedger(store=service.store) as ledger:
+            expired = ledger.recover_expired(now="2035-01-01T00:00:04Z")
+            assert len(expired) == 1 and expired[0].reservation_id == substitute.reservation_id
+            assert ledger.get(substitute.reservation_id).status == "expired"
+
+        with pytest.raises(
+            RoutingReservationError,
+            match="substitution_idempotent_replay_not_active",
+        ):
+            service.authorize_formal_review_substitution(
+                authority_job_id=job.job_id,
+                review_id=review.review_id,
+                current_head_sha="a" * 40,
+                expected_snapshot_artifact_id=review.snapshot_artifact_id,
+                routing_request=request,
+                selector=_substitution_selection,
+                substitution_evidence=evidence,
+                ttl_seconds=1,
+                now="2035-01-01T00:00:04Z",
+            )
+        assert service.get_job(job.job_id).state == "queued"
 
 
 @pytest.mark.parametrize("rejection", ("sealed", "published", "head", "snapshot", "job", "review"))

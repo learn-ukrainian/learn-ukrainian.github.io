@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
@@ -37,6 +39,35 @@ def _request(authority_key: str, idempotency_key: str, initiator: str = "codex")
         route_mode="auto",
         estimated_input_bytes=1200,
     )
+
+
+def _historic_semantic_sha(request: RoutingReservationRequest) -> str:
+    """Match the pre-#6342 identity, before the envelope fields were added."""
+    payload = {
+        "author_family": request.author_family,
+        "author_model": request.author_model,
+        "authority_key": request.authority_key,
+        "estimated_input_bytes": request.estimated_input_bytes,
+        "requested_profile": request.requested_profile,
+        "requested_reviewer": request.requested_reviewer,
+        "requested_risk": request.requested_risk,
+        "requested_role": request.requested_role,
+        "route_mode": request.route_mode,
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def _mark_historic_semantic_sha(
+    ledger: RoutingReservationLedger,
+    reservation_id: str,
+    request: RoutingReservationRequest,
+) -> None:
+    ledger._conn.execute(
+        "UPDATE routing_reservations SET semantic_sha256 = ? WHERE reservation_id = ?",
+        (_historic_semantic_sha(request), reservation_id),
+    )
+    ledger._conn.commit()
 
 
 def _selection(context: object) -> RoutingSelection:
@@ -305,6 +336,7 @@ def _legacy_failed_result_invalid_reservation(
     )
     first = ledger.reserve_selection(original, _selection, now="2035-01-01T00:00:00Z")
     monkeypatch.setattr(ledger, "_append_decision_tx", original_append)
+    _mark_historic_semantic_sha(ledger, first.reservation_id, original)
     ledger.settle(
         first.reservation_id,
         status="failed",
@@ -421,6 +453,95 @@ def test_substitution_rolls_back_legacy_reconstruction_when_selection_fails(
         assert "legacy_authorization_envelope_reconstructed" not in {
             decision.event_type for decision in ledger.decisions(prior_id)
         }
+
+
+@pytest.mark.parametrize(
+    "changed",
+    (
+        {"required_capabilities": ("code_review",)},
+        {"data_egress_policy": "local_interactive"},
+        {"isolation_required": False},
+    ),
+)
+def test_pre_envelope_active_join_and_transport_retry_keep_legacy_defaults(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    changed: dict[str, object],
+) -> None:
+    """Only a substitution reconstructs the old envelope; normal retries do not."""
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        original_append = ledger._append_decision_tx
+
+        def append_without_envelope(
+            reservation_id: str,
+            event_type: str,
+            state: str,
+            evidence: dict[str, object],
+            created_at: str,
+        ) -> None:
+            legacy_evidence = dict(evidence)
+            if event_type == "reserved":
+                legacy_evidence.pop("authorization_envelope", None)
+            original_append(reservation_id, event_type, state, legacy_evidence, created_at)
+
+        legacy = replace(
+            _request("repo:legacy:normal-retry", "first"),
+            required_capabilities=("code_review", "sealed_evidence"),
+            data_egress_policy=None,
+            isolation_required=True,
+        )
+        monkeypatch.setattr(ledger, "_append_decision_tx", append_without_envelope)
+        first = ledger.reserve_selection(legacy, _selection, now="2035-01-01T00:00:00Z")
+        monkeypatch.setattr(ledger, "_append_decision_tx", original_append)
+        _mark_historic_semantic_sha(ledger, first.reservation_id, legacy)
+
+        joined = ledger.reserve_selection(
+            replace(legacy, idempotency_key="join", initiator="grok"),
+            _selection,
+            now="2035-01-01T00:00:01Z",
+        )
+        assert joined.reservation_id == first.reservation_id
+        assert joined.semantic_sha256 == _historic_semantic_sha(legacy)
+        ledger.settle(
+            first.reservation_id,
+            status="failed",
+            failure_classification="transport_error",
+            now="2035-01-01T00:00:02Z",
+        )
+        retry = ledger.reserve_selection(
+            replace(legacy, idempotency_key="retry"),
+            _selection,
+            now="2035-01-01T00:00:03Z",
+        )
+        assert retry.attempt == 2
+
+        with pytest.raises(RoutingReservationError, match="authority_key_semantic_conflict"):
+            ledger.reserve_selection(
+                replace(legacy, idempotency_key="changed", **changed),
+                _selection,
+                now="2035-01-01T00:00:04Z",
+            )
+        assert "legacy_authorization_envelope_reconstructed" not in {
+            decision.event_type for decision in ledger.decisions(first.reservation_id)
+        }
+
+
+def test_substitution_without_a_prior_reservation_fails_closed_without_type_error(
+    tmp_path: Path,
+) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        request = replace(
+            _request("repo:substitution:no-prior", "substitute"),
+            route_mode="explicit",
+            requested_reviewer="glm-5.2",
+        )
+        with pytest.raises(RoutingReservationError, match="substitution_prior_reservation_missing"):
+            ledger.reserve_selection(
+                request,
+                _glm_selection,
+                now="2035-01-01T00:00:00Z",
+                substitution={"reason": "operator-authorized substitution"},
+            )
 
 
 @pytest.mark.parametrize(

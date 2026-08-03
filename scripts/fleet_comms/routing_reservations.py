@@ -324,6 +324,8 @@ class RoutingReservationLedger:
                 if str(idempotent["request_sha256"]) != request_sha:
                     raise RoutingReservationError("idempotency_key_reused_with_different_request")
                 if substitution_data:
+                    if str(idempotent["status"]) not in _ACTIVE_STATUSES:
+                        raise RoutingReservationError("substitution_idempotent_replay_not_active")
                     decision = self._conn.execute(
                         """SELECT evidence_json FROM routing_reservation_decisions
                            WHERE reservation_id = ? AND event_type = 'authorized_substitution'""",
@@ -339,6 +341,8 @@ class RoutingReservationLedger:
                    ORDER BY attempt DESC LIMIT 1""",
                 (req.authority_key,),
             ).fetchone()
+            if latest is None and substitution_data:
+                raise RoutingReservationError("substitution_prior_reservation_missing")
             if latest is not None and substitution_data:
                 self._validate_substitution_tx(
                     latest,
@@ -346,7 +350,7 @@ class RoutingReservationLedger:
                     substitution_data,
                     created_at=current_iso,
                 )
-            elif latest is not None and str(latest["semantic_sha256"]) != semantic_sha:
+            elif latest is not None and str(latest["semantic_sha256"]) != semantic_sha and not self._is_legacy_default_envelope_match(latest, req):
                 raise RoutingReservationError("authority_key_semantic_conflict")
             if latest is not None and str(latest["status"]) in _ACTIVE_STATUSES:
                 # A distinct initiator joins the same exact-head decision rather
@@ -761,6 +765,40 @@ class RoutingReservationLedger:
             or envelope.get("isolation_required") != request.isolation_required
         ):
             raise RoutingReservationError("substitution_authorization_envelope_drift")
+
+    def _is_legacy_default_envelope_match(
+        self,
+        latest: sqlite3.Row,
+        request: RoutingReservationRequest,
+    ) -> bool:
+        if (
+            request.required_capabilities != ("code_review", "sealed_evidence")
+            or request.data_egress_policy is not None
+            or not request.isolation_required
+        ):
+            return False
+        reserved = self._conn.execute(
+            """SELECT evidence_json FROM routing_reservation_decisions
+               WHERE reservation_id = ? AND event_type = 'reserved'""",
+            (str(latest["reservation_id"]),),
+        ).fetchone()
+        if reserved is None:
+            return False
+        reserved_evidence = json.loads(str(reserved["evidence_json"]))
+        if isinstance(reserved_evidence.get("authorization_envelope"), dict):
+            return False
+        # A pre-envelope row is accepted only when its historic semantic hash
+        # still proves the complete base identity and the current request uses
+        # the exact formal-review defaults above.
+        payload = {
+            "author_family": request.author_family, "author_model": request.author_model,
+            "authority_key": request.authority_key, "estimated_input_bytes": request.estimated_input_bytes,
+            "requested_profile": request.requested_profile, "requested_reviewer": request.requested_reviewer,
+            "requested_risk": request.requested_risk, "requested_role": request.requested_role,
+            "route_mode": request.route_mode,
+        }
+        legacy = hashlib.sha256(_canonical_json(payload).encode("utf-8")).hexdigest()
+        return str(latest["semantic_sha256"]) == legacy
 
     def _validate_selection(self, selection: RoutingSelection) -> RoutingSelection:
         if not isinstance(selection, RoutingSelection):

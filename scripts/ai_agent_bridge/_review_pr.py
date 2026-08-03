@@ -810,10 +810,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         idempotency_key=f"{authority_key}:routing:{reservation_attempt}",
                     )
                     if substitution_pending:
-                        prior = routing_ledger.latest_for_authority_key(authority_key)
-                        if prior is None:
-                            print("review-pr: failed formal job has no prior routing attempt", file=sys.stderr)
-                            return 1
                         substitution_evidence = {
                             "reason": override_reason,
                             "data_egress_policy": getattr(args, "data_egress_policy", None),
@@ -909,7 +905,25 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         extra=args.extra,
                     )
                     sealed_prompt = prompt + evidence
-                    routing_ledger.mark_started(routing_reservation.reservation_id)
+                    started_reservation = routing_ledger.mark_started(routing_reservation.reservation_id)
+                    if started_reservation.status != "running":
+                        _finish_authority_job_once(
+                            authority,
+                            authority_job.job_id,
+                            worker_id=worker_id,
+                            fence_token=lease.fence_token,
+                            state="failed",
+                            result=json.dumps(
+                                {
+                                    "failure_classification": "routing_reservation_not_active",
+                                    "reservation_status": started_reservation.status,
+                                },
+                                sort_keys=True,
+                            ).encode("utf-8"),
+                        )
+                        print("review-pr: routing reservation is no longer active; provider was not invoked", file=sys.stderr)
+                        return 1
+                    routing_reservation = started_reservation
                     previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
                     os.environ["LU_ACPX_TRANSPORT"] = "active"
                     invocation_error: BaseException | None = None

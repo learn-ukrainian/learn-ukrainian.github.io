@@ -96,8 +96,9 @@ def _run_invalid_response_lifecycle(
         def reserve_selection(self, *_args, **_kwargs):
             return reservation
 
-        def mark_started(self, _reservation_id):
+        def mark_started(self, reservation_id):
             events.append("started")
+            return SimpleNamespace(status="running", reservation_id=reservation_id)
 
         def settle(self, _reservation_id, **_kwargs):
             events.append("settled")
