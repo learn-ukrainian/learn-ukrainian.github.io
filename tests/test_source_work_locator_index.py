@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import gzip
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -142,19 +142,94 @@ def test_build_is_deterministic_and_canonical_ordered(tmp_path: Path) -> None:
     )
 
 
-def test_gzip_build_is_byte_identical_and_decompresses_to_raw_jsonl(tmp_path: Path) -> None:
+def test_compact_build_is_byte_identical_and_expands_to_raw_jsonl(tmp_path: Path) -> None:
     raw, raw_rows = _build(tmp_path)
-    config, root = _fixture(tmp_path / "gzip-one")
-    first = root / "locators.jsonl.gz"
+    config, root = _fixture(tmp_path / "compact-one")
+    first = root / "locators.compact.jsonl"
     locators.build(config_path=config, input_root=root, output=first)
-    config, root = _fixture(tmp_path / "gzip-two")
-    second = root / "locators.jsonl.gz"
+    config, root = _fixture(tmp_path / "compact-two")
+    second = root / "locators.compact.jsonl"
     locators.build(config_path=config, input_root=root, output=second)
 
     assert first.read_bytes() == second.read_bytes()
-    decompressed = gzip.decompress(first.read_bytes())
-    assert decompressed == raw.read_bytes()
-    assert [json.loads(line) for line in decompressed.decode("utf-8").splitlines()] == raw_rows
+    assert first.stat().st_size < locators.MAX_COMPACT_BYTES
+    assert locators.expanded_compact_jsonl(first) == raw.read_bytes()
+    header = json.loads(first.read_text().splitlines()[0])
+    assert header["semantic_jsonl_sha256"] == hashlib.sha256(raw.read_bytes()).hexdigest()
+    assert locators.compact_rows(first) == raw_rows
+
+
+@pytest.mark.parametrize("field", ["schema_version", "semantic_schema_version", "row_fields", "families", "records", "ordering", "semantic_jsonl_sha256"])
+def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> None:
+    config, root = _fixture(tmp_path)
+    output = root / "locators.compact.jsonl"
+    locators.build(config_path=config, input_root=root, output=output)
+    lines = output.read_text().splitlines()
+    header = json.loads(lines[0])
+    replacements = {
+        "schema_version": "wrong",
+        "semantic_schema_version": "wrong",
+        "row_fields": [],
+        "families": [],
+        "records": 99,
+        "ordering": "wrong",
+        "semantic_jsonl_sha256": "0" * 64,
+    }
+    header[field] = replacements[field]
+    output.write_text("\n".join([locators.canonical_json(header), *lines[1:]]) + "\n", encoding="utf-8")
+    with pytest.raises(locators.LocatorError):
+        locators.compact_rows(output)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["row_length", "family_index", "source_values", "publication_values", "malformed", "unterminated", "nul", "non_utf8"],
+)
+def test_compact_row_tampering_fails_closed(tmp_path: Path, mutation: str) -> None:
+    config, root = _fixture(tmp_path)
+    output = root / "locators.compact.jsonl"
+    locators.build(config_path=config, input_root=root, output=output)
+    lines = output.read_text().splitlines()
+    if mutation == "nul":
+        output.write_bytes(output.read_bytes() + b"\0")
+        with pytest.raises(locators.LocatorError):
+            locators.compact_rows(output)
+        return
+    if mutation == "non_utf8":
+        output.write_bytes(b"\xff" + output.read_bytes()[1:])
+        with pytest.raises(locators.LocatorError):
+            locators.compact_rows(output)
+        return
+    if mutation == "malformed":
+        lines[1] = "["
+    elif mutation == "unterminated":
+        output.write_text("\n".join(lines), encoding="utf-8")
+        with pytest.raises(locators.LocatorError):
+            locators.compact_rows(output)
+        return
+    else:
+        row = json.loads(lines[1])
+        if mutation == "row_length":
+            row.pop()
+        elif mutation == "family_index":
+            row[1] = 99
+        elif mutation == "source_values":
+            row[4].append("extra")
+        else:
+            row[8].pop()
+        lines[1] = locators.canonical_json(row)
+    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with pytest.raises(locators.LocatorError):
+        locators.compact_rows(output)
+
+
+def test_compact_reader_rejects_oversized_input_before_reading(tmp_path: Path) -> None:
+    output = tmp_path / "oversized.compact.jsonl"
+    with output.open("wb") as handle:
+        handle.truncate(locators.MAX_COMPACT_BYTES)
+
+    with pytest.raises(locators.LocatorError, match="input must be smaller"):
+        locators.compact_rows(output)
 
 
 def test_unknown_config_key_and_bad_column_fail_schema(tmp_path: Path) -> None:

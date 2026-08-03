@@ -3,7 +3,8 @@
 > **Decision date:** 2026-08-03
 > **Owner:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **First gate:** [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
-> **Active phase:** [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
+> **Completed phase:** [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
+> **Next phase:** [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
 > **Decision:** Continue with evidence-bearing prepared Ukrainian data products;
 > do not operate or train a project model
 
@@ -85,8 +86,10 @@ model operation even when it is free.
 
 ### Facts
 
-- Lapa's public tokenizer, quality scorers, pretraining checkpoint, datasets,
-  and Gemma-3-specific training templates were materially released in 2025.
+- Lapa's public [tokenizer](https://huggingface.co/lapa-llm/tokenizer), quality
+  scorers, [pretraining checkpoint](https://huggingface.co/lapa-llm/lapa-12b-pt),
+  datasets, and Gemma-3-specific training templates were materially released
+  in 2025.
 - [Google launched Gemma 4 on 2026-04-02](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/).
 - The [Gemma 4 model card](https://ai.google.dev/gemma/docs/core/model_card_4)
   states that official pretrained and instruction-tuned variants are
@@ -123,14 +126,14 @@ not invent a motive or claim that no port is planned.
    deliberately planted failures. **Completed under #6324 over all 189,150
    public/external human-authored records.**
 3. Establish rights and redistribution decisions per source family and product
-   capability, and build the deterministic complement plan. **Active under
+   capability, and build the deterministic complement plan. **Completed under
    #6327.**
 4. Prepare continued-pretraining complements with exact lineage, strata,
-   deduplication, contamination, and limitation receipts. This is part of
-   #6327 and may emit source bytes only for independently evidenced
-   capabilities under a separate publication authorization.
+   contamination, capability, and limitation receipts. **Completed under
+   #6327 as an evidence-bearing plan and faithful Wikipedia candidate view; no
+   source bytes were published.**
 5. Build correction/protection categories only from authoritative sources and
-   Ukrainian-strong linguistic review.
+   Ukrainian-strong linguistic review. **Active next under #6333.**
 6. Consider Lapa classifier ablation or downstream model validation only when
    it answers a preregistered decision and receives separate authorization.
 
@@ -182,6 +185,16 @@ for 1,029 Wikipedia records; 188,121 records remain metadata-only for those
 capabilities, and all records remain metadata-only for redistribution and
 publication. The 3,511-item worklist names the missing evidence at source/work
 level. These are capability decisions, not Ukrainian-quality labels.
+
+The locator transport decision is also evidence-bearing. A 32,991,831-byte
+full-object JSONL was semantically correct but exceeded the formal review
+system's 16 MiB per-file ceiling; deterministic gzip was small enough but was
+not reviewable as UTF-8 evidence. Phase 2 therefore uses one lossless,
+self-describing compact UTF-8 JSONL. Its header binds the full semantic schema,
+record count, ordering, and expanded canonical hash, and every compact row is
+expanded and schema-validated before use. This preserves all 42,302 locator
+records without weakening the evidence or splitting one logical index into
+opaque fragments.
 
 ## How usefulness will be demonstrated
 
@@ -257,3 +270,12 @@ plus Gemini 3.6 Flash High Phase 2 discussion recorded as ACP conversation
 the architecture and Ukrainian-community fit; they are not legal verdicts or
 Ukrainian human gold and do not replace formal exact-head implementation
 review.
+
+During exact-artifact preparation, the review system rejected the complete
+full-object locator for exceeding its per-file limit and rejected deterministic
+gzip as non-UTF-8 evidence. A later GLM 5.2 advisory suggested sharding the
+full objects. The accountable Sol advisor instead selected the single compact
+UTF-8 transport because measured patch size, the repository's strict
+fewer-than-20-files rule, and the 64 MiB total-evidence ceiling made three
+full-object shards a worse fit. The semantic hash and mandatory expansion
+validation ensure that this transport choice changes no locator meaning.

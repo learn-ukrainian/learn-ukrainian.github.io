@@ -116,13 +116,19 @@ evidence and are never a prerequisite for completing an internal data product.
   owns completed Evidence and Canaries v0: a deterministic, text-free signal
   manifest over all 189,150 public/external human-authored records.
 - [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
-  owns active Phase 2: capability decisions, source-stratified complement
+  owns completed Phase 2: capability decisions, source-stratified complement
   planning, resolvability keys, and the evidence-resolution worklist. It does
   not authorize source publication, training, or a local-hydration bypass for
   unresolved learning rights. Its complete production build covers all 189,150
   Phase 1 records, binds 42,302 text-free source/work locators, and creates
   3,511 exact evidence-resolution tasks. This is a capability map and plan, not
   a corpus publication or a Ukrainian-quality judgment.
+- [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
+  owns active Phase 3: the authoritative-source-anchored clean-Ukrainian
+  correction and protection pack. It must distinguish Russian interference,
+  bad morphology, contextual calques, and government errors from quotation,
+  phonetic Russian, Surzhyk, historical or archaic Ukrainian, dialect,
+  regional language, folklore, and unresolved contact-language cases.
 
 - Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns the completed Foundry-engine Phase 2–4 implementation: real corpus

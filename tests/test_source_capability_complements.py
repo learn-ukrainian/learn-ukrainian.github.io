@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import gzip
 import hashlib
 import json
 import sqlite3
@@ -14,6 +13,7 @@ import pytest
 
 from scripts.projects.open_model_data import document_signal_manifest as signals
 from scripts.projects.open_model_data import source_capability_complements as complements
+from scripts.projects.open_model_data import source_work_locator_index as locators
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = {
@@ -214,11 +214,10 @@ def _locator(path: Path, rows: list[dict]) -> Path:
     return path
 
 
-def _gzip_locator(path: Path, rows: list[dict]) -> Path:
+def _compact_locator(path: Path, rows: list[dict]) -> Path:
     raw = _locator(path.with_suffix(""), rows).read_bytes()
-    with path.open("wb") as fileobj:
-        with gzip.GzipFile(filename="", mode="wb", fileobj=fileobj, compresslevel=9, mtime=0) as handle:
-            handle.write(raw)
+    values = [json.loads(line) for line in raw.decode("utf-8").splitlines()]
+    path.write_bytes(locators.compact_jsonl(values))
     return path
 
 
@@ -285,9 +284,9 @@ def test_verify_rebuilds_locator_bound_bundle(tmp_path: Path) -> None:
     )
 
 
-def test_build_and_verify_accept_gzip_locator_with_compressed_byte_binding(tmp_path: Path) -> None:
+def test_build_and_verify_accept_compact_locator_with_compact_byte_binding(tmp_path: Path) -> None:
     manifest, phase1_receipt, rows = _phase1(tmp_path)
-    locator = _gzip_locator(tmp_path / "locators.jsonl.gz", rows)
+    locator = _compact_locator(tmp_path / "locators.compact.jsonl", rows)
     complement, worklist, receipt = tmp_path / "complement.jsonl", tmp_path / "worklist.jsonl", tmp_path / "receipt.json"
     complements.build(
         phase1_manifest=manifest,
@@ -315,13 +314,13 @@ def test_build_and_verify_accept_gzip_locator_with_compressed_byte_binding(tmp_p
 
 
 @pytest.mark.parametrize("mutation", ["truncated", "corrupt"])
-def test_gzip_locator_malformed_data_fails_closed(tmp_path: Path, mutation: str) -> None:
+def test_compact_locator_malformed_data_fails_closed(tmp_path: Path, mutation: str) -> None:
     manifest, phase1_receipt, rows = _phase1(tmp_path)
-    locator = _gzip_locator(tmp_path / "locators.jsonl.gz", rows)
+    locator = _compact_locator(tmp_path / "locators.compact.jsonl", rows)
     payload = locator.read_bytes()
-    locator.write_bytes(payload[:-8] if mutation == "truncated" else payload + b"corrupt")
+    locator.write_bytes(payload[:-1] if mutation == "truncated" else payload + b"corrupt")
 
-    with pytest.raises(complements.ComplementError, match="cannot read artifact"):
+    with pytest.raises(complements.ComplementError, match="invalid compact locator index"):
         complements.build(
             phase1_manifest=manifest,
             phase1_receipt=phase1_receipt,
@@ -354,6 +353,42 @@ def test_build_rejects_locator_mapping_drift(tmp_path: Path, mutation: str) -> N
     elif mutation == "inventory":
         values[0]["inventory_asset_id"] = "wrong.asset"
     locator.write_text("".join(signals.canonical_json(value) + "\n" for value in values), encoding="utf-8")
+    with pytest.raises(complements.ComplementError):
+        complements.build(
+            phase1_manifest=manifest,
+            phase1_receipt=phase1_receipt,
+            policy_path=_policy(tmp_path),
+            locator_index=locator,
+            complement_output=tmp_path / "out.jsonl",
+            worklist_output=tmp_path / "work.jsonl",
+            receipt_output=tmp_path / "out.json",
+        )
+
+
+@pytest.mark.parametrize("mutation", ["duplicate", "missing", "extra"])
+def test_compact_build_rejects_duplicate_missing_or_extra_locator_mapping(tmp_path: Path, mutation: str) -> None:
+    manifest, phase1_receipt, rows = _phase1(tmp_path)
+    raw_locator = _locator(tmp_path / "locators.jsonl", rows)
+    values = [json.loads(line) for line in raw_locator.read_text().splitlines()]
+    if mutation == "duplicate":
+        values.append(values[0])
+    elif mutation == "missing":
+        values.pop()
+    else:
+        extra = dict(values[0])
+        extra["work_id"] = "work.wikipedia." + "0" * 24
+        extra["locator_id"] = "locator." + "1" * 24
+        values.append(extra)
+    values.sort(
+        key=lambda value: (
+            value["source_family"],
+            value["source_id"],
+            value["work_id"],
+            signals.canonical_json(value["source_locator"]),
+        )
+    )
+    locator = tmp_path / "locators.compact.jsonl"
+    locator.write_bytes(locators.compact_jsonl(values))
     with pytest.raises(complements.ComplementError):
         complements.build(
             phase1_manifest=manifest,

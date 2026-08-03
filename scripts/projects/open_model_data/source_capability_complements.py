@@ -8,7 +8,6 @@ model, or publish an artifact.
 from __future__ import annotations
 
 import argparse
-import gzip
 import hashlib
 import json
 import os
@@ -21,6 +20,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import document_signal_manifest as phase1_signals
+from scripts.projects.open_model_data import source_work_locator_index as locator_index_builder
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
@@ -62,13 +62,6 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _open_text(path: Path):
-    """Open raw JSONL or a standard gzip JSONL member by its output suffix."""
-    if path.suffix == ".gz":
-        return gzip.open(path, mode="rt", encoding="utf-8")
-    return path.open(encoding="utf-8")
-
-
 def _read(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -97,11 +90,8 @@ def _artifact(path: Path, records: int | None = None) -> dict[str, Any]:
     if not path.is_file():
         raise ComplementError(f"missing artifact: {path}")
     if records is None:
-        try:
-            with _open_text(path) as handle:
-                records = sum(1 for _ in handle)
-        except (OSError, EOFError, UnicodeDecodeError) as exc:
-            raise ComplementError(f"cannot read artifact {path}: {exc}") from exc
+        with path.open("rb") as handle:
+            records = sum(1 for _ in handle)
     return {"bytes": path.stat().st_size, "records": records, "sha256": sha256_file(path)}
 
 
@@ -162,7 +152,7 @@ def _promote(staged: list[tuple[Path, Path]]) -> None:
 
 def _jsonl(path: Path, validator: Draft202012Validator, label: str) -> Iterator[dict[str, Any]]:
     try:
-        with _open_text(path) as handle:
+        with path.open(encoding="utf-8") as handle:
             for line_number, line in enumerate(handle, start=1):
                 if not line.endswith("\n") or not line.strip():
                     raise ComplementError(f"{label} has a blank or unterminated row at {line_number}")
@@ -174,7 +164,7 @@ def _jsonl(path: Path, validator: Draft202012Validator, label: str) -> Iterator[
                     raise ComplementError(f"{label} row {line_number} is not an object")
                 _validate(value, validator, f"{label} row {line_number}")
                 yield value
-    except (OSError, EOFError, UnicodeDecodeError) as exc:
+    except OSError as exc:
         raise ComplementError(f"cannot read {label}: {exc}") from exc
 
 
@@ -319,7 +309,7 @@ def _receipt(
     phase1_manifest: Path,
     phase1_receipt: Path,
     policy_path: Path,
-    locator_index: Path,
+    locator_artifact: Mapping[str, Any],
     complement: dict[str, Any],
     worklist: dict[str, Any],
     counters: Mapping[str, Counter[str]],
@@ -333,7 +323,6 @@ def _receipt(
     phase1_artifact = _artifact(phase1_manifest)
     phase1_receipt_artifact = _artifact(phase1_receipt)
     policy_artifact = _artifact(policy_path, 1)
-    locator_artifact = _artifact(locator_index)
     identity = "|".join(
         (
             phase1_artifact["sha256"],
@@ -391,8 +380,14 @@ def _receipt(
 def _locators(
     path: Path, validator: Draft202012Validator
 ) -> tuple[dict[tuple[str, str], dict[str, Any]], dict[str, Any], dict[str, int]]:
-    artifact = _artifact(path)
-    rows = list(_jsonl(path, validator, "locator index"))
+    if path.name.endswith(locator_index_builder.COMPACT_OUTPUT_SUFFIX):
+        try:
+            rows = locator_index_builder.compact_rows(path)
+        except locator_index_builder.LocatorError as exc:
+            raise ComplementError(f"invalid compact locator index: {exc}") from exc
+    else:
+        rows = list(_jsonl(path, validator, "locator index"))
+    artifact = _artifact(path, len(rows))
     if rows != sorted(
         rows, key=lambda x: (x["source_family"], x["source_id"], x["work_id"], canonical_json(x["source_locator"]))
     ):
@@ -568,7 +563,7 @@ def build(
             phase1_manifest,
             phase1_receipt,
             policy_path,
-            locator_index,
+            locator_artifact,
             complement_artifact,
             worklist_artifact,
             counters,

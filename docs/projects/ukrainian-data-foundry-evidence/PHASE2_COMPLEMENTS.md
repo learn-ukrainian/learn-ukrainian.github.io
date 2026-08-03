@@ -29,17 +29,19 @@ Generate the committed public-safe locator sidecar before running Phase 2:
 .venv/bin/python -m scripts.projects.open_model_data.source_work_locator_index \
   --config data/projects/open_model_data/evidence/source_work_locator_config_v1.json \
   --input-root . \
-  --output data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz
+  --output data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl
 ```
 
 The locator contains only allowlisted source and work metadata, a canonical
 locator when one is actually known, opaque Phase 1-compatible identifiers, and
 counts. It never contains chunks, source text, evaluation fingerprints, or a
-permission claim. The published `.jsonl.gz` is ordinary deterministic gzip:
-its byte hash and size bind the compressed artifact, while consumers count and
-validate the decompressed UTF-8 JSONL rows. A consumer can inspect the
-committed locator without owning our corpus; rebuilding it requires the
-corresponding local source databases.
+permission claim. The published `.compact.jsonl` is a lossless, UTF-8 compact
+transport: its first line declares the semantic row schema, field order,
+family descriptors, record count, ordering, and hash of canonical expanded
+JSONL. Consumers validate and expand every compact row to the existing full
+object before Phase 2 sees it; artifact byte hashes and sizes bind the compact
+file itself. A consumer can inspect the committed locator without owning our
+corpus; rebuilding it requires the corresponding local source databases.
 
 Then run Phase 2 with the Phase 1 outputs and locator:
 
@@ -48,7 +50,7 @@ Then run Phase 2 with the Phase 1 outputs and locator:
   --phase1-manifest /safe/local/phase1-manifest.jsonl \
   --phase1-receipt /safe/local/phase1-receipt.json \
   --policy data/projects/open_model_data/evidence/source_capability_policy_v1.json \
-  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz \
+  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl \
   --complement-output /safe/local/complement.jsonl \
   --worklist-output /safe/local/evidence-worklist.jsonl \
   --receipt-output /safe/local/complement-receipt.json
@@ -64,7 +66,7 @@ Verify every input binding and byte of every output before using an artifact:
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.source_capability_complements verify \
   --policy data/projects/open_model_data/evidence/source_capability_policy_v1.json \
-  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz \
+  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl \
   --phase1-manifest /safe/local/phase1-manifest.jsonl \
   --phase1-receipt /safe/local/phase1-receipt.json \
   --complement /safe/local/complement.jsonl \
@@ -125,6 +127,13 @@ source/work locators. The locator comprises 3,309 literary, 36,759 textbook,
 1,205 external-article, and 1,029 Wikipedia mappings. The capability worklist
 contains 3,511 source-level evidence tasks.
 
+The compact locator contains 42,302 semantic records and 42,303 physical
+lines including its header. It is 16,560,805 bytes with SHA-256
+`9941d3e7deffb2d05934aa36b6381ca6e0ad1744f20996a97d4135af902382e2`.
+Strict expansion produces 32,991,831 bytes of canonical full-object JSONL with
+semantic SHA-256
+`1d3f85ae6bb4241b9691c18cf855ec71e3e2ab7c97d18bf52e522f9d2ae07a60`.
+
 Current evidence routes 1,029 Wikipedia rows to faithful `candidate` for local
 preparation and local model learning. It routes the other 188,121 records to
 `metadata_only` for those capabilities; that means evidence remains unresolved,
@@ -141,16 +150,19 @@ artifacts remain local and are not publication payloads.
 
 | Run | Wall time | Maximum RSS | Peak memory footprint |
 | --- | ---: | ---: | ---: |
-| Complete build 1 | 517.12 s | 214,122,496 bytes | 221,708,864 bytes |
-| Complete build 2 | 452.07 s | 216,711,168 bytes | 221,594,200 bytes |
-| Independent rebuild verifier | 470.66 s | 2,103,541,760 bytes | 2,118,567,880 bytes |
+| Complete build 1 | 340.48 s | 378,830,848 bytes | 352,797,344 bytes |
+| Complete build 2 | 336.50 s | 386,531,328 bytes | 352,830,112 bytes |
+| Independent rebuild verifier | 340.04 s | 2,106,720,256 bytes | 2,114,816,040 bytes |
 
 The complement SHA-256 is
-`0e4ee4c12615885d3da534667ef383411e2ff5c37e5df517a7c5ca6586ad8b51`;
+`3f0a1458fcf9380a679237f6cfb2915c58d2c33c3764fcb25d63b6e7aa6254e0`;
 the worklist SHA-256 is
 `a60321052721231b5828b604ec098064271d42a2afc4dcb91f968e90f0d60b0a`;
-and the 32,379-byte committed receipt SHA-256 is
-`eb990e76ef16679119e14c086280c5e239d8cc4b0a09665d0f7b677de4b2ed58`.
+and the 32,380-byte committed receipt SHA-256 is
+`12308712b6022557c5da6f3bb76cacbe21738c9c53e5ce97b8b4a6c28f353c4b`.
+The 1,029-row source-blind candidate view is 5,437,809 bytes with SHA-256
+`d885a6c9fc4877d658b87f9c9e44347a36d80f161c303a165af5da9454d0b365`;
+it contains no source text, local path, or evaluation fingerprint.
 The builder uses atomic temporary files rather than a SQLite spool. Budget at
 least 2.5 GB of free local disk for the bound Phase 1 inputs, existing outputs,
 and one complete staged or verifier rebuild, excluding the source databases

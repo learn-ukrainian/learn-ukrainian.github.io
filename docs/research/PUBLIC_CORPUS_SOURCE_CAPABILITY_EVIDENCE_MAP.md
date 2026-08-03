@@ -166,11 +166,12 @@ source-evidence work.
 
 ## Reproducible Phase 2 output
 
-The public, text-free locator index contains 42,302 rows: 3,309 literary,
+The public, text-free locator index contains 42,302 semantic records: 3,309 literary,
 36,759 textbook, 1,205 external-article, and 1,029 Wikipedia source/work
-mappings. The 1,914,856-byte deterministic gzip artifact is bound by SHA-256
-`21524d5a214846537fcfc7b2146c319971b03eed98cdacbfd7517de079462f6a`.
-Its 32,991,831 decompressed canonical JSONL bytes retain the earlier SHA-256
+mappings. Its self-describing compact UTF-8 transport occupies 16,560,805
+bytes and is bound by SHA-256
+`9941d3e7deffb2d05934aa36b6381ca6e0ad1744f20996a97d4135af902382e2`.
+Strict expansion produces 32,991,831 canonical JSONL bytes with SHA-256
 `1d3f85ae6bb4241b9691c18cf855ec71e3e2ab7c97d18bf52e522f9d2ae07a60`.
 It contains no source chunks or text. Canonical URLs are emitted only when the
 retained metadata supports them; a missing URL remains missing rather than
