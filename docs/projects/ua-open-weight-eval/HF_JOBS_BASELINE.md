@@ -55,6 +55,12 @@ disposition. The launcher now rejects provider execution. Any future attempt
 requires a fresh operator-approved issue and a new canary that inspects the
 saved semantic output before a full run.
 
+The immutable historical run configuration contains the field
+`structured_outputs_escape_raw_control_tokens: true` because that is what the
+invalid run executed. Current worker receipts do not repeat it as active
+behavior: they record `raw_control_policy: reject`, and raw controls are
+terminal failures.
+
 CPU job `6a6fbf1b6b79c09949c1fa46` is the accepted no-volume transport gate. It
 reached RUNNING, downloaded the complete pinned bundle, and verified every
 hash. Its later deterministic worker-default failure occurred after those

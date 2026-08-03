@@ -36,7 +36,9 @@ CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
 MAX_OUTPUT_TEXT_CHARS = 768
-RESERVED_MODEL_MARKER_PATTERN = re.compile(r"<unused\d+>|\[multimodal\]")
+MODEL_ARTIFACT_PATTERN = re.compile(
+    r"<unused\d+>|\[multimodal\]|</?[A-Za-z][A-Za-z0-9_-]*(?:\s[^<>]{0,64})?>"
+)
 NON_WHITESPACE_C0 = frozenset(chr(value) for value in range(32)) - {"\t", "\n", "\r"}
 RESPONSE_JSON_SCHEMA = {
     "type": "object",
@@ -346,8 +348,8 @@ def response_integrity_summary(
         _require(isinstance(output_text, str) and output_text, f"missing response-integrity text for {item_id}")
 
         copy_violation = action in {"preserve", "abstain"} and output_text != source
-        source_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(source))
-        output_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(output_text))
+        source_markers = Counter(MODEL_ARTIFACT_PATTERN.findall(source))
+        output_markers = Counter(MODEL_ARTIFACT_PATTERN.findall(output_text))
         marker_violation = any(count > source_markers[token] for token, count in output_markers.items())
         source_controls = Counter(character for character in source if character in NON_WHITESPACE_C0)
         output_controls = Counter(character for character in output_text if character in NON_WHITESPACE_C0)
@@ -414,7 +416,7 @@ def verify_config(config: Mapping[str, Any]) -> None:
     )
     _require(
         config.get("runner", {}).get("structured_outputs_escape_raw_control_tokens") is True,
-        "structured output control-token contract drift",
+        "historical structured-output control-token config drift",
     )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
@@ -727,9 +729,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "structured_outputs_ignore_eos_until_complete"
             ],
             "structured_outputs_max_output_text_chars": config["runner"]["structured_outputs_max_output_text_chars"],
-            "structured_outputs_escape_raw_control_tokens": config["runner"][
-                "structured_outputs_escape_raw_control_tokens"
-            ],
+            "raw_control_policy": "reject",
             "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },
         "network_during_generation": "private_checkpoint_upload_only",

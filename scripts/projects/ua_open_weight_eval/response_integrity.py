@@ -20,7 +20,9 @@ from typing import Any
 from scripts.projects.ua_open_weight_eval import suite_cli
 
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
-RESERVED_MODEL_MARKER_PATTERN = re.compile(r"<unused\d+>|\[multimodal\]")
+MODEL_ARTIFACT_PATTERN = re.compile(
+    r"<unused\d+>|\[multimodal\]|</?[A-Za-z][A-Za-z0-9_-]*(?:\s[^<>]{0,64})?>"
+)
 NON_WHITESPACE_C0 = frozenset(chr(value) for value in range(32)) - {"\t", "\n", "\r"}
 
 
@@ -54,8 +56,8 @@ def response_integrity_summary(
         _require(isinstance(output_text, str) and output_text, f"missing output_text for {item_id}")
 
         copy_violation = action in {"preserve", "abstain"} and output_text != source
-        source_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(source))
-        output_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(output_text))
+        source_markers = Counter(MODEL_ARTIFACT_PATTERN.findall(source))
+        output_markers = Counter(MODEL_ARTIFACT_PATTERN.findall(output_text))
         marker_violation = any(count > source_markers[token] for token, count in output_markers.items())
         source_controls = Counter(character for character in source if character in NON_WHITESPACE_C0)
         output_controls = Counter(character for character in output_text if character in NON_WHITESPACE_C0)
@@ -92,7 +94,11 @@ def require_response_integrity(
     return summary
 
 
-def verify_saved_integrity(responses_path: Path, requests_path: Path | None = None) -> dict[str, Any]:
+def verify_saved_integrity(
+    responses_path: Path,
+    requests_path: Path | None = None,
+    expected_count: int | None = None,
+) -> dict[str, Any]:
     if requests_path is None:
         sources = {
             suite_cli.request_item_id(position): str(case["source"])
@@ -114,9 +120,15 @@ def verify_saved_integrity(responses_path: Path, requests_path: Path | None = No
         _require(isinstance(item_id, str) and item_id in sources, f"unknown response item: {item_id}")
         _require(item_id not in responses, f"duplicate response item: {item_id}")
         responses[item_id] = row
+    expected_count = len(sources) if expected_count is None else expected_count
+    _require(0 < expected_count <= len(sources), "expected response count is invalid")
+    _require(len(responses) == expected_count, "saved output response count drift")
+    if expected_count == len(sources):
+        _require(set(responses) == set(sources), "saved output must cover every source exactly once")
     summary = require_response_integrity(sources=sources, responses=responses)
     return {
         **summary,
+        "expected_rows": expected_count,
         "responses_sha256": suite_cli.sha256_file(responses_path),
         "requests_sha256": requests_sha256,
     }
@@ -126,13 +138,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--responses", type=Path, required=True)
     parser.add_argument("--requests", type=Path)
+    parser.add_argument("--expected-count", type=int)
     return parser.parse_args(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        result = verify_saved_integrity(args.responses, args.requests)
+        result = verify_saved_integrity(args.responses, args.requests, args.expected_count)
     except (OSError, IntegrityError, suite_cli.SuiteError) as exc:
         print(f"response-integrity: ERROR: {exc}", file=sys.stderr)
         return 2

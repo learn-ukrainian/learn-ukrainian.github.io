@@ -138,6 +138,7 @@ def test_response_integrity_is_source_aware_and_fail_closed(tmp_path: Path) -> N
     corruptions = (
         {"one": {"action": "preserve", "output_text": "Точний текст. "}},
         {"one": {"action": "correct", "output_text": "Текст <unused42>"}},
+        {"one": {"action": "correct", "output_text": "Текст </tr><pad>"}},
         {"one": {"action": "correct", "output_text": "Текст\x00"}},
     )
     for responses in corruptions:
@@ -157,6 +158,9 @@ def test_response_integrity_is_source_aware_and_fail_closed(tmp_path: Path) -> N
         responses,
         [{"type": "run"}, {"item_id": "one", "action": "correct", "output_text": "<unused7>"}],
     )
+    assert response_integrity.main(["--responses", str(responses), "--requests", str(requests)]) == 2
+
+    _write_jsonl(responses, [{"type": "run"}])
     assert response_integrity.main(["--responses", str(responses), "--requests", str(requests)]) == 2
 
 
