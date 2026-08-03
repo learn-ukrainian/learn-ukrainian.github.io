@@ -269,6 +269,89 @@ class FormalReviewJobService:
             created_at=created,
         )
 
+    def record_rejected_response(
+        self,
+        review_id: str,
+        raw_response: str | bytes,
+    ) -> FormalReviewAttempt:
+        """Atomically retain a non-canonical response as a failed attempt.
+
+        A response which failed formal-review validation is evidence of an
+        attempted review, not a verdict.  Persist the original bytes and its
+        failed attempt together so a subsequent authority-lease race cannot
+        erase the only durable record of the provider result.
+        """
+        job = self.get_job(review_id, include_attempts=False)
+        payload = (
+            raw_response.encode("utf-8")
+            if isinstance(raw_response, str)
+            else bytes(raw_response)
+        )
+
+        attempt_id = new_id("review-attempt")
+        created = _utc_now()
+        try:
+            self._conn.execute("BEGIN IMMEDIATE")
+            current = self._conn.execute(
+                "SELECT sealed_verdict_artifact_id FROM formal_review_jobs WHERE review_id = ?",
+                (job.review_id,),
+            ).fetchone()
+            if current is None:
+                raise FormalReviewJobsError(f"formal review job not found: {job.review_id}")
+            if current["sealed_verdict_artifact_id"] is not None:
+                raise FormalReviewJobsError(
+                    f"sealed_verdict_already_set: job {job.review_id} cannot record a rejected response"
+                )
+            capture = self.store.store_bytes(
+                payload,
+                producer="formal-review-jobs",
+                retention_class="rejected-review-response",
+                logical_filename=f"{job.review_id}.rejected-response.raw",
+                mime_type="text/plain; charset=utf-8",
+                commit=False,
+            )
+            row = self._conn.execute(
+                "SELECT COALESCE(MAX(attempt_number), 0) FROM formal_review_attempts WHERE review_id = ?",
+                (job.review_id,),
+            ).fetchone()
+            attempt_number = int(row[0]) + 1 if row is not None else 1
+            self._conn.execute(
+                """INSERT INTO formal_review_attempts(
+                    review_attempt_id, review_id, attempt_number,
+                    completion_state, raw_capture_artifact_id, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?)""",
+                (
+                    attempt_id,
+                    job.review_id,
+                    attempt_number,
+                    CompletionState.FAILED.value,
+                    capture.artifact_id,
+                    created,
+                ),
+            )
+            self._conn.execute(
+                "UPDATE formal_review_jobs SET state = 'failed' WHERE review_id = ?",
+                (job.review_id,),
+            )
+            self._conn.commit()
+        except FormalReviewJobsError:
+            self._conn.rollback()
+            raise
+        except Exception as exc:
+            self._conn.rollback()
+            raise FormalReviewJobsError(
+                f"failed to record rejected response for {job.review_id}: {exc}"
+            ) from exc
+
+        return FormalReviewAttempt(
+            review_attempt_id=attempt_id,
+            review_id=job.review_id,
+            attempt_number=attempt_number,
+            completion_state=CompletionState.FAILED.value,
+            raw_capture_artifact_id=capture.artifact_id,
+            created_at=created,
+        )
+
     def accept_sealed_verdict(
         self,
         review_id: str,
