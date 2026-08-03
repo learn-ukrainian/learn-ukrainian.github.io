@@ -1853,26 +1853,29 @@ def _morph_labels(morphology: dict[str, Any]) -> list[str]:
 
 _POS_BUCKET_ALIASES: dict[str, tuple[str, ...]] = {
     "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun"),
-    "verb": ("дієслово", "verb", "infinitive", "imperative"),
     "adjective": ("прикметник", "adj", "adjective"),
+    "numeral": ("числівник", "num", "numr", "numeral"),
+    "pronoun": ("займенник", "pronoun", "pron"),
+    "verb": ("дієслово", "verb", "infinitive", "imperative"),
     "adverb": ("прислівник", "присл", "adv", "adverb"),
-    "numeral": ("числівник", "num", "numeral"),
-    "function": (
+    "preposition": (
         "прийменник",
         "приймен.",
-        "сполучник",
-        "спол.",
-        "частка",
         "preposition",
         "prep",
+    ),
+    "conjunction": (
+        "сполучник",
+        "спол.",
         "conjunction",
         "conj",
+    ),
+    "particle": (
+        "частка",
         "particle",
         "part",
-        "function",
-        "function word",
-        "службове слово",
     ),
+    "interjection": ("вигук", "interjection", "interj", "intj"),
 }
 
 
@@ -1890,38 +1893,63 @@ def _normalize_pos_buckets(value: Any) -> list[str]:
     buckets: list[str] = []
     for part in re.split(r"\s*[,;/|+]\s*", folded):
         for bucket, aliases in _POS_BUCKET_ALIASES.items():
-            if any(
-                part == alias or part.startswith(f"{alias}:") or part.startswith(f"{alias} ")
-                or part.startswith(f"{alias}.")
-                for alias in aliases
-            ) and bucket not in buckets:
+            if any(_pos_alias_matches(part, alias) for alias in aliases) and bucket not in buckets:
                 buckets.append(bucket)
     return buckets
 
 
+def _pos_alias_matches(part: str, alias: str) -> bool:
+    """Match a POS alias at a recognized boundary without swallowing ``part of``."""
+    return (
+        part == alias
+        or part.startswith(f"{alias}:")
+        or part.startswith(f"{alias}.")
+        or (alias != "part" and part.startswith(f"{alias} "))
+    )
+
+
 _DEFINITION_POS_ALIASES: dict[str, tuple[str, ...]] = {
     "noun": ("іменник", "noun"),
-    "verb": ("дієслово", "verb"),
     "adjective": ("прикметник", "adjective"),
+    "numeral": ("числівник", "numr", "numeral"),
+    "pronoun": ("займенник", "pronoun", "pron", "pron\\."),
+    "verb": ("дієслово", "verb"),
     "adverb": ("прислівник", "присл\\.", "adverb"),
-    "numeral": ("числівник", "numeral"),
-    "function": (
+    "preposition": (
         "прийменник",
         "приймен\\.",
+        "preposition",
+        "prep",
+        "prep\\.",
+    ),
+    "conjunction": (
         "сполучник",
         "спол\\.",
-        "частка",
-        "preposition",
         "conjunction",
-        "particle",
+        "conj",
+        "conj\\.",
     ),
+    "particle": (
+        "частка",
+        "particle",
+        "part",
+        "part\\.",
+    ),
+    "interjection": ("вигук", "interjection", "interj", "interj\\.", "intj", "intj\\."),
 }
+
+
+def _definition_pos_alias_pattern(alias: str) -> str:
+    """Keep generic ``part`` from matching prose like ``part of speech``."""
+    if alias == "part":
+        return r"part(?=$|[.,;:])"
+    return alias
 
 _DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (
         bucket,
         re.compile(
-            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:[–—-]\s*)?(?:{'|'.join(aliases)})(?=$|[\s,;:])",
+            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:{'|'.join(_definition_pos_alias_pattern(alias) for alias in aliases)})(?=$|[\s,;:])",
             re.IGNORECASE,
         ),
     )
@@ -2007,11 +2035,15 @@ CLASSIFY_LABELS: dict[str, dict[str, tuple[str, str | None]]] = {
     },
     "pos": {
         "noun": ("іменник", "noun"),
-        "verb": ("дієслово", "verb"),
         "adjective": ("прикметник", "adj."),
-        "adverb": ("прислівник", "adv."),
         "numeral": ("числівник", "num."),
-        "function": ("службове слово", "function word"),
+        "pronoun": ("займенник", "pron."),
+        "verb": ("дієслово", "verb"),
+        "adverb": ("прислівник", "adv."),
+        "preposition": ("прийменник", "prep."),
+        "conjunction": ("сполучник", "conj."),
+        "particle": ("частка", "particle"),
+        "interjection": ("вигук", "interj."),
     },
 }
 
