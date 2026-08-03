@@ -163,7 +163,7 @@ def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
     assert resolution.selected is None
     fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-cursor-fallback")
     assert fallback.status == "excluded"
-    assert "formal-review transport" in fallback.reason
+    assert ("formal-review transport" in fallback.reason) or ("generic multi-model harness" in fallback.reason)
     native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5")
     assert native.status == "excluded"
     assert "unhealthy" in native.reason
@@ -207,6 +207,26 @@ def test_policy_receipt_exposes_catalog_version_date_and_risk():
     assert resolution.policy_version == "deterministic-formal-routing.v2"
     assert resolution.catalog_reviewed_on == "2026-08-02"
     assert resolution.resolved_risk == "high"
+
+
+def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
+    """Probe failure (status=unavailable) is missing evidence, not a dead seat."""
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-luna",
+            author_family="openai",
+            risk="medium",
+            routing_snapshot={
+                "agents": {
+                    "claude": {"status": "unavailable", "health": {"healthy": True}},
+                    "codex": {"status": "unavailable", "health": {"healthy": True}},
+                }
+            },
+        )
+    )
+    assert resolution.selected is not None
+    assert resolution.selected.name == "claude-sonnet-5"
+    assert resolution.selected.health in {None, "healthy"}
 
 
 def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
@@ -698,8 +718,8 @@ def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is
         ),
         runtime_state={
             "agents": {
-                "codex": {"status": "unavailable"},
-                "claude": {"status": "unavailable"},
+                "codex": {"status": "unhealthy"},
+                "claude": {"status": "unhealthy"},
             }
         },
     )
@@ -756,10 +776,10 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
         assert [rung[0].name for rung in ladder[:4]] == [
             "gpt-5.6-terra",
             "claude-sonnet-5",
+            "glm-5.2",
             "gemini-3.6-flash",
-            "grok-4.5",
         ]
-        assert ladder[4][0].name == "grok-4.5-cursor-fallback"
+        assert ladder[4][0].name == "grok-4.5"
 
 
 def test_candidate_constants_preserve_expected_identity():

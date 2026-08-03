@@ -287,9 +287,10 @@ _HEALTH_ALIASES: dict[str, str | None] = {
     "warm": "degraded",
     "near_cap": "near_cap",
     "hot": "near_cap",
-    # routing-budget emits this when CodexBar cannot authenticate/produce a
-    # capacity reading. It is operationally unavailable, never fail-open.
-    "unavailable": "unhealthy",
+    # routing-budget emits this when CodexBar probe fails/times out. That is
+    # missing capacity evidence, not a proven dead seat — fail-open like
+    # "unknown" (operator 2026-08-03: red probe must not ban CF lanes).
+    "unavailable": None,
     # The endpoint uses unknown when budget evidence is absent. Preserve the
     # module's fail-open convention by treating it exactly like a missing key.
     "unknown": None,
