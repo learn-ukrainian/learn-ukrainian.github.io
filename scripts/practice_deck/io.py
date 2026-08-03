@@ -35,7 +35,7 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 15  # 14→15: antonym practice drill mode (#6139)
+PRACTICE_DECK_BUILDER_VERSION = 16  # 15→16: homonym practice drill mode (#6138)
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
@@ -59,6 +59,7 @@ def compute_deck_inputs_fingerprint(
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
     antonym_pairs: list[dict[str, Any]] | None = None,
+    homonym_pairs: list[dict[str, Any]] | None = None,
 ) -> str:
     """Canonical hash of the deck DATA inputs only (no builder version).
 
@@ -73,6 +74,7 @@ def compute_deck_inputs_fingerprint(
         "heritage_pairs": heritage_pairs or [],
         "paronym_pairs": paronym_pairs or [],
         "antonym_pairs": antonym_pairs or [],
+        "homonym_pairs": homonym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }
@@ -88,6 +90,7 @@ def compute_deck_version(
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
     antonym_pairs: list[dict[str, Any]] | None = None,
+    homonym_pairs: list[dict[str, Any]] | None = None,
 ) -> str:
     payload = {
         "builder_version": PRACTICE_DECK_BUILDER_VERSION,
@@ -96,6 +99,7 @@ def compute_deck_version(
         "heritage_pairs": heritage_pairs or [],
         "paronym_pairs": paronym_pairs or [],
         "antonym_pairs": antonym_pairs or [],
+        "homonym_pairs": homonym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }
@@ -138,6 +142,8 @@ def _safe_shard_name(name: object) -> str:
         "practice-synonym.",
         "practice-heritage.",
         "practice-paronym.",
+        "practice-antonym.",
+        "practice-homonym.",
     )
     if not name.endswith(".json") or not name.startswith(allowed_prefixes):
         raise PracticeDeckHydrationError(f"unexpected practice deck file path: {name!r}")

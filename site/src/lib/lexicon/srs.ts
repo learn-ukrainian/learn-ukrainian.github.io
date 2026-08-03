@@ -60,6 +60,7 @@ export const PRACTICE_MODES = [
   'classify',
   'paronym',
   'antonym',
+  'homonym',
 ] as const;
 const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
 

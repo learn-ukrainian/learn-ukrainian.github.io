@@ -1,0 +1,1207 @@
+schema_version: 1
+description: 'Curated homonym pairs for dedicated homonym drills (#6138). Promoted
+  from MiyKlas approved homonym candidates. Fail-closed: unreviewed candidates excluded.'
+pairs:
+- slugA: агент
+  slugB: агент
+  distinction_gloss_uk: «Агент» — уповноважена особа чи розвідник; «агент» — діюча
+    сила чи чинник у природничих/хімічних процесах.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Таємний ___ виконав важливе завдання за кордоном.
+    answer_form: агент
+    confusable_form: агент
+    origin: authored-homonym-frame
+  - sentence_with_slot: Хімічний ___ прискорив реакцію в лабораторній колбі.
+    answer_form: агент
+    confusable_form: агент
+    origin: authored-homonym-frame
+- slugA: акція
+  slugB: акція
+  distinction_gloss_uk: «Акція» — цінний папір, що засвідчує право власності; «акція»
+    — дія, захід або публічний виступ.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Інвестор придбав пакет цінних паперів і кожна ___ зросла в
+      ціні.
+    answer_form: акція
+    confusable_form: акція
+    origin: authored-homonym-frame
+  - sentence_with_slot: Благодійна ___ залучила багато волонтерів та допомоги.
+    answer_form: акція
+    confusable_form: акція
+    origin: authored-homonym-frame
+- slugA: апорт
+  slugB: апорт
+  distinction_gloss_uk: «Апорт» — сорт соковитих яблук; «апорт» — вигук-команда собаці
+    принести кинутий предмет.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На столі лежав соковитий червоний ___ .
+    answer_form: апорт
+    confusable_form: апорт
+    origin: authored-homonym-frame
+  - sentence_with_slot: Дресирувальник вигукнув « ___ !», і пес побіг по палицю.
+    answer_form: Апорт
+    confusable_form: Апорт
+    origin: authored-homonym-frame
+- slugA: атлас
+  slugB: атлас
+  distinction_gloss_uk: «А́тлас» (з наголосом на першому складі) — збірник географічних
+    карт; «атла́с» (з наголосом на другому) — блискуча шовкова тканина.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Учень відкрив географічний ___ України на п'ятій сторінці.
+    answer_form: атлас
+    confusable_form: атлас
+    origin: authored-homonym-frame
+  - sentence_with_slot: Сукня була пошита з гладенького блискучого ___ .
+    answer_form: атласу
+    confusable_form: атласу
+    origin: authored-homonym-frame
+- slugA: баба
+  slugB: баба
+  distinction_gloss_uk: «Баба» — бабуся, літня жінка; «баба» — ударна частина механічного
+    молота або святкова випічка.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Старенька ___ спекла для онуків смачний пиріг.
+    answer_form: баба
+    confusable_form: баба
+    origin: authored-homonym-frame
+  - sentence_with_slot: На Великдень бабуся спекла високу солодку ___ .
+    answer_form: бабу
+    confusable_form: бабу
+    origin: authored-homonym-frame
+- slugA: байка
+  slugB: байка
+  distinction_gloss_uk: «Байка» — коротке алегоричне повчальне оповідання; «байка»
+    — м'яка бавовняна чи вовняна тканина з начесом.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Езоп написав відому ___ про лисицю й виноград.
+    answer_form: байку
+    confusable_form: байку
+    origin: authored-homonym-frame
+  - sentence_with_slot: Тепла сорочка з м'якої ___ чудово зігрівала взимку.
+    answer_form: байки
+    confusable_form: байки
+    origin: authored-homonym-frame
+- slugA: балка
+  slugB: балка
+  distinction_gloss_uk: «Балка» — яр із пологими схилами, вкритий травою; «балка»
+    — опорний будівельний брус із дерева чи металу.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Вівці паслися у глибокій зеленій ___ .
+    answer_form: балці
+    confusable_form: балці
+    origin: authored-homonym-frame
+  - sentence_with_slot: Міцна залізобетонна ___ тримала дах будівлі.
+    answer_form: балка
+    confusable_form: балка
+    origin: authored-homonym-frame
+- slugA: бар
+  slugB: бар
+  distinction_gloss_uk: «Бар» — заклад громадського харчування або стійка; «бар» —
+    позасистемна одиниця вимірювання тиску.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Друзі зустрілися увечері в затишному ___ .
+    answer_form: барі
+    confusable_form: барі
+    origin: authored-homonym-frame
+  - sentence_with_slot: Манометр показав тиск у системі в один ___ .
+    answer_form: бар
+    confusable_form: бар
+    origin: authored-homonym-frame
+- slugA: бокс
+  slugB: бокс
+  distinction_gloss_uk: «Бокс» — вид кулачного спорту; «бокс» — ізольована палата
+    в лікарні або коротка зачіска.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Спортсмен відвідує тренування з класичного ___ .
+    answer_form: боксу
+    confusable_form: боксу
+    origin: authored-homonym-frame
+  - sentence_with_slot: Хворого помістили в окремий медичний ___ .
+    answer_form: бокс
+    confusable_form: бокс
+    origin: authored-homonym-frame
+- slugA: вал
+  slugB: вал
+  distinction_gloss_uk: «Вал» — високий земляний насип або висока хвиля; «вал» — обертова
+    деталь механізму у формі циліндричного бруса.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Навколо фортеці звели захисний земляний ___ .
+    answer_form: вал
+    confusable_form: вал
+    origin: authored-homonym-frame
+  - sentence_with_slot: Колінчастий ___ двигуна обертався дуже швидко.
+    answer_form: вал
+    confusable_form: вал
+    origin: authored-homonym-frame
+- slugA: вибиратися
+  slugB: вибиратися
+  distinction_gloss_uk: «Вибиратися» — знаходити вихід, виходити з труднощів; «вибиратися»
+    — лаштуватися в дорогу чи виїжджати.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Туристи довго намагалися ___ з лісового хаща.
+    answer_form: вибиратися
+    confusable_form: вибиратися
+    origin: authored-homonym-frame
+  - sentence_with_slot: Сім'я почала ___ до моря ще вдосвіта.
+    answer_form: вибиратися
+    confusable_form: вибиратися
+    origin: authored-homonym-frame
+- slugA: вид
+  slugB: вид
+  distinction_gloss_uk: «Вид» — зовнішній вигляд, краєвид або біологічний таксон;
+    «вид» — граматична категорія дієслова (доконаний/недоконаний).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: З вершини гори відкривався чудовий ___ на долину.
+    answer_form: вид
+    confusable_form: вид
+    origin: authored-homonym-frame
+  - sentence_with_slot: Дієслово «прочитати» має доконаний ___ .
+    answer_form: вид
+    confusable_form: вид
+    origin: authored-homonym-frame
+- slugA: глава
+  slugB: глава
+  distinction_gloss_uk: «Глава» — керівник установи, держави чи роду; «глава» — розділ
+    книги чи купол церкви.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На саміті виступив ___ держави.
+    answer_form: глава
+    confusable_form: глава
+    origin: authored-homonym-frame
+  - sentence_with_slot: Друга ___ роману присвячена подіям у Києві.
+    answer_form: глава
+    confusable_form: глава
+    origin: authored-homonym-frame
+- slugA: гранат
+  slugB: гранат
+  distinction_gloss_uk: «Гранат» — південне дерево та соковитий плід з багатьма зернами;
+    «гранат» — дорогоцінний темно-червоний мінерал.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На десерт подали соковитий стиглий ___ .
+    answer_form: гранат
+    confusable_form: гранат
+    origin: authored-homonym-frame
+  - sentence_with_slot: Перстень прикрашав темно-червоний дорогоцінний ___ .
+    answer_form: гранат
+    confusable_form: гранат
+    origin: authored-homonym-frame
+- slugA: графік
+  slugB: графік
+  distinction_gloss_uk: «Гра́фік» — наочне креслення або розклад дій; «графі́к» —
+    художник, який займається графікою.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Потяг курсує за чітким розкладом і черговим ___ .
+    answer_form: графіком
+    confusable_form: графіком
+    origin: authored-homonym-frame
+  - sentence_with_slot: Талановитий ___ створив ілюстрації до нової книги.
+    answer_form: графік
+    confusable_form: графік
+    origin: authored-homonym-frame
+- slugA: грибок
+  slugB: грибок
+  distinction_gloss_uk: «Грибок» — маленький гриб або мікроорганізм; «грибок» — дерев'яне
+    пристосування для штопання шкарпеток.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У вологому приміщенні з'явився пліснявий ___ .
+    answer_form: грибок
+    confusable_form: грибок
+    origin: authored-homonym-frame
+  - sentence_with_slot: Бабуся взяла дерев'яний ___ і почала заштопувати шкарпетку.
+    answer_form: грибок
+    confusable_form: грибок
+    origin: authored-homonym-frame
+- slugA: двір
+  slugB: двір
+  distinction_gloss_uk: «Двір» — подвір'я біля хати чи будинку; «двір» — монарх із
+    родиною та оточенням (царський двір).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Діти гралися у просторому прибудинковому ___ .
+    answer_form: дворі
+    confusable_form: дворі
+    origin: authored-homonym-frame
+  - sentence_with_slot: Королівський ___ зібрався на урочистий бал.
+    answer_form: двір
+    confusable_form: двір
+    origin: authored-homonym-frame
+- slugA: дисципліна
+  slugB: дисципліна
+  distinction_gloss_uk: «Дисципліна» — дотримання порядку й правил; «дисципліна» —
+    окрема галузь науки чи навчальний предмет.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У школі панувала зразкова військова ___ .
+    answer_form: дисципліна
+    confusable_form: дисципліна
+    origin: authored-homonym-frame
+  - sentence_with_slot: Математика є важливою навчальною ___ у школі.
+    answer_form: дисципліною
+    confusable_form: дисципліною
+    origin: authored-homonym-frame
+- slugA: доля
+  slugB: доля
+  distinction_gloss_uk: «Доля» — фатум, життєвий шлях або щастя; «доля» — частина
+    цілого, частка чи пай.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Людина сама творить свою щасливу ___ .
+    answer_form: долю
+    confusable_form: долю
+    origin: authored-homonym-frame
+  - sentence_with_slot: Значна ___ прибутку пішла на благодійність.
+    answer_form: доля
+    confusable_form: доля
+    origin: authored-homonym-frame
+- slugA: емісія
+  slugB: емісія
+  distinction_gloss_uk: «Емісія» — випуск грошових знаків або цінних паперів; «емісія»
+    — випромінювання або викид речовини в навколишнє середовище.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Центральний банк здійснив додаткову ___ грошей.
+    answer_form: емісію
+    confusable_form: емісію
+    origin: authored-homonym-frame
+  - sentence_with_slot: Скорочення ___ парникових газів є метою екологів.
+    answer_form: емісії
+    confusable_form: емісії
+    origin: authored-homonym-frame
+- slugA: жаба
+  slugB: жаба
+  distinction_gloss_uk: «Жаба» — земноводна тварина; «жаба» — пристрій для затискання
+    кабелю чи рейки.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У ставку голосно кумкала зелена ___ .
+    answer_form: жаба
+    confusable_form: жаба
+    origin: authored-homonym-frame
+  - sentence_with_slot: Монтажник використав затискну ___ для фіксації троса.
+    answer_form: жабу
+    confusable_form: жабу
+    origin: authored-homonym-frame
+- slugA: жати
+  slugB: жати
+  distinction_gloss_uk: «Жати» (жну, жнеш) — зрізати колосся хлібних злаків; «жати»
+    (жму, жмеш) — тиснути, стискати чи тиснути в ногах (взуття тисне).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Косарі вийшли в поле ___ пшеницю.
+    answer_form: жати
+    confusable_form: жати
+    origin: authored-homonym-frame
+  - sentence_with_slot: Нові черевики починають сильно ___ у пальцях.
+    answer_form: жати
+    confusable_form: жати
+    origin: authored-homonym-frame
+- slugA: забій
+  slugB: забій
+  distinction_gloss_uk: «Забій» — місце видобутку корисної копалини в шахті; «забій»
+    — пошкодження м'яких тканин тіла від удару.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Шахтарі спустилися в підземний ___ .
+    answer_form: забій
+    confusable_form: забій
+    origin: authored-homonym-frame
+  - sentence_with_slot: Після падіння на коліні залишився болісний ___ .
+    answer_form: забій
+    confusable_form: забій
+    origin: authored-homonym-frame
+- slugA: загін
+  slugB: загін
+  distinction_gloss_uk: «Загін» — військове або спеціальне формування людей; «загін»
+    — обгороджена ділянка для худоби.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Партизанський ___ вирушив на бойове завдання.
+    answer_form: загін
+    confusable_form: загін
+    origin: authored-homonym-frame
+  - sentence_with_slot: Коней загнали на ніч у дерев'яний ___ .
+    answer_form: загін
+    confusable_form: загін
+    origin: authored-homonym-frame
+- slugA: захід
+  slugB: захід
+  distinction_gloss_uk: «Захід» — напрямок стосовно сторін світу (де заходить сонце);
+    «захід» — дія або подія, спрямована на щось.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Сонце повільно сідало на ___ .
+    answer_form: захід
+    confusable_form: захід
+    origin: authored-homonym-frame
+  - sentence_with_slot: Урядовий ___ дав змогу стабілізувати економіку.
+    answer_form: захід
+    confusable_form: захід
+    origin: authored-homonym-frame
+- slugA: карабін
+  slugB: карабін
+  distinction_gloss_uk: «Карабін» — полегшена коротка гвинтівка; «карабін» — металевий
+    сполучний гак із засувкою у альпінізмі.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Мисливець тримав у руках нарізний ___ .
+    answer_form: карабін
+    confusable_form: карабін
+    origin: authored-homonym-frame
+  - sentence_with_slot: Альпініст пристебнув мотузку через надійний сталевий ___ .
+    answer_form: карабін
+    confusable_form: карабін
+    origin: authored-homonym-frame
+- slugA: карбункул
+  slugB: карбункул
+  distinction_gloss_uk: «Карбункул» — гнійне запалення декількох волосяних мішечків;
+    «карбункул» — коштовний камінь червоного кольору (гранат).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Лікар обробив хірургічно небезпечний шкірний ___ .
+    answer_form: карбункул
+    confusable_form: карбункул
+    origin: authored-homonym-frame
+  - sentence_with_slot: Корона королеви сяяла, оскільки її прикрашав червоний ___
+      .
+    answer_form: карбункул
+    confusable_form: карбункул
+    origin: authored-homonym-frame
+- slugA: клуб
+  slugB: клуб
+  distinction_gloss_uk: «Клуб» — організація людей за інтересами або приміщення; «клуб»
+    — округла маса диму чи пилу.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Увечері молодь зібралася в місцевому ___ .
+    answer_form: клубі
+    confusable_form: клубі
+    origin: authored-homonym-frame
+  - sentence_with_slot: З димаря виривався густий чорний ___ диму.
+    answer_form: клуб
+    confusable_form: клуб
+    origin: authored-homonym-frame
+- slugA: коса
+  slugB: коса
+  distinction_gloss_uk: «Коса» — заплетене волосся / сільськогосподарський інструмент
+    / піщана смуга суші у воді.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У дівчини була довга шовковиста ___ .
+    answer_form: коса
+    confusable_form: коса
+    origin: authored-homonym-frame
+  - sentence_with_slot: Гостра металева ___ легко скошувала високу траву.
+    answer_form: коса
+    confusable_form: коса
+    origin: authored-homonym-frame
+- slugA: лава
+  slugB: лава
+  distinction_gloss_uk: «Лава» — ослін для сидіння або шикування людей / очисна виробка
+    в шахті; «лава» — розплавлена вулканічна маса.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Дідусь присів відпочити на дерев'яну ___ .
+    answer_form: лаву
+    confusable_form: лаву
+    origin: authored-homonym-frame
+  - sentence_with_slot: З кратера вулкана виливалася розпечена вогняна ___ .
+    answer_form: лава
+    confusable_form: лава
+    origin: authored-homonym-frame
+- slugA: ласка
+  slugB: ласка
+  distinction_gloss_uk: «Ласка» — вияв доброти, ніжності й прихильності; «ласка» —
+    дрібний хижий ссавець родини куницевих.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Материнська ___ зігріває дитину все життя.
+    answer_form: ласка
+    confusable_form: ласка
+    origin: authored-homonym-frame
+  - sentence_with_slot: Маленький спритний хижак ___ пробіг крізь кущі.
+    answer_form: ласка
+    confusable_form: ласка
+    origin: authored-homonym-frame
+- slugA: лисичка
+  slugB: лисичка
+  distinction_gloss_uk: «Лисичка» — пестлива назва тварини (лисиці); «лисичка» — їстівний
+    жовтий гриб з лійкоподібною шапкою.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Маленька руда ___ змальована в багатьох казках.
+    answer_form: лисичка
+    confusable_form: лисичка
+    origin: authored-homonym-frame
+  - sentence_with_slot: У сосновому лісі ми знайшли смачний їстівний гриб — ___ .
+    answer_form: лисичку
+    confusable_form: лисичку
+    origin: authored-homonym-frame
+- slugA: лютий
+  slugB: лютий
+  distinction_gloss_uk: «Лютий» — другий місяць року; «лютий» — безжалісний, злий
+    або дужий (про мороз/вітер).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Останній місяць зими — це ___ .
+    answer_form: лютий
+    confusable_form: лютий
+    origin: authored-homonym-frame
+  - sentence_with_slot: На вулиці тріщав ___ мороз.
+    answer_form: лютий
+    confusable_form: лютий
+    origin: authored-homonym-frame
+- slugA: магазин
+  slugB: магазин
+  distinction_gloss_uk: «Магазин» — торговельне приміщення для продажу товарів; «магазин»
+    — частина вогнепальної зброї для набоїв.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Мама пішла в продуктовий ___ по хліб.
+    answer_form: магазин
+    confusable_form: магазин
+    origin: authored-homonym-frame
+  - sentence_with_slot: Солдат вставив повний патронами ___ у автомат.
+    answer_form: магазин
+    confusable_form: магазин
+    origin: authored-homonym-frame
+- slugA: мандарин
+  slugB: мандарин
+  distinction_gloss_uk: «Мандарин» — соковитий цитрусовий фрукт; «мандарин» — чиновник
+    у давньому Китаю.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На Новий рік дітям купили солодкий соковитий ___ .
+    answer_form: мандарин
+    confusable_form: мандарин
+    origin: authored-homonym-frame
+  - sentence_with_slot: Знатний китайський ___ мешкав у розкішному палаці.
+    answer_form: мандарин
+    confusable_form: мандарин
+    origin: authored-homonym-frame
+- slugA: мило
+  slugB: мило
+  distinction_gloss_uk: «Мило» — засіб для миття й прання; «мило» — приємно, солодко,
+    приязно (прислівник від «милий»).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Для дезінфекції рук використали запашне ___ .
+    answer_form: мило
+    confusable_form: мило
+    origin: authored-homonym-frame
+  - sentence_with_slot: Дівчина ___ посміхнулася перехожим.
+    answer_form: мило
+    confusable_form: мило
+    origin: authored-homonym-frame
+- slugA: набір
+  slugB: набір
+  distinction_gloss_uk: «Набір» — сукупність предметів / комплект чи прийом людей;
+    «набір» — верстка тексу для друку.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У подарунок купили красивий ___ інструментів.
+    answer_form: набір
+    confusable_form: набір
+    origin: authored-homonym-frame
+  - sentence_with_slot: Комп'ютерний ___ тексту зайняв майже годину.
+    answer_form: набір
+    confusable_form: набір
+    origin: authored-homonym-frame
+- slugA: наліт
+  slugB: наліт
+  distinction_gloss_uk: «Наліт» — раптовий авіаційний чи бандитський напад; «наліт»
+    — тонкий шар осаду чи плівки на поверхні.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Військові відбили ворожий повітряний ___ .
+    answer_form: наліт
+    confusable_form: наліт
+    origin: authored-homonym-frame
+  - sentence_with_slot: На листі яблуні з'явився білий пліснявий ___ .
+    answer_form: наліт
+    confusable_form: наліт
+    origin: authored-homonym-frame
+- slugA: нота
+  slugB: нота
+  distinction_gloss_uk: «Нота» — графічний знак музичного звуку; «нота» — офіційне
+    дипломатичне звернення уряду.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Музикант записав у зошиті нову мелодійну ___ .
+    answer_form: ноту
+    confusable_form: ноту
+    origin: authored-homonym-frame
+  - sentence_with_slot: Посол вручив дипломатичну ___ протесту.
+    answer_form: ноту
+    confusable_form: ноту
+    origin: authored-homonym-frame
+- slugA: образ
+  slugB: образ
+  distinction_gloss_uk: «О́браз» — художнє відображення чи уявлення; «обра́з» — свята
+    ікона.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Поет створив яскравий художній ___ у своєму творі.
+    answer_form: образ
+    confusable_form: образ
+    origin: authored-homonym-frame
+  - sentence_with_slot: У покуті висів старовинний вишитий ___ .
+    answer_form: образ
+    confusable_form: образ
+    origin: authored-homonym-frame
+- slugA: орган
+  slugB: орган
+  distinction_gloss_uk: «О́рган» — частина тіла чи установа; «орга́н» — найбільший
+    клавішно-духовий музичний інструмент.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Серце — це життєво важливий ___ людини.
+    answer_form: орган
+    confusable_form: орган
+    origin: authored-homonym-frame
+  - sentence_with_slot: У соборі зазвучав великий духовий ___ .
+    answer_form: орган
+    confusable_form: орган
+    origin: authored-homonym-frame
+- slugA: орден
+  slugB: орден
+  distinction_gloss_uk: «Орден» — почесна державна нагорода; «орден» — рицарська чи
+    релігійна організація.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Героя нагородили почесним золотим ___ .
+    answer_form: орденом
+    confusable_form: орденом
+    origin: authored-homonym-frame
+  - sentence_with_slot: Лицарський ___ мав власні суворі статути.
+    answer_form: орден
+    confusable_form: орден
+    origin: authored-homonym-frame
+- slugA: оригінал
+  slugB: оригінал
+  distinction_gloss_uk: «Оригінал» — справжній первинний документ (не копія); «оригінал»
+    — дивакувата й неординарна людина.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Нотаріус перевірив справжній ___ документу.
+    answer_form: оригінал
+    confusable_form: оригінал
+    origin: authored-homonym-frame
+  - sentence_with_slot: Цей художник — справжній редкий ___ у колі друзів.
+    answer_form: оригінал
+    confusable_form: оригінал
+    origin: authored-homonym-frame
+- slugA: палата
+  slugB: палата
+  distinction_gloss_uk: «Палата» — кімната для пацієнтів у лікарні; «палата» — підрозділ
+    парламенту чи установа (Торгово-промислова палата).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Хворий відпочивав у світлій лікарняній ___ .
+    answer_form: палаті
+    confusable_form: палаті
+    origin: authored-homonym-frame
+  - sentence_with_slot: Верховна ___ парламенту ухвалила новий закон.
+    answer_form: палата
+    confusable_form: палата
+    origin: authored-homonym-frame
+- slugA: пара
+  slugB: пара
+  distinction_gloss_uk: «Пара» — газоподібний стан води при кипінні; «пара» — дві
+    однорідні речі або двоє людей.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: З носика киплячого чайника йшла густа ___ .
+    answer_form: пара
+    confusable_form: пара
+    origin: authored-homonym-frame
+  - sentence_with_slot: На свято прийшла молода закохана ___ .
+    answer_form: пара
+    confusable_form: пара
+    origin: authored-homonym-frame
+- slugA: партія
+  slugB: партія
+  distinction_gloss_uk: «Партія» — політична організація; «партія» — окрема гра в
+    шахи або частина товару.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Політична ___ презентувала свою передвиборчу програму.
+    answer_form: партія
+    confusable_form: партія
+    origin: authored-homonym-frame
+  - sentence_with_slot: Шахісти розпочали вирішальну ___ турніру.
+    answer_form: партію
+    confusable_form: партію
+    origin: authored-homonym-frame
+- slugA: патрон
+  slugB: патрон
+  distinction_gloss_uk: «Патрон» — боєприпас для стрільби; «патрон» — покровитель,
+    шеф або керівник.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Солдат зарядив бойовий ___ у гвинтівку.
+    answer_form: патрон
+    confusable_form: патрон
+    origin: authored-homonym-frame
+  - sentence_with_slot: Багатий ___ підтримав молодих митців грантом.
+    answer_form: патрон
+    confusable_form: патрон
+    origin: authored-homonym-frame
+- slugA: рація
+  slugB: рація
+  distinction_gloss_uk: «Рація» — пере переносна радіостанція; «рація» — правота,
+    слушність або підстава (мати рацію).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Охоронець використав переносну ___ для зв'язку.
+    answer_form: рацію
+    confusable_form: рацію
+    origin: authored-homonym-frame
+  - sentence_with_slot: У цьому суперечливому питанні ти маєш цілковиту ___ .
+    answer_form: рацію
+    confusable_form: рацію
+    origin: authored-homonym-frame
+- slugA: рейд
+  slugB: рейд
+  distinction_gloss_uk: «Рейд» — військовий чи перевірочний нахід/просув; «рейд» —
+    прибережна частина моря для стоянки кораблів.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Підрозділ здійснив успішний нічний ___ у тил ворога.
+    answer_form: рейд
+    confusable_form: рейд
+    origin: authored-homonym-frame
+  - sentence_with_slot: Кораблі стали на якір на зовнішньому морському ___ .
+    answer_form: рейді
+    confusable_form: рейді
+    origin: authored-homonym-frame
+- slugA: рись
+  slugB: рись
+  distinction_gloss_uk: «Рись» — дикий хижий ссавець із китичками на вухах; «рись»
+    — біг коня (алюр між ходою та галопом).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У карпатському лісі живе плямиста ___ .
+    answer_form: рись
+    confusable_form: рись
+    origin: authored-homonym-frame
+  - sentence_with_slot: Кінь перейшов на швидку й ритмічну ___ .
+    answer_form: рись
+    confusable_form: рись
+    origin: authored-homonym-frame
+- slugA: саджати
+  slugB: саджати
+  distinction_gloss_uk: «Саджати» — вміщувати рослину в ґрунт чи садовити за стіл;
+    «саджати» — закривати у в'язницю чи ставити хліб у піч.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Навесні господарі починають ___ картоплю.
+    answer_form: саджати
+    confusable_form: саджати
+    origin: authored-homonym-frame
+  - sentence_with_slot: За злочини почали ___ правопорушників за ґрати.
+    answer_form: саджати
+    confusable_form: саджати
+    origin: authored-homonym-frame
+- slugA: садити
+  slugB: садити
+  distinction_gloss_uk: «Садити» — саджати рослини в землю; «садити» — допомагати
+    комусь сісти чи поміщати під варту.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Восени рекомендують ___ фруктові дерева.
+    answer_form: садити
+    confusable_form: садити
+    origin: authored-homonym-frame
+  - sentence_with_slot: Мати почала ___ малюка на високий стільчик.
+    answer_form: садити
+    confusable_form: садити
+    origin: authored-homonym-frame
+- slugA: секрет
+  slugB: секрет
+  distinction_gloss_uk: «Секрет» — таємниця, щось приховане; «секрет» — речовина,
+    що виробляється залозами організму.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Подруга довірила мені свій важливий особистий ___ .
+    answer_form: секрет
+    confusable_form: секрет
+    origin: authored-homonym-frame
+  - sentence_with_slot: Шлунковий ___ допомагає травленню їжі.
+    answer_form: секрет
+    confusable_form: секрет
+    origin: authored-homonym-frame
+- slugA: склад
+  slugB: склад
+  distinction_gloss_uk: «Склад» — приміщення для товарів; «склад» — частина слова
+    (фонетична одиниця) чи устрій/структура.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Вантажівка привезла товари на центральний ___ .
+    answer_form: склад
+    confusable_form: склад
+    origin: authored-homonym-frame
+  - sentence_with_slot: Слово «мама» ділиться на два наголошені ___ .
+    answer_form: склади
+    confusable_form: склади
+    origin: authored-homonym-frame
+- slugA: таз
+  slugB: таз
+  distinction_gloss_uk: «Таз» — миска чи посудина для миття; «таз» — частина скелета
+    людини або тварини.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Мама налила теплої води у великий емальований ___ .
+    answer_form: таз
+    confusable_form: таз
+    origin: authored-homonym-frame
+  - sentence_with_slot: Анатомія вивчає будову та кістки людського ___ .
+    answer_form: таза
+    confusable_form: таза
+    origin: authored-homonym-frame
+- slugA: такса
+  slugB: такса
+  distinction_gloss_uk: «Такса» — порода собак із короткими ногами; «такса» — установлений
+    тариф або ціна послуги.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На повідку бігла маленька руда ___ .
+    answer_form: такса
+    confusable_form: такса
+    origin: authored-homonym-frame
+  - sentence_with_slot: За проїзд у таксі діє чітко визначена фіксована ___ .
+    answer_form: такса
+    confusable_form: такса
+    origin: authored-homonym-frame
+- slugA: такт
+  slugB: такт
+  distinction_gloss_uk: «Такт» — відчуття міри й вихованість; «такт» — музична ритмічна
+    одиниця або етап роботи двигуна.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У спілкуванні з людьми потрібен особливий чуйний ___ .
+    answer_form: такт
+    confusable_form: такт
+    origin: authored-homonym-frame
+  - sentence_with_slot: Музиканти почали грати перший ___ вальсу.
+    answer_form: такт
+    confusable_form: такт
+    origin: authored-homonym-frame
+- slugA: термін
+  slugB: термін
+  distinction_gloss_uk: «Те́рмін» — слово із чітким науковим визначенням; «термі́н»
+    — строк або визначений час.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У підручнику пояснюється кожен науковий ___ .
+    answer_form: термін
+    confusable_form: термін
+    origin: authored-homonym-frame
+  - sentence_with_slot: Кінцевий ___ здачі проєкту — наступна п'ятниця.
+    answer_form: термін
+    confusable_form: термін
+    origin: authored-homonym-frame
+- slugA: тур
+  slugB: тур
+  distinction_gloss_uk: «Тур» — вимерлий дикий бик; «тур» — етап, коло змагань або
+    подорож.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У прадавніх лісах колись водився могутній дикий ___ .
+    answer_form: тур
+    confusable_form: тур
+    origin: authored-homonym-frame
+  - sentence_with_slot: Спортсмен пройшов у другий ___ відбіркових змагань.
+    answer_form: тур
+    confusable_form: тур
+    origin: authored-homonym-frame
+- slugA: туш
+  slugB: туш
+  distinction_gloss_uk: «Туш» — фарба для малювання, креслення чи косметики; «туш»
+    — короткий урочистий музичний марш.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Художник малював чертіж використовуючи чорну ___ .
+    answer_form: туш
+    confusable_form: туш
+    origin: authored-homonym-frame
+  - sentence_with_slot: При врученні нагороди оркестр виконав урочистий ___ .
+    answer_form: туш
+    confusable_form: туш
+    origin: authored-homonym-frame
+- slugA: ударник
+  slugB: ударник
+  distinction_gloss_uk: «Ударник» — деталь затвора вогнепальної зброї; «ударник» —
+    музикант, який грає на ударних інструментах.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Металевий ___ розбив капсуль патрона.
+    answer_form: ударник
+    confusable_form: ударник
+    origin: authored-homonym-frame
+  - sentence_with_slot: У рок-гурті талановитий ___ задавав чіткий ритм.
+    answer_form: ударник
+    confusable_form: ударник
+    origin: authored-homonym-frame
+- slugA: утримання
+  slugB: утримання
+  distinction_gloss_uk: «Утримання» — матеріальне або фінансове забезпечення; «утримання»
+    — стриманість або відрахування грошей.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Батьки беруть на себе ___ та догляд дітей.
+    answer_form: утримання
+    confusable_form: утримання
+    origin: authored-homonym-frame
+  - sentence_with_slot: Бухгалтерія здійснила ___ податків із заробітної плати.
+    answer_form: утримання
+    confusable_form: утримання
+    origin: authored-homonym-frame
+- slugA: фаланга
+  slugB: фаланга
+  distinction_gloss_uk: «Фаланга» — трубчаста кістка пальця; «фаланга» — бойовий стрій
+    давньогрецької піхоти.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Лікар оглянув зламану першу ___ вказівного пальця.
+    answer_form: фалангу
+    confusable_form: фалангу
+    origin: authored-homonym-frame
+  - sentence_with_slot: Македонська щільна ___ ви шикувалася на полі бою.
+    answer_form: фаланга
+    confusable_form: фаланга
+    origin: authored-homonym-frame
+- slugA: фокус
+  slugB: фокус
+  distinction_gloss_uk: «Фокус» — точка перетину променів оптичної системи; «фокус»
+    — ілюзія, трюк або витівка.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Фотограф налаштував точний оптичний ___ об'єктива.
+    answer_form: фокус
+    confusable_form: фокус
+    origin: authored-homonym-frame
+  - sentence_with_slot: Ілюзіоніст показав на сцені захопливий картковий ___ .
+    answer_form: фокус
+    confusable_form: фокус
+    origin: authored-homonym-frame
+- slugA: фунт
+  slugB: фунт
+  distinction_gloss_uk: «Фунт» — одиниця маси (~453 г); «фунт» — грошова одиниця Великої
+    Британії (фунт стерлінгів).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Купець зважив на терезах один ___ борошна.
+    answer_form: фунт
+    confusable_form: фунт
+    origin: authored-homonym-frame
+  - sentence_with_slot: Британська валюта називається ___ стерлінгів.
+    answer_form: фунт
+    confusable_form: фунт
+    origin: authored-homonym-frame
+- slugA: храп
+  slugB: храп
+  distinction_gloss_uk: «Храп» — хрипкі звуки уві сні; «храп» — передня частина конячої
+    морди або упряжі.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: З сусідньої кімнати чувся гучний нічний ___ .
+    answer_form: храп
+    confusable_form: храп
+    origin: authored-homonym-frame
+  - sentence_with_slot: Вершник погладив коня по м'якому ніжному ___ .
+    answer_form: храпу
+    confusable_form: храпу
+    origin: authored-homonym-frame
+- slugA: хронограф
+  slugB: хронограф
+  distinction_gloss_uk: «Хронограф» — високоточний секундомір або годинник; «хронограф»
+    — середньовічна історична хроніка.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Суддя засікав час за допомогою точного ___ .
+    answer_form: хронографа
+    confusable_form: хронографа
+    origin: authored-homonym-frame
+  - sentence_with_slot: Історик дослідив давній давньоруський ___ .
+    answer_form: хронограф
+    confusable_form: хронограф
+    origin: authored-homonym-frame
+- slugA: череда
+  slugB: череда
+  distinction_gloss_uk: «Череда» — гурт свійських тварин (корів, овець), що пасуться
+    разом; «череда» — трироздільна лікарська рослина.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Пастух повернув увечері до села велику ___ корів.
+    answer_form: череду
+    confusable_form: череду
+    origin: authored-homonym-frame
+  - sentence_with_slot: Для купання немовлят висушується цілюща ___ .
+    answer_form: череда
+    confusable_form: череда
+    origin: authored-homonym-frame
+- slugA: шах
+  slugB: шах
+  distinction_gloss_uk: «Шах» — монарший титул у країнах Сходу; «шах» — загроза королю
+    в шаховій грі.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Східний монарх мав офіційний титул ___ .
+    answer_form: шах
+    confusable_form: шах
+    origin: authored-homonym-frame
+  - sentence_with_slot: Гравець оголосив супернику незахищений прямий ___ .
+    answer_form: шах
+    confusable_form: шах
+    origin: authored-homonym-frame
+- slugA: штат
+  slugB: штат
+  distinction_gloss_uk: «Штат» — самоуправна адміністративна одиниця держави; «штат»
+    — постійний склад працівників організації.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Каліфорнія — це найбільш густонаселений ___ США.
+    answer_form: штат
+    confusable_form: штат
+    origin: authored-homonym-frame
+  - sentence_with_slot: Директор розширив постійний ___ співробітників компанії.
+    answer_form: штат
+    confusable_form: штат
+    origin: authored-homonym-frame
+- slugA: штучний
+  slugB: штучний
+  distinction_gloss_uk: «Штучний» — зроблений людьми, ненатуральний чи синтетичний;
+    «штучний» — той, що рахується поштучно (окремими екземплярами).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На новорічну ялинку повісили красивий ___ сніг.
+    answer_form: штучний
+    confusable_form: штучний
+    origin: authored-homonym-frame
+  - sentence_with_slot: У магазині продається штучний товар або поштучний ___ товар.
+    answer_form: штучний
+    confusable_form: штучний
+    origin: authored-homonym-frame
+- slugA: як
+  slugB: як
+  distinction_gloss_uk: «Як» — великий тибетський волохатий бык; «як» — питально-відносний
+    прислівник чи сполучник.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У високогір'ї Гімалаїв випасається волохатий тибетський ___
+      .
+    answer_form: як
+    confusable_form: як
+    origin: authored-homonym-frame
+  - sentence_with_slot: 'Учень запитав учителя: « ___ правильно розв''язати задачу?»'
+    answer_form: Як
+    confusable_form: Як
+    origin: authored-homonym-frame
+- slugA: яритися
+  slugB: яритися
+  distinction_gloss_uk: «Яритися» — охоплюватися люттю, гнівом; «яритися» — яскраво
+    сяяти чи палати вогнем.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Ворог починає сильно ___ від поразки.
+    answer_form: яритися
+    confusable_form: яритися
+    origin: authored-homonym-frame
+  - sentence_with_slot: Червоне полум'я багаття продовжує яскраво ___ .
+    answer_form: яритися
+    confusable_form: яритися
+    origin: authored-homonym-frame
+- slugA: яріти
+  slugB: яріти
+  distinction_gloss_uk: «Яріти» — відсвічувати яскраво-червоним світлом / палати;
+    «яріти» — палати пристрастю або люттю.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На заході сонця небо починає глибоко ___ .
+    answer_form: яріти
+    confusable_form: яріти
+    origin: authored-homonym-frame
+  - sentence_with_slot: Очі гнівної людини почали запекло ___ .
+    answer_form: яріти
+    confusable_form: яріти
+    origin: authored-homonym-frame
+- slugA: ячмінь
+  slugB: ячмінь
+  distinction_gloss_uk: «Ячмінь» — злакова сільськогосподарська культура; «ячмінь»
+    — гнійне запалення волосяного мішечка повіки.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На полі дозрівав озимий зерновий ___ .
+    answer_form: ячмінь
+    confusable_form: ячмінь
+    origin: authored-homonym-frame
+  - sentence_with_slot: На верхній повіці ока вискочив болісний ___ .
+    answer_form: ячмінь
+    confusable_form: ячмінь
+    origin: authored-homonym-frame
