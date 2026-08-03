@@ -331,6 +331,21 @@ const en = {
   'practice.poolMiss': 'This word is not in the practice pool yet.',
   'practice.progress': 'Progress',
 
+  // Learner layout P0 fixes (#6317/#6320) — visible helpers, honest empties, hit targets
+  'practice.backToModes': 'Back to modes',
+  'practice.startFlashcardsCta': 'Start flashcards',
+  'practice.heritageNative': 'native',
+  'practice.heritageInherited': 'inherited',
+  'practice.heritageBorrowed': 'borrowed',
+  'practice.heritageCalque': 'calque',
+  'practice.heritageAvoid': 'avoid',
+  'practice.flipHint': 'Tap the card to see the meaning',
+  'practice.rateAfterFlipHint': 'Flip the card first',
+  'practice.keyShortcutWord': 'key',
+  'practice.intervalPrefix': 'in',
+  'practice.modeNoExercises': 'No exercises yet',
+  'practice.secondaryToolsTitle': 'Sync & decks',
+
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
@@ -633,6 +648,21 @@ const uk: Record<ChromeKey, string> = {
   'practice.loadErrorReload': 'Не вдалося завантажити практику. Спробуйте оновити сторінку.',
   'practice.poolMiss': 'Це слово ще не в тренажері.',
   'practice.progress': 'Прогрес',
+
+  // Learner layout P0 fixes (#6317/#6320) — visible helpers, honest empties, hit targets
+  'practice.backToModes': 'Повернутись до режимів',
+  'practice.startFlashcardsCta': 'Почати флешкартки',
+  'practice.heritageNative': 'питоме',
+  'practice.heritageInherited': 'успадковане',
+  'practice.heritageBorrowed': 'запозичене',
+  'practice.heritageCalque': 'калька',
+  'practice.heritageAvoid': 'уникай',
+  'practice.flipHint': 'Торкніться картки, щоб побачити значення',
+  'practice.rateAfterFlipHint': 'Спочатку переверніть картку',
+  'practice.keyShortcutWord': 'клавіша',
+  'practice.intervalPrefix': 'через',
+  'practice.modeNoExercises': 'Немає вправ',
+  'practice.secondaryToolsTitle': 'Синхронізація та колоди',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',

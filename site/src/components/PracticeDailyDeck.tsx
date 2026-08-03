@@ -225,13 +225,16 @@ export default function PracticeDailyDeck({
           <ChromeText k={detailsOpen ? 'practice.hideWords' : 'practice.showWords'} />
           <span className="daily-deck-counters">
             <span className="counter due">
-              {rows.pendingDue.length}
+              <span aria-hidden="true">{STATUS_META.due.glyph}</span> {rows.pendingDue.length}{' '}
+              <ChromeText k={STATUS_META.due.labelKey} />
             </span>
             <span className="counter new">
-              {rows.pendingNew.length}
+              <span aria-hidden="true">{STATUS_META.new.glyph}</span> {rows.pendingNew.length}{' '}
+              <ChromeText k={STATUS_META.new.labelKey} />
             </span>
             <span className="counter done">
-              {rows.done.length}
+              <span aria-hidden="true">{STATUS_META.done.glyph}</span> {rows.done.length}{' '}
+              <ChromeText k={STATUS_META.done.labelKey} />
             </span>
           </span>
         </summary>
