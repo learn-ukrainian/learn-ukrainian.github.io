@@ -1559,7 +1559,7 @@ def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypat
     pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
     assert ("--mcp-config", sealed_config) in pairs
     assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
-    assert ("--max-turns", "2") in pairs
+    assert ("--max-turns", "3") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert plan.metadata["grok_profile_sha256"] == acpx_module._GROK_SEALED_REVIEW_PROFILE_SHA256
     assert plan.metadata["tool_policy"] == "sealed-review-only"
@@ -1890,7 +1890,7 @@ def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monke
     assert ("--model", "kimi-code/k3") in pairs
     assert ("--mcp-config", sealed_config) in pairs
     assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
-    assert ("--max-turns", "2") in pairs
+    assert ("--max-turns", "3") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert plan.metadata["tool_policy"] == "sealed-review-only"
     assert plan.metadata["model"] == "kimi-code/k3"

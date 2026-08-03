@@ -370,7 +370,7 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
         "mcp__sealed_review__search_text",
     ]
     assert "--no-fs" in command and "--no-terminal" in command
-    assert command[command.index("--max-turns") + 1] == "2"
+    assert command[command.index("--max-turns") + 1] == "3"
     assert command[command.index("--prompt-retries") + 1] == "0"
     policy = json.loads(command[command.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
