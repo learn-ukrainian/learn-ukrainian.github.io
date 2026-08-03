@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "489cea7ccda8",
+  "strategy": "manual-commit",
+  "branch": "codex/6143-cefr-soft-luna",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/48/9cea7ccda8/0/metadata.json",
+      "transcript": "/48/9cea7ccda8/0/full.jsonl",
+      "compact_transcript": "/48/9cea7ccda8/0/transcript.jsonl",
+      "content_hash": "/48/9cea7ccda8/0/content_hash.txt",
+      "prompt": "/48/9cea7ccda8/0/prompt.txt"
+    }
+  ]
+}

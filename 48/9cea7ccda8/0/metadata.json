@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "489cea7ccda8",
+  "session_id": "fleet-1621bdd53a634c9ea77411a57bfe1f9f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-03T08:34:51.279049Z",
+  "branch": "codex/6143-cefr-soft-luna",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "deepseek-v4-flash",
+  "turn_id": "b19d7d741038",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-03T08:34:51.275707Z",
+    "agent_lines": 28,
+    "agent_removed": 11,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 28,
+    "total_lines_changed": 39,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
