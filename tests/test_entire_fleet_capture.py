@@ -24,6 +24,31 @@ def _repo_root(tmp_path: Path) -> Path:
     return root.resolve()
 
 
+def test_status_paths_preserves_both_sides_of_nul_terminated_renames(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = (
+        b"R  new/location.py\0old/location.py\0"
+        b" C copied/to.py\0copied/from.py\0"
+        b" M ordinary.py\0?? untracked.py\0"
+        b"?? batch_state/entire/private-spool.jsonl\0"
+    )
+    monkeypatch.setattr(
+        capture.subprocess,
+        "run",
+        lambda *_args, **_kwargs: SimpleNamespace(returncode=0, stdout=output),
+    )
+
+    assert capture._status_paths(tmp_path) == {
+        "new/location.py",
+        "old/location.py",
+        "copied/to.py",
+        "copied/from.py",
+        "ordinary.py",
+        "untracked.py",
+    }
+
+
 def _cursor_base(home: Path, root: Path) -> Path:
     project = shim._cursor_project_name(root)
     base = home / ".cursor" / "projects" / project / "agent-transcripts"

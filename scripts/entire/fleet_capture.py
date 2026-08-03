@@ -71,13 +71,28 @@ def _status_paths(repo_path: Path) -> set[str]:
     if completed.returncode != 0:
         return set()
     paths: set[str] = set()
-    for raw in completed.stdout.split(b"\0"):
+
+    def add_path(raw_path: bytes) -> None:
+        path = raw_path.decode("utf-8", errors="replace").strip()
+        if path and not path.startswith("batch_state/entire/"):
+            paths.add(path[:4096])
+
+    records = completed.stdout.split(b"\0")
+    index = 0
+    while index < len(records):
+        raw = records[index]
+        index += 1
         if len(raw) < 4:
             continue
-        path = raw[3:].decode("utf-8", errors="replace").strip()
-        if not path or path.startswith("batch_state/entire/"):
+        status = raw[:2]
+        add_path(raw[3:])
+        if b"R" not in status and b"C" not in status:
             continue
-        paths.add(path[:4096])
+        # In porcelain v1 -z output Git reverses ``from -> to`` and emits
+        # ``XY to\0from\0``.  The second path has no status prefix.
+        if index < len(records):
+            add_path(records[index])
+            index += 1
     return paths
 
 
