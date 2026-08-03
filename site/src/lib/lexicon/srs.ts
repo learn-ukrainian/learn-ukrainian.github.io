@@ -244,6 +244,8 @@ export interface PracticeHeritageItem {
   nativeLemma?: string;
   calqueLabel?: string;
   kind: 'lexical' | 'sense_restricted' | string;
+  /** Curator-adjudicated learner-facing tone for the selected calque context. */
+  severity: 'russianism' | 'enrichment';
   prompt: string;
   /** Optional English meaning of the Ukrainian prompt sentence. */
   promptEn?: string;

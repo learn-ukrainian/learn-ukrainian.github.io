@@ -19,6 +19,7 @@ from scripts.audit.generate_practice_deck import (
     _build_classify_items,
     _build_cloze_items,
     _build_heritage_items,
+    _heritage_availability_level,
     _build_lexeme,
     _build_paradigm_items,
     _build_paronym_items,
@@ -855,6 +856,28 @@ def test_heritage_item_ids_and_options_are_deterministic() -> None:
     assert first["heritageId"] == second["heritageId"]
     assert first["options"] == second["options"]
     assert first["heritageId"] != changed_version["heritageId"]
+
+
+def test_heritage_a1_admission_is_explicit_and_emitted_with_severity() -> None:
+    pair = _fixture_heritage_pair()
+    pair["cefrAvailability"] = "a1"
+    pair["severity"] = "russianism"
+    lexemes = _fixture_lexemes()
+
+    assert _heritage_availability_level(pair) == "A1"
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    assert item["cefr"] == "A1"
+    assert item["severity"] == "russianism"
+
+
+def test_heritage_pair_requires_known_severity_and_allows_a1_guidance() -> None:
+    pair = _fixture_heritage_pair()
+    pair["cefrAvailability"] = "a1"
+    pair["severity"] = "enrichment"
+    assert validate_heritage_pair(pair) == []
+
+    pair["severity"] = "warning"
+    assert "heritage_pair severity must be russianism or enrichment" in validate_heritage_pair(pair)
 
 
 def test_stress_position_preserves_non_stress_combining_marks() -> None:
@@ -2747,4 +2770,3 @@ def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     for index, pair in enumerate(pairs):
         errors = validate_homonym_pair(pair)
         assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
-

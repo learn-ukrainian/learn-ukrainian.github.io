@@ -364,6 +364,12 @@ interface HeritageFeedback {
   citations?: string[];
 }
 
+function heritageSeverityLabel(severity: PracticeHeritageItem['severity']): { uk: string; en: string } {
+  return severity === 'russianism'
+    ? { uk: 'Російська калька', en: 'Russian calque' }
+    : { uk: 'Лексичне збагачення', en: 'Vocabulary enrichment' };
+}
+
 interface ParonymFeedback {
   kind: 'correct' | 'wrong';
   textUk: string;
@@ -4247,10 +4253,15 @@ function PracticeHeritage({
     ? displayPracticeForm(selectedLabel ?? item.answer, learnerLevel)
     : '___';
   const sentenceEnglish = postAnswerSentenceEnglish(feedback, item.promptEn);
+  const severityLabel = heritageSeverityLabel(item.severity);
   return (
     <div className="lexicon-heritage" data-testid="practice-heritage">
       <p className="heritage-task">
         <PracticeChromeLabel k="practice.chooseNative" />
+      </p>
+      <p className="heritage-severity" data-testid="practice-heritage-severity">
+        <span lang="uk">{severityLabel.uk}</span>
+        {showEnglishSubtitles ? <span className="btn-sub" lang="en">/ {severityLabel.en}</span> : null}
       </p>
       <p className="heritage-sentence">
         <span>{before}</span>

@@ -19,6 +19,7 @@ pairs:
   - antonenko
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   notes: has module frame
   frames:
@@ -46,6 +47,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   notes: безпечний correction dropped — not a manifest article yet
   frames:
@@ -73,6 +75,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: На стадіон прийшли ___ нашої команди.
@@ -100,6 +103,7 @@ pairs:
   - legacy-manifest
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: 'кількісна приблизність: «біля п''яти» (рос. около пяти)'
   authenticSense: просторове біля = поруч
@@ -135,6 +139,7 @@ pairs:
   sourceFamilies:
   - legacy-manifest
   cefrAvailability: b1
+  severity: russianism
   curator: legacy+fable-2026-07-06
   calqueSense: to seem / appear that (рос. выглядит = 'it seems')
   authenticSense: to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)
@@ -169,6 +174,7 @@ pairs:
   - antonenko
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'краєвид: «гарний вид з вікна» (рос. вид)'
   authenticSense: вид = біологічний таксон; граматична категорія
@@ -201,6 +207,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: виняток із правила (рос. исключение)
   authenticSense: виключення = дія (виключення зі списку, з університету)
@@ -234,6 +241,7 @@ pairs:
   - antonenko
   - slovnyk-dicts
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: у значенні «тільки, суто» (рос. исключительно)
   authenticSense: виключно = як виняток
@@ -265,6 +273,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: розв'язання задачі/проблеми (рос. решение задачи)
   authenticSense: ухвалення рішення (вирішення питання по суті)
@@ -294,6 +303,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: розв'язати задачу/проблему (рос. решить задачу)
   authenticSense: вирішити = ухвалити рішення
@@ -325,6 +335,7 @@ pairs:
   - antonenko
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: світло/пристрій (рос. включить свет)
   authenticSense: включити до списку/складу
@@ -361,6 +372,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: двері/вікно/крамницю фізично (рос. открыть дверь)
   authenticSense: відкрити Америку, рахунок, засідання
@@ -394,6 +406,7 @@ pairs:
   - antonenko
   - slovnyk-dicts
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: прийменник «щодо» (рос. относительно)
   authenticSense: відносно = порівняно (відносно небагато)
@@ -428,6 +441,7 @@ pairs:
   - antonenko
   - slovnyk-dicts
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: ставлення до когось/стосунки (рос. отношение)
   authenticSense: математичне відношення; діловий документ
@@ -459,6 +473,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: листи/повідомлення (рос. отправить письмо)
   authenticSense: відправити поїзд, відправити службу
@@ -489,6 +504,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'про речі: «відсутність доказів» (рос. отсутствие)'
   authenticSense: відсутність людей (відсутній на зборах)
@@ -519,6 +535,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: ганити когось (рос. отчитать когось)
   authenticSense: відчитати = прочитати повністю (звіт, лекцію)
@@ -552,6 +569,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'правильний: «вірна відповідь» (рос. верный ответ)'
   authenticSense: вірний = відданий (вірний друг)
@@ -583,6 +601,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «у статті говориться» (рос. говорится)
   authenticSense: говорити як процес мовлення
@@ -612,7 +631,8 @@ pairs:
   sourceFamily: ua-gec
   sourceFamilies:
   - ua-gec
-  cefrAvailability: a2
+  cefrAvailability: a1
+  severity: russianism
   curator: fable-2026-07-06
   notes: Антоненко-збіг спурійний (функційне слово); GEC-цитата достатня
   frames:
@@ -641,6 +661,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: канцелярит «в даний час», «дана книга» (рос. данный)
   authenticSense: 'математичне: дана величина'
@@ -675,6 +696,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: медик, звертання до медика (рос. доктор)
   authenticSense: науковий ступінь (доктор наук)
@@ -706,6 +728,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: у значенні «інший» (рос. другой)
   authenticSense: порядковий числівник (другий раз, другий поверх)
@@ -744,6 +767,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: рутинний підсилювач під рос. действительно («я дійсно не бачив»)
   authenticSense: дійсний/дійсно — про чинність, реальність (дійсний квиток)
@@ -778,6 +802,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: загальне доручення/справа (рос. задача)
   authenticSense: математична задача
@@ -807,6 +832,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   notes: VESUM mislemmatized to verb залити; calqueLabel = залив (noun)
   frames:
@@ -833,6 +859,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «знаходить це дивним» (рос. находит это странным)
   authenticSense: знаходити загублене
@@ -865,6 +892,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'стале місцеперебування: «будинок знаходиться» (рос. находится)'
   authenticSense: знаходитися = бути знайденим (загублене знайшлося)
@@ -903,6 +931,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: вставне слово (рос. значит)
   authenticSense: дієслово значити = мати значення
@@ -934,6 +963,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   notes: простувати/прямувати corrections dropped — not manifest articles yet
   frames:
@@ -960,6 +990,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'ріг вулиці: «на кутку» (рос. на углу)'
   authenticSense: куток кімнати, затишний куток
@@ -989,6 +1020,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: 'будь-який: «любий варіант» (рос. любой)'
   authenticSense: любий = дорогий, коханий
@@ -1024,6 +1056,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'рослинний жир: «соняшникове масло» (рос. масло)'
   authenticSense: масло = тваринний жир (вершкове)
@@ -1055,6 +1088,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «мається великий вибір» (рос. имеется)
   authenticSense: матися = почуватися (як маєшся?)
@@ -1084,6 +1118,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: На завтра ___ підготувати короткий текст.
@@ -1116,6 +1151,7 @@ pairs:
   sourceFamilies:
   - slovnyk-dicts
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: часове «рік назад» (рос. год назад)
   authenticSense: просторовий напрямок (крок назад)
@@ -1145,6 +1181,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: початок у часі (рос. начало)
   authenticSense: філософське першоджерело, основа (вольове начало)
@@ -1176,6 +1213,7 @@ pairs:
   sourceFamilies:
   - legacy-manifest
   cefrAvailability: b1
+  severity: russianism
   curator: legacy+fable-2026-07-06
   calqueSense: week / a seven-day period (рос. неделя)
   authenticSense: Sunday (day of the week)
@@ -1208,6 +1246,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: Я хочу кави, ___ молока немає.
@@ -1233,6 +1272,7 @@ pairs:
   sourceFamily: mixed
   sourceFamilies: []
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: царина знань/діяльності (рос. область знаний)
   authenticSense: адміністративна область
@@ -1263,6 +1303,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: 'зовнішній образ: «облік сучасника» (рос. облик)'
   authenticSense: облік = облічування, реєстрація (взяти на облік)
@@ -1292,6 +1333,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «яким образом» (рос. каким образом)
   authenticSense: художній образ
@@ -1322,6 +1364,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'дія, що задовольняє потреби: «поштова обслуга»'
   authenticSense: обслуга = група людей, призначених виконувати роботу (військ. розрахунок)
@@ -1351,6 +1394,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: туристичний намет (рос. палатка)
   authenticSense: 'торговельна палатка — ятка, кіоск (СУМ: «тимчасове, звичайно літнє приміщення»)'
@@ -1382,6 +1426,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: У статті описано ___ погляд на проблему.
@@ -1408,7 +1453,8 @@ pairs:
   sourceFamilies:
   - slovnyk-dicts
   - ua-gec
-  cefrAvailability: a2
+  cefrAvailability: a1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: батько (рос. папа)
   authenticSense: Папа Римський
@@ -1440,6 +1486,7 @@ pairs:
   - antonenko
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'приблизна кількість: «пару хвилин» (рос. пара минут)'
   authenticSense: пара = двоє, комплект (пара шкарпеток)
@@ -1473,6 +1520,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: У ___ стоїть шафа для взуття.
@@ -1498,6 +1546,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: обмін листами (рос. переписка)
   authenticSense: переписування = процес копіювання написаного
@@ -1527,6 +1576,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   notes: VESUM mislemmatized полу→пола(поділ одягу); calqueLabel fixed to пол
   frames:
@@ -1555,6 +1605,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: ситуація, стан (рос. положение)
   authenticSense: пункт документа; позиція тіла
@@ -1586,6 +1637,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: публікація в соцмережі (рос./англ. пост)
   authenticSense: військовий пост; релігійний піст — окрема лексема
@@ -1616,6 +1668,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: Цей художник ще ___.
@@ -1643,6 +1696,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   notes: трудівник kept as display correction; manifest gate applies to nativeSlug only
   frames:
@@ -1674,6 +1728,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: приймати участь (рос. принимать участие)
   authenticSense: приймати гостей, приймати рішення
@@ -1705,6 +1760,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: присвоїти звання/права (рос. присвоить звание)
   authenticSense: присвоїти = привласнити чуже
@@ -1734,6 +1790,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: дорожній затор (рос. пробка)
   authenticSense: пробка = корок (закорковування)
@@ -1767,6 +1824,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   calqueSense: піднімати питання/тему (рос. поднимать вопрос)
   authenticSense: фізично піднімати
@@ -1796,6 +1854,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: передплата газет/журналів (рос. подписка)
   authenticSense: підписка = письмове зобов'язання, ствердження підписом
@@ -1826,6 +1885,7 @@ pairs:
   sourceFamilies:
   - antonenko
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: про ідеї, чутки, вплив («розповсюджувати ідеї»)
   authenticSense: розповсюджувати = фізично роздавати (книжки, листівки)
@@ -1856,6 +1916,7 @@ pairs:
   sourceFamilies:
   - legacy-manifest
   cefrAvailability: b1
+  severity: russianism
   curator: legacy+fable-2026-07-06
   frames:
   - sentence_with_slot: Наш ___ урок почнеться о дев’ятій.
@@ -1887,6 +1948,7 @@ pairs:
   - antonenko
   - slovnyk-dicts
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «в чому справа», «це не моя справа» (рос. дело)
   authenticSense: юридична/ділова справа
@@ -1918,6 +1980,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: Ми помітили ___ дат у двох документах.
@@ -1943,6 +2006,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests стакан as рідко)
   frames:
@@ -1971,6 +2035,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: Перед поїздкою оформили ___ для всієї родини.
@@ -1996,6 +2061,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   notes: rationale softened per agy review (Котляревський attestation exists)
   frames:
@@ -2022,6 +2088,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   notes: rationale register-based per agy review (Мирний/Сосюра attestations)
   frames:
@@ -2048,6 +2115,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'образне/зображальне тло: «на фоні подій»'
   authenticSense: фізичний термін (радіаційний фон)
@@ -2078,6 +2146,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  severity: russianism
   curator: fable-2026-07-06
   frames:
   - sentence_with_slot: Після відпочинку мені стало ___.
@@ -2105,6 +2174,7 @@ pairs:
   - slovnyk-dicts
   - ua-gec
   cefrAvailability: a2
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: 'годинниковий час: «який час?» (рос. который час)'
   authenticSense: час як загальне поняття
@@ -2134,6 +2204,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: enrichment
   curator: fable-2026-07-06
   calqueSense: «чисто технічний» (рос. чисто технический)
   authenticSense: чисто = охайно, без бруду
@@ -2163,6 +2234,7 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: b1
+  severity: russianism
   curator: fable-2026-07-06
   notes: lemma fixed from surface
   frames:
@@ -2174,3 +2246,440 @@ pairs:
     answer_form: капелюх
     calque_form: шляпу
     origin: authored-codex-2026-07-06
+- calqueLabel: завідуючий
+  calqueSurfaces:
+  - завідуючий
+  nativeSlug: завідувач
+  nativeLemma: завідувач
+  kind: lexical
+  corrections:
+  - завідувач
+  rationale: 'Посаду називаємо іменником: завідувач бібліотеки, не завідуючий бібліотекою.'
+  citations:
+  - state-standard:glazova-11
+  - state-standard:zabolotnyi-7
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: ___ бібліотеки допоміг відвідувачам.
+    answer_form: Завідувач
+    calque_form: Завідуючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: узагальнюючий
+  calqueSurfaces:
+  - узагальнюючий
+  nativeSlug: узагальнювальний
+  nativeLemma: узагальнювальний
+  kind: lexical
+  corrections:
+  - узагальнювальний
+  rationale: 'Для назви вправи вживаємо прикметник узагальнювальний, не узагальнюючий.'
+  citations:
+  - state-standard:glazova-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Наприкінці уроку вчитель дав ___ вправу.
+    answer_form: узагальнювальну
+    calque_form: узагальнюючу
+    origin: authored-codex-2026-08-03
+- calqueLabel: зволожуючий
+  calqueSurfaces:
+  - зволожуючий
+  nativeSlug: зволожувальний
+  nativeLemma: зволожувальний
+  kind: lexical
+  corrections:
+  - зволожувальний
+  rationale: 'Для засобу догляду вживаємо зволожувальний крем, не зволожуючий.'
+  citations:
+  - state-standard:glazova-11
+  - state-standard:zabolotnyi-7
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Узимку я користуюся ___ кремом.
+    answer_form: зволожувальним
+    calque_form: зволожуючим
+    origin: authored-codex-2026-08-03
+- calqueLabel: знеболюючий
+  calqueSurfaces:
+  - знеболюючий
+  nativeSlug: знеболювальний
+  nativeLemma: знеболювальний
+  kind: lexical
+  corrections:
+  - знеболювальний
+  rationale: 'Для назви медичного засобу вживаємо знеболювальний, не знеболюючий.'
+  citations:
+  - state-standard:glazova-11
+  - state-standard:zabolotnyi-7
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Лікар призначив ___ засіб.
+    answer_form: знеболювальний
+    calque_form: знеболюючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: хвилюючий
+  calqueSurfaces:
+  - хвилюючий
+  nativeSlug: зворушливий
+  nativeLemma: зворушливий
+  kind: lexical
+  corrections:
+  - зворушливий
+  rationale: 'У значенні емоційно зворушливий спогад точніше зворушливий, не хвилюючий.'
+  citations:
+  - state-standard:glazova-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Вона розповіла ___ історію.
+    answer_form: зворушливу
+    calque_form: хвилюючу
+    origin: authored-codex-2026-08-03
+- calqueLabel: діючий
+  calqueSurfaces:
+  - діючий
+  nativeSlug: чинний
+  nativeLemma: чинний
+  kind: sense_restricted
+  corrections:
+  - чинний
+  rationale: 'У значенні «той, що має юридичну силу» вживаємо чинний, не діючий.'
+  citations:
+  - state-standard:glazova-11
+  - state-standard:avramenko-11
+  - state-standard:avramenko-7
+  - state-standard:zabolotnyi-7
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  calqueSense: 'чинний квиток, закон або документ (рос. действующий)'
+  authenticSense: 'активний вулкан або дія, що відбувається'
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES); frame is sense-scoped.'
+  frames:
+  - sentence_with_slot: Перевірте, чи маєте ___ квиток.
+    answer_form: чинний
+    calque_form: діючий
+    origin: authored-codex-2026-08-03
+    disambiguated: true
+- calqueLabel: підростаючий
+  calqueSurfaces:
+  - підростаючий
+  nativeSlug: молодий
+  nativeLemma: молодий
+  kind: lexical
+  corrections:
+  - молодий
+  rationale: 'У сполуці про покоління вживаємо молоде, не підростаюче.'
+  citations:
+  - state-standard:glazova-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Бібліотека готує програму для ___ покоління.
+    answer_form: молодого
+    calque_form: підростаючого
+    origin: authored-codex-2026-08-03
+- calqueLabel: головуючий
+  calqueSurfaces:
+  - головуючий
+  nativeSlug: голова
+  nativeLemma: голова
+  kind: lexical
+  corrections:
+  - голова
+  rationale: 'На зборах уживаємо голова зборів, не головуючий на зборах.'
+  citations:
+  - state-standard:avramenko-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py; the administrative meeting context is B1 guidance.'
+  frames:
+  - sentence_with_slot: ___ зборів оголосив порядок денний.
+    answer_form: Голова
+    calque_form: Головуючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: домінуючий
+  calqueSurfaces:
+  - домінуючий
+  nativeSlug: основний
+  nativeLemma: основний
+  kind: lexical
+  corrections:
+  - основний
+  rationale: 'У сполуці домінуючий принцип уживаємо основний принцип.'
+  citations:
+  - state-standard:avramenko-11
+  - antonenko:101 Пануючий чи панівний
+  sourceFamily: mixed
+  sourceFamilies:
+  - state-standard
+  - antonenko
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: У доповіді названо ___ чинник успіху.
+    answer_form: основний
+    calque_form: домінуючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: оточуючий
+  calqueSurfaces:
+  - оточуючий
+  nativeSlug: навколишній
+  nativeLemma: навколишній
+  kind: lexical
+  corrections:
+  - навколишній
+  rationale: 'Для простору навколо нас уживаємо навколишній, не оточуючий.'
+  citations:
+  - state-standard:zabolotnyi-7
+  - state-standard:zabolotnyi-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Ми прибрали ___ територію школи.
+    answer_form: навколишню
+    calque_form: оточуючу
+    origin: authored-codex-2026-08-03
+- calqueLabel: розквітаючий
+  calqueSurfaces:
+  - розквітаючий
+  nativeSlug: розквітлий
+  nativeLemma: розквітлий
+  kind: lexical
+  corrections:
+  - розквітлий
+  rationale: 'Для вже розкритого бузку вживаємо розквітлий, не розквітаючий.'
+  citations:
+  - state-standard:avramenko-7
+  - antonenko:144 Дієприкметник
+  sourceFamily: mixed
+  sourceFamilies:
+  - state-standard
+  - antonenko
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: У саду пахнув ___ бузок.
+    answer_form: розквітлий
+    calque_form: розквітаючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: опадаючий
+  calqueSurfaces:
+  - опадаючий
+  nativeSlug: опалий
+  nativeLemma: опалий
+  kind: lexical
+  corrections:
+  - опалий
+  rationale: 'Для листя, що вже опало, вживаємо опалий, не опадаючий.'
+  citations:
+  - state-standard:avramenko-7
+  - antonenko:144 Дієприкметник
+  sourceFamily: mixed
+  sourceFamilies:
+  - state-standard
+  - antonenko
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Стежку вкривало ___ листя.
+    answer_form: опале
+    calque_form: опадаюче
+    origin: authored-codex-2026-08-03
+- calqueLabel: жовтіючий
+  calqueSurfaces:
+  - жовтіючий
+  nativeSlug: пожовклий
+  nativeLemma: пожовклий
+  kind: lexical
+  corrections:
+  - пожовклий
+  rationale: 'Для листа, що вже пожовк, вживаємо пожовклий, не жовтіючий.'
+  citations:
+  - state-standard:avramenko-7
+  - antonenko:144 Дієприкметник
+  sourceFamily: mixed
+  sourceFamilies:
+  - state-standard
+  - antonenko
+  cefrAvailability: b1
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: На підвіконні лежав ___ лист.
+    answer_form: пожовклий
+    calque_form: жовтіючий
+    origin: authored-codex-2026-08-03
+- calqueLabel: бувший
+  calqueSurfaces:
+  - бувший
+  nativeSlug: колишній
+  nativeLemma: колишній
+  kind: lexical
+  corrections:
+  - колишній
+  rationale: 'Прикметник бувший не відповідає українській нормі; уживаємо колишній.'
+  citations:
+  - state-standard:avramenko-11
+  sourceFamily: state-standard
+  sourceFamilies:
+  - state-standard
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Він зустрів ___ колегу.
+    answer_form: колишнього
+    calque_form: бувшого
+    origin: authored-codex-2026-08-03
+- calqueLabel: міроприємство
+  calqueSurfaces:
+  - міроприємство
+  nativeSlug: захід
+  nativeLemma: захід
+  kind: lexical
+  corrections:
+  - захід
+  rationale: 'Для організованої події вживаємо захід або заходи, не міроприємство.'
+  citations:
+  - antonenko:44 Міра, захід
+  - state-standard:glazova-10
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - state-standard
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Reviewed in scripts/lexicon/calque_corrections.py (CURATED_CALQUES).'
+  frames:
+  - sentence_with_slot: Школа провела благодійний ___.
+    answer_form: захід
+    calque_form: міроприємство
+    origin: authored-codex-2026-08-03
+- calqueLabel: уверх
+  calqueSurfaces:
+  - уверх
+  nativeSlug: вгору
+  nativeLemma: вгору
+  kind: lexical
+  corrections:
+  - вгору
+  rationale: 'UA-GEC фіксує уверх → вгору як F/Calque.'
+  citations:
+  - ua-gec:F/Calque id=3091
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  severity: enrichment
+  curator: codex-2026-08-03
+  notes: 'Direct reviewed UA-GEC gold pair; this is a standard variant preference, so it is enrichment rather than a Russianism.'
+  frames:
+  - sentence_with_slot: Птах злетів ___.
+    answer_form: вгору
+    calque_form: уверх
+    origin: authored-codex-2026-08-03
+- calqueLabel: стулі
+  calqueSurfaces:
+  - стулі
+  nativeSlug: стільці
+  nativeLemma: стільці
+  kind: lexical
+  corrections:
+  - стільці
+  rationale: 'UA-GEC фіксує стулі → стільці як F/Calque.'
+  citations:
+  - ua-gec:F/Calque id=3106
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  notes: 'Direct reviewed UA-GEC gold pair; frame is project-authored.'
+  frames:
+  - sentence_with_slot: У класі стояли нові ___.
+    answer_form: стільці
+    calque_form: стулі
+    origin: authored-codex-2026-08-03
+- calqueLabel: удалився
+  calqueSurfaces:
+  - удалився
+  nativeSlug: пішов
+  nativeLemma: пішов
+  kind: sense_restricted
+  corrections:
+  - пішов
+  rationale: 'UA-GEC фіксує удалився → пішов як F/Calque.'
+  citations:
+  - ua-gec:F/Calque id=3352
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  severity: russianism
+  curator: codex-2026-08-03
+  calqueSense: залишив приміщення або відійшов (калькований руховий контекст)
+  authenticSense: не оцінюється поза руховим контекстом
+  notes: 'Direct reviewed UA-GEC gold pair, restricted to the left or withdrew sense; standard удався meanings are excluded. Frame is project-authored.'
+  frames:
+  - sentence_with_slot: Він мовчки ___ з кімнати.
+    answer_form: пішов
+    calque_form: удалився
+    origin: authored-codex-2026-08-03
+    disambiguated: true

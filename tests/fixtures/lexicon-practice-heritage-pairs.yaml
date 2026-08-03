@@ -13,6 +13,7 @@ pairs:
       - fixture:heritage
     sourceFamily: fixture
     cefrAvailability: a2
+    severity: enrichment
     frames:
       - sentence_with_slot: Я читаю ___.
         answer_form: книгу
