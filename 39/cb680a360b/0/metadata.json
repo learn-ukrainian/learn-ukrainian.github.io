@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "39cb680a360b",
+  "session_id": "fleet-783f08cb84d5447e8adca46f68959d6a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-03T16:17:58.016851Z",
+  "branch": "agy/homonym-paronym-promote",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/lexicon/srs.ts",
+    "site/tests/setup.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "87876f320b21",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-03T16:17:57.997227Z",
+    "agent_lines": 40,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 40,
+    "total_lines_changed": 41,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
