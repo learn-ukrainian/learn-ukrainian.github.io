@@ -4,11 +4,185 @@
     "issue": 6273,
     "maximum_provider_cost_usd": 6.0,
     "no_volume_remedy_approved_at": "2026-08-02",
-    "no_automatic_paid_retry": true,
+    "no_automatic_paid_retry": false,
+    "incurred_provider_costs": [
+      {
+        "job_id": "6a6fbf1b6b79c09949c1fa46",
+        "mode": "preflight",
+        "provider_derived_cost_usd": 0.000167,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fcc80a00abefd4b28dfb6",
+        "mode": "canary",
+        "provider_billed_minutes": 2,
+        "provider_derived_cost_usd": 0.06,
+        "provider_running_seconds": 61,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fd2686b79c09949c1fb57",
+        "mode": "canary",
+        "provider_billed_minutes": 1,
+        "provider_derived_cost_usd": 0.03,
+        "provider_running_seconds": 53,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fd445a00abefd4b28e088",
+        "mode": "canary",
+        "provider_billed_minutes": 1,
+        "provider_derived_cost_usd": 0.03,
+        "provider_running_seconds": 6,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fd5aa6b79c09949c1fbc9",
+        "mode": "canary",
+        "provider_billed_minutes": 3,
+        "provider_derived_cost_usd": 0.09,
+        "provider_running_seconds": 145,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fd8236b79c09949c1fc35",
+        "mode": "canary",
+        "provider_billed_minutes_upper_bound": 3,
+        "provider_derived_cost_usd": 0.09,
+        "provider_duration_unavailable": true,
+        "stage": "CANCELED"
+      },
+      {
+        "job_id": "6a6fdeaaa00abefd4b28e281",
+        "mode": "canary",
+        "provider_billed_minutes": 4,
+        "provider_derived_cost_usd": 0.12,
+        "provider_running_seconds": 189,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fe1ba6b79c09949c1fe21",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 288,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fe50b6b79c09949c1fe42",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 287,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fe7676b79c09949c1fe54",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 289,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fe9a26b79c09949c1fe68",
+        "mode": "canary",
+        "provider_billed_minutes": 6,
+        "provider_derived_cost_usd": 0.18,
+        "provider_running_seconds": 333,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fed30a00abefd4b28e51c",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 286,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6ff094a00abefd4b28e630",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 278,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6ff31d6b79c09949c2000b",
+        "mode": "canary",
+        "provider_billed_minutes": 6,
+        "provider_derived_cost_usd": 0.18,
+        "provider_running_seconds": 351,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6ffedca00abefd4b28e89d",
+        "mode": "canary",
+        "provider_billed_minutes": 7,
+        "provider_derived_cost_usd": 0.21,
+        "provider_running_seconds": 370,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a7004b06b79c09949c20218",
+        "mode": "canary",
+        "provider_billed_minutes": 6,
+        "provider_derived_cost_usd": 0.18,
+        "provider_running_seconds": 344,
+        "stage": "COMPLETED"
+      },
+      {
+        "job_id": "6a7007246b79c09949c20228",
+        "mode": "full",
+        "provider_billed_minutes": 30,
+        "provider_derived_cost_usd": 0.9,
+        "provider_running_seconds": 1763,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a700e66a00abefd4b28e9b9",
+        "mode": "full",
+        "provider_billed_minutes": 10,
+        "provider_derived_cost_usd": 0.3,
+        "provider_running_seconds": 594,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a7013d96b79c09949c2029b",
+        "mode": "full",
+        "provider_billed_minutes": 7,
+        "provider_derived_cost_usd": 0.21,
+        "provider_running_seconds": 399,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a701872a00abefd4b28ea7f",
+        "mode": "full",
+        "provider_billed_minutes": 14,
+        "provider_derived_cost_usd": 0.42,
+        "provider_running_seconds": 803,
+        "stage": "COMPLETED"
+      }
+    ],
+    "prior_provider_cost_usd": 3.750167,
+    "recoverable_execution_retries_authorized": true,
+    "superseding_authorization_at": "2026-08-03",
+    "validated_cpu_transport": {
+      "accepted_by_operator": true,
+      "all_bundle_hashes_verified": true,
+      "complete_pinned_bundle_downloaded": true,
+      "container_reached_running": true,
+      "fixed_by_merge_commit": "80a6a273aa5619b41f2a9a21ea69c5b253e180b4",
+      "job_id": "6a6fbf1b6b79c09949c1fa46",
+      "provider_derived_cost_usd": 0.000167,
+      "validated_bundle_sha256": "08f74baba27d263331befbfe92da247c015462d95a62e562420176af4f912155"
+    },
     "provider": "Hugging Face Jobs"
   },
   "canary": {
     "case_count": 100,
+    "maximum_cost_usd": 0.6,
     "selection_algorithm": "category-balanced-greedy-track-v1",
     "timeout_seconds": 1200
   },
@@ -54,6 +228,12 @@
     "max_tokens": 160,
     "parse_retries": 2,
     "seed": 0,
+    "structured_outputs": "json_schema",
+    "structured_outputs_backend": "xgrammar",
+    "structured_outputs_disable_any_whitespace": true,
+    "structured_outputs_ignore_eos_until_complete": true,
+    "structured_outputs_max_output_text_chars": 768,
+    "structured_outputs_escape_raw_control_tokens": true,
     "temperature": 0.0,
     "vllm_batch_invariant": true
   },

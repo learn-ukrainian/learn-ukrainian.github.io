@@ -19,6 +19,7 @@ import math
 import os
 import platform
 import re
+import shutil
 import statistics
 import sys
 import tempfile
@@ -33,6 +34,17 @@ RESPONSE_SCHEMA = "ua_open_weight_eval_responses.v1"
 CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
+MAX_OUTPUT_TEXT_CHARS = 768
+JSON_RAW_CONTROL_PATTERN = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]+")
+RESPONSE_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "action": {"type": "string", "enum": ["abstain", "correct", "preserve"]},
+        "output_text": {"type": "string", "maxLength": MAX_OUTPUT_TEXT_CHARS},
+    },
+    "required": ["action", "output_text"],
+    "additionalProperties": False,
+}
 JOB_ID_PATTERN = re.compile(r"[a-f0-9]{20,64}")
 OFFLINE_GENERATION_ENVIRONMENT = {
     "HF_DATASETS_OFFLINE": "1",
@@ -45,6 +57,10 @@ OFFLINE_GENERATION_ENVIRONMENT = {
 
 class WorkerError(ValueError):
     """Raised when the frozen worker contract cannot be satisfied."""
+
+    def __init__(self, message: str, *, private_diagnostic: Mapping[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.private_diagnostic = dict(private_diagnostic) if private_diagnostic is not None else None
 
 
 def _require(condition: bool, message: str) -> None:
@@ -282,7 +298,17 @@ def format_prompt(source: str) -> str:
     )
 
 
+def normalize_model_reply(reply: str) -> str:
+    """Encode raw GGUF C0 bytes as JSON escapes without changing their value."""
+
+    def escape_controls(match: re.Match[str]) -> str:
+        return "".join(f"\\u{ord(character):04x}" for character in match.group())
+
+    return JSON_RAW_CONTROL_PATTERN.sub(escape_controls, reply)
+
+
 def parse_model_reply(reply: str) -> dict[str, str]:
+    reply = normalize_model_reply(reply)
     decoder = json.JSONDecoder()
     candidates: list[Mapping[str, Any]] = []
     for index, character in enumerate(reply):
@@ -313,6 +339,31 @@ def verify_config(config: Mapping[str, Any]) -> None:
     _require(config.get("model", {}).get("multimodal_projector_used") is False, "projector must remain excluded")
     _require(config.get("runner", {}).get("temperature") == 0.0, "temperature drift")
     _require(config.get("runner", {}).get("seed") == 0, "seed drift")
+    _require(
+        config.get("runner", {}).get("structured_outputs") == "json_schema",
+        "structured output contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_backend") == "xgrammar",
+        "structured output backend drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_disable_any_whitespace") is True,
+        "structured output whitespace contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_ignore_eos_until_complete") is True,
+        "structured output EOS contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_max_output_text_chars")
+        == MAX_OUTPUT_TEXT_CHARS,
+        "structured output length contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_escape_raw_control_tokens") is True,
+        "structured output control-token contract drift",
+    )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
 
@@ -385,16 +436,99 @@ def gpu_evidence() -> dict[str, Any]:
     }
 
 
+def prepare_text_runtime_tokenizer(tokenizer_root: Path) -> tuple[Path, str, str]:
+    """Derive a text-only runtime config after the official files verify."""
+    source_config = read_json(tokenizer_root / "config.json")
+    _require(source_config.get("model_type") == "gemma4", "official Gemma 4 config drift")
+    _require(
+        source_config.get("architectures") == ["Gemma4ForConditionalGeneration"],
+        "official Gemma 4 architecture drift",
+    )
+    text_config = source_config.get("text_config")
+    _require(isinstance(text_config, dict), "official Gemma 4 text config is missing")
+    runtime_config = {**text_config, "architectures": ["Gemma4ForCausalLM"]}
+    _require(runtime_config.get("model_type") == "gemma4_text", "Gemma 4 text model type drift")
+    runtime_root = tokenizer_root.parent / "tokenizer-text-runtime"
+    shutil.copytree(tokenizer_root, runtime_root)
+    write_atomic(runtime_root / "config.json", runtime_config)
+    runtime_tokenizer_config = read_json(runtime_root / "tokenizer_config.json")
+    runtime_tokenizer_config["fix_mistral_regex"] = True
+    write_atomic(runtime_root / "tokenizer_config.json", runtime_tokenizer_config)
+    return (
+        runtime_root,
+        sha256_file(runtime_root / "config.json"),
+        sha256_file(runtime_root / "tokenizer_config.json"),
+    )
+
+
+def enable_gemma4_text_gguf_alias() -> str:
+    """Bind the plugin's Gemma 4 GGUF map to Transformers' text config name."""
+    import gguf
+
+    matches = [architecture for architecture, name in gguf.MODEL_ARCH_NAMES.items() if name == "gemma4"]
+    _require(len(matches) == 1, "pinned GGUF library has no unique Gemma 4 architecture")
+    _require("gemma4_text" not in gguf.MODEL_ARCH_NAMES.values(), "Gemma 4 text GGUF alias already exists")
+    architecture = matches[0]
+    gguf.MODEL_ARCH_NAMES[architecture] = "gemma4_text"
+    return f"{getattr(architecture, 'name', architecture)}:gemma4->gemma4_text"
+
+
+def build_sampling_params(
+    runner: Mapping[str, Any],
+    *,
+    sampling_params_type: Callable[..., Any],
+    structured_outputs_type: Callable[..., Any],
+) -> Any:
+    _require(
+        int(runner["structured_outputs_max_output_text_chars"]) == MAX_OUTPUT_TEXT_CHARS,
+        "structured output length contract drift",
+    )
+    return sampling_params_type(
+        temperature=float(runner["temperature"]),
+        seed=int(runner["seed"]),
+        ignore_eos=bool(runner["structured_outputs_ignore_eos_until_complete"]),
+        max_tokens=int(runner["max_tokens"]),
+        structured_outputs=structured_outputs_type(
+            json=RESPONSE_JSON_SCHEMA,
+        ),
+    )
+
+
+def build_llm(
+    *,
+    model_path: Path,
+    tokenizer_root: Path,
+    runner: Mapping[str, Any],
+    llm_type: Callable[..., Any],
+) -> Any:
+    return llm_type(
+        model=str(model_path),
+        tokenizer=str(tokenizer_root),
+        quantization="gguf",
+        seed=int(runner["seed"]),
+        max_model_len=int(runner["max_model_len"]),
+        gpu_memory_utilization=float(runner["gpu_memory_utilization"]),
+        trust_remote_code=False,
+        enforce_eager=True,
+        structured_outputs_config={
+            "backend": str(runner["structured_outputs_backend"]),
+            "disable_any_whitespace": bool(runner["structured_outputs_disable_any_whitespace"]),
+        },
+    )
+
+
 def load_generator(
     *, config: Mapping[str, Any], model_path: Path, tokenizer_root: Path
 ) -> tuple[Callable[[Sequence[str]], list[tuple[str, int]]], dict[str, str], Callable[[str], str]]:
     os.environ.update(OFFLINE_GENERATION_ENVIRONMENT)
     from transformers import AutoTokenizer
     from vllm import LLM, SamplingParams
+    from vllm.sampling_params import StructuredOutputsParams
 
     runtime = config["runtime"]
     runner = config["runner"]
     versions = {
+        "gguf_model_type_alias": enable_gemma4_text_gguf_alias(),
         "transformers": importlib.metadata.version("transformers"),
         "vllm": importlib.metadata.version("vllm"),
         "vllm_gguf_plugin": importlib.metadata.version("vllm-gguf-plugin"),
@@ -404,7 +538,12 @@ def load_generator(
         versions["vllm_gguf_plugin"] == runtime["vllm_gguf_plugin"]["version"],
         "vLLM GGUF plugin version drift",
     )
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_root, local_files_only=True, trust_remote_code=False)
+    tokenizer = AutoTokenizer.from_pretrained(
+        tokenizer_root,
+        local_files_only=True,
+        trust_remote_code=False,
+        fix_mistral_regex=True,
+    )
 
     def render(prompt: str) -> str:
         rendered = tokenizer.apply_chat_template(
@@ -415,20 +554,16 @@ def load_generator(
         _require(isinstance(rendered, str) and rendered, "tokenizer did not render a prompt")
         return rendered
 
-    model = LLM(
-        model=str(model_path),
-        tokenizer=str(tokenizer_root),
-        quantization="gguf",
-        seed=int(runner["seed"]),
-        max_model_len=int(runner["max_model_len"]),
-        gpu_memory_utilization=float(runner["gpu_memory_utilization"]),
-        trust_remote_code=False,
-        enforce_eager=True,
+    model = build_llm(
+        model_path=model_path,
+        tokenizer_root=tokenizer_root,
+        runner=runner,
+        llm_type=LLM,
     )
-    sampling = SamplingParams(
-        temperature=float(runner["temperature"]),
-        seed=int(runner["seed"]),
-        max_tokens=int(runner["max_tokens"]),
+    sampling = build_sampling_params(
+        runner,
+        sampling_params_type=SamplingParams,
+        structured_outputs_type=StructuredOutputsParams,
     )
 
     def generate(prompts: Sequence[str]) -> list[tuple[str, int]]:
@@ -478,7 +613,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     verify_config(config)
     _require(args.mode in {"canary", "full"}, "unsupported run mode")
     _require((args.selection is not None) == (args.mode == "canary"), "selection/mode mismatch")
-    _require(os.environ.get("ACCELERATOR") == "l40sx1", "ACCELERATOR must be l40sx1")
+    _require(
+        os.environ.get("UA_EVAL_HARDWARE_FLAVOR") == "l40sx1",
+        "UA_EVAL_HARDWARE_FLAVOR must be l40sx1",
+    )
     job_id = os.environ.get("JOB_ID", "")
     _require(JOB_ID_PATTERN.fullmatch(job_id) is not None, "missing or invalid Hugging Face Job ID")
     artifact_store = HubArtifactStore(args.artifact_repo, args.artifact_prefix)
@@ -491,11 +629,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     work_root = Path(tempfile.mkdtemp(prefix="ua-open-weight-eval-hf-job-"))
     model_path, tokenizer_manifest, download_seconds = download_and_verify_model(config, work_root)
+    tokenizer_root = Path(tokenizer_manifest.pop("root"))
+    runtime_tokenizer_root, runtime_config_sha256, runtime_tokenizer_config_sha256 = (
+        prepare_text_runtime_tokenizer(tokenizer_root)
+    )
+    tokenizer_manifest["text_runtime_config_sha256"] = runtime_config_sha256
+    tokenizer_manifest["text_runtime_tokenizer_config_sha256"] = runtime_tokenizer_config_sha256
     gpu = gpu_evidence()
     generator, versions, render = load_generator(
         config=config,
         model_path=model_path,
-        tokenizer_root=Path(tokenizer_manifest.pop("root")),
+        tokenizer_root=runtime_tokenizer_root,
     )
     runner_sha256 = sha256_file(Path(__file__).resolve())
     checkpoint_header = {
@@ -510,6 +654,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "repository": config["tokenizer"]["repository"],
             "revision": config["tokenizer"]["revision"],
             "tree_sha256": tokenizer_manifest["tree_sha256"],
+            "text_runtime_config_sha256": tokenizer_manifest["text_runtime_config_sha256"],
+            "text_runtime_tokenizer_config_sha256": tokenizer_manifest[
+                "text_runtime_tokenizer_config_sha256"
+            ],
         },
         "backend": "vllm",
         "versions": versions,
@@ -519,6 +667,21 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "seed": config["runner"]["seed"],
             "max_tokens": config["runner"]["max_tokens"],
             "parse_retries": config["runner"]["parse_retries"],
+            "structured_outputs": config["runner"]["structured_outputs"],
+            "structured_outputs_backend": config["runner"]["structured_outputs_backend"],
+            "structured_outputs_disable_any_whitespace": config["runner"][
+                "structured_outputs_disable_any_whitespace"
+            ],
+            "structured_outputs_ignore_eos_until_complete": config["runner"][
+                "structured_outputs_ignore_eos_until_complete"
+            ],
+            "structured_outputs_max_output_text_chars": config["runner"][
+                "structured_outputs_max_output_text_chars"
+            ],
+            "structured_outputs_escape_raw_control_tokens": config["runner"][
+                "structured_outputs_escape_raw_control_tokens"
+            ],
+            "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },
         "network_during_generation": "private_checkpoint_upload_only",
     }
@@ -551,7 +714,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             request_retry_seconds = 0.0
             current_generation = raw_generation
             current_tokens = token_count
+            private_attempts: list[dict[str, Any]] = []
             for attempt in range(retries + 1):
+                private_attempts.append(
+                    {
+                        "attempt": attempt,
+                        "generated_tokens": current_tokens if attempt == 0 else retry_tokens,
+                        "generation_chars": len(current_generation),
+                        "generation_sha256": sha256_text(current_generation),
+                        "raw_generation": current_generation,
+                    }
+                )
                 try:
                     parsed = parse_model_reply(current_generation)
                     retry_count = attempt
@@ -570,7 +743,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     retry_seconds.append(retry_elapsed)
                     request_retry_seconds += retry_elapsed
                     current_tokens += retry_tokens
-            _require(parsed is not None, f"cannot parse model reply for {request['item_id']}: {last_error}")
+            if parsed is None:
+                raise WorkerError(
+                    f"cannot parse model reply for {request['item_id']}: {last_error}",
+                    private_diagnostic={
+                        "item_id": request["item_id"],
+                        "attempts": private_attempts,
+                    },
+                )
             record = {
                 "item_id": request["item_id"],
                 "request_sha256": request["request_sha256"],
@@ -718,12 +898,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             "error": str(exc),
             "traceback": traceback.format_exc(),
         }
+        if isinstance(exc, WorkerError) and exc.private_diagnostic is not None:
+            failure["private_diagnostic"] = exc.private_diagnostic
         failure_path = args.output_root / "failure.private.json"
         with contextlib.suppress(OSError):
             write_atomic(failure_path, failure)
         with contextlib.suppress(BaseException):
             HubArtifactStore(args.artifact_repo, args.artifact_prefix).upload(failure_path, "failure.private.json")
-        print(canonical_json({key: value for key, value in failure.items() if key != "traceback"}), file=sys.stderr)
+        print(
+            canonical_json(
+                {key: value for key, value in failure.items() if key not in {"traceback", "private_diagnostic"}}
+            ),
+            file=sys.stderr,
+        )
         return 2
     print(canonical_json({"status": result["status"], "mode": result["mode"], "job_id": result["job"]["id"]}))
     return 0

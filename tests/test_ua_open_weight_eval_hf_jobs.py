@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -48,8 +49,26 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_hour"] == 1.8
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
-    assert config["authorization"]["no_automatic_paid_retry"] is True
+    assert config["canary"]["maximum_cost_usd"] == 0.6
+    assert config["authorization"]["prior_provider_cost_usd"] == 3.750167
+    assert config["authorization"]["incurred_provider_costs"][-1] == {
+        "job_id": "6a701872a00abefd4b28ea7f",
+        "mode": "full",
+        "provider_billed_minutes": 14,
+        "provider_derived_cost_usd": 0.42,
+        "provider_running_seconds": 803,
+        "stage": "COMPLETED",
+    }
+    assert config["authorization"]["recoverable_execution_retries_authorized"] is True
+    assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
+    assert config["authorization"]["no_automatic_paid_retry"] is False
     assert config["runner"]["checkpoint_upload_every_cases"] == 25
+    assert config["runner"]["structured_outputs"] == "json_schema"
+    assert config["runner"]["structured_outputs_backend"] == "xgrammar"
+    assert config["runner"]["structured_outputs_disable_any_whitespace"] is True
+    assert config["runner"]["structured_outputs_ignore_eos_until_complete"] is True
+    assert config["runner"]["structured_outputs_max_output_text_chars"] == 768
+    assert config["runner"]["structured_outputs_escape_raw_control_tokens"] is True
     assert config["transport"] == {
         "cpu_preflight": {
             "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
@@ -91,8 +110,82 @@ def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
     assert hf_jobs_worker.format_prompt(source) == run_mlx_model.format_prompt(source)
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
     assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
+    expected = run_mlx_model.parse_model_reply(reply)
+    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x00" + reply[-2:]) == {
+        **expected,
+        "output_text": expected["output_text"] + "\x00",
+    }
+    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x01" + reply[-2:]) == {
+        **expected,
+        "output_text": expected["output_text"] + "\x01",
+    }
+    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x06\x15" + reply[-2:] + "</thead>") == {
+        **expected,
+        "output_text": expected["output_text"] + "\x06\x15",
+    }
+    assert hf_jobs_worker.parse_model_reply(
+        reply[:-2] + "\x00\x01\u04c0\u05ea" + reply[-2:] + "</thead>"
+    ) == {
+        **expected,
+        "output_text": expected["output_text"] + "\x00\x01\u04c0\u05ea",
+    }
+    assert hf_jobs_worker.parse_model_reply(reply.replace("Текст", "Те\x00кст")) == {
+        **expected,
+        "output_text": expected["output_text"].replace("Текст", "Те\x00кст"),
+    }
     with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
         hf_jobs_worker.parse_model_reply(reply + " " + reply)
+
+
+def test_worker_structured_output_schema_keeps_the_strict_response_contract() -> None:
+    schema = hf_jobs_worker.RESPONSE_JSON_SCHEMA
+    frozen_sources = [str(case["source"]) for case in suite_cli.read_jsonl(suite_cli.CASES_PATH)]
+    assert max(map(len, frozen_sources)) == 703
+    assert max(map(len, frozen_sources)) < hf_jobs_worker.MAX_OUTPUT_TEXT_CHARS
+    assert schema == {
+        "type": "object",
+        "properties": {
+            "action": {"type": "string", "enum": ["abstain", "correct", "preserve"]},
+            "output_text": {"type": "string", "maxLength": 768},
+        },
+        "required": ["action", "output_text"],
+        "additionalProperties": False,
+    }
+    assert set(schema["properties"]["action"]["enum"]) == hf_jobs_worker.ALLOWED_ACTIONS
+
+    class Capture:
+        def __init__(self, **kwargs: object) -> None:
+            self.kwargs = kwargs
+
+    config = hf_jobs_baseline.load_config()
+    sampling = hf_jobs_worker.build_sampling_params(
+        config["runner"], sampling_params_type=Capture, structured_outputs_type=Capture
+    )
+    assert sampling.kwargs["temperature"] == 0.0
+    assert sampling.kwargs["seed"] == 0
+    assert sampling.kwargs["ignore_eos"] is True
+    assert sampling.kwargs["max_tokens"] == 160
+    structured = sampling.kwargs["structured_outputs"]
+    assert isinstance(structured, Capture)
+    assert structured.kwargs == {"json": schema}
+
+    model = hf_jobs_worker.build_llm(
+        model_path=Path("/verified/model.gguf"),
+        tokenizer_root=Path("/verified/tokenizer"),
+        runner=config["runner"],
+        llm_type=Capture,
+    )
+    assert model.kwargs["structured_outputs_config"] == {
+        "backend": "xgrammar",
+        "disable_any_whitespace": True,
+    }
+
+
+def test_worker_error_keeps_raw_diagnostics_private() -> None:
+    diagnostic = {"item_id": "uaw-request-0001", "attempts": [{"raw_generation": "private"}]}
+    error = hf_jobs_worker.WorkerError("parse failed", private_diagnostic=diagnostic)
+    assert str(error) == "parse failed"
+    assert error.private_diagnostic == diagnostic
 
 
 def test_worker_source_packet_and_selection_stay_gold_blind(tmp_path: Path) -> None:
@@ -134,6 +227,50 @@ def test_tokenizer_verifier_checks_git_blobs_and_lfs_hashes(tmp_path: Path) -> N
         hf_jobs_worker.verify_tokenizer_files(tmp_path, config)
 
 
+def test_text_runtime_config_is_derived_after_verification_without_mutating_source(tmp_path: Path) -> None:
+    tokenizer = tmp_path / "tokenizer"
+    tokenizer.mkdir()
+    source_config = {
+        "architectures": ["Gemma4ForConditionalGeneration"],
+        "model_type": "gemma4",
+        "text_config": {
+            "dtype": "bfloat16",
+            "model_type": "gemma4_text",
+            "num_hidden_layers": 60,
+        },
+        "vision_config": {"model_type": "gemma4_vision"},
+    }
+    (tokenizer / "config.json").write_text(json.dumps(source_config), encoding="utf-8")
+    (tokenizer / "tokenizer_config.json").write_text(
+        json.dumps({"tokenizer_class": "GemmaTokenizer"}), encoding="utf-8"
+    )
+    (tokenizer / "tokenizer.json").write_text("{}", encoding="utf-8")
+    runtime_root, runtime_hash, runtime_tokenizer_hash = hf_jobs_worker.prepare_text_runtime_tokenizer(tokenizer)
+    assert json.loads((tokenizer / "config.json").read_text(encoding="utf-8")) == source_config
+    runtime_config = json.loads((runtime_root / "config.json").read_text(encoding="utf-8"))
+    assert runtime_config == {
+        "architectures": ["Gemma4ForCausalLM"],
+        "dtype": "bfloat16",
+        "model_type": "gemma4_text",
+        "num_hidden_layers": 60,
+    }
+    assert "vision_config" not in runtime_config
+    assert runtime_hash == hf_jobs_worker.sha256_file(runtime_root / "config.json")
+    runtime_tokenizer_config = json.loads((runtime_root / "tokenizer_config.json").read_text(encoding="utf-8"))
+    assert runtime_tokenizer_config["fix_mistral_regex"] is True
+    assert runtime_tokenizer_hash == hf_jobs_worker.sha256_file(runtime_root / "tokenizer_config.json")
+
+
+def test_gemma4_text_runtime_uses_the_pinned_gguf_architecture_alias(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    gguf = SimpleNamespace(MODEL_ARCH_NAMES={"GEMMA4": "gemma4"})
+    monkeypatch.setitem(sys.modules, "gguf", gguf)
+    receipt = hf_jobs_worker.enable_gemma4_text_gguf_alias()
+    assert gguf.MODEL_ARCH_NAMES["GEMMA4"] == "gemma4_text"
+    assert receipt == "GEMMA4:gemma4->gemma4_text"
+
+
 def test_job_commands_use_hash_first_private_transport_without_volumes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -145,6 +282,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     manifest = {
         "bundle_sha256": "b" * 64,
         "requests_sha256": "r" * 64,
+        "source_commit": "d" * 40,
     }
     preflight_gate = {
         "schema_version": "ua_open_weight_eval_hf_jobs_canary_gate.v1",
@@ -174,7 +312,8 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert "operator/ua-open-weight-eval-staging-6273" in joined
     assert "--secrets HF_TOKEN" in joined
     assert "HF_TOKEN=" not in joined
-    assert "--env ACCELERATOR=l40sx1" in joined
+    assert "--env UA_EVAL_HARDWARE_FLAVOR=l40sx1" in joined
+    assert "--env ACCELERATOR=" not in joined
     assert "--volume" not in command
     assert "-v" not in command
     assert "hf://buckets/" not in joined
@@ -186,6 +325,10 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         f"{config['runtime']['container_image']}@{config['runtime']['container_amd64_digest']}"
     )
     assert command[separator + 2 : separator + 4] == ["sh", "-lc"]
+    shell_command = command[separator + 4]
+    assert "python3 -c" in shell_command
+    assert " python -c" not in shell_command
+    assert "os.execvp('python3',['python3'" in hf_jobs_baseline._bootstrap_source()
     tampered_gate = {**preflight_gate, "preflight_cost_usd": 0.002}
     with pytest.raises(hf_jobs_baseline.BaselineError, match="gate SHA-256 drift"):
         hf_jobs_baseline.job_command(
@@ -216,7 +359,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
     assert config["transport"]["cpu_preflight"]["container_amd64_digest"] in preflight_joined
     assert "--volume" not in preflight
     assert "--secrets HF_TOKEN" in preflight_joined
-    assert "ACCELERATOR=" not in preflight_joined
+    assert "UA_EVAL_HARDWARE_FLAVOR=" not in preflight_joined
     with pytest.raises(hf_jobs_baseline.BaselineError, match="passed CPU preflight gate"):
         hf_jobs_baseline.job_command(
             mode="canary",
@@ -242,7 +385,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         )
 
 
-def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
+def test_launch_preview_is_free_but_execute_requires_reconciliation_before_retry(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
@@ -259,7 +402,7 @@ def test_launch_preview_is_free_but_execute_prevents_any_second_attempt(
     )
     launched = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
     assert launched["status"] == "launched"
-    with pytest.raises(hf_jobs_baseline.BaselineError, match="automatic retry is prohibited"):
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="reconcile before retry"):
         hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
 
 
@@ -307,6 +450,31 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
     monkeypatch.setenv("ACCELERATOR", "l40sx1")
     with pytest.raises(hf_jobs_transport.TransportError, match="GPU accelerator"):
         hf_jobs_transport.run_preflight(args, files)
+
+
+def test_transport_spawns_gpu_worker_with_available_python3(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = hf_jobs_baseline.load_config()
+    (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str], *, check: bool) -> subprocess.CompletedProcess:
+        assert check is False
+        calls.append(command)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(hf_jobs_transport.subprocess, "run", fake_run)
+    args = SimpleNamespace(
+        mode="canary",
+        requests_sha256="r" * 64,
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        artifact_prefix="artifacts/bundle/canary",
+    )
+    assert hf_jobs_transport.run_worker(args, tmp_path) == 0
+    assert calls[0][:4] == ["uv", "pip", "install", "--system"]
+    assert calls[1][0] == "python3"
+    assert calls[1][1] == str(tmp_path / "hf_jobs_worker.py")
 
 
 def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
@@ -402,6 +570,7 @@ def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds
 
 def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
     config = hf_jobs_baseline.load_config()
+    config["authorization"]["prior_provider_cost_usd"] = 1.740167
     worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
     worker["timing"]["current_generation_seconds"] = 60.0
     passed = hf_jobs_baseline.project_full_run(
@@ -426,6 +595,7 @@ def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
 
 def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     config = hf_jobs_baseline.load_config()
+    config["authorization"]["prior_provider_cost_usd"] = 1.740167
     worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
     projection = hf_jobs_baseline.project_full_run(
         worker_receipt=worker,
@@ -585,6 +755,103 @@ def test_cpu_preflight_reconciliation_rounds_billing_by_started_minute() -> None
         )
 
 
+def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundle() -> None:
+    config = hf_jobs_baseline.load_config()
+    manifest = {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, "source_commit": "d" * 40}
+    gate = hf_jobs_baseline.operator_gate_gpu_canary(
+        bundle_manifest=manifest,
+        repo_id="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        config=config,
+    )
+    assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
+    assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
+    assert gate["accepted_preflight_cost_usd"] == 0.000167
+    assert gate["prior_provider_cost_usd"] == 3.750167
+    assert gate["incurred_provider_job_ids"] == [
+        "6a6fbf1b6b79c09949c1fa46",
+        "6a6fcc80a00abefd4b28dfb6",
+        "6a6fd2686b79c09949c1fb57",
+        "6a6fd445a00abefd4b28e088",
+        "6a6fd5aa6b79c09949c1fbc9",
+        "6a6fd8236b79c09949c1fc35",
+        "6a6fdeaaa00abefd4b28e281",
+        "6a6fe1ba6b79c09949c1fe21",
+        "6a6fe50b6b79c09949c1fe42",
+        "6a6fe7676b79c09949c1fe54",
+        "6a6fe9a26b79c09949c1fe68",
+        "6a6fed30a00abefd4b28e51c",
+        "6a6ff094a00abefd4b28e630",
+        "6a6ff31d6b79c09949c2000b",
+        "6a6ffedca00abefd4b28e89d",
+        "6a7004b06b79c09949c20218",
+        "6a7007246b79c09949c20228",
+        "6a700e66a00abefd4b28e9b9",
+        "6a7013d96b79c09949c2029b",
+        "6a701872a00abefd4b28ea7f",
+    ]
+    assert gate["bundle_sha256"] == "b" * 64
+    assert gate["bundle_source_commit"] == "d" * 40
+    assert gate["accepted_cpu_fix_merge_commit"] == "80a6a273aa5619b41f2a9a21ea69c5b253e180b4"
+    assert gate["transport_revision"] == "c" * 40
+    assert gate["bindings"] == {
+        "cases_sha256": config["suite"]["cases_sha256"],
+        "model_revision": config["model"]["revision"],
+        "model_sha256": config["model"]["artifact_sha256"],
+        "hardware_flavor": "l40sx1",
+        "mounted_volumes": 0,
+    }
+    unsigned = {key: value for key, value in gate.items() if key != "gate_sha256"}
+    assert gate["gate_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
+
+
+def test_job_command_accepts_only_untampered_operator_canary_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = hf_jobs_baseline.load_config()
+    manifest = {"bundle_sha256": "b" * 64, "requests_sha256": "r" * 64, "source_commit": "d" * 40}
+    gate = hf_jobs_baseline.operator_gate_gpu_canary(
+        bundle_manifest=manifest,
+        repo_id="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        config=config,
+    )
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    hf_cli = tmp_path / "hf"
+    _write_fake_hf_cli(hf_cli)
+    monkeypatch.setattr(hf_jobs_baseline, "verify_bundle", lambda _: manifest)
+    monkeypatch.setattr(hf_jobs_baseline, "load_config", lambda *args, **kwargs: config)
+    command = hf_jobs_baseline.job_command(
+        mode="canary",
+        namespace="operator",
+        bundle=bundle,
+        transport_repo="operator/ua-open-weight-eval-staging-6273",
+        transport_revision="c" * 40,
+        transport_prefix=f"bundles/{'b' * 64}",
+        hf_cli=hf_cli,
+        timeout_seconds=1200,
+        preflight_gate=gate,
+    )
+    assert "--flavor l40sx1" in " ".join(command)
+    tampered = {**gate, "bundle_source_commit": "e" * 40}
+    tampered["gate_sha256"] = hf_jobs_baseline.sha256_text(
+        hf_jobs_baseline.canonical_json({key: value for key, value in tampered.items() if key != "gate_sha256"})
+    )
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="source provenance drift"):
+        hf_jobs_baseline.job_command(
+            mode="canary",
+            namespace="operator",
+            bundle=bundle,
+            transport_repo="operator/ua-open-weight-eval-staging-6273",
+            transport_revision="c" * 40,
+            transport_prefix=f"bundles/{'b' * 64}",
+            hf_cli=hf_cli,
+            timeout_seconds=1200,
+            preflight_gate=tampered,
+        )
+
+
 def _complete_responses(config: dict) -> list[dict]:
     cases = suite_cli.read_jsonl(suite_cli.CASES_PATH)
     rows = [
@@ -677,6 +944,13 @@ def test_results_package_includes_complete_responses_but_not_private_generations
     assert public_receipt["environment"]["launch_client"] == {
         "name": "huggingface_hub",
         "version": "1.25.1",
+    }
+    assert public_receipt["provider_phase"] == {
+        "aggregate_provider_cost_usd": 3.750167,
+        "maximum_provider_cost_usd": 6.0,
+        "remaining_provider_budget_usd": 2.249833,
+        "job_count": 20,
+        "jobs": config["authorization"]["incurred_provider_costs"],
     }
     assert {path.name for path in output.iterdir()} == hf_jobs_baseline.PUBLIC_FILES
     published = suite_cli.read_jsonl(output / "responses.jsonl")

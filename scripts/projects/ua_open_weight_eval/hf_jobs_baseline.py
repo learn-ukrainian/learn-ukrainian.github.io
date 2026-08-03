@@ -77,6 +77,19 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def source_commit() -> str:
+    completed = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    commit = completed.stdout.strip()
+    _require(completed.returncode == 0 and re.fullmatch(r"[a-f0-9]{40}", commit) is not None, "source commit drift")
+    return commit
+
+
 def write_atomic(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.tmp")
@@ -99,9 +112,60 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     hf_jobs_worker.verify_config(config)
     _require(config["authorization"]["issue"] == 6273, "authorization issue drift")
     _require(config["authorization"]["maximum_provider_cost_usd"] == 6.0, "cost ceiling drift")
-    _require(config["authorization"]["no_automatic_paid_retry"] is True, "retry policy drift")
+    authorization = config["authorization"]
+    _require(authorization["no_automatic_paid_retry"] is False, "retry policy drift")
+    _require(authorization["recoverable_execution_retries_authorized"] is True, "retry authorization drift")
+    prior_cost = float(authorization["prior_provider_cost_usd"])
+    _require(0 <= prior_cost < authorization["maximum_provider_cost_usd"], "prior provider cost drift")
+    incurred_costs = authorization["incurred_provider_costs"]
+    _require(isinstance(incurred_costs, list) and incurred_costs, "incurred provider cost ledger drift")
+    _require(
+        len({entry.get("job_id") for entry in incurred_costs}) == len(incurred_costs)
+        and all(
+            isinstance(entry, dict)
+            and JOB_ID_PATTERN.fullmatch(str(entry.get("job_id", ""))) is not None
+            and entry.get("stage") in {"COMPLETED", "ERROR", "CANCELED"}
+            and float(entry.get("provider_derived_cost_usd", -1)) >= 0
+            for entry in incurred_costs
+        ),
+        "incurred provider cost ledger entry drift",
+    )
+    _require(
+        round(sum(float(entry["provider_derived_cost_usd"]) for entry in incurred_costs), 6)
+        == round(prior_cost, 6),
+        "incurred provider costs do not match prior provider cost",
+    )
+    cpu_validation = authorization["validated_cpu_transport"]
+    _require(cpu_validation["accepted_by_operator"] is True, "CPU transport acceptance drift")
+    _require(JOB_ID_PATTERN.fullmatch(cpu_validation["job_id"]) is not None, "CPU transport job ID drift")
+    _require(
+        cpu_validation["container_reached_running"] is True
+        and cpu_validation["complete_pinned_bundle_downloaded"] is True
+        and cpu_validation["all_bundle_hashes_verified"] is True,
+        "CPU transport evidence drift",
+    )
+    cpu_cost_entries = [entry for entry in incurred_costs if entry["job_id"] == cpu_validation["job_id"]]
+    _require(len(cpu_cost_entries) == 1, "CPU transport cost is missing from incurred provider cost ledger")
+    _require(
+        float(cpu_validation["provider_derived_cost_usd"])
+        == float(cpu_cost_entries[0]["provider_derived_cost_usd"]),
+        "CPU transport cost does not match incurred provider cost ledger",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{64}", cpu_validation["validated_bundle_sha256"]) is not None,
+        "validated CPU bundle digest drift",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", cpu_validation["fixed_by_merge_commit"]) is not None,
+        "CPU transport fix commit drift",
+    )
     preflight = config["transport"]["cpu_preflight"]
     _require(config["transport"]["mounted_volumes"] == 0, "volume transport is prohibited")
+    _require(
+        config["canary"]["timeout_seconds"] / 60 * config["pricing"]["usd_per_minute"]
+        <= config["canary"]["maximum_cost_usd"] == 0.6,
+        "canary timeout exceeds its cost ceiling",
+    )
     _require(preflight["flavor"] == "cpu-basic" and preflight["timeout_seconds"] == 300, "CPU preflight drift")
     _require(preflight["maximum_cost_usd"] == 0.001, "CPU preflight cost ceiling drift")
     _require(
@@ -203,6 +267,7 @@ def prepare_bundle(output_dir: Path, *, plugin_wheel: Path | None = None) -> dic
         "files": files,
         "requests_sha256": sha256_file(requests),
         "selection_sha256": selection["selection_sha256"],
+        "source_commit": source_commit(),
         "config_sha256": sha256_file(output_dir / "run_config.json"),
         "transport_sha256": sha256_file(output_dir / "hf_jobs_transport.py"),
         "worker_sha256": sha256_file(output_dir / "hf_jobs_worker.py"),
@@ -217,6 +282,7 @@ def verify_bundle(bundle: Path) -> dict[str, Any]:
     config = load_config(bundle / "run_config.json")
     manifest = read_json(bundle / "BUNDLE_MANIFEST.json")
     _require(manifest.get("schema_version") == "ua_open_weight_eval_hf_jobs_bundle.v1", "bundle schema drift")
+    _require(re.fullmatch(r"[a-f0-9]{40}", str(manifest.get("source_commit", ""))) is not None, "bundle source commit drift")
     expected = {
         "BUNDLE_MANIFEST.json",
         "canary_selection.json",
@@ -414,6 +480,58 @@ def gate_gpu_canary(
     return payload
 
 
+def operator_gate_gpu_canary(
+    *, bundle_manifest: Mapping[str, Any], repo_id: str, transport_revision: str, config: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Bind the operator's superseding CPU-transport acceptance to an exact GPU bundle."""
+    _require(re.fullmatch(r"[a-f0-9]{40}", transport_revision) is not None, "transport revision must be immutable")
+    _require(
+        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/ua-open-weight-eval-staging-6273", repo_id) is not None,
+        "invalid staging repository",
+    )
+    authorization = config["authorization"]
+    validation = authorization["validated_cpu_transport"]
+    _require(validation["accepted_by_operator"] is True, "operator did not accept CPU transport validation")
+    _require(
+        validation["container_reached_running"] is True
+        and validation["complete_pinned_bundle_downloaded"] is True
+        and validation["all_bundle_hashes_verified"] is True,
+        "accepted CPU transport evidence is incomplete",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", validation["fixed_by_merge_commit"]) is not None,
+        "accepted CPU transport fix commit drift",
+    )
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", str(bundle_manifest.get("source_commit", ""))) is not None,
+        "GPU bundle source commit drift",
+    )
+    payload = {
+        "schema_version": "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1",
+        "status": "passed",
+        "authorization_source": f"operator_supersession_{authorization['superseding_authorization_at']}",
+        "accepted_preflight_job_id": validation["job_id"],
+        "accepted_preflight_cost_usd": validation["provider_derived_cost_usd"],
+        "prior_provider_cost_usd": authorization["prior_provider_cost_usd"],
+        "incurred_provider_job_ids": [entry["job_id"] for entry in authorization["incurred_provider_costs"]],
+        "validated_cpu_bundle_sha256": validation["validated_bundle_sha256"],
+        "accepted_cpu_fix_merge_commit": validation["fixed_by_merge_commit"],
+        "bundle_sha256": bundle_manifest["bundle_sha256"],
+        "bundle_source_commit": bundle_manifest["source_commit"],
+        "transport_repository": repo_id,
+        "transport_revision": transport_revision,
+        "bindings": {
+            "cases_sha256": config["suite"]["cases_sha256"],
+            "model_revision": config["model"]["revision"],
+            "model_sha256": config["model"]["artifact_sha256"],
+            "hardware_flavor": config["hardware"]["flavor"],
+            "mounted_volumes": config["transport"]["mounted_volumes"],
+        },
+    }
+    payload["gate_sha256"] = sha256_text(canonical_json(payload))
+    return payload
+
+
 def _bootstrap_source() -> str:
     return """import argparse,hashlib,json,os,sys
 from pathlib import Path
@@ -436,7 +554,7 @@ assert m.get('bundle_sha256')==a.bundle_sha256==hashlib.sha256(json.dumps(u,ensu
 r=next(x for x in m['files'] if x['path']=='hf_jobs_transport.py')
 tp=Path(hf_hub_download(repo_id=a.transport_repo,repo_type='dataset',revision=a.transport_revision,filename=f'{a.transport_prefix}/hf_jobs_transport.py',token=True))
 assert tp.stat().st_size==r['bytes'] and hashlib.sha256(tp.read_bytes()).hexdigest()==r['sha256']
-os.execvp('python',['python',str(tp),*sys.argv[1:]])
+os.execvp('python3',['python3',str(tp),*sys.argv[1:]])
 """
 
 
@@ -500,14 +618,48 @@ def job_command(
             _require(projection is None, "canary launch must not accept a full-run projection")
             _require(timeout_seconds == config["canary"]["timeout_seconds"], "canary timeout drift")
             _require(isinstance(preflight_gate, Mapping), "canary launch requires a passed CPU preflight gate")
+            gate_schema = preflight_gate.get("schema_version")
             _require(
-                preflight_gate.get("schema_version") == "ua_open_weight_eval_hf_jobs_canary_gate.v1"
+                gate_schema
+                in {
+                    "ua_open_weight_eval_hf_jobs_canary_gate.v1",
+                    "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1",
+                }
                 and preflight_gate.get("status") == "passed",
-                "canary launch requires a passed CPU preflight gate",
+                "canary launch requires a passed CPU transport gate",
             )
             _require(preflight_gate.get("bundle_sha256") == manifest["bundle_sha256"], "canary gate bundle drift")
             _require(preflight_gate.get("transport_repository") == transport_repo, "canary gate repository drift")
             _require(preflight_gate.get("transport_revision") == transport_revision, "canary gate revision drift")
+            if gate_schema == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1":
+                expected_bindings = {
+                    "cases_sha256": config["suite"]["cases_sha256"],
+                    "model_revision": config["model"]["revision"],
+                    "model_sha256": config["model"]["artifact_sha256"],
+                    "hardware_flavor": config["hardware"]["flavor"],
+                    "mounted_volumes": config["transport"]["mounted_volumes"],
+                }
+                _require(preflight_gate.get("bindings") == expected_bindings, "operator canary gate binding drift")
+                validation = config["authorization"]["validated_cpu_transport"]
+                _require(
+                    preflight_gate.get("accepted_preflight_job_id") == validation["job_id"]
+                    and float(preflight_gate.get("accepted_preflight_cost_usd", math.inf))
+                    == float(validation["provider_derived_cost_usd"])
+                    and preflight_gate.get("validated_cpu_bundle_sha256") == validation["validated_bundle_sha256"],
+                    "operator canary gate CPU evidence drift",
+                )
+                _require(
+                    float(preflight_gate.get("prior_provider_cost_usd", math.inf))
+                    == float(config["authorization"]["prior_provider_cost_usd"])
+                    and preflight_gate.get("incurred_provider_job_ids")
+                    == [entry["job_id"] for entry in config["authorization"]["incurred_provider_costs"]],
+                    "operator canary gate cumulative cost evidence drift",
+                )
+                _require(
+                    preflight_gate.get("accepted_cpu_fix_merge_commit") == validation["fixed_by_merge_commit"]
+                    and preflight_gate.get("bundle_source_commit") == manifest["source_commit"],
+                    "operator canary gate source provenance drift",
+                )
             gate_sha256 = preflight_gate.get("gate_sha256")
             unsigned_gate = {key: value for key, value in preflight_gate.items() if key != "gate_sha256"}
             _require(
@@ -556,7 +708,7 @@ def job_command(
     ]
     if mode in RUN_MODES:
         transport_args.extend(["--requests-sha256", manifest["requests_sha256"]])
-    bootstrap = shlex.join(["python", "-c", _bootstrap_source(), *transport_args])
+    bootstrap = shlex.join(["python3", "-c", _bootstrap_source(), *transport_args])
     shell_command = f"{installer} huggingface_hub=={config['runtime']['huggingface_hub_cli_version']} && {bootstrap}"
     labels = {
         "bundle_sha256": manifest["bundle_sha256"],
@@ -581,7 +733,7 @@ def job_command(
     if mode in RUN_MODES:
         command.extend(
             [
-                "--env", "ACCELERATOR=l40sx1",
+                "--env", "UA_EVAL_HARDWARE_FLAVOR=l40sx1",
                 "--env", "VLLM_BATCH_INVARIANT=1",
                 "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0",
             ]
@@ -603,7 +755,7 @@ def launch_once(
         state = {"schema_version": "ua_open_weight_eval_hf_jobs_launch_state.v1", "runs": {}}
     runs = state.get("runs")
     _require(isinstance(runs, dict), "launch state drift")
-    _require(mode not in runs, f"{mode} already has a launch attempt; automatic retry is prohibited")
+    _require(mode not in runs, f"{mode} already has a launch attempt in this state; reconcile before retry")
     intent = {
         "status": "prepared",
         "command_sha256": sha256_text(canonical_json(list(command))),
@@ -616,9 +768,9 @@ def launch_once(
     completed = subprocess.run(command, check=False, capture_output=True, text=True)
     intent["launch_returncode"] = completed.returncode
     if completed.returncode != 0:
-        intent["status"] = "launch_response_failed_no_retry"
+        intent["status"] = "launch_response_failed_reconcile_required"
         write_atomic(state_path, state)
-        raise BaselineError("HF Jobs launch returned an error; state was preserved and no retry is allowed")
+        raise BaselineError("HF Jobs launch returned an error; reconcile provider state before retry")
     output = completed.stdout.strip()
     direct_match = JOB_ID_PATTERN.fullmatch(output)
     labelled_match = re.search(r"(?:^|\s)id[=:]\s*([a-f0-9]{20,64})(?:\s|$)", output)
@@ -626,7 +778,7 @@ def launch_once(
     if job_id is None and labelled_match is not None:
         job_id = labelled_match.group(1)
     if job_id is None:
-        intent["status"] = "launch_response_unparseable_no_retry"
+        intent["status"] = "launch_response_unparseable_reconcile_required"
         write_atomic(state_path, state)
         raise BaselineError("HF Jobs launch response has no parseable job ID; reconcile by labels before any retry")
     _require(isinstance(job_id, str) and JOB_ID_PATTERN.fullmatch(job_id) is not None, "launch response has no job ID")
@@ -680,6 +832,9 @@ def reconcile_provider_inspection(
     if mode == "preflight":
         hourly_price = float(config["transport"]["cpu_preflight"]["usd_per_hour"])
         maximum_cost = float(config["transport"]["cpu_preflight"]["maximum_cost_usd"])
+    elif mode == "canary":
+        hourly_price = float(config["pricing"]["usd_per_hour"])
+        maximum_cost = float(config["canary"]["maximum_cost_usd"])
     else:
         hourly_price = float(config["pricing"]["usd_per_hour"])
         maximum_cost = float(config["authorization"]["maximum_provider_cost_usd"])
@@ -736,7 +891,8 @@ def project_full_run(
     projected_full_cost = math.ceil(buffered_full_seconds / 60) * price_per_minute
     canary_cost = float(provider_receipt["provider_derived_cost_usd"])
     maximum = float(config["authorization"]["maximum_provider_cost_usd"])
-    remaining = round(maximum - canary_cost, 6)
+    prior_cost = float(config["authorization"]["prior_provider_cost_usd"])
+    remaining = round(maximum - prior_cost - canary_cost, 6)
     maximum_full_minutes = math.floor(remaining / price_per_minute)
     maximum_full_timeout_seconds = maximum_full_minutes * 60
     passed = projected_full_cost <= remaining and buffered_full_seconds <= maximum_full_timeout_seconds
@@ -768,9 +924,10 @@ def project_full_run(
         },
         "authorization": {
             "maximum_total_cost_usd": maximum,
+            "prior_provider_cost_usd": prior_cost,
             "remaining_after_canary_usd": remaining,
             "maximum_full_timeout_seconds": maximum_full_timeout_seconds,
-            "combined_projected_cost_usd": round(canary_cost + projected_full_cost, 6),
+            "combined_projected_cost_usd": round(prior_cost + canary_cost + projected_full_cost, 6),
         },
     }
 
@@ -799,7 +956,7 @@ def _results_card(config: Mapping[str, Any], public_receipt: Mapping[str, Any]) 
     }
     header = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False).strip()
     model = config["model"]
-    cost = public_receipt["provider_job"]["provider_derived_cost_usd"]
+    cost = public_receipt["provider_phase"]["aggregate_provider_cost_usd"]
     return f"""---
 {header}
 ---
@@ -817,9 +974,10 @@ every Gemma 4 format, quantization, deployment, or Ukrainian capability. The
 4,000 wrapped cases are not 4,000 independent human linguistic judgments. No
 single “Ukrainian quality” score is produced.
 
-Provider-derived execution cost: USD {cost:.6f}. See
+Aggregate provider-derived phase cost: USD {cost:.6f}. See
 `run_receipt.public.json` for the immutable model, tokenizer, runner, hardware,
-decoding, timing, throughput, and cost bindings.
+decoding, timing, throughput, final-job receipt, and complete sanitized cost
+ledger.
 
 ## Reproduction (English)
 
@@ -872,6 +1030,16 @@ def package_results(
     report = suite_cli.score_saved(output_dir / "responses.jsonl", report_path)
     metrics_rows = _metrics_rows(report)
     write_atomic(output_dir / "metrics.jsonl", "".join(canonical_json(row) + "\n" for row in metrics_rows))
+    authorization = config["authorization"]
+    aggregate_cost = float(authorization["prior_provider_cost_usd"])
+    maximum_cost = float(authorization["maximum_provider_cost_usd"])
+    provider_phase = {
+        "aggregate_provider_cost_usd": aggregate_cost,
+        "maximum_provider_cost_usd": maximum_cost,
+        "remaining_provider_budget_usd": round(maximum_cost - aggregate_cost, 6),
+        "job_count": len(authorization["incurred_provider_costs"]),
+        "jobs": authorization["incurred_provider_costs"],
+    }
     public_receipt = {
         "schema_version": "ua_open_weight_eval_public_run_receipt.v1",
         "release": {
@@ -894,6 +1062,7 @@ def package_results(
         "timing": worker_receipt["timing"],
         "throughput": worker_receipt["throughput"],
         "provider_job": provider_receipt,
+        "provider_phase": provider_phase,
         "outputs": {
             "response_count": 4000,
             "responses_sha256": sha256_file(output_dir / "responses.jsonl"),
@@ -1019,6 +1188,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     gate_canary.add_argument("--bundle", type=Path, required=True)
     gate_canary.add_argument("--repo", required=True)
     gate_canary.add_argument("--output", type=Path, required=True)
+    operator_gate = commands.add_parser("operator-gate-canary")
+    operator_gate.add_argument("--bundle", type=Path, required=True)
+    operator_gate.add_argument("--repo", required=True)
+    operator_gate.add_argument("--transport-revision", required=True)
+    operator_gate.add_argument("--output", type=Path, required=True)
     launch = commands.add_parser("launch")
     launch.add_argument("--mode", choices=sorted(LAUNCH_MODES), required=True)
     launch.add_argument("--namespace", required=True)
@@ -1077,6 +1251,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 provider_receipt=read_json(args.provider_receipt),
                 bundle_manifest=verify_bundle(args.bundle),
                 repo_id=args.repo,
+            )
+            write_atomic(args.output, result)
+        elif args.command == "operator-gate-canary":
+            result = operator_gate_gpu_canary(
+                bundle_manifest=verify_bundle(args.bundle),
+                repo_id=args.repo,
+                transport_revision=args.transport_revision,
+                config=load_config(),
             )
             write_atomic(args.output, result)
         elif args.command == "launch":
