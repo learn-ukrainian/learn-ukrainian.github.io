@@ -119,6 +119,18 @@ setting from the engine's `StructuredOutputsConfig`, so the worker now passes
 The request still carries the same JSON schema, and the unchanged strict parser
 still validates every completed object. Six billed minutes cost USD 0.180000,
 raising cumulative cost to USD 1.050167.
+Job `6a6fed30a00abefd4b28e51c` proved that engine-scoped whitespace suppression
+worked, but its first response entered the documented Gemma 4 repetition defect
+inside the schema's otherwise unbounded `output_text` string. One attempt
+stopped early at 60 tokens with an open string; two deterministic retries
+reached 160 tokens with the same open, highly repetitive string. The worker now
+ignores EOS only until the structured object is complete and constrains
+`output_text` to 768 characters. That bound exceeds the frozen suite's longest
+703-character source, keeps all expected preserve/abstain outputs representable,
+and forces xgrammar to close a degenerate string without changing the model,
+suite, prompt, temperature, seed, or strict post-generation validation. See the
+[upstream Gemma 4 report](https://github.com/vllm-project/vllm/issues/40080).
+Five billed minutes cost USD 0.150000, raising cumulative cost to USD 1.200167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

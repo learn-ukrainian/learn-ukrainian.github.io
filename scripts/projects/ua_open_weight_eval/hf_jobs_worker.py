@@ -34,11 +34,12 @@ RESPONSE_SCHEMA = "ua_open_weight_eval_responses.v1"
 CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
+MAX_OUTPUT_TEXT_CHARS = 768
 RESPONSE_JSON_SCHEMA = {
     "type": "object",
     "properties": {
         "action": {"type": "string", "enum": ["abstain", "correct", "preserve"]},
-        "output_text": {"type": "string"},
+        "output_text": {"type": "string", "maxLength": MAX_OUTPUT_TEXT_CHARS},
     },
     "required": ["action", "output_text"],
     "additionalProperties": False,
@@ -339,6 +340,15 @@ def verify_config(config: Mapping[str, Any]) -> None:
         config.get("runner", {}).get("structured_outputs_disable_any_whitespace") is True,
         "structured output whitespace contract drift",
     )
+    _require(
+        config.get("runner", {}).get("structured_outputs_ignore_eos_until_complete") is True,
+        "structured output EOS contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_max_output_text_chars")
+        == MAX_OUTPUT_TEXT_CHARS,
+        "structured output length contract drift",
+    )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
 
@@ -454,9 +464,14 @@ def build_sampling_params(
     sampling_params_type: Callable[..., Any],
     structured_outputs_type: Callable[..., Any],
 ) -> Any:
+    _require(
+        int(runner["structured_outputs_max_output_text_chars"]) == MAX_OUTPUT_TEXT_CHARS,
+        "structured output length contract drift",
+    )
     return sampling_params_type(
         temperature=float(runner["temperature"]),
         seed=int(runner["seed"]),
+        ignore_eos=bool(runner["structured_outputs_ignore_eos_until_complete"]),
         max_tokens=int(runner["max_tokens"]),
         structured_outputs=structured_outputs_type(
             json=RESPONSE_JSON_SCHEMA,
@@ -641,6 +656,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "structured_outputs_backend": config["runner"]["structured_outputs_backend"],
             "structured_outputs_disable_any_whitespace": config["runner"][
                 "structured_outputs_disable_any_whitespace"
+            ],
+            "structured_outputs_ignore_eos_until_complete": config["runner"][
+                "structured_outputs_ignore_eos_until_complete"
+            ],
+            "structured_outputs_max_output_text_chars": config["runner"][
+                "structured_outputs_max_output_text_chars"
             ],
             "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },

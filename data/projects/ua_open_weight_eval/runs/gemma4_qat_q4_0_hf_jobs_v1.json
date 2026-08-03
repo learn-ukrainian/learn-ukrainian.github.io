@@ -91,9 +91,17 @@
         "provider_derived_cost_usd": 0.18,
         "provider_running_seconds": 333,
         "stage": "ERROR"
+      },
+      {
+        "job_id": "6a6fed30a00abefd4b28e51c",
+        "mode": "canary",
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 286,
+        "stage": "ERROR"
       }
     ],
-    "prior_provider_cost_usd": 1.050167,
+    "prior_provider_cost_usd": 1.200167,
     "recoverable_execution_retries_authorized": true,
     "superseding_authorization_at": "2026-08-03",
     "validated_cpu_transport": {
@@ -159,6 +167,8 @@
     "structured_outputs": "json_schema",
     "structured_outputs_backend": "xgrammar",
     "structured_outputs_disable_any_whitespace": true,
+    "structured_outputs_ignore_eos_until_complete": true,
+    "structured_outputs_max_output_text_chars": 768,
     "temperature": 0.0,
     "vllm_batch_invariant": true
   },
