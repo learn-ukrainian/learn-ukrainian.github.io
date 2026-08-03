@@ -174,6 +174,8 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "gpt-5.6-terra" in prompt
     assert "effort=high" in prompt
     assert "confidence` value MUST be a JSON number" in prompt
+    assert '`"P0"`, `"P1"`, `"P2"`, or `"P3"`' in prompt
+    assert '`"maintainability"` invalidate' in prompt
     assert 'correctness":"correct"' in prompt
     assert 'enum aliases such as `"pass"`' in prompt
     assert "never add\n`claim_type` at the finding root" in prompt
