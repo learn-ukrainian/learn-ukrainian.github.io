@@ -595,6 +595,7 @@ describe('lexicon SRS facade', () => {
     const versionByModeSet: Record<string, number> = {
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym': 3,
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym': 4,
+      'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym|homonym': 5,
     };
 
     expect(versionByModeSet[PRACTICE_MODES.join('|')]).toBe(PRACTICE_MODE_DECK_VERSION);

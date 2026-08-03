@@ -1,8 +1,7 @@
 schema_version: 1
-description: 'Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 55
-  driver-adjudicated pairs: 20 baseline seeds and 35 promoted ukr-mova approved candidate
-  pairs (#6137). Frames are authored fresh for morpho congruency (anti-gaming §5)
-  and both-direction balance. Learner-facing text is Ukrainian only. distinction_gloss_uk
+description: 'Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 103
+  driver-adjudicated pairs: baseline seeds and promoted miyklas approved candidate
+  pairs (#6138, #6132, #4387). Learner-facing text is Ukrainian only. Distinction_gloss_uk
   is natural Ukrainian. Citations trace to adjudication and source module seeds. Fail-closed:
   curated only, no pool mining.'
 pairs:
@@ -1006,3 +1005,771 @@ pairs:
     answer_form: численні
     confusable_form: чисельні
     origin: authored-grok-build-2026-08-02
+- slugA: абрис
+  slugB: обрис
+  distinction_gloss_uk: Абрис — контурний малюнок чи схематичний нарис; обрис — загальні
+    обриси/контури предмета чи фігури на відстані.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Художник зробив легкий олівцевий ___ майбутньої картини.
+    answer_form: абрис
+    confusable_form: обрис
+    origin: authored-paronym-frame
+  - sentence_with_slot: У темряві вимальовувався чіткий ___ гірського хребта.
+    answer_form: обрис
+    confusable_form: абрис
+    origin: authored-paronym-frame
+- slugA: авторитарний
+  slugB: авторитетний
+  distinction_gloss_uk: Авторитарний — який спирається на диктат і жорстку владу;
+    авторитетний — який має високий авторитет і повагу.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У країні встановився жорсткий ___ режим.
+    answer_form: авторитарний
+    confusable_form: авторитетний
+    origin: authored-paronym-frame
+  - sentence_with_slot: Вчений висловив свою думку як ___ фахівець у галузі.
+    answer_form: авторитетний
+    confusable_form: авторитарний
+    origin: authored-paronym-frame
+- slugA: анотація
+  slugB: нотація
+  distinction_gloss_uk: Анотація — короткий опис змісту книги чи статті; нотація —
+    зауваження, докір або система умовних знаків.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Перед читанням книги корисно переглянути коротку ___ .
+    answer_form: анотацію
+    confusable_form: нотацію
+    origin: authored-paronym-frame
+  - sentence_with_slot: Батько прочитав синові сувору навчальну ___ .
+    answer_form: нотацію
+    confusable_form: анотацію
+    origin: authored-paronym-frame
+- slugA: блискучий
+  slugB: лискучий
+  distinction_gloss_uk: Блискучий — який сяє променями або видатний/талановитий; лискучий
+    — гладенький від тертя або засалений.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Піаніст продемонстрував ___ виступ на концерті.
+    answer_form: блискучий
+    confusable_form: лискучий
+    origin: authored-paronym-frame
+  - sentence_with_slot: На рукавах старої піджака з'явився ___ глянцевий слід.
+    answer_form: лискучий
+    confusable_form: блискучий
+    origin: authored-paronym-frame
+- slugA: блукати
+  slugB: блудити
+  distinction_gloss_uk: Блукати — ходити без чіткого напрямку, мандрувати; блудити
+    — збиватися з правильного шляху чи робити помилки.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Туристи полюбляли ___ вузькими вулицями давнього міста.
+    answer_form: блукати
+    confusable_form: блудити
+    origin: authored-paronym-frame
+  - sentence_with_slot: У густому тумані можна легко ___ й утратити дорогу.
+    answer_form: блудити
+    confusable_form: блукати
+    origin: authored-paronym-frame
+- slugA: будівельник
+  slugB: будівник
+  distinction_gloss_uk: Будівельник — фахівець або робітник у галузі будівництва;
+    будівник — той, хто творить/розбудовує щось (будівник нової держави).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Кваліфікований ___ зводив новий житловий комплекс.
+    answer_form: будівельник
+    confusable_form: будівник
+    origin: authored-paronym-frame
+  - sentence_with_slot: Молодь виступає як патріотичний ___ майбутнього нашої країни.
+    answer_form: будівник
+    confusable_form: будівельник
+    origin: authored-paronym-frame
+- slugA: будівельник
+  slugB: будівничий
+  distinction_gloss_uk: Будівельник — робітник на будівництві; будівничий — зодчий,
+    архітектор чи видатний творець.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Досвідчений ___ керував монтажем залізобетонних конструкцій.
+    answer_form: будівельник
+    confusable_form: будівничий
+    origin: authored-paronym-frame
+  - sentence_with_slot: Видатний ___ спроєктував величний собор у Києві.
+    answer_form: будівничий
+    confusable_form: будівельник
+    origin: authored-paronym-frame
+- slugA: будівник
+  slugB: будівничий
+  distinction_gloss_uk: Будівник — той, хто будує суспільство або споруди; будівничий
+    — зодчий, головний творець або архітектор.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Народ є головним ___ власної незалежної держави.
+    answer_form: будівником
+    confusable_form: будівничим
+    origin: authored-paronym-frame
+  - sentence_with_slot: Славетний ___ створив унікальний архітектурний ансамбль.
+    answer_form: будівничий
+    confusable_form: будівник
+    origin: authored-paronym-frame
+- slugA: бювет
+  slugB: кювет
+  distinction_gloss_uk: Бювет — споруда над мінеральним джерелом; кювет — канава уздовж
+    дороги для стоку води.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Відпочивальники пили цілющу воду біля курортного ___ .
+    answer_form: бювету
+    confusable_form: кювету
+    origin: authored-paronym-frame
+  - sentence_with_slot: Після зливи придорожній ___ повністю заповнився водою.
+    answer_form: кювет
+    confusable_form: бювет
+    origin: authored-paronym-frame
+- slugA: вимисел
+  slugB: домисел
+  distinction_gloss_uk: Вимисел — вигадка, неіснуюча річ; домисел — здогад чи припущення
+    на основі неповних фактів.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Уся ця чутка виявилася суцільним фантастичним ___ .
+    answer_form: вимислом
+    confusable_form: домислом
+    origin: authored-paronym-frame
+  - sentence_with_slot: Версія слідчого спиралася на логічний ___ та факти.
+    answer_form: домисел
+    confusable_form: вимисел
+    origin: authored-paronym-frame
+- slugA: відпуск
+  slugB: відпустка
+  distinction_gloss_uk: Відпуск — відпускання товарів або термічна обробка металу;
+    відпустка — звільнення від роботи на період відпочинку.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Контролер оформив офіційний ___ матеріалів зі складу.
+    answer_form: відпуск
+    confusable_form: відпустку
+    origin: authored-paronym-frame
+  - sentence_with_slot: Улітку робітник іде у щорічну оплачувану ___ .
+    answer_form: відпустку
+    confusable_form: відпуск
+    origin: authored-paronym-frame
+- slugA: віла
+  slugB: вілла
+  distinction_gloss_uk: Віла — міфологічна дунайська/слов'янська русалка; вілла —
+    комфортабельний заміський будинок.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У народній легенді згадується лісова магічна ___ .
+    answer_form: віла
+    confusable_form: вілла
+    origin: authored-paronym-frame
+  - sentence_with_slot: На березі моря була зведена розкішна сучасна ___ .
+    answer_form: вілла
+    confusable_form: віла
+    origin: authored-paronym-frame
+- slugA: віршований
+  slugB: віршовий
+  distinction_gloss_uk: Віршований — написаний у формі вірша (віршований роман); віршовий
+    — стосовний віршування або ритміки (віршовий розмір).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Шевченко написав відомий ___ твір «Катерина».
+    answer_form: віршований
+    confusable_form: віршовий
+    origin: authored-paronym-frame
+  - sentence_with_slot: Поет детально вивчав ямб і хорей як традиційний ___ розмір.
+    answer_form: віршовий
+    confusable_form: віршований
+    origin: authored-paronym-frame
+- slugA: геройський
+  slugB: героїчний
+  distinction_gloss_uk: Геройський — здійснений героєм або властивий йому; героїчний
+    — сповнений героїзму (героїчна доба).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Солдат здійснив ___ вчинок у бою.
+    answer_form: геройський
+    confusable_form: героїчний
+    origin: authored-paronym-frame
+  - sentence_with_slot: В історії країни залишилася ___ доба боротьби за волю.
+    answer_form: героїчна
+    confusable_form: геройська
+    origin: authored-paronym-frame
+- slugA: годівниця
+  slugB: годувальниця
+  distinction_gloss_uk: Годівниця — лоток чи посудина для годування тварин або птахів;
+    годувальниця — жінка, що годує немовля, або джерело прожитку.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Діти повісили на дереві дерев'яну ___ для синичок.
+    answer_form: годівницю
+    confusable_form: годувальницю
+    origin: authored-paronym-frame
+  - sentence_with_slot: Земля-мати є головною хлібодарною ___ народу.
+    answer_form: годувальницею
+    confusable_form: годівницею
+    origin: authored-paronym-frame
+- slugA: група
+  slugB: трупа
+  distinction_gloss_uk: Група — сукупність людей або предметів; трупа — творчий колектив
+    акторів театру чи цирку.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Екскурсійна ___ студентів оглянула виставку в музеї.
+    answer_form: група
+    confusable_form: трупа
+    origin: authored-paronym-frame
+  - sentence_with_slot: Театральна ___ приїхала з гастролями до Києва.
+    answer_form: трупа
+    confusable_form: група
+    origin: authored-paronym-frame
+- slugA: густо
+  slugB: пусто
+  distinction_gloss_uk: Густо — у великій кількості, щільно; пусто — порожньо, незаповнено
+    або безлюдно.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У садку ___ росли червоні й білі троянди.
+    answer_form: густо
+    confusable_form: пусто
+    origin: authored-paronym-frame
+  - sentence_with_slot: Після від'їзду гостей у будинку стало зовсім ___ .
+    answer_form: пусто
+    confusable_form: густо
+    origin: authored-paronym-frame
+- slugA: гірницький
+  slugB: гірничий
+  distinction_gloss_uk: Гірницький — який стосується шахтарів/гірників (гірницька
+    праця); гірничий — стосовний гірничої справи чи промисловості (гірничий інженер).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У шахтарському селищі шанують сувору ___ працю.
+    answer_form: гірницьку
+    confusable_form: гірничу
+    origin: authored-paronym-frame
+  - sentence_with_slot: Студент вступив на ___ факультет політехніки.
+    answer_form: гірничий
+    confusable_form: гірницький
+    origin: authored-paronym-frame
+- slugA: дистанція
+  slugB: інстанція
+  distinction_gloss_uk: Дистанція — відстань між об'єктами або в спорті; інстанція
+    — орган чи щабель у системі управління/суду.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Спортсмен подолав марафонську ___ за дві години.
+    answer_form: дистанцію
+    confusable_form: інстанцію
+    origin: authored-paronym-frame
+  - sentence_with_slot: Вища судова ___ підтвердила правомірність рішення.
+    answer_form: інстанція
+    confusable_form: дистанція
+    origin: authored-paronym-frame
+- slugA: доля
+  slugB: воля
+  distinction_gloss_uk: Доля — життєвий шлях, фатум чи щастя; воля — свобода, незалежність
+    або волевиявлення.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Кожна людина сама відповідає за власну ___ .
+    answer_form: долю
+    confusable_form: волю
+    origin: authored-paronym-frame
+  - sentence_with_slot: Борці за свободу віддали життя за ___ України.
+    answer_form: волю
+    confusable_form: долю
+    origin: authored-paronym-frame
+- slugA: досвідчений
+  slugB: освічений
+  distinction_gloss_uk: Досвідчений — який має великий практичний досвід й майстерність;
+    освічений — який здобув глибокі знання й освіту.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Операцію виконав дуже ___ хірург із багаторічним стажем.
+    answer_form: досвідчений
+    confusable_form: освічений
+    origin: authored-paronym-frame
+  - sentence_with_slot: Він був інтелігентний і високовчений ___ чоловік.
+    answer_form: освічений
+    confusable_form: досвідчений
+    origin: authored-paronym-frame
+- slugA: знаменитий
+  slugB: знаменний
+  distinction_gloss_uk: Знаменитий — славетний, видатний, відомий усім; знаменний
+    — видатний за важливістю, вирішальний або пам'ятний.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У театрі виступив ___ співак із міжнародною славою.
+    answer_form: знаменитий
+    confusable_form: знаменний
+    origin: authored-paronym-frame
+  - sentence_with_slot: День проголошення Незалежності — це ___ день в історії.
+    answer_form: знаменний
+    confusable_form: знаменитий
+    origin: authored-paronym-frame
+- slugA: зять
+  slugB: взять
+  distinction_gloss_uk: Зять — чоловік дочки або сестри; взять — застаріла форма дієслова
+    взяти.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Батьки радо зустріли свого нового ___ .
+    answer_form: зятя
+    confusable_form: взять
+    origin: authored-paronym-frame
+  - sentence_with_slot: Козаки хотіли штурмом ___ фортецю.
+    answer_form: взяти
+    confusable_form: зятя
+    origin: authored-paronym-frame
+- slugA: контингент
+  slugB: континент
+  distinction_gloss_uk: Контингент — сукупність людей або лімітована група; континент
+    — материк, великий масив суші.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Миротворчий ___ миротворців прибув у регіон конфлікту.
+    answer_form: контингент
+    confusable_form: континент
+    origin: authored-paronym-frame
+  - sentence_with_slot: Австралія — це найменший ___ на нашій планеті.
+    answer_form: континент
+    confusable_form: контингент
+    origin: authored-paronym-frame
+- slugA: корифей
+  slugB: орфей
+  distinction_gloss_uk: Корифей — найвидатніший діяч у певній галузі мистецтва чи
+    науки; Орфей — міфічний грецький співак й музикант.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Марко Кропивницький — ___ українського театру.
+    answer_form: корифей
+    confusable_form: Орфей
+    origin: authored-paronym-frame
+  - sentence_with_slot: Легендарний музикант співав так солодко, наче давній ___ .
+    answer_form: Орфей
+    confusable_form: корифей
+    origin: authored-paronym-frame
+- slugA: лепський
+  slugB: кепський
+  distinction_gloss_uk: Лепський — гарний, чудовий, хороший; кепський — поганий, злий
+    чи недобрий.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Майстер виготовив дуже ___ дубовий стіл.
+    answer_form: лепський
+    confusable_form: кепський
+    origin: authored-paronym-frame
+  - sentence_with_slot: Сьогодні у нас дув дуже ___ холодний вітер.
+    answer_form: кепський
+    confusable_form: лепський
+    origin: authored-paronym-frame
+- slugA: особистий
+  slugB: особливий
+  distinction_gloss_uk: Особистий — належний певній особі, приватний (особистий щоденник);
+    особливий — винятковий, специфічний, не такий, як інші.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Секретар зберігає ___ щоденник у таємниці.
+    answer_form: особистий
+    confusable_form: особливий
+    origin: authored-paronym-frame
+  - sentence_with_slot: Цей день має для нашої родини ___ піднесений статус.
+    answer_form: особливий
+    confusable_form: особистий
+    origin: authored-paronym-frame
+- slugA: особистий
+  slugB: особовий
+  distinction_gloss_uk: Особистий — власне персональний (особисті речі); особовий
+    — стосовний особи в офіційно-діловому чи граматичному значеннях (особова справа,
+    особовий займенник).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У потязі необхідно пильнувати власні ___ речі.
+    answer_form: особисті
+    confusable_form: особові
+    origin: authored-paronym-frame
+  - sentence_with_slot: В кадровому відділі лежить моя ___ справа.
+    answer_form: особова
+    confusable_form: особиста
+    origin: authored-paronym-frame
+- slugA: особливий
+  slugB: особовий
+  distinction_gloss_uk: Особливий — винятковий, незвичайний; особовий — стосовний
+    особи у діловодстві чи граматиці (особовий склад).
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Учитель виявив ___ підхід до кожного учня.
+    answer_form: особливий
+    confusable_form: особовий
+    origin: authored-paronym-frame
+  - sentence_with_slot: Командир ви шикував весь ___ склад полку.
+    answer_form: особовий
+    confusable_form: особливий
+    origin: authored-paronym-frame
+- slugA: пам'ятка
+  slugB: пам'ятник
+  distinction_gloss_uk: Пам'ятка — предме давнини, інструкція чи культурний об'єкт;
+    пам'ятник — монументальна споруда/скульптура на честь особи.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Софія Київська — це видатна архітектурна ___ XI століття.
+    answer_form: пам'ятка
+    confusable_form: пам'ятник
+    origin: authored-paronym-frame
+  - sentence_with_slot: На центральній площі міста встановили ___ Тарасові Шевченку.
+    answer_form: пам'ятник
+    confusable_form: пам'ятку
+    origin: authored-paronym-frame
+- slugA: передній
+  slugB: передовий
+  distinction_gloss_uk: Передній — розміщений спереду; передовий — прогресивний, який
+    іде попереду інших у розвитку.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Водій відчинив ___ двері автомобіля.
+    answer_form: передні
+    confusable_form: передові
+    origin: authored-paronym-frame
+  - sentence_with_slot: Підприємство впроваджує ___ новітні технології.
+    answer_form: передові
+    confusable_form: передні
+    origin: authored-paronym-frame
+- slugA: плутати
+  slugB: путати
+  distinction_gloss_uk: Плутати — змішувати, робити неясним або помилятися; путати
+    — зв'язувати ноги коням путами.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Не варто ___ близькі за звучанням пароніми.
+    answer_form: плутати
+    confusable_form: путати
+    origin: authored-paronym-frame
+  - sentence_with_slot: Пастух почав ___ коней перед випасом на ніч.
+    answer_form: путати
+    confusable_form: плутати
+    origin: authored-paronym-frame
+- slugA: повноваження
+  slugB: уповноваження
+  distinction_gloss_uk: Повноваження — коло офіційних прав, наданих посадовій особі;
+    уповноваження — дія з надання комусь певних прав.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Президент виконує свої конституційні ___ .
+    answer_form: повноваження
+    confusable_form: уповноваження
+    origin: authored-paronym-frame
+  - sentence_with_slot: Для підписання угоди потрібне офіційне ___ міністерства.
+    answer_form: уповноваження
+    confusable_form: повноваження
+    origin: authored-paronym-frame
+- slugA: постановка
+  slugB: установка
+  distinction_gloss_uk: Постановка — вистава/фільм чи формулювання питання; установка
+    — монтаж пристрою чи життєвий орієнтир/налаштування.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Нова театральна ___ мала величезний успіх.
+    answer_form: постановка
+    confusable_form: установка
+    origin: authored-paronym-frame
+  - sentence_with_slot: На заводі завершилася ___ нового обладнання.
+    answer_form: установка
+    confusable_form: постановка
+    origin: authored-paronym-frame
+- slugA: привид
+  slugB: привід
+  distinction_gloss_uk: Привид — мара, фантом, фантастична постать; привід — підстава
+    для дій чи технічний важіль.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: У старому замку, за переказами, живе ___ .
+    answer_form: привид
+    confusable_form: привід
+    origin: authored-paronym-frame
+  - sentence_with_slot: Відсутність новин стала причиною та ___ для хвилювання.
+    answer_form: приводом
+    confusable_form: привидом
+    origin: authored-paronym-frame
+- slugA: програмний
+  slugB: програмований
+  distinction_gloss_uk: Програмний — який є основою програми чи концепції; програмований
+    — виконуваний за заздалегідь розробленим алгоритмом.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Лідер партії виголосив ___ виступ перед виборцями.
+    answer_form: програмний
+    confusable_form: програмований
+    origin: authored-paronym-frame
+  - sentence_with_slot: Сучасне промислове обладнання є цифровим і ___ .
+    answer_form: програмованим
+    confusable_form: програмним
+    origin: authored-paronym-frame
+- slugA: програмний
+  slugB: програмовий
+  distinction_gloss_uk: Програмний — засадничий, концептуальний; програмовий — включений
+    у навчальну чи концертну програму.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Цей документ містить важливі ___ засади реформи.
+    answer_form: програмні
+    confusable_form: програмові
+    origin: authored-paronym-frame
+  - sentence_with_slot: Учні прочитали весь ___ літературний матеріал.
+    answer_form: програмовий
+    confusable_form: програмний
+    origin: authored-paronym-frame
+- slugA: програмовий
+  slugB: програмований
+  distinction_gloss_uk: Програмовий — що належить до затвердженої програми навчання;
+    програмований — керований комп'ютерною програмою.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Учні опрацювали ___ роман Панаса Мирного.
+    answer_form: програмовий
+    confusable_form: програмований
+    origin: authored-paronym-frame
+  - sentence_with_slot: Робот-пилосос виконує ___ маршрут прибирання.
+    answer_form: програмований
+    confusable_form: програмовий
+    origin: authored-paronym-frame
+- slugA: прогресивний
+  slugB: регресивний
+  distinction_gloss_uk: Прогресивний — передовий, який розвивається вгору; регресивний
+    — зворотно спрямований, який веде до занепаду.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Країна впроваджує ___ економічні реформи.
+    answer_form: прогресивні
+    confusable_form: регресивні
+    origin: authored-paronym-frame
+  - sentence_with_slot: Занепад виробництва продемонстрував ___ рух.
+    answer_form: регресивний
+    confusable_form: прогресивний
+    origin: authored-paronym-frame
+- slugA: свідоцтво
+  slugB: свідчення
+  distinction_gloss_uk: Свідоцтво — офіційний документ факт/прав; свідчення — показання
+    свідка в суді чи доказ.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Випускник отримав офіційне ___ про повну середню освіту.
+    answer_form: свідоцтво
+    confusable_form: свідчення
+    origin: authored-paronym-frame
+  - sentence_with_slot: Свідок дав правдиві ___ під час судового засідання.
+    answer_form: свідчення
+    confusable_form: свідоцтво
+    origin: authored-paronym-frame
+- slugA: сердешний
+  slugB: серцевий
+  distinction_gloss_uk: Сердешний — бідолашний, який викликає співчуття; серцевий
+    — який стосується серця чи щирий.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Ох і натерпівся ___ чоловік у скруті!
+    answer_form: сердешний
+    confusable_form: серцевий
+    origin: authored-paronym-frame
+  - sentence_with_slot: Лікар діагностував у пацієнта раптовий ___ напад.
+    answer_form: серцевий
+    confusable_form: сердешний
+    origin: authored-paronym-frame
+- slugA: спілка
+  slugB: сопілка
+  distinction_gloss_uk: Спілка — об'єднання людей чи організація; сопілка — народний
+    духовий музичний інструмент.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Письменники утворили творчу професійну ___ .
+    answer_form: спілку
+    confusable_form: сопілку
+    origin: authored-paronym-frame
+  - sentence_with_slot: Музикант ніжно заграв на дерев'яній ___ .
+    answer_form: сопілці
+    confusable_form: спілці
+    origin: authored-paronym-frame
+- slugA: степінь
+  slugB: ступінь
+  distinction_gloss_uk: Степінь — математична категорія (піднесення до степеня); ступінь
+    — рівень, етап розвитку, звання чи градус.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: На уроці алгебри учні підносили число до другого ___ .
+    answer_form: степеня
+    confusable_form: ' ступеня'
+    origin: authored-paronym-frame
+  - sentence_with_slot: Вчений здобув науковий ___ доктора наук.
+    answer_form: ступінь
+    confusable_form: степінь
+    origin: authored-paronym-frame
+- slugA: тактичний
+  slugB: тактовний
+  distinction_gloss_uk: Тактичний — який стосується тактики бою чи плану дій; тактовний
+    — вежливий, який володіє почуттям міри.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Командир розробив грамотний ___ хід у бою.
+    answer_form: тактичний
+    confusable_form: тактовний
+    origin: authored-paronym-frame
+  - sentence_with_slot: Дипломат зробив дуже ___ і ввічливий жест.
+    answer_form: тактовний
+    confusable_form: тактичний
+    origin: authored-paronym-frame
+- slugA: талан
+  slugB: талант
+  distinction_gloss_uk: Талан — доля, фатум або щастя; талант — вроджені обдарування
+    й здібності.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Ех, не випав йому щасливий ___ у житті!
+    answer_form: талан
+    confusable_form: талант
+    origin: authored-paronym-frame
+  - sentence_with_slot: Художник мав винятковий малярський ___ .
+    answer_form: талант
+    confusable_form: талан
+    origin: authored-paronym-frame
+- slugA: тарас
+  slugB: півтораста
+  distinction_gloss_uk: Тарас — чоловіче власне ім'я; півтораста — числівник, що означає
+    150.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Великий український Кобзар — це ___ Шевченко.
+    answer_form: Тарас
+    confusable_form: півтораста
+    origin: authored-paronym-frame
+  - sentence_with_slot: На зібрання прибуло майже ___ делегатів.
+    answer_form: півтораста
+    confusable_form: Тарас
+    origin: authored-paronym-frame
+- slugA: іммігрант
+  slugB: емігрант
+  distinction_gloss_uk: Іммігрант — іноземець, який в'їхав у країну на постійне проживання;
+    емігрант — особа, яка виїхала зі своєї країни.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Країна прийняла новоприбулого ___ з Європи.
+    answer_form: іммігранта
+    confusable_form: емігранта
+    origin: authored-paronym-frame
+  - sentence_with_slot: Український ___ сумував за батьківщиною за кордоном.
+    answer_form: емігрант
+    confusable_form: іммігрант
+    origin: authored-paronym-frame
+- slugA: їда
+  slugB: їжа
+  distinction_gloss_uk: Їда — процес прийому харчів; їжа — самі харчі, страви.
+  citations:
+  - miyklas.com.ua
+  curator: miyklas-reviewed
+  frames:
+  - sentence_with_slot: Під час ___ не слід розмовляти за столом.
+    answer_form: їди
+    confusable_form: їжі
+    origin: authored-paronym-frame
+  - sentence_with_slot: На обід була приготована корисна й смачна ___ .
+    answer_form: їжа
+    confusable_form: їда
+    origin: authored-paronym-frame

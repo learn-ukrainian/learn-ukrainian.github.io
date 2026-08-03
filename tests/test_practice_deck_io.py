@@ -69,6 +69,8 @@ def test_compute_deck_version_fingerprints_all_inputs() -> None:
     entries = [{"lemmaId": "knyha", "lemma": "knyha", "gloss": "book"}]
     heritage_pairs = [{"nativeSlug": "knyha", "rationale": "fixture"}]
     paronym_pairs = [{"slugA": "knyha", "slugB": "книга", "frames": [], "citations": ["t"]}]
+    antonym_pairs = [{"slugA": "день", "slugB": "ніч", "frames": [], "citations": ["t"]}]
+    homonym_pairs = [{"slugA": "байка", "slugB": "байка", "frames": [], "citations": ["t"]}]
     synonym_verdicts = {
         "approved": [{"a": "knyha", "b": "tom", "polarity": "synonym"}],
         "rejected": [],
@@ -82,6 +84,8 @@ def test_compute_deck_version_fingerprints_all_inputs() -> None:
         synonym_verdicts,
         cloze_sources,
         1,
+        antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
     )
 
     assert version.startswith("atlas-practice-v1-")
@@ -90,16 +94,19 @@ def test_compute_deck_version_fingerprints_all_inputs() -> None:
     assert all(char in "0123456789abcdef" for char in fingerprint)
 
     variants = [
-        ([{**entries[0], "gloss": "book volume"}], heritage_pairs, paronym_pairs, synonym_verdicts, cloze_sources),
-        (entries, [{**heritage_pairs[0], "rationale": "changed"}], paronym_pairs, synonym_verdicts, cloze_sources),
+        ([{**entries[0], "gloss": "book volume"}], heritage_pairs, paronym_pairs, antonym_pairs, homonym_pairs, synonym_verdicts, cloze_sources),
+        (entries, [{**heritage_pairs[0], "rationale": "changed"}], paronym_pairs, antonym_pairs, homonym_pairs, synonym_verdicts, cloze_sources),
         (
             entries,
             heritage_pairs,
             paronym_pairs,
+            antonym_pairs,
+            homonym_pairs,
             {"approved": synonym_verdicts["approved"], "rejected": [{"a": "x", "b": "y", "polarity": "antonym"}]},
             cloze_sources,
         ),
-        (entries, heritage_pairs, paronym_pairs, synonym_verdicts, [{**cloze_sources[0], "sentence": "Changed ___."}]),
+        (entries, heritage_pairs, paronym_pairs, antonym_pairs, homonym_pairs, synonym_verdicts, [{**cloze_sources[0], "sentence": "Changed ___."}]),
+        (entries, heritage_pairs, paronym_pairs, antonym_pairs, [{**homonym_pairs[0], "slugA": "байка2"}], synonym_verdicts, cloze_sources),
     ]
     changed_versions = {
         practice_deck_io.compute_deck_version(
@@ -109,8 +116,10 @@ def test_compute_deck_version_fingerprints_all_inputs() -> None:
             variant_synonym_verdicts,
             variant_cloze_sources,
             1,
+            antonym_pairs=variant_antonym_pairs,
+            homonym_pairs=variant_homonym_pairs,
         )
-        for variant_entries, variant_heritage_pairs, variant_paronym_pairs, variant_synonym_verdicts, variant_cloze_sources in variants
+        for variant_entries, variant_heritage_pairs, variant_paronym_pairs, variant_antonym_pairs, variant_homonym_pairs, variant_synonym_verdicts, variant_cloze_sources in variants
     }
 
     assert version not in changed_versions

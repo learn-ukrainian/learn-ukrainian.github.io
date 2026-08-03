@@ -54,6 +54,7 @@ PRACTICE_MODES = {
     "classify",
     "paronym",
     "antonym",
+    "homonym",
 }
 EXPECTED_SCHEMAS = {
     "index": "atlas-practice-index",
@@ -66,6 +67,7 @@ EXPECTED_SCHEMAS = {
     "heritage": "atlas-practice-heritage",
     "paronym": "atlas-practice-paronym",
     "antonym": "atlas-practice-antonym",
+    "homonym": "atlas-practice-homonym",
 }
 MODE_BODY_KEYS = {
     "cloze": "cloze",
@@ -76,8 +78,9 @@ MODE_BODY_KEYS = {
     "heritage": "heritage",
     "paronym": "paronym",
     "antonym": "antonym",
+    "homonym": "homonym",
 }
-DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym", "homonym")
 MODE_SHARD_KINDS = ("cloze", *DRILL_MODES)
 COVERAGE_MODES = MODE_SHARD_KINDS
 

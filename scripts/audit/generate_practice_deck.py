@@ -55,6 +55,7 @@ DEFAULT_END_DICTIONARY_INVENTORY = Path("data/lexicon/textbook-end-dictionaries/
 DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
 DEFAULT_PARONYM_PAIRS = Path("data/lexicon/paronym_pairs.yaml")
 DEFAULT_ANTONYM_PAIRS = Path("data/lexicon/antonym_pairs.yaml")
+DEFAULT_HOMONYM_PAIRS = Path("data/lexicon/homonym_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
@@ -75,7 +76,7 @@ PUBLISHED_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 # five-shard transport contract stable by carrying admitted, unlevelled
 # recognition lexemes in the first shard; the lexeme/index field remains null.
 UNKNOWN_CEFR_TRANSPORT_LEVEL = PUBLISHED_LEVELS[0]
-DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym", "homonym")
 MODE_SHARD_KEYS = ("cloze", *DRILL_MODES)
 MODE_SCHEMAS = {
     "cloze": "atlas-practice-cloze",
@@ -86,6 +87,7 @@ MODE_SCHEMAS = {
     "heritage": "atlas-practice-heritage",
     "paronym": "atlas-practice-paronym",
     "antonym": "atlas-practice-antonym",
+    "homonym": "atlas-practice-homonym",
 }
 MODE_BODY_KEYS = {
     "cloze": "cloze",
@@ -96,6 +98,7 @@ MODE_BODY_KEYS = {
     "heritage": "heritage",
     "paronym": "paronym",
     "antonym": "antonym",
+    "homonym": "homonym",
 }
 THIN_WARN_THRESHOLDS = {
     "cloze": 0.10,
@@ -103,6 +106,7 @@ THIN_WARN_THRESHOLDS = {
     "heritage": 0.01,
     "paronym": 0.01,
     "antonym": 0.01,
+    "homonym": 0.01,
 }
 MEANING_MC_MAX_WORDS = 4
 MEANING_MC_MAX_CHARS = 32
@@ -3343,6 +3347,158 @@ def validate_antonym_item(item: dict[str, Any], *, internal_options: bool = Fals
     return errors
 
 
+def _strip_homonym_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
+    stripped = {**item}
+    stripped["options"] = [
+        {"label": str(option.get("label") or "")}
+        for option in item.get("options", [])
+        if isinstance(option, dict)
+    ]
+    return stripped
+
+
+def _build_homonym_items(
+    pair: dict[str, Any],
+    lex_a: dict[str, Any],
+    lex_b: dict[str, Any],
+    deck_version: str,
+    *,
+    verifier: VesumVerifier | None = None,
+    public_options: bool = True,
+) -> list[dict[str, Any]]:
+    frames = _valid_homonym_frames(pair)
+    if not frames:
+        return []
+    distinction = _clean_text(pair.get("distinction_gloss_uk")) or ""
+    citations = _clean_text_list(pair.get("citations"))
+    if not citations:
+        return []
+    items: list[dict[str, Any]] = []
+    lex_by_lemma = {
+        _clean_text(lex_a.get("lemma")): lex_a,
+        _clean_text(lex_b.get("lemma")): lex_b,
+    }
+    slugs = (_clean_text(pair.get("slugA")), _clean_text(pair.get("slugB")))
+    for index, frame in enumerate(frames, start=1):
+        sentence = _clean_text(frame.get("sentence_with_slot"))
+        answer_form = _clean_text(frame.get("answer_form"))
+        confusable_form = _clean_text(frame.get("confusable_form"))
+        origin = _clean_text(frame.get("origin"))
+        if not all((sentence, answer_form, confusable_form, origin)):
+            print(
+                f"WARN: homonym_pair {slugs} frame {index} dropped: missing required field",
+                file=sys.stderr,
+            )
+            continue
+        target_lex: dict[str, Any] | None = None
+        ans_matches: list[dict[str, Any]] = []
+        if verifier:
+            try:
+                vres = verifier.verify_words([answer_form])
+                ans_matches = vres.get(answer_form, []) or []
+            except Exception:
+                ans_matches = []
+        if ans_matches:
+            ans_lemma = _clean_text(ans_matches[0].get("lemma"))
+            if ans_lemma and ans_lemma in lex_by_lemma:
+                target_lex = lex_by_lemma[ans_lemma]
+        if target_lex is None:
+            for cand in (lex_a, lex_b):
+                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
+                    target_lex = cand
+                    break
+        if target_lex is None:
+            print(
+                f"WARN: homonym_pair {slugs} frame {index} dropped: could not resolve lemma for answer_form {answer_form!r}",
+                file=sys.stderr,
+            )
+            continue
+        key = "\x1f".join((deck_version, target_lex["lemmaId"], sentence, answer_form, confusable_form))
+        homonym_id = "hom_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+        options = [
+            {"label": answer_form, "kind": "answer", "lemmaId": target_lex["lemmaId"]},
+            {"label": confusable_form, "kind": "confusable"},
+        ]
+        item: dict[str, Any] = {
+            "homonymId": homonym_id,
+            "lemmaId": target_lex["lemmaId"],
+            "srsKey": f"{target_lex['lemmaId']}::homonym",
+            "lemma": target_lex.get("lemma"),
+            "confusable": confusable_form,
+            "frameIndex": index,
+            "cefr": target_lex.get("cefr") or "B1",
+            "prompt": sentence,
+            "answer": answer_form,
+            "options": options,
+            "distinction_gloss_uk": distinction,
+            "citations": citations,
+            "origin": origin,
+        }
+        if prompt_en := _curated_prompt_en(frame):
+            item["promptEn"] = prompt_en
+        items.append(_strip_homonym_option_metadata(item) if public_options else item)
+    return items
+
+
+def validate_homonym_pair(pair: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    for field in ("slugA", "slugB", "distinction_gloss_uk"):
+        if not _clean_text(pair.get(field)):
+            errors.append(f"homonym_pair missing {field}")
+    frames = pair.get("frames")
+    if not isinstance(frames, list) or not frames:
+        errors.append("homonym_pair frames must be a nonempty list")
+    citations = pair.get("citations")
+    if not isinstance(citations, list) or not citations:
+        errors.append("homonym_pair citations must be a nonempty list")
+    return errors
+
+
+def _homonym_frame_errors(frame: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(frame, dict):
+        return ["homonym_pair frame must be an object"]
+    sentence = _clean_text(frame.get("sentence_with_slot"))
+    if not sentence:
+        errors.append("homonym_pair frame missing sentence_with_slot")
+    elif sentence.count("___") != 1:
+        errors.append("homonym_pair frame sentence_with_slot must contain exactly one ___ slot")
+    for field in ("answer_form", "confusable_form", "origin"):
+        if not _clean_text(frame.get(field)):
+            errors.append(f"homonym_pair frame missing {field}")
+    return errors
+
+
+def _valid_homonym_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
+    frames = pair.get("frames")
+    if not isinstance(frames, list):
+        return []
+    return [frame for frame in frames if isinstance(frame, dict) and not _homonym_frame_errors(frame)]
+
+
+def validate_homonym_item(item: dict[str, Any], *, internal_options: bool = False) -> list[str]:
+    errors: list[str] = []
+    for field in ("homonymId", "lemmaId", "srsKey", "prompt", "answer", "confusable", "distinction_gloss_uk"):
+        if not _clean_text(item.get(field)):
+            errors.append(f"homonym item missing {field}")
+    prompt = _clean_text(item.get("prompt"))
+    if prompt and prompt.count("___") != 1:
+        errors.append("homonym prompt must contain exactly one ___ slot")
+    citations = item.get("citations")
+    if not _clean_text_list(citations):
+        errors.append("homonym citations must be a nonempty list")
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) < 2:
+        errors.append("homonym option set must contain at least two options (answer + confusable)")
+    if not internal_options:
+        for option in (options or []):
+            if isinstance(option, dict):
+                leaked = sorted(set(option.keys()) - {"label"})
+                if leaked:
+                    errors.append(f"homonym public option must contain only label (leaked {leaked})")
+    return errors
+
+
 def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     if mode == "classify":
@@ -3364,6 +3520,9 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "antonym":
         for index, item in enumerate(items):
             errors.extend(f"antonym[{index}]: {error}" for error in validate_antonym_item(item))
+    elif mode == "homonym":
+        for index, item in enumerate(items):
+            errors.extend(f"homonym[{index}]: {error}" for error in validate_homonym_item(item))
     return errors
 
 
@@ -3512,6 +3671,7 @@ def _practice_priority_keys(
     paronym_pairs: list[dict[str, Any]] | None,
     synonym_verdicts: dict[str, Any] | None,
     antonym_pairs: list[dict[str, Any]] | None = None,
+    homonym_pairs: list[dict[str, Any]] | None = None,
 ) -> set[str]:
     """Keep source-backed thin-mode legs ahead of ordinary fill lexemes.
 
@@ -3538,6 +3698,9 @@ def _practice_priority_keys(
     for pair in antonym_pairs or []:
         add(pair.get("slugA"))
         add(pair.get("slugB"))
+    for pair in homonym_pairs or []:
+        add(pair.get("slugA"))
+        add(pair.get("slugB"))
     for pair in (synonym_verdicts or {}).get("approved", []):
         if isinstance(pair, dict):
             add(pair.get("a"))
@@ -3556,6 +3719,7 @@ def build_practice_shards(
     synonym_verdicts: dict[str, Any] | None = None,
     end_dictionary_stress: dict[str, dict[str, str]] | None = None,
     antonym_pairs: list[dict[str, Any]] | None = None,
+    homonym_pairs: list[dict[str, Any]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
@@ -3588,11 +3752,12 @@ def build_practice_shards(
         cloze_sources,
         SCHEMA_VERSION,
         antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
     )
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
     inputs_fingerprint = compute_deck_inputs_fingerprint(
-        entries, heritage_pairs, paronym_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION, antonym_pairs=antonym_pairs
+        entries, heritage_pairs, paronym_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION, antonym_pairs=antonym_pairs, homonym_pairs=homonym_pairs
     )
     rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
@@ -3603,6 +3768,7 @@ def build_practice_shards(
         paronym_pairs,
         synonym_verdicts,
         antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
     )
     lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
         entries,
@@ -3883,6 +4049,66 @@ def build_practice_shards(
     if antonym_frame_debt:
         print(
             f"antonym frame coverage: {antonym_frame_debt} records without frames — emitted 0 items for them",
+            file=sys.stderr,
+        )
+
+    homonym_frame_debt = 0
+    for index, pair in enumerate(homonym_pairs or []):
+        pair_errors = validate_homonym_pair(pair)
+        if pair_errors:
+            print(
+                f"WARN: homonym_pair[{index}] dropped: {'; '.join(pair_errors)}",
+                file=sys.stderr,
+            )
+            continue
+        frames = _valid_homonym_frames(pair)
+        if not frames:
+            homonym_frame_debt += 1
+            continue
+        slug_a = _clean_text(pair.get("slugA"))
+        slug_b = _clean_text(pair.get("slugB"))
+        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a)
+        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b)
+        if not lex_a or not lex_b:
+            print(
+                f"WARN: homonym_pair[{index}] {slug_a}/{slug_b} not in practice lexemes; emitted 0 items",
+                file=sys.stderr,
+            )
+            continue
+        for item in _build_homonym_items(
+            pair,
+            lex_a,
+            lex_b,
+            deck_version,
+            verifier=verifier,
+            public_options=False,
+        ):
+            level = _normalize_cefr(item.get("cefr")) or "B1"
+            if level not in mode_by_level:
+                print(
+                    f"WARN: homonym_pair[{index}] unavailable CEFR level {level!r}; emitted 0 items",
+                    file=sys.stderr,
+                )
+                continue
+            item_errors = validate_homonym_item(item, internal_options=True)
+            if item_errors:
+                print(
+                    f"WARN: homonym_pair[{index}] item dropped: {'; '.join(item_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            public_item = _strip_homonym_option_metadata(item)
+            public_errors = validate_homonym_item(public_item)
+            if public_errors:
+                print(
+                    f"WARN: homonym_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            mode_by_level[level]["homonym"].append(public_item)
+    if homonym_frame_debt:
+        print(
+            f"homonym frame coverage: {homonym_frame_debt} records without frames — emitted 0 items for them",
             file=sys.stderr,
         )
 
@@ -4371,6 +4597,22 @@ def read_antonym_pairs(path: Path | None) -> list[dict[str, Any]]:
     return rows
 
 
+def read_homonym_pairs(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists():
+        print("WARN: no curated homonym pairs found; emitting empty homonym deck", file=sys.stderr)
+        return []
+    import yaml
+
+    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    pairs = payload.get("pairs") if isinstance(payload, dict) else payload
+    if not isinstance(pairs, list):
+        raise ValueError("homonym pairs must be a list or an object with pairs list")
+    rows = [row for row in pairs if isinstance(row, dict)]
+    if not rows:
+        print("WARN: curated homonym pairs empty; emitting empty homonym deck", file=sys.stderr)
+    return rows
+
+
 def read_synonym_verdicts(path: Path | None) -> dict[str, Any] | None:
     if path is None or not path.exists():
         print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
@@ -4447,6 +4689,9 @@ def run_broken_validator_fixtures() -> int:
         ),
         "paronym_pair": validate_paronym_pair(
             {"slugA": "адресант", "slugB": "адресат", "frames": [], "citations": []}
+        ),
+        "homonym_pair": validate_homonym_pair(
+            {"slugA": "байка", "slugB": "байка", "frames": [], "citations": []}
         ),
     }
     print("Broken validator fixtures:")
@@ -4884,6 +5129,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS)
+    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument(
         "--curated-membership",
@@ -4959,6 +5205,7 @@ def main(argv: list[str] | None = None) -> int:
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)
     paronym_pairs = read_paronym_pairs(args.paronym_pairs)
     antonym_pairs = read_antonym_pairs(args.antonym_pairs)
+    homonym_pairs = read_homonym_pairs(args.homonym_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
     end_dictionary_stress = read_end_dictionary_stress_overlay(args.end_dictionary_inventory)
     end_payload: dict[str, Any] | None = None
@@ -5017,6 +5264,7 @@ def main(argv: list[str] | None = None) -> int:
         synonym_verdicts=synonym_verdicts,
         end_dictionary_stress=end_dictionary_stress or None,
         antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}

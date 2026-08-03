@@ -15,6 +15,7 @@ from scripts.audit.generate_practice_deck import (
     RealVesumVerifier,
     ReviewedSourceAllowlist,
     _build_antonym_items,
+    _build_homonym_items,
     _build_classify_items,
     _build_cloze_items,
     _build_heritage_items,
@@ -33,6 +34,7 @@ from scripts.audit.generate_practice_deck import (
     main,
     merge_practice_seed_entries,
     read_antonym_pairs,
+    read_homonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
@@ -41,6 +43,8 @@ from scripts.audit.generate_practice_deck import (
     read_sentence_inventory,
     validate_antonym_item,
     validate_antonym_pair,
+    validate_homonym_item,
+    validate_homonym_pair,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
@@ -2562,7 +2566,7 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/paronym_pairs.yaml")
     assert live_path.exists()
     pairs = read_paronym_pairs(live_path)
-    assert len(pairs) == 55, f"Expected 55 paronym pairs (20 baseline + 35 promoted), got {len(pairs)}"
+    assert len(pairs) == 103, f"Expected 103 paronym pairs (55 baseline + 48 promoted), got {len(pairs)}"
     seen_pairs: set[tuple[str, str]] = set()
     for index, pair in enumerate(pairs):
         errors = validate_paronym_pair(pair)
@@ -2661,3 +2665,86 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate antonym pair key {key}"
         seen_pairs.add(key)
+
+
+def test_homonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
+    entries = [
+        {"lemmaId": "байка", "lemma": "байка", "gloss": "fable/fabric", "pos": "noun", "cefr": "A1", "url_slug": "байка", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+    ]
+    pair = {
+        "slugA": "байка",
+        "slugB": "байка",
+        "distinction_gloss_uk": "Байка — алегоричний твір чи м'яка тканина.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {"sentence_with_slot": "Езоп написав ___.", "answer_form": "байку", "confusable_form": "байку", "origin": "t"},
+            {"sentence_with_slot": "Сорочка з м'якої ___.", "answer_form": "байки", "confusable_form": "байки", "origin": "t2"},
+        ],
+    }
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), homonym_pairs=[pair])
+    a1_items = shards.get("A1", {}).get("homonym", {}).get("homonym", [])
+    assert len(a1_items) >= 1, "homonym should emit at least one item"
+    assert validate_homonym_pair(pair) == []
+    for it in a1_items:
+        assert validate_homonym_item(it) == []
+
+
+def test_homonym_builder_copies_optional_curated_prompt_en() -> None:
+    lex_a = {"lemmaId": "байка", "lemma": "байка", "cefr": "A1"}
+    lex_b = {"lemmaId": "байка", "lemma": "байка", "cefr": "A1"}
+    pair = {
+        "slugA": "байка",
+        "slugB": "байка",
+        "distinction_gloss_uk": "Байка розрізнення.",
+        "citations": ["fixture-test"],
+        "frames": [{
+            "sentence_with_slot": "Езоп написав ___.",
+            "prompt_en": "Aesop wrote a ___.",
+            "answer_form": "байку",
+            "confusable_form": "байку",
+            "origin": "fixture",
+        }],
+    }
+
+    item = _build_homonym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert item["promptEn"] == "Aesop wrote a ___."
+
+    pair["frames"][0].pop("prompt_en")
+    item_without_en = _build_homonym_items(pair, lex_a, lex_b, "deck-v1")[0]
+    assert "promptEn" not in item_without_en
+
+
+def test_homonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
+    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
+    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), homonym_pairs=[pair])
+    assert shards["B1"]["homonym"]["homonym"] == []
+    err = capsys.readouterr().err
+    assert "not in practice lexemes; emitted 0 items" in err
+
+
+def test_homonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    p = tmp_path / "empty-hom.yaml"
+    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
+    rows = read_homonym_pairs(p)
+    assert rows == []
+    err = capsys.readouterr().err
+    assert "curated homonym pairs empty" in err
+    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
+    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), homonym_pairs=[])
+    assert shards["B1"]["homonym"]["homonym"] == []
+
+
+def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
+    live_path = Path("data/lexicon/homonym_pairs.yaml")
+    assert live_path.exists()
+    pairs = read_homonym_pairs(live_path)
+    assert len(pairs) == 75, f"Expected 75 homonym pairs, got {len(pairs)}"
+    for index, pair in enumerate(pairs):
+        errors = validate_homonym_pair(pair)
+        assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
+

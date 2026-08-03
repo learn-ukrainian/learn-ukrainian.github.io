@@ -87,6 +87,7 @@ def _write_publish_inputs(
     heritage_pairs: list[dict[str, object]] | None = None,
     paronym_pairs: list[dict[str, object]] | None = None,
     antonym_pairs: list[dict[str, object]] | None = None,
+    homonym_pairs: list[dict[str, object]] | None = None,
     synonym_verdicts: dict[str, object] | None = None,
     cloze_sources: list[dict[str, object]] | None = None,
     sentence_inventory: dict[str, object] | None = None,
@@ -97,6 +98,7 @@ def _write_publish_inputs(
         "heritage_pairs_path": base_dir / "heritage_pairs.yaml",
         "paronym_pairs_path": base_dir / "paronym_pairs.yaml",
         "antonym_pairs_path": base_dir / "antonym_pairs.yaml",
+        "homonym_pairs_path": base_dir / "homonym_pairs.yaml",
         "synonym_verdicts_path": base_dir / "synonym_pair_verdicts.yaml",
         "cloze_sources_path": base_dir / "lexicon-practice-cloze-sources.json",
         "sentence_inventory_path": base_dir / "lexicon-sentence-inventory.json",
@@ -108,6 +110,8 @@ def _write_publish_inputs(
         _write_json(paths["paronym_pairs_path"], {"pairs": paronym_pairs})
     if antonym_pairs is not None:
         _write_json(paths["antonym_pairs_path"], {"pairs": antonym_pairs})
+    if homonym_pairs is not None:
+        _write_json(paths["homonym_pairs_path"], {"pairs": homonym_pairs})
     if synonym_verdicts is not None:
         _write_json(paths["synonym_verdicts_path"], synonym_verdicts)
     if cloze_sources is not None:
