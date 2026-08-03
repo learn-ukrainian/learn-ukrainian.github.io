@@ -46,7 +46,7 @@ const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
-export const PRACTICE_MODE_DECK_VERSION = 4;
+export const PRACTICE_MODE_DECK_VERSION = 5;
 export const PRACTICE_MODES = [
   'flashcards',
   'matching',
