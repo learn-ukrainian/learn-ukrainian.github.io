@@ -1,0 +1,18 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/homonym-paronym-promote
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Rebase PR #6326 onto origin/main after #6302
+
+Branch: `agy/homonym-paronym-promote` (PR #6326).
+Main moved (CEFR soft #6302 merged). Resolve conflicts preserving:
+- homonym pairs + factory wiring from this branch
+- CEFR soft + antonym behavior from main
+
+Do not drop either. Push --force-with-lease. Do not merge.
+Trailer: X-Agent: agy/6326-rebase-after-6302
