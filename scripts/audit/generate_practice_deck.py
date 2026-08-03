@@ -1846,26 +1846,142 @@ def _morph_labels(morphology: dict[str, Any]) -> list[str]:
     return labels
 
 
+_POS_BUCKET_ALIASES: dict[str, tuple[str, ...]] = {
+    "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun"),
+    "verb": ("дієслово", "verb", "infinitive", "imperative"),
+    "adjective": ("прикметник", "adj", "adjective"),
+    "adverb": ("прислівник", "присл", "adv", "adverb"),
+    "numeral": ("числівник", "num", "numeral"),
+    "function": (
+        "прийменник",
+        "приймен.",
+        "сполучник",
+        "спол.",
+        "частка",
+        "preposition",
+        "prep",
+        "conjunction",
+        "conj",
+        "particle",
+        "part",
+        "function",
+        "function word",
+        "службове слово",
+    ),
+}
+
+
+def _normalize_pos_buckets(value: Any) -> list[str]:
+    """Map one POS signal to the closed classify buckets.
+
+    POS fields are normally scalar labels, but VESUM-derived labels can carry a
+    suffix such as ``adv:insert``.  Matching only at a label boundary keeps
+    those tags useful without treating arbitrary prose as a POS signal.
+    """
+    text = _clean_text(value)
+    if not text:
+        return []
+    folded = text.casefold()
+    buckets: list[str] = []
+    for part in re.split(r"\s*[,;/|+]\s*", folded):
+        for bucket, aliases in _POS_BUCKET_ALIASES.items():
+            if any(
+                part == alias or part.startswith(f"{alias}:") or part.startswith(f"{alias} ")
+                or part.startswith(f"{alias}.")
+                for alias in aliases
+            ) and bucket not in buckets:
+                buckets.append(bucket)
+    return buckets
+
+
+_DEFINITION_POS_ALIASES: dict[str, tuple[str, ...]] = {
+    "noun": ("іменник", "noun"),
+    "verb": ("дієслово", "verb"),
+    "adjective": ("прикметник", "adjective"),
+    "adverb": ("прислівник", "присл\\.", "adverb"),
+    "numeral": ("числівник", "numeral"),
+    "function": (
+        "прийменник",
+        "приймен\\.",
+        "сполучник",
+        "спол\\.",
+        "частка",
+        "preposition",
+        "conjunction",
+        "particle",
+    ),
+}
+
+_DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
+    (
+        bucket,
+        re.compile(
+            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:[–—-]\s*)?(?:{'|'.join(aliases)})(?=$|[\s,;:])",
+            re.IGNORECASE,
+        ),
+    )
+    for bucket, aliases in _DEFINITION_POS_ALIASES.items()
+)
+
+
+def _definition_card_pos_buckets(enrichment: dict[str, Any] | None) -> list[str]:
+    if not isinstance(enrichment, dict):
+        return []
+    cards = enrichment.get("definition_cards")
+    if not isinstance(cards, list):
+        return []
+    buckets: list[str] = []
+    for card in cards:
+        if not isinstance(card, dict):
+            continue
+        definitions = card.get("definitions")
+        if isinstance(definitions, str):
+            definitions = [definitions]
+        if not isinstance(definitions, list):
+            continue
+        for definition in definitions:
+            text = _clean_text(definition)
+            if not text:
+                continue
+            for bucket, pattern in _DEFINITION_POS_PATTERNS:
+                if pattern.search(text):
+                    buckets.append(bucket)
+    return buckets
+
+
+def _entry_pos_buckets(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> list[str]:
+    """Collect distinct POS evidence in stable source precedence order."""
+    if morphology is None:
+        morphology = _morphology(entry)
+    enrichment = entry.get("enrichment")
+    enrichment_dict = enrichment if isinstance(enrichment, dict) else {}
+    signals: list[Any] = []
+    if isinstance(morphology, dict):
+        signals.append(morphology.get("pos"))
+    signals.append(entry.get("pos"))
+    for section in ("cefr", "translation"):
+        payload = enrichment_dict.get(section)
+        if isinstance(payload, dict):
+            signals.append(payload.get("pos"))
+
+    buckets: list[str] = []
+    for signal in signals:
+        for bucket in _normalize_pos_buckets(signal):
+            if bucket not in buckets:
+                buckets.append(bucket)
+    for bucket in _definition_card_pos_buckets(enrichment_dict):
+        if bucket not in buckets:
+            buckets.append(bucket)
+    return buckets
+
+
 def _morph_pos(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> str:
     raw = ""
     if morphology is not None:
         raw = str(morphology.get("pos") or "")
     if not raw:
         raw = str(entry.get("pos") or "")
-    value = raw.casefold()
-    if "іменник" in value or value.startswith("noun") or value in {"abbreviation", "proper noun", "plural noun"}:
-        return "noun"
-    if "дієслово" in value or value.startswith("verb") or value in {"infinitive", "imperative"}:
-        return "verb"
-    if "прикметник" in value or value.startswith("adj") or value == "adjective":
-        return "adjective"
-    if "прислівник" in value or value.startswith("adv"):
-        return "adverb"
-    if "числівник" in value or value == "numeral":
-        return "numeral"
-    if value in {"прийменник", "сполучник", "частка", "preposition", "conjunction", "particle"}:
-        return "function"
-    return ""
+    return next(iter(_normalize_pos_buckets(raw)), "")
 
 
 CLASSIFY_LABELS: dict[str, dict[str, tuple[str, str | None]]] = {
@@ -1992,6 +2108,7 @@ def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list
         return []
     labels = _morph_labels(morphology)
     pos = _morph_pos(entry, morphology)
+    pos_buckets = _entry_pos_buckets(entry, morphology)
     sets: list[dict[str, Any]] = []
     if pos == "noun":
         gender = _gender_category(labels)
@@ -2004,7 +2121,10 @@ def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list
         aspect = _aspect_category(labels)
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
-    if pos in CLASSIFY_LABELS["pos"] and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+    # A context-free POS prompt is unsafe when the entry carries more than one
+    # normalized reading.  Morphology remains the source for safe noun/verb
+    # drills above, but no single POS answer is emitted in that case.
+    if len(pos_buckets) <= 1 and pos in CLASSIFY_LABELS["pos"] and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
         sets.append(_category_set_payload("pos", pos, lexeme["cefr"]))
     if not sets:
         return []
