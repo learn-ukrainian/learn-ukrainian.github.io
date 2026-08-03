@@ -651,15 +651,13 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
 }) => {
   await context.clearCookies();
 
-  // The soft-CEFR planner reports the honest capped new-card estimate for the selected level;
-  // assert that rendered count rather than the old hard-CEFR fixture cardinality.
-  await page.route('**/lexicon/practice-index.A1.json', (route) =>
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({
-        deckVersion: 'e2e-scope-fixture',
-        level: 'A1',
-        items: ['a', 'b', 'c'].map((suffix) => ({
+  // Soft CEFR makes every published level eligible, so mock every index shard to keep the
+  // full-level estimate deterministic: eight controlled A1 cards, no background-level drift.
+  await page.route('**/lexicon/practice-index.*.json', (route) => {
+    const { pathname } = new URL(route.request().url());
+    const level = pathname.match(/practice-index\.([A-Z0-9]+)\.json$/)?.[1] ?? 'A1';
+    const items = level === 'A1'
+      ? ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((suffix) => ({
           lemmaId: `e2eScope${suffix}`,
           lemma: `e2eScope${suffix}`,
           cefr: 'A1',
@@ -667,10 +665,13 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
           hasCloze: false,
           clozeIds: [],
           newOrder: 0,
-        })),
-      }),
-    }),
-  );
+        }))
+      : [];
+    return route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ deckVersion: 'e2e-scope-fixture', level, items }),
+    });
+  });
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'learn_ukrainian_custom_sets_v1',
