@@ -157,6 +157,24 @@ the transport valid JSON while preserving the exact decoded output value for
 scoring and audit; it does not delete internal characters, accept duplicate
 objects, or weaken field and action validation. Seven billed minutes cost USD
 0.210000, raising cumulative cost to USD 1.740167.
+Job `6a7004b06b79c09949c20218` then completed the 100-case canary in 344
+RUNNING seconds. Its six billed minutes cost USD 0.180000. All 100 response
+records, item identities, required fields, and checkpoint/response hashes
+validated against the worker receipt. The 25%-buffered full projection was
+3,810 seconds and USD 1.920000, for a projected aggregate of USD 3.840167.
+
+The 4,000-case run resumed only from private direct-upload checkpoints. Job
+`6a7007246b79c09949c20228` persisted 2,375 cases before an HF dataset-commit
+502; 30 billed minutes cost USD 0.900000. Job
+`6a700e66a00abefd4b28e9b9` advanced to 2,950 before the account's rolling
+128-commit/hour limit returned 429; ten billed minutes cost USD 0.300000. After
+the private write path reopened, job `6a7013d96b79c09949c2029b` advanced to
+3,125 before consuming the newly available rolling slots; seven billed minutes
+cost USD 0.210000. GPUs stayed idle during the next verified cooldown. Final
+job `6a701872a00abefd4b28ea7f` resumed all 3,125 durable records and completed
+4,000/4,000 in 803 RUNNING seconds; 14 billed minutes cost USD 0.420000.
+Aggregate provider cost for the phase is USD 3.750167, leaving USD 2.249833
+under the approved USD 6.000000 ceiling.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

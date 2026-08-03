@@ -123,9 +123,49 @@
         "provider_derived_cost_usd": 0.21,
         "provider_running_seconds": 370,
         "stage": "ERROR"
+      },
+      {
+        "job_id": "6a7004b06b79c09949c20218",
+        "mode": "canary",
+        "provider_billed_minutes": 6,
+        "provider_derived_cost_usd": 0.18,
+        "provider_running_seconds": 344,
+        "stage": "COMPLETED"
+      },
+      {
+        "job_id": "6a7007246b79c09949c20228",
+        "mode": "full",
+        "provider_billed_minutes": 30,
+        "provider_derived_cost_usd": 0.9,
+        "provider_running_seconds": 1763,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a700e66a00abefd4b28e9b9",
+        "mode": "full",
+        "provider_billed_minutes": 10,
+        "provider_derived_cost_usd": 0.3,
+        "provider_running_seconds": 594,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a7013d96b79c09949c2029b",
+        "mode": "full",
+        "provider_billed_minutes": 7,
+        "provider_derived_cost_usd": 0.21,
+        "provider_running_seconds": 399,
+        "stage": "ERROR"
+      },
+      {
+        "job_id": "6a701872a00abefd4b28ea7f",
+        "mode": "full",
+        "provider_billed_minutes": 14,
+        "provider_derived_cost_usd": 0.42,
+        "provider_running_seconds": 803,
+        "stage": "COMPLETED"
       }
     ],
-    "prior_provider_cost_usd": 1.740167,
+    "prior_provider_cost_usd": 3.750167,
     "recoverable_execution_retries_authorized": true,
     "superseding_authorization_at": "2026-08-03",
     "validated_cpu_transport": {

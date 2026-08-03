@@ -50,14 +50,14 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 1.740167
+    assert config["authorization"]["prior_provider_cost_usd"] == 3.750167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6ffedca00abefd4b28e89d",
-        "mode": "canary",
-        "provider_billed_minutes": 7,
-        "provider_derived_cost_usd": 0.21,
-        "provider_running_seconds": 370,
-        "stage": "ERROR",
+        "job_id": "6a701872a00abefd4b28ea7f",
+        "mode": "full",
+        "provider_billed_minutes": 14,
+        "provider_derived_cost_usd": 0.42,
+        "provider_running_seconds": 803,
+        "stage": "COMPLETED",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
     assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
@@ -570,6 +570,7 @@ def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds
 
 def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
     config = hf_jobs_baseline.load_config()
+    config["authorization"]["prior_provider_cost_usd"] = 1.740167
     worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
     worker["timing"]["current_generation_seconds"] = 60.0
     passed = hf_jobs_baseline.project_full_run(
@@ -594,6 +595,7 @@ def test_projection_applies_25_percent_margin_and_budget_ceiling() -> None:
 
 def test_full_launch_timeout_is_bound_to_passed_projection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     config = hf_jobs_baseline.load_config()
+    config["authorization"]["prior_provider_cost_usd"] = 1.740167
     worker, provider = _canary_receipts(config, generation_seconds=120.0, running_seconds=210)
     projection = hf_jobs_baseline.project_full_run(
         worker_receipt=worker,
@@ -765,7 +767,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 1.740167
+    assert gate["prior_provider_cost_usd"] == 3.750167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
@@ -782,6 +784,11 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
         "6a6ff094a00abefd4b28e630",
         "6a6ff31d6b79c09949c2000b",
         "6a6ffedca00abefd4b28e89d",
+        "6a7004b06b79c09949c20218",
+        "6a7007246b79c09949c20228",
+        "6a700e66a00abefd4b28e9b9",
+        "6a7013d96b79c09949c2029b",
+        "6a701872a00abefd4b28ea7f",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40
@@ -937,6 +944,13 @@ def test_results_package_includes_complete_responses_but_not_private_generations
     assert public_receipt["environment"]["launch_client"] == {
         "name": "huggingface_hub",
         "version": "1.25.1",
+    }
+    assert public_receipt["provider_phase"] == {
+        "aggregate_provider_cost_usd": 3.750167,
+        "maximum_provider_cost_usd": 6.0,
+        "remaining_provider_budget_usd": 2.249833,
+        "job_count": 20,
+        "jobs": config["authorization"]["incurred_provider_costs"],
     }
     assert {path.name for path in output.iterdir()} == hf_jobs_baseline.PUBLIC_FILES
     published = suite_cli.read_jsonl(output / "responses.jsonl")

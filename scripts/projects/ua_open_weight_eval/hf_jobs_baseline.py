@@ -956,7 +956,7 @@ def _results_card(config: Mapping[str, Any], public_receipt: Mapping[str, Any]) 
     }
     header = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False).strip()
     model = config["model"]
-    cost = public_receipt["provider_job"]["provider_derived_cost_usd"]
+    cost = public_receipt["provider_phase"]["aggregate_provider_cost_usd"]
     return f"""---
 {header}
 ---
@@ -974,9 +974,10 @@ every Gemma 4 format, quantization, deployment, or Ukrainian capability. The
 4,000 wrapped cases are not 4,000 independent human linguistic judgments. No
 single “Ukrainian quality” score is produced.
 
-Provider-derived execution cost: USD {cost:.6f}. See
+Aggregate provider-derived phase cost: USD {cost:.6f}. See
 `run_receipt.public.json` for the immutable model, tokenizer, runner, hardware,
-decoding, timing, throughput, and cost bindings.
+decoding, timing, throughput, final-job receipt, and complete sanitized cost
+ledger.
 
 ## Reproduction (English)
 
@@ -1029,6 +1030,16 @@ def package_results(
     report = suite_cli.score_saved(output_dir / "responses.jsonl", report_path)
     metrics_rows = _metrics_rows(report)
     write_atomic(output_dir / "metrics.jsonl", "".join(canonical_json(row) + "\n" for row in metrics_rows))
+    authorization = config["authorization"]
+    aggregate_cost = float(authorization["prior_provider_cost_usd"])
+    maximum_cost = float(authorization["maximum_provider_cost_usd"])
+    provider_phase = {
+        "aggregate_provider_cost_usd": aggregate_cost,
+        "maximum_provider_cost_usd": maximum_cost,
+        "remaining_provider_budget_usd": round(maximum_cost - aggregate_cost, 6),
+        "job_count": len(authorization["incurred_provider_costs"]),
+        "jobs": authorization["incurred_provider_costs"],
+    }
     public_receipt = {
         "schema_version": "ua_open_weight_eval_public_run_receipt.v1",
         "release": {
@@ -1051,6 +1062,7 @@ def package_results(
         "timing": worker_receipt["timing"],
         "throughput": worker_receipt["throughput"],
         "provider_job": provider_receipt,
+        "provider_phase": provider_phase,
         "outputs": {
             "response_count": 4000,
             "responses_sha256": sha256_file(output_dir / "responses.jsonl"),
