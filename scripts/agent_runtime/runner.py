@@ -2939,12 +2939,17 @@ def resolve_inter_agent_route(
             f"ACP participant {participant!r} is not an enabled confined direct-only route"
         )
 
-    if model is not None and model != pinned_model:
+    selected_model = pinned_model
+    if pinned_model is None:
+        if model is not None:
+            _validate_catalog_model(participant=participant, model=model)
+            selected_model = model
+    elif model is not None and model != pinned_model:
         raise InterAgentTransportError(
             f"ACP participant {participant!r} only supports its registered model pin "
             f"{pinned_model!r}; got {model!r}"
         )
-    if pinned_model is not None:
+    else:
         _validate_catalog_model(participant=participant, model=pinned_model)
 
     pinned_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
@@ -2957,7 +2962,7 @@ def resolve_inter_agent_route(
         participant=participant,
         seat=seat,
         target_agent=target_agent,
-        model=pinned_model,
+        model=selected_model,
         effort=pinned_effort,
     )
 
@@ -3005,6 +3010,7 @@ def invoke_inter_agent(
     effort: str | None = None,
     transport: str | None = None,
     metadata: Mapping[str, object] | None = None,
+    sealed_review_mcp_config: Path | None = None,
     hard_timeout: int = 300,
 ) -> Result:
     """Invoke one confined ACP participant through the normal communication seam.
@@ -3021,6 +3027,9 @@ def invoke_inter_agent(
         raise InterAgentTransportError("inter-agent prompt must be a non-empty string")
     if isinstance(hard_timeout, bool) or not isinstance(hard_timeout, int) or hard_timeout < 1:
         raise InterAgentTransportError("inter-agent hard_timeout must be a positive integer")
+    sealed_config = None
+    if sealed_review_mcp_config is not None:
+        sealed_config = str(Path(sealed_review_mcp_config))
 
     validated_task_id = _require_local_metadata_field(
         "task_id", task_id, adapter_label="InterAgentTransport"
@@ -3059,6 +3068,11 @@ def invoke_inter_agent(
                     "target_agent": route.target_agent,
                     "correlation_id": validated_correlation_id,
                     "idempotency_key": validated_idempotency_key,
+                    **(
+                        {"sealed_review_mcp_config": sealed_config}
+                        if sealed_config is not None
+                        else {}
+                    ),
                 },
                 hard_timeout=hard_timeout,
                 effort=route.effort,

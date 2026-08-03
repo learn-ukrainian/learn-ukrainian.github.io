@@ -57,14 +57,13 @@ Contract captured empirically from the local ``acpx@0.13.0`` install
   selector produced a successful one-shot response, while the same runtime
   path with the selector stripped failed closed as ``AUTH_REQUIRED``.
 
-Confinement is structural, not probabilistic: every invocation either adapter
-builds passes ``--deny-all --no-fs --no-terminal --allowed-tools ""
---auth-policy fail --non-interactive-permissions fail --max-turns 1
---prompt-retries 0`` unconditionally. There is no code path that can loosen
-any of these — a caller cannot pass permission/tool overrides through
-``tool_config`` (the adapter allowlists a fixed set of keys — shadow/target
-markers plus local correlation/idempotency metadata — and rejects anything
-else before spawn).
+Confinement is structural, not probabilistic. Ordinary calls pass
+``--deny-all --no-fs --no-terminal --allowed-tools ""``. The one formal-review
+exception retains ``--no-fs`` and ``--no-terminal`` while admitting only five
+exact ``mcp__sealed_review__*`` tools from a parent-owned config and a
+content-verified helper; its permission policy defaults every other request to
+deny. The adapter rejects any different config, helper, interpreter, snapshot
+mode, or tool-config key before spawn.
 
 Issues: #6027, #6043, #6078, #6130, #6158.
 """
@@ -78,6 +77,7 @@ import os
 import re
 import shlex
 import shutil
+import stat
 import subprocess
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -153,6 +153,7 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
 )
 AGY_ACP_MODEL = "gemini-3.6-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5"
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.2"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.2"
 DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
@@ -174,6 +175,23 @@ _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mj
 _TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     {"permission": {"*": "deny"}, "tools": {"*": False}},
+    separators=(",", ":"),
+    sort_keys=True,
+)
+_OPENCODE_SEALED_REVIEW_CONFIG = json.dumps(
+    {
+        # OpenCode normalizes MCP tools to <server>_<tool>. Keep every
+        # built-in and every other MCP server denied while making only the
+        # parent-pinned sealed reader visible to the provider.
+        "permission": {"*": "deny", "sealed_review_*": "allow"},
+        # OpenCode otherwise replaces tool results above 50 KiB with a path in
+        # its local tool-output directory. The sealed reviewer cannot read
+        # that directory by design, so keep each bounded required-read result
+        # inline. The MCP itself still enforces the tighter 384 KiB streamed
+        # response and 2 MiB complete-evidence ceilings; 3 MiB leaves bounded
+        # room for the authenticated chunks' JSON envelope.
+        "tool_output": {"max_bytes": 3 * 1024 * 1024, "max_lines": 100_000},
+    },
     separators=(",", ":"),
     sort_keys=True,
 )
@@ -220,8 +238,94 @@ _ALLOWED_TOOL_CONFIG_KEYS = frozenset(
         "target_agent",
         "correlation_id",
         "idempotency_key",
+        "sealed_review_mcp_config",
     }
 )
+
+_SEALED_REVIEW_TOOL_NAMES = (
+    "mcp__sealed_review__list_files",
+    "mcp__sealed_review__read_file",
+    "mcp__sealed_review__read_required",
+    "mcp__sealed_review__read_required_all",
+    "mcp__sealed_review__search_text",
+)
+
+
+def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> str | None:
+    """Validate the exact parent-owned MCP config before enabling any tool."""
+    if raw is None:
+        return None
+    if not isinstance(raw, str) or not raw or not Path(raw).is_absolute():
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config must be an absolute path")
+    config_path = Path(raw)
+    try:
+        config_stat = config_path.lstat()
+        payload = config_path.read_bytes()
+    except OSError as exc:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config is unreadable: {exc}") from exc
+    if (
+        not stat.S_ISREG(config_stat.st_mode)
+        or config_stat.st_uid != os.getuid()
+        or config_stat.st_mode & 0o077
+        or len(payload) > 16 * 1024
+    ):
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config ownership/mode/size is unsafe")
+    try:
+        config = json.loads(payload)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config is malformed") from exc
+    if not isinstance(config, dict) or set(config) != {"mcpServers"}:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config has unsupported keys")
+    servers = config.get("mcpServers")
+    if not isinstance(servers, list) or len(servers) != 1 or not isinstance(servers[0], dict):
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP config must define exactly one server")
+    server = servers[0]
+    if set(server) != {"name", "command", "args", "env"} or server.get("name") != "sealed_review":
+        raise AcpxShadowRefusalError(f"{adapter_label}: only the sealed_review server is permitted")
+    expected_python = str(_REPO_ROOT / ".venv" / "bin" / "python")
+    args = server.get("args")
+    if server.get("command") != expected_python or server.get("env") != []:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
+    if not isinstance(args, list) or len(args) != 4 or args[:2] != ["-I", "-S"]:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP arguments are invalid")
+    helper = Path(args[2]) if isinstance(args[2], str) else Path()
+    snapshot = Path(args[3]) if isinstance(args[3], str) else Path()
+    try:
+        helper_stat = helper.lstat()
+        snapshot_stat = snapshot.lstat()
+        config_parent_stat = config_path.parent.lstat()
+        helper_parent_stat = helper.parent.lstat()
+        from scripts.review.isolation import _SEALED_READ_MCP_SOURCE, _has_review_temp_root_marker
+
+        expected_helper = hashlib.sha256(_SEALED_READ_MCP_SOURCE.encode("utf-8")).hexdigest()
+        observed_helper = hashlib.sha256(helper.read_bytes()).hexdigest()
+    except (ImportError, OSError) as exc:
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP roots are invalid") from exc
+    if (
+        not helper.is_absolute()
+        or not snapshot.is_absolute()
+        or not stat.S_ISREG(helper_stat.st_mode)
+        or not stat.S_ISDIR(snapshot_stat.st_mode)
+        or not stat.S_ISDIR(config_parent_stat.st_mode)
+        or not stat.S_ISDIR(helper_parent_stat.st_mode)
+        or helper_stat.st_uid != os.getuid()
+        or snapshot_stat.st_uid != os.getuid()
+        or config_parent_stat.st_uid != os.getuid()
+        or helper_parent_stat.st_uid != os.getuid()
+        or helper_stat.st_mode & 0o022
+        or snapshot_stat.st_mode & 0o022
+        or config_parent_stat.st_mode & 0o022
+        or helper_parent_stat.st_mode & 0o022
+        or observed_helper != expected_helper
+        or not config_path.parent.name.startswith("lu-review-write-")
+        or not helper.parent.name.startswith("lu-review-exec-")
+        or not snapshot.name.startswith("lu-review-view-")
+        or not _has_review_temp_root_marker(config_path.parent)
+        or not _has_review_temp_root_marker(helper.parent)
+        or not _has_review_temp_root_marker(snapshot)
+    ):
+        raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP helper/snapshot failed validation")
+    return str(config_path)
 
 # Fixed ACPX built-ins available only through the runner-owned inter-agent
 # transport boundary (or its bounded discussion controller).  This is
@@ -234,7 +338,7 @@ ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
     "claude": {
         "seat": "acpx-claude-shadow",
         "agent": "claude",
-        "model": CLAUDE_ACP_MODEL,
+        "model": None,
     },
     "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
     "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
@@ -280,6 +384,7 @@ ACPX_PARTICIPANT_EFFORTS: dict[str, str] = {
 # is applied after strict NDJSON parsing and before a Result can reach the
 # fleet-authority receipt.
 ACPX_PARSED_RESPONSE_LIMIT_BYTES = 512 * 1024
+ACPX_TOOL_CALL_LIMIT = 2048
 
 
 @dataclass(frozen=True)
@@ -731,8 +836,31 @@ def _require_compatible_acpx_binary(
     return binary, observed_version
 
 
-def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
-    """Shared structural confinement flags for every ACPX seat."""
+def _confinement_prefix_argv(
+    binary: str,
+    cwd: Path,
+    *,
+    sealed_review_mcp_config: str | None = None,
+) -> list[str]:
+    """Shared confinement, optionally admitting only sealed review tools."""
+    permission_args = ["--deny-all", "--allowed-tools", ""]
+    if sealed_review_mcp_config is not None:
+        permission_policy = json.dumps(
+            {
+                "autoApprove": list(_SEALED_REVIEW_TOOL_NAMES),
+                "defaultAction": "deny",
+            },
+            separators=(",", ":"),
+            sort_keys=True,
+        )
+        permission_args = [
+            "--permission-policy",
+            permission_policy,
+            "--allowed-tools",
+            ",".join(_SEALED_REVIEW_TOOL_NAMES),
+            "--mcp-config",
+            sealed_review_mcp_config,
+        ]
     return [
         binary,
         "--cwd",
@@ -742,13 +870,11 @@ def _confinement_prefix_argv(binary: str, cwd: Path) -> list[str]:
         "--json-strict",
         "--auth-policy",
         "fail",
-        "--deny-all",
         "--non-interactive-permissions",
         "fail",
         "--no-fs",
         "--no-terminal",
-        "--allowed-tools",
-        "",
+        *permission_args,
         "--max-turns",
         "1",
         "--prompt-retries",
@@ -1024,7 +1150,7 @@ class AcpxAdapter:
     Normal communication reaches this seat only through the runner-owned ACP
     boundary. It is not a general-purpose ACPX adapter: it only ever builds
     one invocation shape (``codex exec``, one Codex ACP participant, no tools,
-    no fs/terminal capability, no session, no queue). Every other ACPX
+    no arbitrary fs/terminal capability, no session, no queue). Every other ACPX
     capability (persistent sessions, other agents, flows, compare) is out of
     scope for this seat and structurally unreachable through this class.
     """
@@ -1088,6 +1214,10 @@ class AcpxAdapter:
             adapter_label="AcpxAdapter",
             required_target="codex",
         )
+        sealed_review_mcp_config = _validate_sealed_review_mcp_config(
+            tc.get("sealed_review_mcp_config"),
+            adapter_label="AcpxAdapter",
+        )
 
         validated_task_id = _require_local_metadata_field("task_id", task_id)
         correlation_id = _require_local_metadata_field("correlation_id", tc.get("correlation_id"))
@@ -1106,7 +1236,11 @@ class AcpxAdapter:
             builtin_agent="codex",
         )
 
-        cmd: list[str] = _confinement_prefix_argv(binary, cwd)
+        cmd: list[str] = _confinement_prefix_argv(
+            binary,
+            cwd,
+            sealed_review_mcp_config=sealed_review_mcp_config,
+        )
         if model:
             cmd.extend(["--model", model])
         if effort is not None:
@@ -1202,6 +1336,8 @@ class AcpxAdapter:
         final_stop_reason: object = _MISSING_STOP_REASON
         stop_reason_response_count = 0
         tokens: int | None = None
+        tool_calls_by_id: dict[str, dict[str, Any]] = {}
+        tool_call_order: list[str] = []
 
         for event in events:
             if "params" in event and not isinstance(event["params"], dict):
@@ -1227,6 +1363,44 @@ class AcpxAdapter:
                         return self._closed(usage_error, stderr)
                     if usage_total is not None:
                         tokens = usage_total
+                elif update.get("sessionUpdate") in {"tool_call", "tool_call_update"}:
+                    tool_call_id = update.get("toolCallId")
+                    if not isinstance(tool_call_id, str) or not tool_call_id:
+                        return self._closed("unrecognized ACP toolCallId schema", stderr)
+                    if tool_call_id not in tool_calls_by_id:
+                        if len(tool_call_order) >= ACPX_TOOL_CALL_LIMIT:
+                            return self._closed("ACPX tool-call trace exceeds bounded limit", stderr)
+                        tool_call_order.append(tool_call_id)
+                        tool_calls_by_id[tool_call_id] = {
+                            "id": tool_call_id,
+                            "name": "",
+                            "title": "",
+                            "arguments": {},
+                            "result": None,
+                            "status": "pending",
+                        }
+                    record = tool_calls_by_id[tool_call_id]
+                    name = update.get("name")
+                    if isinstance(name, str) and name:
+                        record["name"] = name
+                    title = update.get("title")
+                    if isinstance(title, str) and title:
+                        record["title"] = title
+                    raw_input = update.get("rawInput")
+                    if raw_input is not None:
+                        if isinstance(raw_input, str):
+                            try:
+                                raw_input = json.loads(raw_input)
+                            except json.JSONDecodeError:
+                                raw_input = {"_raw": raw_input}
+                        record["arguments"] = raw_input if isinstance(raw_input, dict) else {"_raw": raw_input}
+                    status = update.get("status")
+                    if isinstance(status, str) and status:
+                        record["status"] = status
+                    if "rawOutput" in update:
+                        record["result"] = update.get("rawOutput")
+                    elif "content" in update:
+                        record["result"] = update.get("content")
                 continue
 
             has_result = "result" in event
@@ -1322,7 +1496,7 @@ class AcpxAdapter:
             rate_limited=False,
             session_id=None,
             tokens=tokens,
-            tool_calls=[],
+            tool_calls=[tool_calls_by_id[tool_call_id] for tool_call_id in tool_call_order],
         )
 
     @staticmethod
@@ -1369,6 +1543,7 @@ class _AcpxDiscussionAdapter:
     name: str
     target_agent: str
     fixed_model: str | None = None
+    allowed_models: frozenset[str] = frozenset()
     acpx_model: str | None = None
     fixed_effort: str | None = None
     forward_model_to_acpx: bool = True
@@ -1380,7 +1555,12 @@ class _AcpxDiscussionAdapter:
         _ = cwd
         return None
 
-    def _env_overrides(self) -> dict[str, str]:
+    def _env_overrides(
+        self,
+        *,
+        sealed_review_mcp_config: str | None = None,
+    ) -> dict[str, str]:
+        _ = sealed_review_mcp_config
         return {} if self.auth_env is None else {self.auth_env: "1"}
 
     def _env_unsets(self) -> tuple[str, ...]:
@@ -1410,10 +1590,19 @@ class _AcpxDiscussionAdapter:
             adapter_label=type(self).__name__,
             required_target=self.target_agent,
         )
+        sealed_review_mcp_config = _validate_sealed_review_mcp_config(
+            tc.get("sealed_review_mcp_config"),
+            adapter_label=type(self).__name__,
+        )
         if self.fixed_model is not None and model not in {None, self.fixed_model}:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None "
                 f"or {self.fixed_model!r}"
+            )
+        if self.allowed_models and model is not None and model not in self.allowed_models:
+            raise AcpxShadowRefusalError(
+                f"{type(self).__name__}: model={model!r} rejected; allowed pins are "
+                f"{sorted(self.allowed_models)!r}"
             )
         if self.fixed_effort is not None and effort not in {None, self.fixed_effort}:
             raise AcpxShadowRefusalError(
@@ -1441,9 +1630,15 @@ class _AcpxDiscussionAdapter:
             cwd=cwd,
             builtin_agent=builtin_agent,
         )
-        cmd = _confinement_prefix_argv(binary, cwd)
+        cmd = _confinement_prefix_argv(
+            binary,
+            cwd,
+            sealed_review_mcp_config=sealed_review_mcp_config,
+        )
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
+        elif self.allowed_models:
+            cmd.extend(["--model", model or self.default_model])
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
             custom_metadata: dict[str, Any] = {}
@@ -1464,9 +1659,13 @@ class _AcpxDiscussionAdapter:
             metadata["acpx_transport"] = True
         if self.fixed_model is not None:
             metadata["model"] = self.fixed_model
+        elif self.allowed_models:
+            metadata["model"] = model or self.default_model
         if self.fixed_effort is not None:
             metadata["effort"] = self.fixed_effort
         metadata.update(custom_metadata)
+        if sealed_review_mcp_config is not None:
+            metadata["tool_policy"] = "sealed-review-only"
         metadata.update(self._extra_metadata())
         if tc.get("acpx_transport") is True:
             # Keep the runner-sealed transport fields authoritative even if a
@@ -1480,7 +1679,9 @@ class _AcpxDiscussionAdapter:
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,
-            env_overrides=self._env_overrides(),
+            env_overrides=self._env_overrides(
+                sealed_review_mcp_config=sealed_review_mcp_config,
+            ),
             env_unsets=self._env_unsets(),
             liveness_paths=(),
             metadata=metadata,
@@ -1498,8 +1699,8 @@ class _AcpxDiscussionAdapter:
 class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-claude-shadow"
     target_agent = "claude"
-    fixed_model = CLAUDE_ACP_MODEL
-    default_model = fixed_model
+    allowed_models = CLAUDE_ACP_MODELS
+    default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
 
 
@@ -1579,10 +1780,18 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
             "tool_policy": "deny-all",
         }
 
-    def _env_overrides(self) -> dict[str, str]:
+    def _env_overrides(
+        self,
+        *,
+        sealed_review_mcp_config: str | None = None,
+    ) -> dict[str, str]:
         return {
             GLM_AUTH_OPENCODE_LOGIN_ENV: "1",
-            "OPENCODE_CONFIG_CONTENT": _OPENCODE_DENY_ALL_CONFIG,
+            "OPENCODE_CONFIG_CONTENT": (
+                _OPENCODE_SEALED_REVIEW_CONFIG
+                if sealed_review_mcp_config is not None
+                else _OPENCODE_DENY_ALL_CONFIG
+            ),
         }
 
 class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
@@ -1688,6 +1897,10 @@ class AcpxGrokShadowAdapter:
             adapter_label="AcpxGrokShadowAdapter",
             required_target="grok",
         )
+        sealed_review_mcp_config = _validate_sealed_review_mcp_config(
+            tc.get("sealed_review_mcp_config"),
+            adapter_label="AcpxGrokShadowAdapter",
+        )
 
         if model is not None and model != GROK_SHADOW_MODEL:
             raise AcpxShadowRefusalError(
@@ -1738,7 +1951,11 @@ class AcpxGrokShadowAdapter:
 
         profile_path = _require_grok_profile()
         agent_command = _build_grok_agent_command(grok_binary, profile_path)
-        cmd: list[str] = _confinement_prefix_argv(acpx_binary, cwd)
+        cmd: list[str] = _confinement_prefix_argv(
+            acpx_binary,
+            cwd,
+            sealed_review_mcp_config=sealed_review_mcp_config,
+        )
         # --agent is a single shell-safe command string. Do not combine with a
         # positional agent token (acpx grammar), and never emit built-in
         # "grok-build".

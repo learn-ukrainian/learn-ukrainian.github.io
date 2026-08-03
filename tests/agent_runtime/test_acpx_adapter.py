@@ -1657,7 +1657,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
         "claude": {
             "seat": "acpx-claude-shadow",
             "agent": "claude",
-            "model": "claude-sonnet-5",
+            "model": None,
         },
         "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
         "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},

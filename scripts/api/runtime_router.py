@@ -19,7 +19,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
-from .config import BATCH_STATE_DIR
+from .config import BATCH_STATE_DIR, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -41,7 +41,7 @@ from agent_runtime.adapters.acpx import (
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.usage import has_headroom
 
-from scripts.fleet_comms.message_plane import default_plane_root
+from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.orchestration.codex_transport_health import (
     DEFAULT_CONFIG_PATH as CODEX_TRANSPORT_CONFIG_PATH,
 )
@@ -512,6 +512,187 @@ def recent_runtime_records(*, limit: int = 50) -> dict[str, Any]:
         })
     summaries.sort(key=lambda item: _parse_iso_datetime(item.get("ts")) or datetime.min.replace(tzinfo=UTC), reverse=True)
     return {"records": summaries[:record_limit]}
+
+
+def _routing_plane_status() -> dict[str, Any]:
+    """Expose the actual plane posture without inferring authority from rows."""
+    try:
+        raw = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=0)
+    except Exception:
+        raw = {"mode": "unavailable", "enabled": False}
+    mode = str(raw.get("mode") or "unavailable")
+    authority_active = mode == "authority"
+    return {
+        "mode": mode,
+        "enabled": bool(raw.get("enabled")),
+        "authority": "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative",
+        "cutover": "authority_active" if authority_active else "pre_flip_operator_gated",
+    }
+
+
+def _routing_value(record: dict[str, Any], *keys: str) -> Any:
+    """Read an optional compatible ledger field without fabricating values."""
+    for key in keys:
+        value = record.get(key)
+        if value is not None:
+            return value
+    return None
+
+
+def _routing_first(*values: Any) -> Any:
+    """Return the first present field while preserving meaningful zero values."""
+    return next((value for value in values if value is not None), None)
+
+
+def _routing_trace_value(trace: dict[str, Any], *keys: str) -> Any:
+    """Read a trace field across policy-version-compatible names."""
+    return _routing_first(*(trace.get(key) for key in keys))
+
+
+def _routing_duration_s(record: dict[str, Any]) -> float | None:
+    direct = _routing_value(record, "duration_s", "duration_seconds")
+    if isinstance(direct, (int, float)) and not isinstance(direct, bool):
+        return float(direct)
+    lifecycle = record.get("lifecycle") if isinstance(record.get("lifecycle"), dict) else {}
+    started = _parse_iso_datetime(_routing_first(_routing_value(record, "started_at"), lifecycle.get("started_at")))
+    settled = _parse_iso_datetime(
+        _routing_first(_routing_value(record, "settled_at", "terminal_at"), lifecycle.get("settled_at"))
+    )
+    if started is None or settled is None:
+        return None
+    return max(0.0, round((settled - started).total_seconds(), 3))
+
+
+def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
+    """Serialize an allowlisted, body-free routing decision for the Runtime UI."""
+    requested = record.get("requested") if isinstance(record.get("requested"), dict) else {}
+    resolved = record.get("resolved") if isinstance(record.get("resolved"), dict) else {}
+    quota_detail = record.get("quota") if isinstance(record.get("quota"), dict) else {}
+    quota_snapshot = _routing_first(
+        quota_detail.get("snapshot") if isinstance(quota_detail.get("snapshot"), dict) else None,
+        _routing_value(record, "quota_snapshot") if isinstance(_routing_value(record, "quota_snapshot"), dict) else None,
+    ) or {}
+    lifecycle = record.get("lifecycle") if isinstance(record.get("lifecycle"), dict) else {}
+    evidence = record.get("evidence") if isinstance(record.get("evidence"), dict) else {}
+    replay = record.get("replay") if isinstance(record.get("replay"), dict) else {}
+    retry = record.get("retry") if isinstance(record.get("retry"), dict) else {}
+    selection_trace = _routing_first(_routing_value(record, "selection_trace", "trace"), resolved.get("trace"))
+    trace = selection_trace if isinstance(selection_trace, dict) else {}
+    automatic = _routing_value(record, "automatic")
+    if not isinstance(automatic, bool):
+        automatic = _routing_value(record, "route_mode") == "auto" or requested.get("route_mode") == "auto"
+    return {
+        "decision_id": _routing_value(record, "decision_id"),
+        "decision_event": _routing_value(record, "event_type"),
+        "decision_state": _routing_value(record, "state"),
+        "source_authority_id": _routing_value(record, "source_authority_id", "reservation_id"),
+        "authority_key": _routing_value(record, "authority_key"),
+        "timestamp": _routing_value(record, "created_at", "timestamp"),
+        "initiator": _routing_first(_routing_value(record, "initiator"), requested.get("initiator")),
+        "author_model": _routing_first(_routing_value(record, "author_model"), requested.get("author_model")),
+        "author_family": _routing_first(_routing_value(record, "author_family"), requested.get("author_family")),
+        "requested_role": _routing_first(_routing_value(record, "requested_role"), requested.get("role")),
+        "requested_profile": _routing_first(_routing_value(record, "requested_profile"), requested.get("profile")),
+        "requested_risk": _routing_first(_routing_value(record, "requested_risk"), requested.get("risk")),
+        "requested_route": _routing_first(_routing_value(record, "requested_route"), requested.get("route")),
+        "automatic": automatic,
+        "resolved_candidate": _routing_first(_routing_value(record, "resolved_candidate", "candidate"), resolved.get("candidate")),
+        "resolved_route": _routing_first(_routing_value(record, "resolved_route", "route"), resolved.get("route")),
+        "resolved_model": _routing_first(_routing_value(record, "resolved_model", "model"), resolved.get("model")),
+        "resolved_family": _routing_first(_routing_value(record, "resolved_family", "family"), resolved.get("family")),
+        "quota_bucket": _routing_first(_routing_value(record, "quota_bucket"), quota_detail.get("bucket")),
+        "policy_version": _routing_first(_routing_value(record, "policy_version"), resolved.get("policy_version")),
+        "selection_reason": _routing_first(_routing_value(record, "selection_reason", "reason"), evidence.get("reason")),
+        "selection_trace": selection_trace,
+        "selection_reasoning": {
+            # The order is deliberate: a candidate must first be eligible and
+            # task-suitable before quota, opportunity cost, capacity, or
+            # failure posture can distinguish otherwise suitable routes.
+            "hard_eligibility": _routing_trace_value(
+                trace,
+                "hard_eligibility", "eligibility", "capability_gates", "gates",
+            ),
+            "task_fit_quality": _routing_trace_value(
+                trace,
+                "task_fit", "capability_fit", "strength", "quality_rank", "suitability",
+            ),
+            "tie_breakers": _routing_trace_value(
+                trace,
+                "tie_breakers", "quota_cost_capacity", "quota", "opportunity_cost", "failure_posture",
+            ),
+            "cheaper_or_idle_not_selected": _routing_trace_value(
+                trace,
+                "cheaper_or_idle_not_selected", "rejected_alternatives", "not_selected",
+            ),
+        },
+        "quota_source": _routing_first(_routing_value(record, "quota_source"), quota_snapshot.get("source")),
+        "quota_freshness": _routing_first(_routing_value(record, "quota_freshness", "quota_fresh_at"), quota_detail.get("fresh_at"), quota_snapshot.get("freshness")),
+        "quota_headroom": _routing_first(_routing_value(record, "quota_headroom"), quota_snapshot.get("headroom")),
+        "estimated_input_bytes": _routing_first(_routing_value(record, "estimated_input_bytes"), requested.get("estimated_input_bytes")),
+        "actual_input_bytes": _routing_value(record, "actual_input_bytes"),
+        "actual_output_bytes": _routing_value(record, "actual_output_bytes"),
+        "actual_work_bytes": _routing_first(_routing_value(record, "actual_work_bytes"), lifecycle.get("actual_bytes")),
+        "actual_tokens": _routing_first(_routing_value(record, "actual_tokens"), lifecycle.get("actual_tokens")),
+        "reservation_state": _routing_first(_routing_value(record, "reservation_state", "status"), lifecycle.get("status")),
+        "terminal_status": _routing_first(_routing_value(record, "terminal_status", "status"), lifecycle.get("status")),
+        "created_at": _routing_first(_routing_value(record, "created_at"), lifecycle.get("created_at")),
+        "expires_at": _routing_first(_routing_value(record, "expires_at"), lifecycle.get("expires_at")),
+        "started_at": _routing_first(_routing_value(record, "started_at"), lifecycle.get("started_at")),
+        "settled_at": _routing_first(_routing_value(record, "settled_at", "terminal_at"), lifecycle.get("settled_at")),
+        "duration_s": _routing_duration_s(record),
+        "failure_classification": _routing_first(_routing_value(record, "failure_classification"), lifecycle.get("failure_classification")),
+        "retry_chain": _routing_first(_routing_value(record, "retry_chain", "retry"), retry),
+        "failover_chain": _routing_value(record, "failover_chain", "failover"),
+        "replay_status": _routing_first(_routing_value(record, "replay_status", "replay"), replay),
+        "cache_status": _routing_value(record, "cache_status", "cache"),
+    }
+
+
+def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
+    """Read persisted routing decisions through the optional authority ledger.
+
+    The routing-reservation store is owned by Fleet Comms. Runtime only calls
+    its optional read-only projection and reports a distinct unavailable state
+    until that authority is installed; an absent table is never treated as an
+    empty history.
+    """
+    record_limit = min(max(1, int(limit)), 100)
+    plane = _routing_plane_status()
+    try:
+        ledger = importlib.import_module("scripts.fleet_comms.routing_reservations")
+        reader = ledger.list_routing_decisions
+        rows = reader(root=default_plane_root(repo_root=Path(PROJECT_ROOT)), limit=record_limit)
+    except (ImportError, AttributeError):
+        return {
+            "availability": "unavailable",
+            "reason": "routing_decision_reader_unavailable",
+            "plane": plane,
+            "assignments": [],
+        }
+    except (OSError, sqlite3.Error, TypeError, ValueError):
+        return {
+            "availability": "unavailable",
+            "reason": "routing_decision_reader_failed",
+            "plane": plane,
+            "assignments": [],
+        }
+    if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
+        return {
+            "availability": "malformed",
+            "reason": "routing_decision_reader_malformed",
+            "plane": plane,
+            "assignments": [],
+        }
+    assignments = [_routing_assignment_item(row) for row in rows[:record_limit]]
+    assignments.sort(
+        key=lambda item: _parse_iso_datetime(item.get("timestamp")) or datetime.min.replace(tzinfo=UTC),
+        reverse=True,
+    )
+    return {
+        "availability": "available" if assignments else "empty",
+        "plane": plane,
+        "assignments": assignments,
+    }
 
 
 def runtime_recent_outcomes_today() -> dict[str, int]:
@@ -1114,6 +1295,12 @@ async def runtime_headroom(
 @router.get("/recent")
 async def runtime_recent(limit: int = Query(50, ge=1, le=500)):
     return await asyncio.to_thread(recent_runtime_records, limit=limit)
+
+
+@router.get("/routing-assignments")
+async def runtime_routing_assignments(limit: int = Query(100, ge=1, le=100)):
+    """Read-only routing authority decisions and their actual plane posture."""
+    return await asyncio.to_thread(list_routing_assignments, limit=limit)
 
 
 @router.get("/transport-health")
