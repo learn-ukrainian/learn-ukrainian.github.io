@@ -331,6 +331,10 @@ def verify_config(config: Mapping[str, Any]) -> None:
         config.get("runner", {}).get("structured_outputs") == "json_schema",
         "structured output contract drift",
     )
+    _require(
+        config.get("runner", {}).get("structured_outputs_disable_any_whitespace") is True,
+        "structured output whitespace contract drift",
+    )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
 
@@ -452,6 +456,7 @@ def build_sampling_params(
         max_tokens=int(runner["max_tokens"]),
         structured_outputs=structured_outputs_type(
             json=RESPONSE_JSON_SCHEMA,
+            disable_any_whitespace=bool(runner["structured_outputs_disable_any_whitespace"]),
             disable_additional_properties=True,
         ),
     )
@@ -612,6 +617,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "max_tokens": config["runner"]["max_tokens"],
             "parse_retries": config["runner"]["parse_retries"],
             "structured_outputs": config["runner"]["structured_outputs"],
+            "structured_outputs_disable_any_whitespace": config["runner"][
+                "structured_outputs_disable_any_whitespace"
+            ],
             "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },
         "network_during_generation": "private_checkpoint_upload_only",

@@ -107,6 +107,13 @@ execution change, a failed response now records its raw attempts and hashes
 only inside the authenticated private failure receipt; the provider log keeps
 only the redacted error summary. Five billed minutes cost USD 0.150000, raising
 cumulative cost to USD 0.720167.
+The authenticated private receipt from diagnostic job
+`6a6fe7676b79c09949c1fe54` showed that all three attempts consumed the full
+160-token allowance on schema-permitted whitespace after `{` or `{"action":`.
+The worker now sets vLLM's `disable_any_whitespace` structured-output flag, so
+the same JSON schema cannot spend tokens on formatting while the unchanged
+strict parser still validates the completed object. Five billed minutes cost
+USD 0.150000, raising cumulative cost to USD 0.870167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

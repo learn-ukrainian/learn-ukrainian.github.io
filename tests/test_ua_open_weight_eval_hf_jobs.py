@@ -50,13 +50,13 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.720167
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.870167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fe50b6b79c09949c1fe42",
+        "job_id": "6a6fe7676b79c09949c1fe54",
         "mode": "canary",
         "provider_billed_minutes": 5,
         "provider_derived_cost_usd": 0.15,
-        "provider_running_seconds": 287,
+        "provider_running_seconds": 289,
         "stage": "ERROR",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
@@ -64,6 +64,7 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["authorization"]["no_automatic_paid_retry"] is False
     assert config["runner"]["checkpoint_upload_every_cases"] == 25
     assert config["runner"]["structured_outputs"] == "json_schema"
+    assert config["runner"]["structured_outputs_disable_any_whitespace"] is True
     assert config["transport"] == {
         "cpu_preflight": {
             "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
@@ -135,7 +136,11 @@ def test_worker_structured_output_schema_keeps_the_strict_response_contract() ->
     assert sampling.kwargs["max_tokens"] == 160
     structured = sampling.kwargs["structured_outputs"]
     assert isinstance(structured, Capture)
-    assert structured.kwargs == {"json": schema, "disable_additional_properties": True}
+    assert structured.kwargs == {
+        "json": schema,
+        "disable_any_whitespace": True,
+        "disable_additional_properties": True,
+    }
 
 
 def test_worker_error_keeps_raw_diagnostics_private() -> None:
@@ -722,7 +727,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 0.720167
+    assert gate["prior_provider_cost_usd"] == 0.870167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
@@ -733,6 +738,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
         "6a6fdeaaa00abefd4b28e281",
         "6a6fe1ba6b79c09949c1fe21",
         "6a6fe50b6b79c09949c1fe42",
+        "6a6fe7676b79c09949c1fe54",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40
