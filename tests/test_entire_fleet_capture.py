@@ -567,6 +567,22 @@ def test_native_or_unowned_hosts_are_never_duplicated(tmp_path: Path, host: str 
     ) is None
 
 
+def test_missing_entire_cli_has_no_spool_side_effects(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(capture.shutil, "which", lambda _name: None)
+    assert capture.FleetCapture.start(
+        host_harness="hermes",
+        runner_agent="deepseek",
+        entrypoint="dispatch",
+        requested_model="deepseek-v4-flash",
+        prompt="fixture",
+        repo_path=tmp_path,
+        runtime_repo_root=tmp_path,
+    ) is None
+    assert not capture._capture_root(tmp_path).exists()
+
+
 def test_cursor_headless_is_owned_without_claiming_native_cursor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -674,6 +690,7 @@ def test_entire_outage_is_fail_open_and_spool_is_cleaned(
 def test_start_failure_cleans_private_spool(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setattr(capture.shutil, "which", lambda _name: "/fake/entire")
     monkeypatch.setattr(capture, "_atomic_jsonl", lambda *_args: (_ for _ in ()).throw(OSError()))
 
     with pytest.raises(OSError):

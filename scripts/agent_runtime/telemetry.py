@@ -27,6 +27,7 @@ import re
 import subprocess
 import tempfile
 import tomllib
+from contextvars import ContextVar
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -324,7 +325,12 @@ def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     return ("hermes",)
 
 
-def _probe_version(prefix: tuple[str, ...], cwd: str | None = None) -> str | None:
+_VERSION_PROBE_CWD: ContextVar[str | None] = ContextVar(
+    "agent_runtime_version_probe_cwd", default=None
+)
+
+
+def _probe_version(prefix: tuple[str, ...]) -> str | None:
     """Probe a CLI from the invocation cwd, never the ambient checkout.
 
     Some CLIs execute user hooks even for ``--version``.  Running the probe
@@ -332,7 +338,7 @@ def _probe_version(prefix: tuple[str, ...], cwd: str | None = None) -> str | Non
     isolation before the real subprocess starts.  A concrete plan supplies
     its already-validated cwd; pre-plan probes use the system temp directory.
     """
-    probe_cwd = cwd or tempfile.gettempdir()
+    probe_cwd = _VERSION_PROBE_CWD.get() or tempfile.gettempdir()
     try:
         proc = _ORIGINAL_SUBPROCESS_POPEN(
             [*prefix, "--version"],
@@ -355,34 +361,45 @@ def _probe_version(prefix: tuple[str, ...], cwd: str | None = None) -> str | Non
     return _extract_semverish(combined)
 
 
+def _probe_version_at(prefix: tuple[str, ...], cwd: str | None) -> str | None:
+    """Bind a probe cwd without changing the patchable probe call contract."""
+    if cwd is None:
+        return _probe_version(prefix)
+    token = _VERSION_PROBE_CWD.set(cwd)
+    try:
+        return _probe_version(prefix)
+    finally:
+        _VERSION_PROBE_CWD.reset(token)
+
+
 @lru_cache(maxsize=8)
 def codex_cli_version(prefix: tuple[str, ...] = ("codex",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 @lru_cache(maxsize=8)
 def gemini_cli_version(prefix: tuple[str, ...] = ("gemini",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 @lru_cache(maxsize=8)
 def claude_cli_version(prefix: tuple[str, ...] = ("claude",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 @lru_cache(maxsize=8)
 def agy_cli_version(prefix: tuple[str, ...] = ("agy",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 @lru_cache(maxsize=8)
 def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 @lru_cache(maxsize=8)
 def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",), cwd: str | None = None) -> str | None:
-    return _probe_version(prefix, cwd)
+    return _probe_version_at(prefix, cwd)
 
 
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
@@ -425,11 +442,11 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
 
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — NOT hermes-backed; probe it directly.
-        return _probe_version(("grok",), probe_cwd)
+        return _probe_version_at(("grok",), probe_cwd)
     if agent_name == "deepseek" or is_hermes_grok_seat(agent_name):
         # Hermes-backed seats share one version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
-        return _probe_version(prefix, probe_cwd)
+        return _probe_version_at(prefix, probe_cwd)
     return None
 
 

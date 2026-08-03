@@ -161,6 +161,8 @@ class FleetCapture:
         harness = str(host_harness or "").strip().lower()
         if harness not in _OWNED_HOSTS or os.environ.get("ENTIRE_FLEET_CAPTURE_DISABLE") == "1":
             return None
+        if shutil.which("entire") is None:
+            return None
 
         root = _capture_root(runtime_repo_root)
         root.mkdir(parents=True, exist_ok=True, mode=0o700)
