@@ -30,7 +30,7 @@ streams:
     epics: [4913]
   open-model-data:
     title: "Ukrainian open-model data infrastructure"
-    epics: [6164]  # production successor; completed Foundry v1 epic #6056 is historical
+    epics: [6321]  # prepared-data successor; completed Foundry epics #6164 and #6056 are historical
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
