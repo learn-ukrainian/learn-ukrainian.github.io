@@ -62,6 +62,22 @@ def test_claude_driver_defaults_to_opus_xhigh() -> None:
     assert "--effort xhigh" in result.stdout
 
 
+@pytest.mark.parametrize(
+    "argv",
+    (
+        ("--effort", "high", "--epic", "devops"),
+        ("--effort=high", "--epic", "devops"),
+        ("--epic", "devops", "--effort", "high"),
+    ),
+)
+def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]) -> None:
+    result = run_launcher("start-claude-driver.sh", *argv)
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-opus-5" in result.stdout
+    assert "--effort high" in result.stdout
+    assert "--effort xhigh" not in result.stdout
+
+
 def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Path) -> None:
     bin_dir = _stub_claude(tmp_path)
     result = run_launcher(
