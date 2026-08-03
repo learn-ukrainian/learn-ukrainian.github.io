@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/document_signal_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "inputs",
+    "outputs",
+    "coverage",
+    "signal_states",
+    "algorithm",
+    "resources",
+    "safety"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "document_signal_receipt_v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generator_sha256",
+        "config_sha256",
+        "profile_sha256",
+        "admission_config_sha256",
+        "admission_receipt_sha256",
+        "row_schema_sha256",
+        "receipt_schema_sha256",
+        "evaluation_registry"
+      ],
+      "properties": {
+        "generator_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "profile_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "admission_config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "admission_receipt_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "row_schema_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "receipt_schema_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "evaluation_registry": {
+          "$ref": "#/$defs/evaluationRegistry"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest"
+      ],
+      "properties": {
+        "manifest": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete",
+        "expected_rows",
+        "processed_rows",
+        "source_families"
+      ],
+      "properties": {
+        "complete": {
+          "const": true
+        },
+        "expected_rows": {
+          "$ref": "#/$defs/count"
+        },
+        "processed_rows": {
+          "$ref": "#/$defs/count"
+        },
+        "source_families": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/count"
+          }
+        }
+      }
+    },
+    "signal_states": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admission_evidence",
+        "capability_evidence",
+        "document_signals"
+      ],
+      "properties": {
+        "admission_evidence": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/count"
+          }
+        },
+        "capability_evidence": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/count"
+          }
+        },
+        "document_signals": {
+          "$ref": "#/$defs/documentSignals"
+        }
+      }
+    },
+    "algorithm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordering",
+        "serialization",
+        "exact_duplicates",
+        "near_duplicates",
+        "timestamps_omitted"
+      ],
+      "properties": {
+        "ordering": {
+          "const": "profile configuration source order, SQLite id, locator"
+        },
+        "serialization": {
+          "const": "UTF-8 canonical JSON sorted keys LF"
+        },
+        "exact_duplicates": {
+          "const": "sqlite sha256 content groups"
+        },
+        "near_duplicates": {
+          "const": "NFKC casefold word-3gram partition-minhash bands; unresolved candidate only"
+        },
+        "timestamps_omitted": {
+          "const": true
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "streaming",
+        "sqlite_spool",
+        "source_passes",
+        "runtime_bound"
+      ],
+      "properties": {
+        "streaming": {
+          "const": true
+        },
+        "sqlite_spool": {
+          "const": true
+        },
+        "source_passes": {
+          "const": 2
+        },
+        "runtime_bound": {
+          "const": "bounded evaluation registry, one source record, and SQLite spool; no corpus text retained in output"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_text",
+        "uses_model",
+        "training",
+        "upload",
+        "publication",
+        "source_databases_read_only"
+      ],
+      "properties": {
+        "contains_text": {
+          "const": false
+        },
+        "uses_model": {
+          "const": false
+        },
+        "training": {
+          "const": false
+        },
+        "upload": {
+          "const": false
+        },
+        "publication": {
+          "const": false
+        },
+        "source_databases_read_only": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bytes",
+        "records",
+        "sha256"
+      ],
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/count"
+        },
+        "records": {
+          "$ref": "#/$defs/count"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "documentSignals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heldout_matched_records",
+        "exact_duplicate_records",
+        "exact_duplicate_groups",
+        "mixed_cyrillic_latin_records",
+        "ukrainian_and_russian_specific_letter_records",
+        "nfc_changed_records",
+        "nfkc_changed_records",
+        "replacement_character_records",
+        "control_character_records",
+        "repeated_nonblank_line_records",
+        "url_like_token_records"
+      ],
+      "properties": {
+        "heldout_matched_records": {"$ref": "#/$defs/count"},
+        "exact_duplicate_records": {"$ref": "#/$defs/count"},
+        "exact_duplicate_groups": {"$ref": "#/$defs/count"},
+        "mixed_cyrillic_latin_records": {"$ref": "#/$defs/count"},
+        "ukrainian_and_russian_specific_letter_records": {"$ref": "#/$defs/count"},
+        "nfc_changed_records": {"$ref": "#/$defs/count"},
+        "nfkc_changed_records": {"$ref": "#/$defs/count"},
+        "replacement_character_records": {"$ref": "#/$defs/count"},
+        "control_character_records": {"$ref": "#/$defs/count"},
+        "repeated_nonblank_line_records": {"$ref": "#/$defs/count"},
+        "url_like_token_records": {"$ref": "#/$defs/count"}
+      }
+    },
+    "evaluationRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm_version",
+        "artifacts",
+        "candidate_anchor_characters",
+        "maximum_character_anchors_per_text",
+        "exact_fingerprints",
+        "minimum_containment_characters",
+        "near_duplicate_threshold",
+        "near_fingerprints",
+        "normalization"
+      ],
+      "properties": {
+        "algorithm_version": {
+          "type": "string"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "logical_path",
+              "sha256"
+            ],
+            "properties": {
+              "logical_path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+              },
+              "sha256": {
+                "$ref": "#/$defs/hash"
+              }
+            }
+          }
+        },
+        "candidate_anchor_characters": {
+          "$ref": "#/$defs/count"
+        },
+        "maximum_character_anchors_per_text": {
+          "$ref": "#/$defs/count"
+        },
+        "exact_fingerprints": {
+          "$ref": "#/$defs/count"
+        },
+        "minimum_containment_characters": {
+          "$ref": "#/$defs/count"
+        },
+        "near_duplicate_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "near_fingerprints": {
+          "$ref": "#/$defs/count"
+        },
+        "normalization": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

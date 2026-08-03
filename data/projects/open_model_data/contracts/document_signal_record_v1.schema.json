@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/document_signal_record_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ordinal",
+    "record_id",
+    "source_id",
+    "work_id",
+    "source_family",
+    "inventory_asset_id",
+    "dimensions",
+    "admission_evidence_state",
+    "capability_evidence",
+    "content_sha256",
+    "signals",
+    "exact_duplicate",
+    "near_duplicate",
+    "heldout_contamination"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "document_signal_record_v1"
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "record_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_id": {
+      "$ref": "#/$defs/id"
+    },
+    "work_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inventory_asset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period",
+        "genre",
+        "register",
+        "origin"
+      ],
+      "properties": {
+        "period": {
+          "type": "string"
+        },
+        "genre": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        }
+      }
+    },
+    "admission_evidence_state": {
+      "$ref": "#/$defs/admissionEvidence"
+    },
+    "capability_evidence": {
+      "$ref": "#/$defs/capabilityEvidence"
+    },
+    "content_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "counts",
+        "normalization",
+        "boilerplate"
+      ],
+      "properties": {
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "characters",
+            "utf8_bytes",
+            "lexical_words",
+            "lines",
+            "cyrillic",
+            "latin",
+            "digits",
+            "ukrainian_specific",
+            "russian_specific"
+          ],
+          "properties": {
+            "characters": {
+              "$ref": "#/$defs/count"
+            },
+            "utf8_bytes": {
+              "$ref": "#/$defs/count"
+            },
+            "lexical_words": {
+              "$ref": "#/$defs/count"
+            },
+            "lines": {
+              "$ref": "#/$defs/count"
+            },
+            "cyrillic": {
+              "$ref": "#/$defs/count"
+            },
+            "latin": {
+              "$ref": "#/$defs/count"
+            },
+            "digits": {
+              "$ref": "#/$defs/count"
+            },
+            "ukrainian_specific": {
+              "$ref": "#/$defs/count"
+            },
+            "russian_specific": {
+              "$ref": "#/$defs/count"
+            }
+          }
+        },
+        "normalization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "nfc_changed",
+            "nfkc_changed",
+            "apostrophe_variants",
+            "stress_marks",
+            "control_characters",
+            "replacement_characters"
+          ],
+          "properties": {
+            "nfc_changed": {
+              "type": "boolean"
+            },
+            "nfkc_changed": {
+              "type": "boolean"
+            },
+            "apostrophe_variants": {
+              "$ref": "#/$defs/count"
+            },
+            "stress_marks": {
+              "$ref": "#/$defs/count"
+            },
+            "control_characters": {
+              "$ref": "#/$defs/count"
+            },
+            "replacement_characters": {
+              "$ref": "#/$defs/count"
+            }
+          }
+        },
+        "boilerplate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repeated_nonblank_lines",
+            "url_like_tokens"
+          ],
+          "properties": {
+            "repeated_nonblank_lines": {
+              "$ref": "#/$defs/count"
+            },
+            "url_like_tokens": {
+              "$ref": "#/$defs/count"
+            }
+          }
+        }
+      }
+    },
+    "exact_duplicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "group_id",
+        "count"
+      ],
+      "properties": {
+        "group_id": {
+          "$ref": "#/$defs/id"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "near_duplicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "fingerprint",
+        "bands",
+        "state"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "nfkc-casefold-word-3gram-partition-minhash-v1"
+        },
+        "fingerprint": {
+          "$ref": "#/$defs/hash"
+        },
+        "bands": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{16}$"
+          }
+        },
+        "state": {
+          "const": "unresolved_candidate_only_no_automatic_erasure"
+        }
+      }
+    },
+    "heldout_contamination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "method",
+        "semantics"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "matched",
+            "clear"
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "semantics": {
+          "const": "signal_only_no_automatic_erasure"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]+(?:\\.[a-z0-9_:-]+)*\\.[a-f0-9]{24}$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "admissionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance",
+        "acquisition",
+        "snapshot",
+        "rights",
+        "origin",
+        "contamination"
+      ],
+      "properties": {
+        "provenance": {
+          "type": "string"
+        },
+        "acquisition": {
+          "type": "string"
+        },
+        "snapshot": {
+          "type": "string"
+        },
+        "rights": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "contamination": {
+          "type": "string"
+        }
+      }
+    },
+    "capabilityEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_evidence",
+        "origin_evidence",
+        "contamination_evidence",
+        "admission_disposition",
+        "raw_text_redistribution",
+        "local_model_learning",
+        "model_training",
+        "dataset_publication",
+        "learning_view_emission"
+      ],
+      "properties": {
+        "rights_evidence": {
+          "type": "string"
+        },
+        "origin_evidence": {
+          "type": "string"
+        },
+        "contamination_evidence": {
+          "type": "string"
+        },
+        "admission_disposition": {
+          "pattern": "^family_(?:all_[a-z_]+|mixed_or_unknown)$",
+          "type": "string"
+        },
+        "raw_text_redistribution": {
+          "const": "not_decided_by_document_signal_manifest"
+        },
+        "local_model_learning": {
+          "const": "not_decided_by_document_signal_manifest"
+        },
+        "model_training": {
+          "const": "not_decided_by_document_signal_manifest"
+        },
+        "dataset_publication": {
+          "const": "not_decided_by_document_signal_manifest"
+        },
+        "learning_view_emission": {
+          "enum": [
+            "not_emitted_by_admission_receipt",
+            "not_determined_by_document_signal_manifest"
+          ]
+        }
+      }
+    }
+  }
+}
