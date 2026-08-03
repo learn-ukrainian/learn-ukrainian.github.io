@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import sqlite3
@@ -213,6 +214,14 @@ def _locator(path: Path, rows: list[dict]) -> Path:
     return path
 
 
+def _gzip_locator(path: Path, rows: list[dict]) -> Path:
+    raw = _locator(path.with_suffix(""), rows).read_bytes()
+    with path.open("wb") as fileobj:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=fileobj, compresslevel=9, mtime=0) as handle:
+            handle.write(raw)
+    return path
+
+
 def _policy(tmp_path: Path, mutate: Callable[[dict], None] | None = None) -> Path:
     value = json.loads((ROOT / "data/projects/open_model_data/evidence/source_capability_policy_v1.json").read_text())
     if mutate is not None:
@@ -274,6 +283,54 @@ def test_verify_rebuilds_locator_bound_bundle(tmp_path: Path) -> None:
         worklist=worklist,
         receipt=receipt,
     )
+
+
+def test_build_and_verify_accept_gzip_locator_with_compressed_byte_binding(tmp_path: Path) -> None:
+    manifest, phase1_receipt, rows = _phase1(tmp_path)
+    locator = _gzip_locator(tmp_path / "locators.jsonl.gz", rows)
+    complement, worklist, receipt = tmp_path / "complement.jsonl", tmp_path / "worklist.jsonl", tmp_path / "receipt.json"
+    complements.build(
+        phase1_manifest=manifest,
+        phase1_receipt=phase1_receipt,
+        policy_path=_policy(tmp_path),
+        locator_index=locator,
+        complement_output=complement,
+        worklist_output=worklist,
+        receipt_output=receipt,
+    )
+
+    locator_artifact = json.loads(receipt.read_text())["inputs"]["locator_index"]
+    assert locator_artifact["records"] == len(rows)
+    assert locator_artifact["bytes"] == locator.stat().st_size
+    assert locator_artifact["sha256"] == hashlib.sha256(locator.read_bytes()).hexdigest()
+    assert complements.verify(
+        policy_path=_policy(tmp_path),
+        phase1_manifest=manifest,
+        phase1_receipt=phase1_receipt,
+        locator_index=locator,
+        complement=complement,
+        worklist=worklist,
+        receipt=receipt,
+    )
+
+
+@pytest.mark.parametrize("mutation", ["truncated", "corrupt"])
+def test_gzip_locator_malformed_data_fails_closed(tmp_path: Path, mutation: str) -> None:
+    manifest, phase1_receipt, rows = _phase1(tmp_path)
+    locator = _gzip_locator(tmp_path / "locators.jsonl.gz", rows)
+    payload = locator.read_bytes()
+    locator.write_bytes(payload[:-8] if mutation == "truncated" else payload + b"corrupt")
+
+    with pytest.raises(complements.ComplementError, match="cannot read artifact"):
+        complements.build(
+            phase1_manifest=manifest,
+            phase1_receipt=phase1_receipt,
+            policy_path=_policy(tmp_path),
+            locator_index=locator,
+            complement_output=tmp_path / "complement.jsonl",
+            worklist_output=tmp_path / "worklist.jsonl",
+            receipt_output=tmp_path / "receipt.json",
+        )
 
 
 @pytest.mark.parametrize("mutation", ["reorder", "duplicate", "missing", "extra", "family", "inventory"])

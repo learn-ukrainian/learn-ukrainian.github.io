@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import sqlite3
 from pathlib import Path
@@ -139,6 +140,21 @@ def test_build_is_deterministic_and_canonical_ordered(tmp_path: Path) -> None:
             locators.canonical_json(row["source_locator"]),
         ),
     )
+
+
+def test_gzip_build_is_byte_identical_and_decompresses_to_raw_jsonl(tmp_path: Path) -> None:
+    raw, raw_rows = _build(tmp_path)
+    config, root = _fixture(tmp_path / "gzip-one")
+    first = root / "locators.jsonl.gz"
+    locators.build(config_path=config, input_root=root, output=first)
+    config, root = _fixture(tmp_path / "gzip-two")
+    second = root / "locators.jsonl.gz"
+    locators.build(config_path=config, input_root=root, output=second)
+
+    assert first.read_bytes() == second.read_bytes()
+    decompressed = gzip.decompress(first.read_bytes())
+    assert decompressed == raw.read_bytes()
+    assert [json.loads(line) for line in decompressed.decode("utf-8").splitlines()] == raw_rows
 
 
 def test_unknown_config_key_and_bad_column_fail_schema(tmp_path: Path) -> None:

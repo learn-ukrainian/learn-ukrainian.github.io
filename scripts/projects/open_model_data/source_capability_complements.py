@@ -8,6 +8,7 @@ model, or publish an artifact.
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import os
@@ -61,6 +62,13 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _open_text(path: Path):
+    """Open raw JSONL or a standard gzip JSONL member by its output suffix."""
+    if path.suffix == ".gz":
+        return gzip.open(path, mode="rt", encoding="utf-8")
+    return path.open(encoding="utf-8")
+
+
 def _read(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -89,8 +97,11 @@ def _artifact(path: Path, records: int | None = None) -> dict[str, Any]:
     if not path.is_file():
         raise ComplementError(f"missing artifact: {path}")
     if records is None:
-        with path.open("rb") as handle:
-            records = sum(1 for _ in handle)
+        try:
+            with _open_text(path) as handle:
+                records = sum(1 for _ in handle)
+        except (OSError, EOFError, UnicodeDecodeError) as exc:
+            raise ComplementError(f"cannot read artifact {path}: {exc}") from exc
     return {"bytes": path.stat().st_size, "records": records, "sha256": sha256_file(path)}
 
 
@@ -151,7 +162,7 @@ def _promote(staged: list[tuple[Path, Path]]) -> None:
 
 def _jsonl(path: Path, validator: Draft202012Validator, label: str) -> Iterator[dict[str, Any]]:
     try:
-        with path.open(encoding="utf-8") as handle:
+        with _open_text(path) as handle:
             for line_number, line in enumerate(handle, start=1):
                 if not line.endswith("\n") or not line.strip():
                     raise ComplementError(f"{label} has a blank or unterminated row at {line_number}")
@@ -163,7 +174,7 @@ def _jsonl(path: Path, validator: Draft202012Validator, label: str) -> Iterator[
                     raise ComplementError(f"{label} row {line_number} is not an object")
                 _validate(value, validator, f"{label} row {line_number}")
                 yield value
-    except OSError as exc:
+    except (OSError, EOFError, UnicodeDecodeError) as exc:
         raise ComplementError(f"cannot read {label}: {exc}") from exc
 
 

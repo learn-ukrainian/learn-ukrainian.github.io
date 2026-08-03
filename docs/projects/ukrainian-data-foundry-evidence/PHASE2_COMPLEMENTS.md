@@ -29,14 +29,17 @@ Generate the committed public-safe locator sidecar before running Phase 2:
 .venv/bin/python -m scripts.projects.open_model_data.source_work_locator_index \
   --config data/projects/open_model_data/evidence/source_work_locator_config_v1.json \
   --input-root . \
-  --output data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl
+  --output data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz
 ```
 
 The locator contains only allowlisted source and work metadata, a canonical
 locator when one is actually known, opaque Phase 1-compatible identifiers, and
 counts. It never contains chunks, source text, evaluation fingerprints, or a
-permission claim. A consumer can inspect the committed locator without owning
-our corpus; rebuilding it requires the corresponding local source databases.
+permission claim. The published `.jsonl.gz` is ordinary deterministic gzip:
+its byte hash and size bind the compressed artifact, while consumers count and
+validate the decompressed UTF-8 JSONL rows. A consumer can inspect the
+committed locator without owning our corpus; rebuilding it requires the
+corresponding local source databases.
 
 Then run Phase 2 with the Phase 1 outputs and locator:
 
@@ -45,7 +48,7 @@ Then run Phase 2 with the Phase 1 outputs and locator:
   --phase1-manifest /safe/local/phase1-manifest.jsonl \
   --phase1-receipt /safe/local/phase1-receipt.json \
   --policy data/projects/open_model_data/evidence/source_capability_policy_v1.json \
-  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl \
+  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz \
   --complement-output /safe/local/complement.jsonl \
   --worklist-output /safe/local/evidence-worklist.jsonl \
   --receipt-output /safe/local/complement-receipt.json
@@ -61,7 +64,7 @@ Verify every input binding and byte of every output before using an artifact:
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.source_capability_complements verify \
   --policy data/projects/open_model_data/evidence/source_capability_policy_v1.json \
-  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl \
+  --locator-index data/projects/open_model_data/evidence/source_work_locator_index_v1.jsonl.gz \
   --phase1-manifest /safe/local/phase1-manifest.jsonl \
   --phase1-receipt /safe/local/phase1-receipt.json \
   --complement /safe/local/complement.jsonl \
@@ -138,16 +141,16 @@ artifacts remain local and are not publication payloads.
 
 | Run | Wall time | Maximum RSS | Peak memory footprint |
 | --- | ---: | ---: | ---: |
-| Complete build 1 | 484.92 s | 219,643,904 bytes | 222,020,160 bytes |
-| Complete build 2 | 339.66 s | 225,640,448 bytes | 222,036,568 bytes |
-| Independent rebuild verifier | 336.80 s | 2,115,289,088 bytes | 2,124,417,016 bytes |
+| Complete build 1 | 517.12 s | 214,122,496 bytes | 221,708,864 bytes |
+| Complete build 2 | 452.07 s | 216,711,168 bytes | 221,594,200 bytes |
+| Independent rebuild verifier | 470.66 s | 2,103,541,760 bytes | 2,118,567,880 bytes |
 
 The complement SHA-256 is
-`5543529f3b4f0ee3a4b1dce7b170759d4368ea0f5ec3c64fe9640fecfa82cbae`;
+`0e4ee4c12615885d3da534667ef383411e2ff5c37e5df517a7c5ca6586ad8b51`;
 the worklist SHA-256 is
 `a60321052721231b5828b604ec098064271d42a2afc4dcb91f968e90f0d60b0a`;
-and the 32,380-byte committed receipt SHA-256 is
-`b5fb4557112c8faa76852a83886e6075758f6aae303b2545fb646cedff9a2821`.
+and the 32,379-byte committed receipt SHA-256 is
+`eb990e76ef16679119e14c086280c5e239d8cc4b0a09665d0f7b677de4b2ed58`.
 The builder uses atomic temporary files rather than a SQLite spool. Budget at
 least 2.5 GB of free local disk for the bound Phase 1 inputs, existing outputs,
 and one complete staged or verifier rebuild, excluding the source databases

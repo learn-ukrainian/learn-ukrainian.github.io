@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import os
 import re
@@ -117,6 +119,19 @@ def _stage(path: Path, content: bytes) -> Path:
 def _replace(source: Path, target: Path) -> None:
     """Test seam for the sole atomic publication operation."""
     os.replace(source, target)
+
+
+def _serialized_rows(rows: list[dict[str, Any]], output: Path) -> bytes:
+    """Encode canonical JSONL, using deterministic standard gzip when requested."""
+    content = "".join(canonical_json(row) + "\n" for row in rows).encode("utf-8")
+    if output.suffix != ".gz":
+        return content
+    compressed = io.BytesIO()
+    # An empty filename, fixed mtime, and fixed compression level keep the
+    # ordinary gzip member byte-identical across repeated builds.
+    with gzip.GzipFile(filename="", mode="wb", fileobj=compressed, compresslevel=9, mtime=0) as handle:
+        handle.write(content)
+    return compressed.getvalue()
 
 
 def _canonical_url(family: Mapping[str, Any], raw: sqlite3.Row) -> str | None:
@@ -247,7 +262,7 @@ def build(*, config_path: Path, input_root: Path, output: Path) -> dict[str, Any
     identities = {(row["source_id"], row["work_id"]) for row in rows}
     if len(identities) != len(rows):
         raise LocatorError("duplicate source/work mapping after locator construction")
-    staged = _stage(output, "".join(canonical_json(row) + "\n" for row in rows).encode("utf-8"))
+    staged = _stage(output, _serialized_rows(rows, output))
     try:
         _replace(staged, output)
     finally:
