@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "25bb9f4a87e7",
+  "strategy": "manual-commit",
+  "branch": "kimi/entire-attribution-canary-20260803",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/entire/.entire-attribution-canary"
+  ],
+  "sessions": [
+    {
+      "metadata": "/25/bb9f4a87e7/0/metadata.json",
+      "transcript": "/25/bb9f4a87e7/0/full.jsonl",
+      "content_hash": "/25/bb9f4a87e7/0/content_hash.txt",
+      "prompt": "/25/bb9f4a87e7/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 27624,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 49920,
+    "output_tokens": 245,
+    "api_call_count": 2
+  }
+}
