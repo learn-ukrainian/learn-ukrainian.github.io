@@ -50,13 +50,13 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 1.200167
+    assert config["authorization"]["prior_provider_cost_usd"] == 1.350167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fed30a00abefd4b28e51c",
+        "job_id": "6a6ff094a00abefd4b28e630",
         "mode": "canary",
         "provider_billed_minutes": 5,
         "provider_derived_cost_usd": 0.15,
-        "provider_running_seconds": 286,
+        "provider_running_seconds": 278,
         "stage": "ERROR",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
@@ -68,6 +68,7 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["runner"]["structured_outputs_disable_any_whitespace"] is True
     assert config["runner"]["structured_outputs_ignore_eos_until_complete"] is True
     assert config["runner"]["structured_outputs_max_output_text_chars"] == 768
+    assert config["runner"]["structured_outputs_strip_terminal_control_token"] is True
     assert config["transport"] == {
         "cpu_preflight": {
             "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
@@ -109,6 +110,14 @@ def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
     assert hf_jobs_worker.format_prompt(source) == run_mlx_model.format_prompt(source)
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
     assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
+    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x00" + reply[-2:]) == (
+        run_mlx_model.parse_model_reply(reply)
+    )
+    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x01" + reply[-2:]) == (
+        run_mlx_model.parse_model_reply(reply)
+    )
+    with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
+        hf_jobs_worker.parse_model_reply(reply.replace("Текст", "Те\x00кст"))
     with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
         hf_jobs_worker.parse_model_reply(reply + " " + reply)
 
@@ -741,7 +750,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 1.200167
+    assert gate["prior_provider_cost_usd"] == 1.350167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
@@ -755,6 +764,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
         "6a6fe7676b79c09949c1fe54",
         "6a6fe9a26b79c09949c1fe68",
         "6a6fed30a00abefd4b28e51c",
+        "6a6ff094a00abefd4b28e630",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40

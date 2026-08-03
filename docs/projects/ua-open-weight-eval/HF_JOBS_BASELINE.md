@@ -131,6 +131,15 @@ and forces xgrammar to close a degenerate string without changing the model,
 suite, prompt, temperature, seed, or strict post-generation validation. See the
 [upstream Gemma 4 report](https://github.com/vllm-project/vllm/issues/40080).
 Five billed minutes cost USD 0.150000, raising cumulative cost to USD 1.200167.
+Job `6a6ff094a00abefd4b28e630` showed that the bounded grammar closed the JSON
+object, but ignoring the tokenizer's premature EOS left one decoded NUL or SOH
+control token immediately before the final string quote. The authenticated
+private receipt showed a closing quote and brace after that single invalid JSON
+character in all three attempts. The worker now strips only one such terminal
+GGUF control token in that exact location before strict JSON parsing; controls
+anywhere else and every other malformed response remain errors, while the raw
+generation stays preserved privately for audit. Five billed minutes cost USD
+0.150000, raising cumulative cost to USD 1.350167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

@@ -35,6 +35,7 @@ CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
 MAX_OUTPUT_TEXT_CHARS = 768
+JSON_TERMINAL_CONTROL_TOKENS = frozenset({"\x00", "\x01"})
 RESPONSE_JSON_SCHEMA = {
     "type": "object",
     "properties": {
@@ -297,7 +298,15 @@ def format_prompt(source: str) -> str:
     )
 
 
+def normalize_model_reply(reply: str) -> str:
+    """Remove only a GGUF control terminator immediately before the JSON close."""
+    if len(reply) >= 3 and reply[-3] in JSON_TERMINAL_CONTROL_TOKENS and reply.endswith('"}'):
+        return reply[:-3] + reply[-2:]
+    return reply
+
+
 def parse_model_reply(reply: str) -> dict[str, str]:
+    reply = normalize_model_reply(reply)
     decoder = json.JSONDecoder()
     candidates: list[Mapping[str, Any]] = []
     for index, character in enumerate(reply):
@@ -348,6 +357,10 @@ def verify_config(config: Mapping[str, Any]) -> None:
         config.get("runner", {}).get("structured_outputs_max_output_text_chars")
         == MAX_OUTPUT_TEXT_CHARS,
         "structured output length contract drift",
+    )
+    _require(
+        config.get("runner", {}).get("structured_outputs_strip_terminal_control_token") is True,
+        "structured output control-token contract drift",
     )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
@@ -662,6 +675,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             ],
             "structured_outputs_max_output_text_chars": config["runner"][
                 "structured_outputs_max_output_text_chars"
+            ],
+            "structured_outputs_strip_terminal_control_token": config["runner"][
+                "structured_outputs_strip_terminal_control_token"
             ],
             "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },
