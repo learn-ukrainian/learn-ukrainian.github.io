@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+from argparse import Namespace
+from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from agent_runtime.adapters.acpx import (
@@ -14,6 +17,201 @@ from agent_runtime.adapters.acpx import (
 )
 from ai_agent_bridge import _review_pr as review_pr
 from ai_agent_bridge._review_safety import ReviewSafetyError
+
+
+def _invalid_response_args() -> Namespace:
+    return Namespace(
+        pr="6342",
+        reviewer="auto",
+        claude_available=None,
+        model=None,
+        effort=None,
+        extra=None,
+        task_id=None,
+        dry_run=False,
+        background=False,
+        no_timeout=False,
+        initiator="codex/orchestrator",
+        author_model="gpt-5.6-sol",
+        author_family="openai",
+        allow_explicit_fallback=False,
+        override_reason=None,
+        review_profile=None,
+        risk=None,
+        role=None,
+        required_capability=None,
+        data_egress_policy=None,
+        isolation_required=True,
+    )
+
+
+def _run_invalid_response_lifecycle(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    *,
+    stale_lease: bool,
+) -> tuple[int, list[str], object]:
+    """Run one invalid response through the bridge with a real formal-job store."""
+    from agent_runtime import runner
+    from ai_agent_bridge import _review_worktree
+
+    from scripts.fleet_comms import authority as authority_module
+    from scripts.fleet_comms import routing_reservations
+    from scripts.fleet_comms.artifacts import ArtifactStore
+    from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
+
+    checkout = SimpleNamespace(
+        sha="a" * 40,
+        base_sha="b" * 40,
+        patch_digest="c" * 64,
+        changed_paths=("src/app.py",),
+        changed_line_numbers={"src/app.py": frozenset({1})},
+        path=tmp_path,
+        review_prompt_evidence=lambda _engine: "sealed-metadata",
+        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_evidence_input_bytes=lambda: 123,
+    )
+
+    @contextmanager
+    def provision(*_args, **_kwargs):
+        yield checkout
+
+    reservation = SimpleNamespace(
+        reservation_id="routing-reservation_fixture",
+        resolved_candidate="claude-sonnet-5",
+        resolved_route="claude",
+        resolved_model="claude-sonnet-5",
+        resolved_family="anthropic",
+        quota_bucket="claude",
+    )
+    events: list[str] = []
+
+    class FakeLedger:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def reserve_selection(self, *_args, **_kwargs):
+            return reservation
+
+        def mark_started(self, _reservation_id):
+            events.append("started")
+
+        def settle(self, _reservation_id, **_kwargs):
+            events.append("settled")
+            job = formal_jobs.list_jobs(include_attempts=True)[0]
+            assert job.state == "failed"
+            assert len(job.attempts) == 1
+            capture_id = job.attempts[0].raw_capture_artifact_id
+            assert capture_id is not None
+            assert store.read_bytes(capture_id) == b"not valid JSON"
+            return reservation
+
+    store = ArtifactStore(root=tmp_path / "fleet-comms-v1")
+    formal_jobs = FormalReviewJobService(store=store)
+
+    class FakeAuthority:
+        def __init__(self) -> None:
+            self.store = store
+            self.formal = None
+            self.job = SimpleNamespace(state="queued", job_id="authority-job_fixture", subject_id="")
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_formal_review(self, **_kwargs):
+            self.formal = formal_jobs.create_job(
+                "learn-ukrainian/learn-ukrainian.github.io",
+                6342,
+                checkout.sha,
+                "cross-family-review",
+            )
+            self.job.subject_id = self.formal.review_id
+            return self.job
+
+        def require_publishable_formal_review(self, review_id, **_kwargs):
+            return formal_jobs.get_job(review_id, include_attempts=False)
+
+        def claim_job(self, *_args, **_kwargs):
+            return SimpleNamespace(fence_token=1)
+
+        def finish_job(self, *_args, **_kwargs):
+            events.append("finish")
+            assert self.formal is not None
+            recorded = formal_jobs.get_job(self.formal.review_id)
+            assert recorded.state == "failed"
+            assert recorded.sealed_verdict_artifact_id is None
+            assert len(recorded.attempts) == 1
+            capture_id = recorded.attempts[0].raw_capture_artifact_id
+            assert capture_id is not None
+            assert store.read_bytes(capture_id) == b"not valid JSON"
+            if stale_lease:
+                raise authority_module.AuthorityStaleLeaseError("terminalization_conflict")
+
+    authority = FakeAuthority()
+    monkeypatch.setattr(_review_worktree, "provision_review_worktree", provision)
+    monkeypatch.setattr(
+        _review_worktree,
+        "validate_code_review_response",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            _review_worktree.ReviewWorktreeError("review_response_invalid_json")
+        ),
+    )
+    monkeypatch.setattr(review_pr, "_compute_review_routing_budget", lambda: {"agents": {}})
+    monkeypatch.setattr(routing_reservations, "RoutingReservationLedger", FakeLedger)
+    monkeypatch.setattr(authority_module, "AuthorityService", lambda: authority)
+    monkeypatch.setattr(
+        runner,
+        "invoke_inter_agent",
+        lambda *_args, **_kwargs: SimpleNamespace(ok=True, response="not valid JSON"),
+    )
+    try:
+        return review_pr.handle_review_pr(_invalid_response_args()), events, formal_jobs
+    finally:
+        # The caller inspects the service before this helper returns; its store
+        # is then closed by the test after assertions.
+        pass
+
+
+def test_invalid_json_is_captured_before_live_lease_failure_settlement(monkeypatch, tmp_path, capsys) -> None:
+    code, events, formal_jobs = _run_invalid_response_lifecycle(
+        monkeypatch,
+        tmp_path,
+        stale_lease=False,
+    )
+    try:
+        assert code == 1
+        assert events == ["started", "settled", "finish"]
+        job = formal_jobs.list_jobs(include_attempts=True)[0]
+        assert job.state == "failed"
+        assert job.sealed_verdict_artifact_id is None
+        assert job.attempts[0].completion_state == "failed"
+        assert "reviewer result invalid" in capsys.readouterr().err
+    finally:
+        formal_jobs.close()
+
+
+def test_invalid_json_is_captured_before_stale_lease_failure_settlement(monkeypatch, tmp_path, capsys) -> None:
+    code, events, formal_jobs = _run_invalid_response_lifecycle(
+        monkeypatch,
+        tmp_path,
+        stale_lease=True,
+    )
+    try:
+        assert code == 1
+        assert events == ["started", "settled", "finish"]
+        job = formal_jobs.list_jobs(include_attempts=True)[0]
+        assert job.state == "failed"
+        assert job.sealed_verdict_artifact_id is None
+        assert job.attempts[0].raw_capture_artifact_id is not None
+        assert "lease was lost while validating" in capsys.readouterr().err
+    finally:
+        formal_jobs.close()
 
 
 def test_parse_pr_number() -> None:
