@@ -194,6 +194,8 @@ export interface PracticeClassifySet {
   setLabelUk: string;
   setLabelEn?: string;
   answer: string;
+  /** All correct values for a polyfunctional POS lemma, in school order. */
+  answers?: string[];
   answerLabelUk: string;
   answerLabelEn?: string;
   options: PracticeClassifyOption[];
