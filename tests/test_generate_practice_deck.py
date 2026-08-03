@@ -886,6 +886,51 @@ def test_a2_classify_items_do_not_raise_english_labels() -> None:
     assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
+def test_classify_skips_context_free_pos_for_multi_pos_lemma() -> None:
+    entry = {
+        "lemma": "проте",
+        "pos": "conjunction",
+        "enrichment": {
+            "cefr": {"level": "B1", "pos": "conjunction"},
+            "morphology": {
+                "pos": "adverb",
+                "forms": [{"label": "присл."}],
+            },
+            "translation": {"en": ["however"], "pos": "adverb"},
+            "definition_cards": [
+                {"definitions": ["1. спол. для протиставлення; 2. присл., у знач. вставн. сл."]}
+            ],
+        },
+    }
+    lexeme = {"lemmaId": "prote", "lemma": "проте", "cefr": "B1"}
+
+    classify = _build_classify_items(entry, lexeme)
+
+    assert classify == []
+
+
+def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
+    entry = {
+        "lemma": "книга",
+        "pos": "noun",
+        "enrichment": {
+            "cefr": {"level": "A2", "pos": "noun"},
+            "morphology": {
+                "pos": "noun",
+                "forms": [{"label": "ім. жін."}],
+            },
+            "translation": {"en": ["book"], "pos": "noun"},
+        },
+    }
+    lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
+
+    classify = _build_classify_items(entry, lexeme)[0]
+
+    pos_sets = [item for item in classify["sets"] if item["setId"] == "pos"]
+    assert len(pos_sets) == 1
+    assert pos_sets[0]["answer"] == "noun"
+
+
 def test_paradigm_answer_position_is_deterministically_shuffled() -> None:
     items = _build_paradigm_items(
         {

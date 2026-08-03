@@ -278,22 +278,110 @@ export function formatIpa(value: string | null | undefined) {
   return trimmed.startsWith("[") || trimmed.startsWith("/") ? trimmed : `[${trimmed}]`;
 }
 
-export function formatPos(pos: string | null | undefined, morphologyPos: string | undefined) {
-  const labels: Record<string, string> = {
-    noun: "іменник",
-    verb: "дієслово",
-    adj: "прикметник",
-    adverb: "прислівник",
-    adv: "прислівник",
-    phrase: "фраза",
-    pron: "займенник",
-    pronoun: "займенник",
-    prep: "прийменник",
-    conj: "сполучник",
-    particle: "частка",
-    interjection: "вигук",
+const POS_LABELS: Record<string, string> = {
+  "іменник": "іменник",
+  "дієслово": "дієслово",
+  "прикметник": "прикметник",
+  "прислівник": "прислівник",
+  "присл": "прислівник",
+  "числівник": "числівник",
+  "прийменник": "прийменник",
+  "приймен": "прийменник",
+  "сполучник": "сполучник",
+  "спол": "сполучник",
+  "частка": "частка",
+  "службове слово": "службове слово",
+  noun: "іменник",
+  verb: "дієслово",
+  adj: "прикметник",
+  adjective: "прикметник",
+  adverb: "прислівник",
+  adv: "прислівник",
+  phrase: "фраза",
+  pron: "займенник",
+  pronoun: "займенник",
+  prep: "прийменник",
+  preposition: "прийменник",
+  conj: "сполучник",
+  conjunction: "сполучник",
+  particle: "частка",
+  interjection: "вигук",
+  numeral: "числівник",
+  num: "числівник",
+  function: "службове слово",
+};
+
+const DEFINITION_POS_HEADER = String.raw`(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:[–—-]\s*)?`;
+const DEFINITION_POS_MARKERS: Array<[RegExp, string]> = [
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:іменник|noun)(?=$|[\\s,;:])`, "imu"), "іменник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:дієслово|verb)(?=$|[\\s,;:])`, "imu"), "дієслово"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:прикметник|adjective)(?=$|[\\s,;:])`, "imu"), "прикметник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:прислівник|присл\\.|adverb)(?=$|[\\s,;:])`, "imu"), "прислівник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:числівник|numeral)(?=$|[\\s,;:])`, "imu"), "числівник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:прийменник|приймен\\.|preposition)(?=$|[\\s,;:])`, "imu"), "прийменник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:сполучник|спол\\.|conjunction)(?=$|[\\s,;:])`, "imu"), "сполучник"],
+  [new RegExp(`${DEFINITION_POS_HEADER}(?:частка|particle)(?=$|[\\s,;:])`, "imu"), "частка"],
+];
+
+function normalizePosLabels(value: string | null | undefined) {
+  const text = value?.trim();
+  if (!text) return [];
+  return text
+    .split(/\s*(?:[,;/|+]|\b(?:or|або|і|та)\b)\s*/iu)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const key = part.toLocaleLowerCase("uk");
+      const alias = Object.keys(POS_LABELS).find(
+        (candidate) =>
+          key === candidate ||
+          key.startsWith(`${candidate}:`) ||
+          key.startsWith(`${candidate}.`) ||
+          key.startsWith(`${candidate} `),
+      );
+      return alias ? { label: POS_LABELS[alias]!, known: true } : { label: part, known: false };
+    });
+}
+
+function definitionCardPosLabels(cards: DefinitionCard[] | undefined) {
+  const labels: string[] = [];
+  for (const card of cards ?? []) {
+    for (const definition of card.definitions ?? []) {
+      for (const [pattern, label] of DEFINITION_POS_MARKERS) {
+        if (pattern.test(definition) && !labels.includes(label)) labels.push(label);
+      }
+    }
+  }
+  return labels;
+}
+
+export function formatPos(
+  pos: string | null | undefined,
+  morphologyPos: string | null | undefined,
+  signals: {
+    cefrPos?: string | null;
+    translationPos?: string | null;
+    definitionCards?: DefinitionCard[];
+  } = {},
+) {
+  const labels: string[] = [];
+  const fallbackLabels: string[] = [];
+  const addSignal = (value: string | null | undefined) => {
+    for (const normalized of normalizePosLabels(value)) {
+      const target = normalized.known ? labels : fallbackLabels;
+      if (!target.includes(normalized.label)) target.push(normalized.label);
+    }
   };
-  return morphologyPos ?? (pos ? labels[pos] ?? pos : null);
+
+  // Preserve the learner-facing precedence: VESUM morphology first, article
+  // metadata second, then the remaining enrichment signals.
+  addSignal(morphologyPos);
+  addSignal(pos);
+  addSignal(signals.cefrPos);
+  addSignal(signals.translationPos);
+  for (const label of definitionCardPosLabels(signals.definitionCards)) addSignal(label);
+
+  return (labels.length > 0 ? labels : fallbackLabels).join(" · ") || null;
 }
 
 export function expressionLikeEntryTypeLabel(entryType: string | null | undefined) {
@@ -400,7 +488,11 @@ export function buildWordAtlasArticleView(
   const isExpressionLikeEntry = MORPHOLOGY_SUPPRESSED_TYPES.has(entry.entry_type ?? "");
   const suppressMorphology = isExpressionLikeEntry;
   const entryTypeLabel = expressionLikeEntryTypeLabel(entry.entry_type);
-  const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos);
+  const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos, {
+    cefrPos: enrichment?.cefr?.pos,
+    translationPos: enrichment?.translation?.pos,
+    definitionCards,
+  });
   const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
   const heritageBoxes = resolveHeritageBoxes(entry);
   const etymologyStages = buildEtymologyStages(enrichment?.etymology, entry.lemma);
