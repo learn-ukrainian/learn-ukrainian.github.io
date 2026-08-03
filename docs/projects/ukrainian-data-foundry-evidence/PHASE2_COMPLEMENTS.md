@@ -38,8 +38,10 @@ counts. It never contains chunks, source text, evaluation fingerprints, or a
 permission claim. The published `.compact.jsonl` is a lossless, UTF-8 compact
 transport: its first line declares the semantic row schema, field order,
 family descriptors, the exact deterministic `locator_id` derivation, record
-count, ordering, and hash of canonical expanded JSONL. Consumers validate and
-expand every compact row to the existing full object before Phase 2 sees it;
+count, ordering, eight sorted metadata-publication vectors, and hash of
+canonical expanded JSONL. Each row references one vector by a strictly
+validated index. Consumers validate and expand every compact row to the
+existing full object before Phase 2 sees it;
 artifact byte hashes and sizes bind the compact file itself. A consumer can
 inspect the committed locator without owning our corpus; rebuilding it requires
 the corresponding local source databases.
@@ -129,8 +131,8 @@ source/work locators. The locator comprises 3,309 literary, 36,759 textbook,
 contains 3,511 source-level evidence tasks.
 
 The compact locator contains 42,302 semantic records and 42,303 physical
-lines including its header. It is 15,080,355 bytes with SHA-256
-`f9eb08623e50e141472b8297c374c096e937e341b1f456945050d1efe52b199a`.
+lines including its header. It is 11,523,406 bytes with SHA-256
+`ca9fb9e88f7520d77bafb9139b2ba20c652a47395c94d416ad575a1ac0801ee6`.
 Strict expansion produces 32,991,831 bytes of canonical full-object JSONL with
 semantic SHA-256
 `1d3f85ae6bb4241b9691c18cf855ec71e3e2ab7c97d18bf52e522f9d2ae07a60`.
@@ -151,18 +153,18 @@ artifacts remain local and are not publication payloads.
 
 | Run | Wall time | Maximum RSS | Peak memory footprint |
 | --- | ---: | ---: | ---: |
-| Complete build 1 | 336.97 s | 379,420,672 bytes | 330,285,728 bytes |
-| Complete build 2 | 330.69 s | 379,518,976 bytes | 351,224,480 bytes |
-| Independent rebuild verifier | 343.32 s | 2,094,055,424 bytes | 2,112,440,312 bytes |
+| Complete build 1 | 333.80 s | 366,510,080 bytes | 335,102,600 bytes |
+| Complete build 2 | 358.65 s | 366,641,152 bytes | 334,201,504 bytes |
+| Independent rebuild verifier | 335.59 s | 2,111,946,752 bytes | 2,113,800,208 bytes |
 
 The complement SHA-256 is
-`ad506a9d612f4429e4fa2dde654084a232e81854ecc30aee16f9bb87f33bc59b`;
+`11aa27a0e54a75330174a5aebbd2d66e194f559160917aeb842f6792b5db5876`;
 the worklist SHA-256 is
 `a60321052721231b5828b604ec098064271d42a2afc4dcb91f968e90f0d60b0a`;
 and the 32,380-byte committed receipt SHA-256 is
-`f26bea8c3c342aa6b7e8a8d1d1695da00c0524826a9dbd941793f22b811075ab`.
+`129a7ee4c2200f87de840cee86212193bba8132219b3d8b2d7a7a06b388580dc`.
 The 1,029-row source-blind candidate view is 5,437,809 bytes with SHA-256
-`121f2037e7f6bf9afc3f670971f52229ca0d36a10fb8631d5ac11741707964d9`;
+`7626b28ff5f9c467820646e4ec537933574238712d43f05c3400f69376e30e64`;
 it contains no source text, local path, or evaluation fingerprint.
 The builder uses atomic temporary files rather than a SQLite spool. Budget at
 least 2.5 GB of free local disk for the bound Phase 1 inputs, existing outputs,

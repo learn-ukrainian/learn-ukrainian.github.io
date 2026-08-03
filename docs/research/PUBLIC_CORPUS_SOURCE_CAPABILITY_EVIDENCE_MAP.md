@@ -168,9 +168,9 @@ source-evidence work.
 
 The public, text-free locator index contains 42,302 semantic records: 3,309 literary,
 36,759 textbook, 1,205 external-article, and 1,029 Wikipedia source/work
-mappings. Its self-describing compact UTF-8 transport occupies 15,080,355
+mappings. Its self-describing compact UTF-8 transport occupies 11,523,406
 bytes and is bound by SHA-256
-`f9eb08623e50e141472b8297c374c096e937e341b1f456945050d1efe52b199a`.
+`ca9fb9e88f7520d77bafb9139b2ba20c652a47395c94d416ad575a1ac0801ee6`.
 Strict expansion produces 32,991,831 canonical JSONL bytes with SHA-256
 `1d3f85ae6bb4241b9691c18cf855ec71e3e2ab7c97d18bf52e522f9d2ae07a60`.
 It contains no source chunks or text. Canonical URLs are emitted only when the

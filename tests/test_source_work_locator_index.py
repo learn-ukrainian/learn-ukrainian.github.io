@@ -161,7 +161,17 @@ def test_compact_build_is_byte_identical_and_expands_to_raw_jsonl(tmp_path: Path
 
 @pytest.mark.parametrize(
     "field",
-    ["schema_version", "semantic_schema_version", "row_fields", "families", "records", "ordering", "derived_fields", "semantic_jsonl_sha256"],
+    [
+        "schema_version",
+        "semantic_schema_version",
+        "row_fields",
+        "families",
+        "records",
+        "ordering",
+        "derived_fields",
+        "metadata_publication_vectors",
+        "semantic_jsonl_sha256",
+    ],
 )
 def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> None:
     config, root = _fixture(tmp_path)
@@ -177,6 +187,7 @@ def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> No
         "records": 99,
         "ordering": "wrong",
         "derived_fields": {},
+        "metadata_publication_vectors": [],
         "semantic_jsonl_sha256": "0" * 64,
     }
     header[field] = replacements[field]
@@ -187,7 +198,7 @@ def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> No
 
 @pytest.mark.parametrize(
     "mutation",
-    ["row_length", "family_index", "source_values", "publication_values", "malformed", "unterminated", "nul", "non_utf8"],
+    ["row_length", "family_index", "source_values", "publication_index", "malformed", "unterminated", "nul", "non_utf8"],
 )
 def test_compact_row_tampering_fails_closed(tmp_path: Path, mutation: str) -> None:
     config, root = _fixture(tmp_path)
@@ -220,8 +231,52 @@ def test_compact_row_tampering_fails_closed(tmp_path: Path, mutation: str) -> No
         elif mutation == "source_values":
             row[3].append("extra")
         else:
-            row[7].pop()
+            row[7] = "not-an-index"
         lines[1] = locators.canonical_json(row)
+    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with pytest.raises(locators.LocatorError):
+        locators.compact_rows(output)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "index_out_of_range",
+        "index_type",
+        "vector_length",
+        "vector_type",
+        "vector_value",
+        "vector_order",
+        "unused_vector",
+    ],
+)
+def test_compact_publication_vector_tampering_fails_closed(tmp_path: Path, mutation: str) -> None:
+    config, root = _fixture(tmp_path)
+    output = root / "locators.compact.jsonl"
+    locators.build(config_path=config, input_root=root, output=output)
+    lines = output.read_text().splitlines()
+    header, row = json.loads(lines[0]), json.loads(lines[1])
+    vector_index = row[7]
+    if mutation == "index_out_of_range":
+        row[7] = len(header["metadata_publication_vectors"])
+    elif mutation == "index_type":
+        row[7] = "0"
+    elif mutation == "vector_length":
+        header["metadata_publication_vectors"][vector_index].pop()
+    elif mutation == "vector_type":
+        header["metadata_publication_vectors"][vector_index] = "not-a-vector"
+    elif mutation == "vector_value":
+        header["metadata_publication_vectors"][vector_index][0] = "unrecognized-status"
+    elif mutation == "unused_vector":
+        original = header["metadata_publication_vectors"][vector_index]
+        extra = ["missing" if value == "public_metadata" else "public_metadata" for value in original]
+        assert extra not in header["metadata_publication_vectors"]
+        header["metadata_publication_vectors"].append(extra)
+        header["metadata_publication_vectors"].sort(key=locators.canonical_json)
+        row[7] = header["metadata_publication_vectors"].index(original)
+    else:
+        header["metadata_publication_vectors"].reverse()
+    lines[0], lines[1] = locators.canonical_json(header), locators.canonical_json(row)
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     with pytest.raises(locators.LocatorError):
         locators.compact_rows(output)

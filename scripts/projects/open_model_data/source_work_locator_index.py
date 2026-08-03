@@ -30,7 +30,7 @@ COMPACT_ROW_FIELDS = (
     "work_locator_values",
     "canonical_url",
     "metadata_values",
-    "metadata_publication_values",
+    "metadata_publication_vector_index",
     "affected_records",
     "missing_evidence_keys",
 )
@@ -167,6 +167,14 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
             raise LocatorError(f"inconsistent compact family descriptor: {row['source_family']}")
     families = [descriptors[name] for name in sorted(descriptors)]
     family_index = {family["source_family"]: index for index, family in enumerate(families)}
+    publication_vectors = sorted(
+        {
+            tuple(row["metadata_publication"][column] for column in sorted(row["metadata"]))
+            for row in rows
+        },
+        key=canonical_json,
+    )
+    publication_vector_index = {vector: index for index, vector in enumerate(publication_vectors)}
     header = {
         "schema_version": COMPACT_SCHEMA_VERSION,
         "semantic_schema_version": "source_work_locator_v1",
@@ -175,6 +183,7 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
         "records": len(rows),
         "ordering": COMPACT_ORDERING,
         "derived_fields": COMPACT_DERIVED_FIELDS,
+        "metadata_publication_vectors": [list(vector) for vector in publication_vectors],
         "semantic_jsonl_sha256": hashlib.sha256(semantic).hexdigest(),
     }
     compact_rows: list[list[Any]] = []
@@ -189,7 +198,9 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
                 [row["work_locator"][column] for column in family["work_locator_columns"]],
                 row["canonical_url"],
                 [row["metadata"][column] for column in family["metadata_columns"]],
-                [row["metadata_publication"][column] for column in family["metadata_columns"]],
+                publication_vector_index[
+                    tuple(row["metadata_publication"][column] for column in family["metadata_columns"])
+                ],
                 row["affected_records"],
                 row["missing_evidence_keys"],
             ]
@@ -202,7 +213,7 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
     return content
 
 
-def _compact_header(value: Any) -> list[dict[str, Any]]:
+def _compact_header(value: Any) -> tuple[list[dict[str, Any]], list[list[Any]]]:
     if not isinstance(value, dict) or set(value) != {
         "schema_version",
         "semantic_schema_version",
@@ -211,6 +222,7 @@ def _compact_header(value: Any) -> list[dict[str, Any]]:
         "records",
         "ordering",
         "derived_fields",
+        "metadata_publication_vectors",
         "semantic_jsonl_sha256",
     }:
         raise LocatorError("invalid compact locator header")
@@ -224,6 +236,13 @@ def _compact_header(value: Any) -> list[dict[str, Any]]:
         raise LocatorError("invalid compact ordering")
     if value["derived_fields"] != COMPACT_DERIVED_FIELDS:
         raise LocatorError("invalid compact derived field declaration")
+    publication_vectors = value["metadata_publication_vectors"]
+    if not isinstance(publication_vectors, list) or any(not isinstance(vector, list) for vector in publication_vectors):
+        raise LocatorError("invalid compact metadata publication vector table")
+    if publication_vectors != sorted(publication_vectors, key=canonical_json):
+        raise LocatorError("compact metadata publication vectors are not sorted")
+    if len(publication_vectors) != len({canonical_json(vector) for vector in publication_vectors}):
+        raise LocatorError("duplicate compact metadata publication vector")
     if not isinstance(value["records"], int) or isinstance(value["records"], bool) or value["records"] < 0:
         raise LocatorError("invalid compact record count")
     if not isinstance(value["semantic_jsonl_sha256"], str) or re.fullmatch(r"[0-9a-f]{64}", value["semantic_jsonl_sha256"]) is None:
@@ -255,7 +274,7 @@ def _compact_header(value: Any) -> list[dict[str, Any]]:
                 raise LocatorError("invalid compact family column order")
             if any(not isinstance(column, str) or not column for column in columns):
                 raise LocatorError("invalid compact family column name")
-    return families
+    return families, publication_vectors
 
 
 def compact_rows(path: Path) -> list[dict[str, Any]]:
@@ -273,8 +292,9 @@ def compact_rows(path: Path) -> list[dict[str, Any]]:
                 header = json.loads(first)
             except json.JSONDecodeError as exc:
                 raise LocatorError("compact locator has invalid JSON header") from exc
-            families = _compact_header(header)
+            families, publication_vectors = _compact_header(header)
             rows: list[dict[str, Any]] = []
+            used_publication_vector_indices: set[int] = set()
             row_validator = _validator(_read(CONTRACT))
             for line_number, line in enumerate(handle, start=2):
                 if not line.endswith("\n") or not line.strip():
@@ -289,15 +309,25 @@ def compact_rows(path: Path) -> list[dict[str, Any]]:
                 if not isinstance(family_number, int) or isinstance(family_number, bool) or not 0 <= family_number < len(families):
                     raise LocatorError(f"compact locator has invalid family index at {line_number}")
                 family = families[family_number]
-                source_values, work_values, metadata_values, publication_values = encoded[3], encoded[4], encoded[6], encoded[7]
+                source_values, work_values, metadata_values = encoded[3], encoded[4], encoded[6]
                 expected_lengths = (
                     (source_values, family["source_locator_columns"]),
                     (work_values, family["work_locator_columns"]),
                     (metadata_values, family["metadata_columns"]),
-                    (publication_values, family["metadata_columns"]),
                 )
                 if any(not isinstance(values, list) or len(values) != len(columns) for values, columns in expected_lengths):
                     raise LocatorError(f"compact locator has invalid value-array length at {line_number}")
+                publication_vector_index = encoded[7]
+                if (
+                    not isinstance(publication_vector_index, int)
+                    or isinstance(publication_vector_index, bool)
+                    or not 0 <= publication_vector_index < len(publication_vectors)
+                ):
+                    raise LocatorError(f"compact locator has invalid metadata publication vector index at {line_number}")
+                publication_values = publication_vectors[publication_vector_index]
+                used_publication_vector_indices.add(publication_vector_index)
+                if len(publication_values) != len(family["metadata_columns"]):
+                    raise LocatorError(f"compact locator metadata publication vector disagrees with family at {line_number}")
                 row = {
                     "schema_version": "source_work_locator_v1",
                     "locator_id": opaque_id(
@@ -330,6 +360,8 @@ def compact_rows(path: Path) -> list[dict[str, Any]]:
         raise LocatorError(f"cannot read compact locator {path}: {exc}") from exc
     if len(rows) != header["records"]:
         raise LocatorError("compact locator record count disagrees with header")
+    if used_publication_vector_indices != set(range(len(publication_vectors))):
+        raise LocatorError("compact locator has unused metadata publication vectors")
     ordered = sorted(rows, key=lambda row: (row["source_family"], row["source_id"], row["work_id"], canonical_json(row["source_locator"])))
     if rows != ordered:
         raise LocatorError("compact locator rows are reordered")
