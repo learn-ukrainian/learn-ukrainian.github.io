@@ -13,6 +13,7 @@ cannot strand temporary roots.
 
 from __future__ import annotations
 
+import codecs
 import contextlib
 import hashlib
 import json
@@ -214,6 +215,88 @@ def _inline_required_evidence(
         "content_sha256": hashlib.sha256(serialized.encode("utf-8")).hexdigest(),
     }
     return serialized, proof
+
+
+def _sealed_required_evidence_proof(
+    evidence_root: Path,
+    required_paths: tuple[str, ...],
+) -> dict[str, Any]:
+    """Build a body-free, ordered completeness proof for sealed-read engines.
+
+    ACP receives source bytes exclusively through the parent-owned sealed read
+    tools.  The prompt must still prove the exact artifact order, byte counts,
+    and digests without constructing a duplicate inline JSON payload.  Hash and
+    UTF-8 validation stream from disk so valid sealed evidence is bounded by
+    the 16 MiB per-file and 64 MiB total transport limits, rather than the
+    direct Codex/Claude 2 MiB inline limit.
+    """
+    _validate_review_read_sizes(evidence_root, required_paths)
+    files: list[dict[str, Any]] = []
+    raw_total = 0
+    for index, rel_path in enumerate(required_paths):
+        path = evidence_root / rel_path
+        try:
+            before = path.lstat()
+        except OSError as exc:
+            raise ReviewWorktreeError(
+                f"review_evidence_split_required:unreadable:{rel_path}"
+            ) from exc
+        if not stat.S_ISREG(before.st_mode):
+            raise ReviewWorktreeError(f"review_evidence_not_regular:{rel_path}")
+
+        digest = hashlib.sha256()
+        decoder = codecs.getincrementaldecoder("utf-8")(errors="strict")
+        byte_count = 0
+        try:
+            with path.open("rb") as handle:
+                while chunk := handle.read(SEALED_READ_CHUNK_BYTES):
+                    digest.update(chunk)
+                    byte_count += len(chunk)
+                    decoder.decode(chunk, final=False)
+            decoder.decode(b"", final=True)
+            after = path.lstat()
+        except UnicodeDecodeError as exc:
+            raise ReviewWorktreeError(f"review_evidence_not_utf8:{rel_path}") from exc
+        except OSError as exc:
+            raise ReviewWorktreeError(
+                f"review_evidence_split_required:unreadable:{rel_path}"
+            ) from exc
+        if (
+            before.st_dev,
+            before.st_ino,
+            before.st_size,
+            before.st_mtime_ns,
+            before.st_ctime_ns,
+        ) != (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+        ):
+            raise ReviewWorktreeError(f"review_evidence_read_race:{rel_path}")
+        raw_total += byte_count
+        files.append(
+            {
+                "index": index,
+                "path": rel_path,
+                "bytes": byte_count,
+                "sha256": digest.hexdigest(),
+            }
+        )
+
+    proof = {
+        "schema_version": "review-sealed-evidence-proof.v1",
+        "coverage": "every_required_artifact_in_declared_order",
+        "covered_paths": list(required_paths),
+        "covered_path_count": len(required_paths),
+        "raw_bytes": raw_total,
+        "files": files,
+    }
+    proof["proof_sha256"] = hashlib.sha256(
+        json.dumps(proof, ensure_ascii=True, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    ).hexdigest()
+    return proof
 
 
 def _normalized_read_path(raw: Any, *, evidence_root: Path) -> str | None:
@@ -1195,14 +1278,38 @@ class ProvisionedReviewWorktree:
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
+        sealed_proof: dict[str, Any] | None = None
         legacy_inline_bytes = 0
-        if engine_key in {"acp", "codex", "claude"}:
+        if engine_key == "acp":
+            sealed_proof = _sealed_required_evidence_proof(
+                self.path,
+                required_read_paths,
+            )
+            read_protocol = {
+                "tool": "mcp__sealed_review__read_file",
+                "preferred_complete_tool": "sealed_review_read_required_all",
+                "preferred_complete_instruction": (
+                    "Call sealed_review_read_required_all exactly once. If it fails "
+                    "closed with required_evidence_split_required, call "
+                    "sealed_review_read_required with index=0 and offset=0 and follow "
+                    "next_index/next_offset until eof=true. Use read_file for required "
+                    "paths only if the required stream fails."
+                ),
+                "unit": "utf8_bytes",
+                "start_offset": 0,
+                "max_chunk_bytes": SEALED_READ_CHUNK_BYTES,
+                "continue_field": "next_offset",
+                "complete_field": "eof",
+                "required_evidence_proof_sha256": sealed_proof["proof_sha256"],
+                "required_paths": list(required_read_paths),
+            }
+        elif engine_key in {"codex", "claude"}:
             candidate_inline, inline_proof = _inline_required_evidence(
                 self.path,
                 required_read_paths,
             )
             legacy_inline_bytes = len(candidate_inline.encode("utf-8"))
-            if engine_key in {"acp", "codex"}:
+            if engine_key == "codex":
                 read_protocol = {
                     "tool": "mcp__sealed_review__read_file",
                     "preferred_complete_tool": "sealed_review_read_required_all",
@@ -1321,7 +1428,9 @@ class ProvisionedReviewWorktree:
                 "manifest_bytes": manifest_stat.st_size,
                 "patch_bytes": patch_stat.st_size,
                 "unique_evidence_bytes": sum((self.path / path).stat().st_size for path in required_read_paths),
-                "legacy_inline_serialized_bytes": legacy_inline_bytes,
+                "legacy_inline_serialized_bytes": (
+                    legacy_inline_bytes if inline_serialized is not None else None
+                ),
             },
             "read_protocol": read_protocol,
             "clean_verdict_gate": (
@@ -1330,6 +1439,8 @@ class ProvisionedReviewWorktree:
                 else "complete_tool_trace_coverage_required"
             ),
         }
+        if sealed_proof is not None:
+            dossier["sealed_evidence_proof"] = sealed_proof
         serialized = json.dumps(
             dossier,
             ensure_ascii=True,
@@ -1339,7 +1450,11 @@ class ProvisionedReviewWorktree:
         for _ in range(3):
             serialized_bytes = len(serialized.encode("utf-8"))
             dossier["evidence_metrics"]["serialized_prompt_bytes"] = serialized_bytes
-            dossier["evidence_metrics"]["duplicate_bytes_avoided"] = legacy_inline_bytes
+            dossier["evidence_metrics"]["duplicate_bytes_avoided"] = (
+                legacy_inline_bytes
+                if inline_serialized is not None
+                else sealed_proof["raw_bytes"] if sealed_proof is not None else 0
+            )
             updated = json.dumps(
                 dossier,
                 ensure_ascii=True,

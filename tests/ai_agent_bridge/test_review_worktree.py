@@ -313,11 +313,94 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
     )
     assert "exactly once" in dossier["read_protocol"]["preferred_complete_instruction"]
     assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
-    assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] > 200_000
-    assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == dossier["evidence_metrics"][
-        "legacy_inline_serialized_bytes"
+    assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
+    assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == checkout.sealed_evidence_input_bytes()
+    assert dossier["sealed_evidence_proof"]["coverage"] == (
+        "every_required_artifact_in_declared_order"
+    )
+    assert dossier["sealed_evidence_proof"]["covered_paths"] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+        "src/app.py",
     ]
+    assert all("content" not in file for file in dossier["sealed_evidence_proof"]["files"])
+    assert dossier["read_protocol"]["required_evidence_proof_sha256"] == dossier[
+        "sealed_evidence_proof"
+    ]["proof_sha256"]
     assert len(prompt.encode("utf-8")) < 10_000
+
+
+@pytest.mark.parametrize("direct_engine", ("codex", "claude"))
+def test_acp_large_sealed_evidence_skips_inline_limit_but_direct_still_rejects(
+    direct_engine: str,
+    tmp_path: Path,
+) -> None:
+    expected_total = 15_364_689
+    checkout = _prompt_evidence_checkout(tmp_path / "acp-large")
+    required_paths = review_worktree._required_review_read_paths(
+        checkout.path,
+        checkout.changed_paths,
+    )
+    fixed_bytes = sum(
+        (checkout.path / rel_path).stat().st_size
+        for rel_path in required_paths
+        if rel_path != "src/app.py"
+    )
+    (checkout.path / "src/app.py").write_bytes(b"x" * (expected_total - fixed_bytes))
+
+    assert checkout.sealed_evidence_input_bytes() == expected_total
+    assert expected_total > review_worktree.MAX_CODEX_REQUIRED_TOTAL_BYTES
+    assert expected_total < review_worktree.MAX_SEALED_REVIEW_FILE_BYTES
+
+    acp_prompt = checkout.review_prompt_evidence("acp")
+    acp_dossier = json.loads(next(line for line in acp_prompt.splitlines() if line.startswith("{")))
+    proof = acp_dossier["sealed_evidence_proof"]
+    assert "AUTHORITATIVE INLINE REVIEW CONTENT" not in acp_prompt
+    assert acp_dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
+    assert proof["raw_bytes"] == expected_total
+    assert [file["path"] for file in proof["files"]] == list(required_paths)
+    assert all(set(file) == {"index", "path", "bytes", "sha256"} for file in proof["files"])
+    assert len(acp_prompt.encode("utf-8")) < 10_000
+    sealed_read_proof = review_worktree.verify_clean_review_evidence_reads(
+        SimpleNamespace(tool_calls=_codex_read_calls(checkout)),
+        engine="acp",
+        evidence_root=checkout.path,
+        changed_paths=checkout.changed_paths,
+    )
+    assert sealed_read_proof["unique_evidence_bytes"] == expected_total
+    assert sealed_read_proof["covered_paths"] == list(required_paths)
+
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="codex_total_bytes"):
+        checkout.review_prompt_evidence(direct_engine)
+
+
+def test_acp_sealed_proof_preserves_utf8_and_size_rejection_gates(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    checkout = _prompt_evidence_checkout(tmp_path / "acp-invalid-utf8")
+    (checkout.path / "src/app.py").write_bytes(b"\xff")
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="review_evidence_not_utf8"):
+        checkout.review_prompt_evidence("acp")
+
+    evidence_root = tmp_path / "size-gates"
+    evidence_root.mkdir()
+    (evidence_root / "first.txt").write_bytes(b"12345")
+    (evidence_root / "second.txt").write_bytes(b"1234")
+    monkeypatch.setattr(review_worktree, "MAX_SEALED_REVIEW_FILE_BYTES", 4)
+    monkeypatch.setattr(review_worktree, "MAX_SEALED_REVIEW_TOTAL_BYTES", 6)
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="file_bytes"):
+        review_worktree._sealed_required_evidence_proof(
+            evidence_root,
+            ("first.txt", "second.txt"),
+        )
+
+    (evidence_root / "first.txt").write_bytes(b"1234")
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="total_bytes"):
+        review_worktree._sealed_required_evidence_proof(
+            evidence_root,
+            ("first.txt", "second.txt"),
+        )
 
 
 def test_sealed_acp_config_is_parent_owned_and_snapshot_pinned(tmp_path: Path) -> None:
