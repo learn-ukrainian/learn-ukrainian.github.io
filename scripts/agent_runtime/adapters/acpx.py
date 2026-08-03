@@ -120,9 +120,11 @@ AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
 ACPX_DEFAULT_MAX_TURNS = 1
-_CLAUDE_ACP_SEALED_READ_CHUNK_BYTES = 64 * 1024
-_CLAUDE_ACP_MAX_SEALED_READ_CHUNKS = 64
-_CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD = 2
+_CLAUDE_ACP_SEALED_READ_CHUNK_BYTES = 24 * 1024
+_CLAUDE_ACP_INLINE_RESULT_CHARS = 48 * 1024
+_CLAUDE_ACP_FALLBACK_READ_CHUNK_BYTES = 8 * 1024
+_CLAUDE_ACP_MAX_SEALED_READ_CHUNKS = 96
+_CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD = 6
 
 _ACPX_REQUIRED_GLOBAL_FLAGS: tuple[str, ...] = (
     "--agent",
@@ -375,10 +377,11 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
 
     Claude Agent SDK defers MCP discovery behind one ToolSearch round-trip and
     externalizes large single tool results to a provider-private file.  The
-    sealed protocol therefore streams one UTF-8 chunk per model round-trip;
-    one final round-trip remains for the canonical verdict.  Refuse scopes
-    above the helper's reviewed 64-chunk ceiling instead of granting an
-    unbounded agent loop.
+    sealed protocol therefore streams one serialized-result-bounded UTF-8
+    chunk per model round-trip; one final round-trip remains for the canonical
+    verdict. Refuse scopes above the reviewed 96-chunk ceiling instead of
+    granting an unbounded agent loop. Four additional turns cover bounded
+    smaller-chunk recovery without enabling retries at the prompt layer.
     """
     try:
         config = json.loads(Path(config_path).read_text(encoding="utf-8"))
@@ -429,17 +432,17 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
         required.append(raw)
 
     chunk_count = 0
-    effective_chunk_bytes = _CLAUDE_ACP_SEALED_READ_CHUNK_BYTES - 3
     try:
-        for raw in required:
+        for index, raw in enumerate(required):
             target = snapshot.joinpath(*PurePosixPath(raw).parts)
             metadata = target.lstat()
             if not stat.S_ISREG(metadata.st_mode) or target.is_symlink():
                 raise OSError("required evidence is not a regular file")
-            chunk_count += max(
-                1,
-                (metadata.st_size + effective_chunk_bytes - 1)
-                // effective_chunk_bytes,
+            chunk_count += _claude_inline_chunk_count(
+                raw,
+                target.read_bytes(),
+                index=index,
+                required_path_count=len(required),
             )
     except OSError as exc:
         raise AcpxShadowRefusalError(
@@ -452,6 +455,80 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
             failure_code="acp_review_evidence_too_large",
         )
     return chunk_count + _CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD
+
+
+def _claude_inline_chunk_count(
+    raw_path: str,
+    data: bytes,
+    *,
+    index: int,
+    required_path_count: int,
+) -> int:
+    """Mirror the sealed helper's serialized-result-bounded chunking."""
+    file_sha256 = hashlib.sha256(data).hexdigest()
+    offset = 0
+    count = 0
+    while offset < len(data) or (not data and count == 0):
+        max_bytes = _CLAUDE_ACP_SEALED_READ_CHUNK_BYTES
+        while True:
+            end = min(len(data), offset + max_bytes)
+            while end > offset:
+                try:
+                    content = data[offset:end].decode("utf-8", errors="strict")
+                    break
+                except UnicodeDecodeError as exc:
+                    if exc.reason != "unexpected end of data":
+                        raise AcpxShadowRefusalError(
+                            "AcpxClaudeShadowAdapter: sealed review evidence is not UTF-8",
+                            failure_code="acp_review_evidence_invalid",
+                        ) from exc
+                    end -= 1
+            else:
+                content = ""
+            chunk = {
+                "path": raw_path,
+                "offset": offset,
+                "total_bytes": len(data),
+                "chunk_bytes": end - offset,
+                "next_offset": end,
+                "eof": end == len(data),
+                "sha256": file_sha256,
+                "chunk_sha256": hashlib.sha256(data[offset:end]).hexdigest(),
+                "content": content,
+            }
+            payload = {
+                "index": index,
+                "offset": offset,
+                "next_index": index + 1 if end == len(data) else index,
+                "next_offset": 0 if end == len(data) else end,
+                "required_path_count": required_path_count,
+                "eof": end == len(data) and index + 1 == required_path_count,
+                "chunks": [chunk],
+            }
+            inner = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+            outer = json.dumps(
+                {"content": [{"type": "text", "text": inner}], "isError": False},
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            if len(outer) <= _CLAUDE_ACP_INLINE_RESULT_CHARS:
+                break
+            max_bytes //= 2
+            if max_bytes < _CLAUDE_ACP_FALLBACK_READ_CHUNK_BYTES:
+                raise AcpxShadowRefusalError(
+                    "AcpxClaudeShadowAdapter: sealed review chunk cannot fit the bounded inline result",
+                    failure_code="acp_review_evidence_too_large",
+                )
+        count += 1
+        if end == len(data):
+            break
+        if end <= offset:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review chunk cursor stalled",
+                failure_code="acp_review_evidence_invalid",
+            )
+        offset = end
+    return count
 
 # Fixed ACPX built-ins available only through the runner-owned inter-agent
 # transport boundary (or its bounded discussion controller).  This is

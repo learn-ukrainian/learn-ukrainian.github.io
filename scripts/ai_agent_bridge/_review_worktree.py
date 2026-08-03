@@ -431,6 +431,7 @@ def _required_stream_requests(
     index: Any,
     offset: Any,
     max_chunks: Any = MAX_CODEX_REQUIRED_READ_CHUNKS,
+    max_bytes: Any = SEALED_READ_CHUNK_BYTES,
 ) -> list[dict[str, Any]]:
     """Derive the exact chunks emitted by one parent-owned required read."""
     if (
@@ -445,6 +446,10 @@ def _required_stream_requests(
         or isinstance(max_chunks, bool)
         or max_chunks < 1
         or max_chunks > MAX_CODEX_REQUIRED_READ_CHUNKS
+        or not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or max_bytes < 1
+        or max_bytes > SEALED_READ_CHUNK_BYTES
     ):
         return []
     requests: list[dict[str, Any]] = []
@@ -453,7 +458,7 @@ def _required_stream_requests(
         data = (evidence_root / rel_path).read_bytes()
         if offset > len(data):
             return []
-        end = min(len(data), offset + SEALED_READ_CHUNK_BYTES)
+        end = min(len(data), offset + max_bytes)
         while end > offset:
             try:
                 data[offset:end].decode("utf-8", errors="strict")
@@ -466,7 +471,7 @@ def _required_stream_requests(
             {
                 "path": rel_path,
                 "offset": offset,
-                "max_bytes": SEALED_READ_CHUNK_BYTES,
+                "max_bytes": max_bytes,
             }
         )
         if end == len(data):
@@ -552,6 +557,7 @@ def _codex_sealed_read_requests(
             max_chunks=arguments.get(
                 "max_chunks", MAX_CODEX_REQUIRED_READ_CHUNKS
             ),
+            max_bytes=arguments.get("max_bytes", SEALED_READ_CHUNK_BYTES),
         )
     if name == "read_required_all" or name.endswith(
         "sealed_review__read_required_all"
@@ -1307,10 +1313,13 @@ class ProvisionedReviewWorktree:
                     "Claude Agent SDK externalizes the complete tool result. Do not "
                     "call sealed_review_read_required_all. Call "
                     "sealed_review_read_required with index=0, offset=0, and "
-                    "max_chunks=1, then "
+                    "max_chunks=1, max_bytes=24576, and "
+                    "max_result_chars=49152, then "
                     "repeat from next_index/next_offset until eof=true. Each call "
-                    "returns exactly one bounded chunk. Do not call shell, Python, "
-                    "or any other evidence tool."
+                    "returns exactly one serialized-result-bounded chunk. If a call "
+                    "does not return inline, repeat the same cursor once with "
+                    "max_bytes=8192 and max_result_chars=49152. Do not call shell, "
+                    "Python, or any other evidence tool."
                 ),
                 "unit": "utf8_bytes",
                 "start_offset": 0,

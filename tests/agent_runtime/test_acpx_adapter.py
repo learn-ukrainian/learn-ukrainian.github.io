@@ -1837,10 +1837,10 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     config_path = tmp_path / "sealed.json"
     config_path.write_text(json.dumps(config), encoding="utf-8")
 
-    # ToolSearch + four required chunks + final verdict.
-    assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 6
+    # Four bounded recovery turns + ToolSearch + five required chunks + verdict.
+    assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 11
     assert AcpxClaudeShadowAdapter()._max_turns(None) == 1
-    assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 6
+    assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 11
 
 
 def test_claude_adapter_preflight_refuses_missing_dynamic_package_fallback(tmp_path):

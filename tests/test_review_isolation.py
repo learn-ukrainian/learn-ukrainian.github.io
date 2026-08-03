@@ -841,7 +841,13 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
                 "method": "tools/call",
                 "params": {
                     "name": "read_required",
-                    "arguments": {"index": 0, "offset": 0, "max_chunks": 1},
+                    "arguments": {
+                        "index": 0,
+                        "offset": 0,
+                        "max_chunks": 1,
+                        "max_bytes": 24576,
+                        "max_result_chars": 49152,
+                    },
                 },
             },
         )
@@ -881,6 +887,54 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
     claude_required = json.loads(responses[6]["result"]["content"][0]["text"])
     assert len(claude_required["chunks"]) == 1
     assert claude_required["eof"] is False
+
+
+def test_sealed_reader_bounds_escaped_claude_tool_result(tmp_path: Path) -> None:
+    snapshot = tmp_path / "snapshot"
+    bundle = snapshot / ".review-bundle"
+    bundle.mkdir(parents=True)
+    (bundle / "manifest.json").write_text(
+        json.dumps({"changed_paths": []}), encoding="utf-8"
+    )
+    (bundle / "patch.diff").write_text(
+        ('+  "escaped": "\\\\value\\n"\n' * 4096),
+        encoding="utf-8",
+    )
+    execution = tmp_path / "exec"
+    execution.mkdir(mode=0o700)
+    helper = _stage_sealed_read_mcp(execution)
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "read_required",
+            "arguments": {
+                "index": 1,
+                "offset": 0,
+                "max_chunks": 1,
+                "max_bytes": 24576,
+                "max_result_chars": 49152,
+            },
+        },
+    }
+
+    completed = subprocess.run(
+        ["/usr/bin/python3", str(helper), str(snapshot)],
+        input=json.dumps(request) + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    response = json.loads(completed.stdout)
+    serialized_result = json.dumps(
+        response["result"], ensure_ascii=False, separators=(",", ":")
+    )
+    payload = json.loads(response["result"]["content"][0]["text"])
+    assert len(serialized_result) <= 49152
+    assert len(payload["chunks"]) == 1
+    assert 0 < payload["chunks"][0]["chunk_bytes"] <= 24576
 
 
 def test_codex_sealed_reader_returns_bounded_hash_bound_chunks(tmp_path: Path) -> None:

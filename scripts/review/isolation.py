@@ -1031,6 +1031,9 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(sys.argv[1]).resolve(strict=True)
 MAX_CHUNK_BYTES = 64 * 1024
+CLAUDE_MAX_CHUNK_BYTES = 24 * 1024
+CLAUDE_INLINE_RESULT_CHARS = 48 * 1024
+CLAUDE_FALLBACK_CHUNK_BYTES = 8 * 1024
 MAX_REQUIRED_CHUNKS = 6
 MAX_REQUIRED_ALL_CHUNKS = 64
 MAX_REQUIRED_TOTAL_BYTES = 2 * 1024 * 1024
@@ -1161,7 +1164,19 @@ def required_paths():
         result.append(raw)
     return result
 
-def read_required(index=0, offset=0, max_chunks=MAX_REQUIRED_CHUNKS):
+def tool_result(payload):
+    return {"content":[{"type":"text","text":json.dumps(payload, ensure_ascii=False, separators=(",", ":"))}],"isError":False}
+
+def tool_result_chars(payload):
+    return len(json.dumps(tool_result(payload), ensure_ascii=False, separators=(",", ":")))
+
+def read_required(
+    index=0,
+    offset=0,
+    max_chunks=MAX_REQUIRED_CHUNKS,
+    max_bytes=MAX_CHUNK_BYTES,
+    max_result_chars=None,
+):
     paths = required_paths()
     if (
         not isinstance(index, int)
@@ -1176,30 +1191,52 @@ def read_required(index=0, offset=0, max_chunks=MAX_REQUIRED_CHUNKS):
         or (index == len(paths) and offset != 0)
         or max_chunks < 1
         or max_chunks > MAX_REQUIRED_CHUNKS
+        or not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or max_bytes < 1
+        or max_bytes > MAX_CHUNK_BYTES
+        or (
+            max_result_chars is not None
+            and (
+                not isinstance(max_result_chars, int)
+                or isinstance(max_result_chars, bool)
+                or max_result_chars < 1024
+                or max_result_chars > 64 * 1024
+                or max_chunks != 1
+            )
+        )
     ):
         raise ValueError("invalid_required_cursor")
     start_index = index
     start_offset = offset
-    chunks = []
-    while index < len(paths) and len(chunks) < max_chunks:
-        chunk = read_chunk(paths[index], offset, MAX_CHUNK_BYTES)
-        chunks.append(chunk)
-        if chunk["eof"]:
-            index += 1
-            offset = 0
-        else:
-            if chunk["next_offset"] <= offset:
-                raise ValueError("required_cursor_stalled")
-            offset = chunk["next_offset"]
-    return {
-        "index": start_index,
-        "offset": start_offset,
-        "next_index": index,
-        "next_offset": offset,
-        "required_path_count": len(paths),
-        "eof": index == len(paths),
-        "chunks": chunks,
-    }
+    while True:
+        index = start_index
+        offset = start_offset
+        chunks = []
+        while index < len(paths) and len(chunks) < max_chunks:
+            chunk = read_chunk(paths[index], offset, max_bytes)
+            chunks.append(chunk)
+            if chunk["eof"]:
+                index += 1
+                offset = 0
+            else:
+                if chunk["next_offset"] <= offset:
+                    raise ValueError("required_cursor_stalled")
+                offset = chunk["next_offset"]
+        payload = {
+            "index": start_index,
+            "offset": start_offset,
+            "next_index": index,
+            "next_offset": offset,
+            "required_path_count": len(paths),
+            "eof": index == len(paths),
+            "chunks": chunks,
+        }
+        if max_result_chars is None or tool_result_chars(payload) <= max_result_chars:
+            return payload
+        max_bytes //= 2
+        if max_bytes < CLAUDE_FALLBACK_CHUNK_BYTES:
+            raise ValueError("required_inline_chunk_too_large")
 
 def read_required_all():
     paths = required_paths()
@@ -1268,7 +1305,7 @@ def search_file(raw, query):
 TOOLS = [
     {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
     {"name":"read_file","description":"Read one hash-bound UTF-8 byte chunk. Start at offset 0 and repeat from next_offset until eof=true.","inputSchema":{"type":"object","properties":{"path":{"type":"string"},"offset":{"type":"integer","minimum":0},"max_bytes":{"type":"integer","minimum":1,"maximum":65536}},"required":["path"],"additionalProperties":False}},
-    {"name":"read_required","description":"Read the next bounded hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true. Set max_chunks=1 for Claude ACP so results stay inline.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0},"max_chunks":{"type":"integer","minimum":1,"maximum":6}},"additionalProperties":False}},
+    {"name":"read_required","description":"Read the next bounded hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true. Claude ACP uses max_chunks=1, max_bytes=24576, and max_result_chars=49152 so JSON escaping cannot externalize the result.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0},"max_chunks":{"type":"integer","minimum":1,"maximum":6},"max_bytes":{"type":"integer","minimum":1,"maximum":65536},"max_result_chars":{"type":"integer","minimum":1024,"maximum":65536}},"additionalProperties":False}},
     {"name":"read_required_all","description":"Read every hash-bound chunk from an authoritative required review scope of at most 2 MiB. Larger scopes fail closed and must be split.","inputSchema":{"type":"object","properties":{},"additionalProperties":False}},
     {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
 ]
@@ -1289,6 +1326,8 @@ def call_tool(name, args):
             args.get("index", 0),
             args.get("offset", 0),
             args.get("max_chunks", MAX_REQUIRED_CHUNKS),
+            args.get("max_bytes", MAX_CHUNK_BYTES),
+            args.get("max_result_chars"),
         )
     elif name == "read_required_all":
         payload = read_required_all()
@@ -1309,7 +1348,7 @@ def call_tool(name, args):
         payload = {"matches": matches, "truncated": truncated}
     else:
         raise ValueError("unknown_tool")
-    return {"content":[{"type":"text","text":json.dumps(payload, ensure_ascii=False, separators=(",", ":"))}],"isError":False}
+    return tool_result(payload)
 
 for raw in sys.stdin:
     request = None
