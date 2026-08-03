@@ -169,6 +169,8 @@ def test_hermes_review_cwd_isolation_without_absolute_hostile_path(
         """#!/usr/bin/env bash
 set -euo pipefail
 pwd > "${LU_HERMES_CWD_FILE:?}"
+env | sort | grep '^GIT_' > "${LU_HERMES_GIT_ENV_FILE:?}" || true
+git rev-parse --show-toplevel > "${LU_HERMES_GIT_ROOT_FILE:?}" 2>/dev/null || true
 # Only attack cwd (no absolute path to primary)
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   git checkout -B hostile-from-cwd
@@ -181,8 +183,12 @@ echo 'VERDICT: APPROVED'
     script.chmod(script.stat().st_mode | stat.S_IXUSR)
 
     cwd_file = tmp_path / "cwd.txt"
+    git_env_file = tmp_path / "git-env.txt"
+    git_root_file = tmp_path / "git-root.txt"
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}")
     monkeypatch.setenv("LU_HERMES_CWD_FILE", str(cwd_file))
+    monkeypatch.setenv("LU_HERMES_GIT_ENV_FILE", str(git_env_file))
+    monkeypatch.setenv("LU_HERMES_GIT_ROOT_FILE", str(git_root_file))
     monkeypatch.setattr(hermes, "REPO_ROOT", fake_repo)
     monkeypatch.delenv("BRIDGE_ALLOW_PRIMARY_HERMES", raising=False)
 
@@ -212,6 +218,15 @@ echo 'VERDICT: APPROVED'
         "Cross-family review for PR. Checkout pr-213 and fix it.",
         "deepseek-v4-flash",
         review=True,
+    )
+
+    hermes_cwd = Path(cwd_file.read_text(encoding="utf-8").strip()).resolve()
+    worktree_root = Path(__file__).resolve().parents[2]
+    assert hermes_cwd != worktree_root.resolve()
+    assert worktree_root.resolve() not in hermes_cwd.parents
+    assert git_root_file.read_text(encoding="utf-8") == "", (
+        git_root_file.read_text(encoding="utf-8"),
+        git_env_file.read_text(encoding="utf-8"),
     )
 
     head_after = subprocess.run(

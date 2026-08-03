@@ -25,7 +25,9 @@ import logging
 import os
 import re
 import subprocess
+import tempfile
 import tomllib
+from contextvars import ContextVar
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -323,13 +325,27 @@ def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     return ("hermes",)
 
 
+_VERSION_PROBE_CWD: ContextVar[str | None] = ContextVar(
+    "agent_runtime_version_probe_cwd", default=None
+)
+
+
 def _probe_version(prefix: tuple[str, ...]) -> str | None:
+    """Probe a CLI from the invocation cwd, never the ambient checkout.
+
+    Some CLIs execute user hooks even for ``--version``.  Running the probe
+    from the controller's current directory therefore violates review
+    isolation before the real subprocess starts.  A concrete plan supplies
+    its already-validated cwd; pre-plan probes use the system temp directory.
+    """
+    probe_cwd = _VERSION_PROBE_CWD.get() or tempfile.gettempdir()
     try:
         proc = _ORIGINAL_SUBPROCESS_POPEN(
             [*prefix, "--version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            cwd=probe_cwd,
         )
     except BaseException:
         return None
@@ -345,52 +361,64 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
     return _extract_semverish(combined)
 
 
-@lru_cache(maxsize=1)
-def codex_cli_version(prefix: tuple[str, ...] = ("codex",)) -> str | None:
-    return _probe_version(prefix)
+def _probe_version_at(prefix: tuple[str, ...], cwd: str | None) -> str | None:
+    """Bind a probe cwd without changing the patchable probe call contract."""
+    if cwd is None:
+        return _probe_version(prefix)
+    token = _VERSION_PROBE_CWD.set(cwd)
+    try:
+        return _probe_version(prefix)
+    finally:
+        _VERSION_PROBE_CWD.reset(token)
 
 
-@lru_cache(maxsize=1)
-def gemini_cli_version(prefix: tuple[str, ...] = ("gemini",)) -> str | None:
-    return _probe_version(prefix)
+@lru_cache(maxsize=8)
+def codex_cli_version(prefix: tuple[str, ...] = ("codex",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
 
 
-@lru_cache(maxsize=1)
-def claude_cli_version(prefix: tuple[str, ...] = ("claude",)) -> str | None:
-    return _probe_version(prefix)
+@lru_cache(maxsize=8)
+def gemini_cli_version(prefix: tuple[str, ...] = ("gemini",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
 
 
-@lru_cache(maxsize=1)
-def agy_cli_version(prefix: tuple[str, ...] = ("agy",)) -> str | None:
-    return _probe_version(prefix)
+@lru_cache(maxsize=8)
+def claude_cli_version(prefix: tuple[str, ...] = ("claude",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
 
 
-@lru_cache(maxsize=1)
-def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",)) -> str | None:
-    return _probe_version(prefix)
+@lru_cache(maxsize=8)
+def agy_cli_version(prefix: tuple[str, ...] = ("agy",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
 
 
-@lru_cache(maxsize=1)
-def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",)) -> str | None:
-    return _probe_version(prefix)
+@lru_cache(maxsize=8)
+def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
+
+
+@lru_cache(maxsize=8)
+def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",), cwd: str | None = None) -> str | None:
+    return _probe_version_at(prefix, cwd)
 
 
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
+    probe_cwd = str(plan.cwd) if plan is not None else None
     if agent_name == "codex":
         prefix = _codex_version_prefix(plan.cmd) if plan is not None else ("codex",)
-        return codex_cli_version(prefix)
+        return codex_cli_version(prefix, probe_cwd)
     if agent_name == "gemini":
         prefix = _gemini_version_prefix(plan.cmd) if plan is not None else ("gemini",)
-        return gemini_cli_version(prefix)
+        return gemini_cli_version(prefix, probe_cwd)
     if agent_name == "claude":
         prefix = _claude_version_prefix(plan.cmd) if plan is not None else ("claude",)
-        return claude_cli_version(prefix)
+        return claude_cli_version(prefix, probe_cwd)
     if agent_name == "agy":
         prefix = _agy_version_prefix(plan.cmd) if plan is not None else ("agy",)
-        return agy_cli_version(prefix)
+        return agy_cli_version(prefix, probe_cwd)
     if agent_name == "cursor":
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
-        return cursor_cli_version(prefix)
+        return cursor_cli_version(prefix, probe_cwd)
     if agent_name == "kimi":
         if plan is not None and plan.metadata.get("harness") == "kimicc":
             claude_bin = plan.metadata.get("claude_bin")
@@ -399,7 +427,7 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
                 if isinstance(claude_bin, str) and claude_bin
                 else ("claude",)
             )
-            return claude_cli_version(prefix)
+            return claude_cli_version(prefix, probe_cwd)
         if plan is not None and plan.cmd:
             bin_path = plan.cmd[0]
         else:
@@ -409,16 +437,16 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
             except Exception:
                 bin_path = "kimi"
         prefix = (bin_path,)
-        return kimi_cli_version(prefix)
+        return kimi_cli_version(prefix, probe_cwd)
     from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — NOT hermes-backed; probe it directly.
-        return _probe_version(("grok",))
+        return _probe_version_at(("grok",), probe_cwd)
     if agent_name == "deepseek" or is_hermes_grok_seat(agent_name):
         # Hermes-backed seats share one version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
-        return _probe_version(prefix)
+        return _probe_version_at(prefix, probe_cwd)
     return None
 
 

@@ -290,6 +290,13 @@ class GrokBuildAdapter:
             output_file=None,
             env_overrides={},
             liveness_paths=self._liveness_paths(),
+            metadata={
+                "entire_fleet": {
+                    "requested_model": requested_model,
+                    "actual_model": requested_model,
+                }
+            },
+            host_harness="grok",
         )
 
     def parse_response(
