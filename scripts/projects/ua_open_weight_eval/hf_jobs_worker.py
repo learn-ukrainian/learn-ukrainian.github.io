@@ -34,6 +34,15 @@ RESPONSE_SCHEMA = "ua_open_weight_eval_responses.v1"
 CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
+RESPONSE_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "action": {"type": "string", "enum": ["abstain", "correct", "preserve"]},
+        "output_text": {"type": "string"},
+    },
+    "required": ["action", "output_text"],
+    "additionalProperties": False,
+}
 JOB_ID_PATTERN = re.compile(r"[a-f0-9]{20,64}")
 OFFLINE_GENERATION_ENVIRONMENT = {
     "HF_DATASETS_OFFLINE": "1",
@@ -314,6 +323,10 @@ def verify_config(config: Mapping[str, Any]) -> None:
     _require(config.get("model", {}).get("multimodal_projector_used") is False, "projector must remain excluded")
     _require(config.get("runner", {}).get("temperature") == 0.0, "temperature drift")
     _require(config.get("runner", {}).get("seed") == 0, "seed drift")
+    _require(
+        config.get("runner", {}).get("structured_outputs") == "json_schema",
+        "structured output contract drift",
+    )
     _require(config.get("runner", {}).get("checkpoint_upload_every_cases") == 25, "checkpoint cadence drift")
     _require(config.get("transport", {}).get("mounted_volumes") == 0, "mounted volumes are prohibited")
 
@@ -423,12 +436,30 @@ def enable_gemma4_text_gguf_alias() -> str:
     return f"{getattr(architecture, 'name', architecture)}:gemma4->gemma4_text"
 
 
+def build_sampling_params(
+    runner: Mapping[str, Any],
+    *,
+    sampling_params_type: Callable[..., Any],
+    structured_outputs_type: Callable[..., Any],
+) -> Any:
+    return sampling_params_type(
+        temperature=float(runner["temperature"]),
+        seed=int(runner["seed"]),
+        max_tokens=int(runner["max_tokens"]),
+        structured_outputs=structured_outputs_type(
+            json=RESPONSE_JSON_SCHEMA,
+            disable_additional_properties=True,
+        ),
+    )
+
+
 def load_generator(
     *, config: Mapping[str, Any], model_path: Path, tokenizer_root: Path
 ) -> tuple[Callable[[Sequence[str]], list[tuple[str, int]]], dict[str, str], Callable[[str], str]]:
     os.environ.update(OFFLINE_GENERATION_ENVIRONMENT)
     from transformers import AutoTokenizer
     from vllm import LLM, SamplingParams
+    from vllm.sampling_params import StructuredOutputsParams
 
     runtime = config["runtime"]
     runner = config["runner"]
@@ -469,10 +500,10 @@ def load_generator(
         trust_remote_code=False,
         enforce_eager=True,
     )
-    sampling = SamplingParams(
-        temperature=float(runner["temperature"]),
-        seed=int(runner["seed"]),
-        max_tokens=int(runner["max_tokens"]),
+    sampling = build_sampling_params(
+        runner,
+        sampling_params_type=SamplingParams,
+        structured_outputs_type=StructuredOutputsParams,
     )
 
     def generate(prompts: Sequence[str]) -> list[tuple[str, int]]:
@@ -576,6 +607,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "seed": config["runner"]["seed"],
             "max_tokens": config["runner"]["max_tokens"],
             "parse_retries": config["runner"]["parse_retries"],
+            "structured_outputs": config["runner"]["structured_outputs"],
+            "response_json_schema_sha256": sha256_text(canonical_json(RESPONSE_JSON_SCHEMA)),
         },
         "network_during_generation": "private_checkpoint_upload_only",
     }

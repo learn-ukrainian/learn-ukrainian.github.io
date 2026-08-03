@@ -91,6 +91,15 @@ map. The worker now binds that existing map to the text-only config name before
 model loading, recording the compatibility alias in its version provenance.
 The pinned plugin and checkpoint bytes remain unchanged. Four billed minutes
 cost USD 0.120000, raising cumulative cost to USD 0.420167.
+Job `6a6fe1ba6b79c09949c1fe21` then verified the complete bundle, loaded the
+official GGUF as `Gemma4ForCausalLM` on the L40S, and reached generation. Its
+first case exhausted the prompt-only JSON parse retries without producing one
+valid response object. The worker now uses the pinned vLLM 0.26.0 structured
+output interface with an exact JSON schema for `action` and `output_text`, while
+retaining the strict parser as a post-generation validator. This constrains
+syntax only and does not expose gold labels, mutate the suite, or weaken
+response validation. Five billed minutes cost USD 0.150000, raising cumulative
+cost to USD 0.570167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

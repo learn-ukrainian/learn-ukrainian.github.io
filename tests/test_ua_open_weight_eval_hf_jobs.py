@@ -50,19 +50,20 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     assert config["pricing"]["usd_per_minute"] == 0.03
     assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
     assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 0.420167
+    assert config["authorization"]["prior_provider_cost_usd"] == 0.570167
     assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a6fdeaaa00abefd4b28e281",
+        "job_id": "6a6fe1ba6b79c09949c1fe21",
         "mode": "canary",
-        "provider_billed_minutes": 4,
-        "provider_derived_cost_usd": 0.12,
-        "provider_running_seconds": 189,
+        "provider_billed_minutes": 5,
+        "provider_derived_cost_usd": 0.15,
+        "provider_running_seconds": 288,
         "stage": "ERROR",
     }
     assert config["authorization"]["recoverable_execution_retries_authorized"] is True
     assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert config["authorization"]["no_automatic_paid_retry"] is False
     assert config["runner"]["checkpoint_upload_every_cases"] == 25
+    assert config["runner"]["structured_outputs"] == "json_schema"
     assert config["transport"] == {
         "cpu_preflight": {
             "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
@@ -106,6 +107,35 @@ def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
     assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
     with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
         hf_jobs_worker.parse_model_reply(reply + " " + reply)
+
+
+def test_worker_structured_output_schema_keeps_the_strict_response_contract() -> None:
+    schema = hf_jobs_worker.RESPONSE_JSON_SCHEMA
+    assert schema == {
+        "type": "object",
+        "properties": {
+            "action": {"type": "string", "enum": ["abstain", "correct", "preserve"]},
+            "output_text": {"type": "string"},
+        },
+        "required": ["action", "output_text"],
+        "additionalProperties": False,
+    }
+    assert set(schema["properties"]["action"]["enum"]) == hf_jobs_worker.ALLOWED_ACTIONS
+
+    class Capture:
+        def __init__(self, **kwargs: object) -> None:
+            self.kwargs = kwargs
+
+    config = hf_jobs_baseline.load_config()
+    sampling = hf_jobs_worker.build_sampling_params(
+        config["runner"], sampling_params_type=Capture, structured_outputs_type=Capture
+    )
+    assert sampling.kwargs["temperature"] == 0.0
+    assert sampling.kwargs["seed"] == 0
+    assert sampling.kwargs["max_tokens"] == 160
+    structured = sampling.kwargs["structured_outputs"]
+    assert isinstance(structured, Capture)
+    assert structured.kwargs == {"json": schema, "disable_additional_properties": True}
 
 
 def test_worker_source_packet_and_selection_stay_gold_blind(tmp_path: Path) -> None:
@@ -685,7 +715,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
     assert gate["schema_version"] == "ua_open_weight_eval_hf_jobs_operator_canary_gate.v1"
     assert gate["accepted_preflight_job_id"] == "6a6fbf1b6b79c09949c1fa46"
     assert gate["accepted_preflight_cost_usd"] == 0.000167
-    assert gate["prior_provider_cost_usd"] == 0.420167
+    assert gate["prior_provider_cost_usd"] == 0.570167
     assert gate["incurred_provider_job_ids"] == [
         "6a6fbf1b6b79c09949c1fa46",
         "6a6fcc80a00abefd4b28dfb6",
@@ -694,6 +724,7 @@ def test_operator_canary_gate_binds_superseding_cpu_evidence_and_exact_gpu_bundl
         "6a6fd5aa6b79c09949c1fbc9",
         "6a6fd8236b79c09949c1fc35",
         "6a6fdeaaa00abefd4b28e281",
+        "6a6fe1ba6b79c09949c1fe21",
     ]
     assert gate["bundle_sha256"] == "b" * 64
     assert gate["bundle_source_commit"] == "d" * 40
