@@ -219,5 +219,5 @@ yamllint==1.38.0
 yarl==1.24.2
 youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
-zeroconf==0.149.16
+zeroconf==0.150.0
 zlib-state==0.1.12
