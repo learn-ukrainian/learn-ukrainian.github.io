@@ -122,6 +122,7 @@ NO_PAIR_PROBABILITY = {
     "C2": 0.45,
 }
 HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
+HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
 SYNONYM_DEFAULT_AVAILABILITY = "B1"
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
@@ -2572,6 +2573,9 @@ def _clean_text_list(value: Any) -> list[str]:
 
 
 def _heritage_availability_level(pair: dict[str, Any]) -> str:
+    # CEFR is a curator-facing guidance signal, not a hard exclusion from a
+    # learner's path.  B1 remains the default for unreviewed placement, while
+    # a curator may explicitly admit an easy native replacement at A1.
     return _normalize_cefr(pair.get("cefrAvailability")) or HERITAGE_DEFAULT_AVAILABILITY
 
 
@@ -2774,9 +2778,9 @@ def _build_heritage_items(
     # drill items through the same-level index/lexeme shards — so the item must
     # sit AT OR ABOVE the lexeme's shard (cumulative loading pulls lower-level
     # lexeme shards in, keeping the join resolvable). But the curator
-    # availability floor (§9.5, agy-reviewed: B1+ default, A2 only by curator
-    # flag) is a hard pedagogy gate — level-local placement must never drop
-    # BELOW it (#4719: b1-flagged calque drills were served at A1).
+    # availability floor is a curator-selected guidance floor — level-local
+    # placement must never drop below it, but explicitly A1-admitted pairs are
+    # allowed when the native lemma and pedagogy are suitable (#6140).
     lexeme_level = _normalize_cefr(lexeme.get("cefr"))
     if not lexeme_level:
         return []
@@ -2828,6 +2832,7 @@ def _build_heritage_items(
             "nativeLemma": _clean_text(pair.get("nativeLemma")) or lexeme["lemma"],
             "calqueLabel": _clean_text(pair.get("calqueLabel")) or calque_form,
             "kind": _clean_text(pair.get("kind")) or "lexical",
+            "severity": _clean_text(pair.get("severity")) or "enrichment",
             "prompt": sentence,
             "answer": answer_form,
             "calque": calque_form,
@@ -3113,6 +3118,9 @@ def validate_heritage_pair(pair: dict[str, Any]) -> list[str]:
         errors.append("heritage_pair missing sourceFamily")
     if not _clean_text(pair.get("rationale")):
         errors.append("heritage_pair missing rationale")
+    severity = _clean_text(pair.get("severity"))
+    if severity not in HERITAGE_SEVERITIES:
+        errors.append("heritage_pair severity must be russianism or enrichment")
     kind = _clean_text(pair.get("kind"))
     if kind not in HERITAGE_KINDS:
         errors.append("heritage_pair kind must be lexical or sense_restricted")
@@ -3122,8 +3130,8 @@ def validate_heritage_pair(pair: dict[str, Any]) -> list[str]:
         if not _clean_text(pair.get("authenticSense")):
             errors.append("sense_restricted heritage_pair missing authenticSense")
     availability = _clean_text(pair.get("cefrAvailability"))
-    if availability and _normalize_cefr(availability) not in {"A2", "B1"}:
-        errors.append("heritage_pair cefrAvailability must be a2 or b1")
+    if availability and _normalize_cefr(availability) not in {"A1", "A2", "B1"}:
+        errors.append("heritage_pair cefrAvailability must be a1, a2, or b1")
     frames = pair.get("frames")
     if frames is None:
         return errors

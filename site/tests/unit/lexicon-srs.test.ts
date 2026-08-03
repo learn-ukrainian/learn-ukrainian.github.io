@@ -206,6 +206,7 @@ function heritageItem(lemmaId: string, heritageId = `${lemmaId}:heritage:1`): Pr
     nativeLemma: lemmaId,
     calqueLabel: `${lemmaId}-calque`,
     kind: 'lexical',
+    severity: 'enrichment',
     prompt: 'Я бачу ___ щодня.',
     answer: lemmaId,
     calque: `${lemmaId}-calque`,

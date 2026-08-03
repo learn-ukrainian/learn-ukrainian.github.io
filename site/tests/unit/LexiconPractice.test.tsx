@@ -415,6 +415,7 @@ function heritagePracticeItem(): PracticeHeritageItem {
     nativeLemma: 'дім',
     calqueLabel: 'дом',
     kind: 'lexical',
+    severity: 'russianism',
     prompt: 'Я бачу ___ щодня.',
     promptEn: 'I see ___ every day.',
     answer: 'дім',
@@ -1867,6 +1868,7 @@ describe('LexiconPractice', () => {
 
     expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
     expect(screen.getByText('Оберіть питоме українське слово.')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-severity')).toHaveTextContent('Російська калька');
     expect(screen.getByText(/Я бачу/)).toBeInTheDocument();
 
     mixedRender.unmount();
