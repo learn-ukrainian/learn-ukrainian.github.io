@@ -1206,6 +1206,13 @@ def run_detector_on_text(
     owns_runtime = runtime is None
     active_runtime = runtime or EvidenceRuntime(active_config, input_root)
     try:
+        # Heritage evidence is a required part of the detector's conservative
+        # classification stack.  Recording it as unavailable while continuing
+        # with morphology and R2U evidence would turn a degraded evidence
+        # runtime into candidate production, violating the fail-closed
+        # contract exercised by the public API and streaming caller alike.
+        if not active_runtime.heritage_available:
+            return []
         tokens = tokenize_with_offsets(text)
         if not tokens:
             active_runtime.rows_without_prefilter_signal += 1
