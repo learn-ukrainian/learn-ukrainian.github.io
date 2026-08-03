@@ -1,10 +1,19 @@
-# Official Gemma 4 HF Jobs baseline
+# Invalid Gemma 4 HF Jobs run — incident record
+
+> **Disposition (2026-08-03): INVALID — DO NOT USE AS A MODEL BASELINE.** The
+> provider jobs completed and the files were structurally valid, but the saved
+> responses were runtime-corrupted. All 100 canary rows and all 4,000 full-run
+> rows introduced reserved model markers. Of the preserve/abstain rows, 98/98
+> in the canary and 3,961/3,961 in the full run failed the exact-copy contract.
+> This run says nothing reliable about Gemma 4's Ukrainian ability. Its bytes
+> remain available only as a transparent runtime-failure receipt. No rerun is
+> authorized.
 
 Issue [#6273](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6273)
-authorizes one evaluation-only baseline on Hugging Face Jobs. This is not
-training, fine-tuning, optimizer execution, or publication of a new model.
+authorized one evaluation-only attempt on Hugging Face Jobs. It did not train,
+fine-tune, optimize, or publish a model. The attempt is closed as invalid.
 
-## Frozen execution contract
+## Historical frozen execution contract
 
 | Field | Value |
 | --- | --- |
@@ -34,18 +43,17 @@ track-balancing pass covers all fourteen tracks. The selection is bound to the
 frozen cases hash and has SHA-256
 `f1af486e06473828a5af18a5c87d617565238cf6649447343ce9f0decf4a5662`.
 
-The canary has a hard 20-minute timeout and a maximum possible charge of USD
-0.60 at the recorded price. It records model-download time separately from
-generation time, generated-token throughput, and mean case latency. The full
-run may launch only when both token-throughput and case-latency projections,
-with a 25% safety margin, fit the remaining part of the USD 6.00 authorization.
+The canary had a hard 20-minute timeout and a maximum possible charge of USD
+0.60 at the recorded price. The old gate recorded model-download time,
+generation time, throughput, shape, and hashes, but it did not inspect whether
+the actual responses satisfied the evaluation contract. That omission is the
+incident's root cause. Current code requires a source-aware response-integrity
+receipt with zero violations before any full-run projection can pass.
 
-The operator's 2026-08-03 superseding authorization permits retries for
-recoverable execution defects while the cumulative USD 6.00 ceiling and the
-buffered full-run projection continue to pass. A failed or unparseable launch
-response is reconciled through the unique job labels before another attempt.
-Changing the model, suite, hardware, privacy, or publication scope remains
-prohibited without new approval.
+The earlier retry authorization is superseded by the committed invalid-run
+disposition. The launcher now rejects provider execution. Any future attempt
+requires a fresh operator-approved issue and a new canary that inspects the
+saved semantic output before a full run.
 
 CPU job `6a6fbf1b6b79c09949c1fa46` is the accepted no-volume transport gate. It
 reached RUNNING, downloaded the complete pinned bundle, and verified every
@@ -131,37 +139,34 @@ and forces xgrammar to close a degenerate string without changing the model,
 suite, prompt, temperature, seed, or strict post-generation validation. See the
 [upstream Gemma 4 report](https://github.com/vllm-project/vllm/issues/40080).
 Five billed minutes cost USD 0.150000, raising cumulative cost to USD 1.200167.
-Job `6a6ff094a00abefd4b28e630` showed that the bounded grammar closed the JSON
-object, but ignoring the tokenizer's premature EOS left one decoded NUL or SOH
-control token immediately before the final string quote. The authenticated
-private receipt showed a closing quote and brace after that single invalid JSON
-character in all three attempts. The worker now strips only one such terminal
-GGUF control token in that exact location before strict JSON parsing; controls
-anywhere else and every other malformed response remain errors, while the raw
-generation stays preserved privately for audit. Five billed minutes cost USD
-0.150000, raising cumulative cost to USD 1.350167.
+Job `6a6ff094a00abefd4b28e630` showed a decoded NUL or SOH control token before
+the final string quote. The subsequent attempt to normalize this corruption
+instead of treating it as a terminal semantic failure was incorrect. Five
+billed minutes cost USD 0.150000, raising cumulative cost to USD 1.350167.
 Job `6a6ff31d6b79c09949c2000b` advanced farther through the first atomic batch,
 then exposed the same transport artifact as a short terminal run containing
 codes 1, 6, and 21, once followed by trailing markup. That bundle's
-normalization stripped one or more non-whitespace C0 controls only when they
-occurred immediately before the final JSON string quote and object close. It
-deliberately excluded tab, newline, and carriage return, and its strict parser
-still rejected controls inside content. Six billed minutes cost USD 0.180000,
-raising cumulative cost to USD 1.530167.
+normalization accepted non-whitespace C0 controls instead of stopping the run.
+That was not valid evidence of a working evaluator. Six billed minutes cost USD
+0.180000, raising cumulative cost to USD 1.530167.
 Job `6a6ffedca00abefd4b28e89d` showed that the GGUF decoder can place the same
-raw C0 bytes before additional decoded Unicode characters, rather than directly
-before the closing quote. The response still contained exactly one otherwise
-recoverable JSON object. The worker now converts every raw non-whitespace C0
-byte into its standard JSON `\u00xx` escape before strict decoding. This makes
-the transport valid JSON while preserving the exact decoded output value for
-scoring and audit; it does not delete internal characters, accept duplicate
-objects, or weaken field and action validation. Seven billed minutes cost USD
-0.210000, raising cumulative cost to USD 1.740167.
+raw C0 bytes before additional decoded Unicode characters. Converting those
+bytes into JSON escapes made the transport parseable but preserved corrupted
+model output and allowed the run to continue. The current worker rejects raw
+control bytes and rejects any new non-whitespace C0 characters relative to the
+source. Seven billed minutes cost USD 0.210000, raising cumulative cost to USD
+1.740167.
 Job `6a7004b06b79c09949c20218` then completed the 100-case canary in 344
 RUNNING seconds. Its six billed minutes cost USD 0.180000. All 100 response
 records, item identities, required fields, and checkpoint/response hashes
 validated against the worker receipt. The 25%-buffered full projection was
 3,810 seconds and USD 1.920000, for a projected aggregate of USD 3.840167.
+
+Those checks proved transport and structure only. Replaying the saved canary
+through the corrected gate finds 100/100 invalid rows: 98 exact-copy failures,
+100 rows with newly introduced reserved model markers, and 49 rows with newly
+introduced non-whitespace C0 controls. The full run therefore should never
+have launched.
 
 The 4,000-case run resumed only from private direct-upload checkpoints. Job
 `6a7007246b79c09949c20228` persisted 2,375 cases before an HF dataset-commit
@@ -175,6 +180,13 @@ job `6a701872a00abefd4b28ea7f` resumed all 3,125 durable records and completed
 4,000/4,000 in 803 RUNNING seconds; 14 billed minutes cost USD 0.420000.
 Aggregate provider cost for the phase is USD 3.750167, leaving USD 2.249833
 under the approved USD 6.000000 ceiling.
+
+Replaying the saved full output finds 4,000/4,000 invalid rows: 3,961 exact-copy
+failures, 4,000 rows with newly introduced reserved model markers, and 1,830
+rows with newly introduced non-whitespace C0 controls. These counts are
+source-aware: a marker or control already present in a frozen source is not
+itself treated as introduced corruption. The run is not scoreable and its old
+track metrics must not be cited as Gemma results.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
@@ -231,10 +243,10 @@ by both the CPU preflight and any authorized GPU launch. `verify-transport`
 then re-downloads the staged files and verifies their exact set, sizes, and
 hashes before a provider job is submitted.
 
-## Result publication boundary
+## Invalid public artifact boundary
 
-After all 4,000 responses complete and deterministic scoring reproduces, the
-results dataset contains exactly:
+The retained public dataset contains the historical bytes listed below, but its
+current card labels them an invalid runtime-failure receipt:
 
 - `README.md` — Hugging Face card, limitations, and English/Ukrainian reproduction;
 - `responses.jsonl` — complete parsed actions and output text, without raw generations;
@@ -247,16 +259,18 @@ results dataset contains exactly:
 The package excludes weights, model derivatives, source cases, source-only
 request packets, raw generations, checkpoints, provider logs, failed-attempt
 traces, private corpus material, and any aggregate Ukrainian-quality score.
-It is verified once locally and once by anonymous download at the immutable
-Hugging Face dataset commit.
+The original revision remains immutable evidence. The corrective card revision
+is verified by a fresh anonymous, token-free download; every non-card payload
+file must retain its original hash.
 
 ## Українською
 
-Цей запуск є лише оцінюванням офіційного текстового артефакту Gemma 4 QAT
-Q4_0. Він не навчає й не донавчає модель, не виконує кроків оптимізатора та не
-публікує ваги. Спершу запускається збалансована детермінована вибірка зі 100
-прикладів. Повний запуск 4 000 прикладів дозволено лише тоді, коли прогноз із
-25-відсотковим запасом разом із витратами на canary не перевищує 6 доларів США.
+**Цей запуск недійсний як оцінювання моделі.** Завдання провайдера завершилися,
+але всі 100 відповідей canary і всі 4 000 відповідей повного запуску містять
+нові службові маркери моделі. Майже всі відповіді `preserve`/`abstain` також не
+відтворили джерело дослівно. Тому опубліковані метрики нічого надійного не
+говорять про якість української мови Gemma 4. Дані збережено лише як прозору
+квитанцію про помилку середовища виконання; повторний запуск не дозволено.
 
 Підсумок містить окремі звіти за чотирнадцятьма напрямами. Єдиного показника
 «якості української» немає. Повні розібрані відповіді публікуються для

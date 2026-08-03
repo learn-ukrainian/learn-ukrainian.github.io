@@ -1,0 +1,41 @@
+{
+  "schema_version": "ua_open_weight_eval_run_disposition.v1",
+  "issue": 6273,
+  "recorded_on": "2026-08-03",
+  "run_config_sha256": "38d6ee4757a26e4f45b1e6860319821b8eacac9ad28548e4962550ad93661972",
+  "status": "invalid_semantic_output",
+  "evaluation_valid": false,
+  "scoreable": false,
+  "rerun_authorized": false,
+  "reason": "The canary and full outputs passed transport and structural checks but failed source-aware response-integrity checks. The full run must not be treated as a model baseline.",
+  "canary": {
+    "job_id": "6a7004b06b79c09949c20218",
+    "case_count": 100,
+    "responses_sha256": "0781ddf2afd28876ddc3800f7db5b8969182fbf98544b83cc92e6d8bb135bc20",
+    "violation_rows": 100,
+    "copy_contract_violation_rows": 98,
+    "reserved_marker_violation_rows": 100,
+    "introduced_control_violation_rows": 49
+  },
+  "full": {
+    "job_id": "6a701872a00abefd4b28ea7f",
+    "case_count": 4000,
+    "responses_sha256": "46325866e4748047ddfa382cc1371b61d209d6c98ec9df86fe3f5fa9d3aa9276",
+    "violation_rows": 4000,
+    "copy_contract_violation_rows": 3961,
+    "reserved_marker_violation_rows": 4000,
+    "introduced_control_violation_rows": 1830
+  },
+  "public_artifact": {
+    "repository": "krisztiankoos/ua-open-weight-eval-results",
+    "invalid_revision": "6d294b175820777ae382e36ec6a781c5f9032728",
+    "package_sha256": "f5710a3fe9aabeac29d5e6a00b7858657fc6880172b9222b9cc0db0bee86917a",
+    "corrective_card_revision": "152e04defc7faecadfa994a9f8f07fea6c5adb0e",
+    "corrective_readme_sha256": "e5b0a2d2acdfe561b530a3911137e3ae870ab066baa776bd95d449650160dec2",
+    "preservation_policy": "retain immutable bytes as an invalid runtime failure receipt; do not cite metrics as model results"
+  },
+  "replacement_run": {
+    "authorized": false,
+    "minimum_precondition": "A fresh operator-approved issue and canary whose actual saved responses pass the source-aware integrity gate before any full run."
+  }
+}

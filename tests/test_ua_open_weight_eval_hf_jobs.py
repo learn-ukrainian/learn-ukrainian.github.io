@@ -10,7 +10,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.projects.ua_open_weight_eval import hf_jobs_baseline, hf_jobs_transport, hf_jobs_worker, suite_cli
+from scripts.projects.ua_open_weight_eval import (
+    hf_jobs_baseline,
+    hf_jobs_transport,
+    hf_jobs_worker,
+    response_integrity,
+    suite_cli,
+)
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -19,12 +25,7 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
 
 def _write_fake_hf_cli(path: Path) -> None:
     path.write_text(
-        "#!/bin/sh\n"
-        'if [ "$1" = "--version" ]; then\n'
-        "  echo 1.25.1\n"
-        "else\n"
-        "  exit 1\n"
-        "fi\n",
+        '#!/bin/sh\nif [ "$1" = "--version" ]; then\n  echo 1.25.1\nelse\n  exit 1\nfi\n',
         encoding="utf-8",
     )
     path.chmod(0o700)
@@ -110,31 +111,53 @@ def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
     assert hf_jobs_worker.format_prompt(source) == run_mlx_model.format_prompt(source)
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
     assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
-    expected = run_mlx_model.parse_model_reply(reply)
-    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x00" + reply[-2:]) == {
-        **expected,
-        "output_text": expected["output_text"] + "\x00",
-    }
-    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x01" + reply[-2:]) == {
-        **expected,
-        "output_text": expected["output_text"] + "\x01",
-    }
-    assert hf_jobs_worker.parse_model_reply(reply[:-2] + "\x06\x15" + reply[-2:] + "</thead>") == {
-        **expected,
-        "output_text": expected["output_text"] + "\x06\x15",
-    }
-    assert hf_jobs_worker.parse_model_reply(
-        reply[:-2] + "\x00\x01\u04c0\u05ea" + reply[-2:] + "</thead>"
-    ) == {
-        **expected,
-        "output_text": expected["output_text"] + "\x00\x01\u04c0\u05ea",
-    }
-    assert hf_jobs_worker.parse_model_reply(reply.replace("Текст", "Те\x00кст")) == {
-        **expected,
-        "output_text": expected["output_text"].replace("Текст", "Те\x00кст"),
-    }
+    for corrupt in (
+        reply[:-2] + "\x00" + reply[-2:],
+        reply[:-2] + "\x01" + reply[-2:],
+        reply[:-2] + "\x06\x15" + reply[-2:] + "</thead>",
+        reply[:-2] + "\x00\x01\u04c0\u05ea" + reply[-2:] + "</thead>",
+        reply.replace("Текст", "Те\x00кст"),
+    ):
+        with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
+            hf_jobs_worker.parse_model_reply(corrupt)
     with pytest.raises(hf_jobs_worker.WorkerError, match="exactly one JSON object"):
         hf_jobs_worker.parse_model_reply(reply + " " + reply)
+
+
+def test_response_integrity_is_source_aware_and_fail_closed(tmp_path: Path) -> None:
+    sources = {
+        "one": "Точний текст.",
+        "two": "Архівний \x00 [multimodal] текст.",
+    }
+    valid = {
+        "one": {"action": "correct", "output_text": "Виправлений текст."},
+        "two": {"action": "preserve", "output_text": sources["two"]},
+    }
+    assert response_integrity.require_response_integrity(sources=sources, responses=valid)["status"] == "passed"
+
+    corruptions = (
+        {"one": {"action": "preserve", "output_text": "Точний текст. "}},
+        {"one": {"action": "correct", "output_text": "Текст <unused42>"}},
+        {"one": {"action": "correct", "output_text": "Текст\x00"}},
+    )
+    for responses in corruptions:
+        with pytest.raises(response_integrity.IntegrityError, match="semantic integrity failed"):
+            response_integrity.require_response_integrity(sources=sources, responses=responses)
+
+    requests = tmp_path / "requests.jsonl"
+    responses = tmp_path / "responses.jsonl"
+    _write_jsonl(
+        requests,
+        [
+            {"type": "request_run"},
+            {"type": "request", "item_id": "one", "source": sources["one"]},
+        ],
+    )
+    _write_jsonl(
+        responses,
+        [{"type": "run"}, {"item_id": "one", "action": "correct", "output_text": "<unused7>"}],
+    )
+    assert response_integrity.main(["--responses", str(responses), "--requests", str(requests)]) == 2
 
 
 def test_worker_structured_output_schema_keeps_the_strict_response_contract() -> None:
@@ -385,7 +408,7 @@ def test_job_commands_use_hash_first_private_transport_without_volumes(
         )
 
 
-def test_launch_preview_is_free_but_execute_requires_reconciliation_before_retry(
+def test_launch_preview_is_free_but_invalid_disposition_blocks_execution(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
@@ -393,17 +416,10 @@ def test_launch_preview_is_free_but_execute_requires_reconciliation_before_retry
     first = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=False)
     assert first["status"] == "prepared"
     assert not state.exists()
-    monkeypatch.setattr(
-        hf_jobs_baseline.subprocess,
-        "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess(
-            args[0], 0, "id=aaaaaaaaaaaaaaaaaaaaaaaa url=https://huggingface.co/jobs/operator/id\n", ""
-        ),
-    )
-    launched = hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
-    assert launched["status"] == "launched"
-    with pytest.raises(hf_jobs_baseline.BaselineError, match="reconcile before retry"):
+    monkeypatch.setattr(hf_jobs_baseline.subprocess, "run", lambda *args, **kwargs: pytest.fail("launched"))
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="blocked by the invalid-run disposition"):
         hf_jobs_baseline.launch_once(command=command, mode="canary", state_path=state, execute=True)
+    assert not state.exists()
 
 
 def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
@@ -452,9 +468,7 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
         hf_jobs_transport.run_preflight(args, files)
 
 
-def test_transport_spawns_gpu_worker_with_available_python3(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_transport_spawns_gpu_worker_with_available_python3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     config = hf_jobs_baseline.load_config()
     (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
     calls: list[list[str]] = []
@@ -510,8 +524,7 @@ def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
 def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
     header = {"schema_version": "checkpoint.v1", "mode": "full"}
     selected = [
-        {"item_id": f"item-{index}", "request_sha256": str(index) * 64}
-        for index in range(1, 4)
+        {"item_id": f"item-{index}", "request_sha256": str(index) * 64, "source": "Текст"} for index in range(1, 4)
     ]
     records = [
         {
@@ -557,6 +570,14 @@ def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds
             "generated_tokens": 2000,
             "generated_tokens_per_second": 2000 / generation_seconds,
             "mean_generated_tokens_per_case": 20.0,
+        },
+        "response_integrity": {
+            "status": "passed",
+            "checked_rows": 100,
+            "violation_rows": 0,
+            "copy_contract_violation_rows": 0,
+            "reserved_marker_violation_rows": 0,
+            "introduced_control_violation_rows": 0,
         },
     }
     provider = {
@@ -910,6 +931,14 @@ def test_results_package_includes_complete_responses_but_not_private_generations
         "decoding": {"temperature": 0.0, "seed": 0, "max_tokens": 160, "parse_retries": 2},
         "timing": {"wall_seconds": 1000.0},
         "throughput": {"generated_tokens": 10000, "generated_tokens_per_second": 10.0},
+        "response_integrity": {
+            "status": "passed",
+            "checked_rows": 4000,
+            "violation_rows": 0,
+            "copy_contract_violation_rows": 0,
+            "reserved_marker_violation_rows": 0,
+            "introduced_control_violation_rows": 0,
+        },
         "outputs": {"responses_sha256": hf_jobs_baseline.sha256_file(responses)},
         "facts": {
             "closed_model_judge_used": False,
@@ -960,6 +989,24 @@ def test_results_package_includes_complete_responses_but_not_private_generations
     assert len(report["tracks"]) == 14
     assert report["scoring"]["global_quality_score"] is None
     assert len((output / "metrics.jsonl").read_text(encoding="utf-8").splitlines()) == 56
+
+    invalid_responses = tmp_path / "invalid-responses.jsonl"
+    invalid_rows = _complete_responses(config)
+    invalid_rows[1]["output_text"] += "<unused99>"
+    _write_jsonl(invalid_responses, invalid_rows)
+    invalid_worker = json.loads(json.dumps(worker))
+    invalid_worker["outputs"]["responses_sha256"] = hf_jobs_baseline.sha256_file(invalid_responses)
+    invalid_worker_path = tmp_path / "invalid-worker.json"
+    invalid_worker_path.write_text(json.dumps(invalid_worker), encoding="utf-8")
+    invalid_output = tmp_path / "invalid-public"
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="semantic integrity failed"):
+        hf_jobs_baseline.package_results(
+            responses=invalid_responses,
+            worker_receipt_path=invalid_worker_path,
+            provider_receipt_path=provider_path,
+            output_dir=invalid_output,
+        )
+    assert not invalid_output.exists()
 
     (output / "report.json").write_text("{}\n", encoding="utf-8")
     with pytest.raises(

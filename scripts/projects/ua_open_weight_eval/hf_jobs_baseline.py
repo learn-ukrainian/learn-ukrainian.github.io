@@ -26,9 +26,10 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.projects.ua_open_weight_eval import hf_jobs_worker, suite_cli
+from scripts.projects.ua_open_weight_eval import hf_jobs_worker, response_integrity, suite_cli
 
 CONFIG_PATH = ROOT / "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.json"
+DISPOSITION_PATH = ROOT / "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.disposition.json"
 WORKER_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_worker.py"
 TRANSPORT_PATH = ROOT / "scripts/projects/ua_open_weight_eval/hf_jobs_transport.py"
 LICENSE_PATH = ROOT / "LICENSE"
@@ -131,8 +132,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         "incurred provider cost ledger entry drift",
     )
     _require(
-        round(sum(float(entry["provider_derived_cost_usd"]) for entry in incurred_costs), 6)
-        == round(prior_cost, 6),
+        round(sum(float(entry["provider_derived_cost_usd"]) for entry in incurred_costs), 6) == round(prior_cost, 6),
         "incurred provider costs do not match prior provider cost",
     )
     cpu_validation = authorization["validated_cpu_transport"]
@@ -147,8 +147,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     cpu_cost_entries = [entry for entry in incurred_costs if entry["job_id"] == cpu_validation["job_id"]]
     _require(len(cpu_cost_entries) == 1, "CPU transport cost is missing from incurred provider cost ledger")
     _require(
-        float(cpu_validation["provider_derived_cost_usd"])
-        == float(cpu_cost_entries[0]["provider_derived_cost_usd"]),
+        float(cpu_validation["provider_derived_cost_usd"]) == float(cpu_cost_entries[0]["provider_derived_cost_usd"]),
         "CPU transport cost does not match incurred provider cost ledger",
     )
     _require(
@@ -163,7 +162,8 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     _require(config["transport"]["mounted_volumes"] == 0, "volume transport is prohibited")
     _require(
         config["canary"]["timeout_seconds"] / 60 * config["pricing"]["usd_per_minute"]
-        <= config["canary"]["maximum_cost_usd"] == 0.6,
+        <= config["canary"]["maximum_cost_usd"]
+        == 0.6,
         "canary timeout exceeds its cost ceiling",
     )
     _require(preflight["flavor"] == "cpu-basic" and preflight["timeout_seconds"] == 300, "CPU preflight drift")
@@ -175,6 +175,28 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     _require(config["suite"]["cases_sha256"] == sha256_file(suite_cli.CASES_PATH), "frozen cases drift")
     _require(config["suite"]["tracks"] == suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"], "track drift")
     return config
+
+
+def load_disposition(path: Path = DISPOSITION_PATH) -> dict[str, Any]:
+    disposition = read_json(path)
+    _require(
+        disposition.get("schema_version") == "ua_open_weight_eval_run_disposition.v1",
+        "run disposition schema drift",
+    )
+    _require(disposition.get("issue") == 6273, "run disposition issue drift")
+    _require(disposition.get("run_config_sha256") == sha256_file(CONFIG_PATH), "run disposition config drift")
+    _require(disposition.get("status") == "invalid_semantic_output", "run disposition status drift")
+    _require(disposition.get("evaluation_valid") is False, "invalid run cannot be evaluation-valid")
+    _require(disposition.get("scoreable") is False, "invalid run cannot be scoreable")
+    _require(disposition.get("rerun_authorized") is False, "incident correction cannot authorize a rerun")
+    return disposition
+
+
+def verify_response_integrity(path: Path) -> dict[str, Any]:
+    try:
+        return response_integrity.verify_saved_integrity(path)
+    except (response_integrity.IntegrityError, suite_cli.SuiteError) as exc:
+        raise BaselineError(str(exc)) from exc
 
 
 def balanced_canary(cases: Sequence[dict[str, Any]], config: Mapping[str, Any]) -> dict[str, Any]:
@@ -282,7 +304,9 @@ def verify_bundle(bundle: Path) -> dict[str, Any]:
     config = load_config(bundle / "run_config.json")
     manifest = read_json(bundle / "BUNDLE_MANIFEST.json")
     _require(manifest.get("schema_version") == "ua_open_weight_eval_hf_jobs_bundle.v1", "bundle schema drift")
-    _require(re.fullmatch(r"[a-f0-9]{40}", str(manifest.get("source_commit", ""))) is not None, "bundle source commit drift")
+    _require(
+        re.fullmatch(r"[a-f0-9]{40}", str(manifest.get("source_commit", ""))) is not None, "bundle source commit drift"
+    )
     expected = {
         "BUNDLE_MANIFEST.json",
         "canary_selection.json",
@@ -358,7 +382,10 @@ def stage_transport_bundle(*, bundle: Path, repo_id: str) -> dict[str, Any]:
     from huggingface_hub import CommitOperationAdd, HfApi
 
     manifest = verify_bundle(bundle)
-    _require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/ua-open-weight-eval-staging-6273", repo_id) is not None, "invalid staging repository")
+    _require(
+        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/ua-open-weight-eval-staging-6273", repo_id) is not None,
+        "invalid staging repository",
+    )
     token = os.environ.get("HF_TOKEN")
     _require(bool(token), "HF_TOKEN is required to stage the private transport")
     api = HfApi(token=token)
@@ -407,7 +434,9 @@ def verify_preflight_receipt(
         and receipt.get("mode") == "preflight",
         "preflight receipt status drift",
     )
-    _require(receipt.get("job_id") == job_id and receipt.get("hardware_flavor") == "cpu-basic", "preflight identity drift")
+    _require(
+        receipt.get("job_id") == job_id and receipt.get("hardware_flavor") == "cpu-basic", "preflight identity drift"
+    )
     transport = receipt.get("transport")
     _require(isinstance(transport, Mapping), "preflight transport evidence is missing")
     _require(transport.get("repository") == repo_id, "preflight repository drift")
@@ -698,13 +727,20 @@ def job_command(
             _require(0 < timeout_seconds <= maximum_timeout, "full timeout exceeds the remaining-budget projection")
     _require(timeout_seconds > 0 and timeout_seconds % 60 == 0, "timeout must be positive whole minutes")
     transport_args = [
-        "--mode", mode,
-        "--transport-repo", transport_repo,
-        "--transport-revision", transport_revision,
-        "--transport-prefix", transport_prefix,
-        "--artifact-prefix", artifact_prefix,
-        "--bundle-sha256", manifest["bundle_sha256"],
-        "--work-root", "/tmp/ua-open-weight-eval",
+        "--mode",
+        mode,
+        "--transport-repo",
+        transport_repo,
+        "--transport-revision",
+        transport_revision,
+        "--transport-prefix",
+        transport_prefix,
+        "--artifact-prefix",
+        artifact_prefix,
+        "--bundle-sha256",
+        manifest["bundle_sha256"],
+        "--work-root",
+        "/tmp/ua-open-weight-eval",
     ]
     if mode in RUN_MODES:
         transport_args.extend(["--requests-sha256", manifest["requests_sha256"]])
@@ -721,11 +757,18 @@ def job_command(
     if projection is not None:
         labels["projection"] = sha256_text(canonical_json(projection))[:16]
     command = [
-        str(hf_cli), "jobs", "run", "--detach",
-        "--flavor", flavor,
-        "--timeout", f"{timeout_seconds // 60}m",
-        "--namespace", namespace,
-        "--name", f"ua-open-weight-eval-gemma4-{mode}",
+        str(hf_cli),
+        "jobs",
+        "run",
+        "--detach",
+        "--flavor",
+        flavor,
+        "--timeout",
+        f"{timeout_seconds // 60}m",
+        "--namespace",
+        namespace,
+        "--name",
+        f"ua-open-weight-eval-gemma4-{mode}",
     ]
     for key, value in sorted(labels.items()):
         command.extend(["--label", f"{key}={value}"])
@@ -733,9 +776,12 @@ def job_command(
     if mode in RUN_MODES:
         command.extend(
             [
-                "--env", "UA_EVAL_HARDWARE_FLAVOR=l40sx1",
-                "--env", "VLLM_BATCH_INVARIANT=1",
-                "--env", "VLLM_ENABLE_V1_MULTIPROCESSING=0",
+                "--env",
+                "UA_EVAL_HARDWARE_FLAVOR=l40sx1",
+                "--env",
+                "VLLM_BATCH_INVARIANT=1",
+                "--env",
+                "VLLM_ENABLE_V1_MULTIPROCESSING=0",
             ]
         )
     command.extend(["--", image, "sh", "-lc", shell_command])
@@ -745,9 +791,7 @@ def job_command(
     return command
 
 
-def launch_once(
-    *, command: Sequence[str], mode: str, state_path: Path, execute: bool
-) -> dict[str, Any]:
+def launch_once(*, command: Sequence[str], mode: str, state_path: Path, execute: bool) -> dict[str, Any]:
     _require(mode in LAUNCH_MODES, "invalid launch mode")
     if state_path.exists():
         state = read_json(state_path)
@@ -763,6 +807,11 @@ def launch_once(
     }
     if not execute:
         return {"status": "prepared", "mode": mode, "command": list(command), **intent}
+    disposition = load_disposition()
+    _require(
+        disposition["rerun_authorized"] is True,
+        "provider execution is blocked by the invalid-run disposition; a new operator-approved run is required",
+    )
     runs[mode] = intent
     write_atomic(state_path, state)
     completed = subprocess.run(command, check=False, capture_output=True, text=True)
@@ -861,10 +910,32 @@ def reconcile_provider_inspection(
 def project_full_run(
     *, worker_receipt: Mapping[str, Any], provider_receipt: Mapping[str, Any], config: Mapping[str, Any]
 ) -> dict[str, Any]:
-    _require(worker_receipt.get("status") == "completed" and worker_receipt.get("mode") == "canary", "canary worker receipt drift")
-    _require(provider_receipt.get("stage") == "COMPLETED" and provider_receipt.get("mode") == "canary", "canary provider receipt drift")
+    _require(
+        worker_receipt.get("status") == "completed" and worker_receipt.get("mode") == "canary",
+        "canary worker receipt drift",
+    )
+    _require(
+        provider_receipt.get("stage") == "COMPLETED" and provider_receipt.get("mode") == "canary",
+        "canary provider receipt drift",
+    )
     cases = worker_receipt["suite"]["case_count"]
     _require(cases == config["canary"]["case_count"] == 100, "canary case count drift")
+    integrity = worker_receipt.get("response_integrity")
+    _require(isinstance(integrity, dict), "canary response-integrity receipt is missing")
+    _require(integrity.get("status") == "passed", "canary response-integrity gate did not pass")
+    _require(integrity.get("checked_rows") == cases, "canary response-integrity count drift")
+    _require(integrity.get("violation_rows") == 0, "canary response-integrity violations are non-zero")
+    _require(
+        all(
+            integrity.get(field) == 0
+            for field in (
+                "copy_contract_violation_rows",
+                "reserved_marker_violation_rows",
+                "introduced_control_violation_rows",
+            )
+        ),
+        "canary response-integrity counters are non-zero",
+    )
     timing = worker_receipt["timing"]
     throughput = worker_receipt["throughput"]
     generation_seconds = float(timing["generation_seconds"])
@@ -964,9 +1035,9 @@ def _results_card(config: Mapping[str, Any], public_receipt: Mapping[str, Any]) 
 # UA Open-Weight Eval: Gemma 4 QAT Q4_0 baseline
 
 This dataset contains the complete parsed responses and fourteen separate track
-reports from one deterministic evaluation of `{model['repository']}` at immutable
-revision `{model['revision']}`. The evaluated text artifact is
-`{model['artifact_filename']}` (SHA-256 `{model['artifact_sha256']}`). No model
+reports from one deterministic evaluation of `{model["repository"]}` at immutable
+revision `{model["revision"]}`. The evaluated text artifact is
+`{model["artifact_filename"]}` (SHA-256 `{model["artifact_sha256"]}`). No model
 weights or adapters are included.
 
 The result measures this exact official QAT Q4_0 artifact. It does not represent
@@ -982,7 +1053,7 @@ ledger.
 ## Reproduction (English)
 
 1. Download the source suite from GitHub release `ua-open-weight-eval-v0.1.0`.
-2. Verify `cases.jsonl` has SHA-256 `{config['suite']['cases_sha256']}`.
+2. Verify `cases.jsonl` has SHA-256 `{config["suite"]["cases_sha256"]}`.
 3. Run the reviewed HF Jobs worker with the model/runtime revisions in the public receipt.
 4. Score `responses.jsonl` with `suite_cli.py score`; compare the resulting `report.json`.
 5. Verify every file against `SHA256SUMS` and `RESULTS_MANIFEST.json`.
@@ -990,7 +1061,7 @@ ledger.
 ## Відтворення (українською)
 
 1. Завантажте вихідний набір із GitHub-релізу `ua-open-weight-eval-v0.1.0`.
-2. Перевірте SHA-256 файла `cases.jsonl`: `{config['suite']['cases_sha256']}`.
+2. Перевірте SHA-256 файла `cases.jsonl`: `{config["suite"]["cases_sha256"]}`.
 3. Запустіть перевірений HF Jobs runner із точними ревізіями моделі та середовища з квитанції.
 4. Оцініть `responses.jsonl` командою `suite_cli.py score` і порівняйте `report.json`.
 5. Перевірте всі файли за `SHA256SUMS` і `RESULTS_MANIFEST.json`.
@@ -1014,8 +1085,14 @@ def package_results(
     config = load_config()
     worker_receipt = read_json(worker_receipt_path)
     provider_receipt = read_json(provider_receipt_path)
-    _require(worker_receipt.get("status") == "completed" and worker_receipt.get("mode") == "full", "full worker receipt drift")
-    _require(provider_receipt.get("stage") == "COMPLETED" and provider_receipt.get("mode") == "full", "full provider receipt drift")
+    _require(
+        worker_receipt.get("status") == "completed" and worker_receipt.get("mode") == "full",
+        "full worker receipt drift",
+    )
+    _require(
+        provider_receipt.get("stage") == "COMPLETED" and provider_receipt.get("mode") == "full",
+        "full provider receipt drift",
+    )
     _require(worker_receipt["job"]["id"] == provider_receipt["job_id"], "job receipt ID drift")
     _require(worker_receipt["outputs"]["responses_sha256"] == sha256_file(responses), "response hash drift")
     rows = suite_cli.read_jsonl(responses)
@@ -1023,6 +1100,18 @@ def package_results(
     _require(rows[0].get("model_revision") == config["model"]["revision"], "response model revision drift")
     _require(rows[0].get("model_sha256") == config["model"]["artifact_sha256"], "response model hash drift")
     _require(all(set(row) == {"item_id", "action", "output_text"} for row in rows[1:]), "response row field drift")
+    integrity = verify_response_integrity(responses)
+    worker_integrity = worker_receipt.get("response_integrity")
+    _require(isinstance(worker_integrity, dict), "full response-integrity receipt is missing")
+    for field in (
+        "status",
+        "checked_rows",
+        "violation_rows",
+        "copy_contract_violation_rows",
+        "reserved_marker_violation_rows",
+        "introduced_control_violation_rows",
+    ):
+        _require(worker_integrity.get(field) == integrity[field], f"full response-integrity {field} drift")
     _require(not output_dir.exists() or not any(output_dir.iterdir()), "results output directory is not empty")
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(responses, output_dir / "responses.jsonl")
@@ -1069,6 +1158,7 @@ def package_results(
             "report_sha256": sha256_file(report_path),
         },
         "scoring": report["scoring"],
+        "response_integrity": integrity,
         "tracks": list(report["tracks"]),
         "facts": worker_receipt["facts"] | {"complete_responses_published": True},
     }
@@ -1137,6 +1227,8 @@ def verify_results_package(root: Path) -> dict[str, Any]:
     _require(report["cases_sha256"] == load_config()["suite"]["cases_sha256"], "report cases drift")
     _require(report["scoring"]["global_quality_score"] is None, "global score must remain null")
     _require(report["scoring"]["global_score_prohibited"] is True, "global score policy drift")
+    integrity = verify_response_integrity(root / "responses.jsonl")
+    _require(integrity["checked_rows"] == 4000, "response integrity count drift")
     _require(len(report["tracks"]) == 14, "track count drift")
     responses = suite_cli.read_jsonl(root / "responses.jsonl")
     _require(len(responses) == 4001, "response completeness drift")

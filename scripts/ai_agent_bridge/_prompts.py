@@ -296,8 +296,10 @@ Violating this rule destroys the caller's work in progress. There is no exceptio
 
 
 OPERATOR_CONTRACT_DIGEST = """Operator contract (binding; full text: agents_extensions/shared/rules/operator-expectations.md):
-quality over shortcuts - root-cause fixes - tool-backed claims only (Ukrainian word/stress/
-morphology facts VESUM/`sources`-verified, never guessed) - max UA immersion EXCEPT A1 (its
+quality over shortcuts - root-cause fixes - tool-backed claims only - outcome validity precedes
+paid execution (semantic canary + explicit success/stop criteria; transport/shape/cost are not
+outcome proof) - Ukrainian word/stress/morphology facts VESUM/`sources`-verified, never guessed -
+max UA immersion EXCEPT A1 (its
 English scaffolding is by design; from A2 never raise English) - reviews need an independent
 cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution -
 layout A: primary non-bare on main (human+services); agents only under

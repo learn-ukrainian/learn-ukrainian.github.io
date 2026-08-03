@@ -25,6 +25,7 @@ import sys
 import tempfile
 import time
 import traceback
+from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -35,7 +36,8 @@ CHECKPOINT_SCHEMA = "ua_open_weight_eval_hf_jobs_checkpoint.v1"
 WORKER_RECEIPT_SCHEMA = "ua_open_weight_eval_hf_jobs_worker_receipt.v1"
 ALLOWED_ACTIONS = frozenset({"correct", "preserve", "abstain"})
 MAX_OUTPUT_TEXT_CHARS = 768
-JSON_RAW_CONTROL_PATTERN = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]+")
+RESERVED_MODEL_MARKER_PATTERN = re.compile(r"<unused\d+>|\[multimodal\]")
+NON_WHITESPACE_C0 = frozenset(chr(value) for value in range(32)) - {"\t", "\n", "\r"}
 RESPONSE_JSON_SCHEMA = {
     "type": "object",
     "properties": {
@@ -167,7 +169,9 @@ class HubArtifactStore:
             commit_message=f"persist {name} for {os.environ.get('JOB_ID', 'unknown-job')}",
         )
         oid = getattr(info, "oid", None)
-        _require(isinstance(oid, str) and re.fullmatch(r"[a-f0-9]{40}", oid) is not None, "artifact upload commit drift")
+        _require(
+            isinstance(oid, str) and re.fullmatch(r"[a-f0-9]{40}", oid) is not None, "artifact upload commit drift"
+        )
         return oid
 
 
@@ -277,9 +281,7 @@ def select_requests(
     _require(all(item in by_id for item in item_ids), "selection contains an unknown request")
     selected = [by_id[item] for item in item_ids]
     selection_sha256 = (
-        str(selection["selection_sha256"])
-        if selection_path is not None
-        else sha256_text(canonical_json(selection))
+        str(selection["selection_sha256"]) if selection_path is not None else sha256_text(canonical_json(selection))
     )
     return selected, selection_sha256
 
@@ -298,17 +300,7 @@ def format_prompt(source: str) -> str:
     )
 
 
-def normalize_model_reply(reply: str) -> str:
-    """Encode raw GGUF C0 bytes as JSON escapes without changing their value."""
-
-    def escape_controls(match: re.Match[str]) -> str:
-        return "".join(f"\\u{ord(character):04x}" for character in match.group())
-
-    return JSON_RAW_CONTROL_PATTERN.sub(escape_controls, reply)
-
-
 def parse_model_reply(reply: str) -> dict[str, str]:
-    reply = normalize_model_reply(reply)
     decoder = json.JSONDecoder()
     candidates: list[Mapping[str, Any]] = []
     for index, character in enumerate(reply):
@@ -328,6 +320,67 @@ def parse_model_reply(reply: str) -> dict[str, str]:
     _require(action in ALLOWED_ACTIONS, "model reply has an invalid action")
     _require(isinstance(output_text, str) and output_text, "model reply has no output_text")
     return {"action": str(action), "output_text": output_text}
+
+
+def response_integrity_summary(
+    requests: Sequence[Mapping[str, Any]],
+    records: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Detect protocol corruption relative to each source without language guessing."""
+
+    _require(len(requests) == len(records), "response integrity row-count drift")
+    violation_ids: list[str] = []
+    copy_contract_rows = 0
+    reserved_marker_rows = 0
+    introduced_control_rows = 0
+    for request, record in zip(requests, records, strict=True):
+        item_id = str(request.get("item_id", ""))
+        _require(record.get("item_id") == item_id, "response integrity item-order drift")
+        source = request.get("source")
+        response = record.get("response")
+        _require(isinstance(source, str) and source, f"missing response-integrity source for {item_id}")
+        _require(isinstance(response, dict), f"missing response-integrity response for {item_id}")
+        action = response.get("action")
+        output_text = response.get("output_text")
+        _require(action in ALLOWED_ACTIONS, f"invalid response-integrity action for {item_id}")
+        _require(isinstance(output_text, str) and output_text, f"missing response-integrity text for {item_id}")
+
+        copy_violation = action in {"preserve", "abstain"} and output_text != source
+        source_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(source))
+        output_markers = Counter(RESERVED_MODEL_MARKER_PATTERN.findall(output_text))
+        marker_violation = any(count > source_markers[token] for token, count in output_markers.items())
+        source_controls = Counter(character for character in source if character in NON_WHITESPACE_C0)
+        output_controls = Counter(character for character in output_text if character in NON_WHITESPACE_C0)
+        control_violation = any(count > source_controls[character] for character, count in output_controls.items())
+
+        copy_contract_rows += int(copy_violation)
+        reserved_marker_rows += int(marker_violation)
+        introduced_control_rows += int(control_violation)
+        if copy_violation or marker_violation or control_violation:
+            violation_ids.append(item_id)
+
+    return {
+        "schema_version": "ua_open_weight_eval_response_integrity.v1",
+        "status": "passed" if not violation_ids else "invalid",
+        "checked_rows": len(records),
+        "violation_rows": len(violation_ids),
+        "copy_contract_violation_rows": copy_contract_rows,
+        "reserved_marker_violation_rows": reserved_marker_rows,
+        "introduced_control_violation_rows": introduced_control_rows,
+        "sample_violation_item_ids": violation_ids[:10],
+    }
+
+
+def require_response_integrity(
+    requests: Sequence[Mapping[str, Any]],
+    records: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    summary = response_integrity_summary(requests, records)
+    _require(
+        summary["status"] == "passed",
+        f"response semantic integrity failed: {canonical_json(summary)}",
+    )
+    return summary
 
 
 def verify_config(config: Mapping[str, Any]) -> None:
@@ -356,8 +409,7 @@ def verify_config(config: Mapping[str, Any]) -> None:
         "structured output EOS contract drift",
     )
     _require(
-        config.get("runner", {}).get("structured_outputs_max_output_text_chars")
-        == MAX_OUTPUT_TEXT_CHARS,
+        config.get("runner", {}).get("structured_outputs_max_output_text_chars") == MAX_OUTPUT_TEXT_CHARS,
         "structured output length contract drift",
     )
     _require(
@@ -579,7 +631,9 @@ def load_generator(
     return generate, versions, render
 
 
-def load_checkpoint(path: Path, header: Mapping[str, Any], selected: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def load_checkpoint(
+    path: Path, header: Mapping[str, Any], selected: Sequence[Mapping[str, Any]]
+) -> list[dict[str, Any]]:
     if not path.exists():
         append_durable(path, header)
         return []
@@ -595,6 +649,7 @@ def load_checkpoint(path: Path, header: Mapping[str, Any], selected: Sequence[Ma
         _require(isinstance(response, dict), "checkpoint response is missing")
         _require(parse_model_reply(canonical_json(response)) == response, "checkpoint response drift")
         _require(isinstance(record.get("raw_generation"), str), "checkpoint raw generation is missing")
+    require_response_integrity(selected[: len(records)], records)
     return records
 
 
@@ -630,8 +685,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     work_root = Path(tempfile.mkdtemp(prefix="ua-open-weight-eval-hf-job-"))
     model_path, tokenizer_manifest, download_seconds = download_and_verify_model(config, work_root)
     tokenizer_root = Path(tokenizer_manifest.pop("root"))
-    runtime_tokenizer_root, runtime_config_sha256, runtime_tokenizer_config_sha256 = (
-        prepare_text_runtime_tokenizer(tokenizer_root)
+    runtime_tokenizer_root, runtime_config_sha256, runtime_tokenizer_config_sha256 = prepare_text_runtime_tokenizer(
+        tokenizer_root
     )
     tokenizer_manifest["text_runtime_config_sha256"] = runtime_config_sha256
     tokenizer_manifest["text_runtime_tokenizer_config_sha256"] = runtime_tokenizer_config_sha256
@@ -655,9 +710,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "revision": config["tokenizer"]["revision"],
             "tree_sha256": tokenizer_manifest["tree_sha256"],
             "text_runtime_config_sha256": tokenizer_manifest["text_runtime_config_sha256"],
-            "text_runtime_tokenizer_config_sha256": tokenizer_manifest[
-                "text_runtime_tokenizer_config_sha256"
-            ],
+            "text_runtime_tokenizer_config_sha256": tokenizer_manifest["text_runtime_tokenizer_config_sha256"],
         },
         "backend": "vllm",
         "versions": versions,
@@ -669,15 +722,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "parse_retries": config["runner"]["parse_retries"],
             "structured_outputs": config["runner"]["structured_outputs"],
             "structured_outputs_backend": config["runner"]["structured_outputs_backend"],
-            "structured_outputs_disable_any_whitespace": config["runner"][
-                "structured_outputs_disable_any_whitespace"
-            ],
+            "structured_outputs_disable_any_whitespace": config["runner"]["structured_outputs_disable_any_whitespace"],
             "structured_outputs_ignore_eos_until_complete": config["runner"][
                 "structured_outputs_ignore_eos_until_complete"
             ],
-            "structured_outputs_max_output_text_chars": config["runner"][
-                "structured_outputs_max_output_text_chars"
-            ],
+            "structured_outputs_max_output_text_chars": config["runner"]["structured_outputs_max_output_text_chars"],
             "structured_outputs_escape_raw_control_tokens": config["runner"][
                 "structured_outputs_escape_raw_control_tokens"
             ],
@@ -760,6 +809,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "generation_seconds": per_request_batch_seconds + request_retry_seconds,
                 "parse_retries_used": retry_count,
             }
+            require_response_integrity([request], [record])
             append_durable(checkpoint_path, record)
             records.append(record)
         position += len(batch)
@@ -768,6 +818,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     generation = generation_totals(records, resumed_count)
     generation_seconds = float(generation["generation_seconds"])
     generated_tokens = int(generation["generated_tokens"])
+    response_integrity = require_response_integrity(selected, records)
 
     response_header = {
         "type": "run",
@@ -847,6 +898,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "generated_tokens_per_second": generated_tokens / generation_seconds if generation_seconds else None,
             "mean_generated_tokens_per_case": generated_tokens / len(selected),
         },
+        "response_integrity": response_integrity,
         "outputs": {
             "checkpoint_sha256": sha256_file(checkpoint_path),
             "responses_sha256": sha256_file(responses_path),
