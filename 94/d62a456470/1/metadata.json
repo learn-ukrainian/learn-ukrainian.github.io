@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "94d62a456470",
+  "session_id": "session_f9289fcf-f87d-45f6-91de-04f53c4d2507",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-03T18:08:59.0402Z",
+  "branch": "codex/6293-routing-closeout",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "scripts/api/runtime_router.py",
+    "scripts/fleet_comms/routing_reservations.py",
+    "tests/test_fleet_comms_routing_reservations.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3",
+  "turn_id": "bd664f28147b",
+  "token_usage": {
+    "input_tokens": 25304,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 11264,
+    "output_tokens": 2623,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-03T18:08:59.030325Z",
+    "agent_lines": 242,
+    "agent_removed": 9,
+    "human_added": 413,
+    "human_modified": 4,
+    "human_removed": 0,
+    "total_committed": 659,
+    "total_lines_changed": 777,
+    "agent_percentage": 32.3037323037323,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
