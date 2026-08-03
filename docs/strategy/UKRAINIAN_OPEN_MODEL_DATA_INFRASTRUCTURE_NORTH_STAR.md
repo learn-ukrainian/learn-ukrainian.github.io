@@ -54,11 +54,11 @@ generation.
 This direction prioritizes transferable data, grammar, lexical naturalness,
 and evidence over owning or producing model weights. Foundry implementation
 completion stops before model download, accelerator rental, optimizer
-execution, adapter production, or weight upload. The separate release-and-
-validation issue #6273 may run the specifically authorized official Gemma 4
-QAT Q4_0 baseline on Hugging Face Jobs. It does not authorize training. The
-accepted boundary between public evaluation gold, private product data, and
-training data remains intact.
+execution, adapter production, or weight upload. The later #6273 Gemma 4
+Hugging Face Jobs attempt completed structurally but failed source-aware output
+integrity and is retained only as an invalid runtime-failure receipt. It does
+not authorize a rerun or training. The accepted boundary between public
+evaluation gold, private product data, and training data remains intact.
 
 ## Solo-operator execution model
 
@@ -387,18 +387,17 @@ The shipped reference build and evaluation may be validated with Lapa,
 - evidence-backed annotation guidelines.
 
 External feedback may prioritize later evidence adapters or acquisition. It was
-not a prerequisite for the completed Foundry implementation. It is, however,
-required before #6273 can claim that external adoption has been demonstrated.
-An adapter, fixture, internal CI run, or unanswered upstream submission is not
-adoption evidence. Hramatka teacher feedback follows the same optional-evidence
-rule.
+not a prerequisite for the completed Foundry implementation. No external
+adoption is currently claimed: an adapter, fixture, internal CI run, or failed
+project-run output is not adoption evidence. Hramatka teacher feedback follows
+the same optional-evidence rule.
 
 ## Downstream validation policy
 
-The Foundry project does not run training experiments. Under #6273 it may run
-the bounded official Gemma 4 QAT Q4_0 evaluation authorized on 2026-08-02,
-subject to its canary, projection, timeout, and USD 6.00 hard ceiling. It still
-ships frozen artifacts that downstream teams can reproduce without a
+The Foundry project does not run training experiments and has no active
+project-owned evaluation run. The #6273 Gemma 4 attempt is invalid and cannot
+be retried under its historical authorization. The project still ships frozen
+artifacts that downstream teams can reproduce independently without a
 closed-model judge.
 
 A downstream result is useful evidence only when it answers a named question,

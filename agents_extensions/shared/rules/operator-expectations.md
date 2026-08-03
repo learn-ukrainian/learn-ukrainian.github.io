@@ -58,6 +58,14 @@ tie-breakers.
    forms are verified against VESUM / the `sources` MCP — never guessed from morphological
    intuition (pre-training is Russian-contaminated). "Done" means the USER-visible artifact
    was verified end-to-end, not "my diff applied". Never rationalize a defect as by-design.
+   **Outcome validity precedes execution.** Before any paid provider/model run or consequential
+   external action, research the exact model/artifact/runtime compatibility and define a
+   falsifiable, user-visible success condition plus a stop condition. A canary must inspect the
+   actual semantic output needed by the goal; hashes, schemas, throughput, cost, CI, and a
+   provider `COMPLETED` state prove transport or structure only. A semantic tripwire is a
+   terminal failure, never input to normalize away. Changing the artifact, tokenizer, prompt
+   template, parser, or runtime invalidates prior canary proof. Completion reports must name the
+   exact user-visible outcome that was verified.
 8. **Clean code and clean documentation.** Dead code removed, functions tested, docs current.
    Stale docs are context-pollution that misroutes every agent that reads them — expired
    dates, retired lanes, and superseded defaults get pruned when touched.

@@ -7,12 +7,19 @@ proposal. It needs no paid annotator, closed API, or model judge.
 
 ## Release and adoption status
 
+> **Gemma 4 HF result correction (2026-08-03):** the published HF Jobs output
+> is invalid runtime evidence, not a model baseline. All canary and full-run
+> rows fail the corrected source-aware integrity gate. Do not cite its metrics
+> as Gemma 4 Ukrainian results. This does not invalidate the frozen evaluation
+> suite itself; it invalidates only that runner/output pairing. See the
+> [incident record](HF_JOBS_BASELINE.md).
+
 The repository implementation shipped in PR #6268. The public package uses the
 non-colliding tag `ua-open-weight-eval-v0.1.0`; its generated
 `PUBLICATION_MANIFEST.json` and `SHA256SUMS` define the canonical released
-bytes. The GitHub release is public. The operator-approved official Gemma 4 QAT
-Q4_0 baseline on Hugging Face Jobs, its results-dataset publication, and
-independent external adoption remain separate facts tracked in issue #6273.
+bytes. The GitHub release is public. The attempted Gemma 4 QAT Q4_0 HF Jobs run
+is retained as an invalid failure receipt tracked in issue #6273. Independent
+external adoption remains a separate, currently unproven fact.
 The exact bounded execution contract is in the
 [HF Jobs baseline runbook](HF_JOBS_BASELINE.md). An adapter, local fixture, or
 our own completed run does not demonstrate independent adoption.
@@ -55,13 +62,23 @@ The commands below only build files. They never download or invoke a model.
 Run that source-only request packet with a model already present on your own
 machine. Request identifiers are opaque sequence IDs; internal case IDs and
 their category labels are not exposed. Save one JSON object per case using
-`saved_response.schema.json`. Then score it without a judge:
+`saved_response.schema.json`. Verify source-aware response integrity before
+scoring it without a judge:
 
 ```bash
+.venv/bin/python -m scripts.projects.ua_open_weight_eval.response_integrity \
+  --responses batch_state/ua-open-weight-eval/responses.jsonl \
+  --requests batch_state/ua-open-weight-eval/requests.jsonl
 .venv/bin/python -m scripts.projects.ua_open_weight_eval.suite_cli score \
   --responses batch_state/ua-open-weight-eval/responses.jsonl \
   --output batch_state/ua-open-weight-eval/report.json
 ```
+
+The v0.1.0 suite CLI remains byte-frozen, so the adjacent integrity command is
+the required pre-scoring gate for provider/model outputs. It rejects newly
+introduced reserved model markers and non-whitespace C0 controls, and it
+requires `preserve`/`abstain` output to equal the exact source. It does not try
+to classify quoted Russian, surzhyk, historical language, or other source text.
 
 For a reproducible shell-free local invocation, copy
 `local_run_config.example.json`, pin the local model revision and SHA-256, and

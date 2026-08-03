@@ -31,8 +31,10 @@ in-context regardless: quality over shortcuts · root-cause fixes · git/PR hygi
 layout A (primary non-bare on main; agents under `.worktrees/dispatch/…`; bare=bug) ·
 `X-Agent` trailers · whole-fleet utilization, review gate = independent CROSS-FAMILY
 reviewer (discussion ≠ review) · route by model × harness fit · handle limits, NOTE
-substitutions · tool-backed claims only (UK word/stress/morphology facts VESUM/`sources`-
-verified, never guessed) · clean code + current docs · **max UA immersion EXCEPT A1**
+substitutions · tool-backed claims only; **outcome validity precedes paid execution**
+(semantic canary + explicit success/stop criteria; transport/shape/cost are not outcome proof) ·
+UK word/stress/morphology facts VESUM/`sources`-verified, never guessed · clean code + current
+docs · **max UA immersion EXCEPT A1**
 (English scaffolding there is by design; from A2 never raise English) · drive within
 approved scope · **no architecture/layout/process decisions without operator or advisor
 approval (Fable, Sol; roster may change)** · repo hard gates bind.

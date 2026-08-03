@@ -18,8 +18,10 @@ the tie-breakers. Core: quality over shortcuts · root-cause fixes · git/PR hyg
 layout A (primary non-bare on main; agents under `.worktrees/dispatch/…`; bare=bug) ·
 `X-Agent` trailers · use the whole fleet, review gate = independent CROSS-FAMILY reviewer
 (discussion ≠ review) · route by model × harness fit · handle limits, NOTE substitutions ·
-no claims without tool-backed proof (Ukrainian word/stress/morphology facts VESUM/`sources`-
-verified, never guessed) · clean code + current docs · **max UA immersion EXCEPT A1** (its
+no claims without tool-backed proof; **outcome validity precedes paid execution** (semantic
+canary + explicit success/stop criteria; transport/shape/cost are not outcome proof) · Ukrainian
+word/stress/morphology facts VESUM/`sources`-verified, never guessed · clean code + current docs ·
+**max UA immersion EXCEPT A1** (its
 English scaffolding is by design; from A2 never raise English) · drive within approved scope ·
 **no architecture/layout/process decisions without operator or advisor approval (Fable, Sol;
 roster may change)** · repo hard gates bind.

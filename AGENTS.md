@@ -18,7 +18,8 @@ root-cause fixes · **3** Git/GitHub hygiene (**layout A**): primary non-bare on
 heal-as-bug; PRs + `X-Agent` · **4** Use the whole fleet; review gate = independent
 **cross-family** reviewer (discussion ≠ review) · **5** Route by model × harness fit ·
 **6** Limits: substitute lanes, NOTE substitutions · **7** Tool-backed claims only;
-UA word/stress/morphology VESUM/`sources`-verified · **8** Clean code + current docs ·
+outcome validity precedes paid execution (semantic canary, explicit success/stop criteria;
+transport/shape/cost are not outcome proof); UA word/stress/morphology VESUM/`sources`-verified · **8** Clean code + current docs ·
 **9** Max UA immersion EXCEPT A1 · **10** Drive within approved scope · **11** Repo hard
 gates bind · **12** **Advisor/operator approval gate**: no architecture, layout, or
 process decisions without present-tense **operator** or designated **advisor** approval
