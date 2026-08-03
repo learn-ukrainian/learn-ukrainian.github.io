@@ -719,6 +719,51 @@ function classifyDeck(): PracticeDeckData {
   };
 }
 
+function multiAnswerClassifyDeck(): PracticeDeckData {
+  const entry = lexeme('prote', 'проте', 'however', {
+    nominative: 'проте',
+    accusative: 'проте',
+    locative: 'проте',
+  });
+  return {
+    deckVersion: 'test-multi-answer-classify',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['classify'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [{
+      classifyId: 'prote-classify',
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      sets: [{
+        setId: 'pos',
+        setLabelUk: 'частина мови',
+        setLabelEn: 'part of speech',
+        answer: 'adverb',
+        answers: ['adverb', 'conjunction'],
+        answerLabelUk: 'прислівник',
+        options: [
+          { value: 'adverb', labelUk: 'прислівник', labelEn: 'adv.' },
+          { value: 'conjunction', labelUk: 'сполучник', labelEn: 'conj.' },
+          { value: 'particle', labelUk: 'частка', labelEn: 'particle' },
+        ],
+      }],
+      source: 'fixture',
+    }],
+    paradigm: [],
+    synonym: [],
+  };
+}
+
 function paradigmDeck(): PracticeDeckData {
   const entry = lexeme('kava', 'кава', 'coffee', {
     nominative: 'кава',
@@ -3007,6 +3052,23 @@ describe('LexiconPractice', () => {
     expect(prompt.querySelectorAll('p')).toHaveLength(0);
     expect(screen.queryByText('орудний відмінок, однина', { selector: '.mc-sub' })).not.toBeInTheDocument();
     expect(prompt).toMatchSnapshot();
+  });
+
+  test('classify accepts each declared POS answer and marks a multi-answer subtitle', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={multiAnswerClassifyDeck()} autoStart initialMode="classify" />);
+
+    const prompt = screen.getByTestId('practice-form-prompt');
+    expect(prompt).toHaveTextContent('частина мови · можливі кілька правильних відповідей');
+    expect(prompt).toHaveTextContent('part of speech · Multiple answers may be correct');
+
+    const adverb = screen.getByRole('button', { name: /прислівник/ });
+    const conjunction = screen.getByRole('button', { name: /сполучник/ });
+    await user.click(conjunction);
+
+    expect(screen.getByText(/проте: Правильно/)).toBeInTheDocument();
+    expect(adverb).toHaveClass('correct');
+    expect(conjunction).toHaveClass('correct');
   });
 
   test('weak-area chips: renders a UA case chip from a weak review log', async () => {

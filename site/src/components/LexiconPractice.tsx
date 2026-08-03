@@ -1122,7 +1122,7 @@ function drillChoiceOptions(
               ? `${option.labelUk} (${translateGrammarTerm(option.labelUk)})`
               : option.labelUk))
         : option.labelUk,
-      correct: option.value === selectedSet.answer,
+      correct: selectedSet.answers?.includes(option.value) ?? option.value === selectedSet.answer,
     }));
   }
   if (selection.paradigm) {
@@ -1194,11 +1194,16 @@ function drillChoicePrompt(
   if (selectedSet) {
     const setLabelUk = selectedSet.setLabelUk;
     const setLabelEn = selectedSet.setLabelEn || translateGrammarTerm(setLabelUk);
+    const hasMultipleAnswers = (selectedSet.answers?.length ?? 0) > 1;
     return {
       promptUk: `До якої групи належить «${lemma}»?`,
       promptEn: `Which group does «${lemma}» belong to?`,
-      subtitleUk: setLabelUk,
-      subtitleEn: setLabelEn,
+      subtitleUk: hasMultipleAnswers
+        ? `${setLabelUk} · можливі кілька правильних відповідей`
+        : setLabelUk,
+      subtitleEn: hasMultipleAnswers
+        ? `${setLabelEn} · Multiple answers may be correct`
+        : setLabelEn,
     };
   }
   if (selection.paradigm) {
