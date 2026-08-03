@@ -142,12 +142,21 @@ generation stays preserved privately for audit. Five billed minutes cost USD
 0.150000, raising cumulative cost to USD 1.350167.
 Job `6a6ff31d6b79c09949c2000b` advanced farther through the first atomic batch,
 then exposed the same transport artifact as a short terminal run containing
-codes 1, 6, and 21, once followed by trailing markup. The normalization now
-strips one or more non-whitespace C0 controls only when they occur immediately
-before the final JSON string quote and object close. It deliberately excludes
-tab, newline, and carriage return, and the strict parser still rejects controls
-inside content. Six billed minutes cost USD 0.180000, raising cumulative cost
-to USD 1.530167.
+codes 1, 6, and 21, once followed by trailing markup. That bundle's
+normalization stripped one or more non-whitespace C0 controls only when they
+occurred immediately before the final JSON string quote and object close. It
+deliberately excluded tab, newline, and carriage return, and its strict parser
+still rejected controls inside content. Six billed minutes cost USD 0.180000,
+raising cumulative cost to USD 1.530167.
+Job `6a6ffedca00abefd4b28e89d` showed that the GGUF decoder can place the same
+raw C0 bytes before additional decoded Unicode characters, rather than directly
+before the closing quote. The response still contained exactly one otherwise
+recoverable JSON object. The worker now converts every raw non-whitespace C0
+byte into its standard JSON `\u00xx` escape before strict decoding. This makes
+the transport valid JSON while preserving the exact decoded output value for
+scoring and audit; it does not delete internal characters, accept duplicate
+objects, or weaken field and action validation. Seven billed minutes cost USD
+0.210000, raising cumulative cost to USD 1.740167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
