@@ -131,6 +131,33 @@ not invent a motive or claim that no port is planned.
 
 No step requires project-owned training or paid compute.
 
+## How usefulness will be demonstrated
+
+The program will test usefulness against published Ukrainian NLP workflows,
+not against our own terminology. Each prepared-data product must name the
+downstream operation it supports, the incumbent community resource it reuses
+or complements, the evidence a consumer receives, and the decision that the
+artifact can change. A product that merely exports rows or wraps an existing
+dataset does not pass.
+
+Evidence and Canaries v0 must reproduce its document signals on the complete
+inventory, detect deliberately planted lineage, duplication, language-contact,
+normalization, and contamination failures, and explain every abstention. The
+continued-pretraining complement must report source-family balance and rights
+state rather than claiming web-scale coverage. The correction/protection
+product must demonstrate sourced examples and acceptable counterexamples for
+each phenomenon, including Russian quotation, phonetic Russian, historical
+Ukrainian, dialect, and legitimate modern literary usage. Consumer adapters
+must preserve these labels and evidence without silently converting unresolved
+material into training truth.
+
+Public papers, model cards, repositories, dataset schemas, and reproducible
+baseline commands provide the first consumer specification. Later independent
+use is valuable confirmation, but the project does not wait for outreach to
+test deterministic behavior, compatibility, lineage, or limitations. A
+downstream team must be able to inspect the receipts and decide what to admit,
+exclude, protect, or rerun before spending on training.
+
 ## Validation and routing
 
 Deterministic code may establish hashes, schemas, arithmetic, source lineage,
