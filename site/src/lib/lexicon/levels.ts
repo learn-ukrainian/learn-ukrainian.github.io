@@ -10,7 +10,7 @@ const CEFR_RANK = new Map<CefrLevel, number>(
 );
 
 export interface DailyLevelRow {
-  cefr?: string;
+  cefr?: string | null;
 }
 
 export interface LexiconBrowseRow {
@@ -89,18 +89,52 @@ export function normalizeLevelFilter(value: unknown): LevelFilter {
     : "all";
 }
 
+/**
+ * Return all rows in a deterministic order that prefers the learner's level.
+ * CEFR is guidance only: higher-level, lower-level, and unlevelled rows remain
+ * eligible. Unknown or malformed CEFR values sort after known levels without
+ * receiving an inferred placement.
+ */
+export function prioritizeByLearnerLevel<T extends DailyLevelRow>(
+  rows: readonly T[],
+  selectedLevel: unknown,
+): T[] {
+  const targetRank = CEFR_RANK.get(normalizeCefrLevel(selectedLevel)) ?? 0;
+
+  return rows
+    .map((row, index) => {
+      const level = parseCefrLevel(row.cefr);
+      const known = level !== null;
+      const rank = known ? (CEFR_RANK.get(level) ?? CEFR_LEVELS.length) : CEFR_LEVELS.length;
+      return {
+        row,
+        index,
+        known,
+        rank,
+        distance: known ? Math.abs(rank - targetRank) : 0,
+        aboveTarget: known && rank > targetRank ? 1 : 0,
+      };
+    })
+    .sort(
+      (left, right) =>
+        Number(right.known) - Number(left.known) ||
+        left.distance - right.distance ||
+        left.aboveTarget - right.aboveTarget ||
+        left.rank - right.rank ||
+        left.index - right.index,
+    )
+    .map(({ row }) => row);
+}
+
+/**
+ * Backward-compatible name for callers outside practice. Practice itself uses
+ * `prioritizeByLearnerLevel`; this function no longer applies a hard cap.
+ */
 export function filterByCumulativeLevel<T extends DailyLevelRow>(
   rows: readonly T[],
   selectedLevel: unknown,
 ): T[] {
-  const cap = normalizeCefrLevel(selectedLevel);
-  const capRank = CEFR_RANK.get(cap) ?? 0;
-
-  return rows.filter((row) => {
-    const level = parseCefrLevel(row.cefr);
-    if (!level) return false;
-    return (CEFR_RANK.get(level) ?? Number.POSITIVE_INFINITY) <= capRank;
-  });
+  return prioritizeByLearnerLevel(rows, selectedLevel);
 }
 
 export function filterRowsByLevel<T extends { c?: string }>(

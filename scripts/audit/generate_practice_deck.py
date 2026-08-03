@@ -71,6 +71,10 @@ SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
 PUBLISHED_LEVELS = ("A1", "A2", "B1", "B2", "C1")
+# CEFR is lexical guidance, not an admission requirement.  Keep the published
+# five-shard transport contract stable by carrying admitted, unlevelled
+# recognition lexemes in the first shard; the lexeme/index field remains null.
+UNKNOWN_CEFR_TRANSPORT_LEVEL = PUBLISHED_LEVELS[0]
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
 MODE_SHARD_KEYS = ("cloze", *DRILL_MODES)
 MODE_SCHEMAS = {
@@ -1094,6 +1098,10 @@ def _eligible_decoys(
     for lexeme in lexemes:
         if lexeme["lemmaId"] == answer["lemmaId"]:
             continue
+        # Unknown CEFR is valid for recognition, but cannot participate in a
+        # level-bounded cloze option set without inventing a placement.
+        if not lexeme.get("cefr") or not answer.get("cefr"):
+            continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
@@ -1165,6 +1173,8 @@ def _eligible_dictionary_decoys(
     seen_labels: set[str] = {answer_label}
     for lexeme in lexemes:
         if lexeme["lemmaId"] == answer["lemmaId"]:
+            continue
+        if not lexeme.get("cefr") or not answer.get("cefr"):
             continue
         if _option_pos_bucket(lexeme.get("pos")) != answer_bucket:
             continue
@@ -1573,14 +1583,14 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     lemma = _clean_text(entry.get("lemma"))
     gloss = _clean_text(entry.get("gloss"))
     level = _cefr_level(entry)
-    if not lemma or not gloss or not level:
+    if not lemma or not gloss:
         return None
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
     gloss_clean = _gloss_clean(gloss)
     meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
-    # Recognition (matching/choice/flashcard) needs only lemma+gloss+level, so the word is
-    # ALWAYS kept. Attach the paradigm for flashcard declensions ONLY when every form
+    # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
+    # word stays in the deck even when CEFR is unknown. Attach the paradigm for flashcard declensions ONLY when every form
     # VESUM-verifies; otherwise blank it so the UI never displays an unverified declension.
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
@@ -1975,6 +1985,8 @@ def _category_set_payload(set_id: str, value: str, level: str) -> dict[str, Any]
 
 
 def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    if not _normalize_cefr(lexeme.get("cefr")):
+        return []
     morphology = _morphology(entry)
     if not morphology:
         return []
@@ -2026,6 +2038,8 @@ def _single_surface(value: Any) -> str | None:
 
 
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    if not _normalize_cefr(lexeme.get("cefr")):
+        return []
     cases = lexeme.get("paradigm", {}).get("cases")
     if not isinstance(cases, dict):
         return []
@@ -2199,6 +2213,8 @@ def _valid_synonym_distractors(
     for lexeme in lexemes:
         if lexeme["lemmaId"] in {prompt["lemmaId"], answer["lemmaId"]}:
             continue
+        if not lexeme.get("cefr"):
+            continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
         if _headword(lexeme["gloss"]) in blocked_heads:
@@ -2341,10 +2357,12 @@ def _build_synonym_items(
     link back to one another through the current relation sections.
     """
     for entry, lexeme in lexemes_by_entry:
+        if not lexeme.get("cefr"):
+            continue
         for polarity, section_name in (("synonym", "synonyms"), ("antonym", "antonyms")):
             for target_label in _section_items(entry, section_name):
                 target = by_plain_lemma.get(_plain(target_label))
-                if not target:
+                if not target or not target.get("cefr"):
                     continue
                 pair_key = _synonym_pair_key(lexeme["lemma"], target["lemma"], polarity)
                 flagged_a2_exception = pair_key in a2_exception_set
@@ -2374,7 +2392,7 @@ def _build_synonym_items(
     for pair_key in sorted(approved_set):
         prompt_a = by_plain_lemma.get(pair_key[0])
         prompt_b = by_plain_lemma.get(pair_key[1])
-        if not prompt_a or not prompt_b:
+        if not prompt_a or not prompt_b or not prompt_a.get("cefr") or not prompt_b.get("cefr"):
             continue
 
         both_legs_a2 = prompt_a["cefr"] == "A2" and prompt_b["cefr"] == "A2"
@@ -2636,6 +2654,8 @@ def _build_heritage_items(
     # flag) is a hard pedagogy gate — level-local placement must never drop
     # BELOW it (#4719: b1-flagged calque drills were served at A1).
     lexeme_level = _normalize_cefr(lexeme.get("cefr"))
+    if not lexeme_level:
+        return []
     floor = _heritage_availability_level(pair)
     level = max(
         (lvl for lvl in (lexeme_level, floor) if lvl),
@@ -2727,6 +2747,8 @@ def _build_paronym_items(
     verifier: VesumVerifier | None = None,
     public_options: bool = True,
 ) -> list[dict[str, Any]]:
+    if not _normalize_cefr(lex_a.get("cefr")) or not _normalize_cefr(lex_b.get("cefr")):
+        return []
     frames = _valid_paronym_frames(pair)
     if not frames:
         return []
@@ -2770,7 +2792,7 @@ def _build_paronym_items(
                 if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
                     target_lex = cand
                     break
-        if target_lex is None:
+        if target_lex is None or not target_lex.get("cefr"):
             print(
                 f"WARN: paronym_pair {slugs} frame {index} dropped: could not resolve lemma for answer_form {answer_form!r}",
                 file=sys.stderr,
@@ -2791,7 +2813,7 @@ def _build_paronym_items(
             "answer": answer_form,
             "confusable": confusable_form,
             "frameIndex": index,
-            "cefr": target_lex.get("cefr") or "B1",
+            "cefr": target_lex["cefr"],
             "options": options,
             "distinction_gloss_uk": distinction,
             "citations": citations,
@@ -3492,6 +3514,10 @@ def build_practice_shards(
         for level in CEFR_ORDER
     }
     for _entry, lexeme in lexemes_by_entry:
+        # Unlevelled entries stay eligible for recognition.  Cloze and the
+        # level-sensitive optional drills retain their existing gates.
+        if not lexeme.get("cefr"):
+            continue
         if config.cloze_enabled and is_surface_admitted(_entry, SURFACE_CLOZE):
             source_rows = [
                 *cloze_by_lemma_id.get(lexeme["lemmaId"], []),
@@ -3747,7 +3773,12 @@ def build_practice_shards(
 
     shards: dict[str, dict[str, dict[str, Any]]] = {}
     for level in PUBLISHED_LEVELS:
-        level_lexemes = [lexeme for lexeme in all_lexemes if lexeme["cefr"] == level]
+        level_lexemes = [
+            lexeme
+            for lexeme in all_lexemes
+            if lexeme["cefr"] == level
+            or (level == UNKNOWN_CEFR_TRANSPORT_LEVEL and lexeme["cefr"] is None)
+        ]
         if not level_lexemes:
             continue
         level_cloze = cloze_by_level[level]
@@ -3787,7 +3818,7 @@ def build_practice_shards(
                 {
                     "lemmaId": lexeme["lemmaId"],
                     "lemma": lexeme["lemma"],
-                    "cefr": level,
+                    "cefr": lexeme.get("cefr"),
                     "modes": modes,
                     "hasCloze": bool(cloze_ids),
                     "clozeIds": cloze_ids,

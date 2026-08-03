@@ -21,6 +21,7 @@ import {
   readPracticeSessionSnapshot,
   resolveSessionCompletion,
   saveState,
+  selectDailyPracticeDeckItems,
   selectNextPracticeItem,
   sessionPoolAllowsCandidate,
   writeNewCardsDailyState,
@@ -49,11 +50,11 @@ function lexeme(lemmaId: string, lemma = lemmaId): PracticeLexeme {
   };
 }
 
-function indexItem(lemmaId: string, order: number): PracticeIndexItem {
+function indexItem(lemmaId: string, order: number, cefr: string | null = 'A1'): PracticeIndexItem {
   return {
     lemmaId,
     lemma: lemmaId,
-    cefr: 'A1',
+    cefr,
     modes: ['flashcards'],
     hasCloze: false,
     clozeIds: [],
@@ -92,6 +93,17 @@ beforeEach(() => {
 });
 
 describe('practice session helpers', () => {
+  test('keeps an unlevelled index item eligible and ranks it after known guidance', () => {
+    const index = [indexItem('unknown', 0, null), indexItem('known', 1, 'A1')];
+
+    expect(
+      selectDailyPracticeDeckItems(index, new Map(), NOW).map((item) => [item.lemmaId, item.cefr]),
+    ).toEqual([
+      ['known', 'A1'],
+      ['unknown', null],
+    ]);
+  });
+
   test('today-ring denominator excludes uncapped deck size', () => {
     const index = Array.from({ length: 50 }, (_, i) => indexItem(`w${i}`, i));
     const denominator = computeTodayRingDenominator(index, {

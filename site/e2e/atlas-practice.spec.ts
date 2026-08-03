@@ -651,15 +651,13 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
 }) => {
   await context.clearCookies();
 
-  // Fixture index: 3 single-mode items, so the full-level estimate is a small, exact
-  // number (not a live-corpus count that could drift) — well under the 8-per-session cap.
-  await page.route('**/lexicon/practice-index.A1.json', (route) =>
-    route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({
-        deckVersion: 'e2e-scope-fixture',
-        level: 'A1',
-        items: ['a', 'b', 'c'].map((suffix) => ({
+  // Soft CEFR makes every published level eligible, so mock every index shard to keep the
+  // full-level estimate deterministic: eight controlled A1 cards, no background-level drift.
+  await page.route('**/lexicon/practice-index.*.json', (route) => {
+    const { pathname } = new URL(route.request().url());
+    const level = pathname.match(/practice-index\.([A-Z0-9]+)\.json$/)?.[1] ?? 'A1';
+    const items = level === 'A1'
+      ? ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((suffix) => ({
           lemmaId: `e2eScope${suffix}`,
           lemma: `e2eScope${suffix}`,
           cefr: 'A1',
@@ -667,10 +665,13 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
           hasCloze: false,
           clozeIds: [],
           newOrder: 0,
-        })),
-      }),
-    }),
-  );
+        }))
+      : [];
+    return route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({ deckVersion: 'e2e-scope-fixture', level, items }),
+    });
+  });
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'learn_ukrainian_custom_sets_v1',
@@ -692,8 +693,8 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
   await page.goto('/words-of-the-day/practice/');
 
   const estimate = page.getByTestId('practice-session-scope');
-  // Before selecting the custom deck, the estimate describes the full (3-item) fixture level.
-  await expect(estimate).toContainText('3 нов');
+  // Before selecting the custom deck, the estimate reports the full-level soft-CEFR scope.
+  await expect(estimate).toContainText('8 нових');
 
   await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
 
