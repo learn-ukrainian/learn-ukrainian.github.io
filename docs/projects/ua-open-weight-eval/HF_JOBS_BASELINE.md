@@ -84,6 +84,13 @@ that flag, and the worker passes it explicitly to its renderer. The provider
 omitted terminal duration fields for the canceled job, so budget accounting
 conservatively reserves three billed minutes (USD 0.090000), raising cumulative
 accounted cost to USD 0.300167.
+Job `6a6fdeaaa00abefd4b28e281` confirmed the corrected tokenizer path and
+`Gemma4ForCausalLM` selection, then exposed a naming gap between Transformers'
+`gemma4_text` config and the pinned plugin's existing `gemma4` GGUF architecture
+map. The worker now binds that existing map to the text-only config name before
+model loading, recording the compatibility alias in its version provenance.
+The pinned plugin and checkpoint bytes remain unchanged. Four billed minutes
+cost USD 0.120000, raising cumulative cost to USD 0.420167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD

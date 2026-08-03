@@ -411,6 +411,18 @@ def prepare_text_runtime_tokenizer(tokenizer_root: Path) -> tuple[Path, str, str
     )
 
 
+def enable_gemma4_text_gguf_alias() -> str:
+    """Bind the plugin's Gemma 4 GGUF map to Transformers' text config name."""
+    import gguf
+
+    matches = [architecture for architecture, name in gguf.MODEL_ARCH_NAMES.items() if name == "gemma4"]
+    _require(len(matches) == 1, "pinned GGUF library has no unique Gemma 4 architecture")
+    _require("gemma4_text" not in gguf.MODEL_ARCH_NAMES.values(), "Gemma 4 text GGUF alias already exists")
+    architecture = matches[0]
+    gguf.MODEL_ARCH_NAMES[architecture] = "gemma4_text"
+    return f"{getattr(architecture, 'name', architecture)}:gemma4->gemma4_text"
+
+
 def load_generator(
     *, config: Mapping[str, Any], model_path: Path, tokenizer_root: Path
 ) -> tuple[Callable[[Sequence[str]], list[tuple[str, int]]], dict[str, str], Callable[[str], str]]:
@@ -421,6 +433,7 @@ def load_generator(
     runtime = config["runtime"]
     runner = config["runner"]
     versions = {
+        "gguf_model_type_alias": enable_gemma4_text_gguf_alias(),
         "transformers": importlib.metadata.version("transformers"),
         "vllm": importlib.metadata.version("vllm"),
         "vllm_gguf_plugin": importlib.metadata.version("vllm-gguf-plugin"),

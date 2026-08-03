@@ -51,9 +51,17 @@
         "provider_derived_cost_usd": 0.09,
         "provider_duration_unavailable": true,
         "stage": "CANCELED"
+      },
+      {
+        "job_id": "6a6fdeaaa00abefd4b28e281",
+        "mode": "canary",
+        "provider_billed_minutes": 4,
+        "provider_derived_cost_usd": 0.12,
+        "provider_running_seconds": 189,
+        "stage": "ERROR"
       }
     ],
-    "prior_provider_cost_usd": 0.300167,
+    "prior_provider_cost_usd": 0.420167,
     "recoverable_execution_retries_authorized": true,
     "superseding_authorization_at": "2026-08-03",
     "validated_cpu_transport": {
