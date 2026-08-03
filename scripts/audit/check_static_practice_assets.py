@@ -638,7 +638,13 @@ def _ensure_registered_mode_shards(
                     body_key: [],
                     "schema": EXPECTED_SCHEMAS[kind],
                     "schemaVersion": schema_version,
-                    "sizeBudget": {"ok": True},
+                    "sizeBudget": {
+                        "ok": True,
+                        "rawBytes": 0,
+                        "rawLimitBytes": 0,
+                        "gzipBytes": 0,
+                        "gzipLimitBytes": 0,
+                    },
                     "source": source,
                 }
                 path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
