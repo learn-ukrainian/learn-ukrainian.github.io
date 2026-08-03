@@ -56,6 +56,10 @@ OFFLINE_GENERATION_ENVIRONMENT = {
 class WorkerError(ValueError):
     """Raised when the frozen worker contract cannot be satisfied."""
 
+    def __init__(self, message: str, *, private_diagnostic: Mapping[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.private_diagnostic = dict(private_diagnostic) if private_diagnostic is not None else None
+
 
 def _require(condition: bool, message: str) -> None:
     if not condition:
@@ -641,7 +645,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             request_retry_seconds = 0.0
             current_generation = raw_generation
             current_tokens = token_count
+            private_attempts: list[dict[str, Any]] = []
             for attempt in range(retries + 1):
+                private_attempts.append(
+                    {
+                        "attempt": attempt,
+                        "generated_tokens": current_tokens if attempt == 0 else retry_tokens,
+                        "generation_chars": len(current_generation),
+                        "generation_sha256": sha256_text(current_generation),
+                        "raw_generation": current_generation,
+                    }
+                )
                 try:
                     parsed = parse_model_reply(current_generation)
                     retry_count = attempt
@@ -660,7 +674,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     retry_seconds.append(retry_elapsed)
                     request_retry_seconds += retry_elapsed
                     current_tokens += retry_tokens
-            _require(parsed is not None, f"cannot parse model reply for {request['item_id']}: {last_error}")
+            if parsed is None:
+                raise WorkerError(
+                    f"cannot parse model reply for {request['item_id']}: {last_error}",
+                    private_diagnostic={
+                        "item_id": request["item_id"],
+                        "attempts": private_attempts,
+                    },
+                )
             record = {
                 "item_id": request["item_id"],
                 "request_sha256": request["request_sha256"],
@@ -808,12 +829,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             "error": str(exc),
             "traceback": traceback.format_exc(),
         }
+        if isinstance(exc, WorkerError) and exc.private_diagnostic is not None:
+            failure["private_diagnostic"] = exc.private_diagnostic
         failure_path = args.output_root / "failure.private.json"
         with contextlib.suppress(OSError):
             write_atomic(failure_path, failure)
         with contextlib.suppress(BaseException):
             HubArtifactStore(args.artifact_repo, args.artifact_prefix).upload(failure_path, "failure.private.json")
-        print(canonical_json({key: value for key, value in failure.items() if key != "traceback"}), file=sys.stderr)
+        print(
+            canonical_json(
+                {key: value for key, value in failure.items() if key not in {"traceback", "private_diagnostic"}}
+            ),
+            file=sys.stderr,
+        )
         return 2
     print(canonical_json({"status": result["status"], "mode": result["mode"], "job_id": result["job"]["id"]}))
     return 0

@@ -100,6 +100,13 @@ retaining the strict parser as a post-generation validator. This constrains
 syntax only and does not expose gold labels, mutate the suite, or weaken
 response validation. Five billed minutes cost USD 0.150000, raising cumulative
 cost to USD 0.570167.
+Job `6a6fe50b6b79c09949c1fe42` confirmed that the pinned vLLM accepted the
+structured-output schema, but its first response still did not complete as one
+parseable object within the unchanged 160-token limit. To avoid another blind
+execution change, a failed response now records its raw attempts and hashes
+only inside the authenticated private failure receipt; the provider log keeps
+only the redacted error summary. Five billed minutes cost USD 0.150000, raising
+cumulative cost to USD 0.720167.
 
 Historically, the five-minute CPU Basic contract required a complete receipt
 before any GPU launch. Its maximum time-based charge was USD 0.000833 at USD
