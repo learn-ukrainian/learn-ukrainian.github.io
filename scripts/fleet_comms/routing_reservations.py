@@ -62,6 +62,9 @@ class RoutingReservationRequest:
     route_mode: RouteMode
     estimated_input_bytes: int
     requested_reviewer: str | None = None
+    required_capabilities: tuple[str, ...] = ()
+    data_egress_policy: str | None = None
+    isolation_required: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -298,6 +301,7 @@ class RoutingReservationLedger:
         *,
         ttl_seconds: int = 300,
         now: str | None = None,
+        substitution: Mapping[str, Any] | None = None,
     ) -> RoutingReservation:
         """Replay or atomically select and admit a route.
 
@@ -308,6 +312,7 @@ class RoutingReservationLedger:
         req, request_sha, semantic_sha = self._validate_request(request)
         ttl = _positive_int(ttl_seconds, "ttl_seconds")
         current, current_iso = _now(now)
+        substitution_data = _mapping(substitution, field="substitution")
         with self._write_transaction():
             self._recover_expired_tx(current_iso)
             idempotent = self._conn.execute(
@@ -318,6 +323,14 @@ class RoutingReservationLedger:
             if idempotent is not None:
                 if str(idempotent["request_sha256"]) != request_sha:
                     raise RoutingReservationError("idempotency_key_reused_with_different_request")
+                if substitution_data:
+                    decision = self._conn.execute(
+                        """SELECT evidence_json FROM routing_reservation_decisions
+                           WHERE reservation_id = ? AND event_type = 'authorized_substitution'""",
+                        (str(idempotent["reservation_id"]),),
+                    ).fetchone()
+                    if decision is None or json.loads(str(decision["evidence_json"])) != substitution_data:
+                        raise RoutingReservationError("substitution_idempotency_conflict")
                 return self._reservation_from_row(idempotent)
 
             latest = self._conn.execute(
@@ -326,7 +339,14 @@ class RoutingReservationLedger:
                    ORDER BY attempt DESC LIMIT 1""",
                 (req.authority_key,),
             ).fetchone()
-            if latest is not None and str(latest["semantic_sha256"]) != semantic_sha:
+            if latest is not None and substitution_data:
+                self._validate_substitution_tx(
+                    latest,
+                    req,
+                    substitution_data,
+                    created_at=current_iso,
+                )
+            elif latest is not None and str(latest["semantic_sha256"]) != semantic_sha:
                 raise RoutingReservationError("authority_key_semantic_conflict")
             if latest is not None and str(latest["status"]) in _ACTIVE_STATUSES:
                 # A distinct initiator joins the same exact-head decision rather
@@ -337,6 +357,13 @@ class RoutingReservationLedger:
             if selection is None:
                 raise RoutingReservationUnavailable("no_policy_approved_route")
             selected = self._validate_selection(selection)
+            if substitution_data:
+                if selected.candidate != req.requested_reviewer:
+                    raise RoutingReservationError("substitution_selected_reviewer_mismatch")
+                if selected.family == req.author_family:
+                    raise RoutingReservationError("substitution_same_family")
+                if selected.candidate == str(latest["resolved_candidate"]):
+                    raise RoutingReservationError("substitution_reviewer_unchanged")
             circuit = self._circuit_state(self._circuit_key(selected.quota_bucket, selected.credential_bucket))
             if circuit is not None and circuit.open_until is not None and circuit.open_until > current_iso:
                 raise RoutingReservationUnavailable("credential_bucket_circuit_open")
@@ -414,9 +441,22 @@ class RoutingReservationLedger:
                     "policy_version": selected.policy_version,
                     "route_mode": req.route_mode,
                     "trace": selected.trace,
+                    "authorization_envelope": {
+                        "required_capabilities": list(req.required_capabilities),
+                        "data_egress_policy": req.data_egress_policy,
+                        "isolation_required": req.isolation_required,
+                    },
                 },
                 created_at=current_iso,
             )
+            if substitution_data:
+                self._append_decision_tx(
+                    reservation_id,
+                    "authorized_substitution",
+                    "reserved",
+                    substitution_data,
+                    current_iso,
+                )
             return self._get_reservation_tx(reservation_id)
 
     def reserve(
@@ -573,11 +613,19 @@ class RoutingReservationLedger:
         ).fetchone()
         return self._reservation_from_row(row) if row is not None else None
 
+    def latest_for_authority_key(self, authority_key: str) -> RoutingReservation | None:
+        row = self._conn.execute(
+            """SELECT * FROM routing_reservations WHERE authority_key = ?
+               ORDER BY attempt DESC LIMIT 1""",
+            (_required(authority_key, "authority_key"),),
+        ).fetchone()
+        return self._reservation_from_row(row) if row is not None else None
+
     def decisions(self, reservation_id: str) -> tuple[RoutingReservationDecision, ...]:
         rid = _required(reservation_id, "reservation_id")
         rows = self._conn.execute(
             """SELECT * FROM routing_reservation_decisions
-               WHERE reservation_id = ? ORDER BY created_at, decision_id""",
+               WHERE reservation_id = ? ORDER BY created_at, rowid""",
             (rid,),
         ).fetchall()
         return tuple(self._decision_from_row(row) for row in rows)
@@ -618,6 +666,9 @@ class RoutingReservationLedger:
                 if request.requested_reviewer is not None
                 else None
             ),
+            required_capabilities=tuple(sorted({_required(item, "required_capability") for item in request.required_capabilities})),
+            data_egress_policy=(_required(request.data_egress_policy, "data_egress_policy") if request.data_egress_policy is not None else None),
+            isolation_required=bool(request.isolation_required),
         )
         semantic_payload = {
             "author_family": normalized.author_family,
@@ -629,12 +680,87 @@ class RoutingReservationLedger:
             "requested_risk": normalized.requested_risk,
             "requested_role": normalized.requested_role,
             "route_mode": normalized.route_mode,
+            "required_capabilities": normalized.required_capabilities,
+            "data_egress_policy": normalized.data_egress_policy,
+            "isolation_required": normalized.isolation_required,
         }
         semantic_sha = hashlib.sha256(_canonical_json(semantic_payload).encode("utf-8")).hexdigest()
         request_sha = hashlib.sha256(
             _canonical_json({**semantic_payload, "initiator": normalized.initiator}).encode("utf-8")
         ).hexdigest()
         return normalized, request_sha, semantic_sha
+
+    def _validate_substitution_tx(
+        self,
+        latest: sqlite3.Row,
+        request: RoutingReservationRequest,
+        evidence: Mapping[str, Any],
+        *,
+        created_at: str,
+    ) -> None:
+        """Allow the one explicit post-result-invalid compensation edge only."""
+        prior_id = _required(str(evidence.get("prior_reservation_id") or ""), "prior_reservation_id")
+        reason = _required(str(evidence.get("reason") or ""), "substitution_reason")
+        if len(reason) > 500:
+            raise RoutingReservationError("substitution_reason_too_long")
+        existing = self._conn.execute(
+            """SELECT 1 FROM routing_reservation_decisions d
+               JOIN routing_reservations r ON r.reservation_id = d.reservation_id
+               WHERE r.authority_key = ? AND d.event_type = 'authorized_substitution' LIMIT 1""",
+            (request.authority_key,),
+        ).fetchone()
+        if existing is not None:
+            raise RoutingReservationError("substitution_already_authorized")
+        if prior_id != str(latest["reservation_id"]):
+            raise RoutingReservationError("substitution_prior_not_latest")
+        if str(latest["status"]) != "failed" or str(latest["failure_classification"] or "") != "result_invalid":
+            raise RoutingReservationError("substitution_prior_not_result_invalid")
+        if request.route_mode != "explicit" or request.requested_reviewer is None:
+            raise RoutingReservationError("substitution_explicit_reviewer_required")
+        for field in (
+            "author_model", "author_family", "requested_role", "requested_profile",
+            "requested_risk", "estimated_input_bytes",
+        ):
+            if str(latest[field]) != str(getattr(request, field)):
+                raise RoutingReservationError("substitution_authorization_envelope_drift")
+        prior = self._conn.execute(
+            "SELECT evidence_json FROM routing_reservation_decisions WHERE reservation_id = ? AND event_type = 'reserved'",
+            (prior_id,),
+        ).fetchone()
+        envelope = json.loads(str(prior["evidence_json"])).get("authorization_envelope") if prior else None
+        if not isinstance(envelope, dict):
+            legacy_envelope = {
+                "required_capabilities": ["code_review", "sealed_evidence"],
+                "data_egress_policy": None,
+                "isolation_required": True,
+            }
+            if (
+                list(request.required_capabilities)
+                != legacy_envelope["required_capabilities"]
+                or request.data_egress_policy is not None
+                or request.isolation_required is not True
+            ):
+                raise RoutingReservationError(
+                    "substitution_legacy_authorization_envelope_unavailable"
+                )
+            envelope = legacy_envelope
+            self._append_decision_tx(
+                prior_id,
+                "legacy_authorization_envelope_reconstructed",
+                "failed",
+                {
+                    "authorization_envelope": legacy_envelope,
+                    "source": "formal-review-default-contract-before-6342",
+                    "substitution_reason": reason,
+                },
+                created_at,
+            )
+        if (
+            envelope.get("required_capabilities") != list(request.required_capabilities)
+            or envelope.get("data_egress_policy") != request.data_egress_policy
+            or envelope.get("isolation_required") != request.isolation_required
+        ):
+            raise RoutingReservationError("substitution_authorization_envelope_drift")
 
     def _validate_selection(self, selection: RoutingSelection) -> RoutingSelection:
         if not isinstance(selection, RoutingSelection):
@@ -911,17 +1037,32 @@ class RoutingReservationLedger:
             self.ledger = ledger
 
         def __enter__(self) -> None:
-            self.ledger._conn.execute("BEGIN IMMEDIATE")
+            self.nested = self.ledger._conn.in_transaction
+            if self.nested:
+                self.ledger._conn.execute("SAVEPOINT routing_reservation_write")
+            else:
+                self.ledger._conn.execute("BEGIN IMMEDIATE")
 
         def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> bool:
             if exc_type is None:
                 try:
-                    self.ledger._conn.commit()
+                    if self.nested:
+                        self.ledger._conn.execute("RELEASE SAVEPOINT routing_reservation_write")
+                    else:
+                        self.ledger._conn.commit()
                 except Exception:
-                    self.ledger._conn.rollback()
+                    if self.nested:
+                        self.ledger._conn.execute("ROLLBACK TO SAVEPOINT routing_reservation_write")
+                        self.ledger._conn.execute("RELEASE SAVEPOINT routing_reservation_write")
+                    else:
+                        self.ledger._conn.rollback()
                     raise
             else:
-                self.ledger._conn.rollback()
+                if self.nested:
+                    self.ledger._conn.execute("ROLLBACK TO SAVEPOINT routing_reservation_write")
+                    self.ledger._conn.execute("RELEASE SAVEPOINT routing_reservation_write")
+                else:
+                    self.ledger._conn.rollback()
             return False
 
     def _write_transaction(self) -> _WriteTransaction:
