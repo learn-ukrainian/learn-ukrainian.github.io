@@ -1029,7 +1029,12 @@ import stat
 import sys
 from pathlib import Path, PurePosixPath
 
+if len(sys.argv) not in {2, 3}:
+    raise ValueError("invalid_arguments")
 ROOT = Path(sys.argv[1]).resolve(strict=True)
+PROFILE = sys.argv[2] if len(sys.argv) == 3 else "all"
+if PROFILE not in {"all", "read-required-only"}:
+    raise ValueError("invalid_tool_profile")
 MAX_CHUNK_BYTES = 64 * 1024
 CLAUDE_MAX_CHUNK_BYTES = 24 * 1024
 CLAUDE_INLINE_RESULT_CHARS = 48 * 1024
@@ -1302,17 +1307,23 @@ def search_file(raw, query):
     finally:
         os.close(fd)
 
-TOOLS = [
+ALL_TOOLS = [
     {"name":"list_files","description":"List every safe UTF-8 file in the sealed review snapshot.","inputSchema":{"type":"object","properties":{"prefix":{"type":"string"}},"additionalProperties":False}},
     {"name":"read_file","description":"Read one hash-bound UTF-8 byte chunk. Start at offset 0 and repeat from next_offset until eof=true.","inputSchema":{"type":"object","properties":{"path":{"type":"string"},"offset":{"type":"integer","minimum":0},"max_bytes":{"type":"integer","minimum":1,"maximum":65536}},"required":["path"],"additionalProperties":False}},
     {"name":"read_required","description":"Read the next bounded hash-bound chunks from the authoritative required review stream. Start at index=0, offset=0 and repeat from next_index/next_offset until eof=true. Claude ACP uses max_chunks=1, max_bytes=24576, and max_result_chars=49152 so JSON escaping cannot externalize the result.","inputSchema":{"type":"object","properties":{"index":{"type":"integer","minimum":0},"offset":{"type":"integer","minimum":0},"max_chunks":{"type":"integer","minimum":1,"maximum":6},"max_bytes":{"type":"integer","minimum":1,"maximum":65536},"max_result_chars":{"type":"integer","minimum":1024,"maximum":65536}},"additionalProperties":False}},
     {"name":"read_required_all","description":"Read every hash-bound chunk from an authoritative required review scope of at most 2 MiB. Larger scopes fail closed and must be split.","inputSchema":{"type":"object","properties":{},"additionalProperties":False}},
     {"name":"search_text","description":"Search safe sealed files for an exact text substring; refine the query if truncated is true.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1},"prefix":{"type":"string"}},"required":["query"],"additionalProperties":False}},
 ]
+TOOLS = [
+    tool for tool in ALL_TOOLS
+    if PROFILE == "all" or tool["name"] == "read_required"
+]
 
 def call_tool(name, args):
     if not isinstance(args, dict):
         raise ValueError("arguments_must_be_object")
+    if PROFILE == "read-required-only" and name != "read_required":
+        raise ValueError("tool_not_allowed")
     if name == "list_files":
         payload = {"files": files(args.get("prefix", ""))}
     elif name == "read_file":

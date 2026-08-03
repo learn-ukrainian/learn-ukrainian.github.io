@@ -56,7 +56,7 @@ def test_completed_exact_head_replays_without_provider_call(monkeypatch, capsys,
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
@@ -149,7 +149,7 @@ def test_active_exact_head_exits_before_reservation_or_provider_call(monkeypatch
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 

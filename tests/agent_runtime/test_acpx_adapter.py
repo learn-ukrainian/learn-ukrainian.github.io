@@ -1843,6 +1843,50 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 11
 
 
+def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    sealed_config = str(tmp_path / "sealed-config.json")
+    monkeypatch.setattr(
+        acpx_module,
+        "_validate_sealed_review_mcp_config",
+        lambda raw, *, adapter_label: str(raw),
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_claude_sealed_review_max_turns",
+        lambda _config: 9,
+    )
+
+    with acpx_module.active_discussion_scope():
+        plan = AcpxClaudeShadowAdapter().build_invocation(
+            prompt="review the sealed exact head",
+            mode="read-only",
+            cwd=tmp_path,
+            model="claude-sonnet-5",
+            task_id="t-claude-review",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "claude",
+                "correlation_id": "corr-claude",
+                "idempotency_key": "idem-claude",
+                "sealed_review_mcp_config": sealed_config,
+            },
+        )
+
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    allowed = "mcp__sealed_review__read_required"
+    assert ("--allowed-tools", allowed) in pairs
+    assert ("--max-turns", "9") in pairs
+    policy = json.loads(plan.cmd[plan.cmd.index("--permission-policy") + 1])
+    assert policy["autoApprove"] == [
+        allowed,
+        "sealed_review__read_required",
+    ]
+    assert policy["defaultAction"] == "deny"
+
+
 def test_claude_sealed_review_turn_budget_rejects_intermediate_symlink_escape(
     tmp_path,
 ):

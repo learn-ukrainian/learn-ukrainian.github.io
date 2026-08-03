@@ -315,6 +315,7 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
     assert "max_chunks=1" in dossier["read_protocol"]["claude_acp_instruction"]
     assert "max_bytes=24576" in dossier["read_protocol"]["claude_acp_instruction"]
     assert "max_result_chars=49152" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "only sealed_review_read_required" in dossier["read_protocol"]["claude_acp_instruction"]
     assert "Claude ACP must instead" in prompt
     assert "high, medium, or low invalidate" in prompt
     assert "maintainability invalidate" in prompt
@@ -431,6 +432,27 @@ def test_sealed_acp_config_is_parent_owned_and_snapshot_pinned(tmp_path: Path) -
         str(config_path), adapter_label="fixture"
     ) == str(config_path)
     assert checkout.sealed_acp_tool_config() == config_path
+
+    required_config_path = checkout.sealed_acp_tool_config(required_only=True)
+    required_config = json.loads(required_config_path.read_text(encoding="utf-8"))
+    required_server = required_config["mcpServers"][0]
+    assert required_server["args"][4] == "read-required-only"
+    assert _validate_sealed_review_mcp_config(
+        str(required_config_path), adapter_label="AcpxClaudeShadowAdapter"
+    ) == str(required_config_path)
+    completed = subprocess.run(
+        [required_server["command"], *required_server["args"]],
+        input=json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}) + "\n",
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False,
+    )
+    assert completed.returncode == 0
+    response = json.loads(completed.stdout)
+    assert [tool["name"] for tool in response["result"]["tools"]] == [
+        "read_required"
+    ]
 
     write_root.chmod(0o777)
     with pytest.raises(AcpxShadowRefusalError, match="helper/snapshot failed validation"):

@@ -123,6 +123,10 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   write-permission refusal. ACPX client confinement and the Grok no-tool
   profile are both required: client flags alone do not remove native Grok
   tools.
+- Claude formal sealed reviews expose only the parent-owned
+  `sealed_review_read_required` stream. Search, arbitrary file reads, shell,
+  and every other evidence tool are denied structurally so the authenticated
+  read receipt must cover the complete required scope before a verdict passes.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
 - The only supported comparison caller is

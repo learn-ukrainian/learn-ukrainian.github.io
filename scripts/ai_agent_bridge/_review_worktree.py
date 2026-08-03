@@ -1105,7 +1105,7 @@ class ProvisionedReviewWorktree:
             cfg.pop("review_exec_root", None)
         return cfg
 
-    def sealed_acp_tool_config(self) -> Path:
+    def sealed_acp_tool_config(self, *, required_only: bool = False) -> Path:
         """Stage one parent-owned MCP config exposing only sealed snapshot reads.
 
         The reviewed tree never supplies the helper, interpreter, or MCP
@@ -1122,13 +1122,20 @@ class ProvisionedReviewWorktree:
         helper = self.exec_root / "sealed-read-mcp.py"
         if not helper.exists():
             helper = _stage_sealed_read_mcp(self.exec_root)
-        config_path = self.write_root / "sealed-review-acpx-mcp.json"
+        config_path = self.write_root / (
+            "sealed-review-acpx-required-mcp.json"
+            if required_only
+            else "sealed-review-acpx-mcp.json"
+        )
+        helper_args = ["-I", "-S", str(helper), str(self.path)]
+        if required_only:
+            helper_args.append("read-required-only")
         config = {
             "mcpServers": [
                 {
                     "name": "sealed_review",
                     "command": str(python_bin),
-                    "args": ["-I", "-S", str(helper), str(self.path)],
+                    "args": helper_args,
                     # ACPX's MCP schema requires an array even when no
                     # environment entries are delegated to the child.
                     "env": [],
@@ -1319,7 +1326,8 @@ class ProvisionedReviewWorktree:
                     "returns exactly one serialized-result-bounded chunk. If a call "
                     "does not return inline, repeat the same cursor once with "
                     "max_bytes=8192 and max_result_chars=49152. Do not call shell, "
-                    "Python, or any other evidence tool."
+                    "Python, or any other evidence tool. The permission policy exposes "
+                    "only sealed_review_read_required; every other evidence tool is denied."
                 ),
                 "unit": "utf8_bytes",
                 "start_offset": 0,

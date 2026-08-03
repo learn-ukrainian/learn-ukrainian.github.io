@@ -587,7 +587,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             raise RuntimeError("sealed review snapshot was not provisioned")
         evidence = checkout.review_prompt_evidence("acp")
         evidence_metrics = _evidence_metrics(evidence)
-        sealed_mcp_config = checkout.sealed_acp_tool_config()
         estimated_input_bytes = checkout.sealed_evidence_input_bytes()
         timeout = 86400 if args.no_timeout else 1800
         worker_id = f"review-pr-acp:{os.getpid()}"
@@ -832,6 +831,9 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         extra=args.extra,
                     )
                     sealed_prompt = prompt + evidence
+                    sealed_mcp_config = checkout.sealed_acp_tool_config(
+                        required_only=participant == "claude"
+                    )
                     routing_ledger.mark_started(routing_reservation.reservation_id)
                     previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
                     os.environ["LU_ACPX_TRANSPORT"] = "active"

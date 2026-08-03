@@ -267,8 +267,8 @@ _SEALED_REVIEW_TOOL_NAMES = (
     "mcp__sealed_review__read_required_all",
     "mcp__sealed_review__search_text",
 )
-_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES = tuple(
-    name.removeprefix("mcp__") for name in _SEALED_REVIEW_TOOL_NAMES
+_CLAUDE_SEALED_REVIEW_TOOL_NAMES = (
+    "mcp__sealed_review__read_required",
 )
 
 
@@ -330,7 +330,14 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     args = server.get("args")
     if server.get("command") != expected_python or server.get("env") != []:
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
-    if not isinstance(args, list) or len(args) != 4 or args[:2] != ["-I", "-S"]:
+    required_only = adapter_label == "AcpxClaudeShadowAdapter"
+    expected_arg_count = 5 if required_only else 4
+    if (
+        not isinstance(args, list)
+        or len(args) != expected_arg_count
+        or args[:2] != ["-I", "-S"]
+        or (required_only and args[4] != "read-required-only")
+    ):
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP arguments are invalid")
     helper = Path(args[2]) if isinstance(args[2], str) else Path()
     snapshot = Path(args[3]) if isinstance(args[3], str) else Path()
@@ -1181,11 +1188,26 @@ def _confinement_prefix_argv(
     cwd: Path,
     *,
     sealed_review_mcp_config: str | None = None,
+    sealed_review_tool_names: tuple[str, ...] | None = None,
     max_turns: int = ACPX_DEFAULT_MAX_TURNS,
 ) -> list[str]:
     """Shared confinement, optionally admitting only sealed review tools."""
     permission_args = ["--deny-all", "--allowed-tools", ""]
     if sealed_review_mcp_config is not None:
+        allowed_tools = (
+            _SEALED_REVIEW_TOOL_NAMES
+            if sealed_review_tool_names is None
+            else sealed_review_tool_names
+        )
+        if not allowed_tools or not set(allowed_tools).issubset(
+            _SEALED_REVIEW_TOOL_NAMES
+        ):
+            raise AcpxShadowRefusalError(
+                "ACPX sealed-review tool policy contains unsupported tools"
+            )
+        native_allowed_tools = tuple(
+            name.removeprefix("mcp__") for name in allowed_tools
+        )
         permission_policy = json.dumps(
             {
                 # ACP agents do not agree on MCP tool spelling. Claude/Kimi
@@ -1194,8 +1216,8 @@ def _confinement_prefix_argv(
                 # Both spellings still name only the same parent-owned sealed
                 # server; the explicit MCP config replaces ambient servers.
                 "autoApprove": [
-                    *_SEALED_REVIEW_TOOL_NAMES,
-                    *_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES,
+                    *allowed_tools,
+                    *native_allowed_tools,
                 ],
                 "defaultAction": "deny",
             },
@@ -1206,7 +1228,7 @@ def _confinement_prefix_argv(
             "--permission-policy",
             permission_policy,
             "--allowed-tools",
-            ",".join(_SEALED_REVIEW_TOOL_NAMES),
+            ",".join(allowed_tools),
             "--mcp-config",
             sealed_review_mcp_config,
         ]
@@ -1943,6 +1965,7 @@ class _AcpxDiscussionAdapter:
     auth_env: str | None = None
     default_model: str = "acpx-built-in-default"
     supported_modes: frozenset[str] = frozenset({"read-only"})
+    sealed_review_tool_names: tuple[str, ...] = _SEALED_REVIEW_TOOL_NAMES
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]] | None:
         _ = cwd
@@ -2036,6 +2059,7 @@ class _AcpxDiscussionAdapter:
             binary,
             cwd,
             sealed_review_mcp_config=sealed_review_mcp_config,
+            sealed_review_tool_names=self.sealed_review_tool_names,
             max_turns=self._max_turns(sealed_review_mcp_config),
         )
         if self.fixed_model is not None and self.forward_model_to_acpx:
@@ -2106,6 +2130,7 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     allowed_models = CLAUDE_ACP_MODELS
     default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
+    sealed_review_tool_names = _CLAUDE_SEALED_REVIEW_TOOL_NAMES
 
     def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
         if sealed_review_mcp_config is None:
