@@ -527,6 +527,8 @@ class RoutingReservationLedger:
             self._append_decision_tx(rid, "settled", status, terminal_payload, current_iso)
             if status == "failed":
                 self._record_failure_tx(settled, classification, int(open_seconds or 0), current_iso)
+            elif status == "complete":
+                self._record_success_tx(settled, current_iso)
             return settled
 
     def fail_and_release(
@@ -687,9 +689,9 @@ class RoutingReservationLedger:
                    SUM(CASE WHEN status = 'complete' AND settled_at >= ?
                        THEN COALESCE(actual_input_bytes, 0) + COALESCE(actual_output_bytes, 0)
                        ELSE 0 END) AS completed_bytes,
-                   SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failures
+                   SUM(CASE WHEN status = 'failed' AND settled_at >= ? THEN 1 ELSE 0 END) AS failures
                FROM routing_reservations WHERE quota_bucket = ?""",
-            (window_start, quota_bucket),
+            (window_start, window_start, quota_bucket),
         ).fetchone()
         return RoutingBucketUsage(
             quota_bucket=quota_bucket,
@@ -743,7 +745,13 @@ class RoutingReservationLedger:
         circuit_key = self._circuit_key(reservation.quota_bucket, reservation.credential_bucket)
         prior = self._circuit_state(circuit_key)
         failures = 1 if prior is None else prior.recent_failure_count + 1
-        open_until = _iso(_parse_iso(now_iso, field="now") + timedelta(seconds=open_seconds)) if open_seconds else None
+        requested_open_until = (
+            _iso(_parse_iso(now_iso, field="now") + timedelta(seconds=open_seconds)) if open_seconds else None
+        )
+        prior_open_until = prior.open_until if prior is not None and prior.open_until is not None else None
+        open_until = max(value for value in (prior_open_until, requested_open_until) if value is not None) if (
+            prior_open_until is not None or requested_open_until is not None
+        ) else None
         self._conn.execute(
             """INSERT INTO routing_circuit_state(
                 route_key, recent_failure_count, last_failure_at,
@@ -762,6 +770,29 @@ class RoutingReservationLedger:
             "circuit_recorded",
             "failed",
             {"open_until": open_until, "recent_failure_count": failures},
+            now_iso,
+        )
+
+    def _record_success_tx(self, reservation: RoutingReservation, now_iso: str) -> None:
+        """Clear active failure posture while retaining immutable failure evidence."""
+        circuit_key = self._circuit_key(reservation.quota_bucket, reservation.credential_bucket)
+        prior = self._circuit_state(circuit_key)
+        if prior is None:
+            return
+        self._conn.execute(
+            """UPDATE routing_circuit_state
+               SET recent_failure_count = 0, open_until = NULL, updated_at = ?
+               WHERE route_key = ?""",
+            (now_iso, circuit_key),
+        )
+        self._append_decision_tx(
+            reservation.reservation_id,
+            "circuit_healed",
+            "complete",
+            {
+                "cleared_open_until": prior.open_until,
+                "prior_recent_failure_count": prior.recent_failure_count,
+            },
             now_iso,
         )
 

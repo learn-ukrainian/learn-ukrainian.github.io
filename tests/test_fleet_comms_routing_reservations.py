@@ -228,6 +228,84 @@ def test_credential_admission_and_completed_bytes_are_independent_of_quota_bucke
         assert expired.completed_window_bytes == 0
 
 
+def test_recent_failures_use_the_same_settlement_window_as_completed_usage(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        old = ledger.reserve_selection(_request("repo:old-failure", "old"), _selection, now="2035-01-01T00:00:00Z")
+        ledger.fail_and_release(old.reservation_id, "provider_unavailable", now="2035-01-01T00:00:00Z")
+
+        current = ledger.reserve_selection(
+            _request("repo:current-failure", "current"),
+            _selection,
+            now="2035-01-01T00:01:01Z",
+        )
+        ledger.fail_and_release(current.reservation_id, "provider_unavailable", now="2035-01-01T00:01:01Z")
+
+        usage = ledger._bucket_usage("codex-weekly", now_iso="2035-01-01T00:01:01Z", rolling_window_seconds=60)
+        assert usage.recent_failures == 1
+
+
+def test_success_heals_circuit_without_erasing_failure_decisions(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        failed = ledger.reserve_selection(_request("repo:failed", "failed"), _selection, now="2035-01-01T00:00:00Z")
+        ledger.fail_and_release(
+            failed.reservation_id,
+            "provider_unavailable",
+            circuit_open_seconds=30,
+            now="2035-01-01T00:00:01Z",
+        )
+
+        with pytest.raises(RoutingReservationUnavailable, match="credential_bucket_circuit_open"):
+            ledger.reserve_selection(_request("repo:blocked", "blocked"), _selection, now="2035-01-01T00:00:30Z")
+
+        recovered = ledger.reserve_selection(
+            _request("repo:recovered", "recovered"),
+            _selection,
+            now="2035-01-01T00:00:31Z",
+        )
+        ledger.settle(recovered.reservation_id, status="complete", now="2035-01-01T00:00:32Z")
+
+        circuit = ledger.bucket_circuit_state("codex-weekly", "codex-api-key-a")
+        assert circuit is not None
+        assert circuit.recent_failure_count == 0
+        assert circuit.open_until is None
+        assert circuit.last_failure_classification == "provider_unavailable"
+        assert {decision.event_type for decision in ledger.decisions(failed.reservation_id)} == {
+            "reserved",
+            "settled",
+            "circuit_recorded",
+        }
+        assert {decision.event_type for decision in ledger.decisions(recovered.reservation_id)} == {
+            "reserved",
+            "settled",
+            "circuit_healed",
+        }
+
+
+def test_ttl_recovery_does_not_clear_an_open_circuit(tmp_path: Path) -> None:
+    def two_slot_selection(context: object) -> RoutingSelection:
+        return replace(_selection(context), quota_limit=2, credential_limit=2)
+
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        failed = ledger.reserve_selection(
+            _request("repo:failed", "failed"), two_slot_selection, ttl_seconds=60, now="2035-01-01T00:00:00Z"
+        )
+        orphan = ledger.reserve_selection(
+            _request("repo:orphan", "orphan"), two_slot_selection, ttl_seconds=10, now="2035-01-01T00:00:00Z"
+        )
+        ledger.fail_and_release(
+            failed.reservation_id,
+            "provider_unavailable",
+            circuit_open_seconds=30,
+            now="2035-01-01T00:00:01Z",
+        )
+        assert ledger.recover_expired(now="2035-01-01T00:00:10Z") == (ledger.get(orphan.reservation_id),)
+
+        circuit = ledger.bucket_circuit_state("codex-weekly", "codex-api-key-a")
+        assert circuit is not None and circuit.open_until == "2035-01-01T00:00:31Z"
+        with pytest.raises(RoutingReservationUnavailable, match="credential_bucket_circuit_open"):
+            ledger.reserve_selection(_request("repo:blocked", "blocked"), _selection, now="2035-01-01T00:00:10Z")
+
+
 def test_quota_bucket_admission_is_shared_across_distinct_credentials(tmp_path: Path) -> None:
     with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
         ledger.reserve_selection(

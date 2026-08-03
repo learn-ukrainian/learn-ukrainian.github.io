@@ -89,9 +89,14 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | cursor | false |
 | gemini | false |
 | glm-local | true |
-| grok | false |
+| grok | true |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
+
+Grok uses the proven parent-owned exact-head sealed ACP path. The fleet-facing
+`kimi` endpoint resolves to the canonical KimiCC K3 participant, but remains
+fail-closed until its authenticated sealed MCP canary passes. AGY remains
+fail-closed because its text-only wrapper cannot consume the sealed MCP.
 
 ---
 

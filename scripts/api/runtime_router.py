@@ -563,6 +563,83 @@ def _routing_duration_s(record: dict[str, Any]) -> float | None:
     return max(0.0, round((settled - started).total_seconds(), 3))
 
 
+def _routing_quota_freshness_state(value: Any) -> str | None:
+    """Classify a recorded quota freshness value without treating a time as state."""
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip().lower()
+    if normalized == "fresh":
+        return "fresh"
+    if normalized in {"stale", "stale_last_good"}:
+        return "stale"
+    if normalized in {"unavailable", "unknown"}:
+        return normalized
+    return None
+
+
+def _routing_selection_reason(record: dict[str, Any]) -> Any:
+    """Read an explicitly recorded selection reason, never infer one from a route."""
+    evidence = record.get("evidence") if isinstance(record.get("evidence"), dict) else {}
+    resolved = record.get("resolved") if isinstance(record.get("resolved"), dict) else {}
+    trace = _routing_first(_routing_value(record, "selection_trace", "trace"), resolved.get("trace"))
+    trace_detail = trace if isinstance(trace, dict) else {}
+    direct_reason = _routing_first(
+        _routing_value(record, "selection_reason", "reason"),
+        trace_detail.get("selection_reason"),
+        trace_detail.get("substitution_note"),
+    )
+    if direct_reason is not None:
+        return direct_reason
+    # A terminal event's evidence describes execution, not selection.  Older
+    # flat projections have no event type, so retain that compatible fallback.
+    if _routing_value(record, "event_type") in {None, "reserved"}:
+        return evidence.get("reason")
+    return None
+
+
+def _routing_event_item(record: dict[str, Any]) -> dict[str, Any]:
+    """Return the body-free lifecycle facts suitable for an expandable timeline."""
+    return {
+        "decision_id": _routing_value(record, "decision_id"),
+        "event_type": _routing_value(record, "event_type"),
+        "state": _routing_value(record, "state"),
+        "timestamp": _routing_value(record, "created_at", "timestamp"),
+    }
+
+
+def _routing_capacity_evidence(records: list[dict[str, Any]], quota_snapshot: dict[str, Any]) -> dict[str, Any] | None:
+    """Project the finite capacity/load allowlist from routing authority evidence."""
+    scheduler = quota_snapshot.get("scheduler") if isinstance(quota_snapshot.get("scheduler"), dict) else {}
+    reservation_evidence: dict[str, Any] = {}
+    for record in records:
+        if _routing_value(record, "event_type") != "reserved":
+            continue
+        evidence = record.get("evidence")
+        if isinstance(evidence, dict):
+            reservation_evidence = evidence
+            break
+    fields = {
+        "active_credential_before": reservation_evidence.get("active_credential_before"),
+        "active_quota_before": reservation_evidence.get("active_quota_before"),
+        "credential_limit": reservation_evidence.get("credential_limit"),
+        "quota_limit": reservation_evidence.get("quota_limit"),
+        "completed_input_bytes": scheduler.get("completed_input_bytes"),
+        "active_reserved_input_bytes": scheduler.get("active_reserved_input_bytes"),
+        "inflight": scheduler.get("inflight"),
+        "failures": scheduler.get("failures"),
+        "circuit_open": scheduler.get("circuit_open"),
+        "capacity_exhausted": scheduler.get("capacity_exhausted"),
+        "quota_remaining_pct": scheduler.get("quota_remaining_pct"),
+        "quota_stale": scheduler.get("quota_stale"),
+    }
+    allowed = {
+        key: value
+        for key, value in fields.items()
+        if isinstance(value, (str, int, float, bool)) and not isinstance(value, bytes)
+    }
+    return allowed or None
+
+
 def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
     """Serialize an allowlisted, body-free routing decision for the Runtime UI."""
     requested = record.get("requested") if isinstance(record.get("requested"), dict) else {}
@@ -573,11 +650,17 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         _routing_value(record, "quota_snapshot") if isinstance(_routing_value(record, "quota_snapshot"), dict) else None,
     ) or {}
     lifecycle = record.get("lifecycle") if isinstance(record.get("lifecycle"), dict) else {}
-    evidence = record.get("evidence") if isinstance(record.get("evidence"), dict) else {}
     replay = record.get("replay") if isinstance(record.get("replay"), dict) else {}
     retry = record.get("retry") if isinstance(record.get("retry"), dict) else {}
     selection_trace = _routing_first(_routing_value(record, "selection_trace", "trace"), resolved.get("trace"))
     trace = selection_trace if isinstance(selection_trace, dict) else {}
+    snapshot_codexbar = quota_snapshot.get("codexbar") if isinstance(quota_snapshot.get("codexbar"), dict) else {}
+    quota_freshness = _routing_first(
+        _routing_value(record, "quota_freshness"),
+        quota_detail.get("freshness"),
+        quota_snapshot.get("freshness"),
+        snapshot_codexbar.get("freshness"),
+    )
     automatic = _routing_value(record, "automatic")
     if not isinstance(automatic, bool):
         automatic = _routing_value(record, "route_mode") == "auto" or requested.get("route_mode") == "auto"
@@ -594,7 +677,14 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "requested_role": _routing_first(_routing_value(record, "requested_role"), requested.get("role")),
         "requested_profile": _routing_first(_routing_value(record, "requested_profile"), requested.get("profile")),
         "requested_risk": _routing_first(_routing_value(record, "requested_risk"), requested.get("risk")),
-        "requested_route": _routing_first(_routing_value(record, "requested_route"), requested.get("route")),
+        "requested_reviewer": _routing_first(
+            _routing_value(record, "requested_reviewer", "requested_route"), requested.get("requested_reviewer")
+        ),
+        # Kept as a compatibility alias for existing Runtime consumers.  The
+        # nested ledger's requested route is a reviewer pin, not route_mode.
+        "requested_route": _routing_first(
+            _routing_value(record, "requested_reviewer", "requested_route"), requested.get("requested_reviewer")
+        ),
         "automatic": automatic,
         "resolved_candidate": _routing_first(_routing_value(record, "resolved_candidate", "candidate"), resolved.get("candidate")),
         "resolved_route": _routing_first(_routing_value(record, "resolved_route", "route"), resolved.get("route")),
@@ -602,7 +692,7 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "resolved_family": _routing_first(_routing_value(record, "resolved_family", "family"), resolved.get("family")),
         "quota_bucket": _routing_first(_routing_value(record, "quota_bucket"), quota_detail.get("bucket")),
         "policy_version": _routing_first(_routing_value(record, "policy_version"), resolved.get("policy_version")),
-        "selection_reason": _routing_first(_routing_value(record, "selection_reason", "reason"), evidence.get("reason")),
+        "selection_reason": _routing_selection_reason(record),
         "selection_trace": selection_trace,
         "selection_reasoning": {
             # The order is deliberate: a candidate must first be eligible and
@@ -625,9 +715,20 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
                 "cheaper_or_idle_not_selected", "rejected_alternatives", "not_selected",
             ),
         },
-        "quota_source": _routing_first(_routing_value(record, "quota_source"), quota_snapshot.get("source")),
-        "quota_freshness": _routing_first(_routing_value(record, "quota_freshness", "quota_fresh_at"), quota_detail.get("fresh_at"), quota_snapshot.get("freshness")),
+        "quota_source": _routing_first(
+            _routing_value(record, "quota_source"), quota_detail.get("source"), quota_snapshot.get("source")
+        ),
+        "quota_freshness": quota_freshness,
+        "quota_freshness_state": _routing_quota_freshness_state(quota_freshness),
+        "quota_fresh_at": _routing_first(
+            _routing_value(record, "quota_fresh_at"), quota_detail.get("fresh_at"),
+            quota_snapshot.get("fresh_at"), quota_snapshot.get("fetched_at"), snapshot_codexbar.get("fetched_at"),
+        ),
         "quota_headroom": _routing_first(_routing_value(record, "quota_headroom"), quota_snapshot.get("headroom")),
+        "quota_headroom_band": _routing_first(
+            _routing_value(record, "quota_headroom_band"), quota_detail.get("headroom_band")
+        ),
+        "credential_bucket": _routing_first(_routing_value(record, "credential_bucket"), quota_detail.get("credential_bucket")),
         "estimated_input_bytes": _routing_first(_routing_value(record, "estimated_input_bytes"), requested.get("estimated_input_bytes")),
         "actual_input_bytes": _routing_value(record, "actual_input_bytes"),
         "actual_output_bytes": _routing_value(record, "actual_output_bytes"),
@@ -642,10 +743,36 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "duration_s": _routing_duration_s(record),
         "failure_classification": _routing_first(_routing_value(record, "failure_classification"), lifecycle.get("failure_classification")),
         "retry_chain": _routing_first(_routing_value(record, "retry_chain", "retry"), retry),
-        "failover_chain": _routing_value(record, "failover_chain", "failover"),
+        "failover_chain": _routing_first(_routing_value(record, "failover_chain", "failover"), retry.get("fallback_from")),
         "replay_status": _routing_first(_routing_value(record, "replay_status", "replay"), replay),
         "cache_status": _routing_value(record, "cache_status", "cache"),
     }
+
+
+def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Collapse decision events into one current reservation assignment."""
+    ordered = sorted(
+        records,
+        key=lambda record: (
+            _parse_iso_datetime(_routing_value(record, "created_at", "timestamp")) or datetime.min.replace(tzinfo=UTC),
+            str(_routing_value(record, "decision_id") or ""),
+        ),
+    )
+    latest = ordered[-1]
+    item = _routing_assignment_item(latest)
+    item["event_history"] = [_routing_event_item(record) for record in ordered]
+    item["event_count"] = len(ordered)
+    item["latest_event"] = item["event_history"][-1]
+    item["timestamp"] = item["latest_event"]["timestamp"]
+    item["selection_reason"] = _routing_first(
+        *(_routing_selection_reason(record) for record in reversed(ordered)), item.get("selection_reason")
+    )
+    quota_snapshot = latest.get("quota", {}).get("snapshot") if isinstance(latest.get("quota"), dict) else {}
+    if not isinstance(quota_snapshot, dict):
+        quota_snapshot = {}
+    item["capacity_evidence"] = _routing_capacity_evidence(ordered, quota_snapshot)
+    item["current_state"] = _routing_first(item.get("reservation_state"), item.get("terminal_status"), item.get("decision_state"))
+    return item
 
 
 def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
@@ -661,7 +788,10 @@ def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
     try:
         ledger = importlib.import_module("scripts.fleet_comms.routing_reservations")
         reader = ledger.list_routing_decisions
-        rows = reader(root=default_plane_root(repo_root=Path(PROJECT_ROOT)), limit=record_limit)
+        # The authority projection returns one record per decision event.  Read
+        # a bounded event window wide enough to return up to ``limit`` distinct
+        # reservations after lifecycle aggregation.
+        rows = reader(root=default_plane_root(repo_root=Path(PROJECT_ROOT)), limit=record_limit * 10)
     except (ImportError, AttributeError):
         return {
             "availability": "unavailable",
@@ -683,11 +813,17 @@ def list_routing_assignments(*, limit: int = 100) -> dict[str, Any]:
             "plane": plane,
             "assignments": [],
         }
-    assignments = [_routing_assignment_item(row) for row in rows[:record_limit]]
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for index, row in enumerate(rows):
+        reservation_id = _routing_value(row, "reservation_id", "source_authority_id")
+        grouping_key = str(reservation_id) if reservation_id is not None else f"unidentified:{index}"
+        grouped.setdefault(grouping_key, []).append(row)
+    assignments = [_routing_assignment_aggregate(records) for records in grouped.values()]
     assignments.sort(
         key=lambda item: _parse_iso_datetime(item.get("timestamp")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
+    assignments = assignments[:record_limit]
     return {
         "availability": "available" if assignments else "empty",
         "plane": plane,

@@ -72,7 +72,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | --- | --- | --- | --- |
 | **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
-| **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | no until #5557 |
+| **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
 | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
@@ -129,7 +129,7 @@ Near-cap and open-circuit buckets receive no automatic work.
 | cursor | false |
 | gemini | false |
 | glm-local | true |
-| grok | false |
+| grok | true |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
@@ -200,7 +200,7 @@ not erase routing evidence.
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
 - Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
-- #5555–#5557 still fail-closed for formal_review_eligible on AGY/Kimi/Grok (orchestrator seats can still *drive* and *request* CF).
+- Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
 ## Closeout checklist
@@ -211,9 +211,9 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 - [x] empty-body process-ask records `transport empty-ask-body` (`tests/test_reply_sidecar.py` asserts raise + status)
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)
 - [x] efficiency CLI: `fleet_comms metrics` / `github-metrics` / `dead-letters` (PR-M on main)
-- [x] isolation runbooks AGY/Kimi/Grok (#5555–#5557 fail-closed residual documented)
+- [x] isolation runbooks AGY/Kimi/Grok; unsupported legacy native-isolation routes remain fail-closed
 - [x] operator finish-mode: message-plane **shadow** default after parity (#5666; dual_write still opt-in)
 - [ ] operator: retention plan dry-run × ≥7 days before scheduled apply (auto-logged by `retention_engine.py plan`; apply still OFF; 3/7 as of 2026-07-23)
-- [x] isolation residual closeout Option C (#5555–57 / wire issues closed; formal CF = claude|codex|glm)
+- [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi K3 adapter present but fail-closed pending its authenticated canary; AGY structurally fail-closed
 - [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke (launchers dual-aware; live multi-CLI soak optional)
 - [ ] optional later: dual_write plane default after longer shadow soak

@@ -94,8 +94,26 @@ def _canonical_review_response_text(response: str) -> str:
     """Extract one JSON object from the two bounded ACP wrapper shapes."""
     stripped = response.strip()
     match = re.fullmatch(r"```json\r?\n(?P<body>.+)\r?\n```", stripped, re.DOTALL)
-    if match is not None:
+    if match is not None and "```" not in match.group("body"):
         return match.group("body").strip()
+    wrapped_match = re.fullmatch(
+        r"(?P<prefix>.{1,500}?)\r?\n```json\r?\n(?P<body>.+)\r?\n```",
+        stripped,
+        re.DOTALL,
+    )
+    if wrapped_match is not None:
+        prefix = wrapped_match.group("prefix")
+        # Admit the common provider wrapper only when it is bounded prose,
+        # followed by exactly one terminal JSON fence. Schema validation still
+        # owns the verdict; this merely normalizes transport decoration.
+        body = wrapped_match.group("body")
+        if (
+            "{" not in prefix
+            and "}" not in prefix
+            and "```" not in prefix
+            and "```" not in body
+        ):
+            return body.strip()
     object_start = stripped.find("{")
     if object_start > 0 and "}" not in stripped[:object_start]:
         try:
@@ -105,6 +123,76 @@ def _canonical_review_response_text(response: str) -> str:
         if not stripped[object_end:].strip():
             return stripped[object_start:object_end]
     return stripped
+
+
+def _finish_authority_job_once(
+    authority: Any,
+    job_id: str,
+    *,
+    worker_id: str,
+    fence_token: int,
+    state: str,
+    result: bytes,
+) -> bool:
+    """Terminalize only while this worker still owns the fenced authority lease."""
+    from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+
+    try:
+        authority.finish_job(
+            job_id,
+            worker_id=worker_id,
+            fence_token=fence_token,
+            state=state,
+            result=result,
+        )
+    except AuthorityStaleLeaseError:
+        return False
+    return True
+
+
+def _settle_routing_reservation_once(
+    routing_ledger: Any,
+    reservation_id: str,
+    **settlement: Any,
+) -> bool:
+    """Settle a durable reservation without leaking cleanup races as tracebacks."""
+    from scripts.fleet_comms.routing_reservations import RoutingReservationError
+
+    try:
+        routing_ledger.settle(reservation_id, **settlement)
+    except RoutingReservationError as exc:
+        if str(exc) not in {"reservation_not_found", "terminal_settlement_conflict"}:
+            raise
+        return False
+    return True
+
+
+def _compute_review_routing_budget() -> dict[str, Any]:
+    """Take a bounded fresh capacity snapshot for this standalone process."""
+    from scripts.api.codexbar_usage import refresh_provider_usage_data
+    from scripts.api.state_router import SUBSCRIPTION_LANES, compute_routing_budget
+
+    # CodexBar's last-known-good cache is process-local. A new review-pr
+    # process therefore cannot use cache-only mode without falsely marking
+    # every subscription lane unavailable and draining the API-backed lanes.
+    budget = compute_routing_budget(fresh_codexbar=True)
+    agents = budget.get("agents") if isinstance(budget, dict) else None
+    unavailable = tuple(
+        lane
+        for lane in SUBSCRIPTION_LANES
+        if isinstance(agents, dict)
+        and isinstance(agents.get(lane), dict)
+        and agents[lane].get("status") in {"unknown", "unavailable"}
+    )
+    if unavailable:
+        # CodexBar provider probes can serialize internally. Retry missing
+        # lanes one at a time so they do not time out behind one another.
+        for lane in unavailable:
+            refresh_provider_usage_data((lane,), timeout_s=5.0)
+        # The retry populated this process's last-known-good cache; do not
+        # launch a second all-provider refresh while projecting it.
+        budget = compute_routing_budget(fresh_codexbar=False)
+    return budget
 
 
 class _ReviewPrLifecycle:
@@ -166,8 +254,11 @@ Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
 example, `0.95`), never a string such as `"high"`. A clean review therefore
 has exactly this shape (replace the explanation, not the field types):
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
-For findings, use priorities `P0`..`P3`, a documented category, and claim type
-`"present"` or `"missing"`; do not invent enum aliases such as `"pass"`.
+Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,
+`confidence`, `category`, `location`, `verbatim`, `why_wrong`, `smallest_fix`,
+and `sources`. Put claim type `"present"` or `"missing"` only inside the
+`location` object alongside `path`, `start_line`, and `end_line`; never add
+`claim_type` at the finding root. Do not invent enum aliases such as `"pass"`.
 """
 
 
@@ -405,7 +496,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     from agent_runtime.runner import invoke_inter_agent
 
     from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_EFFORTS
-    from scripts.api.state_router import compute_routing_budget
     from scripts.fleet_comms.authority import AuthorityService, AuthorityStaleLeaseError
     from scripts.fleet_comms.review_publication import (
         SealedVerdict,
@@ -429,6 +519,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     from ._config import REPO_ROOT
     from ._review_worktree import (
         ReviewTarget,
+        ReviewWorktreeError,
         provision_review_worktree,
         validate_code_review_response,
         verify_clean_review_evidence_reads,
@@ -502,14 +593,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             estimated_input_bytes=estimated_input_bytes,
             requested_reviewer=requested_candidate,
         )
-        try:
-            routing_budget = compute_routing_budget(fresh_codexbar=False)
-        except Exception as exc:
-            routing_budget = {
-                "agents": {},
-                "in_flight": {},
-                "diagnostics": {"stale": True, "routing_budget_error": type(exc).__name__},
-            }
         with RoutingReservationLedger() as routing_ledger, AuthorityService() as authority:
             authority_job = authority.enqueue_formal_review(
                 repository=DEFAULT_REPOSITORY,
@@ -538,6 +621,14 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     return 1
                 raw_response = replay.decode("utf-8")
             else:
+                try:
+                    routing_budget = _compute_review_routing_budget()
+                except Exception as exc:
+                    routing_budget = {
+                        "agents": {},
+                        "in_flight": {},
+                        "diagnostics": {"stale": True, "routing_budget_error": type(exc).__name__},
+                    }
                 if authority_job.state in {"failed", "expired"}:
                     authority_job = authority.retry_job(authority_job.job_id)
                 elif authority_job.state == "dead_lettered":
@@ -673,7 +764,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             ttl_seconds=timeout + 30,
                         )
                     except RoutingReservationUnavailable as exc:
-                        authority.finish_job(
+                        _finish_authority_job_once(
+                            authority,
                             authority_job.job_id,
                             worker_id=worker_id,
                             fence_token=lease.fence_token,
@@ -695,12 +787,14 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
                     requested_effort = str(getattr(args, "effort", None) or "").strip() or None
                     if requested_effort is not None and requested_effort != effort:
-                        routing_ledger.settle(
+                        _settle_routing_reservation_once(
+                            routing_ledger,
                             routing_reservation.reservation_id,
                             status="cancelled",
                             terminal_evidence={"reason": "invalid_effort_pin"},
                         )
-                        authority.finish_job(
+                        _finish_authority_job_once(
+                            authority,
                             authority_job.job_id,
                             worker_id=worker_id,
                             fence_token=lease.fence_token,
@@ -755,22 +849,32 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         result=result,
                         exc=invocation_error,
                     )
-                    routing_ledger.fail_and_release(
+                    routing_settled = _settle_routing_reservation_once(
+                        routing_ledger,
                         routing_reservation.reservation_id,
-                        classification,
+                        status="failed",
                         actual_input_bytes=estimated_input_bytes,
                         actual_output_bytes=len(raw_response.encode("utf-8")),
                         actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
                         actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
+                        failure_classification=classification,
                         circuit_open_seconds=300,
                     )
-                    authority.finish_job(
+                    authority_finished = _finish_authority_job_once(
+                        authority,
                         authority_job.job_id,
                         worker_id=worker_id,
                         fence_token=lease.fence_token,
                         state="failed",
                         result=json.dumps(failure_receipt, sort_keys=True).encode("utf-8"),
                     )
+                    if not routing_settled or not authority_finished:
+                        print(
+                            "review-pr: durable routing or authority state changed while the reviewer was running; "
+                            "the provider result was not accepted",
+                            file=sys.stderr,
+                        )
+                        return 1
                     can_fallback = _fallback_permitted(
                         route_mode=route_mode,
                         allow_explicit_fallback=allow_explicit_fallback,
@@ -788,8 +892,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     authority_job = authority.retry_job(authority_job.job_id)
 
             if not raw_response:
-                if authority_job.state != "complete":
-                    authority.finish_job(
+                if not replayed:
+                    if routing_reservation is not None:
+                        _settle_routing_reservation_once(
+                            routing_ledger,
+                            routing_reservation.reservation_id,
+                            status="failed",
+                            actual_input_bytes=estimated_input_bytes,
+                            actual_output_bytes=0,
+                            failure_classification="result_invalid",
+                        )
+                    _finish_authority_job_once(
+                        authority,
                         authority_job.job_id,
                         worker_id=worker_id,
                         fence_token=lease.fence_token,
@@ -816,34 +930,38 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         evidence_root=checkout.path,
                         changed_paths=checkout.changed_paths,
                     )
-            except BaseException:
-                if authority_job.state != "complete":
-                    authority.finish_job(
+            except ReviewWorktreeError as exc:
+                if not replayed:
+                    if routing_reservation is not None:
+                        _settle_routing_reservation_once(
+                            routing_ledger,
+                            routing_reservation.reservation_id,
+                            status="failed",
+                            actual_input_bytes=estimated_input_bytes,
+                            actual_output_bytes=len(raw_response.encode("utf-8")),
+                            actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
+                            actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
+                            failure_classification="result_invalid",
+                        )
+                    authority_finished = _finish_authority_job_once(
+                        authority,
                         authority_job.job_id,
                         worker_id=worker_id,
                         fence_token=lease.fence_token,
                         state="failed",
                         result=raw_response.encode("utf-8"),
                     )
-                    if routing_reservation is not None:
-                        routing_ledger.fail_and_release(
-                            routing_reservation.reservation_id,
-                            "result_invalid",
-                            actual_input_bytes=estimated_input_bytes,
-                            actual_output_bytes=len(raw_response.encode("utf-8")),
-                            actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
-                            actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
+                    if not authority_finished:
+                        print(
+                            "review-pr: authority lease was lost while validating the reviewer result; "
+                            "the routing reservation was released",
+                            file=sys.stderr,
                         )
-                raise
-            if authority_job.state != "complete":
-                authority.finish_job(
-                    authority_job.job_id,
-                    worker_id=worker_id,
-                    fence_token=lease.fence_token,
-                    state="complete",
-                    result=canonical_response.encode("utf-8"),
-                )
-                routing_ledger.settle(
+                print(f"review-pr: reviewer result invalid: {exc}", file=sys.stderr)
+                return 1
+            if not replayed:
+                routing_settled = _settle_routing_reservation_once(
+                    routing_ledger,
                     routing_reservation.reservation_id,
                     status="complete",
                     actual_input_bytes=(
@@ -861,6 +979,28 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "evidence_metrics": evidence_metrics,
                     },
                 )
+                if not routing_settled:
+                    print(
+                        "review-pr: routing reservation disappeared before verdict acceptance; "
+                        "the provider result was not published",
+                        file=sys.stderr,
+                    )
+                    return 1
+                authority_finished = _finish_authority_job_once(
+                    authority,
+                    authority_job.job_id,
+                    worker_id=worker_id,
+                    fence_token=lease.fence_token,
+                    state="complete",
+                    result=canonical_response.encode("utf-8"),
+                )
+                if not authority_finished:
+                    print(
+                        "review-pr: authority lease was lost before verdict acceptance; "
+                        "the completed routing usage receipt was retained but the verdict was not published",
+                        file=sys.stderr,
+                    )
+                    return 1
             canonical = json.loads(canonical_response)
             review_evidence = parse_review_evidence(canonical)
             verdict = (

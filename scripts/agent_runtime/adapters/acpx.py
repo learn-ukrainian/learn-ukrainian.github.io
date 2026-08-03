@@ -212,6 +212,10 @@ GROK_SHADOW_MODEL = "grok-4.5"
 GROK_SHADOW_EFFORT = "high"
 _GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
 _GROK_PROFILE_SHA256 = "5831398f7204be279e908371b5f0990d5e5e725a323091232e184083649d7158"
+_GROK_SEALED_REVIEW_PROFILE_PATH = (
+    _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-sealed-review.md"
+)
+_GROK_SEALED_REVIEW_PROFILE_SHA256 = "e6527f1f0f4b67f8b52fed9f7ca74f7ecd35e0e76920c54f23639465ddac5605"
 # Non-secret acpx 0.13.0 auth-method selector for a cached native Grok login.
 GROK_AUTH_CACHED_TOKEN_ENV = "ACPX_AUTH_CACHED_TOKEN"
 # Ambient XAI API-key selectors that would compete with cached_token under
@@ -249,6 +253,32 @@ _SEALED_REVIEW_TOOL_NAMES = (
     "mcp__sealed_review__read_required_all",
     "mcp__sealed_review__search_text",
 )
+_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES = tuple(
+    name.removeprefix("mcp__") for name in _SEALED_REVIEW_TOOL_NAMES
+)
+
+
+def _normalize_grok_sealed_result(result: object, *, tool_name: str) -> object:
+    """Unwrap Grok's authenticated MCP envelope into the provider-neutral result."""
+    if not tool_name.startswith("sealed_review__") or not isinstance(result, dict):
+        return result
+    if (
+        result.get("type") != "MCP"
+        or result.get("server_name") != "sealed_review"
+        or result.get("tool_name") != tool_name.removeprefix("sealed_review__")
+    ):
+        return result
+    output = result.get("output")
+    if not isinstance(output, dict) or set(output) != {"OkayOutput"}:
+        return result
+    serialized = output.get("OkayOutput")
+    if not isinstance(serialized, str):
+        return result
+    try:
+        decoded = json.loads(serialized)
+    except json.JSONDecodeError:
+        return result
+    return decoded if isinstance(decoded, dict) else result
 
 
 def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> str | None:
@@ -436,7 +466,10 @@ def active_communication_scope(*, source: str, agent: str, target_agent: str):
     fixed ACP participant and seals its provenance for the adapter plan.
     """
     validated_source = _require_local_metadata_field(
-        "source", source, adapter_label="AcpxTransport"
+        "source",
+        source,
+        adapter_label="AcpxTransport",
+        pattern=_SOURCE_METADATA_FIELD_RE,
     )
     if validated_source == "unknown":
         raise AcpxShadowRefusalError(
@@ -474,6 +507,7 @@ def current_communication_provenance() -> AcpxTransportProvenance | None:
 # metadata via these fields.
 _METADATA_FIELD_MAX_LEN = 200
 _METADATA_FIELD_RE = re.compile(r"^[A-Za-z0-9._:-]+$")
+_SOURCE_METADATA_FIELD_RE = re.compile(r"^[A-Za-z0-9._:-]+(?:/[A-Za-z0-9._:-]+)*$")
 
 # Real ACP `StopReason` values (agentclientprotocol/sdk schema.json
 # `$defs.StopReason`). "cancelled" is recognized but handled as its own
@@ -613,6 +647,7 @@ def _require_local_metadata_field(
     value: str | None,
     *,
     adapter_label: str = "AcpxAdapter",
+    pattern: re.Pattern[str] = _METADATA_FIELD_RE,
 ) -> str:
     """Validate a local runtime-metadata identifier, or refuse before spawn.
 
@@ -631,10 +666,10 @@ def _require_local_metadata_field(
             f"{adapter_label}: {name} exceeds the {_METADATA_FIELD_MAX_LEN}-char "
             "bound for local metadata"
         )
-    if not _METADATA_FIELD_RE.match(stripped):
+    if not pattern.fullmatch(stripped):
         raise AcpxShadowRefusalError(
             f"{adapter_label}: {name}={stripped!r} must match a bounded local identifier "
-            f"pattern ({_METADATA_FIELD_RE.pattern}); refusing to forward unsafe metadata"
+            f"pattern ({pattern.pattern}); refusing to forward unsafe metadata"
         )
     return stripped
 
@@ -797,11 +832,14 @@ def _require_compatible_acpx_binary(
     checkout's installation.
     """
     candidate = _ACPX_BINARY
+    main_root: Path | None = None
     if not candidate.is_file() and candidate == _DEFAULT_ACPX_BINARY:
-        try:
-            main_root = resolve_main_root(cwd)
-        except NotAGitRepositoryError:
-            main_root = None
+        for discovery_root in (cwd, _REPO_ROOT):
+            try:
+                main_root = resolve_main_root(discovery_root)
+                break
+            except NotAGitRepositoryError:
+                continue
         if main_root is not None:
             primary_candidate = main_root / "node_modules" / ".bin" / "acpx"
             if primary_candidate.is_file():
@@ -810,12 +848,12 @@ def _require_compatible_acpx_binary(
     if not candidate.is_file():
         primary_hint = ""
         if _ACPX_BINARY == _DEFAULT_ACPX_BINARY:
-            try:
+            if main_root is not None:
                 primary_hint = (
                     f"; canonical primary candidate is "
-                    f"{resolve_main_root(cwd) / 'node_modules' / '.bin' / 'acpx'}"
+                    f"{main_root / 'node_modules' / '.bin' / 'acpx'}"
                 )
-            except NotAGitRepositoryError:
+            else:
                 primary_hint = "; cwd is not inside a Git checkout, so no canonical primary install is available"
         raise AcpxShadowRefusalError(
             f"{adapter_label}: project-local acpx binary not found at {candidate}{primary_hint}; run "
@@ -847,7 +885,15 @@ def _confinement_prefix_argv(
     if sealed_review_mcp_config is not None:
         permission_policy = json.dumps(
             {
-                "autoApprove": list(_SEALED_REVIEW_TOOL_NAMES),
+                # ACP agents do not agree on MCP tool spelling. Claude/Kimi
+                # surface ``mcp__server__tool`` while native Grok reports
+                # ``server__tool`` through its search_tool/use_tool wrapper.
+                # Both spellings still name only the same parent-owned sealed
+                # server; the explicit MCP config replaces ambient servers.
+                "autoApprove": [
+                    *_SEALED_REVIEW_TOOL_NAMES,
+                    *_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES,
+                ],
                 "defaultAction": "deny",
             },
             separators=(",", ":"),
@@ -955,23 +1001,28 @@ def _resolve_grok_binary() -> str:
     return str(resolved)
 
 
-def _require_grok_profile() -> str:
-    """Return the exact project-owned no-tool profile, or refuse before spawn."""
+def _require_grok_profile(*, sealed_review: bool = False) -> str:
+    """Return the exact project-owned profile for this invocation."""
+    profile_path = _GROK_SEALED_REVIEW_PROFILE_PATH if sealed_review else _GROK_PROFILE_PATH
+    expected_sha256 = (
+        _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
+    )
+    profile_label = "sealed-review" if sealed_review else "no-tool"
     try:
-        content = _GROK_PROFILE_PATH.read_bytes()
+        content = profile_path.read_bytes()
     except OSError as exc:
         raise AcpxShadowRefusalError(
-            f"AcpxGrokShadowAdapter: required no-tool Grok profile unavailable at "
-            f"{_GROK_PROFILE_PATH}: {exc}"
+            f"AcpxGrokShadowAdapter: required {profile_label} Grok profile unavailable at "
+            f"{profile_path}: {exc}"
         ) from exc
     observed = hashlib.sha256(content).hexdigest()
-    if observed != _GROK_PROFILE_SHA256:
+    if observed != expected_sha256:
         raise AcpxShadowRefusalError(
-            "AcpxGrokShadowAdapter: no-tool Grok profile digest mismatch "
-            f"(observed {observed!r}, expected {_GROK_PROFILE_SHA256!r}); "
+            f"AcpxGrokShadowAdapter: {profile_label} Grok profile digest mismatch "
+            f"(observed {observed!r}, expected {expected_sha256!r}); "
             "refusing to spawn with an unreviewed tool policy"
         )
-    return str(_GROK_PROFILE_PATH)
+    return str(profile_path)
 
 
 def _build_grok_agent_command(abs_grok: str, profile_path: str) -> str:
@@ -1489,6 +1540,32 @@ class AcpxAdapter:
                 failure_code="protocol_output_limit",
             )
 
+        normalized_tool_calls: list[dict[str, Any]] = []
+        for tool_call_id in tool_call_order:
+            record = tool_calls_by_id[tool_call_id]
+            arguments = record.get("arguments")
+            if (
+                isinstance(arguments, dict)
+                and arguments.get("variant") == "UseTool"
+                and isinstance(arguments.get("tool_name"), str)
+                and arguments["tool_name"]
+                and isinstance(arguments.get("tool_input"), dict)
+            ):
+                # Grok emits a generic ``use_tool`` ACP call whose raw input
+                # contains the actual MCP operation. Normalize that wrapper
+                # into the same trace shape produced by direct ACP tools so
+                # sealed-evidence coverage remains provider-neutral.
+                record = {
+                    **record,
+                    "name": arguments["tool_name"],
+                    "arguments": arguments["tool_input"],
+                    "result": _normalize_grok_sealed_result(
+                        record.get("result"),
+                        tool_name=arguments["tool_name"],
+                    ),
+                }
+            normalized_tool_calls.append(record)
+
         return ParseResult(
             ok=True,
             response=response,
@@ -1496,7 +1573,7 @@ class AcpxAdapter:
             rate_limited=False,
             session_id=None,
             tokens=tokens,
-            tool_calls=[tool_calls_by_id[tool_call_id] for tool_call_id in tool_call_order],
+            tool_calls=normalized_tool_calls,
         )
 
     @staticmethod
@@ -1949,7 +2026,11 @@ class AcpxGrokShadowAdapter:
                 f"{', '.join(missing_capabilities)}; refusing to spawn"
             )
 
-        profile_path = _require_grok_profile()
+        sealed_review = sealed_review_mcp_config is not None
+        profile_path = _require_grok_profile(sealed_review=sealed_review)
+        profile_sha256 = (
+            _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
+        )
         agent_command = _build_grok_agent_command(grok_binary, profile_path)
         cmd: list[str] = _confinement_prefix_argv(
             acpx_binary,
@@ -1967,7 +2048,7 @@ class AcpxGrokShadowAdapter:
             "acpx_cli_compatibility": ACPX_CLI_COMPATIBILITY_CONTRACT,
             "grok_cli_version": observed_grok,
             "grok_cli_compatibility": GROK_CLI_COMPATIBILITY_CONTRACT,
-            "grok_profile_sha256": _GROK_PROFILE_SHA256,
+            "grok_profile_sha256": profile_sha256,
             "target_agent": "grok",
             # Effective values are fixed; never fabricate caller-supplied
             # alternatives in telemetry.
@@ -1980,6 +2061,8 @@ class AcpxGrokShadowAdapter:
         if tc.get("acpx_transport") is True:
             metadata["acpx_transport"] = True
             metadata.update(_communication_metadata())
+        if sealed_review:
+            metadata["tool_policy"] = "sealed-review-only"
 
         return InvocationPlan(
             cmd=cmd,

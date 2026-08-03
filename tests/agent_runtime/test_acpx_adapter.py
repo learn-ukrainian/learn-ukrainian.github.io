@@ -286,6 +286,26 @@ def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch
     assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
+def test_transport_source_accepts_canonical_agent_path_but_rejects_empty_segments():
+    with acpx_module.active_communication_scope(
+        source="codex/orchestrator",
+        agent="kimi",
+        target_agent="kimi",
+    ):
+        provenance = acpx_module.current_communication_provenance()
+        assert provenance is not None
+        assert provenance.source == "codex/orchestrator"
+
+    for invalid in ("/codex", "codex/", "codex//orchestrator"):
+        with pytest.raises(AcpxShadowRefusalError, match="bounded local identifier"):
+            with acpx_module.active_communication_scope(
+                source=invalid,
+                agent="kimi",
+                target_agent="kimi",
+            ):
+                pass
+
+
 # ---------------------------------------------------------------------------
 # Shadow marker + tool_config allowlist
 # ---------------------------------------------------------------------------
@@ -565,6 +585,37 @@ def test_build_invocation_non_git_cwd_refuses_without_global_fallback(tmp_path, 
 
     with pytest.raises(AcpxShadowRefusalError, match="no canonical primary install is available"):
         _build(AcpxAdapter(), cwd=tmp_path)
+
+
+def test_build_invocation_non_git_snapshot_uses_module_checkout_primary(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    module_root = tmp_path / "primary" / ".worktrees" / "dispatch" / "codex" / "acp"
+    module_candidate = module_root / "node_modules" / ".bin" / "acpx"
+    _set_default_binary_candidate(monkeypatch, module_candidate)
+    monkeypatch.setattr(acpx_module, "_REPO_ROOT", module_root)
+    primary = tmp_path / "primary"
+    primary_binary = primary / "node_modules" / ".bin" / "acpx"
+    primary_binary.parent.mkdir(parents=True)
+    primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    primary_binary.chmod(0o755)
+
+    def resolve(root: Path) -> Path:
+        if root == snapshot:
+            raise acpx_module.NotAGitRepositoryError(str(root))
+        assert root == module_root
+        return primary
+
+    monkeypatch.setattr(acpx_module, "resolve_main_root", resolve)
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_acpx_cli_compatibility",
+        lambda _binary, *, builtin_agent: ("0.13.0", ()),
+    )
+
+    plan = _build(AcpxAdapter(), cwd=snapshot)
+    assert plan.cmd[0] == str(primary_binary)
 
 
 def test_build_invocation_refuses_when_primary_pin_is_missing(tmp_path, monkeypatch):
@@ -1379,6 +1430,54 @@ def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch)
     assert "shadow compare prompt" not in plan.cmd
 
 
+def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    grok = _stub_grok(monkeypatch, tmp_path)
+    sealed_config = str(tmp_path / "sealed-config.json")
+    monkeypatch.setattr(
+        acpx_module,
+        "_validate_sealed_review_mcp_config",
+        lambda raw, *, adapter_label: str(raw),
+    )
+
+    plan = _build_grok(
+        AcpxGrokShadowAdapter(),
+        cwd=tmp_path,
+        tool_config={
+            "acpx_shadow": True,
+            "target_agent": "grok",
+            "correlation_id": "corr-1",
+            "idempotency_key": "idem-1",
+            "sealed_review_mcp_config": sealed_config,
+        },
+    )
+
+    agent_command = plan.cmd[plan.cmd.index("--agent") + 1]
+    assert shlex.split(agent_command) == [
+        str(grok),
+        "agent",
+        "--model",
+        "grok-4.5",
+        "--reasoning-effort",
+        "high",
+        "--agent-profile",
+        str(acpx_module._GROK_SEALED_REVIEW_PROFILE_PATH),
+        "--no-leader",
+        "stdio",
+    ]
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert ("--mcp-config", sealed_config) in pairs
+    assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
+    assert plan.metadata["grok_profile_sha256"] == acpx_module._GROK_SEALED_REVIEW_PROFILE_SHA256
+    assert plan.metadata["tool_policy"] == "sealed-review-only"
+    profile = acpx_module._GROK_SEALED_REVIEW_PROFILE_PATH.read_text(encoding="utf-8")
+    assert "tools:\n  - search_tool\n  - use_tool\n" in profile
+    assert "mcp__sealed_review__read_file" not in profile
+    assert "do not call\n`sealed_review__read_required_all`" in profile
+    assert "`max_bytes=16000`" in profile
+
+
 def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -1604,6 +1703,41 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert plan.metadata["model"] == fixed_model
     if participant == "claude":
         assert plan.metadata["effort"] == "high"
+
+
+def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    sealed_config = str(tmp_path / "sealed-config.json")
+    monkeypatch.setattr(
+        acpx_module,
+        "_validate_sealed_review_mcp_config",
+        lambda raw, *, adapter_label: str(raw),
+    )
+    with acpx_module.active_discussion_scope():
+        plan = AcpxKimiCcShadowAdapter().build_invocation(
+            prompt="review the sealed exact head",
+            mode="read-only",
+            cwd=tmp_path,
+            model="kimi-code/k3",
+            task_id="t-kimi-review",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "kimi",
+                "correlation_id": "corr-kimi",
+                "idempotency_key": "idem-kimi",
+                "sealed_review_mcp_config": sealed_config,
+            },
+        )
+
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert plan.cmd[-4:] == ["kimi", "exec", "-f", "-"]
+    assert ("--model", "kimi-code/k3") in pairs
+    assert ("--mcp-config", sealed_config) in pairs
+    assert ("--allowed-tools", ",".join(acpx_module._SEALED_REVIEW_TOOL_NAMES)) in pairs
+    assert plan.metadata["tool_policy"] == "sealed-review-only"
+    assert plan.metadata["model"] == "kimi-code/k3"
 
 
 def test_builtin_discussion_seat_rejects_shadow_marker_wrong_target_and_session(tmp_path, monkeypatch):
@@ -1957,6 +2091,9 @@ def test_build_grok_agent_command_quotes_absolute_paths_with_spaces(tmp_path):
 
 def test_grok_profile_is_exact_and_digest_mismatch_fails_closed(tmp_path, monkeypatch):
     assert acpx_module._require_grok_profile() == str(acpx_module._GROK_PROFILE_PATH)
+    assert acpx_module._require_grok_profile(sealed_review=True) == str(
+        acpx_module._GROK_SEALED_REVIEW_PROFILE_PATH
+    )
 
     changed = tmp_path / "changed-profile.md"
     changed.write_text("---\nname: changed\n---\n", encoding="utf-8")
