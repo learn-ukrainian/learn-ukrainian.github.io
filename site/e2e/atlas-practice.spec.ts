@@ -651,8 +651,8 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
 }) => {
   await context.clearCookies();
 
-  // Fixture index: 3 single-mode items, so the full-level estimate is a small, exact
-  // number (not a live-corpus count that could drift) — well under the 8-per-session cap.
+  // The soft-CEFR planner reports the honest capped new-card estimate for the selected level;
+  // assert that rendered count rather than the old hard-CEFR fixture cardinality.
   await page.route('**/lexicon/practice-index.A1.json', (route) =>
     route.fulfill({
       contentType: 'application/json',
@@ -692,8 +692,8 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
   await page.goto('/words-of-the-day/practice/');
 
   const estimate = page.getByTestId('practice-session-scope');
-  // Before selecting the custom deck, the estimate describes the full (3-item) fixture level.
-  await expect(estimate).toContainText('3 нов');
+  // Before selecting the custom deck, the estimate reports the full-level soft-CEFR scope.
+  await expect(estimate).toContainText('8 нових');
 
   await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
 
