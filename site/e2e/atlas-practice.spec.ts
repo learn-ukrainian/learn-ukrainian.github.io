@@ -11,6 +11,23 @@ function trackConsoleErrors(page: Page): string[] {
   return errors;
 }
 
+/**
+ * Opus P0-1 folded Drive sync + deck filter behind a `<details>` disclosure
+ * (`data-testid="practice-secondary-tools"`), below the mode grid. Deck chips,
+ * the "Manage Decks" action, and the switch-session-offer it can surface all
+ * live inside that fold — open it before touching any of them. Idempotent: a
+ * caller can invoke it repeatedly across deck switches within one test.
+ */
+async function openSecondaryTools(page: Page): Promise<void> {
+  const panel = page.getByTestId('practice-secondary-tools');
+  await expect(panel).toBeVisible();
+  const open = await panel.getAttribute('open');
+  if (open === null) {
+    await panel.locator('summary').click();
+  }
+  await expect(panel).toHaveAttribute('open', '');
+}
+
 test('browse supports search, category, and letter entry points without dumping all cards', async ({ page }) => {
   await page.goto('/lexicon/browse/');
 
@@ -537,6 +554,9 @@ test('A5: switching level with a session in progress offers a fresh session; acc
   // The A1 setup session is over; deplete A1 so A2's background lower-level merge (which
   // always fetches A1 as a lower level) cannot reintroduce it into the accepted pool.
   fixtures.depleteLowerLevel('A1');
+  // The switch-session-offer this triggers lives inside the same folded panel as
+  // the deck filter, even though the A2 level button itself is above the fold.
+  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: 'A2' }).click();
 
@@ -575,6 +595,7 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
     );
   });
   await prepareResumableMixedSession(page);
+  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
   await page.getByRole('button', { name: /Practice|Практика/ }).first().click();
@@ -588,12 +609,13 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
   await page.getByTestId('practice-switch-session-accept').click();
 
   await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
-  // The custom deck has exactly one word with no cloze content, so `ensureDeckCustomSetCoverage`
-  // gives it 7 practicable modes (flashcards/stress/classify/paradigm/synonym/paronym/heritage) —
-  // a mixed-mode session over ONE such word plans exactly 7 mode-cards. That number is wildly
-  // different from a full-level session (hundreds of due/new cards) — proof the pool is the
-  // accepted deck, not the full corpus.
-  await expect(page.getByTestId('practice-session-progress')).toContainText('0/7');
+  // The custom deck has exactly one word that resolves to no Atlas/cloze content, so the
+  // P0-3 mode-claim honesty fix in `ensureDeckCustomSetCoverage` only claims the one mode it
+  // can actually deliver (flashcards) rather than promising modes with nothing behind them.
+  // A mixed-mode session over ONE such word plans exactly 1 mode-card — wildly different from
+  // a full-level session (hundreds of due/new cards) — proof the pool is the accepted deck,
+  // not the full corpus.
+  await expect(page.getByTestId('practice-session-progress')).toContainText('0/1');
 
   const snapshot = await readMixedSessionSnapshot(page);
   expect(snapshot?.deckId).toBe('e2e-custom-deck');
@@ -603,6 +625,7 @@ test('A5b: declining the switch offer reverts the selection and leaves the sessi
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
   await prepareResumableMixedSession(page);
+  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.getByTestId('practice-switch-session-offer')).toBeVisible();
@@ -696,6 +719,7 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
   // Before selecting the custom deck, the estimate reports the full-level soft-CEFR scope.
   await expect(estimate).toContainText('8 нових');
 
+  await openSecondaryTools(page);
   await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
 
   // F1-F3 (PR #5837) scoped the two SESSION-start paths to the chosen deck via
@@ -795,6 +819,7 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
   }, [catDeck, orphanDeck] as const);
 
   await page.goto('/words-of-the-day/practice/');
+  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Cat Deck');
@@ -861,6 +886,7 @@ test('A8: two different custom decks show different daily-zone sets, each drawn 
   );
 
   await page.goto('/words-of-the-day/practice/');
+  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /E2E D10 Alpha Deck/ }).click();
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Alpha Deck');
@@ -887,6 +913,7 @@ test('A9a: a deck-scoped daily set is stable within a day and rotates across day
   async function selectDeckAndReadWords(clockTime: string): Promise<string[]> {
     await page.clock.setFixedTime(new Date(clockTime));
     await page.goto('/words-of-the-day/practice/');
+    await openSecondaryTools(page);
     await page.getByRole('button', { name: /E2E D10 Rotation Deck/ }).click();
     await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Rotation Deck');
     return readDailyDeckWords(page);
