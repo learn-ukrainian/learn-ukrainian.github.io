@@ -17,6 +17,7 @@ from scripts.review.reviewer_resolver import (
     DEEPSEEK_V4_PRO,
     GLM,
     GROK_4_5,
+    GROK_4_5_CURSOR_FALLBACK,
     KIMI_K3,
     POOL,
     QWEN,
@@ -71,7 +72,7 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
     fleet = yaml.safe_load((root / "scripts/config/fleet_communications.yaml").read_text(encoding="utf-8"))
     assert fleet["formal_review_eligibility_source"].endswith("#review_scheduler.endpoints")
     policy = catalog["review_scheduler"]["endpoints"]
-    aliases = {"glm-local": "glm"}
+    aliases = {"glm-local": "glm", "kimi": "kimicc"}
     for endpoint in fleet["endpoints"]:
         policy_name = aliases.get(endpoint["name"], endpoint["name"])
         if policy_name in policy:
@@ -129,12 +130,11 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
         assert resolution.selected.name == "claude-sonnet-5", risk
 
 
-def test_high_risk_anthropic_author_gets_terra_as_formal_gate():
+def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
-    assert resolution.selected.name == "gpt-5.6-terra"
-    assert resolution.selected.concrete_model == "gpt-5.6-terra"
-    assert resolution.selected.route == "codex"
-    assert resolution.selected.transport == "native_codex"
+    assert resolution.selected is not None
+    assert resolution.selected.name == "grok-4.5"
+    assert resolution.selected.suitability_rank == 0
 
 
 def test_critical_anthropic_author_still_gets_sol_as_formal_gate():
@@ -317,7 +317,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
     assert unknown.substitution_note is None
 
 
-def test_near_cap_receives_no_new_automatic_assignment():
+def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallback():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="claude",
@@ -325,7 +325,8 @@ def test_near_cap_receives_no_new_automatic_assignment():
             routing_snapshot={"codex": "near_cap", "cursor": "healthy"},
         )
     )
-    assert resolution.selected is None
+    assert resolution.selected is not None
+    assert resolution.selected.name == "grok-4.5"
     terra = next(item for item in resolution.trace if item.name == "gpt-5.6-terra")
     assert terra.status == "excluded"
     assert "automatic assignments are prohibited" in terra.reason
@@ -470,7 +471,7 @@ def test_required_capabilities_and_isolation_fail_closed():
     assert "capabilities" in missing.reason
 
     isolation = evaluate_candidate(
-        GROK_4_5,
+        GROK_4_5_CURSOR_FALLBACK,
         ResolverInputs(author_model="claude", isolation_required=True, formal_review=False),
         author_family="anthropic",
     )
@@ -607,6 +608,41 @@ def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authori
     assert assigned_bytes == {"codex": 40_000, "claude": 80_000}
 
 
+def test_ineligible_kimi_k3_never_receives_automatic_review_load():
+    counts = {"grok-4.5": 0, "kimi-k3": 0}
+    assigned_bytes = {"grok": 0, "kimi": 0}
+
+    for index in range(20):
+        runtime_state = {
+            "agents": {
+                route: {
+                    "status": "healthy",
+                    "scheduler": {
+                        "completed_input_bytes": assigned,
+                        "active_reserved_input_bytes": 0,
+                        "quota_remaining_pct": 80,
+                    },
+                }
+                for route, assigned in assigned_bytes.items()
+            }
+        }
+        resolution = resolve_reviewer(
+            ResolverInputs(author_model="claude", risk="high", exact_head=f"{index:040x}"),
+            runtime_state=runtime_state,
+        )
+        selected = resolution.selected
+        assert selected is not None
+        assert selected.name == "grok-4.5"
+        counts[selected.name] += 1
+        assigned_bytes[selected.quota_bucket] += 1_000
+        kimi_trace = next(item for item in resolution.trace if item.name == "kimi-k3")
+        assert kimi_trace.status == "excluded"
+        assert "authenticated K3 sealed MCP canary" in kimi_trace.reason
+
+    assert counts == {"grok-4.5": 20, "kimi-k3": 0}
+    assert assigned_bytes == {"grok": 20_000, "kimi": 0}
+
+
 def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier():
     weaker = REVIEW_CANDIDATES["pool-xs"]
     resolution = resolve_reviewer(
@@ -698,12 +734,16 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate():
     assert "hard eligibility" in unsafe.fail_closed_reason
 
 
-def test_formal_ineligible_and_k3_participant_identity_are_explicit():
+def test_formal_k3_participant_identity_is_explicit():
     k3 = REVIEW_CANDIDATES["kimi-k3"]
     assert k3.route == "kimicc"
     resolution = resolve_reviewer(ResolverInputs(author_model="codex"), ladder=((k3,),))
     assert resolution.selected is None
-    assert "not yet authenticated end-to-end" in resolution.trace[0].reason
+    result = resolution.trace[0]
+    assert result.name == "kimi-k3"
+    assert result.transport == "native_kimi"
+    assert result.participant == "kimicc"
+    assert "authenticated K3 sealed MCP canary" in result.reason
 
 
 def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is_unavailable():
@@ -720,6 +760,8 @@ def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is
             "agents": {
                 "codex": {"status": "unhealthy"},
                 "claude": {"status": "unhealthy"},
+                "grok": {"status": "unhealthy"},
+                "kimi": {"status": "unhealthy"},
             }
         },
     )

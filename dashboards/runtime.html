@@ -447,6 +447,17 @@ function routingReasoning(item) {
   </details>`;
 }
 
+function routingEventTimeline(item) {
+  const events = Array.isArray(item.event_history) ? item.event_history : [];
+  if (!events.length) return routingFact('Event history', '—');
+  return `<details><summary class="muted">Event history (${escapeHtml(String(item.event_count || events.length))})</summary>
+    ${events.map(event => routingFact(
+      `${displayRouteValue(event.event_type)} / ${displayRouteValue(event.state)}`,
+      `${displayRouteValue(event.decision_id)} · ${formatTs(event.timestamp)}`,
+    )).join('')}
+  </details>`;
+}
+
 function renderRoutingAssignments(data) {
   const content = document.getElementById('routing-assignments-content');
   const plane = data && typeof data.plane === 'object' ? data.plane : {};
@@ -464,24 +475,27 @@ function renderRoutingAssignments(data) {
     return;
   }
   content.innerHTML = `${planeMarkup}<table class="routing-table">
-    <thead><tr><th>Authority / time</th><th>Initiator</th><th>Request</th><th>Resolved route</th><th>Quota &amp; work</th><th>Terminal</th></tr></thead>
+    <thead><tr><th>Reservation / activity</th><th>Initiator</th><th>Request</th><th>Selected route</th><th>Quota &amp; capacity</th><th>Current state</th></tr></thead>
     <tbody>${assignments.map(item => {
       const routeClass = item.automatic === true ? 'route-auto' : 'route-explicit';
       const routeLabel = item.automatic === true ? 'AUTOMATIC' : 'EXPLICIT';
       const details = [
         routingFact('Policy', item.policy_version), routingFact('Reason', item.selection_reason), routingFact('Trace', item.selection_trace),
-        routingFact('Quota source / freshness / headroom', `${displayRouteValue(item.quota_source)} / ${displayRouteValue(item.quota_freshness)} / ${displayRouteValue(item.quota_headroom)}`),
+        routingFact('Quota source / freshness state / recorded freshness / checked at', `${displayRouteValue(item.quota_source)} / ${displayRouteValue(item.quota_freshness_state)} / ${displayRouteValue(item.quota_freshness)} / ${formatTs(item.quota_fresh_at)}`),
+        routingFact('Quota bucket / credential bucket / headroom band', `${displayRouteValue(item.quota_bucket)} / ${displayRouteValue(item.credential_bucket)} / ${displayRouteValue(item.quota_headroom_band)}`),
+        routingFact('Capacity / load evidence', item.capacity_evidence),
         routingFact('Estimated input / actual work / output / tokens', `${displayRouteValue(item.estimated_input_bytes)} / ${displayRouteValue(item.actual_work_bytes)} / ${displayRouteValue(item.actual_output_bytes)} / ${displayRouteValue(item.actual_tokens)}`),
         routingFact('Reservation / expiry / started / settled', `${displayRouteValue(item.reservation_state)} / ${displayRouteValue(item.expires_at)} / ${displayRouteValue(item.started_at)} / ${displayRouteValue(item.settled_at)}`),
         routingFact('Retry / failover / replay / cache', `${displayRouteValue(item.retry_chain)} / ${displayRouteValue(item.failover_chain)} / ${displayRouteValue(item.replay_status)} / ${displayRouteValue(item.cache_status)}`),
+        routingEventTimeline(item),
       ].join('');
       return `<tr>
-        <td>${routingFact('Decision ID', item.decision_id)}${routingFact('Event / state', `${displayRouteValue(item.decision_event)} / ${displayRouteValue(item.decision_state)}`)}${routingFact('Source authority ID', item.source_authority_id)}${routingFact('Authority key', item.authority_key)}${routingFact('Timestamp', formatTs(item.timestamp))}</td>
+        <td>${routingFact('Reservation ID', item.source_authority_id)}${routingFact('Authority key', item.authority_key)}${routingFact('Latest event', `${displayRouteValue(item.latest_event?.event_type)} / ${displayRouteValue(item.latest_event?.state)}`)}${routingFact('Updated', formatTs(item.timestamp))}</td>
         <td>${routingFact('Initiator', item.initiator)}${routingFact('Author model / family', `${displayRouteValue(item.author_model)} / ${displayRouteValue(item.author_family)}`)}</td>
-        <td><span class="pill ${routeClass}">${routeLabel}</span>${routingFact('Role / profile / risk', `${displayRouteValue(item.requested_role)} / ${displayRouteValue(item.requested_profile)} / ${displayRouteValue(item.requested_risk)}`)}${routingFact('Requested route', item.requested_route)}</td>
+        <td><span class="pill ${routeClass}">${routeLabel}</span>${routingFact('Role / profile / risk', `${displayRouteValue(item.requested_role)} / ${displayRouteValue(item.requested_profile)} / ${displayRouteValue(item.requested_risk)}`)}${routingFact('Requested reviewer / route', item.requested_reviewer)}</td>
         <td>${routingFact('Candidate', item.resolved_candidate)}${routingFact('Route', item.resolved_route)}${routingFact('Model / family', `${displayRouteValue(item.resolved_model)} / ${displayRouteValue(item.resolved_family)}`)}${routingReasoning(item)}</td>
-        <td>${routingFact('Quota bucket', item.quota_bucket)}${routingFact('Duration', formatDuration(item.duration_s))}</td>
-        <td>${routingFact('Terminal state', item.terminal_status)}${routingFact('Failure', item.failure_classification)}<details><summary class="muted">Decision details</summary>${details}</details></td>
+        <td>${routingFact('Quota bucket', item.quota_bucket)}${routingFact('Freshness state', item.quota_freshness_state)}${routingFact('Capacity / load', item.capacity_evidence)}${routingFact('Duration', formatDuration(item.duration_s))}</td>
+        <td>${routingFact('Current / terminal state', `${displayRouteValue(item.current_state)} / ${displayRouteValue(item.terminal_status)}`)}${routingFact('Failure', item.failure_classification)}<details><summary class="muted">Reservation details</summary>${details}</details></td>
       </tr>`;
     }).join('')}</tbody>
   </table>`;

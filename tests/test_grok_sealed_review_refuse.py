@@ -1,4 +1,4 @@
-"""Grok sealed formal review is fail-closed (#5557)."""
+"""Grok formal review uses ACP; unsupported native isolation stays closed."""
 
 from __future__ import annotations
 
@@ -9,12 +9,12 @@ import pytest
 from scripts.review.isolation import ReviewIsolationError, prepare_isolated_review_launch
 
 
-def test_grok_endpoint_not_formal_review_eligible() -> None:
+def test_grok_endpoint_is_formal_review_eligible() -> None:
     from scripts.fleet_comms.endpoints import load_endpoint_registry
 
     registry = load_endpoint_registry()
     endpoint, _ = registry.resolve("grok")
-    assert endpoint.formal_review_eligible is False
+    assert endpoint.formal_review_eligible is True
 
 
 def test_grok_isolated_review_refuses_explicitly(tmp_path: Path) -> None:

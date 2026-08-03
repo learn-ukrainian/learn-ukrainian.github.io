@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -89,10 +90,74 @@ def test_canonical_review_response_unwraps_only_single_json_object() -> None:
     assert review_pr._canonical_review_response_text(f"```json\n{payload}\n```") == payload
     leading_text = f"Reviewed the exact head.\n{payload}"
     assert review_pr._canonical_review_response_text(leading_text) == payload
-    with_extra_text = f"Here is the verdict:\n```json\n{payload}\n```"
-    assert review_pr._canonical_review_response_text(with_extra_text) == with_extra_text
+    wrapped_fence = f"Here is the verdict:\n```json\n{payload}\n```"
+    assert review_pr._canonical_review_response_text(wrapped_fence) == payload
     trailing_text = f"{payload}\nThis is extra."
     assert review_pr._canonical_review_response_text(trailing_text) == trailing_text
+    fenced_trailing_text = f"Here is the verdict:\n```json\n{payload}\n```\nThis is extra."
+    assert review_pr._canonical_review_response_text(fenced_trailing_text) == fenced_trailing_text
+    multiple_fences = f"First:\n```json\n{payload}\n```\n```json\n{payload}\n```"
+    assert review_pr._canonical_review_response_text(multiple_fences) == multiple_fences
+    long_prefix = f"{'x' * 501}\n```json\n{payload}\n```"
+    assert review_pr._canonical_review_response_text(long_prefix) == long_prefix
+
+
+def test_authority_terminalization_conflict_is_reported_without_traceback() -> None:
+    from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+
+    class LostLeaseAuthority:
+        def finish_job(self, *_args, **_kwargs):
+            raise AuthorityStaleLeaseError("terminalization_conflict")
+
+    assert review_pr._finish_authority_job_once(
+        LostLeaseAuthority(),
+        "job_fixture",
+        worker_id="worker_fixture",
+        fence_token=1,
+        state="failed",
+        result=b"fixture",
+    ) is False
+
+
+def test_routing_settlement_cleanup_race_is_reported_without_traceback() -> None:
+    from scripts.fleet_comms.routing_reservations import RoutingReservationError
+
+    class MissingReservationLedger:
+        def settle(self, *_args, **_kwargs):
+            raise RoutingReservationError("reservation_not_found")
+
+    assert review_pr._settle_routing_reservation_once(
+        MissingReservationLedger(),
+        "reservation_fixture",
+        status="cancelled",
+    ) is False
+
+
+def test_review_routing_budget_requires_fresh_codexbar(monkeypatch) -> None:
+    from scripts.api import codexbar_usage, state_router
+
+    observed: list[bool] = []
+    refreshed: list[tuple[tuple[str, ...], float]] = []
+    monkeypatch.setattr(state_router, "SUBSCRIPTION_LANES", ("kimi",))
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda *, fresh_codexbar: observed.append(fresh_codexbar)
+        or {
+            "agents": {
+                "kimi": {"status": "unavailable" if fresh_codexbar else "cool"}
+            }
+        },
+    )
+    monkeypatch.setattr(
+        codexbar_usage,
+        "refresh_provider_usage_data",
+        lambda providers, *, timeout_s: refreshed.append((tuple(providers), timeout_s)) or {},
+    )
+
+    assert review_pr._compute_review_routing_budget()["agents"]["kimi"]["status"] == "cool"
+    assert observed == [True, False]
+    assert refreshed == [(('kimi',), 5.0)]
 
 
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:
@@ -111,6 +176,7 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "confidence` value MUST be a JSON number" in prompt
     assert 'correctness":"correct"' in prompt
     assert 'enum aliases such as `"pass"`' in prompt
+    assert "never add\n`claim_type` at the finding root" in prompt
 
 
 def test_acpx_parser_preserves_sealed_tool_coverage_trace() -> None:
@@ -183,6 +249,109 @@ def test_acpx_parser_preserves_sealed_tool_coverage_trace() -> None:
     ]
 
 
+def test_acpx_parser_normalizes_grok_use_tool_to_sealed_operation(tmp_path: Path) -> None:
+    from ai_agent_bridge._review_worktree import verify_clean_review_evidence_reads
+
+    bundle = tmp_path / ".review-bundle"
+    bundle.mkdir()
+    files = {
+        ".review-bundle/manifest.json": b"{}",
+        ".review-bundle/patch.diff": b"diff fixture",
+    }
+    chunks = []
+    for path, content in files.items():
+        (tmp_path / path).write_bytes(content)
+        digest = hashlib.sha256(content).hexdigest()
+        chunks.append(
+            {
+                "path": path,
+                "sha256": digest,
+                "offset": 0,
+                "chunk_bytes": len(content),
+                "chunk_sha256": digest,
+                "next_offset": len(content),
+                "total_bytes": len(content),
+                "eof": True,
+                "content": content.decode("utf-8"),
+            }
+        )
+    payload = {
+        "required_path_count": len(chunks),
+        "total_bytes": sum(len(content) for content in files.values()),
+        "eof": True,
+        "chunks": chunks,
+    }
+    grok_wrapper = {
+        "type": "MCP",
+        "tool_name": "read_required_all",
+        "server_name": "sealed_review",
+        "output": {"OkayOutput": json.dumps(payload)},
+    }
+    events = [
+        {
+            "jsonrpc": "2.0",
+            "method": "session/update",
+            "params": {
+                "update": {
+                    "sessionUpdate": "tool_call",
+                    "toolCallId": "call-grok-1",
+                    "title": "use_tool",
+                    "rawInput": {
+                        "tool_name": "sealed_review__read_required_all",
+                        "tool_input": {},
+                    },
+                }
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "method": "session/update",
+            "params": {
+                "update": {
+                    "sessionUpdate": "tool_call_update",
+                    "toolCallId": "call-grok-1",
+                    "title": "sealed_review__read_required_all",
+                    "status": "completed",
+                    "rawInput": {
+                        "variant": "UseTool",
+                        "tool_name": "sealed_review__read_required_all",
+                        "tool_input": {},
+                    },
+                    "rawOutput": grok_wrapper,
+                }
+            },
+        },
+        {"jsonrpc": "2.0", "id": 2, "result": {"stopReason": "end_turn"}},
+    ]
+
+    parsed = AcpxAdapter().parse_response(
+        stdout="\n".join(json.dumps(event) for event in events),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert parsed.ok is True
+    assert parsed.tool_calls == [
+        {
+            "id": "call-grok-1",
+            "name": "sealed_review__read_required_all",
+            "title": "sealed_review__read_required_all",
+            "arguments": {},
+            "result": payload,
+            "status": "completed",
+        }
+    ]
+    coverage = verify_clean_review_evidence_reads(
+        parsed,
+        engine="acp",
+        evidence_root=tmp_path,
+        changed_paths=(),
+    )
+    assert coverage["covered_paths"] == list(files)
+    assert coverage["covered_path_count"] == 2
+
+
 def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> None:
     command = _confinement_prefix_argv(
         "/trusted/acpx",
@@ -202,7 +371,14 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
     ]
     assert "--no-fs" in command and "--no-terminal" in command
     policy = json.loads(command[command.index("--permission-policy") + 1])
-    assert policy["autoApprove"] == allowed
+    assert policy["autoApprove"] == [
+        *allowed,
+        "sealed_review__list_files",
+        "sealed_review__read_file",
+        "sealed_review__read_required",
+        "sealed_review__read_required_all",
+        "sealed_review__search_text",
+    ]
     assert policy["defaultAction"] == "deny"
 
 

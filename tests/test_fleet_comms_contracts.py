@@ -45,19 +45,20 @@ def test_endpoint_registry_retires_gemini_to_agy() -> None:
 
 
 def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
-    """Sealed CF only for proven seats; unproven live lanes stay false until isolation issues close."""
+    """Sealed CF is true only for endpoints with a proven exact-head ACP path."""
     registry = load_endpoint_registry()
     by_name = {endpoint.name: endpoint for endpoint in registry.endpoints}
 
     assert by_name["claude"].formal_review_eligible is True
     assert by_name["codex"].formal_review_eligible is True
     assert by_name["glm-local"].formal_review_eligible is True
+    assert by_name["grok"].formal_review_eligible is True
 
-    for name in ("agy", "grok", "kimi", "cursor", "gemini"):
+    for name in ("agy", "cursor", "gemini", "kimi"):
         assert name in by_name, f"missing registry endpoint: {name}"
         assert by_name[name].formal_review_eligible is False, name
 
-    for name in ("grok", "kimi", "agy", "cursor"):
+    for name in ("agy", "cursor"):
         endpoint, resolved = registry.resolve(name)
         assert resolved == name
         assert endpoint.state == "live"

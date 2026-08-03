@@ -95,51 +95,114 @@ def _write_acp_db(root, conversations: list[tuple], events: list[tuple]) -> None
 
 
 def test_routing_assignments_api_projects_authority_records(monkeypatch):
-    """Runtime renders the optional ledger as body-free routing history."""
+    """Runtime aggregates canonical nested ledger events by reservation."""
     ledger = types.SimpleNamespace(
         list_routing_decisions=lambda **_kwargs: [
             {
                 "reservation_id": "reservation-001",
                 "authority_key": "route-key-1",
-                "initiator": "codex",
-                "author_model": "gpt-5.6-terra",
-                "author_family": "openai",
-                "requested_role": "implementation",
-                "requested_profile": "standard",
-                "requested_risk": "medium",
-                "requested_route": "codex",
-                "route_mode": "auto",
-                "resolved_candidate": "codex-terra",
-                "resolved_route": "codex",
-                "resolved_model": "gpt-5.6-terra",
-                "resolved_family": "openai",
-                "quota_bucket": "codex_weekly",
-                "policy_version": "routing-v1",
-                "selection_reason": "capacity available",
-                "selection_trace": "rank=1",
-                "quota_snapshot": {"source": "codexbar", "freshness": "fresh", "headroom": "70%"},
-                "estimated_input_bytes": 400,
-                "actual_input_bytes": 380,
-                "actual_output_bytes": 120,
-                "actual_tokens": 95,
+                "decision_id": "decision-003",
+                "event_type": "settled",
+                "state": "complete",
+                "created_at": "2026-08-02T09:00:25Z",
+                "evidence": {"terminal_evidence": {"must_not_leak": "body"}},
+                "requested": {
+                    "initiator": "codex",
+                    "author_model": "gpt-5.6-terra",
+                    "author_family": "openai",
+                    "role": "implementation",
+                    "profile": "standard",
+                    "risk": "medium",
+                    "route_mode": "auto",
+                    "requested_reviewer": None,
+                    "estimated_input_bytes": 400,
+                },
+                "resolved": {
+                    "candidate": "codex-terra",
+                    "route": "codex",
+                    "model": "gpt-5.6-terra",
+                    "family": "openai",
+                    "policy_version": "routing-v1",
+                    "trace": {
+                        "substitution_note": "selected eligible route after capacity check",
+                        "gates": "eligible",
+                    },
+                },
+                "quota": {
+                    "bucket": "codex_weekly",
+                    "credential_bucket": "codex-key-a",
+                    "source": "codexbar_fresh",
+                    "headroom_band": "healthy",
+                    "fresh_at": "2026-08-02T08:59:00Z",
+                    "snapshot": {
+                        "codexbar": {"freshness": "fresh", "fetched_at": "2026-08-02T08:59:00Z"},
+                        "scheduler": {"inflight": 1, "capacity_exhausted": False},
+                    },
+                },
+                "retry": {"attempt": 1, "fallback_from": None, "retry_attempt": 0, "terminal_status": "complete"},
+                "replay": {"authority_key": "route-key-1", "idempotency_key": "route-1", "completed": True},
+                "lifecycle": {
+                    "status": "complete",
+                    "created_at": "2026-08-02T09:00:00Z",
+                    "expires_at": "2026-08-02T09:05:00Z",
+                    "started_at": "2026-08-02T09:00:10Z",
+                    "settled_at": "2026-08-02T09:00:25Z",
+                    "actual_bytes": 500,
+                    "actual_tokens": 95,
+                    "actual_input_bytes": 380,
+                    "actual_output_bytes": 120,
+                    "failure_classification": None,
+                },
+            },
+            {
+                "reservation_id": "reservation-001",
+                "authority_key": "route-key-1",
+                "decision_id": "decision-002",
+                "event_type": "started",
+                "state": "running",
+                "created_at": "2026-08-02T09:00:10Z",
+                "evidence": {},
+                "requested": {"initiator": "codex", "route_mode": "auto"},
+                "resolved": {"trace": {"substitution_note": "selected eligible route after capacity check"}},
+                "quota": {"snapshot": {}},
+                "retry": {},
+                "replay": {},
+                "lifecycle": {"status": "complete"},
+            },
+            {
+                "reservation_id": "reservation-001",
+                "authority_key": "route-key-1",
+                "decision_id": "decision-001",
+                "event_type": "reserved",
+                "state": "reserved",
                 "created_at": "2026-08-02T09:00:00Z",
-                "expires_at": "2026-08-02T09:05:00Z",
-                "started_at": "2026-08-02T09:00:10Z",
-                "settled_at": "2026-08-02T09:00:25Z",
-                "status": "complete",
-                "retry_chain": "none",
-                "failover_chain": "none",
-                "replay_status": "new",
-                "cache_status": "miss",
+                "evidence": {
+                    "active_credential_before": 0,
+                    "active_quota_before": 2,
+                    "credential_limit": 3,
+                    "quota_limit": 4,
+                },
+                "requested": {"initiator": "codex", "route_mode": "auto"},
+                "resolved": {"trace": {"substitution_note": "selected eligible route after capacity check"}},
+                "quota": {"snapshot": {}},
+                "retry": {},
+                "replay": {},
+                "lifecycle": {"status": "complete"},
             },
             {
                 "reservation_id": "reservation-002",
-                "initiator": "operator",
-                "route_mode": "explicit",
-                "resolved_route": "claude",
+                "authority_key": "route-key-2",
+                "decision_id": "decision-004",
+                "event_type": "settled",
+                "state": "failed",
                 "created_at": "2026-08-02T08:00:00Z",
-                "status": "failed",
-                "failure_classification": "provider_unavailable",
+                "evidence": {},
+                "requested": {"initiator": "operator", "route_mode": "explicit", "requested_reviewer": "claude-opus"},
+                "resolved": {"route": "claude"},
+                "quota": {"snapshot": {}},
+                "retry": {"failure_classification": "provider_unavailable"},
+                "replay": {},
+                "lifecycle": {"status": "failed", "failure_classification": "provider_unavailable"},
             },
         ]
     )
@@ -166,11 +229,35 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
     assert automatic["source_authority_id"] == "reservation-001"
     assert automatic["initiator"] == "codex"
     assert automatic["automatic"] is True
+    assert automatic["requested_reviewer"] is None
+    assert automatic["quota_source"] == "codexbar_fresh"
     assert automatic["quota_freshness"] == "fresh"
+    assert automatic["quota_freshness_state"] == "fresh"
+    assert automatic["quota_fresh_at"] == "2026-08-02T08:59:00Z"
+    assert automatic["selection_reason"] == "selected eligible route after capacity check"
+    assert automatic["capacity_evidence"] == {
+        "active_credential_before": 0,
+        "active_quota_before": 2,
+        "credential_limit": 3,
+        "quota_limit": 4,
+        "inflight": 1,
+        "capacity_exhausted": False,
+    }
+    assert automatic["event_count"] == 3
+    assert [event["event_type"] for event in automatic["event_history"]] == ["reserved", "started", "settled"]
+    assert automatic["latest_event"]["decision_id"] == "decision-003"
+    assert automatic["current_state"] == automatic["terminal_status"] == "complete"
+    assert "must_not_leak" not in json.dumps(automatic)
     assert automatic["duration_s"] == 15.0
     assert explicit["initiator"] == "operator"
     assert explicit["automatic"] is False
+    assert explicit["requested_reviewer"] == explicit["requested_route"] == "claude-opus"
     assert explicit["failure_classification"] == "provider_unavailable"
+
+    bounded = runtime_router.list_routing_assignments(limit=1)
+    assert [item["source_authority_id"] for item in bounded["assignments"]] == [
+        "reservation-001"
+    ]
 
 
 def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch):
@@ -186,6 +273,12 @@ def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch):
     monkeypatch.setattr(runtime_router.importlib, "import_module", lambda _name: malformed)
     result = runtime_router.list_routing_assignments()
     assert result["availability"] == "malformed"
+    assert result["assignments"] == []
+
+    empty = types.SimpleNamespace(list_routing_decisions=lambda **_kwargs: [])
+    monkeypatch.setattr(runtime_router.importlib, "import_module", lambda _name: empty)
+    result = runtime_router.list_routing_assignments()
+    assert result["availability"] == "empty"
     assert result["assignments"] == []
 
 
@@ -207,6 +300,7 @@ def test_routing_assignment_serializer_accepts_authority_ledger_shape():
                 "profile": "strict",
                 "risk": "high",
                 "route_mode": "explicit",
+                "requested_reviewer": "claude-opus",
                 "estimated_input_bytes": 0,
             },
             "resolved": {
@@ -220,9 +314,14 @@ def test_routing_assignment_serializer_accepts_authority_ledger_shape():
                     "task_fit": "strong review capability",
                     "tie_breakers": "quota fresh",
                     "cheaper_or_idle_not_selected": "candidate lacks required family",
+                    "substitution_note": "explicit pin passed the required eligibility gate",
                 },
             },
-            "quota": {"bucket": "claude-weekly", "snapshot": {"source": "codexbar", "headroom": 0}, "fresh_at": "2026-08-02T09:59:00Z"},
+            "quota": {
+                "bucket": "claude-weekly",
+                "snapshot": {"source": "codexbar", "headroom": 0, "freshness": "stale_last_good"},
+                "fresh_at": "2026-08-02T09:59:00Z",
+            },
             "retry": {"attempt": 2, "terminal_status": "complete", "failure_classification": None},
             "replay": {"authority_key": "head-role", "idempotency_key": "idempotent", "completed": True},
             "lifecycle": {
@@ -244,8 +343,13 @@ def test_routing_assignment_serializer_accepts_authority_ledger_shape():
     assert item["source_authority_id"] == "authority-1"
     assert item["initiator"] == "dispatcher"
     assert item["automatic"] is False
+    assert item["requested_reviewer"] == item["requested_route"] == "claude-opus"
     assert item["resolved_model"] == "claude-opus-4-6"
     assert item["quota_headroom"] == 0
+    assert item["quota_freshness"] == "stale_last_good"
+    assert item["quota_freshness_state"] == "stale"
+    assert item["quota_fresh_at"] == "2026-08-02T09:59:00Z"
+    assert item["selection_reason"] == "explicit pin passed the required eligibility gate"
     assert item["estimated_input_bytes"] == 0
     assert item["actual_input_bytes"] is None
     assert item["actual_work_bytes"] == 0
@@ -265,9 +369,12 @@ def test_runtime_dashboard_labels_routing_authority_and_explicitness():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
     for expected in (
         "/api/runtime/routing-assignments?limit=100",
-        "Decision ID",
-        "Event / state",
-        "Source authority ID",
+        "Reservation ID",
+        "Latest event",
+        "Requested reviewer / route",
+        "Event history",
+        "Capacity / load evidence",
+        "Freshness state",
         "Initiator",
         "AUTOMATIC",
         "EXPLICIT",

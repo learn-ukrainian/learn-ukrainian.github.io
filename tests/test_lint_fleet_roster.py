@@ -107,7 +107,8 @@ def test_committed_projections_match_machine_authorities():
     eligible = load_formal_review_eligible()
     assert eligible["codex"] is True
     assert eligible["claude"] is True
-    for name in ("agy", "grok", "kimi"):
+    assert eligible["grok"] is True
+    for name in ("agy", "kimi"):
         assert eligible[name] is False
 
 

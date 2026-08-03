@@ -114,8 +114,7 @@ review_scheduler:
       credential_limit: 2
       capacity_weight: 1.0
     grok:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: native Grok ACP sealed MCP consumption is not yet authenticated end-to-end
+      formal_review_eligible: true
       models: [grok-4.5]
       participant: grok
       adapter_transport: acp
@@ -141,7 +140,7 @@ review_scheduler:
       capacity_weight: 1.0
     kimicc:
       formal_review_eligible: false
-      formal_review_exclusion_reason: KimiCC K3 sealed MCP consumption is not yet authenticated end-to-end
+      formal_review_exclusion_reason: authenticated K3 sealed MCP canary has not completed
       models: [kimi-code/k3]
       participant: kimicc
       adapter_transport: acp
@@ -359,7 +358,7 @@ models:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    roles: [coding, adversarial_review, debugging]
+    roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work]
     weaknesses: [native_subscription_window]
@@ -642,7 +641,7 @@ review_candidates:
     transport: native_grok
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.5
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   grok-4.5-cursor-fallback:
     # Explicit Cursor pin — never Cursor auto. Used when native grok is dark.
     model_id: grok-4.5
@@ -660,7 +659,7 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
     health_keys: [kimi]
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   glm-5.2:
     model_id: glm-5.2
     route: glm
@@ -734,8 +733,9 @@ review_candidates:
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
-# CF remains fail-closed on agy|kimi|grok until #5555–#5557; orchestrators still
-# *request* CF via review-pr codex|claude|glm.
+# AGY remains fail-closed because its text-only wrapper cannot consume the
+# parent-owned sealed MCP. Grok enters through the proven exact-head ACP review
+# path; Kimi K3 remains fail-closed until its authenticated sealed canary passes.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:

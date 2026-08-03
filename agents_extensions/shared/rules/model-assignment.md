@@ -206,9 +206,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 * Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
-  When an orchestrator needs **formal sealed CF**, request it via
-  `review-pr --reviewer codex|claude|glm` (agy|kimi|grok remain `formal_review_eligible: false`
-  until #5555–#5557). Authority CF escalate:
+  When an orchestrator needs **formal sealed CF**, request it via `review-pr`.
+  Claude, Codex, GLM, and native Grok use the parent-owned exact-head sealed
+  ACP path. The canonical KimiCC K3 adapter is implemented but remains
+  fail-closed until its authenticated sealed canary passes. AGY remains
+  ineligible because its text-only wrapper cannot consume that MCP. Authority CF escalate:
   `review-pr <N> --model gpt-5.6-sol --effort xhigh` or
   `review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh`.
 
@@ -221,7 +223,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | cursor | false |
   | gemini | false |
   | glm-local | true |
-  | grok | false |
+  | grok | true |
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
