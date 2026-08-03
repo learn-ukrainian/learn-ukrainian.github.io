@@ -159,7 +159,10 @@ def test_compact_build_is_byte_identical_and_expands_to_raw_jsonl(tmp_path: Path
     assert locators.compact_rows(first) == raw_rows
 
 
-@pytest.mark.parametrize("field", ["schema_version", "semantic_schema_version", "row_fields", "families", "records", "ordering", "semantic_jsonl_sha256"])
+@pytest.mark.parametrize(
+    "field",
+    ["schema_version", "semantic_schema_version", "row_fields", "families", "records", "ordering", "derived_fields", "semantic_jsonl_sha256"],
+)
 def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> None:
     config, root = _fixture(tmp_path)
     output = root / "locators.compact.jsonl"
@@ -173,6 +176,7 @@ def test_compact_header_tampering_fails_closed(tmp_path: Path, field: str) -> No
         "families": [],
         "records": 99,
         "ordering": "wrong",
+        "derived_fields": {},
         "semantic_jsonl_sha256": "0" * 64,
     }
     header[field] = replacements[field]
@@ -212,11 +216,11 @@ def test_compact_row_tampering_fails_closed(tmp_path: Path, mutation: str) -> No
         if mutation == "row_length":
             row.pop()
         elif mutation == "family_index":
-            row[1] = 99
+            row[0] = 99
         elif mutation == "source_values":
-            row[4].append("extra")
+            row[3].append("extra")
         else:
-            row[8].pop()
+            row[7].pop()
         lines[1] = locators.canonical_json(row)
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     with pytest.raises(locators.LocatorError):

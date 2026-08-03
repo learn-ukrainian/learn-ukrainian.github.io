@@ -191,10 +191,10 @@ full-object JSONL was semantically correct but exceeded the formal review
 system's 16 MiB per-file ceiling; deterministic gzip was small enough but was
 not reviewable as UTF-8 evidence. Phase 2 therefore uses one lossless,
 self-describing compact UTF-8 JSONL. Its header binds the full semantic schema,
-record count, ordering, and expanded canonical hash, and every compact row is
-expanded and schema-validated before use. This preserves all 42,302 locator
-records without weakening the evidence or splitting one logical index into
-opaque fragments.
+record count, ordering, deterministic `locator_id` derivation, and expanded
+canonical hash, and every compact row is expanded and schema-validated before
+use. This preserves all 42,302 locator records without weakening the evidence
+or splitting one logical index into opaque fragments.
 
 ## How usefulness will be demonstrated
 

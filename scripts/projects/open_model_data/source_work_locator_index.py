@@ -23,7 +23,6 @@ COMPACT_SCHEMA_VERSION = "source_work_locator_compact_v1"
 COMPACT_OUTPUT_SUFFIX = ".compact.jsonl"
 MAX_COMPACT_BYTES = 16 * 1024 * 1024
 COMPACT_ROW_FIELDS = (
-    "locator_id",
     "family_index",
     "source_id",
     "work_id",
@@ -36,6 +35,9 @@ COMPACT_ROW_FIELDS = (
     "missing_evidence_keys",
 )
 COMPACT_ORDERING = "source_family,source_id,work_id,source_locator canonical JSON"
+COMPACT_DERIVED_FIELDS = {
+    "locator_id": "opaque_id('locator',canonical_json([source_family,source_id,work_id,source_locator,work_locator]))"
+}
 
 
 class LocatorError(ValueError):
@@ -172,6 +174,7 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
         "families": families,
         "records": len(rows),
         "ordering": COMPACT_ORDERING,
+        "derived_fields": COMPACT_DERIVED_FIELDS,
         "semantic_jsonl_sha256": hashlib.sha256(semantic).hexdigest(),
     }
     compact_rows: list[list[Any]] = []
@@ -179,7 +182,6 @@ def compact_jsonl(rows: list[Mapping[str, Any]]) -> bytes:
         family = families[family_index[row["source_family"]]]
         compact_rows.append(
             [
-                row["locator_id"],
                 family_index[row["source_family"]],
                 row["source_id"],
                 row["work_id"],
@@ -208,6 +210,7 @@ def _compact_header(value: Any) -> list[dict[str, Any]]:
         "families",
         "records",
         "ordering",
+        "derived_fields",
         "semantic_jsonl_sha256",
     }:
         raise LocatorError("invalid compact locator header")
@@ -219,6 +222,8 @@ def _compact_header(value: Any) -> list[dict[str, Any]]:
         raise LocatorError("invalid compact row field order")
     if value["ordering"] != COMPACT_ORDERING:
         raise LocatorError("invalid compact ordering")
+    if value["derived_fields"] != COMPACT_DERIVED_FIELDS:
+        raise LocatorError("invalid compact derived field declaration")
     if not isinstance(value["records"], int) or isinstance(value["records"], bool) or value["records"] < 0:
         raise LocatorError("invalid compact record count")
     if not isinstance(value["semantic_jsonl_sha256"], str) or re.fullmatch(r"[0-9a-f]{64}", value["semantic_jsonl_sha256"]) is None:
@@ -280,11 +285,11 @@ def compact_rows(path: Path) -> list[dict[str, Any]]:
                     raise LocatorError(f"compact locator has invalid JSON at {line_number}") from exc
                 if not isinstance(encoded, list) or len(encoded) != len(COMPACT_ROW_FIELDS):
                     raise LocatorError(f"compact locator has invalid row length at {line_number}")
-                family_number = encoded[1]
+                family_number = encoded[0]
                 if not isinstance(family_number, int) or isinstance(family_number, bool) or not 0 <= family_number < len(families):
                     raise LocatorError(f"compact locator has invalid family index at {line_number}")
                 family = families[family_number]
-                source_values, work_values, metadata_values, publication_values = encoded[4], encoded[5], encoded[7], encoded[8]
+                source_values, work_values, metadata_values, publication_values = encoded[3], encoded[4], encoded[6], encoded[7]
                 expected_lengths = (
                     (source_values, family["source_locator_columns"]),
                     (work_values, family["work_locator_columns"]),
@@ -295,18 +300,29 @@ def compact_rows(path: Path) -> list[dict[str, Any]]:
                     raise LocatorError(f"compact locator has invalid value-array length at {line_number}")
                 row = {
                     "schema_version": "source_work_locator_v1",
-                    "locator_id": encoded[0],
+                    "locator_id": opaque_id(
+                        "locator",
+                        canonical_json(
+                            [
+                                family["source_family"],
+                                encoded[1],
+                                encoded[2],
+                                dict(zip(family["source_locator_columns"], source_values, strict=True)),
+                                dict(zip(family["work_locator_columns"], work_values, strict=True)),
+                            ]
+                        ),
+                    ),
                     "source_family": family["source_family"],
                     "inventory_asset_id": family["inventory_asset_id"],
-                    "source_id": encoded[2],
-                    "work_id": encoded[3],
+                    "source_id": encoded[1],
+                    "work_id": encoded[2],
                     "source_locator": dict(zip(family["source_locator_columns"], source_values, strict=True)),
                     "work_locator": dict(zip(family["work_locator_columns"], work_values, strict=True)),
-                    "canonical_url": encoded[6],
+                    "canonical_url": encoded[5],
                     "metadata": dict(zip(family["metadata_columns"], metadata_values, strict=True)),
                     "metadata_publication": dict(zip(family["metadata_columns"], publication_values, strict=True)),
-                    "affected_records": encoded[9],
-                    "missing_evidence_keys": encoded[10],
+                    "affected_records": encoded[8],
+                    "missing_evidence_keys": encoded[9],
                 }
                 _validate(row, row_validator, f"compact locator row {line_number}")
                 rows.append(row)

@@ -119,7 +119,6 @@ def _locator(path: Path, rows: list[dict]) -> Path:
         family = row["source_family"]
         locator = {
             "schema_version": "source_work_locator_v1",
-            "locator_id": "locator." + hashlib.sha256((row["source_id"] + row["work_id"]).encode()).hexdigest()[:24],
             "source_family": family,
             "inventory_asset_id": row["inventory_asset_id"],
             "source_id": row["source_id"],
@@ -201,6 +200,18 @@ def _locator(path: Path, rows: list[dict]) -> Path:
                     "missing_evidence_keys": [],
                 }
             )
+        locator["locator_id"] = locators.opaque_id(
+            "locator",
+            locators.canonical_json(
+                [
+                    locator["source_family"],
+                    locator["source_id"],
+                    locator["work_id"],
+                    locator["source_locator"],
+                    locator["work_locator"],
+                ]
+            ),
+        )
         locator_rows.append(locator)
     locator_rows.sort(
         key=lambda value: (
