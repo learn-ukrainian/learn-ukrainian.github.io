@@ -61,6 +61,7 @@ from scripts.agent_runtime.adapters.acpx import (
     ACPX_PARTICIPANT_CATALOG_TRANSPORTS,
     ACPX_PARTICIPANT_EFFORTS,
     ACPX_SUPPORTED_PARTICIPANTS,
+    AcpxShadowRefusalError,
     AcpxTransportProvenance,
     _require_local_metadata_field,
     active_communication_scope,
@@ -143,6 +144,14 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
 _SAFE_ACP_FAILURE_CODES = frozenset(
     {
+        "acp_adapter_incompatible",
+        "acp_adapter_missing",
+        "acp_agent_disconnected",
+        "acp_agent_startup",
+        "acp_auth_required",
+        "acp_permission_denied",
+        "acp_permission_unavailable",
+        "acp_session_create_timeout",
         "adapter_refused",
         "protocol_output_limit",
         "provider_unavailable",
@@ -3183,6 +3192,7 @@ def _invoke_direct_only(
     attribution_token = _INVOCATION_ATTRIBUTION.set(
         resolve_invocation_attribution(explicit=initiator, task_id=task_id)
     )
+    started_at = time.monotonic()
     try:
         return _invoke_impl(
             agent_name,
@@ -3199,6 +3209,29 @@ def _invoke_direct_only(
             allow_direct_only=True,
             allow_runner_failover=False,
         )
+    except AcpxShadowRefusalError as exc:
+        write_record(
+            _build_usage_record(
+                agent=agent_name,
+                entrypoint=entrypoint,
+                model=model or "unknown",
+                mode="read-only",
+                task_id=task_id,
+                cwd=cwd,
+                session_id=None,
+                duration_s=time.monotonic() - started_at,
+                input_chars=len(prompt),
+                output_chars=0,
+                returncode=None,
+                outcome="error",
+                rate_limited=False,
+                stalled=False,
+                stderr_excerpt=None,
+                tokens=None,
+                failure_code=exc.failure_code,
+            )
+        )
+        raise
     finally:
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
 

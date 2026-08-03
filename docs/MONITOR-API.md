@@ -1435,8 +1435,11 @@ reports legacy or unattributable records as `unknown`; it never guesses the
 caller from the destination agent. Failed calls also expose one body-free
 `failure_code`: `adapter_refused`, `protocol_output_limit`,
 `provider_unavailable`, `rate_limited`, `result_invalid`, `timeout`,
-`transport_error`, or `unknown`. Raw stderr, prompts, paths, credentials,
-signals, and provider text remain private.
+`transport_error`, `unknown`, or a bounded ACP class:
+`acp_adapter_missing`, `acp_adapter_incompatible`, `acp_agent_startup`,
+`acp_agent_disconnected`, `acp_auth_required`, `acp_session_create_timeout`,
+`acp_permission_denied`, or `acp_permission_unavailable`. Raw stderr, prompts,
+paths, credentials, signals, and provider text remain private.
 
 ```json
 {

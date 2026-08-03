@@ -190,6 +190,38 @@ def test_inter_agent_does_not_forward_or_return_raw_credentials(tmp_path, monkey
     assert secret not in repr(result.usage_record)
 
 
+def test_direct_acp_preflight_refusal_is_persisted_body_free(tmp_path, monkeypatch) -> None:
+    records: list[dict[str, object]] = []
+
+    def refuse(*_args, **_kwargs):
+        raise acpx_module.AcpxShadowRefusalError(
+            "provider-specific dependency path",
+            failure_code="acp_adapter_missing",
+        )
+
+    monkeypatch.setattr(runner, "_invoke_impl", refuse)
+    monkeypatch.setattr(runner, "write_record", records.append)
+
+    with pytest.raises(acpx_module.AcpxShadowRefusalError):
+        runner._invoke_direct_only(
+            "acpx-claude-shadow",
+            "body that must not persist",
+            cwd=tmp_path,
+            model="claude-sonnet-5",
+            task_id="task-6339",
+            tool_config={},
+            entrypoint="acpx-transport",
+            initiator="codex",
+        )
+
+    assert len(records) == 1
+    assert records[0]["failure_code"] == "acp_adapter_missing"
+    assert records[0]["stderr_excerpt"] is None
+    assert records[0]["cwd"] is None
+    assert records[0]["task_id"] is None
+    assert "body that must not persist" not in repr(records[0])
+
+
 def test_adapter_transport_metadata_and_auth_selector_are_non_secret(tmp_path, monkeypatch) -> None:
     _active_acp(monkeypatch)
     secret = "moonshot-secret-must-not-leak"

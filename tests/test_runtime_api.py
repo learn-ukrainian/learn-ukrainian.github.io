@@ -1138,6 +1138,35 @@ def test_recent_limits_results(tmp_path, monkeypatch):
     assert records[1]["failure_code"] is None
 
 
+def test_recent_preserves_typed_body_free_acp_failure(tmp_path, monkeypatch):
+    usage_dir = tmp_path / "api_usage"
+    now = datetime.now(UTC)
+    monkeypatch.setattr(runtime_router, "USAGE_DIR", usage_dir)
+    _write_usage_file(
+        usage_dir / f"usage_acpx-claude-shadow-acpx-transport_{now:%Y-%m-%d}.jsonl",
+        [
+            {
+                "ts": _iso(now),
+                "agent": "acpx-claude-shadow",
+                "entrypoint": "acpx-transport",
+                "initiator": "codex",
+                "attribution_source": "explicit",
+                "model": "claude-sonnet-5",
+                "outcome": "error",
+                "failure_code": "acp_session_create_timeout",
+                "stderr_excerpt": None,
+            }
+        ],
+    )
+
+    response = client.get("/api/runtime/recent?limit=1")
+
+    assert response.status_code == 200
+    record = response.json()["records"][0]
+    assert record["failure_code"] == "acp_session_create_timeout"
+    assert "stderr_excerpt" not in record
+
+
 def test_runtime_page_labels_caller_source_separately_from_transport():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
 

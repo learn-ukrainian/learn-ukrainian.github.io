@@ -19,6 +19,7 @@ build-invocation tests mock binary resolution and version probes only.
 
 from __future__ import annotations
 
+import json
 import shlex
 from pathlib import Path
 
@@ -178,6 +179,37 @@ def _stub_binary(
         acpx_module,
         "_probe_acpx_cli_compatibility",
         lambda _binary, *, builtin_agent: (version, missing),
+    )
+    monkeypatch.setattr(
+        acpx_module,
+        "_require_local_claude_acp_adapter",
+        lambda _binary, *, adapter_label: {
+            "claude_acp_adapter_version": "0.64.2",
+            "claude_acp_compatibility": "installed>=0.64.2<1",
+            "claude_acp_launch_source": "installed",
+        },
+    )
+    return binary
+
+
+def _fake_installed_claude_adapter(tmp_path: Path, *, version: str = "0.64.2") -> Path:
+    node_modules = tmp_path / "node_modules"
+    binary = node_modules / ".bin" / "acpx"
+    package_root = node_modules / "@agentclientprotocol" / "claude-agent-acp"
+    adapter_bin = package_root / "dist" / "index.js"
+    binary.parent.mkdir(parents=True)
+    adapter_bin.parent.mkdir(parents=True)
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    adapter_bin.write_text("#!/usr/bin/env node\n", encoding="utf-8")
+    (package_root / "package.json").write_text(
+        json.dumps(
+            {
+                "name": "@agentclientprotocol/claude-agent-acp",
+                "version": version,
+                "bin": {"claude-agent-acp": "dist/index.js"},
+            }
+        ),
+        encoding="utf-8",
     )
     return binary
 
@@ -986,7 +1018,7 @@ def test_parse_response_agent_disconnected_fails_closed():
     )
     assert result.ok is False
     assert result.response == ""
-    assert result.failure_code == "provider_unavailable"
+    assert result.failure_code == "acp_agent_disconnected"
     assert "AGENT_DISCONNECTED" in result.stderr_excerpt
 
 
@@ -1095,7 +1127,41 @@ def test_parse_response_auth_required_fails_closed():
     assert result.response == ""
     assert "AUTH_REQUIRED" in result.stderr_excerpt
     assert result.rate_limited is False
-    assert result.failure_code == "provider_unavailable"
+    assert result.failure_code == "acp_auth_required"
+
+
+@pytest.mark.parametrize(
+    ("detail_code", "expected"),
+    [
+        ("AGENT_STARTUP_FAILED", "acp_agent_startup"),
+        ("AGENT_DISCONNECTED", "acp_agent_disconnected"),
+        ("CLAUDE_ACP_SESSION_CREATE_TIMEOUT", "acp_session_create_timeout"),
+        ("AUTH_REQUIRED", "acp_auth_required"),
+        ("PERMISSION_PROMPT_UNAVAILABLE", "acp_permission_unavailable"),
+        ("PERMISSION_DENIED", "acp_permission_denied"),
+        ("UNRECOGNIZED_UPSTREAM_CODE", "transport_error"),
+    ],
+)
+def test_parse_response_preserves_body_free_acp_failure_class(detail_code, expected):
+    stdout = json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": None,
+            "error": {
+                "code": -32603,
+                "message": "provider-specific body must not become the persisted class",
+                "data": {"acpxCode": "RUNTIME", "detailCode": detail_code},
+            },
+        }
+    )
+    result = AcpxAdapter().parse_response(
+        stdout=f"{stdout}\n",
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.failure_code == expected
 
 
 # ---------------------------------------------------------------------------
@@ -1703,6 +1769,68 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert plan.metadata["model"] == fixed_model
     if participant == "claude":
         assert plan.metadata["effort"] == "high"
+        assert plan.metadata["claude_acp_adapter_version"] == "0.64.2"
+        assert plan.metadata["claude_acp_compatibility"] == "installed>=0.64.2<1"
+        assert plan.metadata["claude_acp_launch_source"] == "installed"
+
+
+def test_claude_adapter_preflight_accepts_installed_rolling_dependency(tmp_path):
+    binary = _fake_installed_claude_adapter(tmp_path)
+
+    metadata = acpx_module._require_local_claude_acp_adapter(
+        str(binary),
+        adapter_label="AcpxClaudeShadowAdapter",
+    )
+
+    assert metadata == {
+        "claude_acp_adapter_version": "0.64.2",
+        "claude_acp_compatibility": "installed>=0.64.2<1",
+        "claude_acp_launch_source": "installed",
+    }
+
+
+def test_claude_adapter_preflight_refuses_missing_dynamic_package_fallback(tmp_path):
+    binary = tmp_path / "node_modules" / ".bin" / "acpx"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+
+    with pytest.raises(AcpxShadowRefusalError, match="is missing") as raised:
+        acpx_module._require_local_claude_acp_adapter(
+            str(binary),
+            adapter_label="AcpxClaudeShadowAdapter",
+        )
+
+    assert raised.value.failure_code == "acp_adapter_missing"
+
+
+@pytest.mark.parametrize("version", ["0.64.1", "1.0.0", "0.65.0-beta.1"])
+def test_claude_adapter_preflight_refuses_incompatible_version(tmp_path, version):
+    binary = _fake_installed_claude_adapter(tmp_path, version=version)
+
+    with pytest.raises(AcpxShadowRefusalError) as raised:
+        acpx_module._require_local_claude_acp_adapter(
+            str(binary),
+            adapter_label="AcpxClaudeShadowAdapter",
+        )
+
+    assert raised.value.failure_code == "acp_adapter_incompatible"
+
+
+def test_claude_adapter_manifest_and_lock_keep_rolling_range_reproducible():
+    repo_root = Path(__file__).resolve().parents[2]
+    package = json.loads((repo_root / "package.json").read_text(encoding="utf-8"))
+    lock = json.loads((repo_root / "package-lock.json").read_text(encoding="utf-8"))
+
+    expected_range = ">=0.64.2 <1"
+    assert package["devDependencies"]["@agentclientprotocol/claude-agent-acp"] == expected_range
+    assert lock["packages"][""]["devDependencies"][
+        "@agentclientprotocol/claude-agent-acp"
+    ] == expected_range
+    locked_version = lock["packages"][
+        "node_modules/@agentclientprotocol/claude-agent-acp"
+    ]["version"]
+    locked_tuple = tuple(int(part) for part in locked_version.split("."))
+    assert (0, 64, 2) <= locked_tuple < (1, 0, 0)
 
 
 def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monkeypatch):

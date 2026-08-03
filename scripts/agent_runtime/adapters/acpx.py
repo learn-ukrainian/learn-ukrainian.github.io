@@ -115,6 +115,7 @@ TRANSPORT_ENV = "LU_ACPX_TRANSPORT"
 # will invoke. A compatible in-place upgrade is accepted immediately, while a
 # changed surface fails before prompt delivery.
 ACPX_CLI_COMPATIBILITY_CONTRACT = "json-one-shot-v1"
+CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT = "installed>=0.64.2<1"
 AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
@@ -171,6 +172,13 @@ _DEFAULT_ACPX_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # Keep this separately patchable for hermetic adapter tests.  An explicit
 # override is authoritative and must never silently fall back to another tree.
 _ACPX_BINARY = _DEFAULT_ACPX_BINARY
+_CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
+_CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
+_CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
+_CLAUDE_ACP_MANIFEST_LIMIT_BYTES = 64 * 1024
+_STRICT_SEMVER_RE = re.compile(
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$"
+)
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
 _TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
@@ -584,6 +592,10 @@ class AcpxShadowRefusalError(ValueError):
     ValueError still work), while giving tests a precise type to assert on.
     """
 
+    def __init__(self, message: str, *, failure_code: str = "adapter_refused") -> None:
+        super().__init__(message)
+        self.failure_code = failure_code
+
 
 def _probe_acpx_version(binary: str) -> str:
     """Return ``<binary> --version`` output, or ``"unknown"`` on failure."""
@@ -872,6 +884,124 @@ def _require_compatible_acpx_binary(
             f"{', '.join(missing)}; refusing to spawn"
         )
     return binary, observed_version
+
+
+def _require_local_claude_acp_adapter(
+    acpx_binary: str,
+    *,
+    adapter_label: str,
+) -> dict[str, str]:
+    """Require ACPX to resolve Claude from its installed dependency tree.
+
+    ACPX otherwise falls back to ``npm exec --package=...`` for every Claude
+    launch. The adapter is a direct project dependency so normal worktree
+    calls borrow the canonical primary ``node_modules`` tree together with
+    ACPX. Validate the exact package/bin surface before prompt delivery; never
+    consult PATH or a package-exec cache as a substitute.
+    """
+    binary_path = Path(acpx_binary)
+    if (
+        binary_path.parent.name != ".bin"
+        or binary_path.parent.parent.name != "node_modules"
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: ACPX binary is not inside a project "
+            "node_modules/.bin tree",
+            failure_code="acp_adapter_missing",
+        )
+    node_modules = binary_path.parent.parent
+    package_root = node_modules / "@agentclientprotocol" / "claude-agent-acp"
+    manifest_path = package_root / "package.json"
+    try:
+        package_stat = package_root.lstat()
+        manifest_stat = manifest_path.lstat()
+        manifest_bytes = manifest_path.read_bytes()
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} is missing",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    if (
+        not stat.S_ISDIR(package_stat.st_mode)
+        or not stat.S_ISREG(manifest_stat.st_mode)
+        or package_stat.st_uid != os.getuid()
+        or manifest_stat.st_uid != os.getuid()
+        or package_stat.st_mode & 0o022
+        or manifest_stat.st_mode & 0o022
+        or len(manifest_bytes) > _CLAUDE_ACP_MANIFEST_LIMIT_BYTES
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} "
+            "ownership/mode/size is unsafe",
+            failure_code="acp_adapter_incompatible",
+        )
+    try:
+        manifest = json.loads(manifest_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} manifest is malformed",
+            failure_code="acp_adapter_incompatible",
+        ) from exc
+    if not isinstance(manifest, dict) or manifest.get("name") != _CLAUDE_ACP_PACKAGE:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP package identity is incompatible",
+            failure_code="acp_adapter_incompatible",
+        )
+    version = manifest.get("version")
+    version_match = (
+        _STRICT_SEMVER_RE.fullmatch(version) if isinstance(version, str) else None
+    )
+    if version_match is None:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter version is not stable semver",
+            failure_code="acp_adapter_incompatible",
+        )
+    version_tuple = tuple(int(part) for part in version_match.groups())
+    if not (_CLAUDE_ACP_MIN_VERSION <= version_tuple < _CLAUDE_ACP_MAX_VERSION):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter version {version!r} "
+            f"is outside {CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT}",
+            failure_code="acp_adapter_incompatible",
+        )
+    package_bin = manifest.get("bin")
+    relative_bin = (
+        package_bin.get("claude-agent-acp") if isinstance(package_bin, dict) else None
+    )
+    if (
+        not isinstance(relative_bin, str)
+        or not relative_bin
+        or Path(relative_bin).is_absolute()
+        or ".." in Path(relative_bin).parts
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter bin mapping is incompatible",
+            failure_code="acp_adapter_incompatible",
+        )
+    bin_path = package_root / relative_bin
+    try:
+        bin_stat = bin_path.lstat()
+        resolved_bin = bin_path.resolve(strict=True)
+        resolved_root = package_root.resolve(strict=True)
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter executable is missing",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    if (
+        not stat.S_ISREG(bin_stat.st_mode)
+        or bin_stat.st_uid != os.getuid()
+        or bin_stat.st_mode & 0o022
+        or not resolved_bin.is_relative_to(resolved_root)
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter executable is unsafe",
+            failure_code="acp_adapter_incompatible",
+        )
+    return {
+        "claude_acp_adapter_version": version,
+        "claude_acp_compatibility": CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT,
+        "claude_acp_launch_source": "installed",
+    }
 
 
 def _confinement_prefix_argv(
@@ -1494,12 +1624,15 @@ class AcpxAdapter:
             data = final_error.get("data") or {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
             message = final_error.get("message", "acpx error")
-            if label == "TIMEOUT":
-                failure_code = "timeout"
-            elif label in {"AUTH_REQUIRED", "AGENT_DISCONNECTED"}:
-                failure_code = "provider_unavailable"
-            else:
-                failure_code = "transport_error"
+            failure_code = {
+                "AGENT_DISCONNECTED": "acp_agent_disconnected",
+                "AGENT_STARTUP_FAILED": "acp_agent_startup",
+                "AUTH_REQUIRED": "acp_auth_required",
+                "CLAUDE_ACP_SESSION_CREATE_TIMEOUT": "acp_session_create_timeout",
+                "PERMISSION_DENIED": "acp_permission_denied",
+                "PERMISSION_PROMPT_UNAVAILABLE": "acp_permission_unavailable",
+                "TIMEOUT": "timeout",
+            }.get(label, "transport_error")
             return self._closed(
                 f"acpx {label}: {message}",
                 stderr,
@@ -1646,6 +1779,10 @@ class _AcpxDiscussionAdapter:
     def _extra_metadata(self) -> dict[str, Any]:
         return {}
 
+    def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
+        _ = acpx_binary
+        return {}
+
     def build_invocation(
         self,
         *,
@@ -1707,6 +1844,7 @@ class _AcpxDiscussionAdapter:
             cwd=cwd,
             builtin_agent=builtin_agent,
         )
+        participant_runtime_metadata = self._participant_runtime_metadata(binary)
         cmd = _confinement_prefix_argv(
             binary,
             cwd,
@@ -1741,6 +1879,7 @@ class _AcpxDiscussionAdapter:
         if self.fixed_effort is not None:
             metadata["effort"] = self.fixed_effort
         metadata.update(custom_metadata)
+        metadata.update(participant_runtime_metadata)
         if sealed_review_mcp_config is not None:
             metadata["tool_policy"] = "sealed-review-only"
         metadata.update(self._extra_metadata())
@@ -1779,6 +1918,12 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     allowed_models = CLAUDE_ACP_MODELS
     default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
+
+    def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
+        return _require_local_claude_acp_adapter(
+            acpx_binary,
+            adapter_label=type(self).__name__,
+        )
 
 
 class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):
