@@ -163,3 +163,24 @@ def test_review_pr_dry_run_requires_override_reason_for_explicit_fable(capsys):
 
     assert handle_review_pr(Args()) == 2
     assert "requires --override-reason" in capsys.readouterr().err
+
+
+def test_review_pr_refuses_unbounded_lease_before_provider_spawn(capsys):
+    class Args:
+        pr = "6349"
+        reviewer = "auto"
+        claude_available = None
+        model = None
+        effort = None
+        extra = None
+        task_id = None
+        dry_run = False
+        from_llm = "codex"
+        background = False
+        no_timeout = True
+        initiator = "codex/6349-reviewer-model-flexibility"
+        author_model = "gpt-5.6-sol"
+        author_family = "openai"
+
+    assert handle_review_pr(Args()) == 2
+    assert "--no-timeout is unsafe for leased formal reviews" in capsys.readouterr().err

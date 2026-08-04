@@ -613,6 +613,13 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         return 2
 
     task_id = args.task_id or f"review-pr-{pr}"
+    if args.no_timeout:
+        print(
+            "review-pr: --no-timeout is unsafe for leased formal reviews; "
+            "use the bounded 30-minute review lease and retry on expiry",
+            file=sys.stderr,
+        )
+        return 2
     if args.background:
         print(
             "review-pr: background bridge workers are retired; enqueue the formal job "
@@ -724,7 +731,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         evidence_metrics = _evidence_metrics(evidence)
         estimated_input_bytes = checkout.sealed_evidence_input_bytes()
         active_input_bytes = estimated_input_bytes
-        timeout = 86400 if args.no_timeout else 1800
+        timeout = 1800
         worker_id = f"review-pr-acp:{os.getpid()}"
         authority_key = _formal_review_authority_key(
             DEFAULT_REPOSITORY,
@@ -1379,7 +1386,11 @@ def register_review_pr_parser(subparsers: Any) -> None:
     parser.add_argument("--allow-explicit-fallback", action="store_true",
                         help="Permit an explicit pin to fail over after a retryable transport failure")
     parser.add_argument("--background", action="store_true")
-    parser.add_argument("--no-timeout", action="store_true")
+    parser.add_argument(
+        "--no-timeout",
+        action="store_true",
+        help="Unsupported for leased formal reviews; fails before authority or provider work",
+    )
     parser.add_argument("--dry-run", action="store_true")
     # Post-reply finalize is a separate CLI so review-pr stays pointer-only:
     #   .venv/bin/python -m scripts.fleet_comms formal-job accept \
