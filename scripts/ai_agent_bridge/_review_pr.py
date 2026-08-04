@@ -456,9 +456,16 @@ def resolve_requested_review_candidate(
             f"model_not_formal_review_eligible: {model!r} has no canonical candidate on {scope}; "
             f"eligible models: {eligible_models!r}"
         )
+    if requested_route is None:
+        ambiguity_advice = "add --reviewer to select the native route"
+    else:
+        ambiguity_advice = (
+            f"route {requested_route!r} defines duplicate canonical candidates for this model; "
+            "disambiguate scripts/config/model_catalog.yaml"
+        )
     raise ReviewSafetyError(
         f"ambiguous_formal_review_model: {model!r} maps to candidates {sorted(matches)!r} on {scope}; "
-        "add --reviewer to select the native route"
+        f"{ambiguity_advice}"
     )
 
 

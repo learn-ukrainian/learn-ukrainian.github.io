@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from scripts.agent_runtime.adapters.acpx import (
@@ -86,6 +88,20 @@ def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
         resolve_requested_review_candidate("claude", "gpt-5.6-sol", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
         resolve_requested_review_candidate("agy", "gemini-3.6-flash-high", REVIEW_CANDIDATES)
+
+
+def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice():
+    candidates = dict(REVIEW_CANDIDATES)
+    candidates["claude-fable-clone"] = replace(
+        REVIEW_CANDIDATES["claude-fable-5"],
+        name="claude-fable-clone",
+    )
+
+    with pytest.raises(ReviewSafetyError) as exc_info:
+        resolve_requested_review_candidate("claude", "claude-fable-5", candidates)
+
+    assert "defines duplicate canonical candidates" in str(exc_info.value)
+    assert "add --reviewer" not in str(exc_info.value)
 
 
 @pytest.mark.parametrize("reviewer", ["agy", "kimi"])
