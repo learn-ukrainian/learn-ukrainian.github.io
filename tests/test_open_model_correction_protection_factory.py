@@ -151,7 +151,7 @@ def test_zvuchyt_narration_and_protected_mutations_are_frozen() -> None:
     assert all(item["surface"] == "звучит" for item in category["protected"])
 
 
-def test_frozen_canaries_and_false_correction_caps_fail_closed(monkeypatch) -> None:
+def test_frozen_canaries_and_false_correction_caps_fail_closed() -> None:
     known_answers = _json(KNOWN_ANSWERS)
     thresholds = _json(THRESHOLDS)
     category_id = "russian_lexical_inflectional_intrusion"
@@ -166,23 +166,45 @@ def test_frozen_canaries_and_false_correction_caps_fail_closed(monkeypatch) -> N
     assert gates[category_id]["state"] == "research_only"
     assert any("zvuchyt-modern-ukrainian-narration" in reason for reason in gates[category_id]["reasons"])
 
-    original = factory.known_answer_disposition
-
-    def false_positive(**kwargs):
-        if kwargs["role"] == "acceptable_control":
-            return "correction"
-        return original(**kwargs)
-
-    monkeypatch.setattr(factory, "known_answer_disposition", false_positive)
+    poisoned = _json(KNOWN_ANSWERS)
+    poisoned["categories"][category_id]["acceptable_control"][0]["text"] = (
+        "Неправильна контрольна фраза звучит поза цитатою."
+    )
     gates = factory.gate_results(
-        _json(KNOWN_ANSWERS),
+        poisoned,
         thresholds,
         model_proposal_lanes=1,
         model_dissent_lanes=1,
     )
     assert gates[category_id]["state"] == "research_only"
-    assert gates[category_id]["control_false_corrections"] == 5
+    assert gates[category_id]["control_false_corrections"] == 1
     assert any("maximum_control_false_corrections=0" in reason for reason in gates[category_id]["reasons"])
+
+    poisoned = _json(KNOWN_ANSWERS)
+    poisoned["categories"][category_id]["protected"][0]["text"] = (
+        "Неправильно незахищена фраза звучит поза цитатою."
+    )
+    gates = factory.gate_results(
+        poisoned,
+        thresholds,
+        model_proposal_lanes=1,
+        model_dissent_lanes=1,
+    )
+    assert gates[category_id]["state"] == "research_only"
+    assert gates[category_id]["protected_false_corrections"] == 1
+    assert any(
+        "maximum_protected_false_corrections=0" in reason
+        for reason in gates[category_id]["reasons"]
+    )
+
+
+def test_actual_matcher_protects_zvuchyt_quote_and_lexical_boundary() -> None:
+    rules = factory.known_answer_correction_rules(_json(KNOWN_ANSWERS))
+    quoted = list(factory.iter_rule_matches("Автор навів: «Фраза звучит природно».", rules))
+    assert len(quoted) == 1
+    assert quoted[0].rule["surface"] == "звучит"
+    assert quoted[0].protected is True
+    assert list(factory.iter_rule_matches("Фраза звучить природно.", rules)) == []
 
 
 def test_known_answer_dispositions_obey_category_policy() -> None:

@@ -23,6 +23,8 @@ from typing import Any, TextIO
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
+from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
+
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 SOURCE_SCHEMA = CONTRACTS / "correction_protection_source_v1.schema.json"
@@ -493,6 +495,32 @@ def known_answer_disposition(
     return disposition
 
 
+def known_answer_correction_rules(known_answers: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Return every candidate correction rule before category gate decisions."""
+    rules = [
+        {
+            "category_id": category_id,
+            "surface": str(item["surface"]),
+            "replacement": str(item["replacement"]),
+        }
+        for category_id in CATEGORY_IDS
+        for item in known_answers["categories"][category_id].get("positive", [])
+        if item.get("replacement") is not None
+    ]
+    return sorted(rules, key=lambda row: (-len(row["surface"]), row["category_id"]))
+
+
+def correction_false_positives(
+    items: list[dict[str, Any]],
+    rules: list[dict[str, str]],
+) -> int:
+    """Count records on which the actual matcher proposes an unprotected correction."""
+    return sum(
+        any(not match.protected for match in iter_rule_matches(str(item["text"]), rules))
+        for item in items
+    )
+
+
 def gate_results(
     known_answers: Mapping[str, Any],
     thresholds: Mapping[str, Any],
@@ -501,6 +529,7 @@ def gate_results(
     model_dissent_lanes: int,
 ) -> dict[str, dict[str, Any]]:
     threshold_sha256 = sha256_text(canonical_json(thresholds) + "\n")
+    candidate_rules = known_answer_correction_rules(known_answers)
     results: dict[str, dict[str, Any]] = {}
     for category_id in CATEGORY_IDS:
         specification = known_answers["categories"][category_id]
@@ -556,25 +585,13 @@ def gate_results(
                 f"attributed dissent lanes={model_dissent_lanes} below "
                 f"minimum_attributed_dissent_lanes={minimum_dissent_lanes}"
             )
-        protected_false_corrections = sum(
-            known_answer_disposition(
-                role="protected",
-                category_id=category_id,
-                rule=rule,
-                correction_release_allowed=True,
-            )
-            == "correction"
-            for _item in specification.get("protected", [])
+        protected_false_corrections = correction_false_positives(
+            specification.get("protected", []),
+            candidate_rules,
         )
-        control_false_corrections = sum(
-            known_answer_disposition(
-                role="acceptable_control",
-                category_id=category_id,
-                rule=rule,
-                correction_release_allowed=True,
-            )
-            == "correction"
-            for _item in specification.get("acceptable_control", [])
+        control_false_corrections = correction_false_positives(
+            specification.get("acceptable_control", []),
+            candidate_rules,
         )
         maximum_protected = int(rule.get("maximum_protected_false_corrections", 0))
         maximum_control = int(rule.get("maximum_control_false_corrections", 0))
