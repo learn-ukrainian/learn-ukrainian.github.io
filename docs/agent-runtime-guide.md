@@ -128,7 +128,9 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   and every other evidence tool are denied structurally. Its mandatory stream
   is the hash-bound manifest plus the complete patch, avoiding duplicate
   full-file delivery; reported finding quotes are still verified against the
-  exact sealed files before a verdict can pass.
+  exact sealed files before a verdict can pass. A sealed-review-only system
+  profile suppresses Claude's incompatible `ReportFindings` handoff and
+  requires the canonical JSON verdict in the final ACP assistant message.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
 - The only supported comparison caller is

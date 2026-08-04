@@ -1036,8 +1036,6 @@ PROFILE = sys.argv[2] if len(sys.argv) == 3 else "all"
 if PROFILE not in {"all", "change-evidence-only"}:
     raise ValueError("invalid_tool_profile")
 MAX_CHUNK_BYTES = 64 * 1024
-CLAUDE_MAX_CHUNK_BYTES = 24 * 1024
-CLAUDE_INLINE_RESULT_CHARS = 48 * 1024
 CLAUDE_FALLBACK_CHUNK_BYTES = 8 * 1024
 MAX_REQUIRED_CHUNKS = 6
 MAX_REQUIRED_ALL_CHUNKS = 64

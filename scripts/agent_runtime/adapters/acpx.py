@@ -270,6 +270,14 @@ _SEALED_REVIEW_TOOL_NAMES = (
 _CLAUDE_SEALED_REVIEW_TOOL_NAMES = (
     "mcp__sealed_review__read_required",
 )
+_CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT = (
+    "You are a stateless read-only formal code reviewer. Follow the user's "
+    "parent-authenticated sealed-evidence and output-schema instructions literally. "
+    "Use ToolSearch only to load mcp__sealed_review__read_required, then call that "
+    "reader from the requested cursor until eof=true. Do not call ReportFindings or "
+    "any other built-in or MCP tool. Return the requested canonical JSON object as "
+    "the final assistant message with no prose, markdown, or trailing text."
+)
 
 
 def _normalize_grok_sealed_result(result: object, *, tool_name: str) -> object:
@@ -2000,6 +2008,10 @@ class _AcpxDiscussionAdapter:
         _ = sealed_review_mcp_config
         return ACPX_DEFAULT_MAX_TURNS
 
+    def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
+        _ = sealed_review_mcp_config
+        return None
+
     def build_invocation(
         self,
         *,
@@ -2069,6 +2081,9 @@ class _AcpxDiscussionAdapter:
             sealed_review_tool_names=self.sealed_review_tool_names,
             max_turns=self._max_turns(sealed_review_mcp_config),
         )
+        system_prompt = self._system_prompt(sealed_review_mcp_config)
+        if system_prompt is not None:
+            cmd.extend(["--system-prompt", system_prompt])
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
@@ -2143,6 +2158,11 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         if sealed_review_mcp_config is None:
             return ACPX_DEFAULT_MAX_TURNS
         return _claude_sealed_review_max_turns(sealed_review_mcp_config)
+
+    def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
+        if sealed_review_mcp_config is None:
+            return None
+        return _CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
 
     def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
         return _require_local_claude_acp_adapter(

@@ -1794,6 +1794,7 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
         assert plan.metadata["model"] == fixed_model
     if participant == "claude":
+        assert "--system-prompt" not in plan.cmd
         assert plan.metadata["effort"] == "high"
         assert plan.metadata["claude_acp_adapter_version"] == "0.64.2"
         assert plan.metadata["claude_acp_compatibility"] == "installed>=0.64.2<1"
@@ -1882,6 +1883,8 @@ def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch
     allowed = "mcp__sealed_review__read_required"
     assert ("--allowed-tools", allowed) in pairs
     assert ("--max-turns", "9") in pairs
+    assert ("--system-prompt", acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT) in pairs
+    assert "Do not call ReportFindings" in acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
     policy = json.loads(plan.cmd[plan.cmd.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
         allowed,
