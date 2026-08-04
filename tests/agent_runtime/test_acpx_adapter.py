@@ -1887,6 +1887,7 @@ def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch
     assert ("--max-turns", "9") in pairs
     assert ("--system-prompt", acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT) in pairs
     assert "Do not call ReportFindings" in acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
+    assert "verbatim_note" in acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
     policy = json.loads(plan.cmd[plan.cmd.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
         allowed,

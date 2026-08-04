@@ -127,6 +127,43 @@ def _canonical_review_response_text(response: str) -> str:
     return stripped
 
 
+def _normalize_known_null_review_annotations(response: str) -> str:
+    """Remove only known null provider annotations from finding objects.
+
+    The canonical schema remains strict: non-null annotations, unrelated extra
+    fields, duplicate JSON keys, and malformed responses are returned unchanged
+    so the normal validator can reject them.
+    """
+
+    def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        value: dict[str, Any] = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError(f"duplicate JSON key: {key}")
+            value[key] = item
+        return value
+
+    try:
+        payload = json.loads(response, object_pairs_hook=_reject_duplicate_keys)
+    except (json.JSONDecodeError, ValueError):
+        return response
+    if not isinstance(payload, dict) or not isinstance(payload.get("findings"), list):
+        return response
+
+    changed = False
+    for finding in payload["findings"]:
+        if (
+            isinstance(finding, dict)
+            and "verbatim_note" in finding
+            and finding["verbatim_note"] is None
+        ):
+            del finding["verbatim_note"]
+            changed = True
+    if not changed:
+        return response
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
 def _finish_authority_job_once(
     authority: Any,
     job_id: str,
@@ -290,10 +327,11 @@ has exactly this shape (replace the explanation, not the field types):
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
 Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,
 `confidence`, `category`, `location`, `verbatim`, `why_wrong`, `smallest_fix`,
-and `sources`. Every `sources` value MUST be a non-empty array. Use exactly
-`["none"]` when no external source applies; otherwise use non-empty source
-strings and never mix `"none"` with another value. Put claim type `"present"`
-or `"missing"` only inside the
+and `sources`. Do not add provider annotations such as `verbatim_note`, even
+when their value would be null. Every `sources` value MUST be a non-empty
+array. Use exactly `["none"]` when no external source applies; otherwise use
+non-empty source strings and never mix `"none"` with another value. Put claim
+type `"present"` or `"missing"` only inside the
 `location` object alongside `path`, `start_line`, and `end_line`; never add
 `claim_type` at the finding root. Do not invent enum aliases such as `"pass"`.
 """
@@ -676,11 +714,23 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         print(f"review-pr: {exc}", file=sys.stderr)
         return 2
     route_mode = "explicit" if requested_candidate is not None else "auto"
-    override_reason = str(getattr(args, "override_reason", None) or "").strip() or None
-    if requested_candidate is not None and override_reason is None:
-        print("review-pr: explicit reviewer/model pin requires --override-reason", file=sys.stderr)
-        return 2
     requested_effort = str(getattr(args, "effort", None) or "").strip() or None
+    operator_override_reason = (
+        str(getattr(args, "override_reason", None) or "").strip() or None
+    )
+    if (
+        requested_candidate is not None
+        and (explicit_model is not None or requested_effort is not None)
+        and operator_override_reason is None
+    ):
+        print(
+            "review-pr: explicit model/effort pin requires --override-reason",
+            file=sys.stderr,
+        )
+        return 2
+    override_reason = operator_override_reason
+    if requested_candidate is not None and override_reason is None:
+        override_reason = f"explicit reviewer route {reviewer_request!r} requested"
     if requested_candidate is not None and requested_effort is not None:
         participant = REVIEW_CANDIDATES[requested_candidate].participant
         supported_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
@@ -1172,7 +1222,9 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     )
                 print("review-pr: ACP reviewer failed without bridge retry", file=sys.stderr)
                 return 1
-            canonical_response = _canonical_review_response_text(raw_response)
+            canonical_response = _normalize_known_null_review_annotations(
+                _canonical_review_response_text(raw_response)
+            )
             try:
                 validate_code_review_response(
                     canonical_response,
@@ -1382,7 +1434,10 @@ def register_review_pr_parser(subparsers: Any) -> None:
                         help="Explicit data-egress policy token; gated routes fail closed when absent")
     parser.add_argument("--isolation-required", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--override-reason",
-                        help="Required evidence for every exceptional explicit reviewer/model pin")
+                        help=(
+                            "Required evidence for exact model or effort pins; optional for a "
+                            "reviewer alias selecting its practical default"
+                        ))
     parser.add_argument("--allow-explicit-fallback", action="store_true",
                         help="Permit an explicit pin to fail over after a retryable transport failure")
     parser.add_argument("--background", action="store_true")

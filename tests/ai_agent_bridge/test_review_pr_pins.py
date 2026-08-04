@@ -11,6 +11,7 @@ from scripts.agent_runtime.adapters.acpx import (
 from scripts.ai_agent_bridge._review_pr import (
     FORMAL_CF_EFFORT,
     FORMAL_CF_MODEL,
+    _normalize_known_null_review_annotations,
     formal_cf_pin,
     handle_review_pr,
     resolve_requested_review_candidate,
@@ -143,6 +144,30 @@ def test_review_pr_dry_run_accepts_fable_on_claude_route(capsys):
     assert "model=claude-fable-5 effort=high" in out
 
 
+def test_review_pr_dry_run_accepts_bare_reviewer_default_without_override(capsys):
+    class Args:
+        pr = "6349"
+        reviewer = "claude"
+        claude_available = None
+        model = None
+        effort = None
+        extra = None
+        task_id = None
+        dry_run = True
+        from_llm = "codex"
+        background = False
+        no_timeout = False
+        initiator = "codex/6349-reviewer-model-flexibility"
+        author_model = "gpt-5.6-sol"
+        author_family = "openai"
+        override_reason = None
+
+    assert handle_review_pr(Args()) == 0
+    out = capsys.readouterr().out
+    assert "candidate=claude-sonnet-5" in out
+    assert "model=claude-sonnet-5 effort=high" in out
+
+
 def test_review_pr_dry_run_requires_override_reason_for_explicit_fable(capsys):
     class Args:
         pr = "6349"
@@ -184,3 +209,27 @@ def test_review_pr_refuses_unbounded_lease_before_provider_spawn(capsys):
 
     assert handle_review_pr(Args()) == 2
     assert "--no-timeout is unsafe for leased formal reviews" in capsys.readouterr().err
+
+
+def test_known_null_review_annotation_is_removed_without_relaxing_schema():
+    response = (
+        '{"schema_version":"code-review-findings.v1","overall":{},'
+        '"findings":[{"id":"F1","verbatim_note":null}]}'
+    )
+
+    normalized = _normalize_known_null_review_annotations(response)
+
+    assert '"verbatim_note"' not in normalized
+    assert '"id":"F1"' in normalized
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        '{"findings":[{"verbatim_note":"meaningful"}]}',
+        '{"findings":[{"unknown_note":null}]}',
+        '{"findings":[],"findings":[]}',
+    ],
+)
+def test_review_annotation_normalization_preserves_strict_rejections(response: str):
+    assert _normalize_known_null_review_annotations(response) == response
