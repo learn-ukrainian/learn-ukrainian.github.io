@@ -725,9 +725,15 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     operator_override_reason = (
         str(getattr(args, "override_reason", None) or "").strip() or None
     )
+    if requested_effort is not None and requested_candidate is None:
+        print(
+            "review-pr: --effort requires an explicit eligible --reviewer or --model "
+            "so transport capability is validated before routing",
+            file=sys.stderr,
+        )
+        return 2
     if (
-        requested_candidate is not None
-        and (explicit_model is not None or requested_effort is not None)
+        (explicit_model is not None or requested_effort is not None)
         and operator_override_reason is None
     ):
         print(
@@ -1420,8 +1426,8 @@ def register_review_pr_parser(subparsers: Any) -> None:
         "--effort",
         default=None,
         help=(
-            "Optional exact ACP effort pin; it must match the selected participant's "
-            "registered transport capability"
+            "Optional exact ACP effort pin; requires an explicit eligible reviewer or "
+            "model and must match that participant's registered transport capability"
         ),
     )
     parser.add_argument("--claude-available", dest="claude_available", action=argparse.BooleanOptionalAction,

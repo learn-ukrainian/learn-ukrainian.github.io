@@ -206,6 +206,28 @@ def test_review_pr_dry_run_requires_override_reason_for_explicit_fable(capsys):
     assert "requires --override-reason" in capsys.readouterr().err
 
 
+def test_review_pr_refuses_effort_only_auto_route_before_provider_spawn(capsys):
+    class Args:
+        pr = "6349"
+        reviewer = "auto"
+        claude_available = None
+        model = None
+        effort = "high"
+        extra = None
+        task_id = None
+        dry_run = False
+        from_llm = "codex"
+        background = False
+        no_timeout = False
+        initiator = "codex/6349-reviewer-model-flexibility"
+        author_model = "gpt-5.6-sol"
+        author_family = "openai"
+        override_reason = "operator requested high effort"
+
+    assert handle_review_pr(Args()) == 2
+    assert "requires an explicit eligible --reviewer or --model" in capsys.readouterr().err
+
+
 def test_review_pr_refuses_unbounded_lease_before_provider_spawn(capsys):
     class Args:
         pr = "6349"
