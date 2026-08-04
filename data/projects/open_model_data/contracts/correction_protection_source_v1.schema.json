@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_source_v1.schema.json",
+  "title": "Correction/protection text-free source locator v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_locator_id", "record_id", "work_id", "source_id", "revision_pin", "locator", "content_sha256", "source_axes", "phase2_capability", "context"],
+  "properties": {
+    "schema_version": {"const": "correction_protection_source_v1"},
+    "source_locator_id": {"type": "string", "pattern": "^cp_source:[a-f0-9]{64}$"},
+    "record_id": {"type": "string", "minLength": 3},
+    "work_id": {"type": "string", "minLength": 3},
+    "source_id": {"type": "string", "minLength": 3},
+    "revision_pin": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "content_sha256": {"$ref": "#/$defs/sha256"},
+    "source_axes": {"$ref": "#/$defs/sourceAxes"},
+    "phase2_capability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision_id", "decision_sha256", "evidence_refs"],
+      "properties": {"decision_id": {"type": "string", "minLength": 3}, "decision_sha256": {"$ref": "#/$defs/sha256"}, "evidence_refs": {"$ref": "#/$defs/refs"}}
+    },
+    "context": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start_offset", "end_offset", "context_sha256", "publication_capability_state", "publication_capability_evidence_refs", "context_text"],
+      "properties": {
+        "start_offset": {"type": "integer", "minimum": 0}, "end_offset": {"type": "integer", "minimum": 0}, "context_sha256": {"$ref": "#/$defs/sha256"},
+        "publication_capability_state": {"enum": ["not_assessed", "not_permitted", "permitted_with_evidence"]},
+        "publication_capability_evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "context_text": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"context_text": {"type": "string"}}}, "then": {"properties": {"publication_capability_state": {"const": "permitted_with_evidence"}, "publication_capability_evidence_refs": {"minItems": 1}}}},
+        {"if": {"properties": {"publication_capability_state": {"const": "permitted_with_evidence"}}}, "then": {"properties": {"publication_capability_evidence_refs": {"minItems": 1}}}}
+      ]
+    }
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "sourceAxes": {"type": "object", "additionalProperties": false, "required": ["source_family", "period", "genre", "register"], "properties": {"source_family": {"type": "string", "minLength": 1}, "period": {"type": "string", "minLength": 1}, "genre": {"type": "string", "minLength": 1}, "register": {"type": "string", "minLength": 1}}}}
+}

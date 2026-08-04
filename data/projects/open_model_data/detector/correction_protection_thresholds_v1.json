@@ -1,0 +1,168 @@
+{
+  "schema_version": "correction_protection_thresholds_v1",
+  "config_id": "phase3-correction-protection-thresholds-v1",
+  "assurance_tier": "evidence_graded_non_gold",
+  "authoritative": false,
+  "consumer_decision": "Decide whether a source-backed contextual span may be released as correction evidence, must be protected, or must remain unresolved.",
+  "global_no_go": {
+    "automatic_promotion_from_vesum_absence": false,
+    "automatic_promotion_from_model_vote": false,
+    "human_gold_claim": false,
+    "source_blind_global_normalization": false,
+    "training_or_upload": false
+  },
+  "required_axes": [
+    "source_family",
+    "period",
+    "genre",
+    "register"
+  ],
+  "required_dispositions": [
+    "correct",
+    "correction",
+    "protected",
+    "excluded",
+    "unresolved"
+  ],
+  "evidence_policy": {
+    "attributed_channels_required": true,
+    "correction_requires_non_model_non_vesum_evidence": true,
+    "conflicts_remain_visible": true,
+    "unavailable_adapter_cannot_strengthen_disposition": true,
+    "unresolved_is_terminal": true
+  },
+  "categories": {
+    "russian_lexical_inflectional_intrusion": {
+      "release_mode": "eligible_if_gate_passes",
+      "consumer_harm": "A false correction can erase Ukrainian or a protected context; a missed flag leaves Russian finite or lexical interference.",
+      "minimum_source_backed_positive_cases": 5,
+      "minimum_acceptable_controls": 5,
+      "minimum_protected_examples": 5,
+      "minimum_non_model_evidence_channels_per_correction": 1,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "required_canaries": [
+        "zvuchyt-modern-ukrainian-narration",
+        "zvuchyt-marked-russian-quotation",
+        "zvuchyt-vesum-attested-control",
+        "zvuchyt-quotation-boundary-mutations"
+      ],
+      "no_go": "research_only"
+    },
+    "contextual_calque_government_valency": {
+      "release_mode": "eligible_if_gate_passes",
+      "consumer_harm": "Word-list evidence cannot decide contextual government or valency, so weak evidence creates destructive rewrites.",
+      "minimum_source_backed_positive_cases": 4,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 4,
+      "minimum_non_model_evidence_channels_per_correction": 2,
+      "minimum_attributed_proposal_lanes": 1,
+      "minimum_attributed_dissent_lanes": 1,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "no_go": "research_only"
+    },
+    "modern_literary_ukrainian_control": {
+      "release_mode": "protection_only",
+      "consumer_harm": "False positives teach consumers to erase correct modern Ukrainian.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 8,
+      "minimum_protected_examples": 8,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "allowed_dispositions": [
+        "correct",
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "research_only"
+    },
+    "marked_russian_quotation_code_switch": {
+      "release_mode": "protection_only",
+      "consumer_harm": "Normalizing marked quotation or code-switching changes attributed speech and source meaning.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 8,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "required_canaries": [
+        "zvuchyt-marked-russian-quotation",
+        "zvuchyt-quotation-boundary-mutations"
+      ],
+      "allowed_dispositions": [
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "research_only"
+    },
+    "phonetic_russian_in_literature": {
+      "release_mode": "protection_only",
+      "consumer_harm": "Source-blind correction erases deliberate characterization and literary voice.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 4,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "allowed_dispositions": [
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "research_only"
+    },
+    "historical_archaic_ukrainian": {
+      "release_mode": "protection_only",
+      "consumer_harm": "Modernization without author and period evidence erases historical Ukrainian.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 8,
+      "minimum_distinct_periods": 2,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "allowed_dispositions": [
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "research_only"
+    },
+    "dialect_regional_heritage_folklore": {
+      "release_mode": "protection_only",
+      "consumer_harm": "A global norm can erase region, community, heritage, and folklore evidence.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 8,
+      "minimum_distinct_subtypes": 3,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "allowed_dispositions": [
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "research_only"
+    },
+    "surzhyk_contested_contact": {
+      "release_mode": "research_only",
+      "consumer_harm": "Automatic normalization of contested contact language can erase speaker identity and context.",
+      "minimum_source_backed_positive_cases": 0,
+      "minimum_acceptable_controls": 4,
+      "minimum_protected_examples": 8,
+      "minimum_non_model_evidence_channels_per_correction": 0,
+      "maximum_protected_false_corrections": 0,
+      "maximum_control_false_corrections": 0,
+      "allowed_dispositions": [
+        "protected",
+        "unresolved"
+      ],
+      "no_go": "remain_research_only"
+    }
+  },
+  "held_back_strategy": {
+    "private_locator": "batch_state/issue-6333/heldback/phase3-v1",
+    "public_repo_copy": false,
+    "evaluation_cases_learning_eligible": false
+  }
+}

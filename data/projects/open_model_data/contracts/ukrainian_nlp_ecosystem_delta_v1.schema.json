@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/ukrainian_nlp_ecosystem_delta_v1.schema.json",
+  "title": "Ukrainian NLP ecosystem inspected-scope delta record v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "delta_id", "tool_or_source", "revision", "inspected_on", "official_url", "primary_urls", "observations", "overlap_claims", "delta_claims", "limitations", "reproduction"],
+  "properties": {
+    "schema_version": {"const": "ukrainian_nlp_ecosystem_delta_v1"}, "delta_id": {"type": "string", "pattern": "^uk_nlp_delta:[a-f0-9]{64}$"}, "tool_or_source": {"type": "string", "minLength": 1}, "revision": {"type": "string", "minLength": 1}, "inspected_on": {"type": "string", "format": "date"}, "official_url": {"type": "string", "format": "uri"}, "primary_urls": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "format": "uri"}},
+    "observations": {"type": "object", "additionalProperties": false, "required": ["interface", "phenomena", "protected_context", "evidence_granularity", "output", "license"], "properties": {"interface": {"type": "string", "minLength": 1}, "phenomena": {"type": "string", "minLength": 1}, "protected_context": {"type": "string", "minLength": 1}, "evidence_granularity": {"type": "string", "minLength": 1}, "output": {"type": "string", "minLength": 1}, "license": {"type": "string", "minLength": 1}}},
+    "overlap_claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}}, "delta_claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}}, "limitations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "reproduction": {"type": "object", "additionalProperties": false, "required": ["commands", "command_sha256", "input_sha256"], "properties": {"commands": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "command_sha256": {"$ref": "#/$defs/sha256"}, "input_sha256": {"$ref": "#/$defs/sha256"}}}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "claim": {"type": "object", "additionalProperties": false, "required": ["claim", "evidence_refs", "scope"], "properties": {"claim": {"type": "string", "minLength": 1}, "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "scope": {"const": "inspected_scope_only"}}}}
+}

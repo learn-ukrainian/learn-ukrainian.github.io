@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_evidence_v1.schema.json",
+  "title": "Correction/protection separately attributed evidence v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "evidence_id", "channel", "source_identity", "source_version", "locator", "query", "query_sha256", "status", "supports", "receipt", "raw_payload_publication_allowed", "claim_boundary"],
+  "properties": {
+    "schema_version": {"const": "correction_protection_evidence_v1"}, "evidence_id": {"type": "string", "pattern": "^cp_evidence:[a-f0-9]{64}$"},
+    "channel": {"enum": ["vesum", "r2u", "russian_morphology", "ulif_dictua", "slovnyk_me", "heritage_dictionary", "ukrainian_corpus", "language_tool", "nlp_uk", "model_proposal", "source_metadata"]},
+    "source_identity": {"type": "string", "minLength": 1}, "source_version": {"type": "string", "minLength": 1}, "locator": {"type": "string", "minLength": 1},
+    "query": {"type": ["string", "null"]}, "query_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "status": {"enum": ["attested", "not_found", "ambiguous", "incomplete", "parse_error", "unavailable"]},
+    "supports": {"enum": ["ukrainian_attestation", "russian_attestation", "correction_candidate", "protected_context", "context_only", "metadata_only", "no_conclusion"]},
+    "receipt": {"type": "object", "additionalProperties": false, "required": ["retrieval_id", "retrieval_sha256", "parser_id", "parser_version", "parser_status"], "properties": {"retrieval_id": {"type": "string", "minLength": 1}, "retrieval_sha256": {"$ref": "#/$defs/sha256"}, "parser_id": {"type": "string", "minLength": 1}, "parser_version": {"type": "string", "minLength": 1}, "parser_status": {"enum": ["passed", "not_run", "failed"]}}},
+    "raw_payload_publication_allowed": {"const": false},
+    "claim_boundary": {"type": "object", "additionalProperties": false, "required": ["authoritative", "human_gold", "model_vote_authoritative", "vesum_absence_only_authoritative"], "properties": {"authoritative": {"const": false}, "human_gold": {"const": false}, "model_vote_authoritative": {"const": false}, "vesum_absence_only_authoritative": {"const": false}}},
+    "model_proposal": {"$ref": "#/$defs/modelProposal"}
+  },
+  "allOf": [
+    {"anyOf": [{"properties": {"query": {"type": "string", "minLength": 1}}}, {"properties": {"query_sha256": {"$ref": "#/$defs/sha256"}}}]},
+    {"if": {"properties": {"channel": {"const": "model_proposal"}}}, "then": {"required": ["model_proposal"]}}
+  ],
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "modelProposal": {"type": "object", "additionalProperties": false, "required": ["provider", "family", "harness", "exact_model_id", "proposal_sha256", "dissent"], "properties": {"provider": {"type": "string", "minLength": 1}, "family": {"type": "string", "minLength": 1}, "harness": {"type": "string", "minLength": 1}, "exact_model_id": {"type": "string", "minLength": 1}, "proposal_sha256": {"$ref": "#/$defs/sha256"}, "dissent": {"type": "string", "minLength": 1}}}}
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "vesum_unattested_sample_config_v1",
+  "sample_id": "phase3-vesum-unattested-source-stratified-v1",
+  "expected_denominator": 9292022,
+  "production_expected_denominator": 9292022,
+  "family_quotas": {
+    "external_articles": 64,
+    "literary": 64,
+    "public_textbooks": 64,
+    "wikipedia": 64
+  },
+  "stratification_axes": [
+    "source_family",
+    "period",
+    "genre",
+    "register"
+  ],
+  "allocation_algorithm": "phase3-stratified-largest-remainder-sha256-v1",
+  "population_membership": "Exact profiler lexical tokenization and normalization followed by absence from the pinned VESUM snapshot.",
+  "classification_policy": {
+    "producer": "scripts/projects/open_model_data/language_contact_detector.py",
+    "aggregate_unknown_count_is_linguistic_label": false,
+    "vesum_absence_is_error_label": false,
+    "detector_failure_disposition": "unresolved",
+    "unmapped_detector_category_disposition": "unresolved"
+  },
+  "publication": {
+    "source_text": false,
+    "surface_text": false,
+    "raw_external_evidence": false,
+    "stand_off_only": true
+  },
+  "held_back_strategy": {
+    "private_locator": "batch_state/issue-6333/heldback/phase3-v1",
+    "public_repo_copy": false
+  },
+  "limitations": [
+    "The sample routes evidence for investigation and is not human gold.",
+    "A VESUM non-hit cannot by itself support an error or correction disposition.",
+    "Detector no-hit, adapter failure, or unrecognized category remains unresolved."
+  ]
+}
