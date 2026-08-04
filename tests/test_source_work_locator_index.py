@@ -353,6 +353,35 @@ def test_same_locator_pair_with_conflicting_allowlisted_metadata_fails_closed(tm
         locators.build(config_path=config, input_root=root, output=root / "out")
 
 
+def test_whitespace_equivalent_metadata_is_normalized_before_emission(tmp_path: Path) -> None:
+    config, root = _fixture(tmp_path)
+    with sqlite3.connect(root / "data" / "sources.db") as connection:
+        connection.execute(
+            "INSERT INTO external_articles VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "external",
+                "https://example.test/a",
+                "https://example.test/a?raw=1",
+                "  Article  ",
+                " Speaker ",
+                "example.test",
+                "2026-01-01",
+                "channel",
+                "X",
+            ),
+        )
+    output = root / "out.jsonl"
+    locators.build(config_path=config, input_root=root, output=output)
+    row = next(
+        json.loads(line)
+        for line in output.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["source_family"] == "external_articles"
+    )
+    assert row["metadata"]["title"] == "Article"
+    assert row["metadata"]["speaker"] == "Speaker"
+    assert row["affected_records"] == 2
+
+
 def test_invalid_row_unknown_field_is_rejected_by_contract(tmp_path: Path) -> None:
     _output, rows = _build(tmp_path)
     row = dict(rows[0])

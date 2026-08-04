@@ -38,7 +38,7 @@ counts. It never contains chunks, source text, evaluation fingerprints, or a
 permission claim. The published `.compact.jsonl` is a lossless, UTF-8 compact
 transport: its first line declares the semantic row schema, field order,
 family descriptors, the exact deterministic `locator_id` derivation, record
-count, ordering, eight sorted metadata-publication vectors, and hash of
+count, ordering, the complete sorted set of metadata-publication vectors, and hash of
 canonical expanded JSONL. Each row references one vector by a strictly
 validated index. Consumers validate and expand every compact row to the
 existing full object before Phase 2 sees it;

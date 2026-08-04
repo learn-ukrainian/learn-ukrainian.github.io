@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_consumer_view_v1.schema.json",
+  "title": "Model-neutral evidence-graded correction/protection consumer view v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "view_id",
+    "view_type",
+    "assurance_tier",
+    "authoritative",
+    "source_origin",
+    "record_id",
+    "category_id",
+    "disposition",
+    "action",
+    "original",
+    "proposal",
+    "evidence_refs",
+    "evaluation_firewall",
+    "consumer_decision"
+  ],
+  "properties": {
+    "schema_version": {"const": "correction_protection_consumer_view_v1"},
+    "view_id": {"type": "string", "pattern": "^cp_view:[a-f0-9]{64}$"},
+    "view_type": {"enum": ["correction", "filtering", "preference", "protection", "abstention"]},
+    "assurance_tier": {"const": "evidence_graded_non_gold"},
+    "authoritative": {"const": false},
+    "source_origin": {"enum": ["public_canary", "consumer_controlled_corpus"]},
+    "record_id": {"type": "string", "minLength": 1},
+    "category_id": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["correct", "correction", "protected", "excluded", "unresolved"]},
+    "action": {"enum": ["propose_correction", "retain", "exclude", "abstain"]},
+    "original": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["immutable", "text", "surface", "start_offset", "end_offset", "text_sha256", "surface_sha256"],
+      "properties": {
+        "immutable": {"const": true},
+        "text": {"type": "string"},
+        "surface": {"type": "string"},
+        "start_offset": {"type": "integer", "minimum": 0},
+        "end_offset": {"type": "integer", "minimum": 0},
+        "text_sha256": {"$ref": "#/$defs/sha256"},
+        "surface_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "proposal": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["replacement", "replacement_sha256", "reversible"],
+          "properties": {
+            "replacement": {"type": "string"},
+            "replacement_sha256": {"$ref": "#/$defs/sha256"},
+            "reversible": {"const": true}
+          }
+        }
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^cp_evidence:[a-f0-9]{64}$"}
+    },
+    "evaluation_firewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "overlap_state", "consumer_authorized_local_learning", "learning_eligible"],
+      "properties": {
+        "version": {"$ref": "#/$defs/sha256"},
+        "overlap_state": {"enum": ["clear", "matched", "public_canary"]},
+        "consumer_authorized_local_learning": {"type": "boolean"},
+        "learning_eligible": {"type": "boolean"}
+      }
+    },
+    "consumer_decision": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action": {"const": "propose_correction"}}},
+      "then": {
+        "properties": {
+          "disposition": {"const": "correction"},
+          "proposal": {"type": "object"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"source_origin": {"const": "public_canary"}}},
+      "then": {
+        "properties": {
+          "evaluation_firewall": {
+            "properties": {
+              "overlap_state": {"const": "public_canary"},
+              "consumer_authorized_local_learning": {"const": false},
+              "learning_eligible": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evaluation_firewall": {
+            "properties": {"learning_eligible": {"const": true}},
+            "required": ["learning_eligible"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_origin": {"const": "consumer_controlled_corpus"},
+          "evaluation_firewall": {
+            "properties": {
+              "overlap_state": {"const": "clear"},
+              "consumer_authorized_local_learning": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

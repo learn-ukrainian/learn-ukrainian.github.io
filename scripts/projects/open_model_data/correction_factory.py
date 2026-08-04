@@ -244,7 +244,8 @@ def load_evaluation_registry(
     )
 
 
-def _near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
+def is_near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
+    """Return whether normalized text is a near duplicate of any reference."""
     normalized = normalize_evaluation_text(text)
     if not normalized:
         return False
@@ -263,6 +264,11 @@ def _near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
     return False
 
 
+def _near_duplicate(text: str, reference_texts: Sequence[str]) -> bool:
+    """Compatibility alias for callers predating the public firewall helper."""
+    return is_near_duplicate(text, reference_texts)
+
+
 def contamination_states(
     text: str,
     registry: EvaluationRegistry,
@@ -277,9 +283,9 @@ def contamination_states(
     )
     return {
         "v0_1_1_exact": "match" if exact_hashes & registry.v011_exact else "clear",
-        "v0_1_1_near": "match" if _near_duplicate(text, registry.v011_texts) else "clear",
+        "v0_1_1_near": "match" if is_near_duplicate(text, registry.v011_texts) else "clear",
         "v0_2_exact": "match" if exact_hashes & registry.v02_exact else "clear",
-        "v0_2_near": "match" if _near_duplicate(text, registry.v02_texts) else "clear",
+        "v0_2_near": "match" if is_near_duplicate(text, registry.v02_texts) else "clear",
     }
 
 
