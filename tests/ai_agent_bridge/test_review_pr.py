@@ -68,7 +68,7 @@ def _run_invalid_response_lifecycle(
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
