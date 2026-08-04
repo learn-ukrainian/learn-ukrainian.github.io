@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/vesum_unattested_sample_record_v1.schema.json",
+  "title": "Text-free VESUM unattested sample record v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "sample_id", "assurance_tier", "authoritative", "source", "span", "classification", "evidence_refs", "claim_boundary"],
+  "properties": {
+    "schema_version": {"const": "vesum_unattested_sample_record_v1"}, "sample_id": {"type": "string", "pattern": "^vesum_sample:[a-f0-9]{64}$"}, "assurance_tier": {"const": "evidence_graded_non_gold"}, "authoritative": {"const": false},
+    "source": {"type": "object", "additionalProperties": false, "required": ["record_id", "work_id", "source_id", "revision_pin", "locator", "content_sha256", "source_axes"], "properties": {"record_id": {"type": "string", "minLength": 3}, "work_id": {"type": "string", "minLength": 3}, "source_id": {"type": "string", "minLength": 3}, "revision_pin": {"type": "string", "minLength": 1}, "locator": {"type": "string", "minLength": 1}, "content_sha256": {"$ref": "#/$defs/sha256"}, "source_axes": {"$ref": "#/$defs/axes"}}},
+    "span": {"type": "object", "additionalProperties": false, "required": ["start_offset", "end_offset", "surface_sha256"], "properties": {"start_offset": {"type": "integer", "minimum": 0}, "end_offset": {"type": "integer", "minimum": 0}, "surface_sha256": {"$ref": "#/$defs/sha256"}}},
+    "classification": {"enum": ["ocr_or_noise", "proper_name", "historical_orthography", "foreign_or_russian_quotation", "phonetic_russian", "plausible_modern_ukrainian_error", "legitimate_ukrainian_variation", "unresolved"]},
+    "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^cp_evidence:[a-f0-9]{64}$"}},
+    "claim_boundary": {"type": "object", "additionalProperties": false, "required": ["human_gold", "human_reviewed", "text_published", "training_eligible"], "properties": {"human_gold": {"const": false}, "human_reviewed": {"const": false}, "text_published": {"const": false}, "training_eligible": {"const": false}}}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "axes": {"type": "object", "additionalProperties": false, "required": ["source_family", "period", "genre", "register"], "properties": {"source_family": {"type": "string", "minLength": 1}, "period": {"type": "string", "minLength": 1}, "genre": {"type": "string", "minLength": 1}, "register": {"type": "string", "minLength": 1}}}}
+}
