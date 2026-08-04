@@ -265,10 +265,12 @@ def test_active_exact_head_exits_before_reservation_or_provider_call(monkeypatch
     assert "already active" in capsys.readouterr().err
 
 
-def test_failed_explicit_review_without_prior_reservation_retries_in_place(
+@pytest.mark.parametrize("prior_failure", [None, "acp_adapter_missing"])
+def test_failed_explicit_review_without_result_invalid_prior_retries_in_place(
     monkeypatch,
     capsys,
     tmp_path,
+    prior_failure: str | None,
 ) -> None:
     from agent_runtime import runner
     from ai_agent_bridge import _review_worktree
@@ -301,7 +303,9 @@ def test_failed_explicit_review_without_prior_reservation_retries_in_place(
             return None
 
         def latest_for_authority_key(self, _authority_key):
-            return None
+            if prior_failure is None:
+                return None
+            return SimpleNamespace(failure_classification=prior_failure)
 
         def reserve_selection(self, *_args, **_kwargs):
             raise AssertionError("active retry must exit before reserving")

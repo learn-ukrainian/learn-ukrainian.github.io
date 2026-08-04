@@ -721,6 +721,10 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     if authority_job.state == "failed"
                     else None
                 )
+                # Durable cross-reviewer substitution is intentionally limited
+                # to a semantically invalid verdict. Transport/adapter failures
+                # retain the existing in-call fallback contract: auto routes may
+                # fall back, while explicit pins require --allow-explicit-fallback.
                 substitution_pending = (
                     requested_candidate is not None
                     and prior_reservation is not None
