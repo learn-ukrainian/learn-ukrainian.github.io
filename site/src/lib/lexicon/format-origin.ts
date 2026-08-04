@@ -15,9 +15,10 @@ const MAX_LENGTH = 160;
 
 // Matches a parenthetical that contains Latin-script characters.
 // Tolerates one level of nested parentheses, which Wiktionary uses for
-// transliterations: (naštovx(núty)).
+// transliterations: (naštovx(núty)). Never strip quote- or markup-bearing
+// parens (XSS fixtures, code, etc.) — only transliteration-style content.
 const LATIN_PARENTHETICAL_RE =
-  /\((?:[^()]|\([^()]*\))*[A-Za-z](?:[^()]|\([^()]*\))*\)/g;
+  /\((?=[^)"<>]*[A-Za-z])(?:[^()"<>]|\([^()"<>]*\))+\)/g;
 
 // Imperial-comparison clauses that Kaikki sometimes appends.
 // Keep the sentence's own period before the clause; only drop the clause itself.
