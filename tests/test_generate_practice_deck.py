@@ -976,6 +976,79 @@ def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path)
     }
 
 
+
+def test_build_classify_items_records_missing_morphology_aspect_residual() -> None:
+    entry = {"lemma": "знати", "pos": "verb"}
+    lexeme = {"lemmaId": "znaty", "lemma": "знати", "cefr": "B1"}
+    residuals: list[dict[str, str]] = []
+
+    classify = _build_classify_items(entry, lexeme, aspect_residuals=residuals)
+
+    assert classify == []
+    assert residuals == [
+        {
+            "lemmaId": "znaty",
+            "lemma": "знати",
+            "cefr": "B1",
+            "reason": "missing_morphology",
+        }
+    ]
+
+
+def test_build_classify_items_records_conflicting_explicit_aspect_residual() -> None:
+    entry = {
+        "lemma": "омонім",
+        "pos": "verb",
+        "enrichment": {
+            "morphology": {
+                "pos": "verb",
+                "forms": [{"label": "доконаний"}, {"label": "недоконаний"}],
+            }
+        },
+    }
+    lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
+    residuals: list[dict[str, str]] = []
+
+    classify = _build_classify_items(entry, lexeme, aspect_residuals=residuals)
+
+    assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
+    assert residuals == [
+        {
+            "lemmaId": "omonym",
+            "lemma": "омонім",
+            "cefr": "A2",
+            "reason": "conflicting_explicit_aspect",
+        }
+    ]
+
+
+def test_build_classify_items_records_no_explicit_aspect_or_tense_proxy_residual() -> None:
+    entry = {
+        "lemma": "абити",
+        "pos": "verb",
+        "enrichment": {
+            "morphology": {
+                "pos": "verb",
+                "forms": [{"label": "інфінітив"}],
+            }
+        },
+    }
+    lexeme = {"lemmaId": "abyty", "lemma": "абити", "cefr": "A2"}
+    residuals: list[dict[str, str]] = []
+
+    classify = _build_classify_items(entry, lexeme, aspect_residuals=residuals)
+
+    assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
+    assert residuals == [
+        {
+            "lemmaId": "abyty",
+            "lemma": "абити",
+            "cefr": "A2",
+            "reason": "no_explicit_aspect_or_tense_proxy",
+        }
+    ]
+
+
 def test_a2_classify_items_do_not_raise_english_labels() -> None:
     entry = {
         "lemma": "книга",
