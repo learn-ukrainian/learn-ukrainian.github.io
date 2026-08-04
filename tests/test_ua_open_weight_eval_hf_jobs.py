@@ -93,6 +93,7 @@ def test_invalid_run_disposition_requires_private_retention_and_semantic_publica
     assert retained["visibility"] == "private"
     assert retained["repository_deleted"] is False
     assert retained["visibility_receipt"]["authenticated_repo_info_private"] is True
+    assert retained["visibility_receipt"]["anonymous_http_status"] == 401
     assert retained["visibility_receipt"]["content_revision_preserved"] is True
     assert disposition["public_transparency"]["incident_record"].startswith("https://github.com/")
     assert disposition["publication_policy"] == {
@@ -108,6 +109,12 @@ def test_invalid_run_disposition_requires_private_retention_and_semantic_publica
     drifted = tmp_path / "disposition.json"
     drifted.write_text(json.dumps(disposition), encoding="utf-8")
     with pytest.raises(hf_jobs_baseline.BaselineError, match="must remain private"):
+        hf_jobs_baseline.load_disposition(drifted)
+
+    hash_drift = hf_jobs_baseline.load_disposition()
+    hash_drift["full"]["responses_sha256"] = None
+    drifted.write_text(json.dumps(hash_drift), encoding="utf-8")
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="full response evidence is not a SHA-256"):
         hf_jobs_baseline.load_disposition(drifted)
 
 
@@ -937,7 +944,10 @@ def _complete_responses(config: dict) -> list[dict]:
     return rows
 
 
-def test_results_package_includes_complete_responses_but_not_private_generations(tmp_path: Path) -> None:
+def test_results_package_includes_complete_responses_but_not_private_generations(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     config = hf_jobs_baseline.load_config()
     responses = tmp_path / "responses.jsonl"
     _write_jsonl(responses, _complete_responses(config))
@@ -1043,6 +1053,12 @@ def test_results_package_includes_complete_responses_but_not_private_generations
             output_dir=invalid_output,
         )
     assert not invalid_output.exists()
+
+    nonzero_integrity = {**result["semantic_validation"], "violation_rows": 1}
+    with monkeypatch.context() as scoped:
+        scoped.setattr(hf_jobs_baseline, "verify_response_integrity", lambda _: nonzero_integrity)
+        with pytest.raises(hf_jobs_baseline.BaselineError, match="nonzero violation_rows"):
+            hf_jobs_baseline.verify_results_package(output)
 
     (output / "report.json").write_text("{}\n", encoding="utf-8")
     with pytest.raises(

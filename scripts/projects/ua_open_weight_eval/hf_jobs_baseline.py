@@ -184,6 +184,7 @@ def load_disposition(path: Path = DISPOSITION_PATH) -> dict[str, Any]:
         "run disposition schema drift",
     )
     _require(disposition.get("issue") == 6273, "run disposition issue drift")
+    _require(disposition.get("last_updated_on") == "2026-08-04", "run disposition update date drift")
     _require(disposition.get("run_config_sha256") == sha256_file(CONFIG_PATH), "run disposition config drift")
     _require(disposition.get("status") == "invalid_semantic_output", "run disposition status drift")
     _require(disposition.get("evaluation_valid") is False, "invalid run cannot be evaluation-valid")
@@ -197,7 +198,25 @@ def load_disposition(path: Path = DISPOSITION_PATH) -> dict[str, Any]:
         "retained artifact identity drift",
     )
     _require(retained.get("visibility") == "private", "invalid result repository must remain private")
+    _require(retained.get("visibility_changed_on") == "2026-08-04", "artifact visibility date drift")
     _require(retained.get("repository_deleted") is False, "invalid result repository must be retained")
+    for field in ("invalid_revision", "corrective_card_revision"):
+        _require(
+            re.fullmatch(r"[0-9a-f]{40}", str(retained.get(field, ""))) is not None,
+            f"retained artifact {field} is not a commit revision",
+        )
+    for field in ("package_sha256", "corrective_readme_sha256"):
+        _require(
+            re.fullmatch(r"[0-9a-f]{64}", str(retained.get(field, ""))) is not None,
+            f"retained artifact {field} is not a SHA-256",
+        )
+    for stage in ("canary", "full"):
+        stage_receipt = disposition.get(stage)
+        _require(isinstance(stage_receipt, dict), f"{stage} disposition receipt is missing")
+        _require(
+            re.fullmatch(r"[0-9a-f]{64}", str(stage_receipt.get("responses_sha256", ""))) is not None,
+            f"{stage} response evidence is not a SHA-256",
+        )
     visibility_receipt = retained.get("visibility_receipt")
     _require(isinstance(visibility_receipt, dict), "artifact visibility receipt is missing")
     _require(

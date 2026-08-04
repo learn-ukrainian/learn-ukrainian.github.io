@@ -135,7 +135,9 @@ Publication is eligible only when this command returns verification schema
 actual 4,000 saved responses with zero violations. Transport completion,
 provider status, file shape, manifests, hashes, metrics, runtime, or cost are
 not substitutes. A failure keeps the result repository private; GitHub retains
-the public incident explanation and hashes.
+the public incident explanation and hashes. A verification exception or CLI
+exit code `2` produces no v2 eligibility receipt and therefore means
+publication is ineligible; it is not an infrastructure-only warning to ignore.
 
 ## Українською
 
@@ -157,6 +159,14 @@ the public incident explanation and hashes.
 непрозорі послідовні ідентифікатори без міток категорій. Модель працює з ним
 локально, а команда `score` детерміновано оцінює збережені відповіді. Набір і
 його похідні заборонено додавати до навчальних представлень Foundry.
+
+Перед оприлюдненням майбутнього репозиторію результатів Hugging Face виконайте
+команду `verify-results` для точних підготовлених файлів. Оприлюднення дозволено
+лише тоді, коли схема перевірки
+`ua_open_weight_eval_results_verification.v2` повертає `status: passed`,
+`publication_eligible: true` і квитанцію `semantic_validation` для всіх 4 000
+фактично збережених відповідей без жодного порушення. Виняток перевірки або код
+завершення `2` означає, що репозиторій результатів має залишатися приватним.
 
 ## Acceptance contract
 
