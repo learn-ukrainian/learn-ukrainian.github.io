@@ -2295,10 +2295,11 @@ def _build_classify_items(
             for pattern in patterns
         )
         explicit_conflict = explicit is None and has_any_explicit
-        if explicit_conflict:
-            aspect = None
-        else:
-            aspect = explicit or vesum_aspect or _aspect_category(labels)
+        aspect = (
+            None
+            if explicit_conflict
+            else explicit or vesum_aspect or _aspect_category(labels)
+        )
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
         elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
