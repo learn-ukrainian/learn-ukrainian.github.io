@@ -217,6 +217,13 @@ not permanent routing weights and do not override current CodexBar headroom.
   ACPX built-ins are checked through their `<seat> exec --file` surface rather
   than by duplicating pins for the hidden provider executables. The project
   text ACP server remains digest-checked before use.
+- Claude is the one built-in with an additional installed-package invariant:
+  `@agentclientprotocol/claude-agent-acp` must resolve from the same
+  project-local `node_modules` tree as ACPX and satisfy
+  `installed>=0.64.2<1`. The manifest keeps that rolling range while the
+  lockfile records the exact installed release. Missing, incompatible, or
+  unsafe package/bin metadata fails before prompt delivery; ACPX must not
+  fall back to per-call package execution.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.
@@ -345,11 +352,14 @@ ACPX is installed once at the shared primary checkout as a project-local
 dependency; a dispatch worktree resolves that primary install and must not
 create its own global ACPX installation. The manifest accepts versions from
 `0.13.0` onward, the lockfile preserves reproducibility, and the runtime probe
-rejects incompatible command-surface drift before prompt delivery. For an E2E/replay check,
-run the real stdin-only `acp-discuss` command from a registered worktree with
-one bounded read-only task, then repeat the **identical** task, correlation,
-and idempotency values. The first terminal result is evidence; the second must
-be durable replay suppression, never another model run. Then run:
+rejects incompatible command-surface drift before prompt delivery. The same
+install owns the rolling Claude ACP adapter dependency; run `npm install` in
+the primary checkout after pulling a lockfile change so worktrees do not fall
+back to dynamic package execution. For an E2E/replay check, run the real
+stdin-only `acp-discuss` command from a registered worktree with one bounded
+read-only task, then repeat the **identical** task, correlation, and idempotency
+values. The first terminal result is evidence; the second must be durable
+replay suppression, never another model run. Then run:
 
 ```bash
 .venv/bin/python -m scripts.fleet_comms acp-verify \
@@ -479,6 +489,12 @@ counts and outcomes.
 | `AUTH_REQUIRED` with an existing ChatGPT Codex login | Verify `codex login status`, then set the non-secret per-process selector `ACPX_AUTH_CHAT_GPT=1`; `--auth-policy fail` deliberately refuses implicit method selection |
 | `AUTH_REQUIRED` on the Grok shadow seat | Establish the native Grok CLI's cached login outside this adapter; the Grok adapter automatically sets the non-secret per-process selector `ACPX_AUTH_CACHED_TOKEN=1` and scrubs ambient XAI API-key auth selectors so cached native login is the only accepted path |
 | Other auth failure | Fail closed; do not retry in-adapter; fix credentials outside the adapter and never store or log API keys in the repository |
+| `acp_adapter_missing` / `acp_adapter_incompatible` | Run `npm install` in the canonical primary checkout and verify the locked `@agentclientprotocol/claude-agent-acp` package; do not use a global install or permit dynamic package execution |
+| `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
+| `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
+| `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Claude sealed reviews derive a bounded cap from parent-owned, serialized-result-limited evidence chunks, plus ToolSearch, verdict, and four smaller-chunk recovery turns. Prompt retries stay at zero |
+| `acp_review_evidence_invalid` / `acp_review_evidence_too_large` | Repair the parent-owned sealed snapshot or route the oversized formal review to another eligible provider; Claude ACP refuses scopes above its reviewed 96-chunk ceiling before spawn |
+| `acp_permission_denied` / `acp_permission_unavailable` | Fix the bounded permission configuration; do not broaden the no-tool or sealed-review allowlist |
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |
 | Duplicate correlation id | Treat as replay protection; do not double-apply side effects (there should be none) |

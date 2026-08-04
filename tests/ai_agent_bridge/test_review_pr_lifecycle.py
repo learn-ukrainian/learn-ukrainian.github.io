@@ -107,7 +107,7 @@ def test_completed_exact_head_replays_without_provider_call(monkeypatch, capsys,
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
@@ -214,7 +214,7 @@ def test_active_exact_head_exits_before_reservation_or_provider_call(monkeypatch
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
@@ -265,6 +265,96 @@ def test_active_exact_head_exits_before_reservation_or_provider_call(monkeypatch
     assert "already active" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize("prior_failure", [None, "acp_adapter_missing"])
+def test_failed_explicit_review_without_result_invalid_prior_retries_in_place(
+    monkeypatch,
+    capsys,
+    tmp_path,
+    prior_failure: str | None,
+) -> None:
+    from agent_runtime import runner
+    from ai_agent_bridge import _review_worktree
+
+    from scripts.api import state_router
+    from scripts.fleet_comms import authority as authority_module
+    from scripts.fleet_comms import routing_reservations
+
+    checkout = SimpleNamespace(
+        sha="a" * 40,
+        base_sha="b" * 40,
+        patch_digest="c" * 64,
+        changed_paths=("src/app.py",),
+        changed_line_numbers={"src/app.py": frozenset({1})},
+        path=tmp_path,
+        review_prompt_evidence=lambda _engine: "sealed-metadata",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
+        sealed_evidence_input_bytes=lambda: 123,
+    )
+
+    @contextmanager
+    def provision(*_args, **_kwargs):
+        yield checkout
+
+    class FakeLedger:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def latest_for_authority_key(self, _authority_key):
+            if prior_failure is None:
+                return None
+            return SimpleNamespace(failure_classification=prior_failure)
+
+        def reserve_selection(self, *_args, **_kwargs):
+            raise AssertionError("active retry must exit before reserving")
+
+    failed_job = SimpleNamespace(state="failed", job_id="job_failed", subject_id="review_failed")
+    queued_job = SimpleNamespace(state="queued", job_id="job_failed", subject_id="review_failed")
+    formal = SimpleNamespace(review_id="review_failed", snapshot_artifact_id="artifact_fixture")
+    retry_calls: list[str] = []
+
+    class FakeAuthority:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_formal_review(self, **_kwargs):
+            return failed_job
+
+        def require_publishable_formal_review(self, *_args, **_kwargs):
+            return formal
+
+        def retry_job(self, job_id):
+            retry_calls.append(job_id)
+            return queued_job
+
+        def authorize_formal_review_substitution(self, **_kwargs):
+            raise AssertionError("failed admission without a reservation is not a substitution")
+
+        def claim_job(self, *_args, **_kwargs):
+            raise authority_module.AuthorityStaleLeaseError("job_already_claimed")
+
+    monkeypatch.setattr(_review_worktree, "provision_review_worktree", provision)
+    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kwargs: {"agents": {}})
+    monkeypatch.setattr(routing_reservations, "RoutingReservationLedger", FakeLedger)
+    monkeypatch.setattr(authority_module, "AuthorityService", FakeAuthority)
+    monkeypatch.setattr(
+        runner,
+        "invoke_inter_agent",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("duplicate provider call")),
+    )
+
+    assert _review_pr.handle_review_pr(
+        _args(reviewer="claude", override_reason="retry after expired circuit")
+    ) == 1
+    assert retry_calls == [failed_job.job_id]
+    assert "already active" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize(
     "refusal",
     ("substitution_snapshot_drift", "substitution_reservation_expired"),
@@ -290,7 +380,7 @@ def test_refused_substitution_makes_no_provider_call_or_claim(
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
@@ -377,7 +467,7 @@ def test_expired_reservation_after_successful_substitution_never_reaches_provide
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 

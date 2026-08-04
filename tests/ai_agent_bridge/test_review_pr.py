@@ -68,7 +68,7 @@ def _run_invalid_response_lifecycle(
         changed_line_numbers={"src/app.py": frozenset({1})},
         path=tmp_path,
         review_prompt_evidence=lambda _engine: "sealed-metadata",
-        sealed_acp_tool_config=lambda: tmp_path / "sealed.json",
+        sealed_acp_tool_config=lambda **_kwargs: tmp_path / "sealed.json",
         sealed_evidence_input_bytes=lambda: 123,
     )
 
@@ -373,6 +373,9 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "gpt-5.6-terra" in prompt
     assert "effort=high" in prompt
     assert "confidence` value MUST be a JSON number" in prompt
+    assert '`"P0"`, `"P1"`, `"P2"`, or `"P3"`' in prompt
+    assert '`"maintainability"` invalidate' in prompt
+    assert '`["none"]` when no external source applies' in prompt
     assert 'correctness":"correct"' in prompt
     assert 'enum aliases such as `"pass"`' in prompt
     assert "never add\n`claim_type` at the finding root" in prompt
@@ -569,6 +572,8 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
         "mcp__sealed_review__search_text",
     ]
     assert "--no-fs" in command and "--no-terminal" in command
+    assert command[command.index("--max-turns") + 1] == "1"
+    assert command[command.index("--prompt-retries") + 1] == "0"
     policy = json.loads(command[command.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
         *allowed,
@@ -579,6 +584,16 @@ def test_acpx_sealed_review_confinement_allows_only_parent_reader_tools() -> Non
         "sealed_review__search_text",
     ]
     assert policy["defaultAction"] == "deny"
+
+
+def test_failure_classification_preserves_typed_acp_failure() -> None:
+    result = type(
+        "ResultFixture",
+        (),
+        {"rate_limited": False, "stalled": False, "usage_record": {"failure_code": "acp_turn_limit"}},
+    )()
+
+    assert review_pr._failure_classification(result) == "acp_turn_limit"
 
 
 def test_automatic_failover_and_explicit_no_silent_provider_change() -> None:

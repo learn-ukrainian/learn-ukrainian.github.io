@@ -59,6 +59,17 @@ _RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
 _RUNTIME_ATTRIBUTION_SOURCES = frozenset({"explicit", "session_env", "unknown"})
 _RUNTIME_FAILURE_CODES = frozenset(
     {
+        "acp_adapter_incompatible",
+        "acp_adapter_missing",
+        "acp_agent_disconnected",
+        "acp_agent_startup",
+        "acp_auth_required",
+        "acp_permission_denied",
+        "acp_permission_unavailable",
+        "acp_review_evidence_invalid",
+        "acp_review_evidence_too_large",
+        "acp_session_create_timeout",
+        "acp_turn_limit",
         "adapter_refused",
         "protocol_output_limit",
         "provider_unavailable",

@@ -82,7 +82,7 @@ import subprocess
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from ..result import ParseResult
@@ -115,9 +115,16 @@ TRANSPORT_ENV = "LU_ACPX_TRANSPORT"
 # will invoke. A compatible in-place upgrade is accepted immediately, while a
 # changed surface fails before prompt delivery.
 ACPX_CLI_COMPATIBILITY_CONTRACT = "json-one-shot-v1"
+CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT = "installed>=0.64.2<1"
 AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
+ACPX_DEFAULT_MAX_TURNS = 1
+_CLAUDE_ACP_SEALED_READ_CHUNK_BYTES = 24 * 1024
+_CLAUDE_ACP_INLINE_RESULT_CHARS = 48 * 1024
+_CLAUDE_ACP_FALLBACK_READ_CHUNK_BYTES = 8 * 1024
+_CLAUDE_ACP_MAX_SEALED_READ_CHUNKS = 96
+_CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD = 6
 
 _ACPX_REQUIRED_GLOBAL_FLAGS: tuple[str, ...] = (
     "--agent",
@@ -171,6 +178,13 @@ _DEFAULT_ACPX_BINARY = _REPO_ROOT / "node_modules" / ".bin" / "acpx"
 # Keep this separately patchable for hermetic adapter tests.  An explicit
 # override is authoritative and must never silently fall back to another tree.
 _ACPX_BINARY = _DEFAULT_ACPX_BINARY
+_CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp"
+_CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
+_CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
+_CLAUDE_ACP_MANIFEST_LIMIT_BYTES = 64 * 1024
+_STRICT_SEMVER_RE = re.compile(
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$"
+)
 _TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
 _TEXT_AGENT_SHA256 = "42761e2bd9ab0e66f5e5779826777b46bd0761cc4673e13285e1fc37418ea679"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
@@ -253,8 +267,16 @@ _SEALED_REVIEW_TOOL_NAMES = (
     "mcp__sealed_review__read_required_all",
     "mcp__sealed_review__search_text",
 )
-_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES = tuple(
-    name.removeprefix("mcp__") for name in _SEALED_REVIEW_TOOL_NAMES
+_CLAUDE_SEALED_REVIEW_TOOL_NAMES = (
+    "mcp__sealed_review__read_required",
+)
+_CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT = (
+    "You are a stateless read-only formal code reviewer. Follow the user's "
+    "parent-authenticated sealed-evidence and output-schema instructions literally. "
+    "Use ToolSearch only to load mcp__sealed_review__read_required, then call that "
+    "reader from the requested cursor until eof=true. Do not call ReportFindings or "
+    "any other built-in or MCP tool. Return the requested canonical JSON object as "
+    "the final assistant message with no prose, markdown, or trailing text."
 )
 
 
@@ -316,7 +338,14 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     args = server.get("args")
     if server.get("command") != expected_python or server.get("env") != []:
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
-    if not isinstance(args, list) or len(args) != 4 or args[:2] != ["-I", "-S"]:
+    claude_change_profile = adapter_label == "AcpxClaudeShadowAdapter"
+    expected_arg_count = 5 if claude_change_profile else 4
+    if (
+        not isinstance(args, list)
+        or len(args) != expected_arg_count
+        or args[:2] != ["-I", "-S"]
+        or (claude_change_profile and args[4] != "change-evidence-only")
+    ):
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP arguments are invalid")
     helper = Path(args[2]) if isinstance(args[2], str) else Path()
     snapshot = Path(args[3]) if isinstance(args[3], str) else Path()
@@ -356,6 +385,179 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     ):
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP helper/snapshot failed validation")
     return str(config_path)
+
+
+def _claude_sealed_review_max_turns(config_path: str) -> int:
+    """Derive Claude's exact sealed-read turn budget from parent-owned bytes.
+
+    Claude Agent SDK defers MCP discovery behind one ToolSearch round-trip and
+    externalizes large single tool results to a provider-private file.  The
+    sealed protocol therefore streams one serialized-result-bounded UTF-8
+    chunk per model round-trip; one final round-trip remains for the canonical
+    verdict. Refuse scopes above the reviewed 96-chunk ceiling instead of
+    granting an unbounded agent loop. Four additional turns cover bounded
+    smaller-chunk recovery without enabling retries at the prompt layer.
+    """
+    try:
+        config = json.loads(Path(config_path).read_text(encoding="utf-8"))
+        server = config["mcpServers"][0]
+        server_args = server["args"]
+        change_evidence_only = (
+            len(server_args) == 5
+            and server_args[4] == "change-evidence-only"
+        )
+        snapshot = Path(server_args[3]).resolve(strict=True)
+        manifest = json.loads(
+            (snapshot / ".review-bundle" / "manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        changed_paths = manifest["changed_paths"]
+    except (IndexError, KeyError, OSError, TypeError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence manifest is invalid",
+            failure_code="acp_review_evidence_invalid",
+        ) from exc
+    if not isinstance(changed_paths, list) or not all(
+        isinstance(item, str) for item in changed_paths
+    ):
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review changed paths are invalid",
+            failure_code="acp_review_evidence_invalid",
+        )
+
+    required = [".review-bundle/manifest.json", ".review-bundle/patch.diff"]
+    seen = set(required)
+    for raw in changed_paths:
+        parsed = PurePosixPath(raw)
+        if (
+            not raw
+            or "\\" in raw
+            or parsed.is_absolute()
+            or any(part in {"", ".", ".."} for part in parsed.parts)
+        ):
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path is unsafe",
+                failure_code="acp_review_evidence_invalid",
+            )
+        candidate = snapshot.joinpath(*parsed.parts)
+        try:
+            candidate.resolve(strict=False).relative_to(snapshot)
+        except (OSError, ValueError) as exc:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path escapes the snapshot",
+                failure_code="acp_review_evidence_invalid",
+            ) from exc
+        if change_evidence_only:
+            continue
+        if candidate.is_symlink() or not candidate.exists():
+            continue
+        if not candidate.is_file() or raw in seen:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review changed path is invalid",
+                failure_code="acp_review_evidence_invalid",
+            )
+        seen.add(raw)
+        required.append(raw)
+
+    chunk_count = 0
+    try:
+        for index, raw in enumerate(required):
+            target = snapshot.joinpath(*PurePosixPath(raw).parts)
+            metadata = target.lstat()
+            if not stat.S_ISREG(metadata.st_mode) or target.is_symlink():
+                raise OSError("required evidence is not a regular file")
+            chunk_count += _claude_inline_chunk_count(
+                raw,
+                target.read_bytes(),
+                index=index,
+                required_path_count=len(required),
+            )
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence is unreadable",
+            failure_code="acp_review_evidence_invalid",
+        ) from exc
+    if chunk_count > _CLAUDE_ACP_MAX_SEALED_READ_CHUNKS:
+        raise AcpxShadowRefusalError(
+            "AcpxClaudeShadowAdapter: sealed review evidence exceeds the bounded Claude ACP chunk budget",
+            failure_code="acp_review_evidence_too_large",
+        )
+    return chunk_count + _CLAUDE_ACP_SEALED_REVIEW_TURN_OVERHEAD
+
+
+def _claude_inline_chunk_count(
+    raw_path: str,
+    data: bytes,
+    *,
+    index: int,
+    required_path_count: int,
+) -> int:
+    """Mirror the sealed helper's serialized-result-bounded chunking."""
+    file_sha256 = hashlib.sha256(data).hexdigest()
+    offset = 0
+    count = 0
+    while offset < len(data) or (not data and count == 0):
+        max_bytes = _CLAUDE_ACP_SEALED_READ_CHUNK_BYTES
+        while True:
+            end = min(len(data), offset + max_bytes)
+            while end > offset:
+                try:
+                    content = data[offset:end].decode("utf-8", errors="strict")
+                    break
+                except UnicodeDecodeError as exc:
+                    if exc.reason != "unexpected end of data":
+                        raise AcpxShadowRefusalError(
+                            "AcpxClaudeShadowAdapter: sealed review evidence is not UTF-8",
+                            failure_code="acp_review_evidence_invalid",
+                        ) from exc
+                    end -= 1
+            else:
+                content = ""
+            chunk = {
+                "path": raw_path,
+                "offset": offset,
+                "total_bytes": len(data),
+                "chunk_bytes": end - offset,
+                "next_offset": end,
+                "eof": end == len(data),
+                "sha256": file_sha256,
+                "chunk_sha256": hashlib.sha256(data[offset:end]).hexdigest(),
+                "content": content,
+            }
+            payload = {
+                "index": index,
+                "offset": offset,
+                "next_index": index + 1 if end == len(data) else index,
+                "next_offset": 0 if end == len(data) else end,
+                "required_path_count": required_path_count,
+                "eof": end == len(data) and index + 1 == required_path_count,
+                "chunks": [chunk],
+            }
+            inner = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+            outer = json.dumps(
+                {"content": [{"type": "text", "text": inner}], "isError": False},
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            if len(outer) <= _CLAUDE_ACP_INLINE_RESULT_CHARS:
+                break
+            max_bytes //= 2
+            if max_bytes < _CLAUDE_ACP_FALLBACK_READ_CHUNK_BYTES:
+                raise AcpxShadowRefusalError(
+                    "AcpxClaudeShadowAdapter: sealed review chunk cannot fit the bounded inline result",
+                    failure_code="acp_review_evidence_too_large",
+                )
+        count += 1
+        if end == len(data):
+            break
+        if end <= offset:
+            raise AcpxShadowRefusalError(
+                "AcpxClaudeShadowAdapter: sealed review chunk cursor stalled",
+                failure_code="acp_review_evidence_invalid",
+            )
+        offset = end
+    return count
 
 # Fixed ACPX built-ins available only through the runner-owned inter-agent
 # transport boundary (or its bounded discussion controller).  This is
@@ -583,6 +785,10 @@ class AcpxShadowRefusalError(ValueError):
     documented ``build_invocation`` contract (callers that only catch
     ValueError still work), while giving tests a precise type to assert on.
     """
+
+    def __init__(self, message: str, *, failure_code: str = "adapter_refused") -> None:
+        super().__init__(message)
+        self.failure_code = failure_code
 
 
 def _probe_acpx_version(binary: str) -> str:
@@ -874,15 +1080,149 @@ def _require_compatible_acpx_binary(
     return binary, observed_version
 
 
+def _require_local_claude_acp_adapter(
+    acpx_binary: str,
+    *,
+    adapter_label: str,
+) -> dict[str, str]:
+    """Require ACPX to resolve Claude from its installed dependency tree.
+
+    ACPX otherwise falls back to ``npm exec --package=...`` for every Claude
+    launch. The adapter is a direct project dependency so normal worktree
+    calls borrow the canonical primary ``node_modules`` tree together with
+    ACPX. Validate the exact package/bin surface before prompt delivery; never
+    consult PATH or a package-exec cache as a substitute.
+    """
+    binary_path = Path(acpx_binary)
+    if (
+        binary_path.parent.name != ".bin"
+        or binary_path.parent.parent.name != "node_modules"
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: ACPX binary is not inside a project "
+            "node_modules/.bin tree",
+            failure_code="acp_adapter_missing",
+        )
+    node_modules = binary_path.parent.parent
+    package_root = node_modules / "@agentclientprotocol" / "claude-agent-acp"
+    manifest_path = package_root / "package.json"
+    try:
+        package_stat = package_root.lstat()
+        manifest_stat = manifest_path.lstat()
+        manifest_bytes = manifest_path.read_bytes()
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} is missing",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    if (
+        not stat.S_ISDIR(package_stat.st_mode)
+        or not stat.S_ISREG(manifest_stat.st_mode)
+        or package_stat.st_uid != os.getuid()
+        or manifest_stat.st_uid != os.getuid()
+        or package_stat.st_mode & 0o022
+        or manifest_stat.st_mode & 0o022
+        or len(manifest_bytes) > _CLAUDE_ACP_MANIFEST_LIMIT_BYTES
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} "
+            "ownership/mode/size is unsafe",
+            failure_code="acp_adapter_incompatible",
+        )
+    try:
+        manifest = json.loads(manifest_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} manifest is malformed",
+            failure_code="acp_adapter_incompatible",
+        ) from exc
+    if not isinstance(manifest, dict) or manifest.get("name") != _CLAUDE_ACP_PACKAGE:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP package identity is incompatible",
+            failure_code="acp_adapter_incompatible",
+        )
+    version = manifest.get("version")
+    version_match = (
+        _STRICT_SEMVER_RE.fullmatch(version) if isinstance(version, str) else None
+    )
+    if version_match is None:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter version is not stable semver",
+            failure_code="acp_adapter_incompatible",
+        )
+    version_tuple = tuple(int(part) for part in version_match.groups())
+    if not (_CLAUDE_ACP_MIN_VERSION <= version_tuple < _CLAUDE_ACP_MAX_VERSION):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter version {version!r} "
+            f"is outside {CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT}",
+            failure_code="acp_adapter_incompatible",
+        )
+    package_bin = manifest.get("bin")
+    relative_bin = (
+        package_bin.get("claude-agent-acp") if isinstance(package_bin, dict) else None
+    )
+    if (
+        not isinstance(relative_bin, str)
+        or not relative_bin
+        or Path(relative_bin).is_absolute()
+        or ".." in Path(relative_bin).parts
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter bin mapping is incompatible",
+            failure_code="acp_adapter_incompatible",
+        )
+    bin_path = package_root / relative_bin
+    try:
+        bin_stat = bin_path.lstat()
+        resolved_bin = bin_path.resolve(strict=True)
+        resolved_root = package_root.resolve(strict=True)
+    except OSError as exc:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter executable is missing",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    if (
+        not stat.S_ISREG(bin_stat.st_mode)
+        or bin_stat.st_uid != os.getuid()
+        or bin_stat.st_mode & 0o022
+        or not resolved_bin.is_relative_to(resolved_root)
+    ):
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: project-local Claude ACP adapter executable is unsafe",
+            failure_code="acp_adapter_incompatible",
+        )
+    return {
+        "claude_acp_adapter_version": version,
+        "claude_acp_compatibility": CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT,
+        "claude_acp_launch_source": "installed",
+    }
+
+
 def _confinement_prefix_argv(
     binary: str,
     cwd: Path,
     *,
     sealed_review_mcp_config: str | None = None,
+    sealed_review_tool_names: tuple[str, ...] | None = None,
+    max_turns: int = ACPX_DEFAULT_MAX_TURNS,
 ) -> list[str]:
     """Shared confinement, optionally admitting only sealed review tools."""
     permission_args = ["--deny-all", "--allowed-tools", ""]
     if sealed_review_mcp_config is not None:
+        allowed_tools = (
+            _SEALED_REVIEW_TOOL_NAMES
+            if sealed_review_tool_names is None
+            else sealed_review_tool_names
+        )
+        if not allowed_tools or not set(allowed_tools).issubset(
+            _SEALED_REVIEW_TOOL_NAMES
+        ):
+            raise AcpxShadowRefusalError(
+                "ACPX sealed-review tool policy contains unsupported tools"
+            )
+        native_allowed_tools = tuple(
+            name.removeprefix("mcp__") for name in allowed_tools
+        )
         permission_policy = json.dumps(
             {
                 # ACP agents do not agree on MCP tool spelling. Claude/Kimi
@@ -891,8 +1231,8 @@ def _confinement_prefix_argv(
                 # Both spellings still name only the same parent-owned sealed
                 # server; the explicit MCP config replaces ambient servers.
                 "autoApprove": [
-                    *_SEALED_REVIEW_TOOL_NAMES,
-                    *_GROK_NATIVE_SEALED_REVIEW_TOOL_NAMES,
+                    *allowed_tools,
+                    *native_allowed_tools,
                 ],
                 "defaultAction": "deny",
             },
@@ -903,7 +1243,7 @@ def _confinement_prefix_argv(
             "--permission-policy",
             permission_policy,
             "--allowed-tools",
-            ",".join(_SEALED_REVIEW_TOOL_NAMES),
+            ",".join(allowed_tools),
             "--mcp-config",
             sealed_review_mcp_config,
         ]
@@ -922,7 +1262,7 @@ def _confinement_prefix_argv(
         "--no-terminal",
         *permission_args,
         "--max-turns",
-        "1",
+        str(max_turns),
         "--prompt-retries",
         "0",
     ]
@@ -1494,12 +1834,25 @@ class AcpxAdapter:
             data = final_error.get("data") or {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
             message = final_error.get("message", "acpx error")
-            if label == "TIMEOUT":
-                failure_code = "timeout"
-            elif label in {"AUTH_REQUIRED", "AGENT_DISCONNECTED"}:
-                failure_code = "provider_unavailable"
+            if (
+                label == "RUNTIME"
+                and isinstance(message, str)
+                and re.fullmatch(
+                    r"Internal error: Reached maximum number of turns \([1-9][0-9]*\)",
+                    message,
+                )
+            ):
+                failure_code = "acp_turn_limit"
             else:
-                failure_code = "transport_error"
+                failure_code = {
+                    "AGENT_DISCONNECTED": "acp_agent_disconnected",
+                    "AGENT_STARTUP_FAILED": "acp_agent_startup",
+                    "AUTH_REQUIRED": "acp_auth_required",
+                    "CLAUDE_ACP_SESSION_CREATE_TIMEOUT": "acp_session_create_timeout",
+                    "PERMISSION_DENIED": "acp_permission_denied",
+                    "PERMISSION_PROMPT_UNAVAILABLE": "acp_permission_unavailable",
+                    "TIMEOUT": "timeout",
+                }.get(label, "transport_error")
             return self._closed(
                 f"acpx {label}: {message}",
                 stderr,
@@ -1627,6 +1980,7 @@ class _AcpxDiscussionAdapter:
     auth_env: str | None = None
     default_model: str = "acpx-built-in-default"
     supported_modes: frozenset[str] = frozenset({"read-only"})
+    sealed_review_tool_names: tuple[str, ...] = _SEALED_REVIEW_TOOL_NAMES
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]] | None:
         _ = cwd
@@ -1645,6 +1999,18 @@ class _AcpxDiscussionAdapter:
 
     def _extra_metadata(self) -> dict[str, Any]:
         return {}
+
+    def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
+        _ = acpx_binary
+        return {}
+
+    def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
+        _ = sealed_review_mcp_config
+        return ACPX_DEFAULT_MAX_TURNS
+
+    def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
+        _ = sealed_review_mcp_config
+        return None
 
     def build_invocation(
         self,
@@ -1707,11 +2073,17 @@ class _AcpxDiscussionAdapter:
             cwd=cwd,
             builtin_agent=builtin_agent,
         )
+        participant_runtime_metadata = self._participant_runtime_metadata(binary)
         cmd = _confinement_prefix_argv(
             binary,
             cwd,
             sealed_review_mcp_config=sealed_review_mcp_config,
+            sealed_review_tool_names=self.sealed_review_tool_names,
+            max_turns=self._max_turns(sealed_review_mcp_config),
         )
+        system_prompt = self._system_prompt(sealed_review_mcp_config)
+        if system_prompt is not None:
+            cmd.extend(["--system-prompt", system_prompt])
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
@@ -1741,6 +2113,7 @@ class _AcpxDiscussionAdapter:
         if self.fixed_effort is not None:
             metadata["effort"] = self.fixed_effort
         metadata.update(custom_metadata)
+        metadata.update(participant_runtime_metadata)
         if sealed_review_mcp_config is not None:
             metadata["tool_policy"] = "sealed-review-only"
         metadata.update(self._extra_metadata())
@@ -1779,6 +2152,23 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
     allowed_models = CLAUDE_ACP_MODELS
     default_model = CLAUDE_ACP_MODEL
     fixed_effort = "high"
+    sealed_review_tool_names = _CLAUDE_SEALED_REVIEW_TOOL_NAMES
+
+    def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
+        if sealed_review_mcp_config is None:
+            return ACPX_DEFAULT_MAX_TURNS
+        return _claude_sealed_review_max_turns(sealed_review_mcp_config)
+
+    def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
+        if sealed_review_mcp_config is None:
+            return None
+        return _CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
+
+    def _participant_runtime_metadata(self, acpx_binary: str) -> dict[str, str]:
+        return _require_local_claude_acp_adapter(
+            acpx_binary,
+            adapter_label=type(self).__name__,
+        )
 
 
 class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):

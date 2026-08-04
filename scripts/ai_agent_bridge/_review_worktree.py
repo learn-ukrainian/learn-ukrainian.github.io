@@ -430,6 +430,8 @@ def _required_stream_requests(
     required_paths: tuple[str, ...],
     index: Any,
     offset: Any,
+    max_chunks: Any = MAX_CODEX_REQUIRED_READ_CHUNKS,
+    max_bytes: Any = SEALED_READ_CHUNK_BYTES,
 ) -> list[dict[str, Any]]:
     """Derive the exact chunks emitted by one parent-owned required read."""
     if (
@@ -440,15 +442,23 @@ def _required_stream_requests(
         or index < 0
         or index >= len(required_paths)
         or offset < 0
+        or not isinstance(max_chunks, int)
+        or isinstance(max_chunks, bool)
+        or max_chunks < 1
+        or max_chunks > MAX_CODEX_REQUIRED_READ_CHUNKS
+        or not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or max_bytes < 1
+        or max_bytes > SEALED_READ_CHUNK_BYTES
     ):
         return []
     requests: list[dict[str, Any]] = []
-    while index < len(required_paths) and len(requests) < MAX_CODEX_REQUIRED_READ_CHUNKS:
+    while index < len(required_paths) and len(requests) < max_chunks:
         rel_path = required_paths[index]
         data = (evidence_root / rel_path).read_bytes()
         if offset > len(data):
             return []
-        end = min(len(data), offset + SEALED_READ_CHUNK_BYTES)
+        end = min(len(data), offset + max_bytes)
         while end > offset:
             try:
                 data[offset:end].decode("utf-8", errors="strict")
@@ -461,7 +471,7 @@ def _required_stream_requests(
             {
                 "path": rel_path,
                 "offset": offset,
-                "max_bytes": SEALED_READ_CHUNK_BYTES,
+                "max_bytes": max_bytes,
             }
         )
         if end == len(data):
@@ -544,6 +554,10 @@ def _codex_sealed_read_requests(
             required_paths=required_paths,
             index=arguments.get("index", 0),
             offset=arguments.get("offset", 0),
+            max_chunks=arguments.get(
+                "max_chunks", MAX_CODEX_REQUIRED_READ_CHUNKS
+            ),
+            max_bytes=arguments.get("max_bytes", SEALED_READ_CHUNK_BYTES),
         )
     if name == "read_required_all" or name.endswith(
         "sealed_review__read_required_all"
@@ -1091,7 +1105,7 @@ class ProvisionedReviewWorktree:
             cfg.pop("review_exec_root", None)
         return cfg
 
-    def sealed_acp_tool_config(self) -> Path:
+    def sealed_acp_tool_config(self, *, change_evidence_only: bool = False) -> Path:
         """Stage one parent-owned MCP config exposing only sealed snapshot reads.
 
         The reviewed tree never supplies the helper, interpreter, or MCP
@@ -1108,13 +1122,20 @@ class ProvisionedReviewWorktree:
         helper = self.exec_root / "sealed-read-mcp.py"
         if not helper.exists():
             helper = _stage_sealed_read_mcp(self.exec_root)
-        config_path = self.write_root / "sealed-review-acpx-mcp.json"
+        config_path = self.write_root / (
+            "sealed-review-acpx-required-mcp.json"
+            if change_evidence_only
+            else "sealed-review-acpx-mcp.json"
+        )
+        helper_args = ["-I", "-S", str(helper), str(self.path)]
+        if change_evidence_only:
+            helper_args.append("change-evidence-only")
         config = {
             "mcpServers": [
                 {
                     "name": "sealed_review",
                     "command": str(python_bin),
-                    "args": ["-I", "-S", str(helper), str(self.path)],
+                    "args": helper_args,
                     # ACPX's MCP schema requires an array even when no
                     # environment entries are delegated to the child.
                     "env": [],
@@ -1146,13 +1167,21 @@ class ProvisionedReviewWorktree:
         """Return bounded, hash-bound metadata for sealed review artifacts.
 
         Every supported reviewer has a parent-owned read path into the sealed
-        snapshot. The prompt therefore names and authenticates the complete
-        manifest, patch, and changed files without duplicating arbitrarily large
-        repository bytes into model context. Unreadable or inconsistent input
-        fails closed.
+        snapshot. The prompt names and authenticates the exact required scope.
+        General sealed profiles include the manifest, patch, and changed files;
+        Claude ACP uses the complete manifest and patch without duplicating full
+        changed-file bodies. Unreadable or inconsistent input fails closed.
         """
         engine_key = engine.strip().lower()
-        if engine_key not in {"acp", "codex", "claude", "agy", "grok", "grok-build"}:
+        if engine_key not in {
+            "acp",
+            "acp-claude",
+            "codex",
+            "claude",
+            "agy",
+            "grok",
+            "grok-build",
+        }:
             raise ReviewWorktreeError(f"review_prompt_evidence_invalid:unsupported_engine:{engine!r}")
         bundle_dir = self.path / ".review-bundle"
         manifest_path = bundle_dir / "manifest.json"
@@ -1274,13 +1303,16 @@ class ProvisionedReviewWorktree:
             }
             files.append(entry)
 
-        required_read_paths = _required_review_read_paths(self.path, self.changed_paths)
+        required_read_paths = _required_review_read_paths(
+            self.path,
+            () if engine_key == "acp-claude" else self.changed_paths,
+        )
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
         sealed_proof: dict[str, Any] | None = None
         legacy_inline_bytes = 0
-        if engine_key == "acp":
+        if engine_key in {"acp", "acp-claude"}:
             sealed_proof = _sealed_required_evidence_proof(
                 self.path,
                 required_read_paths,
@@ -1294,6 +1326,21 @@ class ProvisionedReviewWorktree:
                     "sealed_review_read_required with index=0 and offset=0 and follow "
                     "next_index/next_offset until eof=true. Use read_file for required "
                     "paths only if the required stream fails."
+                ),
+                "claude_acp_instruction": (
+                    "Claude Agent SDK externalizes the complete tool result. Do not "
+                    "call sealed_review_read_required_all. Call "
+                    "sealed_review_read_required with index=0, offset=0, and "
+                    "max_chunks=1, max_bytes=24576, and "
+                    "max_result_chars=49152, then "
+                    "repeat from next_index/next_offset until eof=true. Each call "
+                    "returns exactly one serialized-result-bounded chunk. If a call "
+                    "does not return inline, repeat the same cursor once with "
+                    "max_bytes=8192 and max_result_chars=49152. Do not call shell, "
+                    "Python, or any other evidence tool. The permission policy exposes "
+                    "only sealed_review_read_required; every other evidence tool is denied. "
+                    "For Claude ACP the required stream is the exact manifest plus the "
+                    "complete patch, without duplicate full-file bodies."
                 ),
                 "unit": "utf8_bytes",
                 "start_offset": 0,
@@ -1436,7 +1483,11 @@ class ProvisionedReviewWorktree:
             "clean_verdict_gate": (
                 "parent_bound_inline_complete"
                 if engine_key in {"codex", "claude"}
-                else "complete_tool_trace_coverage_required"
+                else (
+                    "complete_change_manifest_and_patch_trace_required"
+                    if engine_key == "acp-claude"
+                    else "complete_tool_trace_coverage_required"
+                )
             ),
         }
         if sealed_proof is not None:
@@ -1490,8 +1541,9 @@ class ProvisionedReviewWorktree:
             "use a detached worktree, git, gh, or other shell command. "
             "Use the parent-bound evidence transport declared by the dossier. A clean "
             "verdict is rejected unless the trusted receipt proves complete delivery. "
-            "For ACP evidence, follow read_protocol.preferred_complete_instruction; it "
-            "avoids duplicate reads while preserving complete byte coverage. "
+            "For ACP evidence, follow read_protocol.preferred_complete_instruction; "
+            "Claude ACP must instead follow read_protocol.claude_acp_instruction. "
+            "These avoid duplicate reads while preserving complete byte coverage. "
             f"{inline_instruction}"
             "The dossier "
             "authenticates those complete "
@@ -1505,7 +1557,15 @@ class ProvisionedReviewWorktree:
             "verbatim/why_wrong/smallest_fix/sources fields. overall.correctness must "
             "be exactly correct, incorrect, or uncertain. Every confidence value must "
             "be a JSON number from 0.0 through 1.0 (for example 0.95), never a string "
-            "such as high. A clean review has this exact shape: "
+            "such as high. Every finding priority MUST be exactly one of P0, P1, P2, "
+            "or P3; labels such as high, medium, or low invalidate the entire review. "
+            "Every finding category MUST be exactly one of bug, security, correctness, "
+            "regression, api, tests, docs, performance, style, or other; aliases such "
+            "as maintainability invalidate the entire review. "
+            "Every finding sources value MUST be a non-empty array. Use exactly "
+            "[\"none\"] when no external source applies; otherwise use non-empty "
+            "source strings and never mix none with another value. "
+            "A clean review has this exact shape: "
             "{\"schema_version\":\"code-review-findings.v1\",\"overall\":"
             "{\"correctness\":\"correct\",\"explanation\":\"No actionable findings.\","
             "\"confidence\":0.95},\"findings\":[]}. Do not invent enum aliases such "

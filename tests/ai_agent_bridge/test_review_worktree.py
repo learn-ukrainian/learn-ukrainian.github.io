@@ -312,6 +312,14 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
         "sealed_review_read_required_all"
     )
     assert "exactly once" in dossier["read_protocol"]["preferred_complete_instruction"]
+    assert "max_chunks=1" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "max_bytes=24576" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "max_result_chars=49152" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "only sealed_review_read_required" in dossier["read_protocol"]["claude_acp_instruction"]
+    assert "Claude ACP must instead" in prompt
+    assert "high, medium, or low invalidate" in prompt
+    assert "maintainability invalidate" in prompt
+    assert '["none"] when no external source applies' in prompt
     assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
     assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
     assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == checkout.sealed_evidence_input_bytes()
@@ -328,6 +336,22 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
         "sealed_evidence_proof"
     ]["proof_sha256"]
     assert len(prompt.encode("utf-8")) < 10_000
+
+    claude_prompt = checkout.review_prompt_evidence("acp-claude")
+    claude_dossier = json.loads(
+        next(line for line in claude_prompt.splitlines() if line.startswith("{"))
+    )
+    assert claude_dossier["clean_verdict_gate"] == (
+        "complete_change_manifest_and_patch_trace_required"
+    )
+    assert claude_dossier["read_protocol"]["required_paths"] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+    ]
+    assert claude_dossier["sealed_evidence_proof"]["covered_paths"] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+    ]
 
 
 @pytest.mark.parametrize("direct_engine", ("codex", "claude"))
@@ -425,6 +449,45 @@ def test_sealed_acp_config_is_parent_owned_and_snapshot_pinned(tmp_path: Path) -
         str(config_path), adapter_label="fixture"
     ) == str(config_path)
     assert checkout.sealed_acp_tool_config() == config_path
+
+    required_config_path = checkout.sealed_acp_tool_config(change_evidence_only=True)
+    required_config = json.loads(required_config_path.read_text(encoding="utf-8"))
+    required_server = required_config["mcpServers"][0]
+    assert required_server["args"][4] == "change-evidence-only"
+    assert _validate_sealed_review_mcp_config(
+        str(required_config_path), adapter_label="AcpxClaudeShadowAdapter"
+    ) == str(required_config_path)
+    requests = [
+        {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "read_required",
+                "arguments": {"index": 0, "offset": 0},
+            },
+        },
+    ]
+    completed = subprocess.run(
+        [required_server["command"], *required_server["args"]],
+        input="\n".join(json.dumps(request) for request in requests) + "\n",
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False,
+    )
+    assert completed.returncode == 0
+    responses = [json.loads(line) for line in completed.stdout.splitlines()]
+    assert [tool["name"] for tool in responses[0]["result"]["tools"]] == [
+        "read_required"
+    ]
+    required_payload = json.loads(responses[1]["result"]["content"][0]["text"])
+    assert required_payload["required_path_count"] == 2
+    assert [chunk["path"] for chunk in required_payload["chunks"]] == [
+        ".review-bundle/manifest.json",
+        ".review-bundle/patch.diff",
+    ]
 
     write_root.chmod(0o777)
     with pytest.raises(AcpxShadowRefusalError, match="helper/snapshot failed validation"):

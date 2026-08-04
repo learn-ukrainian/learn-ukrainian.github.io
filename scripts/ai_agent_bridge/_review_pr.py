@@ -278,12 +278,21 @@ canonical location and evidence fields. Publication derives the GitHub gate
 verdict from this evidence and preserves the review body in the PR comment.
 Use `"correct"`, `"incorrect"`, or `"uncertain"` for `overall.correctness`.
 Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
-example, `0.95`), never a string such as `"high"`. A clean review therefore
+example, `0.95`), never a string such as `"high"`. Every finding priority MUST
+be exactly one of `"P0"`, `"P1"`, `"P2"`, or `"P3"`; labels such as `"high"`,
+`"medium"`, and `"low"` invalidate the whole review. Every finding category
+MUST be exactly one of `"bug"`, `"security"`, `"correctness"`, `"regression"`,
+`"api"`, `"tests"`, `"docs"`, `"performance"`, `"style"`, or `"other"`;
+aliases such as `"maintainability"` invalidate the whole review. A clean review
+therefore
 has exactly this shape (replace the explanation, not the field types):
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
 Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,
 `confidence`, `category`, `location`, `verbatim`, `why_wrong`, `smallest_fix`,
-and `sources`. Put claim type `"present"` or `"missing"` only inside the
+and `sources`. Every `sources` value MUST be a non-empty array. Use exactly
+`["none"]` when no external source applies; otherwise use non-empty source
+strings and never mix `"none"` with another value. Put claim type `"present"`
+or `"missing"` only inside the
 `location` object alongside `path`, `start_line`, and `end_line`; never add
 `claim_type` at the finding root. Do not invent enum aliases such as `"pass"`.
 """
@@ -433,6 +442,17 @@ def _failure_classification(result: Any | None, exc: BaseException | None = None
             "rate_limited",
             "timeout",
             "transport_error",
+            "acp_adapter_incompatible",
+            "acp_adapter_missing",
+            "acp_agent_disconnected",
+            "acp_agent_startup",
+            "acp_auth_required",
+            "acp_permission_denied",
+            "acp_permission_unavailable",
+            "acp_review_evidence_invalid",
+            "acp_review_evidence_too_large",
+            "acp_session_create_timeout",
+            "acp_turn_limit",
         }:
             return str(record["failure_code"])
         if bool(getattr(result, "stalled", False)):
@@ -611,9 +631,10 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         if checkout is None:  # pragma: no cover - target above is mandatory
             raise RuntimeError("sealed review snapshot was not provisioned")
         evidence = checkout.review_prompt_evidence("acp")
+        invocation_evidence = evidence
         evidence_metrics = _evidence_metrics(evidence)
-        sealed_mcp_config = checkout.sealed_acp_tool_config()
         estimated_input_bytes = checkout.sealed_evidence_input_bytes()
+        active_input_bytes = estimated_input_bytes
         timeout = 86400 if args.no_timeout else 1800
         worker_id = f"review-pr-acp:{os.getpid()}"
         authority_key = _formal_review_authority_key(
@@ -695,7 +716,20 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "in_flight": {},
                         "diagnostics": {"stale": True, "routing_budget_error": type(exc).__name__},
                     }
-                substitution_pending = authority_job.state == "failed" and requested_candidate is not None
+                prior_reservation = (
+                    routing_ledger.latest_for_authority_key(authority_key)
+                    if authority_job.state == "failed"
+                    else None
+                )
+                # Durable cross-reviewer substitution is intentionally limited
+                # to a semantically invalid verdict. Transport/adapter failures
+                # retain the existing in-call fallback contract: auto routes may
+                # fall back, while explicit pins require --allow-explicit-fallback.
+                substitution_pending = (
+                    requested_candidate is not None
+                    and prior_reservation is not None
+                    and prior_reservation.failure_classification == "result_invalid"
+                )
                 if authority_job.state in {"failed", "expired"} and not substitution_pending:
                     authority_job = authority.retry_job(authority_job.job_id)
                 elif authority_job.state == "dead_lettered":
@@ -904,7 +938,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         effort=effort or "provider_default",
                         extra=args.extra,
                     )
-                    sealed_prompt = prompt + evidence
+                    invocation_evidence = checkout.review_prompt_evidence(
+                        "acp-claude" if participant == "claude" else "acp"
+                    )
+                    evidence_metrics = _evidence_metrics(invocation_evidence)
+                    active_input_bytes = evidence_metrics.get(
+                        "unique_evidence_bytes",
+                        estimated_input_bytes,
+                    )
+                    sealed_prompt = prompt + invocation_evidence
+                    sealed_mcp_config = checkout.sealed_acp_tool_config(
+                        change_evidence_only=participant == "claude"
+                    )
                     started_reservation = routing_ledger.mark_started(routing_reservation.reservation_id)
                     if started_reservation.status != "running":
                         _finish_authority_job_once(
@@ -961,7 +1006,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         routing_ledger,
                         routing_reservation.reservation_id,
                         status="failed",
-                        actual_input_bytes=estimated_input_bytes,
+                        actual_input_bytes=active_input_bytes,
                         actual_output_bytes=len(raw_response.encode("utf-8")),
                         actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
                         actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
@@ -1018,7 +1063,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             routing_ledger,
                             routing_reservation.reservation_id,
                             status="failed",
-                            actual_input_bytes=estimated_input_bytes,
+                            actual_input_bytes=active_input_bytes,
                             actual_output_bytes=0,
                             failure_classification="result_invalid",
                         )
@@ -1048,7 +1093,14 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         result,
                         engine="acp",
                         evidence_root=checkout.path,
-                        changed_paths=checkout.changed_paths,
+                        changed_paths=(
+                            () if participant == "claude" else checkout.changed_paths
+                        ),
+                    )
+                    coverage_receipt["required_scope"] = (
+                        "complete_change_manifest_and_patch"
+                        if participant == "claude"
+                        else "complete_manifest_patch_and_changed_files"
                     )
             except ReviewWorktreeError as exc:
                 if not replayed:
@@ -1069,7 +1121,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             routing_ledger,
                             routing_reservation.reservation_id,
                             status="failed",
-                            actual_input_bytes=estimated_input_bytes,
+                            actual_input_bytes=active_input_bytes,
                             actual_output_bytes=len(raw_response.encode("utf-8")),
                             actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
                             actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
@@ -1106,8 +1158,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     actual_output_tokens=_usage_int(result, "output_tokens", "tokens"),
                     terminal_evidence={
                         "coverage_receipt": coverage_receipt or {},
-                        "unique_evidence_bytes": estimated_input_bytes,
-                        "serialized_prompt_bytes": len(evidence.encode("utf-8")),
+                        "unique_evidence_bytes": active_input_bytes,
+                        "serialized_prompt_bytes": len(invocation_evidence.encode("utf-8")),
                         "evidence_metrics": evidence_metrics,
                     },
                 )
@@ -1174,7 +1226,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "evidence_metrics": evidence_metrics,
                         "reported_input_tokens": _usage_int(result, "input_tokens"),
                         "reported_output_tokens": _usage_int(result, "output_tokens", "tokens"),
-                        "serialized_prompt_bytes": len(evidence.encode("utf-8")),
+                        "serialized_prompt_bytes": len(invocation_evidence.encode("utf-8")),
                         "transport": "acp",
                     },
                     sort_keys=True,
