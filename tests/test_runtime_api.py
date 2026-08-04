@@ -157,7 +157,7 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
             {
                 "reservation_id": "reservation-001",
                 "authority_key": "route-key-1",
-                "decision_id": "decision-002",
+                "decision_id": "decision-001",
                 "event_type": "started",
                 "state": "running",
                 "created_at": "2026-08-02T09:00:00Z",
@@ -172,7 +172,7 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
             {
                 "reservation_id": "reservation-001",
                 "authority_key": "route-key-1",
-                "decision_id": "decision-001",
+                "decision_id": "decision-002",
                 "event_type": "reserved",
                 "state": "reserved",
                 "created_at": "2026-08-02T09:00:00Z",
@@ -402,6 +402,8 @@ def test_runtime_dashboard_labels_routing_authority_and_explicitness():
         assert expected in html
     assert "routing-table" not in html
     assert "JSON.stringify(value)" not in html
+    assert "renderRoutingResults(assignments);" in html
+    assert "update('routing-search-filter')" not in html
 
 
 def test_agents_endpoint_returns_known_adapters():

@@ -672,21 +672,53 @@ function routingCard(item) {
   </article>`;
 }
 
+function renderRoutingResults(assignments) {
+  const summary = document.getElementById('routing-summary-region');
+  const results = document.getElementById('routing-results-region');
+  const status = document.getElementById('routing-assignments-status');
+  if (!summary || !results || !status) return;
+  const matching = routingSort(assignments.filter(routingMatches));
+  const shown = matching.slice(0, routingUi.visible);
+  const groupNames = { active: 'Active', attention: 'Needs attention', complete: 'Complete' };
+  const groups = ['active', 'attention', 'complete'].map(group => {
+    const items = shown.filter(item => routingLifecycle(item) === group);
+    if (!items.length) return '';
+    const matchingGroupCount = matching.filter(item => routingLifecycle(item) === group).length;
+    const stale = group === 'active' ? items.filter(routingStaleActivity).length : 0;
+    const countText = items.length === matchingGroupCount ? String(items.length) : `${items.length} of ${matchingGroupCount}`;
+    return `<section class="routing-group" aria-label="${groupNames[group]} assignments"><h3 class="routing-group-heading">${groupNames[group]} <small>${countText}${stale ? ` · ${stale} stale activity evidence` : ''}</small></h3>${items.map(routingCard).join('')}</section>`;
+  }).join('');
+  summary.innerHTML = routingSummary(matching);
+  results.innerHTML = `<div class="routing-groups" id="routing-assignment-groups" tabindex="-1">${groups || '<div class="empty">No assignments match these filters.</div>'}</div>${matching.length > shown.length ? '<button type="button" class="routing-load-more focus-target" id="routing-load-more" aria-controls="routing-assignment-groups">Load 25 more</button>' : ''}`;
+  status.textContent = `${shown.length} shown of ${matching.length} matching assignments from ${assignments.length} loaded.`;
+  document.getElementById('routing-load-more')?.addEventListener('click', () => {
+    routingUi.visible += ROUTING_PAGE_SIZE;
+    renderRoutingResults(assignments);
+    (document.getElementById('routing-load-more') || document.getElementById('routing-assignment-groups'))?.focus();
+  });
+}
+
 function bindRoutingControls(assignments) {
   const update = focusId => {
-    renderRoutingAssignments({ assignments, availability: 'available', plane: routingUi.plane || {} });
-    const control = focusId && document.getElementById(focusId);
-    if (control) {
-      control.focus();
-      if (control instanceof HTMLInputElement) control.setSelectionRange(control.value.length, control.value.length);
-    }
+    renderRoutingResults(assignments);
+    document.getElementById(focusId)?.focus();
   };
   document.getElementById('routing-lifecycle-filter')?.addEventListener('change', event => { routingUi.lifecycle = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-lifecycle-filter'); });
   document.getElementById('routing-mode-filter')?.addEventListener('change', event => { routingUi.mode = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-mode-filter'); });
   document.getElementById('routing-route-filter')?.addEventListener('change', event => { routingUi.route = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-route-filter'); });
-  document.getElementById('routing-search-filter')?.addEventListener('input', event => { routingUi.query = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-search-filter'); });
-  document.getElementById('routing-reset')?.addEventListener('click', () => { Object.assign(routingUi, { lifecycle: 'all', mode: 'all', route: 'all', query: '', visible: ROUTING_PAGE_SIZE }); update('routing-lifecycle-filter'); });
-  document.getElementById('routing-load-more')?.addEventListener('click', () => { routingUi.visible += ROUTING_PAGE_SIZE; update(); document.getElementById('routing-load-more')?.focus(); });
+  document.getElementById('routing-search-filter')?.addEventListener('input', event => {
+    routingUi.query = event.target.value;
+    routingUi.visible = ROUTING_PAGE_SIZE;
+    renderRoutingResults(assignments);
+  });
+  document.getElementById('routing-reset')?.addEventListener('click', () => {
+    Object.assign(routingUi, { lifecycle: 'all', mode: 'all', route: 'all', query: '', visible: ROUTING_PAGE_SIZE });
+    document.getElementById('routing-lifecycle-filter').value = 'all';
+    document.getElementById('routing-mode-filter').value = 'all';
+    document.getElementById('routing-route-filter').value = 'all';
+    document.getElementById('routing-search-filter').value = '';
+    update('routing-lifecycle-filter');
+  });
 }
 
 function renderRoutingAssignments(data) {
@@ -709,21 +741,10 @@ function renderRoutingAssignments(data) {
     status.textContent = '0 shown of 0 matching assignments from 0 loaded.';
     return;
   }
-  const matching = routingSort(assignments.filter(routingMatches));
-  const shown = matching.slice(0, routingUi.visible);
-  const groupNames = { active: 'Active', attention: 'Needs attention', complete: 'Complete' };
-  const groups = ['active', 'attention', 'complete'].map(group => {
-    const items = shown.filter(item => routingLifecycle(item) === group);
-    if (!items.length) return '';
-    const matchingGroupCount = matching.filter(item => routingLifecycle(item) === group).length;
-    const stale = group === 'active' ? items.filter(routingStaleActivity).length : 0;
-    const countText = items.length === matchingGroupCount ? String(items.length) : `${items.length} of ${matchingGroupCount}`;
-    return `<section class="routing-group" aria-label="${groupNames[group]} assignments"><h3 class="routing-group-heading">${groupNames[group]} <small>${countText}${stale ? ` · ${stale} stale activity evidence` : ''}</small></h3>${items.map(routingCard).join('')}</section>`;
-  }).join('');
-  content.innerHTML = `${planeMarkup}${routingSummary(matching)}${routingControls(assignments)}<div class="routing-groups" id="routing-assignment-groups">${groups || '<div class="empty">No assignments match these filters.</div>'}</div>${matching.length > shown.length ? '<button type="button" class="routing-load-more focus-target" id="routing-load-more" aria-controls="routing-assignment-groups">Load 25 more</button>' : ''}`;
+  content.innerHTML = `${planeMarkup}<div id="routing-summary-region"></div>${routingControls(assignments)}<div id="routing-results-region"></div>`;
   content.setAttribute('aria-busy', 'false');
-  status.textContent = `${shown.length} shown of ${matching.length} matching assignments from ${assignments.length} loaded.`;
   bindRoutingControls(assignments);
+  renderRoutingResults(assignments);
 }
 
 function stopRefresh() {
