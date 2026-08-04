@@ -634,6 +634,59 @@ def _is_english_learner_gloss(label: str) -> bool:
     return latin_letters > cyrillic_letters
 
 
+def _english_translation_gloss(entry: dict[str, Any]) -> str | None:
+    """First short English sense from enrichment.translation.en, if any."""
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return None
+    translation = enrichment.get("translation")
+    if not isinstance(translation, dict):
+        return None
+    en = translation.get("en")
+    candidates: list[str] = []
+    if isinstance(en, str):
+        candidates.append(en)
+    elif isinstance(en, list):
+        candidates.extend(str(item) for item in en if item)
+    cleaned: list[str] = []
+    for raw in candidates:
+        text = re.sub(r"\s+", " ", str(raw)).strip()
+        # Strip leading qualifiers: "(dated) fairy tale" → "fairy tale"
+        text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
+        # Drop trailing dictionary expansions: "fairy tale (folktale)" → "fairy tale"
+        head = re.split(r"[;(]", text, maxsplit=1)[0]
+        clean = _gloss_clean(head)
+        if clean and _is_english_learner_gloss(clean):
+            cleaned.append(clean)
+    if not cleaned:
+        return None
+    # Prefer short multi-word learner senses ("fairy tale") over a single academic
+    # first gloss ("fable") when both are offered.
+    multi = [
+        sense
+        for sense in cleaned
+        if 1 < _meaning_label_word_count(sense) <= 4 and not _meaning_label_is_phrase(sense)
+    ]
+    return multi[0] if multi else cleaned[0]
+
+
+def _practice_display_gloss(entry: dict[str, Any], level: str | None, fallback: str) -> str:
+    """Learner-facing gloss for flashcards / recognition.
+
+    A1 always prefers English scaffolding when available.
+    A1–A2 never keep a long Ukrainian dictionary definition when English exists —
+    Wiktionary-style «розповідний твір про вигаданих осіб…» is not an A2 gloss.
+    """
+    en = _english_translation_gloss(entry)
+    if not en:
+        return fallback
+    if level == "A1":
+        return en
+    if level == "A2" and not _is_english_learner_gloss(_gloss_clean(fallback)):
+        return en
+    return fallback
+
+
 def _romanize_ukrainian_plain(value: str) -> str:
     return "".join(_UKRAINIAN_ROMANIZATION.get(char, char) for char in value.casefold())
 
@@ -1574,10 +1627,11 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
 
 def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, Any] | None:
     lemma = _clean_text(entry.get("lemma"))
-    gloss = _clean_text(entry.get("gloss"))
+    raw_gloss = _clean_text(entry.get("gloss"))
     level = _cefr_level(entry)
-    if not lemma or not gloss:
+    if not lemma or not raw_gloss:
         return None
+    gloss = _practice_display_gloss(entry, level, raw_gloss)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
     gloss_clean = _gloss_clean(gloss)
