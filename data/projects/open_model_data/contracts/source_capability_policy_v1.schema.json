@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/source_capability_policy_v1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_id", "context", "capabilities", "evidence_catalog", "family_defaults", "source_overrides"],
+  "properties": {
+    "schema_version": {"const": "source_capability_policy_v1"},
+    "policy_id": {"type": "string", "minLength": 3},
+    "context": {"$ref": "#/$defs/context"},
+    "capabilities": {"type": "array", "uniqueItems": true, "minItems": 7, "maxItems": 7, "items": {"enum": ["acquisition_retention", "local_preparation", "local_model_learning", "raw_redistribution", "derived_redistribution", "dataset_publication", "model_publication"]}},
+    "evidence_catalog": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "family_defaults": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scope"}},
+    "source_overrides": {"type": "array", "items": {"$ref": "#/$defs/override"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z]+(?:\\.[a-z0-9_:-]+)*\\.[a-f0-9]{24}$"},
+    "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "context": {"type": "object", "additionalProperties": false, "required": ["actor_scope", "destination_scope", "jurisdiction_scope", "decision_authority"], "properties": {"actor_scope": {"type": "string", "minLength": 3}, "destination_scope": {"type": "string", "minLength": 3}, "jurisdiction_scope": {"type": "string", "minLength": 3}, "decision_authority": {"const": "evidence_record_not_legal_advice"}}},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["evidence_id", "kind", "citation", "retrieved_on"], "properties": {"evidence_id": {"type": "string", "pattern": "^evidence\\.[a-z0-9_.:-]+$"}, "kind": {"enum": ["rights_admission", "license", "terms", "repository_record", "permission", "legal_analysis"]}, "citation": {"type": "string", "minLength": 3}, "canonical_url": {"type": "string", "format": "uri"}, "repo_locator": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"}, "retrieved_on": {"$ref": "#/$defs/date"}, "sha256": {"$ref": "#/$defs/hash"}}, "anyOf": [{"required": ["canonical_url"]}, {"required": ["repo_locator"]}]},
+    "decision": {"type": "object", "additionalProperties": false, "required": ["state", "evidence_refs", "missing_evidence_keys"], "properties": {"state": {"enum": ["evidenced", "unresolved", "blocked", "excluded"]}, "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^evidence\\."}}, "missing_evidence_keys": {"type": "array", "uniqueItems": true, "items": {"enum": ["canonical_source_url", "underlying_work_status", "underlying_work_evidence_url", "edition_identity", "edition_rights_status", "transcription_or_digitization_status", "host_terms_url", "host_terms_version", "terms_retrieved_on", "source_revision_or_snapshot_id", "actor_scope", "destination_scope", "jurisdiction_scope", "explicit_license_or_permission", "content_sha256", "mediawiki_revision_id", "page_history_url", "talk_page_url", "page_footer_license", "imported_content_banner", "additional_attribution_notice"]}}}},
+    "decisions": {"type": "object", "additionalProperties": false, "required": ["acquisition_retention", "local_preparation", "local_model_learning", "raw_redistribution", "derived_redistribution", "dataset_publication", "model_publication"], "properties": {"acquisition_retention": {"$ref": "#/$defs/decision"}, "local_preparation": {"$ref": "#/$defs/decision"}, "local_model_learning": {"$ref": "#/$defs/decision"}, "raw_redistribution": {"$ref": "#/$defs/decision"}, "derived_redistribution": {"$ref": "#/$defs/decision"}, "dataset_publication": {"$ref": "#/$defs/decision"}, "model_publication": {"$ref": "#/$defs/decision"}}},
+    "scope": {"type": "object", "additionalProperties": false, "required": ["source_family", "scope_id", "decisions"], "properties": {"source_family": {"type": "string", "minLength": 1}, "scope_id": {"type": "string", "minLength": 3}, "decisions": {"$ref": "#/$defs/decisions"}}},
+    "partialDecisions": {"type": "object", "additionalProperties": false, "minProperties": 1, "properties": {"acquisition_retention": {"$ref": "#/$defs/decision"}, "local_preparation": {"$ref": "#/$defs/decision"}, "local_model_learning": {"$ref": "#/$defs/decision"}, "raw_redistribution": {"$ref": "#/$defs/decision"}, "derived_redistribution": {"$ref": "#/$defs/decision"}, "dataset_publication": {"$ref": "#/$defs/decision"}, "model_publication": {"$ref": "#/$defs/decision"}}},
+    "override": {"type": "object", "additionalProperties": false, "required": ["source_id", "source_family", "scope_id", "decisions"], "properties": {"source_id": {"$ref": "#/$defs/id"}, "source_family": {"type": "string", "minLength": 1}, "scope_id": {"type": "string", "minLength": 3}, "decisions": {"$ref": "#/$defs/partialDecisions"}}}
+  }
+}

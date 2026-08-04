@@ -45,7 +45,8 @@ corpora, or other licensed collections. The program provides:
 
 Community linguistic usefulness is the success criterion. External adoption
 is welcome evidence that the products are usable, but it is not the product and
-not a completion gate.
+not a completion gate. Each shipped artifact must name one concrete consumer
+decision or use case it enables, without requiring outreach or external use.
 
 We are not trying to win by training and maintaining our own general-purpose
 model weights. Base models can leapfrog a local fine-tune in one release.
@@ -104,14 +105,33 @@ evidence and are never a prerequisite for completing an internal data product.
 - [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
   owns the active evidence-bearing prepared-data program. Its ordered path is
   receipt audit, deterministic evidence and canaries, rights-gated corpus
-  complements, authoritative clean-Ukrainian correction/protection data, and
-  only then optional downstream ablation under separate authorization. The
+  complements, an evidence-graded clean-Ukrainian correction/protection pack,
+  and only then optional downstream ablation under separate authorization. The
   governing decision is the
   [UNLP prepared-data product decision](../research/UNLP_PREPARED_DATA_PRODUCT_DECISION.md).
 - [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
-  owns the blocking Phase 0 receipt audit. It must explain the three empty
-  correction-family lanes and freeze current product truth before new data is
-  advertised.
+  owns the completed Phase 0 receipt audit. It explained the three empty
+  correction-family lanes and froze product truth without weakening a
+  disposition.
+- [#6324](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6324)
+  owns completed Evidence and Canaries v0: a deterministic, text-free signal
+  manifest over all 189,150 public/external human-authored records.
+- [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
+  owns completed Phase 2: capability decisions, source-stratified complement
+  planning, resolvability keys, and the evidence-resolution worklist. It does
+  not authorize source publication, training, or a local-hydration bypass for
+  unresolved learning rights. Its complete production build covers all 189,150
+  Phase 1 records, binds 42,302 text-free source/work locators, and creates
+  3,511 exact evidence-resolution tasks. This is a capability map and plan, not
+  a corpus publication or a Ukrainian-quality judgment.
+- [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
+  owns active Phase 3: an evidence-graded clean-Ukrainian correction/protection
+  pack. It must distinguish Russian interference, bad morphology, contextual
+  calques, and government errors from quotation, phonetic Russian, Surzhyk,
+  historical or archaic Ukrainian, dialect, regional language, folklore, and
+  unresolved contact-language cases. Evidence channels, rather than pack
+  labels, are authoritative; without qualified-human adjudication, no label is
+  gold or authoritative.
 
 - Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns the completed Foundry-engine Phase 2–4 implementation: real corpus
@@ -196,6 +216,11 @@ NLP ecosystem watch remains the mechanism for keeping it current.
 The conclusion is important: **the community does not lack datasets in
 general**. A new contribution must identify the exact uncovered phenomenon,
 consumer, license, and evaluation question.
+
+Before Phase 3 calls a phenomenon uncovered, it must measure the proposed cases
+against the current [LanguageTool Ukrainian rule module](https://github.com/languagetool-org/languagetool/tree/master/languagetool-language-modules/uk)
+and related `nlp_uk`/R2U-community tooling. This comparison verifies a measured
+delta; it does not assume exact present coverage by those tools.
 
 ## Gaps that remain valuable
 
@@ -389,10 +414,16 @@ Successor epic #6321 turns the engine into data products that can be compared
 with or consumed alongside Lapa, `lang-uk`, UA-GEC, and other open-weight
 Ukrainian work through:
 
-- data slices they can inspect and reproduce;
-- diagnostics they can run on any new base model;
-- failure-focused evaluation with protected legitimate variation; and
-- evidence-backed annotation guidelines.
+- a machine-readable disposition table and runnable consumer-corpus filtering
+  recipe;
+- a non-erasure benchmark/harness with protected legitimate variation; and
+- stand-off annotations over revision-pinned locators for non-redistributable
+  source families.
+
+These direct-use forms preserve model-lane proposal provenance, per-family
+datasheets, stable locators, and contamination-aware versioning with held-back
+evaluation material. Provenance/capability metadata and recipes are supporting
+infrastructure, not corpus-scale claims.
 
 External feedback may prioritize later evidence adapters or acquisition, but
 it is not required to prove deterministic receipts, source lineage, rights

@@ -3,6 +3,8 @@
 > **Decision date:** 2026-08-03
 > **Owner:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **First gate:** [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
+> **Completed phase:** [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
+> **Next phase:** [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
 > **Decision:** Continue with evidence-bearing prepared Ukrainian data products;
 > do not operate or train a project model
 
@@ -10,7 +12,9 @@
 
 The Ukrainian NLP community contribution is the goal. External adoption is a
 possible consequence and useful evidence, but it is neither the product nor a
-completion gate.
+completion gate. Every shipped artifact must instead name one concrete consumer
+decision or use case that it enables; this does not require outreach or external
+adoption.
 
 The completed Foundry v1 is an engine and contract foundation. It is not yet
 the prepared data contribution described by the North Star. The successor
@@ -68,12 +72,16 @@ The defensible complementary contribution is:
 3. **Curated continued-pretraining complements** — rights-classified
    textbooks, literature, articles, and historical strata whose provenance and
    balance are more valuable than their raw scale.
-4. **Clean-Ukrainian correction and protection data** — narrow, sourced cases
-   for contextual calques, government, Russian interference, quotation,
-   phonetic Russian, historical language, regional or heritage Ukrainian, and
-   contested cases that must remain unresolved.
-5. **Contamination-resistant evaluation** — frozen scorers and mutation
-   canaries that remain outside every learning view.
+4. **Evidence-attributed correction/protection dispositions** — narrow,
+   sourced cases for contextual calques, government, Russian interference,
+   quotation, phonetic Russian, historical language, regional or heritage
+   Ukrainian, and contested cases that must remain unresolved, plus
+   non-erasure evaluation.
+5. **Supporting infrastructure** — provenance/capability metadata, stable
+   locators, per-family datasheets, consumer recipes, and contamination-
+   resistant evaluation with frozen scorers and mutation canaries outside every
+   learning view. These support the dispositions; they are not corpus-scale
+   claims.
 
 Preference data and tokenizer surgery are deferred until a documented consumer
 need and a non-duplicative research question exist. Lapa classifier ablation is
@@ -84,8 +92,10 @@ model operation even when it is free.
 
 ### Facts
 
-- Lapa's public tokenizer, quality scorers, pretraining checkpoint, datasets,
-  and Gemma-3-specific training templates were materially released in 2025.
+- Lapa's public [tokenizer](https://huggingface.co/lapa-llm/tokenizer), quality
+  scorers, [pretraining checkpoint](https://huggingface.co/lapa-llm/lapa-12b-pt),
+  datasets, and Gemma-3-specific training templates were materially released
+  in 2025.
 - [Google launched Gemma 4 on 2026-04-02](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/).
 - The [Gemma 4 model card](https://ai.google.dev/gemma/docs/core/model_card_4)
   states that official pretrained and instruction-tuned variants are
@@ -117,19 +127,83 @@ not invent a motive or claim that no port is planned.
 ## Execution order
 
 1. Audit current receipts and explain every empty model-ready lane without
-   changing any disposition.
+   changing any disposition. **Completed under #6322.**
 2. Freeze Evidence and Canaries v0 with deterministic document signals and
-   deliberately planted failures.
+   deliberately planted failures. **Completed under #6324 over all 189,150
+   public/external human-authored records.**
 3. Establish rights and redistribution decisions per source family and product
-   capability.
+   capability, and build the deterministic complement plan. **Completed under
+   #6327.**
 4. Prepare continued-pretraining complements with exact lineage, strata,
-   deduplication, contamination, and limitation receipts.
-5. Build correction/protection categories only from authoritative sources and
-   Ukrainian-strong linguistic review.
+   contamination, capability, and limitation receipts. **Completed under
+   #6327 as an evidence-bearing plan and faithful Wikipedia candidate view; no
+   source bytes were published.**
+5. Build an evidence-graded correction/protection pack from authoritative
+   evidence channels and Ukrainian-strong model proposals with preserved
+   provenance. Qualified-human adjudication is required before any label is
+   called gold or authoritative; `unresolved` remains a valid terminal
+   disposition. **Active next under #6333.**
 6. Consider Lapa classifier ablation or downstream model validation only when
    it answers a preregistered decision and receives separate authorization.
 
 No step requires project-owned training or paid compute.
+
+## Phase 2 product contract
+
+Phase 2 is an evidence-resolution and prepared-data planning product, not an IP
+bypass. It must ship:
+
+1. a capability-decision ledger covering every recovered source family, with
+   local preparation, local model learning, raw and derived redistribution,
+   dataset publication, and model publication kept independent;
+2. a deterministic source-stratified complement manifest reconciling all
+   189,150 Phase 1 rows and binding the Phase 1 hashes and receipts;
+3. text-free corpus profiles and resolvability keys that let a consumer assess
+   coverage and align independently acquired sources without implying that the
+   consumer has permission to learn from them;
+4. an evidence-resolution worklist naming the exact missing artifact for every
+   unresolved source or stratum; and
+5. a gated model-neutral processing specification that reuses the existing
+   exporter and evaluation firewall only after the requested capability is
+   independently evidenced.
+
+The project rejects a local-hydration workaround for unresolved sources.
+Possessing or being able to download a source is not itself evidence for local
+model learning, and moving the operation to a consumer machine does not resolve
+that gap. Likewise, the project does not export evaluation fingerprints or
+invent Phase 2 span labels. Historical Ukrainian, dialect, regional language,
+quotation, Surzhyk, and phonetic Russian are protected contextual phenomena,
+not automatic errors; new linguistic decisions remain Phase 3 work.
+
+The first non-Wikipedia evidence-resolution target will be selected from facts:
+the source family whose underlying-work, edition, acquisition, and capability
+evidence can be established first. Neither public-domain literary status nor
+institutional textbook openness is assumed in advance.
+
+The Phase 2 advisor review also rejected opaque hashes as the only consumer
+alignment mechanism. The project therefore publishes a text-free source/work
+locator index with canonical URLs where they are actually known, allowlisted
+bibliographic metadata, and exact Phase 1-compatible identifiers. A locator
+makes an evidence task actionable; it does not grant learning, redistribution,
+download, dataset-publication, or model-publication permission.
+
+The complete Phase 2 build resolves the earlier planning ambiguity without
+weakening a gate. It covers all 189,150 records and binds 42,302 locator rows.
+Current evidence supports faithful local preparation and local model learning
+for 1,029 Wikipedia records; 188,121 records remain metadata-only for those
+capabilities, and all records remain metadata-only for redistribution and
+publication. The 3,511-item worklist names the missing evidence at source/work
+level. These are capability decisions, not Ukrainian-quality labels.
+
+The locator transport decision is also evidence-bearing. A 32,991,831-byte
+full-object JSONL was semantically correct but exceeded the formal review
+system's 16 MiB per-file ceiling; deterministic gzip was small enough but was
+not reviewable as UTF-8 evidence. Phase 2 therefore uses one lossless,
+self-describing compact UTF-8 JSONL. Its header binds the full semantic schema,
+record count, ordering, deterministic `locator_id` derivation, and expanded
+canonical hash, and every compact row is expanded and schema-validated before
+use. This preserves all 42,302 locator records without weakening the evidence
+or splitting one logical index into opaque fragments.
 
 ## How usefulness will be demonstrated
 
@@ -139,6 +213,12 @@ downstream operation it supports, the incumbent community resource it reuses
 or complements, the evidence a consumer receives, and the decision that the
 artifact can change. A product that merely exports rows or wraps an existing
 dataset does not pass.
+
+Before Phase 3 claims that a phenomenon is uncovered, it must compare the
+current [LanguageTool Ukrainian rule module](https://github.com/languagetool-org/languagetool/tree/master/languagetool-language-modules/uk)
+and related `nlp_uk`/R2U-community tooling against the proposed case set and
+record the measured delta. This is a verification requirement, not a claim
+about the exact present coverage of any tool.
 
 Evidence and Canaries v0 must reproduce its document signals on the complete
 inventory, detect deliberately planted lineage, duplication, language-contact,
@@ -150,6 +230,11 @@ each phenomenon, including Russian quotation, phonetic Russian, historical
 Ukrainian, dialect, and legitimate modern literary usage. Consumer adapters
 must preserve these labels and evidence without silently converting unresolved
 material into training truth.
+
+The correction/protection pack must be directly usable as a machine-readable
+disposition table, a runnable consumer-corpus filtering recipe, and a
+non-erasure benchmark/harness. Non-redistributable source families use stand-off
+annotations over revision-pinned locators instead of redistributed source bytes.
 
 Public papers, model cards, repositories, dataset schemas, and reproducible
 baseline commands provide the first consumer specification. Later independent
@@ -170,14 +255,23 @@ legitimate-variation decisions. Preserve disagreements and unresolved cases.
 VESUM proves morphological attestation, not contextual correctness. R2U, ULIF,
 Russian morphology, corpus context, heritage dictionaries, and per-dictionary
 sources remain distinct evidence; no single lookup or model vote is a verdict.
+Before full disposition work, freeze a source-stratified sample of the 9.29
+million VESUM-unattested tokens and separate OCR/noise, proper names, historical
+orthography, foreign quotation, plausible errors, and unresolved cases. The
+aggregate unknown-token count must never become a linguistic label.
+Retain model-lane proposal provenance, per-family datasheets, stable locators,
+and contamination-aware versioning with held-back evaluation material.
 
 The first correction/protection release requires:
 
-- authoritative evidence for every category;
+- evidence attribution for every category, with evidence grade and disposition;
 - a counter-set of acceptable Ukrainian variation;
 - per-category precision and disagreement reporting;
 - frozen scorer canaries; and
 - a predeclared no-go threshold before any downstream experiment.
+
+Only evidence channels are authoritative. Without qualified-human adjudication,
+no pack label is gold or authoritative.
 
 ## No-go conditions
 
@@ -188,6 +282,8 @@ Stop or redesign a lane if it would:
 - leak evaluation cases or derivatives into learning views;
 - duplicate an incumbent Lapa or UNLP resource without a measurable new
   phenomenon;
+- claim an uncovered phenomenon without the required LanguageTool and
+  `nlp_uk`/R2U tooling comparison;
 - call model agreement human or linguistic gold;
 - present 50.3 million words as Kobza-scale data;
 - use adoption, outreach, or a trained model as the proof that the preparation
@@ -199,6 +295,18 @@ Stop or redesign a lane if it would:
 
 This decision combines repository receipts, the public UNLP 2025 and 2026
 proceedings, official Lapa artifacts, official Google Gemma 4 release material,
-and a two-round Fable/K3 adversarial discussion. The model discussion advised
-the architecture; it is not Ukrainian human gold and does not replace formal
-exact-head review of implementation.
+a two-round Fable/K3 Phase 0 adversarial discussion, and the two-round Fable 5
+plus Gemini 3.6 Flash High Phase 2 discussion recorded as ACP conversation
+`conversation_145b502a2a5d4a80ad3f486d66d960ea`. The model discussions advised
+the architecture and Ukrainian-community fit; they are not legal verdicts or
+Ukrainian human gold and do not replace formal exact-head implementation
+review.
+
+During exact-artifact preparation, the review system rejected the complete
+full-object locator for exceeding its per-file limit and rejected deterministic
+gzip as non-UTF-8 evidence. A later GLM 5.2 advisory suggested sharding the
+full objects. The accountable Sol advisor instead selected the single compact
+UTF-8 transport because measured patch size, the repository's strict
+fewer-than-20-files rule, and the 64 MiB total-evidence ceiling made three
+full-object shards a worse fit. The semantic hash and mandatory expansion
+validation ensure that this transport choice changes no locator meaning.
