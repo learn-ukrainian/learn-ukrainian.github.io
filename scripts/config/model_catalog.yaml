@@ -799,16 +799,17 @@ formal_cf_defaults:
   codex:
     model_id: gpt-5.6-terra
     effort: high
-    # Authority escalate for critical / hard CF (review-pr --model gpt-5.6-sol --effort xhigh)
+    # Authority model for critical / hard CF. The one-shot Codex ACP participant
+    # does not expose reasoning effort, so review-pr pins the model only.
     escalate_model_id: gpt-5.6-sol
-    escalate_effort: xhigh
+    escalate_effort: provider_default
   claude:
     model_id: claude-sonnet-5
     effort: high
-    # Others escalate TO Claude: Fable 5 @ xhigh is the Anthropic advisor/authority
-    # seat. Opus 5 advisory consultations are non-binding and separate from formal CF.
+    # The sealed Claude ACP participant supports Sonnet and Fable at its fixed
+    # high effort. Opus 5 advisory consultations remain non-binding and separate.
     escalate_model_id: claude-fable-5
-    escalate_effort: xhigh
+    escalate_effort: high
   glm:
     model_id: glm-5.2
     effort: high

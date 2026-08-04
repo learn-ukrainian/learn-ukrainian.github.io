@@ -25,7 +25,10 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
 #   grok dark → Cursor explicit grok-4.5
 #   agy → gemini-3.6-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
-# Authority Sol/Fable only on critical resolve-reviewer ladder.
+# Automatic authority Sol/Fable selection stays on the critical ladder.
+# An explicit operator pin may select either model at another risk while every
+# formal eligibility, isolation, family, capability, health, and circuit gate
+# remains enforced.
 #
 # Orchestrator seats for this stream (model_catalog.orchestrator_seats):
 #   claude(claude-fable-5 @ high, SUMMONED cadence — grok drives daily; operator 2026-07-26)

@@ -70,7 +70,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-sonnet-5` @ high | **`claude-fable-5` @ xhigh** | yes (`review-pr --reviewer claude`) |
+| **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
 | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
@@ -145,7 +145,8 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
   --initiator codex/orchestrator \
   --author-model gpt-5.6-sol --author-family openai \
-  --reviewer claude --override-reason "operator-requested Anthropic dissent"
+  --reviewer claude --model claude-fable-5 --effort high \
+  --override-reason "operator-requested Fable dissent"
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ... --model poolside/poolside/laguna-xs-2.1  # XS 2.1 light

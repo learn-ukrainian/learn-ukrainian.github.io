@@ -759,6 +759,30 @@ def resolve_reviewer(
             fail_closed_reason=(f"unsupported review risk {inputs.risk!r}; expected one of {sorted(VALID_RISKS)}"),
         )
     active_ladder = ladder if ladder is not None else REVIEW_LADDERS[risk]
+    if inputs.pinned_candidate:
+        pinned_definition = REVIEW_CANDIDATES.get(inputs.pinned_candidate)
+        if pinned_definition is None:
+            return ReviewerResolution(
+                selected=None,
+                advisory=(),
+                trace=(),
+                substitution_note=None,
+                policy_version=_SCHEDULER_POLICY_VERSION,
+                catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+                resolved_risk=risk,
+                fail_closed_reason=f"unknown explicit reviewer pin {inputs.pinned_candidate!r}",
+            )
+        if all(
+            candidate.name != pinned_definition.name
+            for rung in active_ladder
+            for candidate in rung
+        ):
+            # Ladders express automatic preference, not an allowlist.  An
+            # operator-requested canonical pin may name another catalogued
+            # candidate, but it still goes through every hard eligibility,
+            # suitability, isolation, capability, family, health, and circuit
+            # gate below before it can be selected.
+            active_ladder = (*active_ladder, (pinned_definition,))
     try:
         normalize_routing_snapshot(inputs.routing_snapshot)
     except ValueError as exc:

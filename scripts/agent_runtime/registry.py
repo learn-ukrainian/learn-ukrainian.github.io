@@ -273,10 +273,10 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "acpx-codex-shadow": {
-        # Experimental read-only shadow transport (#6027). Direct-only: never
-        # returned by ``available_agents()`` (cli_available False), never a
-        # dispatch/routing/review/failover candidate. The bounded pilot is the
-        # sole public runner surface permitted to invoke this marked seat.
+        # Direct-only ACP transport (#6027): never returned by
+        # ``available_agents()`` and never a general dispatch or failover
+        # candidate. Only the runner-owned communication controller and its
+        # parent-sealed formal-review executable may invoke this seat.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAdapter",
         # ACPX resolves its own agent default when no --model is supplied;
         # this direct-only seat must not advertise an invented catalog model.
@@ -288,14 +288,13 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-grok-shadow": {
-        # Second experimental read-only shadow transport (#6043). Direct-only:
-        # never returned by ``available_agents()`` (cli_available False), never
-        # a dispatch/routing/review/failover candidate. The bounded pilot is
-        # the sole public runner surface permitted to invoke this marked seat.
-        # Fixed
-        # effective model/effort live inside the custom --agent command; do
-        # not advertise a catalog model here. Not a new coordination plane —
-        # native Grok remains authoritative.
+        # Direct-only ACP transport (#6043): never returned by
+        # ``available_agents()`` and never a general dispatch or failover
+        # candidate. Only the runner-owned communication controller and its
+        # hash-pinned, parent-sealed formal-review executable may invoke it.
+        # Fixed effective model/effort live inside the custom --agent command;
+        # do not advertise a catalog model here. Native Grok remains the
+        # provider authority; this registry name is not a coordination plane.
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGrokShadowAdapter",
         "default_model": None,
         "cost_tier": "unknown",

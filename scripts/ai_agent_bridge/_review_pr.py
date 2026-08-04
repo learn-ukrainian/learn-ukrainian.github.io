@@ -4,9 +4,10 @@ Pointer-only: no embedded diffs or inventory YAML. Prefer sealed Codex
 ``--review --pr`` isolation (#5285). Claude-dark local default for
 opencode-family reviewers is GLM-5.2 (LOCAL-ONLY — never CI).
 
-Formal CF model + effort pins (operator 2026-07-21): practical seats @ high
-— Terra / Sonnet 5 / GLM, with pinned AGY as a quota substitution — not Sol/Fable on routine PRs. Authority seats
-remain on the critical review ladder only (see model_catalog.yaml).
+Formal CF defaults (operator 2026-07-21) use practical seats.  Explicit
+operator pins may select another formally eligible model on the requested
+native reviewer route; they still pass every hard gate and never change the
+automatic ladder (see model_catalog.yaml).
 """
 
 from __future__ import annotations
@@ -348,6 +349,81 @@ def formal_cf_pin(reviewer: str) -> tuple[str, str]:
     return model, effort
 
 
+def resolve_requested_review_candidate(
+    reviewer_request: str,
+    explicit_model: str | None,
+    candidates: Mapping[str, Any],
+) -> str | None:
+    """Resolve one explicit request without confusing a route with its default.
+
+    ``--reviewer`` names a semantic/native route, while ``--model`` may select
+    any formally eligible canonical candidate on that route.  The default
+    candidate remains authoritative when no model is supplied.  Model-only
+    requests consider formally eligible candidates only, which disambiguates
+    an attested native route from a non-formal fallback carrying the same model.
+    """
+    model = (explicit_model or "").strip() or None
+    default_name = None
+    requested_route = None
+    if reviewer_request != REVIEWER_AUTO:
+        default_name = EXPLICIT_REVIEWER_CANDIDATE[reviewer_request]
+        try:
+            requested_route = candidates[default_name].route
+        except (KeyError, AttributeError) as exc:
+            raise ReviewSafetyError(
+                f"reviewer_catalog_mismatch: default candidate {default_name!r} "
+                f"for reviewer {reviewer_request!r} is unavailable"
+            ) from exc
+        if not candidates[default_name].formal_review_eligible:
+            reason = candidates[default_name].formal_review_exclusion_reason or "sealed endpoint is not eligible"
+            raise ReviewSafetyError(
+                f"reviewer_not_formal_review_eligible: {reviewer_request!r} cannot satisfy "
+                f"the formal review gate: {reason}"
+            )
+        if model is None:
+            return default_name
+    elif model is None:
+        return None
+
+    matches = [
+        candidate.name
+        for candidate in candidates.values()
+        if candidate.concrete_model == model
+        and candidate.formal_review_eligible
+        and (requested_route is None or candidate.route == requested_route)
+    ]
+    if len(matches) == 1:
+        return matches[0]
+
+    if requested_route is None:
+        scope = "the formal-review catalog"
+        eligible_models = sorted(
+            {
+                candidate.concrete_model
+                for candidate in candidates.values()
+                if candidate.formal_review_eligible
+            }
+        )
+    else:
+        scope = f"reviewer {reviewer_request!r} route {requested_route!r}"
+        eligible_models = sorted(
+            {
+                candidate.concrete_model
+                for candidate in candidates.values()
+                if candidate.formal_review_eligible and candidate.route == requested_route
+            }
+        )
+    if not matches:
+        raise ReviewSafetyError(
+            f"model_not_formal_review_eligible: {model!r} has no canonical candidate on {scope}; "
+            f"eligible models: {eligible_models!r}"
+        )
+    raise ReviewSafetyError(
+        f"ambiguous_formal_review_model: {model!r} maps to candidates {sorted(matches)!r} on {scope}; "
+        "add --reviewer to select the native route"
+    )
+
+
 def _headroom_band(record: dict[str, Any]) -> str:
     status = str(record.get("status") or "unknown")
     remaining = record.get("remaining_pct")
@@ -537,16 +613,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         return 2
 
     task_id = args.task_id or f"review-pr-{pr}"
-    if args.dry_run:
-        dry_model = getattr(args, "model", None) or (
-            "deterministic-scheduler" if reviewer_request == REVIEWER_AUTO else FORMAL_CF_MODEL[reviewer_request]
-        )
-        print(
-            f"review-pr dry-run pr={pr} reviewer_request={reviewer_request} "
-            f"model={dry_model} task_id={task_id} initiator={initiator} "
-            f"author={author_model}/{author_family}"
-        )
-        return 0
     if args.background:
         print(
             "review-pr: background bridge workers are retired; enqueue the formal job "
@@ -587,33 +653,56 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         verify_clean_review_evidence_reads,
     )
 
-    resolved_author_family = resolve_author_family(author_model, author_family)
-    if resolved_author_family != author_family:
-        print(
-            "review-pr: author model/family are unknown, ambiguous, or conflicting; refusing formal review",
-            file=sys.stderr,
-        )
-        return 2
-    requested_candidate = None
-    if reviewer_request != REVIEWER_AUTO:
-        requested_candidate = EXPLICIT_REVIEWER_CANDIDATE[reviewer_request]
     explicit_model = str(getattr(args, "model", None) or "").strip() or None
-    if explicit_model:
-        matches = [candidate.name for candidate in REVIEW_CANDIDATES.values() if candidate.concrete_model == explicit_model]
-        if requested_candidate is not None:
-            valid_model_pin = REVIEW_CANDIDATES[requested_candidate].concrete_model == explicit_model
-        else:
-            valid_model_pin = len(matches) == 1
-            if valid_model_pin:
-                requested_candidate = matches[0]
-        if not valid_model_pin:
-            print("review-pr: --model must identify exactly the explicitly requested canonical candidate", file=sys.stderr)
-            return 2
+    try:
+        resolved_author_family = resolve_author_family(author_model, author_family)
+        if resolved_author_family != author_family:
+            raise ReviewSafetyError(
+                "author model/family are unknown, ambiguous, or conflicting; refusing formal review"
+            )
+        requested_candidate = resolve_requested_review_candidate(
+            reviewer_request,
+            explicit_model,
+            REVIEW_CANDIDATES,
+        )
+    except ReviewSafetyError as exc:
+        print(f"review-pr: {exc}", file=sys.stderr)
+        return 2
     route_mode = "explicit" if requested_candidate is not None else "auto"
     override_reason = str(getattr(args, "override_reason", None) or "").strip() or None
     if requested_candidate is not None and override_reason is None:
         print("review-pr: explicit reviewer/model pin requires --override-reason", file=sys.stderr)
         return 2
+    requested_effort = str(getattr(args, "effort", None) or "").strip() or None
+    if requested_candidate is not None and requested_effort is not None:
+        participant = REVIEW_CANDIDATES[requested_candidate].participant
+        supported_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
+        if requested_effort != supported_effort:
+            print(
+                f"review-pr: participant {participant!r} supports ACP effort pin "
+                f"{supported_effort!r}, not {requested_effort!r}; omit --effort when "
+                "the participant has no registered ACP effort pin",
+                file=sys.stderr,
+            )
+            return 2
+    if args.dry_run:
+        dry_model = (
+            REVIEW_CANDIDATES[requested_candidate].concrete_model
+            if requested_candidate is not None
+            else "deterministic-scheduler"
+        )
+        dry_effort = (
+            ACPX_PARTICIPANT_EFFORTS.get(REVIEW_CANDIDATES[requested_candidate].participant)
+            if requested_candidate is not None
+            else None
+        )
+        print(
+            f"review-pr dry-run pr={pr} reviewer_request={reviewer_request} "
+            f"candidate={requested_candidate or 'deterministic-scheduler'} "
+            f"model={dry_model} effort={dry_effort or 'provider_default'} "
+            f"task_id={task_id} initiator={initiator} author={author_model}/{author_family}"
+        )
+        return 0
     profile = str(getattr(args, "review_profile", None) or "code").strip().lower()
     risk = str(getattr(args, "risk", None) or "medium").strip().lower()
     requested_role = str(getattr(args, "role", None) or "").strip() or None
@@ -909,7 +998,6 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     participant = REVIEW_CANDIDATES[routing_reservation.resolved_candidate].participant
                     model = routing_reservation.resolved_model
                     effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
-                    requested_effort = str(getattr(args, "effort", None) or "").strip() or None
                     if requested_effort is not None and requested_effort != effort:
                         _settle_routing_reservation_once(
                             routing_ledger,
@@ -1249,21 +1337,25 @@ def register_review_pr_parser(subparsers: Any) -> None:
     parser.add_argument(
         "--reviewer",
         default=REVIEWER_AUTO,
-        help="auto|codex|glm|claude|agy|grok|kimi (explicit routes are exceptional pins)",
+        help=(
+            "auto|codex|glm|claude|agy|grok|kimi (recognized semantic routes; "
+            "current sealed eligibility comes from model_catalog.yaml)"
+        ),
     )
     parser.add_argument(
         "--model",
         default=None,
         help=(
-            "Exceptional exact canonical model pin; must agree with --reviewer and "
-            "requires --override-reason"
+            "Exceptional exact canonical model pin; selects one formally eligible "
+            "candidate on --reviewer's native route and requires --override-reason"
         ),
     )
     parser.add_argument(
         "--effort",
         default=None,
         help=(
-            "Override formal CF effort pin (default: high; authority escalate: xhigh)"
+            "Optional exact ACP effort pin; it must match the selected participant's "
+            "registered transport capability"
         ),
     )
     parser.add_argument("--claude-available", dest="claude_available", action=argparse.BooleanOptionalAction,

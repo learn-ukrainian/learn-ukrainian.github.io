@@ -75,14 +75,18 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
 # Formal cross-family CF — PR number is REQUIRED and positional
-.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer codex|claude|glm
+.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
 .venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...
 ```
 
-- **agy | kimi | grok** remain `formal_review_eligible: false` until isolation proofs
-  (#5555–#5557). They **request** CF via `review-pr`; they do not self-seal.
-- Escalate hard/non-routine CF with Sol / Fable (`--model gpt-5.6-sol` or `claude-fable-5`
-  `--effort xhigh`) per model-assignment.
+- **agy | kimi** remain `formal_review_eligible: false` until their isolation
+  proofs (#5555–#5556). They **request** CF via `review-pr`; they do not self-seal.
+  Native Grok passed its exact-head isolation proof and is eligible; Cursor
+  Grok remains a non-formal availability fallback.
+- Escalate hard/non-routine CF with Sol (`--reviewer codex --model gpt-5.6-sol`,
+  provider-default ACP effort) or Fable (`--reviewer claude --model claude-fable-5
+  --effort high`) per model-assignment. Every explicit pin also requires
+  `--override-reason` and still passes the normal hard gates.
 
 ## Standalone TUI/UI contract
 

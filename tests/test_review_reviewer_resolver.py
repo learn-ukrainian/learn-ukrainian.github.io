@@ -734,6 +734,48 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate():
     assert "hard eligibility" in unsafe.fail_closed_reason
 
 
+def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
+    fable = REVIEW_CANDIDATES["claude-fable-5"]
+    selected = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-terra",
+            author_family="openai",
+            risk="medium",
+            pinned_candidate=fable.name,
+            pressure_override_reason="operator requested Fable dissent",
+        )
+    )
+    assert selected.selected is not None
+    assert selected.selected.name == "claude-fable-5"
+    assert "explicit pressure override" in selected.substitution_note
+
+    same_family = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-sonnet-5",
+            author_family="anthropic",
+            risk="medium",
+            pinned_candidate=fable.name,
+            pressure_override_reason="operator requested Fable dissent",
+        )
+    )
+    assert same_family.selected is None
+    assert "hard eligibility" in same_family.fail_closed_reason
+    assert next(item for item in same_family.trace if item.name == fable.name).status == "excluded"
+
+
+def test_unknown_explicit_pin_fails_closed_before_candidate_walk():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-terra",
+            pinned_candidate="not-a-catalog-candidate",
+            pressure_override_reason="test",
+        )
+    )
+    assert resolution.selected is None
+    assert resolution.trace == ()
+    assert "unknown explicit reviewer pin" in resolution.fail_closed_reason
+
+
 def test_formal_k3_participant_identity_is_explicit():
     k3 = REVIEW_CANDIDATES["kimi-k3"]
     assert k3.route == "kimicc"
