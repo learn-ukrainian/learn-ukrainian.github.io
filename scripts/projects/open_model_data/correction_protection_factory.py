@@ -460,6 +460,39 @@ def phase2_route(row: Mapping[str, Any]) -> tuple[str, str]:
     return "modern_literary_ukrainian_control", "unresolved"
 
 
+def known_answer_disposition(
+    *,
+    role: str,
+    category_id: str,
+    rule: Mapping[str, Any],
+    correction_release_allowed: bool,
+) -> str:
+    """Return the same policy-bound disposition used by gates and emission."""
+    allowed = tuple(
+        str(value)
+        for value in rule.get(
+            "allowed_dispositions",
+            ("correct", "correction", "protected", "excluded", "unresolved"),
+        )
+    )
+    if role == "positive":
+        disposition = (
+            "correction"
+            if correction_release_allowed and "correction" in allowed
+            else "unresolved"
+        )
+    elif role == "acceptable_control":
+        disposition = "correct" if "correct" in allowed else "protected"
+    else:
+        disposition = (
+            "unresolved"
+            if category_id == "surzhyk_contested_contact" or "protected" not in allowed
+            else "protected"
+        )
+    require(disposition in allowed, f"{category_id}/{role} disposition {disposition!r} is not allowed")
+    return disposition
+
+
 def gate_results(
     known_answers: Mapping[str, Any],
     thresholds: Mapping[str, Any],
@@ -483,6 +516,15 @@ def gate_results(
             minimum = int(rule.get(key, 0))
             if counts[role] < minimum:
                 reasons.append(f"{role}={counts[role]} below {key}={minimum}")
+        declared_canaries = {
+            str(canary_id)
+            for role in ("positive", "acceptable_control", "protected")
+            for item in specification.get(role, [])
+            for canary_id in item.get("canary_ids", [])
+        }
+        missing_canaries = sorted(set(rule.get("required_canaries", [])) - declared_canaries)
+        if missing_canaries:
+            reasons.append(f"missing required canaries: {', '.join(missing_canaries)}")
         if int(rule.get("minimum_distinct_periods", 0)):
             periods = {str(item.get("period", known_answers["defaults"]["period"])) for item in specification.get("protected", [])}
             if len(periods) < int(rule["minimum_distinct_periods"]):
@@ -514,6 +556,38 @@ def gate_results(
                 f"attributed dissent lanes={model_dissent_lanes} below "
                 f"minimum_attributed_dissent_lanes={minimum_dissent_lanes}"
             )
+        protected_false_corrections = sum(
+            known_answer_disposition(
+                role="protected",
+                category_id=category_id,
+                rule=rule,
+                correction_release_allowed=True,
+            )
+            == "correction"
+            for _item in specification.get("protected", [])
+        )
+        control_false_corrections = sum(
+            known_answer_disposition(
+                role="acceptable_control",
+                category_id=category_id,
+                rule=rule,
+                correction_release_allowed=True,
+            )
+            == "correction"
+            for _item in specification.get("acceptable_control", [])
+        )
+        maximum_protected = int(rule.get("maximum_protected_false_corrections", 0))
+        maximum_control = int(rule.get("maximum_control_false_corrections", 0))
+        if protected_false_corrections > maximum_protected:
+            reasons.append(
+                f"protected false corrections={protected_false_corrections} above "
+                f"maximum_protected_false_corrections={maximum_protected}"
+            )
+        if control_false_corrections > maximum_control:
+            reasons.append(
+                f"control false corrections={control_false_corrections} above "
+                f"maximum_control_false_corrections={maximum_control}"
+            )
         if rule["release_mode"] == "research_only":
             reasons.append("threshold policy fixes category as research-only")
         state = "research_only" if reasons else "passed"
@@ -525,7 +599,9 @@ def gate_results(
             "positive": counts["positive"],
             "acceptable_control": counts["acceptable_control"],
             "protected": counts["protected"],
-            "false_corrections": 0,
+            "protected_false_corrections": protected_false_corrections,
+            "control_false_corrections": control_false_corrections,
+            "false_corrections": protected_false_corrections + control_false_corrections,
             "threshold_config_sha256": threshold_sha256,
             "reasons": reasons,
         }
@@ -887,12 +963,12 @@ def build_artifacts(
                         validate(evidence_row_value, active[EVIDENCE_SCHEMA], f"public evidence {category_id}/{role}/{index}")
                         writers["evidence"].write(evidence_row_value)
                         writers["public_evidence"].write(evidence_row_value)
-                    if role == "positive":
-                        disposition = "correction" if gates[category_id]["correction_release_allowed"] else "unresolved"
-                    elif role == "acceptable_control":
-                        disposition = "correct"
-                    else:
-                        disposition = "unresolved" if category_id == "surzhyk_contested_contact" else "protected"
+                    disposition = known_answer_disposition(
+                        role=role,
+                        category_id=category_id,
+                        rule=thresholds["categories"][category_id],
+                        correction_release_allowed=gates[category_id]["correction_release_allowed"],
+                    )
                     replacement = str(item["replacement"]) if disposition == "correction" else None
                     case = case_row(
                         source=source,
@@ -1002,7 +1078,14 @@ def compact_release_gate(gate: Mapping[str, Any]) -> dict[str, Any]:
         "state": gate["state"],
         "research_only": gate["research_only"],
         "correction_release_allowed": gate["correction_release_allowed"],
+        "positive": gate["positive"],
+        "acceptable_control": gate["acceptable_control"],
+        "protected": gate["protected"],
+        "protected_false_corrections": gate["protected_false_corrections"],
+        "control_false_corrections": gate["control_false_corrections"],
+        "false_corrections": gate["false_corrections"],
         "threshold_config_sha256": gate["threshold_config_sha256"],
+        "reasons": gate["reasons"],
     }
 
 
@@ -1058,6 +1141,8 @@ def build_manifest_and_receipt(
                     "positive",
                     "acceptable_control",
                     "protected",
+                    "protected_false_corrections",
+                    "control_false_corrections",
                     "false_corrections",
                     "threshold_config_sha256",
                     "reasons",

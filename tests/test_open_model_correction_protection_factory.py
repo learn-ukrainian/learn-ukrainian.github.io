@@ -145,6 +145,63 @@ def test_zvuchyt_narration_and_protected_mutations_are_frozen() -> None:
         "text": "Фраза звучит значно вишуканіше.",
         "surface": "звучит",
         "replacement": "звучить",
+        "canary_ids": ["zvuchyt-modern-ukrainian-narration"],
     }
     assert len(category["protected"]) == 5
     assert all(item["surface"] == "звучит" for item in category["protected"])
+
+
+def test_frozen_canaries_and_false_correction_caps_fail_closed(monkeypatch) -> None:
+    known_answers = _json(KNOWN_ANSWERS)
+    thresholds = _json(THRESHOLDS)
+    category_id = "russian_lexical_inflectional_intrusion"
+
+    known_answers["categories"][category_id]["positive"][0]["canary_ids"] = []
+    gates = factory.gate_results(
+        known_answers,
+        thresholds,
+        model_proposal_lanes=1,
+        model_dissent_lanes=1,
+    )
+    assert gates[category_id]["state"] == "research_only"
+    assert any("zvuchyt-modern-ukrainian-narration" in reason for reason in gates[category_id]["reasons"])
+
+    original = factory.known_answer_disposition
+
+    def false_positive(**kwargs):
+        if kwargs["role"] == "acceptable_control":
+            return "correction"
+        return original(**kwargs)
+
+    monkeypatch.setattr(factory, "known_answer_disposition", false_positive)
+    gates = factory.gate_results(
+        _json(KNOWN_ANSWERS),
+        thresholds,
+        model_proposal_lanes=1,
+        model_dissent_lanes=1,
+    )
+    assert gates[category_id]["state"] == "research_only"
+    assert gates[category_id]["control_false_corrections"] == 5
+    assert any("maximum_control_false_corrections=0" in reason for reason in gates[category_id]["reasons"])
+
+
+def test_known_answer_dispositions_obey_category_policy() -> None:
+    thresholds = _json(THRESHOLDS)
+    default_allowed = {"correct", "correction", "protected", "excluded", "unresolved"}
+    for category_id, rule in thresholds["categories"].items():
+        allowed = set(rule.get("allowed_dispositions", default_allowed))
+        for role in ("positive", "acceptable_control", "protected"):
+            disposition = factory.known_answer_disposition(
+                role=role,
+                category_id=category_id,
+                rule=rule,
+                correction_release_allowed=True,
+            )
+            assert disposition in allowed
+    quotation_rule = thresholds["categories"]["marked_russian_quotation_code_switch"]
+    assert factory.known_answer_disposition(
+        role="acceptable_control",
+        category_id="marked_russian_quotation_code_switch",
+        rule=quotation_rule,
+        correction_release_allowed=False,
+    ) == "protected"

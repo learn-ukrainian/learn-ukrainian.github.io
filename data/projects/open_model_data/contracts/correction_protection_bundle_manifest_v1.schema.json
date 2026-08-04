@@ -115,13 +115,15 @@
     "gate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["state", "correction_release_allowed", "positive", "acceptable_control", "protected", "false_corrections", "threshold_config_sha256", "reasons"],
+      "required": ["state", "correction_release_allowed", "positive", "acceptable_control", "protected", "protected_false_corrections", "control_false_corrections", "false_corrections", "threshold_config_sha256", "reasons"],
       "properties": {
         "state": {"enum": ["passed", "research_only"]},
         "correction_release_allowed": {"type": "boolean"},
         "positive": {"type": "integer", "minimum": 0},
         "acceptable_control": {"type": "integer", "minimum": 0},
         "protected": {"type": "integer", "minimum": 0},
+        "protected_false_corrections": {"type": "integer", "minimum": 0},
+        "control_false_corrections": {"type": "integer", "minimum": 0},
         "false_corrections": {"type": "integer", "minimum": 0},
         "threshold_config_sha256": {"$ref": "#/$defs/sha256"},
         "reasons": {"type": "array", "items": {"type": "string", "minLength": 1}}
