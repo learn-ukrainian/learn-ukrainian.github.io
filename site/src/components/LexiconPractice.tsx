@@ -22,7 +22,6 @@ import {
   itemIdPresentInDeck,
   computeSessionScope,
   computeTodayRingDenominator,
-  countDueReviewCards,
   czNorm,
   isPracticeNewCard,
   isPracticeSessionResumable,
@@ -300,13 +299,17 @@ function ensureDeckCustomSetCoverage(
       const matchedClozeIds = clozeByLemma.get(keyLower) ?? [];
       const hasCloze = matchedClozeIds.length > 0;
 
+      // Learner-layout P0-3 / Opus P0-2: an unmatched custom-deck key has no resolved
+      // practice-core content — claiming the full mode list here promised exercises
+      // (e.g. a "5" on the Heritage card) that the active session then couldn't
+      // deliver, landing the learner in an instant empty-mode dead end. Only claim
+      // the modes this key actually resolves content for; other modes appear once
+      // real shard data resolves them (same honesty rule as the built shards).
       newIndexItems.push({
         lemmaId: atlas?.slug ?? key,
         lemma: atlas?.lemma ?? cleanKey,
         cefr: atlas?.cefr ?? null,
-        modes: hasCloze
-          ? ['flashcards', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage']
-          : ['flashcards', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'],
+        modes: hasCloze ? ['flashcards', 'cloze'] : ['flashcards'],
         hasCloze,
         clozeIds: matchedClozeIds,
         newOrder: orderCounter++,
@@ -627,6 +630,13 @@ function visiblePracticeMode(mode: PracticeModeFilter): VisiblePracticeModeFilte
   return mode in MODE_META ? (mode as VisiblePracticeModeFilter) : 'mixed';
 }
 
+/** P0-3: the mode count must be part of the card's accessible name, not aria-hidden. */
+function modeCountAccessibleSuffix(count: number, chromeLocale: 'en' | 'uk'): string {
+  return chromeLocale === 'uk'
+    ? `${count} ${uaPlural(count, { one: 'вправа', few: 'вправи', many: 'вправ' })}`
+    : `${count} ${count === 1 ? 'exercise' : 'exercises'}`;
+}
+
 const HERITAGE_COLORS: Record<string, string> = {
   native: 'var(--lu-teal)',
   inherited: 'var(--lu-teal)',
@@ -809,17 +819,34 @@ function heritageTagColor(heritage: string | null): string | undefined {
   return HERITAGE_COLORS[heritage.toLowerCase()] ?? 'var(--lu-text-muted)';
 }
 
+/** P0-4: heritage on the flashcard back must be a text chip, not color-only. */
+const HERITAGE_LABEL_KEYS: Record<string, ChromeKey> = {
+  native: 'practice.heritageNative',
+  inherited: 'practice.heritageInherited',
+  borrowed: 'practice.heritageBorrowed',
+  loanword: 'practice.heritageBorrowed',
+  calque: 'practice.heritageCalque',
+  avoid: 'practice.heritageAvoid',
+};
+
+function heritageLabelText(heritage: string | null, chromeLocale: 'en' | 'uk'): string | undefined {
+  if (!heritage) return undefined;
+  const key = HERITAGE_LABEL_KEYS[heritage.toLowerCase()];
+  return key ? CHROME_STRINGS[chromeLocale][key] : undefined;
+}
+
 function displayPracticeForm(value: string, learnerLevel: CefrLevel): string {
   return learnerLevel === 'A1' ? value : stripStressMarks(value);
 }
 
-function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel) {
+function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel, chromeLocale: 'en' | 'uk') {
   return {
     front: displayPracticeForm(entry.lemma, learnerLevel),
     back: entry.gloss,
     subtitle: entry.ipa ?? entry.pos ?? undefined,
     tag: entry.cefr ?? undefined,
     tagColor: heritageTagColor(entry.heritage),
+    heritageLabel: heritageLabelText(entry.heritage, chromeLocale),
   };
 }
 
@@ -1095,7 +1122,7 @@ function drillChoiceOptions(
               ? `${option.labelUk} (${translateGrammarTerm(option.labelUk)})`
               : option.labelUk))
         : option.labelUk,
-      correct: option.value === selectedSet.answer,
+      correct: selectedSet.answers?.includes(option.value) ?? option.value === selectedSet.answer,
     }));
   }
   if (selection.paradigm) {
@@ -1167,11 +1194,16 @@ function drillChoicePrompt(
   if (selectedSet) {
     const setLabelUk = selectedSet.setLabelUk;
     const setLabelEn = selectedSet.setLabelEn || translateGrammarTerm(setLabelUk);
+    const hasMultipleAnswers = (selectedSet.answers?.length ?? 0) > 1;
     return {
       promptUk: `До якої групи належить «${lemma}»?`,
       promptEn: `Which group does «${lemma}» belong to?`,
-      subtitleUk: setLabelUk,
-      subtitleEn: setLabelEn,
+      subtitleUk: hasMultipleAnswers
+        ? `${setLabelUk} · можливі кілька правильних відповідей`
+        : setLabelUk,
+      subtitleEn: hasMultipleAnswers
+        ? `${setLabelEn} · Multiple answers may be correct`
+        : setLabelEn,
     };
   }
   if (selection.paradigm) {
@@ -1471,6 +1503,12 @@ function LexiconPracticeIsland({
   const [clozeInput, setClozeInput] = useState('');
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
+  // Opus P0-6: a case-miss used to clear the input and loop forever with no lock —
+  // a learner who knew the word but not the case could cycle its paradigm
+  // indefinitely. Cap case-misses so the second one locks and reveals via the
+  // existing PracticeFormRail path, same as any other locked cloze result.
+  const [clozeCaseMissCount, setClozeCaseMissCount] = useState(0);
+  const clozeCaseMissOutcomeRef = useRef<CompletionOutcome | null>(null);
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
   const [stressSelectedPosition, setStressSelectedPosition] = useState<number | null>(null);
@@ -1645,6 +1683,8 @@ function LexiconPracticeIsland({
     setClozeInput('');
     setClozeFeedback(null);
     setClozeAttemptRecorded(false);
+    setClozeCaseMissCount(0);
+    clozeCaseMissOutcomeRef.current = null;
     setHeritageFeedback(null);
     setParonymFeedback(null);
     setStressSelectedPosition(null);
@@ -2084,6 +2124,14 @@ function LexiconPracticeIsland({
     }
     return counts;
   }, [deckLemmaKeySet, indexForStats]);
+  // P0-3: a mode is only disabled once the index has actually loaded and confirms
+  // zero content — not during the transient pre-load tick where every count is 0.
+  // A real custom deck's synthesized items (`ensureDeckCustomSetCoverage`) only exist
+  // on the full `deck` built by `ensureDeck()` — the lightweight idle `dueIndex` never
+  // carries them — so for a custom deck, wait for `deck` itself rather than trusting
+  // a `dueIndex`-only count of 0 that would otherwise disable every mode forever.
+  const isCustomDeckSelected = selectedDeckFilter !== 'all' && selectedDeckFilter !== 'virtual_teacher_lesson';
+  const modeDataLoaded = isCustomDeckSelected ? deck !== null : deck !== null || dueIndex !== null;
 
   const sessionPoolConstraints = useMemo(
     () =>
@@ -3109,15 +3157,26 @@ function LexiconPracticeIsland({
 
     if (caseMiss) {
       if (!clozeAttemptRecorded) {
-        recordReview(selection, 'hard');
+        clozeCaseMissOutcomeRef.current = recordReview(selection, 'hard');
         setClozeAttemptRecorded(true);
       }
-      setClozeInput('');
+      const nextCaseMissCount = clozeCaseMissCount + 1;
+      setClozeCaseMissCount(nextCaseMissCount);
+      const exhausted = nextCaseMissCount >= 2;
+      // Keep the typed value (select it, don't clear it) — a chip tap that put the
+      // right lemma in the box must not be destroyed on the first case-miss.
       setClozeFeedback({
         kind: 'case-miss',
         textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
         textEn: `→ Correct word. Now put it in the ${translateGrammarTerm(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
       });
+      if (exhausted) {
+        setAnswerLocked(true);
+        if (clozeCaseMissOutcomeRef.current) {
+          pendingOutcomeRef.current = clozeCaseMissOutcomeRef.current;
+          setPendingOutcome(clozeCaseMissOutcomeRef.current);
+        }
+      }
       return;
     }
 
@@ -3143,10 +3202,6 @@ function LexiconPracticeIsland({
     setAnswerLocked(true);
   }
 
-  const dueReviews = useMemo(
-    () => (indexForStats.length ? countDueReviewCards(indexForStats, new Date()) : 0),
-    [completedToday, dailyNewCount, indexForStats, revision],
-  );
   const homeScope = useMemo(
     () =>
       indexForStats.length
@@ -3215,6 +3270,58 @@ function LexiconPracticeIsland({
     setHistory([]);
     setDeck(null);
     setClozeLoaded(false);
+  }
+
+  // P0-2: every active-phase empty state gets the same three-part block instead of
+  // a text-only dead end — what happened, the single best next action as a primary
+  // button, and (where it makes sense) up to two real-content secondary modes.
+  function renderPracticeEmptyState(
+    messageKey: ChromeKey,
+    testId: string,
+    secondaryModes: VisiblePracticeModeFilter[] = [],
+  ) {
+    const primaryIsFlashcards = messageKey === 'practice.clozePreparing' && (modeCounts.flashcards ?? 0) > 0;
+    return (
+      <div className="practice-empty-state" data-testid={testId}>
+        <p className="lexicon-practice-muted">
+          <PracticeChromeLabel k={messageKey} />
+        </p>
+        <button
+          type="button"
+          className="btn btn-accent practice-empty-primary"
+          data-testid={`${testId}-primary`}
+          onClick={() => {
+            if (primaryIsFlashcards) {
+              void startFocusMode('flashcards');
+            } else {
+              finishPractice();
+            }
+          }}
+        >
+          <PracticeChromeLabel k={primaryIsFlashcards ? 'practice.startFlashcardsCta' : 'practice.backToModes'} />
+        </button>
+        {secondaryModes.length > 0 ? (
+          <div className="practice-empty-secondary">
+            {secondaryModes
+              .filter((secondaryMode) => (modeCounts[secondaryMode] ?? 0) > 0)
+              .map((secondaryMode) => {
+                const meta = MODE_META[secondaryMode];
+                const count = modeCounts[secondaryMode] ?? 0;
+                return (
+                  <button
+                    key={secondaryMode}
+                    type="button"
+                    className="btn practice-empty-secondary-btn"
+                    onClick={() => void startFocusMode(secondaryMode)}
+                  >
+                    <ChromeDual uk={`${meta.title} · ${count}`} en={`${meta.en} · ${count}`} />
+                  </button>
+                );
+              })}
+          </div>
+        ) : null}
+      </div>
+    );
   }
 
   return (
@@ -3294,110 +3401,6 @@ function LexiconPracticeIsland({
             </div>
           )}
 
-          {/* Google Drive Sync Bar */}
-          <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.75rem 0 1rem 0' }}>
-            <button
-              type="button"
-              className="btn btn-sm"
-              style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-              onClick={handleGoogleDriveSync}
-              disabled={isDriveSyncing}
-            >
-              <span>☁️</span>
-              <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
-            </button>
-            {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
-          </div>
-
-          {/* Custom Decks & Special Deck Filter Bar */}
-          <div className="k3-deck-filter-bar" style={{ margin: '1rem 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-                {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
-              </span>
-              <button
-                type="button"
-                className="btn btn-sm btn-accent"
-                onClick={() => setShowCreateModal(true)}
-                style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
-              >
-                ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
-              </button>
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <button
-                type="button"
-                className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                onClick={() => requestDeckSwitch('all')}
-                style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-              >
-                {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
-              </button>
-              <button
-                type="button"
-                className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
-                style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-              >
-                {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck'}
-              </button>
-              {customSets.map((set) => (
-                <button
-                  key={set.id}
-                  type="button"
-                  className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                  onClick={() => requestDeckSwitch(set.id)}
-                  style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                >
-                  {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
-                </button>
-              ))}
-            </div>
-            {pendingDeckSwitch ? (
-              <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
-                <span><ChromeText k="practice.switchSessionOffer" /></span>
-                <div className="k3-switch-offer-actions">
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-accent"
-                    data-testid="practice-switch-session-accept"
-                    onClick={acceptDeckSwitch}
-                  >
-                    <ChromeText k="practice.switchSessionAccept" />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    data-testid="practice-switch-session-decline"
-                    onClick={declineDeckSwitch}
-                  >
-                    <ChromeText k="practice.switchSessionDecline" />
-                  </button>
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          {/* Custom Deck Manager & Document Importer Modal */}
-          {showCreateModal ? (
-            <LexiconCustomDeckManager
-              chromeLocale={chromeLocale}
-              activeDeckFilter={selectedDeckFilter}
-              shardBaseUrl={shardBaseUrl}
-              onSelectDeckFilter={(id) => {
-                // F2 (PR #5837 review): route through the same guarded switch flow as the
-                // deck-filter chips — the manager must offer a fresh session too, not
-                // silently swap the deck under an active/resumable one.
-                setCustomSets(readLocalCustomSets());
-                requestDeckSwitch(id);
-              }}
-              onClose={() => {
-                setShowCreateModal(false);
-                setCustomSets(readLocalCustomSets());
-              }}
-            />
-          ) : null}
-
           <div className="k3-practice-dashboard">
             <div className="k3-hero" data-testid="practice-dashboard-hero">
               <h1><ChromeText k="practice.heroTitle" /></h1>
@@ -3436,7 +3439,7 @@ function LexiconPracticeIsland({
 
             <div className="k3-stats" data-testid="practice-dashboard-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
               <div className="k3-stat">
-                <span className="k3-stat-value">{dueReviews}</span>
+                <span className="k3-stat-value">{dailyRows.pendingDue.length}</span>
                 <span className="k3-stat-label"><ChromeText k="practice.statusDue" /></span>
               </div>
               <div className="k3-stat">
@@ -3603,7 +3606,7 @@ function LexiconPracticeIsland({
                 {MODE_CARD_ORDER.map((practiceMode) => {
                   const meta = MODE_META[practiceMode];
                   const modeCount = modeCounts[practiceMode] ?? 0;
-                  const modeEmpty = practiceMode !== 'mixed' && modeCount === 0;
+                  const modeEmpty = practiceMode !== 'mixed' && modeDataLoaded && modeCount === 0;
                   return (
                     <button
                       key={practiceMode}
@@ -3613,6 +3616,8 @@ function LexiconPracticeIsland({
                       data-accent={meta.accent}
                       data-mode-count={modeCount}
                       data-mode-empty={modeEmpty ? 'true' : undefined}
+                      disabled={modeEmpty}
+                      aria-disabled={modeEmpty}
                       aria-describedby="mode-detail-line"
                       onMouseEnter={() => setHoveredMode(practiceMode)}
                       onMouseLeave={() => setHoveredMode(null)}
@@ -3622,12 +3627,22 @@ function LexiconPracticeIsland({
                     >
                       <span className="k3-mode-title">{chromeLocale === 'uk' ? meta.title : meta.en}</span>
                       <span className="k3-mode-step">{chromeLocale === 'uk' ? meta.step : meta.stepEn}</span>
+                      <span className="k3-mode-desc">
+                        {chromeLocale === 'uk' ? meta.description : meta.descriptionEn}
+                      </span>
+                      {modeEmpty ? (
+                        <span className="k3-mode-empty-note">
+                          <ChromeText k="practice.modeNoExercises" />
+                        </span>
+                      ) : null}
                       <span
                         className="k3-mode-count"
-                        aria-hidden="true"
                         data-testid={`practice-mode-count-${practiceMode}`}
                       >
-                        {modeCount}
+                        <span aria-hidden="true">{modeCount}</span>
+                        <span className="sr-only">
+                          {modeCountAccessibleSuffix(modeCount, chromeLocale)}
+                        </span>
                       </span>
                     </button>
                   );
@@ -3636,6 +3651,120 @@ function LexiconPracticeIsland({
             </div>
             </div>
           </div>
+
+          {/*
+           * Opus P0-1: account sync and deck management are power-user actions, not
+           * the first thing a learner should be asked to decide. They used to render
+           * above the whole dashboard, pushing the primary Start/Resume CTA down and
+           * putting the HARD-1/HARD-2 above-the-fold gates at risk. Folded here,
+           * below the mode grid, behind the same disclosure pattern the page already
+           * uses for secondary material.
+           */}
+          <details className="k3-practice-sources" data-testid="practice-secondary-tools">
+            <summary><ChromeText k="practice.secondaryToolsTitle" /></summary>
+            <div className="k3-practice-sources-content">
+              <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  onClick={handleGoogleDriveSync}
+                  disabled={isDriveSyncing}
+                >
+                  <span>☁️</span>
+                  <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
+                </button>
+                {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
+              </div>
+
+              <div className="k3-deck-filter-bar" style={{ margin: '1rem 0 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                    {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-accent"
+                    onClick={() => setShowCreateModal(true)}
+                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
+                  >
+                    ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <button
+                    type="button"
+                    className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                    onClick={() => requestDeckSwitch('all')}
+                    style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                  >
+                    {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                    onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
+                    style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                  >
+                    {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck'}
+                  </button>
+                  {customSets.map((set) => (
+                    <button
+                      key={set.id}
+                      type="button"
+                      className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                      onClick={() => requestDeckSwitch(set.id)}
+                      style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                    >
+                      {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
+                    </button>
+                  ))}
+                </div>
+                {pendingDeckSwitch ? (
+                  <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
+                    <span><ChromeText k="practice.switchSessionOffer" /></span>
+                    <div className="k3-switch-offer-actions">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-accent"
+                        data-testid="practice-switch-session-accept"
+                        onClick={acceptDeckSwitch}
+                      >
+                        <ChromeText k="practice.switchSessionAccept" />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-sm"
+                        data-testid="practice-switch-session-decline"
+                        onClick={declineDeckSwitch}
+                      >
+                        <ChromeText k="practice.switchSessionDecline" />
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {showCreateModal ? (
+                <LexiconCustomDeckManager
+                  chromeLocale={chromeLocale}
+                  activeDeckFilter={selectedDeckFilter}
+                  shardBaseUrl={shardBaseUrl}
+                  onSelectDeckFilter={(id) => {
+                    // F2 (PR #5837 review): route through the same guarded switch flow as the
+                    // deck-filter chips — the manager must offer a fresh session too, not
+                    // silently swap the deck under an active/resumable one.
+                    setCustomSets(readLocalCustomSets());
+                    requestDeckSwitch(id);
+                  }}
+                  onClose={() => {
+                    setShowCreateModal(false);
+                    setCustomSets(readLocalCustomSets());
+                  }}
+                />
+              ) : null}
+            </div>
+          </details>
         </>
       )}
       {loading && (
@@ -3699,11 +3828,8 @@ function LexiconPracticeIsland({
             ) : null}
           </div>
 
-          {deck && deck.index.length === 0 && (
-            <p className="lexicon-practice-muted">
-              <PracticeChromeLabel k="practice.noCards" />
-            </p>
-          )}
+          {deck && deck.index.length === 0 &&
+            renderPracticeEmptyState('practice.noCards', 'practice-no-cards')}
 
           {deck && deck.index.length > 0 && (
             <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
@@ -3731,27 +3857,20 @@ function LexiconPracticeIsland({
                     onMatchingComplete={handleMatchingComplete}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
+                    onBackToModes={finishPractice}
                     showEnglishSubtitles={showEnglishSubtitles}
                     chromeLocale={chromeLocale}
                     learnerLevel={learnerLevel}
                   />
                 </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
-                <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                  <PracticeChromeLabel k="practice.clozePreparing" />
-                </p>
+                renderPracticeEmptyState('practice.clozePreparing', 'practice-cloze-empty', ['matching', 'choice'])
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
-                <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
-                  <PracticeChromeLabel k="practice.heritagePreparing" />
-                </p>
+                renderPracticeEmptyState('practice.heritagePreparing', 'practice-heritage-empty', ['flashcards', 'choice'])
               ) : mode === 'paronym' && (deck.paronym?.length ?? 0) === 0 ? (
-                <p className="lexicon-practice-muted" data-testid="practice-paronym-empty">
-                  <PracticeChromeLabel k="practice.paronymPreparing" />
-                </p>
+                renderPracticeEmptyState('practice.paronymPreparing', 'practice-paronym-empty', ['flashcards', 'choice'])
               ) : (
-                <p className="lexicon-practice-muted">
-                  <PracticeChromeLabel k="practice.allCaughtUp" />
-                </p>
+                renderPracticeEmptyState('practice.allCaughtUp', 'practice-all-caught-up')
               )}
             </div>
           )}
@@ -3795,6 +3914,7 @@ function PracticeItem({
   onMatchingComplete,
   onMatchingMatch,
   onClozeSubmit,
+  onBackToModes,
   showEnglishSubtitles,
   chromeLocale,
   learnerLevel,
@@ -3819,6 +3939,8 @@ function PracticeItem({
   onMatchingComplete(): void;
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
+  /** P0-2: option-build failures (empty matching/choice pools) get a real exit, not just prose. */
+  onBackToModes(): void;
   showEnglishSubtitles: boolean;
   chromeLocale: 'en' | 'uk';
   learnerLevel: CefrLevel;
@@ -3834,7 +3956,7 @@ function PracticeItem({
     );
     return (
       <PracticeFlashcard
-        card={cardData(selection.lemma, learnerLevel)}
+        card={cardData(selection.lemma, learnerLevel, chromeLocale)}
         ratingLabels={RATING_LABELS}
         intervalPreviews={intervalPreviews}
         onRate={onFlashcardRating}
@@ -4027,9 +4149,18 @@ function PracticeItem({
   if (selection.mode === 'matching') {
     if (!pairs.length) {
       return (
-        <p className="lexicon-practice-muted">
-          <PracticeChromeLabel k="practice.noMatchCards" />
-        </p>
+        <div className="practice-empty-state" data-testid="practice-match-empty">
+          <p className="lexicon-practice-muted">
+            <PracticeChromeLabel k="practice.noMatchCards" />
+          </p>
+          <button
+            type="button"
+            className="btn btn-accent practice-empty-primary"
+            onClick={onBackToModes}
+          >
+            <PracticeChromeLabel k="practice.backToModes" />
+          </button>
+        </div>
       );
     }
     const matchedCount = matchedPairIndexesRef.current.size;
@@ -4067,9 +4198,18 @@ function PracticeItem({
   const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed, learnerLevel);
   if (!options.length) {
     return (
-      <p className="lexicon-practice-muted">
-        <PracticeChromeLabel k="practice.noChoiceCards" />
-      </p>
+      <div className="practice-empty-state" data-testid="practice-choice-empty">
+        <p className="lexicon-practice-muted">
+          <PracticeChromeLabel k="practice.noChoiceCards" />
+        </p>
+        <button
+          type="button"
+          className="btn btn-accent practice-empty-primary"
+          onClick={onBackToModes}
+        >
+          <PracticeChromeLabel k="practice.backToModes" />
+        </button>
+      </div>
     );
   }
   const prompt = choicePrompt(selection, learnerLevel);
@@ -4361,6 +4501,15 @@ function PracticeCloze({
   learnerLevel: CefrLevel;
   chromeLocale: 'en' | 'uk';
 }) {
+  const clozeInputRef = useRef<HTMLInputElement | null>(null);
+  // Opus P0-6: a case-miss keeps the typed value (it is not cleared) — select it
+  // instead so the next keystroke replaces it cleanly, rather than requiring a
+  // manual clear before the learner can try the correct case.
+  useEffect(() => {
+    if (feedback?.kind === 'case-miss' && !answerLocked) {
+      clozeInputRef.current?.select();
+    }
+  }, [feedback, answerLocked]);
   const cloze = selection.cloze;
   if (!cloze) return null;
   const [before, after] = clozeParts(cloze).map((part) => displayPracticeForm(part, learnerLevel));
@@ -4439,6 +4588,7 @@ function PracticeCloze({
         }}
       >
         <input
+          ref={clozeInputRef}
           className="cz-input"
           value={input}
           disabled={answerLocked}

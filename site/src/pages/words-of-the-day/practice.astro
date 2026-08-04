@@ -104,7 +104,8 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice button) {
-    min-height: 44px;
+    /* P0-8: raised from the 44px AA floor to the 48px target-size floor. */
+    min-height: 48px;
     border: 1px solid var(--lu-border);
     border-radius: 6px;
     background: var(--lu-surface);
@@ -249,6 +250,36 @@ const frontmatter = {
 
   :global(.lexicon-practice-warning) {
     color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.lexicon-practice .sr-only) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* P0-2: every active-phase empty state gets the same shape — one sentence,
+     a primary next-action button, and (where honest) real-count secondary modes. */
+  :global(.practice-empty-state) {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+
+  :global(.practice-empty-primary) {
+    width: 100%;
+  }
+
+  :global(.practice-empty-secondary) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   @media (max-width: 760px) {
@@ -431,11 +462,49 @@ const frontmatter = {
     text-align: center;
   }
 
+  :global(.flashcard-flip-hint) {
+    display: block;
+    margin-top: 0.6rem;
+    color: var(--lu-text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  :global(.flashcard-back-tags) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+
+  :global(.flashcard-heritage-chip) {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+
   :global(.rating-bar) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.6rem;
     margin-top: 1.3rem;
+  }
+
+  :global(.rating-bar-hint) {
+    grid-column: 1 / -1;
+    margin: 0 0 0.2rem;
+    color: var(--lu-text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
   }
 
   :global(.rate-btn) {
@@ -463,23 +532,45 @@ const frontmatter = {
     font-weight: 900;
   }
 
-  :global(.rate-btn[data-rate="again"]:hover) {
+  /*
+   * Opus P0-5: these four colors used to exist on :hover only, so at rest (and on
+   * touch, where there is no hover) Again/Hard/Good/Easy were visually identical
+   * grey boxes. The border color is now a base-state channel; hover/focus only
+   * add the stronger tint on top of it.
+   */
+  :global(.rate-btn[data-rate="again"]) {
     border-color: var(--lu-red);
+  }
+
+  :global(.rate-btn[data-rate="hard"]) {
+    border-color: var(--lu-orange);
+  }
+
+  :global(.rate-btn[data-rate="good"]) {
+    border-color: var(--lu-green);
+  }
+
+  :global(.rate-btn[data-rate="easy"]) {
+    border-color: var(--lu-blue);
+  }
+
+  :global(.rate-btn[data-rate="again"]:hover),
+  :global(.rate-btn[data-rate="again"]:focus-visible) {
     background: var(--lu-red-light);
   }
 
-  :global(.rate-btn[data-rate="hard"]:hover) {
-    border-color: var(--lu-orange);
+  :global(.rate-btn[data-rate="hard"]:hover),
+  :global(.rate-btn[data-rate="hard"]:focus-visible) {
     background: var(--lu-orange-light);
   }
 
-  :global(.rate-btn[data-rate="good"]:hover) {
-    border-color: var(--lu-green);
+  :global(.rate-btn[data-rate="good"]:hover),
+  :global(.rate-btn[data-rate="good"]:focus-visible) {
     background: var(--lu-green-light);
   }
 
-  :global(.rate-btn[data-rate="easy"]:hover) {
-    border-color: var(--lu-blue);
+  :global(.rate-btn[data-rate="easy"]:hover),
+  :global(.rate-btn[data-rate="easy"]:focus-visible) {
     background: var(--lu-blue-light);
   }
 
@@ -889,7 +980,7 @@ const frontmatter = {
   }
 
   :global(.lexicon-weak-chip) {
-    min-height: 40px;
+    min-height: 48px;
     padding: 0.35rem 0.85rem;
     border: 1px solid var(--lu-orange, #c2410c);
     border-radius: 999px;
@@ -1300,7 +1391,7 @@ const frontmatter = {
     gap: 0.5rem;
   }
   :global(.k3-switch-offer-actions button) {
-    min-height: 40px;
+    min-height: 48px;
     padding: 0 0.85rem;
   }
 
@@ -1380,6 +1471,7 @@ const frontmatter = {
   :global(.daily-deck-reroll) {
     display: inline-flex;
     align-items: center;
+    min-height: 48px;
     gap: 0.35rem;
     padding: 0.35rem 0.7rem;
     border: 1px solid var(--lu-border);
@@ -1465,18 +1557,20 @@ const frontmatter = {
   }
   :global(.daily-deck-counters) {
     display: flex;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
   :global(.daily-deck-counters .counter) {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.25rem;
     min-width: 1.5rem;
     height: 1.5rem;
-    padding: 0 0.35rem;
+    padding: 0 0.55rem;
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 900;
+    white-space: nowrap;
   }
   :global(.daily-deck-counters .counter.due) {
     background: var(--lu-yellow-dark);
@@ -1628,6 +1722,11 @@ const frontmatter = {
   }
   :global(.k3-mode-card[data-mode-empty='true']) {
     opacity: 0.55;
+    cursor: not-allowed;
+  }
+  :global(.k3-mode-card:disabled:hover) {
+    border-color: var(--lu-border);
+    box-shadow: none;
   }
   :global(.k3-mode-title) {
     font-size: 1rem;
@@ -1639,6 +1738,24 @@ const frontmatter = {
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+  }
+  /* P0-1: the description now lives on every card, not only the shared hover line. */
+  :global(.k3-mode-desc) {
+    margin: 0.15rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-transform: none;
+  }
+  /* P0-3: an explicit, honest "no exercises yet" state instead of a silent tap-and-fail. */
+  :global(.k3-mode-empty-note) {
+    margin: 0.15rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   :global(.k3-mode-count) {
     position: absolute;
@@ -1759,16 +1876,27 @@ const frontmatter = {
   }
 
   :global(.stress-vowel) {
-    min-width: 2.2rem;
-    min-height: 2.6rem;
-    padding: 0 0.35rem;
+    position: relative;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.2rem 0.5rem;
     border: 2px solid var(--lu-border);
     border-radius: 8px;
     background: var(--lu-surface);
     color: var(--lu-primary);
     font: inherit;
+    font-size: 1.35em;
     font-weight: 900;
     cursor: pointer;
+  }
+
+  :global(.stress-vowel-key) {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    color: var(--lu-text-muted);
+    font-size: 0.65rem;
+    font-weight: 900;
   }
 
   :global(.stress-vowel:hover:not(:disabled)) {

@@ -27,13 +27,14 @@ def _stub_claude(tmp_path: Path) -> Path:
     return bin_dir
 
 
-def test_claude_default_is_fable_and_sonnet_remains_explicit() -> None:
+def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     default = run_launcher("start-claude.sh")
     fable = run_launcher("start-claude.sh", "--model", "fable")
     sonnet = run_launcher("start-claude.sh", "--model", "sonnet")
     assert default.returncode == sonnet.returncode == 0
     assert fable.returncode == 0
-    assert "would exec claude --model claude-fable-5" in default.stdout
+    assert "would exec claude --model" not in default.stdout
+    assert "would exec claude " in default.stdout
     assert "would exec claude --model claude-fable-5" in fable.stdout
     assert "would exec claude --model claude-sonnet-5" in sonnet.stdout
 
@@ -46,12 +47,35 @@ def test_claude_rejects_models_outside_native_profile(model: str) -> None:
 
 
 def test_certified_claude_driver_models_are_revalidated() -> None:
-    for model in ("fable", "sonnet"):
+    for model in ("opus", "fable", "sonnet"):
         result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", model)
         assert result.returncode == 0, result.stderr
         assert "would claim lease" in result.stdout
     untrusted = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-haiku-5")
     assert untrusted.returncode == 4
+
+
+def test_claude_driver_defaults_to_opus_xhigh() -> None:
+    result = run_launcher("start-claude-driver.sh", "--epic", "devops")
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-opus-5" in result.stdout
+    assert "--effort xhigh" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "argv",
+    (
+        ("--effort", "high", "--epic", "devops"),
+        ("--effort=high", "--epic", "devops"),
+        ("--epic", "devops", "--effort", "high"),
+    ),
+)
+def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]) -> None:
+    result = run_launcher("start-claude-driver.sh", *argv)
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-opus-5" in result.stdout
+    assert "--effort high" in result.stdout
+    assert "--effort xhigh" not in result.stdout
 
 
 def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Path) -> None:

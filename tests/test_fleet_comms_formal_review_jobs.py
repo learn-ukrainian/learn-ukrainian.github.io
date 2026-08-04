@@ -97,6 +97,68 @@ def test_record_attempt_with_and_without_raw_capture(tmp_path: Path) -> None:
                 )
 
 
+@pytest.mark.parametrize(
+    "raw_response",
+    ["not a canonical code-review JSON response", ""],
+)
+def test_record_rejected_response_is_captured_as_failed_and_unpublishable(
+    tmp_path: Path,
+    raw_response: str,
+) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 43, HEAD, GATE)
+
+        attempt = svc.record_rejected_response(job.review_id, raw_response)
+
+        assert attempt.completion_state == CompletionState.FAILED.value
+        assert attempt.raw_capture_artifact_id is not None
+        assert svc.store.read_bytes(attempt.raw_capture_artifact_id) == raw_response.encode("utf-8")
+        recorded = svc.get_job(job.review_id)
+        assert recorded.state == "failed"
+        assert recorded.sealed_verdict_artifact_id is None
+        assert recorded.attempts == (attempt,)
+        with pytest.raises(FormalReviewJobsError, match="sealed_verdict_missing"):
+            svc.load_sealed_verdict(job.review_id)
+
+
+def test_record_rejected_response_rolls_back_when_raw_capture_fails(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 44, HEAD, GATE)
+
+        def reject_store(*_args: object, **_kwargs: object) -> object:
+            raise RuntimeError("raw_capture_store_failed")
+
+        monkeypatch.setattr(svc.store, "store_bytes", reject_store)
+
+        with pytest.raises(FormalReviewJobsError, match="raw_capture_store_failed"):
+            svc.record_rejected_response(job.review_id, "invalid response")
+
+        recorded = svc.get_job(job.review_id)
+        assert recorded.state == "open"
+        assert recorded.attempts == ()
+        assert recorded.sealed_verdict_artifact_id is None
+
+
+def test_record_rejected_response_refuses_already_sealed_verdict_without_extra_binding(
+    tmp_path: Path,
+) -> None:
+    with _service(tmp_path) as svc:
+        job = svc.create_job(REPO, 5512, _SHA, GATE)
+        svc.accept_sealed_verdict(job.review_id, _sealed_payload(job.review_id))
+        before = svc.get_job(job.review_id)
+        artifact_count = svc.store.connection.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0]
+
+        with pytest.raises(FormalReviewJobsError, match="sealed_verdict_already_set"):
+            svc.record_rejected_response(job.review_id, "invalid response")
+
+        after = svc.get_job(job.review_id)
+        assert after.to_dict() == before.to_dict()
+        assert svc.store.connection.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0] == artifact_count
+
+
 def test_list_jobs_filters_and_alias(tmp_path: Path) -> None:
     with _service(tmp_path) as svc:
         j1 = svc.create_job(REPO, 1, HEAD, GATE)

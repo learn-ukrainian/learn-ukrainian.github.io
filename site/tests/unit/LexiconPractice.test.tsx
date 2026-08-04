@@ -719,6 +719,51 @@ function classifyDeck(): PracticeDeckData {
   };
 }
 
+function multiAnswerClassifyDeck(): PracticeDeckData {
+  const entry = lexeme('prote', 'проте', 'however', {
+    nominative: 'проте',
+    accusative: 'проте',
+    locative: 'проте',
+  });
+  return {
+    deckVersion: 'test-multi-answer-classify',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['classify'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [{
+      classifyId: 'prote-classify',
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      sets: [{
+        setId: 'pos',
+        setLabelUk: 'частина мови',
+        setLabelEn: 'part of speech',
+        answer: 'adverb',
+        answers: ['adverb', 'conjunction'],
+        answerLabelUk: 'прислівник',
+        options: [
+          { value: 'adverb', labelUk: 'прислівник', labelEn: 'adv.' },
+          { value: 'conjunction', labelUk: 'сполучник', labelEn: 'conj.' },
+          { value: 'particle', labelUk: 'частка', labelEn: 'particle' },
+        ],
+      }],
+      source: 'fixture',
+    }],
+    paradigm: [],
+    synonym: [],
+  };
+}
+
 function paradigmDeck(): PracticeDeckData {
   const entry = lexeme('kava', 'кава', 'coffee', {
     nominative: 'кава',
@@ -1526,6 +1571,11 @@ describe('LexiconPractice', () => {
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
     await user.click(await screen.findByRole('button', { name: /Коти з Атласу: сесія/ }));
+    // P0-3: the flashcards card is disabled until its count resolves — the Atlas
+    // prefix-shard lookup for this custom-deck key is itself async.
+    await waitFor(() =>
+      expect(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')).not.toBeDisabled(),
+    );
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
@@ -1578,6 +1628,9 @@ describe('LexiconPractice', () => {
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
     await user.click(await screen.findByRole('button', { name: /Довгий атласний глос/ }));
+    await waitFor(() =>
+      expect(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')).not.toBeDisabled(),
+    );
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
@@ -1620,6 +1673,9 @@ describe('LexiconPractice', () => {
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
     await user.click(await screen.findByRole('button', { name: /Справжній сирота/ }));
+    await waitFor(() =>
+      expect(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')).not.toBeDisabled(),
+    );
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
@@ -2465,7 +2521,9 @@ describe('LexiconPractice', () => {
     expect(status).toHaveTextContent('Правильне слово');
     expect(status).toHaveClass('case-miss');
     expect(screen.getByTestId('practice-cloze-sentence-en')).toHaveTextContent('I am reading a book.');
-    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
+    // Opus P0-6: a case-miss keeps the typed/chosen value (selected, not cleared) so a
+    // chip tap is not destroyed — the learner can still see and correct what they typed.
+    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('книга');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
 
     await waitFor(() => {
@@ -2664,15 +2722,17 @@ describe('LexiconPractice', () => {
     document.documentElement.dataset.chromeLocale = "uk";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "B1");
     render(<LexiconPractice />);
-    expect(screen.getByText(/Чергуйте картки/)).toBeInTheDocument();
+    // P0-1: the Mixed description now also lives on its own card, not only the
+    // shared hover line — both carry the same text, so at least one must match.
+    expect(screen.getAllByText(/Чергуйте картки/).length).toBeGreaterThan(0);
 
     await act(async () => {
       document.documentElement.dataset.chromeLocale = "en";
     });
     await waitFor(() => {
       expect(
-        screen.getByText(/Rotate flashcards, matching, choice/),
-      ).toBeInTheDocument();
+        screen.getAllByText(/Rotate flashcards, matching, choice/).length,
+      ).toBeGreaterThan(0);
     });
   });
 
@@ -2770,7 +2830,9 @@ describe('LexiconPractice', () => {
     );
     await user.click(container.querySelector('[data-activity="flashcard"]')!);
     const good = container.querySelector('[data-rate="good"] .ri');
-    expect(good?.textContent).toMatch(/‹.+›/);
+    // P0-6: a bare `‹4d›` decoded nothing — the preview now carries a locale-aware
+    // "in"/"через" prefix so the interval reads as a sentence, not a cryptic glyph.
+    expect(good?.textContent).toMatch(/^(in|через) .+/);
   });
 
   test('wrong answer dwells: feedback stays and never auto-advances', async () => {
@@ -2990,6 +3052,23 @@ describe('LexiconPractice', () => {
     expect(prompt.querySelectorAll('p')).toHaveLength(0);
     expect(screen.queryByText('орудний відмінок, однина', { selector: '.mc-sub' })).not.toBeInTheDocument();
     expect(prompt).toMatchSnapshot();
+  });
+
+  test('classify accepts each declared POS answer and marks a multi-answer subtitle', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={multiAnswerClassifyDeck()} autoStart initialMode="classify" />);
+
+    const prompt = screen.getByTestId('practice-form-prompt');
+    expect(prompt).toHaveTextContent('частина мови · можливі кілька правильних відповідей');
+    expect(prompt).toHaveTextContent('part of speech · Multiple answers may be correct');
+
+    const adverb = screen.getByRole('button', { name: /прислівник/ });
+    const conjunction = screen.getByRole('button', { name: /сполучник/ });
+    await user.click(conjunction);
+
+    expect(screen.getByText(/проте: Правильно/)).toBeInTheDocument();
+    expect(adverb).toHaveClass('correct');
+    expect(conjunction).toHaveClass('correct');
   });
 
   test('weak-area chips: renders a UA case chip from a weak review log', async () => {

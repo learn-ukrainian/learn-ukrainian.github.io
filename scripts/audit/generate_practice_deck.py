@@ -1853,26 +1853,29 @@ def _morph_labels(morphology: dict[str, Any]) -> list[str]:
 
 _POS_BUCKET_ALIASES: dict[str, tuple[str, ...]] = {
     "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun"),
-    "verb": ("дієслово", "verb", "infinitive", "imperative"),
     "adjective": ("прикметник", "adj", "adjective"),
+    "numeral": ("числівник", "num", "numr", "numeral"),
+    "pronoun": ("займенник", "pronoun", "pron"),
+    "verb": ("дієслово", "verb", "infinitive", "imperative"),
     "adverb": ("прислівник", "присл", "adv", "adverb"),
-    "numeral": ("числівник", "num", "numeral"),
-    "function": (
+    "preposition": (
         "прийменник",
         "приймен.",
-        "сполучник",
-        "спол.",
-        "частка",
         "preposition",
         "prep",
+    ),
+    "conjunction": (
+        "сполучник",
+        "спол.",
         "conjunction",
         "conj",
+    ),
+    "particle": (
+        "частка",
         "particle",
         "part",
-        "function",
-        "function word",
-        "службове слово",
     ),
+    "interjection": ("вигук", "interjection", "interj", "intj"),
 }
 
 
@@ -1890,38 +1893,63 @@ def _normalize_pos_buckets(value: Any) -> list[str]:
     buckets: list[str] = []
     for part in re.split(r"\s*[,;/|+]\s*", folded):
         for bucket, aliases in _POS_BUCKET_ALIASES.items():
-            if any(
-                part == alias or part.startswith(f"{alias}:") or part.startswith(f"{alias} ")
-                or part.startswith(f"{alias}.")
-                for alias in aliases
-            ) and bucket not in buckets:
+            if any(_pos_alias_matches(part, alias) for alias in aliases) and bucket not in buckets:
                 buckets.append(bucket)
     return buckets
 
 
+def _pos_alias_matches(part: str, alias: str) -> bool:
+    """Match a POS alias at a recognized boundary without swallowing ``part of``."""
+    return (
+        part == alias
+        or part.startswith(f"{alias}:")
+        or part.startswith(f"{alias}.")
+        or (alias != "part" and part.startswith(f"{alias} "))
+    )
+
+
 _DEFINITION_POS_ALIASES: dict[str, tuple[str, ...]] = {
     "noun": ("іменник", "noun"),
-    "verb": ("дієслово", "verb"),
     "adjective": ("прикметник", "adjective"),
+    "numeral": ("числівник", "numr", "numeral"),
+    "pronoun": ("займенник", "pronoun", "pron", "pron\\."),
+    "verb": ("дієслово", "verb"),
     "adverb": ("прислівник", "присл\\.", "adverb"),
-    "numeral": ("числівник", "numeral"),
-    "function": (
+    "preposition": (
         "прийменник",
         "приймен\\.",
+        "preposition",
+        "prep",
+        "prep\\.",
+    ),
+    "conjunction": (
         "сполучник",
         "спол\\.",
-        "частка",
-        "preposition",
         "conjunction",
-        "particle",
+        "conj",
+        "conj\\.",
     ),
+    "particle": (
+        "частка",
+        "particle",
+        "part",
+        "part\\.",
+    ),
+    "interjection": ("вигук", "interjection", "interj", "interj\\.", "intj", "intj\\."),
 }
+
+
+def _definition_pos_alias_pattern(alias: str) -> str:
+    """Keep generic ``part`` from matching prose like ``part of speech``."""
+    if alias == "part":
+        return r"part(?=$|[.,;:])"
+    return alias
 
 _DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (
         bucket,
         re.compile(
-            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:[–—-]\s*)?(?:{'|'.join(aliases)})(?=$|[\s,;:])",
+            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:{'|'.join(_definition_pos_alias_pattern(alias) for alias in aliases)})(?=$|[\s,;:])",
             re.IGNORECASE,
         ),
     )
@@ -2007,11 +2035,15 @@ CLASSIFY_LABELS: dict[str, dict[str, tuple[str, str | None]]] = {
     },
     "pos": {
         "noun": ("іменник", "noun"),
-        "verb": ("дієслово", "verb"),
         "adjective": ("прикметник", "adj."),
-        "adverb": ("прислівник", "adv."),
         "numeral": ("числівник", "num."),
-        "function": ("службове слово", "function word"),
+        "pronoun": ("займенник", "pron."),
+        "verb": ("дієслово", "verb"),
+        "adverb": ("прислівник", "adv."),
+        "preposition": ("прийменник", "prep."),
+        "conjunction": ("сполучник", "conj."),
+        "particle": ("частка", "particle"),
+        "interjection": ("вигук", "interj."),
     },
 }
 
@@ -2105,6 +2137,24 @@ def _category_set_payload(set_id: str, value: str, level: str) -> dict[str, Any]
     return payload
 
 
+def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] | None:
+    """Build a POS set with every source-attested school-category answer.
+
+    The source signals have their own trust precedence, but the learner-facing
+    primary answer must remain deterministic in Ukrainian school-category
+    order.  A polyfunctional lemma therefore keeps that primary ``answer``
+    for older clients and adds ordered ``answers`` for clients that accept all
+    attested readings.
+    """
+    answers = [value for value in CLASSIFY_LABELS["pos"] if value in values]
+    if not answers:
+        return None
+    payload = _category_set_payload("pos", answers[0], level)
+    if len(answers) > 1:
+        payload["answers"] = answers
+    return payload
+
+
 def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -2126,11 +2176,10 @@ def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list
         aspect = _aspect_category(labels)
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
-    # A context-free POS prompt is unsafe when the entry carries more than one
-    # normalized reading.  Morphology remains the source for safe noun/verb
-    # drills above, but no single POS answer is emitted in that case.
-    if len(pos_buckets) <= 1 and pos in CLASSIFY_LABELS["pos"] and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
-        sets.append(_category_set_payload("pos", pos, lexeme["cefr"]))
+    if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+        pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
+        if pos_set:
+            sets.append(pos_set)
     if not sets:
         return []
     return [
@@ -2981,6 +3030,22 @@ def validate_classify_item(item: dict[str, Any]) -> list[str]:
             errors.append(f"classify {set_id} options must equal the closed category set")
         if answer not in closed_values:
             errors.append(f"classify {set_id} answer must be in the closed category set")
+        answers = category_set.get("answers")
+        if answers is not None:
+            if set_id != "pos":
+                errors.append("classify multi-answer sets are only valid for POS")
+                continue
+            if not isinstance(answers, list) or len(answers) < 2 or not all(
+                isinstance(value, str) for value in answers
+            ):
+                errors.append("classify POS answers must be a string list with at least two values")
+                continue
+            if len(set(answers)) != len(answers) or any(value not in closed_values for value in answers):
+                errors.append("classify POS answers must be distinct closed category values")
+                continue
+            ordered_answers = [value for value in CLASSIFY_LABELS["pos"] if value in answers]
+            if answers != ordered_answers or answer != answers[0]:
+                errors.append("classify POS answers must use school order with answer first")
     return errors
 
 

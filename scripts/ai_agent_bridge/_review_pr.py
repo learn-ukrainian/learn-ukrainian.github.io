@@ -167,6 +167,32 @@ def _settle_routing_reservation_once(
     return True
 
 
+def _record_rejected_formal_response(
+    authority: Any,
+    review_id: str,
+    raw_response: str,
+) -> bool:
+    """Persist an invalid provider response before releasing authority state.
+
+    This capture intentionally does not turn the response into a verdict.  It
+    is a durable failed formal-review attempt even when the authority lease has
+    already become stale by the time validation finishes.
+    """
+    from scripts.fleet_comms.formal_review_jobs import (
+        FormalReviewJobsError,
+        FormalReviewJobService,
+    )
+
+    try:
+        FormalReviewJobService(store=authority.store).record_rejected_response(
+            review_id,
+            raw_response,
+        )
+    except FormalReviewJobsError:
+        return False
+    return True
+
+
 def _compute_review_routing_budget() -> dict[str, Any]:
     """Take a bounded fresh capacity snapshot for this standalone process."""
     from scripts.api.codexbar_usage import refresh_provider_usage_data
@@ -925,6 +951,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
 
             if not raw_response:
                 if not replayed:
+                    captured = _record_rejected_formal_response(
+                        authority,
+                        formal_job.review_id,
+                        raw_response,
+                    )
+                    if not captured:
+                        print(
+                            "review-pr: failed to durably capture invalid reviewer response; "
+                            "routing and authority state were left unchanged",
+                            file=sys.stderr,
+                        )
+                        return 1
                     if routing_reservation is not None:
                         _settle_routing_reservation_once(
                             routing_ledger,
@@ -971,6 +1009,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     )
             except ReviewWorktreeError as exc:
                 if not replayed:
+                    captured = _record_rejected_formal_response(
+                        authority,
+                        formal_job.review_id,
+                        raw_response,
+                    )
+                    if not captured:
+                        print(
+                            "review-pr: failed to durably capture invalid reviewer response; "
+                            "routing and authority state were left unchanged",
+                            file=sys.stderr,
+                        )
+                        return 1
                     if routing_reservation is not None:
                         _settle_routing_reservation_once(
                             routing_ledger,

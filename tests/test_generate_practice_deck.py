@@ -15,16 +15,16 @@ from scripts.audit.generate_practice_deck import (
     RealVesumVerifier,
     ReviewedSourceAllowlist,
     _build_antonym_items,
-    _build_homonym_items,
     _build_classify_items,
     _build_cloze_items,
     _build_heritage_items,
-    _heritage_availability_level,
+    _build_homonym_items,
     _build_lexeme,
     _build_paradigm_items,
     _build_paronym_items,
     _declension_category,
     _eligible_decoys,
+    _heritage_availability_level,
     _meaning_mc_eligible,
     _option_strategy_for_level,
     _select_practice_lexemes,
@@ -35,20 +35,20 @@ from scripts.audit.generate_practice_deck import (
     main,
     merge_practice_seed_entries,
     read_antonym_pairs,
-    read_homonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
+    read_homonym_pairs,
     read_manifest,
     read_paronym_pairs,
     read_practice_seed,
     read_sentence_inventory,
     validate_antonym_item,
     validate_antonym_pair,
-    validate_homonym_item,
-    validate_homonym_pair,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
+    validate_homonym_item,
+    validate_homonym_pair,
     validate_option_set,
     validate_paradigm_item,
     validate_paronym_item,
@@ -913,7 +913,7 @@ def test_a2_classify_items_do_not_raise_english_labels() -> None:
     assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
-def test_classify_skips_context_free_pos_for_multi_pos_lemma() -> None:
+def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> None:
     entry = {
         "lemma": "проте",
         "pos": "conjunction",
@@ -933,7 +933,29 @@ def test_classify_skips_context_free_pos_for_multi_pos_lemma() -> None:
 
     classify = _build_classify_items(entry, lexeme)
 
-    assert classify == []
+    pos_sets = [item for item in classify[0]["sets"] if item["setId"] == "pos"]
+    assert len(pos_sets) == 1
+    assert pos_sets[0]["answer"] == "adverb"
+    assert pos_sets[0]["answers"] == ["adverb", "conjunction"]
+    assert pos_sets[0]["answerLabelUk"] == "прислівник"
+
+
+def test_classify_validator_requires_ordered_multi_pos_answers() -> None:
+    item = {
+        "sets": [
+            {
+                "setId": "pos",
+                "answer": "conjunction",
+                "answers": ["conjunction", "adverb"],
+                "options": [
+                    {"value": value, "labelUk": label[0]}
+                    for value, label in generate_practice_deck.CLASSIFY_LABELS["pos"].items()
+                ],
+            }
+        ]
+    }
+
+    assert "classify POS answers must use school order with answer first" in validate_classify_item(item)
 
 
 def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
@@ -956,6 +978,65 @@ def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
     pos_sets = [item for item in classify["sets"] if item["setId"] == "pos"]
     assert len(pos_sets) == 1
     assert pos_sets[0]["answer"] == "noun"
+
+
+@pytest.mark.parametrize(
+    ("raw_pos", "expected_bucket"),
+    [
+        ("noun", "noun"),
+        ("adjective", "adjective"),
+        ("numr", "numeral"),
+        ("pron", "pronoun"),
+        ("verb", "verb"),
+        ("adverb", "adverb"),
+        ("prep", "preposition"),
+        ("conj", "conjunction"),
+        ("part", "particle"),
+        ("interj", "interjection"),
+        ("intj", "interjection"),
+    ],
+)
+def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(
+    raw_pos: str, expected_bucket: str
+) -> None:
+    assert generate_practice_deck._normalize_pos_buckets(raw_pos) == [expected_bucket]
+
+
+def test_classify_pos_generic_part_does_not_match_prose() -> None:
+    assert generate_practice_deck._normalize_pos_buckets("part of speech") == []
+    assert generate_practice_deck._normalize_pos_buckets("participle") == []
+    assert generate_practice_deck._definition_card_pos_buckets(
+        {"definition_cards": [{"definitions": ["part of speech"]}]}
+    ) == []
+
+
+def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
+    assert list(generate_practice_deck.CLASSIFY_LABELS["pos"]) == [
+        "noun",
+        "adjective",
+        "numeral",
+        "pronoun",
+        "verb",
+        "adverb",
+        "preposition",
+        "conjunction",
+        "particle",
+        "interjection",
+    ]
+    assert [
+        labels[0] for labels in generate_practice_deck.CLASSIFY_LABELS["pos"].values()
+    ] == [
+        "іменник",
+        "прикметник",
+        "числівник",
+        "займенник",
+        "дієслово",
+        "прислівник",
+        "прийменник",
+        "сполучник",
+        "частка",
+        "вигук",
+    ]
 
 
 def test_paradigm_answer_position_is_deterministically_shuffled() -> None:

@@ -9,6 +9,8 @@ export interface PracticeFlashcardData {
   subtitle?: string;
   tag?: string;
   tagColor?: string;
+  /** P0-4: heritage as a text chip on the back — color stays a secondary channel. */
+  heritageLabel?: string;
 }
 
 interface PracticeFlashcardProps {
@@ -39,6 +41,10 @@ export default function PracticeFlashcard({
 
   const tapLabel = CHROME_STRINGS[chromeLocale]['practice.tapToFlip'];
   const rateRecallLabel = CHROME_STRINGS[chromeLocale]['practice.rateRecall'];
+  const flipHint = CHROME_STRINGS[chromeLocale]['practice.flipHint'];
+  const rateAfterFlipHint = CHROME_STRINGS[chromeLocale]['practice.rateAfterFlipHint'];
+  const keyShortcutWord = CHROME_STRINGS[chromeLocale]['practice.keyShortcutWord'];
+  const intervalPrefix = CHROME_STRINGS[chromeLocale]['practice.intervalPrefix'];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -119,10 +125,31 @@ export default function PracticeFlashcard({
                 {card.tag}
               </span>
             )}
+            {!flipped && <span className="flashcard-flip-hint">{flipHint}</span>}
           </div>
           <div className="flashcard-back">
             <span className="flashcard-word">{card.back}</span>
             {card.subtitle && <span className="flashcard-subtitle">{card.subtitle}</span>}
+            {(card.tag || card.heritageLabel) && (
+              <span className="flashcard-back-tags">
+                {card.tag && (
+                  <span
+                    className="flashcard-tag"
+                    style={card.tagColor ? { background: card.tagColor, color: 'white' } : undefined}
+                  >
+                    {card.tag}
+                  </span>
+                )}
+                {card.heritageLabel && (
+                  <span
+                    className="flashcard-heritage-chip"
+                    style={card.tagColor ? { borderColor: card.tagColor } : undefined}
+                  >
+                    {card.heritageLabel}
+                  </span>
+                )}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -133,6 +160,7 @@ export default function PracticeFlashcard({
         data-revealed={flipped ? 'true' : 'false'}
         data-locked={rated ? 'true' : 'false'}
       >
+        {!flipped && <p className="rating-bar-hint">{rateAfterFlipHint}</p>}
         {RATING_ORDER.map((rating, index) => (
           <button
             type="button"
@@ -144,11 +172,17 @@ export default function PracticeFlashcard({
             aria-disabled={!flipped || rated}
             onClick={() => handleRate(rating)}
           >
-            <span className="rk">{index + 1}</span>
+            <span className="rk" aria-label={`${keyShortcutWord} ${index + 1}`}>
+              {index + 1}
+            </span>
             <span className="rt" lang={chromeLocale}>
               {ratingLabels[rating][chromeLocale]}
             </span>
-            {flipped ? <span className="ri">‹{intervalPreviews[rating]}›</span> : null}
+            {flipped ? (
+              <span className="ri">
+                {intervalPrefix} {intervalPreviews[rating]}
+              </span>
+            ) : null}
           </button>
         ))}
       </div>

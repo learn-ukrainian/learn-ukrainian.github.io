@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: eaebeaf781ed29e311fd4e39513463b6cfe00e3fee2709ec38707aa8eae5dd49
+  components_sha256: 056dadfd00e7980da15cbdf3db686a5e76a33b3a2e501da773c9e19d9fc73bff
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1731,6 +1731,10 @@ components:
       - name: tagColor
         type: string
         description: tagColor prop.
+        ukrainian_text: 'false'
+      - name: heritageLabel
+        type: string
+        description: heritageLabel prop.
         ukrainian_text: 'false'
     example:
       card: <PracticeFlashcardData>
