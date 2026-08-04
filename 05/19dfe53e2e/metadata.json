@@ -1,0 +1,36 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0519dfe53e2e",
+  "strategy": "manual-commit",
+  "branch": "kimi/6338-origin-beauty",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/generate_daily_pool.py",
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/components/PracticeDailyDeck.tsx",
+    "site/src/lexicon/WordAtlasArticle.tsx",
+    "site/src/lib/lexicon/daily.ts",
+    "site/src/lib/lexicon/format-origin.ts",
+    "site/src/lib/lexicon/srs.ts",
+    "site/src/lib/lexicon/word-atlas-article-model.ts",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/tests/unit/format-origin.test.ts",
+    "site/tests/unit/word-atlas-article-model.test.ts",
+    "tests/test_generate_daily_pool.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/05/19dfe53e2e/0/metadata.json",
+      "transcript": "/05/19dfe53e2e/0/full.jsonl",
+      "content_hash": "/05/19dfe53e2e/0/content_hash.txt",
+      "prompt": "/05/19dfe53e2e/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 212157,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 16840192,
+    "output_tokens": 38456,
+    "api_call_count": 101
+  }
+}

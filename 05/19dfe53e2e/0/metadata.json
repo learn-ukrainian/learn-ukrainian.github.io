@@ -1,0 +1,54 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0519dfe53e2e",
+  "session_id": "session_cb0cfffe-4636-48e3-bff8-3190a5d6d524",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-04T17:33:33.48144Z",
+  "branch": "kimi/6338-origin-beauty",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/generate_daily_pool.py",
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/components/PracticeDailyDeck.tsx",
+    "site/src/lexicon/WordAtlasArticle.tsx",
+    "site/src/lib/lexicon/daily.ts",
+    "site/src/lib/lexicon/format-origin.ts",
+    "site/src/lib/lexicon/srs.ts",
+    "site/src/lib/lexicon/word-atlas-article-model.ts",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/tests/unit/format-origin.test.ts",
+    "site/tests/unit/word-atlas-article-model.test.ts",
+    "tests/test_generate_daily_pool.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "211c5dc31135",
+  "token_usage": {
+    "input_tokens": 212157,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 16840192,
+    "output_tokens": 38456,
+    "api_call_count": 101
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-04T17:33:33.445286Z",
+    "agent_lines": 434,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 434,
+    "total_lines_changed": 439,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

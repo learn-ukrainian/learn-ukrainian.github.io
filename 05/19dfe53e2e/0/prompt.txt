@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/6338-origin-beauty
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch: Kaikki / origin beauty for practice + atlas surface
+
+## Goal
+Learner-facing origin/etymology surface from Kaikki/Wiktionary data should look intentional — not raw dump or Motî mash.
+
+## Context
+- Lookup: `data/lexicon/kaikki_uk_lookup.json`
+- Practice / atlas must use origin as beauty signal where available
+- Motî is Wiktionary/Kaikki family — not a separate UA-only app branding
+
+## Job
+1. Inventory current origin fields on atlas entries + practice cards (grep + sample hydrated atlas.db if present)
+2. Fix rendering / truncation / empty-origin UX so origin reads clean when present
+3. Prefer Kaikki-sourced clean strings; fail closed on garbage
+4. Tests for formatter/renderer; no invented etymology
+
+## Constraints
+Layout A worktree; X-Agent; no python-version/linter config; PR links atlas/practice epics as appropriate.
+
+## Done
+PR open with before/after samples in PR body + tests.
