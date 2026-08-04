@@ -531,6 +531,7 @@ export function buildWordAtlasArticleView(
     entry,
     isFullyMarked,
     suppressMorphology,
+    formattedOrigin,
   });
   const sourceList = buildSourceList({
     entry,
@@ -710,6 +711,7 @@ function buildArticleOverview(args: {
   entry: LexiconEntryView;
   isFullyMarked: boolean;
   suppressMorphology: boolean;
+  formattedOrigin: ReturnType<typeof formatOrigin>;
 }) {
   const {
     sections,
@@ -723,6 +725,7 @@ function buildArticleOverview(args: {
     entry,
     isFullyMarked,
     suppressMorphology,
+    formattedOrigin,
   } = args;
   const synonymCount =
     (sections?.synonyms?.items.length ?? 0) + (sections?.antonyms?.items.length ?? 0);
