@@ -49,8 +49,10 @@ Registry: manifest inventory from `scripts/config/issue_streams.yaml` via
 epic subset). Projection receipts land in `legacy_projection_receipts` after
 inventory; unrecorded file mutation is flagged as `drift` without flipping modes.
 
-**Still blocked for cutover:** operator gate after per-harness acceptance;
-file handoffs remain authoritative until then.
+**Still blocked for the session-stream continuity cutover:** operator gate
+after per-harness acceptance; session handoff files remain authoritative for
+continuity until then. This does not reopen legacy message-plane writes: Fleet
+Comms is already authoritative for message-plane coordination.
 
 ## 3. Hygiene residuals
 
@@ -162,15 +164,23 @@ request replays the durable verdict without a provider call or reservation.
 
 ### Diagnose quota concentration
 
-- Open `runtime.html` → **Routing assignments**. `AUTOMATIC` and `EXPLICIT`
-  records are visually distinct and show initiator, author, task fit, selected
-  model/family, quota and credential bucket, quota freshness/headroom, work,
-  lifecycle, retry chain, replay state, and authority record ID.
-- Query `/api/runtime/routing-assignments` for the same read-only evidence.
+- Open `runtime.html` → **Routing overview**. Start with the lifecycle,
+  automatic-versus-explicit, route-distribution, and failure-cause cards, then
+  filter by lifecycle, mode, route, initiator, model, reviewer, or failure.
+- Read the decision path as initiator → request → selected route/model →
+  outcome. Expand one assignment for the body-free selection trace, quota and
+  credential evidence, retry/failover/replay state, authority IDs, and ordered
+  lifecycle events.
+- Query `/api/runtime/routing-assignments?limit=100` for the same read-only
+  projection. Counts describe the loaded recent window, not all-time fleet
+  totals, configured routing weights, provider quotas, or caching.
+- Treat “No ledger update” as stale activity evidence only. It is not proof of
+  provider liveness and does not authorize early lease reclamation.
 - Compare the decision trace's hard-gate and suitability reasons before blaming
   load: a deliberately stronger suitable model may receive more work.
-- Confirm provider headroom with CodexBar. A timeout or malformed probe retains
-  the last known good record and exposes failure metadata separately.
+- Confirm provider headroom with CodexBar and inspect the durable authority
+  job/reservation state. A timeout or malformed quota probe retains the last
+  known good record and exposes failure metadata separately.
 - Concentration among truly equivalent suitable candidates indicates stale
   reservations, a shared credential bucket, circuit failures, or bad capacity
   weights—not a reason to weaken the quality floor.
@@ -213,8 +223,10 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 - [x] formal CF model+effort pins + practical ladders (2026-07-21)
 - [x] efficiency CLI: `fleet_comms metrics` / `github-metrics` / `dead-letters` (PR-M on main)
 - [x] isolation runbooks AGY/Kimi/Grok; unsupported legacy native-isolation routes remain fail-closed
-- [x] operator finish-mode: message-plane **shadow** default after parity (#5666; dual_write still opt-in)
+- [x] historical message-plane **shadow** soak after parity (#5666), superseded
+  by the operator-approved `authority` cutover in #6159; `dual_write` is now a
+  compatibility rollback mode
 - [ ] operator: retention plan dry-run × ≥7 days before scheduled apply (auto-logged by `retention_engine.py plan`; apply still OFF; 3/7 as of 2026-07-23)
 - [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi K3 adapter present but fail-closed pending its authenticated canary; AGY structurally fail-closed
 - [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke (launchers dual-aware; live multi-CLI soak optional)
-- [ ] optional later: dual_write plane default after longer shadow soak
+- [x] planned `dual_write`-default step superseded by #6159 authority cutover

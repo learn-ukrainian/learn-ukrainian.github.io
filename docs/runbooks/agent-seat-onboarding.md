@@ -40,7 +40,7 @@ caps or live modes.
 | --- | --- | --- |
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
-| **Fleet-comms + file handoffs** | Durable coordination and authority today; **file dual-write remains authoritative in every current plane mode** | Competing message buses; silent plane/retention/eligibility flips |
+| **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
@@ -80,9 +80,11 @@ For each non-trivial task, the accountable root performs this contract:
 4. Run `record-use` only for locators that were verified and materially
    informed the task. Search delivery alone is not use.
 5. Continue normally when recall is unavailable. Git/GitHub remain
-   authoritative for code; Fleet/file handoffs for coordination; ACP for live
-   discussion and terminal receipts; Monitor for runtime state; rollover for
-   continuity; sealed Fleet review for the formal review gate.
+   authoritative for code; Fleet Comms for durable coordination; ACP for live
+   discussion and terminal receipts; Monitor for runtime state; session-stream
+   handoffs and rollover for continuity; sealed Fleet review for the formal
+   review gate. Legacy message-plane files are read-only projections in
+   `authority` mode.
 
 After the private preflight passes, the accountable root or operator may use
 Entire's product workflows for
@@ -106,11 +108,43 @@ request because it mutates a worktree.
 | **Channels** (`/channels.html`) | Shared channel, thread, context, and delivery visibility | Read-only; send from an agent TUI or the project bridge CLI |
 | **Broker Ops** (`/comms.html`) | Legacy broker messages, zombies, batch progress, and health during migration | Read-only; no browser message composition |
 | **Build Events** (`/build-events.html`) | Active and recent build activity | Replaces the retired duplicate Comms activity feed |
+| **Runtime** (`/runtime.html`) | Runtime health plus the loaded/recent **Routing overview** for initiator, request, selected route/model, outcome, and lifecycle evidence | Read-only; filters, search, details, and load-more never select, retry, cancel, reclaim, or reroute work |
 
 The legacy send, post, and acknowledgement APIs remain available to their
 current project CLI callers. Do not remove those routes or the Broker Ops page
 until caller telemetry proves the old paths are unused and every unique
 operations panel has a canonical replacement.
+
+### Read the routing overview correctly
+
+Use `/runtime.html` → **Routing overview** for the human view, or query
+`GET /api/runtime/routing-assignments?limit=100` for the same body-free
+authority projection. The four summary cards, lifecycle groups, filters, and
+route distribution describe only the assignments returned in that loaded
+recent window. They are not all-time fleet totals, configured routing weights,
+provider quotas, or evidence of caching.
+
+Read each decision path from left to right:
+
+1. **Initiator** identifies the orchestrator/caller responsible for the
+   request; author model/family describes the work being reviewed or routed.
+2. **Request** records the requested role, profile, risk, and whether selection
+   was `AUTOMATIC` or `EXPLICIT`. An explicit assignment may be intentionally
+   concentrated because the orchestrator pinned a reviewer.
+3. **Selected route/model** is the durable scheduler result, not proof that the
+   provider completed successfully.
+4. **Outcome** and **Failure record** show the terminal classification. Expand
+   **Decision evidence & operational details** for selection reasoning, quota
+   freshness, capacity facts, retry/failover/replay state, and chronological
+   authority events.
+
+An active row with “No ledger update” is stale activity evidence only. It is
+not provider-liveness proof: it establishes neither that a provider process is
+alive nor dead and does not authorize early lease reclamation. Before
+diagnosing unfair routing or a bad orchestrator,
+filter by mode, initiator, route, and lifecycle; inspect the durable event and
+selection trace; then corroborate current headroom with CodexBar and authority
+job/reservation state. Never infer provider health from route counts alone.
 
 ### Discuss is not formal review
 
@@ -174,16 +208,16 @@ Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
 to Sol or the accountable orchestrator before making a consequential decision.
 
-### Fleet-comms and file dual-write
+### Fleet-comms authority and legacy projections
 
 ```bash
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
-- Implemented modes are only `off` | `shadow` | `dual_write`.
-- **File dual-write / lane diaries stay authoritative in every mode today.**
-- `dual_write` mirrors plane traffic; it is **not** post-cutover plane-only
-  authority (that state is not implemented).
+- Implemented modes are `off` | `shadow` | `dual_write` | `authority`.
+- In `authority` mode Fleet Comms is the durable source of truth; legacy file
+  stores are read-only migration/projection inputs and receive no new writes.
+- `dual_write` is a compatibility soak/rollback mode, not normal authority.
 - Do not hard-code a live mode in docs or prompts — always query `plane-status`.
 - Plane / retention-apply / `formal_review_eligible` flips belong to the
   infra/harness lane after parity + present-tense operator/advisor GO.
@@ -192,9 +226,10 @@ to Sol or the accountable orchestrator before making a consequential decision.
 
 ACPX is **not** a coordination product and **not** a second fleet bus.
 Direct-only participant seats are **not a new coordination plane**:
-fleet-comms + file dual-write stay authoritative. The Codex/Grok shadow
-comparison remains available, while the active bounded controller may use
-any enabled participant from the fixed registry.
+Fleet Comms remains the durable authority in `authority` mode, while legacy
+message-plane files remain read-only migration/projection inputs. The
+Codex/Grok shadow comparison remains available, while the active bounded
+controller may use any enabled participant from the fixed registry.
 
 **Historical Grok pilot evidence (#6043):** the 2026-07-30 snapshot from
 `/api/comms/live-activity?limit=500&minutes=120` contained 95 broker
@@ -415,10 +450,10 @@ Replay suppression is durable and occurs before scheduling. An orphaned
 reservation is terminal: never retry it. The single-host repository admission
 file lock covers the conversation, including model I/O; no SQLite transaction
 may cover model I/O. Typed partial results, idempotency disposition, and append-only
-state/timeline events are durably recorded through existing fleet-comms and
-file handoffs; those handoffs retain authority. This conversation neither
-changes plane/retention state nor gains dispatch, routing, failover, or review
-authority.
+state/timeline events are durably recorded through Fleet Comms. Legacy
+message-plane files remain read-only migration/projection inputs in authority
+mode. This conversation neither changes plane/retention state nor gains
+dispatch, routing, failover, or review authority.
 
 The privacy boundary is strict: task bodies, model responses, credentials,
 paths, session data, and tool data do not appear in Runtime metadata. The
@@ -504,7 +539,7 @@ counts and outcomes.
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |
 | Duplicate correlation id | Treat as replay protection; do not double-apply side effects (there should be none) |
-| Shadow mismatch | Keep the existing native/participant result authoritative; file evidence for infra |
+| Shadow mismatch | Keep the existing native/participant result authoritative; record the discrepancy as infra evidence without creating a new legacy message-plane write |
 | Implausibly large token usage matching a model context limit | Treat as a telemetry defect: standard ACP `used` is the live context count and `size` is capacity; never record `size` as consumed tokens |
 
 #### Rollback
@@ -514,16 +549,17 @@ counts and outcomes.
    (`scripts/agent_runtime/` via `runner.invoke`, bridge, `delegate.py`) —
    native Codex and native Grok remain the authoritative paths.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
-4. Keep file dual-write handoffs current.
+4. Preserve the read-only legacy projections; resume legacy writes only as part
+   of an explicitly approved rollback to `dual_write`.
 5. Direct-only ACPX seats are transport adapters only; turning any or all off
    is not a plane cutover.
 
 ### Buzz — deferred
 
 Buzz is **not** part of this rollout. Its relay-as-authority model conflicts
-with authoritative file handoffs + fleet-comms. Do not prototype Buzz as a
-coordination plane, review bus, or ACPX peer until a separate operator/advisor
-GO reopens that design.
+with Fleet Comms authority. Do not prototype Buzz as a coordination plane,
+review bus, or ACPX peer until a separate operator/advisor GO reopens that
+design.
 
 ---
 
