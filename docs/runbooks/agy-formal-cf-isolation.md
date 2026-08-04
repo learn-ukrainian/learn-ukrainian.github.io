@@ -32,7 +32,8 @@ AGY **is** an orchestrator seat for fleet-comms (#5512):
 | Deep escalate | `gemini-3.1-pro-high` @ high | Optional, not default loop |
 | Sealed formal CF *reviewer* | — | **Blocked** until isolation proof (#5555) |
 
-When AGY orchestrates, it **requests** CF via `review-pr` (codex|claude|glm). It must not treat `ask-agy --review` as sealed formal CF.
+When AGY orchestrates, it **requests** CF via `review-pr`
+(codex|claude|glm|grok). It must not treat `ask-agy --review` as sealed formal CF.
 
 ## Live lane (non-formal / orchestrator)
 

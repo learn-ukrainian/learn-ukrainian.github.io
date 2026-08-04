@@ -1847,7 +1847,8 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 10
 
 
-def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch):
+@pytest.mark.parametrize("model", ["claude-sonnet-5", "claude-fable-5"])
+def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch, model):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     sealed_config = str(tmp_path / "sealed-config.json")
@@ -1867,7 +1868,7 @@ def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch
             prompt="review the sealed exact head",
             mode="read-only",
             cwd=tmp_path,
-            model="claude-sonnet-5",
+            model=model,
             task_id="t-claude-review",
             session_id=None,
             tool_config={
@@ -1882,15 +1883,18 @@ def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch
     pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
     allowed = "mcp__sealed_review__read_required"
     assert ("--allowed-tools", allowed) in pairs
+    assert ("--model", model) in pairs
     assert ("--max-turns", "9") in pairs
     assert ("--system-prompt", acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT) in pairs
     assert "Do not call ReportFindings" in acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
+    assert "verbatim_note" in acpx_module._CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT
     policy = json.loads(plan.cmd[plan.cmd.index("--permission-policy") + 1])
     assert policy["autoApprove"] == [
         allowed,
         "sealed_review__read_required",
     ]
     assert policy["defaultAction"] == "deny"
+    assert plan.metadata["model"] == model
 
 
 def test_claude_sealed_review_turn_budget_rejects_intermediate_symlink_escape(

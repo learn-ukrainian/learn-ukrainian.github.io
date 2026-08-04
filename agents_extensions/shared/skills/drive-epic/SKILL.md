@@ -152,8 +152,10 @@ family; never self-review, never same-family). Route it:
 .venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...                             # publish the sealed verdict
 ```
 Pick the reviewer family from the served reviewer-seat rule; the writer's family is
-never eligible. For a hard / non-routine change, escalate the seat with
-`--model gpt-5.6-sol` (or `claude-fable-5`) `--effort xhigh`. Read the review CONTENT
+never eligible. For a hard / non-routine change, explicitly pin either
+`--reviewer codex --model gpt-5.6-sol` (provider-default Codex ACP effort) or
+`--reviewer claude --model claude-fable-5 --effort high`; include a concrete
+`--override-reason`. Read the review CONTENT
 (not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
 trusting "verified". A review request is not a passive notification: after invoking
 `review-pr <PR_NUMBER>`, the requester owns its request state and must explicitly poll

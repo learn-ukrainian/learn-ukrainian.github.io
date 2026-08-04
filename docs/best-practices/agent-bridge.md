@@ -167,14 +167,21 @@ brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR> [--reviewer auto|codex|glm|claude]`
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR> [--reviewer auto|codex|claude|glm|grok] [--model MODEL]`
 is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
 
 - **Pointer-only** prompt (PR URL + checklist + mandatory read-only contract).
 - Hard size caps — refuse fat pasted diffs/inventory YAML.
-- Default `--reviewer auto` → **Codex sealed `--review --pr`** (#5285 isolation).
-- Claude dark + local: `--reviewer glm` or `--reviewer auto --no-claude-available`
-  (GLM-5.2 is **LOCAL-ONLY** / China egress — never CI).
+- Default `--reviewer auto` uses the deterministic suitability-first scheduler;
+  no provider is an unconditional default.
+- A reviewer alias selects its practical default. Add a formally eligible
+  same-route model plus `--override-reason` for an exceptional operator pin,
+  for example `--reviewer claude --model claude-fable-5` or
+  `--reviewer codex --model gpt-5.6-sol`.
+- `agy` and `kimi` remain recognized request identities but fail closed until
+  their catalog endpoints satisfy sealed-review eligibility. GLM-5.2 is
+  **LOCAL-ONLY** / China egress and requires the matching egress policy.
+- `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.
 
 Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review

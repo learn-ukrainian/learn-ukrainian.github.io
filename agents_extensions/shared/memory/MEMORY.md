@@ -57,7 +57,7 @@ Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off q
 
 ## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
 **Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
-- Request immediately after `gh pr create`: `.venv/bin/python -m scripts.ai_agent_bridge review-pr <N> --reviewer codex|claude|glm --from <author-family>` (default codex sealed path). **agy / kimi / grok are NOT formal_review_eligible reviewers** — never self-seal.
+- Request immediately after `gh pr create`: `.venv/bin/python -m scripts.ai_agent_bridge review-pr <N> --reviewer codex|claude|glm|grok --initiator <orchestrator/task> --author-model <model> --author-family <family>`. Omit `--reviewer` for deterministic automatic selection. **agy / kimi are NOT formal_review_eligible reviewers** — never self-seal; native Grok is eligible, while Cursor Grok is not.
 - Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without `review-pr`; operator had to ask.
 - After CF pass + green blocking CI: `gh pr merge N --auto --squash --delete-branch` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
 

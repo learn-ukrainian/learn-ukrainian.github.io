@@ -31,7 +31,7 @@
 seal PRs. Formal CF:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
 .venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
 ```
 
@@ -862,10 +862,14 @@ When a worker leaves commits without a PR, or dies with `status=running` and a d
 Formal CF and auto-merge stay with the orchestrator.
 
 ### Formal CF budget rotation (Codex-authored PRs)
-Legal sealed reviewers remain `codex|claude|glm` only (`formal_review_eligible`; do **not** invent
-eligibility for kimi/agy/grok). For **Codex/Luna-authored** PRs, rotate **Claude vs GLM** using
-live routing-budget / CodexBar rem% — do not default-stack every PR on GLM when Claude has
-headroom, and do not burn a near-empty GLM seat on trivial PRs.
+Current sealed reviewer routes are `codex|claude|glm|grok`; the canonical
+`review_scheduler.endpoints` catalog remains authoritative. `agy` and
+`kimi` are recognized request identities but are not yet formally eligible.
+For **Codex/Luna-authored** PRs, use the deterministic routing budget rather
+than default-stacking one provider. An explicit `--model` may select another
+formally eligible model on the requested native route, but still requires
+`--override-reason` and passes every family, capability, isolation, health,
+and circuit gate.
 
 ### Parallel fleet utilization
 While one lane codes owned paths, free lanes should take **disjoint** non-CF work (recon, residual

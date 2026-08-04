@@ -120,9 +120,15 @@ input and transcripts. It does **not** satisfy independent cross-family review.
 Formal CF uses:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
 .venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
 ```
+
+Reviewer aliases keep practical defaults. A present operator may select a
+different formally eligible model on that native route with `--model` plus
+`--override-reason` (for example Claude/Fable or Codex/Sol). Recognized AGY
+and Kimi request identities remain fail-closed until their catalog endpoints
+are formally eligible.
 
 Same-family helper output, design panels, and channel chat never seal a PR.
 

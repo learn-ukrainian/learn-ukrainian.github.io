@@ -160,7 +160,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other lanes escalate **to** Claude (`claude-fable-5` @ xhigh) or to Sol — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
+  | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Sol at the Codex ACP provider default — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
@@ -210,9 +210,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   Claude, Codex, GLM, and native Grok use the parent-owned exact-head sealed
   ACP path. The canonical KimiCC K3 adapter is implemented but remains
   fail-closed until its authenticated sealed canary passes. AGY remains
-  ineligible because its text-only wrapper cannot consume that MCP. Authority CF escalate:
-  `review-pr <N> --model gpt-5.6-sol --effort xhigh` or
-  `review-pr <N> --reviewer claude --model claude-fable-5 --effort xhigh`.
+  ineligible because its text-only wrapper cannot consume that MCP. Authority CF
+  model pins (both require `--override-reason`) are:
+  `review-pr <N> --reviewer codex --model gpt-5.6-sol` (the one-shot Codex ACP
+  route owns its provider-default effort) or
+  `review-pr <N> --reviewer claude --model claude-fable-5 --effort high`.
 
   <!-- fleet-roster-projection:begin formal_review_eligible -->
   | endpoint | formal_review_eligible |

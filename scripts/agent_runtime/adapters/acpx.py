@@ -276,7 +276,9 @@ _CLAUDE_SEALED_REVIEW_SYSTEM_PROMPT = (
     "Use ToolSearch only to load mcp__sealed_review__read_required, then call that "
     "reader from the requested cursor until eof=true. Do not call ReportFindings or "
     "any other built-in or MCP tool. Return the requested canonical JSON object as "
-    "the final assistant message with no prose, markdown, or trailing text."
+    "the final assistant message with no prose, markdown, or trailing text. Each "
+    "finding must contain exactly the requested canonical keys; do not add provider "
+    "annotations such as verbatim_note, even when null."
 )
 
 
