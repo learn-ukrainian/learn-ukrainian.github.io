@@ -397,7 +397,10 @@ def _row(
 ) -> dict[str, Any]:
     source_value = _as_group_value(raw[family["source_column"]])
     work_value = _as_group_value(raw[family["work_column"]])
-    metadata = {column: _as_public_value(raw[column]) for column in family["metadata_columns"]}
+    # Emit the same normalized metadata representation used by the ambiguity
+    # comparison below.  Otherwise whitespace-equivalent rows could pass the
+    # comparison while whichever row SQLite returned first leaked into output.
+    metadata = {column: _normalized_metadata(raw[column]) for column in family["metadata_columns"]}
     source_locator = {column: _as_public_value(raw[column]) for column in family["source_locator_columns"]}
     work_locator = {column: _as_public_value(raw[column]) for column in family["work_locator_columns"]}
     source_id = opaque_id(f"source.{family['source_family']}", source_value)
