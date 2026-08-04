@@ -1099,6 +1099,9 @@ def _eligible_decoys(
     number: str,
 ) -> list[tuple[dict[str, Any], str]]:
     answer_head = _headword(answer["gloss"])
+    answer_bucket = _option_pos_bucket(answer.get("pos"))
+    if not answer_bucket:
+        return []
     candidates: list[tuple[dict[str, Any], str]] = []
     for lexeme in lexemes:
         if lexeme["lemmaId"] == answer["lemmaId"]:
@@ -1107,7 +1110,7 @@ def _eligible_decoys(
         # level-bounded cloze option set without inventing a placement.
         if not lexeme.get("cefr") or not answer.get("cefr"):
             continue
-        if lexeme.get("pos") != answer.get("pos"):
+        if _option_pos_bucket(lexeme.get("pos")) != answer_bucket:
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
@@ -1122,40 +1125,20 @@ def _eligible_decoys(
 
 
 def _option_pos_bucket(pos: Any) -> str:
-    """Map manifest POS variants into a safe option-comparison bucket."""
-    value = _clean_text(pos)
-    if not value:
-        return ""
-    normalized = value.casefold()
-    # The hydrated manifest uses these standard shorthand/form labels for
-    # lexical categories already represented by the broader buckets below.
-    # Keep this list deliberately narrow: semantic labels such as
-    # ``predicative`` and ``sequence word`` remain separate until their
-    # exercise contract is reviewed.
-    if normalized in {
-        "imperative",
-        "infinitive",
-    }:
-        return "verb"
-    if normalized == "intj":
-        return "interjection"
-    if normalized == "numr":
-        return "numeral"
-    if "pronoun" in normalized or normalized in {"pron", "negative pronoun"}:
-        return "pronoun"
-    if "adverb" in normalized or normalized == "adv":
-        return "adverb"
-    if "noun" in normalized or normalized in {"propn", "proper noun"}:
-        return "noun"
-    if "verb" in normalized or normalized in {"passive", "participle", "gerund"}:
-        return "verb"
-    if "adject" in normalized or normalized in {"adj", "adjective"}:
-        return "adjective"
-    if "numeral" in normalized or normalized in {"num", "number"}:
-        return "numeral"
-    if normalized in {"preposition", "prep", "conjunction", "conj", "particle", "part"}:
-        return "function"
-    return normalized
+    """Return one closed school-POS bucket suitable for a cloze option set.
+
+    Classify and distractor selection intentionally share ``_POS_BUCKET_ALIASES``:
+    there are ten school categories, not an eleventh ``function`` catch-all.
+    Ambiguous and unknown signals cannot safely seed a same-POS option set.
+    ``phrase`` is the one explicit non-school option contract; it remains
+    separate from the ten school categories and can never become a classify
+    answer.
+    """
+    buckets = _normalize_pos_buckets(pos)
+    if len(buckets) == 1:
+        return buckets[0]
+    text = _clean_text(pos)
+    return text.casefold() if text and text.casefold() in _OPTION_ONLY_POS_BUCKETS else ""
 
 
 def _eligible_dictionary_decoys(
@@ -1172,6 +1155,8 @@ def _eligible_dictionary_decoys(
     lemma.
     """
     answer_bucket = _option_pos_bucket(answer.get("pos"))
+    if not answer_bucket:
+        return []
     answer_head = _headword(answer["gloss"])
     answer_label = _plain(answer["lemma"])
     candidates: list[tuple[dict[str, Any], str]] = []
@@ -1240,7 +1225,7 @@ def _option(
         "lemmaId": lemma_id,
         "kind": kind,
         "case": case_name,
-        "pos": pos or "",
+        "pos": _option_pos_bucket(pos),
     }
 
 
@@ -1540,10 +1525,13 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     if blank_case != "nominative" and (oblique_count < 2 or oblique_distractor_count < 1):
         errors.append("option set must contain at least two oblique-looking forms")
     pos_values = {
-        str(option.get("pos") or "")
+        _option_pos_bucket(option.get("pos"))
         for option in options
-        if isinstance(option, dict) and option.get("pos")
+        if isinstance(option, dict) and "pos" in option
     }
+    if "" in pos_values:
+        errors.append("option set contains an unknown or multi-POS category")
+        pos_values.discard("")
     if len(pos_values) > 1:
         errors.append("option set must stay within one POS bucket")
     root_counts: dict[str, int] = {}
@@ -1863,10 +1851,10 @@ def _morph_labels(morphology: dict[str, Any]) -> list[str]:
 
 
 _POS_BUCKET_ALIASES: dict[str, tuple[str, ...]] = {
-    "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun"),
+    "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun", "propn"),
     "adjective": ("прикметник", "adj", "adjective"),
-    "numeral": ("числівник", "num", "numr", "numeral"),
-    "pronoun": ("займенник", "pronoun", "pron"),
+    "numeral": ("числівник", "num", "numr", "numeral", "number"),
+    "pronoun": ("займенник", "pronoun", "pron", "negative pronoun"),
     "verb": ("дієслово", "verb", "infinitive", "imperative"),
     "adverb": ("прислівник", "присл", "adv", "adverb"),
     "preposition": (
@@ -1888,6 +1876,12 @@ _POS_BUCKET_ALIASES: dict[str, tuple[str, ...]] = {
     ),
     "interjection": ("вигук", "interjection", "interj", "intj"),
 }
+
+# A phrase is not a school POS and must never appear as a classify answer.  It
+# is, however, an established homogeneous-option contract for sourced
+# identity clozes.  Keep it explicit rather than smuggling arbitrary unknown
+# labels into the school taxonomy.
+_OPTION_ONLY_POS_BUCKETS = frozenset({"phrase"})
 
 
 def _normalize_pos_buckets(value: Any) -> list[str]:
@@ -4237,8 +4231,8 @@ def build_practice_shards(
             continue
         slug_a = _clean_text(pair.get("slugA"))
         slug_b = _clean_text(pair.get("slugB"))
-        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a)
-        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b)
+        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a) or by_plain_lemma.get(_plain(slug_a))
+        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b) or by_plain_lemma.get(_plain(slug_b))
         if not lex_a or not lex_b:
             print(
                 f"WARN: antonym_pair[{index}] {slug_a}/{slug_b} not in practice lexemes; emitted 0 items",
@@ -4297,8 +4291,8 @@ def build_practice_shards(
             continue
         slug_a = _clean_text(pair.get("slugA"))
         slug_b = _clean_text(pair.get("slugB"))
-        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a)
-        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b)
+        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a) or by_plain_lemma.get(_plain(slug_a))
+        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b) or by_plain_lemma.get(_plain(slug_b))
         if not lex_a or not lex_b:
             print(
                 f"WARN: homonym_pair[{index}] {slug_a}/{slug_b} not in practice lexemes; emitted 0 items",
