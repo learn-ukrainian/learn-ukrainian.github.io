@@ -6,8 +6,8 @@
 > rows introduced reserved model markers. Of the preserve/abstain rows, 98/98
 > in the canary and 3,961/3,961 in the full run failed the exact-copy contract.
 > This run says nothing reliable about Gemma 4's Ukrainian ability. Its bytes
-> remain available only as a transparent runtime-failure receipt. No rerun is
-> authorized.
+> are retained privately as a runtime-failure receipt; this public incident
+> record retains their hashes. No rerun is authorized.
 
 Issue [#6273](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6273)
 authorized one evaluation-only attempt on Hugging Face Jobs. It did not train,
@@ -221,8 +221,10 @@ bucket-mount remedy is disproven and must not be retried. See the official
 [Jobs persistence guidance](https://huggingface.co/docs/hub/en/jobs-manage).
 
 Raw generations, parse failures, private checkpoints, and provider logs remain
-private. The complete final parsed responses are public because they are needed
-to reproduce all fourteen deterministic reports.
+private. The invalid final parsed responses were initially published for report
+reproduction, then made private on 2026-08-04. Their public availability did
+not add valid evaluation evidence; the incident record and immutable hashes are
+sufficient for transparency.
 
 ## Free preparation and verification
 
@@ -249,10 +251,12 @@ by both the CPU preflight and any authorized GPU launch. `verify-transport`
 then re-downloads the staged files and verifies their exact set, sizes, and
 hashes before a provider job is submitted.
 
-## Invalid public artifact boundary
+## Private invalid artifact boundary
 
-The retained public dataset contains the historical bytes listed below, but its
-current card labels them an invalid runtime-failure receipt:
+The retained Hugging Face dataset is private as of 2026-08-04 and contains the
+historical bytes listed below. It was not deleted, and the visibility change
+preserved corrective revision
+`152e04defc7faecadfa994a9f8f07fea6c5adb0e`:
 
 - `README.md` — Hugging Face card, limitations, and English/Ukrainian reproduction;
 - `responses.jsonl` — complete parsed actions and output text, without raw generations;
@@ -265,9 +269,20 @@ current card labels them an invalid runtime-failure receipt:
 The package excludes weights, model derivatives, source cases, source-only
 request packets, raw generations, checkpoints, provider logs, failed-attempt
 traces, private corpus material, and any aggregate Ukrainian-quality score.
-The original revision remains immutable evidence. The corrective card revision
-is verified by a fresh anonymous, token-free download; every non-card payload
-file must retain its original hash.
+The original revision and package SHA-256 remain public in this incident record
+and the disposition file. Before the visibility change, a fresh anonymous,
+token-free download verified the corrective card revision and every unchanged
+non-card payload hash. After the change, authenticated repository metadata
+reported `private: true`, an anonymous request returned HTTP 401, and the
+content revision remained unchanged.
+
+No future Hugging Face result repository may be made public merely because its
+provider job, shape, hashes, metrics, runtime, or cost receipts validate. The
+exact saved responses must first pass the source-aware integrity gate, and
+`verify-results` must return
+`ua_open_weight_eval_results_verification.v2` with
+`publication_eligible: true`. A semantic failure keeps the result repository
+private while GitHub retains the public incident explanation and hashes.
 
 ## Українською
 
@@ -279,6 +294,7 @@ file must retain its original hash.
 квитанцію про помилку середовища виконання; повторний запуск не дозволено.
 
 Підсумок містить окремі звіти за чотирнадцятьма напрямами. Єдиного показника
-«якості української» немає. Повні розібрані відповіді публікуються для
-відтворюваності, але сирі генерації, приватні контрольні точки, журнали
-провайдера та ваги моделі не публікуються.
+«якості української» немає. Недійсні розібрані відповіді збережено приватно;
+публічними на GitHub залишаються опис інциденту та хеші. Майбутній репозиторій
+результатів можна оприлюднити лише після семантичної перевірки фактично
+збережених відповідей.

@@ -58,9 +58,10 @@ and evidence over owning or producing model weights. Foundry implementation
 completion stops before model download, accelerator rental, optimizer
 execution, adapter production, or weight upload. The later #6273 Gemma 4
 Hugging Face Jobs attempt completed structurally but failed source-aware output
-integrity and is retained only as an invalid runtime-failure receipt. It does
-not authorize a rerun or training. The accepted boundary between public
-evaluation gold, private product data, and training data remains intact.
+integrity and is retained privately only as an invalid runtime-failure receipt;
+the incident explanation and hashes remain public on GitHub. It does not
+authorize a rerun or training. The accepted boundary between public evaluation
+gold, private product data, and training data remains intact.
 
 ## Solo-operator execution model
 
