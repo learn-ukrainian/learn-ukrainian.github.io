@@ -4516,15 +4516,19 @@ function PracticeCloze({
   const [before, after] = clozeParts(cloze).map((part) => displayPracticeForm(part, learnerLevel));
   const caseDrill = isCaseClozeDrill(cloze, selection.lemma);
   const displayLemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
+  // Case drills name the dictionary form on purpose (inflect it).
+  // Non-case / dictionary-form inserts must NOT name the answer — that turns
+  // a real blank (e.g. textbook inventory with ___) into a giveaway.
   const clozePrompt = caseDrill
     ? {
       uk: `Поставте слово „${displayLemma}” у правильному відмінку.`,
       en: `Put the word „${displayLemma}” in the correct case.`,
     }
     : {
-      uk: `Вставте слово „${displayLemma}” у пропуск.`,
-      en: `Fill in the blank with the word „${displayLemma}”.`,
+      uk: 'Вставте пропущене слово.',
+      en: 'Fill in the missing word.',
     };
+
   const optionErrors = validateClozeOptions(cloze);
   const blankText = feedback?.kind === 'correct' ? cloze.form : input.trim() || '?';
   const displayBlankText = displayPracticeForm(blankText, learnerLevel);
