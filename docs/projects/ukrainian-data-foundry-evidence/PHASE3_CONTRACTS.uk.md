@@ -111,6 +111,16 @@ VESUM не можуть створити статус `correction`.
 `data/sources.db` і `data/vesum.db`. Виробнича команда:
 
 ```bash
+.venv/bin/python scripts/projects/open_model_data/vesum_unattested_sample.py candidate \
+  --config data/projects/open_model_data/profiles/vesum_unattested_sample_config_v1.json \
+  --profile data/projects/open_model_data/profiles/public_external_full_corpus_v1.json \
+  --profile-receipt data/projects/open_model_data/profiles/full_corpus_profile_v1.json \
+  --phase1-manifest batch_state/issue-6327/phase1-production/document_signal_manifest.jsonl \
+  --phase1-receipt batch_state/issue-6327/phase1-production/document_signal_receipt.json \
+  --source-database data/sources.db --vesum-database data/vesum.db \
+  --detector-config data/projects/open_model_data/detector/language_contact_config_v1.json \
+  --output batch_state/issue-6333/first-build.jsonl
+
 .venv/bin/python scripts/projects/open_model_data/vesum_unattested_sample.py build \
   --config data/projects/open_model_data/profiles/vesum_unattested_sample_config_v1.json \
   --profile data/projects/open_model_data/profiles/public_external_full_corpus_v1.json \
@@ -119,18 +129,20 @@ VESUM не можуть створити статус `correction`.
   --phase1-receipt batch_state/issue-6327/phase1-production/document_signal_receipt.json \
   --source-database data/sources.db --vesum-database data/vesum.db \
   --detector-config data/projects/open_model_data/detector/language_contact_config_v1.json \
+  --comparison-output batch_state/issue-6333/first-build.jsonl \
   --output data/projects/open_model_data/profiles/vesum_unattested_sample_v1.jsonl \
   --receipt data/projects/open_model_data/profiles/vesum_unattested_sample_receipt_v1.json
 ```
 
-Виробничу побудову двічі незалежно виконано з баз даних. Результат і квитанція
-в обох запусках побітово однакові. Перевірений результат містить 256 записів —
+Виробничу побудову двічі незалежно виконано з баз даних. Другий запуск побітово
+зіставлено з окремим артефактом першого запуску до запису квитанції. Перевірений
+результат містить 256 записів —
 по 64 для `external_articles`, `literary`, `public_textbooks` і `wikipedia`:
 
 - SHA-256 результату:
   `a8d2ed4f8ef2170e27bd52cc4e9d475efa5261fec7e6f822703bf9340630b414`;
 - SHA-256 квитанції:
-  `88741e1a6f104ac491b3ee1142b25e88a82fff3350b09d6d8d3bbd6a9c2f13f2`;
+  `54f6af17bcc862505966d35db82f27e2042cf4e211eaced9bfaf297917cfe872`;
 - маршрути: 200 `unresolved`, 26 `foreign_or_russian_quotation`, 20
   `legitimate_ukrainian_variation`, чотири `historical_orthography`, чотири
   `plausible_modern_ukrainian_error`, один `ocr_or_noise` та один

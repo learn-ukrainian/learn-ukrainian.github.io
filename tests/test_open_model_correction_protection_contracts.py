@@ -154,7 +154,12 @@ def test_positive_contract_fixtures_validate() -> None:
     _validate("vesum_unattested_sample_receipt_v1.schema.json", {
         "schema_version": "vesum_unattested_sample_receipt_v1", "denominator": 9292022, "production_expected_denominator": 9292022, "pins": {"config_sha256": SHA, "database_sha256": SHA, "vesum_sha256": SHA, "profile_sha256": SHA, "profile_receipt_sha256": SHA, "phase1_manifest_sha256": SHA, "phase1_receipt_sha256": SHA, "sampler_sha256": SHA, "detector_config_sha256": SHA, "detector_generator_sha256": SHA, "record_schema_sha256": SHA, "receipt_schema_sha256": SHA},
         "stratification": {"algorithm": "fixture", "algorithm_sha256": SHA, "quotas": {"fixture": 1}}, "output": _artifact(), "sample_counts": {"fixture": 1}, "sample_hashes": [SHA], "coverage": {"fixture": 1}, "limitations": ["fixture limitation"],
-        "two_build_identity": {"first_output_sha256": SHA, "second_output_sha256": SHA, "identical": True}, "safety": {"text_published": False, "training": False, "human_gold": False, "authoritative": False},
+        "two_build_identity": {
+            "comparison_algorithm": "independent-artifact-byte-identity-sha256-v1",
+            "first_output": {"logical_path": "candidate.jsonl", "sha256": SHA},
+            "second_output": {"logical_path": "sample.jsonl", "sha256": SHA},
+            "identical": True,
+        }, "safety": {"text_published": False, "training": False, "human_gold": False, "authoritative": False},
     })
     _validate("ukrainian_nlp_ecosystem_delta_v1.schema.json", {
         "schema_version": "ukrainian_nlp_ecosystem_delta_v1", "delta_id": _ref("uk_nlp_delta"), "tool_or_source": "fixture", "revision": "v1", "inspected_on": "2026-08-04", "official_url": "https://example.invalid/official", "primary_urls": ["https://example.invalid/primary"],

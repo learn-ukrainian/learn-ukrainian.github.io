@@ -65,7 +65,8 @@ aggregate unknown-token count is never used as a linguistic disposition.
 The committed config freezes the sample size, per-family quotas, axes,
 identity algorithm, input pins, no-text rule, and held-back storage boundary.
 The receipt binds the exact denominator, input hashes, category counts,
-coverage, output bytes/hash, and two-run byte identity.
+coverage, output bytes/hash, and a comparison against a distinct first-build
+artifact.
 
 ## Incumbent-tool delta
 
@@ -106,6 +107,16 @@ manifest under `batch_state/issue-6327/phase1-production/`,
 `data/sources.db`, and `data/vesum.db`. The production command is:
 
 ```bash
+.venv/bin/python scripts/projects/open_model_data/vesum_unattested_sample.py candidate \
+  --config data/projects/open_model_data/profiles/vesum_unattested_sample_config_v1.json \
+  --profile data/projects/open_model_data/profiles/public_external_full_corpus_v1.json \
+  --profile-receipt data/projects/open_model_data/profiles/full_corpus_profile_v1.json \
+  --phase1-manifest batch_state/issue-6327/phase1-production/document_signal_manifest.jsonl \
+  --phase1-receipt batch_state/issue-6327/phase1-production/document_signal_receipt.json \
+  --source-database data/sources.db --vesum-database data/vesum.db \
+  --detector-config data/projects/open_model_data/detector/language_contact_config_v1.json \
+  --output batch_state/issue-6333/first-build.jsonl
+
 .venv/bin/python scripts/projects/open_model_data/vesum_unattested_sample.py build \
   --config data/projects/open_model_data/profiles/vesum_unattested_sample_config_v1.json \
   --profile data/projects/open_model_data/profiles/public_external_full_corpus_v1.json \
@@ -114,18 +125,20 @@ manifest under `batch_state/issue-6327/phase1-production/`,
   --phase1-receipt batch_state/issue-6327/phase1-production/document_signal_receipt.json \
   --source-database data/sources.db --vesum-database data/vesum.db \
   --detector-config data/projects/open_model_data/detector/language_contact_config_v1.json \
+  --comparison-output batch_state/issue-6333/first-build.jsonl \
   --output data/projects/open_model_data/profiles/vesum_unattested_sample_v1.jsonl \
   --receipt data/projects/open_model_data/profiles/vesum_unattested_sample_receipt_v1.json
 ```
 
-The production build was executed twice from the databases. Both the output
-and receipt compared byte-for-byte. The verified result is 256 records, 64 for
+The production build was executed twice from the databases. The second build
+matched the independent first-build artifact byte-for-byte before the receipt
+was written. The verified result is 256 records, 64 for
 each of `external_articles`, `literary`, `public_textbooks`, and `wikipedia`:
 
 - output SHA-256:
   `a8d2ed4f8ef2170e27bd52cc4e9d475efa5261fec7e6f822703bf9340630b414`;
 - receipt SHA-256:
-  `88741e1a6f104ac491b3ee1142b25e88a82fff3350b09d6d8d3bbd6a9c2f13f2`;
+  `54f6af17bcc862505966d35db82f27e2042cf4e211eaced9bfaf297917cfe872`;
 - routes: 200 `unresolved`, 26 `foreign_or_russian_quotation`, 20
   `legitimate_ukrainian_variation`, four `historical_orthography`, four
   `plausible_modern_ukrainian_error`, one `ocr_or_noise`, and one

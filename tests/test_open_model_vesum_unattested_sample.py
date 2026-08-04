@@ -164,11 +164,18 @@ def _fixture(tmp_path: Path) -> dict[str, Path]:
     }
 
 
-def _build(paths: dict[str, Path], output: Path, receipt: Path) -> dict:
+def _build(paths: dict[str, Path], output: Path, receipt: Path, comparison: Path | None = None) -> dict:
+    comparison = comparison or receipt.with_name(f"{receipt.stem}-candidate.jsonl")
+    samples.build_candidate(
+        **paths,
+        output_path=comparison,
+        detector_input_root=ROOT,
+    )
     return samples.build_sample(
         **paths,
         output_path=output,
         receipt_path=receipt,
+        comparison_output_path=comparison,
         detector_input_root=ROOT,
     )
 
@@ -176,8 +183,14 @@ def _build(paths: dict[str, Path], output: Path, receipt: Path) -> dict:
 def test_build_is_text_free_schema_valid_and_byte_identical(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path)
     monkeypatch.setattr(samples.detector, "run_detector_on_text", lambda **_kwargs: [])
-    first = _build(paths, tmp_path / "first.jsonl", tmp_path / "first-receipt.json")
-    second = _build(paths, tmp_path / "second.jsonl", tmp_path / "second-receipt.json")
+    samples.build_candidate(**paths, output_path=tmp_path / "first.jsonl", detector_input_root=ROOT)
+    first = samples.build_sample(
+        **paths,
+        output_path=tmp_path / "second.jsonl",
+        receipt_path=tmp_path / "second-receipt.json",
+        comparison_output_path=tmp_path / "first.jsonl",
+        detector_input_root=ROOT,
+    )
     assert (tmp_path / "first.jsonl").read_bytes() == (tmp_path / "second.jsonl").read_bytes()
     assert first["denominator"] == 8
     assert first["sample_counts"]["total"] == 4
@@ -190,7 +203,25 @@ def test_build_is_text_free_schema_valid_and_byte_identical(tmp_path: Path, monk
     assert all(not text_bearing.intersection(record) for record in records)
     receipt_validator = Draft202012Validator(json.loads(samples.RECEIPT_SCHEMA.read_text(encoding="utf-8")))
     assert not list(receipt_validator.iter_errors(first))
-    assert samples.verify_sample(**paths, output_path=tmp_path / "first.jsonl", receipt_path=tmp_path / "first-receipt.json") == first
+    assert first["two_build_identity"]["first_output"]["logical_path"] == "first.jsonl"
+    assert first["two_build_identity"]["second_output"]["logical_path"] == "second.jsonl"
+    assert samples.verify_sample(**paths, output_path=tmp_path / "second.jsonl", receipt_path=tmp_path / "second-receipt.json") == first
+
+
+def test_compared_build_rejects_nonidentical_candidate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path)
+    monkeypatch.setattr(samples.detector, "run_detector_on_text", lambda **_kwargs: [])
+    candidate = tmp_path / "candidate.jsonl"
+    samples.build_candidate(**paths, output_path=candidate, detector_input_root=ROOT)
+    candidate.write_bytes(candidate.read_bytes() + b"{}\n")
+    with pytest.raises(samples.SampleError, match="independent build mismatch"):
+        samples.build_sample(
+            **paths,
+            output_path=tmp_path / "sample.jsonl",
+            receipt_path=tmp_path / "receipt.json",
+            comparison_output_path=candidate,
+            detector_input_root=ROOT,
+        )
 
 
 @pytest.mark.parametrize("mutation", ("denominator", "pin", "counts"))
@@ -217,6 +248,68 @@ def test_vesum_non_hit_never_becomes_an_automatic_error() -> None:
     assert samples._detector_bucket("") == "unresolved"
     assert samples._detector_bucket("unknown_future_detector_category") == "unresolved"
     assert samples._detector_bucket("valid_word_contact_candidate") == "unresolved"
+
+
+def test_overlapping_detector_categories_use_safety_first_precedence(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        samples.detector,
+        "run_detector_on_text",
+        lambda **_kwargs: [
+            {
+                "span": {"core_start_char": 0, "core_end_char": 7},
+                "classification": {"category": "modern_narration_interference"},
+            },
+            {
+                "span": {"core_start_char": 0, "core_end_char": 7},
+                "classification": {"category": "protected_authentic_ukrainian"},
+            },
+        ],
+    )
+    routed = samples._classification_for_record(
+        text="звучить",
+        source={"source_family": "literary"},
+        phase1_row={
+            "record_id": "record:test",
+            "dimensions": {"period": "modern", "register": "neutral", "origin": "human_authored_source"},
+        },
+        locator="sqlite:sources.db#documents/1",
+        vesum_matches={},
+        detector_config={},
+        input_root=ROOT,
+        selected=[{"sample_id": "sample", "start": 0, "end": 7}],
+    )
+    assert routed == {"sample": "legitimate_ukrainian_variation"}
+
+
+def test_specific_detector_category_beats_generic_unresolved(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        samples.detector,
+        "run_detector_on_text",
+        lambda **_kwargs: [
+            {
+                "span": {"core_start_char": 0, "core_end_char": 7},
+                "classification": {"category": "valid_word_contact_candidate"},
+            },
+            {
+                "span": {"core_start_char": 0, "core_end_char": 7},
+                "classification": {"category": "modern_narration_interference"},
+            },
+        ],
+    )
+    routed = samples._classification_for_record(
+        text="звучить",
+        source={"source_family": "literary"},
+        phase1_row={
+            "record_id": "record:test",
+            "dimensions": {"period": "modern", "register": "neutral", "origin": "human_authored_source"},
+        },
+        locator="sqlite:sources.db#documents/1",
+        vesum_matches={},
+        detector_config={},
+        input_root=ROOT,
+        selected=[{"sample_id": "sample", "start": 0, "end": 7}],
+    )
+    assert routed == {"sample": "plausible_modern_ukrainian_error"}
 
 
 def test_verify_rejects_nested_text_field(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

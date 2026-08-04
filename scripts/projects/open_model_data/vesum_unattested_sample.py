@@ -40,6 +40,17 @@ ALGORITHM = "phase3-stratified-largest-remainder-sha256-v1"
 SELECTION_DOMAIN = "vesum-unattested-sample-selection-v1"
 RANK_DOMAIN = "vesum-unattested-sample-rank-v1"
 EVIDENCE_DOMAIN = "vesum-unattested-sample-evidence-v1"
+COMPARISON_ALGORITHM = "independent-artifact-byte-identity-sha256-v1"
+CLASSIFICATION_SAFETY_PRIORITY = {
+    "legitimate_ukrainian_variation": 0,
+    "historical_orthography": 1,
+    "foreign_or_russian_quotation": 2,
+    "proper_name": 3,
+    "ocr_or_noise": 4,
+    "phonetic_russian": 5,
+    "plausible_modern_ukrainian_error": 6,
+    "unresolved": 7,
+}
 
 
 class SampleError(ValueError):
@@ -222,7 +233,11 @@ def _classification_for_record(
         categories = sorted(
             category for start, end, category in detector_spans if start <= item["start"] and item["end"] <= end
         )
-        routed[item["sample_id"]] = _detector_bucket(sorted(categories)[0]) if categories else "unresolved"
+        buckets = {_detector_bucket(category) for category in categories}
+        routed[item["sample_id"]] = (
+            min(buckets, key=lambda bucket: (CLASSIFICATION_SAFETY_PRIORITY[bucket], bucket))
+            if buckets else "unresolved"
+        )
     return routed
 
 
@@ -369,9 +384,14 @@ def _record(item: Mapping[str, Any], classification: str, phase1_manifest_hash: 
 def build_sample(
     *, config_path: Path, profile_path: Path, profile_receipt_path: Path, phase1_manifest_path: Path,
     phase1_receipt_path: Path, source_database: Path, vesum_database: Path, detector_config_path: Path,
-    output_path: Path, receipt_path: Path, detector_input_root: Path = ROOT,
+    output_path: Path, receipt_path: Path | None, comparison_output_path: Path | None,
+    detector_input_root: Path = ROOT,
 ) -> dict[str, Any]:
-    """Build and publish a text-free occurrence sample, then its receipt last."""
+    """Build and publish a sample only after matching an independent candidate."""
+    if (receipt_path is None) != (comparison_output_path is None):
+        raise SampleError("receipt and comparison output must be supplied together")
+    if comparison_output_path is not None and comparison_output_path.resolve() == output_path.resolve():
+        raise SampleError("comparison output must be a distinct independently built artifact")
     config = _load_config(config_path)
     profile_config = profile._load_and_validate_config(profile_path)
     profile_receipt = _read_json(profile_receipt_path)
@@ -403,6 +423,22 @@ def build_sample(
         _validate(record, record_validator, "sample record")
     encoded = "".join(canonical_json(record) + "\n" for record in records).encode("utf-8")
     output_hash = hashlib.sha256(encoded).hexdigest()
+    if comparison_output_path is None:
+        temporary_output = _stage(output_path, encoded)
+        try:
+            _replace(temporary_output, output_path)
+        finally:
+            temporary_output.unlink(missing_ok=True)
+        return {"logical_path": output_path.name, "records": len(records), "sha256": output_hash}
+    try:
+        comparison_bytes = comparison_output_path.read_bytes()
+    except OSError as exc:
+        raise SampleError(f"cannot read independent comparison output: {exc}") from exc
+    comparison_hash = hashlib.sha256(comparison_bytes).hexdigest()
+    if comparison_bytes != encoded:
+        raise SampleError(
+            "independent build mismatch: candidate and current output are not byte-identical"
+        )
     family_counts = Counter(record["source"]["source_axes"]["source_family"] for record in records)
     category_counts = Counter(record["classification"] for record in records)
     pins = {
@@ -425,7 +461,12 @@ def build_sample(
         "sample_hashes": [record["sample_id"].split(":", 1)[1] for record in records],
         "coverage": dict(sorted({f"stratum:{'|'.join(key)}": value for key, value in counts.items()}.items())),
         "limitations": ["VESUM non-attestation is not an error label", "detector no-hit and unavailable evidence route to unresolved", "sample records contain no source text or raw external evidence"],
-        "two_build_identity": {"first_output_sha256": output_hash, "second_output_sha256": output_hash, "identical": True},
+        "two_build_identity": {
+            "comparison_algorithm": COMPARISON_ALGORITHM,
+            "first_output": {"logical_path": comparison_output_path.name, "sha256": comparison_hash},
+            "second_output": {"logical_path": output_path.name, "sha256": output_hash},
+            "identical": True,
+        },
         "safety": {"text_published": False, "training": False, "human_gold": False, "authoritative": False},
     }
     receipt_validator = _validator(RECEIPT_SCHEMA)
@@ -433,6 +474,8 @@ def build_sample(
     temporary_output = _stage(output_path, encoded)
     try:
         _replace(temporary_output, output_path)
+        if receipt_path is None:  # Guarded above; keeps the type checker honest.
+            raise SampleError("receipt path is required for a compared build")
         temporary_receipt = _stage(receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"))
         try:
             _replace(temporary_receipt, receipt_path)
@@ -441,6 +484,22 @@ def build_sample(
     finally:
         temporary_output.unlink(missing_ok=True)
     return receipt
+
+
+def build_candidate(
+    *, config_path: Path, profile_path: Path, profile_receipt_path: Path, phase1_manifest_path: Path,
+    phase1_receipt_path: Path, source_database: Path, vesum_database: Path, detector_config_path: Path,
+    output_path: Path, detector_input_root: Path = ROOT,
+) -> dict[str, Any]:
+    """Perform the first complete build without manufacturing a release receipt."""
+    return build_sample(
+        config_path=config_path, profile_path=profile_path,
+        profile_receipt_path=profile_receipt_path, phase1_manifest_path=phase1_manifest_path,
+        phase1_receipt_path=phase1_receipt_path, source_database=source_database,
+        vesum_database=vesum_database, detector_config_path=detector_config_path,
+        output_path=output_path, receipt_path=None, comparison_output_path=None,
+        detector_input_root=detector_input_root,
+    )
 
 
 def verify_sample(
@@ -511,26 +570,50 @@ def verify_sample(
     quotas = receipt["stratification"]["quotas"]
     if set(quotas) != set(FAMILIES) or any(family_counts.get(family, 0) != quota for family, quota in quotas.items()):
         raise SampleError("family quota coverage drift")
-    if receipt["two_build_identity"]["first_output_sha256"] != digest.hexdigest() or receipt["two_build_identity"]["second_output_sha256"] != digest.hexdigest():
+    identity = receipt["two_build_identity"]
+    if identity["comparison_algorithm"] != COMPARISON_ALGORITHM:
+        raise SampleError("two-build comparison algorithm drift")
+    if identity["first_output"]["logical_path"] == identity["second_output"]["logical_path"]:
+        raise SampleError("two-build identity does not name distinct artifacts")
+    if identity["first_output"]["sha256"] != digest.hexdigest() or identity["second_output"] != {
+        "logical_path": output_path.name,
+        "sha256": digest.hexdigest(),
+    }:
         raise SampleError("two-build identity hash drift")
     return receipt
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("build", "verify"))
-    for name in ("config", "profile", "profile-receipt", "phase1-manifest", "phase1-receipt", "source-database", "vesum-database", "detector-config", "output", "receipt"):
+    parser.add_argument("mode", choices=("candidate", "build", "verify"))
+    for name in ("config", "profile", "profile-receipt", "phase1-manifest", "phase1-receipt", "source-database", "vesum-database", "detector-config", "output"):
         parser.add_argument(f"--{name}", required=True, type=Path)
+    parser.add_argument("--receipt", type=Path)
+    parser.add_argument("--comparison-output", type=Path)
     parser.add_argument("--detector-input-root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
     values = {
         "config_path": args.config, "profile_path": args.profile, "profile_receipt_path": args.profile_receipt,
         "phase1_manifest_path": args.phase1_manifest, "phase1_receipt_path": args.phase1_receipt,
         "source_database": args.source_database, "vesum_database": args.vesum_database,
-        "detector_config_path": args.detector_config, "output_path": args.output, "receipt_path": args.receipt,
+        "detector_config_path": args.detector_config, "output_path": args.output,
     }
     try:
-        result = build_sample(**values, detector_input_root=args.detector_input_root) if args.mode == "build" else verify_sample(**values)
+        if args.mode == "candidate":
+            if args.receipt is not None or args.comparison_output is not None:
+                raise SampleError("candidate mode does not accept receipt or comparison output")
+            result = build_candidate(**values, detector_input_root=args.detector_input_root)
+        elif args.mode == "build":
+            if args.receipt is None or args.comparison_output is None:
+                raise SampleError("build mode requires --receipt and --comparison-output")
+            result = build_sample(
+                **values, receipt_path=args.receipt, comparison_output_path=args.comparison_output,
+                detector_input_root=args.detector_input_root,
+            )
+        else:
+            if args.receipt is None or args.comparison_output is not None:
+                raise SampleError("verify mode requires --receipt and rejects --comparison-output")
+            result = verify_sample(**values, receipt_path=args.receipt)
     except (SampleError, OSError, sqlite3.Error, json.JSONDecodeError) as exc:
         parser.error(str(exc))
     print(canonical_json(result))
