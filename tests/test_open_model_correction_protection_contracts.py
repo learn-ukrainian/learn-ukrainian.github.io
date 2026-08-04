@@ -24,6 +24,8 @@ SCHEMA_NAMES = (
     "correction_protection_evidence_v1.schema.json",
     "correction_protection_disagreement_v1.schema.json",
     "correction_protection_case_v1.schema.json",
+    "correction_protection_bundle_manifest_v1.schema.json",
+    "correction_protection_model_lane_v1.schema.json",
     "correction_protection_release_receipt_v1.schema.json",
     "vesum_unattested_sample_record_v1.schema.json",
     "vesum_unattested_sample_receipt_v1.schema.json",
@@ -100,6 +102,9 @@ def _case(*, disposition: str = "correction") -> dict[str, Any]:
         "case_id": _ref("cp_case"),
         "assurance_tier": "evidence_graded_non_gold",
         "authoritative": False,
+        "phenomenon": "fixture phenomenon",
+        "benchmark_role": "positive",
+        "evidence_grade": "multi_channel",
         "source": {"source_locator_id": _ref("cp_source"), "source_locator_sha256": SHA},
         "original": {"start_offset": 1, "end_offset": 2, "surface_sha256": SHA, "immutable": True},
         "evidence_refs": [{"evidence_id": _ref("cp_evidence"), "channel": "ukrainian_corpus", "evidence_sha256": SHA}],
@@ -133,18 +138,18 @@ def test_positive_contract_fixtures_validate() -> None:
     _validate("correction_protection_case_v1.schema.json", protected)
     _validate("correction_protection_disagreement_v1.schema.json", {
         "schema_version": "correction_protection_disagreement_v1", "disagreement_id": _ref("cp_disagreement"), "case_id": _ref("cp_case"),
-        "proposals": [{"provider": "fixture-provider", "family": "fixture-family", "harness": "fixture-harness", "exact_model_id": "fixture-model", "proposal_sha256": SHA, "evidence_refs": [_ref("cp_evidence")], "dissent": "fixture dissent"}],
+        "proposals": [{"provider": "fixture-provider", "family": "fixture-family", "harness": "fixture-harness", "exact_model_id": "fixture-model", "proposal": "fixture proposal", "proposal_sha256": SHA, "evidence_refs": [_ref("cp_evidence")], "dissent": "fixture dissent"}],
         "evidence_refs": [_ref("cp_evidence")], "challenge": "fixture challenge",
         "consensus": {"state": "model_only", "human_reviewed": False, "human_gold": False, "authoritative": False},
         "claim_boundary": {"assurance_tier": "evidence_graded_non_gold", "authoritative": False},
     })
     _validate("correction_protection_release_receipt_v1.schema.json", {
         "schema_version": "correction_protection_release_receipt_v1", "inputs": {"cases": _artifact()}, "schemas": {"case": SHA}, "config": {"gate": SHA}, "output": _artifact(), "counts": {"all": 1},
-        "category_gates": {category: {"state": "research_only" if category == "surzhyk_contested_contact" else "passed", "research_only": category == "surzhyk_contested_contact", "correction_release_allowed": category in CATEGORY_IDS[:2], "threshold_config_sha256": SHA} for category in CATEGORY_IDS}, "axes_coverage": {axis: {"fixture": 1} for axis in ("source_family", "period", "genre", "register")},
+        "category_gates": {category: {"state": "research_only" if category == "surzhyk_contested_contact" else "passed", "research_only": category == "surzhyk_contested_contact", "correction_release_allowed": category in CATEGORY_IDS[:2], "positive": 1, "acceptable_control": 1, "protected": 1, "protected_false_corrections": 0, "control_false_corrections": 0, "false_corrections": 0, "threshold_config_sha256": SHA, "reasons": ["fixture"] if category == "surzhyk_contested_contact" else []} for category in CATEGORY_IDS}, "axes_coverage": {axis: {"fixture": 1} for axis in ("source_family", "period", "genre", "register")},
         "dispositions": {name: 0 for name in ("correct", "correction", "protected", "excluded", "unresolved")}, "evidence_grades": {"fixture": 1}, "disagreement": _artifact(),
         "rights_and_publication": {"rights_decision_refs": ["rights:fixture"], "publication_decision_refs": ["publication:fixture"], "raw_payloads_published": False}, "contamination_registry": _artifact(),
         "determinism": {"algorithm": "fixture", "algorithm_sha256": SHA, "serialization": "UTF-8 canonical JSON with sorted keys and LF", "timestamps_omitted": True}, "held_back_strategy": {"locator": "private:held-back/fixture", "public_repo_copy": False},
-        "safety": {"training": False, "upload": False, "model": False, "accelerator": False, "human_gold": False, "authoritative": False},
+        "safety": {"project_model_training": False, "local_model_inference": False, "external_advisory_model_evidence_used": True, "upload": False, "accelerator": False, "human_gold": False, "authoritative": False},
     })
     _validate("vesum_unattested_sample_record_v1.schema.json", {
         "schema_version": "vesum_unattested_sample_record_v1", "sample_id": _ref("vesum_sample"), "assurance_tier": "evidence_graded_non_gold", "authoritative": False,
@@ -197,7 +202,7 @@ def test_forbidden_weakenings_fail_closed() -> None:
     with pytest.raises(ValidationError):
         _validate("correction_protection_source_v1.schema.json", unpublished_text)
     consensus = {
-        "schema_version": "correction_protection_disagreement_v1", "disagreement_id": _ref("cp_disagreement"), "case_id": _ref("cp_case"), "proposals": [{"provider": "p", "family": "f", "harness": "h", "exact_model_id": "m", "proposal_sha256": SHA, "evidence_refs": [_ref("cp_evidence")], "dissent": "d"}], "evidence_refs": [_ref("cp_evidence")], "challenge": "c", "consensus": {"state": "model_only", "human_reviewed": False, "human_gold": False, "authoritative": False}, "claim_boundary": {"assurance_tier": "evidence_graded_non_gold", "authoritative": False},
+        "schema_version": "correction_protection_disagreement_v1", "disagreement_id": _ref("cp_disagreement"), "case_id": _ref("cp_case"), "proposals": [{"provider": "p", "family": "f", "harness": "h", "exact_model_id": "m", "proposal": "proposal", "proposal_sha256": SHA, "evidence_refs": [_ref("cp_evidence")], "dissent": "d"}], "evidence_refs": [_ref("cp_evidence")], "challenge": "c", "consensus": {"state": "model_only", "human_reviewed": False, "human_gold": False, "authoritative": False}, "claim_boundary": {"assurance_tier": "evidence_graded_non_gold", "authoritative": False},
     }
     consensus["consensus"]["human_gold"] = True
     with pytest.raises(ValidationError):
@@ -218,7 +223,18 @@ def test_fixed_dispositions_namespace_and_release_safety() -> None:
     assert set(category_gates["required"]) == set(CATEGORY_IDS)
     assert set(category_gates["properties"]) == set(CATEGORY_IDS)
     safety = _schema("correction_protection_release_receipt_v1.schema.json")["properties"]["safety"]["properties"]
-    assert {key: value["const"] for key, value in safety.items()} == {key: False for key in ("training", "upload", "model", "accelerator", "human_gold", "authoritative")}
+    assert {key: value["const"] for key, value in safety.items() if "const" in value} == {
+        key: False
+        for key in (
+            "project_model_training",
+            "local_model_inference",
+            "upload",
+            "accelerator",
+            "human_gold",
+            "authoritative",
+        )
+    }
+    assert safety["external_advisory_model_evidence_used"] == {"type": "boolean"}
 
 
 def test_existing_gold_lane_and_exporter_are_untouched() -> None:

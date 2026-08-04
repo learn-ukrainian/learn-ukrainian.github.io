@@ -1,0 +1,70 @@
+{
+  "schema_version": "correction_protection_model_lane_v1",
+  "prompt_sha256": "f5ef69f8b2e86465c8891e5fae07df2d0427363c18d445ea46d8ce5228d036a9",
+  "lanes": [
+    {
+      "provider": "xai",
+      "family": "grok",
+      "harness": "ai-agent-bridge/acpx-grok-shadow",
+      "exact_model_id": "grok-4.5",
+      "task_id": "6333-phase3-calque-dissent-grok",
+      "raw_response_sha256": "9bbc37b9aba4232a77fc12df431f41b55ef06f80b6e567691515662b7ce944c4",
+      "parser_status": "passed",
+      "gate_strengthening_allowed": true,
+      "proposals": [
+        {
+          "case_key": "participate",
+          "proposal": "приймають участь → беруть участь",
+          "proposal_sha256": "23522bfd42425e156a3a60565b80b2fa085d024d530f139c5bbcc38552ec40f4",
+          "dissent": "Без повного тексту цитованих джерел у цьому bounded-проході не перевірено точну форму парадигми (беруть/беремо/взяти участь) і стилістичні альтернативи на кшталт «учасники семінару — студенти».",
+          "source_keys": ["PHRASAL_CALQUES:приймати участь", "Antonenko-Davydovych p091", "10-klas-ukrmova-zabolotnyi-2018_s0027"]
+        },
+        {
+          "case_key": "copula",
+          "proposal": "являється студентом → є студентом",
+          "proposal_sha256": "1e1f75f0612867d67faf65ce0773919993d4590c918cfe14331439765ad6ce5f",
+          "dissent": "Альтернативи «становить собою», «виступає як» або нульова копула в інших регістрах не виведені з наведених ключів.",
+          "source_keys": ["SENSE_RESTRICTED_CALQUES:являтися", "9-klas-ukrajinska-mova-avramenko-2017_s0162", "9-klas-ukrmova-zabolotnyi-2017_s0101", "UA-GEC 0301", "Grinchenko authentic appear/show sense"]
+        },
+        {
+          "case_key": "duration",
+          "proposal": "На протязі року → Протягом року",
+          "proposal_sha256": "10a49d5a4051d4955930faaaed93784d43242b7fefc2a318c0960bc1dc45cd13",
+          "dissent": "Можливі стилістичні парафрази «за рік», «упродовж року», «протягом цілого року» не ранжовані джерелами.",
+          "source_keys": ["SENSE_RESTRICTED_CALQUES:на протязі", "7-klas-ukrmova-litvinova-2024_s0186", "7-klas-ukrmova-zabolotnyi-2024_s0229", "UA-GEC 0490/1730"]
+        },
+        {
+          "case_key": "regarding",
+          "proposal": "на рахунок цього рішення → щодо цього рішення",
+          "proposal_sha256": "5864c5b58b6f2dd459d2fc618163e601a15f9b196436f01a083cf9e6916856a9",
+          "dissent": "Конкурентні поверхні «стосовно цього рішення», «з приводу цього рішення», «про це рішення» також природні.",
+          "source_keys": ["SENSE_RESTRICTED_CALQUES:на рахунок", "5-klas-ukrmova-avramenko-2022_s0057", "UA-GEC 1296", "Grinchenko authentic account/count sense"]
+        }
+      ],
+      "limitations": [
+        "The lane did not reread raw textbook pages or full UA-GEC records and explicitly required unresolved if exact source locators fail later verification.",
+        "Model agreement is not authority, qualified human review, or gold."
+      ]
+    },
+    {
+      "provider": "google",
+      "family": "gemini",
+      "harness": "ai-agent-bridge/acpx-agy-shadow",
+      "exact_model_id": "gemini-3.6-flash-high",
+      "task_id": "6333-phase3-calque-proposal-gemini",
+      "raw_response_sha256": "8be3b616b895cb942f79a0fcd68b9a4fecac74b2fe67842fed84837244b22ad2",
+      "parser_status": "failed",
+      "gate_strengthening_allowed": false,
+      "proposals": [],
+      "limitations": [
+        "The ACP response contained Unicode replacement characters in Ukrainian rationale and dissent text, so the lane is retained as failed non-strengthening evidence."
+      ]
+    }
+  ],
+  "claim_boundary": {
+    "human_gold": false,
+    "human_reviewed": false,
+    "authoritative": false,
+    "consensus_authoritative": false
+  }
+}

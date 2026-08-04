@@ -219,6 +219,47 @@ def test_standard_russian_quotation_and_modern_narration_are_distinct(config: di
     assert narration[0]["automatic_error_label"] is False
 
 
+def test_mandatory_zvuchyt_canary_detects_narration_and_protects_exact_quotation(
+    config: dict,
+    runtime,
+) -> None:
+    text = "Фраза звучит значно вишуканіше."
+    narration = _detect(text, config=config, runtime=runtime)
+    matching = [
+        candidate
+        for candidate in narration
+        if text[candidate["span"]["core_start_char"] : candidate["span"]["core_end_char"]] == "звучит"
+    ]
+    assert len(matching) == 1
+    assert matching[0]["classification"]["category"] == "modern_narration_interference"
+    assert matching[0]["queue_route"] == "modern_interference_review"
+
+    quoted = _detect(f"Автор дослівно навів російське речення: «{text}»", config=config, runtime=runtime)
+    quoted_match = [candidate for candidate in quoted if "звучит" in candidate["span"]["original_text"]]
+    assert quoted_match
+    assert all(candidate["classification"]["category"] != "modern_narration_interference" for candidate in quoted_match)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Автор цитує російське речення: «Фраза звучит изысканнее».",
+        "У записі читаємо «эта тема звучит в новостях» і далі український коментар.",
+        "Дослідниця навела форму «звучит» як предмет аналізу.",
+        "— Это звучит убедительно, — відповів персонаж.",
+    ],
+)
+def test_zvuchyt_quote_boundary_mutations_never_become_narration_corrections(
+    text: str,
+    config: dict,
+    runtime,
+) -> None:
+    candidates = _detect(text, config=config, runtime=runtime)
+    matching = [candidate for candidate in candidates if "звучит" in candidate["span"]["original_text"]]
+    assert matching
+    assert all(candidate["classification"]["category"] != "modern_narration_interference" for candidate in matching)
+
+
 def test_phonetic_reconstruction_requires_context_morphology_and_r2u(config: dict, runtime) -> None:
     assert _detect("У примітці є форма очєнь.", config=config, runtime=runtime) == []
     candidates = _detect("Вона сказала: «очєнь вєжліви с нєй».", config=config, runtime=runtime)

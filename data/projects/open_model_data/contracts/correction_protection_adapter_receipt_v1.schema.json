@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_adapter_receipt_v1.schema.json",
+  "title": "Cache-only evidence adapter and parser-canary receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_database", "network_lookups_performed", "ulif_dictua", "slovnyk_me", "safety"],
+  "properties": {
+    "schema_version": {"const": "correction_protection_adapter_receipt_v1"},
+    "source_database": {"$ref": "#/$defs/artifact"},
+    "network_lookups_performed": {"const": 0},
+    "ulif_dictua": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "entry_table_schema_sha256", "section_table_schema_sha256", "entries", "sections", "by_status", "by_section_kind", "raw_response_hashes_verified", "parser_change_canaries"],
+      "properties": {
+        "status": {"enum": ["bounded_cache", "adapter_unavailable"]},
+        "entry_table_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "section_table_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "entries": {"type": "integer", "minimum": 0},
+        "sections": {"type": "integer", "minimum": 0},
+        "by_status": {"$ref": "#/$defs/countMap"},
+        "by_section_kind": {"$ref": "#/$defs/countMap"},
+        "raw_response_hashes_verified": {"type": "integer", "minimum": 0},
+        "parser_change_canaries": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/canary"}}
+      }
+    },
+    "slovnyk_me": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "table_present", "named_dictionary_required", "aggregator_only_can_strengthen_disposition", "parser_change_canaries"],
+      "properties": {
+        "status": {"enum": ["bounded_cache", "adapter_unavailable"]},
+        "table_present": {"type": "boolean"},
+        "named_dictionary_required": {"const": true},
+        "aggregator_only_can_strengthen_disposition": {"const": false},
+        "parser_change_canaries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/canary"}}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_payloads_published", "live_fallback", "human_gold", "authoritative"],
+      "properties": {
+        "raw_payloads_published": {"const": false},
+        "live_fallback": {"const": false},
+        "human_gold": {"const": false},
+        "authoritative": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "countMap": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "canary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "passed", "failure_mode"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "passed": {"const": true},
+        "failure_mode": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
