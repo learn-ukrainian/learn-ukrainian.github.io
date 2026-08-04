@@ -62,7 +62,7 @@ review without changing the deck:
 
 ```bash
 .venv/bin/python -m scripts.audit.generate_practice_deck \
-  --nominate-a2-synonyms --atlas-db <atlas-db> \
+  --nominate-a2 --atlas-db <atlas-db> \
   --vesum-db <vesum-db> --synonym-verdicts <synonym-verdicts>
 ```
 
