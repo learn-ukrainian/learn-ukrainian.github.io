@@ -2100,7 +2100,7 @@ _EXPLICIT_ASPECT_PATTERNS: dict[str, tuple[re.Pattern[str], ...]] = {
     ),
     "perfective": (
         re.compile(r"\bдоконан(?:ий|а|е|і)?\b", re.IGNORECASE),
-        re.compile(r"\bдокон\.?\b", re.IGNORECASE),
+        re.compile(r"\bдок\.?\b", re.IGNORECASE),
         re.compile(r"\bperfective\b", re.IGNORECASE),
         re.compile(r"\bperf\b", re.IGNORECASE),
     ),

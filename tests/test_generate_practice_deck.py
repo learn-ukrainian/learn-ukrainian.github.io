@@ -908,6 +908,11 @@ def test_aspect_category_reads_explicit_vesum_tags(
     assert _aspect_category(labels) == expected, lemma
 
 
+
+def test_aspect_category_reads_ukrainian_abbreviated_labels() -> None:
+    assert _aspect_category(["недок."]) == "imperfective"
+    assert _aspect_category(["док."]) == "perfective"
+
 def test_aspect_category_explicit_tag_wins_over_tense_proxy() -> None:
     assert _aspect_category(["доконаний", "теперішній"]) == "perfective"
 
