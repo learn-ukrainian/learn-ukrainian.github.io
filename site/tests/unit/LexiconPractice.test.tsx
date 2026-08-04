@@ -2548,9 +2548,10 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice initialDeck={indeclinableClozeDeck()} autoStart initialMode="cloze" />);
 
     const task = screen.getByTestId('practice-cloze').querySelector('.cz-task');
-    expect(task).toHaveTextContent('Fill in the blank with the word „згодом”.');
+    expect(task).toHaveTextContent('Fill in the missing word.');
+    expect(task).not.toHaveTextContent('згодом');
     expect(task).not.toHaveTextContent('correct case');
-    expect(screen.getByLabelText('Вставте слово „згодом” у пропуск.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Вставте пропущене слово.')).toBeInTheDocument();
   });
 
   test('cloze shows a usable sentence English before feedback for A1', () => {
