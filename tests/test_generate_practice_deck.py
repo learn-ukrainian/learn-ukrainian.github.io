@@ -977,6 +977,37 @@ def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path)
 
 
 
+
+def test_vesum_aspect_lookup_drops_biaspectual_combined_tag() -> None:
+    verifier = JsonVesumVerifier(
+        {
+            "атакувати": [
+                {"lemma": "атакувати", "pos": "verb", "tags": "verb:imperf:perf:inf"}
+            ],
+        }
+    )
+    assert _vesum_aspect_by_lemma(["атакувати"], verifier) == {}
+
+
+def test_conflicting_explicit_labels_not_overridden_by_vesum_aspect() -> None:
+    entry = {
+        "lemma": "омонім",
+        "pos": "verb",
+        "enrichment": {
+            "morphology": {
+                "pos": "verb",
+                "forms": [{"label": "доконаний"}, {"label": "недоконаний"}],
+            }
+        },
+    }
+    lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
+    residuals: list[dict[str, str]] = []
+    classify = _build_classify_items(
+        entry, lexeme, vesum_aspect="imperfective", aspect_residuals=residuals
+    )
+    assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
+    assert residuals and residuals[0]["reason"] == "conflicting_explicit_aspect"
+
 def test_build_classify_items_records_missing_morphology_aspect_residual() -> None:
     entry = {"lemma": "знати", "pos": "verb"}
     lexeme = {"lemmaId": "znaty", "lemma": "знати", "cefr": "B1"}

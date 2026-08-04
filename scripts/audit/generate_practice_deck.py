@@ -2167,9 +2167,11 @@ def _vesum_aspect_by_lemma(
                 if _plain(str(match.get("lemma") or "")) != lemma_plain:
                     continue
                 tags = set(str(match.get("tags") or "").split(":"))
+                # Independent checks: biaspectual tags (imperf+perf in one string)
+                # must add BOTH so len(aspects)!=1 drops the lemma as mixed.
                 if "imperf" in tags:
                     aspects.add("imperfective")
-                elif "perf" in tags:
+                if "perf" in tags:
                     aspects.add("perfective")
             if len(aspects) == 1:
                 aspects_by_lemma[lemma_plain] = next(iter(aspects))
@@ -2283,18 +2285,28 @@ def _build_classify_items(
         if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
             sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
     elif pos == "verb":
-        # Atlas/VESUM labels are primary.  The direct VESUM lookup exists for
-        # older hydrated manifests whose decoded form labels omitted aspect.
-        aspect = _explicit_aspect_category(labels) or vesum_aspect or _aspect_category(labels)
+        # Atlas form labels are primary. Direct VESUM lookup is only for
+        # manifests whose labels omitted aspect — never to override a conflict.
+        explicit = _explicit_aspect_category(labels)
+        has_any_explicit = any(
+            pattern.search(label)
+            for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
+            for label in labels
+            for pattern in patterns
+        )
+        explicit_conflict = explicit is None and has_any_explicit
+        if explicit_conflict:
+            aspect = None
+        else:
+            aspect = explicit or vesum_aspect or _aspect_category(labels)
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
         elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
-            reason = "conflicting_explicit_aspect" if any(
-                pattern.search(label)
-                for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
-                for label in labels
-                for pattern in patterns
-            ) else "no_explicit_aspect_or_tense_proxy"
+            reason = (
+                "conflicting_explicit_aspect"
+                if explicit_conflict
+                else "no_explicit_aspect_or_tense_proxy"
+            )
             aspect_residuals.append(
                 {
                     "lemmaId": str(lexeme["lemmaId"]),
