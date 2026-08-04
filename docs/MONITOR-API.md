@@ -1389,6 +1389,62 @@ refused before prompt delivery. Versions remain per-call telemetry only. The
 ACPX manifest range accepts versions from `0.13.0` onward, while the committed
 lockfile keeps installs reproducible until an intentional lock refresh.
 
+### `GET /api/runtime/routing-assignments?limit=100`
+
+Read-only, body-free projection of the durable routing-reservation ledger. The
+top-level `plane` object reports the message-plane posture observed by the API;
+`availability` distinguishes available, empty, unavailable, and malformed
+history. `assignments` are newest-first aggregates bounded by `limit` (1–100),
+so the response is a loaded recent window, never an all-time routing total.
+
+Each aggregate identifies the initiator and author model/family, automatic
+versus explicit selection, requested role/profile/risk/reviewer, admitted
+route/model/family, quota freshness and capacity evidence, retry/failover/replay
+state, terminal outcome/failure, and chronological body-free event history.
+Same-timestamp lifecycle events use semantic order (`reserved` before
+`started` before terminal settlement), rather than opaque decision-ID order.
+
+The endpoint never starts, retries, cancels, reclaims, or reroutes work. It
+does not expose prompts, model responses, credentials, provider output, or raw
+artifact bodies. Stale `reserved`/`running` activity means only that the ledger
+has not changed recently; it is not proof that the provider is alive or dead.
+Corroborate provider headroom with CodexBar and durable authority job state.
+
+The `/runtime.html` **Routing overview** consumes this projection. Its summary
+cards, filters, search, lifecycle groups, decision-path cards, details, and
+load-more control are presentation-only.
+
+```json
+{
+  "availability": "available",
+  "plane": {
+    "mode": "authority",
+    "authority": "fleet_comms_authoritative",
+    "cutover": "authority_active"
+  },
+  "assignments": [
+    {
+      "source_authority_id": "routing-reservation_<id>",
+      "initiator": "codex/task-id",
+      "author_model": "gpt-5.6-sol",
+      "author_family": "openai",
+      "automatic": true,
+      "requested_role": "infra:medium",
+      "resolved_route": "grok",
+      "resolved_model": "grok-4.5",
+      "resolved_family": "xai",
+      "current_state": "complete",
+      "failure_classification": null,
+      "event_history": [
+        {"event_type": "reserved", "state": "reserved"},
+        {"event_type": "started", "state": "running"},
+        {"event_type": "settled", "state": "complete"}
+      ]
+    }
+  ]
+}
+```
+
 ### `GET /api/runtime/acp/conversations`
 
 Read-only, body-free metadata for controller-scheduled ACP conversations. The

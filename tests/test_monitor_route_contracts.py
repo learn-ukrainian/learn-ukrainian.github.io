@@ -90,3 +90,15 @@ def test_contract_endpoint_exposes_route_and_page_contracts():
     assert any(item["pattern"] == "/ws/batch" and item["kind"] == "websocket" for item in data["route_contracts"])
     assert any(item["file"] == "routing.html" and item["url"] == "/routing.html" for item in data["page_contracts"])
     assert any(item["file"] == "acp.html" and item["url"] == "/acp.html" for item in data["page_contracts"])
+
+
+def test_routing_assignments_has_specific_observability_contract():
+    contract = contract_for_route("/api/runtime/routing-assignments")
+
+    assert contract is not None
+    assert contract.pattern == "/api/runtime/routing-assignments"
+    assert contract.match == "exact"
+    assert "Fleet Comms routing-reservation" in contract.source_of_truth
+    assert "decision-time snapshots" in contract.freshness
+    assert "all-time" in contract.stale_risk
+    assert contract.mutates is False

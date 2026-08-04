@@ -20,6 +20,7 @@ COOPERATION = REPO / "docs/best-practices/agent-cooperation.md"
 RUNTIME = REPO / "docs/agent-runtime-guide.md"
 ROSTER = REPO / "docs/runbooks/epic-orchestrator-roster.md"
 FLEET_COMMS = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
+OPEN_GAPS = REPO / "docs/runbooks/fleet-comms-open-gaps.md"
 
 OWNED_DOCS = (
     ONBOARDING,
@@ -105,7 +106,7 @@ def test_five_ownership_surfaces(onboarding: str) -> None:
 
 def test_human_comms_pages_have_distinct_read_only_roles(onboarding: str) -> None:
     lower = onboarding.lower()
-    for page in ("acp conversations", "channels", "broker ops", "build events"):
+    for page in ("acp conversations", "channels", "broker ops", "build events", "runtime"):
         assert page in lower
     assert "readable codex↔grok acp transcripts" in lower
     assert "shared channel, thread, context, and delivery visibility" in lower
@@ -114,8 +115,31 @@ def test_human_comms_pages_have_distinct_read_only_roles(onboarding: str) -> Non
     assert "legacy send, post, and acknowledgement apis remain" in lower
 
 
-def test_authoritative_file_handoff_wording(all_owned: dict[str, str]) -> None:
-    """File dual-write stays authoritative in every current plane mode."""
+def test_routing_overview_interpretation_is_onboarded(onboarding: str, all_owned: dict[str, str]) -> None:
+    lower = onboarding.lower()
+    normalized = " ".join(lower.split())
+    for expected in (
+        "routing overview",
+        "/api/runtime/routing-assignments?limit=100",
+        "loaded recent window",
+        "automatic",
+        "explicit",
+        "initiator",
+        "selected route/model",
+        "stale activity evidence",
+        "not provider-liveness proof",
+        "codexbar",
+    ):
+        assert expected in normalized
+    fleet = all_owned["agents_extensions/shared/rules/fleet-comms-coordination.md"].lower()
+    assert "routing observability contract" in fleet
+    assert "/api/runtime/routing-assignments?limit=100" in fleet
+    assert "not provider-liveness proof" in fleet
+    assert "never select, retry, cancel, reclaim, or reroute" in fleet
+
+
+def test_authority_mode_and_legacy_file_wording(all_owned: dict[str, str]) -> None:
+    """Authority mode uses Fleet Comms; legacy file stores are projections."""
     onboarding = all_owned["docs/runbooks/agent-seat-onboarding.md"]
     fleet = all_owned["agents_extensions/shared/rules/fleet-comms-coordination.md"]
     for label, body in (
@@ -123,12 +147,30 @@ def test_authoritative_file_handoff_wording(all_owned: dict[str, str]) -> None:
         ("fleet-comms", fleet),
     ):
         lower = body.lower()
-        assert "authoritative" in lower, label
-        assert "file" in lower, label
-        assert (
-            "every" in lower and ("mode" in lower or "plane" in lower)
-        ) or "in every" in lower, label
+        assert "authority" in lower, label
+        assert "fleet" in lower and "comms" in lower, label
+        assert "legacy" in lower and "file" in lower, label
+        assert "read-only" in lower, label
         assert "dual_write" in body or "dual-write" in body or "dual write" in lower, label
+
+    stale_message_plane_claims = (
+        "fleet-comms + file dual-write stay authoritative",
+        "fleet-comms + authoritative file handoffs",
+        "authoritative file handoffs + fleet-comms",
+        "keep file dual-write handoffs current",
+    )
+    combined = f"{onboarding}\n{fleet}".lower()
+    for stale_claim in stale_message_plane_claims:
+        assert stale_claim not in combined
+
+
+def test_open_gaps_distinguishes_session_handoffs_from_message_plane() -> None:
+    open_gaps = OPEN_GAPS.read_text(encoding="utf-8").lower()
+    normalized = " ".join(open_gaps.split())
+    assert "session handoff files remain authoritative for continuity" in normalized
+    assert "fleet comms is already authoritative for message-plane coordination" in normalized
+    assert "superseded by the operator-approved `authority` cutover" in normalized
+    assert "optional later: dual_write plane default" not in normalized
 
 
 def test_plane_status_is_the_live_mode_query(all_owned: dict[str, str]) -> None:

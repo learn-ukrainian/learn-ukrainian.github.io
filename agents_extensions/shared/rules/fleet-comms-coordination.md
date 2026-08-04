@@ -79,6 +79,24 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...
 ```
 
+### Routing observability contract
+
+Use `/runtime.html` → **Routing overview**, or the body-free
+`GET /api/runtime/routing-assignments?limit=100` projection, to diagnose which
+orchestrator initiated a request, whether selection was automatic or explicit,
+which route/model was admitted, and how the reservation terminated. Summary
+cards, lifecycle groups, filters, and route distributions cover only the
+loaded recent window; they are not all-time totals, routing weights, provider
+quotas, or caching evidence.
+
+Inspect the chronological event and selection trace before attributing
+concentration to an orchestrator or scheduler. A “No ledger update” cue is
+stale activity evidence, not provider-liveness proof and not authority to
+reclaim a lease early. Corroborate headroom with CodexBar and durable authority
+job/reservation state. The dashboard is read-only: its filters, search,
+details, and load-more controls never select, retry, cancel, reclaim, or reroute
+work.
+
 - **agy | kimi** remain `formal_review_eligible: false` until their isolation
   proofs (#5555–#5556). They **request** CF via `review-pr`; they do not self-seal.
   Native Grok passed its exact-head isolation proof and is eligible; Cursor
@@ -133,10 +151,11 @@ Supported fleet seats cold-start through:
 
 1. This rule (binding fleet-comms musts).
 2. **`docs/runbooks/agent-seat-onboarding.md`** — ownership matrix for `discuss`,
-   `delegate.py dispatch`, fleet-comms + authoritative file handoffs, experimental
-   ACPX (default-off/shadow, one read-only/stateless Codex participant), and
-   **Buzz deferred**. Also covers Kimi native (default; K3 max-only) vs explicit
-   KimiCC (K3 defaults `high`), rollback, and no-auth fresh-agent smoke.
+   `delegate.py dispatch`, Fleet Comms authority + read-only legacy projections,
+   experimental ACPX (default-off/shadow, one read-only/stateless Codex
+   participant), and **Buzz deferred**. Also covers Kimi native (default; K3
+   max-only) vs explicit KimiCC (K3 defaults `high`), rollback, and no-auth
+   fresh-agent smoke.
 
 Discussion is never formal CF. Formal CF remains `review-pr` /
 `publish-review-verdict` only. ACP is structured provider transport; fleet-comms
