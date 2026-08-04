@@ -12,7 +12,9 @@
 
 The Ukrainian NLP community contribution is the goal. External adoption is a
 possible consequence and useful evidence, but it is neither the product nor a
-completion gate.
+completion gate. Every shipped artifact must instead name one concrete consumer
+decision or use case that it enables; this does not require outreach or external
+adoption.
 
 The completed Foundry v1 is an engine and contract foundation. It is not yet
 the prepared data contribution described by the North Star. The successor
@@ -70,12 +72,16 @@ The defensible complementary contribution is:
 3. **Curated continued-pretraining complements** — rights-classified
    textbooks, literature, articles, and historical strata whose provenance and
    balance are more valuable than their raw scale.
-4. **Clean-Ukrainian correction and protection data** — narrow, sourced cases
-   for contextual calques, government, Russian interference, quotation,
-   phonetic Russian, historical language, regional or heritage Ukrainian, and
-   contested cases that must remain unresolved.
-5. **Contamination-resistant evaluation** — frozen scorers and mutation
-   canaries that remain outside every learning view.
+4. **Evidence-attributed correction/protection dispositions** — narrow,
+   sourced cases for contextual calques, government, Russian interference,
+   quotation, phonetic Russian, historical language, regional or heritage
+   Ukrainian, and contested cases that must remain unresolved, plus
+   non-erasure evaluation.
+5. **Supporting infrastructure** — provenance/capability metadata, stable
+   locators, per-family datasheets, consumer recipes, and contamination-
+   resistant evaluation with frozen scorers and mutation canaries outside every
+   learning view. These support the dispositions; they are not corpus-scale
+   claims.
 
 Preference data and tokenizer surgery are deferred until a documented consumer
 need and a non-duplicative research question exist. Lapa classifier ablation is
@@ -132,8 +138,11 @@ not invent a motive or claim that no port is planned.
    contamination, capability, and limitation receipts. **Completed under
    #6327 as an evidence-bearing plan and faithful Wikipedia candidate view; no
    source bytes were published.**
-5. Build correction/protection categories only from authoritative sources and
-   Ukrainian-strong linguistic review. **Active next under #6333.**
+5. Build an evidence-graded correction/protection pack from authoritative
+   evidence channels and Ukrainian-strong model proposals with preserved
+   provenance. Qualified-human adjudication is required before any label is
+   called gold or authoritative; `unresolved` remains a valid terminal
+   disposition. **Active next under #6333.**
 6. Consider Lapa classifier ablation or downstream model validation only when
    it answers a preregistered decision and receives separate authorization.
 
@@ -205,6 +214,12 @@ or complements, the evidence a consumer receives, and the decision that the
 artifact can change. A product that merely exports rows or wraps an existing
 dataset does not pass.
 
+Before Phase 3 claims that a phenomenon is uncovered, it must compare the
+current [LanguageTool Ukrainian rule module](https://github.com/languagetool-org/languagetool/tree/master/languagetool-language-modules/uk)
+and related `nlp_uk`/R2U-community tooling against the proposed case set and
+record the measured delta. This is a verification requirement, not a claim
+about the exact present coverage of any tool.
+
 Evidence and Canaries v0 must reproduce its document signals on the complete
 inventory, detect deliberately planted lineage, duplication, language-contact,
 normalization, and contamination failures, and explain every abstention. The
@@ -215,6 +230,11 @@ each phenomenon, including Russian quotation, phonetic Russian, historical
 Ukrainian, dialect, and legitimate modern literary usage. Consumer adapters
 must preserve these labels and evidence without silently converting unresolved
 material into training truth.
+
+The correction/protection pack must be directly usable as a machine-readable
+disposition table, a runnable consumer-corpus filtering recipe, and a
+non-erasure benchmark/harness. Non-redistributable source families use stand-off
+annotations over revision-pinned locators instead of redistributed source bytes.
 
 Public papers, model cards, repositories, dataset schemas, and reproducible
 baseline commands provide the first consumer specification. Later independent
@@ -235,14 +255,23 @@ legitimate-variation decisions. Preserve disagreements and unresolved cases.
 VESUM proves morphological attestation, not contextual correctness. R2U, ULIF,
 Russian morphology, corpus context, heritage dictionaries, and per-dictionary
 sources remain distinct evidence; no single lookup or model vote is a verdict.
+Before full disposition work, freeze a source-stratified sample of the 9.29
+million VESUM-unattested tokens and separate OCR/noise, proper names, historical
+orthography, foreign quotation, plausible errors, and unresolved cases. The
+aggregate unknown-token count must never become a linguistic label.
+Retain model-lane proposal provenance, per-family datasheets, stable locators,
+and contamination-aware versioning with held-back evaluation material.
 
 The first correction/protection release requires:
 
-- authoritative evidence for every category;
+- evidence attribution for every category, with evidence grade and disposition;
 - a counter-set of acceptable Ukrainian variation;
 - per-category precision and disagreement reporting;
 - frozen scorer canaries; and
 - a predeclared no-go threshold before any downstream experiment.
+
+Only evidence channels are authoritative. Without qualified-human adjudication,
+no pack label is gold or authoritative.
 
 ## No-go conditions
 
@@ -253,6 +282,8 @@ Stop or redesign a lane if it would:
 - leak evaluation cases or derivatives into learning views;
 - duplicate an incumbent Lapa or UNLP resource without a measurable new
   phenomenon;
+- claim an uncovered phenomenon without the required LanguageTool and
+  `nlp_uk`/R2U tooling comparison;
 - call model agreement human or linguistic gold;
 - present 50.3 million words as Kobza-scale data;
 - use adoption, outreach, or a trained model as the proof that the preparation
