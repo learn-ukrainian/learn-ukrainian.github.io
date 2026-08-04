@@ -6,6 +6,7 @@ import hashlib
 import json
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,14 @@ from scripts.fleet_comms.authority import (
 from scripts.fleet_comms.cli import main
 from scripts.fleet_comms.message_plane import MessagePlane, resolve_plane_mode
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from scripts.fleet_comms.review_publisher import record_publication_receipt
+from scripts.fleet_comms.routing_reservations import (
+    RoutingReservationError,
+    RoutingReservationLedger,
+    RoutingReservationRequest,
+    RoutingReservationUnavailable,
+    RoutingSelection,
+)
 
 
 class _UnusedExecutor:
@@ -33,6 +42,23 @@ def _root(tmp_path: Path) -> Path:
 
 def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _historic_routing_semantic_sha(request: RoutingReservationRequest) -> str:
+    """Return the pre-#6342 request identity without envelope dimensions."""
+    payload = {
+        "author_family": request.author_family,
+        "author_model": request.author_model,
+        "authority_key": request.authority_key,
+        "estimated_input_bytes": request.estimated_input_bytes,
+        "requested_profile": request.requested_profile,
+        "requested_reviewer": request.requested_reviewer,
+        "requested_risk": request.requested_risk,
+        "requested_role": request.requested_role,
+        "route_mode": request.route_mode,
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
 def test_authority_mode_resolves_without_changing_existing_modes() -> None:
@@ -799,3 +825,428 @@ def test_formal_review_refuses_head_mismatch_before_verdict_publication(tmp_path
         ).fetchone()
         assert seal is not None
         assert seal["snapshot_artifact_id"] == review.snapshot_artifact_id
+
+
+def _substitution_request(authority_key: str, idempotency_key: str = "substitute") -> RoutingReservationRequest:
+    return RoutingReservationRequest(
+        authority_key=authority_key,
+        idempotency_key=idempotency_key,
+        initiator="codex/orchestrator",
+        author_model="gpt-5.6-sol",
+        author_family="openai",
+        requested_role="code:high",
+        requested_profile="code",
+        requested_risk="high",
+        route_mode="explicit",
+        estimated_input_bytes=123,
+        requested_reviewer="glm-5.2",
+        required_capabilities=("code_review", "sealed_evidence"),
+        data_egress_policy="approved",
+        isolation_required=True,
+    )
+
+
+def _substitution_selection(_context: object) -> RoutingSelection:
+    return RoutingSelection(
+        candidate="glm-5.2",
+        route="glm",
+        model="glm-5.2",
+        family="zhipu",
+        quota_bucket="glm-weekly",
+        credential_bucket="glm-key-a",
+        quota_limit=1,
+        credential_limit=1,
+        policy_version="resolver-v1",
+        quota_snapshot={"remaining": 1},
+        quota_fresh_at="2035-01-01T00:00:00Z",
+        trace={"source": "fixture"},
+    )
+
+
+def _failed_formal_substitution_fixture(
+    service: AuthorityService,
+    *,
+    legacy_envelope: bool = False,
+) -> tuple[object, object, RoutingReservationRequest, dict[str, object]]:
+    """Create the sole admissible post-result-invalid substitution boundary."""
+    head = "a" * 40
+    authority_key = "formal-review:substitution-fixture"
+    job = service.enqueue_formal_review(
+        repository="owner/repo",
+        pr_number=42,
+        head_sha=head,
+        gate_kind="cross-family-review",
+        snapshot=b'{"head":"' + head.encode("ascii") + b'"}',
+        idempotency_key=authority_key,
+    )
+    review = service.require_publishable_formal_review(job.subject_id, current_head_sha=head)
+    assert review.snapshot_artifact_id is not None
+    egress_policy = None if legacy_envelope else "approved"
+    original_request = RoutingReservationRequest(
+        authority_key=authority_key,
+        idempotency_key="original",
+        initiator="codex/orchestrator",
+        author_model="gpt-5.6-sol",
+        author_family="openai",
+        requested_role="code:high",
+        requested_profile="code",
+        requested_risk="high",
+        route_mode="auto",
+        estimated_input_bytes=123,
+        required_capabilities=("code_review", "sealed_evidence"),
+        data_egress_policy=egress_policy,
+        isolation_required=True,
+    )
+    with RoutingReservationLedger(store=service.store) as ledger:
+        original_append = ledger._append_decision_tx
+        if legacy_envelope:
+            def append_without_envelope(
+                reservation_id: str,
+                event_type: str,
+                state: str,
+                evidence: dict[str, object],
+                created_at: str,
+            ) -> None:
+                old_evidence = dict(evidence)
+                if event_type == "reserved":
+                    old_evidence.pop("authorization_envelope", None)
+                original_append(
+                    reservation_id,
+                    event_type,
+                    state,
+                    old_evidence,
+                    created_at,
+                )
+
+            ledger._append_decision_tx = append_without_envelope
+        original = ledger.reserve_selection(
+            original_request,
+            lambda _context: RoutingSelection(
+                candidate="grok-4.5",
+                route="grok",
+                model="grok-4.5",
+                family="xai",
+                quota_bucket="grok-weekly",
+                credential_bucket="grok-key-a",
+                quota_limit=1,
+                credential_limit=1,
+                policy_version="resolver-v1",
+                quota_snapshot={"remaining": 1},
+                quota_fresh_at="2035-01-01T00:00:00Z",
+                trace={"source": "fixture"},
+            ),
+            now="2035-01-01T00:00:00Z",
+        )
+        if legacy_envelope:
+            ledger._append_decision_tx = original_append
+            ledger._conn.execute(
+                "UPDATE routing_reservations SET semantic_sha256 = ? WHERE reservation_id = ?",
+                (_historic_routing_semantic_sha(original_request), original.reservation_id),
+            )
+            ledger._conn.commit()
+        ledger.settle(
+            original.reservation_id,
+            status="failed",
+            failure_classification="result_invalid",
+            now="2035-01-01T00:00:01Z",
+        )
+    lease = service.claim_job(job.job_id, "fixture-worker", now="2035-01-01T00:00:00Z")
+    service.finish_job(
+        job.job_id,
+        worker_id="fixture-worker",
+        fence_token=lease.fence_token,
+        state="failed",
+        result=b'{"failure_classification":"result_invalid"}',
+        now="2035-01-01T00:00:01Z",
+    )
+    request = replace(_substitution_request(authority_key), data_egress_policy=egress_policy)
+    evidence = {
+        "prior_reservation_id": original.reservation_id,
+        "reason": "operator-authorized result-invalid substitution",
+        "review_id": review.review_id,
+        "authority_job_id": job.job_id,
+        "authority_key": authority_key,
+        "data_egress_policy": egress_policy,
+        "new_requested_reviewer": "glm-5.2",
+    }
+    return job, review, request, evidence
+
+
+def test_authority_authorizes_one_atomic_result_invalid_substitution(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+        reservation = service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=60,
+            now="2035-01-01T00:00:02Z",
+        )
+
+        assert reservation.attempt == 2
+        assert service.get_job(job.job_id).state == "queued"
+        with RoutingReservationLedger(store=service.store) as ledger:
+            assert [item.event_type for item in ledger.decisions(reservation.reservation_id)] == [
+                "reserved",
+                "authorized_substitution",
+            ]
+
+
+def test_authority_authorizes_the_pre_6342_formal_review_default_envelope(
+    tmp_path: Path,
+) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(
+            service,
+            legacy_envelope=True,
+        )
+        reservation = service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=60,
+            now="2035-01-01T00:00:02Z",
+        )
+
+        assert reservation.attempt == 2
+        with RoutingReservationLedger(store=service.store) as ledger:
+            prior = next(
+                item
+                for item in ledger.decisions(evidence["prior_reservation_id"])
+                if item.event_type == "legacy_authorization_envelope_reconstructed"
+            )
+            substitute = next(
+                item
+                for item in ledger.decisions(reservation.reservation_id)
+                if item.event_type == "authorized_substitution"
+            )
+        assert prior.evidence["source"] == "formal-review-default-contract-before-6342"
+        assert (
+            substitute.evidence["prior_authorization_envelope_source"]
+            == "formal-review-default-contract-before-6342"
+        )
+        assert substitute.evidence["requested_data_egress_policy"] is None
+
+
+def test_authority_identical_substitution_replay_returns_existing_reservation(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+        first = service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=60,
+            now="2035-01-01T00:00:02Z",
+        )
+        assert service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=60,
+            now="2035-01-01T00:00:03Z",
+        ) == first
+
+
+def test_authority_refuses_replay_after_substitution_reservation_ttl_expiry(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+        substitute = service.authorize_formal_review_substitution(
+            authority_job_id=job.job_id,
+            review_id=review.review_id,
+            current_head_sha="a" * 40,
+            expected_snapshot_artifact_id=review.snapshot_artifact_id,
+            routing_request=request,
+            selector=_substitution_selection,
+            substitution_evidence=evidence,
+            ttl_seconds=1,
+            now="2035-01-01T00:00:02Z",
+        )
+        with RoutingReservationLedger(store=service.store) as ledger:
+            expired = ledger.recover_expired(now="2035-01-01T00:00:04Z")
+            assert len(expired) == 1 and expired[0].reservation_id == substitute.reservation_id
+            assert ledger.get(substitute.reservation_id).status == "expired"
+
+        with pytest.raises(
+            RoutingReservationError,
+            match="substitution_idempotent_replay_not_active",
+        ):
+            service.authorize_formal_review_substitution(
+                authority_job_id=job.job_id,
+                review_id=review.review_id,
+                current_head_sha="a" * 40,
+                expected_snapshot_artifact_id=review.snapshot_artifact_id,
+                routing_request=request,
+                selector=_substitution_selection,
+                substitution_evidence=evidence,
+                ttl_seconds=1,
+                now="2035-01-01T00:00:04Z",
+            )
+        assert service.get_job(job.job_id).state == "queued"
+
+
+@pytest.mark.parametrize("rejection", ("sealed", "published", "head", "snapshot", "job", "review"))
+def test_authority_substitution_rejects_terminal_or_identity_drift(
+    tmp_path: Path,
+    rejection: str,
+) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+        kwargs = {
+            "authority_job_id": job.job_id,
+            "review_id": review.review_id,
+            "current_head_sha": "a" * 40,
+            "expected_snapshot_artifact_id": review.snapshot_artifact_id,
+            "routing_request": request,
+            "selector": _substitution_selection,
+            "substitution_evidence": evidence,
+            "ttl_seconds": 60,
+            "now": "2035-01-01T00:00:02Z",
+        }
+        error = ""
+        if rejection == "sealed":
+            artifact = service.store.store_bytes(b"sealed", producer="test")
+            service.store.connection.execute(
+                "UPDATE formal_review_jobs SET sealed_verdict_artifact_id = ? WHERE review_id = ?",
+                (artifact.artifact_id, review.review_id),
+            )
+            service.store.connection.commit()
+            error = "substitution_verdict_already_accepted"
+        elif rejection == "published":
+            record_publication_receipt(
+                service.store.connection,
+                review_id=review.review_id,
+                head_sha="a" * 40,
+            )
+            error = "substitution_verdict_already_published"
+        elif rejection == "head":
+            kwargs["current_head_sha"] = "b" * 40
+            error = "formal_review_head_mismatch"
+        elif rejection == "snapshot":
+            kwargs["expected_snapshot_artifact_id"] = "artifact_wrong"
+            error = "substitution_snapshot_drift"
+        elif rejection == "job":
+            other = service.enqueue_request(
+                recipient="codex",
+                body="unrelated",
+                idempotency_key="unrelated-authority-job",
+            )
+            kwargs["authority_job_id"] = other.job_id
+            error = "substitution_authority_job_mismatch"
+        else:
+            kwargs["review_id"] = "review_wrong"
+            error = "substitution_authority_job_mismatch"
+
+        with pytest.raises(AuthorityServiceError, match=error):
+            service.authorize_formal_review_substitution(**kwargs)
+        assert service.get_job(job.job_id).state == "failed"
+
+
+@pytest.mark.parametrize("selector_kind", ("none", "capacity"))
+def test_authority_substitution_refusal_rolls_back_requeue_and_reservation(
+    tmp_path: Path,
+    selector_kind: str,
+) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+
+        def no_route_selector(_context: object) -> None:
+            return None
+
+        selector = no_route_selector
+        if selector_kind == "capacity":
+            with RoutingReservationLedger(store=service.store) as ledger:
+                ledger.reserve_selection(
+                    _substitution_request("formal-review:capacity-blocker", "blocker"),
+                    _substitution_selection,
+                    now="2035-01-01T00:00:02Z",
+                )
+            selector = _substitution_selection
+        with pytest.raises(RoutingReservationUnavailable):
+            service.authorize_formal_review_substitution(
+                authority_job_id=job.job_id,
+                review_id=review.review_id,
+                current_head_sha="a" * 40,
+                expected_snapshot_artifact_id=review.snapshot_artifact_id,
+                routing_request=request,
+                selector=selector,
+                substitution_evidence=evidence,
+                ttl_seconds=60,
+                now="2035-01-01T00:00:02Z",
+            )
+
+        assert service.get_job(job.job_id).state == "failed"
+        with RoutingReservationLedger(store=service.store) as ledger:
+            attempts = [
+                item for item in (ledger.latest_for_authority_key(request.authority_key),)
+                if item is not None
+            ]
+            assert len(attempts) == 1 and attempts[0].attempt == 1
+        events = service.store.connection.execute(
+            "SELECT event_type FROM authority_job_events WHERE job_id = ? ORDER BY rowid",
+            (job.job_id,),
+        ).fetchall()
+        assert "substitution_authorized" not in [row[0] for row in events]
+
+
+def _concurrent_substitution(root: Path, job_id: str, review_id: str, snapshot: str, request: RoutingReservationRequest, evidence: dict[str, str]) -> str:
+    with AuthorityService(root=root) as service:
+        try:
+            return service.authorize_formal_review_substitution(
+                authority_job_id=job_id,
+                review_id=review_id,
+                current_head_sha="a" * 40,
+                expected_snapshot_artifact_id=snapshot,
+                routing_request=request,
+                selector=_substitution_selection,
+                substitution_evidence=evidence,
+                ttl_seconds=60,
+                now="2035-01-01T00:00:02Z",
+            ).reservation_id
+        except AuthorityServiceError as exc:
+            return str(exc)
+
+
+def test_concurrent_substitution_requests_do_not_fork_authority_or_reservation(tmp_path: Path) -> None:
+    root = _root(tmp_path)
+    with AuthorityService(root=root) as service:
+        job, review, request, evidence = _failed_formal_substitution_fixture(service)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(
+            pool.map(
+                lambda _index: _concurrent_substitution(
+                    root,
+                    job.job_id,
+                    review.review_id,
+                    str(review.snapshot_artifact_id),
+                    request,
+                    evidence,
+                ),
+                range(2),
+            )
+        )
+    reservation_ids = [value for value in outcomes if value.startswith("routing-reservation_")]
+    assert reservation_ids and len(set(reservation_ids)) == 1
+    assert all(
+        value.startswith("routing-reservation_") or value == "substitution_authority_job_not_failed"
+        for value in outcomes
+    )
+    with AuthorityService(root=root) as service, RoutingReservationLedger(store=service.store) as ledger:
+        reservation = ledger.latest_for_authority_key(request.authority_key)
+        assert reservation is not None and reservation.attempt == 2
+        assert service.get_job(job.job_id).state == "queued"

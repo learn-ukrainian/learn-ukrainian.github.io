@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+from collections.abc import Mapping
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -381,7 +382,19 @@ def _routing_trace(resolution: Any) -> dict[str, Any]:
     }
 
 
-def _semantic_request_matches(reservation: Any, request: Any) -> bool:
+def _semantic_request_matches(
+    reservation: Any,
+    request: Any,
+    *,
+    authorization_envelope: Mapping[str, Any] | None,
+) -> bool:
+    envelope = authorization_envelope
+    if not isinstance(envelope, Mapping):
+        envelope = {
+            "required_capabilities": ["code_review", "sealed_evidence"],
+            "data_egress_policy": None,
+            "isolation_required": True,
+        }
     return all(
         (
             reservation.author_model == request.author_model,
@@ -392,6 +405,9 @@ def _semantic_request_matches(reservation: Any, request: Any) -> bool:
             reservation.route_mode == request.route_mode,
             reservation.requested_reviewer == request.requested_reviewer,
             reservation.estimated_input_bytes == request.estimated_input_bytes,
+            envelope.get("required_capabilities") == list(request.required_capabilities),
+            envelope.get("data_egress_policy") == request.data_egress_policy,
+            envelope.get("isolation_required") == request.isolation_required,
         )
     )
 
@@ -618,6 +634,9 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             route_mode=route_mode,
             estimated_input_bytes=estimated_input_bytes,
             requested_reviewer=requested_candidate,
+            required_capabilities=tuple(sorted(required_capabilities)),
+            data_egress_policy=getattr(args, "data_egress_policy", None),
+            isolation_required=bool(getattr(args, "isolation_required", True)),
         )
         with RoutingReservationLedger() as routing_ledger, AuthorityService() as authority:
             authority_job = authority.enqueue_formal_review(
@@ -638,7 +657,28 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             replayed = authority_job.state == "complete"
             if authority_job.state == "complete":
                 routing_reservation = routing_ledger.completed_replay(authority_key)
-                if routing_reservation is None or not _semantic_request_matches(routing_reservation, routing_request):
+                reserved_decision = (
+                    next(
+                        (
+                            item
+                            for item in routing_ledger.decisions(routing_reservation.reservation_id)
+                            if item.event_type == "reserved"
+                        ),
+                        None,
+                    )
+                    if routing_reservation is not None
+                    else None
+                )
+                authorization_envelope = (
+                    reserved_decision.evidence.get("authorization_envelope")
+                    if reserved_decision is not None
+                    else None
+                )
+                if routing_reservation is None or not _semantic_request_matches(
+                    routing_reservation,
+                    routing_request,
+                    authorization_envelope=authorization_envelope,
+                ):
                     print("review-pr: completed exact-head result lacks a matching routing authority receipt", file=sys.stderr)
                     return 1
                 replay = authority.read_job_result(authority_job.job_id)
@@ -655,7 +695,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "in_flight": {},
                         "diagnostics": {"stale": True, "routing_budget_error": type(exc).__name__},
                     }
-                if authority_job.state in {"failed", "expired"}:
+                substitution_pending = authority_job.state == "failed" and requested_candidate is not None
+                if authority_job.state in {"failed", "expired"} and not substitution_pending:
                     authority_job = authority.retry_job(authority_job.job_id)
                 elif authority_job.state == "dead_lettered":
                     authority_job = authority.redrive_job(authority_job.job_id)
@@ -768,6 +809,28 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         routing_request,
                         idempotency_key=f"{authority_key}:routing:{reservation_attempt}",
                     )
+                    if substitution_pending:
+                        substitution_evidence = {
+                            "reason": override_reason,
+                            "data_egress_policy": getattr(args, "data_egress_policy", None),
+                        }
+                        try:
+                            routing_reservation = authority.authorize_formal_review_substitution(
+                                authority_job_id=authority_job.job_id,
+                                review_id=formal_job.review_id,
+                                current_head_sha=checkout.sha,
+                                expected_snapshot_artifact_id=str(formal_job.snapshot_artifact_id or ""),
+                                routing_request=attempt_request,
+                                selector=select_inside_authority,
+                                substitution_evidence=substitution_evidence,
+                                ttl_seconds=timeout + 30,
+                            )
+                        except Exception as exc:
+                            print(f"review-pr: formal reviewer substitution refused: {exc}", file=sys.stderr)
+                            return 1
+                        authority_job = authority.get_job(authority_job.job_id)
+                        substitution_pending = False
+
                     try:
                         lease = authority.claim_job(
                             authority_job.job_id,
@@ -784,11 +847,12 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         )
                         return 1
                     try:
-                        routing_reservation = routing_ledger.reserve_selection(
-                            attempt_request,
-                            select_inside_authority,
-                            ttl_seconds=timeout + 30,
-                        )
+                        if routing_reservation is None:
+                            routing_reservation = routing_ledger.reserve_selection(
+                                attempt_request,
+                                select_inside_authority,
+                                ttl_seconds=timeout + 30,
+                            )
                     except RoutingReservationUnavailable as exc:
                         _finish_authority_job_once(
                             authority,
@@ -841,7 +905,25 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         extra=args.extra,
                     )
                     sealed_prompt = prompt + evidence
-                    routing_ledger.mark_started(routing_reservation.reservation_id)
+                    started_reservation = routing_ledger.mark_started(routing_reservation.reservation_id)
+                    if started_reservation.status != "running":
+                        _finish_authority_job_once(
+                            authority,
+                            authority_job.job_id,
+                            worker_id=worker_id,
+                            fence_token=lease.fence_token,
+                            state="failed",
+                            result=json.dumps(
+                                {
+                                    "failure_classification": "routing_reservation_not_active",
+                                    "reservation_status": started_reservation.status,
+                                },
+                                sort_keys=True,
+                            ).encode("utf-8"),
+                        )
+                        print("review-pr: routing reservation is no longer active; provider was not invoked", file=sys.stderr)
+                        return 1
+                    routing_reservation = started_reservation
                     previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
                     os.environ["LU_ACPX_TRANSPORT"] = "active"
                     invocation_error: BaseException | None = None

@@ -1298,6 +1298,150 @@ class AuthorityService:
         except FormalReviewJobsError as exc:
             raise AuthorityServiceError("sealed_verdict_rejected") from exc
 
+    def authorize_formal_review_substitution(
+        self,
+        *,
+        authority_job_id: str,
+        review_id: str,
+        current_head_sha: str,
+        expected_snapshot_artifact_id: str,
+        routing_request: Any,
+        selector: Any,
+        substitution_evidence: Mapping[str, Any],
+        ttl_seconds: int,
+        now: str | None = None,
+    ) -> Any:
+        """Atomically requeue one failed formal review and reserve its substitute."""
+        from scripts.fleet_comms.routing_reservations import RoutingReservationLedger
+
+        jid = _nonempty(authority_job_id, field="authority_job_id")
+        rid = _nonempty(review_id, field="review_id")
+        head = _nonempty(current_head_sha, field="current_head_sha").lower()
+        snapshot = _nonempty(expected_snapshot_artifact_id, field="expected_snapshot_artifact_id")
+        now_value = self._now_string(now)
+        with self._write_transaction():
+            job = self._require_job_tx(jid)
+            if str(job["job_kind"]) != "formal_review" or str(job["subject_id"]) != rid:
+                raise AuthorityServiceError("substitution_authority_job_mismatch")
+            if str(job["idempotency_key"]) != str(routing_request.authority_key):
+                raise AuthorityServiceError("substitution_authority_key_mismatch")
+            review = self._conn.execute(
+                "SELECT snapshot_artifact_id, sealed_verdict_artifact_id FROM formal_review_jobs WHERE review_id = ?",
+                (rid,),
+            ).fetchone()
+            if review is None or str(review["snapshot_artifact_id"] or "") != snapshot:
+                raise AuthorityServiceError("substitution_snapshot_drift")
+            if review["sealed_verdict_artifact_id"] is not None:
+                raise AuthorityServiceError("substitution_verdict_already_accepted")
+            published = self._conn.execute(
+                "SELECT 1 FROM github_publications WHERE review_id = ? LIMIT 1", (rid,)
+            ).fetchone()
+            if published is not None:
+                raise AuthorityServiceError("substitution_verdict_already_published")
+            self._require_formal_snapshot_seal_tx(rid, current_head_sha=head)
+            ledger = RoutingReservationLedger(store=self.store)
+            reason = _nonempty(
+                str(substitution_evidence.get("reason") or ""),
+                field="substitution_reason",
+            )
+            egress = substitution_evidence.get("data_egress_policy")
+            if egress is not None and not isinstance(egress, str):
+                raise AuthorityServiceError("substitution_egress_policy_invalid")
+            if egress != routing_request.data_egress_policy:
+                raise AuthorityServiceError("substitution_egress_policy_mismatch")
+            job_state = str(job["state"])
+            if job_state in {"queued", "running"}:
+                existing = ledger.latest_for_authority_key(routing_request.authority_key)
+                decision = (
+                    next(
+                        (
+                            item
+                            for item in ledger.decisions(existing.reservation_id)
+                            if item.event_type == "authorized_substitution"
+                        ),
+                        None,
+                    )
+                    if existing is not None
+                    else None
+                )
+                if (
+                    existing is None
+                    or existing.idempotency_key != routing_request.idempotency_key
+                    or decision is None
+                    or decision.evidence.get("review_id") != rid
+                    or decision.evidence.get("authority_job_id") != jid
+                    or decision.evidence.get("authority_key") != routing_request.authority_key
+                    or decision.evidence.get("reason") != reason
+                    or decision.evidence.get("requested_data_egress_policy") != egress
+                    or decision.evidence.get("new_requested_reviewer")
+                    != routing_request.requested_reviewer
+                ):
+                    raise AuthorityServiceError("substitution_authority_job_not_failed")
+                return ledger.reserve_selection(
+                    routing_request,
+                    selector,
+                    ttl_seconds=ttl_seconds,
+                    now=now_value,
+                    substitution=decision.evidence,
+                )
+            if job_state != "failed":
+                raise AuthorityServiceError("substitution_authority_job_not_failed")
+            prior = ledger.latest_for_authority_key(routing_request.authority_key)
+            if prior is None:
+                raise AuthorityServiceError("substitution_prior_reservation_missing")
+            prior_reserved = next(
+                (
+                    decision
+                    for decision in ledger.decisions(prior.reservation_id)
+                    if decision.event_type == "reserved"
+                ),
+                None,
+            )
+            prior_envelope = (
+                prior_reserved.evidence.get("authorization_envelope")
+                if prior_reserved is not None
+                else None
+            )
+            prior_envelope_source = "persisted"
+            if not isinstance(prior_envelope, Mapping):
+                prior_envelope = {
+                    "required_capabilities": ["code_review", "sealed_evidence"],
+                    "data_egress_policy": None,
+                    "isolation_required": True,
+                }
+                prior_envelope_source = "formal-review-default-contract-before-6342"
+            evidence = {
+                "prior_reservation_id": prior.reservation_id,
+                "prior_failure_classification": prior.failure_classification,
+                "review_id": rid,
+                "authority_job_id": jid,
+                "authority_key": routing_request.authority_key,
+                "reason": reason,
+                "prior_authorization_envelope_source": prior_envelope_source,
+                "prior_data_egress_policy": prior_envelope.get("data_egress_policy"),
+                "requested_data_egress_policy": egress,
+                "prior_resolved_candidate": prior.resolved_candidate,
+                "new_requested_reviewer": routing_request.requested_reviewer,
+            }
+            reservation = ledger.reserve_selection(
+                routing_request,
+                selector,
+                ttl_seconds=ttl_seconds,
+                now=now_value,
+                substitution=evidence,
+            )
+            self._conn.execute(
+                """UPDATE authority_jobs SET state = 'queued', result_artifact_id = NULL,
+                   terminal_sha256 = NULL, lease_owner = NULL, lease_expires_at = NULL,
+                   updated_at = ?, completed_at = NULL WHERE job_id = ?""",
+                (now_value, jid),
+            )
+            self._append_job_event_tx(
+                jid, int(job["fence_token"]), "substitution_authorized", "queued",
+                {"reservation_id": reservation.reservation_id, "review_id": rid},
+            )
+            return reservation
+
     # ------------------------------------------------------------------
     # Historical migration seam (no live-state caller is invoked here)
 
