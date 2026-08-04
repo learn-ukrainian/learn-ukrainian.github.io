@@ -1,0 +1,200 @@
+{
+  "schema_version": "correction_protection_known_answers_v1",
+  "config_id": "phase3-public-known-answers-v1",
+  "rights_scope": "Project-authored short regression sentences may be published; cited third-party evidence remains locator/hash only.",
+  "consumer_decision": "Measure whether correction rules flag evidenced modern errors while abstaining on acceptable and protected Ukrainian contexts.",
+  "defaults": {
+    "source_family": "project_authored_canary",
+    "period": "modern",
+    "genre": "regression_canary",
+    "register": "neutral"
+  },
+  "categories": {
+    "russian_lexical_inflectional_intrusion": {
+      "phenomenon": "Russian finite morphology in otherwise Ukrainian narration",
+      "positive": [
+        {"text": "Фраза звучит значно вишуканіше.", "surface": "звучит", "replacement": "звучить"},
+        {"text": "Ця тема звучит у вечірніх новинах.", "surface": "звучит", "replacement": "звучить"},
+        {"text": "Такий висновок звучит надто категорично.", "surface": "звучит", "replacement": "звучить"},
+        {"text": "Український переклад звучит природніше.", "surface": "звучит", "replacement": "звучить"},
+        {"text": "Нова назва звучит переконливо.", "surface": "звучит", "replacement": "звучить"}
+      ],
+      "acceptable_control": [
+        {"text": "Фраза звучить значно вишуканіше.", "surface": "звучить"},
+        {"text": "Ця тема звучить у вечірніх новинах.", "surface": "звучить"},
+        {"text": "Такий висновок звучить надто категорично.", "surface": "звучить"},
+        {"text": "Український переклад звучить природніше.", "surface": "звучить"},
+        {"text": "Нова назва звучить переконливо.", "surface": "звучить"}
+      ],
+      "protected": [
+        {"text": "Автор цитує російське речення: «Фраза звучит изысканнее».", "surface": "звучит"},
+        {"text": "У записі читаємо «эта тема звучит в новостях» і далі український коментар.", "surface": "звучит"},
+        {"text": "Дослідниця навела форму «звучит» як предмет аналізу.", "surface": "звучит"},
+        {"text": "— Это звучит убедительно, — відповів персонаж.", "surface": "звучит"},
+        {"text": "Позначена цитата <ru>фраза звучит естественно</ru> лишається без змін.", "surface": "звучит"}
+      ],
+      "evidence": [
+        {"channel": "russian_morphology", "source_identity": "pymorphy3-dicts-ru", "source_version": "pymorphy3-2.0.6+pymorphy3-dicts-ru-2.4.417150.4580142", "locator": "scripts.verification.check_ru_morph.get_ru_confidence", "status": "attested", "supports": "russian_attestation"},
+        {"channel": "r2u", "source_identity": "r2u-bounded-language-contact-regressions-2026-08-01", "source_version": "03af1ea7b495c337e9d7203c201a330253fb0c584e8519d9abd0e93707d5929e", "locator": "data/projects/open_model_data/detector/r2u_evidence_cache_v1.json#query=zvuchyt", "status": "attested", "supports": "russian_attestation"}
+      ]
+    },
+    "contextual_calque_government_valency": {
+      "phenomenon": "Context-sensitive calque, collocation, government, or valency error",
+      "positive": [
+        {"case_key": "participate", "text": "Студенти приймають участь у семінарі.", "surface": "приймають участь", "replacement": "беруть участь", "evidence_key": "PHRASAL_CALQUES:приймати участь"},
+        {"case_key": "copula", "text": "Він являється студентом університету.", "surface": "являється студентом", "replacement": "є студентом", "evidence_key": "SENSE_RESTRICTED_CALQUES:являтися"},
+        {"case_key": "duration", "text": "На протязі року команда працювала над словником.", "surface": "На протязі року", "replacement": "Протягом року", "evidence_key": "SENSE_RESTRICTED_CALQUES:на протязі"},
+        {"case_key": "regarding", "text": "Поговорімо на рахунок цього рішення.", "surface": "на рахунок цього рішення", "replacement": "щодо цього рішення", "evidence_key": "SENSE_RESTRICTED_CALQUES:на рахунок"}
+      ],
+      "acceptable_control": [
+        {"text": "Комісія приймає рішення відкритим голосуванням.", "surface": "приймає рішення"},
+        {"text": "Уві сні героєві являється давній приятель.", "surface": "являється"},
+        {"text": "Не сиди на протязі біля відчиненого вікна.", "surface": "на протязі"},
+        {"text": "Кошти надійшли на банківський рахунок.", "surface": "на банківський рахунок"}
+      ],
+      "protected": [
+        {"text": "У вправі наведено помилковий вислів «приймати участь».", "surface": "приймати участь"},
+        {"text": "Словосполучення «являється студентом» тут є цитованим прикладом.", "surface": "являється студентом"},
+        {"text": "Підручник зіставляє «на протязі року» і «протягом року».", "surface": "на протязі року"},
+        {"text": "Редактор позначив «на рахунок цього» як предмет обговорення.", "surface": "на рахунок цього"}
+      ],
+      "evidence": [
+        {"channel": "ukrainian_corpus", "source_identity": "scripts.lexicon.calque_corrections", "source_version": "sha256:d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5", "locator": "scripts/lexicon/calque_corrections.py", "status": "attested", "supports": "correction_candidate"},
+        {"channel": "heritage_dictionary", "source_identity": "named-textbook-and-heritage-evidence", "source_version": "sha256:d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5", "locator": "scripts/lexicon/calque_corrections.py#provenance", "status": "attested", "supports": "correction_candidate"}
+      ]
+    },
+    "modern_literary_ukrainian_control": {
+      "phenomenon": "Correct modern literary Ukrainian that must not be over-corrected",
+      "acceptable_control": [
+        {"text": "Вірний друг не залишив її в біді.", "surface": "Вірний"},
+        {"text": "Касир перевірив дійсний квиток.", "surface": "дійсний"},
+        {"text": "Учениця рахує гроші.", "surface": "рахує"},
+        {"text": "Вона гарно виглядає сьогодні.", "surface": "виглядає"},
+        {"text": "Ми стояли біля школи.", "surface": "біля"},
+        {"text": "Любий друже, дякую за листа.", "surface": "Любий"},
+        {"text": "У неділю музей працює до шостої.", "surface": "неділю"},
+        {"text": "Команда підбиває підсумки року.", "surface": "підбиває підсумки"}
+      ],
+      "protected": [
+        {"text": "Блискучий виступ запам’ятався слухачам.", "surface": "Блискучий"},
+        {"text": "Квітучий сад видно з вікна.", "surface": "Квітучий"},
+        {"text": "Пекучий біль поступово минув.", "surface": "Пекучий"},
+        {"text": "Лежачий камінь укрився мохом.", "surface": "Лежачий"},
+        {"text": "Навколишнє середовище потребує захисту.", "surface": "Навколишнє"},
+        {"text": "Чинний закон оприлюднено офіційно.", "surface": "Чинний"},
+        {"text": "Зворушливий спогад об’єднав родину.", "surface": "Зворушливий"},
+        {"text": "Молоде покоління бере відповідальність.", "surface": "Молоде"}
+      ],
+      "evidence": [
+        {"channel": "vesum", "source_identity": "dict-uk", "source_version": "dict-uk-v6.8.0-e33803783ac1", "locator": "data/vesum.db", "status": "attested", "supports": "ukrainian_attestation"},
+        {"channel": "heritage_dictionary", "source_identity": "calque-false-positive-guards", "source_version": "sha256:d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5", "locator": "scripts/lexicon/calque_corrections.py#LEXICALISED_SAFE", "status": "attested", "supports": "protected_context"}
+      ]
+    },
+    "marked_russian_quotation_code_switch": {
+      "phenomenon": "Marked Russian quotation or code-switching boundary",
+      "acceptable_control": [
+        {"text": "Дослідник навів українську цитату: «Мова є домом буття».", "surface": "Мова"},
+        {"text": "— Це звучить переконливо, — відповіла героїня.", "surface": "звучить"},
+        {"text": "Термін language contact подано як іншомовну назву.", "surface": "language contact"},
+        {"text": "Автор пояснює, що цитату відтворено дослівно.", "surface": "цитату"}
+      ],
+      "protected": [
+        {"text": "Дослідник навів слова: «что вызвало смуту» й продовжив пояснення.", "surface": "что вызвало смуту"},
+        {"text": "— Они что, не разговаривают? — запитав герой.", "surface": "Они что, не разговаривают"},
+        {"text": "У листі стояло: «я скоро вернусь».", "surface": "я скоро вернусь"},
+        {"text": "Вона прошепотіла «ничего не понимаю» і замовкла.", "surface": "ничего не понимаю"},
+        {"text": "Позначка <ru>это звучит естественно</ru> задає мовну межу.", "surface": "это звучит естественно"},
+        {"text": "Форма «звучит» наведена без нормалізації.", "surface": "звучит"},
+        {"text": "Цитата починається тут — «поговорим завтра» — і завершується перед коментарем.", "surface": "поговорим завтра"},
+        {"text": "У таблиці є російський стовпець «правильный ответ».", "surface": "правильный ответ"}
+      ],
+      "evidence": [
+        {"channel": "source_metadata", "source_identity": "project-authored-marked-boundaries", "source_version": "v1", "locator": "correction_protection_known_answers_v1.json#marked_russian_quotation_code_switch", "status": "attested", "supports": "protected_context"}
+      ]
+    },
+    "phonetic_russian_in_literature": {
+      "phenomenon": "Ukrainian-orthography rendering of Russian character speech",
+      "acceptable_control": [
+        {"text": "Оповідач пише нормативною українською мовою.", "surface": "нормативною"},
+        {"text": "Герой вимовив українське слово виразно.", "surface": "українське"},
+        {"text": "У примітці описано фонетичне відтворення.", "surface": "фонетичне"},
+        {"text": "Автор розмежував мову оповідача й персонажа.", "surface": "розмежував"}
+      ],
+      "protected": [
+        {"text": "Він вигукнув: «Вот, что значіт цівілізація!»", "surface": "Вот, что значіт цівілізація"},
+        {"text": "Вона відповіла: «очєнь вєжліви с нєй».", "surface": "очєнь вєжліви с нєй"},
+        {"text": "«Придєт наше врємя», — сказав персонаж.", "surface": "Придєт наше врємя"},
+        {"text": "Персонаж буркнув: «нє хочу і нє буду».", "surface": "нє хочу і нє буду"}
+      ],
+      "evidence": [
+        {"channel": "source_metadata", "source_identity": "project-authored-literary-speech-canaries", "source_version": "v1", "locator": "correction_protection_known_answers_v1.json#phonetic_russian_in_literature", "status": "attested", "supports": "protected_context"}
+      ]
+    },
+    "historical_archaic_ukrainian": {
+      "phenomenon": "Historical or archaic Ukrainian conditioned by period and work",
+      "acceptable_control": [
+        {"text": "Сучасний текст зберігає чинний правопис.", "surface": "правопис"},
+        {"text": "Редактор не модернізує цитату без позначки.", "surface": "модернізує"},
+        {"text": "Дослідниця вказує дату кожної редакції.", "surface": "редакції"},
+        {"text": "Архівний опис відокремлено від сучасного коментаря.", "surface": "Архівний"}
+      ],
+      "protected": [
+        {"text": "і что вас порушило на сю ганьбу", "surface": "что", "period": "middle_ukrainian", "genre": "historical_document", "register": "historical"},
+        {"text": "Словеса давнього письма лишено в редакції твору.", "surface": "Словеса", "period": "middle_ukrainian", "genre": "chronicle", "register": "historical"},
+        {"text": "Автор ужив давню форму сего в листі.", "surface": "сего", "period": "middle_ukrainian", "genre": "letter", "register": "historical"},
+        {"text": "У пам’ятці зафіксовано написаніє як форму епохи.", "surface": "написаніє", "period": "middle_ukrainian", "genre": "religious", "register": "historical"},
+        {"text": "Літописець записав градъ у давньому контексті.", "surface": "градъ", "period": "old_east_slavic", "genre": "chronicle", "register": "historical"},
+        {"text": "Форма бысть належить до цитованої пам’ятки.", "surface": "бысть", "period": "old_east_slavic", "genre": "chronicle", "register": "historical"},
+        {"text": "У рукописі стоїть рѣка без модернізації.", "surface": "рѣка", "period": "old_east_slavic", "genre": "manuscript", "register": "historical"},
+        {"text": "Давній запис містить форму єсмь.", "surface": "єсмь", "period": "old_east_slavic", "genre": "historical_document", "register": "historical"}
+      ],
+      "evidence": [
+        {"channel": "source_metadata", "source_identity": "period-conditioned-project-canaries", "source_version": "v1", "locator": "correction_protection_known_answers_v1.json#historical_archaic_ukrainian", "status": "attested", "supports": "protected_context"}
+      ]
+    },
+    "dialect_regional_heritage_folklore": {
+      "phenomenon": "Dialectal, regional, heritage, or folklore form",
+      "acceptable_control": [
+        {"text": "Стандартний виклад не замінює діалектну цитату.", "surface": "діалектну"},
+        {"text": "У словнику вказано регіон уживання.", "surface": "регіон"},
+        {"text": "Фольклорний текст має окремий паспорт джерела.", "surface": "Фольклорний"},
+        {"text": "Мовна спадщина потребує точного контексту.", "surface": "спадщина"}
+      ],
+      "protected": [
+        {"text": "Він пояснив, шо саме сталося.", "surface": "шо", "genre": "dialogue", "register": "dialect"},
+        {"text": "Вона да й рушила далі.", "surface": "да й", "genre": "dialogue", "register": "regional"},
+        {"text": "Він гукнув мой до хлопців.", "surface": "мой", "genre": "dialogue", "register": "dialect"},
+        {"text": "У родинному записі лишилося слово нанашко.", "surface": "нанашко", "genre": "memoir", "register": "heritage"},
+        {"text": "Ой ходила дівчина бережком у народній пісні.", "surface": "Ой", "genre": "folk_song", "register": "folklore"},
+        {"text": "Колядники співали давню приспівку гей же гей.", "surface": "гей же гей", "genre": "carol", "register": "folklore"},
+        {"text": "У регіональному словнику подано форму файний.", "surface": "файний", "genre": "dictionary", "register": "regional"},
+        {"text": "Оповідач зберіг місцеве слово ґазда.", "surface": "ґазда", "genre": "oral_history", "register": "heritage"}
+      ],
+      "evidence": [
+        {"channel": "source_metadata", "source_identity": "register-conditioned-project-canaries", "source_version": "v1", "locator": "correction_protection_known_answers_v1.json#dialect_regional_heritage_folklore", "status": "attested", "supports": "protected_context"}
+      ]
+    },
+    "surzhyk_contested_contact": {
+      "phenomenon": "Surzhyk or contested contact-language context requiring abstention",
+      "acceptable_control": [
+        {"text": "Дослідник не робить висновку без контексту мовця.", "surface": "контексту"},
+        {"text": "Контактне мовлення описано без оцінного ярлика.", "surface": "Контактне"},
+        {"text": "Невпевнені випадки завершуються утриманням від виправлення.", "surface": "утриманням"},
+        {"text": "Соціолінгвістичний контекст зберігається в метаданих.", "surface": "Соціолінгвістичний"}
+      ],
+      "protected": [
+        {"text": "Та я ж тобі говорив, шо воно не робе.", "surface": "шо воно не робе", "register": "contact_speech"},
+        {"text": "Вона сказала, що вже рішила це питання.", "surface": "рішила", "register": "contact_speech"},
+        {"text": "Ми встрілися коло магазина, — згадував мовець.", "surface": "встрілися коло магазина", "register": "contact_speech"},
+        {"text": "Я поняв, але не согласен, — відповів співрозмовник.", "surface": "поняв, але не согласен", "register": "contact_speech"},
+        {"text": "Воно канєшно добре, та треба подумати.", "surface": "канєшно", "register": "contact_speech"},
+        {"text": "Мовець ужив форму получається у спонтанній розмові.", "surface": "получається", "register": "contact_speech"},
+        {"text": "У записі звучить таке: давай завтра созвонимось.", "surface": "давай завтра созвонимось", "register": "contact_speech"},
+        {"text": "Респондент сказав, що йому нравиться ця пісня.", "surface": "нравиться", "register": "contact_speech"}
+      ],
+      "evidence": [
+        {"channel": "source_metadata", "source_identity": "project-authored-contested-contact-canaries", "source_version": "v1", "locator": "correction_protection_known_answers_v1.json#surzhyk_contested_contact", "status": "ambiguous", "supports": "context_only"}
+      ]
+    }
+  }
+}

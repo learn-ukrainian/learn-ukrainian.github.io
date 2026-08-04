@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_bundle_manifest_v1.schema.json",
+  "title": "Correction/protection bundle manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "inputs",
+    "outputs",
+    "record_counts",
+    "category_counts",
+    "role_counts",
+    "disposition_counts",
+    "category_gates",
+    "public_known_answers",
+    "evaluation_firewall",
+    "two_build_identity",
+    "consumer_decisions",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "correction_protection_bundle_manifest_v1"},
+    "bundle_id": {"type": "string", "pattern": "^cp_bundle:[a-f0-9]{64}$"},
+    "inputs": {"$ref": "#/$defs/artifactMap"},
+    "outputs": {"$ref": "#/$defs/artifactMap"},
+    "record_counts": {"$ref": "#/$defs/countMap"},
+    "category_counts": {"$ref": "#/$defs/countMap"},
+    "role_counts": {"$ref": "#/$defs/countMap"},
+    "disposition_counts": {"$ref": "#/$defs/countMap"},
+    "category_gates": {
+      "type": "object",
+      "minProperties": 8,
+      "additionalProperties": {"$ref": "#/$defs/gate"}
+    },
+    "public_known_answers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "learning_eligible", "held_back_equivalent", "source_text_rights"],
+      "properties": {
+        "records": {"type": "integer", "minimum": 1},
+        "learning_eligible": {"const": false},
+        "held_back_equivalent": {"const": false},
+        "source_text_rights": {"const": "project_authored_short_canaries"}
+      }
+    },
+    "evaluation_firewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_artifacts", "exact_matches", "near_matches", "learning_exports_created"],
+      "properties": {
+        "registry_artifacts": {"$ref": "#/$defs/artifactMap"},
+        "exact_matches": {"type": "integer", "minimum": 0},
+        "near_matches": {"type": "integer", "minimum": 0},
+        "learning_exports_created": {"const": false}
+      }
+    },
+    "two_build_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison_algorithm", "first_manifest", "second_manifest", "artifact_hashes_identical", "distinct_output_roots"],
+      "properties": {
+        "comparison_algorithm": {"const": "independent-bundle-artifact-sha256-v1"},
+        "first_manifest": {"$ref": "#/$defs/artifact"},
+        "second_manifest": {"$ref": "#/$defs/artifact"},
+        "artifact_hashes_identical": {"const": true},
+        "distinct_output_roots": {"const": true}
+      }
+    },
+    "consumer_decisions": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "claim_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assurance_tier", "authoritative", "human_gold", "human_reviewed", "project_model_training_performed", "local_model_inference_performed", "external_advisory_model_evidence_used", "upload_performed"],
+      "properties": {
+        "assurance_tier": {"const": "evidence_graded_non_gold"},
+        "authoritative": {"const": false},
+        "human_gold": {"const": false},
+        "human_reviewed": {"const": false},
+        "project_model_training_performed": {"const": false},
+        "local_model_inference_performed": {"const": false},
+        "external_advisory_model_evidence_used": {"type": "boolean"},
+        "upload_performed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "records", "bytes", "sha256"],
+      "properties": {
+        "logical_path": {"type": "string", "minLength": 1},
+        "records": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "artifactMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    },
+    "countMap": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "correction_release_allowed", "positive", "acceptable_control", "protected", "false_corrections", "threshold_config_sha256", "reasons"],
+      "properties": {
+        "state": {"enum": ["passed", "research_only"]},
+        "correction_release_allowed": {"type": "boolean"},
+        "positive": {"type": "integer", "minimum": 0},
+        "acceptable_control": {"type": "integer", "minimum": 0},
+        "protected": {"type": "integer", "minimum": 0},
+        "false_corrections": {"type": "integer", "minimum": 0},
+        "threshold_config_sha256": {"$ref": "#/$defs/sha256"},
+        "reasons": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

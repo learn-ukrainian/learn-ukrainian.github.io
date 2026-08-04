@@ -3,9 +3,12 @@
   "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_case_v1.schema.json",
   "title": "Evidence-graded correction/protection case v1",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "case_id", "assurance_tier", "authoritative", "source", "original", "evidence_refs", "category_gate", "disposition", "claim_boundary"],
+  "required": ["schema_version", "case_id", "assurance_tier", "authoritative", "phenomenon", "benchmark_role", "evidence_grade", "source", "original", "evidence_refs", "category_gate", "disposition", "claim_boundary"],
   "properties": {
     "schema_version": {"const": "correction_protection_case_v1"}, "case_id": {"type": "string", "pattern": "^cp_case:[a-f0-9]{64}$"}, "assurance_tier": {"const": "evidence_graded_non_gold"}, "authoritative": {"const": false},
+    "phenomenon": {"type": "string", "minLength": 1},
+    "benchmark_role": {"enum": ["full_corpus_candidate", "positive", "acceptable_control", "protected_example"]},
+    "evidence_grade": {"enum": ["source_metadata_only", "multi_channel", "model_supported_non_gold"]},
     "source": {"$ref": "#/$defs/source"}, "original": {"$ref": "#/$defs/original"}, "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/evidenceRef"}},
     "category_gate": {"type": "object", "additionalProperties": false, "required": ["category_id", "state", "correction_release_allowed", "threshold_config_sha256", "evidence_refs"], "properties": {"category_id": {"type": "string", "minLength": 1}, "state": {"enum": ["passed", "research_only"]}, "correction_release_allowed": {"type": "boolean"}, "threshold_config_sha256": {"$ref": "#/$defs/sha256"}, "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}}, "allOf": [{"if": {"properties": {"state": {"const": "research_only"}}}, "then": {"properties": {"correction_release_allowed": {"const": false}}}}]},
     "disposition": {"enum": ["correct", "correction", "protected", "excluded", "unresolved"]}, "proposal": {"$ref": "#/$defs/proposal"}, "disagreement_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
