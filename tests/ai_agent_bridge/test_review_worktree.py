@@ -319,6 +319,7 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
     assert "Claude ACP must instead" in prompt
     assert "high, medium, or low invalidate" in prompt
     assert "maintainability invalidate" in prompt
+    assert '["none"] when no external source applies' in prompt
     assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
     assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
     assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == checkout.sealed_evidence_input_bytes()

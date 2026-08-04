@@ -262,7 +262,10 @@ has exactly this shape (replace the explanation, not the field types):
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
 Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,
 `confidence`, `category`, `location`, `verbatim`, `why_wrong`, `smallest_fix`,
-and `sources`. Put claim type `"present"` or `"missing"` only inside the
+and `sources`. Every `sources` value MUST be a non-empty array. Use exactly
+`["none"]` when no external source applies; otherwise use non-empty source
+strings and never mix `"none"` with another value. Put claim type `"present"`
+or `"missing"` only inside the
 `location` object alongside `path`, `start_line`, and `end_line`; never add
 `claim_type` at the finding root. Do not invent enum aliases such as `"pass"`.
 """
