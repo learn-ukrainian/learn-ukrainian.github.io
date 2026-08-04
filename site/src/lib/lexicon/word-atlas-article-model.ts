@@ -16,6 +16,7 @@ import {
 import { pluralizeUk } from "../i18n/plural";
 import type { EntryRecord } from "./atlas-data-source";
 import { safeHref } from "./safe-url";
+import { formatOrigin, type FormattedOrigin } from "./format-origin";
 
 export interface DefinitionCard {
   id: string;
@@ -496,6 +497,7 @@ export function buildWordAtlasArticleView(
   const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
   const heritageBoxes = resolveHeritageBoxes(entry);
   const etymologyStages = buildEtymologyStages(enrichment?.etymology, entry.lemma);
+  const formattedOrigin = formatOrigin(enrichment?.etymology);
   const courseUsage = entry.course_usage.slice().sort((a, b) => {
     if (a.track !== b.track) return a.track.localeCompare(b.track);
     return a.module_num - b.module_num;
@@ -529,6 +531,7 @@ export function buildWordAtlasArticleView(
     entry,
     isFullyMarked,
     suppressMorphology,
+    formattedOrigin,
   });
   const sourceList = buildSourceList({
     entry,
@@ -566,6 +569,7 @@ export function buildWordAtlasArticleView(
     headwordIpa,
     heritageBoxes,
     etymologyStages,
+    formattedOrigin,
     courseUsage,
     textbookItems,
     externalGroups,
@@ -707,6 +711,7 @@ function buildArticleOverview(args: {
   entry: LexiconEntryView;
   isFullyMarked: boolean;
   suppressMorphology: boolean;
+  formattedOrigin: ReturnType<typeof formatOrigin>;
 }) {
   const {
     sections,
@@ -720,6 +725,7 @@ function buildArticleOverview(args: {
     entry,
     isFullyMarked,
     suppressMorphology,
+    formattedOrigin,
   } = args;
   const synonymCount =
     (sections?.synonyms?.items.length ?? 0) + (sections?.antonyms?.items.length ?? 0);
@@ -740,8 +746,8 @@ function buildArticleOverview(args: {
     },
     {
       label: "Походження",
-      ready: Boolean(enrichment?.etymology),
-      detail: enrichment?.etymology?.source ?? "очікує джерело",
+      ready: Boolean(formattedOrigin || enrichment?.etymology),
+      detail: formattedOrigin?.text ?? enrichment?.etymology?.source ?? "очікує джерело",
     },
     {
       label: "Морфологія",

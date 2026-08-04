@@ -5,6 +5,8 @@ from pathlib import Path
 
 from scripts.atlas import atlas_db
 from scripts.audit.generate_daily_pool import (
+    _clean_origin,
+    _first_origin,
     build_pool,
     compute_weight,
     load_db_entries,
@@ -373,3 +375,80 @@ def test_build_pool_keeps_source_inventory_browse_only_by_default() -> None:
     ]
 
     assert [item["lemma"] for item in build_pool(entries, size=10)] == ["кіт"]
+
+
+def test_clean_origin_strips_latin_parentheticals_and_comparisons() -> None:
+    raw = "From наштовх(ну́ти) (naštovx(núty)) + -увати (-uvaty)."
+    assert _clean_origin(raw) == "From наштовх(ну́ти) + -увати."
+
+    compare = "From одно- + кімна́та + -ний. Compare Russian одноко́мнатный."
+    assert _clean_origin(compare) == "From одно- + кімна́та + -ний."
+
+
+def test_clean_origin_rejects_garbage_and_esum_labels() -> None:
+    assert _clean_origin("   ") is None
+    assert _clean_origin("(núty) (odnokómnatnyj)") is None
+    assert _clean_origin("Стаття ЕСУМ: вода; етимонів: 3.") is None
+
+
+def test_first_origin_only_returns_kaikki_sourced_prose() -> None:
+    kaikki_entry = {
+        "lemma": "монета",
+        "url_slug": "moneta",
+        "gloss": "coin",
+        "primary_source": "course",
+        "course_usage": [],
+        "enrichment": {
+            "etymology": {"text": "From Latin monēta.", "source": "kaikki/Wiktionary (CC BY-SA 3.0)"}
+        },
+    }
+    esum_entry = {
+        "lemma": "вода",
+        "url_slug": "voda",
+        "gloss": "water",
+        "primary_source": "course",
+        "course_usage": [],
+        "enrichment": {
+            "etymology": {"text": "Стаття ЕСУМ: вода; етимонів: 3.", "source": "ЕСУМ"}
+        },
+    }
+
+    assert _first_origin(kaikki_entry) == "From Latin monēta."
+    assert _first_origin(esum_entry) is None
+
+
+def test_build_pool_carries_cleaned_etymology_for_kaikki_origin() -> None:
+    entries = [
+        {
+            "lemma": "монета",
+            "url_slug": "moneta",
+            "gloss": "coin",
+            "primary_source": "course",
+            "course_usage": [],
+            "enrichment": {
+                "cefr": {"level": "A1", "source": "fixture", "text": "A1"},
+                "etymology": {
+                    "text": "From Latin monēta.",
+                    "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+                },
+            },
+        },
+        {
+            "lemma": "вода",
+            "url_slug": "voda",
+            "gloss": "water",
+            "primary_source": "course",
+            "course_usage": [],
+            "enrichment": {
+                "cefr": {"level": "A1", "source": "fixture", "text": "A1"},
+                "etymology": {
+                    "text": "Стаття ЕСУМ: вода; етимонів: 3.",
+                    "source": "ЕСУМ",
+                },
+            },
+        },
+    ]
+
+    pool = {item["lemma"]: item for item in build_pool(entries, size=10)}
+    assert pool["монета"]["etymology"] == "From Latin monēta."
+    assert "etymology" not in pool["вода"]

@@ -2077,6 +2077,7 @@ function LexiconPracticeIsland({
             example: word.example ?? null,
             exampleEn: word.exampleEn ?? null,
             exampleProvenance: word.exampleProvenance ?? null,
+            etymology: word.etymology ?? null,
           })),
         };
 

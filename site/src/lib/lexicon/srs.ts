@@ -597,6 +597,11 @@ export interface DailyPracticeDeckItem {
     locator?: string;
     title?: string;
   } | null;
+  /**
+   * Cleaned Kaikki/Wiktionary etymology surfaced as a beauty signal on the
+   * daily card flip side. Null/absent when no usable origin is available.
+   */
+  etymology?: string | null;
 }
 
 export interface DailyPracticeDeckSnapshot {
@@ -2550,6 +2555,8 @@ function normalizeDailyPracticeDeckSnapshot(
       item.exampleProvenance === null || isValidDailyPracticeDeckExampleProvenance(item.exampleProvenance)
         ? (item.exampleProvenance as DailyPracticeDeckItem['exampleProvenance'] | null)
         : undefined;
+    const etymology =
+      typeof item.etymology === 'string' || item.etymology === null ? item.etymology : undefined;
     items.push({
       lemmaId: item.lemmaId,
       origin: item.origin,
@@ -2561,6 +2568,7 @@ function normalizeDailyPracticeDeckSnapshot(
       ...(example !== undefined ? { example } : {}),
       ...(exampleEn !== undefined ? { exampleEn } : {}),
       ...(exampleProvenance !== undefined ? { exampleProvenance } : {}),
+      ...(etymology !== undefined ? { etymology } : {}),
     });
   }
   return {

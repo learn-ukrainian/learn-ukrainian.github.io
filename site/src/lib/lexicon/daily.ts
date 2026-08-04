@@ -34,6 +34,11 @@ export interface DailyWord {
     status: string;
     useBasis?: string;
   };
+  /**
+   * Cleaned Kaikki/Wiktionary etymology used as a beauty signal on daily cards.
+   * Absent when the origin is empty, garbage, or non-Wiktionary sourced.
+   */
+  etymology?: string | null;
 }
 
 export function dateSeed(d: Date): number {
