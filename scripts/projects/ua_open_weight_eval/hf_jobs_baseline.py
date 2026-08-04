@@ -180,7 +180,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
 def load_disposition(path: Path = DISPOSITION_PATH) -> dict[str, Any]:
     disposition = read_json(path)
     _require(
-        disposition.get("schema_version") == "ua_open_weight_eval_run_disposition.v1",
+        disposition.get("schema_version") == "ua_open_weight_eval_run_disposition.v2",
         "run disposition schema drift",
     )
     _require(disposition.get("issue") == 6273, "run disposition issue drift")
@@ -189,6 +189,55 @@ def load_disposition(path: Path = DISPOSITION_PATH) -> dict[str, Any]:
     _require(disposition.get("evaluation_valid") is False, "invalid run cannot be evaluation-valid")
     _require(disposition.get("scoreable") is False, "invalid run cannot be scoreable")
     _require(disposition.get("rerun_authorized") is False, "incident correction cannot authorize a rerun")
+    retained = disposition.get("retained_artifact")
+    _require(isinstance(retained, dict), "retained artifact disposition is missing")
+    _require(
+        retained.get("repository") == "krisztiankoos/ua-open-weight-eval-results"
+        and retained.get("repository_type") == "huggingface_dataset",
+        "retained artifact identity drift",
+    )
+    _require(retained.get("visibility") == "private", "invalid result repository must remain private")
+    _require(retained.get("repository_deleted") is False, "invalid result repository must be retained")
+    visibility_receipt = retained.get("visibility_receipt")
+    _require(isinstance(visibility_receipt, dict), "artifact visibility receipt is missing")
+    _require(
+        visibility_receipt.get("authenticated_repo_info_private") is True
+        and visibility_receipt.get("anonymous_http_status") == 401
+        and visibility_receipt.get("content_revision_preserved") is True,
+        "private artifact retention is not verified",
+    )
+    transparency = disposition.get("public_transparency")
+    _require(isinstance(transparency, dict), "public incident evidence is missing")
+    _require(
+        transparency.get("incident_record")
+        == "https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
+        "public incident record drift",
+    )
+    _require(
+        set(transparency.get("retained_evidence", []))
+        == {
+            "invalid_revision",
+            "package_sha256",
+            "corrective_card_revision",
+            "corrective_readme_sha256",
+            "canary.responses_sha256",
+            "full.responses_sha256",
+        },
+        "public incident hash evidence drift",
+    )
+    policy = disposition.get("publication_policy")
+    _require(isinstance(policy, dict), "result publication policy is missing")
+    _require(
+        policy.get("scope") == "future_hugging_face_result_repositories"
+        and policy.get("required_gate") == "actual_saved_outputs_pass_source_aware_response_integrity"
+        and policy.get("required_verification_schema") == "ua_open_weight_eval_results_verification.v2",
+        "result publication semantic gate drift",
+    )
+    _require(
+        policy.get("failure_action")
+        == "keep result repository private and publish only the incident explanation and hashes on GitHub",
+        "result publication failure policy drift",
+    )
     return disposition
 
 
@@ -1228,7 +1277,15 @@ def verify_results_package(root: Path) -> dict[str, Any]:
     _require(report["scoring"]["global_quality_score"] is None, "global score must remain null")
     _require(report["scoring"]["global_score_prohibited"] is True, "global score policy drift")
     integrity = verify_response_integrity(root / "responses.jsonl")
+    _require(integrity["status"] == "passed", "response semantic validation did not pass")
     _require(integrity["checked_rows"] == 4000, "response integrity count drift")
+    for field in (
+        "violation_rows",
+        "copy_contract_violation_rows",
+        "reserved_marker_violation_rows",
+        "introduced_control_violation_rows",
+    ):
+        _require(integrity[field] == 0, f"response semantic validation has nonzero {field}")
     _require(len(report["tracks"]) == 14, "track count drift")
     responses = suite_cli.read_jsonl(root / "responses.jsonl")
     _require(len(responses) == 4001, "response completeness drift")
@@ -1244,8 +1301,10 @@ def verify_results_package(root: Path) -> dict[str, Any]:
         text = path.read_text(encoding="utf-8", errors="ignore")
         _require("/Users/" not in text and "HF_TOKEN=" not in text, f"private path or token leaked in {path.name}")
     return {
-        "schema_version": "ua_open_weight_eval_results_verification.v1",
+        "schema_version": "ua_open_weight_eval_results_verification.v2",
         "status": "passed",
+        "publication_eligible": True,
+        "semantic_validation": integrity,
         "files": len(PUBLIC_FILES),
         "responses": 4000,
         "tracks": 14,

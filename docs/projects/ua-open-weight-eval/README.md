@@ -7,19 +7,22 @@ proposal. It needs no paid annotator, closed API, or model judge.
 
 ## Release and adoption status
 
-> **Gemma 4 HF result correction (2026-08-03):** the published HF Jobs output
-> is invalid runtime evidence, not a model baseline. All canary and full-run
-> rows fail the corrected source-aware integrity gate. Do not cite its metrics
-> as Gemma 4 Ukrainian results. This does not invalidate the frozen evaluation
-> suite itself; it invalidates only that runner/output pairing. See the
+> **Gemma 4 HF result correction (updated 2026-08-04):** the HF Jobs output is
+> invalid runtime evidence, not a model baseline. All canary and full-run rows
+> fail the corrected source-aware integrity gate. Its Hugging Face result
+> repository is retained privately, while the incident explanation and hashes
+> remain public on GitHub. Do not cite its metrics as Gemma 4 Ukrainian
+> results. This does not invalidate the frozen evaluation suite itself; it
+> invalidates only that runner/output pairing. See the
 > [incident record](HF_JOBS_BASELINE.md).
 
 The repository implementation shipped in PR #6268. The public package uses the
 non-colliding tag `ua-open-weight-eval-v0.1.0`; its generated
 `PUBLICATION_MANIFEST.json` and `SHA256SUMS` define the canonical released
-bytes. The GitHub release is public. The attempted Gemma 4 QAT Q4_0 HF Jobs run
-is retained as an invalid failure receipt tracked in issue #6273. Independent
-external adoption remains a separate, currently unproven fact.
+bytes. The GitHub release remains public. The attempted Gemma 4 QAT Q4_0 HF
+Jobs run is retained privately as an invalid failure receipt tracked in
+issue #6273. Independent external adoption remains a separate, currently
+unproven fact.
 The exact bounded execution contract is in the
 [HF Jobs baseline runbook](HF_JOBS_BASELINE.md). An adapter, local fixture, or
 our own completed run does not demonstrate independent adoption.
@@ -115,6 +118,24 @@ The command rejects missing or extra files and includes no model weights,
 provider output, private corpus, VESUM data, literary/textbook corpus content,
 or pending v0.2 material. The staged directory is the complete Hugging Face
 dataset-repository payload; upload remains an explicit operator approval gate.
+
+Result repositories have a separate fail-closed publication gate. Before any
+future Hugging Face result repository is made public, run `verify-results` on
+the exact staged result bytes:
+
+```bash
+.venv/bin/python -m scripts.projects.ua_open_weight_eval.hf_jobs_baseline \
+  verify-results \
+  --root batch_state/ua-open-weight-eval-results
+```
+
+Publication is eligible only when this command returns verification schema
+`ua_open_weight_eval_results_verification.v2`, `status: passed`,
+`publication_eligible: true`, and a `semantic_validation` receipt covering the
+actual 4,000 saved responses with zero violations. Transport completion,
+provider status, file shape, manifests, hashes, metrics, runtime, or cost are
+not substitutes. A failure keeps the result repository private; GitHub retains
+the public incident explanation and hashes.
 
 ## Українською
 

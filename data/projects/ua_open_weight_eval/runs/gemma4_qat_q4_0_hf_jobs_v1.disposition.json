@@ -1,7 +1,8 @@
 {
-  "schema_version": "ua_open_weight_eval_run_disposition.v1",
+  "schema_version": "ua_open_weight_eval_run_disposition.v2",
   "issue": 6273,
   "recorded_on": "2026-08-03",
+  "last_updated_on": "2026-08-04",
   "run_config_sha256": "38d6ee4757a26e4f45b1e6860319821b8eacac9ad28548e4962550ad93661972",
   "status": "invalid_semantic_output",
   "evaluation_valid": false,
@@ -26,13 +27,41 @@
     "reserved_marker_violation_rows": 4000,
     "introduced_control_violation_rows": 1830
   },
-  "public_artifact": {
+  "retained_artifact": {
     "repository": "krisztiankoos/ua-open-weight-eval-results",
+    "repository_type": "huggingface_dataset",
+    "visibility": "private",
+    "visibility_changed_on": "2026-08-04",
+    "repository_deleted": false,
     "invalid_revision": "6d294b175820777ae382e36ec6a781c5f9032728",
     "package_sha256": "f5710a3fe9aabeac29d5e6a00b7858657fc6880172b9222b9cc0db0bee86917a",
     "corrective_card_revision": "152e04defc7faecadfa994a9f8f07fea6c5adb0e",
     "corrective_readme_sha256": "e5b0a2d2acdfe561b530a3911137e3ae870ab066baa776bd95d449650160dec2",
-    "preservation_policy": "retain immutable bytes as an invalid runtime failure receipt; do not cite metrics as model results"
+    "preservation_policy": "retain the invalid runtime-failure bytes privately; do not cite metrics as model results",
+    "visibility_receipt": {
+      "verified_on": "2026-08-04",
+      "authenticated_repo_info_private": true,
+      "anonymous_http_status": 401,
+      "content_revision_preserved": true
+    }
+  },
+  "public_transparency": {
+    "incident_record": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md",
+    "disposition_file": "data/projects/ua_open_weight_eval/runs/gemma4_qat_q4_0_hf_jobs_v1.disposition.json",
+    "retained_evidence": [
+      "invalid_revision",
+      "package_sha256",
+      "corrective_card_revision",
+      "corrective_readme_sha256",
+      "canary.responses_sha256",
+      "full.responses_sha256"
+    ]
+  },
+  "publication_policy": {
+    "scope": "future_hugging_face_result_repositories",
+    "required_gate": "actual_saved_outputs_pass_source_aware_response_integrity",
+    "required_verification_schema": "ua_open_weight_eval_results_verification.v2",
+    "failure_action": "keep result repository private and publish only the incident explanation and hashes on GitHub"
   },
   "replacement_run": {
     "authorized": false,

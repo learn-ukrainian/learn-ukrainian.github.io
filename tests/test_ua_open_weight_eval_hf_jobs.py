@@ -85,6 +85,32 @@ def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
     }
 
 
+def test_invalid_run_disposition_requires_private_retention_and_semantic_publication_gate(
+    tmp_path: Path,
+) -> None:
+    disposition = hf_jobs_baseline.load_disposition()
+    retained = disposition["retained_artifact"]
+    assert retained["visibility"] == "private"
+    assert retained["repository_deleted"] is False
+    assert retained["visibility_receipt"]["authenticated_repo_info_private"] is True
+    assert retained["visibility_receipt"]["content_revision_preserved"] is True
+    assert disposition["public_transparency"]["incident_record"].startswith("https://github.com/")
+    assert disposition["publication_policy"] == {
+        "scope": "future_hugging_face_result_repositories",
+        "required_gate": "actual_saved_outputs_pass_source_aware_response_integrity",
+        "required_verification_schema": "ua_open_weight_eval_results_verification.v2",
+        "failure_action": (
+            "keep result repository private and publish only the incident explanation and hashes on GitHub"
+        ),
+    }
+
+    disposition["retained_artifact"]["visibility"] = "public"
+    drifted = tmp_path / "disposition.json"
+    drifted.write_text(json.dumps(disposition), encoding="utf-8")
+    with pytest.raises(hf_jobs_baseline.BaselineError, match="must remain private"):
+        hf_jobs_baseline.load_disposition(drifted)
+
+
 def test_balanced_canary_is_deterministic_category_balanced_and_track_covering() -> None:
     config = hf_jobs_baseline.load_config()
     cases = suite_cli.read_jsonl(suite_cli.CASES_PATH)
@@ -972,6 +998,12 @@ def test_results_package_includes_complete_responses_but_not_private_generations
         output_dir=output,
     )
     assert result["status"] == "passed"
+    assert result["schema_version"] == "ua_open_weight_eval_results_verification.v2"
+    assert result["publication_eligible"] is True
+    assert result["semantic_validation"]["status"] == "passed"
+    assert result["semantic_validation"]["checked_rows"] == 4000
+    assert result["semantic_validation"]["violation_rows"] == 0
+    assert result["semantic_validation"]["responses_sha256"] == hf_jobs_baseline.sha256_file(responses)
     assert result["responses"] == 4000
     public_receipt = json.loads((output / "run_receipt.public.json").read_text(encoding="utf-8"))
     assert public_receipt["environment"]["launch_client"] == {

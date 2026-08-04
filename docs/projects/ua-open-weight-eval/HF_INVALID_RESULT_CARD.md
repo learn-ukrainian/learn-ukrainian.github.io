@@ -33,6 +33,10 @@ configs:
 > **Do not use this dataset as a Gemma 4 baseline and do not cite its metrics
 > as evidence of Ukrainian-language quality.**
 
+This Hugging Face repository was made private on 2026-08-04 without deleting
+its files or history. The public transparency record is the GitHub incident
+report and its retained hashes, not this invalid result payload.
+
 The provider jobs completed and the files were structurally valid, but the
 saved responses were runtime-corrupted. A source-aware replay on 2026-08-03
 found:
@@ -49,7 +53,7 @@ source is not treated as newly introduced corruption. The gate makes no
 linguistic judgment about Ukrainian, quoted Russian, surzhyk, historical
 language, or regional language.
 
-The original payload is preserved for transparency as a failure receipt. Its
+The original payload is preserved privately as a failure receipt. Its
 historical revision is `6d294b175820777ae382e36ec6a781c5f9032728`; its
 historical package SHA-256 is
 `f5710a3fe9aabeac29d5e6a00b7858657fc6880172b9222b9cc0db0bee86917a`.
@@ -67,12 +71,16 @@ source-aware gate are maintained in the
 > **Не використовуйте цей набір як базову оцінку Gemma 4 і не цитуйте його
 > метрики як доказ якості української мови.**
 
+Репозиторій Hugging Face зроблено приватним 4 серпня 2026 року без видалення
+файлів чи історії. Публічними доказами залишаються опис інциденту та хеші на
+GitHub, а не цей недійсний пакет результатів.
+
 Завдання провайдера завершилися, але збережені відповіді були пошкоджені
 середовищем виконання. Усі 100 відповідей canary і всі 4 000 відповідей
 повного запуску містять нові службові маркери моделі. Майже всі відповіді
 `preserve`/`abstain` також не відтворили джерело дослівно.
 
-Початкові файли збережено для прозорості лише як квитанцію про помилку. Вони не
+Початкові файли збережено приватно лише як квитанцію про помилку. Вони не
 дають надійних висновків про українську мову Gemma 4. Сам незмінний набір
 UA Open-Weight Eval v0.1.0 не визнано недійсним; недійсною є лише ця комбінація
 моделі, середовища виконання та відповідей. Повторний запуск не дозволено.
