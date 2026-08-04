@@ -330,13 +330,13 @@ def _validate_sealed_review_mcp_config(raw: object, *, adapter_label: str) -> st
     args = server.get("args")
     if server.get("command") != expected_python or server.get("env") != []:
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP runtime is not parent-pinned")
-    required_only = adapter_label == "AcpxClaudeShadowAdapter"
-    expected_arg_count = 5 if required_only else 4
+    claude_change_profile = adapter_label == "AcpxClaudeShadowAdapter"
+    expected_arg_count = 5 if claude_change_profile else 4
     if (
         not isinstance(args, list)
         or len(args) != expected_arg_count
         or args[:2] != ["-I", "-S"]
-        or (required_only and args[4] != "read-required-only")
+        or (claude_change_profile and args[4] != "change-evidence-only")
     ):
         raise AcpxShadowRefusalError(f"{adapter_label}: sealed review MCP arguments are invalid")
     helper = Path(args[2]) if isinstance(args[2], str) else Path()
@@ -393,7 +393,12 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
     try:
         config = json.loads(Path(config_path).read_text(encoding="utf-8"))
         server = config["mcpServers"][0]
-        snapshot = Path(server["args"][3]).resolve(strict=True)
+        server_args = server["args"]
+        change_evidence_only = (
+            len(server_args) == 5
+            and server_args[4] == "change-evidence-only"
+        )
+        snapshot = Path(server_args[3]).resolve(strict=True)
         manifest = json.loads(
             (snapshot / ".review-bundle" / "manifest.json").read_text(
                 encoding="utf-8"
@@ -435,6 +440,8 @@ def _claude_sealed_review_max_turns(config_path: str) -> int:
                 "AcpxClaudeShadowAdapter: sealed review changed path escapes the snapshot",
                 failure_code="acp_review_evidence_invalid",
             ) from exc
+        if change_evidence_only:
+            continue
         if candidate.is_symlink() or not candidate.exists():
             continue
         if not candidate.is_file() or raw in seen:

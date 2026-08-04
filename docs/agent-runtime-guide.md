@@ -125,8 +125,10 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   tools.
 - Claude formal sealed reviews expose only the parent-owned
   `sealed_review_read_required` stream. Search, arbitrary file reads, shell,
-  and every other evidence tool are denied structurally so the authenticated
-  read receipt must cover the complete required scope before a verdict passes.
+  and every other evidence tool are denied structurally. Its mandatory stream
+  is the hash-bound manifest plus the complete patch, avoiding duplicate
+  full-file delivery; reported finding quotes are still verified against the
+  exact sealed files before a verdict can pass.
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
 - The only supported comparison caller is

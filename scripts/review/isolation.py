@@ -1033,7 +1033,7 @@ if len(sys.argv) not in {2, 3}:
     raise ValueError("invalid_arguments")
 ROOT = Path(sys.argv[1]).resolve(strict=True)
 PROFILE = sys.argv[2] if len(sys.argv) == 3 else "all"
-if PROFILE not in {"all", "read-required-only"}:
+if PROFILE not in {"all", "change-evidence-only"}:
     raise ValueError("invalid_tool_profile")
 MAX_CHUNK_BYTES = 64 * 1024
 CLAUDE_MAX_CHUNK_BYTES = 24 * 1024
@@ -1153,6 +1153,8 @@ def required_paths():
     if not isinstance(changed, list) or not all(isinstance(item, str) for item in changed):
         raise ValueError("required_manifest_changed_paths_invalid")
     result = [manifest_path, ".review-bundle/patch.diff"]
+    if PROFILE == "change-evidence-only":
+        return result
     seen = set(result)
     for raw in changed:
         candidate = candidate_path(raw)
@@ -1322,7 +1324,7 @@ TOOLS = [
 def call_tool(name, args):
     if not isinstance(args, dict):
         raise ValueError("arguments_must_be_object")
-    if PROFILE == "read-required-only" and name != "read_required":
+    if PROFILE == "change-evidence-only" and name != "read_required":
         raise ValueError("tool_not_allowed")
     if name == "list_files":
         payload = {"files": files(args.get("prefix", ""))}

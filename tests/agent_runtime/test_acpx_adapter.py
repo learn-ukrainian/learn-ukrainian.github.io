@@ -1837,10 +1837,13 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     config_path = tmp_path / "sealed.json"
     config_path.write_text(json.dumps(config), encoding="utf-8")
 
-    # Four bounded recovery turns + ToolSearch + five required chunks + verdict.
-    assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 11
+    config["mcpServers"][0]["args"].append("change-evidence-only")
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    # Four bounded recovery turns + ToolSearch + four change-evidence chunks + verdict.
+    assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 10
     assert AcpxClaudeShadowAdapter()._max_turns(None) == 1
-    assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 11
+    assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 10
 
 
 def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch):
@@ -1906,7 +1909,15 @@ def test_claude_sealed_review_turn_budget_rejects_intermediate_symlink_escape(
         json.dumps(
             {
                 "mcpServers": [
-                    {"args": ["-I", "-S", "/ignored", str(snapshot)]}
+                    {
+                        "args": [
+                            "-I",
+                            "-S",
+                            "/ignored",
+                            str(snapshot),
+                            "change-evidence-only",
+                        ]
+                    }
                 ]
             }
         ),

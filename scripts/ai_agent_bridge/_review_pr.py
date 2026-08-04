@@ -586,8 +586,10 @@ def handle_review_pr(args: argparse.Namespace) -> int:
         if checkout is None:  # pragma: no cover - target above is mandatory
             raise RuntimeError("sealed review snapshot was not provisioned")
         evidence = checkout.review_prompt_evidence("acp")
+        invocation_evidence = evidence
         evidence_metrics = _evidence_metrics(evidence)
         estimated_input_bytes = checkout.sealed_evidence_input_bytes()
+        active_input_bytes = estimated_input_bytes
         timeout = 86400 if args.no_timeout else 1800
         worker_id = f"review-pr-acp:{os.getpid()}"
         authority_key = _formal_review_authority_key(
@@ -830,9 +832,17 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         effort=effort or "provider_default",
                         extra=args.extra,
                     )
-                    sealed_prompt = prompt + evidence
+                    invocation_evidence = checkout.review_prompt_evidence(
+                        "acp-claude" if participant == "claude" else "acp"
+                    )
+                    evidence_metrics = _evidence_metrics(invocation_evidence)
+                    active_input_bytes = evidence_metrics.get(
+                        "unique_evidence_bytes",
+                        estimated_input_bytes,
+                    )
+                    sealed_prompt = prompt + invocation_evidence
                     sealed_mcp_config = checkout.sealed_acp_tool_config(
-                        required_only=participant == "claude"
+                        change_evidence_only=participant == "claude"
                     )
                     routing_ledger.mark_started(routing_reservation.reservation_id)
                     previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
@@ -872,7 +882,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         routing_ledger,
                         routing_reservation.reservation_id,
                         status="failed",
-                        actual_input_bytes=estimated_input_bytes,
+                        actual_input_bytes=active_input_bytes,
                         actual_output_bytes=len(raw_response.encode("utf-8")),
                         actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
                         actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
@@ -917,7 +927,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             routing_ledger,
                             routing_reservation.reservation_id,
                             status="failed",
-                            actual_input_bytes=estimated_input_bytes,
+                            actual_input_bytes=active_input_bytes,
                             actual_output_bytes=0,
                             failure_classification="result_invalid",
                         )
@@ -947,7 +957,14 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         result,
                         engine="acp",
                         evidence_root=checkout.path,
-                        changed_paths=checkout.changed_paths,
+                        changed_paths=(
+                            () if participant == "claude" else checkout.changed_paths
+                        ),
+                    )
+                    coverage_receipt["required_scope"] = (
+                        "complete_change_manifest_and_patch"
+                        if participant == "claude"
+                        else "complete_manifest_patch_and_changed_files"
                     )
             except ReviewWorktreeError as exc:
                 if not replayed:
@@ -956,7 +973,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             routing_ledger,
                             routing_reservation.reservation_id,
                             status="failed",
-                            actual_input_bytes=estimated_input_bytes,
+                            actual_input_bytes=active_input_bytes,
                             actual_output_bytes=len(raw_response.encode("utf-8")),
                             actual_input_tokens=_usage_int(result, "input_tokens") if result is not None else None,
                             actual_output_tokens=_usage_int(result, "output_tokens", "tokens") if result is not None else None,
@@ -993,8 +1010,8 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                     actual_output_tokens=_usage_int(result, "output_tokens", "tokens"),
                     terminal_evidence={
                         "coverage_receipt": coverage_receipt or {},
-                        "unique_evidence_bytes": estimated_input_bytes,
-                        "serialized_prompt_bytes": len(evidence.encode("utf-8")),
+                        "unique_evidence_bytes": active_input_bytes,
+                        "serialized_prompt_bytes": len(invocation_evidence.encode("utf-8")),
                         "evidence_metrics": evidence_metrics,
                     },
                 )
@@ -1061,7 +1078,7 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "evidence_metrics": evidence_metrics,
                         "reported_input_tokens": _usage_int(result, "input_tokens"),
                         "reported_output_tokens": _usage_int(result, "output_tokens", "tokens"),
-                        "serialized_prompt_bytes": len(evidence.encode("utf-8")),
+                        "serialized_prompt_bytes": len(invocation_evidence.encode("utf-8")),
                         "transport": "acp",
                     },
                     sort_keys=True,

@@ -1105,7 +1105,7 @@ class ProvisionedReviewWorktree:
             cfg.pop("review_exec_root", None)
         return cfg
 
-    def sealed_acp_tool_config(self, *, required_only: bool = False) -> Path:
+    def sealed_acp_tool_config(self, *, change_evidence_only: bool = False) -> Path:
         """Stage one parent-owned MCP config exposing only sealed snapshot reads.
 
         The reviewed tree never supplies the helper, interpreter, or MCP
@@ -1124,12 +1124,12 @@ class ProvisionedReviewWorktree:
             helper = _stage_sealed_read_mcp(self.exec_root)
         config_path = self.write_root / (
             "sealed-review-acpx-required-mcp.json"
-            if required_only
+            if change_evidence_only
             else "sealed-review-acpx-mcp.json"
         )
         helper_args = ["-I", "-S", str(helper), str(self.path)]
-        if required_only:
-            helper_args.append("read-required-only")
+        if change_evidence_only:
+            helper_args.append("change-evidence-only")
         config = {
             "mcpServers": [
                 {
@@ -1167,13 +1167,21 @@ class ProvisionedReviewWorktree:
         """Return bounded, hash-bound metadata for sealed review artifacts.
 
         Every supported reviewer has a parent-owned read path into the sealed
-        snapshot. The prompt therefore names and authenticates the complete
-        manifest, patch, and changed files without duplicating arbitrarily large
-        repository bytes into model context. Unreadable or inconsistent input
-        fails closed.
+        snapshot. The prompt names and authenticates the exact required scope.
+        General sealed profiles include the manifest, patch, and changed files;
+        Claude ACP uses the complete manifest and patch without duplicating full
+        changed-file bodies. Unreadable or inconsistent input fails closed.
         """
         engine_key = engine.strip().lower()
-        if engine_key not in {"acp", "codex", "claude", "agy", "grok", "grok-build"}:
+        if engine_key not in {
+            "acp",
+            "acp-claude",
+            "codex",
+            "claude",
+            "agy",
+            "grok",
+            "grok-build",
+        }:
             raise ReviewWorktreeError(f"review_prompt_evidence_invalid:unsupported_engine:{engine!r}")
         bundle_dir = self.path / ".review-bundle"
         manifest_path = bundle_dir / "manifest.json"
@@ -1295,13 +1303,16 @@ class ProvisionedReviewWorktree:
             }
             files.append(entry)
 
-        required_read_paths = _required_review_read_paths(self.path, self.changed_paths)
+        required_read_paths = _required_review_read_paths(
+            self.path,
+            () if engine_key == "acp-claude" else self.changed_paths,
+        )
         _validate_review_read_sizes(self.path, required_read_paths)
         inline_serialized: str | None = None
         inline_proof: dict[str, Any] | None = None
         sealed_proof: dict[str, Any] | None = None
         legacy_inline_bytes = 0
-        if engine_key == "acp":
+        if engine_key in {"acp", "acp-claude"}:
             sealed_proof = _sealed_required_evidence_proof(
                 self.path,
                 required_read_paths,
@@ -1327,7 +1338,9 @@ class ProvisionedReviewWorktree:
                     "does not return inline, repeat the same cursor once with "
                     "max_bytes=8192 and max_result_chars=49152. Do not call shell, "
                     "Python, or any other evidence tool. The permission policy exposes "
-                    "only sealed_review_read_required; every other evidence tool is denied."
+                    "only sealed_review_read_required; every other evidence tool is denied. "
+                    "For Claude ACP the required stream is the exact manifest plus the "
+                    "complete patch, without duplicate full-file bodies."
                 ),
                 "unit": "utf8_bytes",
                 "start_offset": 0,
@@ -1470,7 +1483,11 @@ class ProvisionedReviewWorktree:
             "clean_verdict_gate": (
                 "parent_bound_inline_complete"
                 if engine_key in {"codex", "claude"}
-                else "complete_tool_trace_coverage_required"
+                else (
+                    "complete_change_manifest_and_patch_trace_required"
+                    if engine_key == "acp-claude"
+                    else "complete_tool_trace_coverage_required"
+                )
             ),
         }
         if sealed_proof is not None:
