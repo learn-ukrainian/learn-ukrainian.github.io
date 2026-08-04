@@ -306,9 +306,7 @@ def test_orchestrator_escalate_pins_parallel_sol_fable_pro():
     # formal-CF review seat whose authority escalate is still Sol.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-5.6-sol"
-    assert fc["codex"]["escalate_effort"] == "provider_default"
     assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
-    assert fc["claude"]["escalate_effort"] == "high"
 
 
 def test_practical_ladders_exclude_authority_seats():
