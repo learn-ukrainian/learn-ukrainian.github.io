@@ -716,7 +716,16 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                         "in_flight": {},
                         "diagnostics": {"stale": True, "routing_budget_error": type(exc).__name__},
                     }
-                substitution_pending = authority_job.state == "failed" and requested_candidate is not None
+                prior_reservation = (
+                    routing_ledger.latest_for_authority_key(authority_key)
+                    if authority_job.state == "failed"
+                    else None
+                )
+                substitution_pending = (
+                    requested_candidate is not None
+                    and prior_reservation is not None
+                    and prior_reservation.failure_classification == "result_invalid"
+                )
                 if authority_job.state in {"failed", "expired"} and not substitution_pending:
                     authority_job = authority.retry_job(authority_job.job_id)
                 elif authority_job.state == "dead_lettered":
