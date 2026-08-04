@@ -1273,6 +1273,32 @@ def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     assert index_items["borshch"]["modes"] == ["flashcards"]
 
 
+def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> None:
+    """Wiktionary-style UK definitions are not A1/A2 learner glosses (e.g. «казка»)."""
+    verifier = JsonVesumVerifier({})
+    entry = {
+        "lemma": "казка",
+        "url_slug": "казка",
+        "gloss": "розповідний твір про вигаданих осіб і події, переважно за участю фантастичних сил",
+        "pos": "noun",
+        "primary_source": "atlas",
+        "cefr": "A2",
+        "enrichment": {
+            "translation": {
+                "en": [
+                    "fable (fictitious narration to enforce some useful truth or precept)",
+                    "fairy tale (folktale)",
+                ],
+                "source": "dmklinger",
+            }
+        },
+    }
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None
+    assert lexeme["glossClean"] == "fairy tale"
+    assert "розповідний" not in lexeme["gloss"]
+
+
 def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
     assert _meaning_mc_eligible("justice", "справедливість", "noun") is True
     assert _meaning_mc_eligible("сукупність прав", "право", "noun") is False
