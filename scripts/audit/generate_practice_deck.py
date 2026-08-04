@@ -4020,8 +4020,13 @@ def build_practice_shards(
             continue
         slug_a = _clean_text(pair.get("slugA"))
         slug_b = _clean_text(pair.get("slugB"))
-        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a)
-        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b)
+        # slugA/slugB carry the lemma spelling, not the URL slug: an apostrophe
+        # lemma's lemmaId is hyphen-slugified (e.g. "пам'ятка" -> "пам-ятка"),
+        # so a raw slug_to_lex/lexemes_by_id lookup never matches it. Fall back
+        # to the plain-lemma map antonym/homonym resolution never needed but
+        # synonym/homonym frame selection already relies on (#6338).
+        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a) or by_plain_lemma.get(_plain(slug_a))
+        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b) or by_plain_lemma.get(_plain(slug_b))
         if not lex_a or not lex_b:
             print(
                 f"WARN: paronym_pair[{index}] {slug_a}/{slug_b} not in practice lexemes; emitted 0 items",

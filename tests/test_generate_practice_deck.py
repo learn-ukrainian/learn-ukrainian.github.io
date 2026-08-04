@@ -2613,6 +2613,34 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         assert validate_paronym_item(it) == []
 
 
+def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytest.CaptureFixture[str]) -> None:
+    # #6338: an apostrophe lemma's lemmaId is hyphen-slugified (matching a
+    # real url_slug, e.g. "пам-ятка"), so slugA/slugB carrying the apostrophe
+    # spelling must resolve through by_plain_lemma, not slug_to_lex/lexemes_by_id.
+    entries = [
+        {"lemmaId": "пам-ятка", "lemma": "пам'ятка", "gloss": "landmark", "pos": "noun", "cefr": "A2", "url_slug": "пам-ятка", "primary_source": "course_vocab", "course_usage": [{"track": "a2"}]},
+        {"lemmaId": "пам-ятник", "lemma": "пам'ятник", "gloss": "monument", "pos": "noun", "cefr": "A1", "url_slug": "пам-ятник", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+    ]
+    pair = {
+        "slugA": "пам'ятка",
+        "slugB": "пам'ятник",
+        "distinction_gloss_uk": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {"sentence_with_slot": "Це видатна архітектурна ___.", "answer_form": "пам'ятка", "confusable_form": "пам'ятник", "origin": "t"},
+            {"sentence_with_slot": "На площі встановили ___.", "answer_form": "пам'ятник", "confusable_form": "пам'ятку", "origin": "t2"},
+        ],
+    }
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
+    a1_items = shards.get("A1", {}).get("paronym", {}).get("paronym", [])
+    a2_items = shards.get("A2", {}).get("paronym", {}).get("paronym", [])
+    assert len(a1_items) + len(a2_items) >= 1, "apostrophe-lemma paronym pair should resolve and emit"
+    err = capsys.readouterr().err
+    assert "not in practice lexemes" not in err
+
+
 def test_paronym_builder_copies_optional_curated_prompt_en() -> None:
     lex_a = {"lemmaId": "бігати", "lemma": "бігати", "cefr": "B1"}
     lex_b = {"lemmaId": "бігти", "lemma": "бігти", "cefr": "B1"}
@@ -2670,7 +2698,9 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/paronym_pairs.yaml")
     assert live_path.exists()
     pairs = read_paronym_pairs(live_path)
-    assert len(pairs) == 103, f"Expected 103 paronym pairs (55 baseline + 48 promoted), got {len(pairs)}"
+    # 103 authored - 1 dedup (пам'ятка/пам'ятник was authored twice under two
+    # different apostrophe characters; #6338 merged the two into one entry).
+    assert len(pairs) == 102, f"Expected 102 paronym pairs (103 authored - 1 dedup, #6338), got {len(pairs)}"
     seen_pairs: set[tuple[str, str]] = set()
     for index, pair in enumerate(pairs):
         errors = validate_paronym_pair(pair)
