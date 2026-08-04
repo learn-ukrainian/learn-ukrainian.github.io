@@ -879,3 +879,89 @@ def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
     assert entered.wait(timeout=0.5)
     assert elapsed < 0.2
     assert result["freshness"] == "unavailable"
+
+
+def test_default_refresh_timeout_floor_matches_real_cli_latency(monkeypatch):
+    """Regression: the prior 2.0s default never let the claude lane's CLI
+    probe complete (live-measured 2026-08-04: `codexbar usage --json
+    --provider claude` took ~17s twice in a row, its own dashboard-fetch
+    latency, not a hang), which painted a healthy lane as capacity-unavailable
+    — the routing-budget false-red this dispatch fixes."""
+    monkeypatch.delenv("CODEXBAR_REFRESH_TIMEOUT_S", raising=False)
+    assert (
+        codexbar_usage_mod._codexbar_refresh_timeout_s()
+        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
+    )
+    # Comfortable margin above the live-measured ~17s worst case.
+    assert codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S >= 20.0
+
+
+def test_refresh_timeout_env_override(monkeypatch):
+    """CODEXBAR_REFRESH_TIMEOUT_S lets a slower box or CI raise/lower the floor."""
+    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "9.5")
+    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == 9.5
+
+    # Malformed or non-positive overrides fall back to the safe default
+    # rather than passing a bad value to subprocess.run(timeout=...).
+    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "not-a-number")
+    assert (
+        codexbar_usage_mod._codexbar_refresh_timeout_s()
+        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
+    )
+
+    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "-5")
+    assert (
+        codexbar_usage_mod._codexbar_refresh_timeout_s()
+        == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
+    )
+
+
+def test_refresh_provider_usage_data_defaults_to_realistic_timeout(monkeypatch):
+    """The blocking fresh-refresh path (state_router fresh_codexbar=True) must
+    pass the realistic default down to the CLI subprocess timeout, not the
+    prior 2.0s that starved slow lanes like claude."""
+    monkeypatch.delenv("CODEXBAR_REFRESH_TIMEOUT_S", raising=False)
+    seen_timeouts = []
+
+    def fake_fetch(provider, *, timeout_s):
+        seen_timeouts.append(timeout_s)
+        return _normalize_provider_data(provider, json.loads(CODEX_FIXTURE)[0])
+
+    monkeypatch.setattr(codexbar_usage_mod, "fetch_codexbar_usage", fake_fetch)
+    codexbar_usage_mod.refresh_provider_usage_data(["codex"])
+    assert seen_timeouts == [codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S]
+
+
+def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
+    """_run_all_refreshes previously hardcoded timeout_s=2.0 directly, even
+    though it runs on a non-blocking daemon thread with no reason to use a
+    shorter timeout than the explicit fresh-refresh path."""
+    captured = {}
+
+    def fake_refresh(providers, *, timeout_s=None):
+        captured["timeout_s"] = timeout_s
+        captured["providers"] = tuple(providers)
+        return {}
+
+    monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    codexbar_usage_mod._run_all_refreshes()
+    # No override passed -> refresh_provider_usage_data resolves the shared
+    # realistic default itself, instead of the caller hardcoding 2.0.
+    assert captured["timeout_s"] is None
+    assert "claude" in captured["providers"]
+
+
+def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
+    """Ties this fix to the existing fail-open classification (reviewer_resolver
+    operator note 2026-08-03: 'red probe must not ban CF lanes'): a CLI timeout
+    must produce status='unavailable', which reviewer_resolver treats as missing
+    evidence, never as a dead/unhealthy lane."""
+    from scripts.review.reviewer_resolver import _HEALTH_ALIASES
+
+    timeout_result = codexbar_usage_mod._normalize_provider_error(
+        "claude",
+        {"kind": "timeout", "code": "TIMEOUT", "message": "CodexBar CLI timed out after 25.0s"},
+    )
+    assert timeout_result["status"] == "unavailable"
+    assert timeout_result["error_kind"] == "timeout"
+    assert _HEALTH_ALIASES[timeout_result["status"]] is None  # fail-open, not "unhealthy"

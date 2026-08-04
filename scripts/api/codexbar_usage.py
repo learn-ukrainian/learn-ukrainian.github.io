@@ -6,6 +6,7 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import threading
 import time
@@ -19,6 +20,21 @@ from scripts.api.state_helpers import cache_get_with_age, cache_set
 WEEKLY_WINDOW_MINUTES = 10080
 # Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
 WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
+
+# Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
+# ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a
+# hang) while codex returned in ~2s. The prior 2.0s refresh timeout
+# guaranteed a false 'unavailable' classification for the claude lane on
+# every fresh-refresh call — Monitor/routing then painted a healthy lane as
+# capacity-unknown (routing-budget false-red). This floor covers both
+# refresh_provider_usage_data() callers: the explicit fresh-refresh path
+# (state_router.compute_routing_budget(fresh_codexbar=True)) and the
+# background refresh thread (trigger_background_refresh). Neither blocks an
+# HTTP response thread past its own asyncio.to_thread call, so there is no
+# reason for the background path to run a shorter, more failure-prone
+# timeout than the explicit one — the prior 2.0s/5.0s split was itself the
+# bug, not a deliberate tradeoff.
+DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
 
 PROVIDER_TO_LANE = {
     "codex": "codex",
@@ -97,13 +113,38 @@ def _with_observation_metadata(
     return result
 
 
-def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 2.0) -> dict[str, dict[str, Any]]:
+def _codexbar_refresh_timeout_s() -> float:
+    """Per-provider CLI timeout floor for a blocking CodexBar refresh.
+
+    Override via CODEXBAR_REFRESH_TIMEOUT_S (e.g. a slower box, or CI).
+    Read fresh on every call so tests can monkeypatch the env var per-case.
+    """
+    raw = os.environ.get("CODEXBAR_REFRESH_TIMEOUT_S")
+    if raw:
+        try:
+            value = float(raw)
+        except ValueError:
+            value = None
+        if value is not None and value > 0:
+            return value
+    return DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
+
+
+def refresh_provider_usage_data(
+    providers: Iterable[str], *, timeout_s: float | None = None
+) -> dict[str, dict[str, Any]]:
     """Synchronously refresh selected providers in parallel for an explicit caller.
 
     The regular API path intentionally remains cache-only and non-blocking. This
     helper is reserved for callers, such as the dispatch budget guard, which
     explicitly need a bounded fresh verdict before acting.
+
+    timeout_s defaults to _codexbar_refresh_timeout_s() (CODEXBAR_REFRESH_TIMEOUT_S,
+    25.0s) — a real CLI call, not a hang. Callers should only override this when
+    they have their own measured reason to.
     """
+    if timeout_s is None:
+        timeout_s = _codexbar_refresh_timeout_s()
     unique_providers = tuple(dict.fromkeys(providers))
     if not unique_providers:
         return {}
@@ -543,8 +584,12 @@ def trigger_background_refresh() -> None:
 def _run_all_refreshes() -> None:
     # The background path must not serially spend six long CLI timeouts. Its
     # bounded probes are parallel and failed probes cannot poison LKG data.
+    # Runs on a daemon thread, so it does not block any HTTP response —
+    # it shares the same realistic timeout floor as the explicit fresh-refresh
+    # path (see _codexbar_refresh_timeout_s) rather than the prior 2.0s, which
+    # never let the claude lane's ~17s CLI probe complete.
     providers = ["claude", "codex", "cursor", "gemini", "grok", "kimi"]
-    refresh_provider_usage_data(providers, timeout_s=2.0)
+    refresh_provider_usage_data(providers)
 
 
 def get_provider_usage_data(provider: str) -> dict[str, Any]:

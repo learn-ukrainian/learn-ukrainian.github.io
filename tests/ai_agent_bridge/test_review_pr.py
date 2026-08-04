@@ -351,12 +351,13 @@ def test_review_routing_budget_requires_fresh_codexbar(monkeypatch) -> None:
     monkeypatch.setattr(
         codexbar_usage,
         "refresh_provider_usage_data",
-        lambda providers, *, timeout_s: refreshed.append((tuple(providers), timeout_s)) or {},
+        lambda providers, *, timeout_s=None: refreshed.append((tuple(providers), timeout_s)) or {},
     )
 
     assert review_pr._compute_review_routing_budget()["agents"]["kimi"]["status"] == "cool"
     assert observed == [True, False]
-    assert refreshed == [(('kimi',), 5.0)]
+    # Production uses the shared floor (25s default / env) — no hard-coded 5.0s override.
+    assert refreshed == [(("kimi",), None)]
 
 
 def test_build_review_pr_prompt_has_contract_and_cap() -> None:

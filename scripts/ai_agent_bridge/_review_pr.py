@@ -250,10 +250,13 @@ def _compute_review_routing_budget() -> dict[str, Any]:
         and agents[lane].get("status") in {"unknown", "unavailable"}
     )
     if unavailable:
-        # CodexBar provider probes can serialize internally. Retry missing
-        # lanes one at a time so they do not time out behind one another.
+        # Retry missing lanes one at a time rather than one more all-lane
+        # refresh. Uses the shared realistic timeout floor (25s default,
+        # CODEXBAR_REFRESH_TIMEOUT_S) — the prior 5.0s override was still
+        # shorter than the claude lane's live-measured ~17s CLI latency and
+        # reproduced the same false-'unavailable' misclassification.
         for lane in unavailable:
-            refresh_provider_usage_data((lane,), timeout_s=5.0)
+            refresh_provider_usage_data((lane,))
         # The retry populated this process's last-known-good cache; do not
         # launch a second all-provider refresh while projecting it.
         budget = compute_routing_budget(fresh_codexbar=False)
