@@ -1838,16 +1838,27 @@ def _morphology(entry: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def _morph_labels(morphology: dict[str, Any]) -> list[str]:
+    """Return the closed morphology signals used by classify drills.
+
+    ``aspect`` and raw VESUM ``tags`` are optional schema fields.  They are
+    deliberately retained here: unlike a human-readable tense label, they
+    are an explicit grammatical source for verb aspect.
+    """
+    labels: list[str] = []
+    for key in ("aspect", "tags"):
+        value = _clean_text(morphology.get(key))
+        if value is not None:
+            labels.append(value)
     forms = morphology.get("forms")
     if not isinstance(forms, list):
-        return []
-    labels: list[str] = []
+        return labels
     for row in forms:
         if not isinstance(row, dict):
             continue
-        label = _clean_text(row.get("label"))
-        if label is not None:
-            labels.append(label)
+        for key in ("label", "aspect", "tags"):
+            value = _clean_text(row.get(key))
+            if value is not None:
+                labels.append(value)
     return labels
 
 
@@ -2080,7 +2091,51 @@ def _gender_category(labels: list[str]) -> str | None:
     return next(iter(genders)) if len(genders) == 1 else None
 
 
+_EXPLICIT_ASPECT_PATTERNS: dict[str, tuple[re.Pattern[str], ...]] = {
+    "imperfective": (
+        re.compile(r"\bнедоконан(?:ий|а|е|і)?\b", re.IGNORECASE),
+        re.compile(r"\bнедок\.?\b", re.IGNORECASE),
+        re.compile(r"\bimperfective\b", re.IGNORECASE),
+        re.compile(r"\bimperf\b", re.IGNORECASE),
+    ),
+    "perfective": (
+        re.compile(r"\bдоконан(?:ий|а|е|і)?\b", re.IGNORECASE),
+        re.compile(r"\bдокон\.?\b", re.IGNORECASE),
+        re.compile(r"\bperfective\b", re.IGNORECASE),
+        re.compile(r"\bperf\b", re.IGNORECASE),
+    ),
+}
+
+
+def _explicit_aspect_category(labels: list[str]) -> str | None:
+    """Return one explicit aspect signal, rejecting contradictory evidence."""
+    aspects = {
+        aspect
+        for aspect, patterns in _EXPLICIT_ASPECT_PATTERNS.items()
+        if any(pattern.search(label) for label in labels for pattern in patterns)
+    }
+    return next(iter(aspects)) if len(aspects) == 1 else None
+
+
 def _aspect_category(labels: list[str]) -> str | None:
+    """Classify aspect from VESUM/Atlas evidence before a documented fallback.
+
+    VESUM ``perf``/``imperf`` tags and their decoded Atlas labels are explicit
+    aspect evidence, so they win over tense.  Tense is only a legacy fallback:
+    an untagged verb with both present and future labels is imperfective because
+    imperfectives have analytic future forms; a future-only untagged verb is
+    treated as perfective.  Contradictory explicit tags are left unclassified.
+    """
+    explicit = _explicit_aspect_category(labels)
+    if explicit:
+        return explicit
+    if any(
+        pattern.search(label)
+        for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
+        for label in labels
+        for pattern in patterns
+    ):
+        return None
     has_present = any("теперішній" in label for label in labels)
     has_future = any("майбутній" in label for label in labels)
     if has_present:
@@ -2088,6 +2143,37 @@ def _aspect_category(labels: list[str]) -> str | None:
     if has_future:
         return "perfective"
     return None
+
+
+def _vesum_aspect_by_lemma(
+    lemmas: list[str], verifier: VesumVerifier
+) -> dict[str, str]:
+    """Read explicit aspect from VESUM tags for exact verb lemmas in batches.
+
+    The manifest's learner-facing form labels historically omit ``perf`` and
+    ``imperf``.  This direct query keeps practice classification sourced from
+    VESUM until (and when) an Atlas payload already carries an explicit tag.
+    Unknown or mixed analyses are intentionally omitted rather than guessed.
+    """
+    aspects_by_lemma: dict[str, str] = {}
+    unique_lemmas = list(dict.fromkeys(lemma for lemma in lemmas if lemma))
+    for start in range(0, len(unique_lemmas), 500):
+        batch = unique_lemmas[start : start + 500]
+        matches_by_form = verifier.verify_words(batch, "verb")
+        for lemma in batch:
+            lemma_plain = _plain(lemma)
+            aspects: set[str] = set()
+            for match in matches_by_form.get(lemma, []):
+                if _plain(str(match.get("lemma") or "")) != lemma_plain:
+                    continue
+                tags = set(str(match.get("tags") or "").split(":"))
+                if "imperf" in tags:
+                    aspects.add("imperfective")
+                elif "perf" in tags:
+                    aspects.add("perfective")
+            if len(aspects) == 1:
+                aspects_by_lemma[lemma_plain] = next(iter(aspects))
+    return aspects_by_lemma
 
 
 def _declension_category(entry: dict[str, Any], labels: list[str], paradigm: dict[str, Any]) -> str | None:
@@ -2155,11 +2241,35 @@ def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] |
     return payload
 
 
-def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+def _is_aspect_residual_target(entry: dict[str, Any], lexeme: dict[str, Any]) -> bool:
+    cefr = _normalize_cefr(lexeme.get("cefr"))
+    return bool(
+        cefr
+        and CEFR_RANK["A2"] <= CEFR_RANK[cefr] <= CEFR_RANK["C1"]
+        and _morph_pos(entry) == "verb"
+    )
+
+
+def _build_classify_items(
+    entry: dict[str, Any],
+    lexeme: dict[str, Any],
+    *,
+    vesum_aspect: str | None = None,
+    aspect_residuals: list[dict[str, str]] | None = None,
+) -> list[dict[str, Any]]:
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
     morphology = _morphology(entry)
     if not morphology:
+        if aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
+            aspect_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": "missing_morphology",
+                }
+            )
         return []
     labels = _morph_labels(morphology)
     pos = _morph_pos(entry, morphology)
@@ -2173,9 +2283,26 @@ def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list
         if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
             sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
     elif pos == "verb":
-        aspect = _aspect_category(labels)
+        # Atlas/VESUM labels are primary.  The direct VESUM lookup exists for
+        # older hydrated manifests whose decoded form labels omitted aspect.
+        aspect = _explicit_aspect_category(labels) or vesum_aspect or _aspect_category(labels)
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
+        elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
+            reason = "conflicting_explicit_aspect" if any(
+                pattern.search(label)
+                for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
+                for label in labels
+                for pattern in patterns
+            ) else "no_explicit_aspect_or_tense_proxy"
+            aspect_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": reason,
+                }
+            )
     if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
         pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
         if pos_set:
@@ -3793,6 +3920,7 @@ def build_practice_shards(
     end_dictionary_stress: dict[str, dict[str, str]] | None = None,
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
+    aspect_residuals: list[dict[str, str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
@@ -3849,6 +3977,12 @@ def build_practice_shards(
         config,
         priority_lemma_keys,
     )
+    verb_lemmas = [
+        str(entry.get("lemma") or "")
+        for entry, lexeme in lexemes_by_entry
+        if _is_aspect_residual_target(entry, lexeme)
+    ]
+    vesum_aspects = _vesum_aspect_by_lemma(verb_lemmas, verifier)
     # Paronym emit resolves adjudicated pair slugs against the selected pool
     # (main's _select_practice_lexemes refactor supplies the pool; this map is
     # the branch's paronym-specific addition kept through the merge).
@@ -3903,7 +4037,12 @@ def build_practice_shards(
                 }
             )
 
-        classify_items = _build_classify_items(_entry, lexeme)
+        classify_items = _build_classify_items(
+            _entry,
+            lexeme,
+            vesum_aspect=vesum_aspects.get(lexeme["lemmaPlain"]),
+            aspect_residuals=aspect_residuals,
+        )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         paradigm_items = _build_paradigm_items(lexeme)
         mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
@@ -5182,6 +5321,18 @@ def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) ->
     return written
 
 
+def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) -> None:
+    """Write the named A2--C1 practice-verb aspect residual for review."""
+    payload = {
+        "schema": "atlas-practice-aspect-residuals-v1",
+        "scope": "selected practice verbs at A2-C1 with no emitted aspect set",
+        "count": len(residuals),
+        "verbs": sorted(residuals, key=lambda row: (row["cefr"], row["lemmaId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
@@ -5230,6 +5381,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT)
     parser.add_argument("--cloze-raw-limit", type=int, default=DEFAULT_CLOZE_RAW_LIMIT)
     parser.add_argument("--cloze-gzip-limit", type=int, default=DEFAULT_CLOZE_GZIP_LIMIT)
+    parser.add_argument(
+        "--aspect-residual-report",
+        type=Path,
+        help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
+    )
     parser.add_argument("--fixture-note", type=str)
     parser.add_argument(
         "--seed-selection",
@@ -5326,6 +5482,7 @@ def main(argv: list[str] | None = None) -> int:
         seed_selection=args.seed_selection,
         cloze_enabled=not args.disable_cloze,
     )
+    aspect_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -5338,6 +5495,7 @@ def main(argv: list[str] | None = None) -> int:
         end_dictionary_stress=end_dictionary_stress or None,
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
+        aspect_residuals=aspect_residuals,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
@@ -5389,6 +5547,27 @@ def main(argv: list[str] | None = None) -> int:
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
+    if args.aspect_residual_report:
+        emitted_lemma_ids = {
+            str(item.get("lemmaId"))
+            for level_shards in shards.values()
+            for item in level_shards.get("lexemes", {}).get("items", [])
+            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+        }
+        aspect_residuals = [
+            residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids
+        ]
+        write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
+        print(
+            "aspect residuals "
+            + json.dumps(
+                {
+                    "count": len(aspect_residuals),
+                    "report": str(args.aspect_residual_report),
+                },
+                ensure_ascii=False,
+            )
+        )
     written = write_shards(shards, args.out_dir)
     for path in written:
         print(path)
