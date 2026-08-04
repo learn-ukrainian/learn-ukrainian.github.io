@@ -731,6 +731,17 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
 test('A7: word cards render the level exactly once', async ({ page, context }) => {
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
+  // Learner level is soft guidance: the real date-seeded pool may legitimately
+  // put an A2+ word first. Freeze this assertion's input so it tests duplicate
+  // CEFR rendering rather than today's selection order.
+  await page.route('**/lexicon/daily-pool.json', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify([
+        { lemma: 'слово', slug: 'a7-level-once', gloss: 'word', cefr: 'A1' },
+      ]),
+    }),
+  );
   await page.goto('/words-of-the-day/practice/');
 
   // Wait for the real daily deck (not the loading placeholder's bare "—" card).
