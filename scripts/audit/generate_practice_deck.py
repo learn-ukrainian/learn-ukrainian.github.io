@@ -650,8 +650,11 @@ def _english_translation_gloss(entry: dict[str, Any]) -> str | None:
         candidates.extend(str(item) for item in en if item)
     cleaned: list[str] = []
     for raw in candidates:
-        # Drop parenthetical dictionary expansions: "fairy tale (folktale)" → "fairy tale"
-        head = re.split(r"[;(]", raw, maxsplit=1)[0]
+        text = re.sub(r"\s+", " ", str(raw)).strip()
+        # Strip leading qualifiers: "(dated) fairy tale" → "fairy tale"
+        text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
+        # Drop trailing dictionary expansions: "fairy tale (folktale)" → "fairy tale"
+        head = re.split(r"[;(]", text, maxsplit=1)[0]
         clean = _gloss_clean(head)
         if clean and _is_english_learner_gloss(clean):
             cleaned.append(clean)
@@ -679,7 +682,7 @@ def _practice_display_gloss(entry: dict[str, Any], level: str | None, fallback: 
         return fallback
     if level == "A1":
         return en
-    if level in {"A1", "A2"} and not _is_english_learner_gloss(_gloss_clean(fallback)):
+    if level == "A2" and not _is_english_learner_gloss(_gloss_clean(fallback)):
         return en
     return fallback
 

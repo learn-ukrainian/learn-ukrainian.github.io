@@ -1298,6 +1298,19 @@ def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> No
     assert lexeme["glossClean"] == "fairy tale"
     assert "розповідний" not in lexeme["gloss"]
 
+    dated = {
+        **entry,
+        "enrichment": {
+            "translation": {
+                "en": ["(dated) fairy tale (folktale)"],
+                "source": "dmklinger",
+            }
+        },
+    }
+    dated_lexeme = _build_lexeme(dated, verifier)
+    assert dated_lexeme is not None
+    assert dated_lexeme["glossClean"] == "fairy tale"
+
 
 def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
     assert _meaning_mc_eligible("justice", "справедливість", "noun") is True
