@@ -2259,8 +2259,16 @@ def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> 
 @pytest.mark.parametrize(
     ("manifest_pos", "expected_bucket"),
     [
+        ("noun", "noun"),
+        ("adjective", "adjective"),
+        ("numeral", "numeral"),
+        ("pronoun", "pronoun"),
         ("infinitive", "verb"),
         ("imperative", "verb"),
+        ("adverb", "adverb"),
+        ("preposition", "preposition"),
+        ("conjunction", "conjunction"),
+        ("particle", "particle"),
         ("numr", "numeral"),
         ("intj", "interjection"),
     ],
@@ -2269,6 +2277,51 @@ def test_option_pos_bucket_normalizes_unambiguous_manifest_aliases(
     manifest_pos: str, expected_bucket: str
 ) -> None:
     assert generate_practice_deck._option_pos_bucket(manifest_pos) == expected_bucket
+
+
+def test_option_pos_bucket_uses_the_same_closed_school_set_as_classify() -> None:
+    assert {
+        generate_practice_deck._option_pos_bucket(alias)
+        for aliases in generate_practice_deck._POS_BUCKET_ALIASES.values()
+        for alias in aliases
+    } == set(generate_practice_deck.CLASSIFY_LABELS["pos"])
+    assert generate_practice_deck._option_pos_bucket("predicative") == ""
+    assert generate_practice_deck._option_pos_bucket("noun/verb") == ""
+
+
+def test_validate_option_set_rejects_unknown_or_multi_pos_option() -> None:
+    errors = validate_option_set(
+        {
+            "options": [
+                {"label": "один", "pos": "noun", "kind": "answer"},
+                {"label": "два", "pos": "noun/verb", "kind": "decoy"},
+                {"label": "три", "pos": "noun", "kind": "decoy"},
+                {"label": "чотири", "pos": "noun", "kind": "decoy"},
+            ]
+        }
+    )
+
+    assert "option set contains an unknown or multi-POS category" in errors
+
+
+def test_dictionary_decoys_do_not_mash_school_function_categories() -> None:
+    answer = {
+        "lemmaId": "bez",
+        "lemma": "без",
+        "gloss": "without",
+        "pos": "preposition",
+        "cefr": "A1",
+    }
+    lexemes = [
+        answer,
+        {"lemmaId": "do", "lemma": "до", "gloss": "to", "pos": "prep", "cefr": "A1"},
+        {"lemmaId": "i", "lemma": "і", "gloss": "and", "pos": "conjunction", "cefr": "A1"},
+        {"lemmaId": "ne", "lemma": "не", "gloss": "not", "pos": "particle", "cefr": "A1"},
+    ]
+
+    decoys = generate_practice_deck._eligible_dictionary_decoys(answer, lexemes)
+
+    assert [(lexeme["lemmaId"], label) for lexeme, label in decoys] == [("do", "до")]
 
 
 def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
