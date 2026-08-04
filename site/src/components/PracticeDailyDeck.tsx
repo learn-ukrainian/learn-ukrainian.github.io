@@ -93,6 +93,7 @@ export default function PracticeDailyDeck({
   const displayLemma = (lemma: string) => (showStressMarks ? lemma : stripStressMarks(lemma));
   const currentExample = currentItem?.example?.trim() || currentLexeme?.example?.trim() || null;
   const currentExampleEn = usablePracticeSentenceEnglish(currentItem?.exampleEn || currentLexeme?.exampleEn);
+  const currentEtymology = currentItem?.etymology?.trim() || null;
 
   return (
     <div className="practice-daily-deck" data-testid="practice-daily-deck">
@@ -179,6 +180,11 @@ export default function PracticeDailyDeck({
                           {currentExampleEn}
                         </span>
                       ) : null}
+                    </p>
+                  ) : null}
+                  {currentEtymology ? (
+                    <p className="daily-deck-origin" data-testid="practice-daily-etymology" lang="uk">
+                      <ChromeDual uk="Походження:" en="Origin:" /> {currentEtymology}
                     </p>
                   ) : null}
                 </>

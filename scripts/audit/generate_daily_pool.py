@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -59,6 +60,67 @@ def kind_for_source(source: Any) -> str:
 
 def _has_text(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
+
+
+_MAX_ORIGIN_LENGTH = 160
+
+# Matches a parenthetical that contains Latin-script characters (transliteration
+# or English gloss). Tolerates one level of nested parentheses.
+_LATIN_PARENTHETICAL_RE = re.compile(
+    r"\((?:[^()]|\([^()]*\))*[A-Za-z](?:[^()]|\([^()]*\))*\)"
+)
+# Imperial comparison clauses that Kaikki sometimes appends.
+# Keep the sentence's own period before the clause; only drop the clause itself.
+_COMPARE_CLAUSE_RE = re.compile(r"(?:\s*,\s*)?\b[Cc]ompare\s+[A-Z][a-z]+[^.]*\.?")
+# Source/license fragments that should never become prose.
+_SOURCE_FRAGMENT_RE = re.compile(r"\bkaikki/Wiktionary\b|\(CC BY-SA[^)]*\)")
+# Internal mphdict/ESUM labels are not learner-facing etymology.
+_ESUM_LABEL_RE = re.compile(r"Стаття\s+ЕСУМ|етимонів\s*:", re.IGNORECASE)
+
+
+def _clean_origin(text: str) -> str | None:
+    """Clean a raw Kaikki/Wiktionary etymology string for the daily pool.
+
+    Fails closed: returns ``None`` for empty/garbage input or internal labels.
+    """
+    collapsed = " ".join(text.split())
+    if not collapsed or not any(c.isalpha() for c in collapsed):
+        return None
+
+    cleaned = _LATIN_PARENTHETICAL_RE.sub("", collapsed)
+    cleaned = _COMPARE_CLAUSE_RE.sub("", cleaned)
+    cleaned = _SOURCE_FRAGMENT_RE.sub("", cleaned)
+    cleaned = " ".join(cleaned.split())
+    # Pull stray punctuation back against the preceding word instead of deleting it.
+    cleaned = re.sub(r"\s+([.,])", r"\1", cleaned).strip()
+
+    if not cleaned or not any(c.isalpha() for c in cleaned):
+        return None
+    if _ESUM_LABEL_RE.search(cleaned):
+        return None
+
+    cleaned = cleaned[0].upper() + cleaned[1:]
+    if len(cleaned) <= _MAX_ORIGIN_LENGTH:
+        return cleaned
+    breakpoint = cleaned.rfind(" ", 0, _MAX_ORIGIN_LENGTH)
+    end = breakpoint if breakpoint > 0 else _MAX_ORIGIN_LENGTH
+    return cleaned[:end] + "…"
+
+
+def _first_origin(entry: dict[str, Any]) -> str | None:
+    """Return a cleaned Kaikki/Wiktionary origin string for the daily pool, or None."""
+    enrichment = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
+    etymology = enrichment.get("etymology")
+    if not isinstance(etymology, dict):
+        return None
+    raw_text = etymology.get("text")
+    if not isinstance(raw_text, str) or not raw_text.strip():
+        return None
+    source = etymology.get("source", "")
+    if not isinstance(source, str) or "Wiktionary" not in source:
+        # Only surface Kaikki-sourced origin prose; ESUM has its own pages.
+        return None
+    return _clean_origin(raw_text)
 
 
 def _first_course_track(entry: dict[str, Any]) -> str | None:
@@ -205,6 +267,9 @@ def _pool_item(
     if inventory_row is not None:
         item["exampleProvenance"] = inventory_row["provenance"]
         item["exampleLicense"] = inventory_row["license"]
+    origin = _first_origin(entry)
+    if origin is not None:
+        item["etymology"] = origin
     return item
 
 
