@@ -78,7 +78,38 @@ tr:last-child td { border-bottom: none; }
 .routing-detail strong { color: var(--text); font-weight: 600; }
 .route-auto { background: rgba(57,210,192,0.14); color: var(--cyan); }
 .route-explicit { background: rgba(240,136,62,0.16); color: var(--orange); }
-.routing-table td { min-width: 135px; }
+.routing-live { min-height: 1.2em; margin-bottom: 10px; color: var(--text2); font-size: 12px; }
+.routing-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.routing-summary-card { min-width: 0; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; }
+.routing-summary-card dt { color: var(--text2); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.routing-summary-card dd { margin: 6px 0 0; color: var(--text); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.routing-controls { display: grid; grid-template-columns: minmax(160px, .8fr) minmax(160px, .8fr) minmax(160px, .8fr) minmax(220px, 1.4fr) auto; gap: 9px; align-items: end; margin-bottom: 16px; }
+.routing-control { display: grid; gap: 5px; min-width: 0; color: var(--text2); font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+.routing-control select, .routing-control input, .routing-load-more, .routing-reset { min-height: 44px; width: 100%; padding: 9px 10px; color: var(--text); font: inherit; text-transform: none; letter-spacing: normal; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; }
+.routing-control input::placeholder { color: var(--text3); }
+.routing-reset { align-self: end; min-width: 76px; background: var(--bg3); cursor: pointer; }
+.routing-reset:hover, .routing-load-more:hover { border-color: var(--blue); color: var(--blue); }
+.routing-groups { display: grid; gap: 18px; }
+.routing-group { display: grid; gap: 10px; }
+.routing-group-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--text); font-size: 14px; }
+.routing-group-heading small { color: var(--text2); font-size: 12px; font-weight: 400; }
+.routing-card { min-width: 0; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; }
+.routing-card:focus-within { border-color: var(--blue); }
+.routing-path { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: stretch; list-style: none; }
+.routing-path-step { min-width: 0; padding: 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; }
+.routing-path-label { display: block; margin-bottom: 5px; color: var(--text2); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.routing-path-value { color: var(--text); font-size: 13px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.routing-arrow { align-self: center; color: var(--purple); font-size: 18px; }
+.routing-card-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 14px; margin: 12px 0; }
+.routing-card-summary .routing-detail { min-width: 0; overflow-wrap: anywhere; }
+.routing-card details { border-top: 1px solid var(--border); padding-top: 10px; }
+.routing-card summary { min-height: 32px; color: var(--text); cursor: pointer; }
+.routing-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; margin-top: 10px; }
+.routing-facts .routing-detail { overflow-wrap: anywhere; }
+.routing-list { margin: 6px 0 0 18px; color: var(--text2); }
+.routing-list li { margin: 4px 0; overflow-wrap: anywhere; }
+.routing-load-more { max-width: 240px; margin-top: 2px; background: var(--bg3); cursor: pointer; }
+.focus-target:focus-visible, .btn:focus-visible, a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 @media (max-width: 820px) {
   .usage-row { grid-template-columns: 1fr; }
   .topbar { flex-wrap: wrap; }
@@ -86,9 +117,17 @@ tr:last-child td { border-bottom: none; }
   .acpx-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .acpx-spine { min-height: 110px; }
   .acpx-spine::before, .acpx-spine::after { width: 30px; height: 1px; }
+  .routing-summary, .routing-card-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .routing-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .routing-reset { width: auto; }
+  .routing-path { grid-template-columns: 1fr; gap: 5px; }
+  .routing-arrow { justify-self: center; transform: rotate(90deg); line-height: 16px; }
 }
 @media (max-width: 520px) {
   .acpx-summary { grid-template-columns: 1fr; }
+  .container { padding: 14px; }
+  .routing-summary, .routing-card-summary, .routing-facts, .routing-controls { grid-template-columns: 1fr; }
+  .routing-reset, .routing-load-more { max-width: none; }
 }
 </style>
 <link rel="stylesheet" href="/monitor.css">
@@ -148,9 +187,10 @@ tr:last-child td { border-bottom: none; }
   </section>
 
   <section class="card purple" aria-labelledby="routing-assignments-heading">
-    <div class="card-header"><h2 id="routing-assignments-heading">&#129517; Routing assignments</h2><div class="muted">Read-only authority history · newest first</div></div>
+    <div class="card-header"><h2 id="routing-assignments-heading">&#129517; Routing overview</h2><div class="muted">Read-only loaded/recent authority window</div></div>
     <div class="banner" id="routing-assignments-banner" role="status"></div>
-    <div id="routing-assignments-content" class="empty" aria-live="polite">Loading routing authority history...</div>
+    <div id="routing-assignments-status" class="routing-live" aria-live="polite" aria-atomic="true">Loading routing authority history...</div>
+    <div id="routing-assignments-content" class="empty" aria-busy="true">Loading routing authority history...</div>
   </section>
 
   <section class="card orange">
@@ -425,44 +465,269 @@ function renderRecent(records) {
   </table>`;
 }
 
+const ROUTING_PAGE_SIZE = 25;
+const STALE_ACTIVITY_MS = 45 * 60 * 1000;
+const routingUi = { lifecycle: 'all', mode: 'all', route: 'all', query: '', visible: ROUTING_PAGE_SIZE };
+
 function displayRouteValue(value) {
   if (value == null || value === '') return '—';
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  return typeof value === 'object' ? 'Reported facts' : String(value);
 }
 
 function routingFact(label, value) {
   return `<div class="routing-detail"><strong>${escapeHtml(label)}:</strong> ${escapeHtml(displayRouteValue(value))}</div>`;
 }
 
-function routingReasoning(item) {
-  const reasoning = item.selection_reasoning && typeof item.selection_reasoning === 'object'
-    ? item.selection_reasoning : {};
-  return `<details><summary class="muted">Suitability-first decision evidence</summary>
-    <div class="routing-detail"><strong>Order:</strong> hard eligibility and capability gates → task fit / quality rank → quota, subscription opportunity cost, capacity, and failure tie-breakers.</div>
-    ${routingFact('Hard eligibility / capability', reasoning.hard_eligibility)}
-    ${routingFact('Task fit / quality', reasoning.task_fit_quality)}
-    ${routingFact('Quota / cost / capacity / failure tie-breakers', reasoning.tie_breakers)}
-    ${routingFact('Why cheaper or idle alternative was not selected', reasoning.cheaper_or_idle_not_selected)}
+function routingObjectFacts(label, value) {
+  if (!value || typeof value !== 'object') return routingFact(label, value);
+  const entries = Array.isArray(value) ? value.map((item, index) => [String(index + 1), item]) : Object.entries(value);
+  if (!entries.length) return routingFact(label, '—');
+  return `<div class="routing-detail"><strong>${escapeHtml(label)}:</strong><ul class="routing-list">${entries.map(([key, item]) => {
+    if (item && typeof item === 'object') {
+      const nested = Array.isArray(item) ? item : Object.values(item);
+      return `<li><strong>${escapeHtml(displayLabel(key))}:</strong> ${nested.map(displayRouteValue).map(escapeHtml).join(', ') || '—'}</li>`;
+    }
+    return `<li><strong>${escapeHtml(displayLabel(key))}:</strong> ${escapeHtml(displayRouteValue(item))}</li>`;
+  }).join('')}</ul></div>`;
+}
+
+function routingCandidateTrace(trace) {
+  if (!trace || typeof trace !== 'object') return routingFact('Candidate trace', trace);
+  const candidates = Array.isArray(trace.candidates) ? trace.candidates : [];
+  const decisionOrder = Array.isArray(trace.decision_order) ? trace.decision_order.map(displayLabel).join(' → ') : '—';
+  const candidateItems = candidates.map(candidate => {
+    if (!candidate || typeof candidate !== 'object') return `<li>${escapeHtml(displayRouteValue(candidate))}</li>`;
+    const identity = [candidate.route, candidate.model, candidate.family].filter(Boolean).join(' / ');
+    const reason = candidate.reason ? ` — ${candidate.reason}` : '';
+    return `<li><strong>${escapeHtml(displayRouteValue(candidate.name))}</strong> · ${escapeHtml(displayRouteValue(candidate.status))} · ${escapeHtml(identity || 'unreported route')}${escapeHtml(reason)}</li>`;
+  }).join('');
+  return `<div class="routing-detail"><strong>Candidate trace:</strong>
+    <ul class="routing-list">
+      <li><strong>Decision order:</strong> ${escapeHtml(decisionOrder)}</li>
+      <li><strong>Recorded note:</strong> ${escapeHtml(displayRouteValue(trace.substitution_note))}</li>
+      ${candidateItems || '<li>No candidate rows recorded.</li>'}
+    </ul>
+  </div>`;
+}
+
+function routingLifecycle(item) {
+  const states = [item.current_state, item.terminal_status, item.reservation_state, item.decision_state]
+    .filter(Boolean).map(value => String(value).toLowerCase());
+  const failure = String(item.failure_classification || '').toLowerCase();
+  if (failure || states.some(state => ['failed', 'failure', 'expired', 'cancelled', 'canceled', 'error', 'terminated', 'unknown'].includes(state))) return 'attention';
+  if (states.some(state => ['complete', 'completed', 'succeeded', 'success', 'settled'].includes(state))) return 'complete';
+  return 'active';
+}
+
+function routingTimestamp(item) {
+  const value = item.latest_event?.timestamp || item.timestamp;
+  const date = new Date(value || '');
+  return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+}
+
+function routingStaleActivity(item) {
+  if (routingLifecycle(item) !== 'active') return null;
+  const state = String(item.reservation_state || item.current_state || '').toLowerCase();
+  const timestamp = routingTimestamp(item);
+  return ['reserved', 'running'].includes(state) && timestamp && Date.now() - timestamp > STALE_ACTIVITY_MS
+    ? Date.now() - timestamp : null;
+}
+
+function routingAge(ageMs) {
+  const minutes = Math.floor(ageMs / 60000);
+  if (minutes >= 60) return `${Math.floor(minutes / 60)}h`;
+  return `${Math.max(1, minutes)}m`;
+}
+
+function routingRoute(item) {
+  return String(item.resolved_route || 'unreported');
+}
+
+function routingSearchText(item) {
+  return [item.initiator, item.author_model, item.author_family, item.requested_role, item.requested_profile,
+    item.requested_risk, item.resolved_route, item.resolved_model, item.resolved_family,
+    item.requested_reviewer, item.failure_classification].filter(Boolean).join(' ').toLocaleLowerCase();
+}
+
+function routingMatches(item) {
+  return (routingUi.lifecycle === 'all' || routingLifecycle(item) === routingUi.lifecycle)
+    && (routingUi.mode === 'all' || (routingUi.mode === 'automatic') === (item.automatic === true))
+    && (routingUi.route === 'all' || routingRoute(item) === routingUi.route)
+    && (!routingUi.query || routingSearchText(item).includes(routingUi.query.toLocaleLowerCase()));
+}
+
+function routingSort(items) {
+  const order = { active: 0, attention: 1, complete: 2 };
+  return [...items].sort((left, right) => (order[routingLifecycle(left)] - order[routingLifecycle(right)]) || (routingTimestamp(right) - routingTimestamp(left)));
+}
+
+function routingSummaryCard(label, value) {
+  return `<dl class="routing-summary-card"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></dl>`;
+}
+
+function routingSummary(assignments) {
+  const lifecycle = { active: 0, attention: 0, complete: 0, stale: 0 };
+  const modes = {
+    automatic: { total: 0, active: 0, attention: 0, complete: 0 },
+    explicit: { total: 0, active: 0, attention: 0, complete: 0 },
+  };
+  const routes = new Map();
+  const failures = new Map();
+  assignments.forEach(item => {
+    const group = routingLifecycle(item);
+    lifecycle[group] += 1;
+    if (routingStaleActivity(item)) lifecycle.stale += 1;
+    const mode = item.automatic === true ? 'automatic' : 'explicit';
+    modes[mode].total += 1;
+    modes[mode][group] += 1;
+    routes.set(routingRoute(item), (routes.get(routingRoute(item)) || 0) + 1);
+    const failure = item.failure_classification || (group === 'attention' ? 'unclassified' : null);
+    if (failure) failures.set(failure, (failures.get(failure) || 0) + 1);
+  });
+  const ranked = map => [...map.entries()].sort((left, right) => right[1] - left[1] || String(left[0]).localeCompare(String(right[0])));
+  const routeText = ranked(routes).slice(0, 5).map(([name, count]) => `${name} ${count}`).join(' · ') || 'No selected routes';
+  const failureText = ranked(failures).slice(0, 3).map(([name, count]) => `${name} ${count}`).join(' · ') || 'No failures recorded';
+  return `<div class="routing-summary" aria-label="Loaded recent routing window summary">
+    ${routingSummaryCard('Lifecycle', `${lifecycle.active} active · ${lifecycle.stale} stale · ${lifecycle.attention} needs attention · ${lifecycle.complete} complete`)}
+    ${routingSummaryCard('Automatic vs explicit', `${modes.automatic.total} automatic: ${modes.automatic.complete} complete, ${modes.automatic.attention} attention, ${modes.automatic.active} active · ${modes.explicit.total} explicit: ${modes.explicit.complete} complete, ${modes.explicit.attention} attention, ${modes.explicit.active} active`)}
+    ${routingSummaryCard('Route distribution', routeText)}
+    ${routingSummaryCard('Top failure causes', failureText)}
+  </div>`;
+}
+
+function routingControls(assignments) {
+  const routes = [...new Set(assignments.map(routingRoute))].sort((left, right) => left.localeCompare(right));
+  if (routingUi.route !== 'all' && !routes.includes(routingUi.route)) routingUi.route = 'all';
+  const option = (value, label, selected) => `<option value="${escapeHtml(value)}"${selected ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+  return `<div class="routing-controls" aria-label="Filter routing assignments">
+    <label class="routing-control">Lifecycle<select id="routing-lifecycle-filter">${option('all', 'All lifecycle groups', routingUi.lifecycle === 'all')}${option('active', 'Active', routingUi.lifecycle === 'active')}${option('attention', 'Needs attention', routingUi.lifecycle === 'attention')}${option('complete', 'Complete', routingUi.lifecycle === 'complete')}</select></label>
+    <label class="routing-control">Mode<select id="routing-mode-filter">${option('all', 'All modes', routingUi.mode === 'all')}${option('automatic', 'Automatic', routingUi.mode === 'automatic')}${option('explicit', 'Explicit', routingUi.mode === 'explicit')}</select></label>
+    <label class="routing-control">Route<select id="routing-route-filter">${option('all', 'All routes', routingUi.route === 'all')}${routes.map(route => option(route, displayLabel(route), routingUi.route === route)).join('')}</select></label>
+    <label class="routing-control">Search<input id="routing-search-filter" type="search" value="${escapeHtml(routingUi.query)}" placeholder="Initiator, model, reviewer, failure"></label>
+    <button type="button" class="routing-reset focus-target" id="routing-reset">Reset</button>
+  </div>`;
+}
+
+function routingDetails(item) {
+  const reasoning = item.selection_reasoning && typeof item.selection_reasoning === 'object' ? item.selection_reasoning : {};
+  const events = Array.isArray(item.event_history) ? item.event_history : [];
+  return `<details><summary class="focus-target" aria-label="Assignment details for ${escapeHtml(displayRouteValue(item.source_authority_id))}">Decision evidence &amp; operational details</summary>
+    <div class="routing-facts">
+      ${routingFact('Reservation ID', item.source_authority_id)}
+      ${routingFact('Authority key', item.authority_key)}
+      ${routingFact('Latest event', `${displayRouteValue(item.latest_event?.event_type)} / ${displayRouteValue(item.latest_event?.state)}`)}
+      ${routingFact('Requested reviewer / route', item.requested_reviewer)}
+      ${routingFact('Policy version', item.policy_version)}
+      ${routingFact('Selection reason', item.selection_reason)}
+      ${routingCandidateTrace(item.selection_trace)}
+      <div class="routing-detail"><strong>Suitability-first decision evidence:</strong> hard eligibility and capability gates → task fit / quality rank → quota, subscription opportunity cost, capacity, and failure tie-breakers.</div>
+      ${routingFact('Hard eligibility / capability', reasoning.hard_eligibility)}
+      ${routingFact('Task fit / quality', reasoning.task_fit_quality)}
+      ${routingFact('Quota / cost / capacity / failure tie-breakers', reasoning.tie_breakers)}
+      ${routingFact('Why cheaper or idle alternative was not selected', reasoning.cheaper_or_idle_not_selected)}
+      ${routingFact('Quota source / freshness / checked', `${displayRouteValue(item.quota_source)} / ${displayRouteValue(item.quota_freshness_state)} / ${formatTs(item.quota_fresh_at)}`)}
+      ${routingFact('Freshness state', item.quota_freshness_state)}
+      ${routingFact('Quota bucket / credential bucket / headroom', `${displayRouteValue(item.quota_bucket)} / ${displayRouteValue(item.credential_bucket)} / ${displayRouteValue(item.quota_headroom_band || item.quota_headroom)}`)}
+      ${routingObjectFacts('Capacity facts', item.capacity_evidence)}
+      ${routingFact('Estimated input / actual input / work / output / tokens', `${displayRouteValue(item.estimated_input_bytes)} / ${displayRouteValue(item.actual_input_bytes)} / ${displayRouteValue(item.actual_work_bytes)} / ${displayRouteValue(item.actual_output_bytes)} / ${displayRouteValue(item.actual_tokens)}`)}
+      ${routingFact('Reservation / expiry / started / settled', `${displayRouteValue(item.reservation_state)} / ${formatTs(item.expires_at)} / ${formatTs(item.started_at)} / ${formatTs(item.settled_at)}`)}
+      ${routingObjectFacts('Retry facts', item.retry_chain)}
+      ${routingObjectFacts('Failover facts', item.failover_chain)}
+      ${routingObjectFacts('Replay facts', item.replay_status)}
+      ${routingObjectFacts('Cache facts', item.cache_status)}
+    </div>
+    <div class="routing-detail"><strong>Chronological event history:</strong>${events.length ? `<ol class="routing-list" aria-label="Event history">${events.map(event => `<li>${escapeHtml(`${displayRouteValue(event.event_type)} / ${displayRouteValue(event.state)} · ${displayRouteValue(event.decision_id)} · ${formatTs(event.timestamp)}`)}</li>`).join('')}</ol>` : ' —'}</div>
   </details>`;
 }
 
-function routingEventTimeline(item) {
-  const events = Array.isArray(item.event_history) ? item.event_history : [];
-  if (!events.length) return routingFact('Event history', '—');
-  return `<details><summary class="muted">Event history (${escapeHtml(String(item.event_count || events.length))})</summary>
-    ${events.map(event => routingFact(
-      `${displayRouteValue(event.event_type)} / ${displayRouteValue(event.state)}`,
-      `${displayRouteValue(event.decision_id)} · ${formatTs(event.timestamp)}`,
-    )).join('')}
-  </details>`;
+function routingCard(item) {
+  const lifecycle = routingLifecycle(item);
+  const staleAge = routingStaleActivity(item);
+  const outcomeClass = lifecycle === 'attention' ? 'err' : lifecycle === 'complete' ? 'ok' : 'info';
+  const modeClass = item.automatic === true ? 'route-auto' : 'route-explicit';
+  const reviewer = item.requested_reviewer || 'scheduler';
+  return `<article class="routing-card" aria-label="Routing assignment ${escapeHtml(displayRouteValue(item.source_authority_id))}">
+    <ol class="routing-path" aria-label="Routing decision path">
+      <li class="routing-path-step"><span class="routing-path-label">Initiator</span><div class="routing-path-value">${escapeHtml(displayRouteValue(item.initiator))}</div></li>
+      <li class="routing-arrow" aria-hidden="true">→</li>
+      <li class="routing-path-step"><span class="routing-path-label">Request</span><div class="routing-path-value">${escapeHtml(`${displayRouteValue(item.requested_role)} · ${displayRouteValue(item.requested_profile)} · ${displayRouteValue(item.requested_risk)}`)}</div></li>
+      <li class="routing-arrow" aria-hidden="true">→</li>
+      <li class="routing-path-step"><span class="routing-path-label">Selected route / model</span><div class="routing-path-value">${escapeHtml(`${displayRouteValue(item.resolved_route)} · ${displayRouteValue(item.resolved_model)}`)}</div></li>
+      <li class="routing-arrow" aria-hidden="true">→</li>
+      <li class="routing-path-step"><span class="routing-path-label">Outcome</span><div class="routing-path-value"><span class="pill ${outcomeClass}">${escapeHtml(displayRouteValue(item.current_state || item.terminal_status))}</span></div></li>
+    </ol>
+    <div class="routing-card-summary">
+      ${routingFact('Updated', formatTs(item.timestamp))}
+      ${routingFact('Current state', item.current_state || item.terminal_status)}
+      <div class="routing-detail"><strong>Mode:</strong> <span class="pill ${modeClass}">${item.automatic === true ? 'AUTOMATIC' : 'EXPLICIT'}</span></div>
+      ${routingFact('Initiator / author model / family', `${displayRouteValue(item.initiator)} / ${displayRouteValue(item.author_model)} / ${displayRouteValue(item.author_family)}`)}
+      ${routingFact('Role / profile / risk', `${displayRouteValue(item.requested_role)} / ${displayRouteValue(item.requested_profile)} / ${displayRouteValue(item.requested_risk)}`)}
+      ${routingFact('Reviewer pin / scheduler', reviewer)}
+      ${routingFact('Route / model / family', `${displayRouteValue(item.resolved_route)} / ${displayRouteValue(item.resolved_model)} / ${displayRouteValue(item.resolved_family)}`)}
+      ${routingFact('Duration', formatDuration(item.duration_s))}
+      ${routingFact('Failure record', item.failure_classification || (lifecycle === 'attention' ? 'not recorded' : null))}
+    </div>
+    ${staleAge ? `<div class="routing-detail"><span class="pill warn">No ledger update for ${escapeHtml(routingAge(staleAge))}</span> Stale activity evidence, not provider-liveness proof.</div>` : ''}
+    ${routingDetails(item)}
+  </article>`;
+}
+
+function renderRoutingResults(assignments) {
+  const summary = document.getElementById('routing-summary-region');
+  const results = document.getElementById('routing-results-region');
+  const status = document.getElementById('routing-assignments-status');
+  if (!summary || !results || !status) return;
+  const matching = routingSort(assignments.filter(routingMatches));
+  const shown = matching.slice(0, routingUi.visible);
+  const groupNames = { active: 'Active', attention: 'Needs attention', complete: 'Complete' };
+  const groups = ['active', 'attention', 'complete'].map(group => {
+    const items = shown.filter(item => routingLifecycle(item) === group);
+    if (!items.length) return '';
+    const matchingGroupCount = matching.filter(item => routingLifecycle(item) === group).length;
+    const stale = group === 'active' ? items.filter(routingStaleActivity).length : 0;
+    const countText = items.length === matchingGroupCount ? String(items.length) : `${items.length} of ${matchingGroupCount}`;
+    return `<section class="routing-group" aria-label="${groupNames[group]} assignments"><h3 class="routing-group-heading">${groupNames[group]} <small>${countText}${stale ? ` · ${stale} stale activity evidence` : ''}</small></h3>${items.map(routingCard).join('')}</section>`;
+  }).join('');
+  summary.innerHTML = routingSummary(matching);
+  results.innerHTML = `<div class="routing-groups" id="routing-assignment-groups" tabindex="-1">${groups || '<div class="empty">No assignments match these filters.</div>'}</div>${matching.length > shown.length ? '<button type="button" class="routing-load-more focus-target" id="routing-load-more" aria-controls="routing-assignment-groups">Load 25 more</button>' : ''}`;
+  status.textContent = `${shown.length} shown of ${matching.length} matching assignments from ${assignments.length} loaded.`;
+  document.getElementById('routing-load-more')?.addEventListener('click', () => {
+    routingUi.visible += ROUTING_PAGE_SIZE;
+    renderRoutingResults(assignments);
+    (document.getElementById('routing-load-more') || document.getElementById('routing-assignment-groups'))?.focus();
+  });
+}
+
+function bindRoutingControls(assignments) {
+  const update = focusId => {
+    renderRoutingResults(assignments);
+    document.getElementById(focusId)?.focus();
+  };
+  document.getElementById('routing-lifecycle-filter')?.addEventListener('change', event => { routingUi.lifecycle = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-lifecycle-filter'); });
+  document.getElementById('routing-mode-filter')?.addEventListener('change', event => { routingUi.mode = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-mode-filter'); });
+  document.getElementById('routing-route-filter')?.addEventListener('change', event => { routingUi.route = event.target.value; routingUi.visible = ROUTING_PAGE_SIZE; update('routing-route-filter'); });
+  document.getElementById('routing-search-filter')?.addEventListener('input', event => {
+    routingUi.query = event.target.value;
+    routingUi.visible = ROUTING_PAGE_SIZE;
+    renderRoutingResults(assignments);
+  });
+  document.getElementById('routing-reset')?.addEventListener('click', () => {
+    Object.assign(routingUi, { lifecycle: 'all', mode: 'all', route: 'all', query: '', visible: ROUTING_PAGE_SIZE });
+    document.getElementById('routing-lifecycle-filter').value = 'all';
+    document.getElementById('routing-mode-filter').value = 'all';
+    document.getElementById('routing-route-filter').value = 'all';
+    document.getElementById('routing-search-filter').value = '';
+    update('routing-lifecycle-filter');
+  });
 }
 
 function renderRoutingAssignments(data) {
   const content = document.getElementById('routing-assignments-content');
+  const status = document.getElementById('routing-assignments-status');
   const plane = data && typeof data.plane === 'object' ? data.plane : {};
   const assignments = Array.isArray(data?.assignments) ? data.assignments : [];
   const availability = data?.availability || 'unavailable';
+  routingUi.plane = plane;
   const planeMarkup = `<div class="routing-status">
     <span class="pill ${plane.mode === 'authority' ? 'ok' : 'warn'}">Plane: ${escapeHtml(displayRouteValue(plane.mode))}</span>
     <span class="pill info">${escapeHtml(displayRouteValue(plane.authority))}</span>
@@ -472,33 +737,14 @@ function renderRoutingAssignments(data) {
   if (!assignments.length) {
     const reason = data?.reason ? ` (${displayRouteValue(data.reason)})` : '';
     content.innerHTML = `${planeMarkup}<div class="empty">No routing assignments available${escapeHtml(reason)}.</div>`;
+    content.setAttribute('aria-busy', 'false');
+    status.textContent = '0 shown of 0 matching assignments from 0 loaded.';
     return;
   }
-  content.innerHTML = `${planeMarkup}<table class="routing-table">
-    <thead><tr><th>Reservation / activity</th><th>Initiator</th><th>Request</th><th>Selected route</th><th>Quota &amp; capacity</th><th>Current state</th></tr></thead>
-    <tbody>${assignments.map(item => {
-      const routeClass = item.automatic === true ? 'route-auto' : 'route-explicit';
-      const routeLabel = item.automatic === true ? 'AUTOMATIC' : 'EXPLICIT';
-      const details = [
-        routingFact('Policy', item.policy_version), routingFact('Reason', item.selection_reason), routingFact('Trace', item.selection_trace),
-        routingFact('Quota source / freshness state / recorded freshness / checked at', `${displayRouteValue(item.quota_source)} / ${displayRouteValue(item.quota_freshness_state)} / ${displayRouteValue(item.quota_freshness)} / ${formatTs(item.quota_fresh_at)}`),
-        routingFact('Quota bucket / credential bucket / headroom band', `${displayRouteValue(item.quota_bucket)} / ${displayRouteValue(item.credential_bucket)} / ${displayRouteValue(item.quota_headroom_band)}`),
-        routingFact('Capacity / load evidence', item.capacity_evidence),
-        routingFact('Estimated input / actual work / output / tokens', `${displayRouteValue(item.estimated_input_bytes)} / ${displayRouteValue(item.actual_work_bytes)} / ${displayRouteValue(item.actual_output_bytes)} / ${displayRouteValue(item.actual_tokens)}`),
-        routingFact('Reservation / expiry / started / settled', `${displayRouteValue(item.reservation_state)} / ${displayRouteValue(item.expires_at)} / ${displayRouteValue(item.started_at)} / ${displayRouteValue(item.settled_at)}`),
-        routingFact('Retry / failover / replay / cache', `${displayRouteValue(item.retry_chain)} / ${displayRouteValue(item.failover_chain)} / ${displayRouteValue(item.replay_status)} / ${displayRouteValue(item.cache_status)}`),
-        routingEventTimeline(item),
-      ].join('');
-      return `<tr>
-        <td>${routingFact('Reservation ID', item.source_authority_id)}${routingFact('Authority key', item.authority_key)}${routingFact('Latest event', `${displayRouteValue(item.latest_event?.event_type)} / ${displayRouteValue(item.latest_event?.state)}`)}${routingFact('Updated', formatTs(item.timestamp))}</td>
-        <td>${routingFact('Initiator', item.initiator)}${routingFact('Author model / family', `${displayRouteValue(item.author_model)} / ${displayRouteValue(item.author_family)}`)}</td>
-        <td><span class="pill ${routeClass}">${routeLabel}</span>${routingFact('Role / profile / risk', `${displayRouteValue(item.requested_role)} / ${displayRouteValue(item.requested_profile)} / ${displayRouteValue(item.requested_risk)}`)}${routingFact('Requested reviewer / route', item.requested_reviewer)}</td>
-        <td>${routingFact('Candidate', item.resolved_candidate)}${routingFact('Route', item.resolved_route)}${routingFact('Model / family', `${displayRouteValue(item.resolved_model)} / ${displayRouteValue(item.resolved_family)}`)}${routingReasoning(item)}</td>
-        <td>${routingFact('Quota bucket', item.quota_bucket)}${routingFact('Freshness state', item.quota_freshness_state)}${routingFact('Capacity / load', item.capacity_evidence)}${routingFact('Duration', formatDuration(item.duration_s))}</td>
-        <td>${routingFact('Current / terminal state', `${displayRouteValue(item.current_state)} / ${displayRouteValue(item.terminal_status)}`)}${routingFact('Failure', item.failure_classification)}<details><summary class="muted">Reservation details</summary>${details}</details></td>
-      </tr>`;
-    }).join('')}</tbody>
-  </table>`;
+  content.innerHTML = `${planeMarkup}<div id="routing-summary-region"></div>${routingControls(assignments)}<div id="routing-results-region"></div>`;
+  content.setAttribute('aria-busy', 'false');
+  bindRoutingControls(assignments);
+  renderRoutingResults(assignments);
 }
 
 function stopRefresh() {
@@ -525,12 +771,16 @@ async function loadRuntime() {
   }
 
   try {
+    document.getElementById('routing-assignments-content').setAttribute('aria-busy', 'true');
     const data = await fetchJson('/api/runtime/routing-assignments?limit=100');
     renderRoutingAssignments(data && typeof data === 'object' ? data : {});
     setBanner('routing-assignments-banner', '');
   } catch (error) {
     setBanner('routing-assignments-banner', `Routing authority history unavailable: ${error.message}`);
-    document.getElementById('routing-assignments-content').innerHTML = '<div class="empty">Routing authority history is unavailable. No assignment or plane state is inferred.</div>';
+    const content = document.getElementById('routing-assignments-content');
+    content.innerHTML = '<div class="empty">Routing authority history is unavailable. No assignment or plane state is inferred.</div>';
+    content.setAttribute('aria-busy', 'false');
+    document.getElementById('routing-assignments-status').textContent = '0 shown of 0 matching assignments from 0 loaded.';
   }
 
   try {

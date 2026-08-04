@@ -157,10 +157,10 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
             {
                 "reservation_id": "reservation-001",
                 "authority_key": "route-key-1",
-                "decision_id": "decision-002",
+                "decision_id": "decision-001",
                 "event_type": "started",
                 "state": "running",
-                "created_at": "2026-08-02T09:00:10Z",
+                "created_at": "2026-08-02T09:00:00Z",
                 "evidence": {},
                 "requested": {"initiator": "codex", "route_mode": "auto"},
                 "resolved": {"trace": {"substitution_note": "selected eligible route after capacity check"}},
@@ -172,7 +172,7 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
             {
                 "reservation_id": "reservation-001",
                 "authority_key": "route-key-1",
-                "decision_id": "decision-001",
+                "decision_id": "decision-002",
                 "event_type": "reserved",
                 "state": "reserved",
                 "created_at": "2026-08-02T09:00:00Z",
@@ -369,11 +369,27 @@ def test_runtime_dashboard_labels_routing_authority_and_explicitness():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
     for expected in (
         "/api/runtime/routing-assignments?limit=100",
+        "Routing overview",
+        "loaded/recent authority window",
+        "Routing decision path",
+        "Load 25 more",
+        "STALE_ACTIVITY_MS = 45 * 60 * 1000",
+        "No ledger update for",
+        "Stale activity evidence, not provider-liveness proof.",
+        "routing-assignments-status",
+        "aria-busy",
+        "Capacity facts",
+        "Chronological event history",
+        "Reviewer pin / scheduler",
+        "Automatic vs explicit",
+        "Candidate trace",
+        "routing-assignment-groups",
+        'aria-controls="routing-assignment-groups"',
+        "Assignment details for",
         "Reservation ID",
         "Latest event",
         "Requested reviewer / route",
         "Event history",
-        "Capacity / load evidence",
         "Freshness state",
         "Initiator",
         "AUTOMATIC",
@@ -384,6 +400,10 @@ def test_runtime_dashboard_labels_routing_authority_and_explicitness():
         "plane.authority",
     ):
         assert expected in html
+    assert "routing-table" not in html
+    assert "JSON.stringify(value)" not in html
+    assert "renderRoutingResults(assignments);" in html
+    assert "update('routing-search-filter')" not in html
 
 
 def test_agents_endpoint_returns_known_adapters():

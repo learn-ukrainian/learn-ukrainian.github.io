@@ -618,6 +618,32 @@ def _routing_event_item(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+_ROUTING_EVENT_ORDER = {
+    # The authority ledger timestamps events to whole seconds.  A reservation
+    # and its immediate start (or a settlement and its circuit update) can
+    # therefore share a timestamp; UUID order is not lifecycle order.
+    "reserved": 0,
+    "authorized_substitution": 1,
+    "started": 2,
+    "settled": 3,
+    "recovered_expired": 3,
+    "circuit_recorded": 4,
+    "circuit_healed": 4,
+    "legacy_authorization_envelope_reconstructed": 5,
+}
+
+
+def _routing_event_sort_key(record: dict[str, Any]) -> tuple[datetime, int, str]:
+    """Sort same-second authority events in their recorded lifecycle order."""
+    timestamp = _parse_iso_datetime(_routing_value(record, "created_at", "timestamp"))
+    event_type = str(_routing_value(record, "event_type") or "")
+    return (
+        timestamp or datetime.min.replace(tzinfo=UTC),
+        _ROUTING_EVENT_ORDER.get(event_type, 50),
+        str(_routing_value(record, "decision_id") or ""),
+    )
+
+
 def _routing_capacity_evidence(records: list[dict[str, Any]], quota_snapshot: dict[str, Any]) -> dict[str, Any] | None:
     """Project the finite capacity/load allowlist from routing authority evidence."""
     scheduler = quota_snapshot.get("scheduler") if isinstance(quota_snapshot.get("scheduler"), dict) else {}
@@ -762,13 +788,7 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
 
 def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Collapse decision events into one current reservation assignment."""
-    ordered = sorted(
-        records,
-        key=lambda record: (
-            _parse_iso_datetime(_routing_value(record, "created_at", "timestamp")) or datetime.min.replace(tzinfo=UTC),
-            str(_routing_value(record, "decision_id") or ""),
-        ),
-    )
+    ordered = sorted(records, key=_routing_event_sort_key)
     latest = ordered[-1]
     item = _routing_assignment_item(latest)
     item["event_history"] = [_routing_event_item(record) for record in ordered]
