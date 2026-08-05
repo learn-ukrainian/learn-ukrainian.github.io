@@ -873,13 +873,18 @@ def _paradigm_from_vesum_lemma_search(
     if isinstance(verifier, RealVesumVerifier):
         from scripts.verification.vesum import verify_lemma
 
-        for query in {lemma_plain, lemma_plain.casefold(), lemma_plain.lower()}:
-            if not query:
-                continue
-            found = verify_lemma(query, db_path=verifier.db_path)
-            if found:
-                rows = found
-                break
+        try:
+            for query in {lemma_plain, lemma_plain.casefold(), lemma_plain.lower()}:
+                if not query:
+                    continue
+                found = verify_lemma(query, db_path=verifier.db_path)
+                if found:
+                    rows = found
+                    break
+        except FileNotFoundError:
+            # CI / fixture paths often lack data/vesum.db. Fail closed to empty
+            # paradigm so recognition-only cards still build; never abort the deck.
+            return {"cases": {}}
     elif isinstance(verifier, JsonVesumVerifier):
         # Fixture payloads are form→matches; invert to lemma search for tests.
         want = lemma_plain.casefold()
