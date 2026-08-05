@@ -109,9 +109,10 @@ def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
     for body, name in ((driver, "drive-epic skill"), (cooperation, "V2 template")):
         assert "Pre-dispatch outcome adequacy" in body, f"{name} lost the prompt adequacy gate"
         assert "SHA-256" in body, f"{name} lost prompt hash binding"
-        assert "independent held-out evaluation" in body, f"{name} lost held-out evaluation"
         assert "exact-head implementation review" in body, f"{name} lost prompt-review boundary"
 
+    assert "independent held-out evaluation" in driver, "drive-epic skill lost held-out evaluation"
+    assert "- Independent held-out evaluation:" in cooperation, "V2 template lost held-out evaluation"
     assert "Pre-dispatch outcome adequacy" in workflow, "workflow lost the prompt adequacy gate"
     assert "SHA-256" in workflow, "workflow lost prompt hash binding"
     assert "independent held-out evaluation" in workflow, "workflow lost held-out evaluation"
