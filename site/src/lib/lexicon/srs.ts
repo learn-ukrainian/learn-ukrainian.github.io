@@ -2281,6 +2281,31 @@ export function stripIdentityClozeForLemmaFocus(
   return { ...deck, index, cloze };
 }
 
+/**
+ * Content fingerprint for lemma-focus strip freshness: clozeIds/modes alone are not
+ * enough because upgradeIdentityClozeToMorphology keeps the same clozeId while
+ * rewriting form/sentence/blankCase (CF: clozeAlreadyStripped content-blind).
+ */
+export function lemmaFocusClozeContentKey(deck: PracticeDeckData, lemmaId: string): string {
+  const target = lemmaId.trim();
+  if (!target) return '';
+  const clozeById = new Map(deck.cloze.map((item) => [item.clozeId, item]));
+  const item = deck.index.find((row) => row.lemmaId === target);
+  if (!item) return '';
+  const payload = item.clozeIds.map((clozeId) => {
+    const cloze = clozeById.get(clozeId);
+    if (!cloze) return `${clozeId}:missing`;
+    return [
+      clozeId,
+      cloze.form,
+      cloze.sentence,
+      cloze.blankCase ?? '',
+      (cloze.options ?? []).map((opt) => `${opt.kind}:${opt.label}`).join('|'),
+    ].join('\t');
+  });
+  return [item.clozeIds.join('\0'), item.modes.join('\0'), ...payload].join('\n');
+}
+
 export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
   const errors: string[] = [];
   if (cloze.options.length < 4) {

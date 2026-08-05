@@ -40,6 +40,7 @@ import {
   selectNextPracticeItem,
   seededAnswerIndex,
   sessionPoolAllowsCandidate,
+  lemmaFocusClozeContentKey,
   stripIdentityClozeForLemmaFocus,
   stripStressMarks,
   uaPlural,
@@ -1746,16 +1747,12 @@ function LexiconPracticeIsland({
       const alreadyFocused =
         deck.index.length === filtered.index.length &&
         deck.index.every((item) => item.lemmaId === focusedLemmaId);
+      // Compare cloze *content* (form/sentence/blankCase/options), not only ids/modes:
+      // morphology upgrade keeps clozeId stable (CF P2 content-blind guard).
       const clozeAlreadyStripped =
         alreadyFocused &&
-        filtered.index.every((item) => {
-          const current = deck.index.find((row) => row.lemmaId === item.lemmaId);
-          return (
-            current &&
-            current.clozeIds.join('\0') === item.clozeIds.join('\0') &&
-            current.modes.join('\0') === item.modes.join('\0')
-          );
-        });
+        lemmaFocusClozeContentKey(deck, focusedLemmaId) ===
+          lemmaFocusClozeContentKey(filtered, focusedLemmaId);
       if (!clozeAlreadyStripped) {
         setDeck(filtered);
         return;

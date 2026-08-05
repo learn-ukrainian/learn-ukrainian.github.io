@@ -31,6 +31,7 @@ import {
   isIdentityClozeInsert,
   selectNextPracticeItem,
   seededAnswerIndex,
+  lemmaFocusClozeContentKey,
   stripIdentityClozeForLemmaFocus,
   upgradeIdentityClozeToMorphology,
   uaPlural,
@@ -1358,6 +1359,49 @@ describe('lexicon SRS facade', () => {
     expect(stripped.index[0]?.clozeIds).toEqual([]);
     expect(stripped.index[0]?.hasCloze).toBe(false);
     expect(stripped.index[0]?.modes).toEqual(['flashcards']);
+  });
+
+  test('lemma-focus content key changes when identity cloze is upgraded in place', () => {
+    // CF P2: id/mode-only guards miss in-place morphology rewrites (same clozeId).
+    const novyi = lexeme('новий', 'новий');
+    novyi.paradigm = {
+      cases: {
+        nominative: { singular: 'новий' },
+        genitive: { singular: 'нового' },
+        dative: { singular: 'новому' },
+        accusative: { singular: 'новий' },
+        instrumental: { singular: 'новим' },
+        locative: { singular: 'новому' },
+      },
+    };
+    const identity = cloze('новий', 'novyi-identity', 'nominative', 'новий');
+    identity.sentence = '1 січня — ___ рік.';
+    const deck: PracticeDeckData = {
+      deckVersion: 'test-v1',
+      level: 'A1',
+      index: [
+        {
+          lemmaId: 'новий',
+          lemma: 'новий',
+          cefr: 'A1',
+          modes: ['flashcards', 'cloze'],
+          hasCloze: true,
+          clozeIds: ['novyi-identity'],
+          newOrder: 0,
+        },
+      ],
+      lexemes: [novyi],
+      cloze: [identity],
+    };
+    const before = lemmaFocusClozeContentKey(deck, 'новий');
+    const focused = stripIdentityClozeForLemmaFocus(deck, 'новий');
+    const after = lemmaFocusClozeContentKey(focused, 'новий');
+    expect(before).not.toBe(after);
+    const twice = stripIdentityClozeForLemmaFocus(focused, 'новий');
+    expect(lemmaFocusClozeContentKey(twice, 'новий')).toBe(after);
+    expect(focused.index[0]?.clozeIds).toEqual(['novyi-identity']);
+    const morph = focused.cloze.find((c) => c.clozeId === 'novyi-identity');
+    expect(morph?.form).not.toBe('новий');
   });
 });
 
