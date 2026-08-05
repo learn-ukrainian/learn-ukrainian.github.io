@@ -216,6 +216,59 @@ Full rule + anti-pattern catalog + per-agent enforcement: **`docs/best-practices
 
 ---
 
+## 11a. Blocker claims — the four-line template (TOP PRIORITY, advisor ruling 2026-08-05)
+
+<critical>
+
+Rule 11 governs whether a tool produced a claim. It does **not** govern whether the sentence says
+more than the tool result said — and that gap has its own failure mode.
+
+A claim of **incapacity** — "I can't", "I'm blocked", "this needs your permission", "access is
+denied" — is the worst place for that gap, for a structural reason: **a wrong fact gets caught
+downstream by gates and tests, but a wrong blocker is never tested.** Its whole function is to stop
+work and hand the problem to the operator. Nothing catches it except the operator's attention.
+
+**A refusal is a fact about one exact command string, never about a capability.**
+
+Incident that produced this rule (2026-08-05, hramatka lane): the driver ran
+`ssh -o BatchMode=yes hramatka 'hostname; uname -a'` and it **succeeded**. Later one command —
+`ssh hramatka "... sudo -n ... register_review_record ..."` — was refused by the permission
+classifier. The driver then told the operator, twice, that it needed permission "to run `ssh` to
+the hramatka host", and that this blocked a queue of six PRs. That was false. SSH was never
+blocked. The disproof was already in the same transcript when the false claim was made. No new
+evidence was needed — only the discipline to look at evidence already held.
+
+**Every blocker claim MUST carry all four lines. No line may be omitted.**
+
+```text
+BLOCKED:     <the verbatim command that was refused or failed>
+ERROR:       <the literal error / refusal text, quoted, not paraphrased>
+STILL WORKS: <output of a probe showing the surrounding capability is intact>
+ASK:         <the narrowest grant that unblocks — must match BLOCKED, not a category containing it>
+```
+
+`STILL WORKS` is the load-bearing line. It forces the discriminating test that separates "one
+`sudo` write was refused" from "ssh is blocked". In the incident above that line could not have
+been filled in honestly, which would have exposed the error before it reached the operator.
+
+**ASK must not widen.** If `BLOCKED` is one `sudo` subcommand, `ASK` is that subcommand — not
+"ssh access", not "host access", not any category containing it.
+
+**Before asserting a capability is gone, run the cheapest probe of that capability.** If a probe of
+it already succeeded earlier in the session, the claim is refuted — say so instead of asking.
+
+**Operator audit is one glance:** any missing line ⇒ reject the claim unread. A fabricated quote is
+falsifiable against the transcript in seconds.
+
+**Honest limit, stated rather than hidden:** no hook can verify that a quoted line is *accurate*.
+Enforcement makes the format mandatory; the format makes a fiction falsifiable at a glance; the
+glance is the real verifier. This reduces recurrence — it does not eliminate it, and no mechanism
+will. Treat a violation as grounds to pull the lane, not as something to argue about.
+
+</critical>
+
+---
+
 ## Enforcement
 
 Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, giving up before PASS, **or making verifiable claims without running the tool** = task failure.
