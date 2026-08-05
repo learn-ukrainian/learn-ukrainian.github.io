@@ -820,10 +820,10 @@ function buildArticleOverview(args: {
     },
     {
       label: "Переклад",
-      ready: (enrichment?.translation?.en.length ?? 0) > 0,
+      ready: (enrichment?.translation?.en?.length ?? 0) > 0,
       detail:
-        (enrichment?.translation?.en.length ?? 0) > 0
-          ? `${enrichment?.translation?.en.length} англ.`
+        (enrichment?.translation?.en?.length ?? 0) > 0
+          ? `${enrichment?.translation?.en?.length} англ.`
           : "очікує джерело",
     },
     {
