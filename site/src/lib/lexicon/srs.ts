@@ -2136,24 +2136,9 @@ function morphologyOptions(
     });
   }
 
-  // Pad with synthetic labels only if paradigm is thin (still 4 chips for the rail).
-  let pad = 0;
-  while (options.length < 4) {
-    pad += 1;
-    const label = `${answerForm}-${pad}`;
-    if (seen.has(czNorm(label))) continue;
-    seen.add(czNorm(label));
-    options.push({
-      optionId: `${lemma.lemmaId}:pad:${pad}`,
-      label,
-      lemmaId: `${lemma.lemmaId}-pad-${pad}`,
-      kind: 'decoy-lemma',
-      case: 'nominative',
-      pos,
-    });
-  }
-
-  return options.slice(0, 4);
+  // Never fabricate non-word distractors (CF F1). Thin banks return short lists;
+  // caller must abandon the upgrade rather than teach invented strings.
+  return options;
 }
 
 /**
@@ -2201,6 +2186,11 @@ export function upgradeIdentityClozeToMorphology(
   if (!form || czNorm(form) === czNorm(lemma.lemma)) return null;
 
   const caseLabel = CASE_LABEL_UK[caseName] ?? caseName;
+  const options = morphologyOptions(lemma, caseName, form, formBank);
+  // Need four distinct real forms (answer + three distractors). No invented pads (CF F1).
+  if (options.length < 4) {
+    return null;
+  }
   const rewritten: PracticeClozeItem = {
     ...cloze,
     form,
@@ -2215,7 +2205,7 @@ export function upgradeIdentityClozeToMorphology(
       triggerLabel: 'відмінювання',
       feedback: `«${lemma.lemma}» → ${caseLabel}: ${form}`,
     },
-    options: morphologyOptions(lemma, caseName, form, formBank),
+    options,
     // Drop textbook attribution on synthetic frames so we do not pretend a
     // school page asked for a different case than the original extract.
     attribution: keepSentence ? cloze.attribution : undefined,

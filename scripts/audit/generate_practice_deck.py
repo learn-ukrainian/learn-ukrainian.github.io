@@ -860,19 +860,20 @@ def _vesum_form_preference(tags: str, pos: str | None) -> int:
 
 
 def _vesum_number_key(tokens: set[str]) -> str | None:
-    """Return singular/plural from VESUM tags, or None when number is ambiguous."""
+    """Return singular/plural from VESUM tags.
+
+    Prefer explicit singular. Plural-only rows map to plural. Tags with neither
+    s nor p (common for adjectives) default to singular for textbook drills.
+    """
     has_pl = "p" in tokens or "pl" in tokens
     has_sg = "s" in tokens
-    if has_sg and not has_pl:
-        return "singular"
     if has_pl and not has_sg:
         return "plural"
-    # Many adj tags omit explicit s/p; treat as singular only when not plural-marked.
-    if has_pl:
-        return "plural"
-    if has_sg or not has_pl:
-        return "singular"
-    return None
+    if has_sg and has_pl:
+        # Conflicting number tags — skip the row rather than guess.
+        return None
+    # Explicit singular, or no number tag (adj default) → singular.
+    return "singular"
 
 
 def _paradigm_from_vesum_lemma_search(
