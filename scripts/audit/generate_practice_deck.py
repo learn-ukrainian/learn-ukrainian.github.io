@@ -1747,10 +1747,7 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
         searched = _paradigm_from_vesum_lemma_search(lemma_plain, pos, verifier)
-        if _all_paradigm_forms(searched):
-            paradigm = searched
-        else:
-            paradigm = {"cases": {}}
+        paradigm = searched if _all_paradigm_forms(searched) else {"cases": {}}
     lexeme: dict[str, Any] = {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,
