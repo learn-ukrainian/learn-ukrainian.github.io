@@ -125,14 +125,22 @@ evidence and are never a prerequisite for completing an internal data product.
   Phase 1 records, binds 42,302 text-free source/work locators, and creates
   3,511 exact evidence-resolution tasks. This is a capability map and plan, not
   a corpus publication or a Ukrainian-quality judgment.
-- [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
-  owns active Phase 3: an evidence-graded clean-Ukrainian correction/protection
-  pack. It must distinguish Russian interference, bad morphology, contextual
-  calques, and government errors from quotation, phonetic Russian, Surzhyk,
-  historical or archaic Ukrainian, dialect, regional language, folklore, and
-  unresolved contact-language cases. Evidence channels, rather than pack
-  labels, are authoritative; without qualified-human adjudication, no label is
-  gold or authoritative.
+- Closed
+  [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
+  preserves the historical Phase 3 engine/seed delivery. Its schemas,
+  deterministic factory, consumer views, and public non-erasure canaries reach
+  `ENGINE_READY`; they do not establish source coverage or independent
+  linguistic validation. The nine authored positive canaries collapse to five
+  literal surface patterns, and the 189,150 Phase 2 stand-off rows are metadata
+  coverage rather than a linguistic correction denominator.
+- [#6375](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6375)
+  owns active Phase 3 recovery: a source-derived Ukrainian Correction and
+  Protection Knowledge Base with complete mandatory-source accounting,
+  independently held-out linguistic evaluation, and source-blind consumer
+  reproduction. Phase 3 completes only after `ENGINE_READY`,
+  `SOURCE_COVERAGE_READY`, `LINGUISTICALLY_VALIDATED`, and `CONSUMER_PROVEN`
+  are all evidenced on merged `origin/main`. Phase 4 remains blocked until
+  then.
 
 - Closed [#6164](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6164)
   owns the completed Foundry-engine Phase 2–4 implementation: real corpus

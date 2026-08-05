@@ -1,7 +1,18 @@
 # Phase 3 correction and protection product
 
-Phase 3 ships a directly runnable, model-neutral Ukrainian correction and
-protection product. It does not train a project model and it is not human gold.
+> **Recovery status:** the artifacts documented here are the historical
+> `ENGINE_READY` engine/seed release from #6333, not a completed Phase 3
+> linguistic product. Its 9/9 benchmark reuses authored public canaries that
+> produced five literal correction patterns; it is regression evidence, not
+> independent linguistic validation. The 189,150 Phase 2 stand-off rows are
+> metadata dispositions and do not count as correction coverage. Recovery
+> continues under #6375 until `SOURCE_COVERAGE_READY`,
+> `LINGUISTICALLY_VALIDATED`, and `CONSUMER_PROVEN` join `ENGINE_READY` on
+> merged `origin/main`. Phase 4 remains blocked.
+
+The historical release ships a directly runnable, model-neutral Ukrainian
+correction and protection engine. It does not train a project model and it is
+not human gold.
 Every record says `assurance_tier: evidence_graded_non_gold` and
 `authoritative: false`.
 

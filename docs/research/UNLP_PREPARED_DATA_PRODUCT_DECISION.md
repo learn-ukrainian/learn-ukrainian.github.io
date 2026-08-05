@@ -4,7 +4,7 @@
 > **Owner:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **First gate:** [#6322](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6322)
 > **Completed phase:** [#6327](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6327)
-> **Next phase:** [#6333](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6333)
+> **Active phase:** [#6375](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6375)
 > **Decision:** Continue with evidence-bearing prepared Ukrainian data products;
 > do not operate or train a project model
 
@@ -142,9 +142,16 @@ not invent a motive or claim that no port is planned.
    evidence channels and Ukrainian-strong model proposals with preserved
    provenance. Qualified-human adjudication is required before any label is
    called gold or authoritative; `unresolved` remains a valid terminal
-   disposition. **Active next under #6333.**
-6. Consider Lapa classifier ablation or downstream model validation only when
-   it answers a preregistered decision and receives separate authorization.
+   disposition. Closed #6333 delivered reusable contracts, a deterministic
+   engine, consumer views, and public regression canaries, so its historical
+   status is `ENGINE_READY` only. Recovery issue #6375 remains active until
+   complete mandatory-source accounting, independent held-out linguistic
+   validation, and source-blind consumer reproduction also establish
+   `SOURCE_COVERAGE_READY`, `LINGUISTICALLY_VALIDATED`, and `CONSUMER_PROVEN`
+   on merged `origin/main`.
+6. Keep Lapa classifier ablation, downstream model validation, and every other
+   Phase 4 action blocked until all four Phase 3 statuses are evidenced. Any
+   later Phase 4 execution also requires separate operator authorization.
 
 No step requires project-owned training or paid compute.
 
