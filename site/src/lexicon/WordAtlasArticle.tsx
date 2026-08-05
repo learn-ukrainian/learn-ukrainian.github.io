@@ -781,7 +781,7 @@ export default function WordAtlasArticle({
               {externalGroups.map((group) => (
                 <div key={group.name} className="external-group">
                   <div className="external-group-header">{group.name} <span className="external-group-count">{(group.materials?.length ?? 0)}</span></div>
-                  {group.materials.map((item) => {
+                  {(group.materials ?? []).map((item) => {
                     const materialHref = item.url ? safeHref(item.url) : null;
                     return (
                       <div key={item.title} className={`resource-card ${item.kind ?? "blog"}`}>

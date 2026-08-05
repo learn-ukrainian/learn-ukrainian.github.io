@@ -851,11 +851,28 @@ def _vesum_form_preference(tags: str, pos: str | None) -> int:
             score += 2
         if "n" in tokens:
             score += 1
-        if "p" in tokens or "pl" in tokens:
-            score -= 3
-    if "s" in tokens or "v_naz" in tokens:
-        score += 1
+    # Strong preference for true singular; plural-only lemmas still score lower.
+    if "s" in tokens and "p" not in tokens and "pl" not in tokens:
+        score += 12
+    if "p" in tokens or "pl" in tokens:
+        score -= 8
     return score
+
+
+def _vesum_number_key(tokens: set[str]) -> str | None:
+    """Return singular/plural from VESUM tags, or None when number is ambiguous."""
+    has_pl = "p" in tokens or "pl" in tokens
+    has_sg = "s" in tokens
+    if has_sg and not has_pl:
+        return "singular"
+    if has_pl and not has_sg:
+        return "plural"
+    # Many adj tags omit explicit s/p; treat as singular only when not plural-marked.
+    if has_pl:
+        return "plural"
+    if has_sg or not has_pl:
+        return "singular"
+    return None
 
 
 def _paradigm_from_vesum_lemma_search(
@@ -874,7 +891,8 @@ def _paradigm_from_vesum_lemma_search(
         from scripts.verification.vesum import verify_lemma
 
         try:
-            for query in {lemma_plain, lemma_plain.casefold(), lemma_plain.lower()}:
+            # Ordered de-dupe (set iteration is hash-randomized across processes).
+            for query in dict.fromkeys((lemma_plain, lemma_plain.casefold(), lemma_plain.lower())):
                 if not query:
                     continue
                 found = verify_lemma(query, db_path=verifier.db_path)
@@ -911,8 +929,8 @@ def _paradigm_from_vesum_lemma_search(
         return {"cases": {}}
 
     pos_filter = _vesum_pos(pos)
-    # case_name -> best (score, form)
-    best: dict[str, tuple[int, str]] = {}
+    # (case_name, number_key) -> best (score, form)
+    best: dict[tuple[str, str], tuple[int, str]] = {}
     for row in rows:
         form = _clean_text(row.get("word_form"))
         tags = str(row.get("tags") or "")
@@ -922,21 +940,26 @@ def _paradigm_from_vesum_lemma_search(
         if pos_filter and row_pos and row_pos != pos_filter:
             continue
         tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+        number_key = _vesum_number_key(tokens)
+        if number_key is None:
+            continue
         for case_name, tag in CASE_VESUM_TAGS.items():
             if tag not in tokens:
                 continue
             score = _vesum_form_preference(tags, pos)
-            prev = best.get(case_name)
+            slot = (case_name, number_key)
+            prev = best.get(slot)
             if prev is None or score > prev[0] or (score == prev[0] and form < prev[1]):
-                best[case_name] = (score, form)
+                best[slot] = (score, form)
 
     if not best:
         return {"cases": {}}
 
     cases: dict[str, dict[str, str]] = {}
-    for case_name, (_score, form) in best.items():
-        # Practice drills use singular by convention for these case chips.
-        cases[case_name] = {"singular": form}
+    for (case_name, number_key), (_score, form) in best.items():
+        cases.setdefault(case_name, {})[number_key] = form
+    # Prefer singular-only presentation for drills when both exist; keep plural
+    # when that is the only attested number for the case (pluralia tantum).
     return {"cases": cases}
 
 
