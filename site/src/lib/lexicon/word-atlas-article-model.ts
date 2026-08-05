@@ -498,7 +498,7 @@ export function buildWordAtlasArticleView(
   const heritageBoxes = resolveHeritageBoxes(entry);
   const etymologyStages = buildEtymologyStages(enrichment?.etymology, entry.lemma);
   const formattedOrigin = formatOrigin(enrichment?.etymology);
-  const courseUsage = entry.course_usage.slice().sort((a, b) => {
+  const courseUsage = (entry.course_usage ?? []).slice().sort((a, b) => {
     if (a.track !== b.track) return a.track.localeCompare(b.track);
     return a.module_num - b.module_num;
   });
@@ -539,7 +539,7 @@ export function buildWordAtlasArticleView(
     definitionCards,
     sections,
   });
-  const hasPractice = record.renderContext.practiceLevels.length > 0;
+  const hasPractice = (record.renderContext.practiceLevels ?? []).length > 0;
 
   function stressDisplay(form: string | undefined | null) {
     if (!form) return "";
@@ -728,11 +728,11 @@ function buildArticleOverview(args: {
     formattedOrigin,
   } = args;
   const synonymCount =
-    (sections?.synonyms?.items.length ?? 0) + (sections?.antonyms?.items.length ?? 0);
-  const homonymCount = sections?.homonyms?.items.length ?? 0;
-  const paronymCount = sections?.paronyms?.items.length ?? 0;
-  const idiomCount = sections?.idioms?.items.length ?? 0;
-  const externalCount = externalGroups.reduce((total, group) => total + group.materials.length, 0);
+    (sections?.synonyms?.items?.length ?? 0) + (sections?.antonyms?.items?.length ?? 0);
+  const homonymCount = sections?.homonyms?.items?.length ?? 0;
+  const paronymCount = sections?.paronyms?.items?.length ?? 0;
+  const idiomCount = sections?.idioms?.items?.length ?? 0;
+  const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
     definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
   const cards = [
@@ -870,7 +870,7 @@ function buildSourceList(args: {
   if (sections?.idioms?.source) sources.add(sections.idioms.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
-  if (entry.course_usage.length > 0) sources.add("curriculum_vocabulary");
+  if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");
   if (entry.wiki_reference?.wikipedia) sources.add("query_wikipedia");
   if (entry.wiki_reference?.wiktionary_url) sources.add("uk.wiktionary");
   return Array.from(sources).sort((a, b) => a.localeCompare(b, "uk"));
