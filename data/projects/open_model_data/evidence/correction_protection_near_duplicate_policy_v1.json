@@ -1,0 +1,79 @@
+{
+  "schema_version": "near_duplicate_policy_v1",
+  "policy_id": "near_duplicate_policy_v1",
+  "implementation": {
+    "algorithm_identity": "phase3-normalized-token-edit-firewall-v1",
+    "implementation_version": "phase3_near_duplicate.py-v1",
+    "module": "scripts/projects/open_model_data/phase3_near_duplicate.py"
+  },
+  "fail_closed": true,
+  "normalization_steps": [
+    "unicode_normalization",
+    "casefold",
+    "whitespace_collapse",
+    "punctuation_tokenization"
+  ],
+  "compared_fields": [
+    "source_document_identity",
+    "unit_identity",
+    "span_fingerprint",
+    "normalized_surface"
+  ],
+  "similarity_features": [
+    "exact_fingerprint",
+    "token_jaccard",
+    "normalized_edit_similarity"
+  ],
+  "numeric_thresholds": {
+    "exact_match": 1.0,
+    "near_duplicate_minimum": 0.9
+  },
+  "scopes": {
+    "document": "exact source_document_identity equality",
+    "unit": "exact source_document_identity and unit_identity equality",
+    "span": "exact normalized fingerprint or token Jaccard and normalized edit similarity at the near threshold"
+  },
+  "governs": [
+    "train_development_to_heldout_firewall",
+    "ua_eval_exclusion",
+    "public_canary_neighbour_exclusion",
+    "canonical_rule_identity_collapse",
+    "heldout_activation_counts"
+  ],
+  "golden_fixtures": [
+    {
+      "fixture_id": "mechanics-exact-01",
+      "scope": "span",
+      "left": "ALPHA— beta",
+      "right": "alpha beta",
+      "expected": "exact",
+      "purpose": "normalization mechanics only; not a linguistic claim"
+    },
+    {
+      "fixture_id": "mechanics-near-01",
+      "scope": "span",
+      "left": "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon",
+      "right": "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau phi",
+      "expected": "near",
+      "purpose": "threshold mechanics only; not a linguistic claim"
+    },
+    {
+      "fixture_id": "mechanics-nonmatch-01",
+      "scope": "span",
+      "left": "alpha beta gamma",
+      "right": "orange violet black",
+      "expected": "nonmatch",
+      "purpose": "separation mechanics only; not a linguistic claim"
+    }
+  ],
+  "invalidation": {
+    "policy_change_invalidates": [
+      "partitions",
+      "heldout_seals",
+      "activation_counts",
+      "linguistic_validation_receipts"
+    ],
+    "rescore_from_scratch": true
+  },
+  "policy_fingerprint_sha256": "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e"
+}
