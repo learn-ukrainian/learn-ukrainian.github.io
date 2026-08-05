@@ -26,8 +26,11 @@ import {
   refillDailyPracticeDeckSnapshot,
   saveState,
   selectDailyPracticeDeckItems,
+  isCaseClozeDrill,
+  isIdentityClozeInsert,
   selectNextPracticeItem,
   seededAnswerIndex,
+  stripIdentityClozeForLemmaFocus,
   uaPlural,
   validateClozeOptions,
   writeDailyPracticeDeckSnapshot,
@@ -1259,6 +1262,75 @@ describe('lexicon SRS facade', () => {
     expect(uaPlural(5)).toBe('правильних');
     expect(uaPlural(11)).toBe('правильних');
     expect(uaPlural(21)).toBe('правильна');
+  });
+
+  test('lemma-focus strips identity cloze but keeps case drills', () => {
+    // Studying «новий» with a blank for «новий» itself is not practice — the
+    // deep-link already names the target. Case drills (inflect the form) stay.
+    const novyi = lexeme('новий', 'новий');
+    const identity = cloze('новий', 'novyi-identity', 'nominative', 'новий');
+    identity.sentence = '1 січня — ___ рік.';
+    const caseDrill = cloze('новий', 'novyi-case', 'genitive', 'нового');
+    caseDrill.sentence = 'Колір ___ автомобіля.';
+
+    const full: PracticeDeckData = {
+      deckVersion: 'test-v1',
+      level: 'A1',
+      index: [
+        {
+          lemmaId: 'новий',
+          lemma: 'новий',
+          cefr: 'A1',
+          modes: ['flashcards', 'cloze', 'matching'],
+          hasCloze: true,
+          clozeIds: ['novyi-identity', 'novyi-case'],
+          newOrder: 0,
+        },
+        {
+          lemmaId: 'дім',
+          lemma: 'дім',
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 1,
+        },
+      ],
+      lexemes: [novyi, lexeme('дім')],
+      cloze: [identity, caseDrill],
+    };
+
+    expect(isIdentityClozeInsert(identity, novyi)).toBe(true);
+    expect(isCaseClozeDrill(caseDrill, novyi)).toBe(true);
+
+    const focused = stripIdentityClozeForLemmaFocus(full, 'новий');
+    expect(focused.index).toHaveLength(1);
+    expect(focused.index[0]?.lemmaId).toBe('новий');
+    expect(focused.index[0]?.clozeIds).toEqual(['novyi-case']);
+    expect(focused.index[0]?.hasCloze).toBe(true);
+    expect(focused.index[0]?.modes).toContain('cloze');
+    expect(focused.index[0]?.modes).toContain('flashcards');
+
+    const onlyIdentity: PracticeDeckData = {
+      ...full,
+      index: [
+        {
+          lemmaId: 'новий',
+          lemma: 'новий',
+          cefr: 'A1',
+          modes: ['flashcards', 'cloze'],
+          hasCloze: true,
+          clozeIds: ['novyi-identity'],
+          newOrder: 0,
+        },
+      ],
+      cloze: [identity],
+    };
+    const stripped = stripIdentityClozeForLemmaFocus(onlyIdentity, 'новий');
+    expect(stripped.index[0]?.clozeIds).toEqual([]);
+    expect(stripped.index[0]?.hasCloze).toBe(false);
+    expect(stripped.index[0]?.modes).toEqual(['flashcards']);
+    expect(stripped.index[0]?.modes).not.toContain('cloze');
   });
 });
 

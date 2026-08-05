@@ -1944,6 +1944,76 @@ export function isWrongCaseAnswer(value: string, lemma: PracticeLexeme, cloze: P
   return false;
 }
 
+const NON_CASE_CLOZE_POS = new Set(['adv', 'prep', 'conj', 'part']);
+
+/**
+ * Case drills ask for an inflected form of a known dictionary headword.
+ * Identity inserts blank the citation form itself (form ≈ lemma).
+ */
+export function isCaseClozeDrill(
+  cloze: PracticeClozeItem,
+  lemma: Pick<PracticeLexeme, 'lemma' | 'pos'>,
+): boolean {
+  // Deterministic prompt heuristic: an NFC/casefold-equal answer is an insertion,
+  // never a case drill. Likewise, VESUM indeclinable POS tags must not receive
+  // case wording. Otherwise a changed form remains a case drill: authored clozes
+  // carry case-rule feedback and their chips may distinguish case variants.
+  const normalizedForm = cloze.form.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
+  const normalizedLemma = lemma.lemma.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
+  if (!normalizedForm || normalizedForm === normalizedLemma) return false;
+  return !NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase());
+}
+
+/** True when the blank is the same word the learner already knows they are drilling. */
+export function isIdentityClozeInsert(
+  cloze: PracticeClozeItem,
+  lemma: Pick<PracticeLexeme, 'lemma' | 'pos'>,
+): boolean {
+  return !isCaseClozeDrill(cloze, lemma);
+}
+
+/**
+ * Lemma-focused practice (`?lemmaId=…`) already tells the learner which word they
+ * are studying. Identity clozes (blank = that citation form) are then trivial —
+ * e.g. studying «новий» and filling «___ рік». Keep case drills only.
+ */
+export function stripIdentityClozeForLemmaFocus(
+  deck: PracticeDeckData,
+  lemmaId: string,
+): PracticeDeckData {
+  const target = lemmaId.trim();
+  if (!target) return deck;
+
+  const clozeById = new Map(deck.cloze.map((item) => [item.clozeId, item]));
+  const lexemeById = new Map(deck.lexemes.map((item) => [item.lemmaId, item]));
+
+  const index = deck.index
+    .filter((item) => item.lemmaId === target)
+    .map((item) => {
+      const lexeme = lexemeById.get(item.lemmaId);
+      const caseClozeIds = lexeme
+        ? item.clozeIds.filter((clozeId) => {
+            const cloze = clozeById.get(clozeId);
+            return Boolean(cloze && isCaseClozeDrill(cloze, lexeme));
+          })
+        : [];
+
+      const modes =
+        caseClozeIds.length > 0
+          ? item.modes
+          : item.modes.filter((mode) => mode !== 'cloze');
+
+      return {
+        ...item,
+        clozeIds: caseClozeIds,
+        hasCloze: caseClozeIds.length > 0,
+        modes,
+      };
+    });
+
+  return { ...deck, index };
+}
+
 export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
   const errors: string[] = [];
   if (cloze.options.length < 4) {
