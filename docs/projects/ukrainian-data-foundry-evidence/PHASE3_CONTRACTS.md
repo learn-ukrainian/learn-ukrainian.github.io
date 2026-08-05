@@ -1,5 +1,11 @@
 # Phase 3: evidence-graded correction and protection contracts
 
+> **Recovery status:** these contracts and their current engine satisfy
+> `ENGINE_READY` only. The public authored canaries are regression fixtures,
+> not an independent held-out set, and the Phase 2 stand-off inventory is not a
+> linguistic denominator. Issue #6375 owns the remaining source-coverage,
+> linguistic-validation, and consumer-proof gates; Phase 4 is blocked.
+
 [Українська версія](PHASE3_CONTRACTS.uk.md)
 
 Phase 3 adds a model-neutral, evidence-graded product lane for Ukrainian
