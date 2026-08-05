@@ -104,12 +104,19 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
     driver = (REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md").read_text(encoding="utf-8")
     cooperation = (REPO / "docs/best-practices/agent-cooperation.md").read_text(encoding="utf-8")
+    workflow = (REPO / "agents_extensions/shared/rules/workflow.md").read_text(encoding="utf-8")
 
     for body, name in ((driver, "drive-epic skill"), (cooperation, "V2 template")):
         assert "Pre-dispatch outcome adequacy" in body, f"{name} lost the prompt adequacy gate"
         assert "SHA-256" in body, f"{name} lost prompt hash binding"
         assert "independent held-out evaluation" in body, f"{name} lost held-out evaluation"
         assert "exact-head implementation review" in body, f"{name} lost prompt-review boundary"
+
+    assert "Pre-dispatch outcome adequacy" in workflow, "workflow lost the prompt adequacy gate"
+    assert "SHA-256" in workflow, "workflow lost prompt hash binding"
+    assert "independent held-out evaluation" in workflow, "workflow lost held-out evaluation"
+    assert "Prompt review is not implementation review" in workflow, "workflow lost prompt-review boundary"
+    assert "cross-family PR gate" in workflow, "workflow lost cross-family review boundary"
 
 
 def test_agy_bridge_prompt_permits_narrow_repo_reads_but_forbids_writes() -> None:

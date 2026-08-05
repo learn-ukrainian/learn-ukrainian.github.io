@@ -174,7 +174,7 @@ family; never self-review, never same-family). Route it:
 ```
 Pick the reviewer family and capability from the served reviewer-seat rule; the writer's
 family is never eligible. For a hard / non-routine change, record the live role selection
-and concrete `--override-reason`; do not hard-wire a reviewer identity. Read the review CONTENT
+and concrete `--override-reason`; do not hard-wire a reviewer identity in this skill. Read the review CONTENT
 (not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
 trusting "verified". A review request is not a passive notification: after invoking
 `review-pr <PR_NUMBER>`, the requester owns its request state and must explicitly poll
