@@ -1,5 +1,6 @@
 {
-  "fingerprint": "1b4af7c9822020a9eeeb6794451f2a022644248b8f2f03ad2793a7be68b4df56",
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -184,7 +185,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "81ad1a9103594abee149199a5eecd6dd0a88f5538facdcc424057defddc071f7"
+        "sha256": "2f76c0cdbf007ca924df31df1be846adf0e27d1963526e9dff107129379790f8"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -224,8 +225,7 @@
       }
     ]
   },
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "fingerprint": "effa789dfec4b9785234d4eef27839e8df50aa6660c6ce3608d16afb077e7dfd",
   "stats": {
     "lexicon_code_files": 55
   }
