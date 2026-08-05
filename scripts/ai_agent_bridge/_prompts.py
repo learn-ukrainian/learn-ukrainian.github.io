@@ -302,6 +302,10 @@ outcome proof) - Ukrainian word/stress/morphology facts VESUM/`sources`-verified
 max UA immersion EXCEPT A1 (its
 English scaffolding is by design; from A2 never raise English) - reviews need an independent
 cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution -
+pre-dispatch outcome adequacy: before presentation or dispatch, substantive phase/epic prompts freeze SHA-256 plus user outcome,
+denominator, non-goals, role map, independent held-out evaluation, stop/residual policy, and
+completion terms; live-routed critics re-review material drift. Prompt review is not exact-head
+implementation or cross-family PR review; engine proof is not product completion -
 layout A: primary non-bare on main (human+services); agents only under
 .worktrees/dispatch/<agent>/<task>/ - bare primary is a bug to heal - **no architecture/
 layout/process decisions without present-tense operator or advisor approval** (current

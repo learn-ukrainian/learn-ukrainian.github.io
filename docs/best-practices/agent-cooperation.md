@@ -159,6 +159,11 @@ You are the single accountable root orchestrator for {objective}.
 
 Outcome:
 - {user-visible terminal outcome}
+- Denominator: {real-world or source population against which completion is measured}
+- Non-goals: {explicit exclusions; operator/advisor approval if any shrink the actual mission}
+- Independent held-out evaluation: {evaluator, held-out evidence, and pass/fail condition}
+- Stop/residual policy and completion vocabulary: {when to stop, what remains, and exact terminal terms}
+- Normative-language sources: {pedagogical/evidential role before consuming an occurrence, if relevant}
 
 Scope and constraints:
 - Repository/root: {path or environment}
@@ -226,6 +231,23 @@ Independent review boundary:
 - If that gate applies, the root must route a separate read-only review through
   the approved non-Codex path and treat unresolved material findings as
   blockers.
+
+Pre-dispatch outcome adequacy:
+- Before presenting or dispatching a substantive phase or epic kickoff, freeze this
+  exact prompt and record its SHA-256. A high-stakes domain prompt receives a domain-fit review plus a
+  distinct adversarial scope/circularity critique; smaller consequential work
+  receives at least one fast critic; a genuinely trivial bounded prompt is
+  explicitly exempt. The prompt author counts as neither reviewer.
+- Select reviewer roles from live `model-assignment.md`, not permanent identities.
+  Each reviewer returns an explicit checklist verdict and findings; the author
+  reconciles them before dispatch. Re-review after a material change to outcome,
+  scope, denominator, role map, acceptance criteria, or independent evaluation.
+- Prompt review does not replace exact-head implementation review or the
+  independent cross-family PR gate. Seeds, prototypes, schemas, transport checks,
+  and self-authored canaries prove at most engine/mechanism readiness, not product
+  validity. Completion reports name the verified user-visible outcome, denominator,
+  held-out proof, and residual gap. For normative language evidence, establish the
+  source's pedagogical or evidential role before consuming an occurrence.
 ```
 
 ### Nested V2 block
@@ -263,6 +285,15 @@ Before handing a V2 prompt to the operator, verify that:
   an exact-string protocol proof was explicitly requested
 - nesting has a real coordination purpose and stays within the active child cap
 - same-family helper review is not represented as independent review
+- for a substantive phase/epic kickoff, the frozen prompt has a SHA-256; outcome,
+  denominator, non-goals, role map, independent held-out evaluation, stop/residual
+  policy, and completion vocabulary; and the required live-routed prompt critics'
+  checklist verdicts/findings have been reconciled
+- any material change to outcome, scope, denominator, role map, acceptance criteria,
+  or independent evaluation triggers re-review; prompt review is never presented as
+  exact-head implementation review or cross-family PR review
+- for normative language evidence, the prompt identifies each source's pedagogical or
+  evidential role before treating an occurrence as normative
 
 ---
 

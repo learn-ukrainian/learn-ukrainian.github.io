@@ -65,7 +65,11 @@ tie-breakers.
    provider `COMPLETED` state prove transport or structure only. A semantic tripwire is a
    terminal failure, never input to normalize away. Changing the artifact, tokenizer, prompt
    template, parser, or runtime invalidates prior canary proof. Completion reports must name the
-   exact user-visible outcome that was verified.
+   exact user-visible outcome that was verified, its real-world or source denominator, the
+   independent held-out proof, and any residual gap. A seed, prototype, schema, transport check,
+   or self-authored canary can establish engine/mechanism readiness only; it cannot close a
+   product phase. For language claims, a source occurrence is not normative evidence until its
+   pedagogical or evidential role is established.
 8. **Clean code and clean documentation.** Dead code removed, functions tested, docs current.
    Stale docs are context-pollution that misroutes every agent that reads them — expired
    dates, retired lanes, and superseded defaults get pruned when touched.
@@ -98,15 +102,31 @@ tie-breakers.
     adopt architecture, local layout, process, or policy without **present-tense approval**
     from the **operator** or a designated **advisor**. Current advisors: **Fable** and **Sol**
     (roster may change — do not hard-code forever; confirm via `/api/rules` /
-    `model-assignment.md` when unsure). Discussion/panels improve quality but do **not**
+    `model-assignment.md` when unsure). Fable is a summoned design advisor, not a standing
+    reviewer or routing default. Discussion/panels improve quality but do **not**
     replace advisor approval for design. Routine implementation of already-queued work does
     not need a new advisor turn. Violations: shipping helpers/layouts/process "for now",
     redefining primary-checkout semantics, or flipping gates without an advisor record.
-13. **Adversarial quality & constructive criticism (No happy-path nonsense).** Every status
-    report, architecture review, and code audit MUST lead with potential failure modes, missing
-    edge cases, race conditions, and un-tested codepaths. Never output superficial praise or
-    "happy path" cheerleading. Default to rigorous constructive critique: identify structural
-    fragility, demand empirical proof, and surface hidden risks before reporting past-tense execution.
+13. **Adversarial quality & constructive criticism (No happy-path nonsense).** Every in-flight
+    architecture review and code audit MUST lead with potential failure modes, missing edge cases,
+    race conditions, and un-tested codepaths. Never output superficial praise or "happy path"
+    cheerleading. Default to rigorous constructive critique: identify structural fragility, demand
+    empirical proof, and surface hidden risks. Terminal completion reports follow item 7: lead with
+    the exact verified user-visible outcome, then the residual gap and risks.
+14. **Pre-dispatch outcome adequacy.** Before presenting to the operator or dispatching a
+    substantive phase or epic kickoff, freeze a prompt that names the user-visible outcome,
+    real-world or source denominator,
+    non-goals, role map, independent held-out evaluation, stop/residual policy, and completion
+    vocabulary. A high-stakes domain prompt needs a domain-fit reviewer and a distinct adversarial
+    scope/circularity critic; smaller consequential work needs at least one fast critic; a
+    genuinely trivial bounded prompt is explicitly exempt. The prompt author counts as neither
+    reviewer. Route those roles from the live
+    `model-assignment.md` rules, never by permanent reviewer identity. Bind each review to the
+    prompt SHA-256 and its explicit checklist verdict, findings, and author reconciliation;
+    re-review after a material change to the outcome, scope, denominator, role map, acceptance
+    criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
+    operator/advisor approval. Prompt review improves dispatch quality only: it never replaces
+    exact-head implementation review or the independent cross-family PR gate.
 
 ## Precedence
 

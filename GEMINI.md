@@ -24,7 +24,11 @@ word/stress/morphology facts VESUM/`sources`-verified, never guessed · clean co
 **max UA immersion EXCEPT A1** (its
 English scaffolding is by design; from A2 never raise English) · drive within approved scope ·
 **no architecture/layout/process decisions without operator or advisor approval (Fable, Sol;
-roster may change)** · repo hard gates bind.
+roster may change)** · **pre-dispatch outcome adequacy**: before presentation or dispatch,
+substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map, independent held-out evaluation,
+stop/residual policy, and completion terms; live-routed critics re-review material drift. Prompt
+review is not exact-head implementation or cross-family PR review; engine proof is not product
+completion · repo hard gates bind.
 
 ## Project Research Registry — Orchestrator Duty (binding)
 
