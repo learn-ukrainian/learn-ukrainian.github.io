@@ -1972,10 +1972,173 @@ export function isIdentityClozeInsert(
   return !isCaseClozeDrill(cloze, lemma);
 }
 
+const CASE_LABEL_UK: Record<string, string> = {
+  nominative: 'називний',
+  genitive: 'родовий',
+  dative: 'давальний',
+  accusative: 'знахідний',
+  instrumental: 'орудний',
+  locative: 'місцевий',
+  vocative: 'кличний',
+};
+
+function paradigmCaseForms(
+  lemma: PracticeLexeme,
+): Array<{ caseName: string; number: string; form: string }> {
+  const out: Array<{ caseName: string; number: string; form: string }> = [];
+  for (const [caseName, numbers] of Object.entries(lemma.paradigm.cases ?? {})) {
+    if (!numbers) continue;
+    for (const [number, form] of Object.entries(numbers)) {
+      const trimmed = form?.trim();
+      if (trimmed) out.push({ caseName, number, form: trimmed });
+    }
+  }
+  return out;
+}
+
+function pickParadigmForm(
+  lemma: PracticeLexeme,
+  caseName: string,
+): string | null {
+  const numbers = lemma.paradigm.cases?.[caseName];
+  if (!numbers) return null;
+  return numbers.singular?.trim() || numbers.plural?.trim() || null;
+}
+
+function stablePickIndex(seed: string, modulo: number): number {
+  if (modulo <= 0) return 0;
+  let h = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return h % modulo;
+}
+
+function morphologyOptions(
+  lemma: PracticeLexeme,
+  answerCase: string,
+  answerForm: string,
+): PracticeClozeOption[] {
+  const pos = lemma.pos ?? 'noun';
+  const seen = new Set<string>([czNorm(answerForm)]);
+  const options: PracticeClozeOption[] = [
+    {
+      optionId: `${lemma.lemmaId}:answer`,
+      label: answerForm,
+      lemmaId: lemma.lemmaId,
+      kind: 'answer',
+      case: answerCase,
+      pos,
+    },
+  ];
+
+  // Citation form as same-root distractor when it differs from the answer.
+  if (czNorm(lemma.lemma) !== czNorm(answerForm)) {
+    options.push({
+      optionId: `${lemma.lemmaId}:lemma`,
+      label: lemma.lemma,
+      lemmaId: lemma.lemmaId,
+      kind: 'same-root-lemma',
+      case: 'nominative',
+      pos,
+    });
+    seen.add(czNorm(lemma.lemma));
+  }
+
+  for (const row of paradigmCaseForms(lemma)) {
+    if (options.length >= 4) break;
+    const key = czNorm(row.form);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    options.push({
+      optionId: `${lemma.lemmaId}:para:${row.caseName}:${row.number}`,
+      label: row.form,
+      lemmaId: lemma.lemmaId,
+      kind: row.caseName === 'nominative' ? 'same-root-lemma' : 'decoy-oblique',
+      case: row.caseName,
+      pos,
+    });
+  }
+
+  // Pad with synthetic labels only if paradigm is thin (still 4 chips for the rail).
+  let pad = 0;
+  while (options.length < 4) {
+    pad += 1;
+    const label = `${answerForm}-${pad}`;
+    if (seen.has(czNorm(label))) continue;
+    seen.add(czNorm(label));
+    options.push({
+      optionId: `${lemma.lemmaId}:pad:${pad}`,
+      label,
+      lemmaId: `${lemma.lemmaId}-pad-${pad}`,
+      kind: 'decoy-lemma',
+      case: 'nominative',
+      pos,
+    });
+  }
+
+  return options.slice(0, 4);
+}
+
 /**
- * Lemma-focused practice (`?lemmaId=…`) already tells the learner which word they
- * are studying. Identity clozes (blank = that citation form) are then trivial —
- * e.g. studying «новий» and filling «___ рік». Keep case drills only.
+ * Turn a trivial identity insert into a real case/morphology drill for the same
+ * lemma: use the blank's case when the paradigm has a non-citation form, otherwise
+ * pick a stable non-citation paradigm form and a neutral morphology frame.
+ * Returns null when the lemma has no usable morphology (indeclinable / empty paradigm).
+ */
+export function upgradeIdentityClozeToMorphology(
+  cloze: PracticeClozeItem,
+  lemma: PracticeLexeme,
+): PracticeClozeItem | null {
+  if (!isIdentityClozeInsert(cloze, lemma)) return cloze;
+  if (NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase())) return null;
+
+  const blankCase = (cloze.blankCase || 'nominative').trim() || 'nominative';
+  const fromBlank = pickParadigmForm(lemma, blankCase);
+  let caseName = blankCase;
+  let form = fromBlank;
+  let keepSentence = Boolean(fromBlank && czNorm(fromBlank) !== czNorm(lemma.lemma));
+
+  if (!keepSentence) {
+    const oblique = paradigmCaseForms(lemma).filter(
+      (row) => czNorm(row.form) !== czNorm(lemma.lemma),
+    );
+    if (oblique.length === 0) return null;
+    const pick = oblique[stablePickIndex(cloze.clozeId, oblique.length)]!;
+    caseName = pick.caseName;
+    form = pick.form;
+    keepSentence = false;
+  }
+
+  if (!form || czNorm(form) === czNorm(lemma.lemma)) return null;
+
+  const caseLabel = CASE_LABEL_UK[caseName] ?? caseName;
+  const rewritten: PracticeClozeItem = {
+    ...cloze,
+    form,
+    blankCase: caseName,
+    sentence: keepSentence && /_{3,}/.test(cloze.sentence) ? cloze.sentence : '___',
+    clozeEn: keepSentence ? cloze.clozeEn : undefined,
+    caseRule: {
+      ruleId: `${caseName}-morphology`,
+      case: caseName,
+      caseLabel,
+      trigger: 'lemma-focus-morphology',
+      triggerLabel: 'відмінювання',
+      feedback: `«${lemma.lemma}» → ${caseLabel}: ${form}`,
+    },
+    options: morphologyOptions(lemma, caseName, form),
+    // Drop textbook attribution on synthetic frames so we do not pretend a
+    // school page asked for a different case than the original extract.
+    attribution: keepSentence ? cloze.attribution : undefined,
+  };
+  return rewritten;
+}
+
+/**
+ * Lemma-focused practice (`?lemmaId=…`) already names the target word.
+ * Identity clozes (blank = citation form) are trivial; upgrade them to
+ * morphology/case drills when the paradigm allows, otherwise drop them.
  */
 export function stripIdentityClozeForLemmaFocus(
   deck: PracticeDeckData,
@@ -1986,32 +2149,58 @@ export function stripIdentityClozeForLemmaFocus(
 
   const clozeById = new Map(deck.cloze.map((item) => [item.clozeId, item]));
   const lexemeById = new Map(deck.lexemes.map((item) => [item.lemmaId, item]));
+  const rewrittenCloze = new Map<string, PracticeClozeItem>();
 
   const index = deck.index
     .filter((item) => item.lemmaId === target)
     .map((item) => {
       const lexeme = lexemeById.get(item.lemmaId);
-      const caseClozeIds = lexeme
-        ? item.clozeIds.filter((clozeId) => {
-            const cloze = clozeById.get(clozeId);
-            return Boolean(cloze && isCaseClozeDrill(cloze, lexeme));
-          })
-        : [];
+      if (!lexeme) {
+        return {
+          ...item,
+          clozeIds: [],
+          hasCloze: false,
+          modes: item.modes.filter((mode) => mode !== 'cloze'),
+        };
+      }
+
+      const keptIds: string[] = [];
+      for (const clozeId of item.clozeIds) {
+        const cloze = clozeById.get(clozeId);
+        if (!cloze) continue;
+        if (isCaseClozeDrill(cloze, lexeme)) {
+          keptIds.push(clozeId);
+          continue;
+        }
+        const upgraded = upgradeIdentityClozeToMorphology(cloze, lexeme);
+        if (upgraded) {
+          rewrittenCloze.set(upgraded.clozeId, upgraded);
+          keptIds.push(upgraded.clozeId);
+        }
+      }
 
       const modes =
-        caseClozeIds.length > 0
-          ? item.modes
-          : item.modes.filter((mode) => mode !== 'cloze');
+        keptIds.length > 0 ? item.modes : item.modes.filter((mode) => mode !== 'cloze');
 
       return {
         ...item,
-        clozeIds: caseClozeIds,
-        hasCloze: caseClozeIds.length > 0,
+        clozeIds: keptIds,
+        hasCloze: keptIds.length > 0,
         modes,
       };
     });
 
-  return { ...deck, index };
+  if (rewrittenCloze.size === 0) {
+    return { ...deck, index };
+  }
+
+  const cloze = deck.cloze.map((item) => rewrittenCloze.get(item.clozeId) ?? item);
+  // Include any upgraded ids that were not in the original cloze list (should not happen).
+  for (const [id, item] of rewrittenCloze) {
+    if (!cloze.some((row) => row.clozeId === id)) cloze.push(item);
+  }
+
+  return { ...deck, index, cloze };
 }
 
 export function validateClozeOptions(cloze: PracticeClozeItem): string[] {

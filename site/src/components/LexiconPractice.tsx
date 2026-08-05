@@ -1739,9 +1739,9 @@ function LexiconPracticeIsland({
     if (!isAutoStartTrigger || !deck || plannedTotal > 0) return;
 
     if (focusedLemmaId) {
-      // Lemma deep-link: only that word, and never identity cloze (blank = the
-      // same citation form the learner already knows they are drilling — e.g.
-      // «новий» practice filling «___ рік»). Case drills stay (inflect the form).
+      // Lemma deep-link: only that word. Identity cloze (blank = citation form)
+      // is trivial when the URL already names the target — upgrade to morphology
+      // / case drills from the paradigm when possible, else drop cloze mode.
       const filtered = stripIdentityClozeForLemmaFocus(deck, focusedLemmaId);
       const alreadyFocused =
         deck.index.length === filtered.index.length &&

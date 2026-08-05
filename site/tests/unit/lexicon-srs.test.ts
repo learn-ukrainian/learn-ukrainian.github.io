@@ -26,11 +26,13 @@ import {
   refillDailyPracticeDeckSnapshot,
   saveState,
   selectDailyPracticeDeckItems,
+  czNorm,
   isCaseClozeDrill,
   isIdentityClozeInsert,
   selectNextPracticeItem,
   seededAnswerIndex,
   stripIdentityClozeForLemmaFocus,
+  upgradeIdentityClozeToMorphology,
   uaPlural,
   validateClozeOptions,
   writeDailyPracticeDeckSnapshot,
@@ -1264,10 +1266,20 @@ describe('lexicon SRS facade', () => {
     expect(uaPlural(21)).toBe('правильна');
   });
 
-  test('lemma-focus strips identity cloze but keeps case drills', () => {
-    // Studying «новий» with a blank for «новий» itself is not practice — the
-    // deep-link already names the target. Case drills (inflect the form) stay.
+  test('lemma-focus upgrades identity cloze to morphology and keeps real case drills', () => {
+    // Studying «новий» with a blank for «новий» itself is trivial — upgrade to a
+    // declined form from the paradigm, or keep an existing case drill.
     const novyi = lexeme('новий', 'новий');
+    novyi.paradigm = {
+      cases: {
+        nominative: { singular: 'новий' },
+        genitive: { singular: 'нового' },
+        dative: { singular: 'новому' },
+        accusative: { singular: 'новий' },
+        instrumental: { singular: 'новим' },
+        locative: { singular: 'новому' },
+      },
+    };
     const identity = cloze('новий', 'novyi-identity', 'nominative', 'новий');
     identity.sentence = '1 січня — ___ рік.';
     const caseDrill = cloze('новий', 'novyi-case', 'genitive', 'нового');
@@ -1303,34 +1315,49 @@ describe('lexicon SRS facade', () => {
     expect(isIdentityClozeInsert(identity, novyi)).toBe(true);
     expect(isCaseClozeDrill(caseDrill, novyi)).toBe(true);
 
+    const upgraded = upgradeIdentityClozeToMorphology(identity, novyi);
+    expect(upgraded).not.toBeNull();
+    expect(upgraded!.form).not.toBe('новий');
+    expect(czNorm(upgraded!.form)).not.toBe(czNorm('новий'));
+    expect(isCaseClozeDrill(upgraded!, novyi)).toBe(true);
+    // Synthetic morphology frame — do not keep the textbook «___ рік» with a wrong case.
+    expect(upgraded!.sentence).toBe('___');
+
     const focused = stripIdentityClozeForLemmaFocus(full, 'новий');
     expect(focused.index).toHaveLength(1);
     expect(focused.index[0]?.lemmaId).toBe('новий');
-    expect(focused.index[0]?.clozeIds).toEqual(['novyi-case']);
+    expect(focused.index[0]?.clozeIds).toEqual(['novyi-identity', 'novyi-case']);
     expect(focused.index[0]?.hasCloze).toBe(true);
     expect(focused.index[0]?.modes).toContain('cloze');
-    expect(focused.index[0]?.modes).toContain('flashcards');
+    const morph = focused.cloze.find((c) => c.clozeId === 'novyi-identity');
+    expect(morph?.form).not.toBe('новий');
+    expect(focused.cloze.find((c) => c.clozeId === 'novyi-case')?.form).toBe('нового');
 
+    // Indeclinable / empty paradigm → cloze mode drops (nothing to inflect).
+    const particle = lexeme('і', 'і');
+    particle.pos = 'conj';
+    particle.paradigm = { cases: {} };
     const onlyIdentity: PracticeDeckData = {
-      ...full,
+      deckVersion: 'test-v1',
+      level: 'A1',
       index: [
         {
-          lemmaId: 'новий',
-          lemma: 'новий',
+          lemmaId: 'і',
+          lemma: 'і',
           cefr: 'A1',
           modes: ['flashcards', 'cloze'],
           hasCloze: true,
-          clozeIds: ['novyi-identity'],
+          clozeIds: ['i-identity'],
           newOrder: 0,
         },
       ],
-      cloze: [identity],
+      lexemes: [particle],
+      cloze: [cloze('і', 'i-identity', 'nominative', 'і')],
     };
-    const stripped = stripIdentityClozeForLemmaFocus(onlyIdentity, 'новий');
+    const stripped = stripIdentityClozeForLemmaFocus(onlyIdentity, 'і');
     expect(stripped.index[0]?.clozeIds).toEqual([]);
     expect(stripped.index[0]?.hasCloze).toBe(false);
     expect(stripped.index[0]?.modes).toEqual(['flashcards']);
-    expect(stripped.index[0]?.modes).not.toContain('cloze');
   });
 });
 
