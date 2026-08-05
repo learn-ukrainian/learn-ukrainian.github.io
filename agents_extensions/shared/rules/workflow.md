@@ -88,6 +88,27 @@ Classification is mandatory; delivery remains fail-open. A disabled or degraded
 registry must not block the delegated task, and it does not justify fabricating
 context or weakening the generic pointer-free contract.
 
+### Pre-dispatch outcome adequacy gate
+
+Before presenting to the operator or dispatching a substantive phase or epic kickoff,
+freeze the exact prompt and record its SHA-256, user-visible outcome, real-world or
+source denominator, non-goals, role map, independent held-out evaluation, stop/residual
+policy, and completion vocabulary. A high-stakes domain prompt receives a domain-fit review plus a distinct
+adversarial scope/circularity critique; smaller consequential work receives at least one
+fast critic. A genuinely trivial bounded prompt is explicitly exempt. The prompt author
+counts as neither reviewer. Select reviewer
+roles from live `model-assignment.md` routing, require explicit checklist verdicts and
+findings, and reconcile findings before dispatch. Re-review when outcome, scope,
+denominator, role map, acceptance criteria, or independent evaluation changes materially.
+
+Prompt review is not implementation review and never satisfies the independent
+cross-family PR gate. Discovery, seeds, prototypes, schemas, transport checks, and
+self-authored canaries can establish research or engine readiness, never product validity.
+A completion report names the verified user-visible outcome, denominator, held-out proof,
+and residual gap. For normative language evidence, establish the source's pedagogical or
+evidential role before consuming an occurrence. Any non-goal that would shrink the actual
+mission needs operator/advisor approval.
+
 **Do NOT read `CLAUDE.md`, `agents_extensions/shared/rules/*.md`, or
 `docs/session-state/current.md` directly on cold start.** Those are
 the source of truth the endpoints above serve. Reading them separately

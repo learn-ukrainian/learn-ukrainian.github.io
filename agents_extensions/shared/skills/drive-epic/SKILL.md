@@ -110,6 +110,27 @@ name. Respect the live caps (in-flight ceilings), the language-lane restriction
 per the served rules), folk carve-outs (cross-family only), and the judge-seat rules.
 On limit: note the substitution and reroute per the fallback table — never block on one lane.
 
+### 3a. Pre-dispatch outcome adequacy (required before substantive phase/epic kickoff)
+
+Freeze the exact prompt before presenting or routing it. Record its SHA-256, user-visible
+outcome, real-world or source denominator, non-goals, role map, independent held-out evaluation,
+stop/residual policy, and completion vocabulary. For high-stakes domain work, obtain a
+domain-fit review and a distinct adversarial scope/circularity critique; for smaller
+consequential work, obtain at least one fast critic. A genuinely trivial bounded prompt is
+explicitly exempt. The prompt author counts as neither reviewer. Choose these roles from live
+`model-assignment.md` routing, not a
+permanent reviewer identity; collect explicit checklist verdicts/findings and reconcile them
+before dispatch.
+
+Re-review after a material change to outcome, scope, denominator, role map, acceptance
+criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
+operator/advisor approval. Prompt review is pre-dispatch quality control only: it never
+replaces exact-head implementation review or the cross-family PR review gate. Discovery,
+seeds, prototypes, schemas, transport checks, and self-authored canaries may prove research or
+engine readiness, never product completion. On handback, name the verified user-visible outcome,
+denominator, held-out proof, and residual gap. For normative language evidence, establish the
+source's pedagogical or evidential role before consuming an occurrence.
+
 ### 4. Dispatch
 `scripts/delegate.py dispatch --agent <lane> --worktree ...` with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
@@ -148,14 +169,12 @@ A review of record is **independent and cross-family** (outside the author's mod
 family; never self-review, never same-family). Route it:
 ```bash
 # PR number is REQUIRED and positional (omitting it exits with a usage error):
-.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family-lane>   # e.g. review-pr 5632 --reviewer codex
+.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family-lane>
 .venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...                             # publish the sealed verdict
 ```
-Pick the reviewer family from the served reviewer-seat rule; the writer's family is
-never eligible. For a hard / non-routine change, explicitly pin either
-`--reviewer codex --model gpt-5.6-sol` (provider-default Codex ACP effort) or
-`--reviewer claude --model claude-fable-5 --effort high`; include a concrete
-`--override-reason`. Read the review CONTENT
+Pick the reviewer family and capability from the served reviewer-seat rule; the writer's
+family is never eligible. For a hard / non-routine change, record the live role selection
+and concrete `--override-reason`; do not hard-wire a reviewer identity in this skill. Read the review CONTENT
 (not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
 trusting "verified". A review request is not a passive notification: after invoking
 `review-pr <PR_NUMBER>`, the requester owns its request state and must explicitly poll

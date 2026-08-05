@@ -19,14 +19,21 @@ CONTRACT = REPO / "agents_extensions/shared/rules/operator-expectations.md"
 CONTRACT_REL = "agents_extensions/shared/rules/operator-expectations.md"
 
 
-def test_contract_file_exists_with_all_thirteen_items() -> None:
+def test_contract_file_exists_with_all_fourteen_items() -> None:
     body = CONTRACT.read_text(encoding="utf-8")
-    for n in range(1, 14):
+    for n in range(1, 15):
         assert re.search(rf"^{n}\. \*\*", body, re.MULTILINE), f"contract item {n} missing"
     assert "tie-breakers" in body
     assert "A1 is the deliberate exception" in body, "A1 immersion exception clause missing"
     assert "OUTSIDE your own model family" in body, "cross-family review clause missing"
     assert "Outcome validity precedes execution" in body, "semantic outcome gate missing"
+    assert "Pre-dispatch outcome adequacy" in body, "pre-dispatch adequacy gate missing"
+    assert "Before presenting to the operator or dispatching" in body, "operator-presented prompts lost the gate"
+    assert "The prompt author counts as neither" in body, "prompt author can self-review"
+    assert "SHA-256" in body, "prompt hash binding missing"
+    assert "independent held-out" in body, "held-out evaluation requirement missing"
+    assert "exact-head implementation review" in body, "prompt-review boundary missing"
+    assert "pedagogical or evidential role" in body, "normative-language source-role gate missing"
 
 
 def test_contract_served_first_by_rules_api() -> None:
@@ -51,6 +58,8 @@ def test_agents_md_carries_binding_digest() -> None:
     assert "cross-family" in body, "digest lost the cross-family review clause"
     assert "EXCEPT A1" in body, "digest lost the A1 immersion exception"
     assert "outcome validity precedes paid execution" in body, "digest lost the semantic outcome gate"
+    assert "pre-dispatch outcome adequacy" in body.lower(), "digest lost the prompt adequacy gate"
+    assert "independent held-out evaluation" in body, "digest lost held-out proof requirement"
 
 
 def test_gemini_md_carries_binding_digest() -> None:
@@ -60,6 +69,8 @@ def test_gemini_md_carries_binding_digest() -> None:
     assert "operator-expectations.md" in body, "GEMINI.md lost the contract pointer"
     assert "EXCEPT A1" in body, "GEMINI.md digest lost the A1 immersion exception"
     assert "outcome validity precedes paid execution" in body, "GEMINI.md lost the semantic outcome gate"
+    assert "pre-dispatch outcome adequacy" in body, "GEMINI.md lost the prompt adequacy gate"
+    assert "independent held-out evaluation" in body, "GEMINI.md lost held-out proof requirement"
 
 
 def test_claude_md_carries_binding_digest() -> None:
@@ -69,6 +80,8 @@ def test_claude_md_carries_binding_digest() -> None:
     assert "operator-expectations.md" in body
     assert "EXCEPT A1" in body, "CLAUDE.md digest lost the A1 immersion exception"
     assert "outcome validity precedes paid execution" in body, "CLAUDE.md lost the semantic outcome gate"
+    assert "pre-dispatch outcome adequacy" in body, "CLAUDE.md lost the prompt adequacy gate"
+    assert "independent held-out evaluation" in body, "CLAUDE.md lost held-out proof requirement"
 
 
 def test_agy_bridge_prompt_injects_contract_digest() -> None:
@@ -84,6 +97,27 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "operator-expectations.md" in out
     assert "EXCEPT A1" in out
     assert "outcome validity precedes paid execution" in " ".join(out.split())
+    assert "pre-dispatch outcome adequacy" in out
+    assert "independent held-out evaluation" in out
+
+
+def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
+    driver = (REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md").read_text(encoding="utf-8")
+    cooperation = (REPO / "docs/best-practices/agent-cooperation.md").read_text(encoding="utf-8")
+    workflow = (REPO / "agents_extensions/shared/rules/workflow.md").read_text(encoding="utf-8")
+
+    for body, name in ((driver, "drive-epic skill"), (cooperation, "V2 template")):
+        assert "Pre-dispatch outcome adequacy" in body, f"{name} lost the prompt adequacy gate"
+        assert "SHA-256" in body, f"{name} lost prompt hash binding"
+        assert "exact-head implementation review" in body, f"{name} lost prompt-review boundary"
+
+    assert "independent held-out evaluation" in driver, "drive-epic skill lost held-out evaluation"
+    assert "- Independent held-out evaluation:" in cooperation, "V2 template lost held-out evaluation"
+    assert "Pre-dispatch outcome adequacy" in workflow, "workflow lost the prompt adequacy gate"
+    assert "SHA-256" in workflow, "workflow lost prompt hash binding"
+    assert "independent held-out evaluation" in workflow, "workflow lost held-out evaluation"
+    assert "Prompt review is not implementation review" in workflow, "workflow lost prompt-review boundary"
+    assert "cross-family PR gate" in workflow, "workflow lost cross-family review boundary"
 
 
 def test_agy_bridge_prompt_permits_narrow_repo_reads_but_forbids_writes() -> None:

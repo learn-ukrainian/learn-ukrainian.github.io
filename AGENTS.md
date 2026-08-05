@@ -23,7 +23,13 @@ transport/shape/cost are not outcome proof); UA word/stress/morphology VESUM/`so
 **9** Max UA immersion EXCEPT A1 · **10** Drive within approved scope · **11** Repo hard
 gates bind · **12** **Advisor/operator approval gate**: no architecture, layout, or
 process decisions without present-tense **operator** or designated **advisor** approval
-(current advisors: **Fable**, **Sol** — roster may change; check `/api/rules`).
+(current advisors: **Fable**, **Sol** — roster may change; check `/api/rules`) · **13**
+Adversarial quality · **14**
+**Pre-dispatch outcome adequacy**: before presentation or dispatch, substantive phase/epic prompts freeze SHA-256 plus
+user outcome, denominator, non-goals, role map, independent held-out evaluation,
+stop/residual policy, and completion terms; live-routed critics review and re-review
+material drift. Prompt review is not exact-head implementation or cross-family PR review;
+engine proof is not product completion.
 
 ### Fleet-comms mid-cutover (binding for standalone TUI/UI drivers; #5512 / #5632)
 
