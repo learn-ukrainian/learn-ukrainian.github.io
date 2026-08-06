@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import stat
 import subprocess
 import sys
@@ -35,6 +36,45 @@ VERSION = "phase3_rule_author_runner_v1"
 PRIVATE_MODE = 0o700
 FILE_MODE = 0o600
 CANONICAL_AGY_MODEL = "gemini-3.6-flash-high"
+PUBLIC_RECEIPT_STRING_FIELDS = frozenset(
+    {
+        "schema_version",
+        "execution_mode",
+        "bundle_sha256",
+        "phase3_v2_contract_sha256",
+        "phase3_v2_1_amendment_sha256",
+        "phase3_v2_1_combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "evaluation_contract_sha256",
+        "coverage_contract_sha256",
+        "near_duplicate_policy_sha256",
+        "query_plan_sha256",
+        "packet_schema_sha256",
+        "implementation_version",
+        "script_sha256",
+        "schema_sha256",
+        "receipt_id",
+        "role_id",
+        "task_id",
+        "action_kind",
+        "provider",
+        "exact_model",
+        "model_family",
+        "harness",
+        "input_manifest_sha256",
+        "output_sha256",
+        "evaluation_cycle_id",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "conflict_graph_sha256",
+        "started_at",
+        "completed_at",
+        "status",
+        "prompt_set_sha256",
+    }
+)
+PUBLIC_RECEIPT_SAFE_TOKEN = re.compile(r"[A-Za-z0-9_.:+-]+\Z")
 
 
 class RuleAuthorRunnerError(ValueError):
@@ -137,7 +177,20 @@ def _receipt_has_no_leakage(receipt: Mapping[str, Any]) -> bool:
 
     def walk(value: Any) -> bool:
         if isinstance(value, Mapping):
-            return all(not any(word in str(key).lower() for word in forbidden) and walk(child) for key, child in value.items())
+            for key, child in value.items():
+                key_text = str(key)
+                if any(word in key_text.lower() for word in forbidden):
+                    return False
+                if isinstance(child, str) and (
+                    key_text not in PUBLIC_RECEIPT_STRING_FIELDS
+                    or PUBLIC_RECEIPT_SAFE_TOKEN.fullmatch(child) is None
+                ):
+                    return False
+                if not walk(child):
+                    return False
+            return True
+        if isinstance(value, str):
+            return PUBLIC_RECEIPT_SAFE_TOKEN.fullmatch(value) is not None
         return all(walk(child) for child in value) if isinstance(value, list) else True
 
     return walk(receipt)

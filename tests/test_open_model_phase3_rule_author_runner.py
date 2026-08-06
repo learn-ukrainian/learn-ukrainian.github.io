@@ -318,6 +318,8 @@ def test_receipt_is_public_safe_and_execution_aliases_fail(tmp_path: Path) -> No
         return set()
 
     assert result["no_leakage"] is True and not (all_keys(result) & forbidden)
+    assert runner._receipt_has_no_leakage({"model_notes": "rights-limited source text"}) is False
+    assert runner._receipt_has_no_leakage({"status": "текст"}) is False
     second_bundle, second_role, second_private, second_receipt = _paths(tmp_path / "alias")
 
     def aliased_output(command: list[str], stdin: bytes) -> None:
