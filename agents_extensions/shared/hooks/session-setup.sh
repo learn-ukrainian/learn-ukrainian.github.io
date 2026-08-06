@@ -205,27 +205,11 @@ if [ "$LEARN_UKRAINIAN_TRUSTED" != "1" ]; then
   ISSUES+=("CONTEXT PROFILE UNTRUSTED: $LEARN_UKRAINIAN_RESOLUTION_REASON. Compact startup is active without a trusted context denominator or forced auto-compaction.")
 fi
 
-# Persist official SessionStart identity and the resolved route in the canonical
-# checkout. Build argv as an array so exact transcript paths are never split.
-SESSION_RECORD_SCRIPT="${CLAUDE_SESSION_RECORD_SCRIPT:-$PROJECT_DIR/scripts/lib/session_record.py}"
-SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"  # canonical: worktrees carry no venv (F001 r5)
-if [ -n "$SESSION_ID" ] && [ -f "$SESSION_RECORD_SCRIPT" ] && [ -x "$SESSION_RECORD_PYTHON" ]; then
-  SESSION_RECORD_CMD=(
-    "$SESSION_RECORD_PYTHON" "$SESSION_RECORD_SCRIPT" --state-root "$CANONICAL_ROOT"
-    update --session-id "$SESSION_ID" --provenance "SessionStart" --append-env
-  )
-  [ -n "$TRANSCRIPT_PATH" ] && SESSION_RECORD_CMD+=(--transcript-path "$TRANSCRIPT_PATH")
-  [ -n "$SOURCE" ] && SESSION_RECORD_CMD+=(--source "$SOURCE")
-  [ -n "$OBSERVED_MODEL" ] && SESSION_RECORD_CMD+=(--observed-model "$OBSERVED_MODEL")
-  [ -n "$AGENT_TYPE" ] && SESSION_RECORD_CMD+=(--agent-type "$AGENT_TYPE")
-  [ -n "$REQUESTED_PROFILE_ID" ] && SESSION_RECORD_CMD+=(--profile-id "$REQUESTED_PROFILE_ID")
-  if ! run_bounded 2 "${SESSION_RECORD_CMD[@]}" >/dev/null; then
-    ISSUES+=("SESSION RECORD FAILED: official SessionStart identity could not be persisted.")
-  fi
-  unset SESSION_RECORD_CMD
-elif [ -n "$SESSION_ID" ]; then
-  ISSUES+=("SESSION RECORD UNAVAILABLE: canonical runtime record helper is missing.")
-fi
+# Session-record persistence, venv version check, primary-on-main assert,
+# thread-lease claim, and rollover detect are consolidated into ONE python
+# process (scripts/hooks/session_start_gate.py) further below — the serial
+# per-check interpreter spawns dominated the measured ~950 ms cold-start
+# (PR #6413). Only shell-cheap checks stay inline here.
 
 # A supervised Claudex child inherits a random run id and generation. Bind those
 # to Claude Code's official SessionStart id before any rollover can be requested.
@@ -251,24 +235,11 @@ if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
   fi
 fi
 
-# 1. Check the canonical venv against the repository's exact Python pin. Linked
-# worktrees deliberately do not carry a local .venv, so this must not inspect
-# PROJECT_DIR here.
-PYTHON_VERSION_FILE="$CANONICAL_ROOT/.python-version"
-CANONICAL_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
-if [ ! -f "$PYTHON_VERSION_FILE" ]; then
-  ISSUES+=("PYTHON VERSION PIN MISSING: expected .python-version at $PYTHON_VERSION_FILE")
-elif [ ! -x "$CANONICAL_PYTHON" ]; then
+# 1. Venv-missing is checked in shell (the gate itself needs the venv python);
+# the exact version pin comparison happens inside the gate, in-process.
+if [ ! -x "$CANONICAL_ROOT/.venv/bin/python" ]; then
   ISSUES+=("VENV MISSING: canonical .venv/bin/python not found. Recreate it with the version in .python-version.")
-else
-  EXPECTED_PYTHON_VERSION=$(head -1 "$PYTHON_VERSION_FILE" | tr -d '[:space:]')
-  PY_VERSION=$(run_bounded 1 "$CANONICAL_PYTHON" --version 2>&1)
-  if [ -z "$EXPECTED_PYTHON_VERSION" ] || [ "$PY_VERSION" != "Python $EXPECTED_PYTHON_VERSION" ]; then
-    ISSUES+=("VENV WRONG PYTHON: Expected Python ${EXPECTED_PYTHON_VERSION:-<missing pin>}, got ${PY_VERSION:-<unavailable>}")
-  fi
-  unset EXPECTED_PYTHON_VERSION
 fi
-unset PYTHON_VERSION_FILE CANONICAL_PYTHON
 
 # 2. Claude-only environment diagnostics do not belong in Codex context.
 if [ "$IS_CODEX_SESSION" = "0" ] && [ -z "$CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS" ]; then
@@ -350,15 +321,7 @@ if [ "$CODEX_NORMAL_TASK" = "0" ]; then
   fi
 fi
 
-# Keep only the local protected-branch diagnostic on the synchronous path.
-if [ -x "$PROJECT_DIR/.venv/bin/python" ] \
-    && [ -f "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" ]; then
-  if ! run_bounded 2 "$PROJECT_DIR/.venv/bin/python" \
-      "$PROJECT_DIR/scripts/guardrails/assert_primary_on_main.py" \
-      --cwd "$PROJECT_DIR" --quiet 2>/dev/null; then
-    ISSUES+=("PRIMARY HEAD is detached or not on main (#4857). Inspect it, then run the explicit doctor if appropriate: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal.")
-  fi
-fi
+# The local protected-branch diagnostic runs inside the consolidated gate below.
 
 # 13. Session handoff. Claude uses the official SessionStart session id; Codex
 # retains its documented environment fallback for non-Claude fixtures.
@@ -442,75 +405,11 @@ fi
 
 # Rollover packets are lineage-scoped and may legitimately coexist. A driver
 # cold-start is different: only one live Claude session may own a handoff slot
-# at a time. Claim the flat durable lease before reading any queue guidance so
-# a duplicate SessionStart stops before it can double-drive work.
-case "$HANDOFF_AGENT" in
-  claude|claude-*)
-    if [ -z "$CURRENT_THREAD_ID" ]; then
-      HANDOFF_CONTEXT="ERROR: Cannot acquire durable thread lease: SessionStart did not provide a current thread id. Stop; do not drive this queue."
-    else
-      THREAD_LEASE_RC=0
-      THREAD_LEASE_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-        --repo-root "$CANONICAL_ROOT" claim-thread-lease --agent "$HANDOFF_AGENT" \
-        --current-thread-id "$CURRENT_THREAD_ID" 2>&1) || THREAD_LEASE_RC=$?
-      if [ "$THREAD_LEASE_RC" -eq 124 ] || [ "$THREAD_LEASE_RC" -eq 127 ]; then
-        HANDOFF_CONTEXT="ERROR: LEASE CLAIM COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release.
-Output:
-$THREAD_LEASE_OUTPUT"
-      elif [ "$THREAD_LEASE_RC" -ne 0 ]; then
-        HANDOFF_CONTEXT="ERROR: DURABLE THREAD LEASE CONFLICT — stop; do not cold-start or drive this queue.
-Output:
-$THREAD_LEASE_OUTPUT"
-      else
-        # Record the claimed generation in the process-scoped env file ONLY.
-        # There is deliberately NO session-keyed generation sidecar (formal CF
-        # F001 round 3 on #5896): a sidecar keyed by SESSION_ID is mutable
-        # across a same-id resume, so a delayed SessionEnd from a dead
-        # predecessor could read the SUCCESSOR's generation and tombstone the
-        # successor's live lease. The SessionEnd release therefore fences on
-        # process identity alone and no-ops when it cannot be reconfirmed;
-        # claim-side pid-liveness reclaims any stale lease.
-        THREAD_LEASE_GENERATION=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
-try:
-  d=json.loads(sys.stdin.read()); print(d.get("generation") or "")
-except Exception:
-  print("")' 2>/dev/null || true)
-        if [ -n "$THREAD_LEASE_GENERATION" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-          printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "$THREAD_LEASE_GENERATION" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
-        fi
-        unset THREAD_LEASE_GENERATION
-
-        # A successful claim can still be a takeover (the previous owner was confirmed
-        # dead/zombie, or its pid was reused) or a heal from a corrupt on-disk lease.
-        # Neither may ever be silent — surface it into SessionStart context so the
-        # operator is told a slot changed hands before driving it (#5759).
-        THREAD_LEASE_TAKEOVER_BANNER=$(printf '%s' "$THREAD_LEASE_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
-try:
-    d = json.loads(sys.stdin.read())
-except Exception:
-    raise SystemExit(0)
-parts = []
-replaced = d.get("replaced_owner_thread_id")
-if replaced:
-    parts.append(
-        "THREAD LEASE TAKEOVER: this session (generation " + str(d.get("generation"))
-        + ") replaced owner " + str(replaced) + " -- reason: " + str(d.get("takeover_reason", "unknown")) + "."
-    )
-corrupt = d.get("recovered_from_corrupt_lease")
-if corrupt:
-    parts.append("THREAD LEASE HEALED: on-disk lease was corrupt and was reset -- " + str(corrupt) + ".")
-if parts:
-    print("\n".join(parts))
-' 2>/dev/null || true)
-        if [ -n "$THREAD_LEASE_TAKEOVER_BANNER" ]; then
-          INFO+=("$THREAD_LEASE_TAKEOVER_BANNER")
-        fi
-        unset THREAD_LEASE_TAKEOVER_BANNER
-      fi
-      unset THREAD_LEASE_RC
-    fi
-    ;;
-esac
+# at a time. The lease claim (plus session-record, venv-pin, primary-on-main,
+# and rollover detect) runs inside the consolidated one-process gate below —
+# see GATE INVOCATION. Generation-sidecar rationale (formal CF F001 round 3 on
+# #5896) and takeover-banner duty (#5759) are unchanged and live in the gate's
+# result mapping.
 
 build_handoff_pointer() {
   local brief_path="$1"
@@ -585,62 +484,106 @@ if [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "1" ]; then
   esac
 fi
 
-render_ambiguous_rollover_context() {
-  local original_detect_output="$1"
-  local formatted_context=""
+# --- GATE INVOCATION: one python process for record/venv/primary/lease/detect.
+# Crash honesty (issue #6411): a crashed helper maps to "could not determine",
+# never to a business verdict such as a lease conflict.
+GATE_ARGS=(
+  --repo-root "$CANONICAL_ROOT" --project-dir "$PROJECT_DIR"
+  --agent "$HANDOFF_AGENT" --session-id "$CURRENT_THREAD_ID"
+)
+[ -n "$TRANSCRIPT_PATH" ] && GATE_ARGS+=(--transcript-path "$TRANSCRIPT_PATH")
+[ -n "$SOURCE" ] && GATE_ARGS+=(--source "$SOURCE")
+[ -n "$OBSERVED_MODEL" ] && GATE_ARGS+=(--observed-model "$OBSERVED_MODEL")
+[ -n "$AGENT_TYPE" ] && GATE_ARGS+=(--agent-type "$AGENT_TYPE")
+[ -n "$REQUESTED_PROFILE_ID" ] && GATE_ARGS+=(--profile-id "$REQUESTED_PROFILE_ID")
+case "$HANDOFF_AGENT" in
+  claude|claude-*) GATE_ARGS+=(--claim-lease) ;;
+esac
+if [ "$CODEX_NORMAL_TASK" = "0" ] && [ -z "$HANDOFF_CONTEXT" ]; then
+  GATE_ARGS+=(--detect)
+fi
+if [ ${#TASK_FAMILY_ARGS[@]} -gt 0 ]; then
+  GATE_ARGS+=(--task-family "$SESSION_EPIC")
+fi
 
-  if formatted_context=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" \
-    --format session-start 2>&1); then
-    printf '%s' "$formatted_context"
-    return 0
-  fi
+GATE_RC=0
+GATE_JSON=$(run_bounded 9 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
+  -m scripts.hooks.session_start_gate "${GATE_ARGS[@]}" 2>/dev/null) || GATE_RC=$?
+unset GATE_ARGS
 
-  cat <<EOF
-ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact candidate.
-Formatting lookup failed:
-${formatted_context:-no output}
-Detection output:
-$original_detect_output
-EOF
-}
+GATE_FIELDS=()
+if [ "$GATE_RC" -eq 0 ] && [ -n "$GATE_JSON" ]; then
+  while IFS= read -r -d '' _gate_field; do
+    GATE_FIELDS+=("$_gate_field")
+  done < <(printf '%s' "$GATE_JSON" | jq -j '
+    [ (.session_record.status // ""), (.session_record.verdict // .session_record.error // ""),
+      (.python_version.status // ""), (.python_version.verdict // .python_version.error // ""),
+      (.primary_main.status // ""), (.primary_main.verdict // .primary_main.error // ""),
+      (.thread_lease.status // ""), (.thread_lease.context // ""),
+      (.thread_lease.generation // ""), (.thread_lease.takeover_banner // ""),
+      (.rollover_detect.status // ""), (.rollover_detect.context // ""),
+      (.rollover_detect.detect_status // "")
+    ] | .[] | tostring, ([0] | implode)' 2>/dev/null)
+  unset _gate_field
+fi
 
-if [ "$CODEX_NORMAL_TASK" = "1" ]; then
-  : # Native Codex task continuity; no fleet-driver rollover namespace is bound.
-elif [ -z "$HANDOFF_CONTEXT" ] && ! DETECT_OUTPUT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-  --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-  --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format json 2>&1); then
-  # Exit 2 may be multi-packet ambiguity (#5398) — surface candidates, never cold-start.
-  DETECT_ERR_CODE=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys
-try:
-  d=json.loads(sys.stdin.read()); print(d.get("error_code") or "")
-except Exception:
-  print("")' 2>/dev/null || true)
-  if [ "$DETECT_ERR_CODE" = "MULTIPLE_LIVE_PENDING_ROLLOVERS" ]; then
-    HANDOFF_CONTEXT=$(render_ambiguous_rollover_context "$DETECT_OUTPUT")
-  else
-    HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
+GATE_DETECT_STATUS=""
+if [ "$GATE_RC" -ne 0 ] || [ ${#GATE_FIELDS[@]} -lt 13 ]; then
+  ISSUES+=("SESSION GATE COULD NOT RUN (rc=$GATE_RC): session-record, venv-pin, and primary-on-main checks did not run.")
+  case "$HANDOFF_AGENT" in
+    claude|claude-*)
+      if [ -z "$HANDOFF_CONTEXT" ]; then
+        HANDOFF_CONTEXT="ERROR: SESSION GATE COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release.
 Output:
-$DETECT_OUTPUT"
-  fi
-elif [ -n "$HANDOFF_CONTEXT" ]; then
-  : # Lease failure above is authoritative; never replace it with detect output.
-elif ! DETECT_STATUS=$(printf '%s' "$DETECT_OUTPUT" | "$ROLLOVER_PYTHON" -c 'import json,sys; print(json.loads(sys.stdin.read()).get("status", ""), end="")'); then
-  HANDOFF_CONTEXT="ERROR: thread_handoff.py detect output could not be parsed. Stop.
-Output:
-$DETECT_OUTPUT"
-elif [ "$DETECT_STATUS" = "ambiguous" ]; then
-  HANDOFF_CONTEXT=$(render_ambiguous_rollover_context "$DETECT_OUTPUT")
-elif [ "$DETECT_STATUS" = "pending_start" ] || [ "$DETECT_STATUS" = "resumed" ]; then
-  if ! HANDOFF_CONTEXT=$(run_bounded 3 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
-    --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" \
-    --current-thread-id "$CURRENT_THREAD_ID" "${TASK_FAMILY_ARGS[@]}" --format session-start 2>&1); then
-    HANDOFF_CONTEXT="ERROR: thread_handoff.py detect failed. Stop.
-Output:
-$HANDOFF_CONTEXT"
-  fi
-elif [ "$DETECT_STATUS" = "none" ]; then
+${GATE_JSON:-no output}"
+      fi
+      ;;
+  esac
+else
+  case "${GATE_FIELDS[0]}" in
+    ok|skipped) ;;
+    issue) ISSUES+=("${GATE_FIELDS[1]}") ;;
+    *) ISSUES+=("SESSION RECORD CHECK CRASHED (state unknown): ${GATE_FIELDS[1]:-unknown error}") ;;
+  esac
+  case "${GATE_FIELDS[2]}" in
+    ok|skipped) ;;
+    issue) ISSUES+=("${GATE_FIELDS[3]}") ;;
+    *) ISSUES+=("VENV PIN CHECK CRASHED (state unknown): ${GATE_FIELDS[3]:-unknown error}") ;;
+  esac
+  case "${GATE_FIELDS[4]}" in
+    ok|skipped) ;;
+    issue) ISSUES+=("${GATE_FIELDS[5]}") ;;
+    *) ISSUES+=("PRIMARY-ON-MAIN CHECK CRASHED (branch state unknown): ${GATE_FIELDS[5]:-unknown error}") ;;
+  esac
+  case "${GATE_FIELDS[6]}" in
+    ok)
+      # Generation reaches only the process-scoped env file (no session-keyed
+      # sidecar — formal CF F001 round 3 on #5896). Takeover/heal is never
+      # silent (#5759).
+      if [ -n "${GATE_FIELDS[8]}" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+        printf 'export LEARN_UKRAINIAN_THREAD_LEASE_GENERATION=%s\n' "${GATE_FIELDS[8]}" >> "$CLAUDE_ENV_FILE" 2>/dev/null || true
+      fi
+      [ -n "${GATE_FIELDS[9]}" ] && INFO+=("${GATE_FIELDS[9]}")
+      ;;
+    skipped) ;;
+    *)
+      if [ -z "$HANDOFF_CONTEXT" ]; then
+        HANDOFF_CONTEXT="${GATE_FIELDS[7]:-ERROR: LEASE CLAIM HELPER CRASHED — stop; lease state UNKNOWN; do NOT force-release.}"
+      fi
+      ;;
+  esac
+  case "${GATE_FIELDS[10]}" in
+    ok|skipped) GATE_DETECT_STATUS="${GATE_FIELDS[12]}" ;;
+    *)
+      if [ -z "$HANDOFF_CONTEXT" ]; then
+        HANDOFF_CONTEXT="${GATE_FIELDS[11]:-ERROR: thread_handoff.py detect crashed. Stop.}"
+      fi
+      ;;
+  esac
+fi
+unset GATE_JSON GATE_FIELDS GATE_RC
+
+if [ -z "$HANDOFF_CONTEXT" ] && [ "$GATE_DETECT_STATUS" = "none" ]; then
   HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
 
   if [ -f "$PROJECT_DIR/.agent/${HANDOFF_AGENT}-thread-handoff.md" ]; then
@@ -702,8 +645,6 @@ Output:
 $HANDOFF_CONTEXT"
     fi
   fi
-elif [ -z "$HANDOFF_CONTEXT" ]; then
-  HANDOFF_CONTEXT="ERROR: Unexpected detect status: $DETECT_STATUS"
 fi
 
 # Epic assignment banner

@@ -70,15 +70,35 @@ fi
 WINDOW=""
 WINDOW_PROVENANCE="unavailable"
 WARNING_TIERS=""
-PYTHON_BIN="$PROJECT_DIR/.venv/bin/python"
-SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
-if [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
-  RECORD_JSON=$("$PYTHON_BIN" "$SESSION_RECORD" get --session-id "$SESSION_ID" 2>/dev/null || true)
-  if [ -n "$RECORD_JSON" ]; then
-    WINDOW=$(printf '%s' "$RECORD_JSON" | jq -r '.actual_context_window_tokens // empty' 2>/dev/null)
-    WINDOW_PROVENANCE=$(printf '%s' "$RECORD_JSON" | jq -r '.actual_context_window_provenance // "unavailable"' 2>/dev/null)
-    WARNING_TIERS=$(printf '%s' "$RECORD_JSON" | jq -r '.rollover_warning_percentages | select(type == "array" and length == 3) | join(" ")' 2>/dev/null)
+# The session record is plain JSON at <canonical>/.agent/sessions/<id>.json —
+# read it with jq directly instead of spawning a ~130 ms python interpreter on
+# EVERY tool call (PR #6413 finding #3). This also fixes worktree sessions,
+# where the old $PROJECT_DIR/.venv python check silently disabled the monitor
+# (linked worktrees carry no venv — F001 r5 class).
+RECORD_FILE="${LEARN_UKRAINIAN_SESSION_RECORD:-}"
+if [ -z "$RECORD_FILE" ] || [ ! -f "$RECORD_FILE" ]; then
+  if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+    CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+  else
+    GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+    if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+      CANONICAL_ROOT=$(dirname "$GIT_COMMON_DIR")
+    else
+      CANONICAL_ROOT="$PROJECT_DIR"
+    fi
   fi
+  RECORD_FILE="$CANONICAL_ROOT/.agent/sessions/$SESSION_ID.json"
+fi
+if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
+  RECORD_ROW=$(jq -r '
+    [ (.actual_context_window_tokens // "" | tostring),
+      (.actual_context_window_provenance // "unavailable"),
+      (.rollover_warning_percentages | if type == "array" and length == 3 then join(" ") else "" end)
+    ] | join("\u0001")' "$RECORD_FILE" 2>/dev/null || true)
+  if [ -n "$RECORD_ROW" ]; then
+    IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS <<< "$RECORD_ROW"
+  fi
+  unset RECORD_ROW
 fi
 
 # Compatibility fallback before SessionStart has written a record: only an

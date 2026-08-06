@@ -722,11 +722,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
             "timeout": 3
-          },
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/thread-lease-heartbeat.sh",
-            "timeout": 3
           }
         ]
       },

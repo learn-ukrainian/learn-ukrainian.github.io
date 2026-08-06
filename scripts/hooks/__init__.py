@@ -1,1 +1,1 @@
-"""Hook audit, timing, and harness profile helpers."""
+"""Hook audit, timing, harness profile, and consolidated per-event entrypoint helpers."""
