@@ -13,14 +13,14 @@
       "metadata": "/4b/a2a54277a7/0/metadata.json",
       "transcript": "/4b/a2a54277a7/0/full.jsonl",
       "content_hash": "/4b/a2a54277a7/0/content_hash.txt",
-      "prompt": "/4b/a2a54277a7/0/prompt.txt"
+      "prompt": ""
     }
   ],
   "token_usage": {
-    "input_tokens": 58151,
+    "input_tokens": 59355,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 1894656,
-    "output_tokens": 19653,
-    "api_call_count": 36
+    "cache_read_tokens": 2108160,
+    "output_tokens": 19963,
+    "api_call_count": 39
   }
 }
