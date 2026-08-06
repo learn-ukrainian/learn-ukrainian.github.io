@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "629d363c751a",
+  "session_id": "session_a4b443c6-44a5-4ff4-8502-7641b4dd65b6",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T13:25:10.333556Z",
+  "branch": "kimi/review-rail-hardening",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_review_pr.py",
+    "scripts/ai_agent_bridge/_review_worktree.py",
+    "scripts/review/evidence.py",
+    "tests/ai_agent_bridge/test_review_pr.py",
+    "tests/ai_agent_bridge/test_review_worktree.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "1aba1fdb21d0",
+  "token_usage": {
+    "input_tokens": 183868,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 12643584,
+    "output_tokens": 29322,
+    "api_call_count": 92
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T13:25:10.29244Z",
+    "agent_lines": 319,
+    "agent_removed": 25,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 319,
+    "total_lines_changed": 344,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

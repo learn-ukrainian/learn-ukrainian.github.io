@@ -1,0 +1,61 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/review-rail-hardening
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: formal CF review rail hardening (issue #6415, items 2–4)
+
+Operator-approved bootstrap exception: the gate this PR fixes cannot review it, so the operator
+will approve this one PR directly. Do NOT enable auto-merge; do NOT self-merge.
+
+## Evidence preamble (#M-4 — verify each claim yourself before relying on it)
+
+- Two consecutive sealed reviews by `acpx-claude-shadow` were rejected by the evidence validator:
+  `review_response_evidence:req-1:line_mismatch:range_span_mismatch:claimed=49-50 expected_end=52 quote_lines=4`
+  `review_response_evidence:req-1:line_mismatch:range_span_mismatch:claimed=50-52 expected_end=53 quote_lines=4`
+  Pattern: the validator expects `end = start + quote_lines - 1`; the reviewer claims a shorter
+  span while quoting the right lines. Validator code: `validate_code_review_response` in
+  `scripts/ai_agent_bridge/_review_worktree.py` (find `range_span_mismatch`).
+- Seat ineligibility is discoverable only by burning an attempt (each provisions a snapshot):
+  `kimi`: "authenticated K3 sealed MCP canary has not completed"; `glm-5.2` and `gpt-5.6-terra`:
+  "failed a hard eligibility gate"; `agy`: "source-blind AGY ACP wrapper does not expose
+  parent-owned MCP servers". Resolver: `scripts/review/reviewer_resolver.py` (~line 760–895).
+- `--author-family gemini` fails as "unknown, ambiguous, or conflicting" because the canonical
+  family string is `google` (`resolve_author_family`, `reviewer_resolver.py:99`); the error never
+  names the accepted vocabulary.
+
+## Steps
+
+1. Worktree (delegate provides it). Read issue #6415 in full first.
+2. **Item 2 — evidence off-by-one.** First REPRODUCE: a failing unit test with a review response
+   whose quoted lines exactly match the target file but whose claimed range end is
+   `start + quote_lines - 2` (the observed shape). Then read the REVIEWER PROMPT template that
+   states the range contract (find where the sealed review prompt describes line-evidence
+   format) and decide which side is wrong:
+   - If the prompt is ambiguous/absent about endpoint arithmetic → fix the PROMPT to state the
+     exact contract AND make the validator normalize an endpoint-only mismatch WHEN AND ONLY WHEN
+     every quoted line matches the file text exactly at the claimed start (content is the truth;
+     the claim is metadata). A mismatch in quoted CONTENT must still hard-fail.
+   - Never weaken content verification — mutation-test it: a test where quoted content is wrong
+     must still fail validation after your change.
+3. **Item 3 — eligibility visibility.** Add `review-pr --list-eligible` (or a sibling
+   subcommand): runs the same resolver, prints per-seat status + the exact ineligibility reason,
+   makes NO snapshot/provision side effects. Orchestrators must be able to route without burning
+   provisioned attempts.
+4. **Item 4 — family vocabulary.** The authorship error must enumerate valid family strings
+   (from `_VALID_CONCRETE_FAMILIES`) and show what the given model resolved to.
+5. OUT OF SCOPE: item 1 (temp lifecycle — issue #6412, separate design), any change to seat
+   eligibility RULES themselves (only their visibility).
+6. Tests: each fix gets a test that fails when the fix is reverted. Run
+   `.venv/bin/python -m pytest` on the touched test files + `ruff check` on changed files.
+   NOTE: your worktree has no .venv — symlink the canonical one first:
+   `ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv` (remove the symlink before
+   final commit so the tree is clean).
+7. Commit as you go; conventional commits; final commit trailer `X-Agent: <your-branch>`.
+8. Push, open PR titled "fix(review): evidence off-by-one normalization + seat eligibility
+   listing + family vocabulary errors (#6415)". PR body: per-item what/why, quoted test output,
+   explicit statement of what was NOT weakened (content verification). No auto-merge.
