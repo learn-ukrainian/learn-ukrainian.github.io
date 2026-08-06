@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8d357cfff06e",
+  "session_id": "fleet-c80ebd18d3484ef7942afc7a13020092",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T13:34:09.721709Z",
+  "branch": "agy/reviewer-bench-telemetry",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/state_router.py",
+    "scripts/audit/module_size_policy_audit.py",
+    "scripts/review/bench_health.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/api/test_routing_budget_endpoint.py",
+    "tests/review/test_bench_health.py",
+    "tests/test_review_reviewer_resolver.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "bf59f3197242",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T13:34:09.712738Z",
+    "agent_lines": 278,
+    "agent_removed": 16,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 278,
+    "total_lines_changed": 294,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
