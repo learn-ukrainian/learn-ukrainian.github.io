@@ -23,7 +23,12 @@ def _write(path: Path, value: object) -> None:
     path.write_text(rows.canonical_json(value) + "\n", encoding="utf-8")
 
 
-def _fixture(tmp_path: Path, *, include_test: bool = False) -> dict[str, Path]:
+def _fixture(
+    tmp_path: Path,
+    *,
+    include_test: bool = False,
+    source_langs: tuple[str, str] = ("uk", "ru"),
+) -> dict[str, Path]:
     root = tmp_path / "synthetic"
     data = root / "data/projects/open_model_data"
     role = ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
@@ -38,8 +43,8 @@ def _fixture(tmp_path: Path, *, include_test: bool = False) -> dict[str, Path]:
     connection = sqlite3.connect(db)
     connection.execute("CREATE TABLE ua_gec_errors (id INTEGER PRIMARY KEY, error TEXT, correct TEXT, error_type TEXT, doc_id TEXT, annotator_id TEXT, partition TEXT, is_native INTEGER, source_lang TEXT)")
     records = [
-        (1, "synthetic train error one", "synthetic correction one", "G/Case", "train-doc", "ann-one", "gec/train", 1, "uk"),
-        (2, "synthetic train error two", "synthetic correction two", "F/Calque", "train-doc-two", "ann-two", "gec/train", 0, "ru"),
+        (1, "synthetic train error one", "synthetic correction one", "G/Case", "train-doc", "ann-one", "gec/train", 1, source_langs[0]),
+        (2, "synthetic train error two", "synthetic correction two", "F/Calque", "train-doc-two", "ann-two", "gec/train", 0, source_langs[1]),
     ]
     if include_test:
         records.append((3, "synthetic heldout error", "synthetic heldout correction", "G/Case", "test-doc", "ann-three", "gec/test", 1, "uk"))
@@ -112,6 +117,27 @@ def test_rows_are_deterministic_private_complete_and_packet_compiler_compatible(
     assert receipt["input_bindings"]["partition_public_receipt_file_sha256"] == rows.sha256_file(paths["public"])
     assert receipt["exclusions"]["all_rows_train"] is True
     assert receipt["exclusions"]["clearance_source_row_set_equal"] is True
+
+
+def test_empty_source_lang_is_schema_valid_and_preserves_frozen_hash(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path, source_langs=("", "fr-CA"))
+    _build(paths)
+    materialized = [
+        json.loads(line)
+        for line in (paths["private"] / rows.ROWS_FILENAME).read_text(encoding="utf-8").splitlines()
+    ]
+
+    assert {item["source_record"]["source_lang"] for item in materialized} == {"", "fr-CA"}
+    assert all(
+        item["unit_sha256"] == freeze._unit_hash(freeze._normal(item["source_record"]))
+        for item in materialized
+    )
+    schema = rows.read_json(rows.SCHEMA_PATH, "adapter schema")
+    validator = Draft202012Validator(
+        {"$schema": schema["$schema"], "$defs": schema["$defs"], "$ref": "#/$defs/sourceRow"}
+    )
+    for item in materialized:
+        validator.validate(item)
 
 
 def test_rejects_stale_db_test_injection_and_unexpected_or_symlink_private_inputs(tmp_path: Path) -> None:

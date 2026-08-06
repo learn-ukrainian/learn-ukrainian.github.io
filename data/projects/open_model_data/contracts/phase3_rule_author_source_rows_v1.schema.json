@@ -52,7 +52,7 @@
         "annotator_id": {"type": "string", "minLength": 1},
         "partition": {"type": "string", "pattern": ".+/train$"},
         "is_native": {"type": "integer"},
-        "source_lang": {"type": "string", "minLength": 1}
+        "source_lang": {"type": "string"}
       }
     },
     "receipt": {

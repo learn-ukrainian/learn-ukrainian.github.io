@@ -321,7 +321,7 @@ def reconstruct_ua_gec_rows(
         require(isinstance(error_type, str) and error_type, "ua_gec error_type malformed")
         require(isinstance(annotator_id, str) and annotator_id, "ua_gec annotator_id malformed")
         require(isinstance(is_native, int), "ua_gec is_native malformed")
-        require(isinstance(source_lang, str) and source_lang, "ua_gec source_lang malformed")
+        require(isinstance(source_lang, str), "ua_gec source_lang malformed")
         source_record = freeze_mod._normal(
             {
                 "id": row_id,

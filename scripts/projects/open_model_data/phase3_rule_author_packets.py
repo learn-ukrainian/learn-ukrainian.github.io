@@ -412,9 +412,12 @@ def _item_from_row(row: Mapping[str, Any], clearance_sha: str, policy_sha: str) 
         isinstance(annotator, str)
         and annotator
         and isinstance(source_lang, str)
-        and source_lang
         and isinstance(is_native, int),
         "UA-GEC correction provenance is malformed",
+    )
+    require(
+        source_lang != "unknown",
+        "UA-GEC source_lang literal 'unknown' collides with packet sentinel",
     )
     frozen = {"family_id": family_id, "unit_id": unit_id, "unit_sha256": unit_sha}
     identity = {"frozen_unit": frozen, "source_sha256": supplied_sha, "start": start, "end": end}
@@ -444,7 +447,7 @@ def _item_from_row(row: Mapping[str, Any], clearance_sha: str, policy_sha: str) 
             "partition": partition,
             "annotator_identity_sha256": sha256_bytes(annotator.encode("utf-8")),
             "is_native": is_native,
-            "source_lang": source_lang,
+            "source_lang": source_lang or "unknown",
         },
         "candidate_signals": sorted(set(candidate_signals)),
         "clearance_sha256": clearance_sha,

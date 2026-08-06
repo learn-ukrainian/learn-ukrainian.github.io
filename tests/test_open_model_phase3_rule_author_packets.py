@@ -280,6 +280,49 @@ def test_document_identity_uses_hash_verified_normalized_record(tmp_path: Path) 
     assert len(identities) == 1
 
 
+def test_source_lang_empty_maps_to_packet_sentinel_without_rewriting_nonempty_value(tmp_path: Path) -> None:
+    empty = _source_record(
+        1,
+        error="synthetic source span one",
+        correct="synthetic correction one",
+        error_type="F",
+    )
+    empty["source_lang"] = ""
+    nonempty = _source_record(
+        2,
+        error="synthetic source span two",
+        correct="synthetic correction two",
+        error_type="Calque",
+    )
+    nonempty["source_lang"] = "fr-CA"
+    paths = _fixture(tmp_path, records=[empty, nonempty])
+
+    bundle = _build(paths)
+    metadata_by_text = {
+        item["source_text"]: item["metadata"]["source_lang"]
+        for packet in bundle["packets"]
+        for item in packet["items"]
+    }
+    assert metadata_by_text == {
+        "synthetic source span one": "unknown",
+        "synthetic source span two": "fr-CA",
+    }
+
+
+def test_raw_unknown_source_lang_fails_closed_to_prevent_packet_sentinel_collision(tmp_path: Path) -> None:
+    record = _source_record(
+        1,
+        error="synthetic source span one",
+        correct="synthetic correction one",
+        error_type="F",
+    )
+    record["source_lang"] = "unknown"
+    paths = _fixture(tmp_path, records=[record])
+
+    with pytest.raises(packets.PacketCompilerError, match="packet sentinel"):
+        _build(paths)
+
+
 def test_clearance_is_exact_not_a_complement_and_frozen_units_cannot_drift(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
