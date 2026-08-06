@@ -76,5 +76,6 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/cli-help-standard.md"
     "rules/model-assignment.md"
     "rules/operator-expectations.md"
+    "rules/fleet-driver-routing.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
