@@ -574,15 +574,26 @@ def promote(
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
             # PHASE 3: VERIFY STAGED MANIFEST
-            # Hazards-only: live/canonical Atlas already fails the full §8 conformance
-            # suite (no_mirror_attribution / unmapped_source_label at tens of thousands).
-            # Blocking promote on those pre-existing RED gates freezes teacher admission.
-            # Structural hazard scans (junk synonyms, HTML entities, etc.) still run.
+            # Hard gate = structural hazards + shrink (always). Full §8 conformance is
+            # run second as ADVISORY only: the live/canonical Atlas is already RED on
+            # pre-existing no_mirror_attribution / unmapped_source_label at scale, and
+            # hard-gating promote on those freezes teacher admission (#6369 residual).
+            # Re-enable hard conformance once main baseline §8 is green.
             verify_code = verify_manifest.main(
-                ["--manifest", str(STAGED_MANIFEST), "--skip-conformance"]
+                ["--manifest", str(STAGED_MANIFEST), "--skip-conformance", "--sample", "0"]
             )
             if verify_code != 0:
                 raise RuntimeError(f"staged manifest failed verification with exit code {verify_code}")
+            # Non-blocking §8 report for operators (exit code intentionally ignored).
+            _advisory = verify_manifest.main(
+                ["--manifest", str(STAGED_MANIFEST), "--sample", "0"]
+            )
+            if _advisory != 0:
+                print(
+                    f"advisory §8 conformance exit {_advisory} "
+                    f"(non-blocking; pre-existing RED on live Atlas — #6369)",
+                    flush=True,
+                )
             journal_record.update({
                 "phase": "VERIFIED",
             })
