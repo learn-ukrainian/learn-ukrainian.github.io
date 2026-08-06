@@ -2354,10 +2354,10 @@
     },
     {
       "clozeId": "teacher_cloze_57",
-      "lemmaId": "альона",
+      "lemmaId": "вчителька",
       "sentenceFrameId": "teacher_frame_57",
-      "lemma": "альона",
-      "form": "Альона",
+      "lemma": "вчителька",
+      "form": "Вчителька",
       "sentence": "Але _____ _____ — це\nприкольно.",
       "blankCase": "context",
       "caseRule": {
@@ -2366,12 +2366,12 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "знахідний"
       },
-      "clozeEn": "Context sentence for альона",
+      "clozeEn": "Context sentence for вчителька",
       "options": [
         {
           "optionId": "opt_ans",
-          "lemmaId": "альона",
-          "label": "Альона",
+          "lemmaId": "вчителька",
+          "label": "Вчителька",
           "kind": "answer"
         },
         {
@@ -24384,8 +24384,8 @@
         },
         {
           "optionId": "opt_dec_0",
-          "lemmaId": "альона",
-          "label": "альона",
+          "lemmaId": "вчителька",
+          "label": "вчителька",
           "kind": "distractor"
         },
         {
@@ -63864,8 +63864,8 @@
         },
         {
           "optionId": "opt_dec_0",
-          "lemmaId": "альона",
-          "label": "альона",
+          "lemmaId": "вчителька",
+          "label": "вчителька",
           "kind": "distractor"
         },
         {
