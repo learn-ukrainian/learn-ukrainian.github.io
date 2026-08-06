@@ -358,6 +358,45 @@ def test_document_identity_collapses_layers() -> None:
     assert left != heldout.document_identity_for_ua_gec("docB")
 
 
+def test_reconstruction_preserves_empty_source_lang_and_rejects_non_strings(tmp_path: Path) -> None:
+    def reconstruct(source_lang: object, index: int) -> dict[str, object]:
+        db_path = tmp_path / f"sources-{index}.db"
+        with sqlite3.connect(db_path) as connection:
+            connection.execute(
+                "CREATE TABLE ua_gec_errors (id INTEGER PRIMARY KEY, error TEXT, correct TEXT, error_type TEXT, "
+                "doc_id TEXT, annotator_id TEXT, partition TEXT, is_native INTEGER, source_lang TEXT)"
+            )
+            connection.execute(
+                "INSERT INTO ua_gec_errors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (1, "synthetic error", "synthetic correction", "G/Case", "doc", "annotator", "gec/train", 1, source_lang),
+            )
+        payload = {
+            "id": 1,
+            "error": "synthetic error",
+            "correct": "synthetic correction",
+            "error_type": "G/Case",
+            "doc_id": "doc",
+            "annotator_id": "annotator",
+            "partition": "gec/train",
+            "is_native": 1,
+            "source_lang": source_lang if isinstance(source_lang, str) else "",
+        }
+        return heldout.reconstruct_ua_gec_rows(
+            sources_db=db_path,
+            freeze_units=[_unit_for_row(1, ordinal=1, payload=payload)],
+        )[0]
+
+    empty = reconstruct("", 1)
+    assert empty["source_lang"] == ""
+    assert empty["source_record"]["source_lang"] == ""
+    assert empty["unit_sha256"] == freeze_mod._unit_hash(empty["source_record"])
+    assert reconstruct("fr-CA", 2)["source_record"]["source_lang"] == "fr-CA"
+
+    for index, invalid in enumerate((None, b"invalid"), start=3):
+        with pytest.raises(heldout.PartitionError, match="source_lang malformed"):
+            reconstruct(invalid, index)
+
+
 def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) -> None:
     root = _build_fixture_root(tmp_path)
     private = root / "batch_state/open-model-data/phase3-heldout"
