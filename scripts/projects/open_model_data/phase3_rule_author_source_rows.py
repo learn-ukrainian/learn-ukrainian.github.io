@@ -478,7 +478,7 @@ def build(
     receipt["receipt_sha256"] = receipt_body_sha256(receipt)
     _validate(receipt, "receipt", "source-row receipt")
     _assert_public_safe(receipt)
-    _atomic_write(public_receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"), 0o644)
+    _atomic_write(public_receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"), PRIVATE_FILE_MODE)
     return receipt
 
 
