@@ -66,6 +66,11 @@ def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+def packet_sha256(packet: Mapping[str, Any]) -> str:
+    """Return the logical packet digest, independent of JSON-file framing."""
+    return sha256_bytes(canonical_json(packet).encode("utf-8"))
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -780,7 +785,7 @@ def verify(
             {key: response["author"][key] for key in ("role_id", "controller_identity_id", "task_id")} == author_actor,
             "response author does not match current role contract",
         )
-        packets_by_hash = {sha256_bytes(canonical_json(packet).encode("utf-8")): packet for packet in bundle["packets"]}
+        packets_by_hash = {packet_sha256(packet): packet for packet in bundle["packets"]}
         require(response["packet_sha256"] in packets_by_hash, "response does not bind a packet in this bundle")
         bound_packet = packets_by_hash[response["packet_sha256"]]
         bound_items = {item["source_item_id"]: item for item in bound_packet["items"]}

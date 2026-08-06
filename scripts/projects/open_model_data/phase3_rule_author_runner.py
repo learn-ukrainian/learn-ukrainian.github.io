@@ -222,7 +222,7 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
     for packet in bundle["packets"]:
         ordinal = packet["ordinal"]
         attachment = canonical_json(packet).encode("utf-8") + b"\n"
-        packet_sha = sha256_bytes(attachment)
+        packet_sha = packets.packet_sha256(packet)
         prompt = _prompt(author, packet_sha).encode("utf-8")
         entries.append({
             "ordinal": ordinal, "packet_id": packet["packet_id"], "packet_sha256": packet_sha,

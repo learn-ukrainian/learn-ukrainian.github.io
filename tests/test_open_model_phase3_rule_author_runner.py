@@ -66,6 +66,14 @@ def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -
     assert manifest["bindings"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
     result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", executor=_executor())
     assert result["complete"] is True and result["no_leakage"] is True
+    bundle_value = json.loads(bundle.read_text(encoding="utf-8"))
+    packet_by_ordinal = {packet["ordinal"]: packet for packet in bundle_value["packets"]}
+    for entry in manifest["packets"]:
+        logical_packet_sha = packets.packet_sha256(packet_by_ordinal[entry["ordinal"]])
+        record = json.loads((private / entry["record"]).read_text(encoding="utf-8"))
+        assert entry["packet_sha256"] == logical_packet_sha == record["response"]["packet_sha256"]
+        assert entry["attachment_sha256"] == runner.sha256_file(private / entry["attachment"])
+        assert entry["attachment_sha256"] != logical_packet_sha
     assert stat.S_IMODE(receipt.stat().st_mode) == 0o600
     Draft202012Validator.check_schema(json.loads(runner.SCHEMA_PATH.read_text()))
     assert runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")["ok"] is True
