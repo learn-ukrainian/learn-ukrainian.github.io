@@ -16,7 +16,7 @@ import os
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +41,7 @@ def append_row(row: dict[str, Any], path: Path | None = None, *, force: bool = F
     dest.parent.mkdir(parents=True, exist_ok=True)
     row = {
         **row,
-        "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+        "ts": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
     }
     with dest.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
@@ -52,7 +52,7 @@ def run_wrapped(argv: list[str]) -> int:
     if not argv:
         print("run_wrapped: missing command", file=sys.stderr)
         return 2
-    event = os.environ.get("HOOK_EVENT_NAME") or os.environ.get("hook_event_name") or ""
+    event = os.environ.get("HOOK_EVENT_NAME") or ""
     matcher = os.environ.get("HOOK_MATCHER") or ""
     tool = os.environ.get("HOOK_TOOL_NAME") or ""
     stdin = sys.stdin.buffer.read()

@@ -67,10 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     path: Path = args.config
-    if not path.exists():
-        text = ""
-    else:
-        text = path.read_text(encoding="utf-8")
+    text = "" if not path.exists() else path.read_text(encoding="utf-8")
     new_text, changed = ensure_compat_claude_hooks_false(text)
     if not changed:
         print(f"ok: {path} already has [compat.claude] hooks = false")

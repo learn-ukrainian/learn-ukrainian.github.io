@@ -14,7 +14,7 @@ import statistics
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -193,7 +193,7 @@ def main(argv: list[str] | None = None) -> int:
     bash_tax = estimate_bash_pretool_tax(rows)
     report = {
         "schema": "hook-stack-measure.v1",
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "repo": str(ROOT),
         "repeats": args.repeats,
         "hooks": rows,
