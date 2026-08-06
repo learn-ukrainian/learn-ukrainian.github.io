@@ -494,6 +494,34 @@ def test_complete_census_rejects_stale_population_role_contract() -> None:
         lexical.validate_complete_census(_complete_census(population), population, role_contract=roles)
 
 
+def test_cli_validates_synthetic_closed_lexical_census_v2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    roles = _lexical_roles()
+    population = _lexical_population()
+    census = _complete_census(population)
+    role_path = tmp_path / "roles.json"
+    population_path = tmp_path / "population.json"
+    census_path = tmp_path / "census.json"
+    role_path.write_text(json.dumps(roles), encoding="utf-8")
+    population_path.write_text(json.dumps(population), encoding="utf-8")
+    census_path.write_text(json.dumps(census), encoding="utf-8")
+
+    assert audit.main([
+        "--role-contract", str(role_path),
+        "validate-lexical-census-v2",
+        "--census", str(census_path),
+        "--population-freeze", str(population_path),
+    ]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result == {
+        "complete_census": True,
+        "family_count": 13,
+        "ok": True,
+        "seed_required": False,
+        "status": "MECHANICS_ONLY_NOT_SOURCE_COVERAGE_READY",
+        "used_unit_count": 1,
+    }
+
+
 def test_release_manifest_is_closed_and_rejects_generic_locator(tmp_path: Any) -> None:
     release = tmp_path / "release"
     release.mkdir()
