@@ -40,6 +40,9 @@ PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR = (
 )
 RIGHTS_PROVENANCE_CLASSIFICATION = "rights_limited_locator_only"
 ISO_8601_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+GIT_SHA40 = re.compile(r"^[0-9a-f]{40}$")
+FREEZER_IMPLEMENTATION_VERSION = "phase3_source_universe_freezer_v2"
+FREEZER_SCRIPT_PATH = "scripts/projects/open_model_data/phase3_source_universe.py"
 
 SOURCES_FAMILIES = {
     "lexical_balla_en_uk": "balla_en_uk",
@@ -72,6 +75,19 @@ HEADING_MARKER = re.compile(
 # A contents leader is a long trailing run, or a three-mark run followed by a page
 # number; unlike ordinary ``(...)`` title punctuation, the shorter form needs digits.
 TOC_LEADER = re.compile(r"(?:[.…]{3,}\s*\d+|[.…]{4,})\s*$")
+PAYLOAD_FILES = frozenset({
+    "antonenko_style_guide.units.jsonl",
+    "antonenko_textbook_representation.units.jsonl",
+    "calque_inventory.units.jsonl",
+    "lexical_structural_freeze_v1.json",
+    "other_normative_style_inventory.units.jsonl",
+    "pravopys_2019_complete.units.jsonl",
+    "pravopys_2026_complete.units.jsonl",
+    "school_textbooks.units.jsonl",
+    "ua_gec.units.jsonl",
+})
+RECEIPT_FILE = "source-universe-freeze-receipt.json"
+EXPECTED_OUTPUT_FILES = frozenset({*PAYLOAD_FILES, RECEIPT_FILE})
 
 
 class FreezeError(ValueError):
@@ -92,6 +108,34 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _verify_merged_main_binding(merged_main_sha: str) -> dict[str, str]:
+    """Bind the freezer executable to the exact current origin/main commit."""
+    require(GIT_SHA40.fullmatch(merged_main_sha) is not None, "merged-main SHA must be 40 lowercase hex characters")
+    try:
+        remote_head = subprocess.run(
+            ["git", "-C", str(ROOT), "rev-parse", "origin/main"],
+            check=False,
+            capture_output=True,
+        )
+        merged_script = subprocess.run(
+            ["git", "-C", str(ROOT), "show", f"{merged_main_sha}:{FREEZER_SCRIPT_PATH}"],
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        raise FreezeError(f"unable to verify merged-main binding: {exc}") from exc
+    require(remote_head.returncode == 0, "unable to resolve origin/main for freeze binding")
+    require(remote_head.stdout.decode("ascii").strip() == merged_main_sha, "freeze SHA is not the current origin/main head")
+    require(merged_script.returncode == 0, "freezer implementation is absent from the merged-main SHA")
+    current_script = ROOT / FREEZER_SCRIPT_PATH
+    require(merged_script.stdout == current_script.read_bytes(), "running freezer bytes differ from merged-main freezer bytes")
+    return {
+        "implementation_version": FREEZER_IMPLEMENTATION_VERSION,
+        "script_path": FREEZER_SCRIPT_PATH,
+        "script_sha256": sha256_file(current_script),
+    }
 
 
 def require(condition: bool, message: str) -> None:
@@ -563,10 +607,15 @@ def freeze(
     r2u_cache: Path,
     output_dir: Path,
     pdftotext: Path,
+    merged_main_sha: str,
 ) -> dict[str, Any]:
     """Validate every family first, then atomically publish text-free ledgers."""
     for path, label in ((coverage_contract, "coverage contract"), (sources_db, "sources database"), (vesum_db, "VESUM database"), (pravopys_2019_pdf, "2019 PDF"), (pravopys_2026_pdf, "2026 PDF"), (calque_module, "calque module"), (r2u_cache, "R2U cache")):
         require(path.is_file(), f"missing {label}: {path}")
+    freezer_binding = _verify_merged_main_binding(merged_main_sha)
+    if output_dir.exists():
+        unexpected = {path.name for path in output_dir.iterdir()} - EXPECTED_OUTPUT_FILES
+        require(not unexpected, f"output directory contains stale or unexpected files: {sorted(unexpected)}")
     contract = _read_json(coverage_contract)
     families = _expected_families(contract)
     source_hash, vesum_hash = sha256_file(sources_db), sha256_file(vesum_db)
@@ -630,15 +679,39 @@ def freeze(
                 "structural_universe_sha256": summary["ordered_rolling_sha256"],
             })
         require({item["family_id"] for item in receipt_families} == set(families), "not every mandatory source family was frozen")
+        payload_files = sorted(
+            (
+                {"path": target.name, "sha256": sha256_file(temporary), "byte_count": temporary.stat().st_size}
+                for temporary, target in staged
+            ),
+            key=lambda item: str(item["path"]),
+        )
+        require({str(item["path"]) for item in payload_files} == PAYLOAD_FILES, "source-freeze payload file set changed")
         receipt = {
             "schema_version": "phase3_source_universe_freeze_v1", "text_free": True,
+            "status": "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY",
+            "merged_main_sha": merged_main_sha,
+            "freezer": freezer_binding,
             "coverage_contract_sha256": sha256_file(coverage_contract),
             "input_sha256": {"sources_db": source_hash, "vesum_db": vesum_hash, "calque_module": sha256_file(calque_module), "r2u_cache": sha256_file(r2u_cache), "pravopys_2019_pdf": pdf2019["input_sha256"], "pravopys_2026_pdf": pdf2026["input_sha256"]},
             "pdf_editions": {"pravopys_2019_complete": pdf2019, "pravopys_2026_complete": pdf2026},
             "other_normative_style_inventory": discovery, "families": receipt_families,
+            "blocking_requirements": [
+                "source_unit_dispositions_and_dual_population_audits",
+                "textbook_nonhit_audit",
+                "pravopys_2019_2026_delta_coverage_and_audit",
+                "lexical_used_subset_census",
+            ],
+            "artifact_manifest": {
+                "artifact_count": len(EXPECTED_OUTPUT_FILES),
+                "payload_file_count": len(payload_files),
+                "payloads": payload_files,
+                "payload_manifest_sha256": _unit_hash(payload_files),
+                "receipt_file": RECEIPT_FILE,
+            },
         }
         receipt_bytes = (canonical_json(receipt) + "\n").encode("utf-8")
-        staged.append((_stage(output_dir / "source-universe-freeze-receipt.json", receipt_bytes), output_dir / "source-universe-freeze-receipt.json"))
+        staged.append((_stage(output_dir / RECEIPT_FILE, receipt_bytes), output_dir / RECEIPT_FILE))
         for temporary, target in staged:
             os.replace(temporary, target)
         return receipt
@@ -667,6 +740,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--r2u-cache", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--pdftotext", type=Path, required=True)
+    parser.add_argument("--merged-main-sha", required=True)
     return parser.parse_args(argv)
 
 

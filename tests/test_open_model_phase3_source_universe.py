@@ -5,12 +5,15 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.projects.open_model_data import phase3_source_universe as freezer
 
 SOURCE_TABLES = tuple(freezer.SOURCES_FAMILIES.values())
+FREEZE_SCHEMA = freezer.ROOT / "data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json"
 
 
 def _json(path: Path, value: object) -> None:
@@ -77,6 +80,15 @@ def _inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, object
     monkeypatch.setattr(freezer, "EXPECTED_2026_SHA256", freezer.sha256_file(pdf2026).upper())
     monkeypatch.setattr(freezer, "EXPECTED_PARAGRAPH_COUNT", 2)
     monkeypatch.setattr(freezer, "extract_pdf_pages", lambda path, tool: ["РОЗДІЛ I\n§ 1. heading\n1. unit", "§ 2. heading\nа) unit"])
+    monkeypatch.setattr(
+        freezer,
+        "_verify_merged_main_binding",
+        lambda sha: {
+            "implementation_version": freezer.FREEZER_IMPLEMENTATION_VERSION,
+            "script_path": freezer.FREEZER_SCRIPT_PATH,
+            "script_sha256": "b" * 64,
+        },
+    )
     return {
         "coverage_contract": contract, "sources_db": sources, "vesum_db": vesum,
         "pravopys_2019_pdf": pdf2019, "pravopys_2026_pdf": pdf2026,
@@ -85,6 +97,7 @@ def _inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, object
         "pravopys_2026_retrieved_at": "2026-08-05T22:05:39Z",
         "pravopys_2026_retrieval_locator": "https://data.commoncrawl.org/fixture-2026",
         "calque_module": module, "r2u_cache": cache, "pdftotext": tmp_path / "unused",
+        "merged_main_sha": "a" * 40,
     }
 
 
@@ -98,7 +111,7 @@ def test_freeze_writes_all_21_text_free_ledgers_deterministically(tmp_path: Path
     receipt = _freeze(inputs, first)
     _freeze(inputs, second)
     assert len(receipt["families"]) == 21
-    assert len(list(first.iterdir())) <= 12
+    assert {path.name for path in first.iterdir()} == freezer.EXPECTED_OUTPUT_FILES
     assert sorted(path.name for path in first.iterdir()) == sorted(path.name for path in second.iterdir())
     for path in first.iterdir():
         assert path.read_bytes() == (second / path.name).read_bytes()
@@ -123,6 +136,16 @@ def test_freeze_writes_all_21_text_free_ledgers_deterministically(tmp_path: Path
     }
     assert receipt["pdf_editions"]["pravopys_2026_complete"]["official_decision_locator"] == freezer.PRAVOPYS_2026_DECISION_LOCATOR
     assert receipt["pdf_editions"]["pravopys_2026_complete"]["official_download_locator"] == freezer.PRAVOPYS_2026_OFFICIAL_DOWNLOAD_LOCATOR
+    Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8"))).validate(receipt)
+    manifest = receipt["artifact_manifest"]
+    assert manifest["artifact_count"] == 10
+    assert manifest["payload_file_count"] == 9
+    assert {item["path"] for item in manifest["payloads"]} == freezer.PAYLOAD_FILES
+    assert manifest["payload_manifest_sha256"] == freezer._unit_hash(manifest["payloads"])
+    for item in manifest["payloads"]:
+        payload = first / item["path"]
+        assert item["sha256"] == freezer.sha256_file(payload)
+        assert item["byte_count"] == payload.stat().st_size
 
 
 def test_count_mismatch_fails_before_output_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -134,6 +157,65 @@ def test_count_mismatch_fails_before_output_publication(tmp_path: Path, monkeypa
     with pytest.raises(freezer.FreezeError, match="frozen unit count mismatch"):
         _freeze(inputs, output)
     assert not output.exists() or not list(output.iterdir())
+
+
+def test_stale_output_file_fails_before_freeze(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    inputs = _inputs(tmp_path, monkeypatch)
+    output = tmp_path / "out"
+    output.mkdir()
+    (output / "stale.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(freezer.FreezeError, match="stale or unexpected"):
+        _freeze(inputs, output)
+
+
+def test_merged_main_binding_fails_on_noncanonical_sha() -> None:
+    with pytest.raises(freezer.FreezeError, match="40 lowercase hex"):
+        freezer._verify_merged_main_binding("A" * 40)
+
+
+def test_merged_main_binding_requires_current_remote_head(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        freezer.subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout=("b" * 40 + "\n").encode()),
+    )
+    with pytest.raises(freezer.FreezeError, match="not the current origin/main"):
+        freezer._verify_merged_main_binding("a" * 40)
+
+
+def test_merged_main_binding_requires_identical_freezer_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = iter(
+        [
+            SimpleNamespace(returncode=0, stdout=("a" * 40 + "\n").encode()),
+            SimpleNamespace(returncode=0, stdout=b"different freezer"),
+        ]
+    )
+    monkeypatch.setattr(freezer.subprocess, "run", lambda *args, **kwargs: next(calls))
+    with pytest.raises(freezer.FreezeError, match="running freezer bytes differ"):
+        freezer._verify_merged_main_binding("a" * 40)
+
+
+def test_receipt_schema_rejects_artifact_manifest_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = _freeze(_inputs(tmp_path, monkeypatch), tmp_path / "out")
+    receipt["artifact_manifest"]["artifact_count"] = 9
+    validator = Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8")))
+    with pytest.raises(ValidationError):
+        validator.validate(receipt)
+
+
+def test_receipt_schema_rejects_wrong_family_receipt_shape(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = _freeze(_inputs(tmp_path, monkeypatch), tmp_path / "out")
+    lexical = next(item for item in receipt["families"] if item["family_id"] == "lexical_balla_en_uk")
+    lexical.clear()
+    lexical.update({
+        "family_id": "lexical_balla_en_uk",
+        "unit_count": 1,
+        "ledger_sha256": "a" * 64,
+        "ledger_file": "lexical_balla_en_uk.units.jsonl",
+    })
+    validator = Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8")))
+    with pytest.raises(ValidationError):
+        validator.validate(receipt)
 
 
 def test_pdf_hash_mismatch_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
