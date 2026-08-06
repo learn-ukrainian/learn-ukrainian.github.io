@@ -345,6 +345,18 @@ class RoutingReservationLedger:
                 raise RoutingReservationError("substitution_prior_reservation_missing")
             superseded_prior: sqlite3.Row | None = None
             if latest is not None and substitution_data:
+                if str(latest["status"]) in _ACTIVE_STATUSES:
+                    existing = self._conn.execute(
+                        """SELECT 1 FROM routing_reservation_decisions d
+                           JOIN routing_reservations r ON r.reservation_id = d.reservation_id
+                           WHERE r.authority_key = ? AND d.event_type = 'authorized_substitution' LIMIT 1""",
+                        (req.authority_key,),
+                    ).fetchone()
+                    if existing is not None:
+                        raise RoutingReservationError("substitution_already_authorized")
+                    # A distinct initiator joins the same exact-head decision rather
+                    # than causing a second selection or a quota herd.
+                    return self._reservation_from_row(latest)
                 self._validate_substitution_tx(
                     latest,
                     req,

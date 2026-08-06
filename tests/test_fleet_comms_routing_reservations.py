@@ -609,28 +609,49 @@ def test_substitution_rejects_authorization_envelope_drift(
             )
 
 
-def test_substitution_rejects_active_or_non_result_invalid_prior(tmp_path: Path) -> None:
+def test_substitution_joins_active_prior_instead_of_creating_new_attempt(tmp_path: Path) -> None:
     with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
         active = ledger.reserve_selection(
-            _request("repo:substitution:active", "first"),
+            _request("repo:substitution:active-join", "first"),
             _selection,
             now="2035-01-01T00:00:00Z",
         )
         request = replace(
-            _request("repo:substitution:active", "substitute"),
+            _request("repo:substitution:active-join", "substitute"),
             route_mode="explicit",
             requested_reviewer="glm-5.2",
         )
-        evidence = {"prior_reservation_id": active.reservation_id, "reason": "operator-authorized"}
-        with pytest.raises(RoutingReservationError, match="substitution_prior_not_result_invalid"):
-            ledger.reserve_selection(request, _glm_selection, substitution=evidence)
+        evidence = {
+            "prior_reservation_id": active.reservation_id,
+            "reason": "operator-authorized",
+        }
+        joined = ledger.reserve_selection(request, _glm_selection, substitution=evidence)
+        assert joined.reservation_id == active.reservation_id
+        assert joined.attempt == active.attempt
 
+
+def test_substitution_rejects_non_result_invalid_terminal_prior(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        active = ledger.reserve_selection(
+            _request("repo:substitution:non-result-invalid", "first"),
+            _selection,
+            now="2035-01-01T00:00:00Z",
+        )
         ledger.settle(
             active.reservation_id,
             status="failed",
             failure_classification="transport_error",
             now="2035-01-01T00:00:01Z",
         )
+        request = replace(
+            _request("repo:substitution:non-result-invalid", "substitute"),
+            route_mode="explicit",
+            requested_reviewer="glm-5.2",
+        )
+        evidence = {
+            "prior_reservation_id": active.reservation_id,
+            "reason": "operator-authorized",
+        }
         with pytest.raises(RoutingReservationError, match="substitution_prior_not_result_invalid"):
             ledger.reserve_selection(request, _glm_selection, substitution=evidence)
 
