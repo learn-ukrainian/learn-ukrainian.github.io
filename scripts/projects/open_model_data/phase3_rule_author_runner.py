@@ -33,6 +33,7 @@ SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_rule_author
 VERSION = "phase3_rule_author_runner_v1"
 PRIVATE_MODE = 0o700
 FILE_MODE = 0o600
+CANONICAL_AGY_MODEL = "gemini-3.6-flash-high"
 
 
 class RuleAuthorRunnerError(ValueError):
@@ -138,6 +139,7 @@ def _receipt_has_no_leakage(receipt: Mapping[str, Any]) -> bool:
 
 
 def _author(role_path: Path, exact_model: str) -> dict[str, str]:
+    require(exact_model == CANONICAL_AGY_MODEL, "exact model is not the canonical AGY Gemini model")
     role = packets.read_json(role_path)
     actor = packets._derive_role_actor(role, "rule_author_extractor")
     return {**actor, "provider": "google", "model_family": "gemini", "harness": "agy", "exact_model": exact_model}
@@ -308,9 +310,11 @@ def _receipt(manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
             records.append(_validate_record(entry, manifest, root))
     parsed = [record for record in records if record["state"] == "parsed"]
     fully_attempted = len(records) == len(manifest["packets"])
-    complete = fully_attempted and len(parsed) == len(records)
+    failed_count = sum(bool(record.get("execution_error")) for record in records)
+    complete = fully_attempted and len(parsed) == len(records) and failed_count == 0
+    canary_succeeded = not fully_attempted and bool(records) and len(parsed) == len(records) and failed_count == 0
     prompt_set_sha = sha256_bytes(canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8"))
-    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": sum(bool(record.get("execution_error")) for record in records), "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted}
+    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
     receipt["no_leakage"] = _receipt_has_no_leakage(receipt)
     _validate_receipt(receipt)
     return receipt
