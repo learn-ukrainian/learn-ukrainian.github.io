@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import sys
-from argparse import Namespace
 from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
@@ -51,18 +50,18 @@ def test_ask_kimi_parser_defaults_to_k3_and_check_model_accepts_kimi():
     assert probe.model == "k3"
 
 
-def test_ask_kimi_formal_review_requires_sealed_review_pr(monkeypatch, tmp_path):
-    payload = tmp_path / "payload.md"
-    payload.write_text("attached", encoding="utf-8")
-    with pytest.raises(SystemExit, match="formal_review_requires_review_pr_acp_sealed_snapshot"):
-        _cli._handle_ask_kimi(
-            Namespace(
-                content="hello", task_id="kimi-ask", type="query", data=str(payload),
-                new_session=True, from_llm="codex", from_model="gpt-5.6-terra",
-                to_model="k2.7-coding", no_timeout=True, review=True, model="k3",
-                branch=None, pr=None, background=False,
-            )
-        )
+def test_ask_review_flag_runs_as_normal_ask(monkeypatch):
+    # Direct one-round review regime (operator order 2026-08-06): review=True is
+    # a normal ask, never a sealed-path refusal. Mutation guard: re-adding the
+    # formal_review_requires_review_pr_acp_sealed_snapshot raise fails this test.
+    from scripts.ai_agent_bridge import _acp_compat
+
+    sentinel = object()
+    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)
+    result = _acp_compat.run_compat_ask(
+        "kimi", "hello", task_id="kimi-ask", review=True
+    )
+    assert result is sentinel
 
 
 def test_ask_kimi_background_records_a_kimi_target(monkeypatch):
