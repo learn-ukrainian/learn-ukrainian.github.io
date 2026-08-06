@@ -76,6 +76,58 @@ def _sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     h.update(path.read_bytes())
     return h.hexdigest()
+
+
+def _conformance_violation_keys(manifest_path: Path) -> set[tuple[str, str]]:
+    """Return {(gate, lemma)} for §8 violations on *manifest_path*.
+
+    Used to hard-fail promote only on *new* §8 violations relative to the
+    production baseline (pre-existing live Atlas REDs must not freeze teacher
+    admission — #6369).
+    """
+    from scripts.audit.validate_atlas_conformance import (
+        HeritageLemmaLookup,
+        VesumLemmaLookup,
+        validate,
+    )
+    from scripts.lexicon.verify_manifest import (
+        DEFAULT_CURRICULUM,
+        DEFAULT_SOURCES_DB,
+        DEFAULT_VESUM,
+        load_manifest,
+    )
+
+    if not manifest_path.is_file():
+        return set()
+    manifest = load_manifest(manifest_path)
+    curriculum = yaml.safe_load(DEFAULT_CURRICULUM.read_text(encoding="utf-8")) if DEFAULT_CURRICULUM.is_file() else {}
+    vesum = VesumLemmaLookup(DEFAULT_VESUM) if DEFAULT_VESUM.is_file() else None
+    heritage = HeritageLemmaLookup(DEFAULT_SOURCES_DB) if DEFAULT_SOURCES_DB.is_file() else None
+    violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=heritage)
+    return {(v.gate, v.lemma) for v in violations}
+
+
+def _assert_no_new_conformance_violations(*, staged: Path, baseline: Path) -> dict[str, Any]:
+    """Hard-fail if staged introduces §8 keys absent from baseline."""
+    base_keys = _conformance_violation_keys(baseline)
+    staged_keys = _conformance_violation_keys(staged)
+    new_keys = sorted(staged_keys - base_keys)
+    report = {
+        "baseline_violations": len(base_keys),
+        "staged_violations": len(staged_keys),
+        "new_violations": len(new_keys),
+        "new_samples": [
+            {"gate": g, "lemma": lemma} for g, lemma in new_keys[:20]
+        ],
+    }
+    if new_keys:
+        sample = ", ".join(f"{g}:{lemma}" for g, lemma in new_keys[:8])
+        raise RuntimeError(
+            f"staged manifest introduces {len(new_keys)} new §8 conformance "
+            f"violation(s) vs production baseline (samples: {sample})"
+        )
+    return report
+
 from scripts.audit.source_inventory_intake import read_source_inventory, source_inventory_candidates
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon.build_data_manifest import _lemma_key
@@ -574,28 +626,29 @@ def promote(
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
             # PHASE 3: VERIFY STAGED MANIFEST
-            # Hard gate = structural hazards + shrink (always). Full §8 conformance is
-            # run second as ADVISORY only: the live/canonical Atlas is already RED on
-            # pre-existing no_mirror_attribution / unmapped_source_label at scale, and
-            # hard-gating promote on those freezes teacher admission (#6369 residual).
-            # Re-enable hard conformance once main baseline §8 is green.
+            # 1) Structural hazards + shrink remain a hard gate.
+            # 2) §8 conformance is hard-gated only for *new* violations vs the
+            #    production baseline. Pre-existing live Atlas RED
+            #    (no_mirror_attribution / unmapped_source_label at scale) must
+            #    not freeze teacher admission (#6369).
             verify_code = verify_manifest.main(
                 ["--manifest", str(STAGED_MANIFEST), "--skip-conformance", "--sample", "0"]
             )
             if verify_code != 0:
                 raise RuntimeError(f"staged manifest failed verification with exit code {verify_code}")
-            # Non-blocking §8 report for operators (exit code intentionally ignored).
-            _advisory = verify_manifest.main(
-                ["--manifest", str(STAGED_MANIFEST), "--sample", "0"]
+            conf_delta = _assert_no_new_conformance_violations(
+                staged=STAGED_MANIFEST, baseline=manifest
             )
-            if _advisory != 0:
-                print(
-                    f"advisory §8 conformance exit {_advisory} "
-                    f"(non-blocking; pre-existing RED on live Atlas — #6369)",
-                    flush=True,
-                )
+            print(
+                "§8 new-vs-baseline: "
+                f"baseline={conf_delta['baseline_violations']} "
+                f"staged={conf_delta['staged_violations']} "
+                f"new={conf_delta['new_violations']}",
+                flush=True,
+            )
             journal_record.update({
                 "phase": "VERIFIED",
+                "conformance_delta": conf_delta,
             })
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
