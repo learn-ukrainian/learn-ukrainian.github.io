@@ -16,10 +16,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
 
-# Catalog tier map is loaded best-effort; fall back to coarse agent tiers.
+# Static agent→tier fallback (not a live model_catalog.yaml load).
 _DEFAULT_AGENT_TIER = {
     "claude": "practical",  # seat may host authority (Fable) — model_id refines below
     "codex": "practical",

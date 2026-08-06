@@ -207,17 +207,31 @@ def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
             raise
 
 
-def _collect_strings(value: Any) -> set[str]:
-    found: set[str] = set()
-    if isinstance(value, str):
-        found.add(value)
-    elif isinstance(value, Mapping):
-        for item in value.values():
-            found |= _collect_strings(item)
-    elif isinstance(value, list):
-        for item in value:
-            found |= _collect_strings(item)
-    return found
+_SAFE_BINDING_KEYS = frozenset(
+    {
+        "role",
+        "role_name",
+        "actor_role",
+        "controller_identity_id",
+        "task_id",
+        "attestation_task_id",
+        "seat_id",
+        "runtime_id",
+        "binding_id",
+    }
+)
+
+
+def _binding_identity_strings(binding: Mapping[str, Any]) -> set[str]:
+    """Allow only known identity fields — never every nested string recursively."""
+    allowed: set[str] = set()
+    for key, value in binding.items():
+        key_l = str(key).lower()
+        if key_l not in _SAFE_BINDING_KEYS and not key_l.endswith("_id"):
+            continue
+        if isinstance(value, str) and value:
+            allowed.add(value)
+    return allowed
 
 
 def _assert_public_safe(
@@ -503,8 +517,11 @@ def build(
         {
             "phase3_rule_author_source_rows_receipt_v1",
             IMPLEMENTATION_VERSION,
-            * _collect_strings(steward),
-            * _collect_strings(author),
+            "heldout_steward",
+            "seat_heldout_steward",
+            "rule_author_extractor",
+            * _binding_identity_strings(steward),
+            * _binding_identity_strings(author),
         }
     )
     _assert_public_safe(receipt, approved_strings=approved)
