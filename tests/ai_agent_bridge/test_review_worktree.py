@@ -320,6 +320,8 @@ def test_acp_prompt_uses_sealed_chunks_and_reports_avoided_inline_bytes(tmp_path
     assert "high, medium, or low invalidate" in prompt
     assert "maintainability invalidate" in prompt
     assert '["none"] when no external source applies' in prompt
+    assert "end_line is inclusive" in prompt
+    assert "start_line + (number of lines in verbatim) - 1" in prompt
     assert dossier["evidence_metrics"]["unique_evidence_bytes"] == checkout.sealed_evidence_input_bytes()
     assert dossier["evidence_metrics"]["legacy_inline_serialized_bytes"] is None
     assert dossier["evidence_metrics"]["duplicate_bytes_avoided"] == checkout.sealed_evidence_input_bytes()
@@ -1905,6 +1907,95 @@ def test_review_response_schema_is_canonical_strict_and_surface_bound(tmp_path: 
             head_sha=head,
             patch_sha256=patch,
             changed_paths=("src/app.py",),
+        )
+
+
+def test_validate_code_review_response_normalizes_endpoint_only_mismatch(tmp_path: Path) -> None:
+    """Reproduce #6415 item 2: quoted lines match but claimed end is off-by-one.
+
+    The validator must accept an endpoint-only mismatch when the verbatim quote
+    matches the file text exactly at the claimed start line. Wrong quoted content
+    must still fail closed.
+    """
+    base = "b" * 40
+    head = "a" * 40
+    patch = "c" * 64
+    evidence_root = tmp_path / "evidence"
+    (evidence_root / "src").mkdir(parents=True)
+    (evidence_root / "src" / "app.py").write_text(
+        "line1\nline2\nline3\nline4\n", encoding="utf-8"
+    )
+    changed_lines = {"src/app.py": frozenset({1, 2, 3, 4})}
+
+    def _finding(verbatim: str, start_line: int, end_line: int) -> dict:
+        return {
+            "schema_version": "code-review-findings.v1",
+            "overall": {
+                "correctness": "incorrect",
+                "explanation": "One actionable defect was found.",
+                "confidence": 0.95,
+            },
+            "findings": [
+                {
+                    "id": "F001",
+                    "title": "Example finding",
+                    "body": "The exact changed lines are incorrect.",
+                    "priority": "P1",
+                    "confidence": 0.95,
+                    "category": "correctness",
+                    "location": {
+                        "path": "src/app.py",
+                        "start_line": start_line,
+                        "end_line": end_line,
+                        "claim_type": "present",
+                    },
+                    "verbatim": verbatim,
+                    "why_wrong": "The values produce the wrong behavior.",
+                    "smallest_fix": "Correct the changed lines.",
+                    "sources": ["none"],
+                }
+            ],
+        }
+
+    # Observed failure shape from acpx-claude-shadow: 4-line verbatim, claimed
+    # end is one less than the inclusive span (start + quote_lines - 1).
+    short_end = _finding("line1\nline2\nline3\nline4", 1, 3)
+    digest = review_worktree.validate_code_review_response(
+        json.dumps(short_end),
+        base_sha=base,
+        head_sha=head,
+        patch_sha256=patch,
+        changed_paths=("src/app.py",),
+        evidence_root=evidence_root,
+        changed_lines=changed_lines,
+    )
+    assert len(digest) == 64
+
+    # Inflated end line with matching quote must also normalize to the quote.
+    long_end = _finding("line1\nline2\nline3\nline4", 1, 5)
+    digest = review_worktree.validate_code_review_response(
+        json.dumps(long_end),
+        base_sha=base,
+        head_sha=head,
+        patch_sha256=patch,
+        changed_paths=("src/app.py",),
+        evidence_root=evidence_root,
+        changed_lines=changed_lines,
+    )
+    assert len(digest) == 64
+
+    # Mutation: wrong quoted content must still fail, even when the claimed
+    # range equals the verbatim length.
+    wrong_content = _finding("line1\nWRONG\nline3\nline4", 1, 4)
+    with pytest.raises(review_worktree.ReviewWorktreeError, match="review_response_evidence"):
+        review_worktree.validate_code_review_response(
+            json.dumps(wrong_content),
+            base_sha=base,
+            head_sha=head,
+            patch_sha256=patch,
+            changed_paths=("src/app.py",),
+            evidence_root=evidence_root,
+            changed_lines=changed_lines,
         )
 
 

@@ -380,6 +380,98 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert 'correctness":"correct"' in prompt
     assert 'enum aliases such as `"pass"`' in prompt
     assert "never add\n`claim_type` at the finding root" in prompt
+    assert "`end_line` is inclusive" in prompt
+    assert "`start_line + (number of lines in verbatim) - 1`" in prompt
+
+
+def test_list_eligible_prints_seat_status_without_provisioning(capsys) -> None:
+    """--list-eligible runs the resolver and prints per-seat status, no snapshot."""
+    args = Namespace(
+        list_eligible=True,
+        author_model="codex",
+        author_family="openai",
+        reviewer="auto",
+        review_profile="code",
+        risk="medium",
+        role=None,
+        required_capability=None,
+        data_egress_policy=None,
+        isolation_required=True,
+        routing_snapshot_file=None,
+    )
+    code = review_pr._cmd_list_eligible(args)
+    assert code == 0
+    output = json.loads(capsys.readouterr().out)
+    seats = output["seats"]
+    assert seats
+    names = {s["name"] for s in seats}
+    assert "claude-sonnet-5" in names
+    assert output["selected"]["name"] == "claude-sonnet-5"
+    terra = next(s for s in seats if s["name"] == "gpt-5.6-terra")
+    assert terra["status"] == "excluded"
+    assert "same family" in terra["reason"]
+
+
+def test_list_eligible_requires_author_identity(capsys) -> None:
+    args = Namespace(
+        list_eligible=True,
+        author_model="",
+        author_family="openai",
+        reviewer="auto",
+        review_profile="code",
+        risk="medium",
+        role=None,
+        required_capability=None,
+        data_egress_policy=None,
+        isolation_required=True,
+        routing_snapshot_file=None,
+    )
+    assert review_pr._cmd_list_eligible(args) == 2
+    assert "concrete_author_identity_required" in capsys.readouterr().err
+
+
+def _family_error_args(author_family: str) -> Namespace:
+    return Namespace(
+        list_eligible=False,
+        pr="6415",
+        reviewer="auto",
+        claude_available=None,
+        model=None,
+        effort=None,
+        extra=None,
+        task_id=None,
+        dry_run=False,
+        background=False,
+        no_timeout=False,
+        initiator="test/orchestrator",
+        author_model="gemini",
+        author_family=author_family,
+        review_profile="code",
+        risk="medium",
+        role=None,
+        required_capability=None,
+        data_egress_policy=None,
+        isolation_required=True,
+        override_reason=None,
+        allow_explicit_fallback=False,
+        routing_snapshot_file=None,
+    )
+
+
+def test_handle_review_pr_rejects_unknown_family_with_vocabulary(capsys) -> None:
+    code = review_pr.handle_review_pr(_family_error_args("gemini"))
+    assert code == 2
+    err = capsys.readouterr().err
+    assert "valid families are" in err
+    assert "google" in err
+
+
+def test_handle_review_pr_rejects_conflicting_family_with_resolution(capsys) -> None:
+    code = review_pr.handle_review_pr(_family_error_args("openai"))
+    assert code == 2
+    err = capsys.readouterr().err
+    assert "resolved from --author-model='gemini' ('google')" in err
+    assert "Valid --author-family values" in err
 
 
 def test_acpx_parser_preserves_sealed_tool_coverage_trace() -> None:
