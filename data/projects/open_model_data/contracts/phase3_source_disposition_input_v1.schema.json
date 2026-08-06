@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_source_disposition_input_v1.schema.json",
+  "title": "Phase 3 reviewed source-disposition input (text-free)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "source_freeze_receipt_sha256", "role_contract_sha256", "author_binding", "source_review_binding", "families"],
+  "properties": {
+    "schema_version": {"const": "phase3_source_disposition_input_v1"},
+    "text_free": {"const": true},
+    "source_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "author_binding": {"$ref": "#/$defs/author_binding"},
+    "source_review_binding": {"$ref": "#/$defs/source_review_binding"},
+    "families": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {"$ref": "#/$defs/family"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "opaque_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,160}$"},
+    "family_id": {"enum": ["antonenko_style_guide", "ua_gec", "school_textbooks", "antonenko_textbook_representation", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete", "other_normative_style_inventory"]},
+    "author_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "controller_identity_id", "task_id"],
+      "properties": {
+        "role_id": {"const": "rule_author_extractor"},
+        "controller_identity_id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{3,160}$"},
+        "task_id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{3,160}$"}
+      }
+    },
+    "source_review_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "controller_identity_id", "task_id", "receipt_sha256"],
+      "properties": {
+        "role_id": {"const": "ukrainian_source_reviewer"},
+        "controller_identity_id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{3,160}$"},
+        "task_id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{3,160}$"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "consumer_view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view_id", "view_sha256"],
+      "properties": {
+        "view_id": {"$ref": "#/$defs/opaque_id"},
+        "view_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "nonconversion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason_code", "unit_specific_locator_sha256"],
+      "properties": {
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,80}$"},
+        "unit_specific_locator_sha256": {"$ref": "#/$defs/sha256"},
+        "reason_predicate_sha256": {"$ref": "#/$defs/sha256"},
+        "unit_specific_rationale_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "unit_sha256", "locator_sha256", "disposition_code"],
+      "properties": {
+        "unit_id": {"$ref": "#/$defs/opaque_id"},
+        "unit_sha256": {"$ref": "#/$defs/sha256"},
+        "locator_sha256": {"$ref": "#/$defs/sha256"},
+        "disposition_code": {"enum": ["converted", "not_rule_bearing", "duplicate_representation", "evaluation_only", "rights_limited_locator_only", "superseded_or_historical", "blocked_with_reason"]},
+        "canonical_identity": {"$ref": "#/$defs/opaque_id"},
+        "source_role": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,80}$"},
+        "claim_type": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,80}$"},
+        "evidence_locator_sha256s": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+        "consumer_view": {"$ref": "#/$defs/consumer_view"},
+        "predicate_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "representation_source_identity": {"$ref": "#/$defs/opaque_id"},
+        "nonconversion": {"$ref": "#/$defs/nonconversion"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"disposition_code": {"const": "converted"}}, "required": ["disposition_code"]},
+          "then": {
+            "required": ["canonical_identity", "source_role", "claim_type", "evidence_locator_sha256s", "consumer_view", "predicate_sha256", "artifact_sha256"],
+            "not": {"required": ["nonconversion"]}
+          },
+          "else": {
+            "required": ["nonconversion"],
+            "not": {"anyOf": [
+              {"required": ["canonical_identity"]}, {"required": ["source_role"]}, {"required": ["claim_type"]},
+              {"required": ["evidence_locator_sha256s"]}, {"required": ["consumer_view"]},
+              {"required": ["predicate_sha256"]}, {"required": ["artifact_sha256"]}
+            ]}
+          }
+        }
+      ]
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family_id", "ledger_sha256", "unit_count", "dispositions"],
+      "properties": {
+        "family_id": {"$ref": "#/$defs/family_id"},
+        "ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "unit_count": {"type": "integer", "minimum": 0},
+        "dispositions": {"type": "array", "items": {"$ref": "#/$defs/disposition"}}
+      }
+    }
+  }
+}
