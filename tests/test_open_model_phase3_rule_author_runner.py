@@ -125,6 +125,20 @@ def test_permissions_symlink_and_aliases_fail_closed(tmp_path: Path) -> None:
         runner.prepare(bundle_path=bundle, role_path=role, private_dir=alias, exact_model="gemini-test")
 
 
+def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path: Path) -> None:
+    real_parent = tmp_path / "real"
+    real_parent.mkdir()
+    linked_parent = tmp_path / "linked"
+    os.symlink(real_parent, linked_parent)
+    bundle, role, private, _ = _paths(linked_parent)
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
+    assert (real_parent / "private" / "manifest.json").exists() and manifest["author"]["task_id"] == "author-task"
+    leaf_alias = linked_parent / "bundle-leaf-alias.json"
+    os.symlink(bundle, leaf_alias)
+    with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
+        runner.prepare(bundle_path=leaf_alias, role_path=role, private_dir=private, exact_model="gemini-test")
+
+
 def test_role_binding_drift_rejects_resume(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
@@ -141,6 +155,31 @@ def test_canary_never_claims_full_completion_then_full_union_can(tmp_path: Path)
     assert canary["canary"] is True and canary["complete"] is False
     full = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-test", executor=_executor())
     assert full["canary"] is False and full["complete"] is True and full["attempted_count"] == 2
+
+
+def test_full_then_canary_rerun_preserves_completed_receipt(tmp_path: Path) -> None:
+    bundle, role, private, receipt = _paths(tmp_path)
+    full = runner.run(
+        bundle_path=bundle,
+        role_path=role,
+        private_dir=private,
+        receipt_path=receipt,
+        exact_model="gemini-test",
+        executor=_executor(),
+    )
+    rerun = runner.run(
+        bundle_path=bundle,
+        role_path=role,
+        private_dir=private,
+        receipt_path=receipt,
+        exact_model="gemini-test",
+        max_packets=1,
+        executor=_executor(),
+    )
+    assert rerun["complete"] is True and rerun["canary"] is False
+    assert {key: rerun[key] for key in ("attempted_count", "parsed_count", "unparsed_count", "failed_count")} == {
+        key: full[key] for key in ("attempted_count", "parsed_count", "unparsed_count", "failed_count")
+    }
 
 
 def test_command_is_only_the_fixed_agy_bridge_shape(tmp_path: Path) -> None:
@@ -269,6 +308,7 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
         executor=unavailable,
     )
     assert result["failed_count"] == 2 and result["unparsed_count"] == 2
+    assert result["complete"] is False and result["canary"] is False
     record_path = private / "records/1.json"
     record = json.loads(record_path.read_text(encoding="utf-8"))
     record["execution_error"] = "edited-after-capture"

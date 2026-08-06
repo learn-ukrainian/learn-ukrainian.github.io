@@ -66,11 +66,9 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _no_alias(path: Path, label: str) -> Path:
-    absolute = path.absolute()
+    """Canonicalize safe ancestors while rejecting a symlink at the requested leaf."""
     require(not path.is_symlink(), f"{label} must not be a symlink")
-    resolved = path.resolve(strict=True)
-    require(absolute == resolved, f"{label} path alias is forbidden")
-    return resolved
+    return path.resolve(strict=True)
 
 
 def _private_root(path: Path, *, create: bool) -> Path:
@@ -302,16 +300,17 @@ def _validate_record(entry: Mapping[str, Any], manifest: Mapping[str, Any], root
     return record
 
 
-def _receipt(manifest: Mapping[str, Any], root: Path, selected: set[int]) -> dict[str, Any]:
+def _receipt(manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
     records = []
     for entry in manifest["packets"]:
         path = root / entry["record"]
         if path.exists():
             records.append(_validate_record(entry, manifest, root))
     parsed = [record for record in records if record["state"] == "parsed"]
-    complete = len(selected) == len(manifest["packets"]) and len(records) == len(manifest["packets"]) and len(parsed) == len(records)
+    fully_attempted = len(records) == len(manifest["packets"])
+    complete = fully_attempted and len(parsed) == len(records)
     prompt_set_sha = sha256_bytes(canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8"))
-    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": sum(bool(record.get("execution_error")) for record in records), "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": len(selected) != len(manifest["packets"])}
+    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": sum(bool(record.get("execution_error")) for record in records), "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted}
     receipt["no_leakage"] = _receipt_has_no_leakage(receipt)
     _validate_receipt(receipt)
     return receipt
@@ -339,7 +338,6 @@ def run(
         manifest=manifest,
     )
     selected_entries = manifest["packets"][:max_packets] if max_packets else manifest["packets"]
-    selected = {entry["ordinal"] for entry in selected_entries}
     invoke = executor or (lambda command, stdin: subprocess.run(command, input=stdin, check=False, capture_output=True))
     for entry in selected_entries:
         record_path = root / entry["record"]
@@ -367,7 +365,7 @@ def run(
         _write_private(record_path, (canonical_json(_record(entry, manifest, root, execution_error=execution_error)) + "\n").encode("utf-8"))
     if max_packets is None:
         _assert_tree(root, manifest, permit_empty_results=False)
-    receipt = _receipt(manifest, root, selected)
+    receipt = _receipt(manifest, root)
     _write_public_receipt(safe_receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"))
     return receipt
 
@@ -382,7 +380,7 @@ def _safe_receipt_path(
 ) -> Path:
     parent = _no_alias(path.parent, "receipt parent")
     candidate = parent / path.name
-    require(not candidate.exists() or (not candidate.is_symlink() and candidate.resolve() == candidate.absolute()), "receipt path is aliased")
+    require(not candidate.exists() or not candidate.is_symlink(), "receipt path is aliased")
     try:
         candidate.absolute().relative_to(private_dir.absolute())
     except ValueError:
