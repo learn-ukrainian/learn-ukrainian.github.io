@@ -108,8 +108,9 @@ def test_committed_projections_match_machine_authorities():
     assert eligible["codex"] is True
     assert eligible["claude"] is True
     assert eligible["grok"] is True
-    for name in ("agy", "kimi"):
-        assert eligible[name] is False
+    # Operator 2026-08-06: AGY formal eligible (pinned Opus 4.6 Thinking).
+    assert eligible["agy"] is True
+    assert eligible["kimi"] is False
 
 
 def test_cli_main_ok_on_repo():

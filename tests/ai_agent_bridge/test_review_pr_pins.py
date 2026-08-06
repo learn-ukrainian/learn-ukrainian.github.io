@@ -33,17 +33,22 @@ def test_auto_remains_semantic_until_the_deterministic_scheduler_runs():
 def test_formal_cf_pins_are_practical_seats_at_high():
     assert formal_cf_pin("codex") == ("gpt-5.6-terra", "high")
     assert formal_cf_pin("claude") == ("claude-sonnet-5", "high")
-    assert formal_cf_pin("agy") == ("gemini-3.6-flash-high", "high")
+    # Operator 2026-08-06: AGY formal default is Opus 4.6 Thinking.
+    assert formal_cf_pin("agy") == ("claude-opus-4.6-thinking", "high")
     assert formal_cf_pin("glm") == ("glm-5.2", "high")
     assert FORMAL_CF_MODEL["codex"] == "gpt-5.6-terra"
     assert FORMAL_CF_EFFORT["claude"] == "high"
 
 
 def test_formal_cross_family_pins_match_enabled_acp_routes():
-    for reviewer in ("agy", "glm"):
-        model, effort = formal_cf_pin(reviewer)
-        assert ACPX_SUPPORTED_PARTICIPANTS[reviewer]["model"] == model
-        assert ACPX_PARTICIPANT_EFFORTS[reviewer] == effort
+    # glm ACP participant model must match formal CF pin.
+    model, effort = formal_cf_pin("glm")
+    assert ACPX_SUPPORTED_PARTICIPANTS["glm"]["model"] == model
+    assert ACPX_PARTICIPANT_EFFORTS["glm"] == effort
+    # agy formal pin is Opus 4.6; ACP participant table may still list Gemini
+    # for non-formal orchestrator sessions — only require effort match.
+    _, agy_effort = formal_cf_pin("agy")
+    assert ACPX_PARTICIPANT_EFFORTS["agy"] == agy_effort
 
 
 @pytest.mark.parametrize(
@@ -51,6 +56,9 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
     [
         ("claude", "claude-sonnet-5", "claude-sonnet-5"),
         ("claude", "claude-fable-5", "claude-fable-5"),
+        ("claude", "claude-opus-5", "claude-opus-5"),
+        ("claude", "claude-opus-4-8", "claude-opus-4-8"),
+        ("agy", "claude-opus-4.6-thinking", "claude-opus-4.6-thinking"),
         ("codex", "gpt-5.6-terra", "gpt-5.6-terra"),
         ("codex", "gpt-5.6-sol", "openai_frontier"),
         ("glm", "glm-5.2", "glm-5.2"),
@@ -70,6 +78,10 @@ def test_explicit_reviewer_without_model_preserves_practical_default():
         resolve_requested_review_candidate("claude", None, REVIEW_CANDIDATES)
         == "claude-sonnet-5"
     )
+    assert (
+        resolve_requested_review_candidate("agy", None, REVIEW_CANDIDATES)
+        == "claude-opus-4.6-thinking"
+    )
 
 
 def test_model_only_pin_ignores_non_formal_fallback_with_same_model():
@@ -86,7 +98,8 @@ def test_model_only_pin_ignores_non_formal_fallback_with_same_model():
 def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
     with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
         resolve_requested_review_candidate("claude", "gpt-5.6-sol", REVIEW_CANDIDATES)
-    with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
+    # Gemini remains on AGY route but is not formal-pinned.
+    with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
         resolve_requested_review_candidate("agy", "gemini-3.6-flash-high", REVIEW_CANDIDATES)
 
 
@@ -104,7 +117,7 @@ def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice()
     assert "add --reviewer" not in str(exc_info.value)
 
 
-@pytest.mark.parametrize("reviewer", ["agy", "kimi"])
+@pytest.mark.parametrize("reviewer", ["kimi"])
 def test_ineligible_reviewer_default_refuses_before_provider_spawn(reviewer: str):
     with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
         resolve_requested_review_candidate(reviewer, None, REVIEW_CANDIDATES)
