@@ -12,14 +12,14 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TRAIL_RUNNER = PROJECT_ROOT / "scripts" / "orchestration" / "trail_runner.py"
 PYTHON_BIN = PROJECT_ROOT / ".venv" / "bin" / "python"
 _RUNNER_TIMEOUT_SECONDS = 90
 
-mcp = FastMCP(
+mcp = MCPServer(
     "trail",
     instructions=(
         "Weak drivers may only inspect a pinned trail, advance its exact current step, "
