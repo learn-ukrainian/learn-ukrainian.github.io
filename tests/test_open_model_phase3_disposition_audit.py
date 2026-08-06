@@ -1,0 +1,420 @@
+"""Hermetic tests for the text-free Phase 3 disposition audit primitives."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+from copy import deepcopy
+from typing import Any
+
+import pytest
+from jsonschema import Draft202012Validator
+
+from scripts.projects.open_model_data import phase3_disposition_audit as audit
+
+
+def _token(value: str) -> str:
+    return value * 64
+
+
+def _git_token(value: str) -> str:
+    return value * 40
+
+
+def _coverage() -> dict[str, Any]:
+    return {"text_free": True, "mandatory_families": [{"family_id": "fixture_source", "audit": {
+        "auditor_role_id": "disposition_auditor", "seed_owner_role_id": "disposition_auditor",
+        "nonconverted_formula": "min(nonconverted_total,max(100,ceil(0.02*family_unit_total)))",
+        "converted_formula": "min(converted_total,max(100,ceil(0.02*family_unit_total)))",
+        "nonconverted_stratification": ["disposition_code", "document_or_edition_identity"],
+        "converted_stratification": ["source_role", "claim_type", "document_or_edition_identity"],
+        "sampling_without_replacement": True,
+        "nonconverted_decision_codes": ["agree", "disagree_should_be_converted", "disagree_wrong_code", "insufficient_locator_evidence"],
+        "converted_miss_codes": ["disagree_stub_conversion", "disagree_misclassified_role_or_claim", "disagree_unsupported_evidence", "disagree_non_actionable_rule"],
+        "repair_invalidates_both_samples": True, "passing_sample_reuse_forbidden": True,
+    }}]}
+
+
+def _roles() -> dict[str, Any]:
+    return {
+        "root": {"controller_identity_id": "controller_fixture_root"},
+        "seats": [{
+            "role_id": "disposition_auditor", "assignment_state": "assigned_verified",
+            "controller_identity_attested": True, "controller_identity_id": "controller_fixture_auditor",
+        }],
+    }
+
+
+def _ledger(coverage: dict[str, Any], roles: dict[str, Any], unit_ids: list[str]) -> dict[str, Any]:
+    units = [{"unit_id": unit_id, "unit_sha256": audit.sha256_value({"unit_id": unit_id}), "unit_locator_sha256": audit.sha256_value({"locator": unit_id})} for unit_id in unit_ids]
+    family_hash = audit.source_family_universe_sha256(units)
+    rows = [
+        {
+            "unit_id": unit_id,
+            "unit_sha256": units[index]["unit_sha256"], "unit_locator_sha256": units[index]["unit_locator_sha256"],
+            "disposition_code": "converted" if index % 2 else "not_rule_bearing",
+            "document_or_edition_identity": f"edition_{index % 2}",
+            "source_role": "rule_source" if index % 2 else None,
+            "claim_type": "claim" if index % 2 else None,
+            "canonical_content_identity": "content_fixture" if index % 2 else None,
+            "evidence_artifact_locators": ["artifact_fixture"] if index % 2 else [],
+            "consumer_view_ids": ["view_fixture"] if index % 2 else [],
+            "conversion_predicate_locator": "predicate_fixture" if index % 2 else None,
+            "reason_locator": None if index % 2 else "reason_fixture",
+            "repeated_reason_count": None if index % 2 else 4,
+            "predicate_or_rationale_locator": None,
+        }
+        for index, unit_id in enumerate(unit_ids)
+    ]
+    total = len(unit_ids)
+    return {
+        "schema_version": "phase3_disposition_ledger_v1", "text_free": True,
+        "source_universe_receipt_sha256": _token("a"), "source_universe_payload_manifest_sha256": _token("b"),
+        "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles),
+        "repair_generation": 0,
+        "families": [{
+            "family_id": "fixture_source", "frozen_input_identity_total": total, "family_unit_total": total,
+            "ledger_input_total": total, "disposition_row_sum": total, "ledger_universe_sha256": family_hash,
+            "audit_universe_sha256": family_hash, "rows": rows,
+        }],
+    }
+
+
+@pytest.fixture
+def frozen(monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    coverage, roles = _coverage(), _roles()
+    unit_ids = [f"unit.fixture.{index:03d}" for index in range(8)]
+    source_receipt = {"artifact_manifest": {"payload_manifest_sha256": _token("b")}}
+    units = [{"unit_id": unit_id, "unit_sha256": audit.sha256_value({"unit_id": unit_id}), "unit_locator_sha256": audit.sha256_value({"locator": unit_id})} for unit_id in unit_ids]
+    monkeypatch.setattr(audit, "_source_receipt", lambda _: (source_receipt, _token("a"), {"fixture_source": units}))
+    monkeypatch.setattr(audit, "_first_containing_squash_merge", lambda *args, **kwargs: _git_token("f"))
+    ledger = _ledger(coverage, roles, unit_ids)
+    return ledger, coverage, roles
+
+
+def _seed(freeze: dict[str, Any], roles: dict[str, Any], family_id: str = "fixture_source", population_kind: str = "nonconverted", **changes: object) -> dict[str, Any]:
+    population = next(item for item in freeze["families"] if item["family_id"] == family_id)[population_kind]
+    population_hash = audit._population_hash(population["records"])
+    entropy, derived_seed, first_commit = audit.derive_entropy_seed(
+        freeze,
+        audit_kind="source_disposition",
+        family_id=family_id,
+        population_kind=population_kind,
+        population_universe_sha256=population_hash,
+    )
+    result: dict[str, Any] = {
+        "schema_version": "phase3_disposition_audit_seed_receipt_v1", "text_free": True,
+        "audit_round_id": "audit_round_fixture", "seed": derived_seed,
+        "seed_commitment_sha256": audit.sha256_bytes(derived_seed.encode("ascii")),
+        "seed_owner_role_id": "disposition_auditor", "auditor_controller_identity_id": "controller_fixture_auditor",
+        "source_universe_receipt_sha256": freeze["source_universe_receipt_sha256"],
+        "disposition_ledger_sha256": freeze["disposition_ledger_sha256"],
+        "population_freeze_sha256": freeze["population_freeze_sha256"],
+        "coverage_contract_sha256": freeze["coverage_contract_sha256"], "role_contract_sha256": freeze["role_contract_sha256"],
+        "repair_generation": freeze["repair_generation"], "results_recorded": False, "reroll_count": 0,
+        "prior_sample_reused": False, "proposal_identity_ids": [], "family_id": family_id, "population_kind": population_kind,
+        "population_sha256": population_hash, "strata_allocation_sha256": audit.sha256_value(population["strata"]),
+        "entropy_contract_version": audit.ENTROPY_CONTRACT_VERSION, "origin_main_ref": audit.ORIGIN_MAIN_REF,
+        "first_containing_squash_merge_sha": first_commit, "audit_kind": "source_disposition",
+        "entropy_tuple": entropy, "entropy_tuple_sha256": derived_seed,
+        "seed_committer_controller_identity_id": "controller_fixture_auditor",
+        "seed_attestor_controller_identity_id": "controller_fixture_auditor", "derivation_mode": "unique_sha256_or_abort",
+    }
+    result.update(changes)
+    return result
+
+
+def test_exact_formula_is_not_weakened() -> None:
+    assert audit.sample_size(101, 10000) == 101
+    assert audit.sample_size(500, 10000) == 200
+    assert audit.sample_size(17, 0) == 17
+
+
+def test_common_entropy_tuple_is_ordered_and_lane_specific() -> None:
+    seeds = set()
+    for audit_kind, population_kind in [
+        ("source_disposition", "nonconverted"),
+        ("textbook_nonhit", "textbook_nonhit"),
+        ("pravopys_delta", "pravopys_delta"),
+    ]:
+        frozen_tuple, seed = audit._derive_entropy_seed_from_fields(
+            first_containing_squash_merge_sha=_git_token("f"),
+            audit_kind=audit_kind,
+            family_id="fixture_family",
+            population_kind=population_kind,
+            population_freeze_sha256=_token("a"),
+            population_universe_sha256=_token("b"),
+        )
+        assert [item["field"] for item in frozen_tuple] == [
+            "version_tag", "first_containing_squash_merge_sha", "audit_kind", "family_id",
+            "population_kind", "population_freeze_sha256", "population_universe_sha256",
+        ]
+        seeds.add(seed)
+    assert len(seeds) == 3
+
+
+@pytest.mark.parametrize("mutation", ["duplicate", "missing", "hash"])
+def test_disposition_ledger_requires_exact_source_identity(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]], mutation: str) -> None:
+    ledger, coverage, roles = frozen
+    candidate = deepcopy(ledger)
+    rows = candidate["families"][0]["rows"]
+    if mutation == "duplicate":
+        rows[1]["unit_id"] = rows[0]["unit_id"]
+    elif mutation == "missing":
+        rows.pop()
+        candidate["families"][0]["disposition_row_sum"] -= 1
+    else:
+        candidate["families"][0]["audit_universe_sha256"] = _token("0")
+    with pytest.raises(audit.AuditError):
+        audit.validate_disposition_ledger(candidate, coverage_contract=coverage, role_contract=roles)
+
+
+def test_population_freeze_and_seed_timing_role_separation(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    good = _seed(freeze, roles)
+    assert audit.validate_seed_receipt(good, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")["ok"] is True
+    for change in ({"results_recorded": True}, {"reroll_count": 1}, {"proposal_identity_ids": ["controller_x"]}):
+        with pytest.raises(audit.AuditError):
+            audit.validate_seed_receipt(_seed(freeze, roles, **change), freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
+    with pytest.raises(audit.AuditError, match="author or root"):
+        audit.validate_seed_receipt(good, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted", prohibited_identity_ids=["controller_fixture_auditor"])
+    with pytest.raises(audit.AuditError, match="assigned auditor"):
+        audit.validate_seed_receipt(_seed(freeze, roles, auditor_controller_identity_id="controller_author"), freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
+
+
+@pytest.mark.parametrize("mutation", ["seed", "tuple", "merge", "committer"])
+def test_entropy_receipt_rejects_every_alternative_derivation(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]], mutation: str) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    receipt = _seed(freeze, roles)
+    if mutation == "seed":
+        receipt["seed"] = _token("0")
+    elif mutation == "tuple":
+        receipt["entropy_tuple"][3]["value"] = "other_family"
+    elif mutation == "merge":
+        receipt["first_containing_squash_merge_sha"] = _git_token("e")
+    else:
+        receipt["seed_committer_controller_identity_id"] = "controller_fixture_root"
+    with pytest.raises(audit.AuditError):
+        audit.validate_seed_receipt(receipt, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
+
+
+def _git_run(repo: Any, *arguments: str) -> str:
+    return subprocess.run(["git", "-C", str(repo), *arguments], check=True, capture_output=True, text=True).stdout.strip()
+
+
+@pytest.mark.parametrize("subject, accepted", [("feat: land freeze (#123)", True), ("feat: manual landing", False)])
+def test_first_containing_entropy_commit_must_be_origin_main_squash(tmp_path: Any, subject: str, accepted: bool) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git_run(repo, "init", "-q")
+    _git_run(repo, "config", "user.email", "noreply@github.com")
+    _git_run(repo, "config", "user.name", "GitHub")
+    (repo / "README.md").write_text("fixture\n", encoding="utf-8")
+    _git_run(repo, "add", "README.md")
+    _git_run(repo, "commit", "-q", "-m", "chore: initialize (#1)")
+    base = {"schema_version": "phase3_disposition_population_freeze_v1", "text_free": True}
+    freeze = {**base, "population_freeze_sha256": audit.sha256_value(base)}
+    (repo / "freeze.json").write_text(json.dumps(freeze, sort_keys=True) + "\n", encoding="utf-8")
+    _git_run(repo, "add", "freeze.json")
+    _git_run(repo, "commit", "-q", "-m", subject)
+    head = _git_run(repo, "rev-parse", "HEAD")
+    _git_run(repo, "update-ref", "refs/remotes/origin/main", head)
+    if accepted:
+        assert audit._first_containing_squash_merge(freeze, repo_root=repo) == head
+        frozen_tuple, seed, first_commit = audit.derive_entropy_seed(
+            freeze,
+            audit_kind="textbook_nonhit",
+            family_id="school_textbooks",
+            population_kind="textbook_nonhit",
+            population_universe_sha256=_token("b"),
+            repo_root=repo,
+        )
+        assert first_commit == head
+        assert seed == audit.sha256_bytes(audit.canonical_json(frozen_tuple).encode("utf-8"))
+    else:
+        with pytest.raises(audit.AuditError, match="not a GitHub squash"):
+            audit.derive_entropy_seed(
+                freeze,
+                audit_kind="textbook_nonhit",
+                family_id="school_textbooks",
+                population_kind="textbook_nonhit",
+                population_universe_sha256=_token("b"),
+                repo_root=repo,
+            )
+
+
+def test_stratified_selection_is_deterministic_and_without_replacement() -> None:
+    records = [
+        {"unit_id": f"unit.{index}", "disposition_code": f"code_{index % 3}", "document_or_edition_identity": f"edition_{index % 2}"}
+        for index in range(40)
+    ]
+    first = audit._stratified_ids(records, 11, _token("d"), "fixture_source", "nonconverted")
+    second = audit._stratified_ids(records, 11, _token("d"), "fixture_source", "nonconverted")
+    assert first == second
+    assert len(first) == len(set(first)) == 11
+    assert {next(row for row in records if row["unit_id"] == unit)["disposition_code"] for unit in first} == {"code_0", "code_1", "code_2"}
+
+
+def test_published_strata_uses_proportional_largest_remainder() -> None:
+    records = [
+        {"unit_id": f"unit.{index}", "disposition_code": "major" if index < 8 else "minor", "document_or_edition_identity": "edition"}
+        for index in range(10)
+    ]
+    assert audit._strata_allocation(records, 3, "nonconverted") == [
+        {"stratum": ["major", "edition"], "population_total": 8, "sample_allocation": 2},
+        {"stratum": ["minor", "edition"], "population_total": 2, "sample_allocation": 1},
+    ]
+
+
+def test_stale_and_repaired_seed_receipts_cannot_be_reused(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    seed = _seed(freeze, roles)
+    with pytest.raises(audit.AuditError, match="cannot be reused"):
+        audit.validate_seed_receipt(seed, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted", prior_seed_receipt_sha256s=[audit.sha256_value(seed)])
+    stale = _seed(freeze, roles, repair_generation=1)
+    with pytest.raises(audit.AuditError, match="repair generation"):
+        audit.validate_seed_receipt(stale, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
+
+
+def test_result_codes_and_zero_miss_gate(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
+    manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
+    rows = [
+        {"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]}
+        for sample in manifest["samples"] for unit_id in sample["unit_ids"]
+    ]
+    results = {
+        "schema_version": "phase3_disposition_audit_results_v1", "text_free": True,
+        "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows,
+    }
+    assert audit.validate_audit_results(results, manifest, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)["zero_miss"] is True
+    next(row for row in results["results"] if row["sample_kind"] == "nonconverted")["decision_code"] = "disagree_wrong_code"
+    with pytest.raises(audit.AuditError, match="zero-nonagree"):
+        audit.validate_audit_results(results, manifest, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)
+
+
+def test_results_reject_self_hashed_subset_manifest(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
+    manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
+    forged = deepcopy(manifest)
+    forged["samples"][0]["unit_ids"] = forged["samples"][0]["unit_ids"][:1]
+    forged["samples"][0]["sample_size"] = 1
+    base = {key: value for key, value in forged.items() if key != "sample_manifest_sha256"}
+    forged["sample_manifest_sha256"] = audit.sha256_value(base)
+    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": forged["sample_manifest_sha256"], "population_freeze_sha256": forged["population_freeze_sha256"], "repair_generation": 0, "results": []}
+    with pytest.raises(audit.AuditError, match="differs from deterministic"):
+        audit.validate_audit_results(results, forged, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)
+
+
+def test_emit_rejects_substituted_self_consistent_freeze(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    substituted = deepcopy(freeze)
+    substituted["families"][0]["nonconverted"]["records"][0]["document_or_edition_identity"] = "edition_substituted"
+    population = substituted["families"][0]["nonconverted"]
+    population["strata"] = audit._strata_allocation(population["records"], population["sample_size"], "nonconverted")
+    base = {key: value for key, value in substituted.items() if key != "population_freeze_sha256"}
+    substituted["population_freeze_sha256"] = audit.sha256_value(base)
+    seeds = [_seed(substituted, roles), _seed(substituted, roles, population_kind="converted")]
+    with pytest.raises(audit.AuditError, match="freshly derived"):
+        audit.emit_samples(substituted, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
+
+
+def test_source_text_shape_is_rejected(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    ledger["families"][0]["rows"][0]["text"] = "forbidden"
+    with pytest.raises(audit.AuditError, match="source text"):
+        audit.validate_disposition_ledger(ledger, coverage_contract=coverage, role_contract=roles)
+
+
+def test_unit_hash_and_conversion_evidence_are_required(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    candidate = deepcopy(ledger)
+    candidate["families"][0]["rows"][0]["unit_sha256"] = _token("0")
+    with pytest.raises(audit.AuditError, match="unit hash"):
+        audit.validate_disposition_ledger(candidate, coverage_contract=coverage, role_contract=roles)
+    candidate = deepcopy(ledger)
+    candidate["families"][0]["rows"][1]["evidence_artifact_locators"] = []
+    with pytest.raises(audit.AuditError, match="evidence"):
+        audit.validate_disposition_ledger(candidate, coverage_contract=coverage, role_contract=roles)
+
+
+def test_repeated_reason_count_is_computed_not_trusted(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    candidate = deepcopy(ledger)
+    nonconverted = [row for row in candidate["families"][0]["rows"] if row["disposition_code"] != "converted"]
+    assert len(nonconverted) == 4
+    for row in nonconverted:
+        row["repeated_reason_count"] = 1
+    with pytest.raises(audit.AuditError, match="declared repeated reason count"):
+        audit.validate_disposition_ledger(candidate, coverage_contract=coverage, role_contract=roles)
+
+
+def test_blocked_disposition_cannot_pass_coverage(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    ledger["families"][0]["rows"][0]["disposition_code"] = "blocked_with_reason"
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
+    manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
+    rows = [{"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]} for sample in manifest["samples"] for unit_id in sample["unit_ids"]]
+    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows}
+    with pytest.raises(audit.AuditError, match="blocked_with_reason"):
+        audit.validate_audit_results(results, manifest, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)
+
+
+def test_bundle_recomputes_every_artifact_binding(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
+    ledger, coverage, roles = frozen
+    freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
+    seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
+    manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
+    rows = [{"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]} for sample in manifest["samples"] for unit_id in sample["unit_ids"]]
+    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows}
+    bundle = {
+        "schema_version": "phase3_disposition_audit_bundle_v1", "text_free": True,
+        "source_universe_receipt_sha256": freeze["source_universe_receipt_sha256"],
+        "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles),
+        "disposition_ledger_sha256": audit.sha256_value(ledger), "population_freeze_sha256": freeze["population_freeze_sha256"],
+        "seed_receipt_sha256s": sorted(audit.sha256_value(seed) for seed in seeds),
+        "sample_manifest_sha256": manifest["sample_manifest_sha256"], "audit_results_sha256": audit.sha256_value(results),
+    }
+    schema = json.loads((audit.DATA / "contracts/phase3_disposition_audit_bundle_v1.schema.json").read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    for artifact in [ledger, freeze, *seeds, manifest, results, bundle]:
+        validator.validate(artifact)
+    assert audit.validate_bundle(bundle, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, sample_manifest=manifest, results=results, coverage_contract=coverage, role_contract=roles)["bundle_verified"] is True
+    bundle["audit_results_sha256"] = _token("0")
+    with pytest.raises(audit.AuditError, match="audit_results_sha256"):
+        audit.validate_bundle(bundle, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, sample_manifest=manifest, results=results, coverage_contract=coverage, role_contract=roles)
+
+
+def test_schema_is_a_closed_artifact_schema() -> None:
+    schema = json.loads((audit.DATA / "contracts/phase3_disposition_audit_bundle_v1.schema.json").read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    assert "oneOf" in schema and "ledgerRow" in schema["$defs"] and schema["$defs"]["ledgerRow"]["additionalProperties"] is False
+
+
+def test_lexical_census_requires_hashed_unique_machine_rows(monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = {"artifact_manifest": {"payload_manifest_sha256": _token("b")}}
+    monkeypatch.setattr(audit, "_source_receipt", lambda _: (receipt, _token("a"), {}))
+    structural = json.loads((audit.DEFAULT_SOURCE_UNIVERSE / "lexical_structural_freeze_v1.json").read_text(encoding="utf-8"))
+    families = []
+    for item in structural["families"]:
+        rows = []
+        if item["family_id"] == structural["families"][0]["family_id"]:
+            rows = [{"used_subset_unit_id": "used.fixture.1", "used_subset_unit_sha256": _token("c"), "decision_code": "agree", "evidence_artifact_locators": ["artifact_extraction"]}]
+        families.append({"family_id": item["family_id"], "structural_universe_sha256": item["ordered_rolling_sha256"], "used_subset_census_sha256": audit.sha256_value(rows), "used_subset_total": len(rows), "rows": rows})
+    coverage, roles = _coverage(), _roles()
+    census = {"schema_version": "phase3_lexical_complete_census_v1", "text_free": True, "source_universe_receipt_sha256": _token("a"), "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles), "release_artifact_manifest_sha256": _token("d"), "used_subset_extraction_artifact_sha256": _token("e"), "auditor_controller_identity_id": "controller_fixture_auditor", "families": families}
+    assert audit.validate_lexical_complete_census(census, coverage_contract=coverage, role_contract=roles)["complete_census"] is True
+    census["families"][0]["rows"].append(deepcopy(census["families"][0]["rows"][0]))
+    census["families"][0]["used_subset_total"] = 2
+    census["families"][0]["used_subset_census_sha256"] = audit.sha256_value(census["families"][0]["rows"])
+    with pytest.raises(audit.AuditError, match="duplicate lexical"):
+        audit.validate_lexical_complete_census(census, coverage_contract=coverage, role_contract=roles)
