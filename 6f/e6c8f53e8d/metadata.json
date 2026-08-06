@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6fe6c8f53e8d",
+  "strategy": "manual-commit",
+  "branch": "agy/hramatka-6412-design-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/decisions/drafts/cf-temp-lifecycle.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/6f/e6c8f53e8d/0/metadata.json",
+      "transcript": "/6f/e6c8f53e8d/0/full.jsonl",
+      "compact_transcript": "/6f/e6c8f53e8d/0/transcript.jsonl",
+      "content_hash": "/6f/e6c8f53e8d/0/content_hash.txt",
+      "prompt": "/6f/e6c8f53e8d/0/prompt.txt"
+    }
+  ]
+}

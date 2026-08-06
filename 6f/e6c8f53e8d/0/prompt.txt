@@ -1,0 +1,52 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: design note for CF review temp + reaper lifecycle (issue #6412)
+
+Stage 1 of 2 (design only — NO implementation). Deliverable: a design note posted as a comment
+on issue #6412, plus the same text committed as `docs/decisions/drafts/cf-temp-lifecycle.md`
+on your branch with a PR marked draft.
+
+## Context (verified, do not re-litigate the problem)
+
+Read issue #6412 in full — the problem statement and requirements R1–R6 are evidence-backed
+(code refs verified 2026-08-06). Read the referenced code yourself before designing:
+- `scripts/ai_agent_bridge/_review_worktree.py` (cleanup call sites ~2907/3023, sweep calls 2782/3044)
+- `scripts/review/isolation.py:337` (`sweep_review_temp_orphans`, 48h age rule, temp-root prefixes ~line 50)
+- `scripts/review/snapshot.py:1923` (snap creation)
+- The worktree reaper invoked by launchd `com.learn-ukrainian.worktree-cleanup` (find its script; document what it does today, incl. the fetch-timeout abort path)
+
+## What the design note must cover
+
+1. Owner-liveness manifest for temp roots (R1): exact schema, where written, pid+started_at
+   fencing semantics (mirror `thread_handoff.py` lease liveness — cite it), foreign/manifest-less
+   root handling (48h fallback stays).
+2. Janitor consolidation (R2): how the existing launchd job invokes the sweeper; idempotency;
+   what happens when a sweep races a live review (must be provably safe — this is the hard part;
+   address the TOCTOU between "owner pid dead" check and reap).
+3. Disk-pressure mode (R3): threshold source (config, not hardcoded), escalation behavior,
+   loud reporting channel.
+4. Signal hardening (R4): which signals, where handlers attach, what SIGKILL leaves behind.
+5. Reaper robustness (R5): fetch-timeout degradation, terminal-task detached workspaces,
+   visible needs_finalize reporting.
+6. R6 (clonefile) as measured phase 2: what to measure, expected win, git-behavior risks. Design
+   only — no commitment.
+7. Failure modes section FIRST-CLASS: for each mechanism, what breaks if it's wrong (reaping a
+   live review mid-CF is the catastrophic case — the design must make it structurally impossible,
+   not unlikely).
+8. Test strategy: how each guard gets a test that FAILS when the guard is removed (mutation-check).
+
+## Rules
+
+- Design note only. No implementation code beyond illustrative schema/pseudocode.
+- #M-4: every claim about current behavior cites file:line you actually read.
+- Non-goals (from the issue): review isolation guarantees unchanged; dirty-worktree preservation
+  defaults unchanged.
+- Post the note to issue #6412, push branch + draft PR, then stop. Cross-family review of the
+  design happens before any implementation is dispatched.

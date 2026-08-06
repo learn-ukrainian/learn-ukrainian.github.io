@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6fe6c8f53e8d",
+  "session_id": "fleet-365b938ecd6e4a5c971bc4f16c91347a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T21:34:11.768704Z",
+  "branch": "agy/hramatka-6412-design-agy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/decisions/drafts/cf-temp-lifecycle.md"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "0d0a634eb9af",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T21:34:11.751974Z",
+    "agent_lines": 323,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 323,
+    "total_lines_changed": 323,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
