@@ -2174,11 +2174,19 @@ export function upgradeIdentityClozeToMorphology(
         row.caseName !== 'nominative' &&
         row.caseName !== 'oblique',
     );
-    const anyNonBase = formBank.filter((row) => czNorm(row.form) !== czNorm(lemma.lemma));
-    const pool = oblique.length > 0 ? oblique : anyNonBase;
+    // Only use forms with a known case label — never guess 'genitive' for
+    // unresolved 'oblique' tags (CF P2). Prefer true non-nominative cases;
+    // fall back to other non-base forms that still carry a real case name.
+    const anyNonBaseKnownCase = formBank.filter(
+      (row) =>
+        czNorm(row.form) !== czNorm(lemma.lemma) &&
+        row.caseName !== 'nominative' &&
+        row.caseName !== 'oblique',
+    );
+    const pool = oblique.length > 0 ? oblique : anyNonBaseKnownCase;
     if (pool.length === 0) return null;
     const pick = pool[stablePickIndex(cloze.clozeId, pool.length)]!;
-    caseName = pick.caseName === 'oblique' ? 'genitive' : pick.caseName;
+    caseName = pick.caseName;
     form = pick.form;
     keepSentence = false;
   }

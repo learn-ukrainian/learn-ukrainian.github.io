@@ -914,7 +914,7 @@ def _paradigm_from_vesum_lemma_search(
             for match in matches:
                 if not isinstance(match, dict):
                     continue
-                if _plain(str(match.get("lemma") or "")) != want:
+                if _plain(str(match.get("lemma") or "")).casefold() != want:
                     continue
                 if pos_filter and match.get("pos") != pos_filter:
                     continue
