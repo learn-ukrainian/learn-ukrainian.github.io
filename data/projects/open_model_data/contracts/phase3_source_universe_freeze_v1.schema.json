@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_source_universe_freeze_v1.schema.json",
+  "title": "Phase 3 source-universe freeze receipt v1",
+  "description": "A text-free receipt for the complete Phase 3 source-universe freeze; it does not certify coverage readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "merged_main_sha",
+    "freezer",
+    "coverage_contract_sha256",
+    "input_sha256",
+    "pdf_editions",
+    "other_normative_style_inventory",
+    "families",
+    "status",
+    "blocking_requirements",
+    "artifact_manifest"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_source_universe_freeze_v1"},
+    "text_free": {"const": true},
+    "merged_main_sha": {"$ref": "#/$defs/git_sha"},
+    "freezer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation_version", "script_path", "script_sha256"],
+      "properties": {
+        "implementation_version": {"const": "phase3_source_universe_freezer_v2"},
+        "script_path": {"const": "scripts/projects/open_model_data/phase3_source_universe.py"},
+        "script_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "coverage_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources_db",
+        "vesum_db",
+        "calque_module",
+        "r2u_cache",
+        "pravopys_2019_pdf",
+        "pravopys_2026_pdf"
+      ],
+      "properties": {
+        "sources_db": {"$ref": "#/$defs/sha256"},
+        "vesum_db": {"$ref": "#/$defs/sha256"},
+        "calque_module": {"$ref": "#/$defs/sha256"},
+        "r2u_cache": {"$ref": "#/$defs/sha256"},
+        "pravopys_2019_pdf": {"$ref": "#/$defs/sha256"},
+        "pravopys_2026_pdf": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "pdf_editions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pravopys_2019_complete", "pravopys_2026_complete"],
+      "properties": {
+        "pravopys_2019_complete": {"$ref": "#/$defs/pravopys_2019_edition"},
+        "pravopys_2026_complete": {"$ref": "#/$defs/pravopys_2026_edition"}
+      }
+    },
+    "other_normative_style_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_tables",
+        "additional_family_count",
+        "zero_additional_family_inventory"
+      ],
+      "properties": {
+        "candidate_tables": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "additional_family_count": {"type": "integer", "minimum": 0},
+        "zero_additional_family_inventory": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"zero_additional_family_inventory": {"const": true}}, "required": ["zero_additional_family_inventory"]},
+          "then": {"properties": {"additional_family_count": {"const": 0}, "candidate_tables": {"maxItems": 0}}},
+          "else": {"properties": {"additional_family_count": {"minimum": 1}, "candidate_tables": {"minItems": 1}}}
+        }
+      ]
+    },
+    "families": {
+      "type": "array",
+      "minItems": 21,
+      "maxItems": 21,
+      "items": {"$ref": "#/$defs/family_receipt"},
+      "allOf": [
+        {"contains": {"properties": {"family_id": {"const": "lexical_balla_en_uk"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_dmklinger_uk_en"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_esum_cognate_forms"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_esum_etymology"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_frazeolohichnyi"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_grinchenko"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_puls_cefr"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_sum11"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_ukrajinet"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_wiktionary"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "antonenko_style_guide"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "ua_gec"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "school_textbooks"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_ulif"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "antonenko_textbook_representation"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_vesum"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "calque_inventory"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "lexical_r2u"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "pravopys_2019_complete"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "pravopys_2026_complete"}}, "required": ["family_id"]}},
+        {"contains": {"properties": {"family_id": {"const": "other_normative_style_inventory"}}, "required": ["family_id"]}}
+      ]
+    },
+    "status": {"const": "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY"},
+    "blocking_requirements": {
+      "const": [
+        "source_unit_dispositions_and_dual_population_audits",
+        "textbook_nonhit_audit",
+        "pravopys_2019_2026_delta_coverage_and_audit",
+        "lexical_used_subset_census"
+      ]
+    },
+    "artifact_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_count",
+        "payload_file_count",
+        "payloads",
+        "payload_manifest_sha256",
+        "receipt_file"
+      ],
+      "properties": {
+        "artifact_count": {"const": 10},
+        "payload_file_count": {"const": 9},
+        "payloads": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/payload"}
+        },
+        "payload_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_file": {"const": "source-universe-freeze-receipt.json"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "git_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "https_locator": {"type": "string", "pattern": "^https://[^\\s]+$"},
+    "retrieved_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "family_id": {
+      "enum": [
+        "lexical_balla_en_uk",
+        "lexical_dmklinger_uk_en",
+        "lexical_esum_cognate_forms",
+        "lexical_esum_etymology",
+        "lexical_frazeolohichnyi",
+        "lexical_grinchenko",
+        "lexical_puls_cefr",
+        "lexical_sum11",
+        "lexical_ukrajinet",
+        "lexical_wiktionary",
+        "antonenko_style_guide",
+        "ua_gec",
+        "school_textbooks",
+        "lexical_ulif",
+        "antonenko_textbook_representation",
+        "lexical_vesum",
+        "calque_inventory",
+        "lexical_r2u",
+        "pravopys_2019_complete",
+        "pravopys_2026_complete",
+        "other_normative_style_inventory"
+      ]
+    },
+    "ledger_family_id": {
+      "enum": [
+        "antonenko_style_guide",
+        "antonenko_textbook_representation",
+        "calque_inventory",
+        "ua_gec",
+        "school_textbooks",
+        "pravopys_2019_complete",
+        "pravopys_2026_complete",
+        "other_normative_style_inventory"
+      ]
+    },
+    "lexical_family_id": {
+      "enum": [
+        "lexical_balla_en_uk",
+        "lexical_dmklinger_uk_en",
+        "lexical_esum_cognate_forms",
+        "lexical_esum_etymology",
+        "lexical_frazeolohichnyi",
+        "lexical_grinchenko",
+        "lexical_puls_cefr",
+        "lexical_sum11",
+        "lexical_ukrajinet",
+        "lexical_wiktionary",
+        "lexical_ulif",
+        "lexical_vesum",
+        "lexical_r2u"
+      ]
+    },
+    "ledger_family_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family_id", "unit_count", "ledger_sha256", "ledger_file"],
+      "properties": {
+        "family_id": {"$ref": "#/$defs/ledger_family_id"},
+        "unit_count": {"type": "integer", "minimum": 0},
+        "ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "ledger_file": {"type": "string", "pattern": "^[^/\\\\]+\\.units\\.jsonl$"}
+      }
+    },
+    "lexical_structural_family_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "unit_count",
+        "structural_receipt_file",
+        "structural_receipt_sha256",
+        "structural_universe_sha256"
+      ],
+      "properties": {
+        "family_id": {"$ref": "#/$defs/lexical_family_id"},
+        "unit_count": {"type": "integer", "minimum": 0},
+        "structural_receipt_file": {"const": "lexical_structural_freeze_v1.json"},
+        "structural_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "structural_universe_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "family_receipt": {
+      "oneOf": [
+        {"$ref": "#/$defs/ledger_family_receipt"},
+        {"$ref": "#/$defs/lexical_structural_family_receipt"}
+      ]
+    },
+    "pravopys_2019_edition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edition_identity",
+        "input_sha256",
+        "official_download_locator",
+        "retrieval_locator",
+        "retrieved_at",
+        "page_count_extracted",
+        "stable_grain",
+        "paragraph_count",
+        "source_text_committed",
+        "rights_provenance_classification"
+      ],
+      "properties": {
+        "edition_identity": {"const": "pravopys_2019_complete"},
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "official_download_locator": {"$ref": "#/$defs/https_locator"},
+        "retrieval_locator": {"$ref": "#/$defs/https_locator"},
+        "retrieved_at": {"$ref": "#/$defs/retrieved_at"},
+        "page_count_extracted": {"type": "integer", "minimum": 1},
+        "stable_grain": {"const": "pdf_numbered_hierarchy"},
+        "paragraph_count": {"type": "integer", "minimum": 1},
+        "source_text_committed": {"const": false},
+        "rights_provenance_classification": {"const": "rights_limited_locator_only"}
+      }
+    },
+    "pravopys_2026_edition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edition_identity",
+        "input_sha256",
+        "official_decision_locator",
+        "official_download_locator",
+        "retrieval_locator",
+        "retrieved_at",
+        "page_count_extracted",
+        "stable_grain",
+        "paragraph_count",
+        "source_text_committed",
+        "rights_provenance_classification"
+      ],
+      "properties": {
+        "edition_identity": {"const": "pravopys_2026_complete"},
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "official_decision_locator": {"$ref": "#/$defs/https_locator"},
+        "official_download_locator": {"$ref": "#/$defs/https_locator"},
+        "retrieval_locator": {"$ref": "#/$defs/https_locator"},
+        "retrieved_at": {"$ref": "#/$defs/retrieved_at"},
+        "page_count_extracted": {"type": "integer", "minimum": 1},
+        "stable_grain": {"const": "pdf_numbered_hierarchy"},
+        "paragraph_count": {"type": "integer", "minimum": 1},
+        "source_text_committed": {"const": false},
+        "rights_provenance_classification": {"const": "rights_limited_locator_only"}
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "byte_count"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\][^\\\\]*$"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "byte_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
