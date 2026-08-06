@@ -363,6 +363,22 @@ reliability guidance — noting the GLM transport fix landed 2026-07-28 (#5947) 
 transport failure, reroute BY SEAT within the pool and record the substitution
 (workflow.md substitution rule).
 
+## Driver routing card + breadth floor (operator GO 2026-08-06)
+
+Epic drivers **must** follow `fleet-driver-routing.md` (served immediately after this file
+in `/api/rules`):
+
+- **ROUTING_CARD_V1** before every implement dispatch (tier · model×harness · advisor packet · alternatives).
+- **Default bounded work:** authority brief (**Fable** or **Sol**) → heap/practical implement
+  (Luna / Terra / Flash / …). A complete advisor packet makes weaker models viable.
+- **Fable reachability** under a small Claude subscription: native pin `claude-fable-5`, or
+  **Cursor → Fable** (multi-model pin; use composite identity for CF bookkeeping when required).
+- **Session breadth:** after ≥3 implement dispatches, ≥2 agents and ≥2 tiers, or a tool-backed
+  `NOTE: fleet_breadth`. Handoff must attach
+  `python -m scripts.fleet.driver_breadth_report`.
+
+This does not replace the ladders below; it stops single-seat fixation.
+
 ## Harness vs model — route by BOTH (added 2026-07-05; user order: fleet utilization is paramount)
 
 A fleet member = MODEL × HARNESS. The same model behaves differently in different harnesses, and
