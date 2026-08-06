@@ -112,7 +112,7 @@ def test_verify_rejects_a_prepared_only_or_partial_run(tmp_path: Path) -> None:
 def test_permissions_symlink_and_aliases_fail_closed(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
-    os.chmod(private / manifest["packets"][0]["prompt"], 0o644)
+    os.chmod(private / manifest["packets"][0]["prompt"], 0o400)
     with pytest.raises(runner.RuleAuthorRunnerError, match="0600"):
         runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
     os.chmod(private / manifest["packets"][0]["prompt"], 0o600)
@@ -309,8 +309,8 @@ def test_receipt_cannot_overwrite_inputs_or_private_files(tmp_path: Path) -> Non
 def test_public_receipt_does_not_chmod_its_existing_parent(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     destination = tmp_path / "public"
-    destination.mkdir(mode=0o755)
-    os.chmod(destination, 0o755)
+    destination.mkdir(mode=0o750)
+    os.chmod(destination, 0o750)
     runner.run(
         bundle_path=bundle,
         role_path=role,
@@ -320,5 +320,5 @@ def test_public_receipt_does_not_chmod_its_existing_parent(tmp_path: Path) -> No
         max_packets=1,
         executor=_executor(),
     )
-    assert stat.S_IMODE(destination.stat().st_mode) == 0o755
+    assert stat.S_IMODE(destination.stat().st_mode) == 0o750
     assert stat.S_IMODE((destination / "receipt.json").stat().st_mode) == 0o600
