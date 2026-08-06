@@ -73586,7 +73586,7 @@
     },
     {
       "clozeId": "teacher_cloze_1753",
-      "lemmaId": "зосереджуватися назосередитися на",
+      "lemmaId": "зосереджуватися на",
       "sentenceFrameId": "teacher_frame_1753",
       "lemma": "на",
       "form": "НАЗВИ",
@@ -73598,11 +73598,11 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "знахідний"
       },
-      "clozeEn": "Context sentence for зосереджуватися назосередитися на",
+      "clozeEn": "Context sentence for зосереджуватися на",
       "options": [
         {
           "optionId": "opt_ans",
-          "lemmaId": "зосереджуватися назосередитися на",
+          "lemmaId": "зосереджуватися на",
           "label": "НАЗВИ",
           "kind": "answer"
         },
