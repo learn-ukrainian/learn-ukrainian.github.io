@@ -487,9 +487,15 @@ fi
 # --- GATE INVOCATION: one python process for record/venv/primary/lease/detect.
 # Crash honesty (issue #6411): a crashed helper maps to "could not determine",
 # never to a business verdict such as a lease conflict.
+# --session-id is the durable thread-lease/rollover identity (CURRENT_THREAD_ID,
+# with the Codex env fallback); --record-session-id is the official hook
+# session id that context-monitor.sh reads the session record back by. Keep
+# these two args separate even though they usually coincide for Claude
+# sessions (CF review on #6414 finding 1).
 GATE_ARGS=(
   --repo-root "$CANONICAL_ROOT" --project-dir "$PROJECT_DIR"
   --agent "$HANDOFF_AGENT" --session-id "$CURRENT_THREAD_ID"
+  --record-session-id "$SESSION_ID"
 )
 [ -n "$TRANSCRIPT_PATH" ] && GATE_ARGS+=(--transcript-path "$TRANSCRIPT_PATH")
 [ -n "$SOURCE" ] && GATE_ARGS+=(--source "$SOURCE")

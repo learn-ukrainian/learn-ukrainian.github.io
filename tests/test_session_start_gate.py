@@ -31,6 +31,7 @@ def _args(**overrides: object) -> argparse.Namespace:
         "project_dir": str(REPO_ROOT),
         "agent": "claude-testlane",
         "session_id": "test-session-0001",
+        "record_session_id": "",
         "transcript_path": "",
         "source": "",
         "observed_model": "",
@@ -45,6 +46,45 @@ def _args(**overrides: object) -> argparse.Namespace:
 
 
 # --- python-level phase behavior ---------------------------------------------
+
+
+def test_session_record_uses_record_session_id_not_thread_id(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The official session record must be keyed by the hook-supplied session
+    id (record_session_id), not the durable thread-lease/rollover identity
+    (session_id) — context-monitor.sh still reads records back by the former
+    (CF review on #6414 finding 1)."""
+    from scripts.lib import session_record
+
+    captured: dict[str, object] = {}
+
+    def _fake_update_session(*, session_id: str, **kwargs: object) -> dict[str, object]:
+        captured["session_id"] = session_id
+        return {"schema_version": 1, "session_id": session_id}
+
+    monkeypatch.delenv("CLAUDE_ENV_FILE", raising=False)
+    monkeypatch.setattr(session_record, "update_session", _fake_update_session)
+    result = gate.phase_session_record(
+        _args(session_id="thread-lease-id", record_session_id="hook-session-id")
+    )
+    assert captured["session_id"] == "hook-session-id"
+    assert result["status"] == "ok"
+
+
+def test_session_record_falls_back_to_session_id_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Direct/test invocations that omit --record-session-id still work."""
+    from scripts.lib import session_record
+
+    captured: dict[str, object] = {}
+
+    def _fake_update_session(*, session_id: str, **kwargs: object) -> dict[str, object]:
+        captured["session_id"] = session_id
+        return {"schema_version": 1, "session_id": session_id}
+
+    monkeypatch.delenv("CLAUDE_ENV_FILE", raising=False)
+    monkeypatch.setattr(session_record, "update_session", _fake_update_session)
+    result = gate.phase_session_record(_args(session_id="thread-lease-id", record_session_id=""))
+    assert captured["session_id"] == "thread-lease-id"
+    assert result["status"] == "ok"
 
 
 def test_lease_helper_crash_is_unknown_not_conflict(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -69,6 +109,59 @@ def test_lease_structured_refusal_is_a_conflict(monkeypatch: pytest.MonkeyPatch)
     result = gate.phase_thread_lease(_args())
     assert result["status"] == "stop"
     assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
+
+
+def test_lease_structured_error_is_not_a_conflict(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A structured-but-non-conflict status (e.g. {"status": "error"}) is a
+    HELPER FAILURE, not a business refusal — restricting the DURABLE THREAD
+    LEASE CONFLICT label to the exact "conflict" status (CF review on #6414
+    finding 3; the #6411 mislabel class)."""
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print(json.dumps({"status": "error", "error": "lock backend unavailable"}))
+            return 1
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "crashed"
+    assert "UNKNOWN" in result["context"]
+    assert "DURABLE THREAD LEASE CONFLICT" not in result["context"]
+
+
+def test_lease_rc0_malformed_json_is_not_ok(monkeypatch: pytest.MonkeyPatch) -> None:
+    """rc == 0 alone is not proof of a claim — malformed/empty JSON on a
+    clean exit must not fall through to an unconditional ok (CF review on
+    #6414 finding 2)."""
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print("not json")
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "crashed"
+    assert "UNKNOWN" in result["context"]
+
+
+def test_lease_rc0_without_acquired_status_is_not_ok(monkeypatch: pytest.MonkeyPatch) -> None:
+    """rc == 0 with a parseable but non-"acquired" status (e.g. a stale
+    "conflict" payload on an otherwise clean exit) must not be treated as a
+    successful claim (CF review on #6414 finding 2)."""
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print(json.dumps({"status": "conflict", "owner_thread_id": "other"}))
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "crashed"
+    assert "UNKNOWN" in result["context"]
 
 
 def test_lease_unstructured_failure_is_unknown(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -166,36 +259,62 @@ def test_python_version_mismatch_is_issue(tmp_path: Path) -> None:
     assert "VENV WRONG PYTHON" in result["verdict"]
 
 
-def test_lease_verdict_is_authoritative_over_detect(monkeypatch: pytest.MonkeyPatch) -> None:
-    """detect must not run once the lease phase says stop/crashed."""
+def test_lease_verdict_is_authoritative_over_detect(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """detect must not run once the lease phase says stop/crashed.
 
-    def _boom() -> object:
-        raise ImportError("shadowed")
+    The old version of this test mocked ``_import_thread_handoff`` to raise
+    for BOTH phases and only asserted ``rc == 0`` — but ``main()`` always
+    returns 0 once it produces JSON (see its docstring), regardless of
+    whether detect ran or was skipped. That assertion could not fail even if
+    the "skip detect" gating were deleted entirely. This version uses a
+    phase-specific fake with a call counter so it proves detect's ``main``
+    was never invoked, not just that the gate didn't crash.
 
-    monkeypatch.setattr(gate, "_import_thread_handoff", _boom)
-    rc = 0
-    out_path = os.devnull
-    with open(out_path, "w") as devnull:
-        stdout = sys.stdout
-        sys.stdout = devnull
-        try:
-            rc = gate.main(
-                [
-                    "--repo-root",
-                    str(REPO_ROOT),
-                    "--project-dir",
-                    str(REPO_ROOT),
-                    "--agent",
-                    "claude-testlane",
-                    "--session-id",
-                    "s-1",
-                    "--claim-lease",
-                    "--detect",
-                ]
-            )
-        finally:
-            sys.stdout = stdout
+    Mutation-check: delete the ``if lease_status in {"stop", "crashed"}:
+    skip`` gating in ``main()`` (call ``phase_rollover_detect`` unconditionally)
+    -> ``detect_calls`` becomes 1 and this test fails. Restore it -> passes.
+    """
+
+    detect_calls = 0
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            nonlocal detect_calls
+            if "claim-thread-lease" in argv:
+                print(json.dumps({"status": "conflict", "owner_thread_id": "other"}))
+                return 1
+            if "detect" in argv:
+                detect_calls += 1
+                print(json.dumps({"status": "none"}))
+                return 0
+            raise AssertionError(f"unexpected thread_handoff invocation: {argv}")
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(REPO_ROOT),
+            "--project-dir",
+            str(REPO_ROOT),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-1",
+            "--claim-lease",
+            "--detect",
+        ]
+    )
     assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["thread_lease"]["status"] == "stop"
+    assert result["rollover_detect"] == {
+        "status": "skipped",
+        "reason": "lease verdict is authoritative",
+    }
+    assert detect_calls == 0, "detect ran despite an authoritative lease stop verdict"
 
 
 # --- shell-level verdict mapping ---------------------------------------------

@@ -65,7 +65,13 @@ def _run_cli_inprocess(main_fn: Any, argv: list[str]) -> tuple[int, str, str]:
 
 
 def phase_session_record(args: argparse.Namespace) -> dict[str, Any]:
-    if not args.session_id:
+    # The official session record is keyed by the hook-supplied session id
+    # (context-monitor.sh reads it back by that same id, not by the durable
+    # thread-lease/rollover identity, which may differ — CF review on #6414
+    # finding 1). Fall back to --session-id only when the caller did not
+    # supply a distinct --record-session-id (e.g. direct/test invocations).
+    record_session_id = args.record_session_id or args.session_id
+    if not record_session_id:
         return {"status": "skipped", "reason": "no session id"}
     try:
         from scripts.lib import session_record
@@ -77,7 +83,7 @@ def phase_session_record(args: argparse.Namespace) -> dict[str, Any]:
         args.repo_root,
         "update",
         "--session-id",
-        args.session_id,
+        record_session_id,
         "--provenance",
         "SessionStart",
         "--append-env",
@@ -196,14 +202,17 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
         )
         return crash
     if rc != 0:
-        # The claim ran to a real refusal. Distinguish structured conflict output
-        # from an unstructured crash-style failure (issue #6411): only a parseable
-        # refusal may be called a conflict.
+        # The claim ran to a real refusal. Distinguish the exact structured
+        # conflict status from every other outcome — a malformed/empty payload
+        # OR a structured-but-non-conflict status such as {"status": "error"}
+        # is a HELPER FAILURE, not a business conflict (issue #6411 / CF review
+        # on #6414 findings 2-3): only status == "conflict" may be labeled
+        # DURABLE THREAD LEASE CONFLICT.
         try:
             payload = json.loads(out or "{}")
         except ValueError:
             payload = None
-        if isinstance(payload, dict) and payload.get("status"):
+        if isinstance(payload, dict) and payload.get("status") == "conflict":
             return {
                 "status": "stop",
                 "context": (
@@ -211,30 +220,48 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
                     f"this queue.\nOutput:\n{out.strip() or err.strip()}"
                 ),
             }
+        status_note = (
+            f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
+        )
         return {
             "status": "crashed",
-            "error": f"claim-thread-lease rc={rc} with unstructured output",
+            "error": f"claim-thread-lease rc={rc} with {status_note}",
             "context": (
-                "ERROR: LEASE CLAIM FAILED WITHOUT A STRUCTURED VERDICT — stop; lease state "
-                f"UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
+                "ERROR: LEASE CLAIM FAILED WITHOUT A STRUCTURED CONFLICT VERDICT — stop; lease "
+                f"state UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
             ),
         }
-    generation = ""
-    banner_parts: list[str] = []
-    with contextlib.suppress(ValueError):
+    # rc == 0 requires PROOF, not just a clean exit: valid JSON with the
+    # explicit acquired status. A malformed/empty payload — or any status
+    # other than "acquired" — must not fall through to an unconditional ok
+    # (CF review on #6414 finding 2).
+    try:
         payload = json.loads(out or "{}")
-        generation = str(payload.get("generation") or "")
-        replaced = payload.get("replaced_owner_thread_id")
-        if replaced:
-            banner_parts.append(
-                f"THREAD LEASE TAKEOVER: this session (generation {payload.get('generation')}) "
-                f"replaced owner {replaced} -- reason: {payload.get('takeover_reason', 'unknown')}."
-            )
-        corrupt = payload.get("recovered_from_corrupt_lease")
-        if corrupt:
-            banner_parts.append(
-                f"THREAD LEASE HEALED: on-disk lease was corrupt and was reset -- {corrupt}."
-            )
+    except ValueError:
+        payload = None
+    if not isinstance(payload, dict) or payload.get("status") != "acquired":
+        status_note = f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
+        return {
+            "status": "crashed",
+            "error": f"claim-thread-lease rc=0 without an acquired verdict ({status_note})",
+            "context": (
+                "ERROR: LEASE CLAIM RETURNED SUCCESS WITHOUT A STRUCTURED ACQUIRED VERDICT — "
+                f"stop; lease state UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
+            ),
+        }
+    generation = str(payload.get("generation") or "")
+    banner_parts: list[str] = []
+    replaced = payload.get("replaced_owner_thread_id")
+    if replaced:
+        banner_parts.append(
+            f"THREAD LEASE TAKEOVER: this session (generation {payload.get('generation')}) "
+            f"replaced owner {replaced} -- reason: {payload.get('takeover_reason', 'unknown')}."
+        )
+    corrupt = payload.get("recovered_from_corrupt_lease")
+    if corrupt:
+        banner_parts.append(
+            f"THREAD LEASE HEALED: on-disk lease was corrupt and was reset -- {corrupt}."
+        )
     return {"status": "ok", "generation": generation, "takeover_banner": "\n".join(banner_parts)}
 
 
@@ -327,6 +354,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project-dir", required=True, help="session checkout (may be a worktree)")
     parser.add_argument("--agent", required=True)
     parser.add_argument("--session-id", default="")
+    parser.add_argument(
+        "--record-session-id",
+        default="",
+        help=(
+            "Official hook session id for the session-record phase. Distinct from "
+            "--session-id (the durable thread-lease/rollover identity) so each "
+            "consumer keys its own store by the right id; falls back to "
+            "--session-id when omitted."
+        ),
+    )
     parser.add_argument("--transcript-path", default="")
     parser.add_argument("--source", default="")
     parser.add_argument("--observed-model", default="")
