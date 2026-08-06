@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 
 from scripts.hooks.apply_grok_hook_profile import ensure_compat_claude_hooks_false
-from scripts.hooks.hook_timing import append_row, main as timing_main
+from scripts.hooks.hook_timing import append_row
+from scripts.hooks.hook_timing import main as timing_main
 
 
 def test_append_row_force(tmp_path: Path, monkeypatch) -> None:
