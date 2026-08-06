@@ -1,32 +1,27 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-45e1b7bba8a3.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-0737528c8445.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "f327069038e59993bd8d87515018ba78ffdc99ac5ad50027afa366f6f172afe9",
+  "manifest_fingerprint": "effa789dfec4b9785234d4eef27839e8df50aa6660c6ce3608d16afb077e7dfd",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-07-31T21:44:34Z",
-  "gz_sha256": "0755c37001be516c81777879f7d6219b77ff17f7d122ddb93b843ce1cedae952",
-  "json_sha256": "45e1b7bba8a37d235530bffe07bd8e8b1817d68490df036d56b28679769ffe7f",
-  "gz_bytes": 13866622,
-  "json_bytes": 99616768,
+  "generated_at": "2026-08-05T20:32:25Z",
+  "gz_sha256": "0a06f1d433dbb928e7bb68ef7bb6e65af8c258e79f3dbd4a336ee54d78c21c7a",
+  "json_sha256": "0737528c844561910f00376a10ad8d7a26fc9386f8e39e21ca107ad96a1852ba",
+  "gz_bytes": 14196544,
+  "json_bytes": 102568813,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 672,
+      "poc_thin_pages": 2278,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 50
     },
     "candidate": {
-      "poc_thin_pages": 678,
+      "poc_thin_pages": 2025,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 50
     },
-    "regressions": {
-      "poc_thin_pages": {
-        "baseline": 672,
-        "candidate": 678
-      }
-    },
-    "override_reason": "#6064 no_cefr residual complete: 37 teacher lemmas pipeline CEFR (GRAC estimate); POC-thin 672→678 (+6 listed thin heads with no available relations/etymology/wiki). Practice admit 612→649. missing_route still open (169).",
+    "regressions": {},
+    "override_reason": "#6369 teacher P1: translation.en shape for article overview + enrichment floor",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
