@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2cbd4b34e07c",
+  "strategy": "manual-commit",
+  "branch": "kimi/hooks-claude-startup-review",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/reports/2026-08-06-hooks-startup-efficiency.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/2c/bd4b34e07c/0/metadata.json",
+      "transcript": "/2c/bd4b34e07c/0/full.jsonl",
+      "compact_transcript": "/2c/bd4b34e07c/0/transcript.jsonl",
+      "content_hash": "/2c/bd4b34e07c/0/content_hash.txt",
+      "prompt": "/2c/bd4b34e07c/0/prompt.txt"
+    }
+  ]
+}

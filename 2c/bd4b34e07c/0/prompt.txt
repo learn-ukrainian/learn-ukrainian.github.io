@@ -1,0 +1,42 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/hooks-claude-startup-review
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: apply CF review findings to kimi/hooks-claude-startup-review (PR #6413)
+
+The cross-family review of record (grok-4.5, review_7fcef77082354b4b840f5181d0639eb5, verdict
+CHANGES_REQUESTED, posted on the PR) returned three findings. The authoring lane (kimi) is down
+with an auth failure, so this fix is rerouted; note the substitution in the commit body.
+Apply EXACTLY the three findings below — no other edits, no scope growth.
+
+All three findings target `batch_state/reports/2026-08-06-hooks-startup-efficiency.md`:
+
+1. **F1 (P2, OPSEC — highest priority):** The report hard-codes the operator's personal home
+   path in absolute paths (6 occurrences verified at head 8c00d54f — lines ~45-46, 156-158,
+   178, 188). Rewrite EVERY absolute `/Users/<name>/projects/learn-ukrainian/...` path to a
+   repo-relative or env-based form (`.venv/bin/python`, `$PWD`, `$REPO_ROOT`). After editing,
+   prove zero residual with `grep -c` of the personal username over the whole branch diff —
+   quote the raw output in your report (#M-4).
+2. **F2 (P3):** Executive summary line ~13 says a 20-turn session costs ~11 s of hook latency,
+   but its own components total 20 × 711 ms ≈ 14.2 s and section 1 totals ~15.4 s. Align the
+   headline with the report's own arithmetic (~14 s turn-tax-only, or scope it to the ~15.4 s
+   full-session total).
+3. **F3 (P3):** Section 5 lead-in (~line 275) says "Three hooks touch the durable thread lease"
+   then lists four. Change the count to four.
+
+## Steps
+1. You are in the dispatch worktree on branch `kimi/hooks-claude-startup-review`.
+2. Apply the three fixes above. Nothing else.
+3. Verification (#M-4, quote raw output for each): the username grep (must be 0), and re-run
+   the two arithmetic statements you touched (state the numbers as they now read).
+4. Conventional commit: `docs(hooks-report): scrub personal paths + fix latency headline and
+   lease-hook count (CF review review_7fcef77082354b4b840f5181d0639eb5)`. Body notes the lane
+   substitution (kimi lane down 401; applied by agy).
+5. `git push --force-with-lease origin kimi/hooks-claude-startup-review` — plain push is fine
+   if you did not rewrite history; do NOT rebase.
+6. Report past-tense. Do NOT merge, do NOT arm auto-merge, do NOT touch other files.
