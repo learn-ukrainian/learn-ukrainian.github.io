@@ -336,7 +336,9 @@ array. Use exactly `["none"]` when no external source applies; otherwise use
 non-empty source strings and never mix `"none"` with another value. Put claim
 type `"present"` or `"missing"` only inside the
 `location` object alongside `path`, `start_line`, and `end_line`; never add
-`claim_type` at the finding root. Do not invent enum aliases such as `"pass"`.
+`claim_type` at the finding root. `end_line` is inclusive and must equal
+`start_line + (number of lines in verbatim) - 1`; a one-line verbatim on line 7
+must have `"start_line": 7, "end_line": 7`. Do not invent enum aliases such as `"pass"`.
 """
 
 
@@ -639,8 +641,73 @@ def _routing_attempt_seed(authority_job: Any) -> int:
     return max(0, value) if isinstance(value, int) and not isinstance(value, bool) else 0
 
 
+def _cmd_list_eligible(args: argparse.Namespace) -> int:
+    """Print every seat's eligibility for the given author identity.
+
+    Runs the same resolver used by the formal review scheduler, but performs no
+    provisioning, authority, or routing side effects.
+    """
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    author_model = str(getattr(args, "author_model", None) or "").strip()
+    author_family = str(getattr(args, "author_family", None) or "").strip()
+    if not author_model or not author_family:
+        print(
+            "review-pr: concrete_author_identity_required: pass --author-model and --author-family",
+            file=sys.stderr,
+        )
+        return 2
+
+    routing_snapshot = None
+    routing_snapshot_file = getattr(args, "routing_snapshot_file", None)
+    if routing_snapshot_file:
+        routing_snapshot = json.loads(Path(routing_snapshot_file).read_text(encoding="utf-8"))
+
+    profile = str(getattr(args, "review_profile", None) or "code").strip().lower()
+    risk = str(getattr(args, "risk", None) or "medium").strip().lower()
+    inputs = ResolverInputs(
+        author_model=author_model,
+        author_family=author_family,
+        review_profile=profile,
+        risk=risk,
+        domain=profile,
+        required_capabilities=frozenset(args.required_capability or ()),
+        data_egress_policy=args.data_egress_policy,
+        isolation_required=bool(getattr(args, "isolation_required", True)),
+        routing_snapshot=routing_snapshot,
+    )
+    resolution = resolve_reviewer(inputs)
+
+    def _candidate_dict(item: Any) -> dict[str, Any]:
+        return {
+            "name": item.name,
+            "model": item.concrete_model,
+            "family": item.family,
+            "route": item.route,
+            "status": item.status,
+            "reason": item.reason,
+            "health": item.health,
+            "suitability_rank": item.suitability_rank,
+            "quality_tier": item.quality_tier,
+        }
+
+    output = {
+        "seats": [_candidate_dict(item) for item in resolution.trace],
+        "selected": _candidate_dict(resolution.selected) if resolution.selected else None,
+        "fail_closed_reason": resolution.fail_closed_reason,
+        "policy_version": resolution.policy_version,
+        "catalog_reviewed_on": resolution.catalog_reviewed_on,
+        "resolved_risk": resolution.resolved_risk,
+    }
+    print(json.dumps(output, indent=2, sort_keys=True))
+    return 0
+
+
 def handle_review_pr(args: argparse.Namespace) -> int:
     """CLI handler for ``review-pr``."""
+    if getattr(args, "list_eligible", False):
+        return _cmd_list_eligible(args)
+
     try:
         pr = parse_pr_number(str(args.pr))
         reviewer_request = resolve_reviewer(args.reviewer, claude_available=args.claude_available)
@@ -693,9 +760,11 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     )
     from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
     from scripts.review.reviewer_resolver import (
+        _VALID_CONCRETE_FAMILIES,
         REVIEW_CANDIDATES,
         ResolverInputs,
         resolve_author_family,
+        resolve_family,
     )
     from scripts.review.reviewer_resolver import resolve_reviewer as resolve_canonical_reviewer
 
@@ -712,8 +781,21 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     try:
         resolved_author_family = resolve_author_family(author_model, author_family)
         if resolved_author_family != author_family:
+            resolved_from_model = resolve_family(author_model)
+            valid_families = sorted(_VALID_CONCRETE_FAMILIES)
+            if author_family not in _VALID_CONCRETE_FAMILIES:
+                family_advice = (
+                    f"--author-family={author_family!r} is not a recognized family; "
+                    f"valid families are {valid_families!r}"
+                )
+            else:
+                family_advice = (
+                    f"--author-family={author_family!r} does not match the family "
+                    f"resolved from --author-model={author_model!r} ({resolved_from_model!r})"
+                )
             raise ReviewSafetyError(
-                "author model/family are unknown, ambiguous, or conflicting; refusing formal review"
+                f"author identity cannot be resolved for formal review: {family_advice}. "
+                f"Valid --author-family values: {valid_families!r}."
             )
         requested_candidate = resolve_requested_review_candidate(
             reviewer_request,
@@ -1408,7 +1490,22 @@ def register_review_pr_parser(subparsers: Any) -> None:
             "atomically chooses and reserves the sealed ACP route. No LLM performs routing."
         ),
     )
-    parser.add_argument("pr", help="PR number (e.g. 5443 or #5443)")
+    parser.add_argument(
+        "pr",
+        nargs="?",
+        default=None,
+        help="PR number (e.g. 5443 or #5443); omit with --list-eligible",
+    )
+    parser.add_argument(
+        "--list-eligible",
+        dest="list_eligible",
+        action="store_true",
+        help=(
+            "List every formal-review seat's eligibility for the given author "
+            "identity and exit. No snapshot is provisioned and no authority state "
+            "is mutated."
+        ),
+    )
     parser.add_argument(
         "--reviewer",
         default=REVIEWER_AUTO,
@@ -1437,7 +1534,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
                         default=None, help="Deprecated compatibility hint; never routing authority")
     parser.add_argument("--task-id", help="Bridge task id (default: review-pr-<N>)")
     parser.add_argument("--extra", help="Optional extra scope text (kept under size cap)")
-    parser.add_argument("--initiator", "--from", dest="initiator", required=True,
+    parser.add_argument("--initiator", "--from", dest="initiator", default=None,
                         help="Concrete orchestrator identity persisted in routing authority")
     parser.add_argument("--author-model", required=True, help="Concrete author model/seat identity")
     parser.add_argument("--author-family", required=True, help="Concrete author model family")
@@ -1449,6 +1546,12 @@ def register_review_pr_parser(subparsers: Any) -> None:
     parser.add_argument("--data-egress-policy",
                         help="Explicit data-egress policy token; gated routes fail closed when absent")
     parser.add_argument("--isolation-required", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--routing-snapshot-file",
+        dest="routing_snapshot_file",
+        default=None,
+        help="Optional routing-budget snapshot JSON for eligibility listing",
+    )
     parser.add_argument("--override-reason",
                         help=(
                             "Required evidence for exact model or effort pins; optional for a "

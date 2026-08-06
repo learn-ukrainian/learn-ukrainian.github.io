@@ -448,24 +448,42 @@ def verify_finding_evidence(
     expected_end = expected_end_line_for_quote(start_line, verbatim)
     alternate_line, alternate_text = find_verbatim_match(file_text, verbatim)
 
-    # Range must equal the exact verbatim span (blocks inflated ranges that
-    # intersect unrelated changed lines).
-    if end_line != expected_end:
-        return EvidenceCheckResult(
-            OUTCOME_LINE_MISMATCH,
-            matched_line=alternate_line,
-            matched_text=alternate_text,
-            detail=(
-                f"range_span_mismatch:claimed={start_line}-{end_line} "
-                f"expected_end={expected_end} quote_lines={len(quote_lines)}"
-                + (f" actual_match_at={alternate_line}" if alternate_line is not None else "")
-            ),
-        )
-
+    # Content is the truth; the claimed end_line is metadata. If the verbatim
+    # quote matches exactly at the claimed start line, normalize the span to the
+    # canonical inclusive end (start_line + quote_lines - 1) only when the claim
+    # is an UNDER-claim. Inflated claims (end_line > canonical end) assert
+    # evidence covering lines the reviewer never quoted and must fail closed.
     at_claim, matched_text = match_at_line(file_text, verbatim, start_line)
     if at_claim:
         matched_line = start_line
+        if end_line <= expected_end:
+            end_line = expected_end
+        else:
+            return EvidenceCheckResult(
+                OUTCOME_LINE_MISMATCH,
+                matched_line=matched_line,
+                matched_text=matched_text,
+                detail=(
+                    f"range_span_mismatch:claimed={start_line}-{end_line} "
+                    f"expected_end={expected_end} quote_lines={len(quote_lines)}"
+                    f" actual_match_at={matched_line}"
+                ),
+            )
     else:
+        if end_line == expected_end:
+            # Exact range claim but the quote lives on a different line.
+            if alternate_line is None:
+                return EvidenceCheckResult(
+                    OUTCOME_QUOTE_MISSING,
+                    detail="verbatim_not_found",
+                )
+            return EvidenceCheckResult(
+                OUTCOME_LINE_MISMATCH,
+                matched_line=alternate_line,
+                matched_text=alternate_text,
+                detail=f"matched_at_line:{alternate_line}",
+            )
+        # Both the endpoint and the content disagree with the claim.
         if alternate_line is None:
             return EvidenceCheckResult(
                 OUTCOME_QUOTE_MISSING,
@@ -475,7 +493,11 @@ def verify_finding_evidence(
             OUTCOME_LINE_MISMATCH,
             matched_line=alternate_line,
             matched_text=alternate_text,
-            detail=f"matched_at_line:{alternate_line}",
+            detail=(
+                f"range_span_mismatch:claimed={start_line}-{end_line} "
+                f"expected_end={expected_end} quote_lines={len(quote_lines)}"
+                f" actual_match_at={alternate_line}"
+            ),
         )
 
     path_changed = changed_lines.get(path, set())

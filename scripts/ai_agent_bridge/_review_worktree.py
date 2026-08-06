@@ -1565,6 +1565,9 @@ class ProvisionedReviewWorktree:
             "Every finding sources value MUST be a non-empty array. Use exactly "
             "[\"none\"] when no external source applies; otherwise use non-empty "
             "source strings and never mix none with another value. "
+            "For location, end_line is inclusive and must equal start_line + "
+            "(number of lines in verbatim) - 1. A one-line verbatim on line 7 "
+            "must have location start_line 7 and end_line 7. "
             "A clean review has this exact shape: "
             "{\"schema_version\":\"code-review-findings.v1\",\"overall\":"
             "{\"correctness\":\"correct\",\"explanation\":\"No actionable findings.\","
@@ -1702,12 +1705,7 @@ def _verify_finding_with_optional_line_relocate(
         target=target,
         changed_lines=changed_lines,
     )
-    if (
-        result.outcome == OUTCOME_LINE_MISMATCH
-        and result.matched_line is not None
-        and "matched_at_line:" in (result.detail or "")
-        and "range_span_mismatch" not in (result.detail or "")
-    ):
+    if result.outcome == OUTCOME_LINE_MISMATCH and result.matched_line is not None:
         relocated = _relocate_finding_to_matched_line(finding, result.matched_line)
         if relocated is not None:
             result = verify_finding_evidence(
