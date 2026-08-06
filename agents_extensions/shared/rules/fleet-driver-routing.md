@@ -104,9 +104,7 @@ whichever the breadth script reports):
 | After | Minimum |
 | --- | --- |
 | ≥3 implement dispatches | ≥**2** distinct **agents** AND ≥**2** **tiers** used, **or** a single `NOTE: fleet_breadth` with tool-backed blockers |
-| Handoff / FAIL-HANDOFF | Attach  
-  ` .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator <prefix> --since-hours 24 `  
-  output (or equivalent). Missing report = incomplete handoff. |
+| Handoff / FAIL-HANDOFF | Attach `.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator <prefix> --since-hours 24` output (or equivalent). Missing report = incomplete handoff. |
 
 Trivial one-shot (typo, single-file comment) is exempt if labeled
 `ROUTING_CARD_V1 tier: heap` with `acceptance_cmd` and **no** multi-file product claim.
