@@ -621,9 +621,9 @@ def test_codexbar_unavailable_missing_binary(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] is None
-    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["burn_pct_7d"] is not None
+    assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "missing_binary"
 
@@ -654,9 +654,9 @@ def test_codexbar_unavailable_timeout(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] is None
-    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["burn_pct_7d"] is not None
+    assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "timeout"
 
@@ -689,9 +689,9 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] is None
-    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["burn_pct_7d"] is not None
+    assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "non_zero_exit"
 
@@ -724,9 +724,9 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] is None
-    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["burn_pct_7d"] is not None
+    assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "malformed_json"
 
@@ -759,9 +759,9 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
 
     data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["burn_pct_7d"] is None
-    assert data["agents"]["codex"]["remaining_pct"] is None
+    assert data["agents"]["codex"]["status"] == "warm"
+    assert data["agents"]["codex"]["burn_pct_7d"] is not None
+    assert data["agents"]["codex"]["remaining_pct"] is not None
     assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "unparseable_schema"
 

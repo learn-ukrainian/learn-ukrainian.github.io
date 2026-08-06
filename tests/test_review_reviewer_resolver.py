@@ -218,8 +218,8 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
             risk="medium",
             routing_snapshot={
                 "agents": {
-                    "claude": {"status": "unavailable", "health": {"healthy": True}},
-                    "codex": {"status": "unavailable", "health": {"healthy": True}},
+                    "claude": {"status": "unavailable"},
+                    "codex": {"status": "unavailable"},
                 }
             },
         )
@@ -880,3 +880,35 @@ def test_candidate_constants_preserve_expected_identity():
     assert GROK_4_5_CURSOR_FALLBACK.transport == "cursor"
     assert GROK_4_5_CURSOR_FALLBACK.concrete_model == "grok-4.5"
     assert SONNET_5.concrete_model == "claude-sonnet-5"
+
+
+def test_contradictory_snapshot_surfaces_degraded_telemetry_reason():
+    """Self-contradictory telemetry (healthy=true + status=unavailable) surfaces degraded_telemetry reason."""
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-sonnet-5",
+            author_family="anthropic",
+            risk="medium",
+            routing_snapshot={
+                "agents": {
+                    "codex": {"health": {"healthy": True}, "status": "unavailable"},
+                }
+            },
+        )
+    )
+    codex_entry = next(entry for entry in resolution.trace if entry.name == "gpt-5.6-terra")
+    assert codex_entry.status == "excluded"
+    assert "degraded_telemetry" in codex_entry.reason
+    assert "healthy=true, status=unavailable" in codex_entry.reason
+
+
+def test_glm_egress_exclusion_reason_names_unlock_flag():
+    """GLM fail-closed egress policy exclusion names the unlocking flag."""
+    result = evaluate_candidate(
+        GLM,
+        ResolverInputs(author_model="claude", data_egress_policy=None),
+        author_family="anthropic",
+    )
+    assert result.status == "excluded"
+    assert "requires --data-egress-policy local_interactive" in result.reason
+
