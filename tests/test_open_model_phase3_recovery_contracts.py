@@ -343,6 +343,8 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01"),
         "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01"),
         "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01"),
+        "scorer": ("phase3-role-scorer-kimi-v1", "controller_phase3_scorer_kimi_01"),
+        "outsider_reproducer": ("phase3-role-outsider-reproducer-glm-v1", "controller_phase3_outsider_reproducer_glm_01"),
         "cross_family_code_infra_reviewer": ("phase3-role-cross-family-code-infra-reviewer-grok-v1", "controller_phase3_cross_family_reviewer_grok_01"),
         "disposition_auditor": ("phase3-role-disposition-auditor-claude-v1", "controller_phase3_disposition_auditor_claude_01"),
         "textbook_nonhit_auditor": ("phase3-role-textbook-nonhit-auditor-agy-v1", "controller_phase3_textbook_nonhit_auditor_agy_01"),
@@ -378,6 +380,8 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         "rule_author_extractor",
         "heldout_steward",
         "heldout_label_reviewer",
+        "scorer",
+        "outsider_reproducer",
         "cross_family_code_infra_reviewer",
         "disposition_auditor",
         "textbook_nonhit_auditor",
@@ -418,15 +422,12 @@ def test_new_auditor_seat_assignment_cannot_drift(
         contracts.validate_contracts(root)
 
 
-def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_path: Path) -> None:
+def test_attested_scorer_cannot_be_rebound_without_fresh_attestation(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
     seats = {seat["role_id"]: seat for seat in roles["seats"]}
     bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
-    reserved_roles = {
-        "scorer",
-        "outsider_reproducer",
-    }
+    reserved_roles: set[str] = set()
     for role_id in reserved_roles:
         assert seats[role_id]["assignment_state"] == "reserved_unassigned"
         assert seats[role_id]["controller_identity_id"] is None
@@ -441,7 +442,10 @@ def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_pa
         "status": "identity_attested_pre_artifact",
     })
     _write_json(path, roles)
-    with pytest.raises(contracts.ContractError, match="unlaunched decision seat claims a controller identity"):
+    with pytest.raises(
+        contracts.ContractError,
+        match=r"attested decision role binding changed|attested decision seat controller identity changed",
+    ):
         contracts.validate_contracts(root)
 
 
