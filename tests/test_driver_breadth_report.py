@@ -113,8 +113,35 @@ def test_breadth_floor_ok_two_agents_two_tiers(tmp_path: Path) -> None:
     tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(hours=24))
     report = build_report(tasks)
     assert report["distinct_agents"] >= 2
-    assert report["tiers"].get("heap", 0) >= 1  # luna
+    assert report["implement_tiers"].get("heap", 0) >= 1  # luna
     assert report["breadth_floor_ok"] is True
+
+
+def test_breadth_floor_ignores_review_tasks_for_diversity(tmp_path: Path) -> None:
+    """CF: review-* must not launder single-seat implement marathons."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    for i in range(3):
+        _task(
+            tasks_dir / f"impl{i}.json",
+            task_id=f"impl-{i}",
+            agent="claude",
+            model="claude-sonnet-5",
+            initiator="grok-x",
+        )
+    _task(
+        tasks_dir / "rev.json",
+        task_id="review-cf-1",
+        agent="codex",
+        model="gpt-5.6-terra",
+        initiator="grok-x",
+    )
+    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(hours=24))
+    report = build_report(tasks)
+    assert report["implement_dispatch_count"] == 3
+    assert report["breadth_floor_applies"] is True
+    assert report["distinct_agents"] == 1
+    assert report["breadth_floor_ok"] is False
 
 
 def test_enforce_exits_two_without_note(tmp_path: Path, monkeypatch) -> None:

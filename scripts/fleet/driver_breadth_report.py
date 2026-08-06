@@ -132,8 +132,6 @@ def build_report(tasks: list[dict[str, Any]]) -> dict[str, Any]:
         statuses[status] += 1
 
     n = len(tasks)
-    distinct_agents = len([a for a in agents if a != "unknown"])
-    distinct_tiers = len(tiers)
     done = statuses.get("done", 0)
     # Floor after 3+ implement-ish dispatches (anything not pure review-*)
     implement = [
@@ -142,6 +140,18 @@ def build_report(tasks: list[dict[str, Any]]) -> dict[str, Any]:
         if not str(t.get("task_id") or "").startswith("review-")
         and str(t.get("agent") or "") not in ("",)
     ]
+    # Floor diversity MUST use the same population as floor_applies — otherwise
+    # a review-* (or other non-implement) task can launder single-seat marathons.
+    impl_agents = Counter()
+    impl_tiers = Counter()
+    for task in implement:
+        agent = str(task.get("agent") or "unknown")
+        model = str(task.get("model") or "unknown")
+        if agent != "unknown":
+            impl_agents[agent] += 1
+        impl_tiers[_tier_for(agent, model)] += 1
+    distinct_agents = len(impl_agents)
+    distinct_tiers = len(impl_tiers)
     floor_applies = len(implement) >= 3
     floor_ok = (not floor_applies) or (distinct_agents >= 2 and distinct_tiers >= 2)
 
@@ -154,12 +164,14 @@ def build_report(tasks: list[dict[str, Any]]) -> dict[str, Any]:
         "agents": dict(agents),
         "models": dict(models),
         "tiers": dict(tiers),
+        "implement_agents": dict(impl_agents),
+        "implement_tiers": dict(impl_tiers),
         "statuses": dict(statuses),
         "done_count": done,
         "done_rate": (done / n) if n else None,
         "breadth_floor_applies": floor_applies,
         "breadth_floor_ok": floor_ok,
-        "breadth_floor_rule": "after >=3 implement dispatches: >=2 agents AND >=2 tiers",
+        "breadth_floor_rule": "after >=3 implement dispatches: >=2 agents AND >=2 tiers (implement only)",
     }
 
 
