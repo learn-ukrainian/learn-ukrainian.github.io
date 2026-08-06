@@ -814,10 +814,25 @@ def validate_bundle(
     }
 
 
-def validate_lexical_complete_census(census: Mapping[str, Any], *, source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, coverage_contract: Mapping[str, Any] | None = None, role_contract: Mapping[str, Any] | None = None) -> dict[str, Any]:
+def validate_lexical_complete_census(census: Mapping[str, Any], *, source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, coverage_contract: Mapping[str, Any] | None = None, role_contract: Mapping[str, Any] | None = None, population_freeze: Mapping[str, Any] | None = None, prohibited_identity_ids: Sequence[str] = ()) -> dict[str, Any]:
     """Validate a complete lexical used-subset census; it intentionally has no seed path."""
     coverage = coverage_contract or read_json(DEFAULT_COVERAGE_CONTRACT)
     roles = role_contract or read_json(DEFAULT_ROLE_CONTRACT)
+    # V2 is the closed-manifest implementation.  Keep V1 verification only for
+    # historical receipts; V1 cannot claim current coverage readiness.
+    if census.get("schema_version") == "phase3_lexical_complete_census_v2":
+        require(population_freeze is not None, "closed lexical census requires its population freeze")
+        from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
+
+        try:
+            return lexical.validate_complete_census(
+                census,
+                population_freeze,
+                role_contract=roles,
+                prohibited_identity_ids=prohibited_identity_ids,
+            )
+        except lexical.LexicalCoverageError as exc:
+            raise AuditError(str(exc)) from exc
     _text_free(census, "lexical census")
     _exact(census, {"schema_version", "text_free", "source_universe_receipt_sha256", "coverage_contract_sha256", "role_contract_sha256", "release_artifact_manifest_sha256", "used_subset_extraction_artifact_sha256", "auditor_controller_identity_id", "families"}, "lexical census")
     require(census["schema_version"] == "phase3_lexical_complete_census_v1" and census["text_free"] is True, "invalid lexical census header")
@@ -858,6 +873,53 @@ def validate_lexical_complete_census(census: Mapping[str, Any], *, source_univer
     return {"ok": True, "family_count": len(seen), "complete_census": True, "seed_required": False}
 
 
+def validate_lexical_structural_audit(
+    receipt: Mapping[str, Any], *, source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE,
+    coverage_contract: Mapping[str, Any] | None = None, role_contract: Mapping[str, Any] | None = None,
+    sources_db: Path, vesum_db: Path, r2u_cache: Path,
+) -> dict[str, Any]:
+    """Expose the independent complete structural lexical audit primitive."""
+    from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
+
+    try:
+        return lexical.validate_structural_audit(
+            receipt,
+            source_universe_dir=source_universe_dir,
+            coverage_contract=coverage_contract or read_json(DEFAULT_COVERAGE_CONTRACT),
+            role_contract=role_contract or read_json(DEFAULT_ROLE_CONTRACT),
+            sources_db=sources_db,
+            vesum_db=vesum_db,
+            r2u_cache=r2u_cache,
+        )
+    except lexical.LexicalCoverageError as exc:
+        raise AuditError(str(exc)) from exc
+
+
+def freeze_lexical_used_subset_population(
+    release_manifest: Mapping[str, Any], *, release_root: Path,
+    source_universe_dir: Path = DEFAULT_SOURCE_UNIVERSE, coverage_contract: Mapping[str, Any] | None = None,
+    role_contract: Mapping[str, Any] | None = None, sources_db: Path, vesum_db: Path, r2u_cache: Path,
+    repair_generation: int,
+) -> dict[str, Any]:
+    """Freeze exact typed release references before the lexical census starts."""
+    from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
+
+    try:
+        return lexical.freeze_used_subset_population(
+            release_manifest,
+            release_root=release_root,
+            source_universe_dir=source_universe_dir,
+            coverage_contract=coverage_contract or read_json(DEFAULT_COVERAGE_CONTRACT),
+            role_contract=role_contract or read_json(DEFAULT_ROLE_CONTRACT),
+            sources_db=sources_db,
+            vesum_db=vesum_db,
+            r2u_cache=r2u_cache,
+            repair_generation=repair_generation,
+        )
+    except lexical.LexicalCoverageError as exc:
+        raise AuditError(str(exc)) from exc
+
+
 def _print(value: Mapping[str, Any]) -> None:
     sys.stdout.write(canonical_json(value) + "\n")
 
@@ -896,6 +958,30 @@ def main(argv: Sequence[str] | None = None) -> int:
     item.add_argument("--results", type=Path, required=True)
     item = commands.add_parser("validate-lexical-census")
     item.add_argument("--census", type=Path, required=True)
+    item = commands.add_parser("validate-lexical-structural-audit")
+    item.add_argument("--receipt", type=Path, required=True)
+    item.add_argument("--sources-db", type=Path, required=True)
+    item.add_argument("--vesum-db", type=Path, required=True)
+    item.add_argument("--r2u-cache", type=Path, required=True)
+    item = commands.add_parser("freeze-lexical-used-subset")
+    item.add_argument("--release-manifest", type=Path, required=True)
+    item.add_argument("--release-root", type=Path, required=True)
+    item.add_argument("--sources-db", type=Path, required=True)
+    item.add_argument("--vesum-db", type=Path, required=True)
+    item.add_argument("--r2u-cache", type=Path, required=True)
+    item.add_argument("--repair-generation", type=int, required=True)
+    item = commands.add_parser("validate-lexical-census-v2")
+    item.add_argument("--census", type=Path, required=True)
+    item.add_argument("--population-freeze", type=Path, required=True)
+    item.add_argument("--prohibited-identity", action="append", default=[])
+    item = commands.add_parser("validate-lexical-bundle")
+    item.add_argument("--bundle", type=Path, required=True)
+    item.add_argument("--structural-audit", type=Path, required=True)
+    item.add_argument("--population-freeze", type=Path, required=True)
+    item.add_argument("--census", type=Path, required=True)
+    item.add_argument("--sources-db", type=Path, required=True)
+    item.add_argument("--vesum-db", type=Path, required=True)
+    item.add_argument("--r2u-cache", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         coverage, roles = read_json(args.coverage_contract), read_json(args.role_contract)
@@ -909,9 +995,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             _print(validate_audit_results(read_json(args.results), read_json(args.sample_manifest), ledger=read_json(args.ledger), population_freeze=read_json(args.population_freeze), seed_receipts=[read_json(path) for path in args.seed_receipt], coverage_contract=coverage, role_contract=roles, source_universe_dir=args.source_universe, audit_kind=args.audit_kind, prohibited_identity_ids=args.prohibited_identity, prior_seed_receipt_sha256s=args.prior_seed_receipt_sha256))
         elif args.command == "validate-bundle":
             _print(validate_bundle(read_json(args.bundle), ledger=read_json(args.ledger), population_freeze=read_json(args.population_freeze), seed_receipts=[read_json(path) for path in args.seed_receipt], sample_manifest=read_json(args.sample_manifest), results=read_json(args.results), coverage_contract=coverage, role_contract=roles, source_universe_dir=args.source_universe))
-        else:
+        elif args.command == "validate-lexical-census":
             _print(validate_lexical_complete_census(read_json(args.census), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles))
-    except AuditError as exc:
+        elif args.command == "validate-lexical-structural-audit":
+            _print(validate_lexical_structural_audit(read_json(args.receipt), source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache))
+        elif args.command == "freeze-lexical-used-subset":
+            _print(freeze_lexical_used_subset_population(read_json(args.release_manifest), release_root=args.release_root, source_universe_dir=args.source_universe, coverage_contract=coverage, role_contract=roles, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache, repair_generation=args.repair_generation))
+        else:
+            from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
+
+            if args.command == "validate-lexical-census-v2":
+                _print(validate_lexical_complete_census(read_json(args.census), population_freeze=read_json(args.population_freeze), coverage_contract=coverage, role_contract=roles, prohibited_identity_ids=args.prohibited_identity))
+            else:
+                _print(lexical.validate_lexical_bundle(read_json(args.bundle), structural_audit=read_json(args.structural_audit), population_freeze=read_json(args.population_freeze), census=read_json(args.census), role_contract=roles, coverage_contract=coverage, sources_db=args.sources_db, vesum_db=args.vesum_db, r2u_cache=args.r2u_cache, source_universe_dir=args.source_universe))
+    except ValueError as exc:
         parser.error(str(exc))
     return 0
 
