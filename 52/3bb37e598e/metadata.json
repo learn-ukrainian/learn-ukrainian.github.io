@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "523bb37e598e",
+  "strategy": "manual-commit",
+  "branch": "agy/reviewer-bench-telemetry",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/state_router.py",
+    "scripts/audit/module_size_policy_audit.py",
+    "scripts/review/bench_health.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/api/test_routing_budget_endpoint.py",
+    "tests/review/test_bench_health.py",
+    "tests/test_codexbar_usage.py",
+    "tests/test_review_reviewer_resolver.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/52/3bb37e598e/0/metadata.json",
+      "transcript": "/52/3bb37e598e/0/full.jsonl",
+      "compact_transcript": "/52/3bb37e598e/0/transcript.jsonl",
+      "content_hash": "/52/3bb37e598e/0/content_hash.txt",
+      "prompt": "/52/3bb37e598e/0/prompt.txt"
+    }
+  ]
+}
