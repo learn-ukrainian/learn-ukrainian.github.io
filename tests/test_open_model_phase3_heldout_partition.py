@@ -377,6 +377,7 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
     )
+    public_bytes_before_reconstruction_metadata_rerun = (public / "public_receipt_v1.json").read_bytes()
     second = heldout.build_artifacts(
         root=root,
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
@@ -393,6 +394,7 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         skip_source_freeze_git_binding=True,
     )
     assert first["public_receipt_sha256"] == second["public_receipt_sha256"]
+    assert (public / "public_receipt_v1.json").read_bytes() == public_bytes_before_reconstruction_metadata_rerun
     assert first["heldout_seal_sha256"] == second["heldout_seal_sha256"]
     assert first["author_clearance_sha256"] == second["author_clearance_sha256"]
 
