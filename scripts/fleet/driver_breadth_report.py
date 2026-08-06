@@ -54,9 +54,13 @@ def _parse_ts(value: str | None) -> datetime | None:
         return None
     text = value.replace("Z", "+00:00")
     try:
-        return datetime.fromisoformat(text)
+        dt = datetime.fromisoformat(text)
     except ValueError:
         return None
+    # Task JSON may omit offsets; always compare as UTC-aware.
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=UTC)
+    return dt
 
 
 def _tier_for(agent: str | None, model: str | None) -> str:
@@ -210,10 +214,22 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     if args.enforce and report["breadth_floor_applies"] and not report["breadth_floor_ok"]:
-        if args.note_file and args.note_file.is_file() and args.note_file.stat().st_size > 0:
+        if args.note_file and args.note_file.is_file():
+            try:
+                note_text = args.note_file.read_text(encoding="utf-8")
+            except OSError:
+                note_text = ""
+            if "NOTE: fleet_breadth" in note_text and len(note_text.strip()) >= 24:
+                if not args.json:
+                    print(f"  enforce: waived by note-file {args.note_file}")
+                return 0
             if not args.json:
-                print(f"  enforce: waived by note-file {args.note_file}")
-            return 0
+                print(
+                    "  enforce: FAIL — --note-file must contain "
+                    "'NOTE: fleet_breadth' and a short justification",
+                    file=sys.stderr,
+                )
+            return 2
         if not args.json:
             print(
                 "  enforce: FAIL — need >=2 agents and >=2 tiers after 3+ implement "

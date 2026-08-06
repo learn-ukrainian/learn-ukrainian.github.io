@@ -3,10 +3,16 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from scripts.fleet.driver_breadth_report import _tier_for, build_report, load_tasks, main
+from scripts.fleet.driver_breadth_report import (
+    _parse_ts,
+    _tier_for,
+    build_report,
+    load_tasks,
+    main,
+)
 
 
 def _task(
@@ -19,7 +25,7 @@ def _task(
     status: str = "done",
     hours_ago: float = 1.0,
 ) -> None:
-    started = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
+    started = datetime.now(UTC) - timedelta(hours=hours_ago)
     payload = {
         "task_id": task_id,
         "agent": agent,
@@ -27,10 +33,46 @@ def _task(
         "initiator": initiator,
         "status": status,
         "started_at": started.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "finished_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "finished_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "duration_s": 10,
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_parse_ts_naive_becomes_utc() -> None:
+    dt = _parse_ts("2026-08-06T12:00:00")
+    assert dt is not None
+    assert dt.tzinfo is not None
+
+
+def test_note_file_requires_fleet_breadth_marker(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    for i in range(3):
+        _task(
+            tasks_dir / f"t{i}.json",
+            task_id=f"work-{i}",
+            agent="claude",
+            model="claude-sonnet-5",
+            initiator="grok-night-drive",
+        )
+    bad = tmp_path / "bad.md"
+    bad.write_text("x\n", encoding="utf-8")
+    assert (
+        main(
+            [
+                "--tasks-dir",
+                str(tasks_dir),
+                "--initiator",
+                "grok",
+                "--enforce",
+                "--note-file",
+                str(bad),
+                "--json",
+            ]
+        )
+        == 2
+    )
 
 
 def test_tier_for_gemini_flash_high_is_practical() -> None:
@@ -55,7 +97,7 @@ def test_breadth_floor_fails_single_seat(tmp_path: Path) -> None:
             model="claude-sonnet-5",
             initiator="grok-night-drive",
         )
-    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(timezone.utc) - timedelta(hours=24))
+    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(hours=24))
     report = build_report(tasks)
     assert report["implement_dispatch_count"] == 3
     assert report["distinct_agents"] == 1
@@ -69,7 +111,7 @@ def test_breadth_floor_ok_two_agents_two_tiers(tmp_path: Path) -> None:
     _task(tasks_dir / "a.json", task_id="a", agent="claude", model="claude-sonnet-5", initiator="grok-x")
     _task(tasks_dir / "b.json", task_id="b", agent="codex", model="gpt-5.6-luna", initiator="grok-x")
     _task(tasks_dir / "c.json", task_id="c", agent="codex", model="gpt-5.6-terra", initiator="grok-x")
-    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(timezone.utc) - timedelta(hours=24))
+    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(hours=24))
     report = build_report(tasks)
     assert report["distinct_agents"] >= 2
     assert report["tiers"].get("heap", 0) >= 1  # luna
