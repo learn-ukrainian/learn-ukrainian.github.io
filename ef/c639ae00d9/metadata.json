@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "efc639ae00d9",
+  "strategy": "manual-commit",
+  "branch": "agy/requirements-declaration-sync",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "requirements.txt"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ef/c639ae00d9/0/metadata.json",
+      "transcript": "/ef/c639ae00d9/0/full.jsonl",
+      "compact_transcript": "/ef/c639ae00d9/0/transcript.jsonl",
+      "content_hash": "/ef/c639ae00d9/0/content_hash.txt",
+      "prompt": "/ef/c639ae00d9/0/prompt.txt"
+    }
+  ]
+}

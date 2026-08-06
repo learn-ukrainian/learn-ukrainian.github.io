@@ -1,0 +1,46 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/requirements-declaration-sync
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: requirements declaration sync after venv audit (2026-08-06)
+
+## Evidence preamble (#M-4 — each claim is tool-backed; re-verify yourself before relying)
+
+- `scripts/orchestration/trails/trail_mcp.py:15` does `from mcp.server.fastmcp import FastMCP`,
+  but `mcp` is NOT declared in `requirements.txt` (verify: `grep -i "^mcp" requirements.txt` → empty).
+  The 2026-08-05 venv wipe+restore therefore silently lost it and `pytest --collect-only` failed on
+  `tests/test_trail_isolation.py` with `ModuleNotFoundError: No module named 'mcp'`.
+- `mcp==2.0.0` does NOT provide `mcp.server.fastmcp` (import fails); `mcp==1.29.0` does
+  (verified: 13 tests collect). The venv now has `mcp==1.29.0` installed operationally.
+- `zeroconf` is declared in `requirements.txt` but: zero imports in either repo
+  (`grep -rn "import zeroconf" --include='*.py'` → nothing outside .venv), and no installed
+  distribution requires it (importlib.metadata reverse-dep scan → NOTHING). Its only
+  requirements.txt history is a CVE version bump (ae6b0274a6, #3046).
+- `requirements-lock.txt` cannot resolve (hf-xet conflict at line 63, per 2026-08-05 session
+  handoff) — the environment is not reproducible from source.
+
+## Steps
+
+1. Create/confirm your dispatch worktree (delegate handles this; do not touch the primary checkout).
+2. Edit `requirements.txt`:
+   a. Add `mcp>=1.29,<2` with a one-line comment: required by `scripts/orchestration/trails/trail_mcp.py`
+      (FastMCP); `<2` because mcp 2.0 removed the `mcp.server.fastmcp` path.
+   b. Remove the `zeroconf>=0.150.0` line. If you find any evidence it IS used (search harder than the
+      preamble: dynamic imports, subprocess, docs), keep it and say why in the PR body instead.
+3. Attempt to regenerate `requirements-lock.txt` from the updated requirements files with the repo's
+   existing lock tooling (check `docs/SCRIPTS.md` / Makefile / CI for the canonical command; do not
+   invent a new toolchain). If the hf-xet conflict still blocks resolution, do NOT force it: leave the
+   lock file untouched and document the exact conflict output in the PR body + open a follow-up issue
+   titled "requirements-lock.txt unresolvable (hf-xet)" with that output.
+4. Run: `.venv/bin/ruff check` on any changed py files (none expected);
+   `.venv/bin/python -m pytest tests/test_trail_isolation.py --collect-only -q` must collect 13 tests.
+5. Commit as you go — a committed partial beats a perfect uncommitted result.
+   Conventional commit: `fix(deps): declare mcp<2, drop unused zeroconf`.
+6. Push and open a PR. PR body: what changed, the evidence above (re-verified by you), what you did
+   NOT do (no venv mutations — the venv was already repaired operationally).
+7. Do NOT enable auto-merge; do not merge. The orchestrator owns merge after cross-family review.
