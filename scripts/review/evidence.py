@@ -450,13 +450,25 @@ def verify_finding_evidence(
 
     # Content is the truth; the claimed end_line is metadata. If the verbatim
     # quote matches exactly at the claimed start line, normalize the span to the
-    # canonical inclusive end (start_line + quote_lines - 1). This absorbs the
-    # acpx-claude-shadow off-by-one endpoint shape from #6415 without weakening
-    # content verification: a mismatch in the quoted text still fails closed.
+    # canonical inclusive end (start_line + quote_lines - 1) only when the claim
+    # is an UNDER-claim. Inflated claims (end_line > canonical end) assert
+    # evidence covering lines the reviewer never quoted and must fail closed.
     at_claim, matched_text = match_at_line(file_text, verbatim, start_line)
     if at_claim:
         matched_line = start_line
-        end_line = expected_end
+        if end_line <= expected_end:
+            end_line = expected_end
+        else:
+            return EvidenceCheckResult(
+                OUTCOME_LINE_MISMATCH,
+                matched_line=matched_line,
+                matched_text=matched_text,
+                detail=(
+                    f"range_span_mismatch:claimed={start_line}-{end_line} "
+                    f"expected_end={expected_end} quote_lines={len(quote_lines)}"
+                    f" actual_match_at={matched_line}"
+                ),
+            )
     else:
         if end_line == expected_end:
             # Exact range claim but the quote lives on a different line.

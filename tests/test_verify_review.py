@@ -22,6 +22,7 @@ from scripts.review.evidence import (
     OUTCOME_VERIFIED,
     EvidenceError,
     build_target_manifest,
+    changed_lines_map,
     compute_target_input_fingerprint,
     find_verbatim_match,
     is_safe_repo_relative_path,
@@ -30,6 +31,7 @@ from scripts.review.evidence import (
     path_surface_bytes,
     resolve_safe_path,
     split_lines_preserve_content,
+    verify_finding_evidence,
 )
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -929,7 +931,7 @@ def test_inflated_range_fails_line_mismatch(tmp_path):
     assert result.exit_code == EXIT_UNVERIFIABLE
 
 
-def test_short_range_fails_line_mismatch(tmp_path):
+def test_short_range_normalizes_to_canonical_end(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("a = 1\nb = 2\nc = 3\n", encoding="utf-8")
     target = resolve_local_target(repo)
@@ -946,8 +948,38 @@ def test_short_range_fails_line_mismatch(tmp_path):
     }
     raw = json.dumps(payload)
     result = verify_review(raw, _ctx(repo, target, raw))
-    assert result.validations[0].outcome == OUTCOME_LINE_MISMATCH
-    assert "range_span_mismatch" in result.validations[0].detail
+    assert result.validations[0].outcome == OUTCOME_VERIFIED
+    assert result.validations[0].matched_line == 1
+    assert result.validations[0].detail == "matched_at_line:1"
+
+
+def test_normalize_endpoint_underclaim_only_rejects_inflated(tmp_path):
+    """Verbatim match at start normalizes short claims but rejects inflated endpoints."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("a = 1\nb = 2\nc = 3\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    changed_lines = changed_lines_map(repo, target)
+
+    # Under-claim: one-line end for a two-line quote normalizes to verified.
+    under = verify_finding_evidence(
+        _finding(start=1, end=1, verbatim="a = 1\nb = 2"),
+        repo_root=repo,
+        target=target,
+        changed_lines=changed_lines,
+    )
+    assert under.outcome == OUTCOME_VERIFIED
+    assert under.detail == "matched_at_line:1"
+
+    # Inflated claim: verbatim matches at start but end_line covers unquoted lines.
+    inflated = verify_finding_evidence(
+        _finding(start=1, end=3, verbatim="a = 1\nb = 2"),
+        repo_root=repo,
+        target=target,
+        changed_lines=changed_lines,
+    )
+    assert inflated.outcome == OUTCOME_LINE_MISMATCH
+    assert "range_span_mismatch" in inflated.detail
+    assert "expected_end=2" in inflated.detail
 
 
 def test_decode_failure_is_fail_closed_evidence(tmp_path, monkeypatch):
