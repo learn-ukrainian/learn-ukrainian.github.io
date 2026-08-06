@@ -293,7 +293,8 @@ def reconstruct_ua_gec_rows(
     connection = _connect_sources(sources_db)
     try:
         rows = connection.execute(
-            'SELECT "id", "error", "correct", "doc_id", "partition" FROM "ua_gec_errors" ORDER BY "id"'
+            'SELECT "id", "error", "correct", "error_type", "doc_id", "annotator_id", '
+            '"partition", "is_native", "source_lang" FROM "ua_gec_errors" ORDER BY "id"'
         ).fetchall()
     finally:
         connection.close()
@@ -311,8 +312,30 @@ def reconstruct_ua_gec_rows(
         error = row["error"]
         correct = row["correct"]
         require(isinstance(error, str) and isinstance(correct, str), "ua_gec row text fields malformed")
+        error_type = row["error_type"]
         doc_id = row["doc_id"]
+        annotator_id = row["annotator_id"]
+        is_native = row["is_native"]
+        source_lang = row["source_lang"]
         require(isinstance(doc_id, str) and doc_id != "", "ua_gec doc_id malformed")
+        require(isinstance(error_type, str) and error_type, "ua_gec error_type malformed")
+        require(isinstance(annotator_id, str) and annotator_id, "ua_gec annotator_id malformed")
+        require(isinstance(is_native, int), "ua_gec is_native malformed")
+        require(isinstance(source_lang, str) and source_lang, "ua_gec source_lang malformed")
+        source_record = freeze_mod._normal(
+            {
+                "id": row_id,
+                "error": error,
+                "correct": correct,
+                "error_type": error_type,
+                "doc_id": doc_id,
+                "annotator_id": annotator_id,
+                "partition": str(row["partition"]),
+                "is_native": is_native,
+                "source_lang": source_lang,
+            }
+        )
+        require(unit["unit_sha256"] == freeze_mod._unit_hash(source_record), "ua_gec frozen unit hash drift")
         reconstructed.append(
             {
                 "family_id": UA_GEC_FAMILY,
@@ -328,6 +351,11 @@ def reconstruct_ua_gec_rows(
                 "partition": str(row["partition"]),
                 "error": error,
                 "correct": correct,
+                "error_type": error_type,
+                "annotator_id": annotator_id,
+                "is_native": is_native,
+                "source_lang": source_lang,
+                "source_record": source_record,
                 "locator": unit["locator"],
             }
         )

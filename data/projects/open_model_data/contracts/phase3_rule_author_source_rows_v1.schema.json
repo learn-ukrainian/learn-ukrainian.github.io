@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_rule_author_source_rows_v1.schema.json",
+  "title": "Phase 3 steward-bound rule-author source rows v1",
+  "description": "Private exact UA-GEC rows for the rule-author packet compiler and a text-free public receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "sourceRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family_id", "unit_id", "unit_sha256", "source_locator", "source_text", "corrected_text", "source_record", "span_start", "span_end", "source_sha256", "candidate_signals", "heldout", "ua_eval", "public_canary_neighbour"],
+      "properties": {
+        "family_id": {"const": "ua_gec"},
+        "unit_id": {"type": "string", "minLength": 1},
+        "unit_sha256": {"$ref": "#/$defs/sha256"},
+        "source_locator": {"$ref": "#/$defs/frozenLocator"},
+        "source_text": {"type": "string", "minLength": 1},
+        "corrected_text": {"type": "string"},
+        "source_record": {"$ref": "#/$defs/uaGecRecord"},
+        "span_start": {"const": 0},
+        "span_end": {"type": "integer", "minimum": 1},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "candidate_signals": {"const": []},
+        "heldout": {"const": false},
+        "ua_eval": {"const": false},
+        "public_canary_neighbour": {"const": false}
+      }
+    },
+    "frozenLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "table", "primary_key_fields", "primary_key_sha256"],
+      "properties": {
+        "kind": {"const": "sqlite_row"},
+        "table": {"const": "ua_gec_errors"},
+        "primary_key_fields": {"const": ["id"]},
+        "primary_key_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "uaGecRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "error", "correct", "error_type", "doc_id", "annotator_id", "partition", "is_native", "source_lang"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 1},
+        "error": {"type": "string", "minLength": 1},
+        "correct": {"type": "string"},
+        "error_type": {"type": "string", "minLength": 1},
+        "doc_id": {"type": "string", "minLength": 1},
+        "annotator_id": {"type": "string", "minLength": 1},
+        "partition": {"type": "string", "pattern": ".+/train$"},
+        "is_native": {"type": "integer"},
+        "source_lang": {"type": "string", "minLength": 1}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "text_free", "implementation_version", "role_binding", "rule_author_binding", "input_bindings", "exclusions", "aggregates", "source_rows_sha256", "receipt_sha256"],
+      "properties": {
+        "schema_version": {"const": "phase3_rule_author_source_rows_receipt_v1"},
+        "text_free": {"const": true},
+        "implementation_version": {"const": "phase3_rule_author_source_rows_v1"},
+        "role_binding": {"$ref": "#/$defs/roleBinding"},
+        "rule_author_binding": {"$ref": "#/$defs/ruleAuthorBinding"},
+        "input_bindings": {"$ref": "#/$defs/inputBindings"},
+        "exclusions": {"type": "object", "additionalProperties": false, "required": ["heldout_excluded", "ua_eval_exclusion_enforced", "public_canary_exclusion_enforced", "complement_inference_used", "all_rows_train", "clearance_source_row_set_equal"], "properties": {"heldout_excluded": {"const": true}, "ua_eval_exclusion_enforced": {"const": true}, "public_canary_exclusion_enforced": {"const": true}, "complement_inference_used": {"const": false}, "all_rows_train": {"const": true}, "clearance_source_row_set_equal": {"const": true}}},
+        "aggregates": {"type": "object", "additionalProperties": false, "required": ["source_row_count"], "properties": {"source_row_count": {"type": "integer", "minimum": 0}}},
+        "source_rows_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "roleBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role_id", "seat_id", "controller_identity_id", "attestation_task_id", "artifact_task_id"],
+      "properties": {"role_id": {"const": "heldout_steward"}, "seat_id": {"const": "seat_heldout_steward"}, "controller_identity_id": {"const": "controller_phase3_heldout_steward_cursor_runtime_01"}, "attestation_task_id": {"const": "phase3-role-heldout-steward-cursor-v2"}, "artifact_task_id": {"const": "phase3-heldout-partition-seal-cursor-v1"}}
+    },
+    "ruleAuthorBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role_id", "controller_identity_id", "task_id"],
+      "properties": {"role_id": {"const": "rule_author_extractor"}, "controller_identity_id": {"const": "controller_phase3_rule_author_agy_runtime_01"}, "task_id": {"const": "phase3-role-rule-author-agy-v3"}}
+    },
+    "inputBindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["combined_contract_sha256", "source_universe_receipt_sha256", "ua_gec_ledger_sha256", "sources_db_sha256", "evaluation_contract_sha256", "coverage_contract_sha256", "role_contract_sha256", "near_duplicate_policy_sha256", "near_duplicate_policy_fingerprint_sha256", "author_clearance_receipt_sha256", "author_clearance_file_sha256", "partition_public_receipt_body_sha256", "partition_public_receipt_file_sha256", "compiler_script_sha256", "compiler_schema_sha256", "adapter_script_sha256", "adapter_schema_sha256"],
+      "properties": {"combined_contract_sha256": {"$ref": "#/$defs/sha256"}, "source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"}, "ua_gec_ledger_sha256": {"$ref": "#/$defs/sha256"}, "sources_db_sha256": {"$ref": "#/$defs/sha256"}, "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"}, "coverage_contract_sha256": {"$ref": "#/$defs/sha256"}, "role_contract_sha256": {"$ref": "#/$defs/sha256"}, "near_duplicate_policy_sha256": {"$ref": "#/$defs/sha256"}, "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"}, "author_clearance_receipt_sha256": {"$ref": "#/$defs/sha256"}, "author_clearance_file_sha256": {"$ref": "#/$defs/sha256"}, "partition_public_receipt_body_sha256": {"$ref": "#/$defs/sha256"}, "partition_public_receipt_file_sha256": {"$ref": "#/$defs/sha256"}, "compiler_script_sha256": {"$ref": "#/$defs/sha256"}, "compiler_schema_sha256": {"$ref": "#/$defs/sha256"}, "adapter_script_sha256": {"$ref": "#/$defs/sha256"}, "adapter_schema_sha256": {"$ref": "#/$defs/sha256"}}
+    }
+  }
+}
