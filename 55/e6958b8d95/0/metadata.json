@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "55e6958b8d95",
+  "session_id": "session_f9df23bf-07d1-4bf5-bb57-8c9c756b0993",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T17:22:36.202727Z",
+  "branch": "kimi/reservation-supersede-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/routing_reservations.py",
+    "tests/test_fleet_comms_routing_reservations.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "56578003dbff",
+  "token_usage": {
+    "input_tokens": 49095,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 925184,
+    "output_tokens": 8780,
+    "api_call_count": 17
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T17:22:36.160611Z",
+    "agent_lines": 63,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 63,
+    "total_lines_changed": 69,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
