@@ -437,6 +437,44 @@ def test_packet_caps_and_oversize_singleton_preserve_source(tmp_path: Path) -> N
     assert all(len(packet["items"]) <= packets.MAX_ITEMS for packet in bundle["packets"])
 
 
+def test_verify_rejects_oversize_marker_on_multi_item_packet(tmp_path: Path) -> None:
+    records = [
+        _source_record(
+            1,
+            error="x" * 120_000,
+            correct="synthetic correction one",
+            error_type="F",
+            doc_id="doc-one",
+        ),
+        _source_record(
+            2,
+            error="y" * 120_000,
+            correct="synthetic correction two",
+            error_type="Calque",
+            doc_id="doc-two",
+        ),
+    ]
+    paths = _fixture(tmp_path, records=records)
+    bundle = _build(paths)
+    assert len(bundle["packets"]) == 2
+    packet = bundle["packets"][0]
+    packet["items"] = [item for source_packet in bundle["packets"] for item in source_packet["items"]]
+    packet["byte_count"] = packets._packet_byte_count(packet["items"])
+    packet["oversize_singleton"] = True
+    bundle["packets"] = [packet]
+    _write(paths["output"], bundle)
+
+    with pytest.raises(packets.PacketCompilerError, match="oversize-singleton marker drift"):
+        _verify(paths)
+
+
+def test_overall_review_decision_fails_closed_for_mixed_outcomes() -> None:
+    assert packets._overall_review_decision([{"decision": "accepted"}]) == "accepted"
+    assert packets._overall_review_decision([{"decision": "rejected"}]) == "rejected"
+    assert packets._overall_review_decision([{"decision": "revise"}]) == "revise"
+    assert packets._overall_review_decision([{"decision": "accepted"}, {"decision": "rejected"}]) == "revise"
+
+
 def test_packet_item_and_per_document_caps_are_deterministic(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     bundle = _build(paths)

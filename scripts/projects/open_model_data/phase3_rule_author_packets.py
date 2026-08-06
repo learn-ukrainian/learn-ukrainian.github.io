@@ -19,7 +19,7 @@ import re
 import subprocess
 import tempfile
 from collections import Counter
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -532,6 +532,13 @@ def _query_plan_sha256() -> str:
     return sha256_bytes(canonical_json(query_plan).encode("utf-8"))
 
 
+def _overall_review_decision(decisions: Sequence[Mapping[str, Any]]) -> str:
+    """Accept or reject only homogeneous proposal decisions; mixed sets revise."""
+    states = {str(item["decision"]) for item in decisions}
+    require(states, "Ukrainian review has no proposal decisions")
+    return next(iter(states)) if len(states) == 1 else "revise"
+
+
 def _validated_source_items(
     *,
     sources_path: Path,
@@ -707,7 +714,12 @@ def verify(
         )
         size = _packet_byte_count(packet["items"])
         require(size == packet["byte_count"], "packet byte count drift")
-        require(packet["oversize_singleton"] or size <= MAX_UTF8_BYTES, "packet byte cap violated")
+        expected_oversize_singleton = len(packet["items"]) == 1 and size > MAX_UTF8_BYTES
+        require(
+            packet["oversize_singleton"] is expected_oversize_singleton,
+            "packet oversize-singleton marker drift",
+        )
+        require(expected_oversize_singleton or size <= MAX_UTF8_BYTES, "packet byte cap violated")
         require(len(packet["items"]) <= MAX_ITEMS, "packet item cap violated")
         ua_docs = Counter(item["source_document_identity"] for item in packet["items"] if item["family_id"] == "ua_gec")
         textbook_docs = Counter(
@@ -816,13 +828,7 @@ def verify(
                     and decision["mechanism_decision"] == canonical.get("mechanism"),
                     "canonical reviewed rule disagrees with explicit Ukrainian decisions",
                 )
-        expected_overall = (
-            "revise"
-            if any(item["decision"] == "revise" for item in decisions)
-            else "accepted"
-            if any(item["decision"] == "accepted" for item in decisions)
-            else "rejected"
-        )
+        expected_overall = _overall_review_decision(decisions)
         require(review["decision"] == expected_overall, "overall Ukrainian review decision drift")
         require(
             review["canonical_reviewed_payload_sha256"] == sha256_bytes(canonical_json(decisions).encode("utf-8")),
