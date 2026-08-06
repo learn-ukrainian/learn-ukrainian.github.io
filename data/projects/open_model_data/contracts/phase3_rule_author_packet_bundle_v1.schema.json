@@ -4,10 +4,11 @@
   "title": "Phase 3 private rule-author packet bundle v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "bundle_id", "clearance", "source_freeze", "evaluation_contract_sha256", "coverage_contract_sha256", "role_contract_sha256", "near_duplicate_policy_fingerprint_sha256", "compiler", "packets"],
+  "required": ["schema_version", "bundle_id", "phase3_v2_contract_sha256", "clearance", "source_freeze", "evaluation_contract_sha256", "coverage_contract_sha256", "role_contract_sha256", "near_duplicate_policy_fingerprint_sha256", "compiler", "packets"],
   "properties": {
     "schema_version": {"const": "phase3_rule_author_packet_bundle_v1"},
     "bundle_id": {"type": "string", "pattern": "^rule_author_bundle:[a-f0-9]{64}$"},
+    "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     "clearance": {"type": "object", "additionalProperties": false, "required": ["receipt_sha256", "file_sha256"], "properties": {"receipt_sha256": {"$ref": "#/$defs/sha256"}, "file_sha256": {"$ref": "#/$defs/sha256"}}},
     "source_freeze": {"type": "object", "additionalProperties": false, "required": ["receipt_sha256", "merged_main_sha"], "properties": {"receipt_sha256": {"$ref": "#/$defs/sha256"}, "merged_main_sha": {"$ref": "#/$defs/gitSha"}}},
     "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
@@ -21,7 +22,7 @@
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
     "gitSha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
     "packetFrozenUnit": {"type": "object", "additionalProperties": false, "required": ["family_id", "unit_id", "unit_sha256"], "properties": {"family_id": {"enum": ["ua_gec", "antonenko_style_guide", "calque_inventory", "school_textbooks"]}, "unit_id": {"type": "string", "minLength": 1}, "unit_sha256": {"$ref": "#/$defs/sha256"}}},
-    "compiler": {"type": "object", "additionalProperties": false, "required": ["implementation_version", "script_sha256", "query_plan_sha256", "max_items", "max_utf8_bytes"], "properties": {"implementation_version": {"const": "phase3_rule_author_packet_compiler_v1"}, "script_sha256": {"$ref": "#/$defs/sha256"}, "query_plan_sha256": {"$ref": "#/$defs/sha256"}, "max_items": {"const": 24}, "max_utf8_bytes": {"const": 196608}}},
+    "compiler": {"type": "object", "additionalProperties": false, "required": ["implementation_version", "script_sha256", "phase3_v2_contract_sha256", "query_plan_sha256", "max_items", "max_utf8_bytes"], "properties": {"implementation_version": {"const": "phase3_rule_author_packet_compiler_v1"}, "script_sha256": {"$ref": "#/$defs/sha256"}, "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}, "query_plan_sha256": {"$ref": "#/$defs/sha256"}, "max_items": {"const": 24}, "max_utf8_bytes": {"const": 196608}}},
     "packet": {
       "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_rule_author_packet_v1.schema.json",
       "type": "object", "additionalProperties": false,

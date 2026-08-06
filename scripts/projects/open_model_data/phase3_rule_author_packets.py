@@ -17,11 +17,15 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from jsonschema import Draft202012Validator
 
@@ -34,7 +38,10 @@ SCHEMA_PATH = CONTRACTS / "phase3_rule_author_packet_bundle_v1.schema.json"
 CLEARANCE_SCHEMA_PATH = CONTRACTS / "phase3_heldout_partition_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"
 IMPLEMENTATION_VERSION = "phase3_rule_author_packet_compiler_v1"
-COMBINED_CONTRACT_SHA256 = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
+PHASE3_V2_CONTRACT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+LEGACY_V1_V3_COMBINED_CONTRACT_SHA256 = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
+# Compatibility alias retained for fixture callers; all new artifacts bind v2.
+COMBINED_CONTRACT_SHA256 = PHASE3_V2_CONTRACT_SHA256
 MAX_ITEMS = 24
 MAX_UTF8_BYTES = 196_608
 # The canonical steward receipt currently clears only UA-GEC units.  The packet
@@ -611,6 +618,7 @@ def build(
     compiler = {
         "implementation_version": IMPLEMENTATION_VERSION,
         "script_sha256": sha256_file(ROOT / SCRIPT_PATH),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
         "query_plan_sha256": query_sha,
         "max_items": MAX_ITEMS,
         "max_utf8_bytes": MAX_UTF8_BYTES,
@@ -623,6 +631,7 @@ def build(
     bundle = {
         "schema_version": "phase3_rule_author_packet_bundle_v1",
         "bundle_id": stable_id("rule_author_bundle", identity),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
         "clearance": {"receipt_sha256": clearance["receipt_sha256"], "file_sha256": clearance_sha},
         "source_freeze": {"receipt_sha256": receipt_sha, "merged_main_sha": receipt["merged_main_sha"]},
         "evaluation_contract_sha256": sha256_file(evaluation_path),
@@ -700,11 +709,16 @@ def verify(
     expected_compiler = {
         "implementation_version": IMPLEMENTATION_VERSION,
         "script_sha256": sha256_file(ROOT / SCRIPT_PATH),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
         "query_plan_sha256": _query_plan_sha256(),
         "max_items": MAX_ITEMS,
         "max_utf8_bytes": MAX_UTF8_BYTES,
     }
     require(bundle["compiler"] == expected_compiler, "bundle compiler identity drift")
+    require(
+        bundle["phase3_v2_contract_sha256"] == PHASE3_V2_CONTRACT_SHA256,
+        "bundle Phase 3 v2 contract binding drift",
+    )
     for packet in bundle["packets"]:
         require(packet["clearance_sha256"] == clearance_sha, "packet clearance binding drift")
         require(

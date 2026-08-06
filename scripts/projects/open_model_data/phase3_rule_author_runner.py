@@ -159,6 +159,11 @@ def _validate_bundle(path: Path) -> dict[str, Any]:
         bundle["compiler"].get("query_plan_sha256") == packets._query_plan_sha256(),
         "packet compiler query-plan binding drift",
     )
+    require(
+        bundle.get("phase3_v2_contract_sha256") == packets.PHASE3_V2_CONTRACT_SHA256
+        and bundle["compiler"].get("phase3_v2_contract_sha256") == packets.PHASE3_V2_CONTRACT_SHA256,
+        "packet bundle Phase 3 v2 contract binding drift",
+    )
     return bundle
 
 
@@ -230,6 +235,7 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
         "role_contract_sha256": sha256_file(role_path),
         "bindings": {
             "evaluation_contract_sha256": bundle["evaluation_contract_sha256"],
+            "phase3_v2_contract_sha256": bundle["phase3_v2_contract_sha256"],
             "coverage_contract_sha256": bundle["coverage_contract_sha256"],
             "near_duplicate_policy_sha256": bundle["near_duplicate_policy_fingerprint_sha256"],
             "query_plan_sha256": bundle["compiler"]["query_plan_sha256"],
@@ -314,7 +320,7 @@ def _receipt(manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
     complete = fully_attempted and len(parsed) == len(records) and failed_count == 0
     canary_succeeded = not fully_attempted and bool(records) and len(parsed) == len(records) and failed_count == 0
     prompt_set_sha = sha256_bytes(canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8"))
-    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
+    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "phase3_v2_contract_sha256": manifest["bindings"]["phase3_v2_contract_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
     receipt["no_leakage"] = _receipt_has_no_leakage(receipt)
     _validate_receipt(receipt)
     return receipt

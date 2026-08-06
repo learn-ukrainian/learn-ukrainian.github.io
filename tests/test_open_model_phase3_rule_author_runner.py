@@ -37,7 +37,7 @@ def _packet(number: int) -> dict[str, object]:
 def _paths(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
     bundle_path, role_path = tmp_path / "bundle.json", tmp_path / "role.json"
     _write(role_path, _role())
-    bundle = {"schema_version": "phase3_rule_author_packet_bundle_v1", "bundle_id": "rule_author_bundle:" + "2" * 64, "clearance": {"receipt_sha256": "3" * 64, "file_sha256": "4" * 64}, "source_freeze": {"receipt_sha256": "5" * 64, "merged_main_sha": "6" * 40}, "evaluation_contract_sha256": "7" * 64, "coverage_contract_sha256": "8" * 64, "role_contract_sha256": runner.sha256_file(role_path), "near_duplicate_policy_fingerprint_sha256": "0" * 64, "compiler": {"implementation_version": "phase3_rule_author_packet_compiler_v1", "script_sha256": runner.sha256_file(runner.ROOT / packets.SCRIPT_PATH), "query_plan_sha256": packets._query_plan_sha256(), "max_items": 24, "max_utf8_bytes": 196608}, "packets": [_packet(1), _packet(2)]}
+    bundle = {"schema_version": "phase3_rule_author_packet_bundle_v1", "bundle_id": "rule_author_bundle:" + "2" * 64, "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "clearance": {"receipt_sha256": "3" * 64, "file_sha256": "4" * 64}, "source_freeze": {"receipt_sha256": "5" * 64, "merged_main_sha": "6" * 40}, "evaluation_contract_sha256": "7" * 64, "coverage_contract_sha256": "8" * 64, "role_contract_sha256": runner.sha256_file(role_path), "near_duplicate_policy_fingerprint_sha256": "0" * 64, "compiler": {"implementation_version": "phase3_rule_author_packet_compiler_v1", "script_sha256": runner.sha256_file(runner.ROOT / packets.SCRIPT_PATH), "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "query_plan_sha256": packets._query_plan_sha256(), "max_items": 24, "max_utf8_bytes": 196608}, "packets": [_packet(1), _packet(2)]}
     _write(bundle_path, bundle)
     return bundle_path, role_path, tmp_path / "private", tmp_path / "receipt.json"
 
@@ -63,11 +63,21 @@ def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -
     bundle, role, private, receipt = _paths(tmp_path)
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
     assert len(manifest["packets"]) == 2
+    assert manifest["bindings"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
     result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", executor=_executor())
     assert result["complete"] is True and result["no_leakage"] is True
     assert stat.S_IMODE(receipt.stat().st_mode) == 0o600
     Draft202012Validator.check_schema(json.loads(runner.SCHEMA_PATH.read_text()))
     assert runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")["ok"] is True
+
+
+def test_prepare_rejects_packet_bundle_v2_binding_drift(tmp_path: Path) -> None:
+    bundle, role, private, _ = _paths(tmp_path)
+    value = json.loads(bundle.read_text(encoding="utf-8"))
+    value["phase3_v2_contract_sha256"] = "0" * 64
+    _write(bundle, value)
+    with pytest.raises(runner.RuleAuthorRunnerError, match=r"schema violation|v2 contract binding drift"):
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
 
 
 def test_malformed_output_is_unparsed_not_a_proposal(tmp_path: Path) -> None:

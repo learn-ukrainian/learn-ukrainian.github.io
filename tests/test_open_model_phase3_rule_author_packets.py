@@ -241,6 +241,8 @@ def _verify(paths: dict[str, Path], **kwargs: Path) -> dict[str, object]:
 def test_bundle_is_deterministic_private_and_cross_layer_doc_identity_collapses(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     first = _build(paths)
+    assert first["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
+    assert first["compiler"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
     second_path = tmp_path / "batch_state" / "repeat.json"
     second = _build(paths, second_path)
     assert first == second
@@ -248,6 +250,16 @@ def test_bundle_is_deterministic_private_and_cross_layer_doc_identity_collapses(
     ua = [item for packet in first["packets"] for item in packet["items"] if item["family_id"] == "ua_gec"]
     assert len({item["source_document_identity"] for item in ua}) == 1
     assert _verify(paths)["ok"] is True
+
+
+def test_legacy_v1_v3_contract_binding_cannot_build_a_v2_packet_bundle(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
+    clearance["input_bindings"]["combined_contract_sha256"] = packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _write(paths["clearance"], clearance)
+    with pytest.raises(packets.PacketCompilerError, match="combined-contract binding drift"):
+        _build(paths)
 
 
 def test_document_identity_uses_hash_verified_normalized_record(tmp_path: Path) -> None:

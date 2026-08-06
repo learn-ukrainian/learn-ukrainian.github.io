@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_v2_compatibility_matrix_v1.schema.json",
+  "title": "Phase 3 v2 compatibility and invalidation matrix v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "legacy_provenance", "bindings", "engine_bindings", "inventory", "legacy_claims", "source_authoring", "phase4"],
+  "properties": {
+    "schema_version": {"const": "phase3_v2_compatibility_matrix_v1"},
+    "text_free": {"const": true},
+    "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    "legacy_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "original_prompt_v1_sha256", "scope_amendment_v3_sha256", "combined_v1_v3_sha256"],
+      "properties": {
+        "authority": {"const": "legacy_provenance_only_not_current_authority"},
+        "original_prompt_v1_sha256": {"$ref": "#/$defs/sha256"},
+        "scope_amendment_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "combined_v1_v3_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_sha256", "validator_sha256"],
+      "properties": {"schema_sha256": {"$ref": "#/$defs/sha256"}, "validator_sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "engine_bindings": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/engineEntry"}
+    },
+    "inventory": {
+      "type": "array",
+      "minItems": 26,
+      "items": {"$ref": "#/$defs/inventoryEntry"}
+    },
+    "legacy_claims": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/legacyClaim"}
+    },
+    "source_authoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocked", "reason"],
+      "properties": {"blocked": {"const": true}, "reason": {"const": "v2_exclusive_role_independence_not_established"}}
+    },
+    "phase4": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocked", "reason"],
+      "properties": {"blocked": {"const": true}, "reason": {"const": "phase3_v2_rebuild_review_and_completion_not_established"}}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "inventoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "logical_path", "artifact_sha256", "artifact_class", "disposition", "machine_reason", "phase3_v2_contract_sha256"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "logical_path": {"type": "string", "pattern": "^data/projects/open_model_data/evidence/.+"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_class": {"enum": ["deterministic_engine", "linguistic_status", "source_status", "consumer_status", "completion_status", "role_contract_status", "phase2_artifact"]},
+        "disposition": {"enum": ["valid", "rebound", "invalidated"]},
+        "machine_reason": {
+          "enum": [
+            "deterministic_nonsemantic_engine_valid_under_v2",
+            "deterministic_engine_rebound_to_v2",
+            "pre_v2_linguistic_status_invalidated",
+            "pre_v2_source_status_invalidated",
+            "pre_v2_consumer_status_invalidated",
+            "pre_v2_completion_status_invalidated",
+            "pre_v2_role_contract_invalidated",
+            "phase2_rows_not_phase3_evidence"
+          ]
+        },
+        "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
+      }
+    },
+    "engineEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "artifact_sha256", "disposition", "machine_reason", "phase3_v2_contract_sha256"],
+      "properties": {
+        "logical_path": {"enum": ["scripts/projects/open_model_data/phase3_rule_author_packets.py", "scripts/projects/open_model_data/phase3_rule_author_runner.py", "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json", "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json"]},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "disposition": {"const": "rebound"},
+        "machine_reason": {"const": "deterministic_engine_rebound_to_v2"},
+        "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
+      }
+    },
+    "legacyClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "disposition", "machine_reason"],
+      "properties": {
+        "claim_id": {"enum": ["public_canary_9_of_9", "nine_case_seed", "phase2_rows", "breadth_floor_100_total", "breadth_floor_25_automatic"]},
+        "disposition": {"const": "invalidated"},
+        "machine_reason": {"enum": ["public_canary_not_v2_evaluation", "seed_not_v2_evaluation", "phase2_rows_not_phase3_evidence", "legacy_floor_not_v2_completion"]}
+      }
+    }
+  }
+}
