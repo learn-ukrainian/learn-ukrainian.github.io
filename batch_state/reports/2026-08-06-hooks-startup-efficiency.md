@@ -182,7 +182,7 @@ print(f"total_shared_rules_bytes={sum((base/f).read_bytes().__len__() for f in f
 PY
 ```
 
-So the static prompt already carries a **30 KB digest** of rules whose full text is available via API, and may also auto-load `.claude/rules/*.md` (another **26.6 KB**):
+So the static prompt already carries a **30 KB digest** of rules whose full text is available via API, and may also auto-load `.claude/rules/*.md` (another **~27.5 KB**, 27,478 bytes measured below):
 
 ```bash
 ls .claude/rules/*.md | \
@@ -190,7 +190,7 @@ ls .claude/rules/*.md | \
 # 27478 bytes total
 ```
 
-`.claude/rules/_load-via-api.md` claims the full rules "no longer auto-load into the Claude Code system prompt"; if that is accurate, the 26.6 KB is only path-specific rule overhead. If it is not accurate, SessionStart silently injects **~95 KB** of rules material.
+`.claude/rules/_load-via-api.md` claims the full rules "no longer auto-load into the Claude Code system prompt"; if that is accurate, the ~27.5 KB is only path-specific rule overhead. If it is not accurate, SessionStart silently injects **~95 KB** of rules material.
 
 ### Hook-injected context
 
