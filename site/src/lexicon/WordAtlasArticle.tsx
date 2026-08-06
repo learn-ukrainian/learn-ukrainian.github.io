@@ -293,7 +293,7 @@ export default function WordAtlasArticle({
             </div>
           </section>
 
-          {isExpressionLikeEntry && componentLinks.length > 0 && (
+          {isExpressionLikeEntry && (componentLinks?.length ?? 0) > 0 && (
             <section className="atlas-section expression-detail" data-expression-detail={entry.entry_type}>
               <div className="component-links">
                 <div className="chip-label">Складники:</div>
@@ -458,7 +458,7 @@ export default function WordAtlasArticle({
                       </>
                     )}
                   </p>
-                  {!isFullyMarked && enrichment.morphology.forms.length > 0 && (
+                  {!isFullyMarked && (enrichment.morphology.forms?.length ?? 0) > 0 && (
                     <table className="paradigm-table">
                       <caption>Форми дієприкметника</caption>
                       <thead>
@@ -468,7 +468,7 @@ export default function WordAtlasArticle({
                         </tr>
                       </thead>
                       <tbody>
-                        {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                        {(enrichment.morphology.forms ?? []).slice(0, 24).map((form) => (
                           <tr key={`${form.form}-${form.label}`}>
                             <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
                             <td className="case-name">{form.label}</td>
@@ -479,7 +479,7 @@ export default function WordAtlasArticle({
                   )}
                 </>
               ) : (
-                !isFullyMarked && enrichment.morphology.forms.length > 0 && (
+                !isFullyMarked && (enrichment.morphology.forms?.length ?? 0) > 0 && (
                   <table className="paradigm-table">
                     <caption>Форми</caption>
                     <thead>
@@ -489,7 +489,7 @@ export default function WordAtlasArticle({
                       </tr>
                     </thead>
                     <tbody>
-                      {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                      {(enrichment.morphology.forms ?? []).slice(0, 24).map((form) => (
                         <tr key={`${form.form}-${form.label}`}>
                           <td className="form">{form.stress ?? stressDisplay(form.form)}</td>
                           <td className="case-name">{form.label}</td>
@@ -571,10 +571,10 @@ export default function WordAtlasArticle({
             </section>
           )}
 
-          {((sections?.synonyms?.items.length ?? 0) > 0 || (sections?.antonyms?.items.length ?? 0) > 0) && (
+          {((sections?.synonyms?.items?.length ?? 0) > 0 || (sections?.antonyms?.items?.length ?? 0) > 0) && (
             <section className="atlas-section">
               <h2>Синоніми та антоніми</h2>
-              {(sections?.synonyms?.items.length ?? 0) > 0 && (
+              {(sections?.synonyms?.items?.length ?? 0) > 0 && (
                 <div>
                   <div className="chip-label">Синоніми:</div>
                   {synonymSets.length > 0 ? (
@@ -608,7 +608,7 @@ export default function WordAtlasArticle({
                   )}
                 </div>
               )}
-              {(sections?.antonyms?.items.length ?? 0) > 0 && (
+              {(sections?.antonyms?.items?.length ?? 0) > 0 && (
                 <div style={{marginTop: "14px"}}>
                   <div className="chip-label">Антоніми:</div>
                   <div className="chip-row">
@@ -652,7 +652,7 @@ export default function WordAtlasArticle({
             </section>
           )}
 
-          {(sections?.homonyms?.items.length ?? 0) > 0 && (
+          {(sections?.homonyms?.items?.length ?? 0) > 0 && (
             <section className="atlas-section">
               <h2>Омоніми</h2>
               <div className="chip-row">
@@ -684,7 +684,7 @@ export default function WordAtlasArticle({
             </section>
           )}
 
-          {(sections?.paronyms?.items.length ?? 0) > 0 && (
+          {(sections?.paronyms?.items?.length ?? 0) > 0 && (
             <section className="atlas-section">
               <h2>Пароніми</h2>
               <div className="chip-row">
@@ -717,7 +717,7 @@ export default function WordAtlasArticle({
             </section>
           )}
 
-          {(sections?.idioms?.items.length ?? 0) > 0 && (
+          {(sections?.idioms?.items?.length ?? 0) > 0 && (
             <section className="atlas-section">
               <h2>Фразеологізми та сталі вирази</h2>
               {sections!.idioms!.items.map((idiom) => (
@@ -780,8 +780,8 @@ export default function WordAtlasArticle({
               <h2>Зовнішні матеріали</h2>
               {externalGroups.map((group) => (
                 <div key={group.name} className="external-group">
-                  <div className="external-group-header">{group.name} <span className="external-group-count">{group.materials.length}</span></div>
-                  {group.materials.map((item) => {
+                  <div className="external-group-header">{group.name} <span className="external-group-count">{(group.materials?.length ?? 0)}</span></div>
+                  {(group.materials ?? []).map((item) => {
                     const materialHref = item.url ? safeHref(item.url) : null;
                     return (
                       <div key={item.title} className={`resource-card ${item.kind ?? "blog"}`}>

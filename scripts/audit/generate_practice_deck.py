@@ -831,6 +831,139 @@ def _paradigm(entry: dict[str, Any]) -> dict[str, Any]:
     return {"cases": clean_cases}
 
 
+def _vesum_form_preference(tags: str, pos: str | None) -> int:
+    """Higher is better when choosing one surface per case for practice drills."""
+    tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+    score = 0
+    # Prefer short, positive, non-comparative dictionary rows.
+    if "long" in tokens:
+        score -= 20
+    if "compb" in tokens or "compr" in tokens or "super" in tokens:
+        score -= 5
+    if "bad" in tokens:
+        score -= 15
+    pos_key = (pos or "").casefold()
+    if pos_key in {"adj", "adjective"} or "adj" in tokens:
+        # Masculine singular is the default textbook drill gender for adjectives.
+        if "m" in tokens:
+            score += 8
+        if "f" in tokens:
+            score += 2
+        if "n" in tokens:
+            score += 1
+    # Strong preference for true singular; plural-only lemmas still score lower.
+    if "s" in tokens and "p" not in tokens and "pl" not in tokens:
+        score += 12
+    if "p" in tokens or "pl" in tokens:
+        score -= 8
+    return score
+
+
+def _vesum_number_key(tokens: set[str]) -> str | None:
+    """Return singular/plural from VESUM tags.
+
+    Prefer explicit singular. Plural-only rows map to plural. Tags with neither
+    s nor p (common for adjectives) default to singular for textbook drills.
+    """
+    has_pl = "p" in tokens or "pl" in tokens
+    has_sg = "s" in tokens
+    if has_pl and not has_sg:
+        return "plural"
+    if has_sg and has_pl:
+        # Conflicting number tags — skip the row rather than guess.
+        return None
+    # Explicit singular, or no number tag (adj default) → singular.
+    return "singular"
+
+
+def _paradigm_from_vesum_lemma_search(
+    lemma_plain: str,
+    pos: str | None,
+    verifier: VesumVerifier,
+) -> dict[str, Any]:
+    """Build a practice paradigm by searching VESUM for all forms of the lemma.
+
+    Enrichment morphology is often empty on thin Atlas shells. VESUM still has
+    full inflection tables (e.g. новий → нового/новому/…). Search those rows so
+    lemma-focused cloze can ask for non-base cases instead of retyping the headword.
+    """
+    rows: list[dict[str, Any]] = []
+    if isinstance(verifier, RealVesumVerifier):
+        from scripts.verification.vesum import verify_lemma
+
+        try:
+            # Ordered de-dupe (set iteration is hash-randomized across processes).
+            for query in dict.fromkeys((lemma_plain, lemma_plain.casefold(), lemma_plain.lower())):
+                if not query:
+                    continue
+                found = verify_lemma(query, db_path=verifier.db_path)
+                if found:
+                    rows = found
+                    break
+        except FileNotFoundError:
+            # CI / fixture paths often lack data/vesum.db. Fail closed to empty
+            # paradigm so recognition-only cards still build; never abort the deck.
+            return {"cases": {}}
+    elif isinstance(verifier, JsonVesumVerifier):
+        # Fixture payloads are form→matches; invert to lemma search for tests.
+        want = lemma_plain.casefold()
+        pos_filter = _vesum_pos(pos)
+        for form, matches in verifier.payload.items():
+            if not isinstance(matches, list):
+                continue
+            for match in matches:
+                if not isinstance(match, dict):
+                    continue
+                if _plain(str(match.get("lemma") or "")).casefold() != want:
+                    continue
+                if pos_filter and match.get("pos") != pos_filter:
+                    continue
+                rows.append(
+                    {
+                        "word_form": form,
+                        "pos": match.get("pos"),
+                        "tags": match.get("tags") or "",
+                    }
+                )
+
+    if not rows:
+        return {"cases": {}}
+
+    pos_filter = _vesum_pos(pos)
+    # (case_name, number_key) -> best (score, form)
+    best: dict[tuple[str, str], tuple[int, str]] = {}
+    for row in rows:
+        form = _clean_text(row.get("word_form"))
+        tags = str(row.get("tags") or "")
+        row_pos = row.get("pos")
+        if not form:
+            continue
+        if pos_filter and row_pos and row_pos != pos_filter:
+            continue
+        tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+        number_key = _vesum_number_key(tokens)
+        if number_key is None:
+            continue
+        for case_name, tag in CASE_VESUM_TAGS.items():
+            if tag not in tokens:
+                continue
+            score = _vesum_form_preference(tags, pos)
+            slot = (case_name, number_key)
+            prev = best.get(slot)
+            if prev is None or score > prev[0] or (score == prev[0] and form < prev[1]):
+                best[slot] = (score, form)
+
+    if not best:
+        return {"cases": {}}
+
+    cases: dict[str, dict[str, str]] = {}
+    for (case_name, number_key), (_score, form) in best.items():
+        cases.setdefault(case_name, {})[number_key] = form
+    # Prefer singular-only presentation for drills when both exist; keep plural
+    # when that is the only attested number for the case (pluralia tantum).
+    return {"cases": cases}
+
+
 def _vesum_pos(pos: str | None) -> str | None:
     if not pos:
         return None
@@ -1637,11 +1770,13 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     gloss_clean = _gloss_clean(gloss)
     meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
-    # word stays in the deck even when CEFR is unknown. Attach the paradigm for flashcard declensions ONLY when every form
-    # VESUM-verifies; otherwise blank it so the UI never displays an unverified declension.
+    # word stays in the deck even when CEFR is unknown. Prefer enrichment morphology;
+    # when that is missing/unverified, **search VESUM by lemma** for real non-base
+    # forms (новий→нового/новому/…) so focused cloze can drill declension.
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
-        paradigm = {"cases": {}}
+        searched = _paradigm_from_vesum_lemma_search(lemma_plain, pos, verifier)
+        paradigm = searched if _all_paradigm_forms(searched) else {"cases": {}}
     lexeme: dict[str, Any] = {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,

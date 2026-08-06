@@ -3166,3 +3166,34 @@ def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     for index, pair in enumerate(pairs):
         errors = validate_homonym_pair(pair)
         assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
+
+
+def test_vesum_number_key_and_lemma_search_paradigm():
+    # Lemma-focus morphology needs VESUM search when enrichment paradigm is thin.
+    assert generate_practice_deck._vesum_number_key({"s", "v_rod"}) == "singular"
+    assert generate_practice_deck._vesum_number_key({"p", "v_dav"}) == "plural"
+    assert generate_practice_deck._vesum_number_key({"s", "p", "v_naz"}) is None
+    # Adjective tags often omit s/p → singular default.
+    assert generate_practice_deck._vesum_number_key({"adj", "v_rod"}) == "singular"
+
+    verifier = JsonVesumVerifier(
+        {
+            "новий": [{"lemma": "новий", "pos": "adj", "tags": "adj:v_naz:s"}],
+            "нового": [{"lemma": "новий", "pos": "adj", "tags": "adj:v_rod:s"}],
+            "новому": [{"lemma": "новий", "pos": "adj", "tags": "adj:v_dav:s"}],
+            "новим": [{"lemma": "новий", "pos": "adj", "tags": "adj:v_oru:s"}],
+            "стара": [{"lemma": "старий", "pos": "adj", "tags": "adj:v_naz:s"}],
+        }
+    )
+    paradigm = generate_practice_deck._paradigm_from_vesum_lemma_search(
+        "новий", "adj", verifier
+    )
+    cases = paradigm.get("cases") or {}
+    assert cases.get("genitive", {}).get("singular") == "нового"
+    assert cases.get("dative", {}).get("singular") == "новому"
+    assert cases.get("instrumental", {}).get("singular") == "новим"
+    # Casefold lemma match for fixture search.
+    paradigm2 = generate_practice_deck._paradigm_from_vesum_lemma_search(
+        "Новий", "adj", verifier
+    )
+    assert (paradigm2.get("cases") or {}).get("genitive", {}).get("singular") == "нового"

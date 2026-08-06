@@ -23,6 +23,7 @@ import {
   computeSessionScope,
   computeTodayRingDenominator,
   czNorm,
+  isCaseClozeDrill,
   isPracticeNewCard,
   isPracticeSessionResumable,
   isWrongCaseAnswer,
@@ -39,6 +40,8 @@ import {
   selectNextPracticeItem,
   seededAnswerIndex,
   sessionPoolAllowsCandidate,
+  lemmaFocusClozeContentKey,
+  stripIdentityClozeForLemmaFocus,
   stripStressMarks,
   uaPlural,
   validateClozeOptions,
@@ -1237,19 +1240,6 @@ function clozeParts(item: PracticeClozeItem): [string, string] {
   return [before, after.join('___')];
 }
 
-const NON_CASE_CLOZE_POS = new Set(['adv', 'prep', 'conj', 'part']);
-
-function isCaseClozeDrill(cloze: PracticeClozeItem, lemma: PracticeLexeme): boolean {
-  // Deterministic prompt heuristic: an NFC/casefold-equal answer is an insertion,
-  // never a case drill. Likewise, VESUM indeclinable POS tags must not receive
-  // case wording. Otherwise a changed form remains a case drill: authored clozes
-  // carry case-rule feedback and their chips may distinguish case variants.
-  const normalizedForm = cloze.form.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
-  const normalizedLemma = lemma.lemma.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
-  if (!normalizedForm || normalizedForm === normalizedLemma) return false;
-  return !NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase());
-}
-
 function slotPromptParts(prompt: string): [string, string] {
   const [before, ...after] = prompt.split('___');
   return [before, after.join('___')];
@@ -1749,13 +1739,24 @@ function LexiconPracticeIsland({
     const isAutoStartTrigger = autoStart || Boolean(focusedLemmaId);
     if (!isAutoStartTrigger || !deck || plannedTotal > 0) return;
 
-    if (focusedLemmaId && deck.index.some((item) => item.lemmaId !== focusedLemmaId)) {
-      const filtered = {
-        ...deck,
-        index: deck.index.filter((item) => item.lemmaId === focusedLemmaId),
-      };
-      setDeck(filtered);
-      return;
+    if (focusedLemmaId) {
+      // Lemma deep-link: only that word. Identity cloze (blank = citation form)
+      // is trivial when the URL already names the target — upgrade to morphology
+      // / case drills from the paradigm when possible, else drop cloze mode.
+      const filtered = stripIdentityClozeForLemmaFocus(deck, focusedLemmaId);
+      const alreadyFocused =
+        deck.index.length === filtered.index.length &&
+        deck.index.every((item) => item.lemmaId === focusedLemmaId);
+      // Compare cloze *content* (form/sentence/blankCase/options), not only ids/modes:
+      // morphology upgrade keeps clozeId stable (CF P2 content-blind guard).
+      const clozeAlreadyStripped =
+        alreadyFocused &&
+        lemmaFocusClozeContentKey(deck, focusedLemmaId) ===
+          lemmaFocusClozeContentKey(filtered, focusedLemmaId);
+      if (!clozeAlreadyStripped) {
+        setDeck(filtered);
+        return;
+      }
     }
 
     const plan = computeSessionScope(
