@@ -2167,23 +2167,18 @@ export function upgradeIdentityClozeToMorphology(
   let keepSentence = Boolean(fromBlank && czNorm(fromBlank) !== czNorm(lemma.lemma));
 
   if (!keepSentence) {
-    // Prefer true oblique cases over another nominative-looking surface.
-    const oblique = formBank.filter(
-      (row) =>
-        czNorm(row.form) !== czNorm(lemma.lemma) &&
-        row.caseName !== 'nominative' &&
-        row.caseName !== 'oblique',
+    // Never use unresolved 'oblique' tags or invent a case (no genitive guess).
+    // Prefer non-nominative known cases; fall back to any non-base form that
+    // still has a concrete case label (may include nominative variants).
+    const knownNonBase = (row: { form: string; caseName: string }) =>
+      czNorm(row.form) !== czNorm(lemma.lemma) &&
+      Boolean(row.caseName) &&
+      row.caseName !== 'oblique';
+    const nonNominative = formBank.filter(
+      (row) => knownNonBase(row) && row.caseName !== 'nominative',
     );
-    // Only use forms with a known case label — never guess 'genitive' for
-    // unresolved 'oblique' tags (CF P2). Prefer true non-nominative cases;
-    // fall back to other non-base forms that still carry a real case name.
-    const anyNonBaseKnownCase = formBank.filter(
-      (row) =>
-        czNorm(row.form) !== czNorm(lemma.lemma) &&
-        row.caseName !== 'nominative' &&
-        row.caseName !== 'oblique',
-    );
-    const pool = oblique.length > 0 ? oblique : anyNonBaseKnownCase;
+    const anyKnownCase = formBank.filter((row) => knownNonBase(row));
+    const pool = nonNominative.length > 0 ? nonNominative : anyKnownCase;
     if (pool.length === 0) return null;
     const pick = pool[stablePickIndex(cloze.clozeId, pool.length)]!;
     caseName = pick.caseName;
