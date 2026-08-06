@@ -346,6 +346,57 @@ def test_steward_receipt_body_and_bindings_are_not_retargetable_or_legacy(tmp_pa
         _build(paths)
 
 
+def test_heldout_prohibition_is_checked_on_the_assigned_rule_author_seat(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    role = json.loads(paths["role"].read_text(encoding="utf-8"))
+    assigned = next(seat for seat in role["seats"] if seat["role_id"] == "rule_author_extractor")
+    assigned["must_not"] = []
+    role["seats"].insert(
+        0,
+        {
+            **assigned,
+            "seat_id": "seat_rule_author_extractor_revoked",
+            "assignment_state": "revoked",
+            "controller_identity_attested": False,
+            "must_not": ["read_heldout_text_locators_fingerprints_labels"],
+        },
+    )
+    _write(paths["role"], role)
+    clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
+    clearance["input_bindings"]["role_contract_sha256"] = packets.sha256_file(paths["role"])
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _write(paths["clearance"], clearance)
+
+    with pytest.raises(packets.PacketCompilerError, match="heldout prohibition drift"):
+        _build(paths)
+
+
+@pytest.mark.parametrize(
+    ("field", "match"),
+    [
+        ("bundle_policy", "bundle near-duplicate policy binding drift"),
+        ("packet_policy", "packet near-duplicate policy binding drift"),
+        ("packet_clearance", "packet clearance binding drift"),
+        ("packet_query", "packet query-plan binding drift"),
+    ],
+)
+def test_verify_rejects_tampered_bundle_and_packet_pins(tmp_path: Path, field: str, match: str) -> None:
+    paths = _fixture(tmp_path)
+    bundle = _build(paths)
+    if field == "bundle_policy":
+        bundle["near_duplicate_policy_fingerprint_sha256"] = "f" * 64
+    elif field == "packet_policy":
+        bundle["packets"][0]["near_duplicate_policy_fingerprint_sha256"] = "f" * 64
+    elif field == "packet_clearance":
+        bundle["packets"][0]["clearance_sha256"] = "f" * 64
+    else:
+        bundle["packets"][0]["query_plan_sha256"] = "f" * 64
+    _write(paths["output"], bundle)
+
+    with pytest.raises(packets.PacketCompilerError, match=match):
+        _verify(paths)
+
+
 def test_rejects_test_ua_eval_canary_and_malformed_rows(tmp_path: Path) -> None:
     for field, value, reason in (
         ("source_record.partition", "gec-only/test", "test unit"),

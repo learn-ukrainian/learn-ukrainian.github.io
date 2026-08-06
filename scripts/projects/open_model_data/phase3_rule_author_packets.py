@@ -167,11 +167,10 @@ def receipt_body_sha256(receipt: Mapping[str, Any]) -> str:
     return sha256_bytes(body.encode("utf-8"))
 
 
-def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
-    """Derive a current actor from the role contract; never accept it in clearance."""
+def _assigned_role_seat(role_contract: Mapping[str, Any], expected_role: str) -> Mapping[str, Any]:
+    """Return the one attested, assigned seat for a decision role."""
     seats = role_contract.get("seats")
-    bindings = role_contract.get("task_bindings")
-    require(isinstance(seats, list) and isinstance(bindings, list), "role contract lacks seats or task bindings")
+    require(isinstance(seats, list), "role contract lacks seats")
     assigned = [
         seat
         for seat in seats
@@ -182,7 +181,15 @@ def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> 
         and isinstance(seat.get("controller_identity_id"), str)
     ]
     require(len(assigned) == 1, f"role contract lacks one assigned {expected_role} seat")
-    controller = str(assigned[0]["controller_identity_id"])
+    return assigned[0]
+
+
+def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
+    """Derive a current actor from the role contract; never accept it in clearance."""
+    bindings = role_contract.get("task_bindings")
+    require(isinstance(bindings, list), "role contract lacks task bindings")
+    assigned = _assigned_role_seat(role_contract, expected_role)
+    controller = str(assigned["controller_identity_id"])
     matching = [
         binding
         for binding in bindings
@@ -276,7 +283,7 @@ def validate_clearance(
         and "rule_author_extractor" not in set(acl.get("post_release_scorer_roles", [])),
         "rule author is not excluded by heldout ACL",
     )
-    author_seat = next(seat for seat in role_contract["seats"] if seat.get("role_id") == "rule_author_extractor")
+    author_seat = _assigned_role_seat(role_contract, "rule_author_extractor")
     require(
         "read_heldout_text_locators_fingerprints_labels" in set(author_seat.get("must_not", [])),
         "rule-author heldout prohibition drift",
@@ -651,6 +658,7 @@ def verify(
         coverage_path=coverage_path,
         role_path=role_path,
     )
+    policy_sha = str(clearance["input_bindings"]["near_duplicate_policy_fingerprint_sha256"])
     require(
         bundle["clearance"] == {"receipt_sha256": clearance["receipt_sha256"], "file_sha256": clearance_sha},
         "bundle clearance binding drift",
@@ -672,6 +680,10 @@ def verify(
     )
     require(bundle["coverage_contract_sha256"] == sha256_file(coverage_path), "bundle coverage-contract binding drift")
     require(bundle["role_contract_sha256"] == sha256_file(role_path), "bundle role-contract binding drift")
+    require(
+        bundle["near_duplicate_policy_fingerprint_sha256"] == policy_sha,
+        "bundle near-duplicate policy binding drift",
+    )
     role_contract = read_json(role_path)
     author_actor = _derive_role_actor(role_contract, "rule_author_extractor")
     reviewer_actor = _derive_role_actor(role_contract, "ukrainian_source_reviewer")
@@ -684,6 +696,15 @@ def verify(
     }
     require(bundle["compiler"] == expected_compiler, "bundle compiler identity drift")
     for packet in bundle["packets"]:
+        require(packet["clearance_sha256"] == clearance_sha, "packet clearance binding drift")
+        require(
+            packet["near_duplicate_policy_fingerprint_sha256"] == policy_sha,
+            "packet near-duplicate policy binding drift",
+        )
+        require(
+            packet["query_plan_sha256"] == expected_compiler["query_plan_sha256"],
+            "packet query-plan binding drift",
+        )
         size = _packet_byte_count(packet["items"])
         require(size == packet["byte_count"], "packet byte count drift")
         require(packet["oversize_singleton"] or size <= MAX_UTF8_BYTES, "packet byte cap violated")
