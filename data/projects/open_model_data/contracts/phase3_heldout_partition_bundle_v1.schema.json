@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_heldout_partition_bundle_v1.schema.json",
+  "title": "Phase 3 held-out partition bundle v1",
+  "description": "Schemas for immutable input bindings, private held-out seal, private author clearance, public text-free receipt, and partition/leakage verification receipts.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "roleBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role_id",
+        "seat_id",
+        "controller_identity_id",
+        "attestation_task_id",
+        "artifact_task_id"
+      ],
+      "properties": {
+        "role_id": {"const": "heldout_steward"},
+        "seat_id": {"const": "seat_heldout_steward"},
+        "controller_identity_id": {
+          "const": "controller_phase3_heldout_steward_cursor_runtime_01"
+        },
+        "attestation_task_id": {"const": "phase3-role-heldout-steward-cursor-v2"},
+        "artifact_task_id": {"const": "phase3-heldout-partition-seal-cursor-v1"}
+      }
+    },
+    "zeroOverlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_exact",
+        "unit_exact",
+        "test_excluded_from_author_clearance"
+      ],
+      "properties": {
+        "document_exact": {"const": true},
+        "unit_exact": {"const": true},
+        "test_excluded_from_author_clearance": {"const": true}
+      }
+    },
+    "inputBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "combined_contract_sha256",
+        "original_prompt_sha256",
+        "scope_amendment_sha256",
+        "role_contract_sha256",
+        "evaluation_contract_sha256",
+        "coverage_contract_sha256",
+        "source_universe_receipt_sha256",
+        "near_duplicate_policy_sha256",
+        "near_duplicate_policy_fingerprint_sha256",
+        "ua_eval_exclusion_manifest_sha256",
+        "public_canary_exclusion_manifest_sha256",
+        "sources_db_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_input_bindings_v1"},
+        "combined_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "original_prompt_sha256": {"$ref": "#/$defs/sha256"},
+        "scope_amendment_sha256": {"$ref": "#/$defs/sha256"},
+        "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "coverage_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "near_duplicate_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_eval_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "public_canary_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "sources_db_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "heldoutSealUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_id",
+        "unit_sha256",
+        "source_document_identity",
+        "layer",
+        "split",
+        "primary_key_sha256",
+        "ordinal",
+        "family_id",
+        "error",
+        "correct",
+        "locator",
+        "error_span_fingerprint_sha256",
+        "correct_span_fingerprint_sha256",
+        "sources_db_sha256",
+        "near_duplicate_policy_fingerprint_sha256"
+      ],
+      "properties": {
+        "unit_id": {"type": "string", "minLength": 1},
+        "unit_sha256": {"$ref": "#/$defs/sha256"},
+        "source_document_identity": {"type": "string", "minLength": 1},
+        "layer": {"type": "string", "minLength": 1},
+        "split": {"const": "test"},
+        "primary_key_sha256": {"$ref": "#/$defs/sha256"},
+        "ordinal": {"type": "integer", "minimum": 1},
+        "family_id": {"const": "ua_gec"},
+        "error": {"type": "string"},
+        "correct": {"type": "string"},
+        "locator": {"$ref": "#/$defs/frozenUaGecLocator"},
+        "error_span_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "correct_span_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "sources_db_sha256": {"$ref": "#/$defs/sha256"},
+        "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "frozenUaGecLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "table", "primary_key_fields", "primary_key_sha256"],
+      "properties": {
+        "kind": {"const": "sqlite_row"},
+        "table": {"const": "ua_gec_errors"},
+        "primary_key_fields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {"const": "id"}
+        },
+        "primary_key_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "heldoutSealReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "text_free",
+        "implementation_version",
+        "role_binding",
+        "input_bindings",
+        "family_id",
+        "sealed_units",
+        "sealed_unit_count",
+        "sealed_document_count",
+        "label_state",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_seal_receipt_v1"},
+        "text_free": {"const": false},
+        "implementation_version": {"const": "phase3_heldout_partition_v1"},
+        "role_binding": {"$ref": "#/$defs/roleBinding"},
+        "input_bindings": {"$ref": "#/$defs/inputBindings"},
+        "family_id": {"const": "ua_gec"},
+        "sealed_units": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/heldoutSealUnit"}
+        },
+        "sealed_unit_count": {"type": "integer", "minimum": 0},
+        "sealed_document_count": {"type": "integer", "minimum": 0},
+        "label_state": {"const": "NOT_YET_LABELLED_OR_ACTIVATED"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "authorClearedUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "unit_sha256", "family_id"],
+      "properties": {
+        "unit_id": {"type": "string", "minLength": 1},
+        "unit_sha256": {"$ref": "#/$defs/sha256"},
+        "family_id": {"const": "ua_gec"}
+      }
+    },
+    "authorClearanceReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "text_free",
+        "implementation_version",
+        "role_binding",
+        "input_bindings",
+        "cleared_units",
+        "cleared_unit_count",
+        "heldout_excluded",
+        "ua_eval_exclusion_enforced",
+        "public_canary_exclusion_enforced",
+        "heldout_complement_encoded",
+        "fingerprints_encoded",
+        "locators_encoded",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_author_clearance_receipt_v1"},
+        "text_free": {"const": true},
+        "implementation_version": {"const": "phase3_heldout_partition_v1"},
+        "role_binding": {"$ref": "#/$defs/roleBinding"},
+        "input_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "combined_contract_sha256",
+            "role_contract_sha256",
+            "evaluation_contract_sha256",
+            "coverage_contract_sha256",
+            "source_universe_receipt_sha256",
+            "near_duplicate_policy_fingerprint_sha256",
+            "ua_eval_exclusion_manifest_sha256",
+            "public_canary_exclusion_manifest_sha256"
+          ],
+          "properties": {
+            "combined_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "coverage_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"},
+            "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+            "ua_eval_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"},
+            "public_canary_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "cleared_units": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/authorClearedUnit"}
+        },
+        "cleared_unit_count": {"type": "integer", "minimum": 0},
+        "heldout_excluded": {"const": true},
+        "ua_eval_exclusion_enforced": {"const": true},
+        "public_canary_exclusion_enforced": {"const": true},
+        "heldout_complement_encoded": {"const": false},
+        "fingerprints_encoded": {"const": false},
+        "locators_encoded": {"const": false},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "capabilityShortfall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "detail", "families_not_sealed", "denominator_shrinkage"],
+      "properties": {
+        "code": {"const": "NON_UA_GEC_LABEL_BLIND_HELDOUT_NOT_SEALED"},
+        "detail": {"const": "contract_requires_ua_gec_test_as_mandatory_private_side_only_at_partition_time"},
+        "families_not_sealed": {"const": "non_ua_gec_evaluation_families_deferred_hash_only"},
+        "denominator_shrinkage": {"const": false}
+      }
+    },
+    "publicReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "text_free",
+        "implementation_version",
+        "role_binding",
+        "input_bindings",
+        "artifact_hashes",
+        "aggregates",
+        "zero_overlap",
+        "capability",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_public_receipt_v1"},
+        "text_free": {"const": true},
+        "implementation_version": {"const": "phase3_heldout_partition_v1"},
+        "role_binding": {"$ref": "#/$defs/roleBinding"},
+        "input_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "combined_contract_sha256",
+            "role_contract_sha256",
+            "evaluation_contract_sha256",
+            "coverage_contract_sha256",
+            "source_universe_receipt_sha256",
+            "near_duplicate_policy_fingerprint_sha256",
+            "ua_eval_exclusion_manifest_sha256",
+            "public_canary_exclusion_manifest_sha256",
+            "sources_db_sha256"
+          ],
+          "properties": {
+            "combined_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "coverage_contract_sha256": {"$ref": "#/$defs/sha256"},
+            "source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"},
+            "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+            "ua_eval_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"},
+            "public_canary_exclusion_manifest_sha256": {"$ref": "#/$defs/sha256"},
+            "sources_db_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "artifact_hashes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "heldout_seal_sha256",
+            "author_clearance_sha256",
+            "partition_verification_sha256",
+            "leakage_verification_sha256"
+          ],
+          "properties": {
+            "heldout_seal_sha256": {"$ref": "#/$defs/sha256"},
+            "author_clearance_sha256": {"$ref": "#/$defs/sha256"},
+            "partition_verification_sha256": {"$ref": "#/$defs/sha256"},
+            "leakage_verification_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "aggregates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ua_gec_input_total",
+            "heldout_sealed_unit_total",
+            "author_cleared_unit_total",
+            "author_omitted_unit_total",
+            "omit_reason_code_count"
+          ],
+          "properties": {
+            "ua_gec_input_total": {"type": "integer", "minimum": 0},
+            "heldout_sealed_unit_total": {"type": "integer", "minimum": 0},
+            "author_cleared_unit_total": {"type": "integer", "minimum": 0},
+            "author_omitted_unit_total": {"type": "integer", "minimum": 0},
+            "omit_reason_code_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        "zero_overlap": {"$ref": "#/$defs/zeroOverlap"},
+        "capability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "per_phenomenon_floors_claimed",
+            "automatic_rule_activation_floors_claimed",
+            "shortfalls"
+          ],
+          "properties": {
+            "state": {"const": "NOT_YET_LABELLED_OR_ACTIVATED"},
+            "per_phenomenon_floors_claimed": {"const": false},
+            "automatic_rule_activation_floors_claimed": {"const": false},
+            "shortfalls": {
+              "type": "array",
+              "items": {"$ref": "#/$defs/capabilityShortfall"}
+            }
+          }
+        },
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "partitionVerificationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "text_free",
+        "ua_gec_input_total",
+        "heldout_sealed_unit_total",
+        "author_cleared_unit_total",
+        "author_omitted_unit_total",
+        "omit_reason_totals",
+        "zero_overlap",
+        "role_binding",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_partition_verification_v1"},
+        "text_free": {"const": true},
+        "ua_gec_input_total": {"type": "integer", "minimum": 0},
+        "heldout_sealed_unit_total": {"type": "integer", "minimum": 0},
+        "author_cleared_unit_total": {"type": "integer", "minimum": 0},
+        "author_omitted_unit_total": {"type": "integer", "minimum": 0},
+        "omit_reason_totals": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "zero_overlap": {"$ref": "#/$defs/zeroOverlap"},
+        "role_binding": {"$ref": "#/$defs/roleBinding"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "leakageVerificationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "text_free",
+        "zero_overlap",
+        "near_duplicate_policy_fingerprint_sha256",
+        "ua_eval_exclusion_enforced",
+        "public_canary_exclusion_enforced",
+        "malformed_comparisons_fail_closed",
+        "cross_layer_doc_id_collapsed",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_leakage_verification_v1"},
+        "text_free": {"const": true},
+        "zero_overlap": {"$ref": "#/$defs/zeroOverlap"},
+        "near_duplicate_policy_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_eval_exclusion_enforced": {"const": true},
+        "public_canary_exclusion_enforced": {"const": true},
+        "malformed_comparisons_fail_closed": {"const": true},
+        "cross_layer_doc_id_collapsed": {"const": true},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "input_bindings",
+        "heldout_seal",
+        "author_clearance",
+        "public_receipt",
+        "partition_verification",
+        "leakage_verification"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_heldout_partition_bundle_v1"},
+        "input_bindings": {"$ref": "#/$defs/inputBindings"},
+        "heldout_seal": {"$ref": "#/$defs/heldoutSealReceipt"},
+        "author_clearance": {"$ref": "#/$defs/authorClearanceReceipt"},
+        "public_receipt": {"$ref": "#/$defs/publicReceipt"},
+        "partition_verification": {"$ref": "#/$defs/partitionVerificationReceipt"},
+        "leakage_verification": {"$ref": "#/$defs/leakageVerificationReceipt"}
+      }
+    }
+  }
+}
