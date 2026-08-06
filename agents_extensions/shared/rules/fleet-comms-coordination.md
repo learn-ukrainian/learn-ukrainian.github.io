@@ -74,9 +74,12 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams tail --stream epic:<N> --limit 20
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
-# Formal cross-family CF — PR number is REQUIRED and positional
-.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
-.venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...
+# Cross-family PR review — DIRECT by default (operator order 2026-08-06):
+# ONE round. The requester asks a cross-family lane for verdict + findings at the
+# current head, then posts them on the PR (gh pr comment / gh pr review).
+printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --review
+# Formal sealed path (review-pr / publish-review-verdict) is OPT-IN, high-risk code only.
 ```
 
 ### Routing observability contract
@@ -115,8 +118,10 @@ Every epic driver session (any harness) MUST:
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Use `review-pr <PR_NUMBER> …` / `publish-review-verdict` for formal PR CF — discussion
-   and same-family chat are not the review gate.
+4. Review of record = ONE cross-family round posted on the PR at the current head.
+   Direct ask + posted verdict is the default gate (operator order 2026-08-06); the
+   formal sealed path (`review-pr` / `publish-review-verdict`) is opt-in for
+   high-risk code only. Discussion and same-family chat are still not the gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
    - **grok / gemini / kimi:** canary mint/score

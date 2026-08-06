@@ -219,8 +219,6 @@ def run_compat_ask(
     hard_timeout: int = 300,
 ) -> object:
     """Execute one normal ACP ask with fail-open body-free usage telemetry."""
-    if review:
-        raise ValueError("formal_review_requires_review_pr_acp_sealed_snapshot")
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
@@ -271,11 +269,11 @@ def _run_compat_ask_impl(
 ) -> object:
     """Execute the authority/ACP path after telemetry admission.
 
-    ``review=True`` is refused: formal review must enter through ``review-pr``
-    so exact PR identity and a sealed snapshot are mandatory.
+    ``review=True`` runs as a normal ask: the review of record is one direct
+    cross-family round with the verdict posted on the PR by the requester
+    (operator order 2026-08-06). The sealed ``review-pr`` path is opt-in for
+    high-risk code only.
     """
-    if review:
-        raise ValueError("formal_review_requires_review_pr_acp_sealed_snapshot")
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")

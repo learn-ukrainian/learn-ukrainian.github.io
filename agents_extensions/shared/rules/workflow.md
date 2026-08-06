@@ -349,8 +349,13 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    User-visible ACs require typed `behavior_proof` evidence referencing the
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
    reviewed SHA; never copy a `behavior_proof_status` string.
-6. **Pass the independent review and CI gates** — review evidence must be from
-   outside the author model family and bound to the current PR head.
+6. **Pass the independent review and CI gates** — ONE cross-family review round:
+   reviewer outside the author model family, verdict + findings posted on the PR,
+   bound to the current head. Direct ask is the default mechanism; the formal
+   sealed path is opt-in for high-risk code only. Docs/report-only PRs: the
+   merging orchestrator folds trivial findings (typos, counts, path scrubs — no
+   behavior change) in at merge, recorded in the merge commit body; re-review is
+   only for behavior-changing deltas or a contested verdict.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining

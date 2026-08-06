@@ -206,14 +206,15 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 * Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
-  When an orchestrator needs **formal sealed CF**, request it via `review-pr`.
+  The review of record is ONE direct cross-family round (operator order
+  2026-08-06): plain `ask-<lane>` with the diff reference, verdict + findings
+  posted on the PR at the current head by the requester. The **formal sealed
+  path** (`review-pr`) is OPT-IN for high-risk code only. When it is used:
   Claude, Codex, GLM, and native Grok use the parent-owned exact-head sealed
-  ACP path. The canonical KimiCC K3 adapter is implemented but remains
-  fail-closed until its authenticated sealed canary passes. AGY remains
-  ineligible because its text-only wrapper cannot consume that MCP. Authority CF
-  model pins (both require `--override-reason`) are:
-  `review-pr <N> --reviewer codex --model gpt-5.6-sol` (the one-shot Codex ACP
-  route owns its provider-default effort) or
+  ACP path; the canonical KimiCC K3 adapter remains fail-closed until its
+  authenticated sealed canary passes; AGY remains sealed-ineligible (text-only
+  wrapper). Sealed authority CF model pins (both require `--override-reason`):
+  `review-pr <N> --reviewer codex --model gpt-5.6-sol` or
   `review-pr <N> --reviewer claude --model claude-fable-5 --effort high`.
 
   <!-- fleet-roster-projection:begin formal_review_eligible -->
@@ -481,9 +482,13 @@ The same table lives in `memory/MEMORY.md` rule #M0; this file is the deploy-rul
 
 </critical>
 
-## Formal PR CF review (fleet-comms Phase 4–5)
+## PR cross-family review (direct by default — operator order 2026-08-06)
 
-For **GitHub PR formal cross-family review**, do **not** use fat `ask-* --review` with a pasted diff or PR URL body.
+Default review of record: ONE direct round via plain `ask-<lane>` (reference the
+branch/diff for the reviewer to fetch; do not paste huge diffs inline), verdict +
+findings posted on the PR at the current head by the requester.
+
+The sealed path below is **OPT-IN for high-risk code only**:
 
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
