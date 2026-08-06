@@ -343,6 +343,7 @@ class RoutingReservationLedger:
             ).fetchone()
             if latest is None and substitution_data:
                 raise RoutingReservationError("substitution_prior_reservation_missing")
+            superseded_prior: sqlite3.Row | None = None
             if latest is not None and substitution_data:
                 self._validate_substitution_tx(
                     latest,
@@ -350,12 +351,21 @@ class RoutingReservationLedger:
                     substitution_data,
                     created_at=current_iso,
                 )
-            elif latest is not None and str(latest["semantic_sha256"]) != semantic_sha and not self._is_legacy_default_envelope_match(latest, req):
-                raise RoutingReservationError("authority_key_semantic_conflict")
-            if latest is not None and str(latest["status"]) in _ACTIVE_STATUSES:
-                # A distinct initiator joins the same exact-head decision rather
-                # than causing a second selection or a quota herd.
-                return self._reservation_from_row(latest)
+            elif latest is not None:
+                latest_status = str(latest["status"])
+                latest_semantic = str(latest["semantic_sha256"])
+                legacy_match = self._is_legacy_default_envelope_match(latest, req)
+                if latest_semantic != semantic_sha and not legacy_match:
+                    if latest_status in _ACTIVE_STATUSES:
+                        raise RoutingReservationError("authority_key_semantic_conflict")
+                    # The latest attempt for this authority key has already
+                    # terminated with a different envelope. Allow a fresh
+                    # reservation and record the supersede decision.
+                    superseded_prior = latest
+                if latest_status in _ACTIVE_STATUSES:
+                    # A distinct initiator joins the same exact-head decision rather
+                    # than causing a second selection or a quota herd.
+                    return self._reservation_from_row(latest)
 
             selection = selector(RoutingSelectionContext(self, now=current_iso))
             if selection is None:
@@ -453,6 +463,22 @@ class RoutingReservationLedger:
                 },
                 created_at=current_iso,
             )
+            if superseded_prior is not None:
+                self._append_decision_tx(
+                    reservation_id,
+                    event_type="superseded_terminal_attempt",
+                    state="reserved",
+                    evidence={
+                        "authority_key": req.authority_key,
+                        "prior_reservation_id": str(superseded_prior["reservation_id"]),
+                        "prior_attempt": int(superseded_prior["attempt"]),
+                        "prior_status": str(superseded_prior["status"]),
+                        "prior_semantic_sha256": str(superseded_prior["semantic_sha256"]),
+                        "new_attempt": attempt,
+                        "new_semantic_sha256": semantic_sha,
+                    },
+                    created_at=current_iso,
+                )
             if substitution_data:
                 self._append_decision_tx(
                     reservation_id,

@@ -229,6 +229,37 @@ def test_same_authority_key_semantic_conflict_fails_closed(tmp_path: Path) -> No
             ledger.reserve_selection(changed, _selection, now="2035-01-01T00:00:01Z")
 
 
+def test_terminal_different_envelope_is_superseded_not_deadlocked(tmp_path: Path) -> None:
+    root = _root(tmp_path)
+    with RoutingReservationLedger(root=root) as ledger:
+        first_req = _request("repo:terminal-supersede:head", "first")
+        first = ledger.reserve_selection(first_req, _selection, now="2035-01-01T00:00:00Z")
+        assert first.attempt == 1
+        ledger.fail_and_release(first.reservation_id, "provider_unavailable", now="2035-01-01T00:00:01Z")
+
+        second_req = replace(first_req, idempotency_key="second", requested_risk="critical")
+        second = ledger.reserve_selection(second_req, _selection, now="2035-01-01T00:00:02Z")
+        assert second.attempt == 2
+        assert second.reservation_id != first.reservation_id
+        assert second.semantic_sha256 != first.semantic_sha256
+
+        supersede_decisions = [
+            decision
+            for decision in ledger.decisions(second.reservation_id)
+            if decision.event_type == "superseded_terminal_attempt"
+        ]
+        assert len(supersede_decisions) == 1
+        assert supersede_decisions[0].evidence["prior_reservation_id"] == first.reservation_id
+        assert supersede_decisions[0].evidence["prior_attempt"] == first.attempt
+        assert supersede_decisions[0].evidence["prior_status"] == "failed"
+        assert supersede_decisions[0].state == "reserved"
+
+        ledger.mark_started(second.reservation_id, now="2035-01-01T00:00:02Z")
+        third_req = replace(first_req, idempotency_key="third", requested_risk="low")
+        with pytest.raises(RoutingReservationError, match="authority_key_semantic_conflict"):
+            ledger.reserve_selection(third_req, _selection, now="2035-01-01T00:00:03Z")
+
+
 def test_one_result_invalid_substitution_is_linked_idempotent_and_single_use(tmp_path: Path) -> None:
     with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
         first = ledger.reserve_selection(
