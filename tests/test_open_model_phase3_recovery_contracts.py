@@ -343,6 +343,8 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01"),
         "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01"),
         "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01"),
+        "disposition_auditor": ("phase3-role-disposition-auditor-claude-v1", "controller_phase3_disposition_auditor_claude_01"),
+        "textbook_nonhit_auditor": ("phase3-role-textbook-nonhit-auditor-agy-v1", "controller_phase3_textbook_nonhit_auditor_agy_01"),
     }
     bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
     seats = {seat["role_id"]: seat for seat in roles["seats"]}
@@ -369,7 +371,16 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         ("status", "combined_contract_text_approved_pre_artifact"),
     ],
 )
-@pytest.mark.parametrize("role_id", ("rule_author_extractor", "heldout_steward", "heldout_label_reviewer"))
+@pytest.mark.parametrize(
+    "role_id",
+    (
+        "rule_author_extractor",
+        "heldout_steward",
+        "heldout_label_reviewer",
+        "disposition_auditor",
+        "textbook_nonhit_auditor",
+    ),
+)
 def test_newly_attested_role_binding_cannot_drift(
     tmp_path: Path, field: str, replacement: str, role_id: str
 ) -> None:
@@ -383,6 +394,28 @@ def test_newly_attested_role_binding_cannot_drift(
         contracts.validate_contracts(root)
 
 
+@pytest.mark.parametrize("role_id", ("disposition_auditor", "textbook_nonhit_auditor"))
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("assignment_state", "reserved_unassigned"),
+        ("controller_identity_attested", False),
+    ],
+)
+def test_new_auditor_seat_assignment_cannot_drift(
+    tmp_path: Path, role_id: str, field: str, replacement: object
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
+    next(seat for seat in roles["seats"] if seat["role_id"] == role_id)[field] = replacement
+    _write_json(path, roles)
+    with pytest.raises(
+        contracts.ContractError,
+        match=r"schema violation|attested decision seat identity is not assigned and attested",
+    ):
+        contracts.validate_contracts(root)
+
+
 def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
@@ -392,8 +425,6 @@ def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_pa
         "scorer",
         "outsider_reproducer",
         "cross_family_code_infra_reviewer",
-        "disposition_auditor",
-        "textbook_nonhit_auditor",
     }
     for role_id in reserved_roles:
         assert seats[role_id]["assignment_state"] == "reserved_unassigned"

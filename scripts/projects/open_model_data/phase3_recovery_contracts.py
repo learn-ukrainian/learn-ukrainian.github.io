@@ -448,6 +448,8 @@ def _validate_roles(roles: dict[str, Any]) -> None:
         "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01", "identity_attested_pre_artifact"),
         "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01", "identity_attested_pre_artifact"),
         "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01", "identity_attested_pre_artifact"),
+        "disposition_auditor": ("phase3-role-disposition-auditor-claude-v1", "controller_phase3_disposition_auditor_claude_01", "identity_attested_pre_artifact"),
+        "textbook_nonhit_auditor": ("phase3-role-textbook-nonhit-auditor-agy-v1", "controller_phase3_textbook_nonhit_auditor_agy_01", "identity_attested_pre_artifact"),
     }
     for role_id, (task_id, controller_identity_id, status) in attested.items():
         binding = by_role[role_id]
