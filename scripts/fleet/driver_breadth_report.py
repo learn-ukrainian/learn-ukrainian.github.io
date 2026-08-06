@@ -101,9 +101,16 @@ def load_tasks(
         finished = _parse_ts(str(data.get("finished_at") or "") or None)
         if started is None and finished is None:
             continue
-        if started is not None and started < since and (finished is None or finished < since):
+        # Fully before the lookback window only. Unfinished work that started
+        # earlier stays in-scope so single-seat marathons remain visible.
+        if (
+            started is not None
+            and started < since
+            and finished is not None
+            and finished < since
+        ):
             continue
-        if finished is not None and finished < since and (started is None or started < since):
+        if finished is not None and finished < since and started is None:
             continue
         rows.append(data)
     return rows
