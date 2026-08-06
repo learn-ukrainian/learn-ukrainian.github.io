@@ -25,24 +25,29 @@ hooks = false
 
 
 def ensure_compat_claude_hooks_false(text: str) -> tuple[str, bool]:
-    """Return (new_text, changed)."""
-    # Already correct
+    """Return (new_text, changed).
+
+    Idempotent even when ``hooks = false`` has trailing whitespace or an inline
+    TOML comment. Never inserts a second ``hooks`` key into an existing section.
+    """
+    # Already correct: value is false (optional spaces / inline comment after).
     if re.search(
-        r"(?ms)^\[compat\.claude\][^\[]*^hooks\s*=\s*false\s*$",
+        r"(?ms)^\[compat\.claude\][^\[]*^hooks\s*=\s*false\s*(?:#.*)?$",
         text,
     ):
         return text, False
-    # Section exists with hooks = true → flip
+    # Section exists
     if re.search(r"(?ms)^\[compat\.claude\]", text):
-        new = re.sub(
-            r"(?ms)(^\[compat\.claude\][^\[]*?^hooks\s*=\s*)\w+",
-            r"\1false",
-            text,
-            count=1,
-        )
-        if new != text:
-            return new, True
-        # section without hooks key
+        # Existing hooks key (any value) → set value token to false, keep rest of line.
+        if re.search(r"(?ms)^\[compat\.claude\][^\[]*^hooks\s*=", text):
+            new = re.sub(
+                r"(?ms)(^\[compat\.claude\][^\[]*?^hooks\s*=\s*)\S+",
+                r"\1false",
+                text,
+                count=1,
+            )
+            return new, new != text
+        # Section without hooks key
         new = re.sub(
             r"(?ms)(^\[compat\.claude\]\s*\n)",
             r"\1hooks = false\n",

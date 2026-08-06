@@ -13,6 +13,8 @@ if [ ! -x "$PYTHON" ]; then
   exec "$@"
 fi
 if [ "${HOOK_TIMING:-}" = "1" ] || [ "${HOOK_TIMING:-}" = "true" ] || [ "${HOOK_TIMING:-}" = "always" ]; then
+  # -m resolution uses cwd, not the interpreter path — pin to repo root.
+  cd "$ROOT" || exit 1
   exec "$PYTHON" -m scripts.hooks.hook_timing wrap -- "$@"
 fi
 exec "$@"
