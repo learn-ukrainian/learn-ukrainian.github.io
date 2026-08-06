@@ -35,6 +35,14 @@ PROMPT_HASH = "6a563a7526c4ec7a89732f3de5651b0ab2e176ec089abf80f9eb733337db7662"
 AMENDMENT_HASH = "da0f814f2f12e4974073de1a7b547fc3f27c07f6d903c95fde8f704d4e664132"
 COMBINED_HASH = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
 PRAVOPYS_2026_HASH = "E593956BFBA6737D991A76FA86970DB9C10A5CD7FD8895BAE67F2B9A950C3A92"
+PRAVOPYS_2019_HASH = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
+PRAVOPYS_2026_DECISION_LOCATOR = "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/rishennia-47-vid-1-bereznia"
+PRAVOPYS_2026_DOWNLOAD_LOCATOR = "https://mova.gov.ua/storage/app/sites/19/2026/rishennja-komisiji/01-03/sdm-ukrayinskii-pravopis-vidannia.pdf"
+PRAVOPYS_2019_DOWNLOAD_LOCATOR = "https://mon.gov.ua/storage/app/media/zagalna%20serednya/05062019-onovl-pravo.pdf"
+NEAR_DUPLICATE_IMPLEMENTATION_VERSION = "phase3_near_duplicate.py-v1"
+NEAR_DUPLICATE_IMPLEMENTATION_MODULE = "scripts/projects/open_model_data/phase3_near_duplicate.py"
+NEAR_DUPLICATE_POLICY_ARTIFACT = "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+NEAR_DUPLICATE_POLICY_FINGERPRINT = "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e"
 DISPOSITIONS = {
     "converted",
     "not_rule_bearing",
@@ -296,14 +304,20 @@ def _validate_coverage(coverage: dict[str, Any]) -> None:
     require("28_sections_26_raw_responses" in families["lexical_ulif"]["input_identity"]["unit_grain"], "stale ULIF section/raw-response counts")
     authority = coverage["pravopys_2026_authority"]
     require(authority["official_pdf_sha256"] == PRAVOPYS_2026_HASH, "wrong 2026 Pravopys hash")
+    require(authority["official_decision_locator"] == PRAVOPYS_2026_DECISION_LOCATOR, "wrong 2026 decision locator")
+    require(authority["official_download_locator"] == PRAVOPYS_2026_DOWNLOAD_LOCATOR, "wrong 2026 download locator")
     require(authority["digest_hex_case"] == "uppercase_as_published", "2026 published digest casing provenance changed")
     require(authority["page_count"] == 426 and authority["stated_paragraph_extent"] == 168, "2026 Pravopys provenance changed")
-    require(authority["official_bytes_acquired_and_verified"] is False, "unacquired 2026 bytes falsely verified")
+    require(authority["official_bytes_acquired_and_verified"] is True, "verified 2026 acquisition lost")
+    require(authority["acquisition_retrieved_at"] == "2026-08-05T22:05:39Z", "2026 retrieval time changed")
+    require(authority["rights_provenance_classification"] == "rights_limited_locator_only", "2026 rights provenance changed")
     alignment = coverage["edition_alignment"]
     require(alignment["current_authority_family"] == "pravopys_2026_complete", "2026 authority changed")
     require(alignment["historical_family"] == "pravopys_2019_complete", "2019 retention changed")
-    require(alignment["pravopys_2019_observed_candidate_pdf_sha256"] == "0d2fd75a2e9b2a412d4c8e072f6a8cac06d075a297a770fd037312054b0e501a", "wrong 2019 Pravopys candidate hash")
-    require(alignment["pravopys_2019_official_provenance_verified"] is False, "2019 candidate falsely claimed as official provenance")
+    require(alignment["pravopys_2019_official_pdf_sha256"] == PRAVOPYS_2019_HASH, "wrong official 2019 Pravopys hash")
+    require(alignment["pravopys_2019_official_download_locator"] == PRAVOPYS_2019_DOWNLOAD_LOCATOR, "wrong 2019 download locator")
+    require(alignment["pravopys_2019_official_provenance_verified"] is True, "verified 2019 provenance lost")
+    require(alignment["pravopys_2019_rights_provenance_classification"] == "rights_limited_locator_only", "2019 rights provenance changed")
     required_delta = {"unchanged", "editorial_technical_only", "illustration_removed_or_changed", "stress_or_formulation_clarified", "new_structural_wrapper_or_alphabet_material", "added_rule_bearing_unit", "removed_rule_bearing_unit", "normative_conflict"}
     require(set(alignment["delta_dispositions"]) == required_delta, "Pravopys delta taxonomy changed")
     delta = alignment["delta_coverage_required"]
@@ -320,7 +334,7 @@ def _validate_coverage(coverage: dict[str, Any]) -> None:
     require("all_mandatory_unit_universes_must_be_genuinely_frozen_hash_bound_before_source_extraction" in blocker_ids, "universe-freeze extraction blocker missing")
 
 
-def _validate_evaluation(evaluation: dict[str, Any]) -> None:
+def _validate_evaluation(evaluation: dict[str, Any], repo_root: Path) -> None:
     require(evaluation["text_free"] is True, "evaluation contract must remain text-free")
     require(set(evaluation["matcher_mechanisms"]) == MATCHER_MECHANISMS, "matcher mechanism classes changed")
     require(set(evaluation["phenomena"]) == EVALUATION_PHENOMENA, "evaluation phenomenon classes changed")
@@ -334,7 +348,25 @@ def _validate_evaluation(evaluation: dict[str, Any]) -> None:
     require(matrix["ukrainian_artifact_review_required_before_extraction"] is True, "automatic nomination bypasses Ukrainian artifact review")
     policy = evaluation["near_duplicate_policy"]
     require(policy["policy_id"] == "near_duplicate_policy_v1" and policy["fail_closed"] is True, "near-duplicate policy weakened")
-    require(policy["implementation_version"] == "implementation_pending", "near-duplicate implementation falsely claimed")
+    require(policy["implementation_version"] == NEAR_DUPLICATE_IMPLEMENTATION_VERSION, "near-duplicate implementation version drift")
+    require(policy["implementation_module"] == NEAR_DUPLICATE_IMPLEMENTATION_MODULE, "near-duplicate implementation module drift")
+    require(policy["implementation_artifact"] == NEAR_DUPLICATE_POLICY_ARTIFACT, "near-duplicate policy artifact drift")
+    require(policy["policy_fingerprint_sha256"] == NEAR_DUPLICATE_POLICY_FINGERPRINT, "near-duplicate policy fingerprint drift")
+    require((repo_root / policy["implementation_module"]).is_file(), "near-duplicate implementation missing")
+    policy_artifact = read_json(repo_root / policy["implementation_artifact"])
+    require(policy_artifact["policy_fingerprint_sha256"] == NEAR_DUPLICATE_POLICY_FINGERPRINT, "near-duplicate policy artifact fingerprint drift")
+    artifact_fingerprint_input = dict(policy_artifact)
+    artifact_fingerprint_input.pop("policy_fingerprint_sha256", None)
+    require(
+        hashlib.sha256((canonical_json(artifact_fingerprint_input) + "\n").encode("utf-8")).hexdigest()
+        == NEAR_DUPLICATE_POLICY_FINGERPRINT,
+        "near-duplicate policy artifact content drift",
+    )
+    require(policy_artifact["implementation"] == {
+        "algorithm_identity": "phase3-normalized-token-edit-firewall-v1",
+        "implementation_version": NEAR_DUPLICATE_IMPLEMENTATION_VERSION,
+        "module": NEAR_DUPLICATE_IMPLEMENTATION_MODULE,
+    }, "near-duplicate policy artifact implementation drift")
     require(policy["normalization_steps"] == ["unicode_normalization", "casefold", "whitespace_collapse", "punctuation_tokenization"], "near-duplicate normalization changed")
     require(policy["compared_fields"] == ["source_document_identity", "unit_identity", "span_fingerprint", "normalized_surface"], "near-duplicate compared fields changed")
     require(policy["similarity_features"] == ["exact_fingerprint", "token_jaccard", "normalized_edit_similarity"], "near-duplicate similarity features changed")
@@ -410,19 +442,22 @@ def _validate_roles(roles: dict[str, Any]) -> None:
     seat_by_role = {seat["role_id"]: seat for seat in seats}
     for role_id in ROLE_IDS:
         require(by_role[role_id]["controller_identity_id"] == seat_by_role[role_id]["controller_identity_id"], "task binding controller identity differs from decision seat")
-    approved = {
-        "scope_circularity_critic": ("review-phase3-recovery-contract-scope-v9", "controller_phase3_scope_critic_01"),
-        "ukrainian_source_reviewer": ("review-phase3-recovery-contract-domain-v8", "controller_phase3_ukrainian_reviewer_01"),
+    attested = {
+        "scope_circularity_critic": ("review-phase3-recovery-contract-scope-v9", "controller_phase3_scope_critic_01", "combined_contract_text_approved_pre_artifact"),
+        "ukrainian_source_reviewer": ("review-phase3-recovery-contract-domain-v8", "controller_phase3_ukrainian_reviewer_01", "combined_contract_text_approved_pre_artifact"),
+        "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01", "identity_attested_pre_artifact"),
+        "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01", "identity_attested_pre_artifact"),
+        "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01", "identity_attested_pre_artifact"),
     }
-    for role_id, (task_id, controller_identity_id) in approved.items():
+    for role_id, (task_id, controller_identity_id, status) in attested.items():
         binding = by_role[role_id]
-        require(binding["status"] == "combined_contract_text_approved_pre_artifact" and binding["reserved_task_id"] == task_id, "approved contract-text review binding changed")
+        require(binding["status"] == status and binding["reserved_task_id"] == task_id, "attested decision role binding changed")
         seat = seat_by_role[role_id]
-        require(seat["assignment_state"] == "assigned_verified" and seat["controller_identity_attested"] is True, "approved decision seat identity is not assigned and attested")
-        require(binding["controller_identity_id"] == controller_identity_id, "approved decision seat controller identity changed")
+        require(seat["assignment_state"] == "assigned_verified" and seat["controller_identity_attested"] is True, "attested decision seat identity is not assigned and attested")
+        require(binding["controller_identity_id"] == controller_identity_id, "attested decision seat controller identity changed")
         require(binding["artifact_approval_claimed"] is False, "artifact review falsely self-sealed")
-        require(binding["program_completion_claimed"] is False, "contract review falsely claims program completion")
-    for role_id in ROLE_IDS - set(approved):
+        require(binding["program_completion_claimed"] is False, "attested role falsely claims program completion")
+    for role_id in ROLE_IDS - set(attested):
         binding = by_role[role_id]
         seat = seat_by_role[role_id]
         require(seat["assignment_state"] == "reserved_unassigned" and seat["controller_identity_id"] is None and seat["controller_identity_attested"] is False, "unlaunched decision seat claims a controller identity")
@@ -436,7 +471,7 @@ def validate_contracts(repo_root: Path = ROOT) -> dict[str, Any]:
     artifacts = [_schema_validate(schema_path, artifact_path) for schema_path, artifact_path in zip(schema_paths, artifact_paths, strict=True)]
     local_binding_inputs_verified = _validate_hashes(repo_root, artifacts)
     _validate_coverage(artifacts[0])
-    _validate_evaluation(artifacts[1])
+    _validate_evaluation(artifacts[1], repo_root)
     _validate_roles(artifacts[2])
     return {
         "artifacts": ARTIFACT_NAMES,

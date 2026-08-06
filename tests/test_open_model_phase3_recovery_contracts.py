@@ -29,6 +29,9 @@ def _isolated_root(tmp_path: Path) -> Path:
     destination.parent.mkdir(parents=True)
     shutil.copytree(CONTRACTS, destination / "contracts")
     shutil.copytree(EVIDENCE, destination / "evidence")
+    implementation = target / contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE
+    implementation.parent.mkdir(parents=True)
+    shutil.copy2(ROOT / contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE, implementation)
     return target
 
 
@@ -83,6 +86,25 @@ def test_denominator_shrinkage_fails_closed(tmp_path: Path) -> None:
         contracts.validate_contracts(root)
 
 
+@pytest.mark.parametrize(
+    ("section", "field", "replacement"),
+    [
+        ("pravopys_2026_authority", "official_download_locator", "https://example.invalid/2026.pdf"),
+        ("edition_alignment", "pravopys_2019_official_pdf_sha256", "0" * 64),
+        ("edition_alignment", "pravopys_2019_official_provenance_verified", False),
+    ],
+)
+def test_verified_pravopys_acquisition_identity_drift_fails_closed(
+    tmp_path: Path, section: str, field: str, replacement: object,
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
+    coverage[section][field] = replacement
+    _write_json(path, coverage)
+    with pytest.raises(contracts.ContractError):
+        contracts.validate_contracts(root)
+
+
 def test_source_audit_formula_weakening_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
@@ -116,6 +138,52 @@ def test_near_duplicate_threshold_change_fails_closed(tmp_path: Path) -> None:
     evaluation["near_duplicate_policy"]["numeric_thresholds"]["near_duplicate_minimum"] = 0.89
     _write_json(path, evaluation)
     with pytest.raises(contracts.ContractError):
+        contracts.validate_contracts(root)
+
+
+def test_near_duplicate_implementation_is_exactly_bound_to_its_pinned_artifact(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    _, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    policy = evaluation["near_duplicate_policy"]
+    assert policy["implementation_version"] == contracts.NEAR_DUPLICATE_IMPLEMENTATION_VERSION
+    assert policy["implementation_module"] == contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE
+    assert policy["implementation_artifact"] == contracts.NEAR_DUPLICATE_POLICY_ARTIFACT
+    assert policy["policy_fingerprint_sha256"] == contracts.NEAR_DUPLICATE_POLICY_FINGERPRINT
+    assert contracts.validate_contracts(root)["ok"] is True
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("implementation_version", "implementation_pending"),
+        ("implementation_module", "scripts/projects/open_model_data/drift.py"),
+        ("implementation_artifact", "data/projects/open_model_data/evidence/drift.json"),
+        ("policy_fingerprint_sha256", "0" * 64),
+    ],
+)
+def test_near_duplicate_implementation_binding_drift_fails_closed(
+    tmp_path: Path, field: str, replacement: str
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["near_duplicate_policy"][field] = replacement
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match="schema violation"):
+        contracts.validate_contracts(root)
+
+
+def test_near_duplicate_policy_artifact_content_drift_fails_closed(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    artifact_path = root / contracts.NEAR_DUPLICATE_POLICY_ARTIFACT
+    policy_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    policy_artifact["implementation"]["module"] = "scripts/projects/open_model_data/drift.py"
+    fingerprint_input = dict(policy_artifact)
+    fingerprint_input.pop("policy_fingerprint_sha256")
+    policy_artifact["policy_fingerprint_sha256"] = hashlib.sha256(
+        (contracts.canonical_json(fingerprint_input) + "\n").encode("utf-8")
+    ).hexdigest()
+    _write_json(artifact_path, policy_artifact)
+    with pytest.raises(contracts.ContractError, match="near-duplicate policy artifact fingerprint drift"):
         contracts.validate_contracts(root)
 
 
@@ -265,6 +333,83 @@ def test_all_roles_unlaunched_lie_fails_closed(tmp_path: Path) -> None:
         binding["status"] = "reserved_not_launched"
     _write_json(path, roles)
     with pytest.raises(contracts.ContractError, match=r"schema violation|approved contract-text review binding changed"):
+        contracts.validate_contracts(root)
+
+
+def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    roles = _artifact(root, "correction_protection_role_contract_v1.json")[1]
+    expected = {
+        "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01"),
+        "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01"),
+        "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01"),
+    }
+    bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
+    seats = {seat["role_id"]: seat for seat in roles["seats"]}
+    for role_id, (task_id, controller_identity_id) in expected.items():
+        assert seats[role_id]["assignment_state"] == "assigned_verified"
+        assert seats[role_id]["controller_identity_id"] == controller_identity_id
+        assert seats[role_id]["controller_identity_attested"] is True
+        assert bindings[role_id] == {
+            "role_id": role_id,
+            "reserved_task_id": task_id,
+            "controller_identity_id": controller_identity_id,
+            "status": "identity_attested_pre_artifact",
+            "artifact_approval_claimed": False,
+            "program_completion_claimed": False,
+        }
+    assert contracts.validate_contracts(root)["ok"] is True
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("reserved_task_id", "phase3-role-drift"),
+        ("controller_identity_id", "controller_phase3_drift_01"),
+        ("status", "combined_contract_text_approved_pre_artifact"),
+    ],
+)
+@pytest.mark.parametrize("role_id", ("rule_author_extractor", "heldout_steward", "heldout_label_reviewer"))
+def test_newly_attested_role_binding_cannot_drift(
+    tmp_path: Path, field: str, replacement: str, role_id: str
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
+    next(binding for binding in roles["task_bindings"] if binding["role_id"] == role_id)[field] = replacement
+    if field == "controller_identity_id":
+        next(seat for seat in roles["seats"] if seat["role_id"] == role_id)[field] = replacement
+    _write_json(path, roles)
+    with pytest.raises(contracts.ContractError, match=r"attested decision role binding changed|attested decision seat controller identity changed"):
+        contracts.validate_contracts(root)
+
+
+def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
+    seats = {seat["role_id"]: seat for seat in roles["seats"]}
+    bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
+    reserved_roles = {
+        "scorer",
+        "outsider_reproducer",
+        "cross_family_code_infra_reviewer",
+        "disposition_auditor",
+        "textbook_nonhit_auditor",
+    }
+    for role_id in reserved_roles:
+        assert seats[role_id]["assignment_state"] == "reserved_unassigned"
+        assert seats[role_id]["controller_identity_id"] is None
+        assert bindings[role_id]["status"] == "reserved_not_launched"
+    seats["scorer"].update({
+        "assignment_state": "assigned_verified",
+        "controller_identity_id": "controller_phase3_scorer_01",
+        "controller_identity_attested": True,
+    })
+    bindings["scorer"].update({
+        "controller_identity_id": "controller_phase3_scorer_01",
+        "status": "identity_attested_pre_artifact",
+    })
+    _write_json(path, roles)
+    with pytest.raises(contracts.ContractError, match="unlaunched decision seat claims a controller identity"):
         contracts.validate_contracts(root)
 
 
