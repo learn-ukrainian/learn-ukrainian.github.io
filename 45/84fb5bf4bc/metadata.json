@@ -3,7 +3,7 @@
   "checkpoint_id": "4584fb5bf4bc",
   "strategy": "manual-commit",
   "branch": "agy/requirements-declaration-sync",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
     "requirements.txt",
     "scripts/orchestration/trails/trail_mcp.py"
@@ -15,6 +15,13 @@
       "compact_transcript": "/45/84fb5bf4bc/0/transcript.jsonl",
       "content_hash": "/45/84fb5bf4bc/0/content_hash.txt",
       "prompt": "/45/84fb5bf4bc/0/prompt.txt"
+    },
+    {
+      "metadata": "/45/84fb5bf4bc/1/metadata.json",
+      "transcript": "/45/84fb5bf4bc/1/full.jsonl",
+      "compact_transcript": "/45/84fb5bf4bc/1/transcript.jsonl",
+      "content_hash": "/45/84fb5bf4bc/1/content_hash.txt",
+      "prompt": "/45/84fb5bf4bc/1/prompt.txt"
     }
   ]
 }
