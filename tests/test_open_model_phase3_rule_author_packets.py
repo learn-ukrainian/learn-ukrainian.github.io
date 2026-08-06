@@ -346,6 +346,21 @@ def test_steward_receipt_body_and_bindings_are_not_retargetable_or_legacy(tmp_pa
         _build(paths)
 
 
+@pytest.mark.parametrize("field", ["heldout_access", "near_duplicate_policy"])
+def test_malformed_nested_evaluation_contract_fails_closed(tmp_path: Path, field: str) -> None:
+    paths = _fixture(tmp_path)
+    evaluation = json.loads(paths["evaluation"].read_text(encoding="utf-8"))
+    evaluation[field] = None
+    _write(paths["evaluation"], evaluation)
+    clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
+    clearance["input_bindings"]["evaluation_contract_sha256"] = packets.sha256_file(paths["evaluation"])
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _write(paths["clearance"], clearance)
+
+    with pytest.raises(packets.PacketCompilerError, match=f"evaluation contract {field} is malformed"):
+        _build(paths)
+
+
 def test_heldout_prohibition_is_checked_on_the_assigned_rule_author_seat(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     role = json.loads(paths["role"].read_text(encoding="utf-8"))

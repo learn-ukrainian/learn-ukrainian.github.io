@@ -288,17 +288,17 @@ def validate_clearance(
         "read_heldout_text_locators_fingerprints_labels" in set(author_seat.get("must_not", [])),
         "rule-author heldout prohibition drift",
     )
-    require(
-        evaluation.get("heldout_access", {}).get("author_extractor_forbidden") is True,
-        "evaluation contract permits author heldout access",
-    )
+    heldout_access = evaluation.get("heldout_access")
+    require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
+    require(heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access")
     policy = near_duplicate.policy_for_governed_use(
         "public_canary_neighbour_exclusion",
         expected_fingerprint=str(bindings["near_duplicate_policy_fingerprint_sha256"]),
     )
+    evaluation_policy = evaluation.get("near_duplicate_policy")
+    require(isinstance(evaluation_policy, Mapping), "evaluation contract near_duplicate_policy is malformed")
     require(
-        evaluation.get("near_duplicate_policy", {}).get("policy_fingerprint_sha256")
-        == policy["policy_fingerprint_sha256"],
+        evaluation_policy.get("policy_fingerprint_sha256") == policy["policy_fingerprint_sha256"],
         "evaluation near-duplicate policy binding drift",
     )
     _sha(clearance_sha256, "clearance file")
