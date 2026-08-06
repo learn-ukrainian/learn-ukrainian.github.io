@@ -10,7 +10,7 @@ import argparse
 import json
 import sys
 from collections import Counter
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -90,10 +90,9 @@ def load_tasks(
         if not isinstance(data, dict):
             continue
         init = str(data.get("initiator") or "").lower()
+        # "grok" matches initiator "grok-night-drive" via substring or startswith
         if prefix and prefix not in init and not init.startswith(prefix):
-            # allow exact "grok" matching "grok-night-drive"
-            if prefix not in init:
-                continue
+            continue
         started = _parse_ts(str(data.get("started_at") or "") or None)
         finished = _parse_ts(str(data.get("finished_at") or "") or None)
         if started is None and finished is None:
@@ -185,12 +184,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON only")
     args = parser.parse_args(argv)
 
-    since = datetime.now(timezone.utc) - timedelta(hours=args.since_hours)
+    since = datetime.now(UTC) - timedelta(hours=args.since_hours)
     tasks = load_tasks(args.tasks_dir, initiator_prefix=args.initiator, since=since)
     report = build_report(tasks)
     report["initiator_filter"] = args.initiator
     report["since_hours"] = args.since_hours
-    report["generated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    report["generated_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
