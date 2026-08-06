@@ -172,7 +172,7 @@ def _prompt(author: Mapping[str, str], packet_sha: str, prompt_sha_placeholder: 
         "Do not access, infer, mention, or reconstruct heldout, UA-Eval, or public-canary material.",
         "Propose only source-supported candidates from attached source_item_id values; abstain when the source is insufficient.",
         "Return one JSON object only with keys proposals, abstentions, limitations, parse_state.",
-        "Each proposal must satisfy the Phase 3 typed matcher/output schema; matcher.kind must equal mechanism.",
+        "Each proposal must satisfy the Phase 3 typed matcher/output schema; matcher.kind must equal the proposal's mechanism value (for example, both literal).",
         "Every proposal source_item_id and evidence_refs must reference attached source_item_id values, and source_span must match that item.",
         "This is a non-authoritative proposal; do not claim Ukrainian review, acceptance, publication, or completion.",
         f"Mechanical packet SHA-256: {packet_sha}.",
@@ -283,13 +283,20 @@ def _record(entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Path, *
         for proposal in response["proposals"]:
             require(proposal["source_item_id"] in item_spans and proposal["source_span"] == item_spans[proposal["source_item_id"]], "proposal source binding drift")
             require(proposal["evidence_refs"] and set(proposal["evidence_refs"]) <= {proposal["source_item_id"]}, "proposal evidence is not source-only")
-        return {"state": "parsed", "response": response, "execution_error": execution_error}
+        record = {"state": "parsed", "response": response, "execution_error": execution_error}
     except (UnicodeDecodeError, json.JSONDecodeError, RuleAuthorRunnerError, packets.PacketCompilerError) as exc:
-        return {"state": "unparsed", "packet_sha256": entry["packet_sha256"], "prompt_sha256": entry["prompt_sha256"], "raw_response_sha256": sha256_bytes(raw), "technical_error": str(exc), "execution_error": execution_error}
+        record = {"state": "unparsed", "packet_sha256": entry["packet_sha256"], "prompt_sha256": entry["prompt_sha256"], "raw_response_sha256": sha256_bytes(raw), "technical_error": str(exc), "execution_error": execution_error}
+    return {**record, "record_sha256": sha256_bytes(canonical_json(record).encode("utf-8"))}
 
 
 def _validate_record(entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
     record = _read_json(_assert_private_file(root, entry["record"]))
+    stored_hash = record.get("record_sha256")
+    unsigned = {key: value for key, value in record.items() if key != "record_sha256"}
+    require(
+        isinstance(stored_hash, str) and stored_hash == sha256_bytes(canonical_json(unsigned).encode("utf-8")),
+        "record self-integrity hash drift",
+    )
     expected = _record(entry, manifest, root, execution_error=record.get("execution_error"))
     require(record == expected, "resume record hash, schema, or binding drift")
     return record
@@ -358,6 +365,8 @@ def run(
             require(not raw_path.is_symlink() and raw_path.resolve() == raw_path.absolute(), "bridge output path is aliased")
             os.chmod(raw_path, FILE_MODE)
         _write_private(record_path, (canonical_json(_record(entry, manifest, root, execution_error=execution_error)) + "\n").encode("utf-8"))
+    if max_packets is None:
+        _assert_tree(root, manifest, permit_empty_results=False)
     receipt = _receipt(manifest, root, selected)
     _write_public_receipt(safe_receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"))
     return receipt
@@ -411,7 +420,7 @@ def _write_public_receipt(path: Path, value: bytes) -> None:
 def verify(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_model: str) -> dict[str, Any]:
     manifest = prepare(bundle_path=bundle_path, role_path=role_path, private_dir=private_dir, exact_model=exact_model)
     root = _private_root(private_dir, create=False)
-    _assert_tree(root, manifest, permit_empty_results=True)
+    _assert_tree(root, manifest, permit_empty_results=False)
     for entry in manifest["packets"]:
         if (root / entry["record"]).exists():
             _validate_record(entry, manifest, root)

@@ -91,6 +91,24 @@ def test_resume_reuses_exact_prepared_files(tmp_path: Path) -> None:
     assert runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test") == first
 
 
+def test_verify_rejects_a_prepared_only_or_partial_run(tmp_path: Path) -> None:
+    bundle, role, private, receipt = _paths(tmp_path)
+    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
+    with pytest.raises(runner.RuleAuthorRunnerError, match="incomplete"):
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
+    runner.run(
+        bundle_path=bundle,
+        role_path=role,
+        private_dir=private,
+        receipt_path=receipt,
+        exact_model="gemini-test",
+        max_packets=1,
+        executor=_executor(),
+    )
+    with pytest.raises(runner.RuleAuthorRunnerError, match="incomplete"):
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
+
+
 def test_permissions_symlink_and_aliases_fail_closed(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
@@ -132,6 +150,8 @@ def test_command_is_only_the_fixed_agy_bridge_shape(tmp_path: Path) -> None:
     assert command[1:4] == [str(runner.ROOT / "scripts/ai_agent_bridge/__main__.py"), "ask-agy", "-"]
     assert "--review" not in command and "--task-id" in command and "--to-model" in command and "--data" in command and "--output-path" in command
     assert str(private / manifest["packets"][0]["prompt"]) not in command
+    prompt = (private / manifest["packets"][0]["prompt"]).read_text(encoding="utf-8")
+    assert "matcher.kind must equal the proposal's mechanism value" in prompt and "both literal" in prompt
 
 
 def test_cross_packet_source_is_rejected(tmp_path: Path) -> None:
@@ -246,10 +266,16 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
         private_dir=private,
         receipt_path=receipt,
         exact_model="gemini-test",
-        max_packets=1,
         executor=unavailable,
     )
-    assert result["failed_count"] == 1 and result["unparsed_count"] == 1
+    assert result["failed_count"] == 2 and result["unparsed_count"] == 2
+    record_path = private / "records/1.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["execution_error"] = "edited-after-capture"
+    record_path.write_text(json.dumps(record, separators=(",", ":")) + "\n", encoding="utf-8")
+    os.chmod(record_path, 0o600)
+    with pytest.raises(runner.RuleAuthorRunnerError, match="self-integrity"):
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-test")
     alias = tmp_path / "bundle-alias.json"
     os.symlink(bundle, alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
