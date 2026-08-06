@@ -181,8 +181,8 @@ def test_rejects_stale_contract_or_partition_receipt_binding_and_permission_drif
         _build(paths)
     paths = _fixture(tmp_path / "permissions")
     _build(paths)
-    os.chmod(paths["private"] / rows.ROWS_FILENAME, 0o640)
-    with pytest.raises(rows.SourceRowsError, match="permissions too open"):
+    os.chmod(paths["private"] / rows.ROWS_FILENAME, 0o400)
+    with pytest.raises(rows.SourceRowsError, match="permissions drift"):
         _build(paths)
 
 

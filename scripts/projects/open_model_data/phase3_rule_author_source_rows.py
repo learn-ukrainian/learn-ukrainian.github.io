@@ -142,7 +142,7 @@ def _prepare_private_dir(private_dir: Path) -> Path:
     for entry in entries:
         _lstat(entry, "private source-row directory entry")
         require(entry.name == ROWS_FILENAME and entry.is_file(), "unexpected file in private source-row directory")
-        require((entry.stat().st_mode & 0o777) == PRIVATE_FILE_MODE, "private source-row file permissions too open")
+        require((entry.stat().st_mode & 0o777) == PRIVATE_FILE_MODE, "private source-row file permissions drift")
     return private_dir / ROWS_FILENAME
 
 
