@@ -37,12 +37,10 @@ _DEFAULT_AGENT_TIER = {
 # compounds like gpt-5.6-sol / claude-fable). Bare substring matching mis-tiers
 # e.g. gemini-3.6-flash-high (flash) and gemini-* (mini inside gemini).
 _AUTHORITY_TOKEN_RE = re.compile(
-    r"(?:^|[-_.])(?:fable|sol|opus)(?:$|[-_.])"
-    r"|gpt-5\.6-sol|claude-fable|claude-opus",
+    r"(?:^|[-_.])(?:fable|sol|opus|claude-fable|claude-opus|gpt-5\.6-sol)(?:$|[-_.])"
 )
 _HEAP_TOKEN_RE = re.compile(
-    r"(?:^|[-_.])(?:luna|haiku|flash|mini|laguna)(?:$|[-_.])"
-    r"|k2\.5",
+    r"(?:^|[-_.])(?:luna|haiku|flash|mini|laguna|k2\.5)(?:$|[-_.])"
 )
 _PRACTICAL_OVERRIDE_RE = re.compile(
     r"flash-high|gemini-3\.[0-9]+-flash-high|gpt-5\.6-terra|claude-sonnet",
