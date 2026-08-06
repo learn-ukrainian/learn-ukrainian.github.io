@@ -1,0 +1,66 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/hooks-claude-startup-review
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: measured efficiency review of Claude Code hooks + session startup (2026-08-06)
+
+Operator order: "hooks are not efficient and need to be reviewed. your startup should also be
+investigated and reviewed — is it efficient or bloat?" This is a MEASUREMENT + findings task.
+Deliverable is a report, not code changes.
+
+## Prior art — do NOT duplicate
+
+Open PR #6408 (`grok/hook-audit`) already ships hook-timing tooling and Grok-path optimizations:
+`scripts/hooks/hook_timing.py`, `scripts/hooks/measure_hook_stack.py`, `run_hook_timed.sh`
+(`HOOK_TIMING=1`), plus `docs/best-practices/hook-audit.md`. USE that tooling (fetch the branch,
+run its measure harness) instead of inventing your own. Its scope was the Grok seat; YOUR scope is
+the **Claude seat**: session-setup.sh cold-start, context injection volume, and failure-path
+verdict quality. Cite #6408's numbers where relevant instead of re-measuring the same thing.
+
+## Rules
+
+- Read-only analysis. Do not modify hooks, settings, or scripts. No process/architecture decisions —
+  findings and recommendations only; the operator decides.
+- #M-4: every number in the report must come from a command you ran, quoted with the command.
+  No estimated timings, no "probably".
+
+## Scope
+
+All of `.claude/hooks/*` in the public repo (session-setup.sh is the big one, ~700+ lines), plus
+`.claude/settings.json` hook wiring, plus what SessionStart injects into the model's context.
+
+## Questions to answer (each with measurements)
+
+1. **Wall-clock cost per hook event.** Time each hook script standalone (`time bash <hook> < /dev/null`
+   with a representative env; note which env vars matter). Which hooks run on which events
+   (SessionStart, PreToolUse, PostToolUse, Stop, SessionEnd, PostCompact)? What is the TOTAL added
+   latency per user turn and per session start?
+2. **Subprocess fan-out.** Count python/curl/git spawns per hook invocation (e.g. `bash -x` trace,
+   count exec lines). session-setup.sh is suspected of spawning many short-lived .venv pythons —
+   each ~100-300ms. Which could be merged into one python call?
+3. **Context injection size.** Measure bytes/estimated tokens each SessionStart source injects:
+   profile capsule, epic banner, rollover/handoff output, INFO lines, CLAUDE.md chain (user + project +
+   rules files), MEMORY.md. What is duplicated (e.g. rules digest in CLAUDE.md vs served /api/rules vs
+   .claude/rules/*)? What is stale?
+4. **Failure-path quality.** The 2026-08-06 case study: `thread_handoff.py` crashed with ImportError
+   (venv namespace shadow) and session-setup.sh line ~461 mislabeled rc≠0 as "DURABLE THREAD LEASE
+   CONFLICT". Audit every hook branch that maps an exit code to a verdict: which ones can report a
+   WRONG verdict on crash (vs "could not determine")? List each with file:line.
+5. **Redundancy across hooks.** thread-lease-heartbeat, goal-driver-stop, release-thread-lease,
+   context-monitor, post-compact — overlapping responsibilities? Same data fetched multiple times
+   (e.g. Monitor API curls without If-None-Match/caching)?
+6. **Bloat verdict.** For each hook: load-bearing (guards a real burn — cite which) vs bloat
+   (removable/mergeable with measured saving). Ranked list of the top wins by saved latency and
+   saved context tokens, with concrete recommendation each.
+
+## Deliverable
+
+Single markdown report at `batch_state/reports/2026-08-06-hooks-startup-efficiency.md` in your
+worktree, committed and pushed on your branch, PR opened (docs-only PR). Structure: executive
+summary (10 lines max, plain language) → per-question findings with quoted measurements →
+ranked recommendations table. Do NOT enable auto-merge.

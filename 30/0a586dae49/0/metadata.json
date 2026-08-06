@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "300a586dae49",
+  "session_id": "session_679584cc-8637-4523-8cf9-7e597403f101",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T10:56:56.76572Z",
+  "branch": "kimi/hooks-claude-startup-review",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/reports/2026-08-06-hooks-startup-efficiency.md"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "1e2f9b49a453",
+  "token_usage": {
+    "input_tokens": 145174,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 4806144,
+    "output_tokens": 33415,
+    "api_call_count": 51
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T10:56:56.739019Z",
+    "agent_lines": 358,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 358,
+    "total_lines_changed": 358,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
