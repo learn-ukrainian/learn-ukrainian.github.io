@@ -278,7 +278,7 @@ QWEN = ReviewerCandidate(
     always_excluded_reason="excluded from routine/automatic routing (cost) — model-assignment.md",
 )
 
-_HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "unhealthy": 3}
+_HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "degraded_telemetry": 3, "unhealthy": 4}
 _HEALTH_ALIASES: dict[str, str | None] = {
     "healthy": "healthy",
     "cool": "healthy",
@@ -287,6 +287,7 @@ _HEALTH_ALIASES: dict[str, str | None] = {
     "warm": "degraded",
     "near_cap": "near_cap",
     "hot": "near_cap",
+    "degraded_telemetry": "degraded_telemetry",
     # routing-budget emits this when CodexBar probe fails/times out. That is
     # missing capacity evidence, not a proven dead seat — fail-open like
     # "unknown" (operator 2026-08-03: red probe must not ban CF lanes).
@@ -337,11 +338,15 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
         if not isinstance(raw, Mapping):
             raise ValueError(f"routing snapshot agents.{route} must be a mapping")
         health = raw.get("health")
+        status = raw.get("status")
+        is_healthy = isinstance(health, Mapping) and health.get("healthy") is True
+        if is_healthy and status == "unavailable":
+            normalized[str(route)] = "degraded_telemetry"
+            continue
         if isinstance(health, Mapping) and health.get("healthy") is False:
             normalized[str(route)] = "unhealthy"
             continue
-        status = raw.get("status")
-        if status is None and isinstance(health, Mapping) and health.get("healthy") is True:
+        if status is None and is_healthy:
             normalized[str(route)] = "healthy"
             continue
         if status is None:
@@ -534,7 +539,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         return (
             f"data-egress policy fail-closed: {candidate.name} requires "
             f"data_egress_policy={candidate.requires_data_egress_policy!r}, "
-            f"got {inputs.data_egress_policy!r}"
+            f"got {inputs.data_egress_policy!r} (requires --data-egress-policy {candidate.requires_data_egress_policy})"
         )
     missing = inputs.required_capabilities - candidate.capabilities
     if missing:
@@ -642,6 +647,20 @@ def evaluate_candidate(
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
             reason=circuit_reason,
+            health=health,
+        )
+    if health == "degraded_telemetry":
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason=f"degraded_telemetry: seat snapshot for {candidate.name!r} is self-contradictory (healthy=true, status=unavailable)",
             health=health,
         )
     if health == "unhealthy":
