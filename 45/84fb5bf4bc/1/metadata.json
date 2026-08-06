@@ -3,7 +3,7 @@
   "checkpoint_id": "4584fb5bf4bc",
   "session_id": "fleet-bb93a1044d99461db2bdf2b5aa30afa8",
   "strategy": "manual-commit",
-  "created_at": "2026-08-06T17:09:30.29198Z",
+  "created_at": "2026-08-06T17:09:35.319063Z",
   "branch": "agy/requirements-declaration-sync",
   "checkpoints_count": 1,
   "files_touched": [
@@ -13,9 +13,11 @@
   "agent": "Project Runner",
   "model": "gemini-3.6-flash-high",
   "turn_id": "68feb0fe62e5",
-  "compact_transcript_start": 0,
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
   "initial_attribution": {
-    "calculated_at": "2026-08-06T17:09:30.286761Z",
+    "calculated_at": "2026-08-06T17:09:35.309387Z",
     "agent_lines": 0,
     "agent_removed": 0,
     "human_added": 0,
@@ -25,14 +27,5 @@
     "total_lines_changed": 0,
     "agent_percentage": 0,
     "metric_version": 2
-  },
-  "prompt_attributions": [
-    {
-      "checkpoint_number": 1,
-      "user_lines_added": 0,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0
-    }
-  ]
+  }
 }
