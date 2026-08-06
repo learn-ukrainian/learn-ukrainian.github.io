@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Callable, Mapping
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +51,10 @@ def sha256_bytes(value: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
+
+
+def _utc_now() -> str:
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
 def require(condition: bool, message: str) -> None:
@@ -141,8 +146,17 @@ def _receipt_has_no_leakage(receipt: Mapping[str, Any]) -> bool:
 def _author(role_path: Path, exact_model: str) -> dict[str, str]:
     require(exact_model == CANONICAL_AGY_MODEL, "exact model is not the canonical AGY Gemini model")
     role = packets.read_json(role_path)
-    actor = packets._derive_role_actor(role, "rule_author_extractor")
-    return {**actor, "provider": "google", "model_family": "gemini", "harness": "agy", "exact_model": exact_model}
+    try:
+        actor = packets._derive_role_actor(role, "rule_author_extractor")
+    except packets.PacketCompilerError as exc:
+        raise RuleAuthorRunnerError(str(exc)) from exc
+    entry = next(item for item in role["functional_roles"] if item["role_id"] == "rule_author_extractor")
+    require(
+        {key: entry[key] for key in ("exact_model", "model_family", "harness")}
+        == {"exact_model": exact_model, "model_family": "gemini", "harness": "agy"},
+        "functional-role rule-author execution lane drift",
+    )
+    return {**actor, "provider": "google", "model_family": entry["model_family"], "harness": entry["harness"], "exact_model": exact_model}
 
 
 def _validate_bundle(path: Path) -> dict[str, Any]:
@@ -164,6 +178,13 @@ def _validate_bundle(path: Path) -> dict[str, Any]:
         and bundle["compiler"].get("phase3_v2_contract_sha256") == packets.PHASE3_V2_CONTRACT_SHA256,
         "packet bundle Phase 3 v2 contract binding drift",
     )
+    require(
+        bundle.get("phase3_v2_1_amendment_sha256") == packets.PHASE3_V2_1_AMENDMENT_SHA256
+        and bundle.get("phase3_v2_1_combined_contract_sha256") == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+        and bundle["compiler"].get("phase3_v2_1_amendment_sha256") == packets.PHASE3_V2_1_AMENDMENT_SHA256
+        and bundle["compiler"].get("phase3_v2_1_combined_contract_sha256") == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        "packet bundle Phase 3 v2.1 contract binding drift",
+    )
     return bundle
 
 
@@ -172,7 +193,7 @@ def _prompt(author: Mapping[str, str], packet_sha: str, prompt_sha_placeholder: 
     # fields after preserving the model's exact raw bytes.
     return "\n".join((
         "You are the assigned Phase 3 rule-author extractor, not a reviewer or scorer.",
-        f"Binding: role={author['role_id']}; controller={author['controller_identity_id']}; task={author['task_id']}.",
+        f"Binding: role={author['role_id']}; task={author['task_id']}.",
         "The attached private packet is the complete and only evidence. Do not use model memory as authority.",
         "Do not access, infer, mention, or reconstruct heldout, UA-Eval, or public-canary material.",
         "Propose only source-supported candidates from attached source_item_id values; abstain when the source is insufficient.",
@@ -184,6 +205,49 @@ def _prompt(author: Mapping[str, str], packet_sha: str, prompt_sha_placeholder: 
         f"Prompt hash note: {prompt_sha_placeholder}.",
         "",
     ))
+
+
+def _action_receipt(
+    *,
+    author: Mapping[str, str],
+    input_manifest_sha256: str,
+    output_sha256: str,
+    functional_role_contract_sha256: str,
+    conflict_graph_sha256: str,
+    evaluation_cycle_id: str,
+    status: str,
+    started_at: str,
+    completed_at: str | None,
+) -> dict[str, Any]:
+    identity = {
+        "role_id": author["role_id"],
+        "task_id": author["task_id"],
+        "input_manifest_sha256": input_manifest_sha256,
+        "evaluation_cycle_id": evaluation_cycle_id,
+        "output_sha256": output_sha256,
+        "status": status,
+    }
+    return {
+        "receipt_id": "phase3_functional_action:" + sha256_bytes(canonical_json(identity).encode("utf-8")),
+        "role_id": author["role_id"],
+        "task_id": author["task_id"],
+        "action_kind": "rule_author_packet_run",
+        "provider": author["provider"],
+        "exact_model": author["exact_model"],
+        "model_family": author["model_family"],
+        "harness": author["harness"],
+        "input_manifest_sha256": input_manifest_sha256,
+        "output_sha256": output_sha256,
+        "evaluation_cycle_id": evaluation_cycle_id,
+        "base_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256,
+        "amendment_sha256": packets.PHASE3_V2_1_AMENDMENT_SHA256,
+        "combined_contract_sha256": packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        "functional_role_contract_sha256": functional_role_contract_sha256,
+        "conflict_graph_sha256": conflict_graph_sha256,
+        "started_at": started_at,
+        "completed_at": completed_at,
+        "status": status,
+    }
 
 
 def _expected_paths(manifest: Mapping[str, Any]) -> set[str]:
@@ -216,7 +280,11 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
     """Prepare canonical private attachments/prompts, idempotently on exact identity."""
     bundle_path, role_path = _no_alias(bundle_path, "bundle"), _no_alias(role_path, "role contract")
     bundle, author = _validate_bundle(bundle_path), _author(role_path, exact_model)
-    require(bundle["role_contract_sha256"] == sha256_file(role_path), "packet bundle role-contract binding drift")
+    role_contract = packets.read_json(role_path)
+    require(
+        bundle["functional_role_contract_sha256"] == sha256_file(role_path),
+        "packet bundle functional-role contract binding drift",
+    )
     root = _private_root(private_dir, create=True)
     entries: list[dict[str, Any]] = []
     for packet in bundle["packets"]:
@@ -232,10 +300,12 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
         })
     manifest = {
         "schema_version": "phase3_rule_author_run_manifest_v1", "bundle_sha256": sha256_file(bundle_path),
-        "role_contract_sha256": sha256_file(role_path),
+        "functional_role_contract_sha256": sha256_file(role_path),
         "bindings": {
             "evaluation_contract_sha256": bundle["evaluation_contract_sha256"],
             "phase3_v2_contract_sha256": bundle["phase3_v2_contract_sha256"],
+            "phase3_v2_1_amendment_sha256": bundle["phase3_v2_1_amendment_sha256"],
+            "phase3_v2_1_combined_contract_sha256": bundle["phase3_v2_1_combined_contract_sha256"],
             "coverage_contract_sha256": bundle["coverage_contract_sha256"],
             "near_duplicate_policy_sha256": bundle["near_duplicate_policy_fingerprint_sha256"],
             "query_plan_sha256": bundle["compiler"]["query_plan_sha256"],
@@ -243,12 +313,31 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
             "compiler": bundle["compiler"],
         },
         "runner": {"implementation_version": VERSION, "script_sha256": sha256_file(ROOT / SCRIPT_PATH), "schema_sha256": sha256_file(SCHEMA_PATH)},
-        "author": author, "packets": entries,
+        "author": author,
+        "action_receipt": _action_receipt(
+            author=author,
+            input_manifest_sha256=sha256_file(bundle_path),
+            output_sha256=sha256_bytes(canonical_json([]).encode("utf-8")),
+            functional_role_contract_sha256=sha256_file(role_path),
+            conflict_graph_sha256=packets.functional_roles.conflict_graph_sha256(role_contract),
+            evaluation_cycle_id=role_contract["evaluation_cycle"]["evaluation_cycle_id"],
+            status="prepared",
+            started_at=_utc_now(),
+            completed_at=None,
+        ),
+        "packets": entries,
     }
     _validate_manifest(manifest)
     existing = root / "manifest.json"
     if existing.exists():
         old = _read_json(_assert_private_file(root, "manifest.json"))
+        _validate_manifest(old)
+        require(
+            old["action_receipt"]["status"] == "prepared"
+            and old["action_receipt"]["completed_at"] is None,
+            "stored prepared action receipt state drift",
+        )
+        manifest["action_receipt"] = old["action_receipt"]
         require(old == manifest, "resume binding or hash drift")
         _assert_tree(root, old, permit_empty_results=True)
         for entry in entries:
@@ -319,8 +408,24 @@ def _receipt(manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
     failed_count = sum(bool(record.get("execution_error")) for record in records)
     complete = fully_attempted and len(parsed) == len(records) and failed_count == 0
     canary_succeeded = not fully_attempted and bool(records) and len(parsed) == len(records) and failed_count == 0
+    record_identities = [
+        {"ordinal": entry["ordinal"], "record_sha256": record["record_sha256"], "state": record["state"]}
+        for entry, record in zip(manifest["packets"], records, strict=False)
+    ]
+    action_status = "completed" if complete else ("failed" if failed_count else "partial")
+    action_receipt = _action_receipt(
+        author=manifest["author"],
+        input_manifest_sha256=manifest["bundle_sha256"],
+        output_sha256=sha256_bytes(canonical_json(record_identities).encode("utf-8")),
+        functional_role_contract_sha256=manifest["functional_role_contract_sha256"],
+        conflict_graph_sha256=manifest["action_receipt"]["conflict_graph_sha256"],
+        evaluation_cycle_id=manifest["action_receipt"]["evaluation_cycle_id"],
+        status=action_status,
+        started_at=manifest["action_receipt"]["started_at"],
+        completed_at=_utc_now(),
+    )
     prompt_set_sha = sha256_bytes(canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8"))
-    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "phase3_v2_contract_sha256": manifest["bindings"]["phase3_v2_contract_sha256"], "role_contract_sha256": manifest["role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
+    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "phase3_v2_contract_sha256": manifest["bindings"]["phase3_v2_contract_sha256"], "phase3_v2_1_amendment_sha256": manifest["bindings"]["phase3_v2_1_amendment_sha256"], "phase3_v2_1_combined_contract_sha256": manifest["bindings"]["phase3_v2_1_combined_contract_sha256"], "functional_role_contract_sha256": manifest["functional_role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "action_receipt": action_receipt, "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
     receipt["no_leakage"] = _receipt_has_no_leakage(receipt)
     _validate_receipt(receipt)
     return receipt

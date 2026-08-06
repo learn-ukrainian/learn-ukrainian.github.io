@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
 from scripts.projects.open_model_data import phase3_rule_author_runner as runner
 
@@ -20,7 +21,7 @@ def _write(path: Path, value: object) -> None:
 
 
 def _role() -> dict[str, object]:
-    return {"seats": [{"role_id": "rule_author_extractor", "assignment_state": "assigned_verified", "controller_identity_id": "controller_author", "controller_identity_attested": True}], "task_bindings": [{"role_id": "rule_author_extractor", "controller_identity_id": "controller_author", "reserved_task_id": "author-task", "status": "identity_attested_pre_artifact"}]}
+    return json.loads(functional_roles.LEDGER_PATH.read_text(encoding="utf-8"))
 
 
 def _item(number: int) -> dict[str, object]:
@@ -37,7 +38,7 @@ def _packet(number: int) -> dict[str, object]:
 def _paths(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
     bundle_path, role_path = tmp_path / "bundle.json", tmp_path / "role.json"
     _write(role_path, _role())
-    bundle = {"schema_version": "phase3_rule_author_packet_bundle_v1", "bundle_id": "rule_author_bundle:" + "2" * 64, "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "clearance": {"receipt_sha256": "3" * 64, "file_sha256": "4" * 64}, "source_freeze": {"receipt_sha256": "5" * 64, "merged_main_sha": "6" * 40}, "evaluation_contract_sha256": "7" * 64, "coverage_contract_sha256": "8" * 64, "role_contract_sha256": runner.sha256_file(role_path), "near_duplicate_policy_fingerprint_sha256": "0" * 64, "compiler": {"implementation_version": "phase3_rule_author_packet_compiler_v1", "script_sha256": runner.sha256_file(runner.ROOT / packets.SCRIPT_PATH), "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "query_plan_sha256": packets._query_plan_sha256(), "max_items": 24, "max_utf8_bytes": 196608}, "packets": [_packet(1), _packet(2)]}
+    bundle = {"schema_version": "phase3_rule_author_packet_bundle_v1", "bundle_id": "rule_author_bundle:" + "2" * 64, "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "phase3_v2_1_amendment_sha256": packets.PHASE3_V2_1_AMENDMENT_SHA256, "phase3_v2_1_combined_contract_sha256": packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256, "clearance": {"receipt_sha256": "3" * 64, "file_sha256": "4" * 64}, "source_freeze": {"receipt_sha256": "5" * 64, "merged_main_sha": "6" * 40}, "evaluation_contract_sha256": "7" * 64, "coverage_contract_sha256": "8" * 64, "functional_role_contract_sha256": runner.sha256_file(role_path), "near_duplicate_policy_fingerprint_sha256": "0" * 64, "compiler": {"implementation_version": "phase3_rule_author_packet_compiler_v1", "script_sha256": runner.sha256_file(runner.ROOT / packets.SCRIPT_PATH), "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256, "phase3_v2_1_amendment_sha256": packets.PHASE3_V2_1_AMENDMENT_SHA256, "phase3_v2_1_combined_contract_sha256": packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256, "query_plan_sha256": packets._query_plan_sha256(), "max_items": 24, "max_utf8_bytes": 196608}, "packets": [_packet(1), _packet(2)]}
     _write(bundle_path, bundle)
     return bundle_path, role_path, tmp_path / "private", tmp_path / "receipt.json"
 
@@ -64,8 +65,17 @@ def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
     assert len(manifest["packets"]) == 2
     assert manifest["bindings"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
+    assert manifest["bindings"]["phase3_v2_1_combined_contract_sha256"] == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+    assert manifest["action_receipt"]["task_id"] == functional_roles.ROLE_TASKS["rule_author_extractor"]
+    assert manifest["action_receipt"]["status"] == "prepared"
+    assert set(manifest["action_receipt"]) == set(functional_roles.ACTION_RECEIPT_FIELDS)
+    assert manifest["action_receipt"]["completed_at"] is None
     result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", executor=_executor())
     assert result["complete"] is True and result["no_leakage"] is True
+    assert result["action_receipt"]["status"] == "completed"
+    assert result["action_receipt"]["output_sha256"] != manifest["action_receipt"]["output_sha256"]
+    assert result["action_receipt"]["receipt_id"] != manifest["action_receipt"]["receipt_id"]
+    assert result["action_receipt"]["completed_at"].endswith("Z")
     bundle_value = json.loads(bundle.read_text(encoding="utf-8"))
     packet_by_ordinal = {packet["ordinal"]: packet for packet in bundle_value["packets"]}
     for entry in manifest["packets"]:
@@ -86,6 +96,21 @@ def test_prepare_rejects_packet_bundle_v2_binding_drift(tmp_path: Path) -> None:
     _write(bundle, value)
     with pytest.raises(runner.RuleAuthorRunnerError, match=r"schema violation|v2 contract binding drift"):
         runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+
+
+@pytest.mark.parametrize("field", ["phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256"])
+def test_prepare_rejects_packet_bundle_v2_1_binding_drift(tmp_path: Path, field: str) -> None:
+    bundle, role, private, _ = _paths(tmp_path)
+    value = json.loads(bundle.read_text(encoding="utf-8"))
+    value[field] = "0" * 64
+    _write(bundle, value)
+    with pytest.raises(runner.RuleAuthorRunnerError, match=r"schema violation|v2.1 contract binding drift"):
+        runner.prepare(
+            bundle_path=bundle,
+            role_path=role,
+            private_dir=private,
+            exact_model="gemini-3.6-flash-high",
+        )
 
 
 def test_malformed_output_is_unparsed_not_a_proposal(tmp_path: Path) -> None:
@@ -150,7 +175,10 @@ def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path:
     os.symlink(real_parent, linked_parent)
     bundle, role, private, _ = _paths(linked_parent)
     manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
-    assert (real_parent / "private" / "manifest.json").exists() and manifest["author"]["task_id"] == "author-task"
+    assert (
+        (real_parent / "private" / "manifest.json").exists()
+        and manifest["author"]["task_id"] == functional_roles.ROLE_TASKS["rule_author_extractor"]
+    )
     leaf_alias = linked_parent / "bundle-leaf-alias.json"
     os.symlink(bundle, leaf_alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
@@ -161,9 +189,9 @@ def test_role_binding_drift_rejects_resume(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
     runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
     changed = _role()
-    changed["task_bindings"][0]["reserved_task_id"] = "other-task"  # type: ignore[index]
+    next(item for item in changed["functional_roles"] if item["role_id"] == "rule_author_extractor")["task_id"] = "other-task"  # type: ignore[index]
     _write(role, changed)
-    with pytest.raises(runner.RuleAuthorRunnerError, match="role-contract binding"):
+    with pytest.raises(runner.RuleAuthorRunnerError, match=r"functional-role|schema violation"):
         runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
 
 
@@ -209,6 +237,7 @@ def test_command_is_only_the_fixed_agy_bridge_shape(tmp_path: Path) -> None:
     assert str(private / manifest["packets"][0]["prompt"]) not in command
     prompt = (private / manifest["packets"][0]["prompt"]).read_text(encoding="utf-8")
     assert "matcher.kind must equal the proposal's mechanism value" in prompt and "both literal" in prompt
+    assert "controller=" not in prompt and "attestation" not in prompt
 
 
 def test_cross_packet_source_is_rejected(tmp_path: Path) -> None:

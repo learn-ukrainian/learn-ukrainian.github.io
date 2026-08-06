@@ -4,11 +4,13 @@
   "title": "Phase 3 v2 compatibility and invalidation matrix v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "legacy_provenance", "bindings", "engine_bindings", "inventory", "legacy_claims", "source_authoring", "phase4"],
+  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256", "legacy_provenance", "bindings", "functional_role_binding", "engine_bindings", "inventory", "legacy_claims", "source_authoring", "phase4"],
   "properties": {
     "schema_version": {"const": "phase3_v2_compatibility_matrix_v1"},
     "text_free": {"const": true},
     "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    "phase3_v2_1_amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+    "phase3_v2_1_combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
     "legacy_provenance": {
       "type": "object",
       "additionalProperties": false,
@@ -26,6 +28,19 @@
       "required": ["schema_sha256", "validator_sha256"],
       "properties": {"schema_sha256": {"$ref": "#/$defs/sha256"}, "validator_sha256": {"$ref": "#/$defs/sha256"}}
     },
+    "functional_role_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "artifact_sha256", "schema_sha256", "validator_sha256", "conflict_graph_sha256", "role_graph_ready"],
+      "properties": {
+        "logical_path": {"const": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "validator_sha256": {"$ref": "#/$defs/sha256"},
+        "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "role_graph_ready": {"const": true}
+      }
+    },
     "engine_bindings": {
       "type": "array",
       "minItems": 4,
@@ -34,7 +49,7 @@
     },
     "inventory": {
       "type": "array",
-      "minItems": 26,
+      "minItems": 27,
       "items": {"$ref": "#/$defs/inventoryEntry"}
     },
     "legacy_claims": {
@@ -47,7 +62,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["blocked", "reason"],
-      "properties": {"blocked": {"const": true}, "reason": {"const": "v2_exclusive_role_independence_not_established"}}
+      "properties": {"blocked": {"const": true}, "reason": {"const": "v2_1_runtime_migration_and_exact_head_review_pending"}}
     },
     "phase4": {
       "type": "object",
@@ -66,12 +81,13 @@
         "artifact_id": {"type": "string", "minLength": 1},
         "logical_path": {"type": "string", "pattern": "^data/projects/open_model_data/evidence/.+"},
         "artifact_sha256": {"$ref": "#/$defs/sha256"},
-        "artifact_class": {"enum": ["deterministic_engine", "linguistic_status", "source_status", "consumer_status", "completion_status", "role_contract_status", "phase2_artifact"]},
+        "artifact_class": {"enum": ["deterministic_engine", "functional_role_contract", "linguistic_status", "source_status", "consumer_status", "completion_status", "role_contract_status", "phase2_artifact"]},
         "disposition": {"enum": ["valid", "rebound", "invalidated"]},
         "machine_reason": {
           "enum": [
             "deterministic_nonsemantic_engine_valid_under_v2",
             "deterministic_engine_rebound_to_v2",
+            "functional_role_contract_rebound_to_v2_1",
             "pre_v2_linguistic_status_invalidated",
             "pre_v2_source_status_invalidated",
             "pre_v2_consumer_status_invalidated",

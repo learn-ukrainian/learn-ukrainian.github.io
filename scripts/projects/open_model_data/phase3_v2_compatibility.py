@@ -21,13 +21,18 @@ if __package__ in {None, ""}:
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
+
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v2_compatibility_matrix_v1.schema.json"
 MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"
 SCRIPT_PATH = ROOT / "scripts/projects/open_model_data/phase3_v2_compatibility.py"
 V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
+V2_1_COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
 MATRIX_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
+FUNCTIONAL_ROLE_LOGICAL_PATH = "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
     "nine_case_seed": "seed_not_v2_evaluation",
@@ -99,7 +104,10 @@ def _tracked_evidence_paths() -> set[str]:
         text=True,
     )
     require(result.returncode == 0, "cannot enumerate tracked evidence")
-    return {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
+    paths = {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
+    if (ROOT / FUNCTIONAL_ROLE_LOGICAL_PATH).is_file():
+        paths.add(FUNCTIONAL_ROLE_LOGICAL_PATH)
+    return paths
 
 
 def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
@@ -109,9 +117,24 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
     errors = sorted(Draft202012Validator(schema).iter_errors(matrix), key=lambda error: list(error.path))
     require(not errors, f"matrix schema violation: {errors[0].message if errors else ''}")
     require(matrix["phase3_v2_contract_sha256"] == V2_SHA256, "Phase 3 v2 pin drift")
+    require(matrix["phase3_v2_1_amendment_sha256"] == V2_1_AMENDMENT_SHA256, "Phase 3 v2.1 amendment pin drift")
+    require(matrix["phase3_v2_1_combined_contract_sha256"] == V2_1_COMBINED_SHA256, "Phase 3 v2.1 combined pin drift")
     require(matrix["legacy_provenance"] == LEGACY_PROVENANCE, "legacy v1/v3 provenance binding drift")
     require(matrix["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "matrix schema binding drift")
     require(matrix["bindings"]["validator_sha256"] == sha256_file(SCRIPT_PATH), "matrix validator binding drift")
+    role_result = functional_roles.verify()
+    require(
+        matrix["functional_role_binding"]
+        == {
+            "logical_path": FUNCTIONAL_ROLE_LOGICAL_PATH,
+            "artifact_sha256": role_result["functional_role_contract_sha256"],
+            "schema_sha256": sha256_file(functional_roles.SCHEMA_PATH),
+            "validator_sha256": sha256_file(ROOT / "scripts/projects/open_model_data/phase3_functional_roles.py"),
+            "conflict_graph_sha256": role_result["conflict_graph_sha256"],
+            "role_graph_ready": True,
+        },
+        "functional-role validator binding drift",
+    )
     engine_entries = matrix["engine_bindings"]
     require({entry["logical_path"] for entry in engine_entries} == ENGINE_PATHS, "v2 engine binding set drift")
     for entry in engine_entries:
@@ -133,7 +156,13 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         require(path.is_file() and not path.is_symlink(), f"matrix artifact missing or aliased: {entry['logical_path']}")
         require(sha256_file(path) == entry["artifact_sha256"], f"matrix artifact hash drift: {entry['logical_path']}")
         require(entry["phase3_v2_contract_sha256"] == V2_SHA256, "entry v2 pin drift")
-        if entry["artifact_class"] in SEMANTIC_CLASSES:
+        if entry["artifact_class"] == "functional_role_contract":
+            require(
+                entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "functional_role_contract_rebound_to_v2_1",
+                "v2.1 functional-role ledger is not rebound",
+            )
+        elif entry["artifact_class"] in SEMANTIC_CLASSES:
             require(entry["disposition"] == "invalidated", "pre-v2 semantic/source/consumer/completion artifact not invalidated")
             require(
                 entry["machine_reason"] == INVALIDATION_REASONS[entry["artifact_class"]],
@@ -157,7 +186,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         )
     require(
         matrix["source_authoring"]
-        == {"blocked": True, "reason": "v2_exclusive_role_independence_not_established"},
+        == {"blocked": True, "reason": "v2_1_runtime_migration_and_exact_head_review_pending"},
         "source-authoring block drift",
     )
     require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")
@@ -165,11 +194,14 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         "ok": True,
         "schema_version": matrix["schema_version"],
         "phase3_v2_contract_sha256": V2_SHA256,
+        "phase3_v2_1_amendment_sha256": V2_1_AMENDMENT_SHA256,
+        "phase3_v2_1_combined_contract_sha256": V2_1_COMBINED_SHA256,
         "matrix_sha256": sha256_file(matrix_path),
         "inventory_count": len(entries),
         "invalidated_count": sum(entry["disposition"] == "invalidated" for entry in entries),
         "rebound_count": sum(entry["disposition"] == "rebound" for entry in entries),
         "valid_count": sum(entry["disposition"] == "valid" for entry in entries),
+        "role_graph_ready": True,
         "source_authoring_blocked": True,
         "phase4_blocked": True,
     }

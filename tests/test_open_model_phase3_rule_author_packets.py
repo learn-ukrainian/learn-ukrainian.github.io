@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
 
 
@@ -29,62 +30,23 @@ def _jsonl(path: Path, rows: list[dict[str, object]]) -> None:
 
 
 def _role_contract() -> dict[str, object]:
-    def seat(role: str, controller: str, must_not: list[str] | None = None) -> dict[str, object]:
-        return {
-            "seat_id": f"seat_{role}",
-            "role_id": role,
-            "assignment_state": "assigned_verified",
-            "controller_identity_id": controller,
-            "controller_identity_attested": True,
-            "must_not": must_not or [],
-        }
-
-    def binding(role: str, controller: str, task: str) -> dict[str, object]:
-        return {
-            "role_id": role,
-            "controller_identity_id": controller,
-            "reserved_task_id": task,
-            "status": "identity_attested_pre_artifact",
-        }
-
-    return {
-        "seats": [
-            seat("heldout_steward", "controller_phase3_heldout_steward_cursor_runtime_01"),
-            seat("rule_author_extractor", "controller_author", ["read_heldout_text_locators_fingerprints_labels"]),
-            seat("ukrainian_source_reviewer", "controller_reviewer"),
-        ],
-        "task_bindings": [
-            binding(
-                "heldout_steward",
-                "controller_phase3_heldout_steward_cursor_runtime_01",
-                "phase3-role-heldout-steward-cursor-v2",
-            ),
-            binding("rule_author_extractor", "controller_author", "author-task"),
-            binding("ukrainian_source_reviewer", "controller_reviewer", "review-task"),
-        ],
-        "heldout_acl": {
-            "pre_release_read_roles": ["heldout_steward", "heldout_label_reviewer"],
-            "post_release_scorer_roles": ["scorer"],
-            "forbidden_roles": ["rule_author_extractor", "ukrainian_source_reviewer"],
-        },
-    }
+    return json.loads(functional_roles.LEDGER_PATH.read_text(encoding="utf-8"))
 
 
 def _clearance(
     receipt_sha: str, evaluation_sha: str, coverage_sha: str, role_sha: str, units: list[dict[str, str]]
 ) -> dict[str, object]:
     value: dict[str, object] = {
-        "schema_version": "phase3_author_clearance_receipt_v1",
+        "schema_version": "phase3_author_clearance_receipt_v2_1",
         "text_free": True,
-        "implementation_version": "phase3_heldout_partition_v1",
+        "implementation_version": "phase3_heldout_partition_v2_1",
         "role_binding": {
             "role_id": "heldout_steward",
-            "seat_id": "seat_heldout_steward",
-            "controller_identity_id": "controller_phase3_heldout_steward_cursor_runtime_01",
-            "attestation_task_id": "phase3-role-heldout-steward-cursor-v2",
-            "artifact_task_id": "phase3-heldout-partition-seal-cursor-v1",
+            "task_id": functional_roles.ROLE_TASKS["heldout_steward"],
         },
         "input_bindings": {
+            "phase3_v2_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256,
+            "phase3_v2_1_amendment_sha256": packets.PHASE3_V2_1_AMENDMENT_SHA256,
             "combined_contract_sha256": packets.COMBINED_CONTRACT_SHA256,
             "role_contract_sha256": role_sha,
             "evaluation_contract_sha256": evaluation_sha,
@@ -102,6 +64,30 @@ def _clearance(
         "heldout_complement_encoded": False,
         "fingerprints_encoded": False,
         "locators_encoded": False,
+    }
+    role = _role_contract()
+    steward = next(item for item in role["functional_roles"] if item["role_id"] == "heldout_steward")  # type: ignore[index]
+    bindings = value["input_bindings"]
+    value["action_receipt"] = {
+        "receipt_id": "phase3_functional_action:" + "9" * 64,
+        "role_id": "heldout_steward",
+        "task_id": functional_roles.ROLE_TASKS["heldout_steward"],
+        "action_kind": "partition_seal_and_clear_author_units",
+        "provider": "local",
+        "exact_model": steward["exact_model"],
+        "model_family": steward["model_family"],
+        "harness": steward["harness"],
+        "input_manifest_sha256": packets.sha256_bytes(packets.canonical_json(bindings).encode("utf-8")),
+        "output_sha256": packets.sha256_bytes(packets.canonical_json(units).encode("utf-8")),
+        "evaluation_cycle_id": role["evaluation_cycle"]["evaluation_cycle_id"],  # type: ignore[index]
+        "base_contract_sha256": packets.PHASE3_V2_CONTRACT_SHA256,
+        "amendment_sha256": packets.PHASE3_V2_1_AMENDMENT_SHA256,
+        "combined_contract_sha256": packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        "functional_role_contract_sha256": role_sha,
+        "conflict_graph_sha256": functional_roles.conflict_graph_sha256(role),
+        "started_at": "2026-08-06T00:00:00Z",
+        "completed_at": "2026-08-06T00:00:01Z",
+        "status": "completed",
     }
     value["receipt_sha256"] = packets.receipt_body_sha256(value)
     return value
@@ -127,6 +113,15 @@ def _source_record(
         "is_native": 1,
         "source_lang": "uk",
     }
+
+
+def _refresh_clearance_bindings(clearance: dict[str, object]) -> None:
+    action = clearance["action_receipt"]
+    bindings = clearance["input_bindings"]
+    units = clearance["cleared_units"]
+    action["input_manifest_sha256"] = packets.sha256_bytes(packets.canonical_json(bindings).encode("utf-8"))  # type: ignore[index]
+    action["output_sha256"] = packets.sha256_bytes(packets.canonical_json(units).encode("utf-8"))  # type: ignore[index]
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
 
 
 def _source_row(record: dict[str, object]) -> dict[str, object]:
@@ -243,6 +238,9 @@ def test_bundle_is_deterministic_private_and_cross_layer_doc_identity_collapses(
     first = _build(paths)
     assert first["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
     assert first["compiler"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
+    assert first["phase3_v2_1_amendment_sha256"] == packets.PHASE3_V2_1_AMENDMENT_SHA256
+    assert first["phase3_v2_1_combined_contract_sha256"] == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+    assert first["functional_role_contract_sha256"] == packets.sha256_file(paths["role"])
     second_path = tmp_path / "batch_state" / "repeat.json"
     second = _build(paths, second_path)
     assert first == second
@@ -340,7 +338,7 @@ def test_clearance_is_exact_not_a_complement_and_frozen_units_cannot_drift(tmp_p
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
     clearance["cleared_units"] = clearance["cleared_units"][:-1]
     clearance["cleared_unit_count"] = len(clearance["cleared_units"])
-    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _refresh_clearance_bindings(clearance)
     _write(paths["clearance"], clearance)
     with pytest.raises(packets.PacketCompilerError, match="not explicitly cleared"):
         _build(paths)
@@ -397,7 +395,7 @@ def test_steward_receipt_body_and_bindings_are_not_retargetable_or_legacy(tmp_pa
         _build(paths)
     paths = _fixture(tmp_path / "legacy")
     _write(paths["clearance"], {"schema_version": "phase3_rule_author_clearance_v1", "authorized_units": []})
-    with pytest.raises(packets.PacketCompilerError, match="schema violation"):
+    with pytest.raises(packets.PacketCompilerError, match="top-level field set drift"):
         _build(paths)
 
 
@@ -409,7 +407,7 @@ def test_malformed_nested_evaluation_contract_fails_closed(tmp_path: Path, field
     _write(paths["evaluation"], evaluation)
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
     clearance["input_bindings"]["evaluation_contract_sha256"] = packets.sha256_file(paths["evaluation"])
-    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _refresh_clearance_bindings(clearance)
     _write(paths["clearance"], clearance)
 
     with pytest.raises(packets.PacketCompilerError, match=f"evaluation contract {field} is malformed"):
@@ -419,25 +417,19 @@ def test_malformed_nested_evaluation_contract_fails_closed(tmp_path: Path, field
 def test_heldout_prohibition_is_checked_on_the_assigned_rule_author_seat(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     role = json.loads(paths["role"].read_text(encoding="utf-8"))
-    assigned = next(seat for seat in role["seats"] if seat["role_id"] == "rule_author_extractor")
+    assigned = next(seat for seat in role["functional_roles"] if seat["role_id"] == "rule_author_extractor")
     assigned["must_not"] = []
-    role["seats"].insert(
-        0,
-        {
-            **assigned,
-            "seat_id": "seat_rule_author_extractor_revoked",
-            "assignment_state": "revoked",
-            "controller_identity_attested": False,
-            "must_not": ["read_heldout_text_locators_fingerprints_labels"],
-        },
-    )
     _write(paths["role"], role)
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
     clearance["input_bindings"]["role_contract_sha256"] = packets.sha256_file(paths["role"])
-    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    clearance["action_receipt"]["functional_role_contract_sha256"] = packets.sha256_file(paths["role"])
+    _refresh_clearance_bindings(clearance)
     _write(paths["clearance"], clearance)
 
-    with pytest.raises(packets.PacketCompilerError, match="heldout prohibition drift"):
+    with pytest.raises(
+        packets.PacketCompilerError,
+        match=r"functional-role schema violation|functional role binding drift|heldout prohibition drift",
+    ):
         _build(paths)
 
 
@@ -571,11 +563,11 @@ def test_packet_item_and_per_document_caps_are_deterministic(tmp_path: Path) -> 
 def test_role_separation_and_response_review_schema_closure(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
-    clearance["role_binding"]["controller_identity_id"] = "controller_author"
+    clearance["role_binding"]["task_id"] = functional_roles.ROLE_TASKS["rule_author_extractor"]
     clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
     _write(paths["clearance"], clearance)
     with pytest.raises(
-        packets.PacketCompilerError, match=r"schema violation|role contract does not bind|must be distinct"
+        packets.PacketCompilerError, match=r"clearance steward task binding drift"
     ):
         _build(paths)
     paths = _fixture(tmp_path / "response")
@@ -587,12 +579,11 @@ def test_role_separation_and_response_review_schema_closure(tmp_path: Path) -> N
         "authority_state": "non_authoritative_model_proposal",
         "author": {
             "role_id": "rule_author_extractor",
-            "controller_identity_id": "controller_author",
             "provider": "fixture",
             "model_family": "fixture",
             "harness": "fixture",
             "exact_model": "fixture",
-            "task_id": "author-task",
+            "task_id": functional_roles.ROLE_TASKS["rule_author_extractor"],
         },
         "packet_sha256": packets.sha256_bytes(packets.canonical_json(packet).encode("utf-8")),
         "prompt_sha256": "1" * 64,
@@ -652,8 +643,7 @@ def test_role_separation_and_response_review_schema_closure(tmp_path: Path) -> N
         "schema_version": "phase3_ukrainian_rule_review_decision_v1",
         "reviewer": {
             "role_id": "ukrainian_source_reviewer",
-            "controller_identity_id": "controller_reviewer",
-            "task_id": "review-task",
+            "task_id": functional_roles.ROLE_TASKS["ukrainian_source_reviewer"],
         },
         "reviewed_payload_sha256": packets.sha256_file(response_path),
         "canonical_reviewed_payload_sha256": packets.sha256_bytes(

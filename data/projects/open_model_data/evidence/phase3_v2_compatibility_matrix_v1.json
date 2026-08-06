@@ -2,6 +2,8 @@
   "schema_version": "phase3_v2_compatibility_matrix_v1",
   "text_free": true,
   "phase3_v2_contract_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+  "phase3_v2_1_amendment_sha256": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b",
+  "phase3_v2_1_combined_contract_sha256": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907",
   "legacy_provenance": {
     "authority": "legacy_provenance_only_not_current_authority",
     "original_prompt_v1_sha256": "6a563a7526c4ec7a89732f3de5651b0ab2e176ec089abf80f9eb733337db7662",
@@ -9,16 +11,25 @@
     "combined_v1_v3_sha256": "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
   },
   "bindings": {
-    "schema_sha256": "aa90d7934208c93c54bda01eab68bbb35a3482c4d0405b2864cc06a5e20c49f9",
-    "validator_sha256": "6aec1a5bc607d9b20a6529b5ac577c79095f77e2ee2ff9686e1925bca4fb98a7"
+    "schema_sha256": "f8cc71c65f308b0455b2d57252924d5023c1bd08476e3f28055d0b712f97e01c",
+    "validator_sha256": "2157999c66c090d111b6a398173fc96310579406951acc8491257bd1f85d933d"
+  },
+  "functional_role_binding": {
+    "logical_path": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json",
+    "artifact_sha256": "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b",
+    "schema_sha256": "ea83fa8a540514ae4206464915c5f78d49baf524414d34bd1a5e983207d3c4cc",
+    "validator_sha256": "908d753f88c0144d6f636db60e7dc9bd3a31cd2bfe79dab7c4a7247794f6be19",
+    "conflict_graph_sha256": "f78fdba628ac7823b148d8e89d417ee44559e834f37958cbea3f467a9c3f65aa",
+    "role_graph_ready": true
   },
   "engine_bindings": [
-    {"logical_path":"scripts/projects/open_model_data/phase3_rule_author_packets.py","artifact_sha256":"78a6ce91cd734dc645f9da6a5d3c0818ed4b3b936dcd0cf0b3cad6006983eb78","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
-    {"logical_path":"scripts/projects/open_model_data/phase3_rule_author_runner.py","artifact_sha256":"ce59877aacc17b421b61442195786e767558817244d80db19a38f34ee6f97525","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
-    {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json","artifact_sha256":"7522d255a9dd722f97cec33953fdf9c4ea2862592a8d85c8b1a238409f18627e","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
-    {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json","artifact_sha256":"31d08c7bece4a6d4792863497f34636eb6578279de329b84a57060831c745cdc","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
+    {"logical_path":"scripts/projects/open_model_data/phase3_rule_author_packets.py","artifact_sha256":"149712aaec80b2fcbb3027483ab8e69228179aa2a019ae99b9b23cbb8ff3a71f","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"scripts/projects/open_model_data/phase3_rule_author_runner.py","artifact_sha256":"99c9d0ec0d447e076a64be95e12ad81686521e8127353352dc1fb5d502dbb94f","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json","artifact_sha256":"14494241d6e00b7b7ca7ca79c37b505755c9d3a37a33ff4890a973d56fe6c414","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json","artifact_sha256":"1fefacca7b85f7b48a8edd37149dc28138dc1a0ea161f6bfa2e605f8e3287afa","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
   ],
   "inventory": [
+    {"artifact_id":"schema:correction_protection_functional_role_contract_v2_1","logical_path":"data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json","artifact_sha256":"3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b","artifact_class":"functional_role_contract","disposition":"rebound","machine_reason":"functional_role_contract_rebound_to_v2_1","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"artifact_id":"schema:correction_protection_adapter_receipt_v1","logical_path":"data/projects/open_model_data/evidence/correction_protection_adapter_receipt_v1.json","artifact_sha256":"fc17a831616e36eb0c460b12dd44362456770a03d767337c097545d09ad4092a","artifact_class":"source_status","disposition":"invalidated","machine_reason":"pre_v2_source_status_invalidated","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"artifact_id":"cp_bundle:e5babb35c3cff47774c8a95bab15a8a0c81f4932db3e5b870a055195dabd3b95","logical_path":"data/projects/open_model_data/evidence/correction_protection_bundle_manifest_v1.json","artifact_sha256":"6ead94022793079f2643d11deb144b66c765d36bbc367e24c38b6fbe67b9a3af","artifact_class":"completion_status","disposition":"invalidated","machine_reason":"pre_v2_completion_status_invalidated","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"artifact_id":"schema:correction_protection_coverage_contract_v1","logical_path":"data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json","artifact_sha256":"f9718921f9c2973d5a552d7408af02c3a3653118dda9738445eb1cd3f914051c","artifact_class":"completion_status","disposition":"invalidated","machine_reason":"pre_v2_completion_status_invalidated","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
@@ -53,6 +64,6 @@
     {"claim_id":"breadth_floor_100_total","disposition":"invalidated","machine_reason":"legacy_floor_not_v2_completion"},
     {"claim_id":"breadth_floor_25_automatic","disposition":"invalidated","machine_reason":"legacy_floor_not_v2_completion"}
   ],
-  "source_authoring": {"blocked":true,"reason":"v2_exclusive_role_independence_not_established"},
+  "source_authoring": {"blocked":true,"reason":"v2_1_runtime_migration_and_exact_head_review_pending"},
   "phase4": {"blocked":true,"reason":"phase3_v2_rebuild_review_and_completion_not_established"}
 }
