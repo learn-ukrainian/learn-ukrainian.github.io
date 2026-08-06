@@ -609,15 +609,49 @@ def test_substitution_rejects_authorization_envelope_drift(
             )
 
 
-def test_substitution_joins_active_prior_instead_of_creating_new_attempt(tmp_path: Path) -> None:
+def test_active_substitution_validates_evidence_before_replacing_reservation(tmp_path: Path) -> None:
     with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
         active = ledger.reserve_selection(
-            _request("repo:substitution:active-join", "first"),
+            _request("repo:substitution:active-validation", "first"),
             _selection,
             now="2035-01-01T00:00:00Z",
         )
         request = replace(
-            _request("repo:substitution:active-join", "substitute"),
+            _request("repo:substitution:active-validation", "substitute"),
+            route_mode="explicit",
+            requested_reviewer="glm-5.2",
+        )
+
+        def selector_must_not_run(_context: object) -> RoutingSelection:
+            raise AssertionError("invalid active substitution reached route selection")
+
+        with pytest.raises(RoutingReservationError, match="substitution_prior_not_latest"):
+            ledger.reserve_selection(
+                request,
+                selector_must_not_run,
+                now="2035-01-01T00:00:01Z",
+                substitution={"prior_reservation_id": "routing-reservation_wrong", "reason": "operator-authorized"},
+            )
+        with pytest.raises(RoutingReservationError, match="substitution_reason_required"):
+            ledger.reserve_selection(
+                request,
+                selector_must_not_run,
+                now="2035-01-01T00:00:01Z",
+                substitution={"prior_reservation_id": active.reservation_id, "reason": ""},
+            )
+        assert ledger.latest_for_authority_key(request.authority_key) == active
+        assert [item.event_type for item in ledger.decisions(active.reservation_id)] == ["reserved"]
+
+
+def test_active_substitution_replaces_reservation_and_records_single_grant(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        active = ledger.reserve_selection(
+            _request("repo:substitution:active-replacement", "first"),
+            _selection,
+            now="2035-01-01T00:00:00Z",
+        )
+        request = replace(
+            _request("repo:substitution:active-replacement", "substitute"),
             route_mode="explicit",
             requested_reviewer="glm-5.2",
         )
@@ -625,9 +659,98 @@ def test_substitution_joins_active_prior_instead_of_creating_new_attempt(tmp_pat
             "prior_reservation_id": active.reservation_id,
             "reason": "operator-authorized",
         }
-        joined = ledger.reserve_selection(request, _glm_selection, substitution=evidence)
-        assert joined.reservation_id == active.reservation_id
-        assert joined.attempt == active.attempt
+
+        replacement = ledger.reserve_selection(
+            request,
+            _glm_selection,
+            now="2035-01-01T00:00:01Z",
+            substitution=evidence,
+        )
+        assert replacement.reservation_id != active.reservation_id
+        assert replacement.attempt == active.attempt + 1
+        assert replacement.status == "reserved"
+        assert replacement.requested_reviewer == replacement.resolved_candidate == "glm-5.2"
+        assert ledger.get(active.reservation_id).status == "cancelled"
+        assert [item.event_type for item in ledger.decisions(active.reservation_id)] == ["reserved", "settled"]
+        decisions = ledger.decisions(replacement.reservation_id)
+        assert [item.event_type for item in decisions] == [
+            "reserved",
+            "superseded_active_attempt",
+            "authorized_substitution",
+        ]
+        assert decisions[-1].evidence == evidence
+        assert ledger.reserve_selection(
+            request,
+            _glm_selection,
+            now="2035-01-01T00:00:02Z",
+            substitution=evidence,
+        ) == replacement
+        with pytest.raises(RoutingReservationError, match="substitution_already_authorized"):
+            ledger.reserve_selection(
+                replace(request, idempotency_key="repeat-substitution"),
+                _glm_selection,
+                now="2035-01-01T00:00:03Z",
+                substitution=evidence,
+            )
+
+
+def test_active_substitution_refusal_rolls_back_cancellation(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        active = ledger.reserve_selection(
+            _request("repo:substitution:active-rollback", "first"),
+            _selection,
+            now="2035-01-01T00:00:00Z",
+        )
+        request = replace(
+            _request("repo:substitution:active-rollback", "substitute"),
+            route_mode="explicit",
+            requested_reviewer="glm-5.2",
+        )
+        evidence = {
+            "prior_reservation_id": active.reservation_id,
+            "reason": "operator-authorized",
+        }
+
+        with pytest.raises(RoutingReservationUnavailable, match="no_policy_approved_route"):
+            ledger.reserve_selection(
+                request,
+                lambda _context: None,
+                now="2035-01-01T00:00:01Z",
+                substitution=evidence,
+            )
+        assert ledger.get(active.reservation_id) == active
+        assert [item.event_type for item in ledger.decisions(active.reservation_id)] == ["reserved"]
+
+
+def test_active_substitution_refuses_to_retarget_running_reservation(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        active = ledger.reserve_selection(
+            _request("repo:substitution:active-running", "first"),
+            _selection,
+            now="2035-01-01T00:00:00Z",
+        )
+        ledger.mark_started(active.reservation_id, now="2035-01-01T00:00:01Z")
+        request = replace(
+            _request("repo:substitution:active-running", "substitute"),
+            route_mode="explicit",
+            requested_reviewer="glm-5.2",
+        )
+        evidence = {
+            "prior_reservation_id": active.reservation_id,
+            "reason": "operator-authorized",
+        }
+
+        with pytest.raises(RoutingReservationError, match="substitution_active_reservation_started"):
+            ledger.reserve_selection(
+                request,
+                _glm_selection,
+                now="2035-01-01T00:00:02Z",
+                substitution=evidence,
+            )
+        assert ledger.get(active.reservation_id).status == "running"
+        assert "authorized_substitution" not in {
+            item.event_type for item in ledger.decisions(active.reservation_id)
+        }
 
 
 def test_substitution_rejects_non_result_invalid_terminal_prior(tmp_path: Path) -> None:

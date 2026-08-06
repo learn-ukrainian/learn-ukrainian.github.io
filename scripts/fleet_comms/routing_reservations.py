@@ -344,25 +344,23 @@ class RoutingReservationLedger:
             if latest is None and substitution_data:
                 raise RoutingReservationError("substitution_prior_reservation_missing")
             superseded_prior: sqlite3.Row | None = None
+            active_substitution_prior: sqlite3.Row | None = None
             if latest is not None and substitution_data:
-                if str(latest["status"]) in _ACTIVE_STATUSES:
-                    existing = self._conn.execute(
-                        """SELECT 1 FROM routing_reservation_decisions d
-                           JOIN routing_reservations r ON r.reservation_id = d.reservation_id
-                           WHERE r.authority_key = ? AND d.event_type = 'authorized_substitution' LIMIT 1""",
-                        (req.authority_key,),
-                    ).fetchone()
-                    if existing is not None:
-                        raise RoutingReservationError("substitution_already_authorized")
-                    # A distinct initiator joins the same exact-head decision rather
-                    # than causing a second selection or a quota herd.
-                    return self._reservation_from_row(latest)
+                active_prior = str(latest["status"]) in _ACTIVE_STATUSES
                 self._validate_substitution_tx(
                     latest,
                     req,
                     substitution_data,
                     created_at=current_iso,
+                    allow_reserved_prior=active_prior,
                 )
+                if active_prior:
+                    self._cancel_reserved_substitution_tx(
+                        latest,
+                        replacement_request=req,
+                        created_at=current_iso,
+                    )
+                    active_substitution_prior = latest
             elif latest is not None:
                 latest_status = str(latest["status"])
                 latest_semantic = str(latest["semantic_sha256"])
@@ -488,6 +486,20 @@ class RoutingReservationLedger:
                         "prior_semantic_sha256": str(superseded_prior["semantic_sha256"]),
                         "new_attempt": attempt,
                         "new_semantic_sha256": semantic_sha,
+                    },
+                    created_at=current_iso,
+                )
+            if active_substitution_prior is not None:
+                self._append_decision_tx(
+                    reservation_id,
+                    event_type="superseded_active_attempt",
+                    state="reserved",
+                    evidence={
+                        "authority_key": req.authority_key,
+                        "prior_reservation_id": str(active_substitution_prior["reservation_id"]),
+                        "prior_attempt": int(active_substitution_prior["attempt"]),
+                        "prior_status": str(active_substitution_prior["status"]),
+                        "replacement_requested_reviewer": req.requested_reviewer,
                     },
                     created_at=current_iso,
                 )
@@ -739,8 +751,9 @@ class RoutingReservationLedger:
         evidence: Mapping[str, Any],
         *,
         created_at: str,
+        allow_reserved_prior: bool = False,
     ) -> None:
-        """Allow the one explicit post-result-invalid compensation edge only."""
+        """Validate a result-invalid retry or an unstarted active replacement."""
         prior_id = _required(str(evidence.get("prior_reservation_id") or ""), "prior_reservation_id")
         reason = _required(str(evidence.get("reason") or ""), "substitution_reason")
         if len(reason) > 500:
@@ -755,7 +768,11 @@ class RoutingReservationLedger:
             raise RoutingReservationError("substitution_already_authorized")
         if prior_id != str(latest["reservation_id"]):
             raise RoutingReservationError("substitution_prior_not_latest")
-        if str(latest["status"]) != "failed" or str(latest["failure_classification"] or "") != "result_invalid":
+        latest_status = str(latest["status"])
+        if allow_reserved_prior:
+            if latest_status != "reserved":
+                raise RoutingReservationError("substitution_active_reservation_started")
+        elif latest_status != "failed" or str(latest["failure_classification"] or "") != "result_invalid":
             raise RoutingReservationError("substitution_prior_not_result_invalid")
         if request.route_mode != "explicit" or request.requested_reviewer is None:
             raise RoutingReservationError("substitution_explicit_reviewer_required")
@@ -789,7 +806,7 @@ class RoutingReservationLedger:
             self._append_decision_tx(
                 prior_id,
                 "legacy_authorization_envelope_reconstructed",
-                "failed",
+                latest_status,
                 {
                     "authorization_envelope": legacy_envelope,
                     "source": "formal-review-default-contract-before-6342",
@@ -803,6 +820,50 @@ class RoutingReservationLedger:
             or envelope.get("isolation_required") != request.isolation_required
         ):
             raise RoutingReservationError("substitution_authorization_envelope_drift")
+
+    def _cancel_reserved_substitution_tx(
+        self,
+        latest: sqlite3.Row,
+        *,
+        replacement_request: RoutingReservationRequest,
+        created_at: str,
+    ) -> None:
+        """Release one unstarted reservation before its authorized replacement."""
+        if str(latest["status"]) != "reserved":
+            raise RoutingReservationError("substitution_active_reservation_started")
+        terminal_evidence = {
+            "reason": "authorized_active_substitution",
+            "replacement_idempotency_key": replacement_request.idempotency_key,
+            "replacement_requested_reviewer": replacement_request.requested_reviewer,
+        }
+        terminal_payload = {
+            "actual_input_bytes": None,
+            "actual_output_bytes": None,
+            "actual_input_tokens": None,
+            "actual_output_tokens": None,
+            "failure_classification": None,
+            "status": "cancelled",
+            "terminal_evidence": terminal_evidence,
+        }
+        terminal_sha = hashlib.sha256(_canonical_json(terminal_payload).encode("utf-8")).hexdigest()
+        cursor = self._conn.execute(
+            """UPDATE routing_reservations
+               SET status = 'cancelled', settled_at = ?, actual_bytes = 0, actual_tokens = 0,
+                   actual_input_bytes = NULL, actual_output_bytes = NULL,
+                   actual_input_tokens = NULL, actual_output_tokens = NULL,
+                   failure_classification = NULL, terminal_sha256 = ?
+               WHERE reservation_id = ? AND status = 'reserved'""",
+            (created_at, terminal_sha, str(latest["reservation_id"])),
+        )
+        if cursor.rowcount != 1:
+            raise RoutingReservationError("substitution_active_reservation_started")
+        self._append_decision_tx(
+            str(latest["reservation_id"]),
+            "settled",
+            "cancelled",
+            terminal_payload,
+            created_at,
+        )
 
     def _is_legacy_default_envelope_match(
         self,
