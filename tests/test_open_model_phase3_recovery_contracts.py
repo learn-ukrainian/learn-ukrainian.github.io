@@ -343,6 +343,7 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01"),
         "heldout_steward": ("phase3-role-heldout-steward-cursor-v2", "controller_phase3_heldout_steward_cursor_runtime_01"),
         "heldout_label_reviewer": ("phase3-role-label-reviewer-codex-v2", "controller_phase3_heldout_label_reviewer_codex_runtime_01"),
+        "cross_family_code_infra_reviewer": ("phase3-role-cross-family-code-infra-reviewer-grok-v1", "controller_phase3_cross_family_reviewer_grok_01"),
         "disposition_auditor": ("phase3-role-disposition-auditor-claude-v1", "controller_phase3_disposition_auditor_claude_01"),
         "textbook_nonhit_auditor": ("phase3-role-textbook-nonhit-auditor-agy-v1", "controller_phase3_textbook_nonhit_auditor_agy_01"),
     }
@@ -377,6 +378,7 @@ def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) 
         "rule_author_extractor",
         "heldout_steward",
         "heldout_label_reviewer",
+        "cross_family_code_infra_reviewer",
         "disposition_auditor",
         "textbook_nonhit_auditor",
     ),
@@ -424,7 +426,6 @@ def test_remaining_reserved_roles_cannot_be_activated_without_attestation(tmp_pa
     reserved_roles = {
         "scorer",
         "outsider_reproducer",
-        "cross_family_code_infra_reviewer",
     }
     for role_id in reserved_roles:
         assert seats[role_id]["assignment_state"] == "reserved_unassigned"
