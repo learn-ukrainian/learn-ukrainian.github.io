@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import json
 import subprocess
+import tracemalloc
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_disposition_audit as audit
+from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
 
 
 def _token(value: str) -> str:
@@ -418,3 +421,211 @@ def test_lexical_census_requires_hashed_unique_machine_rows(monkeypatch: pytest.
     census["families"][0]["used_subset_census_sha256"] = audit.sha256_value(census["families"][0]["rows"])
     with pytest.raises(audit.AuditError, match="duplicate lexical"):
         audit.validate_lexical_complete_census(census, coverage_contract=coverage, role_contract=roles)
+
+
+def _lexical_roles() -> dict[str, Any]:
+    return {
+        "root": {"controller_identity_id": "controller_phase3_root_01"},
+        "seats": [
+            {"role_id": "disposition_auditor", "assignment_state": "assigned_verified", "controller_identity_attested": True, "controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR},
+            {"role_id": "rule_author_extractor", "controller_identity_id": "controller_phase3_rule_author_agy_runtime_01"},
+        ],
+    }
+
+
+def _lexical_population() -> dict[str, Any]:
+    locator = {"kind": "release_artifact_immutable_locator", "artifact_id": "release_fixture", "artifact_sha256": _token("a"), "path": "release.json", "anchor_sha256": _token("b")}
+    families = []
+    for index, family_id in enumerate(sorted(lexical.LEXICAL_FAMILIES)):
+        rows = [] if index else [{"family_id": family_id, "unit_id": f"unit.{family_id}.{_token('c')}", "unit_sha256": _token("d"), "evidence_locators": [locator]}]
+        families.append({"family_id": family_id, "structural_universe_sha256": _token("e"), "used_subset_total": len(rows), "rows": rows, "used_subset_population_sha256": lexical.sha256_value(rows)})
+    base = {
+        "schema_version": "phase3_lexical_used_subset_population_freeze_v1", "text_free": True,
+        "source_universe_receipt_sha256": _token("1"), "source_universe_payload_manifest_sha256": _token("2"), "lexical_structural_freeze_sha256": _token("3"),
+        "release_artifact_manifest_sha256": _token("4"), "release_files_sha256": _token("5"), "coverage_contract_sha256": _token("6"), "role_contract_sha256": lexical.sha256_value(_lexical_roles()), "implementation_sha256": lexical.implementation_sha256(),
+        "repair_generation": 0, "families": families,
+    }
+    return {**base, "population_freeze_sha256": lexical.sha256_value(base)}
+
+
+def _complete_census(population: dict[str, Any]) -> dict[str, Any]:
+    families = []
+    for family in population["families"]:
+        rows = [{**row, "decision_code": "agree"} for row in family["rows"]]
+        families.append({"family_id": family["family_id"], "used_subset_total": len(rows), "rows": rows, "used_subset_census_sha256": lexical.sha256_value(rows)})
+    return {"schema_version": "phase3_lexical_complete_census_v2", "text_free": True, "source_universe_receipt_sha256": population["source_universe_receipt_sha256"], "source_universe_payload_manifest_sha256": population["source_universe_payload_manifest_sha256"], "lexical_structural_freeze_sha256": population["lexical_structural_freeze_sha256"], "coverage_contract_sha256": population["coverage_contract_sha256"], "role_contract_sha256": population["role_contract_sha256"], "population_freeze_sha256": population["population_freeze_sha256"], "implementation_sha256": lexical.implementation_sha256(), "repair_generation": 0, "seed_required": False, "auditor_controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR, "families": families}
+
+
+@pytest.mark.parametrize("mutation", ["omission", "addition", "substitution", "duplicate", "stale", "zero_family", "nonagree", "auditor", "seed"])
+def test_closed_lexical_census_fails_closed_for_population_and_authority(mutation: str) -> None:
+    population, roles = _lexical_population(), _lexical_roles()
+    census = _complete_census(population)
+    first = census["families"][0]
+    if mutation == "omission":
+        first["rows"] = []
+        first["used_subset_total"] = 0
+    elif mutation == "addition":
+        first["rows"].append(deepcopy(first["rows"][0]))
+        first["rows"][-1]["unit_id"] = f"unit.{first['family_id']}.{_token('9')}"
+        first["used_subset_total"] = 2
+    elif mutation == "substitution":
+        first["rows"][0]["unit_sha256"] = _token("9")
+    elif mutation == "duplicate":
+        first["rows"].append(deepcopy(first["rows"][0]))
+        first["used_subset_total"] = 2
+    elif mutation == "stale":
+        census["repair_generation"] = 1
+    elif mutation == "zero_family":
+        census["families"].pop()
+    elif mutation == "nonagree":
+        first["rows"][0]["decision_code"] = "disagree_invalid_attestation"
+    elif mutation == "auditor":
+        census["auditor_controller_identity_id"] = "controller_other"
+    else:
+        census["seed"] = _token("f")
+    with pytest.raises(lexical.LexicalCoverageError):
+        lexical.validate_complete_census(census, population, role_contract=roles)
+
+
+def test_complete_census_rejects_stale_population_role_contract() -> None:
+    population, roles = _lexical_population(), _lexical_roles()
+    roles["root"]["controller_identity_id"] = "controller_phase3_other_root"
+    with pytest.raises(lexical.LexicalCoverageError, match="role contract"):
+        lexical.validate_complete_census(_complete_census(population), population, role_contract=roles)
+
+
+def test_cli_validates_synthetic_closed_lexical_census_v2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    roles = _lexical_roles()
+    population = _lexical_population()
+    census = _complete_census(population)
+    role_path = tmp_path / "roles.json"
+    population_path = tmp_path / "population.json"
+    census_path = tmp_path / "census.json"
+    role_path.write_text(json.dumps(roles), encoding="utf-8")
+    population_path.write_text(json.dumps(population), encoding="utf-8")
+    census_path.write_text(json.dumps(census), encoding="utf-8")
+
+    assert audit.main([
+        "--role-contract", str(role_path),
+        "validate-lexical-census-v2",
+        "--census", str(census_path),
+        "--population-freeze", str(population_path),
+    ]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result == {
+        "complete_census": True,
+        "family_count": 13,
+        "ok": True,
+        "seed_required": False,
+        "status": "MECHANICS_ONLY_NOT_SOURCE_COVERAGE_READY",
+        "used_unit_count": 1,
+    }
+
+
+def test_release_manifest_is_closed_and_rejects_generic_locator(tmp_path: Any) -> None:
+    release = tmp_path / "release"
+    release.mkdir()
+    artifact = release / "release.json"
+    artifact.write_text('{"opaque":true}\n', encoding="utf-8")
+    item = {"artifact_id": "release_fixture", "path": "release.json", "sha256": lexical.sha256_file(artifact)}
+    manifest = {"schema_version": "phase3_lexical_release_manifest_v1", "text_free": True, "release_files": [item], "release_artifact_manifest_sha256": ""}
+    manifest["release_artifact_manifest_sha256"] = lexical.sha256_value({key: value for key, value in manifest.items() if key != "release_artifact_manifest_sha256"})
+    assert lexical._validate_release_manifest(manifest, release_root=release)[0] == manifest["release_artifact_manifest_sha256"]
+    (release / "extra.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(lexical.LexicalCoverageError, match="closure"):
+        lexical._validate_release_manifest(manifest, release_root=release)
+    family_id = "lexical_balla_en_uk"
+    with pytest.raises(lexical.LexicalCoverageError, match="database-only"):
+        lexical._validate_typed_reference({"family_id": family_id, "unit_id": f"unit.{family_id}.{_token('a')}", "unit_sha256": _token("b"), "evidence_locator": {"kind": "database_locator", "artifact_id": "release_fixture", "artifact_sha256": item["sha256"], "path": "release.json", "anchor_sha256": _token("c")}}, files={"release_fixture": item})
+
+
+def test_closed_release_scanner_extracts_embedded_typed_reference_and_rejects_legacy_generic_use(tmp_path: Any) -> None:
+    release = tmp_path / "release"
+    release.mkdir()
+    family_id = "lexical_vesum"
+    typed = {"record": {"lexical_unit_reference": {"family_id": family_id, "unit_id": f"unit.{family_id}.{_token('a')}", "unit_sha256": _token("b")}}}
+    artifact = release / "release.json"
+    artifact.write_text(json.dumps(typed) + "\n", encoding="utf-8")
+    file = {"artifact_id": "release_fixture", "path": "release.json", "sha256": lexical.sha256_file(artifact)}
+    references = lexical.extract_typed_lexical_references([file], release_root=release)
+    assert [(item["family_id"], item["unit_id"]) for item in references] == [(family_id, typed["record"]["lexical_unit_reference"]["unit_id"])]
+    artifact.write_text(json.dumps({"channel": "vesum", "locator": "data/vesum.db"}) + "\n", encoding="utf-8")
+    file["sha256"] = lexical.sha256_file(artifact)
+    with pytest.raises(lexical.LexicalCoverageError, match="generic lexical"):
+        lexical.extract_typed_lexical_references([file], release_root=release)
+    artifact.write_text(json.dumps({"channel": "r2u", "locator": "r2u-cache.json"}) + "\n", encoding="utf-8")
+    file["sha256"] = lexical.sha256_file(artifact)
+    with pytest.raises(lexical.LexicalCoverageError, match="generic lexical"):
+        lexical.extract_typed_lexical_references([file], release_root=release)
+
+
+def test_multiple_typed_occurrences_form_one_used_unit_with_all_locators() -> None:
+    family_id = "lexical_vesum"
+    unit_id = f"unit.{family_id}.{_token('a')}"
+    def occurrence(artifact_id: str, anchor: str, unit_hash: str = _token("b")) -> dict[str, Any]:
+        return {"family_id": family_id, "unit_id": unit_id, "unit_sha256": unit_hash, "evidence_locator": {"kind": "release_artifact_immutable_locator", "artifact_id": artifact_id, "artifact_sha256": _token("c"), "path": f"{artifact_id}.json", "anchor_sha256": anchor}}
+
+    rows = lexical.aggregate_typed_occurrences([occurrence("release_b", _token("2")), occurrence("release_a", _token("1"))])
+    assert len(rows) == 1
+    assert len(rows[0]["evidence_locators"]) == 2
+    assert [item["artifact_id"] for item in rows[0]["evidence_locators"]] == ["release_a", "release_b"]
+    with pytest.raises(lexical.LexicalCoverageError, match="conflicting hashes"):
+        lexical.aggregate_typed_occurrences([occurrence("release_a", _token("1")), occurrence("release_b", _token("2"), _token("d"))])
+
+
+@pytest.mark.parametrize("field", ["duplicate_group_observation_total", "duplicate_group_rolling_sha256"])
+def test_structural_audit_compares_reopened_duplicate_groups(monkeypatch: pytest.MonkeyPatch, field: str) -> None:
+    roles, coverage = _lexical_roles(), {"coverage": "fixture"}
+    summaries = [{"family_id": family_id, "unit_count": 2, "ordered_rolling_sha256": _token("a"), "duplicate_group_observation_total": 2, "duplicate_group_rolling_sha256": _token("b"), "parse_status_counts": {"parsed": 2}, "provenance": {"input_sha256": _token("c"), "unit_grain": "fixture"}} for family_id in sorted(lexical.LEXICAL_FAMILIES)]
+    source = {"artifact_manifest": {"payload_manifest_sha256": _token("d")}}
+    monkeypatch.setattr(lexical, "_source_bindings", lambda _: (source, _token("e"), {"families": summaries}, _token("f")))
+    monkeypatch.setattr(lexical, "reopen_structural_universe", lambda **_: summaries)
+    receipt = {"schema_version": "phase3_lexical_structural_audit_v1", "text_free": True, "source_universe_receipt_sha256": _token("e"), "source_universe_payload_manifest_sha256": _token("d"), "lexical_structural_freeze_sha256": _token("f"), "coverage_contract_sha256": lexical.sha256_value(coverage), "role_contract_sha256": lexical.sha256_value(roles), "implementation_sha256": lexical.implementation_sha256(), "repair_generation": 0, "auditor_controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR, "families": deepcopy(summaries)}
+    assert lexical.validate_structural_audit(receipt, coverage_contract=coverage, role_contract=roles, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))["structural_audit_verified"] is True
+    receipt["families"][0][field] = 1 if field.endswith("total") else _token("9")
+    with pytest.raises(lexical.LexicalCoverageError, match="reopened lexical"):
+        lexical.validate_structural_audit(receipt, coverage_contract=coverage, role_contract=roles, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
+
+
+def test_lexical_bundle_cannot_accept_an_unvalidated_structural_receipt(monkeypatch: pytest.MonkeyPatch) -> None:
+    population, roles = _lexical_population(), _lexical_roles()
+    census = _complete_census(population)
+    structural = {"invalid": True}
+    bindings = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "role_contract_sha256", "implementation_sha256", "repair_generation")}
+    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v1", "text_free": True, **bindings, "structural_audit_sha256": lexical.sha256_value(structural), "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
+    monkeypatch.setattr(lexical, "validate_structural_audit", lambda *args, **kwargs: (_ for _ in ()).throw(lexical.LexicalCoverageError("invalid structural receipt")))
+    with pytest.raises(lexical.LexicalCoverageError, match="invalid structural"):
+        lexical.validate_lexical_bundle(bundle, structural_audit=structural, population_freeze=population, census=census, role_contract=roles, coverage_contract={"fixture": True}, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
+
+
+@pytest.mark.parametrize("binding", ["source_universe_receipt_sha256", "coverage_contract_sha256", "role_contract_sha256", "repair_generation"])
+def test_lexical_bundle_rejects_stale_cross_receipt_bindings(monkeypatch: pytest.MonkeyPatch, binding: str) -> None:
+    roles, coverage = _lexical_roles(), {"coverage": "fixture"}
+    population = _lexical_population()
+    population["coverage_contract_sha256"] = lexical.sha256_value(coverage)
+    base = {key: value for key, value in population.items() if key != "population_freeze_sha256"}
+    population["population_freeze_sha256"] = lexical.sha256_value(base)
+    census = _complete_census(population)
+    structural = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "role_contract_sha256", "implementation_sha256", "repair_generation")}
+    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v1", "text_free": True, **structural, "structural_audit_sha256": lexical.sha256_value(structural), "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
+    monkeypatch.setattr(lexical, "validate_structural_audit", lambda *args, **kwargs: {"ok": True})
+    monkeypatch.setattr(lexical, "validate_complete_census", lambda *args, **kwargs: {"ok": True})
+    if binding == "repair_generation":
+        bundle[binding] = 1
+    else:
+        bundle[binding] = _token("9")
+    with pytest.raises(lexical.LexicalCoverageError, match="binding mismatch"):
+        lexical.validate_lexical_bundle(bundle, structural_audit=structural, population_freeze=population, census=census, role_contract=roles, coverage_contract=coverage, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
+
+
+def test_structural_summary_streams_large_synthetic_family() -> None:
+    def units() -> Any:
+        for index in range(150_000):
+            yield {"unit_id": f"unit.fixture.{index}", "unit_sha256": _token("a"), "duplicate_group_id": f"duplicate.fixture.{index % 3}", "parse_status": "parsed", "provenance": {"input_sha256": _token("b"), "unit_grain": "fixture"}}
+
+    tracemalloc.start()
+    summary = lexical._structural_summary("fixture", units())
+    _, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 150_000
+    assert peak < 5 * 1024 * 1024
