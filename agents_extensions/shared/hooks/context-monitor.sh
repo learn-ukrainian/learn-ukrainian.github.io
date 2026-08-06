@@ -22,6 +22,16 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UK_PIPELINE" ] || [ -n "$GEM
   exit 0
 fi
 
+# Grok TUI: Claude PostToolUse context-monitor is high-frequency noise and was
+# never designed for Grok compaction (hook audit 2026-08-06). Skip unless
+# explicitly re-enabled.
+if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
+  || [ "${SESSION_HANDOFF_AGENT:-}" = "grok-build" ]; then
+  if [ "${GROK_CONTEXT_MONITOR:-}" != "1" ]; then
+    exit 0
+  fi
+fi
+
 command -v jq >/dev/null 2>&1 || exit 0
 
 INPUT=$(cat)

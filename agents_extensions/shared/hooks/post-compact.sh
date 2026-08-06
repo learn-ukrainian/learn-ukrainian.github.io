@@ -33,6 +33,24 @@ emit_context() {
   fi
 }
 
+# Grok (native TUI / build): skip the Claude curriculum in_progress scan entirely
+# (hook audit 2026-08-06). Epic-bound Grok still gets a short reminder; native
+# compaction remains authoritative. Do not run multi-second find/grep over curriculum/.
+if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
+  || [ "${SESSION_HANDOFF_AGENT:-}" = "grok-build" ]; then
+  _grok_ctx="KEY REMINDERS (Grok post-compact, thin path):
+  - Fleet driver: dispatch with ROUTING_CARD_V1; default bounded work = Fable/Sol brief → heap/practical.
+  - Heavy atlas compute on VPS (atlas-runner), not the Mac.
+  - Tool-backed claims only; breadth report before handoff.
+  - Epic=${SESSION_EPIC:-none}"
+  if [ -n "${SESSION_EPIC:-}" ]; then
+    _grok_ctx="${_grok_ctx}
+  - Continue from file handoff / fleet-comms for epic ${SESSION_EPIC}; do not re-scan curriculum state."
+  fi
+  emit_context "$_grok_ctx"
+  exit 0
+fi
+
 # Ordinary Codex tasks use the runtime's native remote compaction and need no
 # repository-authored context replay. A launcher-bound fleet driver is the
 # exception: hydrate only its exact stream and point at the durable shadow
