@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_textbook_nonhit_bundle_v1.schema.json",
+  "title": "Phase 3 textbook non-hit scanner bundle v1",
+  "description": "Complete source-free textbook chunk candidate/non-hit inventory and audit freeze.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "source_bindings", "scanner", "rubric", "scanner_review", "population", "audit_contract"],
+  "properties": {
+    "schema_version": {"const": "phase3_textbook_nonhit_bundle_v1"},
+    "text_free": {"const": true},
+    "source_bindings": {"$ref": "#/$defs/source_bindings"},
+    "scanner": {"$ref": "#/$defs/scanner"},
+    "rubric": {"$ref": "#/$defs/rubric"},
+    "scanner_review": {"$ref": "#/$defs/scanner_review"},
+    "population": {"$ref": "#/$defs/population"},
+    "audit_contract": {"$ref": "#/$defs/audit_contract"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "locator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "table", "primary_key_fields", "primary_key_sha256"],
+      "properties": {
+        "kind": {"const": "sqlite_row"}, "table": {"const": "textbooks"},
+        "primary_key_fields": {"const": ["id"]}, "primary_key_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "role_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role_id", "controller_identity_id", "reserved_task_id"],
+      "properties": {
+        "role_id": {"type": "string", "minLength": 1},
+        "controller_identity_id": {"type": "string", "pattern": "^controller_[a-z0-9_]+$"},
+        "reserved_task_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "unit_sha256", "locator", "tracked_file", "source_identity", "metadata_sha256", "candidate_classes"],
+      "properties": {
+        "unit_id": {"type": "string", "pattern": "^unit\\.school_textbooks\\.[a-f0-9]{64}$"},
+        "unit_sha256": {"$ref": "#/$defs/sha256"},
+        "locator": {"$ref": "#/$defs/locator"},
+        "tracked_file": {"type": "string", "minLength": 1},
+        "source_identity": {"type": "string", "minLength": 1},
+        "metadata_sha256": {"$ref": "#/$defs/sha256"},
+        "candidate_classes": {"type": "array", "uniqueItems": true, "items": {"enum": ["rule_bearing", "error_correction", "editing_exercise", "contrast", "metalinguistic_candidate"]}}
+      }
+    },
+    "source_bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coverage_contract_sha256", "role_contract_sha256", "source_freeze_receipt_sha256", "school_ledger_sha256", "frozen_unit_identity_sha256", "sources_db_sha256", "metadata_index_sha256", "tracked_file_total", "section_total", "section_tracked_file_total", "section_metadata_sha256"],
+      "properties": {
+        "coverage_contract_sha256": {"$ref": "#/$defs/sha256"}, "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "source_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"}, "school_ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "frozen_unit_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "sources_db_sha256": {"$ref": "#/$defs/sha256"}, "metadata_index_sha256": {"$ref": "#/$defs/sha256"},
+        "tracked_file_total": {"const": 168}, "section_total": {"const": 7250},
+        "section_tracked_file_total": {"type": "integer", "minimum": 1, "maximum": 168},
+        "section_metadata_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scanner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["implementation_version", "script_path", "script_sha256", "candidate_classes", "classification_universe_sha256", "author"],
+      "properties": {
+        "implementation_version": {"const": "phase3_textbook_nonhit_v1"}, "script_path": {"const": "scripts/projects/open_model_data/phase3_textbook_nonhit.py"},
+        "script_sha256": {"$ref": "#/$defs/sha256"},
+        "candidate_classes": {"const": ["rule_bearing", "error_correction", "editing_exercise", "contrast", "metalinguistic_candidate"]},
+        "classification_universe_sha256": {"$ref": "#/$defs/sha256"},
+        "author": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "rule_author_extractor"}}}]}
+      }
+    },
+    "rubric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rubric_id", "candidate_classes", "positive_fixture_ids", "negative_fixture_ids", "expected_decisions", "rubric_sha256"],
+      "properties": {
+        "rubric_id": {"type": "string", "minLength": 1},
+        "candidate_classes": {"const": ["rule_bearing", "error_correction", "editing_exercise", "contrast", "metalinguistic_candidate"]},
+        "positive_fixture_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "negative_fixture_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "expected_decisions": {"type": "object", "additionalProperties": {"type": "boolean"}},
+        "rubric_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "review_receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "text_free", "scanner_author", "scanner_reviewer", "scanner", "metadata_index_sha256", "classification_universe_sha256", "rubric_sha256", "decision"],
+      "properties": {
+        "schema_version": {"const": "phase3_textbook_scanner_review_receipt_v1"}, "text_free": {"const": true},
+        "scanner_author": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "rule_author_extractor"}}}]},
+        "scanner_reviewer": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "ukrainian_source_reviewer"}}}]},
+        "scanner": {
+          "type": "object", "additionalProperties": false,
+          "required": ["implementation_version", "script_path", "script_sha256"],
+          "properties": {
+            "implementation_version": {"const": "phase3_textbook_nonhit_v1"},
+            "script_path": {"const": "scripts/projects/open_model_data/phase3_textbook_nonhit.py"},
+            "script_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "metadata_index_sha256": {"$ref": "#/$defs/sha256"}, "classification_universe_sha256": {"$ref": "#/$defs/sha256"},
+        "rubric_sha256": {"$ref": "#/$defs/sha256"}, "decision": {"const": "approved"}
+      }
+    },
+    "scanner_review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt", "receipt_sha256", "receipt_file_sha256"],
+      "properties": {
+        "receipt": {"$ref": "#/$defs/review_receipt"}, "receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_file_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "population": {
+      "type": "object", "additionalProperties": false,
+      "required": ["frozen_unit_total", "candidate_total", "nonhit_total", "all_units_sha256", "candidate_universe_sha256", "nonhit_universe_sha256", "all_units", "candidate_units", "nonhit_units"],
+      "properties": {
+        "frozen_unit_total": {"const": 54979}, "candidate_total": {"type": "integer", "minimum": 0}, "nonhit_total": {"type": "integer", "minimum": 0},
+        "all_units_sha256": {"$ref": "#/$defs/sha256"}, "candidate_universe_sha256": {"$ref": "#/$defs/sha256"}, "nonhit_universe_sha256": {"$ref": "#/$defs/sha256"},
+        "all_units": {"type": "array", "minItems": 54979, "maxItems": 54979, "items": {"$ref": "#/$defs/unit"}},
+        "candidate_units": {"type": "array", "items": {"$ref": "#/$defs/unit"}}, "nonhit_units": {"type": "array", "items": {"$ref": "#/$defs/unit"}}
+      }
+    },
+    "audit_contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["auditor_role_id", "auditor_identity_id", "auditor_task_id", "sample_formula", "sampler_version", "stratification", "sampling_without_replacement", "entropy_contract", "arbitrary_seed_forbidden", "first_containing_origin_main_squash_merge_required", "unique_canonical_tuple_seed_required", "auditor_sole_attestor_committer", "seed_choice_reroll_reuse_forbidden", "passing_sample_reuse_forbidden", "zero_misses_required", "miss_invalidates_population_and_sample"],
+      "properties": {
+        "auditor_role_id": {"const": "textbook_nonhit_auditor"}, "auditor_identity_id": {"type": "string", "pattern": "^controller_[a-z0-9_]+$"}, "auditor_task_id": {"type": "string", "minLength": 1}, "sample_formula": {"const": "min(1000,nonhit_total)"},
+        "sampler_version": {"const": "phase3_textbook_nonhit_hamilton_v1"}, "stratification": {"const": ["tracked_file", "source_identity"]},
+        "sampling_without_replacement": {"const": true}, "entropy_contract": {"const": "approved_common_anti_grinding_v1"}, "arbitrary_seed_forbidden": {"const": true},
+        "first_containing_origin_main_squash_merge_required": {"const": true}, "unique_canonical_tuple_seed_required": {"const": true},
+        "auditor_sole_attestor_committer": {"const": true}, "seed_choice_reroll_reuse_forbidden": {"const": true},
+        "passing_sample_reuse_forbidden": {"const": true}, "zero_misses_required": {"const": true}, "miss_invalidates_population_and_sample": {"const": true}
+      }
+    }
+  }
+}
