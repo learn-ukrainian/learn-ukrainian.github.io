@@ -10,7 +10,7 @@
 ## Executive summary
 
 - **SessionStart is the big ticket**: a representative cold-start with a session id costs **~948 ms** (median of 5 runs). PR #6408 measured only the stripped path (no session id / no lease claim) at **~112 ms**, so the real Claude cold-start is ~8× worse than the baseline.
-- **Per-turn tax is heavy**: a single Bash tool call pays **~161 ms** PreToolUse guard tax + **~370 ms** PostToolUse tax, and every turn pays **~180 ms** on Stop. Over a 20-turn session that is ~11 s of hook latency.
+- **Per-turn tax is heavy**: a single Bash tool call pays **~161 ms** PreToolUse guard tax + **~370 ms** PostToolUse tax, and every turn pays **~180 ms** on Stop. Over a 20-turn session that is ~14 s of turn-tax hook latency (~15.4 s full-session total).
 - **The fan-out is the cause**: `session-setup.sh` alone starts **~16 .venv python interpreters** in series; `context-monitor.sh`, `thread-lease-heartbeat.sh`, `goal-driver-stop.sh`, etc. each start at least one python per firing.
 - **Context injection is large and partly duplicated**: a new Claude session receives **~70 KB** of project instructions before the first user message (CLAUDE.md + AGENTS.md + MEMORY.md + hook output). AGENTS.md already digests the same rules that are also served by `/api/rules` and, if still auto-loaded, by `.claude/rules/`.
 - **Failure-path quality is brittle**: `session-setup.sh:461` labels **any** non-zero return from `claim-thread-lease` as a "DURABLE THREAD LEASE CONFLICT", including `ImportError` crashes.
@@ -42,7 +42,7 @@ Hook/event mapping is taken from `.claude/settings.json`:
 The PR #6408 stack harness was run from the `grok/hook-audit` worktree with the canonical venv:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+.venv/bin/python \
   scripts/hooks/measure_hook_stack.py --repeats 5 --json-stdout
 ```
 
@@ -153,9 +153,9 @@ Most of the per-turn python calls are independent of each other and could be mer
 .venv/bin/python - <<'PY'
 from pathlib import Path
 files = {
-    'CLAUDE.md': Path('/Users/krisztiankoos/projects/learn-ukrainian/CLAUDE.md'),
-    'AGENTS.md': Path('/Users/krisztiankoos/projects/learn-ukrainian/AGENTS.md'),
-    'MEMORY.md': Path('/Users/krisztiankoos/projects/learn-ukrainian/.claude/memory/MEMORY.md'),
+    'CLAUDE.md': Path('CLAUDE.md'),
+    'AGENTS.md': Path('AGENTS.md'),
+    'MEMORY.md': Path('.claude/memory/MEMORY.md'),
 }
 for name, p in files.items():
     text = p.read_text()
@@ -175,7 +175,7 @@ The full rules set served by the Monitor API (`/api/rules`) is **137 KB**:
 ```bash
 .venv/bin/python - <<'PY'
 from pathlib import Path
-base = Path('/Users/krisztiankoos/projects/learn-ukrainian/agents_extensions/shared/rules')
+base = Path('agents_extensions/shared/rules')
 files = ['operator-expectations.md','critical-rules.md','non-negotiable-rules.md','workflow.md',
          'fleet-comms-coordination.md','delegate-must-use-worktree.md','cli-help-standard.md','model-assignment.md']
 print(f"total_shared_rules_bytes={sum((base/f).read_bytes().__len__() for f in files)}")
@@ -185,7 +185,7 @@ PY
 So the static prompt already carries a **30 KB digest** of rules whose full text is available via API, and may also auto-load `.claude/rules/*.md` (another **26.6 KB**):
 
 ```bash
-ls /Users/krisztiankoos/projects/learn-ukrainian/.claude/rules/*.md | \
+ls .claude/rules/*.md | \
   xargs wc -c | tail -1
 # 27478 bytes total
 ```
@@ -272,7 +272,7 @@ Most hooks outside `session-setup.sh` use `|| true` and fail open, so they do no
 
 ### Thread-lease hooks overlap
 
-Three hooks touch the durable thread lease:
+Four hooks touch the durable thread lease:
 
 1. `session-setup.sh` — claims the lease at cold-start.
 2. `thread-lease-heartbeat.sh` (PostToolUse) — refreshes heartbeat, throttled to 60 s.
