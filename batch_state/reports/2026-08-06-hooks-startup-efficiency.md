@@ -212,7 +212,8 @@ Component split:
 | Epic banner | 425 | 70 |
 | Handoff / cold-start context | 554 | 71 |
 | Issues + INFO lines | 668 | 75 |
-| **Hook output total** | **2 047** | **256** |
+| Section separators / whitespace | 6 | 0 |
+| **Hook output total** | **2 053** | **256** |
 
 ### Total per-session context injection
 
