@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from scripts.fleet.driver_breadth_report import build_report, load_tasks, main
+from scripts.fleet.driver_breadth_report import _tier_for, build_report, load_tasks, main
 
 
 def _task(
@@ -31,6 +31,17 @@ def _task(
         "duration_s": 10,
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_tier_for_gemini_flash_high_is_practical() -> None:
+    """CF F1: bare 'flash' must not map gemini-3.6-flash-high to heap."""
+    assert _tier_for("agy", "gemini-3.6-flash-high") == "practical"
+    assert _tier_for("gemini", "gemini-3.6-flash-high") == "practical"
+    # Bare flash / mini tokens still heap when not -high.
+    assert _tier_for("agy", "gemini-2.0-flash") == "heap"
+    assert _tier_for("codex", "gpt-5.6-luna") == "heap"
+    # 'mini' must not match inside 'gemini'
+    assert _tier_for("agy", "gemini-3.1-pro-high") == "practical"
 
 
 def test_breadth_floor_fails_single_seat(tmp_path: Path) -> None:

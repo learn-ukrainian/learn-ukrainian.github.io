@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter
 from datetime import UTC, datetime, timedelta
@@ -40,13 +41,19 @@ _AUTHORITY_MODEL_HINTS = (
     "claude-fable",
     "claude-opus",
 )
-_HEAP_MODEL_HINTS = (
+# Delimiter-aware heap tokens. Bare substring "flash"/"mini" mis-classifies
+# gemini-3.6-flash-high (practical) and gemini-* (via "mini" inside "gemini").
+_HEAP_MODEL_SUBSTRINGS = (
     "luna",
-    "flash",
     "haiku",
-    "mini",
     "k2.5",
     "laguna",
+)
+_HEAP_TOKEN_RE = re.compile(
+    r"(?:^|[-_.])(?:flash|mini)(?:$|[-_.])",
+)
+_PRACTICAL_OVERRIDE_RE = re.compile(
+    r"flash-high|gemini-3\.[0-9]+-flash-high|gpt-5\.6-terra|claude-sonnet",
 )
 
 
@@ -66,9 +73,14 @@ def _tier_for(agent: str | None, model: str | None) -> str:
     for hint in _AUTHORITY_MODEL_HINTS:
         if hint in model_l:
             return "authority"
-    for hint in _HEAP_MODEL_HINTS:
+    # Practical before heap: *-flash-high is frontier_practical, not heap Flash.
+    if _PRACTICAL_OVERRIDE_RE.search(model_l):
+        return "practical"
+    for hint in _HEAP_MODEL_SUBSTRINGS:
         if hint in model_l:
             return "heap"
+    if _HEAP_TOKEN_RE.search(model_l):
+        return "heap"
     return _DEFAULT_AGENT_TIER.get(agent_l, "practical")
 
 
