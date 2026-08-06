@@ -701,11 +701,12 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   pool:
-    # Default pool formal/volume seat = Laguna S 2.1 (strongest gen-2).
+    # Default pool formal/volume seat = Laguna S 2.1 (operator 2026-08-06).
+    # Pin the concrete model so ask-pool never drifts to XS/M.1 by catalog lag.
     model_id: poolside/laguna-s-2.1
     route: pool
     transport: opencode
-    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
+    invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-s-2.1
     review_profiles: [code, infra]
     capabilities: [code_review]
   pool-xs:

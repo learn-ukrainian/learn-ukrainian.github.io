@@ -84,6 +84,10 @@ or count as a formal review.
   tool-heavy implement). **`deepseek-v4-pro` is temporarily DO NOT USE** — do not dispatch,
   pin, or ladder-select Pro until the operator lifts this hold. Neither is a language,
   folk-content, or approval-authority seat.
+* **pool** (operator 2026-08-06): default pin is **`laguna-s-2.1`**
+  (`poolside/laguna-s-2.1` / `poolside/poolside/laguna-s-2.1` via `ab ask-pool`). Do **not**
+  default to XS or M.1. Use **`laguna-xs-2.1` only** when the caller explicitly wants the light
+  gen-2 seat; **`laguna-m.1` is prior-gen fallback only**. Never invent `s2`/`m2` orthography.
 
 | Task | Tool + model |
 | --- | --- |
