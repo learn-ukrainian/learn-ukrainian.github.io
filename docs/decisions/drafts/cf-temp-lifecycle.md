@@ -15,24 +15,24 @@ Formal Code Review (CF) snapshots (`$TMPDIR/lu-review-snap-*`, `$TMPDIR/lu-revie
 Inspection of the codebase confirms four design vulnerabilities:
 
 1. **Cleanup coupled strictly to `finally` blocks in single-process execution:**
-   - In [`scripts/ai_agent_bridge/_review_worktree.py:2905`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L2905) (`provision_review_worktree`), [`line 3021`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L3021) (`_provision_local_review_worktree`), and [`line 3055`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L3055), temporary directory cleanup (`_cleanup_review_resources` at [`line 2727`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L2727)) runs strictly in Python `finally:` blocks.
+   - In [`scripts/ai_agent_bridge/_review_worktree.py:2905`](scripts/ai_agent_bridge/_review_worktree.py#L2905) (`provision_review_worktree`), [`line 3021`](scripts/ai_agent_bridge/_review_worktree.py#L3021) (`_provision_local_review_worktree`), and [`line 3055`](scripts/ai_agent_bridge/_review_worktree.py#L3055), temporary directory cleanup (`_cleanup_review_resources` at [`line 2727`](scripts/ai_agent_bridge/_review_worktree.py#L2727)) runs strictly in Python `finally:` blocks.
    - If the process suffers an uncatchable termination (`SIGKILL` / `kill -9`), system OOM kill, hardware power loss, or execution thrash, Python process execution halts instantly. The `finally:` block never executes, stranding multi-hundred-megabyte temp roots indefinitely.
 
 2. **Inadequate orphan sweeper backstop:**
-   - The only current cleanup backstop is `sweep_review_temp_orphans()` in [`scripts/review/isolation.py:337`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/review/isolation.py#L337).
-   - It reaps roots **only if older than 48 hours** (`REVIEW_TEMP_ORPHAN_MAX_AGE_S = 48 * 60 * 60` in [`scripts/review/isolation.py:56`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/review/isolation.py#L56)).
-   - It is invoked **only at the start of a new formal CF review** (calls in [`_review_worktree.py:2780`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L2780) and [`line 3042`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L3042)).
+   - The only current cleanup backstop is `sweep_review_temp_orphans()` in [`scripts/review/isolation.py:337`](scripts/review/isolation.py#L337).
+   - It reaps roots **only if older than 48 hours** (`REVIEW_TEMP_ORPHAN_MAX_AGE_S = 48 * 60 * 60` in [`scripts/review/isolation.py:56`](scripts/review/isolation.py#L56)).
+   - It is invoked **only at the start of a new formal CF review** (calls in [`_review_worktree.py:2780`](scripts/ai_agent_bridge/_review_worktree.py#L2780) and [`line 3042`](scripts/ai_agent_bridge/_review_worktree.py#L3042)).
    - There is no scheduled background sweeper for review temp roots, nor any disk-pressure monitoring.
 
 3. **Sentinel marker lacks owner identity:**
-   - Current roots write an anonymous sentinel string `lu-review-root-v1:<random_nonce>` via `_write_review_temp_root_marker` in [`scripts/review/isolation.py:82-104`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/review/isolation.py#L82-L104).
+   - Current roots write an anonymous sentinel string `lu-review-root-v1:<random_nonce>` via `_write_review_temp_root_marker` in [`scripts/review/isolation.py:82-104`](scripts/review/isolation.py#L82-L104).
    - Because the marker lacks owner PID, process start time, or machine identity, an external janitor cannot distinguish an actively running 5-minute-old review from a crashed 5-minute-old orphan killed by `SIGKILL`.
 
 4. **Worktree reaper brittle failure modes:**
-   - Scheduled worktree hygiene runs via launchd job `com.learn-ukrainian.worktree-cleanup` ([`scripts/orchestration/install_worktree_cleanup_launchd.py:12`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/install_worktree_cleanup_launchd.py#L12)), calling [`scripts/orchestration/scheduled_worktree_cleanup.py`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/scheduled_worktree_cleanup.py).
-   - In [`scheduled_worktree_cleanup.py:362-369`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/scheduled_worktree_cleanup.py#L362-L369), if `git fetch --prune origin` fails or times out (120s), the ENTIRE hygiene run aborts immediately (`result["errors"].append("fetch failed; cleanup skipped"); return result`).
+   - Scheduled worktree hygiene runs via launchd job `com.learn-ukrainian.worktree-cleanup` ([`scripts/orchestration/install_worktree_cleanup_launchd.py:12`](scripts/orchestration/install_worktree_cleanup_launchd.py#L12)), calling [`scripts/orchestration/scheduled_worktree_cleanup.py`](scripts/orchestration/scheduled_worktree_cleanup.py).
+   - In [`scheduled_worktree_cleanup.py:362-369`](scripts/orchestration/scheduled_worktree_cleanup.py#L362-L369), if `git fetch --prune origin` fails or times out (120s), the ENTIRE hygiene run aborts immediately (`result["errors"].append("fetch failed; cleanup skipped"); return result`).
    - Detached-HEAD review worktrees are skipped even when their underlying dispatch task record in `batch_state/tasks/{task_id}.json` is terminal (`done`/`failed`/`no_deliverable`).
-   - `needs_finalize` task statuses prevent reaping ([`scripts/orchestration/reap_worktrees.py:350`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/reap_worktrees.py#L350)) without emitting any operator-visible alerts.
+   - `needs_finalize` task statuses prevent reaping ([`scripts/orchestration/reap_worktrees.py:350`](scripts/orchestration/reap_worktrees.py#L350)) without emitting any operator-visible alerts.
 
 ---
 
@@ -44,7 +44,7 @@ The design prioritizes safety above all: **a live review must NEVER be reaped mi
 | :--- | :--- | :--- |
 | **False-Positive Active Review Reap (Catastrophic)** | Sweeper prematurely deletes a temp root belonging to an active, ongoing CF review. | **Owner-Liveness Triple Fencing (PID + `started_at` + `machine_id`).** The sweeper reads `.lu-review-root.json`. A root is considered active if `kill(pid, 0)` succeeds **AND** process start time (`ps` / `psutil`) matches `owner_pid_started_at` **AND** `machine_id` matches local host. Reaping is strictly forbidden if the process is alive. |
 | **PID Recycling Race** | Owner process dies; OS re-assigns the exact same PID to a newly spawned, unrelated process. | **Exact Start-Time Matching.** Standard POSIX `kill(pid, 0)` is insufficient because PIDs recycle. The sweeper compares `owner_pid_started_at` (microseconds/epoch timestamp from `ProcessSnapshot`). If PID exists but start time differs, the recorded owner is proven dead and the root is safely reaped. |
-| **TOCTOU Sweep Race** | Sweeper checks liveness, owner process exits 1ms later, or sweeper decides to delete right as a new review process starts. | **FD-Pinned Double Check & Marker Age Fencing.** 1) Newly created roots get a 60-second grace window during which dead-owner checks are suppressed unless the owner process is confirmed non-existent via `ESRCH`. 2) Re-evaluate liveness immediately before `rmtree`. 3) Verification of root descriptor using `O_NOFOLLOW` (mirroring [`scripts/review/isolation.py:69-79`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/review/isolation.py#L69-L79)). |
+| **TOCTOU Sweep Race** | Sweeper checks liveness, owner process exits 1ms later, or sweeper decides to delete right as a new review process starts. | **FD-Pinned Double Check & Marker Age Fencing.** 1) Newly created roots get a 60-second grace window during which dead-owner checks are suppressed unless the owner process is confirmed non-existent via `ESRCH`. 2) Re-evaluate liveness immediately before `rmtree`. 3) Verification of root descriptor using `O_NOFOLLOW` (mirroring [`scripts/review/isolation.py:69-79`](scripts/review/isolation.py#L69-L79)). |
 | **SIGKILL Process Termination** | Review runner receives `SIGKILL` (`kill -9`) or system OOM kill. Process signal handlers cannot run. | **Out-of-Process Liveness Sweeping.** Because `SIGKILL` prevents `finally:` cleanup, the scheduled janitor (`com.learn-ukrainian.worktree-cleanup`) inspects manifests in `$TMPDIR`. Since the owner PID is dead (ESRCH), the janitor reaps the root at the next run regardless of root age. |
 | **Unreadable / Corrupt Manifest** | Root created but process crashed before manifest write, or disk corruption occurred. | **48-Hour Fallback Rule.** Manifest-less or unreadable roots fall back to the age rule (`mtime > 48h` in normal mode, `> 1h` in disk-pressure mode). Unmarked roots are never reaped by prefix alone. |
 | **Disk 100% Full (Write Lock Failure)** | Machine disk hits 100% free space, preventing creation of atomic lock files or receipts. | **Read-Only Inspection + Non-Blocking Atomic Unlink.** The sweeper can scan, parse JSON manifests, and call `rmtree` without allocating new disk blocks. Receipt writing failure is logged to `sys.stderr` without aborting the deletion loop. |
@@ -56,7 +56,7 @@ The design prioritizes safety above all: **a live review must NEVER be reaped mi
 
 ### 3.1 Metadata Schema (`.lu-review-root.json`)
 
-To enable deterministic, age-independent orphan detection, every review temp root created by `create_review_temp_root` in [`scripts/review/isolation.py:106`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/review/isolation.py#L106) will contain a JSON manifest file named `.lu-review-root.json` alongside the existing sentinel file `.lu-review-root`.
+To enable deterministic, age-independent orphan detection, every review temp root created by `create_review_temp_root` in [`scripts/review/isolation.py:106`](scripts/review/isolation.py#L106) will contain a JSON manifest file named `.lu-review-root.json` alongside the existing sentinel file `.lu-review-root`.
 
 ```json
 {
@@ -78,13 +78,13 @@ To enable deterministic, age-independent orphan detection, every review temp roo
 
 ### 3.2 Fencing & Liveness Semantics
 
-The liveness probe reuses the exact process liveness and start-time fencing semantics established in [`scripts/orchestration/thread_handoff.py:809-940`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/thread_handoff.py#L809-L940) (`_process_is_alive`, `_process_is_zombie`, `_evaluate_owner_liveness`).
+The liveness probe reuses the exact process liveness and start-time fencing semantics established in [`scripts/orchestration/thread_handoff.py:809-940`](scripts/orchestration/thread_handoff.py#L809-L940) (`_process_is_alive`, `_process_is_zombie`, `_evaluate_owner_liveness`).
 
 1. **Local Machine Fencing:** If `owner_machine_id` does not match the current host, the root cannot be probed via local PID and falls back to age-based evaluation.
 2. **PID Liveness Check:** Call `os.kill(owner_pid, 0)`.
    - If `ProcessLookupError` (ESRCH): Owner is **DEAD**.
    - If `PermissionError` (EPERM): Process exists but owned by another user. Proceed to start-time check.
-   - If success: Verify zombie status using `ps -o stat= -p <pid>`. Confirmed zombies (`Z` state) are treated as **DEAD** (citing [`thread_handoff.py:827-848`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/thread_handoff.py#L827-L848)).
+   - If success: Verify zombie status using `ps -o stat= -p <pid>`. Confirmed zombies (`Z` state) are treated as **DEAD** (citing [`thread_handoff.py:827-848`](scripts/orchestration/thread_handoff.py#L827-L848)).
 3. **Start-Time Matching:** Inspect process start time via `ps -o lstart= -p <pid>` or `psutil.Process(pid).create_time()`.
    - Compare `snapshot.started_at` with `owner_pid_started_at`.
    - If start time matches (within ±1.0s resolution tolerance): Owner is **ALIVE**. Sweeper MUST skip.
@@ -101,11 +101,11 @@ The liveness probe reuses the exact process liveness and start-time fencing sema
 
 ### 4.1 Integration into Scheduled Hygiene
 
-Instead of creating a new background daemon, review-temp orphan sweeping is consolidated into the existing launchd job `com.learn-ukrainian.worktree-cleanup` ([`scripts/orchestration/install_worktree_cleanup_launchd.py:12`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/install_worktree_cleanup_launchd.py#L12)), which runs every 4 hours via [`scripts/orchestration/scheduled_worktree_cleanup.py`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/scheduled_worktree_cleanup.py).
+Instead of creating a new background daemon, review-temp orphan sweeping is consolidated into the existing launchd job `com.learn-ukrainian.worktree-cleanup` ([`scripts/orchestration/install_worktree_cleanup_launchd.py:12`](scripts/orchestration/install_worktree_cleanup_launchd.py#L12)), which runs every 4 hours via [`scripts/orchestration/scheduled_worktree_cleanup.py`](scripts/orchestration/scheduled_worktree_cleanup.py).
 
 `scheduled_worktree_cleanup.py` will execute `sweep_review_temp_orphans()` as part of its pipeline, recording results (`roots_reaped`, `bytes_freed`, `errors`) into the structured receipt JSON.
 
-The inline call to `sweep_review_temp_orphans()` at the start of formal CF reviews in [`_review_worktree.py:2780`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py#L2780) is **retained** as a fast pre-flight check.
+The inline call to `sweep_review_temp_orphans()` at the start of formal CF reviews in [`_review_worktree.py:2780`](scripts/ai_agent_bridge/_review_worktree.py#L2780) is **retained** as a fast pre-flight check.
 
 ### 4.2 TOCTOU Race Prevention Architecture
 
@@ -156,7 +156,7 @@ When `shutil.disk_usage(tmp_dir).free < threshold_bytes`:
 
 ### 6.1 Handlers & Signal Coverage
 
-`provision_review_worktree` and `provision_local_review_snapshot` in [`scripts/ai_agent_bridge/_review_worktree.py`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/ai_agent_bridge/_review_worktree.py) will register explicit signal handlers for interceptable process termination signals:
+`provision_review_worktree` and `provision_local_review_snapshot` in [`scripts/ai_agent_bridge/_review_worktree.py`](scripts/ai_agent_bridge/_review_worktree.py) will register explicit signal handlers for interceptable process termination signals:
 - `SIGTERM` (15)
 - `SIGINT` (2)
 - `SIGHUP` (1)
@@ -192,7 +192,7 @@ def _hardened_review_scope(roots: tuple[Path, ...]):
 
 ### 7.1 Fetch Timeout Degradation
 
-Currently in [`scripts/orchestration/scheduled_worktree_cleanup.py:362-369`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/scheduled_worktree_cleanup.py#L362-L369):
+Currently in [`scripts/orchestration/scheduled_worktree_cleanup.py:362-369`](scripts/orchestration/scheduled_worktree_cleanup.py#L362-L369):
 
 ```python
 # CURRENT BROKEN BEHAVIOR:
@@ -214,14 +214,14 @@ If `git fetch` fails or times out:
 
 ### 7.2 Terminal-Task Detached Workspaces
 
-In [`scripts/orchestration/reap_worktrees.py:475-497`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/reap_worktrees.py#L475-L497), detached HEAD worktrees are evaluated for age > 24.0h.
+In [`scripts/orchestration/reap_worktrees.py:475-497`](scripts/orchestration/reap_worktrees.py#L475-L497), detached HEAD worktrees are evaluated for age > 24.0h.
 
 **Refactored Behavior:**
 If a detached worktree has an associated task ID (`_dispatch_task_id`), read `batch_state/tasks/{task_id}.json`. If `status` is in `("done", "failed", "no_deliverable")` AND the worktree is clean, classify as reapable **immediately** without waiting for the 24-hour age threshold.
 
 ### 7.3 Visible `needs_finalize` Reporting
 
-Worktrees skipped because their task status is `needs_finalize` ([`reap_worktrees.py:350`](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy/scripts/orchestration/reap_worktrees.py#L350)) will be explicitly surfaced in `build_receipt()` under `summary["needs_finalize_worktrees"]` and printed in the janitor log output to alert operators.
+Worktrees skipped because their task status is `needs_finalize` ([`reap_worktrees.py:350`](scripts/orchestration/reap_worktrees.py#L350)) will be explicitly surfaced in `build_receipt()` under `summary["needs_finalize_worktrees"]` and printed in the janitor log output to alert operators.
 
 ---
 
