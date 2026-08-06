@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4584fb5bf4bc",
+  "session_id": "fleet-eb783ee2797544c7be5829b8d9f3d5f4",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-06T11:17:31.353856Z",
+  "branch": "agy/requirements-declaration-sync",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "requirements.txt",
+    "scripts/orchestration/trails/trail_mcp.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "eb184e0ef7d8",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-06T11:17:31.341474Z",
+    "agent_lines": 4,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 4,
+    "total_lines_changed": 8,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
