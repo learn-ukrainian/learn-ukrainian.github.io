@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "527b62af9698",
+  "strategy": "manual-commit",
+  "branch": "kimi/review-rail-hardening",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/review/evidence.py",
+    "tests/test_verify_review.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/52/7b62af9698/0/metadata.json",
+      "transcript": "/52/7b62af9698/0/full.jsonl",
+      "content_hash": "/52/7b62af9698/0/content_hash.txt",
+      "prompt": "/52/7b62af9698/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 50838,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 726016,
+    "output_tokens": 5654,
+    "api_call_count": 13
+  }
+}
