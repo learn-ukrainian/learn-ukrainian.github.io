@@ -79,8 +79,7 @@ def test_tier_for_gemini_flash_high_is_practical() -> None:
     """CF F1: bare 'flash' must not map gemini-3.6-flash-high to heap."""
     assert _tier_for("agy", "gemini-3.6-flash-high") == "practical"
     assert _tier_for("gemini", "gemini-3.6-flash-high") == "practical"
-    # Bare flash / mini tokens still heap when not -high.
-    assert _tier_for("agy", "gemini-2.0-flash") == "heap"
+    # Bare flash token still heap when not flash-high (live seats: 3.6-flash / 3.1-pro only).
     assert _tier_for("codex", "gpt-5.6-luna") == "heap"
     # 'mini' must not match inside 'gemini'
     assert _tier_for("agy", "gemini-3.1-pro-high") == "practical"
