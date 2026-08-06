@@ -250,6 +250,36 @@ def test_bundle_is_deterministic_private_and_cross_layer_doc_identity_collapses(
     assert _verify(paths)["ok"] is True
 
 
+def test_document_identity_uses_hash_verified_normalized_record(tmp_path: Path) -> None:
+    records = [
+        _source_record(
+            1,
+            error="synthetic source span one",
+            correct="synthetic correction one",
+            error_type="F",
+            doc_id="café",
+        ),
+        _source_record(
+            2,
+            error="synthetic source span two",
+            correct="synthetic correction two",
+            error_type="Calque",
+            doc_id="café",
+        ),
+    ]
+    source_rows = [_source_row(record) for record in records]
+    source_rows[1]["source_record"]["doc_id"] = "cafe\u0301"
+    paths = _fixture(tmp_path, records=records, rows=source_rows)
+
+    bundle = _build(paths)
+    identities = {
+        item["source_document_identity"]
+        for packet in bundle["packets"]
+        for item in packet["items"]
+    }
+    assert len(identities) == 1
+
+
 def test_clearance_is_exact_not_a_complement_and_frozen_units_cannot_drift(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))

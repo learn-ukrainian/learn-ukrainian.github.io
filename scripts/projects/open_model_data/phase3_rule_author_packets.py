@@ -421,7 +421,9 @@ def _item_from_row(row: Mapping[str, Any], clearance_sha: str, policy_sha: str) 
         "source_item_id": stable_id("rule_author_source", identity),
         "family_id": family_id,
         "frozen_unit": frozen,
-        "source_document_identity": _source_document_identity(row, family_id),
+        "source_document_identity": _source_document_identity(
+            {**row, "source_record": normalized_record}, family_id
+        ),
         "locator": {
             "kind": "local_immutable_locator",
             "opaque_locator_sha256": sha256_bytes(canonical_json(locator).encode("utf-8")),
