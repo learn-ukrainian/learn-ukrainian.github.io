@@ -51,10 +51,11 @@ fleet_comms_cold_clause() {
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
-    "Formal CF: \`.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family>\` " \
-    "then publish-review-verdict (PR number required; never self-seal). " \
-    "All normal inter-agent asks, 2–6 seat discussions, and sealed formal review provider calls use ACP; " \
+    "Cross-family CF: direct ask-<lane> for verdict+findings, post on the PR, merge when CI green " \
+    "(sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
+    "All normal inter-agent asks and 2–6 seat discussions use ACP; " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
+    "After merge: reap worktrees (\`reap_worktrees.py --apply\`). " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
 }
 
@@ -66,7 +67,7 @@ fleet_comms_print_banner_line() {
   fi
   case "$plane_mode" in
     off)
-      echo "  fleet-comms: plane=off · diary authoritative · CF via review-pr · rule=$(fleet_comms_rule_relpath) · skill=drive-epic"
+      echo "  fleet-comms: plane=off · diary authoritative · CF via direct ask · rule=$(fleet_comms_rule_relpath) · skill=drive-epic"
       ;;
     shadow|dual_write)
       echo "  fleet-comms: plane=${plane_mode} (compatibility soak) · rule=$(fleet_comms_rule_relpath) · skill=drive-epic"
