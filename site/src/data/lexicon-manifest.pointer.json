@@ -1,27 +1,32 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-0737528c8445.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-0778b59991c5.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "effa789dfec4b9785234d4eef27839e8df50aa6660c6ce3608d16afb077e7dfd",
+  "manifest_fingerprint": "b1ec63f8d8cdf0b1b2d3d7a537c116aadc456fc7dcd6d39a383f07217d701588",
   "fingerprint_schema_version": 1,
   "generated_at": "2026-08-05T20:32:25Z",
-  "gz_sha256": "0a06f1d433dbb928e7bb68ef7bb6e65af8c258e79f3dbd4a336ee54d78c21c7a",
-  "json_sha256": "0737528c844561910f00376a10ad8d7a26fc9386f8e39e21ca107ad96a1852ba",
-  "gz_bytes": 14196544,
-  "json_bytes": 102568813,
+  "gz_sha256": "c025ccad9e27f9133f52c13c945d49496281e357333d58f23437aa814a1cd523",
+  "json_sha256": "0778b59991c5ba16564935df08ddd7896d2ea3ceefa2ad3768096e66c4658f39",
+  "gz_bytes": 14196623,
+  "json_bytes": 102569555,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 2278,
+      "poc_thin_pages": 1270,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 50
     },
     "candidate": {
-      "poc_thin_pages": 2025,
+      "poc_thin_pages": 2024,
       "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 50
+      "old_gate_no_english_anchor": 48
     },
-    "regressions": {},
-    "override_reason": "#6369 teacher P1: translation.en shape for article overview + enrichment floor",
+    "regressions": {
+      "poc_thin_pages": {
+        "baseline": 1270,
+        "candidate": 2024
+      }
+    },
+    "override_reason": "#6369 residual Class-B EN fill: generic release asset stale vs versioned canonical; operator override from existing pointer",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
