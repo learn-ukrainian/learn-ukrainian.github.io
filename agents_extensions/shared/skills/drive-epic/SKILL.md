@@ -89,6 +89,9 @@ solo action, on missing GO. If #349 and any other queue view disagree, **#349 wi
 correct the other view the same session. Full contract:
 `docs/runbooks/hramatka-driver-queue.md`.
 
+Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
+as specified in that runbook; only `ALLOW` permits the new action.
+
 ### 1. Read topology + metrics (don't hold state — query it)
 ```bash
 .venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
