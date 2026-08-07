@@ -55,5 +55,6 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-07-08 | — | codex-tool-capture / qg-grounding-containment | 6th codex/gpt QG format bug: `_event_input_matches_query` required exact query equality, rejecting model's decorated cited queries (e.g. including mode=section 3) → grounded confirms dropped 880→410 (Claude). Relaxed to containment (`cand in cited`) with a >=3-char min-length guard. Detail in [codex-tool-capture.md](codex-tool-capture.md). |
 | 2026-07-10 | #4220 | destructive-restores | Destructive restores — restore tooling silently clobbering newer local work |
 | 2026-07-12 | #4998 | research-registry-p4-gate-wiring | Wiring the P4 strict-adoption gate surfaced two latent bugs |
+| 2026-08-06 | #6415 | review-rail-outage-cascade | Review machinery failed 7:1 against its catches; outage froze all merges; process defeated purpose → detail: 2026-08-06-review-rail-outage-cascade.md |
 <!-- INDEX-END -->
 - 2026-07-10 · destructive-restore: `npm run hydrate` overwrote the richer in-flight intake manifest (8,706→5,787) with the published release — restore tools must never destroy more data than they replace by default → detail: destructive-restores.md

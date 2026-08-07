@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_functional_role_contract_v2_1.schema.json",
+  "title": "Phase 3 correction/protection task-scoped functional-role contract v2.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "contract_inputs", "independence_model", "root", "functional_roles", "task_conflict_graph", "heldout_acl", "action_receipt_contract", "evaluation_cycle", "preserved_phase3_contract", "role_graph_ready", "source_authoring", "phase4"],
+  "properties": {
+    "schema_version": {"const": "correction_protection_functional_role_contract_v2_1"},
+    "text_free": {"const": true},
+    "contract_inputs": {
+      "const": {
+        "phase3_v2_base_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+        "functional_role_amendment_sha256": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b",
+        "combined_contract_sha256": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+      }
+    },
+    "independence_model": {
+      "const": {
+        "unit": "task_id",
+        "provider_is_independence_identity": false,
+        "natural_person_identity_required": false,
+        "task_ids_unique": true,
+        "provider_reuse_allowed_for_nonconflicting_tasks": true,
+        "action_receipt_required": true
+      }
+    },
+    "root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "functional_role_ids", "forbidden_action_kinds", "may_authorize_phase4"],
+      "properties": {
+        "task_id": {"const": "phase3-v2-1-root-orchestration"},
+        "functional_role_ids": {"type": "array", "maxItems": 0},
+        "forbidden_action_kinds": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "may_authorize_phase4": {"const": false}
+      }
+    },
+    "functional_roles": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {"$ref": "#/$defs/functionalRole"}
+    },
+    "task_conflict_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "nodes", "edges"],
+      "properties": {
+        "mode": {"const": "directed_forbidden_information_and_artifact_edges"},
+        "nodes": {"type": "array", "minItems": 14, "maxItems": 14, "uniqueItems": true, "items": {"$ref": "#/$defs/graphTaskId"}},
+        "edges": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/conflictEdge"}}
+      }
+    },
+    "heldout_acl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pre_release_read_task_ids", "post_release_score_task_ids", "forbidden_task_ids"],
+      "properties": {
+        "pre_release_read_task_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/taskId"}},
+        "post_release_score_task_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/taskId"}},
+        "forbidden_task_ids": {"type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true, "items": {"$ref": "#/$defs/taskId"}}
+      }
+    },
+    "action_receipt_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "required_fields", "provider_is_audit_metadata_not_identity", "provider_reuse_allowed_without_conflict_edge"],
+      "properties": {
+        "schema_version": {"const": "phase3_functional_role_action_receipt_v2_1"},
+        "required_fields": {"type": "array", "minItems": 19, "maxItems": 19, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "provider_is_audit_metadata_not_identity": {"const": true},
+        "provider_reuse_allowed_without_conflict_edge": {"const": true}
+      }
+    },
+    "evaluation_cycle": {
+      "const": {
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+        "release_freeze_binding_field": "fixed_release_sha256",
+        "evaluation_freeze_binding_field": "heldout_evaluation_freeze_sha256",
+        "activation_requires_both_freeze_bindings": true,
+        "void_on": ["release_artifact_change", "evaluation_freeze_change", "denominator_change", "breadth_floor_change", "evaluation_threshold_change"],
+        "voided_cycle_may_not_resume": true,
+        "restart_requires_new_cycle_id_and_fresh_freezes": true,
+        "action_receipts_must_match_evaluation_cycle_id": true
+      }
+    },
+    "preserved_phase3_contract": {
+      "const": {
+        "denominators_unchanged": true,
+        "breadth_floors_unchanged": true,
+        "statuses_unchanged": true,
+        "evaluation_thresholds_unchanged": true,
+        "phase4_block_unchanged": true
+      }
+    },
+    "role_graph_ready": {"const": true},
+    "source_authoring": {"const": {"blocked": true, "reason": "v2_1_runtime_migration_and_exact_head_review_pending"}},
+    "phase4": {"const": {"blocked": true, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}}
+  },
+  "$defs": {
+    "roleId": {"enum": ["scope_circularity_critic", "ukrainian_source_reviewer", "rule_author_extractor", "heldout_steward", "heldout_label_reviewer", "scorer", "outsider_reproducer", "cross_family_code_infra_reviewer", "disposition_auditor", "textbook_nonhit_auditor"]},
+    "taskId": {"enum": ["phase3-v2-1-scope-circularity-review", "phase3-v2-1-ukrainian-source-review", "phase3-v2-1-rule-author-extraction", "phase3-v2-1-heldout-stewardship", "phase3-v2-1-heldout-label-review", "phase3-v2-1-heldout-scoring", "phase3-v2-1-outsider-reproduction", "phase3-v2-1-code-infra-review", "phase3-v2-1-disposition-audit", "phase3-v2-1-textbook-nonhit-audit"]},
+    "graphTaskId": {"enum": ["phase3-v2-1-root-orchestration", "phase3-v2-1-disposition-ledger-production", "phase3-v2-1-textbook-scanner-implementation", "phase3-v2-1-fixed-release-freeze", "phase3-v2-1-scope-circularity-review", "phase3-v2-1-ukrainian-source-review", "phase3-v2-1-rule-author-extraction", "phase3-v2-1-heldout-stewardship", "phase3-v2-1-heldout-label-review", "phase3-v2-1-heldout-scoring", "phase3-v2-1-outsider-reproduction", "phase3-v2-1-code-infra-review", "phase3-v2-1-disposition-audit", "phase3-v2-1-textbook-nonhit-audit"]},
+    "functionalRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "task_id", "exact_model", "model_family", "harness", "capability_class", "may_act", "must_not"],
+      "properties": {
+        "role_id": {"$ref": "#/$defs/roleId"},
+        "task_id": {"$ref": "#/$defs/taskId"},
+        "exact_model": {"type": "string", "minLength": 1},
+        "model_family": {"enum": ["anthropic", "cursor", "gemini", "openai", "deterministic", "zhipu", "xai"]},
+        "harness": {"enum": ["claude-code", "cursor", "agy", "codex", "local-python", "opencode"]},
+        "capability_class": {"enum": ["contract_scope_review", "ukrainian_decision", "ukrainian_rule_proposal", "heldout_custody", "evaluation_scoring", "independent_reproduction", "cross_family_code_review"]},
+        "may_act": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "must_not": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "conflictEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edge_kind", "producer_task_id", "consumer_task_id", "fixed_before_consumer"],
+      "properties": {
+        "edge_kind": {"enum": ["scope_inputs_to_scope_review", "author_output_to_source_review", "steward_seal_to_label_review", "fixed_release_to_scorer", "disposition_ledger_to_disposition_audit", "scanner_to_textbook_nonhit_audit", "implementation_to_cross_family_code_review", "fixed_release_to_outsider_reproduction"]},
+        "producer_task_id": {"$ref": "#/$defs/graphTaskId"},
+        "consumer_task_id": {"$ref": "#/$defs/taskId"},
+        "fixed_before_consumer": {"const": true}
+      }
+    }
+  }
+}

@@ -322,6 +322,7 @@ def _clearance_and_bindings(
             evaluation_path=evaluation_path,
             coverage_path=coverage_path,
             role_path=role_path,
+            allow_legacy_source_rows=True,
         )
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
@@ -345,8 +346,13 @@ def _clearance_and_bindings(
     public_bindings = partition_receipt.get("input_bindings")
     require(isinstance(public_bindings, Mapping), "partition public input bindings missing")
     clearance_bindings = clearance["input_bindings"]
+    clearance_contract_sha256 = (
+        packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256
+        if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1"
+        else packets.COMBINED_CONTRACT_SHA256
+    )
     for key, actual in {
-        "combined_contract_sha256": packets.COMBINED_CONTRACT_SHA256,
+        "combined_contract_sha256": clearance_contract_sha256,
         "source_universe_receipt_sha256": freeze_sha,
         "evaluation_contract_sha256": sha256_file(evaluation_path),
         "coverage_contract_sha256": sha256_file(coverage_path),
@@ -482,7 +488,7 @@ def build(
         "role_binding": steward,
         "rule_author_binding": author,
         "input_bindings": {
-            "combined_contract_sha256": packets.COMBINED_CONTRACT_SHA256,
+            "combined_contract_sha256": clearance["input_bindings"]["combined_contract_sha256"],
             "source_universe_receipt_sha256": sha256_file(source_universe_dir / packets.LEDGER_RECEIPT),
             "ua_gec_ledger_sha256": ledger_sha,
             "sources_db_sha256": sha256_file(sources_db),
