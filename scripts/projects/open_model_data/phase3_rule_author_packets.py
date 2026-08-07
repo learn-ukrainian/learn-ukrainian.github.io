@@ -17,14 +17,19 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near_duplicate
 from scripts.projects.open_model_data import phase3_source_universe as source_universe
 
@@ -34,7 +39,12 @@ SCHEMA_PATH = CONTRACTS / "phase3_rule_author_packet_bundle_v1.schema.json"
 CLEARANCE_SCHEMA_PATH = CONTRACTS / "phase3_heldout_partition_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"
 IMPLEMENTATION_VERSION = "phase3_rule_author_packet_compiler_v1"
-COMBINED_CONTRACT_SHA256 = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
+PHASE3_V2_CONTRACT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+PHASE3_V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
+PHASE3_V2_1_COMBINED_CONTRACT_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+LEGACY_V1_V3_COMBINED_CONTRACT_SHA256 = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
+# Compatibility alias retained for fixture callers; all new artifacts bind v2.
+COMBINED_CONTRACT_SHA256 = PHASE3_V2_1_COMBINED_CONTRACT_SHA256
 MAX_ITEMS = 24
 MAX_UTF8_BYTES = 196_608
 # The canonical steward receipt currently clears only UA-GEC units.  The packet
@@ -57,6 +67,11 @@ def canonical_json(value: Any) -> str:
 
 def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def packet_sha256(packet: Mapping[str, Any]) -> str:
+    """Return the logical packet digest, independent of JSON-file framing."""
+    return sha256_bytes(canonical_json(packet).encode("utf-8"))
 
 
 def sha256_file(path: Path) -> str:
@@ -167,8 +182,8 @@ def receipt_body_sha256(receipt: Mapping[str, Any]) -> str:
     return sha256_bytes(body.encode("utf-8"))
 
 
-def _assigned_role_seat(role_contract: Mapping[str, Any], expected_role: str) -> Mapping[str, Any]:
-    """Return the one attested, assigned seat for a decision role."""
+def _legacy_assigned_role_seat(role_contract: Mapping[str, Any], expected_role: str) -> Mapping[str, Any]:
+    """Resolve a v1 assigned seat while the held-out runtime migrates to v2.1."""
     seats = role_contract.get("seats")
     require(isinstance(seats, list), "role contract lacks seats")
     assigned = [
@@ -184,11 +199,10 @@ def _assigned_role_seat(role_contract: Mapping[str, Any], expected_role: str) ->
     return assigned[0]
 
 
-def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
-    """Derive a current actor from the role contract; never accept it in clearance."""
+def _legacy_derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
     bindings = role_contract.get("task_bindings")
     require(isinstance(bindings, list), "role contract lacks task bindings")
-    assigned = _assigned_role_seat(role_contract, expected_role)
+    assigned = _legacy_assigned_role_seat(role_contract, expected_role)
     controller = str(assigned["controller_identity_id"])
     matching = [
         binding
@@ -197,7 +211,8 @@ def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> 
         and binding.get("role_id") == expected_role
         and binding.get("controller_identity_id") == controller
         and isinstance(binding.get("reserved_task_id"), str)
-        and binding.get("status") in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
+        and binding.get("status")
+        in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
     ]
     require(len(matching) == 1, f"role contract lacks one active {expected_role} task binding")
     return {
@@ -207,39 +222,40 @@ def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> 
     }
 
 
+def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
+    """Return a role actor from the receipt's pinned contract generation."""
+    if role_contract.get("schema_version") == "correction_protection_role_contract_v1":
+        return _legacy_derive_role_actor(role_contract, expected_role)
+    try:
+        return functional_roles.binding_for_role(role_contract, expected_role)
+    except functional_roles.FunctionalRoleError as exc:
+        raise PacketCompilerError(str(exc)) from exc
+
+
 def _validate_steward_binding(role_contract: Mapping[str, Any], role_binding: Mapping[str, Any]) -> dict[str, str]:
-    require(role_binding.get("role_id") == "heldout_steward", "clearance role binding is not heldout steward")
-    controller = role_binding.get("controller_identity_id")
-    attestation_task = role_binding.get("attestation_task_id")
-    require(
-        isinstance(controller, str) and isinstance(attestation_task, str),
-        "clearance steward role binding is incomplete",
-    )
-    seats = role_contract.get("seats")
-    bindings = role_contract.get("task_bindings")
-    require(isinstance(seats, list) and isinstance(bindings, list), "role contract lacks seats or task bindings")
-    seat_ok = any(
-        isinstance(seat, Mapping)
-        and seat.get("role_id") == "heldout_steward"
-        and seat.get("seat_id") == role_binding.get("seat_id")
-        and seat.get("assignment_state") == "assigned_verified"
-        and seat.get("controller_identity_id") == controller
-        and seat.get("controller_identity_attested") is True
-        for seat in seats
-    )
-    task_ok = any(
-        isinstance(binding, Mapping)
-        and binding.get("role_id") == "heldout_steward"
-        and binding.get("controller_identity_id") == controller
-        and binding.get("reserved_task_id") == attestation_task
-        and binding.get("status") in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
-        for binding in bindings
-    )
-    require(seat_ok and task_ok, "role contract does not bind heldout steward receipt")
-    return {"controller_identity_id": controller, "role_id": "heldout_steward", "task_id": attestation_task}
+    if role_contract.get("schema_version") == "correction_protection_role_contract_v1":
+        require(role_binding.get("role_id") == "heldout_steward", "clearance role binding is not heldout steward")
+        controller = role_binding.get("controller_identity_id")
+        attestation_task = role_binding.get("attestation_task_id")
+        require(
+            isinstance(controller, str) and isinstance(attestation_task, str),
+            "clearance steward role binding is incomplete",
+        )
+        assigned = _legacy_assigned_role_seat(role_contract, "heldout_steward")
+        actor = _legacy_derive_role_actor(role_contract, "heldout_steward")
+        require(
+            assigned.get("seat_id") == role_binding.get("seat_id")
+            and actor["controller_identity_id"] == controller
+            and actor["task_id"] == attestation_task,
+            "role contract does not bind heldout steward receipt",
+        )
+        return actor
+    expected = _derive_role_actor(role_contract, "heldout_steward")
+    require(dict(role_binding) == expected, "clearance steward task binding drift")
+    return expected
 
 
-def validate_clearance(
+def _validate_legacy_clearance(
     clearance: Mapping[str, Any],
     *,
     clearance_sha256: str,
@@ -248,13 +264,13 @@ def validate_clearance(
     coverage_path: Path,
     role_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Validate a steward receipt without looking for or deriving heldout identities."""
+    """Preserve the merged v1 source-row boundary until its v2.1 slice lands."""
     validate(clearance, "clearance", "clearance")
     require(receipt_body_sha256(clearance) == clearance.get("receipt_sha256"), "clearance receipt body hash drift")
     bindings = clearance["input_bindings"]
     require(
-        bindings.get("combined_contract_sha256") == COMBINED_CONTRACT_SHA256,
-        "clearance combined-contract binding drift",
+        bindings.get("combined_contract_sha256") == LEGACY_V1_V3_COMBINED_CONTRACT_SHA256,
+        "legacy clearance combined-contract binding drift",
     )
     require(bindings.get("source_universe_receipt_sha256") == receipt_sha256, "clearance source-freeze binding drift")
     require(
@@ -267,6 +283,10 @@ def validate_clearance(
     )
     require(bindings.get("role_contract_sha256") == sha256_file(role_path), "clearance role-contract binding drift")
     role_contract = read_json(role_path)
+    require(
+        role_contract.get("schema_version") == "correction_protection_role_contract_v1",
+        "legacy clearance requires the v1 role contract",
+    )
     evaluation = read_json(evaluation_path)
     steward = _validate_steward_binding(role_contract, clearance["role_binding"])
     author = _derive_role_actor(role_contract, "rule_author_extractor")
@@ -283,10 +303,202 @@ def validate_clearance(
         and "rule_author_extractor" not in set(acl.get("post_release_scorer_roles", [])),
         "rule author is not excluded by heldout ACL",
     )
-    author_seat = _assigned_role_seat(role_contract, "rule_author_extractor")
+    author_seat = _legacy_assigned_role_seat(role_contract, "rule_author_extractor")
     require(
         "read_heldout_text_locators_fingerprints_labels" in set(author_seat.get("must_not", [])),
         "rule-author heldout prohibition drift",
+    )
+    heldout_access = evaluation.get("heldout_access")
+    require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
+    require(heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access")
+    policy = near_duplicate.policy_for_governed_use(
+        "public_canary_neighbour_exclusion",
+        expected_fingerprint=str(bindings["near_duplicate_policy_fingerprint_sha256"]),
+    )
+    evaluation_policy = evaluation.get("near_duplicate_policy")
+    require(isinstance(evaluation_policy, Mapping), "evaluation contract near_duplicate_policy is malformed")
+    require(
+        evaluation_policy.get("policy_fingerprint_sha256") == policy["policy_fingerprint_sha256"],
+        "evaluation near-duplicate policy binding drift",
+    )
+    _sha(clearance_sha256, "clearance file")
+    return role_contract, evaluation
+
+
+def validate_clearance(
+    clearance: Mapping[str, Any],
+    *,
+    clearance_sha256: str,
+    receipt_sha256: str,
+    evaluation_path: Path,
+    coverage_path: Path,
+    role_path: Path,
+    allow_legacy_source_rows: bool = False,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Validate a steward receipt without looking for or deriving heldout identities."""
+    if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1":
+        require(
+            allow_legacy_source_rows,
+            "legacy v1 clearance is restricted to transitional source-row materialization",
+        )
+        return _validate_legacy_clearance(
+            clearance,
+            clearance_sha256=clearance_sha256,
+            receipt_sha256=receipt_sha256,
+            evaluation_path=evaluation_path,
+            coverage_path=coverage_path,
+            role_path=role_path,
+        )
+    require(
+        set(clearance)
+        == {
+            "schema_version",
+            "text_free",
+            "implementation_version",
+            "role_binding",
+            "action_receipt",
+            "input_bindings",
+            "cleared_units",
+            "cleared_unit_count",
+            "heldout_excluded",
+            "ua_eval_exclusion_enforced",
+            "public_canary_exclusion_enforced",
+            "heldout_complement_encoded",
+            "fingerprints_encoded",
+            "locators_encoded",
+            "receipt_sha256",
+        },
+        "clearance top-level field set drift",
+    )
+    require(clearance.get("schema_version") == "phase3_author_clearance_receipt_v2_1", "clearance is not v2.1")
+    require(clearance.get("text_free") is True, "clearance is not text-free")
+    require(clearance.get("implementation_version") == "phase3_heldout_partition_v2_1", "clearance implementation drift")
+    require(receipt_body_sha256(clearance) == clearance.get("receipt_sha256"), "clearance receipt body hash drift")
+    bindings = clearance["input_bindings"]
+    require(
+        isinstance(bindings, Mapping)
+        and set(bindings)
+        == {
+            "phase3_v2_contract_sha256",
+            "phase3_v2_1_amendment_sha256",
+            "combined_contract_sha256",
+            "role_contract_sha256",
+            "evaluation_contract_sha256",
+            "coverage_contract_sha256",
+            "source_universe_receipt_sha256",
+            "near_duplicate_policy_fingerprint_sha256",
+            "ua_eval_exclusion_manifest_sha256",
+            "public_canary_exclusion_manifest_sha256",
+        },
+        "clearance input-binding field set drift",
+    )
+    require(
+        bindings.get("combined_contract_sha256") == COMBINED_CONTRACT_SHA256,
+        "clearance combined-contract binding drift",
+    )
+    require(
+        bindings.get("phase3_v2_contract_sha256") == PHASE3_V2_CONTRACT_SHA256
+        and bindings.get("phase3_v2_1_amendment_sha256") == PHASE3_V2_1_AMENDMENT_SHA256,
+        "clearance v2.1 contract input binding drift",
+    )
+    require(bindings.get("source_universe_receipt_sha256") == receipt_sha256, "clearance source-freeze binding drift")
+    require(
+        bindings.get("evaluation_contract_sha256") == sha256_file(evaluation_path),
+        "clearance evaluation-contract binding drift",
+    )
+    require(
+        bindings.get("coverage_contract_sha256") == sha256_file(coverage_path),
+        "clearance coverage-contract binding drift",
+    )
+    require(bindings.get("role_contract_sha256") == sha256_file(role_path), "clearance role-contract binding drift")
+    cleared_units = clearance.get("cleared_units")
+    require(isinstance(cleared_units, list), "clearance cleared units malformed")
+    unit_keys: list[tuple[str, str]] = []
+    for unit in cleared_units:
+        require(
+            isinstance(unit, Mapping)
+            and set(unit) == {"family_id", "unit_id", "unit_sha256"}
+            and isinstance(unit.get("family_id"), str)
+            and isinstance(unit.get("unit_id"), str)
+            and SHA256.fullmatch(str(unit.get("unit_sha256"))) is not None,
+            "clearance cleared unit identity malformed",
+        )
+        unit_keys.append((str(unit["family_id"]), str(unit["unit_id"])))
+    require(len(unit_keys) == len(set(unit_keys)) == clearance.get("cleared_unit_count"), "clearance unit count or uniqueness drift")
+    require(
+        clearance.get("heldout_excluded") is True
+        and clearance.get("ua_eval_exclusion_enforced") is True
+        and clearance.get("public_canary_exclusion_enforced") is True
+        and clearance.get("heldout_complement_encoded") is False
+        and clearance.get("fingerprints_encoded") is False
+        and clearance.get("locators_encoded") is False,
+        "clearance exclusion or no-leak contract drift",
+    )
+    role_contract = read_json(role_path)
+    try:
+        functional_roles.verify_value(role_contract)
+    except functional_roles.FunctionalRoleError as exc:
+        raise PacketCompilerError(str(exc)) from exc
+    evaluation = read_json(evaluation_path)
+    steward = _validate_steward_binding(role_contract, clearance["role_binding"])
+    author = _derive_role_actor(role_contract, "rule_author_extractor")
+    acl = role_contract.get("heldout_acl")
+    require(isinstance(acl, Mapping), "role contract heldout ACL missing")
+    require(steward["task_id"] in set(acl.get("pre_release_read_task_ids", [])), "steward lacks pre-release heldout access")
+    require(
+        author["task_id"] in set(acl.get("forbidden_task_ids", []))
+        and author["task_id"] not in set(acl.get("pre_release_read_task_ids", []))
+        and author["task_id"] not in set(acl.get("post_release_score_task_ids", [])),
+        "rule author is not excluded by heldout ACL",
+    )
+    author_seat = next(item for item in role_contract["functional_roles"] if item["role_id"] == "rule_author_extractor")
+    require(
+        "read_heldout_text_locators_fingerprints_labels" in set(author_seat.get("must_not", [])),
+        "rule-author heldout prohibition drift",
+    )
+    action_receipt = clearance.get("action_receipt")
+    require(isinstance(action_receipt, Mapping), "clearance lacks v2.1 steward action receipt")
+    require(set(action_receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "clearance action receipt field set drift")
+    steward_entry = next(item for item in role_contract["functional_roles"] if item["role_id"] == "heldout_steward")
+    require(
+        {key: action_receipt.get(key) for key in ("role_id", "task_id")} == steward,
+        "clearance action receipt steward binding drift",
+    )
+    require(
+        all(action_receipt.get(key) == steward_entry[key] for key in ("exact_model", "model_family", "harness")),
+        "clearance action receipt execution lane drift",
+    )
+    require(isinstance(action_receipt.get("provider"), str) and action_receipt["provider"], "clearance provider metadata missing")
+    require(
+        action_receipt.get("input_manifest_sha256")
+        == sha256_bytes(canonical_json(bindings).encode("utf-8")),
+        "clearance action receipt input drift",
+    )
+    require(
+        action_receipt.get("output_sha256")
+        == sha256_bytes(canonical_json(clearance.get("cleared_units", [])).encode("utf-8")),
+        "clearance action receipt output drift",
+    )
+    require(
+        action_receipt.get("evaluation_cycle_id") == role_contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "clearance evaluation-cycle binding drift",
+    )
+    require(
+        action_receipt.get("base_contract_sha256") == PHASE3_V2_CONTRACT_SHA256
+        and action_receipt.get("amendment_sha256") == PHASE3_V2_1_AMENDMENT_SHA256
+        and action_receipt.get("combined_contract_sha256") == PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+        and action_receipt.get("functional_role_contract_sha256") == sha256_file(role_path)
+        and action_receipt.get("conflict_graph_sha256") == functional_roles.conflict_graph_sha256(role_contract),
+        "clearance action receipt contract binding drift",
+    )
+    require(action_receipt.get("status") == "completed", "clearance steward action is not completed")
+    require(
+        action_receipt.get("action_kind") == "partition_seal_and_clear_author_units",
+        "clearance steward action kind drift",
+    )
+    require(
+        all(isinstance(action_receipt.get(key), str) and action_receipt[key] for key in ("receipt_id", "action_kind", "started_at", "completed_at")),
+        "clearance action receipt metadata incomplete",
     )
     heldout_access = evaluation.get("heldout_access")
     require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
@@ -611,6 +823,9 @@ def build(
     compiler = {
         "implementation_version": IMPLEMENTATION_VERSION,
         "script_sha256": sha256_file(ROOT / SCRIPT_PATH),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
+        "phase3_v2_1_amendment_sha256": PHASE3_V2_1_AMENDMENT_SHA256,
+        "phase3_v2_1_combined_contract_sha256": PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
         "query_plan_sha256": query_sha,
         "max_items": MAX_ITEMS,
         "max_utf8_bytes": MAX_UTF8_BYTES,
@@ -623,11 +838,14 @@ def build(
     bundle = {
         "schema_version": "phase3_rule_author_packet_bundle_v1",
         "bundle_id": stable_id("rule_author_bundle", identity),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
+        "phase3_v2_1_amendment_sha256": PHASE3_V2_1_AMENDMENT_SHA256,
+        "phase3_v2_1_combined_contract_sha256": PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
         "clearance": {"receipt_sha256": clearance["receipt_sha256"], "file_sha256": clearance_sha},
         "source_freeze": {"receipt_sha256": receipt_sha, "merged_main_sha": receipt["merged_main_sha"]},
         "evaluation_contract_sha256": sha256_file(evaluation_path),
         "coverage_contract_sha256": sha256_file(coverage_path),
-        "role_contract_sha256": sha256_file(role_path),
+        "functional_role_contract_sha256": sha256_file(role_path),
         "near_duplicate_policy_fingerprint_sha256": policy_sha,
         "compiler": compiler,
         "packets": packets,
@@ -689,7 +907,10 @@ def verify(
         bundle["evaluation_contract_sha256"] == sha256_file(evaluation_path), "bundle evaluation-contract binding drift"
     )
     require(bundle["coverage_contract_sha256"] == sha256_file(coverage_path), "bundle coverage-contract binding drift")
-    require(bundle["role_contract_sha256"] == sha256_file(role_path), "bundle role-contract binding drift")
+    require(
+        bundle["functional_role_contract_sha256"] == sha256_file(role_path),
+        "bundle functional-role contract binding drift",
+    )
     require(
         bundle["near_duplicate_policy_fingerprint_sha256"] == policy_sha,
         "bundle near-duplicate policy binding drift",
@@ -700,11 +921,23 @@ def verify(
     expected_compiler = {
         "implementation_version": IMPLEMENTATION_VERSION,
         "script_sha256": sha256_file(ROOT / SCRIPT_PATH),
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
+        "phase3_v2_1_amendment_sha256": PHASE3_V2_1_AMENDMENT_SHA256,
+        "phase3_v2_1_combined_contract_sha256": PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
         "query_plan_sha256": _query_plan_sha256(),
         "max_items": MAX_ITEMS,
         "max_utf8_bytes": MAX_UTF8_BYTES,
     }
     require(bundle["compiler"] == expected_compiler, "bundle compiler identity drift")
+    require(
+        bundle["phase3_v2_contract_sha256"] == PHASE3_V2_CONTRACT_SHA256,
+        "bundle Phase 3 v2 contract binding drift",
+    )
+    require(
+        bundle["phase3_v2_1_amendment_sha256"] == PHASE3_V2_1_AMENDMENT_SHA256
+        and bundle["phase3_v2_1_combined_contract_sha256"] == PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        "bundle Phase 3 v2.1 contract binding drift",
+    )
     for packet in bundle["packets"]:
         require(packet["clearance_sha256"] == clearance_sha, "packet clearance binding drift")
         require(
@@ -763,10 +996,10 @@ def verify(
         response = read_json(response_path)
         validate(response, "ruleAuthorResponse", "rule-author response")
         require(
-            {key: response["author"][key] for key in ("role_id", "controller_identity_id", "task_id")} == author_actor,
+            {key: response["author"][key] for key in ("role_id", "task_id")} == author_actor,
             "response author does not match current role contract",
         )
-        packets_by_hash = {sha256_bytes(canonical_json(packet).encode("utf-8")): packet for packet in bundle["packets"]}
+        packets_by_hash = {packet_sha256(packet): packet for packet in bundle["packets"]}
         require(response["packet_sha256"] in packets_by_hash, "response does not bind a packet in this bundle")
         bound_packet = packets_by_hash[response["packet_sha256"]]
         bound_items = {item["source_item_id"]: item for item in bound_packet["items"]}
@@ -790,8 +1023,8 @@ def verify(
         validate(review, "reviewDecision", "Ukrainian review decision")
         require(review["reviewer"] == reviewer_actor, "reviewer does not match current Ukrainian reviewer role")
         require(
-            review["reviewer"]["controller_identity_id"] != response["author"]["controller_identity_id"],
-            "Ukrainian reviewer must be independent of rule author",
+            functional_roles.tasks_conflict(role_contract, response["author"]["task_id"], review["reviewer"]["task_id"]),
+            "rule-author output lacks a directed source-review task edge",
         )
         require(review["reviewed_payload_sha256"] == response_sha, "review does not bind response payload")
         decisions = review["proposal_decisions"]
