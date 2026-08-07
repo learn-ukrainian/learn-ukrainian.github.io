@@ -67,3 +67,35 @@ P7. **Guard scoping audit**: guards accreted broader than their incident. The pr
     writing its own docs/autopsies; the merge guard blocks operator-intended outage merges with
     no override; variable-expanded paths false-positive as primary writes. Each guard gets an
     explicit scope statement + an operator-visible override path, or it shrinks.
+
+## Fleet discussion outcome (2026-08-07, codex + agy + glm, 2 rounds + synthesis)
+
+Verdicts on the candidates (full transcript: fleet conversation
+`conversation_bceaa18330d24c61acdea399d75f46e6`):
+- **P5 is the strongest fix and a dependency of P1**: persist the completed exact-head verdict
+  through the existing result/artifact path BEFORE any reservation/bookkeeping cleanup; later
+  publication replays that result. Bookkeeping failure must never erase a completed verdict.
+- **P1 endorsed, narrowed**: incremental re-review only when a durable prior verdict exists for
+  the actual base/head with unchanged review scope; otherwise normal review. NO blanket
+  docs-only fast-track (one over-reviewed report is not evidence all docs are harmless), and
+  NO semantic-diff engine (ceremony creep).
+- **P2 + P6 merge into one fail-stop**: a capability-aware check at the GitHub side-effect
+  boundary; ONE failed rail/infrastructure recovery cycle → terminal `needs_operator`, suppress
+  further automatic cycles for that PR/head (single-flight), emit one actionable notice.
+  Substantive findings (real test/lint failures) are NOT escalation grounds — classify first.
+- **P3**: a short human-run outage-merge runbook (distinguish platform outage from failing
+  tests; exact-head local evidence + any valid independent verdict; named admin action;
+  restoration + reconciliation afterward). A runbook, not a subsystem.
+- **P4 reframed to transport-level**: 401/403/expiry immediately quarantines the seat from
+  dispatch, stops retries, alerts once. No background heartbeat cron.
+- **P7 as an audit**: per guard record scope, purpose/owner, failure class, next operator
+  action, override-allowed?. "Operator-visible" ≠ every guard bypassable.
+- **Failure taxonomy** (the shared contract): platform · credential · guard-control ·
+  bookkeeping · substantive-finding · unknown. The first four and unknown → `needs_operator`
+  fail-stop; only substantive findings continue the normal fix loop.
+
+**Explicitly NOT built** (anti-ceremony guardrails): no review-history database, no new
+ledgers/reconciliation daemons, no AST diff engine, no verdict registry, no docs-only skip
+rule, no platform-health required CI check, no automated admin merges, no credential heartbeat
+cron, no per-guard override UI, no new retry counters/dashboards/SLOs. The 7:1 failure ratio
+justifies fail-stop design and this autopsy — not deletion of independent review itself.
