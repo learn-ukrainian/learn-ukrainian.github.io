@@ -1,0 +1,10 @@
+# Unclog PR #6428 CI red after rebase
+
+Branch: agy/6412-temp-lifecycle-impl @ 4466a8bf7d
+Worktree: .worktrees/dispatch/agy/6428-unclog (or create)
+
+Failures on CI run 31197519764:
+- pytest shards 2/3/4
+- gitleaks/trufflehog (local gitleaks clean — investigate trufflehog BASE/HEAD)
+
+Fix real pytest failures. Push. Do not merge without green + CF.
