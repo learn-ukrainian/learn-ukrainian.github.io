@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cb3824891cde",
+  "session_id": "session_01844052-caef-4e4c-95f2-5df1132253ae",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T16:13:01.50461Z",
+  "branch": "kimi/hramatka-hygiene-pr3",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet/post_task_reap.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "1871071c3f61",
+  "token_usage": {
+    "input_tokens": 110993,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3756670,
+    "output_tokens": 30910,
+    "api_call_count": 40
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T16:13:01.385515Z",
+    "agent_lines": 286,
+    "agent_removed": 60,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 286,
+    "total_lines_changed": 346,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

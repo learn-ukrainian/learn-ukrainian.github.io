@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cb3824891cde",
+  "strategy": "manual-commit",
+  "branch": "kimi/hramatka-hygiene-pr3",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet/post_task_reap.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/cb/3824891cde/0/metadata.json",
+      "transcript": "/cb/3824891cde/0/full.jsonl",
+      "content_hash": "/cb/3824891cde/0/content_hash.txt",
+      "prompt": "/cb/3824891cde/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 110993,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3756670,
+    "output_tokens": 30910,
+    "api_call_count": 40
+  }
+}

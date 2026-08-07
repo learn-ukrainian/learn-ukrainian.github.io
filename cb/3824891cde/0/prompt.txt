@@ -1,0 +1,16 @@
+# Task: PR #6435 delta fixes (Codex CHANGES_REQUESTED)
+
+Branch: kimi/hramatka-hygiene-pr3
+
+## Blockers
+1. ACP runtime paths: **no name/substring selection**. Only reap paths explicitly bound in task state to this task_id (or documented ownership field). No unbound `runtime-review-*` glob reap.
+2. Liveness fail-closed: if process liveness probe fails/errors → **retain** (never reap). Main dispatch worktree must also have a liveness check when pid is known.
+3. Dirty-tree check applies to **all** paths before remove; never `--force` remove if dirty or liveness unknown.
+
+## Tests
+- No unbound ACP name reap
+- liveness probe failure → retain
+- dirty ACP path → retain
+- mutation: disable fail-closed on liveness → test fails
+
+Push to same PR. No merge.
