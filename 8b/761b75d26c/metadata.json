@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8b761b75d26c",
+  "strategy": "manual-commit",
+  "branch": "kimi/hramatka-hygiene-pr3",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "scripts/fleet/post_task_reap.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8b/761b75d26c/0/metadata.json",
+      "transcript": "/8b/761b75d26c/0/full.jsonl",
+      "content_hash": "/8b/761b75d26c/0/content_hash.txt",
+      "prompt": "/8b/761b75d26c/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 107377,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3972352,
+    "output_tokens": 25942,
+    "api_call_count": 42
+  }
+}

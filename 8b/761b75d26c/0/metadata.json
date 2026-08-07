@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8b761b75d26c",
+  "session_id": "session_a491df1b-ac22-4fc5-97a5-ded7023df78f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T13:20:58.28635Z",
+  "branch": "kimi/hramatka-hygiene-pr3",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "scripts/fleet/post_task_reap.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "3a4b8a30d332",
+  "token_usage": {
+    "input_tokens": 107377,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3972352,
+    "output_tokens": 25942,
+    "api_call_count": 42
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T13:20:58.259862Z",
+    "agent_lines": 845,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 845,
+    "total_lines_changed": 846,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
