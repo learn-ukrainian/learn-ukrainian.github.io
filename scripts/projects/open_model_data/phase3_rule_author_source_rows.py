@@ -322,6 +322,7 @@ def _clearance_and_bindings(
             evaluation_path=evaluation_path,
             coverage_path=coverage_path,
             role_path=role_path,
+            allow_legacy_source_rows=True,
         )
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc

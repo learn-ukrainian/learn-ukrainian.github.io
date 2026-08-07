@@ -260,6 +260,19 @@ def test_legacy_v1_v3_contract_binding_cannot_build_a_v2_packet_bundle(tmp_path:
         _build(paths)
 
 
+def test_legacy_v1_clearance_is_restricted_to_source_row_materialization(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    clearance = json.loads(paths["clearance"].read_text(encoding="utf-8"))
+    clearance["schema_version"] = "phase3_author_clearance_receipt_v1"
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
+    _write(paths["clearance"], clearance)
+    with pytest.raises(
+        packets.PacketCompilerError,
+        match="legacy v1 clearance is restricted to transitional source-row materialization",
+    ):
+        _build(paths)
+
+
 def test_document_identity_uses_hash_verified_normalized_record(tmp_path: Path) -> None:
     records = [
         _source_record(

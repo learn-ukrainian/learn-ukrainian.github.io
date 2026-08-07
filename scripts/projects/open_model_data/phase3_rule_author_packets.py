@@ -333,9 +333,14 @@ def validate_clearance(
     evaluation_path: Path,
     coverage_path: Path,
     role_path: Path,
+    allow_legacy_source_rows: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Validate a steward receipt without looking for or deriving heldout identities."""
     if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1":
+        require(
+            allow_legacy_source_rows,
+            "legacy v1 clearance is restricted to transitional source-row materialization",
+        )
         return _validate_legacy_clearance(
             clearance,
             clearance_sha256=clearance_sha256,
