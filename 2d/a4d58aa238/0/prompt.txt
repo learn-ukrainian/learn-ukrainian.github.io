@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/hramatka-6412-design-agy
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: apply CF design finding to agy/hramatka-6412-design-agy (draft PR #6425)
+
+Sealed CF review (claude-sonnet-5, review_21e7f86cd59941e2b14b47026c376d5b, CHANGES_REQUESTED,
+posted on the PR) found ONE P2 internal contradiction in your design doc
+docs/decisions/drafts/cf-temp-lifecycle.md. Fix exactly this; no scope growth.
+
+## The contradiction
+§4.2's sweeper flowchart step 2 unconditionally SKIPs any root younger than 60s (grace period)
+before liveness is ever evaluated, and §5.2 scopes the grace bypass to disk-pressure mode only.
+But §9's `test_sweep_reaps_dead_owner_root_immediately` spec asserts a 5-second-old dead-owner
+root is reaped immediately in NORMAL mode — impossible under the documented algorithm — while
+mutation-matrix row 3 expects the opposite (fresh root protected).
+
+## Required fix (reviewer's option (a) — matches your own §2 language)
+Add an explicit ESRCH-confirmed-dead branch to the §4.2 step-2 gate: a root younger than 60s
+is SKIPped UNLESS its owner is confirmed non-existent via ESRCH (double-checked immediately
+before rmtree, per your §2 TOCTOU row). Then reconcile §5.2, §9 test spec 1, and mutation-matrix
+row 3 so all four sections describe the same algorithm (row 3 should assert a fresh root with a
+LIVE owner is protected; the dead-owner test stays at 5s and passes via the ESRCH branch).
+
+## Steps
+1. Worktree on agy/hramatka-6412-design-agy. Edit ONLY the design doc.
+2. Also update the design-note comment on issue #6412 to match (post a short reply noting the
+   revision — do not edit history).
+3. Reminder: repo-relative paths only — NO file:///Users/... links anywhere (OPSEC; your prior
+   revision leaked 18 and they were scrubbed).
+4. Conventional commit citing the review id; push. PR stays draft. Do NOT merge.
