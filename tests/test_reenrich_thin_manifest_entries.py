@@ -1,3 +1,4 @@
+import json
 import sqlite3
 
 import pytest
@@ -6,6 +7,7 @@ from scripts.lexicon import enrich_manifest
 from scripts.lexicon import reenrich_thin_manifest_entries as reenrich
 from scripts.lexicon.publish_manifest import ManifestPublishError
 from scripts.lexicon.reenrich_thin_manifest_entries import (
+    _load_slug_filter,
     _preserve_existing_metadata,
     _reenrich_translation_only,
     reenrich_thin_entries,
@@ -124,6 +126,66 @@ def test_missing_translation_target_fills_only_entries_without_translation(monke
         "en": ["cream"],
         "source": "existing source",
     }
+
+
+def test_missing_translation_target_respects_slug_filter(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "абзац", "url_slug": "абзац", "enrichment": {}},
+            {"lemma": "агент", "url_slug": "агент", "enrichment": {}},
+        ],
+    }
+    seen: list[str] = []
+
+    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
+        seen.append(lemma)
+        return {"en": ["agent"], "source": "fixture source"}
+
+    monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
+    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="missing-translation",
+            slug_filter={"агент"},
+        )
+
+    assert seen == ["агент"]
+    assert summary["targets"] == 1
+    assert "translation" not in manifest["entries"][0]["enrichment"]
+    assert manifest["entries"][1]["enrichment"]["translation"] == {
+        "en": ["agent"],
+        "source": "fixture source",
+    }
+
+
+def test_load_slug_filter_accepts_bare_array(tmp_path) -> None:
+    path = tmp_path / "slugs.json"
+    path.write_text(json.dumps(["абзац", "агент"]), encoding="utf-8")
+
+    assert _load_slug_filter(path) == {"абзац", "агент"}
+
+
+def test_load_slug_filter_accepts_class_b_detail_dump(tmp_path) -> None:
+    path = tmp_path / "residual.json"
+    path.write_text(
+        json.dumps({"class_b_detail": [{"slug": "абзац"}, {"slug": "агент", "lemma": "агент"}]}),
+        encoding="utf-8",
+    )
+
+    assert _load_slug_filter(path) == {"абзац", "агент"}
+
+
+def test_load_slug_filter_rejects_unknown_shape(tmp_path) -> None:
+    path = tmp_path / "bad.json"
+    path.write_text(json.dumps({"nope": []}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="class_b_detail"):
+        _load_slug_filter(path)
 
 
 def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(monkeypatch) -> None:

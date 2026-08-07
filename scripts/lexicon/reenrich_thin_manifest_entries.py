@@ -51,6 +51,23 @@ def _read_local_manifest(path: Path) -> dict[str, Any]:
     return data
 
 
+def _load_slug_filter(path: Path) -> set[str]:
+    """Load a url_slug allowlist restricting re-enrichment to a scoped residual.
+
+    Accepts either a bare JSON array of slugs, or an audit-style object with a
+    ``class_b_detail`` list of ``{"slug": ...}`` records (the shape produced by
+    the #6369 Class-B no-English-gloss residual dump).
+    """
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return {str(slug) for slug in data}
+    if isinstance(data, dict):
+        detail = data.get("class_b_detail")
+        if isinstance(detail, list):
+            return {str(item["slug"]) for item in detail if isinstance(item, dict) and item.get("slug")}
+    raise ValueError(f"{path} must contain a JSON array of slugs or a 'class_b_detail' list")
+
+
 def _refresh_manifest_fingerprint(manifest: dict[str, Any]) -> None:
     fingerprint_payload = enrich_manifest.write_fingerprint(enrich_manifest.DEFAULT_FINGERPRINT, root=ROOT)
     manifest["manifest_fingerprint"] = {
@@ -223,6 +240,7 @@ def reenrich_thin_entries(
     refresh_wiki: bool = False,
     target: str = "missing-anchor",
     cached_slovnyk_only: bool = False,
+    slug_filter: set[str] | None = None,
 ) -> dict[str, Any]:
     if target == "missing-translation":
         targets = missing_translation_entries(manifest)
@@ -230,6 +248,8 @@ def reenrich_thin_entries(
         targets = thin_old_gate_entries(manifest)
     else:
         raise ValueError(f"unsupported re-enrichment target: {target}")
+    if slug_filter is not None:
+        targets = [entry for entry in targets if entry.get("url_slug") in slug_filter]
     if limit is not None:
         targets = targets[:limit]
 
@@ -323,6 +343,15 @@ def main() -> int:
         action="store_true",
         help="Use existing Slovnyk.me Ukrainian-English cache rows only; do not live-fetch missing Slovnyk entries.",
     )
+    parser.add_argument(
+        "--slugs-file",
+        type=Path,
+        default=None,
+        help=(
+            "Restrict re-enrichment to entries whose url_slug appears in this JSON file "
+            "(bare JSON array of slugs, or an audit dump with a 'class_b_detail' list)."
+        ),
+    )
     parser.add_argument("--refresh-wiki", action="store_true")
     parser.add_argument("--write", action="store_true")
     parser.add_argument(
@@ -343,6 +372,7 @@ def main() -> int:
 
     manifest = _read_local_manifest(manifest_path) if args.local else load_manifest(manifest_path)
     kaikki_lookup = _load_kaikki_lookup(kaikki_path)
+    slug_filter = _load_slug_filter(args.slugs_file) if args.slugs_file else None
     with sqlite3.connect(sources_db) as conn:
         summary = reenrich_thin_entries(
             manifest,
@@ -353,6 +383,7 @@ def main() -> int:
             refresh_wiki=args.refresh_wiki,
             target=args.target,
             cached_slovnyk_only=args.cached_slovnyk_only,
+            slug_filter=slug_filter,
         )
 
     print(json.dumps(summary, ensure_ascii=False, indent=2))
