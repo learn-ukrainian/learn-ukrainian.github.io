@@ -226,6 +226,30 @@ def test_lease_acquired_reports_generation_and_takeover(monkeypatch: pytest.Monk
     assert "dead-owner" in result["takeover_banner"]
 
 
+def test_lease_refreshed_status_is_a_successful_claim(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The unchanged lease helper legitimately returns {"status": "refreshed"}
+    (exit 0) for a same-thread/process resume of an already-held lease. The
+    gate must accept this as a real success alongside "acquired", not mark a
+    legitimate resume crashed/unknown (round-3 CF review on #6414).
+
+    Mutation-check: revert the gate's acceptance check back to
+    ``payload.get("status") != "acquired"`` -> this test fails because
+    "refreshed" is rejected. Restore ``not in ("acquired", "refreshed")`` ->
+    passes.
+    """
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print(json.dumps({"status": "refreshed", "generation": 3}))
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "ok"
+    assert result["generation"] == "3"
+
+
 def test_lease_without_session_id_stops(monkeypatch: pytest.MonkeyPatch) -> None:
     result = gate.phase_thread_lease(_args(session_id=""))
     assert result["status"] == "stop"

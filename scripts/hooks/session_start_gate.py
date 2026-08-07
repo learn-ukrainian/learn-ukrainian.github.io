@@ -250,19 +250,21 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
                 f"state UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
             ),
         }
-    # rc == 0 requires PROOF, not just a clean exit: valid JSON with the
-    # explicit acquired status. A malformed/empty payload — or any status
-    # other than "acquired" — must not fall through to an unconditional ok
-    # (CF review on #6414 finding 2).
+    # rc == 0 requires PROOF, not just a clean exit: valid JSON with an
+    # explicit success status. A malformed/empty payload — or any status
+    # other than "acquired" (fresh claim) or "refreshed" (legitimate
+    # same-thread/process resume of the unchanged lease helper, still
+    # exit 0) — must not fall through to an unconditional ok (CF review on
+    # #6414 finding 2; round-3 finding: "refreshed" was wrongly rejected).
     payload = _parse_protocol_payload(out, err)
-    if not isinstance(payload, dict) or payload.get("status") != "acquired":
+    if not isinstance(payload, dict) or payload.get("status") not in ("acquired", "refreshed"):
         status_note = f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
         return {
             "status": "crashed",
-            "error": f"claim-thread-lease rc=0 without an acquired verdict ({status_note})",
+            "error": f"claim-thread-lease rc=0 without an acquired/refreshed verdict ({status_note})",
             "context": (
-                "ERROR: LEASE CLAIM RETURNED SUCCESS WITHOUT A STRUCTURED ACQUIRED VERDICT — "
-                f"stop; lease state UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
+                "ERROR: LEASE CLAIM RETURNED SUCCESS WITHOUT A STRUCTURED ACQUIRED/REFRESHED "
+                f"VERDICT — stop; lease state UNKNOWN; do NOT force-release.\nOutput:\n{(out or err).strip()}"
             ),
         }
     generation = str(payload.get("generation") or "")
