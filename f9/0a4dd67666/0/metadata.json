@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f90a4dd67666",
+  "session_id": "session_b525d7a4-1904-4454-8b60-a53f70a447ff",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T12:40:57.975676Z",
+  "branch": "kimi/6369-residual-fill",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.pointer.json"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "caf41aec3375",
+  "token_usage": {
+    "input_tokens": 155657,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 11388672,
+    "output_tokens": 36684,
+    "api_call_count": 94
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T12:40:57.941597Z",
+    "agent_lines": 16,
+    "agent_removed": 11,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 16,
+    "total_lines_changed": 27,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

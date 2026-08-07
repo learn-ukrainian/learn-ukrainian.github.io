@@ -1,0 +1,51 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/6369-residual-fill
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #6369 residual remeasure + EN fill (post-#6400)
+
+## Context
+- PR **#6400 MERGED** 2026-08-07: VPS Class-B reenrich launcher + prior fill wave (reported ~50 remaining_old_gate_no_english_anchor after VPS).
+- Stale snapshot `batch_state/atlas-6369-class-b-no-en.json`: membership 5173, missing `обставини`, class_b_no_en **613** (pre-VPS).
+- Issue **#6369** remains OPEN until residual tool-proved 0 or named impossible.
+
+## Acceptance (operator #6369 — do not invent a lower bar)
+1. Residual teacher-intake lemmas not in Atlas = **0** (or listed with tool-proved block).
+2. «старшина» public Atlas article (verify still true).
+3. New entries have English learner gloss (not UK dump alone) — Class-B no-EN residual → **0** or named impossible sources.
+4. Practice surface_admission for teacher set; deck regen+pointer **only if** membership/admission changed.
+5. No private names/paths in public tree.
+
+## Work (layout A)
+```
+.worktrees/dispatch/kimi/6369-residual-fill/
+```
+1. `git fetch origin && git checkout -b kimi/6369-residual-fill origin/main`
+2. Hydrate if needed: `cd site && npm run hydrate:manifest` (fail closed if asset missing).
+3. **Remeasure** teacher membership Class-B (no EN): reuse method from night drive / `batch_state/dispatch-briefs/6369-class-b-en-reenrich.md`. Write fresh residual to `batch_state/atlas-6369-class-b-no-en.json` (gitignored) and quote counts in PR body.
+4. Fill residual EN via:
+   ```bash
+   .venv/bin/python -m scripts.lexicon.reenrich_thin_manifest_entries \
+     --local --manifest site/src/data/lexicon-manifest.json \
+     --target missing-anchor --sources-db data/sources.db --write \
+     --slugs-file <residual-slugs.txt>
+   ```
+   Prefer VPS path from merged `scripts/lexicon/runner/launch_reenrich_class_b_remote.sh` if local sources.db / runtime is too heavy. Never invent glosses.
+5. Promote/add Atlas entry for `обставини` if still missing and VESUM-attested in teacher intake.
+6. Re-count; commit only public artifacts that belong in git (manifest/fingerprint as project policy requires). **No auto-merge.**
+7. PR title: `feat(atlas): #6369 residual Class-B EN + missing atlas routes`
+8. Link #6369; include before/after tables.
+
+## Non-goals
+- Ohoiko P2 / textbook P3
+- Closing #6369 while residual > 0 without named impossible list
+- Empty-commit formal CF reseal thrash
+
+## #M-4
+Every count/SHA/claim must quote raw tool output in the PR body.
+
+X-Agent: kimi/6369-residual-fill
