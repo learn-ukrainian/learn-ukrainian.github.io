@@ -1147,6 +1147,8 @@ def main(argv: list[str] | None = None) -> int:
     # when applying — worktree reaps alone left multi-GB lu-review snaps.
     if apply:
         try:
+            if str(PROJECT_ROOT) not in sys.path:
+                sys.path.insert(0, str(PROJECT_ROOT))
             from scripts.review.isolation import sweep_review_temp_orphans
 
             sweep = sweep_review_temp_orphans()
