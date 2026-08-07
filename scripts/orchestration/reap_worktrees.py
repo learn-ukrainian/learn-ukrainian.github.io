@@ -200,10 +200,23 @@ def is_under_worktrees(repo_root: Path, path: Path) -> bool:
 
 
 def _worktree_clean(path: Path) -> bool | None:
-    proc = _run(["git", "status", "--porcelain"], cwd=path)
+    """Return True when the worktree has no meaningful dirty files.
+
+    Dispatch workers often leave an untracked ``.venv`` (or nested site
+    venv) which must not block reaping multi-hundred-MB trees.
+    """
+    proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path)
     if proc.returncode != 0:
         return None
-    return not bool((proc.stdout or "").strip())
+    ignored_prefixes = (".venv/", ".venv", "node_modules/", "node_modules")
+    for raw in (proc.stdout or "").splitlines():
+        if len(raw) < 4:
+            continue
+        rel = raw[3:].strip().strip('"')
+        if rel in ignored_prefixes or rel.startswith((".venv/", "node_modules/")):
+            continue
+        return False
+    return True
 
 
 def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequestState], str | None]:
