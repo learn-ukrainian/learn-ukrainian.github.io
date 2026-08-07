@@ -82,7 +82,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 <!-- fleet-roster-projection:begin formal_review_eligible -->
 | endpoint | formal_review_eligible |
 | --- | --- |
-| agy | true |
+| agy | false |
 | claude | true |
 | codex | true |
 | cursor | false |

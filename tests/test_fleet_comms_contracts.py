@@ -53,22 +53,16 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
     assert by_name["codex"].formal_review_eligible is True
     assert by_name["glm-local"].formal_review_eligible is True
     assert by_name["grok"].formal_review_eligible is True
-    # Operator 2026-08-06: AGY formal eligible for catalog-pinned models (Opus 4.6).
-    assert by_name["agy"].formal_review_eligible is True
 
-    for name in ("cursor", "gemini", "kimi"):
+    for name in ("agy", "cursor", "gemini", "kimi"):
         assert name in by_name, f"missing registry endpoint: {name}"
         assert by_name[name].formal_review_eligible is False, name
 
-    endpoint, resolved = registry.resolve("cursor")
-    assert resolved == "cursor"
-    assert endpoint.state == "live"
-    assert endpoint.formal_review_eligible is False
-
-    agy, agy_resolved = registry.resolve("agy")
-    assert agy_resolved == "agy"
-    assert agy.state == "live"
-    assert agy.formal_review_eligible is True
+    for name in ("agy", "cursor"):
+        endpoint, resolved = registry.resolve(name)
+        assert resolved == name
+        assert endpoint.state == "live"
+        assert endpoint.formal_review_eligible is False
 
 
 def test_every_live_provider_uses_only_acp_transport() -> None:

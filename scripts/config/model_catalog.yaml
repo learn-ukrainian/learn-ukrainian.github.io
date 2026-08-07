@@ -102,10 +102,9 @@ review_scheduler:
       credential_limit: 1
       capacity_weight: 1.0
     agy:
-      # Operator 2026-08-06: formal CF allowed for pinned models only (Opus 4.6 via AGY).
-      # Gemini AGY seats stay unpinned here — not formal unless added to models.
-      formal_review_eligible: true
-      models: [claude-opus-4.6-thinking]
+      formal_review_eligible: false
+      formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
+      models: [gemini-3.6-flash-high]
       participant: agy
       adapter_transport: acp
       catalog_transport: agy
@@ -601,12 +600,12 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
   claude-opus-4.6-thinking:
     family: anthropic
-    tier: frontier_practical
-    lifecycle: active
-    roles: [strong_review, code_review, compatibility_only]
+    tier: compatibility
+    lifecycle: fallback
+    roles: [compatibility_only]
     transports: [agy]
-    strengths: [agy_route_opus_4_6, formal_cf_pin_operator_2026_08_06]
-    weaknesses: [superseded_by_opus_4.8_for_native_claude]
+    strengths: [existing_route_compatibility]
+    weaknesses: [superseded_by_opus_4.8]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
@@ -707,14 +706,6 @@ review_candidates:
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  # Operator 2026-08-06: Opus 4.6 Thinking formal CF via AGY route.
-  claude-opus-4.6-thinking:
-    model_id: claude-opus-4.6-thinking
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model "Claude Opus 4.6 (Thinking)"
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   claude-sonnet-5:
@@ -879,12 +870,12 @@ formal_cf_defaults:
     fallback_transport: cursor
     fallback_model_id: grok-4.5
   agy:
-    # Operator 2026-08-06: formal CF default for --reviewer agy is Opus 4.6 Thinking.
-    # Orchestrator seat default remains Gemini Flash (orchestrator_seats.agy).
-    model_id: claude-opus-4.6-thinking
+    # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
+    # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
+    # selects gemini-3.6-flash-high via the practical ladder.
+    model_id: gemini-3.6-flash-high
     effort: high
-    formal_review_eligible: true
-    orchestrator_model_id: gemini-3.6-flash-high
+    formal_review_eligible: false
     isolation_issue: 5555
 
 review_ladders:

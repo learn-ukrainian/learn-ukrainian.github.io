@@ -17,16 +17,15 @@ message_plane:
 formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_scheduler.endpoints
 
 # Formal review is eligible only after the endpoint proves parent-owned sealed
-# MCP consumption on the exact-head ACP path (or operator pin for a proven route).
-# Kimi K3 remains fail-closed pending its authenticated canary.
+# MCP consumption on the exact-head ACP path. AGY remains structurally
+# fail-closed; Kimi K3 remains fail-closed pending its authenticated canary.
 #
 # Formal CF model+effort pins (review-pr / model_catalog formal_cf_defaults):
 #   codex → gpt-5.6-terra @ high · claude → claude-sonnet-5 @ high · glm → glm-5.2
 #   claude formal pins also: claude-fable-5, claude-opus-5, claude-opus-4-8
 #   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
 #   grok dark → Cursor explicit grok-4.5
-#   agy → orchestrator gemini-3.6-flash-high; formal pin Opus 4.6 Thinking
-#     (operator 2026-08-06; model_catalog endpoints.agy.models)
+#   agy → gemini-3.6-flash-high @ high (orchestrator seat; text-only ACP wrapper is not a formal-review route)
 # Automatic authority Sol/Fable selection stays on the critical ladder.
 # An explicit operator pin may select either model at another risk while every
 # formal eligibility, isolation, family, capability, health, and circuit gate
@@ -70,10 +69,10 @@ endpoints:
     concurrency_limit: 2
     # Orchestrator seat (user 2026-07-21): gemini-3.6-flash-high @ high — peer
     # cold-start / drive-board driver alongside claude|grok|codex (Codex re-added 2026-07-23).
-    # Operator 2026-08-06: formal CF eligible for catalog-pinned models only
-    # (Opus 4.6 Thinking via model_catalog review_scheduler.endpoints.agy.models).
-    # Gemini AGY remains orchestrator/advisory unless explicitly pinned there.
-    formal_review_eligible: true
+    # The source-blind AGY wrapper is text-only and cannot consume the
+    # parent-owned sealed MCP. When AGY orchestrates, request formal CF through
+    # an eligible cross-family review-pr route; AGY itself stays advisory.
+    formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: grok
     aliases: [grok]

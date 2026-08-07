@@ -44,9 +44,7 @@ REVIEWER_AUTO = "auto"
 EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
-    # Operator 2026-08-06: AGY formal default is Opus 4.6 Thinking (Gemini stays
-    # orchestrator-only unless pinned on endpoints.agy.models).
-    REVIEWER_AGY: "claude-opus-4.6-thinking",
+    REVIEWER_AGY: "gemini-3.6-flash",
     REVIEWER_GLM: "glm-5.2",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-k3",
@@ -57,7 +55,7 @@ EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
 FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
-    REVIEWER_AGY: "claude-opus-4.6-thinking",
+    REVIEWER_AGY: "gemini-3.6-flash-high",
     REVIEWER_GLM: "glm-5.2",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-code/k3",
@@ -419,7 +417,7 @@ def resolve_requested_review_candidate(
                 f"reviewer_catalog_mismatch: default candidate {default_name!r} "
                 f"for reviewer {reviewer_request!r} is unavailable"
             ) from exc
-        if not candidates[default_name].formal_review_eligible and model is None:
+        if not candidates[default_name].formal_review_eligible:
             reason = candidates[default_name].formal_review_exclusion_reason or "sealed endpoint is not eligible"
             raise ReviewSafetyError(
                 f"reviewer_not_formal_review_eligible: {reviewer_request!r} cannot satisfy "
