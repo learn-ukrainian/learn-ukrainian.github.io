@@ -365,16 +365,20 @@ def _build_textbook_row(
             "supply the canonical Cyrillic author form. See ADR "
             "docs/decisions/2026-05-15-cyrillic-native-matcher.md."
         )
+    text = str(entry.get("text") or "")
     return (
         entry.get("chunk_id", f"tb-{source_file}-{chunk_index}"),
         entry.get("section_title", ""),
-        entry.get("text", ""),
+        text,
         source_file,
         subject,
         entry.get("grade", grade),
         author,
         author_uk,
-        entry.get("token_count", len(entry.get("text", ""))),
+        # ``char_count`` is a storage/API field, not an extraction token
+        # estimate. Token counts remain in JSONL provenance but must never
+        # replace the actual SQLite text length.
+        len(text),
     )
 
 
