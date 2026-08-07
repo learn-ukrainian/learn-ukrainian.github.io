@@ -1,0 +1,74 @@
+{
+  "schema_version": "correction_protection_functional_role_contract_v2_1",
+  "text_free": true,
+  "contract_inputs": {
+    "phase3_v2_base_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+    "functional_role_amendment_sha256": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b",
+    "combined_contract_sha256": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+  },
+  "independence_model": {
+    "unit": "task_id",
+    "provider_is_independence_identity": false,
+    "natural_person_identity_required": false,
+    "task_ids_unique": true,
+    "provider_reuse_allowed_for_nonconflicting_tasks": true,
+    "action_receipt_required": true
+  },
+  "root": {
+    "task_id": "phase3-v2-1-root-orchestration",
+    "functional_role_ids": [],
+    "forbidden_action_kinds": ["make_ukrainian_linguistic_decision", "make_source_label_decision", "make_heldout_label_decision", "make_score_decision", "make_disposition_audit_decision", "make_textbook_nonhit_audit_decision"],
+    "may_authorize_phase4": false
+  },
+  "functional_roles": [
+    {"role_id":"scope_circularity_critic","task_id":"phase3-v2-1-scope-circularity-review","exact_model":"composer-2.5","model_family":"cursor","harness":"cursor","capability_class":"contract_scope_review","may_act":["contract_scope_review","denominator_review","completion_claim_review"],"must_not":["author_rules","label_heldout","score_heldout","make_linguistic_dispositions"]},
+    {"role_id":"ukrainian_source_reviewer","task_id":"phase3-v2-1-ukrainian-source-review","exact_model":"grok-4.5","model_family":"xai","harness":"opencode","capability_class":"ukrainian_decision","may_act":["ukrainian_source_review","source_conflict_review","normative_scope_review"],"must_not":["author_reviewed_rules","seal_heldout","score_heldout"]},
+    {"role_id":"rule_author_extractor","task_id":"phase3-v2-1-rule-author-extraction","exact_model":"gemini-3.6-flash-high","model_family":"gemini","harness":"agy","capability_class":"ukrainian_rule_proposal","may_act":["propose_rules_from_allowed_train_development_packets"],"must_not":["read_heldout_text_locators_fingerprints_labels","label_heldout","score_heldout","review_own_output"]},
+    {"role_id":"heldout_steward","task_id":"phase3-v2-1-heldout-stewardship","exact_model":"phase3-heldout-partition-v1","model_family":"deterministic","harness":"local-python","capability_class":"heldout_custody","may_act":["partition_heldout","seal_heldout","custody_heldout_bytes_locators_fingerprints"],"must_not":["author_rules","label_linguistic_gold","score_heldout"]},
+    {"role_id":"heldout_label_reviewer","task_id":"phase3-v2-1-heldout-label-review","exact_model":"gpt-5.6-sol","model_family":"openai","harness":"codex","capability_class":"ukrainian_decision","may_act":["label_steward_sealed_heldout_items"],"must_not":["author_rules","alter_partition_after_seal","score_heldout"]},
+    {"role_id":"scorer","task_id":"phase3-v2-1-heldout-scoring","exact_model":"phase3-evaluation-scorer-v1","model_family":"deterministic","harness":"local-python","capability_class":"evaluation_scoring","may_act":["score_fixed_release_against_sealed_heldout"],"must_not":["modify_rules_under_test","label_heldout","redefine_thresholds_after_results"]},
+    {"role_id":"outsider_reproducer","task_id":"phase3-v2-1-outsider-reproduction","exact_model":"glm-5","model_family":"zhipu","harness":"opencode","capability_class":"independent_reproduction","may_act":["fresh_worktree_byte_identical_reproduction"],"must_not":["use_author_worktree","read_private_heldout_plaintext","use_canary_as_completion_proof"]},
+    {"role_id":"cross_family_code_infra_reviewer","task_id":"phase3-v2-1-code-infra-review","exact_model":"grok-4.5","model_family":"xai","harness":"opencode","capability_class":"cross_family_code_review","may_act":["review_code_schemas_ci_rights_opsec"],"must_not":["make_ukrainian_normative_dispositions","substitute_for_ukrainian_source_review"]},
+    {"role_id":"disposition_auditor","task_id":"phase3-v2-1-disposition-audit","exact_model":"claude-opus-4-6","model_family":"anthropic","harness":"claude-code","capability_class":"ukrainian_decision","may_act":["audit_conversion_dispositions","audit_locator_sufficiency","audit_wrong_code_support_calls"],"must_not":["author_audited_ledgers","author_rules_for_audited_families","seal_heldout","score_heldout"]},
+    {"role_id":"textbook_nonhit_auditor","task_id":"phase3-v2-1-textbook-nonhit-audit","exact_model":"grok-4.5","model_family":"xai","harness":"opencode","capability_class":"ukrainian_decision","may_act":["audit_frozen_textbook_nonhit_sample"],"must_not":["author_scanner_under_audit","author_rules_from_audited_sample","seal_heldout","score_heldout"]}
+  ],
+  "task_conflict_graph": {
+    "mode": "directed_forbidden_information_and_artifact_edges",
+    "nodes": ["phase3-v2-1-root-orchestration", "phase3-v2-1-disposition-ledger-production", "phase3-v2-1-textbook-scanner-implementation", "phase3-v2-1-fixed-release-freeze", "phase3-v2-1-scope-circularity-review", "phase3-v2-1-ukrainian-source-review", "phase3-v2-1-rule-author-extraction", "phase3-v2-1-heldout-stewardship", "phase3-v2-1-heldout-label-review", "phase3-v2-1-heldout-scoring", "phase3-v2-1-outsider-reproduction", "phase3-v2-1-code-infra-review", "phase3-v2-1-disposition-audit", "phase3-v2-1-textbook-nonhit-audit"],
+    "edges": [
+      {"edge_kind":"scope_inputs_to_scope_review","producer_task_id":"phase3-v2-1-root-orchestration","consumer_task_id":"phase3-v2-1-scope-circularity-review","fixed_before_consumer":true},
+      {"edge_kind":"author_output_to_source_review","producer_task_id":"phase3-v2-1-rule-author-extraction","consumer_task_id":"phase3-v2-1-ukrainian-source-review","fixed_before_consumer":true},
+      {"edge_kind":"steward_seal_to_label_review","producer_task_id":"phase3-v2-1-heldout-stewardship","consumer_task_id":"phase3-v2-1-heldout-label-review","fixed_before_consumer":true},
+      {"edge_kind":"fixed_release_to_scorer","producer_task_id":"phase3-v2-1-fixed-release-freeze","consumer_task_id":"phase3-v2-1-heldout-scoring","fixed_before_consumer":true},
+      {"edge_kind":"disposition_ledger_to_disposition_audit","producer_task_id":"phase3-v2-1-disposition-ledger-production","consumer_task_id":"phase3-v2-1-disposition-audit","fixed_before_consumer":true},
+      {"edge_kind":"scanner_to_textbook_nonhit_audit","producer_task_id":"phase3-v2-1-textbook-scanner-implementation","consumer_task_id":"phase3-v2-1-textbook-nonhit-audit","fixed_before_consumer":true},
+      {"edge_kind":"implementation_to_cross_family_code_review","producer_task_id":"phase3-v2-1-root-orchestration","consumer_task_id":"phase3-v2-1-code-infra-review","fixed_before_consumer":true},
+      {"edge_kind":"fixed_release_to_outsider_reproduction","producer_task_id":"phase3-v2-1-fixed-release-freeze","consumer_task_id":"phase3-v2-1-outsider-reproduction","fixed_before_consumer":true}
+    ]
+  },
+  "heldout_acl": {
+    "pre_release_read_task_ids": ["phase3-v2-1-heldout-stewardship", "phase3-v2-1-heldout-label-review"],
+    "post_release_score_task_ids": ["phase3-v2-1-heldout-scoring"],
+    "forbidden_task_ids": ["phase3-v2-1-scope-circularity-review", "phase3-v2-1-ukrainian-source-review", "phase3-v2-1-rule-author-extraction", "phase3-v2-1-outsider-reproduction", "phase3-v2-1-code-infra-review", "phase3-v2-1-disposition-audit", "phase3-v2-1-textbook-nonhit-audit"]
+  },
+  "action_receipt_contract": {
+    "schema_version": "phase3_functional_role_action_receipt_v2_1",
+    "required_fields": ["receipt_id", "role_id", "task_id", "action_kind", "provider", "exact_model", "model_family", "harness", "input_manifest_sha256", "output_sha256", "evaluation_cycle_id", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "started_at", "completed_at", "status"],
+    "provider_is_audit_metadata_not_identity": true,
+    "provider_reuse_allowed_without_conflict_edge": true
+  },
+  "evaluation_cycle": {
+    "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+    "release_freeze_binding_field": "fixed_release_sha256",
+    "evaluation_freeze_binding_field": "heldout_evaluation_freeze_sha256",
+    "activation_requires_both_freeze_bindings": true,
+    "void_on": ["release_artifact_change", "evaluation_freeze_change", "denominator_change", "breadth_floor_change", "evaluation_threshold_change"],
+    "voided_cycle_may_not_resume": true,
+    "restart_requires_new_cycle_id_and_fresh_freezes": true,
+    "action_receipts_must_match_evaluation_cycle_id": true
+  },
+  "preserved_phase3_contract": {"denominators_unchanged":true,"breadth_floors_unchanged":true,"statuses_unchanged":true,"evaluation_thresholds_unchanged":true,"phase4_block_unchanged":true},
+  "role_graph_ready": true,
+  "source_authoring": {"blocked":true,"reason":"v2_1_runtime_migration_and_exact_head_review_pending"},
+  "phase4": {"blocked":true,"reason":"phase3_v2_rebuild_review_and_completion_not_established"}
+}

@@ -69,6 +69,7 @@ UNSCOPED_RULE_FILES = (
     "delegate-must-use-worktree.md",
     "cli-help-standard.md",
     "model-assignment.md",
+    "fleet-driver-routing.md",
 )
 CLAUDE_RULE_FILES = (
     "_load-via-api.md",

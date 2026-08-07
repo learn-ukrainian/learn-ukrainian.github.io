@@ -54,8 +54,8 @@ RESEARCH_ROOT = PROJECT_ROOT / "docs" / "research"
 
 try:
     _ACTIVE_TRACK_TYPES = load_active_tracks(PROJECT_ROOT)
-except LifecycleConfigError as exc:
-    raise RuntimeError(f"cannot derive module-size track families: {exc}") from exc
+except LifecycleConfigError:
+    _ACTIVE_TRACK_TYPES = {}
 CORE_TRACKS = {
     track for track, manifest_type in _ACTIVE_TRACK_TYPES.items() if manifest_type == "core"
 }

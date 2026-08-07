@@ -103,10 +103,16 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
     assert practical.index("glm-5.2") < practical.index("deepseek-v4-flash")
-    assert practical.index("deepseek-v4-flash") < practical.index("deepseek-v4-pro")
+    # Operator 2026-08-06 until further notice: Flash only on ladders; Pro held.
+    assert "deepseek-v4-flash" in practical
+    assert "deepseek-v4-pro" not in practical
 
     critical = [rung[0] for rung in catalog["review_ladders"]["critical"] if len(rung) == 1]
-    assert critical.index("deepseek-v4-pro") < critical.index("deepseek-v4-flash")
+    assert "deepseek-v4-flash" in critical
+    assert "deepseek-v4-pro" not in critical
+    # Pro remains catalogued (active) so the hold can be lifted without re-adding metadata.
+    assert catalog["models"]["deepseek-v4-pro"]["lifecycle"] == "active"
+    assert "temporary_operator_hold_prefer_flash" in catalog["models"]["deepseek-v4-pro"]["weaknesses"]
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:

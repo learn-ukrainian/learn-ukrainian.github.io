@@ -108,3 +108,52 @@ Full recipe, restore drill, and coordination with #6014's restic bus:
 - `finalize.py` (publication archive)
 - Live Atlas pin-flip / publish
 - Re-fetching ULIF / re-running reduce
+
+## Class-B residual EN re-enrich (#6369, run-class-b-reenrich)
+
+Separate, much smaller job: fills sourced English translation cards for the
+Class-B residual — old-gate manifest entries with no learner English gloss
+(`scripts/lexicon/reenrich_thin_manifest_entries.py --target
+missing-translation`, scoped with `--slugs-file`). Runs on the same VPS
+under the same memory discipline, in its own work-dir
+(`run-class-b-reenrich`) so it never collides with a live 20k run.
+
+**Do not run this on the Mac.** Orchestration is driven from a
+[layout-A](../../../AGENTS.md) worktree, execution happens on the VPS.
+
+The VPS repo checkout at `$REPO` is treated as read-only for this job (it is
+routinely stale/dirty — large `data/` dirs are deliberately deleted there for
+disk headroom). The Mac-side orchestrator never runs `git pull`/`checkout`/
+`reset` against it; it scp's the driver + launcher into the work-dir instead
+(the `--slugs-file` flag lands via #6398 — if that PR hasn't merged yet, this
+is the "scp the script from the PR branch" fallback).
+
+```bash
+# From the Mac worktree — syncs residual slugs + driver + launcher, starts
+# the job detached under MemoryHigh=1.5G/MemoryMax=2.0G, polls until done
+# (bounded, default 900s), then pulls manifest.json + reenrich.log +
+# reenrich-summary.json back into batch_state/class-b-reenrich-pulled/.
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh
+
+# Smoke: 5 slugs only
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --limit 5
+
+# Fire-and-forget (skip the poll loop)
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --no-poll
+
+# Just pull back current artifacts (job already finished, or checking
+# mid-run without re-syncing/re-launching)
+scripts/lexicon/runner/launch_reenrich_class_b_remote.sh --pull-only
+
+# Read-only status check (pid, log tail, disk) without pulling anything
+scripts/lexicon/runner/health_reenrich_class_b.sh
+```
+
+Resumable: a resumed run reuses the same work-dir manifest snapshot (taken
+once from the live checkout's hydrated manifest) — `missing-translation`
+targeting only touches entries that still lack a translation, so re-running
+after a kill/reboot picks up exactly where it left off.
+
+**Does not** finalize, publish, or pin-flip. The pulled-back `manifest.json`
+is the input to the existing publish gate — that step runs on the worktree,
+same as any other Atlas manifest change, and is not part of this launcher.

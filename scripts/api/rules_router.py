@@ -79,6 +79,8 @@ RULE_SOURCES: tuple[str, ...] = (
     "agents_extensions/shared/rules/delegate-must-use-worktree.md",
     "agents_extensions/shared/rules/cli-help-standard.md",
     "agents_extensions/shared/rules/model-assignment.md",
+    # Driver routing card + breadth floor (operator GO 2026-08-06).
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
     "docs/best-practices/fleet-shared-doctrine.md",
     "docs/best-practices/fleet-role-scorecard.md",
 )

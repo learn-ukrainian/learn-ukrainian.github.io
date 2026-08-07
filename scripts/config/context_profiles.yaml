@@ -55,6 +55,23 @@ profiles:
     cold_start_budget_tokens: 104857
     rollover_warning_percentages: [75.0, 85.0, 92.0]
 
+  # K3 capped at 256K context (kimicc_alias k3-256k / platform id kimi-k3-256k).
+  # Distinct from kimicc_k3 (1M window) — do NOT reuse that profile here, the
+  # true window is 256K and compaction margin must be computed against that,
+  # not the uncapped 1M figure.
+  kimicc_k3_256k:
+    profile_id: kimicc_k3_256k
+    transport: kimicc
+    main_model_id: kimi-k3-256k
+    model_id_patterns:
+      - '^kimi-k3-256k$'
+      - '^k3-256k$'
+    main_context_window_tokens: 262144
+    auto_compact_capacity_tokens: 249036
+    cold_start_profile: compact
+    cold_start_budget_tokens: 26214
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
   kimicc_k27:
     profile_id: kimicc_k27
     transport: kimicc
