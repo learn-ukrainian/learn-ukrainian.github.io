@@ -220,10 +220,46 @@ review gate passes AND blocking CI is green:**
 gh pr merge --auto --squash --delete-branch
 ```
 Never arm on a **draft** and never merge ahead of the review verdict. Blocking CI red →
-never `--admin`-bypass. After merge: delete remote branch, `git worktree remove --force`
-(worktree BEFORE local branch), sweep stale refs. A track/infra driver **self-merges its
-own lane's PR** after the cross-family gate + green CI (lane model — there is no promoting
-orchestrator). Flag another lane's PR with `needs=merge` rather than merging it.
+never `--admin`-bypass. A track/infra driver **self-merges its own lane's PR** after the
+cross-family gate + green CI (lane model — there is no promoting orchestrator). Flag
+another lane's PR with `needs=merge` rather than merging it.
+
+### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
+
+**A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
+promises do not bind; this section does. Leaving worktrees / ACP review runtimes /
+`/tmp` formal-review snaps after merge is a process defect (ENOSPC / disk full is the
+known failure mode). Do not start the next formal `review-pr` or large dispatch until
+cleanup for the just-merged PR is complete.
+
+**Order after `gh pr view <N>` shows `MERGED` (or auto-merge lands):**
+
+1. **Confirm** — `gh pr view <N> --json state,mergedAt,mergeCommit` (quote SHA when
+   handoff needs it).
+2. **Worktree first** — `git worktree remove --force .worktrees/dispatch/<agent>/<task>`
+   (and any other worktree still on that PR branch). Never leave a branch checked out
+   that blocks branch delete.
+3. **Branches** — delete local branch if present; ensure remote is gone
+   (`--delete-branch` on merge, else `git push origin --delete <branch>`); `git fetch
+   --prune`; `git worktree prune`.
+4. **Review / CF residue for that PR** (reap only when no live process holds the path):
+   - `.worktrees/dispatch/acp/runtime-review-<PR>*` — `git worktree unlock` if locked,
+     then `remove --force` (or `rm -rf` if already unregistered)
+   - `/tmp/lu-cf-clean/`, `/tmp/lu-review-*`, `/tmp/lu-pr*` tied to that PR or finished
+     formal snapshots — sealed snaps are often **read-only**: `chmod -R u+w` then
+     `rm -rf`
+   - runtime tmp under `$TMPDIR/learn-ukrainian/<task-id>*` if present
+   - stray worktree `.venv` if a worker created one
+5. **Optional sweeper** — not a substitute for step 4:
+   ```bash
+   .venv/bin/python -c "from scripts.review.isolation import sweep_review_temp_orphans; print(sweep_review_temp_orphans())"
+   ```
+6. **Prove** — `df -h /` and `git worktree list` must show no zombie path for that PR.
+   Record free space in the file handoff when disk was tight this session.
+
+**Do not** treat `gh pr merge --auto --squash --delete-branch` alone as closeout. **Do
+not** leave locked ACP review worktrees for finished reviews. **Do not** run another
+formal snapshot provision while disk is near full without reaping first.
 
 ### 8. Handoff — dual-write, cutover-aware (see §Fleet-comms state below)
 End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;
