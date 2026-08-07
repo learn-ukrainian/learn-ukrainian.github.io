@@ -173,6 +173,23 @@ Discussion is never formal CF. Formal CF remains `review-pr` /
 `publish-review-verdict` only. ACP is structured provider transport; fleet-comms
 owns the durable record and publication state.
 
+### Formal CF thrash ban (operator 2026-08-06)
+
+Agents MUST NOT:
+
+1. Push **empty commits** whose only purpose is CF reseal / authority-key reset.
+2. Re-run `review-pr` when this head already has sealed **APPROVED** (idempotent stop).
+3. Re-run `review-pr` when the tip tree is unchanged since an APPROVED ancestor
+   (empty reseals void exact-head binding without product change).
+4. Spend formal CF while **GitHub Actions** is in outage/degraded (check githubstatus).
+
+`review-pr` enforces (2)–(4) fail-closed. Rule (2) — exact-head already sealed
+**APPROVED** — is a HARD idempotent stop and is **never** overridable, including by
+`--allow-cf-thrash`. The override flag applies only to (3) empty-tree-tip reseals and
+(4) the GitHub Actions outage guard, operator-only with `--override-reason …`. Never
+auto-reset branches. (Python fail-closed enforcement is unchanged — this section only
+clarifies which guards the flag reaches.)
+
 ## ACP provider transport
 
 For normal **read-only inter-agent communication**, ACP is the only provider

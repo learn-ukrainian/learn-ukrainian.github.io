@@ -23,6 +23,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from ._review_pr_thrash import evaluate_formal_cf_thrash
 from ._review_safety import (
     MAX_REVIEW_REQUEST_BYTES,
     ReviewSafetyError,
@@ -826,6 +827,12 @@ def handle_review_pr(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 2
+    if bool(getattr(args, "allow_cf_thrash", False)) and operator_override_reason is None:
+        print(
+            "review-pr: --allow-cf-thrash requires --override-reason",
+            file=sys.stderr,
+        )
+        return 2
     override_reason = operator_override_reason
     if requested_candidate is not None and override_reason is None:
         override_reason = f"explicit reviewer route {reviewer_request!r} requested"
@@ -874,6 +881,20 @@ def handle_review_pr(args: argparse.Namespace) -> int:
     ) as checkout:
         if checkout is None:  # pragma: no cover - target above is mandatory
             raise RuntimeError("sealed review snapshot was not provisioned")
+        thrash = evaluate_formal_cf_thrash(
+            repository=DEFAULT_REPOSITORY,
+            pr_number=pr,
+            head_sha=checkout.sha,
+            git_repo=REPO_ROOT,
+            allow_thrash=bool(getattr(args, "allow_cf_thrash", False)),
+            check_actions=not bool(getattr(args, "skip_actions_health", False)),
+        )
+        if thrash.action == "already_approved":
+            print(thrash.message)
+            return thrash.exit_code
+        if thrash.action == "refuse":
+            print(thrash.message, file=sys.stderr)
+            return thrash.exit_code
         evidence = checkout.review_prompt_evidence("acp")
         invocation_evidence = evidence
         evidence_metrics = _evidence_metrics(evidence)
@@ -1559,6 +1580,19 @@ def register_review_pr_parser(subparsers: Any) -> None:
                         ))
     parser.add_argument("--allow-explicit-fallback", action="store_true",
                         help="Permit an explicit pin to fail over after a retryable transport failure")
+    parser.add_argument(
+        "--allow-cf-thrash",
+        action="store_true",
+        help=(
+            "Operator override for formal CF thrash guard (empty reseal / re-CF after APPROVED). "
+            "Requires --override-reason."
+        ),
+    )
+    parser.add_argument(
+        "--skip-actions-health",
+        action="store_true",
+        help="Skip GitHub Actions outage preflight (still subject to thrash guard)",
+    )
     parser.add_argument("--background", action="store_true")
     parser.add_argument(
         "--no-timeout",
