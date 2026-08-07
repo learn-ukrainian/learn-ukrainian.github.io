@@ -32,7 +32,11 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "fleet-comms is the durable source of truth" in body.lower()
     assert "legacy stores are read-only" in body.lower()
     assert "acp" in body.lower() and "provider transport" in body.lower()
-    assert "PR_NUMBER" in body or "PR number" in body.lower()
+    # Direct one-round review regime (operator order 2026-08-06, PR #6423):
+    # the rule must document the direct default AND the opt-in sealed path.
+    assert "direct" in body.lower() and "one round" in body.lower().replace("-", " ")
+    assert "opt-in" in body.lower()
+    assert "review-pr" in body  # sealed path still documented (opt-in)
     assert HELPER.is_file(), "missing shared launcher helper"
     helper = HELPER.read_text(encoding="utf-8")
     assert "fleet_comms_cold_clause" in helper
