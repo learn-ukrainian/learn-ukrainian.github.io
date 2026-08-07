@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6c6803c82e47",
+  "session_id": "session_2edbaf33-8b07-43ee-a5a9-671bbe6cd71e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T17:42:21.080659Z",
+  "branch": "agy/6412-temp-lifecycle-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/reap_worktrees.py",
+    "scripts/review/isolation.py",
+    "tests/orchestration/test_scheduled_worktree_cleanup.py",
+    "tests/review/test_temp_lifecycle.py",
+    "tests/test_review_isolation.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "3c9ca0910d38",
+  "checkpoint_transcript_start": 633,
+  "transcript_lines_at_start": 633,
+  "token_usage": {
+    "input_tokens": 169624,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 13776384,
+    "output_tokens": 37814,
+    "api_call_count": 110
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T17:42:21.048175Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 304,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 304,
+    "total_lines_changed": 486,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
