@@ -163,7 +163,9 @@ def test_claude_hosted_models_share_seven_composed_claude_code_hooks() -> None:
     }
     assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh"]["timeout"] == 10
     assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/guard-primary-checkout-write.py"]["timeout"] == 5
-    assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/thread-lease-heartbeat.sh"]["timeout"] == 3
+    # thread-lease-heartbeat.sh was removed from PostToolUse (diagnostic-only by
+    # its own header; the Stop hook still refreshes once per turn) — PR #6413 rec 2.
+    assert "$CLAUDE_PROJECT_DIR/.claude/hooks/thread-lease-heartbeat.sh" not in existing
     assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/release-thread-lease.sh"]["timeout"] == 5
 
 

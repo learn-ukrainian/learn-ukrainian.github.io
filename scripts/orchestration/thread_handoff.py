@@ -37,8 +37,18 @@ try:
     from scripts.orchestration.task_family import rollover as task_family_rollover
     from scripts.orchestration.task_family import rollover_registry as task_family_rollover_registry
     from scripts.orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
-except ModuleNotFoundError as exc:
-    if __package__ or exc.name != "scripts":
+except ImportError as exc:
+    # Two fallback-worthy shapes when running script-by-path (issue #6411):
+    #   1. ModuleNotFoundError name="scripts" — repo root not on sys.path.
+    #   2. Plain ImportError "cannot import name … from 'scripts'" — a FOREIGN
+    #      `scripts` namespace package (e.g. a stray editable install's raw
+    #      .pth path) shadows this repo's package. The 2026-08-06 incident
+    #      crashed here and the SessionStart hook mislabeled the crash as a
+    #      lease conflict.
+    # A genuine missing submodule/dependency (ModuleNotFoundError for anything
+    # other than `scripts`) still raises; so does any failure when running as a
+    # real package (-m from repo root).
+    if __package__ or (isinstance(exc, ModuleNotFoundError) and exc.name != "scripts"):
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import context_canary

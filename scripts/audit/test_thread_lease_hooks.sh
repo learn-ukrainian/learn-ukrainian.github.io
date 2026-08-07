@@ -17,7 +17,6 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SELF="${BASH_SOURCE[0]}"
 PYTHON_BIN="$REPO_ROOT/.venv/bin/python"
 THREAD_HANDOFF_PY="$REPO_ROOT/scripts/orchestration/thread_handoff.py"
-HEARTBEAT_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/thread-lease-heartbeat.sh"
 RELEASE_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/release-thread-lease.sh"
 STOP_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/goal-driver-stop.sh"
 
@@ -68,30 +67,6 @@ PYEOF
 # --- internal re-exec dispatch used by run_as_fake_claude_ancestor (must
 #     come after every function it might call is defined, and before any
 #     top-level test logic runs) ---
-
-__scenario_heartbeat_hook_advances_without_generation_env() {
-  local root="$1" agent="$2" session_id="$3"
-  "$PYTHON_BIN" "$THREAD_HANDOFF_PY" --repo-root "$root" \
-    claim-thread-lease --agent "$agent" --current-thread-id "$session_id" >/dev/null
-
-  rewind_heartbeat "$(lease_file_path "$root" "$agent")"
-
-  printf '%s' "{\"session_id\":\"$session_id\"}" | \
-    env -u LEARN_UKRAINIAN_THREAD_LEASE_GENERATION -u CLAUDE_NON_INTERACTIVE \
-        -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
-    CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="$agent" CODEX_CANONICAL_REPO_ROOT="$root" \
-    THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
-    "$HEARTBEAT_HOOK"
-  # `:` (no-op) after the hook invocation: if it were the textually-last
-  # command in this function, bash's exec-last-command optimization can
-  # replace THIS process's image with the hook's own subprocess instead of
-  # forking a child for it — silently destroying the faked argv[0]=claude
-  # ancestor identity the harness-ancestor walk depends on (verified via
-  # manual repro: the very next process-identity probe in the same shell
-  # started finding an unrelated, real ambient "claude" ancestor instead of
-  # this scenario's own fake one). A trailing no-op guarantees a fork.
-  :
-}
 
 __scenario_stop_hook_advances_heartbeat_without_generation_env() {
   local root="$1" agent="$2" session_id="$3"
@@ -162,24 +137,11 @@ run_as_fake_claude_ancestor() {
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
-# 1. PostToolUse heartbeat hook (thread-lease-heartbeat.sh): with NO
-#    LEARN_UKRAINIAN_THREAD_LEASE_GENERATION in its environment at all, it
-#    must still advance heartbeat_at via the identity-proof fence alone —
-#    this is the load-bearing proof that the original bug (the env var never
-#    reaching hook subprocesses, so every refresh silently no-oped) is dead.
-root="$TMP_ROOT/heartbeat-project"
-mkdir -p "$root"
-session_id="fixture-session-heartbeat"
-run_as_fake_claude_ancestor __scenario_heartbeat_hook_advances_without_generation_env "$root" claude "$session_id"
-
-lease="$(lease_file_path "$root" claude)"
-[ -f "$lease" ] || fail "heartbeat hook: lease file missing after scenario"
-heartbeat_at="$(lease_field "$lease" heartbeat_at)"
-owner_thread_id="$(lease_field "$lease" owner_thread_id)"
-generation="$(lease_field "$lease" generation)"
-[ "$heartbeat_at" != "2020-01-01T00:00:00Z" ] || fail "heartbeat hook: heartbeat_at did not advance with no generation env var set"
-[ "$owner_thread_id" = "$session_id" ] || fail "heartbeat hook: owner_thread_id changed — expected a refresh, not a reacquire"
-[ "$generation" = "1" ] || fail "heartbeat hook: generation changed — expected a refresh, not a reacquire"
+# 1. (removed) PostToolUse heartbeat hook — thread-lease-heartbeat.sh was
+#    deleted as dead code (perf(hooks): one-process SessionStart gate,
+#    #6414): it was diagnostic-only and the Stop hook's own refresh (below)
+#    already keeps heartbeat_at meaningful, so the PostToolUse-specific
+#    identity-proof-fence proof this scenario existed for no longer applies.
 
 # 2. Stop hook's own lease-refresh section (goal-driver-stop.sh): same proof,
 #    unconditional (unthrottled) refresh path, and it must still emit its
@@ -262,11 +224,6 @@ echo "error: unrecognized argument or old CLI" >&2
 exit 2
 PYSTUB
 chmod +x "$STUB_BIN_DIR/python"
-
-printf '%s' '{"session_id":"stub-session"}' | \
-  env -u CLAUDE_NON_INTERACTIVE -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
-  CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" THREAD_ROLLOVER_PYTHON="$STUB_BIN_DIR/python" \
-  "$HEARTBEAT_HOOK" || fail "heartbeat hook failed against old CLI"
 
 printf '%s' '{"session_id":"stub-session"}' | \
   env -u CLAUDE_NON_INTERACTIVE -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \

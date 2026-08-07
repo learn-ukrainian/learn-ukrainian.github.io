@@ -13,6 +13,7 @@ CODEX_HOOKS = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 SESSION_SETUP = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
 POST_COMPACT = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "post-compact.sh"
 ROLLOVER_LINK = REPO_ROOT / "scripts" / "lib" / "thread_rollover_link.sh"
+SESSION_START_GATE = REPO_ROOT / "scripts" / "hooks" / "session_start_gate.py"
 
 
 def test_bounded_command_terminates_a_slow_process() -> None:
@@ -51,6 +52,11 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
     session_source = SESSION_SETUP.read_text(encoding="utf-8")
     compact_source = POST_COMPACT.read_text(encoding="utf-8")
     rollover_link_source = ROLLOVER_LINK.read_text(encoding="utf-8")
+    # perf(hooks) #6414: the ambiguous-rollover formatting fallback (previously
+    # a bash function shelling out to `thread_handoff.py --format session-start`)
+    # moved into the consolidated one-process gate, which calls
+    # thread_handoff.main() in-process instead.
+    gate_source = SESSION_START_GATE.read_text(encoding="utf-8")
 
     assert "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS=1" in session_source
     assert "THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS=3" in session_source
@@ -58,13 +64,9 @@ def test_rollover_and_postcompact_commands_are_bounded() -> None:
         'THREAD_ROLLOVER_COMMAND_TIMEOUT_SECONDS="$CLAMPED_BOUNDED_TIMEOUT_SECONDS"'
         in session_source
     )
-    assert "render_ambiguous_rollover_context" in session_source
+    assert '"--format", "session-start"' in gate_source
     assert "--format session-start 2>&1 || true" not in session_source
-    assert (
-        "ERROR: MULTIPLE live pending rollovers — do not cold-start; "
-        "bind one exact candidate."
-        in session_source
-    )
+    assert "ERROR: MULTIPLE live pending rollovers — do not cold-start; bind one exact" in gate_source
     assert 'run_bounded 3 "$ROLLOVER_PYTHON"' in session_source
     assert 'run_bounded 2 "$ROLLOVER_PYTHON"' in compact_source
     assert 'parser_runner=("${runner[@]}")' in rollover_link_source
