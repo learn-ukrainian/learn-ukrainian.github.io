@@ -105,6 +105,13 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
         {
             "CLAUDE_PROJECT_DIR": os.fspath(project),
             "TEST_SESSION_RECORD": os.fspath(record_path),
+            # context-monitor.sh no longer spawns python for the session
+            # record (perf(hooks) #6414) — it reads the record file directly
+            # with jq, via this override or its canonical
+            # .agent/sessions/<id>.json default. statusline.sh (still python-
+            # backed) keeps using TEST_SESSION_RECORD/the fake .venv python
+            # above, so both fixtures point at the same on-disk record.
+            "LEARN_UKRAINIAN_SESSION_RECORD": os.fspath(record_path),
         }
     )
     for name in (

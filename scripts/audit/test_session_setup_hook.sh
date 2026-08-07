@@ -109,7 +109,7 @@ run_hook() {
     CLAUDE_PROFILE_RESOLVER_PYTHON="$VENV_PYTHON" \
     CLAUDE_HANDOFF_IDENTITY_SH="$REPO_ROOT/scripts/lib/handoff_identity.sh" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
-    CLAUDE_SESSION_RECORD_PYTHON="$VENV_PYTHON" \
+    CLAUDE_SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$VENV_PYTHON}" \
     SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$VENV_PYTHON" \
@@ -494,7 +494,13 @@ assert_contains "$output_harness" "--agent claude-infra" "epic harness surfaces 
 assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epic harness surfaces claude-infra packet (#5201)"
 
 # 17b. An exhausted aggregate budget leaves the durable lease state unknown;
-# it is not evidence of a thread lease conflict and must never suggest force release.
+# it is not evidence of a thread lease conflict and must never suggest force
+# release. Session-record, venv-pin, primary-on-main, thread-lease, and
+# rollover-detect all run inside ONE python process now (the consolidated
+# gate — see session_start_gate.py), so the way to simulate budget exhaustion
+# is to slow the gate's OWN interpreter, not a downstream rollover helper: a
+# slow THREAD_ROLLOVER_PYTHON no longer touches the lease claim, which runs
+# in-process and is immune to it.
 setup_fixture "$fixture_root"
 slow_python="$fixture_root/.venv/bin/slow-python"
 cat > "$slow_python" <<'EOF'
@@ -503,13 +509,13 @@ sleep 2
 EOF
 chmod +x "$slow_python"
 output="$(
-  SESSION_START_BUDGET_SECONDS=1 THREAD_ROLLOVER_PYTHON="$slow_python" \
+  SESSION_START_BUDGET_SECONDS=1 CLAUDE_SESSION_RECORD_PYTHON="$slow_python" \
     run_hook "$fixture_root" 0 claude
 )"
 assert_contains "$output" \
-  "ERROR: LEASE CLAIM COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release." \
-  "lease claim budget exhaustion"
-assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "lease claim budget exhaustion"
+  "ERROR: SESSION GATE COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release." \
+  "gate budget exhaustion"
+assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "gate budget exhaustion"
 
 # 18. Official SessionStart fields drive the native profile and exact transcript record.
 setup_fixture "$fixture_root"

@@ -89,6 +89,18 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         "scripts/orchestration/task_identity.py",
         "scripts/orchestration/thread_handoff.py",
         "scripts/orchestration/thread_handoff_canary.py",
+        # The consolidated SessionStart gate (perf(hooks), #6414) and its
+        # primary-on-main phase dependency — the deployed session-setup.sh
+        # hook execs `python -m scripts.hooks.session_start_gate`, which
+        # ModuleNotFoundErrors without these (fixture repos are a bootstrapped
+        # subset of the real tree, not a full checkout).
+        "scripts/hooks/__init__.py",
+        "scripts/hooks/session_start_gate.py",
+        "scripts/guardrails/__init__.py",
+        "scripts/guardrails/assert_primary_on_main.py",
+        "scripts/guardrails/worktree_containment.py",
+        "scripts/common/__init__.py",
+        "scripts/common/git_context.py",
         "scripts/lib/context_profiles.py",
         "scripts/lib/session_record.py",
         "scripts/config/context_profiles.yaml",
