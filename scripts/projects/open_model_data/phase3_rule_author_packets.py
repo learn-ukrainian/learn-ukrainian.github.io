@@ -182,8 +182,50 @@ def receipt_body_sha256(receipt: Mapping[str, Any]) -> str:
     return sha256_bytes(body.encode("utf-8"))
 
 
+def _legacy_assigned_role_seat(role_contract: Mapping[str, Any], expected_role: str) -> Mapping[str, Any]:
+    """Resolve a v1 assigned seat while the held-out runtime migrates to v2.1."""
+    seats = role_contract.get("seats")
+    require(isinstance(seats, list), "role contract lacks seats")
+    assigned = [
+        seat
+        for seat in seats
+        if isinstance(seat, Mapping)
+        and seat.get("role_id") == expected_role
+        and seat.get("assignment_state") == "assigned_verified"
+        and seat.get("controller_identity_attested") is True
+        and isinstance(seat.get("controller_identity_id"), str)
+    ]
+    require(len(assigned) == 1, f"role contract lacks one assigned {expected_role} seat")
+    return assigned[0]
+
+
+def _legacy_derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
+    bindings = role_contract.get("task_bindings")
+    require(isinstance(bindings, list), "role contract lacks task bindings")
+    assigned = _legacy_assigned_role_seat(role_contract, expected_role)
+    controller = str(assigned["controller_identity_id"])
+    matching = [
+        binding
+        for binding in bindings
+        if isinstance(binding, Mapping)
+        and binding.get("role_id") == expected_role
+        and binding.get("controller_identity_id") == controller
+        and isinstance(binding.get("reserved_task_id"), str)
+        and binding.get("status")
+        in {"identity_attested_pre_artifact", "combined_contract_text_approved_pre_artifact"}
+    ]
+    require(len(matching) == 1, f"role contract lacks one active {expected_role} task binding")
+    return {
+        "controller_identity_id": controller,
+        "role_id": expected_role,
+        "task_id": str(matching[0]["reserved_task_id"]),
+    }
+
+
 def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> dict[str, str]:
-    """Return the exact v2.1 task-scoped binding for a functional role."""
+    """Return a role actor from the receipt's pinned contract generation."""
+    if role_contract.get("schema_version") == "correction_protection_role_contract_v1":
+        return _legacy_derive_role_actor(role_contract, expected_role)
     try:
         return functional_roles.binding_for_role(role_contract, expected_role)
     except functional_roles.FunctionalRoleError as exc:
@@ -191,9 +233,96 @@ def _derive_role_actor(role_contract: Mapping[str, Any], expected_role: str) -> 
 
 
 def _validate_steward_binding(role_contract: Mapping[str, Any], role_binding: Mapping[str, Any]) -> dict[str, str]:
+    if role_contract.get("schema_version") == "correction_protection_role_contract_v1":
+        require(role_binding.get("role_id") == "heldout_steward", "clearance role binding is not heldout steward")
+        controller = role_binding.get("controller_identity_id")
+        attestation_task = role_binding.get("attestation_task_id")
+        require(
+            isinstance(controller, str) and isinstance(attestation_task, str),
+            "clearance steward role binding is incomplete",
+        )
+        assigned = _legacy_assigned_role_seat(role_contract, "heldout_steward")
+        actor = _legacy_derive_role_actor(role_contract, "heldout_steward")
+        require(
+            assigned.get("seat_id") == role_binding.get("seat_id")
+            and actor["controller_identity_id"] == controller
+            and actor["task_id"] == attestation_task,
+            "role contract does not bind heldout steward receipt",
+        )
+        return actor
     expected = _derive_role_actor(role_contract, "heldout_steward")
     require(dict(role_binding) == expected, "clearance steward task binding drift")
     return expected
+
+
+def _validate_legacy_clearance(
+    clearance: Mapping[str, Any],
+    *,
+    clearance_sha256: str,
+    receipt_sha256: str,
+    evaluation_path: Path,
+    coverage_path: Path,
+    role_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Preserve the merged v1 source-row boundary until its v2.1 slice lands."""
+    validate(clearance, "clearance", "clearance")
+    require(receipt_body_sha256(clearance) == clearance.get("receipt_sha256"), "clearance receipt body hash drift")
+    bindings = clearance["input_bindings"]
+    require(
+        bindings.get("combined_contract_sha256") == LEGACY_V1_V3_COMBINED_CONTRACT_SHA256,
+        "legacy clearance combined-contract binding drift",
+    )
+    require(bindings.get("source_universe_receipt_sha256") == receipt_sha256, "clearance source-freeze binding drift")
+    require(
+        bindings.get("evaluation_contract_sha256") == sha256_file(evaluation_path),
+        "clearance evaluation-contract binding drift",
+    )
+    require(
+        bindings.get("coverage_contract_sha256") == sha256_file(coverage_path),
+        "clearance coverage-contract binding drift",
+    )
+    require(bindings.get("role_contract_sha256") == sha256_file(role_path), "clearance role-contract binding drift")
+    role_contract = read_json(role_path)
+    require(
+        role_contract.get("schema_version") == "correction_protection_role_contract_v1",
+        "legacy clearance requires the v1 role contract",
+    )
+    evaluation = read_json(evaluation_path)
+    steward = _validate_steward_binding(role_contract, clearance["role_binding"])
+    author = _derive_role_actor(role_contract, "rule_author_extractor")
+    require(
+        steward["controller_identity_id"] != author["controller_identity_id"],
+        "steward and rule author controller identities must be distinct",
+    )
+    acl = role_contract.get("heldout_acl")
+    require(isinstance(acl, Mapping), "role contract heldout ACL missing")
+    require("heldout_steward" in set(acl.get("pre_release_read_roles", [])), "steward lacks pre-release heldout access")
+    require(
+        "rule_author_extractor" in set(acl.get("forbidden_roles", []))
+        and "rule_author_extractor" not in set(acl.get("pre_release_read_roles", []))
+        and "rule_author_extractor" not in set(acl.get("post_release_scorer_roles", [])),
+        "rule author is not excluded by heldout ACL",
+    )
+    author_seat = _legacy_assigned_role_seat(role_contract, "rule_author_extractor")
+    require(
+        "read_heldout_text_locators_fingerprints_labels" in set(author_seat.get("must_not", [])),
+        "rule-author heldout prohibition drift",
+    )
+    heldout_access = evaluation.get("heldout_access")
+    require(isinstance(heldout_access, Mapping), "evaluation contract heldout_access is malformed")
+    require(heldout_access.get("author_extractor_forbidden") is True, "evaluation contract permits author heldout access")
+    policy = near_duplicate.policy_for_governed_use(
+        "public_canary_neighbour_exclusion",
+        expected_fingerprint=str(bindings["near_duplicate_policy_fingerprint_sha256"]),
+    )
+    evaluation_policy = evaluation.get("near_duplicate_policy")
+    require(isinstance(evaluation_policy, Mapping), "evaluation contract near_duplicate_policy is malformed")
+    require(
+        evaluation_policy.get("policy_fingerprint_sha256") == policy["policy_fingerprint_sha256"],
+        "evaluation near-duplicate policy binding drift",
+    )
+    _sha(clearance_sha256, "clearance file")
+    return role_contract, evaluation
 
 
 def validate_clearance(
@@ -206,6 +335,15 @@ def validate_clearance(
     role_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Validate a steward receipt without looking for or deriving heldout identities."""
+    if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1":
+        return _validate_legacy_clearance(
+            clearance,
+            clearance_sha256=clearance_sha256,
+            receipt_sha256=receipt_sha256,
+            evaluation_path=evaluation_path,
+            coverage_path=coverage_path,
+            role_path=role_path,
+        )
     require(
         set(clearance)
         == {
