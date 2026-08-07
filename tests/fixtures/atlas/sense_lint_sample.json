@@ -1,0 +1,109 @@
+{
+  "generated_at": "2026-08-07T00:00:00+00:00",
+  "note": "Small fixture for scripts/audit/lint_word_atlas.py (#6437 PR1). Not derived from the production manifest.",
+  "entries": [
+    {
+      "slug": "брак",
+      "lemma": "брак",
+      "entry_type": "lemma",
+      "senses": [
+        {
+          "id": "brak_defect",
+          "pos": "noun",
+          "uk_source_def": "вада, недолік у виробі, продукції",
+          "learner_uk": "недолік, вада",
+          "learner_en": ["defect", "flaw", "scarcity"],
+          "en_disambiguation": "imperfection/flaw (not marriage/ordinal second)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        },
+        {
+          "id": "brak_marriage",
+          "pos": "noun",
+          "uk_source_def": "шлюб",
+          "learner_uk": "шлюб",
+          "learner_en": ["marriage"],
+          "en_disambiguation": "matrimony (not the defect/scarcity sense)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "clean-entry-example",
+      "lemma": "приклад",
+      "entry_type": "lemma",
+      "senses": [
+        {
+          "id": "pryklad_example",
+          "pos": "noun",
+          "uk_source_def": "зразок для наслідування або пояснення",
+          "learner_uk": "приклад",
+          "learner_en": ["example"],
+          "en_disambiguation": "",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "truncated-entry-example",
+      "lemma": "цитата",
+      "entry_type": "lemma",
+      "senses": [
+        {
+          "id": "tsytata_quote",
+          "pos": "noun",
+          "uk_source_def": "дослівний уривок з якого-небудь тексту, точно переданий текст...",
+          "learner_uk": "цитата",
+          "learner_en": ["quote", "citation"],
+          "en_disambiguation": "excerpt (literary/legal sense)",
+          "source": "btc",
+          "completeness": "draft"
+        },
+        {
+          "id": "tsytata_honest_truncation",
+          "pos": "noun",
+          "uk_source_def": "приклад чесно позначеного обрізання визначення…",
+          "learner_uk": "цитата",
+          "learner_en": ["quote"],
+          "en_disambiguation": "",
+          "source": "btc",
+          "completeness": "truncated"
+        }
+      ]
+    },
+    {
+      "slug": "second-entry-example",
+      "lemma": "секунда",
+      "entry_type": "lemma",
+      "senses": [
+        {
+          "id": "sekunda_time_unit",
+          "pos": "noun",
+          "uk_source_def": "одиниця часу",
+          "learner_uk": "секунда",
+          "learner_en": ["second"],
+          "en_disambiguation": "",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        },
+        {
+          "id": "sekunda_disambiguated",
+          "pos": "noun",
+          "uk_source_def": "одиниця виміру плоского кута",
+          "learner_uk": "секунда (кута)",
+          "learner_en": ["second"],
+          "en_disambiguation": "unit of time or angle (not ordinal position)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "no-senses-entry-example",
+      "lemma": "легасі",
+      "entry_type": "lemma"
+    }
+  ]
+}
