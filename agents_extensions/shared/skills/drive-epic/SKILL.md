@@ -76,6 +76,19 @@ with `scripts/ai_agent_bridge/inbox_watch.sh --stop "$SESSION_HANDOFF_AGENT"`; i
 crashed process leaves a stale pidfile, the operating system releases its advisory lock
 and the next watcher replaces the recorded pid safely.
 
+### 0c. Hramatka epic — dual-repo queue (epic #4542 only)
+
+If `SESSION_EPIC` is Hramatka (public #4542), the priority/ownership queue is
+private BOARD `learn-ukrainian-infra-private#349`, not the public epic body. Cold-start
+read order: **private #349 → private open PRs → public PRs linked from #4542 only.**
+Public #4542 is charter + bare pointer — never generate or mirror a public checklist
+from the private board (leak + dual-write). GitHub issue/PR state in either repo
+remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
+status feed. Operator-only host mutation (private #360, #212) is **ESCALATE**, not
+solo action, on missing GO. If #349 and any other queue view disagree, **#349 wins** —
+correct the other view the same session. Full contract:
+`docs/runbooks/hramatka-driver-queue.md`.
+
 ### 1. Read topology + metrics (don't hold state — query it)
 ```bash
 .venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
