@@ -36,6 +36,28 @@ from pathlib import Path
 from typing import Any
 
 
+def _parse_protocol_payload(out: str, err: str) -> dict[str, Any] | None:
+    """Parse a JSON protocol payload from stdout, falling back to stderr.
+
+    The old shell hook merged stdout+stderr (``2>&1``) before scanning for
+    lease/rollover protocol JSON. This gate captures the two streams
+    separately; if a helper's structured payload (e.g. a real conflict or
+    ambiguity verdict) lands on stderr instead of stdout, it must still be
+    found here — otherwise it silently degrades to crashed/unknown (CF
+    review round 2 on #6414, retained finding 3).
+    """
+    for candidate in (out, err):
+        if not candidate or not candidate.strip():
+            continue
+        try:
+            payload = json.loads(candidate)
+        except ValueError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    return None
+
+
 def _crash(exc: BaseException) -> dict[str, Any]:
     return {
         "status": "crashed",
@@ -208,10 +230,7 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
         # is a HELPER FAILURE, not a business conflict (issue #6411 / CF review
         # on #6414 findings 2-3): only status == "conflict" may be labeled
         # DURABLE THREAD LEASE CONFLICT.
-        try:
-            payload = json.loads(out or "{}")
-        except ValueError:
-            payload = None
+        payload = _parse_protocol_payload(out, err)
         if isinstance(payload, dict) and payload.get("status") == "conflict":
             return {
                 "status": "stop",
@@ -235,10 +254,7 @@ def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
     # explicit acquired status. A malformed/empty payload — or any status
     # other than "acquired" — must not fall through to an unconditional ok
     # (CF review on #6414 finding 2).
-    try:
-        payload = json.loads(out or "{}")
-    except ValueError:
-        payload = None
+    payload = _parse_protocol_payload(out, err)
     if not isinstance(payload, dict) or payload.get("status") != "acquired":
         status_note = f"status={payload.get('status')!r}" if isinstance(payload, dict) else "unstructured output"
         return {
@@ -291,9 +307,8 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
         return _run_cli_inprocess(thread_handoff.main, [*base, "--format", "session-start"])
 
     if rc != 0:
-        error_code = ""
-        with contextlib.suppress(ValueError):
-            error_code = str(json.loads(out or "{}").get("error_code") or "")
+        payload = _parse_protocol_payload(out, err)
+        error_code = str(payload.get("error_code") or "") if isinstance(payload, dict) else ""
         if error_code == "MULTIPLE_LIVE_PENDING_ROLLOVERS":
             try:
                 frc, fout, _ferr = _formatted()
@@ -314,14 +329,17 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
             "error": f"detect rc={rc}",
             "context": f"ERROR: thread_handoff.py detect failed. Stop.\nOutput:\n{(out or err).strip()}",
         }
-    try:
-        detect_status = str(json.loads(out or "{}").get("status") or "")
-    except ValueError:
+    payload = _parse_protocol_payload(out, err)
+    if payload is None:
         return {
             "status": "crashed",
             "error": "detect output was not valid JSON",
-            "context": f"ERROR: thread_handoff.py detect output could not be parsed. Stop.\nOutput:\n{out}",
+            "context": (
+                "ERROR: thread_handoff.py detect output could not be parsed. Stop.\n"
+                f"Output:\n{(out or err)}"
+            ),
         }
+    detect_status = str(payload.get("status") or "")
     if detect_status in {"ambiguous", "pending_start", "resumed"}:
         try:
             frc, fout, ferr = _formatted()

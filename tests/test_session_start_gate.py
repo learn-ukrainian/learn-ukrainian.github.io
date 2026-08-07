@@ -111,6 +111,30 @@ def test_lease_structured_refusal_is_a_conflict(monkeypatch: pytest.MonkeyPatch)
     assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
 
 
+def test_lease_conflict_on_stderr_is_still_a_conflict(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The old shell hook merged stdout+stderr (``2>&1``) before scanning for
+    protocol JSON. A helper that prints its structured conflict payload to
+    stderr instead of stdout must still be classified as a real conflict, not
+    silently degraded to crashed/unknown (CF review round 2 on #6414,
+    retained finding 3).
+
+    Mutation-check: change ``_parse_protocol_payload`` back to reading only
+    ``out`` (drop the ``err`` fallback) -> this test fails because the
+    payload is never found. Restore the fallback -> passes.
+    """
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print(json.dumps({"status": "conflict", "owner_thread_id": "other"}), file=sys.stderr)
+            return 1
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "stop"
+    assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
+
+
 def test_lease_structured_error_is_not_a_conflict(monkeypatch: pytest.MonkeyPatch) -> None:
     """A structured-but-non-conflict status (e.g. {"status": "error"}) is a
     HELPER FAILURE, not a business refusal — restricting the DURABLE THREAD
@@ -227,6 +251,32 @@ def test_detect_none_is_ok(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
     result = gate.phase_rollover_detect(_args())
     assert result == {"status": "ok", "detect_status": "none"}
+
+
+def test_detect_ambiguous_on_stderr_still_formats_stop(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Same stderr-payload guard as the lease phase, for detect (CF review
+    round 2 on #6414, retained finding 3).
+
+    Mutation-check: change ``_parse_protocol_payload`` back to reading only
+    ``out`` -> this test fails because ``detect_status`` never resolves to
+    "ambiguous" and the formatted stop context is never produced. Restore
+    the ``err`` fallback -> passes.
+    """
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            if "--format" in argv and argv[argv.index("--format") + 1] == "json":
+                print(json.dumps({"status": "ambiguous"}), file=sys.stderr)
+            else:
+                print("ROLLOVER PACKET: follow the thread-rollover workflow.")
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_rollover_detect(_args())
+    assert result["status"] == "stop"
+    assert "ROLLOVER PACKET" in result["context"]
+    assert result["detect_status"] == "ambiguous"
 
 
 def test_detect_pending_returns_formatted_stop(monkeypatch: pytest.MonkeyPatch) -> None:
