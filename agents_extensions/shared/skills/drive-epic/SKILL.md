@@ -282,6 +282,10 @@ End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemi
 the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
 file handoff current — it stays authoritative through every plane mode (below).
 
+On a Hramatka epic (#4542) drive, before declaring the handoff verified-clean run
+`.venv/bin/python -m scripts.fleet.hramatka_hygiene_check` — only exit 0 is a pass;
+exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either (`docs/runbooks/hramatka-driver-queue.md`).
+
 **Skill source of truth is git, not deploy trees.** Edit only
 `agents_extensions/shared/skills/drive-epic/SKILL.md` (this file). Never implement or
 “fix” process in `.claude/skills/` or other deploy-rsync targets — those copies are

@@ -6,8 +6,8 @@ across the public/private repo split. Authority: the 2026-08-07 stream-hygiene
 consult (`batch_state/hramatka-drive/CONSULT-VERDICT-stream-hygiene-2026-08-07.md`,
 gitignored local evidence; ACP conversation
 `conversation_7b6241377cd44c7ea5265da5c85efb5c`, claude/codex/agy/kimi converged
-spine, PR-1 of a 4-PR package). PR-2 adds the Hramatka-only scope gate below;
-`post_task_reap` and `hygiene_check` remain separate PR-3/PR-4 work.
+spine). Scope gate ships with PR-2; settle reaper with PR-3; closeout
+`hygiene_check` with PR-4 (this document covers all three surfaces).
 
 ## Queue roles
 
@@ -51,18 +51,42 @@ Hramatka and any 50%/majority heuristic are not membership evidence. A private
 API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
 never becomes an implicit allow. The gate has no environment-variable bypass.
 
-Private #360 and #212 remain `ESCALATE` because they are operator-only host
-mutation work. This PR intentionally does not add a self-asserted GO/override
-flag: a verified operator authorization belongs in its own audited workflow.
+Host-mutation work without an explicit operator GO remains `ESCALATE` (see
+private #212 residual; private #360 crypto redeploy was completed on-host).
+
+## Closeout hygiene check
+
+Before declaring a Hramatka drive **verified-clean** at handoff, run the
+read-only closeout gate:
+
+```bash
+.venv/bin/python -m scripts.fleet.hramatka_hygiene_check
+# exit 0 verified | exit 1 stale | exit 2 unknown
+```
+
+It emits a JSON receipt (`policy_version`, `status`, `epic_charter_ok`,
+`queue_pointer_ok`, `zombie_worktrees`, `df`, plus supporting `reasons`) and
+never mutates GitHub or the filesystem. Only exit 0 (`verified`) is a clean
+handoff:
+
+- **stale** (exit 1) — the public epic #4542 still carries a live (unchecked)
+  checklist item, is missing its pointer to private board #349, a registered
+  dispatch worktree is bound to an already-terminal task
+  (`.worktrees/dispatch/` vs. `batch_state/tasks/`), or local disk use is at
+  or above the configured high-water mark (default 95%, `--high-water-percent`).
+- **unknown** (exit 2) — GitHub was unreachable for the public epic or the
+  private board. This is never a pass.
+
+The gate does not reap orphan worktrees or gate new scope itself — that is
+`post_task_reap` (PR-3) and `hramatka_scope_gate` (PR-2) respectively. It only
+reports.
 
 ## Operator-only items — track/escalate, never action solo
 
-Private [#360](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/360)
-and [#212](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/212)
-require host mutation. A driver without an explicit operator GO for the specific
-mutation must **ESCALATE** — track the item and surface it, do not action it.
-This is not a bare refuse: the item stays visible and owned, it does not drop
-out of the queue.
+Host mutation without an explicit operator GO must **ESCALATE** — track and
+surface, do not freestyle host changes outside the documented deploy path.
+Drivers with SSH access still follow the private deploy runbook and record
+evidence on the private issue.
 
 ## Same-session correction rule
 
@@ -73,7 +97,6 @@ defer the fix to a later PR.
 
 ## What this contract does not change
 
-- No `post_task_reap` or `hygiene_check` code ships here.
-- No product/teacher-facing features.
+- No product/teacher-facing features in these process PRs.
 - No private-repo secrets or private task titles are mirrored here beyond bare
   issue numbers.
