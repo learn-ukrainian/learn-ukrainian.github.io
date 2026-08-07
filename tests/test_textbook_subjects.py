@@ -133,7 +133,12 @@ CURRENT_TEXTBOOK_SOURCE_FILES = (
     "9-klas-ukrajinska-mova-avramenko-2017",
     "9-klas-ukrajinska-mova-voron-2017",
     "9-klas-ukrajinska-mova-zabolotnij-2017",
+    "9-klas-fizyka-zasiekina-2026",
+    "9-klas-heometriya-bevz-2026",
+    "9-klas-informatyka-bios-2026",
+    "9-klas-ukrlit-zabolotnyi-2026",
     "9-klas-ukrmova-zabolotnyi-2017",
+    "9-klas-zdorovia-gushchyna-2026",
     "anna-ohoiko-1000-words-2nd-ed",
     "anna-ohoiko-500-verbs",
     "antonenko-davydovych-yak-my-hovorymo",
@@ -148,16 +153,20 @@ CURRENT_TEXTBOOK_SOURCE_FILES = (
 
 
 def test_current_textbook_source_files_all_map_to_canonical_subjects() -> None:
-    assert len(CURRENT_TEXTBOOK_SOURCE_FILES) == 91
+    assert len(CURRENT_TEXTBOOK_SOURCE_FILES) == 96
     subjects = [subject_for_source_file(source) for source in CURRENT_TEXTBOOK_SOURCE_FILES]
 
     assert None not in subjects
     assert Counter(subjects) == {
         "ukrmova": 45,
-        "ukrlit": 16,
+        "ukrlit": 17,
         "istoriya": 16,
         "bukvar": 4,
         "lexicon": 10,
+        "fizyka": 1,
+        "heometriya": 1,
+        "informatyka": 1,
+        "zdorovia": 1,
     }
     assert set(CURRENT_TEXTBOOK_SOURCE_FILES) == set(KNOWN_SOURCE_FILE_SUBJECTS)
 
@@ -332,11 +341,27 @@ def test_batch3_author_translits_resolve_to_cyrillic() -> None:
         "zasekina": "Засєкіна",
         "kovbasenko": "Ковбасенко",
         "ladychenko": "Ладиченко",
+        "bevz": "Бевз",
+        "bios": "Біос",
     }
     from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
     for translit, cyrillic in expected.items():
         assert AUTHOR_UK_BY_TRANSLIT[translit] == cyrillic
+
+
+@pytest.mark.parametrize(
+    ("stem", "expected_subject"),
+    [
+        ("9-klas-fizyka-zasiekina-2026", "fizyka"),
+        ("9-klas-heometriya-bevz-2026", "heometriya"),
+        ("9-klas-informatyka-bios-2026", "informatyka"),
+        ("9-klas-ukrlit-zabolotnyi-2026", "ukrlit"),
+        ("9-klas-zdorovia-gushchyna-2026", "zdorovia"),
+    ],
+)
+def test_current_grade9_recovery_subjects(stem: str, expected_subject: str) -> None:
+    assert subject_for_source_file(stem) == expected_subject
 
 
 def test_known_source_file_subjects_regression() -> None:

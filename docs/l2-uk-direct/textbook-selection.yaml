@@ -1,13 +1,13 @@
 # Textbook Selection for RAG Database
-# Selected: 2026-02-26
-# Total: 116 books (115 prior selections + Grade 6 Zabolotnyi 2023 recovery) from pidruchnyk.com.ua, shkola.in.ua, and Google Drive
+# Selected: 2026-08-08
+# Total: 120 books from pidruchnyk.com.ua and shkola.in.ua, retained once in Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
 # Page URL pattern: https://pidruchnyk.com.ua/{slug}.html
 
 # Selection criteria:
-# 1. Newest NUS editions (2024-2025 State Standard aligned)
+# 1. Current NUS editions for each staged cohort, including Grade 9 in 2026/27
 # 2. Author diversity: Большакова (1-2), mixed (3-4), Авраменко+Голуб/Караман (5-11)
 # 3. Decolonized history: Щупак (5-8), Гісем+Хлібовська (9-11)
 # 4. Two language books per grade for RAG diversity
@@ -289,6 +289,17 @@ books:
     slug: 967-ukrliteratura-9-klas-avramenko-2017
     note: "Continuity"
 
+  - id: g9-lit-zabolotnyi-current
+    grade: 9
+    subject: ukrainska_literatura
+    author: Заболотний
+    year: 2026
+    slug: 3244-ukr-literatura-9-klas-zabolotnyi-2026
+    canonical_source: 9-klas-ukrlit-zabolotnyi-2026
+    source_url: https://pidruchnyk.com.ua/3244-ukr-literatura-9-klas-zabolotnyi-2026.html
+    gdrive_id: 1Jk6DAeyYWEXfEXKJAeyq8w7zeQHX6AYC
+    note: "Current NUS edition; download-enabled catalog copy retained once in Google Drive"
+
   - id: g9-hist-gisem
     grade: 9
     subject: istoriia
@@ -525,6 +536,17 @@ books:
     year: 2022
     slug: 3115-fizyka-9-klas-bariakhtar
 
+  - id: g9-fizyka-zasiekina-current
+    grade: 9
+    subject: fizyka
+    author: Засєкіна
+    year: 2026
+    slug: 3256-pidruchnyk-fizyka-9-klas-zasiekina-2026
+    canonical_source: 9-klas-fizyka-zasiekina-2026
+    source_url: https://pidruchnyk.com.ua/3256-pidruchnyk-fizyka-9-klas-zasiekina-2026.html
+    gdrive_id: 1_MA1BYfvG2XW0-VZWNKFwNC4uStSUXkG
+    note: "Current NUS edition; download-enabled catalog copy retained once in Google Drive"
+
   - id: g9-heometriya-merzliak
     grade: 9
     subject: heometriya
@@ -532,12 +554,34 @@ books:
     year: 2017
     slug: 996-geometriya-merzlyak-9-klas-2017
 
+  - id: g9-heometriya-bevz-current
+    grade: 9
+    subject: heometriya
+    author: Бевз
+    year: 2026
+    slug: 3168-geometriia-9-klas-bevz-2026
+    canonical_source: 9-klas-heometriya-bevz-2026
+    source_url: https://pidruchnyk.com.ua/3168-geometriia-9-klas-bevz-2026.html
+    gdrive_id: 1A8yMOm-pOZ2aZCvihwN8F40Wb3AClePu
+    note: "Current NUS edition; download-enabled catalog copy retained once in Google Drive"
+
   - id: g9-informatyka-ryvkind
     grade: 9
     subject: informatyka
     author: Ривкінд
     year: 2017
     slug: 1046-informatika-9-klas-ryvkind-2017
+
+  - id: g9-informatyka-bios-current
+    grade: 9
+    subject: informatyka
+    author: Біос
+    year: 2026
+    slug: 3187-informatyka-9-klas-bios-2026
+    canonical_source: 9-klas-informatyka-bios-2026
+    source_url: https://pidruchnyk.com.ua/3187-informatyka-9-klas-bios-2026.html
+    gdrive_id: 1XLZLstnG5EBc5g9P3vZv8ZrGZfrb3zYr
+    note: "Current NUS edition; download-enabled catalog copy retained once in Google Drive"
 
   - id: g9-khimiya-popel
     grade: 9
@@ -759,15 +803,16 @@ books:
     gdrive_id: 1l8-daWxfbEvoQH4gXK6tWbsLMQ3cWbMr
     note: "DEFERRED wave-3b: pid+shkola copies share the same view-only Drive file"
 
-  - id: g9-zdorovia-vorontsova
+  - id: g9-zdorovia-gushchyna
     grade: 9
     subject: zdorovia
-    author: Воронцова
+    author: Гущина
     year: 2026
-    slug: 3181-zdorovia-9-klas-voroncova-2026
-    status: needs_manual_pdf
-    gdrive_id: 1HKqtD_Ap3TicxfPtIGRfgRk-GTC4V-lb
-    note: "DEFERRED wave-3b: Воронцова + Шиян (shkola 3402) both view-only Drive"
+    slug: 3182-zdorovia-9-klas-gushchyna-2026
+    canonical_source: 9-klas-zdorovia-gushchyna-2026
+    source_url: https://pidruchnyk.com.ua/3182-zdorovia-9-klas-gushchyna-2026.html
+    gdrive_id: 1nExKGj4PTX9qfBDmk2_a_9Xx-6lkBGRo
+    note: "Download-enabled current edition selected after Воронцова and Шиян copies proved view-only; retained once in Google Drive"
 
   - id: g9-hromadianska-pometun
     grade: 9

@@ -982,14 +982,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.ukrlit
-    source_ids: []
+    source_ids:
+    - 3244-ukr-literatura-9-klas-zabolotnyi-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 967-ukrliteratura-9-klas-avramenko-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current 2026/27 NUS source is not enumerated in the selected manifest; 2017 inventory is legacy-only and cannot satisfy this cell.
+  evidence_note: Current 2026/27 NUS Заболотний edition is selected; 2017 inventory remains legacy-only evidence.
   choice_group_id: g09.literature_realization
   choice_member_id: separate
   choice_member_requires: &id005
@@ -1515,14 +1516,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.heometriya
-    source_ids: []
+    source_ids:
+    - 3168-geometriia-9-klas-bevz-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 996-geometriya-merzlyak-9-klas-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 geometry inventory is retained as legacy-only evidence.
+  evidence_note: Current Grade 9 NUS Бевз edition is selected; 2017 geometry inventory remains legacy-only evidence.
   choice_group_id: g09.mathematics_realization
   choice_member_id: separate
   choice_member_requires: *id008
@@ -1972,14 +1974,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.fizyka
-    source_ids: []
+    source_ids:
+    - 3256-pidruchnyk-fizyka-9-klas-zasiekina-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 3115-fizyka-9-klas-bariakhtar
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; the 2022 physics inventory is retained as legacy-only evidence.
+  evidence_note: Current Grade 9 NUS Засєкіна edition is selected; the 2022 physics inventory remains legacy-only evidence.
   choice_group_id: g09.natural_science_realization
   choice_member_id: separate
   choice_member_requires: *id011
@@ -2152,14 +2155,15 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g09.informatyka
-    source_ids: []
+    source_ids:
+    - 3187-informatyka-9-klas-bios-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 1046-informatika-9-klas-ryvkind-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 informatics inventory is retained as legacy-only evidence.
+  evidence_note: Current Grade 9 NUS Біос edition is selected; 2017 informatics inventory remains legacy-only evidence.
 - cell_id: g05.tekhnolohiyi
   grade: 5
   canonical_subject_id: tekhnolohiyi
@@ -2363,13 +2367,13 @@ cells:
   coverage:
     coverage_unit_id: g09.zdorovia_bezpeka_dobrobut
     source_ids:
-    - 3181-zdorovia-9-klas-voroncova-2026
+    - 3182-zdorovia-9-klas-gushchyna-2026
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+  evidence_note: Current Grade 9 NUS Гущина edition is selected after inaccessible alternatives were rejected.
 - cell_id: g05.etyka
   grade: 5
   canonical_subject_id: etyka
