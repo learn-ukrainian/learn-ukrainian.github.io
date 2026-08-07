@@ -29,5 +29,5 @@
     "override_reason": "#6369 residual Class-B EN fill: generic release asset stale vs versioned canonical; operator override from existing pointer",
     "bootstrap": false
   },
-  "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
+  "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON. richness_gate.baseline.poc_thin_pages dropped from the prior pointer's recorded 2278 to 1270 because publish_manifest.py recomputes baseline live off the currently published GitHub release asset (download_published_manifest -> audit_manifest, scripts/lexicon/publish_manifest.py) rather than reusing the value recorded in the previous pointer commit; the intervening park_thin_entries.py run (scripts/lexicon/park_thin_entries.py) removed audit-classified thin lemma_article entries from that canonical asset between the two publishes, so 1270 reflects the true current published count, not a re-baselined/relaxed target. The remaining override covers old_gate_no_english_anchor (residual 48, unreachable without wired EN per #6369 scope); teacher P1's own residual on that gate is 0."
 }
