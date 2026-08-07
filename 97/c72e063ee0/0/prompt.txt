@@ -1,0 +1,55 @@
+# Task: green main — extend PR #6430 with second red-main fix
+
+## Context (tool-proven)
+
+- Epic seat: hramatka (`epic:4542`), driver `grok-hramatka`. Lease already claimed — do not touch leases.
+- Plane mode: **authority**. Fleet-comms is durable SSOT.
+- Handoff FIRST ACTION: land #6430 (awareness test aligned to direct one-round review regime).
+- **#6430 alone is not enough for green main.** Main CI is red for TWO independent reasons:
+
+### Red 1 — fixed already on PR #6430 head `5ffbc0653a8b`
+`tests/test_fleet_comms_launcher_awareness.py` asserts `PR_NUMBER` / `PR number` which left the rule after #6423.
+PR already changes assertions to require `direct` + `one round` + `opt-in` + `review-pr`.
+Local main: that test FAILS (proved). Do not re-do unless missing.
+
+### Red 2 — NOT fixed yet (blocks CI on #6430 and main)
+`tests/test_legacy_bridge_telemetry.py::test_refused_invocations_do_not_start_coverage_or_usage[kwargs2]`
+
+Parametrize case:
+```python
+{"command_target": "glm", "content": "prompt", "task_id": "task", "review": True}
+```
+
+**Root cause (code, not guess):** `_acp_compat.run_compat_ask` / `_run_compat_ask_impl` docstring and behavior after operator order 2026-08-06:
+> `review=True` runs as a normal ask: the review of record is one direct … sealed review-pr is opt-in
+
+So `review=True` is **no longer a refused invocation**. The test still expects `ValueError` before telemetry starts.
+- Local: `DID NOT RAISE ValueError` (and can reach real ACP).
+- CI: `InterAgentTransportError: inter-agent ACP requires a trusted initiating Source` (gets past ValueError gate).
+
+## Required outcome
+1. Work on **existing branch** `claude/awareness-test-fix` (PR #6430). Do not open a second PR for this green-main unit unless the branch is unusable.
+2. Update `tests/test_legacy_bridge_telemetry.py` so refused cases match current contract:
+   - Keep refused cases that still raise `ValueError` early: retired target, empty `task_id`.
+   - **Remove** the `review=True` case from `test_refused_invocations_do_not_start_coverage_or_usage` (or split into a separate positive test that proves `review=True` is accepted as a normal ask without inventing new product behavior).
+3. If you add a positive test for `review=True`, **mock** `_run_compat_ask_impl` so no real ACP/network runs; assert telemetry start/finish contract honestly.
+4. Do **not** weaken production refusal for empty task_id / retired targets.
+5. Run (quote raw output in final note):
+   ```bash
+   .venv/bin/python -m pytest tests/test_legacy_bridge_telemetry.py tests/test_fleet_comms_launcher_awareness.py -q --tb=short
+   .venv/bin/ruff check tests/test_legacy_bridge_telemetry.py
+   ```
+   Prefer primary `.venv` against worktree paths if sparse worktree lacks venv.
+6. Conventional commit + `X-Agent: kimi/6430-green-main` (or your agent/task-id).
+7. Push to `claude/awareness-test-fix` so PR #6430 updates.
+8. **Do NOT** self-merge, auto-merge, or request review as "done". Driver owns CF + merge.
+9. Return: commit SHA, pytest summary, files changed, anything unexpected.
+
+## Non-goals
+- No plane mode flips, lease ops, rules rewrites, or product Hramatka UI work.
+- Do not "fix" by deleting the whole telemetry suite.
+- No linter config / `.python-version` changes.
+- No artifact dumps (status/audit json).
+
+## Evidence preamble (#M-4)
+Every claim in your return must cite the command + quoted raw evidence.

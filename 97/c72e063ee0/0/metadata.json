@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "97c72e063ee0",
+  "session_id": "session_a34618ed-0057-4f93-895f-24f2c2ee8941",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T10:29:25.732422Z",
+  "branch": "claude/awareness-test-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_legacy_bridge_telemetry.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "29455f8cdde5",
+  "token_usage": {
+    "input_tokens": 23868,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 316672,
+    "output_tokens": 1812,
+    "api_call_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T10:29:25.718288Z",
+    "agent_lines": 18,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 18,
+    "total_lines_changed": 19,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
