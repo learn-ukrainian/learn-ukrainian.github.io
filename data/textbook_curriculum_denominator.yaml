@@ -1,0 +1,4056 @@
+schema_version: textbook_curriculum_denominator_v1
+operation:
+  as_of: 2026/27
+  grades:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  basis_policy:
+  - 'Grades 1-4: current TOP №743, Savchenko/Shyian programs.'
+  - 'Grades 5-9: current TOP №235 as updated by №1120, staged NUS cohorts.'
+  - 'Grades 10-11: current order-890 / 2011 standard material.'
+  future_transitions_not_current:
+  - The 2026 primary TOP starts for Grade 1 in September 2028.
+  - The 2024 profile standard starts on 1 September 2027.
+selection_reference:
+  path: docs/l2-uk-direct/textbook-selection.yaml
+  selected_book_count_is_inventory_only: true
+  selection_note: The 116-book selection is a local inventory selection, not the official curriculum denominator.
+requirement_classes:
+- required_common
+- required_one_of
+- profile_or_track
+- optional_elective
+- no_textbook_required_or_unresolved
+locator_registry:
+  MON_P12: https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/programy-1-4-klas/2022/08/15/Typova.osvitnya.prohrama.1-4/Typova.osvitnya.prohrama.1-2.Savchenko.pdf
+  MON_P34: https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/programy-1-4-klas/2022/08/15/Typova.osvitnya.prohrama.1-4/Typova.osvitnya.prohrama.3-4.Savchenko.pdf
+  MON_B235: https://mon.gov.ua/static-objects/mon/uploads/public/661/68f/f4b/66168ff4b1bbe581264698.pdf
+  MON_BFAQ: https://mon.gov.ua/news/vidpovidaiemo-na-zapytannia-shchodo-onovlenoi-typovoi-osvitnoi-prohramy-dlia-59-klasiv-nush
+  MON_U890: https://mon.gov.ua/static-objects/mon/zagalna%20serednya/typovi-programu-2-11/typova-osv-prohr-zzso-iii-stupenya-890.pdf
+  MON_UINDEX: https://mon.gov.ua/osvita-2/zagalna-serednya-osvita/osvitni-programi/navchalni-programi-dlya-10-11-klasiv
+  IMZO_ROOT: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/
+  IMZO_1_BUKVAR: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/1-klas/1-ukranska-mova-bukvar-1-klas/
+  IMZO_3_READ: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/3-klas/ukranska-mova-ta-chitannya-pdruchnik-dlya-3-klasu-zakladv-zagalno-seredno-osvti-u-2-kh-chastinakh/
+  IMZO_4: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/4-klas/
+  IMZO_6_UA: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/6-klas-n/movno-lteraturna-osvtnya-galuz/ukranska-mova/
+  IMZO_6_MATH: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/6-klas-n/matematichna-osvtnya-galuz/
+  IMZO_6_INFO: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/6-klas-n/nformatichna-osvtnya-galuz/nformatika/
+  IMZO_8_ALG: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/8-klas-old/algebra-8-klas/
+  IMZO_8_GEO: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/8-klas-old/geometrya-8-klas/
+  IMZO_10: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/10-klas/
+  IMZO_11: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/11-klas/
+cells:
+- cell_id: g01.ukrmova_bukvar
+  grade: 1
+  canonical_subject_id: ukrmova_bukvar
+  display_name_uk: Українська мова. Буквар
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  official_edition_catalog_locator_ids:
+  - IMZO_1_BUKVAR
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g01.ukrmova_bukvar
+    source_ids:
+    - 3028-bukvar-1-klas-zakhariichuk
+    - 3029-ukr-mova-bukvar-1-klas-bolshakova
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: 'Formal TOP cell is integrated ''Українська мова. Навчання грамоти''; IMZO names the approved textbook family
+    ''Українська мова. Буквар''. DB: 394 chunks, 4 files; present.'
+- cell_id: g02.ukrmova
+  grade: 2
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g02.ukrmova_chytannia_combined
+    source_ids:
+    - 3037-ukrmova-bolshakova-2-klas
+    - 57-ukrayinska-mova-vashulenko-dubovyk-2-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: 'TOP permits separate Ukrainian language plus Reading or an integrated course. DB identity ukrmova: 746 chunks,
+    6 files; present.'
+- cell_id: g02.chytannia
+  grade: 2
+  canonical_subject_id: chytannia
+  display_name_uk: Читання
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g02.ukrmova_chytannia_combined
+    source_ids:
+    - 3037-ukrmova-bolshakova-2-klas
+    - 57-ukrayinska-mova-vashulenko-dubovyk-2-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: No separate DB identity; normalized under ukrmova.
+- cell_id: g03.ukrmova
+  grade: 3
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_3_READ
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g03.ukrmova_lit_chytannia_combined
+    source_ids:
+    - 1504-ukrmova-ta-chytannja-sachenko-3-klas-nush
+    - 1524-ukrmova-ta-chytannya-vashulenko-3klas-nush
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: 'DB: 939 chunks, 6 files; present.'
+- cell_id: g03.lit_chytannia
+  grade: 3
+  canonical_subject_id: lit_chytannia
+  display_name_uk: Літературне читання
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_3_READ
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g03.ukrmova_lit_chytannia_combined
+    source_ids:
+    - 1504-ukrmova-ta-chytannja-sachenko-3-klas-nush
+    - 1524-ukrmova-ta-chytannya-vashulenko-3klas-nush
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: IMZO packages Ukrainian language and reading as a combined two-part volume; DB normalizes it under ukrmova.
+- cell_id: g04.ukrmova
+  grade: 4
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_4
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g04.ukrmova_lit_chytannia_combined
+    source_ids:
+    - 650-ukrayinska-mova-varzacka-4-klas
+    - 652-ukrayinska-mova-zaharychuk-4-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: 'DB: 986 chunks, 6 files; present.'
+- cell_id: g04.lit_chytannia
+  grade: 4
+  canonical_subject_id: lit_chytannia
+  display_name_uk: Літературне читання
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_4
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g04.ukrmova_lit_chytannia_combined
+    source_ids:
+    - 650-ukrayinska-mova-varzacka-4-klas
+    - 652-ukrayinska-mova-zaharychuk-4-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: IMZO catalog title is 'Українська мова та читання'; DB normalizes it under ukrmova.
+- cell_id: g01.foreign_language
+  grade: 1
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g01.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+- cell_id: g02.foreign_language
+  grade: 2
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g02.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+- cell_id: g03.foreign_language
+  grade: 3
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g03.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+- cell_id: g04.foreign_language
+  grade: 4
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g04.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+- cell_id: g01.matematyka
+  grade: 1
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g01.matematyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+- cell_id: g02.matematyka
+  grade: 2
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g02.matematyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+- cell_id: g03.matematyka
+  grade: 3
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g03.matematyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+- cell_id: g04.matematyka
+  grade: 4
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g04.matematyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+- cell_id: g01.ya_doslidzhuiu_svit
+  grade: 1
+  canonical_subject_id: ya_doslidzhuiu_svit
+  display_name_uk: Я досліджую світ
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g01.ya_doslidzhuiu_svit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+- cell_id: g02.ya_doslidzhuiu_svit
+  grade: 2
+  canonical_subject_id: ya_doslidzhuiu_svit
+  display_name_uk: Я досліджую світ
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g02.ya_doslidzhuiu_svit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+- cell_id: g03.ya_doslidzhuiu_svit
+  grade: 3
+  canonical_subject_id: ya_doslidzhuiu_svit
+  display_name_uk: Я досліджую світ
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g03.ya_doslidzhuiu_svit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+- cell_id: g04.ya_doslidzhuiu_svit
+  grade: 4
+  canonical_subject_id: ya_doslidzhuiu_svit
+  display_name_uk: Я досліджую світ
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g04.ya_doslidzhuiu_svit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+- cell_id: g01.dyzain_i_tekhnolohii
+  grade: 1
+  canonical_subject_id: dyzain_i_tekhnolohii
+  display_name_uk: Дизайн і технології
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g01.dyzain_i_tekhnolohii
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g02.dyzain_i_tekhnolohii
+  grade: 2
+  canonical_subject_id: dyzain_i_tekhnolohii
+  display_name_uk: Дизайн і технології
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g02.dyzain_i_tekhnolohii
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g03.dyzain_i_tekhnolohii
+  grade: 3
+  canonical_subject_id: dyzain_i_tekhnolohii
+  display_name_uk: Дизайн і технології
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g03.dyzain_i_tekhnolohii
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g04.dyzain_i_tekhnolohii
+  grade: 4
+  canonical_subject_id: dyzain_i_tekhnolohii
+  display_name_uk: Дизайн і технології
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g04.dyzain_i_tekhnolohii
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g03.informatyka
+  grade: 3
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_4
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g03.informatyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: TOP table has Informatics in both grades; no current DB source.
+- cell_id: g04.informatyka
+  grade: 4
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_4
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g04.informatyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: TOP table has Informatics in both grades; no current DB source.
+- cell_id: g01.mystetstvo
+  grade: 1
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g01.mystetstvo
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g02.mystetstvo
+  grade: 2
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g02.mystetstvo
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g03.mystetstvo
+  grade: 3
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g03.mystetstvo
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g04.mystetstvo
+  grade: 4
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g04.mystetstvo
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Official cell; title-level acquisition reconciliation pending.
+- cell_id: g01.fizychna_kultura
+  grade: 1
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g01.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Curricular cell confirmed; no textbook identity in current corpus.
+- cell_id: g02.fizychna_kultura
+  grade: 2
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g02.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Curricular cell confirmed; no textbook identity in current corpus.
+- cell_id: g03.fizychna_kultura
+  grade: 3
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g03.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Curricular cell confirmed; no textbook identity in current corpus.
+- cell_id: g04.fizychna_kultura
+  grade: 4
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_P12
+  - MON_P34
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g04.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: approved_primary_basis
+  evidence_note: Curricular cell confirmed; no textbook identity in current corpus.
+- cell_id: g05.ukrmova
+  grade: 5
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g05.ukrmova
+    source_ids:
+    - 1643-ukrainska-mova-avramenko-5-klas-2022
+    - 1649-ukrmova-5-klas-golub
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+- cell_id: g06.ukrmova
+  grade: 6
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g06.ukrmova
+    source_ids:
+    - 2591-ukrmova-6-klas-zabolotnyi-2023
+    - 2592-ukrmova-6-klas-avramenko
+    - 2595-ukrmova-6-klas-golub
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+- cell_id: g07.ukrmova
+  grade: 7
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g07.ukrmova
+    source_ids:
+    - 2873-ukrainska-mova-zabolotnyi-7-klas-2024
+    - 2876-ukrainska-mova-avramenko-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+- cell_id: g08.ukrmova
+  grade: 8
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g08.ukrmova
+    source_ids:
+    - 2899-ukrainska-mova-avramenko-8-klas-2025
+    - 2902-ukrainska-mova-zabolotnyi-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+- cell_id: g09.ukrmova
+  grade: 9
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g09.ukrmova
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 970-ukrmova-9klas-avramenko
+    - 1000-ukrmova-zabolotniy-9-klas-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current 2026/27 NUS source is not enumerated in the selected manifest; 2017 inventory is legacy-only and cannot satisfy this cell.
+- cell_id: g05.ukrlit
+  grade: 5
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g05.ukrlit
+    source_ids:
+    - 1685-5_ukrlit_avramenko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+  choice_group_id: g05.literature_realization
+  choice_member_id: separate
+  choice_member_requires: &id001
+  - g05.ukrlit
+  - g05.zarlit
+- cell_id: g06.ukrlit
+  grade: 6
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g06.ukrlit
+    source_ids:
+    - 2618-ukralit-6-klas-avramenko-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+  choice_group_id: g06.literature_realization
+  choice_member_id: separate
+  choice_member_requires: &id002
+  - g06.ukrlit
+  - g06.zarlit
+- cell_id: g07.ukrlit
+  grade: 7
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.ukrlit
+    source_ids:
+    - 2863-ukrainska-literatura-avramenko-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+  choice_group_id: g07.literature_realization
+  choice_member_id: separate
+  choice_member_requires: &id003
+  - g07.ukrlit
+  - g07.zarlit
+- cell_id: g08.ukrlit
+  grade: 8
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.ukrlit
+    source_ids:
+    - 2962-ukrainska-literatura-avramenko-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for every grade 5-9.
+  choice_group_id: g08.literature_realization
+  choice_member_id: separate
+  choice_member_requires: &id004
+  - g08.ukrlit
+  - g08.zarlit
+- cell_id: g09.ukrlit
+  grade: 9
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.ukrlit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 967-ukrliteratura-9-klas-avramenko-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current 2026/27 NUS source is not enumerated in the selected manifest; 2017 inventory is legacy-only and cannot satisfy this cell.
+  choice_group_id: g09.literature_realization
+  choice_member_id: separate
+  choice_member_requires: &id005
+  - g09.ukrlit
+  - g09.zarlit
+- cell_id: g05.zarlit
+  grade: 5
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g05.zarlit
+    source_ids:
+    - 1693-5_zarlit_voloschuk
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Separate identity present in DB for every grade 5-9.
+  choice_group_id: g05.literature_realization
+  choice_member_id: separate
+  choice_member_requires: *id001
+- cell_id: g06.zarlit
+  grade: 6
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g06.zarlit
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Separate identity present in DB for every grade 5-9.
+  choice_group_id: g06.literature_realization
+  choice_member_id: separate
+  choice_member_requires: *id002
+- cell_id: g07.zarlit
+  grade: 7
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.zarlit
+    source_ids:
+    - 2858-zarubizhna-literatura-voloshchuk-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Separate identity present in DB for every grade 5-9.
+  choice_group_id: g07.literature_realization
+  choice_member_id: separate
+  choice_member_requires: *id003
+- cell_id: g08.zarlit
+  grade: 8
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.zarlit
+    source_ids:
+    - 2995-zarubizhna-literatura-voloshchuk-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Separate identity present in DB for every grade 5-9.
+  choice_group_id: g08.literature_realization
+  choice_member_id: separate
+  choice_member_requires: *id004
+- cell_id: g09.zarlit
+  grade: 9
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.zarlit
+    source_ids:
+    - 3176-zarubizhna-literatura-9-klas-kovbasenko-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Separate identity present in DB for every grade 5-9.
+  choice_group_id: g09.literature_realization
+  choice_member_id: separate
+  choice_member_requires: *id005
+- cell_id: g05.literature_integrated
+  grade: 5
+  canonical_subject_id: literature_integrated
+  display_name_uk: Інтегрований курс літератур (української та зарубіжної)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.literature_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 4; no distinct current DB identity.
+  choice_group_id: g05.literature_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g05.literature_integrated
+- cell_id: g06.literature_integrated
+  grade: 6
+  canonical_subject_id: literature_integrated
+  display_name_uk: Інтегрований курс літератур (української та зарубіжної)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.literature_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 4; no distinct current DB identity.
+  choice_group_id: g06.literature_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g06.literature_integrated
+- cell_id: g07.literature_integrated
+  grade: 7
+  canonical_subject_id: literature_integrated
+  display_name_uk: Інтегрований курс літератур (української та зарубіжної)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.literature_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 4; no distinct current DB identity.
+  choice_group_id: g07.literature_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g07.literature_integrated
+- cell_id: g08.literature_integrated
+  grade: 8
+  canonical_subject_id: literature_integrated
+  display_name_uk: Інтегрований курс літератур (української та зарубіжної)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.literature_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 4; no distinct current DB identity.
+  choice_group_id: g08.literature_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g08.literature_integrated
+- cell_id: g09.literature_integrated
+  grade: 9
+  canonical_subject_id: literature_integrated
+  display_name_uk: Інтегрований курс літератур (української та зарубіжної)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.literature_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 4; no distinct current DB identity.
+  choice_group_id: g09.literature_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g09.literature_integrated
+- cell_id: g05.foreign_language
+  grade: 5
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 47; outside current tracked subject identity.
+- cell_id: g06.foreign_language
+  grade: 6
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 47; outside current tracked subject identity.
+- cell_id: g07.foreign_language
+  grade: 7
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 47; outside current tracked subject identity.
+- cell_id: g08.foreign_language
+  grade: 8
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 47; outside current tracked subject identity.
+- cell_id: g09.foreign_language
+  grade: 9
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземна мова
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 47; outside current tracked subject identity.
+- cell_id: g05.matematyka
+  grade: 5
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_MATH
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g05.matematyka
+    source_ids:
+    - 1632-matematyka-5-klas-ister-2022
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grade 5 present (305 chunks); Grade 6 PDF-only / extraction missing.
+- cell_id: g06.matematyka
+  grade: 6
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_MATH
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g06.matematyka
+    source_ids:
+    - 2590-matematyka-6-klas-ister-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grade 5 present (305 chunks); Grade 6 PDF-only / extraction missing.
+- cell_id: g07.algebra
+  grade: 7
+  canonical_subject_id: algebra
+  display_name_uk: Алгебра
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_ALG
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.algebra
+    source_ids:
+    - 2892-algebra-merzliak-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  choice_group_id: g07.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: &id006
+  - g07.algebra
+  - g07.heometriya
+- cell_id: g08.algebra
+  grade: 8
+  canonical_subject_id: algebra
+  display_name_uk: Алгебра
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_ALG
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.algebra
+    source_ids:
+    - 2906-algebra-merzliak-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  choice_group_id: g08.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: &id007
+  - g08.algebra
+  - g08.heometriya
+- cell_id: g09.algebra
+  grade: 9
+  canonical_subject_id: algebra
+  display_name_uk: Алгебра
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_ALG
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.algebra
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 982-algebra-merzlyak-9-klas-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 algebra inventory is retained as legacy-only evidence.
+  choice_group_id: g09.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: &id008
+  - g09.algebra
+  - g09.heometriya
+- cell_id: g07.heometriya
+  grade: 7
+  canonical_subject_id: heometriya
+  display_name_uk: Геометрія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_GEO
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.heometriya
+    source_ids:
+    - 2885-geometriia-merzliak-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  choice_group_id: g07.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: *id006
+- cell_id: g08.heometriya
+  grade: 8
+  canonical_subject_id: heometriya
+  display_name_uk: Геометрія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_GEO
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.heometriya
+    source_ids:
+    - 2912-geometriia-merzliak-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  choice_group_id: g08.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: *id007
+- cell_id: g09.heometriya
+  grade: 9
+  canonical_subject_id: heometriya
+  display_name_uk: Геометрія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_8_GEO
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.heometriya
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 996-geometriya-merzlyak-9-klas-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 geometry inventory is retained as legacy-only evidence.
+  choice_group_id: g09.mathematics_realization
+  choice_member_id: separate
+  choice_member_requires: *id008
+- cell_id: g07.matematyka_integrated
+  grade: 7
+  canonical_subject_id: matematyka_integrated
+  display_name_uk: Математика (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.matematyka_integrated
+    source_ids:
+    - 2879-matematyka-ister-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 52; Grade 7 normalized as matematyka, Grades 8-9 not separately resolved.
+  choice_group_id: g07.mathematics_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g07.matematyka_integrated
+- cell_id: g08.matematyka_integrated
+  grade: 8
+  canonical_subject_id: matematyka_integrated
+  display_name_uk: Математика (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.matematyka_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 52; Grade 7 normalized as matematyka, Grades 8-9 not separately resolved.
+  choice_group_id: g08.mathematics_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g08.matematyka_integrated
+- cell_id: g09.matematyka_integrated
+  grade: 9
+  canonical_subject_id: matematyka_integrated
+  display_name_uk: Математика (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.matematyka_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 52; Grade 7 normalized as matematyka, Grades 8-9 not separately resolved.
+  choice_group_id: g09.mathematics_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g09.matematyka_integrated
+- cell_id: g05.natural_5_6_one_of
+  grade: 5
+  canonical_subject_id: natural_5_6_one_of
+  display_name_uk: Пізнаємо природу | Довкілля | Природничі науки
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g05.natural_5_6_one_of
+    source_ids:
+    - 1722-piznaiemo-pryrodu-korshevnuk-5-klas-2022
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity
+    is not fully resolved.
+  choice_group_id: g05.natural_science_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g05.natural_5_6_one_of
+- cell_id: g06.natural_5_6_one_of
+  grade: 6
+  canonical_subject_id: natural_5_6_one_of
+  display_name_uk: Пізнаємо природу | Довкілля | Природничі науки
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g06.natural_5_6_one_of
+    source_ids:
+    - 2651-piznaiemo-pryrodu-6-klas-korshevniuk
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity
+    is not fully resolved.
+  choice_group_id: g06.natural_science_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g06.natural_5_6_one_of
+- cell_id: g07.natural_7_9_integrated
+  grade: 7
+  canonical_subject_id: natural_7_9_integrated
+  display_name_uk: Природничі науки (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.natural_7_9_integrated
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 59; no complete current DB identity.
+  choice_group_id: g07.natural_science_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g07.natural_7_9_integrated
+- cell_id: g08.natural_7_9_integrated
+  grade: 8
+  canonical_subject_id: natural_7_9_integrated
+  display_name_uk: Природничі науки (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.natural_7_9_integrated
+    source_ids:
+    - 2958-pryrodnychi-nauky-mandrenko-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 59; no complete current DB identity.
+  choice_group_id: g08.natural_science_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g08.natural_7_9_integrated
+- cell_id: g09.natural_7_9_integrated
+  grade: 9
+  canonical_subject_id: natural_7_9_integrated
+  display_name_uk: Природничі науки (інтегрований курс)
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.natural_7_9_integrated
+    source_ids:
+    - 3238-pryrodnychi-nauky-9-klas-mandrenko-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 59; no complete current DB identity.
+  choice_group_id: g09.natural_science_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g09.natural_7_9_integrated
+- cell_id: g07.biolohiya
+  grade: 7
+  canonical_subject_id: biolohiya
+  display_name_uk: Біологія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.biolohiya
+    source_ids:
+    - 2838-biologiia-zadorozhnyi-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 8-9 present; Grade 7 source has only 2 chunks and is effectively empty.
+  choice_group_id: g07.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: &id009
+  - g07.biolohiya
+  - g07.heohrafiya
+  - g07.fizyka
+  - g07.khimiya
+- cell_id: g08.biolohiya
+  grade: 8
+  canonical_subject_id: biolohiya
+  display_name_uk: Біологія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.biolohiya
+    source_ids:
+    - 2923-biologiia-anderson-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 8-9 present; Grade 7 source has only 2 chunks and is effectively empty.
+  choice_group_id: g08.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: &id010
+  - g08.biolohiya
+  - g08.heohrafiya
+  - g08.fizyka
+  - g08.khimiya
+- cell_id: g09.biolohiya
+  grade: 9
+  canonical_subject_id: biolohiya
+  display_name_uk: Біологія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.biolohiya
+    source_ids:
+    - 3152-biologiia-9-klas-zadorozhnyi-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 8-9 present; Grade 7 source has only 2 chunks and is effectively empty.
+  choice_group_id: g09.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: &id011
+  - g09.biolohiya
+  - g09.heohrafiya
+  - g09.fizyka
+  - g09.khimiya
+- cell_id: g06.heohrafiya
+  grade: 6
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g06.heohrafiya
+    source_ids:
+    - 6-klas-heohrafiya-zapotockyi-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 6-9.
+- cell_id: g07.heohrafiya
+  grade: 7
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.heohrafiya
+    source_ids:
+    - 7-klas-heohrafiya-hilberh-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 6-9.
+  choice_group_id: g07.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id009
+- cell_id: g08.heohrafiya
+  grade: 8
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.heohrafiya
+    source_ids:
+    - 8-klas-heohrafiya-hilberh-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 6-9.
+  choice_group_id: g08.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id010
+- cell_id: g09.heohrafiya
+  grade: 9
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.heohrafiya
+    source_ids:
+    - 3162-geografiia-9-klas-boiko-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 6-9.
+  choice_group_id: g09.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id011
+- cell_id: g07.fizyka
+  grade: 7
+  canonical_subject_id: fizyka
+  display_name_uk: Фізика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.fizyka
+    source_ids:
+    - 2823-fizyka-bariakhtar-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 7-9.
+  choice_group_id: g07.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id009
+- cell_id: g08.fizyka
+  grade: 8
+  canonical_subject_id: fizyka
+  display_name_uk: Фізика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.fizyka
+    source_ids:
+    - 2971-fizyka-bariakhtar-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 7-9.
+  choice_group_id: g08.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id010
+- cell_id: g09.fizyka
+  grade: 9
+  canonical_subject_id: fizyka
+  display_name_uk: Фізика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.fizyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 3115-fizyka-9-klas-bariakhtar
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; the 2022 physics inventory is retained as legacy-only evidence.
+  choice_group_id: g09.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id011
+- cell_id: g07.khimiya
+  grade: 7
+  canonical_subject_id: khimiya
+  display_name_uk: Хімія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.khimiya
+    source_ids:
+    - 2819-khimiia-grygorovych-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 7-9.
+  choice_group_id: g07.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id009
+- cell_id: g08.khimiya
+  grade: 8
+  canonical_subject_id: khimiya
+  display_name_uk: Хімія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.khimiya
+    source_ids:
+    - 2921-khimiia-grygorovych-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present in DB for grades 7-9.
+  choice_group_id: g08.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id010
+- cell_id: g09.khimiya
+  grade: 9
+  canonical_subject_id: khimiya
+  display_name_uk: Хімія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.khimiya
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 1041-himiya-9-klas-popel-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 chemistry inventory is retained as legacy-only evidence.
+  choice_group_id: g09.natural_science_realization
+  choice_member_id: separate
+  choice_member_requires: *id011
+- cell_id: g05.informatyka
+  grade: 5
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_INFO
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g05.informatyka
+    source_ids:
+    - 1660-informatyka-5-klas-ryvkind-2022
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+- cell_id: g06.informatyka
+  grade: 6
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_INFO
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g06.informatyka
+    source_ids:
+    - 2686-informatyka-6-klas-ryvkind-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+- cell_id: g07.informatyka
+  grade: 7
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_INFO
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g07.informatyka
+    source_ids:
+    - 2809-informatyka-ryvkind-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+- cell_id: g08.informatyka
+  grade: 8
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_INFO
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g08.informatyka
+    source_ids:
+    - 3011-informatyka-ryvkind-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+- cell_id: g09.informatyka
+  grade: 9
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_6_INFO
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g09.informatyka
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 1046-informatika-9-klas-ryvkind-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 informatics inventory is retained as legacy-only evidence.
+- cell_id: g05.tekhnolohiyi
+  grade: 5
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+- cell_id: g06.tekhnolohiyi
+  grade: 6
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+- cell_id: g07.tekhnolohiyi
+  grade: 7
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+- cell_id: g08.tekhnolohiyi
+  grade: 8
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+- cell_id: g09.tekhnolohiyi
+  grade: 9
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+- cell_id: g05.zdorovia_bezpeka_dobrobut
+  grade: 5
+  canonical_subject_id: zdorovia_bezpeka_dobrobut
+  display_name_uk: Здоров’я, безпека та добробут
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g05.zdorovia_bezpeka_dobrobut
+    source_ids:
+    - 1707-zdorovia-bezpeka-ta-dobrobut-voroncova-5-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+- cell_id: g06.zdorovia_bezpeka_dobrobut
+  grade: 6
+  canonical_subject_id: zdorovia_bezpeka_dobrobut
+  display_name_uk: Здоров’я, безпека та добробут
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g06.zdorovia_bezpeka_dobrobut
+    source_ids:
+    - 2644-zdorovia-6-klas-vorontsova-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+- cell_id: g07.zdorovia_bezpeka_dobrobut
+  grade: 7
+  canonical_subject_id: zdorovia_bezpeka_dobrobut
+  display_name_uk: Здоров’я, безпека та добробут
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g07.zdorovia_bezpeka_dobrobut
+    source_ids:
+    - 2813-zdorovia-bezpeka-ta-dobrobut-gushchyna-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+- cell_id: g08.zdorovia_bezpeka_dobrobut
+  grade: 8
+  canonical_subject_id: zdorovia_bezpeka_dobrobut
+  display_name_uk: Здоров’я, безпека та добробут
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g08.zdorovia_bezpeka_dobrobut
+    source_ids:
+    - 2997-zdorovia-bezpeka-ta-dobrobut-vasylenko-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+- cell_id: g09.zdorovia_bezpeka_dobrobut
+  grade: 9
+  canonical_subject_id: zdorovia_bezpeka_dobrobut
+  display_name_uk: Здоров’я, безпека та добробут
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g09.zdorovia_bezpeka_dobrobut
+    source_ids:
+    - 3181-zdorovia-9-klas-voroncova-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Grades 5-8 present; Grade 9 is deferred, not evidence of non-teaching.
+- cell_id: g05.etyka
+  grade: 5
+  canonical_subject_id: etyka
+  display_name_uk: Етика / інший курс морального спрямування
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g05.etyka
+    source_ids:
+    - 1695-etyka-5-klas-meleshchenko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially optional; etyka present in DB for grades 5-6.
+- cell_id: g06.etyka
+  grade: 6
+  canonical_subject_id: etyka
+  display_name_uk: Етика / інший курс морального спрямування
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g06.etyka
+    source_ids:
+    - 2632-etyka-6-klas-martyniuk
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially optional; etyka present in DB for grades 5-6.
+- cell_id: g08.finansova
+  grade: 8
+  canonical_subject_id: finansova
+  display_name_uk: Підприємництво і фінансова грамотність
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g08.finansova
+    source_ids:
+    - 2950-pidpryiemnyctvo-i-finansova-gramotnist-plastun-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 66; Grade 8 present; Grade 9 deferred.
+- cell_id: g09.finansova
+  grade: 9
+  canonical_subject_id: finansova
+  display_name_uk: Підприємництво і фінансова грамотність
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g09.finansova
+    source_ids:
+    - 3211-pidruchnyk-pidpryiemnyctvo-i-finansova-gramotnist-9-klas-gilberg-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 66; Grade 8 present; Grade 9 deferred.
+- cell_id: g05.vstup_istorii
+  grade: 5
+  canonical_subject_id: vstup_istorii
+  display_name_uk: Вступ до історії України та громадянської освіти
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g05.vstup_istorii
+    source_ids:
+    - 1668-vstup-do-istorii-5-klas-shchupak-2022
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present under normalized istoriya.
+  choice_group_id: g05.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g05.vstup_istorii
+- cell_id: g06.istoriya_ukr_vsesvit
+  grade: 6
+  canonical_subject_id: istoriya_ukr_vsesvit
+  display_name_uk: Історія України. Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g06.istoriya_ukr_vsesvit
+    source_ids:
+    - 2606-istoriia-6-klas-gisem-2023
+    - 2610-istoriia-6-klas-shchupak-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present under istoriya.
+  choice_group_id: g06.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g06.istoriya_ukr_vsesvit
+- cell_id: g05.history_integrated_5_6
+  grade: 5
+  canonical_subject_id: history_integrated_5_6
+  display_name_uk: Україна і світ | Досліджуємо історію і суспільство
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.history_integrated_5_6
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: FAQ says the school chooses the MNP; no distinct current DB identity.
+  choice_group_id: g05.history_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g05.history_integrated_5_6
+- cell_id: g06.history_integrated_5_6
+  grade: 6
+  canonical_subject_id: history_integrated_5_6
+  display_name_uk: Україна і світ | Досліджуємо історію і суспільство
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.history_integrated_5_6
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: FAQ says the school chooses the MNP; no distinct current DB identity.
+  choice_group_id: g06.history_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g06.history_integrated_5_6
+- cell_id: g07.history_separate
+  grade: 7
+  canonical_subject_id: history_separate
+  display_name_uk: Історія України + Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.history_separate
+    source_ids: []
+    source_groups:
+    - - 2847-istoriia-ukrainy-galimov-7-klas-2024
+    - - 2855-vsesvitnia-istoriia-ladychenko-7-klas-2024
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present under istoriya and vsesvitnia.
+  choice_group_id: g07.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g07.history_separate
+- cell_id: g08.history_separate
+  grade: 8
+  canonical_subject_id: history_separate
+  display_name_uk: Історія України + Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.history_separate
+    source_ids: []
+    source_groups:
+    - - 3014-istoriia-ukrainy-gisem-8-klas-2025
+      - 3018-istoriia-ukrainy-galimov-8-klas-2025
+      - 3020-istoriia-ukrainy-shchupak-8-klas-2025
+    - - 2976-vsesvitnia-istoriia-ladychenko-8-klas-2025
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present under istoriya and vsesvitnia.
+  choice_group_id: g08.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g08.history_separate
+- cell_id: g09.history_separate
+  grade: 9
+  canonical_subject_id: history_separate
+  display_name_uk: Історія України + Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.history_separate
+    source_ids: []
+    source_groups:
+    - - 3127-istoriia-ukrainy-9-klas-gisem
+    - - 3159-vsesvitnia-istoriia-9-klas-pometun-2026
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Present under istoriya and vsesvitnia.
+  choice_group_id: g09.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g09.history_separate
+- cell_id: g07.history_integrated_7_9
+  grade: 7
+  canonical_subject_id: history_integrated_7_9
+  display_name_uk: 'Історія: Україна і світ'
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.history_integrated_7_9
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 73; no distinct current DB identity.
+  choice_group_id: g07.history_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g07.history_integrated_7_9
+- cell_id: g08.history_integrated_7_9
+  grade: 8
+  canonical_subject_id: history_integrated_7_9
+  display_name_uk: 'Історія: Україна і світ'
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.history_integrated_7_9
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 73; no distinct current DB identity.
+  choice_group_id: g08.history_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g08.history_integrated_7_9
+- cell_id: g09.history_integrated_7_9
+  grade: 9
+  canonical_subject_id: history_integrated_7_9
+  display_name_uk: 'Історія: Україна і світ'
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.history_integrated_7_9
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 73; no distinct current DB identity.
+  choice_group_id: g09.history_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g09.history_integrated_7_9
+- cell_id: g08.hromadianska
+  grade: 8
+  canonical_subject_id: hromadianska
+  display_name_uk: Громадянська освіта
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.hromadianska
+    source_ids:
+    - 2988-gromadianska-osvita-vasylkiv-8-klas-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: 'Present in DB: 143 chunks.'
+  choice_group_id: g08.civics_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g08.hromadianska
+- cell_id: g09.pravoznavstvo
+  grade: 9
+  canonical_subject_id: pravoznavstvo
+  display_name_uk: Правознавство
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g09.pravoznavstvo
+    source_ids:
+    - 3236-pravoznavstvo-9-klas-remekh-2026
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Official MNP 75; deferred in current corpus.
+- cell_id: g05.mystetstvo_one_of
+  grade: 5
+  canonical_subject_id: mystetstvo_one_of
+  display_name_uk: Мистецтво | Музичне мистецтво | Образотворче мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g05.mystetstvo_one_of
+    source_ids:
+    - 1709-mystectstvo-rublia-5-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Integrated mystetstvo is present in every grade 5-9; separate music/visual identities are not in DB.
+  choice_group_id: g05.arts_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g05.mystetstvo_one_of
+- cell_id: g06.mystetstvo_one_of
+  grade: 6
+  canonical_subject_id: mystetstvo_one_of
+  display_name_uk: Мистецтво | Музичне мистецтво | Образотворче мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g06.mystetstvo_one_of
+    source_ids:
+    - 2687-mystetstvo-6-klas-rublia
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Integrated mystetstvo is present in every grade 5-9; separate music/visual identities are not in DB.
+  choice_group_id: g06.arts_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g06.mystetstvo_one_of
+- cell_id: g07.mystetstvo_one_of
+  grade: 7
+  canonical_subject_id: mystetstvo_one_of
+  display_name_uk: Мистецтво | Музичне мистецтво | Образотворче мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g07.mystetstvo_one_of
+    source_ids:
+    - 2804-mystectvo-masol-7-klas-2024
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Integrated mystetstvo is present in every grade 5-9; separate music/visual identities are not in DB.
+  choice_group_id: g07.arts_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g07.mystetstvo_one_of
+- cell_id: g08.mystetstvo_one_of
+  grade: 8
+  canonical_subject_id: mystetstvo_one_of
+  display_name_uk: Мистецтво | Музичне мистецтво | Образотворче мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g08.mystetstvo_one_of
+    source_ids:
+    - 8-klas-mystetstvo-komarovska-2025
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Integrated mystetstvo is present in every grade 5-9; separate music/visual identities are not in DB.
+  choice_group_id: g08.arts_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g08.mystetstvo_one_of
+- cell_id: g09.mystetstvo_one_of
+  grade: 9
+  canonical_subject_id: mystetstvo_one_of
+  display_name_uk: Мистецтво | Музичне мистецтво | Образотворче мистецтво
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g09.mystetstvo_one_of
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: legacy_only
+    legacy_inventory_source_ids:
+    - 9-klas-mystetstvo-masol-2017
+    edition_policy: current_nus_cohort
+  evidence_note: Current Grade 9 NUS source is not enumerated; the 2017 art inventory is legacy-only and separate music/visual identities are unresolved.
+  choice_group_id: g09.arts_realization
+  choice_member_id: integrated
+  choice_member_requires:
+  - g09.mystetstvo_one_of
+- cell_id: g05.fizychna_kultura
+  grade: 5
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially compulsory; no textbook identity in current corpus.
+- cell_id: g06.fizychna_kultura
+  grade: 6
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially compulsory; no textbook identity in current corpus.
+- cell_id: g07.fizychna_kultura
+  grade: 7
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially compulsory; no textbook identity in current corpus.
+- cell_id: g08.fizychna_kultura
+  grade: 8
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially compulsory; no textbook identity in current corpus.
+- cell_id: g09.fizychna_kultura
+  grade: 9
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_B235
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Officially compulsory; no textbook identity in current corpus.
+- cell_id: g05.interfield_course
+  grade: 5
+  canonical_subject_id: interfield_course
+  display_name_uk: Робототехніка | STEM | Драматургія і театр | Фізика та основи техніки | Економіка і право
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g05.interfield_course
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+- cell_id: g06.interfield_course
+  grade: 6
+  canonical_subject_id: interfield_course
+  display_name_uk: Робототехніка | STEM | Драматургія і театр | Фізика та основи техніки | Економіка і право
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g06.interfield_course
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+- cell_id: g07.interfield_course
+  grade: 7
+  canonical_subject_id: interfield_course
+  display_name_uk: Робототехніка | STEM | Драматургія і театр | Фізика та основи техніки | Економіка і право
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g07.interfield_course
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+- cell_id: g08.interfield_course
+  grade: 8
+  canonical_subject_id: interfield_course
+  display_name_uk: Робототехніка | STEM | Драматургія і театр | Фізика та основи техніки | Економіка і право
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g08.interfield_course
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+- cell_id: g09.interfield_course
+  grade: 9
+  canonical_subject_id: interfield_course
+  display_name_uk: Робототехніка | STEM | Драматургія і театр | Фізика та основи техніки | Економіка і право
+  cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_B235
+  - MON_BFAQ
+  official_edition_catalog_locator_ids:
+  - IMZO_ROOT
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g09.interfield_course
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_nus_cohort
+  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+- cell_id: g10.ukrmova
+  grade: 10
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g10.ukrmova
+    source_ids:
+    - 3081-ukrmova-10-klas-glazova
+    - 3082-ukrmova-10-klas-karaman
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.ukrmova
+  grade: 11
+  canonical_subject_id: ukrmova
+  display_name_uk: Українська мова
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g11.ukrmova
+    source_ids:
+    - 1238-ukrmova-11-klas-glazova
+    - 1239-ukrainska-mova-11-klas-avramenko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.ukrlit
+  grade: 10
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g10.ukrlit
+    source_ids:
+    - 392-ukrayinska-lteratura-avramenko-paharenko-10-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.ukrlit
+  grade: 11
+  canonical_subject_id: ukrlit
+  display_name_uk: Українська література
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g11.ukrlit
+    source_ids:
+    - 1237-ukrliteratura-avramenko-11klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.zarlit
+  grade: 10
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.zarlit
+    source_ids:
+    - 1147-zarubizhna-10-klas-voloschuk
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.zarlit
+  grade: 11
+  canonical_subject_id: zarlit
+  display_name_uk: Зарубіжна література
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.zarlit
+    source_ids:
+    - 1279-zarubizhna-11-klas-voloschuk
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.history_ua_world
+  grade: 10
+  canonical_subject_id: history_ua_world
+  display_name_uk: Історія України. Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g10.history_ua_world
+    source_ids: []
+    source_groups:
+    - - 3092-istoriia-ukrainy-10-klas-khlibovska
+    - - 3109-vsesvitnia-istoriia-10-klas-gisem-stan
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Separate identities present; integrated alternative requires title-level reconciliation.
+  choice_group_id: g10.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g10.history_ua_world
+- cell_id: g11.history_ua_world
+  grade: 11
+  canonical_subject_id: history_ua_world
+  display_name_uk: Історія України. Всесвітня історія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_one_of
+  official_program_locator_ids:
+  - MON_U890
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: choice_required
+  coverage:
+    coverage_unit_id: g11.history_ua_world
+    source_ids: []
+    source_groups:
+    - - 3021-istoriia-ukrainy-galimov-11-klas
+      - 3023-istoriia-ukrainy-khlibovska-11-klas-2024
+      - 3024-istoriia-ukrainy-gisem-11-klas-2024
+    - - 3027-vsesvitnia-istoriia-shchupak-11-klas-2024
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Separate identities present; integrated alternative requires title-level reconciliation.
+  choice_group_id: g11.history_realization
+  choice_member_id: separate
+  choice_member_requires:
+  - g11.history_ua_world
+- cell_id: g10.hromadianska
+  grade: 10
+  canonical_subject_id: hromadianska
+  display_name_uk: Громадянська освіта
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g10.hromadianska
+    source_ids:
+    - 10-klas-hromadianska-gisem-2018
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for Grade 10; exact 10/11 timetable row requires order-890 table extraction.
+- cell_id: g10.foreign_language
+  grade: 10
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземні мови
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g10.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; not represented in current tracked DB.
+- cell_id: g11.foreign_language
+  grade: 11
+  canonical_subject_id: foreign_language
+  display_name_uk: Іноземні мови
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g11.foreign_language
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; not represented in current tracked DB.
+- cell_id: g10.matematyka
+  grade: 10
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g10.matematyka
+    source_ids:
+    - 1153-matematyka-10-klas-merzlyak
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.matematyka
+  grade: 11
+  canonical_subject_id: matematyka
+  display_name_uk: Математика
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g11.matematyka
+    source_ids:
+    - 3065-matematyka-11-klas-nelin
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.algebra_geometry
+  grade: 10
+  canonical_subject_id: algebra_geometry
+  display_name_uk: Алгебра і геометрія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.algebra_geometry
+    source_ids: []
+    source_groups:
+    - - 1223-algebra-10-klas-ister
+    - - 1178-geometriya-10-klas-ister
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Algebra and geometry identities present in DB for both grades.
+- cell_id: g11.algebra_geometry
+  grade: 11
+  canonical_subject_id: algebra_geometry
+  display_name_uk: Алгебра і геометрія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.algebra_geometry
+    source_ids: []
+    source_groups:
+    - - 1250-algebra-ister-11-klas
+    - - 1248-geometriya-11-klas-ister
+    source_match_mode: all
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Algebra and geometry identities present in DB for both grades.
+- cell_id: g10.informatyka
+  grade: 10
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10-11.informatyka_combined
+    source_ids:
+    - 3099-informatyka-10-11-klas-rudenko-stand
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.informatyka
+  grade: 11
+  canonical_subject_id: informatyka
+  display_name_uk: Інформатика
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10-11.informatyka_combined
+    source_ids:
+    - 3099-informatyka-10-11-klas-rudenko-stand
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.zakhyst_ukrainy
+  grade: 10
+  canonical_subject_id: zakhyst_ukrainy
+  display_name_uk: Захист України
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g10.zakhyst_ukrainy
+    source_ids:
+    - 10-klas-zakhyst-fuka-2023
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.zakhyst_ukrainy
+  grade: 11
+  canonical_subject_id: zakhyst_ukrainy
+  display_name_uk: Захист України
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: required_common
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: required
+  coverage:
+    coverage_unit_id: g11.zakhyst_ukrainy
+    source_ids:
+    - 1270-zahyst-vitchyzny-11-klass-gudyma-med
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.mystetstvo
+  grade: 10
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10-11.mystetstvo_combined
+    source_ids:
+    - 3090-mystectvo-10-11-klas-nazarenko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: 'DB source 10-11-klas-mystectvo-nazarenko-2018: 311 chunks, stored under Grade 10; no separate Grade 11 source.'
+- cell_id: g11.mystetstvo
+  grade: 11
+  canonical_subject_id: mystetstvo
+  display_name_uk: Мистецтво
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10-11.mystetstvo_combined
+    source_ids:
+    - 3090-mystectvo-10-11-klas-nazarenko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: 'DB source 10-11-klas-mystectvo-nazarenko-2018: 311 chunks, stored under Grade 10; no separate Grade 11 source.'
+- cell_id: g10.tekhnolohiyi
+  grade: 10
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g10.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no current DB identity.
+- cell_id: g11.tekhnolohiyi
+  grade: 11
+  canonical_subject_id: tekhnolohiyi
+  display_name_uk: Технології
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g11.tekhnolohiyi
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no current DB identity.
+- cell_id: g10.biolohiya_ekolohiya
+  grade: 10
+  canonical_subject_id: biolohiya_ekolohiya
+  display_name_uk: Біологія і екологія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.biolohiya_ekolohiya
+    source_ids:
+    - 3113-biologiia-i-ekologiia-10-klas-zadorozhnyi-stan
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.biolohiya_ekolohiya
+  grade: 11
+  canonical_subject_id: biolohiya_ekolohiya
+  display_name_uk: Біологія і екологія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.biolohiya_ekolohiya
+    source_ids:
+    - 3111-biologiia-ekologiia-11-klas-shalamov
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.heohrafiya
+  grade: 10
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.heohrafiya
+    source_ids:
+    - 1184-geografiya-10-klas-boyko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.heohrafiya
+  grade: 11
+  canonical_subject_id: heohrafiya
+  display_name_uk: Географія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.heohrafiya
+    source_ids:
+    - 1242-geografiya-11klas-pestushko
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.fizyka_astronomiya
+  grade: 10
+  canonical_subject_id: fizyka_astronomiya
+  display_name_uk: Фізика і астрономія | Фізика | Астрономія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.fizyka_astronomiya
+    source_ids:
+    - 3079-fizyka-10-klas-bariakhtar
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Physics present in both grades; astronomy present in Grade 11; exact integrated-title mapping pending.
+- cell_id: g11.fizyka_astronomiya
+  grade: 11
+  canonical_subject_id: fizyka_astronomiya
+  display_name_uk: Фізика і астрономія | Фізика | Астрономія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.fizyka_astronomiya
+    source_ids:
+    - 1277-fizyka-i-astronomiya-11-klas-zasekina
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Physics present in both grades; astronomy present in Grade 11; exact integrated-title mapping pending.
+- cell_id: g10.khimiya
+  grade: 10
+  canonical_subject_id: khimiya
+  display_name_uk: Хімія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.khimiya
+    source_ids:
+    - 3077-khimiia-10-klas-grygorovych
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.khimiya
+  grade: 11
+  canonical_subject_id: khimiya
+  display_name_uk: Хімія
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.khimiya
+    source_ids:
+    - 3059-khimiia-11-klas-grygorovych
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.pryrodnychi_nauky
+  grade: 10
+  canonical_subject_id: pryrodnychi_nauky
+  display_name_uk: Природничі науки (4 проєкти)
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g10.pryrodnychi_nauky
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Official program family; exact project-to-edition mapping unresolved.
+- cell_id: g11.pryrodnychi_nauky
+  grade: 11
+  canonical_subject_id: pryrodnychi_nauky
+  display_name_uk: Природничі науки (4 проєкти)
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g11.pryrodnychi_nauky
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Official program family; exact project-to-edition mapping unresolved.
+- cell_id: g10.ekonomika
+  grade: 10
+  canonical_subject_id: ekonomika
+  display_name_uk: Економіка
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.ekonomika
+    source_ids:
+    - 10-klas-ekonomika-krupska-2018
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.ekonomika
+  grade: 11
+  canonical_subject_id: ekonomika
+  display_name_uk: Економіка
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.ekonomika
+    source_ids:
+    - 1318-ekonomika-krihovec-homyak-11-klas
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.pravoznavstvo
+  grade: 10
+  canonical_subject_id: pravoznavstvo
+  display_name_uk: Правознавство
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.pravoznavstvo
+    source_ids:
+    - 10-klas-pravoznavstvo-lukianchykov-2018
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g11.pravoznavstvo
+  grade: 11
+  canonical_subject_id: pravoznavstvo
+  display_name_uk: Правознавство
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.pravoznavstvo
+    source_ids:
+    - 11-klas-pravoznavstvo-narovlianskyi-2019
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Present in DB for both grades.
+- cell_id: g10.finansova
+  grade: 10
+  canonical_subject_id: finansova
+  display_name_uk: Фінансова грамотність
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g10.finansova
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially described as a selective/optional subject; no current DB identity.
+- cell_id: g11.finansova
+  grade: 11
+  canonical_subject_id: finansova
+  display_name_uk: Фінансова грамотність
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: optional_elective
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: optional
+  coverage:
+    coverage_unit_id: g11.finansova
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially described as a selective/optional subject; no current DB identity.
+- cell_id: g10.kreslennia
+  grade: 10
+  canonical_subject_id: kreslennia
+  display_name_uk: Креслення
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g10.kreslennia
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no current DB identity.
+- cell_id: g11.kreslennia
+  grade: 11
+  canonical_subject_id: kreslennia
+  display_name_uk: Креслення
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: profile_or_track
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: profile_conditional
+  coverage:
+    coverage_unit_id: g11.kreslennia
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: resolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no current DB identity.
+- cell_id: g10.fizychna_kultura
+  grade: 10
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g10.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no textbook identity in current DB.
+- cell_id: g11.fizychna_kultura
+  grade: 11
+  canonical_subject_id: fizychna_kultura
+  display_name_uk: Фізична культура
+  cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
+  requirement_class: no_textbook_required_or_unresolved
+  official_program_locator_ids:
+  - MON_UINDEX
+  official_edition_catalog_locator_ids:
+  - IMZO_10
+  - IMZO_11
+  textbook_applicability: unresolved
+  coverage:
+    coverage_unit_id: g11.fizychna_kultura
+    source_ids: []
+    source_groups: []
+    source_match_mode: any
+    evidence_state: unresolved
+    legacy_inventory_source_ids: []
+    edition_policy: current_order_890
+  evidence_note: Officially listed; no textbook identity in current DB.

@@ -4,8 +4,12 @@ Tests pure functions only — no network calls, no Qdrant.
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -288,6 +292,307 @@ class TestCheckQuality:
     def test_ascii_only(self):
         is_clean, _ratio = self.check_quality("This is English text only.")
         assert not is_clean
+
+
+class TestTextbookExtractionReadiness:
+    def test_mojibake_repairs_mixed_run_without_whole_page_bypass(self):
+        from scripts.rag.extract_text import _repair_cp1251_mojibake
+
+        assert _repair_cp1251_mojibake("Українська: äóøà. Îñü") == "Українська: душа. Ось"
+
+    def test_mojibake_preserves_clean_and_ordinary_accented_text(self):
+        from scripts.rag.extract_text import _repair_cp1251_mojibake
+
+        clean = "Українська мова — café naïve, déjà vu."
+        assert _repair_cp1251_mojibake(clean) == clean
+        assert _repair_cp1251_mojibake("Ось чистий текст.") == "Ось чистий текст."
+
+    def test_digital_detection_requires_sample_coverage(self, monkeypatch):
+        from scripts.rag.extract_text import is_digital_pdf
+
+        class FakeDoc:
+            def __init__(self, pages):
+                self.pages = pages
+
+            def __len__(self):
+                return len(self.pages)
+
+            def __getitem__(self, index):
+                return SimpleNamespace(get_text=lambda: self.pages[index])
+
+            def close(self):
+                return None
+
+        sparse = ["front matter " * 12, "front matter " * 12] + [""] * 10
+        adequate = ["content page " * 12] * 8 + [""] * 4
+        monkeypatch.setitem(
+            sys.modules,
+            "pymupdf",
+            SimpleNamespace(open=lambda _path: FakeDoc(sparse)),
+        )
+        assert not is_digital_pdf(Path("sparse.pdf"))
+        monkeypatch.setitem(
+            sys.modules,
+            "pymupdf",
+            SimpleNamespace(open=lambda _path: FakeDoc(adequate)),
+        )
+        assert is_digital_pdf(Path("adequate.pdf"))
+
+    def test_hybrid_selection_ocr_only_targets_unusable_pages(self, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        native = [
+            {"page_number": 1, "text": "Нативний текст сторінки один. " * 5,
+             "extraction_mode": "native_text", "layout": {}},
+            {"page_number": 2, "text": "", "extraction_mode": "native_text", "layout": {}},
+            {"page_number": 3, "text": "Нативний текст сторінки три. " * 5,
+             "extraction_mode": "native_text", "layout": {}},
+            {"page_number": 4, "text": "коротко", "extraction_mode": "native_text", "layout": {}},
+        ]
+        monkeypatch.setattr(extract, "extract_native_pages", lambda _path: native)
+        calls = []
+
+        def fake_ocr(_path, pages):
+            calls.append(pages)
+            return [
+                {"page_number": page, "text": f"Оцифрований текст сторінки {page}. " * 5,
+                 "extraction_mode": "apple_vision_ocr", "layout": {},
+                 "ocr": {"observation_count": 4, "mean_confidence": 0.9}}
+                for page in pages
+            ]
+
+        pages, receipt = extract.extract_page_records(Path("fixture.pdf"), ocr_runner=fake_ocr)
+        assert calls == [[2, 4]]
+        assert [page["extraction_mode"] for page in pages] == [
+            "native_text", "apple_vision_ocr", "native_text", "apple_vision_ocr"
+        ]
+        assert receipt["status"] == "pass"
+        assert receipt["content_page_count"] == 4
+
+    def test_quality_gate_fails_closed_and_leaves_only_failure_receipt(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        native = [
+            {
+                "page_number": index,
+                "text": "Лише дві сторінки мають текст. " * 5 if index <= 2 else "",
+                "extraction_mode": "native_text",
+                "layout": {},
+            }
+            for index in range(1, 11)
+        ]
+        monkeypatch.setattr(extract, "extract_native_pages", lambda _path: native)
+        output_dir = tmp_path / "chunks"
+        with pytest.raises(extract.ExtractionQualityError) as caught:
+            extract.process_pdf(
+                Path("7-klas-test-author-2024-1.pdf"),
+                output_dir=output_dir,
+                ocr_runner=lambda _path, _pages: [],
+            )
+        assert caught.value.receipt["status"] == "fail"
+        assert not list(output_dir.glob("*.jsonl"))
+        assert list(output_dir.glob("*.receipt.json"))
+        assert list(output_dir.glob(".*.tmp")) == []
+
+    def test_quality_gate_rejects_long_low_confidence_garbled_ocr(self, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        native = [
+            {"page_number": index, "text": "", "extraction_mode": "native_text", "layout": {}}
+            for index in range(1, 11)
+        ]
+        monkeypatch.setattr(extract, "extract_native_pages", lambda _path: native)
+
+        def garbled_ocr(_path, pages):
+            return [
+                {
+                    "page_number": page,
+                    "text": "N H O I S T R Latin lookalikes " * 8,
+                    "extraction_mode": "apple_vision_ocr",
+                    "layout": {},
+                    "ocr": {"observation_count": 20, "mean_confidence": 0.4},
+                }
+                for page in pages
+            ]
+
+        with pytest.raises(extract.ExtractionQualityError) as caught:
+            extract.extract_page_records(Path("fixture.pdf"), ocr_runner=garbled_ocr)
+
+        assert caught.value.receipt["content_page_count"] == 0
+        assert caught.value.receipt["ocr_quality_rejected_pages"] == list(range(1, 11))
+
+    def test_swift_subprocess_contract_orders_pages_and_preserves_metadata(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        helper = tmp_path / "apple_vision_ocr.swift"
+        helper.write_text("// fixture helper", encoding="utf-8")
+        payload = {
+            "schema_version": "apple-vision-ocr.v1",
+            "metadata": {
+                "runtime": {"os_version": "fixture"},
+                "recognizer": {"revision": 7},
+            },
+            "pages": [
+                {"page_number": 2, "text": "Ось текст.", "observation_count": 2,
+                 "mean_confidence": 0.91, "line_break_count": 1},
+                {"page_number": 10, "text": "Ще текст.", "observation_count": 3,
+                 "mean_confidence": 0.92, "line_break_count": 0},
+            ],
+        }
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append((command, kwargs))
+            return SimpleNamespace(stdout=json.dumps(payload), stderr="")
+
+        monkeypatch.setattr(extract.subprocess, "run", fake_run)
+        pages = extract.run_apple_vision_ocr(
+            Path("fixture.pdf"), [10, 2], helper_path=helper
+        )
+        assert calls[0][0][calls[0][0].index("--pages") + 1] == "2,10"
+        assert calls[0][0][-2:] == ["--mode", "ocr"]
+        assert calls[0][1]["capture_output"] is True
+        assert [page["page_number"] for page in pages] == [2, 10]
+        assert pages[0]["ocr"]["recognizer"] == {"revision": 7}
+
+    def test_pdfkit_native_subprocess_contract_extracts_all_pages(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        helper = tmp_path / "apple_vision_ocr.swift"
+        helper.write_text("// fixture helper", encoding="utf-8")
+        payload = {
+            "schema_version": "apple-vision-ocr.v1",
+            "metadata": {"runtime": {"os_version": "fixture"}},
+            "pages": [
+                {"page_number": 1, "text": "Перша сторінка."},
+                {"page_number": 2, "text": "Друга сторінка."},
+            ],
+        }
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append((command, kwargs))
+            return SimpleNamespace(stdout=json.dumps(payload), stderr="")
+
+        monkeypatch.setattr(extract.subprocess, "run", fake_run)
+        pages = extract.run_apple_pdfkit_native(Path("fixture.pdf"), helper_path=helper)
+
+        assert calls[0][0][-4:] == ["--pages", "all", "--mode", "native"]
+        assert [page["page_number"] for page in pages] == [1, 2]
+        assert pages[0]["layout"]["source_order"] == "PDFKit page.string"
+        assert pages[0]["native_runtime"] == {"os_version": "fixture"}
+
+    def test_legacy_markdown_ocr_uses_dependency_free_page_inventory(self, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        monkeypatch.setattr(
+            extract,
+            "extract_native_pages",
+            lambda _path: [{"page_number": 1}, {"page_number": 2}],
+        )
+        calls = []
+
+        def fake_ocr(_path, pages):
+            calls.append(pages)
+            return [
+                {"page_number": page, "text": f"Текст {page}."}
+                for page in pages
+            ]
+
+        monkeypatch.setattr(extract, "run_apple_vision_ocr", fake_ocr)
+
+        assert extract.extract_markdown_ocr(Path("fixture.pdf")) == (
+            "## Сторінка 1\n\nТекст 1.\n\n## Сторінка 2\n\nТекст 2."
+        )
+        assert calls == [[1, 2]]
+
+    def test_atomic_output_cleanup_on_replace_failure(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        output = tmp_path / "output.jsonl"
+        monkeypatch.setattr(extract.os, "replace", lambda *_args: (_ for _ in ()).throw(OSError("boom")))
+        with pytest.raises(OSError, match="boom"):
+            extract._atomic_write(output, "fixture\n")
+        assert not output.exists()
+        assert list(tmp_path.glob(".*.tmp")) == []
+
+    def test_process_writes_page_provenance_continuation_and_receipt(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        page_texts = [
+            "Це сторінка без завершення " * 8,
+            "продовжується на наступній сторінці. " * 8,
+            "Завершена сторінка тексту. " * 8,
+        ]
+        page_records = [
+            {
+                "page_number": index,
+                "text": text,
+                "extraction_mode": "native_text" if index != 2 else "apple_vision_ocr",
+                "layout": {"formula_structure": "lossy", "latex_preserved": False},
+                "ocr": ({"observation_count": 12, "mean_confidence": 0.88,
+                         "runtime": {"os_version": "fixture"}}
+                         if index == 2 else {}),
+            }
+            for index, text in enumerate(page_texts, start=1)
+        ]
+        receipt = {
+            "schema_version": "textbook-page-coverage.v1",
+            "status": "pass",
+            "total_pages": 3,
+            "content_page_count": 3,
+            "content_page_coverage": 1.0,
+            "ocr_requested_pages": [2],
+        }
+        monkeypatch.setattr(
+            extract,
+            "extract_page_records",
+            lambda _path, **_kwargs: (page_records, receipt),
+        )
+        output_dir = tmp_path / "chunks"
+        summary = extract.process_pdf(
+            Path("3-klas-test-author-2024-1.pdf"), output_dir=output_dir
+        )
+        output_path = Path(summary["output_file"])
+        rows = [
+            json.loads(line)
+            for line in output_path.read_text(encoding="utf-8").splitlines()
+        ]
+        assert {row["page_start"] for row in rows} == {1, 2, 3}
+        assert rows[0]["continuation"] is True
+        assert rows[1]["continuation_of_previous"] is True
+        assert rows[1]["page_extraction_mode"] == "apple_vision_ocr"
+        assert rows[1]["layout"]["latex_preserved"] is False
+        assert rows[1]["ocr"]["observation_count"] == 12
+        assert Path(summary["receipt_file"]).exists()
+        assert list(output_dir.glob(".*.tmp")) == []
+
+    def test_formula_layout_is_retained_and_flagged_instead_of_dropped(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        formula = "Розв’язання: 2x + 3 = 7; x = 2. " * 20
+        monkeypatch.setattr(
+            extract,
+            "extract_page_records",
+            lambda _path, **_kwargs: (
+                [{
+                    "page_number": 27,
+                    "text": formula,
+                    "extraction_mode": "native_text",
+                    "layout": {"formula_structure": "lossy"},
+                }],
+                {"status": "pass", "total_pages": 27, "content_page_count": 27,
+                 "content_page_coverage": 1.0, "ocr_requested_pages": []},
+            ),
+        )
+        summary = extract.process_pdf(
+            Path("7-klas-algebra-merzliak-2024-1.pdf"),
+            output_dir=tmp_path / "chunks",
+            symbol_noise_threshold=0.0,
+        )
+        row = json.loads(Path(summary["output_file"]).read_text(encoding="utf-8"))
+        assert row["layout"]["formula_structure"] == "lossy"
+        assert row["layout"]["formula_gate_override"] is True
 
 
 # ── crawl_ulp: extract_topics, get_season_info, get_fmu_level, parse_ulp_itunes ──

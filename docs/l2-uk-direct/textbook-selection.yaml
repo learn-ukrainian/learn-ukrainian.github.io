@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-02-26
-# Total: 115 books (42 humanities + 22 wave-1 STEM + 51 batch-3, #4593) from pidruchnyk.com.ua + Google Drive
+# Total: 116 books (115 prior selections + Grade 6 Zabolotnyi 2023 recovery) from pidruchnyk.com.ua, shkola.in.ua, and Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
@@ -133,7 +133,18 @@ books:
     author: Голуб
     year: 2023
     slug: 2595-ukrmova-6-klas-golub
-    note: "Replaces Заболотний (SSL error)"
+    note: "Second current-edition language source"
+
+  - id: g6-mova-zabolotnyi
+    grade: 6
+    subject: ukrainska_mova
+    author: Заболотний
+    year: 2023
+    slug: 2591-ukrmova-6-klas-zabolotnyi-2023
+    canonical_source: 6-klas-ukrmova-zabolotnyi-2023
+    fallback_page_urls:
+      - "https://shkola.in.ua/2835-ukrainska-mova-6-klas-zabolotnyi.html"
+    note: "Current official edition replacing the corrupt 2020 extraction"
 
   - id: g6-lit-avramenko
     grade: 6
@@ -389,6 +400,9 @@ books:
     author: Ривкінд
     year: 2023
     slug: 2686-informatyka-6-klas-ryvkind-2023
+    canonical_source: 6-klas-informatyka-ryvkind-2023
+    fallback_page_urls:
+      - "https://shkola.in.ua/2898-informatyka-6-klas-ryvkind.html"
 
   - id: g6-matematyka-ister
     grade: 6
@@ -396,6 +410,9 @@ books:
     author: Істер
     year: 2023
     slug: 2590-matematyka-6-klas-ister-2023
+    canonical_source: 6-klas-matematyka-ister-2023
+    fallback_page_urls:
+      - "https://shkola.in.ua/2815-matematyka-6-klas-ister.html"
 
   - id: g7-algebra-merzliak
     grade: 7
@@ -445,6 +462,9 @@ books:
     author: Мерзляк
     year: 2025
     slug: 2906-algebra-merzliak-8-klas-2025
+    canonical_source: 8-klas-algebra-merzliak-2025
+    fallback_page_urls:
+      - "https://shkola.in.ua/318-alhebra-8-klas-merzliak.html"
 
   - id: g8-biolohiya-anderson
     grade: 8
@@ -466,6 +486,9 @@ books:
     author: Мерзляк
     year: 2025
     slug: 2912-geometriia-merzliak-8-klas-2025
+    canonical_source: 8-klas-heometriya-merzliak-2025
+    fallback_page_urls:
+      - "https://shkola.in.ua/338-heometriia-8-klas-merzliak.html"
 
   - id: g8-informatyka-ryvkind
     grade: 8
@@ -929,6 +952,6 @@ books:
     grade: 11
     subject: mystetstvo
     author: Назаренко
-    year: 2019
+    year: 2018
     slug: 3090-mystectvo-10-11-klas-nazarenko
     note: "combined 10(11) volume, fills mystetstvo-11 slot"
