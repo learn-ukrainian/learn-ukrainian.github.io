@@ -28,6 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.orchestration import reap_worktrees
+from scripts.review.isolation import sweep_review_temp_orphans
 
 SCHEMA_VERSION = "scheduled-git-hygiene.v2"
 DEFAULT_INTERVAL_MINUTES = 240
@@ -350,6 +351,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "maintenance": None,
         "orphans": [],
         "errors": [],
+        "needs_finalize_worktrees": [],
     }
 
 
@@ -365,8 +367,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         "detail": None if fetch.returncode == 0 else _failure(fetch),
     }
     if fetch.returncode != 0:
-        result["errors"].append("fetch failed; cleanup skipped")
-        return result
+        result["errors"].append(f"fetch failed ({_failure(fetch)}); degraded to local cleanup")
 
     worktree_prune = _worktree_prune(repo_root, apply=apply)
     result["worktree_prune"] = worktree_prune
@@ -413,6 +414,19 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             result["errors"].append(
                 f"git maintenance failed: {maintenance['detail']}"
             )
+        try:
+            sweep_res = sweep_review_temp_orphans()
+            result["review_temp_sweep"] = sweep_res
+            if sweep_res.get("errors"):
+                result["errors"].append(
+                    f"review temp sweep encountered {sweep_res['errors']} error(s)"
+                )
+        except Exception as exc:
+            result["errors"].append(f"review temp sweep failed: {exc}")
+
+        result["needs_finalize_worktrees"] = (
+            reap_worktrees.find_needs_finalize_worktrees(repo_root)
+        )
     except RuntimeError as exc:
         result["errors"].append(str(exc))
     return result
@@ -457,6 +471,26 @@ def build_receipt(
         for row in repository["results"]
         if row.get("branch_pruned") is True
     )
+    review_temp_reaped = sum(
+        repository.get("review_temp_sweep", {}).get("roots_reaped", 0)
+        for repository in repositories
+        if repository.get("review_temp_sweep")
+    )
+    review_temp_bytes_freed = sum(
+        repository.get("review_temp_sweep", {}).get("bytes_freed", 0)
+        for repository in repositories
+        if repository.get("review_temp_sweep")
+    )
+    needs_finalize_worktrees = [
+        item
+        for repository in repositories
+        for item in repository.get("needs_finalize_worktrees", [])
+    ]
+    if needs_finalize_worktrees:
+        for item in needs_finalize_worktrees:
+            sys.stderr.write(
+                f"WARNING: Worktree '{item.get('path')}' skipped with status 'needs_finalize'\n"
+            )
     return {
         "schema_version": SCHEMA_VERSION,
         "observed_at": timestamp,
@@ -467,6 +501,9 @@ def build_receipt(
             "branches_deleted": branches_deleted,
             "orphans_reported": orphans,
             "errors": errors,
+            "review_temp_reaped": review_temp_reaped,
+            "review_temp_bytes_freed": review_temp_bytes_freed,
+            "needs_finalize_worktrees": needs_finalize_worktrees,
         },
         "repositories": repositories,
     }

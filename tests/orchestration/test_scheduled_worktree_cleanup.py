@@ -431,6 +431,9 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "branches_deleted": 2,
         "orphans_reported": 1,
         "errors": 0,
+        "review_temp_reaped": 0,
+        "review_temp_bytes_freed": 0,
+        "needs_finalize_worktrees": [],
     }
     assert receipt["mode"] == "apply"
 
