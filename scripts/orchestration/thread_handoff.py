@@ -222,6 +222,48 @@ def replacement_packet_paths(agent: str, lineage_id: str, generation: int, rollo
     }
 
 
+def semantic_snapshot_template(state: dict[str, Any], *, generated_at: datetime) -> dict[str, Any]:
+    """Build the answer-free strict-snapshot scaffold for one reserved packet.
+
+    The source references deliberately satisfy the closed ``context_canary``
+    grammar while the empty semantic fields keep an unfilled scaffold from
+    being minted as a production probe.
+    """
+    replacement = state.get("replacement") or {}
+    lineage_id = state.get("lineage_id")
+    rollover_id = replacement.get("rollover_id")
+    handoff_path = replacement.get("handoff_path")
+    if not isinstance(lineage_id, str) or not isinstance(rollover_id, str) or not isinstance(handoff_path, str):
+        raise ValueError("prepared rollover is missing the reserved snapshot identity or handoff path")
+    handoff_ref = f"handoff:{handoff_path}"
+    return {
+        "generated_at": isoformat_z(generated_at),
+        "lineage_id": lineage_id,
+        "rollover_id": rollover_id,
+        "seed": 0,
+        "goals": [
+            {"id": f"goal-{index}", "statement": "", "source_ref": f"{handoff_ref}#goal-{index}"}
+            for index in range(1, 4)
+        ],
+        "decision_records": [
+            {"id": f"decision-{index}", "decision": "", "source_ref": f"{handoff_ref}#decision-{index}"}
+            for index in range(1, 4)
+        ],
+        "constraint_records": [
+            {
+                "id": f"constraint-{index}",
+                "prohibition": "",
+                "source_ref": f"{handoff_ref}#constraint-{index}",
+            }
+            for index in range(1, 3)
+        ],
+        "next_actions": [
+            {"id": f"action-{index}", "action": "", "source_ref": f"{handoff_ref}#action-{index}"}
+            for index in range(1, 3)
+        ],
+    }
+
+
 def default_handoff_path(agent: str) -> Path:
     if agent == DEFAULT_AGENT:
         return ORCHESTRATOR_HANDOFF_PATH
@@ -2621,8 +2663,6 @@ def render_bootstrap_prompt(
 ) -> str:
     active_thresh, window, active_profile, provenance = resolve_handoff_policy(context_threshold)
     git = snapshot["git"]
-    monitor = snapshot["monitor"]
-    github = snapshot["github"]
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
     display = replacement.get("display") or {}
@@ -2636,20 +2676,6 @@ def render_bootstrap_prompt(
     active_generation = active.get("generation") or "unknown"
     replacement_generation = replacement.get("generation") or "unknown"
     rollover_id = replacement.get("rollover_id") or "unknown"
-    canary_challenge = replacement.get("canary_challenge") or "unknown"
-    canary_proof_path = Path(replacement.get("canary_proof_path") or "unknown")
-    semantic_snapshot_path = Path(replacement.get("semantic_snapshot_path") or "unknown")
-    strict_probe_path = Path(replacement.get("strict_probe_path") or "unknown")
-    strict_questions_path = Path(replacement.get("strict_questions_path") or "unknown")
-    strict_answers_path = Path(replacement.get("strict_answers_path") or "unknown")
-    strict_verdict_path = Path(replacement.get("strict_verdict_path") or "unknown")
-    if state_root is not None:
-        canary_proof_path = repo_local_path(state_root, canary_proof_path)
-        semantic_snapshot_path = repo_local_path(state_root, semantic_snapshot_path)
-        strict_probe_path = repo_local_path(state_root, strict_probe_path)
-        strict_questions_path = repo_local_path(state_root, strict_questions_path)
-        strict_answers_path = repo_local_path(state_root, strict_answers_path)
-        strict_verdict_path = repo_local_path(state_root, strict_verdict_path)
     context_percent = (state.get("last_handoff") or {}).get("context_percent")
     agent_label = "Codex orchestrator" if agent == "orchestrator" else agent
     if title_transition.get("native_title_supported"):
@@ -2662,14 +2688,6 @@ def render_bootstrap_prompt(
             "- This harness has no native title mutation adapter. Bind the exact replacement with `bind-replacement` before resume.",
             "- Preserve the visible title in the dispatch record, brief, ledger, inbox, monitor API, and final receipt; never claim a native rename.",
         ]
-    binding_command_lines = (
-        []
-        if title_transition.get("native_title_supported")
-        else [
-            f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --replacement-task-id <replacement-thread-id> --evidence <exact-harness-binding-evidence>"
-        ]
-    )
-
     return (
         "\n".join(
             [
@@ -2719,26 +2737,16 @@ def render_bootstrap_prompt(
                 ".venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results",
                 "```",
                 "",
-                "Bind this new thread and complete the strict semantic recall before proof and confirmation:",
-                "```bash",
-                *binding_command_lines,
-                f".venv/bin/python scripts/orchestration/thread_handoff.py resume --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --replacement-thread-id <replacement-thread-id>",
-                f".venv/bin/python scripts/context_canary.py mint --snapshot {semantic_snapshot_path.as_posix()} --out {strict_probe_path.as_posix()}",
-                f".venv/bin/python scripts/context_canary.py questions --probe {strict_probe_path.as_posix()} --out {strict_questions_path.as_posix()}",
-                f".venv/bin/python scripts/context_canary.py score --probe {strict_probe_path.as_posix()} --answers {strict_answers_path.as_posix()} --expected-lineage-id {replacement.get('lineage_id', 'unknown')} --expected-rollover-id {rollover_id} --verdict {strict_verdict_path.as_posix()}",
-                f".venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id {rollover_id} --replacement-thread-id <replacement-thread-id> --challenge {canary_challenge} --proof-file {canary_proof_path.as_posix()}",
-                f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent {agent} --lineage-id {replacement.get('lineage_id', 'unknown')} --rollover-id {rollover_id} --new-thread-id <replacement-thread-id> --canary-proof {canary_proof_path.as_posix()} --strict-probe {strict_probe_path.as_posix()} --strict-verdict {strict_verdict_path.as_posix()}",
-                "```",
+                "Use the compact capsule command card emitted by `detect --format session-start` for this packet.",
+                "It is the only execution card: `bootstrap-replacement` emits the strict snapshot template; `confirm-replacement` emits questions when answers are absent, then mints, scores, proves, and confirms on its idempotent rerun.",
                 "",
                 "After confirmation, read the exact predecessor through the native app. Run `native-action --action archive` with its authoritative status and pin facts. If either fact is absent, use `unknown`; the durable receipt must block and preserve the predecessor. Only an actionable response authorizes `set_thread_archived` for the returned exact UUID, followed by `record-native-result` and `reconcile-native`.",
                 "",
                 "Only after that command reports old_automation_ready_to_delete=true may the old heartbeat automation be deleted or paused.",
                 "",
-                "Current snapshot:",
-                f"- Branch: {git.get('branch')} @ {git.get('head')}",
+                "Durable packet identity:",
+                f"- Branch at preparation: {git.get('branch')} @ {git.get('head')}",
                 f"- {context_line(float(context_percent) if context_percent is not None else None, active_thresh, window, active_profile, provenance)}",
-                f"- Active delegates: {(monitor.get('active_delegates') or {}).get('total', 'unknown') if isinstance(monitor.get('active_delegates'), dict) else 'unknown'}",
-                f"- Open PRs: {len(github.get('open_prs')) if isinstance(github.get('open_prs'), list) else 'unknown'}",
                 f"- Bootstrap prompt source: {prompt_path}",
             ]
         )
@@ -2755,40 +2763,16 @@ def render_current_markdown(
     state_root: Path | None = None,
     context_threshold: float,
 ) -> str:
-    active_thresh, window, active_profile, provenance = resolve_handoff_policy(context_threshold)
     git = snapshot["git"]
-    monitor = snapshot["monitor"]
-    github = snapshot["github"]
     active = state.get("active") or {}
     replacement = state.get("replacement") or {}
     identity = replacement.get("identity") or {}
     title_transition = replacement.get("title_transition") or {}
     cleanup = state.get("cleanup") or {}
-    handoff = state.get("last_handoff") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or "unknown"
     thread_handoff_text = replacement.get("handoff_path") or "unknown"
-    canary_proof_path = Path(replacement.get("canary_proof_path") or "unknown")
-    strict_probe_path = Path(replacement.get("strict_probe_path") or "unknown")
-    strict_questions_path = Path(replacement.get("strict_questions_path") or "unknown")
-    strict_answers_path = Path(replacement.get("strict_answers_path") or "unknown")
-    strict_verdict_path = Path(replacement.get("strict_verdict_path") or "unknown")
-    semantic_snapshot_path = Path(replacement.get("semantic_snapshot_path") or "unknown")
-    if state_root is not None:
-        canary_proof_path = repo_local_path(state_root, canary_proof_path)
-        strict_probe_path = repo_local_path(state_root, strict_probe_path)
-        strict_questions_path = repo_local_path(state_root, strict_questions_path)
-        strict_answers_path = repo_local_path(state_root, strict_answers_path)
-        strict_verdict_path = repo_local_path(state_root, strict_verdict_path)
-        semantic_snapshot_path = repo_local_path(state_root, semantic_snapshot_path)
     role_handoff = (role_handoff_path or default_handoff_path(agent)).as_posix()
     title_agent = "Orchestrator" if agent == "orchestrator" else agent.title()
-    binding_command_lines = (
-        []
-        if title_transition.get("native_title_supported")
-        else [
-            f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement --agent {agent} --lineage-id {replacement.get('lineage_id', '<lineage-id>')} --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --replacement-task-id <replacement-thread-id> --evidence <exact-harness-binding-evidence>"
-        ]
-    )
 
     lines = [
         f"# Current - {title_agent} thread handoff ({snapshot['generated_at']})",
@@ -2827,54 +2811,6 @@ def render_current_markdown(
         f"- Title adapter: `{title_transition.get('harness', 'unknown')}` (`{title_transition.get('state', 'unknown')}`)",
         f"- Native title mutation supported: `{title_transition.get('native_title_supported', False)}`",
         "",
-        "## Context Budget",
-        "",
-        context_line(
-            float(handoff["context_percent"]) if handoff.get("context_percent") is not None else None,
-            active_thresh,
-            window,
-            active_profile,
-            provenance,
-        ),
-        "",
-        "## Git State",
-        "",
-        f"- Repo: `{git.get('repo_root')}`",
-        f"- Branch: `{git.get('branch')}`",
-        f"- HEAD: `{git.get('head')}` (`{git.get('full_head')}`)",
-        f"- Upstream: `{(git.get('ahead_behind') or {}).get('upstream', 'none')}`",
-        f"- Ahead/behind: `{git.get('ahead_behind')}`",
-        "",
-        "### Last 5 Commits",
-        "",
-        summarize_commits(git.get("last_commits") or []),
-        "",
-        "### Modified Files",
-        "",
-        summarize_modified_files(git.get("modified_files") or []),
-        "",
-        "## Open PRs",
-        "",
-        summarize_prs(github.get("open_prs")),
-        "",
-        "## Open Issues",
-        "",
-        summarize_issues(github.get("open_issues")),
-        "",
-        "## Delegated Tasks",
-        "",
-        "### Active",
-        "",
-        summarize_tasks(monitor.get("active_delegates")),
-        "",
-        "### Recently Completed",
-        "",
-        summarize_tasks(monitor.get("completed_delegates")),
-        "",
-        "## Worktrees",
-        "",
-        f"- Count: `{(monitor.get('worktrees') or {}).get('count', 'unknown') if isinstance(monitor.get('worktrees'), dict) else 'unknown'}`",
-        "",
         "## First-Turn Checklist",
         "",
         *first_turn_checklist_lines(
@@ -2883,28 +2819,9 @@ def render_current_markdown(
             role_handoff_text=role_handoff,
         ),
         "",
-        "## Local Monitor Follow-Up",
+        "## Rollover Command Capsule",
         "",
-        "```bash",
-        "curl -sS http://127.0.0.1:8765/api/delegate/active",
-        "curl -sS http://127.0.0.1:8765/api/worktrees",
-        ".venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results",
-        "```",
-        "",
-        "## Replacement Bootstrap Prompt",
-        "",
-        "Paste the generated bootstrap prompt into a new thread. This protocol does not fork, continue, or resume provider conversation history.",
-        "After the new thread is actually running, bind and prove this exact rollover:",
-        "",
-        "```bash",
-        *binding_command_lines,
-        f".venv/bin/python scripts/orchestration/thread_handoff.py resume --agent {agent} --lineage-id {replacement.get('lineage_id', '<lineage-id>')} --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --replacement-thread-id <replacement-thread-id>",
-        f".venv/bin/python scripts/context_canary.py mint --snapshot {semantic_snapshot_path.as_posix()} --out {strict_probe_path.as_posix()}",
-        f".venv/bin/python scripts/context_canary.py questions --probe {strict_probe_path.as_posix()} --out {strict_questions_path.as_posix()}",
-        f".venv/bin/python scripts/context_canary.py score --probe {strict_probe_path.as_posix()} --answers {strict_answers_path.as_posix()} --expected-lineage-id {replacement.get('lineage_id', '<lineage-id>')} --expected-rollover-id {replacement.get('rollover_id', '<rollover-id>')} --verdict {strict_verdict_path.as_posix()}",
-        f".venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --replacement-thread-id <replacement-thread-id> --challenge {replacement.get('canary_challenge', '<canary-challenge>')} --proof-file {canary_proof_path.as_posix()}",
-        f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started --agent {agent} --lineage-id {replacement.get('lineage_id', '<lineage-id>')} --rollover-id {replacement.get('rollover_id', '<rollover-id>')} --new-thread-id <replacement-thread-id> --canary-proof {canary_proof_path.as_posix()} --strict-probe {strict_probe_path.as_posix()} --strict-verdict {strict_verdict_path.as_posix()}",
-        "```",
+        "Use `detect --format session-start` for the sole compact execution card. It contains `bootstrap-replacement` and `confirm-replacement`; do not reconstruct the individual proof commands.",
         "",
         "Do not delete the old heartbeat automation before this confirmation.",
         "",
@@ -4255,7 +4172,6 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
                 "canary_proof_file": replacement["canary_proof_path"],
                 "semantic_snapshot_file": replacement["semantic_snapshot_path"],
                 "strict_probe_file": replacement["strict_probe_path"],
-                "strict_questions_file": replacement["strict_questions_path"],
                 "strict_answers_file": replacement["strict_answers_path"],
                 "strict_verdict_file": replacement["strict_verdict_path"],
                 "status": replacement["status"],
@@ -4267,6 +4183,219 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
         )
     )
     return 0
+
+
+def _wrapper_packet_context(
+    args: argparse.Namespace,
+) -> tuple[Path, Path, str, Path, dict[str, Any], dict[str, Any]] | None:
+    """Load one exact rollover packet for the compact replacement wrappers."""
+    try:
+        repo_root, state_root = resolve_roots(args.repo_root)
+        agent = normalize_agent_name(args.agent)
+        if not args.lineage_id and not args.state_file:
+            raise ValueError("--lineage-id or --state-file is required to locate an isolated rollover")
+        state_path = resolve_state_path(
+            repo_root=repo_root,
+            state_root=state_root,
+            supplied_state_file=args.state_file,
+            default_path=default_state_path(agent, args.lineage_id) if args.lineage_id else None,
+        )
+        state = load_state(state_path)
+        state_error = state_error_payload(state, state_path, state_root)
+        if state_error:
+            raise ValueError(str(state_error["error"]))
+        replacement = state.get("replacement")
+        if not isinstance(replacement, dict):
+            raise ValueError("run prepare first")
+        if args.rollover_id != replacement.get("rollover_id"):
+            raise ValueError("--rollover-id does not match the isolated pending rollover")
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": str(exc)}, indent=2))
+        return None
+    return repo_root, state_root, agent, state_path, state, replacement
+
+
+def _print_questions_only(path: Path) -> None:
+    """Return the answer-free recall view after a strict proof failure."""
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        print(json.dumps({"questions_only_error": f"{type(exc).__name__}: {exc}"}, indent=2))
+        return
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
+    """Bind, resume, and create one answer-free semantic snapshot template."""
+    packet = _wrapper_packet_context(args)
+    if packet is None:
+        return 2
+    _repo_root, _state_root, _agent, _state_path, state, replacement = packet
+    identity = replacement.get("identity") or {}
+    already_resumed = (
+        replacement.get("status") in {"resumed", "started"}
+        and identity.get("replacement_task_id") == args.replacement_thread_id
+        and replacement.get("resumed_thread_id") == args.replacement_thread_id
+    )
+    if not already_resumed:
+        title_transition = replacement.get("title_transition") or {}
+        if not title_transition.get("native_title_supported"):
+            bind_args = argparse.Namespace(
+                repo_root=args.repo_root,
+                agent=args.agent,
+                lineage_id=args.lineage_id,
+                state_file=args.state_file,
+                rollover_id=args.rollover_id,
+                replacement_task_id=args.replacement_thread_id,
+                evidence=args.evidence,
+            )
+            if cmd_bind_replacement(bind_args) != 0:
+                return 2
+        resume_args = argparse.Namespace(
+            repo_root=args.repo_root,
+            agent=args.agent,
+            lineage_id=args.lineage_id,
+            state_file=args.state_file,
+            rollover_id=args.rollover_id,
+            replacement_thread_id=args.replacement_thread_id,
+        )
+        if cmd_resume(resume_args) != 0:
+            return 2
+    packet = _wrapper_packet_context(args)
+    if packet is None:
+        return 2
+    _repo_root, state_root, agent, state_path, state, replacement = packet
+    snapshot_path = repo_local_path(state_root, Path(replacement["semantic_snapshot_path"]))
+    template_path = snapshot_path.with_name("semantic-snapshot.template.json")
+    template_created = False
+    try:
+        if not template_path.exists():
+            write_json_atomic(template_path, semantic_snapshot_template(state, generated_at=utc_now()))
+            template_created = True
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": str(exc), "action": "bootstrap-replacement"}, indent=2))
+        return 2
+    print(
+        json.dumps(
+            {
+                "status": "bootstrap_ready",
+                "agent": agent,
+                "lineage_id": state["lineage_id"],
+                "rollover_id": replacement["rollover_id"],
+                "state_file": rel(state_path, state_root),
+                "handoff_path": replacement["handoff_path"],
+                "bootstrap_prompt_path": replacement["bootstrap_prompt_path"],
+                "semantic_snapshot_template": rel(template_path, state_root),
+                "semantic_snapshot_file": replacement["semantic_snapshot_path"],
+                "strict_questions_file": replacement["strict_questions_path"],
+                "strict_answers_file": replacement["strict_answers_path"],
+                "template_created": template_created,
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+def cmd_confirm_replacement(args: argparse.Namespace) -> int:
+    """Run strict mint, recall questions, score, canary proof, and confirmation."""
+    packet = _wrapper_packet_context(args)
+    if packet is None:
+        return 2
+    _repo_root, state_root, agent, _state_path, state, replacement = packet
+    if replacement.get("status") not in {"resumed", "started"}:
+        print(json.dumps({"error": "bootstrap-replacement must resume this packet before confirmation"}, indent=2))
+        return 2
+    replacement_thread_id = args.replacement_thread_id or replacement.get("resumed_thread_id") or replacement.get("thread_id")
+    if not isinstance(replacement_thread_id, str) or not replacement_thread_id.strip():
+        print(json.dumps({"error": "bootstrap-replacement must resume this packet before confirmation"}, indent=2))
+        return 2
+    replacement_thread_id = replacement_thread_id.strip()
+    resumed_thread_id = replacement.get("resumed_thread_id")
+    if isinstance(resumed_thread_id, str) and resumed_thread_id != replacement_thread_id:
+        print(json.dumps({"error": "--replacement-thread-id does not match the thread that resumed this rollover"}, indent=2))
+        return 2
+    if replacement.get("status") == "started":
+        if replacement.get("thread_id") != replacement_thread_id:
+            print(json.dumps({"error": "--replacement-thread-id does not match the already confirmed replacement"}, indent=2))
+            return 2
+        print(
+            json.dumps(
+                {
+                    "status": "already_confirmed",
+                    "agent": agent,
+                    "lineage_id": state["lineage_id"],
+                    "rollover_id": replacement["rollover_id"],
+                    "replacement_thread_id": replacement_thread_id,
+                    "old_automation_ready_to_delete": (state.get("cleanup") or {}).get(
+                        "old_automation_ready_to_delete", False
+                    ),
+                },
+                indent=2,
+            )
+        )
+        return 0
+    try:
+        snapshot_path = repo_local_path(state_root, Path(replacement["semantic_snapshot_path"]))
+        probe_path = repo_local_path(state_root, Path(replacement["strict_probe_path"]))
+        questions_path = repo_local_path(state_root, Path(replacement["strict_questions_path"]))
+        answers_path = repo_local_path(state_root, Path(replacement["strict_answers_path"]))
+        verdict_path = repo_local_path(state_root, Path(replacement["strict_verdict_path"]))
+        proof_path = repo_local_path(state_root, Path(replacement["canary_proof_path"]))
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": str(exc), "action": "confirm-replacement"}, indent=2))
+        return 2
+
+    mint_args = argparse.Namespace(snapshot=snapshot_path, facts=None, out=probe_path)
+    if context_canary.cmd_mint(mint_args) != 0:
+        return 2
+    questions_args = argparse.Namespace(probe=probe_path, out=questions_path)
+    if context_canary.cmd_questions(questions_args) != 0:
+        return 2
+    score_args = argparse.Namespace(
+        probe=probe_path,
+        answers=answers_path,
+        expected_lineage_id=state["lineage_id"],
+        expected_rollover_id=replacement["rollover_id"],
+        verdict=verdict_path,
+        threshold=0.75,
+        pass_ratio=0.85,
+        context_tokens=0,
+        model="unknown",
+        log=None,
+    )
+    if context_canary.cmd_score(score_args) != 0:
+        _print_questions_only(questions_path)
+        return 2
+    canary_result = thread_handoff_canary.main(
+        [
+            "--rollover-id",
+            replacement["rollover_id"],
+            "--replacement-thread-id",
+            replacement_thread_id,
+            "--challenge",
+            replacement["canary_challenge"],
+            "--proof-file",
+            proof_path.as_posix(),
+        ]
+    )
+    if canary_result != 0:
+        _print_questions_only(questions_path)
+        return 2
+    confirm_args = argparse.Namespace(
+        repo_root=args.repo_root,
+        agent=agent,
+        lineage_id=args.lineage_id,
+        state_file=args.state_file,
+        rollover_id=args.rollover_id,
+        new_thread_id=replacement_thread_id,
+        new_automation_id=args.new_automation_id,
+        canary_proof=proof_path,
+        strict_probe=probe_path,
+        strict_verdict=verdict_path,
+        confirmed_by=args.confirmed_by,
+    )
+    return cmd_confirm_started(confirm_args)
 
 
 def cmd_check(args: argparse.Namespace) -> int:
@@ -4406,60 +4535,20 @@ def render_session_start_context(candidate: dict[str, Any] | None, *, agent: str
     thread_id = current_thread_id or "<current-codex-thread-id>"
     lineage_id = candidate["lineage_id"]
     rollover_id = candidate["rollover_id"]
-    base = [
-        f"--agent {agent}",
-        f"--lineage-id {lineage_id}",
-        f"--rollover-id {rollover_id}",
-    ]
-    proof = candidate["canary_proof_path"]
-    snapshot = candidate["semantic_snapshot_path"]
-    probe = candidate["strict_probe_path"]
-    questions = candidate["strict_questions_path"]
-    answers = candidate["strict_answers_path"]
-    verdict = candidate["strict_verdict_path"]
-    identity = candidate["identity"]
-    title_transition = candidate["title_transition"]
-    common = " ".join(base)
     if candidate["status"] == "resumed":
         title = "RESUMED THREAD ROLLOVER DETECTED"
-        first = "This same Codex thread already holds the packet; do not resume it again."
     else:
         title = "PENDING THREAD ROLLOVER DETECTED"
-        first = "Claim this packet before ordinary work:"
-    lines = [
-        title,
-        first,
-        f"Visible task title: {identity['visible_title']}",
-        f"Issue: {identity['github_issue_url'] or 'not applicable'}",
-        f"Task identity lifecycle: {identity['lifecycle_state']}",
-        f"Title confirmation state: {title_transition['state']}",
-    ]
+    lines = [title, "```bash"]
     if candidate["status"] == "pending_start":
-        if not title_transition["native_title_supported"] and title_transition["state"] == "awaiting_replacement_binding":
-            lines.append(
-                f".venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement {common} --replacement-task-id {thread_id} --evidence <exact-harness-binding-evidence>"
-            )
-        if title_transition["state"] in {"title_reconciled", "fallback_recorded"} or not title_transition[
-            "native_title_supported"
-        ]:
-            lines.append(
-                f".venv/bin/python scripts/orchestration/thread_handoff.py resume {common} --replacement-thread-id {thread_id}"
-            )
-        else:
-            lines.append(
-                f"Do not resume yet. {task_identity.safe_recommended_resolution(title_transition, rollover_id=rollover_id)}"
-            )
+        lines.append(
+            f".venv/bin/python scripts/orchestration/thread_handoff.py bootstrap-replacement -a {agent} -l {lineage_id} -r {rollover_id} -t {thread_id} -e <binding>"
+        )
     lines.extend(
         [
-            f"Read the packet: {candidate['handoff_path']}",
-            f"Write the validated durable semantic snapshot to its reserved path: {snapshot}",
-            f".venv/bin/python scripts/context_canary.py mint --snapshot {snapshot} --out {probe}",
-            f".venv/bin/python scripts/context_canary.py questions --probe {probe} --out {questions}",
-            f'Answer only the IDs/questions in {questions} from restored context; write {{"id": "answer"}} JSON to {answers}.',
-            f".venv/bin/python scripts/context_canary.py score --probe {probe} --answers {answers} --expected-lineage-id {lineage_id} --expected-rollover-id {rollover_id} --verdict {verdict}",
-            f".venv/bin/python scripts/orchestration/thread_handoff_canary.py --rollover-id {rollover_id} --replacement-thread-id {thread_id} --challenge {candidate['canary_challenge']} --proof-file {proof}",
-            f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-started {common} --new-thread-id {thread_id} --canary-proof {proof} --strict-probe {probe} --strict-verdict {verdict}",
-            "Do not auto-run any mutation above. Cleanup remains locked unless both exact proofs pass.",
+            f".venv/bin/python scripts/orchestration/thread_handoff.py confirm-replacement -a {agent} -l {lineage_id} -r {rollover_id}",
+            "```",
+            "Fill snapshot; first confirm emits questions. Failure keeps cleanup locked.",
         ]
     )
     if candidate.get("excluded_terminal"):
@@ -5064,6 +5153,34 @@ def build_parser() -> argparse.ArgumentParser:
     resume.add_argument("--rollover-id", required=True)
     resume.add_argument("--replacement-thread-id", required=True)
     resume.set_defaults(func=cmd_resume)
+
+    bootstrap_replacement = subparsers.add_parser(
+        "bootstrap-replacement",
+        help="Bind and resume one fallback replacement, then write its answer-free strict snapshot template.",
+    )
+    bootstrap_replacement.add_argument("-a", "--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    bootstrap_replacement.add_argument("-l", "--lineage-id", type=argparse_lineage_id)
+    bootstrap_replacement.add_argument("--state-file", type=Path)
+    bootstrap_replacement.add_argument("-r", "--rollover-id", required=True)
+    bootstrap_replacement.add_argument("-t", "--replacement-thread-id", required=True)
+    bootstrap_replacement.add_argument("-e", "--evidence", required=True)
+    bootstrap_replacement.set_defaults(func=cmd_bootstrap_replacement)
+
+    confirm_replacement = subparsers.add_parser(
+        "confirm-replacement",
+        help="Mint, ask, score, canary-prove, and confirm one resumed replacement in-process.",
+    )
+    confirm_replacement.add_argument("-a", "--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
+    confirm_replacement.add_argument("-l", "--lineage-id", type=argparse_lineage_id)
+    confirm_replacement.add_argument("--state-file", type=Path)
+    confirm_replacement.add_argument("-r", "--rollover-id", required=True)
+    confirm_replacement.add_argument(
+        "--replacement-thread-id",
+        help="Optional exact thread ID; defaults to the packet's already resumed replacement ID.",
+    )
+    confirm_replacement.add_argument("--new-automation-id")
+    confirm_replacement.add_argument("--confirmed-by", default=os.environ.get("USER", "operator"))
+    confirm_replacement.set_defaults(func=cmd_confirm_replacement)
 
     check = subparsers.add_parser("check", help="Detect stale or unsafe handoff state.")
     check.add_argument("--agent", type=argparse_agent_name, default=DEFAULT_AGENT)

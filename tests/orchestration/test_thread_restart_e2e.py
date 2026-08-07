@@ -517,6 +517,20 @@ def semantic_snapshot(lease: dict) -> dict:
     }
 
 
+def fill_snapshot_template(template: dict) -> dict:
+    """Fill only the replacement-authored semantic fields in a wrapper template."""
+    snapshot = json.loads(json.dumps(template))
+    for index, record in enumerate(snapshot["goals"], start=1):
+        record["statement"] = f"continue durable goal {index}"
+    for index, record in enumerate(snapshot["decision_records"], start=1):
+        record["decision"] = f"keep packet decision {index}"
+    for index, record in enumerate(snapshot["constraint_records"], start=1):
+        record["prohibition"] = f"never transfer provider history {index}"
+    for index, record in enumerate(snapshot["next_actions"], start=1):
+        record["action"] = f"execute durable action {index}"
+    return snapshot
+
+
 def strict_evidence(primary: Path, packet: dict, *, wrong_answer: bool = False) -> tuple[Path, Path, Path]:
     lease = load_lease(primary, packet)
     replacement = lease["replacement"]
@@ -636,39 +650,101 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_
     runtime = primary / packet["runtime_path"]
     bootstrap = (runtime / "bootstrap.md").read_text(encoding="utf-8")
     assert "do not fork, continue, or resume provider conversation history" in bootstrap
-    assert "thread_handoff.py resume" in bootstrap
-    assert "thread_handoff_canary.py" in bootstrap
-    assert "thread_handoff.py confirm-started" in bootstrap
+    assert "detect --format session-start" in bootstrap
+    assert "bootstrap-replacement" in bootstrap
+    assert "confirm-replacement" in bootstrap
+    assert "thread_handoff.py resume" not in bootstrap
+    assert "thread_handoff_canary.py" not in bootstrap
+    assert "thread_handoff.py confirm-started" not in bootstrap
     assert "codex exec resume" not in bootstrap
     assert not list(primary.glob(".agent/**/*state_5.sqlite"))
     receipts = list(primary.glob(".agent/task-families/**/events.jsonl"))
     assert len(receipts) == 1
 
-    resumed = resume(primary, packet)
-    assert resumed["replacement_thread_id"] == REPLACEMENT_THREAD_ID
-    assert resumed["replacement_thread_id"] != SOURCE_THREAD_ID
-    validated = run(
+    # The app owns creation/title acknowledgement; the compact wrapper owns
+    # the replacement bind, resume, semantic-template, and confirmation flow.
+    register_native_replacement(primary, packet, REPLACEMENT_THREAD_ID)
+    bootstrapped = run(
         handoff_command(
             primary,
-            "check",
+            "bootstrap-replacement",
             "--agent",
             "codex",
             "--lineage-id",
             packet["lineage_id"],
+            "--rollover-id",
+            packet["rollover_id"],
+            "--replacement-thread-id",
+            REPLACEMENT_THREAD_ID,
+            "--evidence",
+            "e2e exact replacement binding",
         ),
         cwd=primary,
         check=True,
     )
-    assert json.loads(validated.stdout)["warnings"] == []
-    probe, verdict, questions = strict_evidence(primary, packet)
-    assert len(json.loads(questions.read_text(encoding="utf-8"))["questions"]) == 10
-    proof = canary_proof(primary, packet)
+    decoder = json.JSONDecoder()
+    remaining = bootstrapped.stdout
+    bootstrap_payloads = []
+    while remaining.strip():
+        payload, end = decoder.raw_decode(remaining.lstrip())
+        bootstrap_payloads.append(payload)
+        remaining = remaining.lstrip()[end:]
+    assert len(bootstrap_payloads) == 2
+    assert bootstrap_payloads[0]["replacement_thread_id"] == REPLACEMENT_THREAD_ID
+    bootstrap_result = bootstrap_payloads[1]
+    assert bootstrap_result["status"] == "bootstrap_ready"
+    assert bootstrap_result["semantic_snapshot_file"] == lease["replacement"]["semantic_snapshot_path"]
+    assert load_lease(primary, packet)["replacement"]["resumed_thread_id"] == REPLACEMENT_THREAD_ID
+    template_path = primary / bootstrap_result["semantic_snapshot_template"]
+    template = json.loads(template_path.read_text(encoding="utf-8"))
+    assert template["lineage_id"] == packet["lineage_id"]
+    assert template["rollover_id"] == packet["rollover_id"]
+    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [3, 3, 2, 2]
+    assert all(not record["statement"] for record in template["goals"])
+    assert all(not record["decision"] for record in template["decision_records"])
+    assert all(not record["prohibition"] for record in template["constraint_records"])
+    assert all(not record["action"] for record in template["next_actions"])
+    snapshot_path = primary / bootstrap_result["semantic_snapshot_file"]
+    write_json(snapshot_path, fill_snapshot_template(template))
+
+    confirm_wrapper = handoff_command(
+        primary,
+        "confirm-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+    )
+    questions_only = run(confirm_wrapper, cwd=primary)
+    assert questions_only.returncode == 2
+    assert questions_only.stdout.strip(), questions_only.stderr
+    assert "minted 10 anchors" in questions_only.stdout
+    assert "questions written" in questions_only.stdout
+    question_payload = json.loads(questions_only.stdout[questions_only.stdout.index("{") :])
+    assert question_payload["schema"] == "production-handoff-v2-questions"
+    assert question_payload["lineage_id"] == packet["lineage_id"]
+    assert question_payload["rollover_id"] == packet["rollover_id"]
+    questions = question_payload["questions"]
+    assert len(questions) == 10
+    assert all(set(question) == {"id", "q"} for question in questions)
+    replacement = load_lease(primary, packet)["replacement"]
+    probe = json.loads((primary / replacement["strict_probe_path"]).read_text(encoding="utf-8"))
+    assert {question["id"] for question in questions} == {anchor["id"] for anchor in probe["anchors"]}
+    write_json(
+        primary / replacement["strict_answers_path"],
+        {anchor["id"]: anchor["a"] for anchor in probe["anchors"]},
+    )
+    assert_cleanup_locked(primary, packet)
+
     confirmed = run(
-        confirm_command(primary, packet, proof=proof, probe=probe, verdict=verdict),
+        confirm_wrapper,
         cwd=primary,
         check=True,
     )
-    result = json.loads(confirmed.stdout)
+    assert "SCORE 10/10" in confirmed.stdout
+    result = json.loads(confirmed.stdout[confirmed.stdout.rfind("\n{") + 1 :])
     assert result["replacement_status"] == "started"
     assert result["old_automation_ready_to_delete"] is True
     assert load_lease(primary, packet)["cleanup"]["old_automation_ready_to_delete"] is True
@@ -927,7 +1003,9 @@ def test_app_style_worktree_bootstrap_deploys_hook_and_discovers_canonical_packe
     assert "PENDING THREAD ROLLOVER DETECTED" in started.stdout
     assert packet["lineage_id"] in started.stdout
     assert packet["rollover_id"] in started.stdout
-    assert "--replacement-thread-id fresh-app-thread" in started.stdout
+    assert "bootstrap-replacement" in started.stdout
+    assert "confirm-replacement" in started.stdout
+    assert "-t fresh-app-thread" in started.stdout
     assert_cleanup_locked(primary, packet)
     assert git(replacement, "status", "--short", "--untracked-files=all").stdout == ""
 

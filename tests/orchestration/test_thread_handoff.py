@@ -347,6 +347,20 @@ def strict_artifacts(tmp_path: Path, state: dict) -> tuple[Path, Path]:
     return probe, verdict
 
 
+def filled_snapshot_from_template(template: dict) -> dict:
+    """Model the two semantic fields the replacement is allowed to author."""
+    snapshot = json.loads(json.dumps(template))
+    for index, record in enumerate(snapshot["goals"], start=1):
+        record["statement"] = f"goal {index}"
+    for index, record in enumerate(snapshot["decision_records"], start=1):
+        record["decision"] = f"decision {index}"
+    for index, record in enumerate(snapshot["constraint_records"], start=1):
+        record["prohibition"] = f"prohibition {index}"
+    for index, record in enumerate(snapshot["next_actions"], start=1):
+        record["action"] = f"action {index}"
+    return snapshot
+
+
 def test_direct_script_help_from_repository_root():
     repo_root = Path(__file__).resolve().parents[2]
     env = os.environ.copy()
@@ -375,6 +389,8 @@ def test_direct_script_help_from_repository_root():
         "reconcile-native",
         "confirm-started",
         "resume",
+        "bootstrap-replacement",
+        "confirm-replacement",
         "check",
         "audit",
     ):
@@ -551,7 +567,9 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "git status --short --branch" in prompt
     assert "issue_stream_audit.py --json" in prompt
     assert "git worktree list" in prompt
-    assert "confirm-started --agent orchestrator --lineage-id" in prompt
+    assert "detect --format session-start" in prompt
+    assert "bootstrap-replacement" in prompt
+    assert "confirm-replacement" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "If either fact is absent, use `unknown`" in prompt
     assert "Only an actionable response authorizes `set_thread_archived`" in prompt
@@ -571,15 +589,12 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     rendered = th.render_current_markdown(sample_snapshot(tmp_path), state, context_threshold=82.0)
 
     assert "## Thread Lease" in rendered
-    assert "## Git State" in rendered
-    assert "### Last 5 Commits" in rendered
-    assert "### Modified Files" in rendered
-    assert "## Open PRs" in rendered
-    assert "## Delegated Tasks" in rendered
+    assert "## Task Identity" in rendered
     assert "## First-Turn Checklist" in rendered
     assert "issue_stream_audit.py --json" in rendered
-    assert "confirm-started --agent orchestrator --lineage-id" in rendered
-    assert "orchestrator_control.py inbox --recent 20 --include-results" in rendered
+    assert "## Rollover Command Capsule" in rendered
+    assert "detect --format session-start" in rendered
+    assert "context_canary.py mint" not in rendered
     assert "Durable role handoff: `docs/session-state/codex-orchestrator-handoff.md`" in rendered
     assert "Source checkout HEAD: `abc123def0456789`" in rendered
 
@@ -613,7 +628,8 @@ def test_render_current_markdown_for_codex_uses_orchestrator_pointer(tmp_path: P
 
     assert "## First-Turn Checklist" in rendered
     assert "Durable role handoff: `docs/session-state/current.orchestrator.md`" in rendered
-    assert "confirm-started --agent codex --lineage-id" in rendered
+    assert "detect --format session-start" in rendered
+    assert "confirm-replacement" in rendered
 
 
 def test_render_router_markdown_contains_parseable_markers():
@@ -3695,7 +3711,7 @@ def test_parallel_lineages_do_not_collide_in_an_explicit_fixture(tmp_path: Path,
     assert payloads[0]["runtime_path"] != payloads[1]["runtime_path"]
 
 
-def test_bootstrap_uses_resume_canary_confirm_without_history_resume(tmp_path: Path):
+def test_bootstrap_references_compact_capsule_without_history_resume(tmp_path: Path):
     state = prepared()
     state_root = tmp_path / "canonical"
     prompt = th.render_bootstrap_prompt(
@@ -3706,10 +3722,328 @@ def test_bootstrap_uses_resume_canary_confirm_without_history_resume(tmp_path: P
     )
 
     assert "do not fork, continue, or resume provider conversation history" in prompt
-    assert "thread_handoff.py resume" in prompt
-    assert "thread_handoff_canary.py" in prompt
-    assert "thread_handoff.py confirm-started" in prompt
-    assert str(state_root / state["replacement"]["canary_proof_path"]) in prompt
+    assert "detect --format session-start" in prompt
+    assert "bootstrap-replacement" in prompt
+    assert "confirm-replacement" in prompt
+    assert "context_canary.py mint" not in prompt
+    assert "thread_handoff_canary.py" not in prompt
+
+
+def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    command = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(command) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    template_path = (tmp_path / state["replacement"]["semantic_snapshot_path"]).with_name(
+        "semantic-snapshot.template.json"
+    )
+    template = json.loads(template_path.read_text(encoding="utf-8"))
+    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [3, 3, 2, 2]
+    assert all(not record["statement"] for record in template["goals"])
+    assert all(not record["decision"] for record in template["decision_records"])
+    assert all(not record["prohibition"] for record in template["constraint_records"])
+    assert all(not record["action"] for record in template["next_actions"])
+    handoff_ref = f"handoff:{state['replacement']['handoff_path']}"
+    assert all(
+        record["source_ref"].startswith(f"{handoff_ref}#")
+        for category in ("goals", "decision_records", "constraint_records", "next_actions")
+        for record in template[category]
+    )
+    assert all(
+        th.context_canary._parse_and_validate_source_ref(record["source_ref"], category)
+        for category, records in (
+            ("goal", template["goals"]),
+            ("decision/rationale", template["decision_records"]),
+            ("negative-constraint/prohibition", template["constraint_records"]),
+            ("next-action", template["next_actions"]),
+        )
+        for record in records
+    )
+    assert th.context_canary.main(["mint", "--snapshot", str(template_path), "--out", str(tmp_path / "probe.json")]) == 1
+
+    state_bytes = state_path.read_bytes()
+    template_bytes = template_path.read_bytes()
+    assert th.main(command) == 0
+    bootstrap = json.loads(capsys.readouterr().out)
+    assert bootstrap["handoff_path"] == state["replacement"]["handoff_path"]
+    assert bootstrap["bootstrap_prompt_path"] == state["replacement"]["bootstrap_prompt_path"]
+    assert state_path.read_bytes() == state_bytes
+    assert template_path.read_bytes() == template_bytes
+
+
+def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    bootstrap = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(bootstrap) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    replacement = state["replacement"]
+    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
+    th.write_json_atomic(
+        tmp_path / replacement["semantic_snapshot_path"],
+        filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))),
+    )
+    probe_path = tmp_path / replacement["strict_probe_path"]
+    answers_path = tmp_path / replacement["strict_answers_path"]
+    verdict_path = tmp_path / replacement["strict_verdict_path"]
+    confirm = [
+        "--repo-root",
+        str(tmp_path),
+        "confirm-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+    ]
+    assert th.context_canary.main(["mint", "--snapshot", str(tmp_path / replacement["semantic_snapshot_path"]), "--out", str(probe_path)]) == 0
+    probe = json.loads(probe_path.read_text(encoding="utf-8"))
+    th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
+    probe_path.unlink()
+    assert th.main(confirm) == 0
+    capsys.readouterr()
+    confirmed = json.loads(state_path.read_text(encoding="utf-8"))
+    assert confirmed["replacement"]["status"] == "started"
+    assert confirmed["cleanup"]["old_automation_ready_to_delete"] is True
+    state_bytes = state_path.read_bytes()
+    verdict_bytes = verdict_path.read_bytes()
+    assert th.main(confirm) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "already_confirmed"
+    assert state_path.read_bytes() == state_bytes
+    assert verdict_path.read_bytes() == verdict_bytes
+
+
+def test_confirm_replacement_failed_or_skipped_score_leaves_confirmation_locked(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    bootstrap = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(bootstrap) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    replacement = state["replacement"]
+    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
+    th.write_json_atomic(
+        tmp_path / replacement["semantic_snapshot_path"],
+        filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))),
+    )
+    th.write_json_atomic(tmp_path / replacement["strict_answers_path"], {})
+    confirm = [
+        "--repo-root",
+        str(tmp_path),
+        "confirm-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+    ]
+    assert th.main(confirm) == 2
+    failed_output = capsys.readouterr().out
+    assert '"schema": "production-handoff-v2-questions"' in failed_output
+    locked = json.loads(state_path.read_text(encoding="utf-8"))
+    assert locked["replacement"]["status"] == "resumed"
+    assert locked["cleanup"]["old_automation_ready_to_delete"] is False
+
+    original_score = th.context_canary.cmd_score
+    monkeypatch.setattr(th.context_canary, "cmd_score", lambda args: 0)
+    assert th.main(confirm) == 2
+    capsys.readouterr()
+    locked_after_skip = json.loads(state_path.read_text(encoding="utf-8"))
+    assert locked_after_skip["replacement"]["status"] == "resumed"
+    assert locked_after_skip["cleanup"]["old_automation_ready_to_delete"] is False
+    monkeypatch.setattr(th.context_canary, "cmd_score", original_score)
+
+
+def test_confirm_replacement_canary_failure_prints_questions_and_keeps_lock(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "codex",
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                "old",
+            ]
+        )
+        == 0
+    )
+    packet = json.loads(capsys.readouterr().out)
+    bootstrap = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(bootstrap) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    replacement = state["replacement"]
+    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
+    snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
+    probe_path = tmp_path / replacement["strict_probe_path"]
+    th.write_json_atomic(snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))))
+    assert th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
+    probe = json.loads(probe_path.read_text(encoding="utf-8"))
+    th.write_json_atomic(
+        tmp_path / replacement["strict_answers_path"],
+        {anchor["id"]: anchor["a"] for anchor in probe["anchors"]},
+    )
+    probe_path.unlink()
+    monkeypatch.setattr(th.thread_handoff_canary, "main", lambda argv: 2)
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "confirm-replacement",
+                "--agent",
+                "codex",
+                "--lineage-id",
+                packet["lineage_id"],
+                "--rollover-id",
+                packet["rollover_id"],
+            ]
+        )
+        == 2
+    )
+    assert '"schema": "production-handoff-v2-questions"' in capsys.readouterr().out
+    locked = json.loads(state_path.read_text(encoding="utf-8"))
+    assert locked["replacement"]["status"] == "resumed"
+    assert locked["cleanup"]["old_automation_ready_to_delete"] is False
+
+
+def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_template(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    command = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(command) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    template_path = (tmp_path / state["replacement"]["semantic_snapshot_path"]).with_name(
+        "semantic-snapshot.template.json"
+    )
+    state_bytes = state_path.read_bytes()
+    template_bytes = template_path.read_bytes()
+    assert th.main([*command[:-3], "other-thread", "--evidence", "test exact binding"]) == 2
+    assert "replacement task ID does not match the exact persisted binding" in capsys.readouterr().out
+    assert state_path.read_bytes() == state_bytes
+    assert template_path.read_bytes() == template_bytes
+
+
+def test_compact_rendering_has_one_capsule_and_no_volatile_tables(tmp_path: Path):
+    state = prepared(agent="codex")
+    handoff = th.render_current_markdown(sample_snapshot(tmp_path), state, agent="codex", context_threshold=82.0)
+    bootstrap = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, agent="codex", context_threshold=82.0)
+    candidate = {
+        "lineage_id": state["lineage_id"],
+        "rollover_id": state["replacement"]["rollover_id"],
+        "status": "pending_start",
+    }
+    startup = th.render_session_start_context(candidate, agent="codex", current_thread_id="new-thread")
+    assert len(handoff.encode("utf-8")) <= 4096
+    for volatile_heading in ("Open PRs", "Open Issues", "Delegated Tasks", "Last 5 Commits", "## Worktrees"):
+        assert volatile_heading not in handoff
+    assert "detect --format session-start" in handoff
+    assert "detect --format session-start" in bootstrap
+    assert "context_canary.py mint" not in handoff + bootstrap
+    assert startup.count("```bash") == 1
+    assert "bootstrap-replacement" in startup and "confirm-replacement" in startup
+    assert "context_canary.py" not in startup
+    assert len(startup.encode("utf-8")) <= 550
 
 
 def test_canary_proof_rejects_tampering_after_atomic_write(tmp_path: Path):
@@ -4048,7 +4382,7 @@ def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_pat
     startup = capsys.readouterr().out
     assert "PENDING THREAD ROLLOVER DETECTED" in startup
     assert "COLD START: NO LIVE THREAD ROLLOVER" not in startup
-    assert "--agent claude-infra" in startup
+    assert "-a claude-infra" in startup
     assert prepared_payload["lineage_id"] in startup
     assert prepared_payload["rollover_id"] in startup
 
@@ -4097,7 +4431,30 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
         == 0
     )
     startup = capsys.readouterr().out
-    assert "PENDING THREAD ROLLOVER DETECTED" in startup and "context_canary.py questions" in startup
+    assert "PENDING THREAD ROLLOVER DETECTED" in startup
+    assert "bootstrap-replacement" in startup and "confirm-replacement" in startup
+    assert "context_canary.py questions" not in startup
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "bootstrap-replacement",
+                "--agent",
+                "codex",
+                "--lineage-id",
+                packet["lineage_id"],
+                "--rollover-id",
+                packet["rollover_id"],
+                "--replacement-thread-id",
+                "new-thread",
+                "--evidence",
+                "native title already registered and reconciled",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
     resume_command = [
         "--repo-root",
         str(tmp_path),
