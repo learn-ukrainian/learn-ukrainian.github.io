@@ -107,7 +107,7 @@
     "eslint-plugin-jsdoc": "^61.5.0",
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.2.0",
-    "js-yaml": "^4.3.0",
+    "js-yaml": "^4.3.1",
     "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.7.4",
     "puppeteer": "^24.32.0",
@@ -123,7 +123,7 @@
   },
   "overrides": {
     "uuid": "11.1.1",
-    "js-yaml": "^4.3.0",
+    "js-yaml": "^4.3.1",
     "brace-expansion@1": "1.1.16",
     "brace-expansion@2": "2.1.2",
     "markdown-it": ">=14.2.0",
