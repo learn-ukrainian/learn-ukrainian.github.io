@@ -219,6 +219,76 @@ Implementation must not proceed without deterministic gates for:
 - `scripts_documented`: any new or materially changed Atlas operational script
   is documented in `docs/SCRIPTS.md`.
 
+## Sense-Level Fields (v1 delta — #6437)
+
+- decided_at: `2026-08-07`
+- discussion_inputs: Gemini (AGY) consultation, verdict AGREE-WITH-CHANGES
+  (`batch_state/atlas-drive/gemini-consult-entry-lint.out`, not committed)
+
+`entry_type` (above) classifies the article as a whole. Within a `lemma` or
+other article entry, a `senses` array separates the lexicographical
+definition, the learner-facing hint, and the drill target for each distinct
+meaning. This closes two related problems: EN/UK glosses truncated mid-word
+by hard length caps, and bare single-word EN drill targets that hide the
+polysemy of the source word (e.g. `брак` surfacing only ordinal "second"
+instead of defect/scarcity/manufacturing "seconds").
+
+A `senses` entry has this shape:
+
+```yaml
+senses:
+  - id: "brak_defect"            # stable; drills key off this, not array order
+    pos: "noun"
+    grammar_notes: "…"           # optional UA pedagogy note
+    uk_source_def: "…"           # immutable raw SUM/BTC text — lint reads it,
+                                  # nothing in the lint or enrich pipeline may
+                                  # rewrite it
+    learner_uk: "недолік, вада"
+    learner_en: ["defect", "flaw", "scarcity"]
+    en_disambiguation: "imperfection/flaw (not marriage/ordinal second)"
+    source: "sum20_vetted|btc|dmklinger|manual_native|rag_verified"
+    completeness: "complete|truncated|draft"
+```
+
+Field notes:
+
+- `id`: stable per-sense slug. Practice/drill wiring keys off `senses[id]`,
+  never off array position or `learner_en[0]`, so re-ordering or adding a
+  sense cannot silently drift what a learner drills (LINT-003 in the
+  companion issue, not implemented in this PR).
+- `uk_source_def`: the raw lexicographical definition (СУМ-20/BTC/etc). This
+  is ingestion data — the lint gate reads it read-only and PR1 does not
+  mutate it.
+- `learner_uk` / `learner_en`: the pedagogy-facing gloss and drill target(s).
+  `learner_en` is a list because a sense can have more than one accepted EN
+  target; a single-item list on a high-risk polysemous word is exactly what
+  LINT-002 flags.
+- `en_disambiguation`: required whenever `learner_en` is a bare single word
+  that reads as a different, unrelated sense in general English (see
+  LINT-002 denylist in `scripts/audit/lint_word_atlas.py`).
+- `completeness`: `truncated` is the honest tag for text a hard cap cut off
+  mid-word; a `learner_uk`/`learner_en`/`en_disambiguation` value ending in
+  `...`/`…` without this tag is what LINT-001 flags. `enrich_manifest.py`
+  stopping mid-word hard slices and tagging honestly is tracked separately
+  (issue #6437 D3-4) and is not part of this PR.
+
+### Lint gate (PR1 scope)
+
+`scripts/audit/lint_word_atlas.py` implements two read-only, advisory rules
+against any manifest carrying `senses[]`:
+
+| ID | Name | Checks |
+| --- | --- | --- |
+| LINT-001 | `TRUNCATED_TEXT_CUTOFF` | A learner-facing sense field ends `...`/`…` while `completeness != "truncated"`. |
+| LINT-002 | `AMBIGUOUS_BARE_EN` | `learner_en` is a single-item list, the word is in a high-risk polysemy denylist, and `en_disambiguation` is empty. |
+
+LINT-003 (`DRILL_SENSE_ID_MISSING`), LINT-004 (`UNVETTED_EN_SOURCE`), and the
+P1 advisory rules (`MULTI_SENSE_UK_SINGLE_EN`, `POS_TRANSFORMATION_MISMATCH`)
+are scoped for later PRs against this same issue; they are not implemented
+here. No CI gate is wired to `lint_word_atlas.py` in this PR — it runs as a
+standalone advisory check until a residual-count policy is agreed (issue
+#6437 D6-7).
+
 ## Open Decisions
 
 - Whether `form_of` records stay in the manifest as non-entry records or move
