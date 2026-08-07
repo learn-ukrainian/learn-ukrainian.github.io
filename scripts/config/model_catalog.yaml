@@ -380,7 +380,32 @@ models:
     roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools]
-    weaknesses: [public_context_spec_is_not_verified, max_effort_only]
+    # 2026-08-07 release notes (operator-supplied): k3 now supports low/high/max
+    # thinking effort; 1M window requires Allegretto tier+. Reserve k3 for
+    # large-codebase analysis, multi-file refactors, long documents — routine
+    # headless work routes to kimi-code/k3-256k below (same results within
+    # 256K at ~half quota).
+    weaknesses: [public_context_spec_is_not_verified]
+    sources:
+      - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
+  kimi-code/k3-256k:
+    family: moonshot
+    tier: frontier_practical
+    lifecycle: active
+    # K3 capped at 256K context: identical outputs to k3 within the window,
+    # ~half quota consumption. Recommended DEFAULT for headless dispatch
+    # (Q&A, routine coding, small/medium edits). No video input. Supports
+    # low/high/max thinking effort. Operator-adopted 2026-08-07.
+    aliases: [k3-256k, kimi-k3-256k]
+    kimi_routes:
+      kimicc_alias: k3-256k
+      platform_model_id: kimi-k3-256k
+      coding_model_id: k3-256k
+      context_profile: kimicc_k3
+    roles: [routine_coding, everyday_review, dispatch_default]
+    transports: [native_kimi]
+    strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
+    weaknesses: [no_video_input, context_capped_256k]
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-k3-max:
