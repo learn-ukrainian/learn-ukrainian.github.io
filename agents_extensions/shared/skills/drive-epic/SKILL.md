@@ -197,7 +197,9 @@ other terminal/attention states: `failed | timeout | rate_limited | cancelled |
 crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
-first, then check the worktree for finished-but-unpushed work.
+first, then check the worktree for finished-but-unpushed work. **After terminal status,**
+run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run by default;
+pass `--apply` to reap the bound dispatch worktree).
 
 ### 5a. Required live-driver inbox drain — after settle
 Once the settle-loop reaches its decision point, drain again before choosing the next
