@@ -131,6 +131,13 @@ Every epic driver session (any harness) MUST:
      (do not invent `<model>_lane`).
 7. Provider drivers inject the **`drive-epic`** binding after their lease and
    provider canary. Interactive launchers never claim a driver lease.
+8. **Post-merge cleanup is mandatory** (operator 2026-08-07). A squash-merge is not
+   done until worktree + branch + CF/review temp residue for that PR are reaped and
+   `df -h /` + `git worktree list` prove no zombie. Order and paths: `drive-epic` skill
+   §7a (worktree before branch; ACP `runtime-review-<PR>*`; `/tmp/lu-cf-clean` /
+   `/tmp/lu-review-*` / `/tmp/lu-pr*` — chmod then rm for read-only sealed snaps). Do
+   not start another formal `review-pr` while disk is near full without reaping first.
+   Session chat promises do not bind; this rule and §7a do.
 
 ## Operator launch surface (#5632)
 
