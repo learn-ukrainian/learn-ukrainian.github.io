@@ -115,19 +115,26 @@ To prevent Time-of-Check to Time-of-Use (TOCTOU) races between checking process 
 [Sweeper Loop]
     │
     ├── 1. Read .lu-review-root.json manifest
-    ├── 2. Is root created < 60 seconds ago? ─── YES ──► SKIP (Grace Period)
-    │            │ NO
+    ├── 2. Is root created < 60 seconds ago?
+    │            │
+    │            ├── YES ──► Is owner PID confirmed non-existent via ESRCH?
+    │            │                 │
+    │            │                 ├── YES ──► Proceed to Step 4 (Double Check)
+    │            │                 └── NO (Alive / EPERM / Unconfirmed) ──► SKIP (Grace Period)
+    │            │
+    │            └── NO ──► Proceed to Step 3
+    │
     ├── 3. Evaluate Owner Liveness (PID + started_at)
     │            │
     │            ├── ALIVE / UNCHECKABLE ────────► SKIP
     │            │
     │            └── DEAD
     │                  │
-    ├── 4. Re-Verify Liveness Probe (Double Check)
+    ├── 4. Re-Verify Liveness Probe (Double Check immediately before rmtree)
     │            │
-    │            ├── Owner became Alive? ────────► SKIP
+    │            ├── Owner became Alive / Unconfirmed? ────────► SKIP
     │            │
-    │            └── Confirmed Dead
+    │            └── Confirmed Dead (ESRCH / PID mismatch)
     │                  │
     └── 5. Remove Tree via remove_review_temp_tree() (O_NOFOLLOW FD-pinned)
 ```
@@ -146,7 +153,7 @@ Disk-pressure thresholds are specified via environment configuration or configur
 
 When `shutil.disk_usage(tmp_dir).free < threshold_bytes`:
 
-1. **Immediate Dead-Owner Sweep:** Reap ALL dead-owner temp roots immediately, regardless of root creation time (bypassing the 60s grace period).
+1. **Immediate Dead-Owner Sweep:** Reap ALL dead-owner temp roots immediately, regardless of root creation time (bypassing the 60s grace window for all dead-owner classifications, including recycled PIDs and zombie processes, whereas normal mode only bypasses grace for ESRCH-confirmed dead owners).
 2. **Aggressive Unmanifested Sweep:** Reduce the manifest-less fallback age cutoff from **48 hours** down to **1 hour**.
 3. **Loud Alerting:** Emit a high-priority alert payload to the Monitor API / system log (`MonitorAPI.notify_disk_pressure`).
 
@@ -260,7 +267,8 @@ Every safety guard introduced must have a dedicated test that **FAILS** if the g
 │                          │                      │ recycled PID reaped)  │
 ├──────────────────────────┼──────────────────────┼───────────────────────┤
 │ 3. 60s Grace Window      │ Remove grace check   │ TEST FAILS (Asserts   │
-│                          │                      │ fresh root protected) │
+│                          │                      │ fresh root with LIVE  │
+│                          │                      │ owner is protected)   │
 ├──────────────────────────┼──────────────────────┼───────────────────────┤
 │ 4. Disk Pressure Escal.  │ Hardcode 48h limit   │ TEST FAILS (Asserts   │
 │                          │                      │ aggressive sweep)     │
@@ -282,9 +290,9 @@ Every safety guard introduced must have a dedicated test that **FAILS** if the g
 ### Specific Test Specifications
 
 1. **`test_sweep_reaps_dead_owner_root_immediately`**
-   - Setup: Create temp root with `.lu-review-root.json` containing an invalid/dead PID (e.g. 999999). Age = 5 seconds.
-   - Assert: `sweep_review_temp_orphans()` reaps root immediately (0h age).
-   - Mutation check: If code is modified to require age > 48h for all roots, test FAILS.
+   - Setup: Create temp root with `.lu-review-root.json` containing a non-existent/dead PID (e.g. 999999 returning `ESRCH`). Age = 5 seconds.
+   - Assert: `sweep_review_temp_orphans()` reaps root immediately in normal mode via the ESRCH-confirmed-dead grace bypass branch.
+   - Mutation check: If code is modified to require age > 48h for all roots or unconditionally skip roots < 60s without checking ESRCH, test FAILS.
 
 2. **`test_sweep_preserves_live_owner_root`**
    - Setup: Create temp root with `.lu-review-root.json` containing `os.getpid()` and current process `started_at`. Age = 100 hours.
