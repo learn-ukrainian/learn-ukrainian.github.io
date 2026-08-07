@@ -450,11 +450,13 @@ models:
   deepseek-v4-pro:
     family: deepseek
     tier: frontier_practical
+    # Still catalogued, but operator 2026-08-06 until further notice: DO NOT USE.
+    # Flash is the only DeepSeek seat on review ladders / dispatches until lifted.
     lifecycle: active
     roles: [strong_review, coding, long_context_reasoning]
     transports: [hermes, opencode]
     strengths: [quality_per_dollar, one_million_context, tool_calling]
-    weaknesses: [silent_stall_history, not_for_folk_content]
+    weaknesses: [silent_stall_history, not_for_folk_content, temporary_operator_hold_prefer_flash]
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
@@ -699,7 +701,9 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   pool:
-    # Default pool formal/volume seat = Laguna S 2.1 (strongest gen-2).
+    # Default pool formal/volume seat = Laguna S 2.1 (operator 2026-08-06).
+    # Bridge default POOL_MODEL is poolside/poolside/laguna-s-2.1 — bare ask-pool
+    # must stay the S 2.1 pin (not XS/M.1). Override only via --model / pool-xs seat.
     model_id: poolside/laguna-s-2.1
     route: pool
     transport: opencode
@@ -857,7 +861,7 @@ review_ladders:
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
     - [glm-5.2]
-    - [deepseek-v4-pro]
+    # Operator 2026-08-06 until further notice: DeepSeek Flash only (Pro on hold).
     - [deepseek-v4-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]
@@ -873,8 +877,8 @@ review_ladders:
     - [grok-4.5]
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
+    # Operator 2026-08-06 until further notice: DeepSeek Flash only (Pro on hold).
     - [deepseek-v4-flash]
-    - [deepseek-v4-pro]
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
