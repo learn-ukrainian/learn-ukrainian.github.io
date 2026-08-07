@@ -396,16 +396,20 @@ models:
     # ~half quota consumption. Recommended DEFAULT for headless dispatch
     # (Q&A, routine coding, small/medium edits). No video input. Supports
     # low/high/max thinking effort. Operator-adopted 2026-08-07.
+    # Parity ("identical outputs") and the ~half-quota figure are Moonshot's
+    # release-note claims, not independently measured on this fleet — treat
+    # as provisional until a side-by-side run confirms them (mirrors the
+    # public_context_spec_is_not_verified caveat on kimi-code/k3 above).
     aliases: [k3-256k, kimi-k3-256k]
     kimi_routes:
       kimicc_alias: k3-256k
       platform_model_id: kimi-k3-256k
       coding_model_id: k3-256k
-      context_profile: kimicc_k3
-    roles: [routine_coding, everyday_review, dispatch_default]
+      context_profile: kimicc_k3_256k
+    roles: [routine_coding, everyday_review]
     transports: [native_kimi]
     strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
-    weaknesses: [no_video_input, context_capped_256k]
+    weaknesses: [no_video_input, context_capped_256k, parity_and_quota_claims_not_verified]
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-k3-max:
