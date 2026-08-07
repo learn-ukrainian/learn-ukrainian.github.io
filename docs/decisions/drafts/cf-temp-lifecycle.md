@@ -226,6 +226,9 @@ In [`scripts/orchestration/reap_worktrees.py:475-497`](scripts/orchestration/rea
 **Refactored Behavior:**
 If a detached worktree has an associated task ID (`_dispatch_task_id`), read `batch_state/tasks/{task_id}.json`. If `status` is in `("done", "failed", "no_deliverable")` AND the worktree is clean, classify as reapable **immediately** without waiting for the 24-hour age threshold.
 
+**Active IDs Unspecified (`active_ids=None`):**
+When `active_ids` is `None` (e.g. during standalone or offline janitor invocations where no active-process registry is passed), any detached worktree whose underlying task is confirmed terminal (`done`, `failed`, `no_deliverable`) in `batch_state/tasks/{task_id}.json` is treated as reapable (`active_ids is None or task_id not in active_ids`). This is safe and defensible because task state in JSON is the authoritative source of task settlement when no active-process filter is active.
+
 ### 7.3 Visible `needs_finalize` Reporting
 
 Worktrees skipped because their task status is `needs_finalize` ([`reap_worktrees.py:350`](scripts/orchestration/reap_worktrees.py#L350)) will be explicitly surfaced in `build_receipt()` under `summary["needs_finalize_worktrees"]` and printed in the janitor log output to alert operators.

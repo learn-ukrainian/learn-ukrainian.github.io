@@ -38,10 +38,16 @@ import time
 import urllib.parse
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.orchestration.thread_handoff import (
+    _default_machine_id,
+    _default_process_snapshot,
+    _process_is_alive,
+)
 from scripts.utils.claude_version import _parse_claude_semver
 
 ISOLATION_POLICY_VERSION = "review-isolation-v2"
@@ -55,6 +61,10 @@ REVIEW_TEMP_ROOT_PREFIXES = (
 )
 REVIEW_TEMP_ORPHAN_MAX_AGE_S = 48 * 60 * 60
 REVIEW_TEMP_ROOT_MARKER_NAME = ".lu-review-root"
+REVIEW_TEMP_ROOT_MANIFEST_NAME = ".lu-review-root.json"
+LU_REVIEW_TEMP_MIN_FREE_GB = 10.0
+REVIEW_TEMP_GRACE_WINDOW_S = 60.0
+REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S = 3600.0
 _REVIEW_TEMP_ROOT_MARKER_RE = re.compile(
     rb"^lu-review-root-v1:[0-9a-f]{64}\n$"
 )
@@ -78,8 +88,13 @@ def _open_review_temp_root_fd(root: Path) -> int:
     return os.open(root, flags)
 
 
-def _write_review_temp_root_marker(root: Path) -> None:
-    """Bind a newly created private root to review cleanup with a random nonce."""
+def _write_review_temp_root_marker(
+    root: Path,
+    *,
+    prefix: str = "",
+    context: dict[str, Any] | None = None,
+) -> None:
+    """Bind a newly created private root to review cleanup with a random nonce and manifest."""
     root_fd = _open_review_temp_root_fd(root)
     try:
         flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
@@ -89,8 +104,9 @@ def _write_review_temp_root_marker(root: Path) -> None:
             0o400,
             dir_fd=root_fd,
         )
+        nonce = secrets.token_hex(32)
         try:
-            marker = f"lu-review-root-v1:{secrets.token_hex(32)}\n".encode("ascii")
+            marker = f"lu-review-root-v1:{nonce}\n".encode("ascii")
             with os.fdopen(marker_fd, "wb") as handle:
                 handle.write(marker)
                 handle.flush()
@@ -98,6 +114,49 @@ def _write_review_temp_root_marker(root: Path) -> None:
         except BaseException:
             with contextlib.suppress(OSError):
                 os.close(marker_fd)
+            raise
+
+        manifest_fd = os.open(
+            REVIEW_TEMP_ROOT_MANIFEST_NAME,
+            flags,
+            0o400,
+            dir_fd=root_fd,
+        )
+        try:
+            pid = os.getpid()
+            now_epoch = time.time()
+            created_at_iso = (
+                datetime.fromtimestamp(now_epoch, tz=UTC)
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
+            snapshot = _default_process_snapshot(pid)
+            started_at = (
+                snapshot.started_at
+                if snapshot and snapshot.started_at is not None
+                else now_epoch
+            )
+            machine_id = _default_machine_id() or ""
+
+            manifest_data = {
+                "schema_version": "lu-review-root-v2",
+                "nonce": nonce,
+                "created_at": created_at_iso,
+                "created_at_epoch": now_epoch,
+                "prefix": prefix,
+                "owner_pid": pid,
+                "owner_pid_started_at": started_at,
+                "owner_machine_id": machine_id,
+                "context": context or {},
+            }
+            manifest_bytes = json.dumps(manifest_data, indent=2).encode("utf-8")
+            with os.fdopen(manifest_fd, "wb") as handle:
+                handle.write(manifest_bytes)
+                handle.flush()
+                os.fchmod(handle.fileno(), 0o400)
+        except BaseException:
+            with contextlib.suppress(OSError):
+                os.close(manifest_fd)
             raise
     finally:
         os.close(root_fd)
@@ -107,11 +166,12 @@ def create_review_temp_root(
     *,
     prefix: str,
     dir: str | os.PathLike[str] | None = None,
+    context: dict[str, Any] | None = None,
 ) -> Path:
     """Create a private review root whose cleanup identity is its sentinel."""
     root = Path(tempfile.mkdtemp(prefix=prefix, dir=dir))
     try:
-        _write_review_temp_root_marker(root)
+        _write_review_temp_root_marker(root, prefix=prefix, context=context)
     except BaseException:
         # The factory never exposes an unmarked root. This exact just-created
         # directory is not yet a cleanup caller input.
@@ -334,14 +394,131 @@ def _review_temp_orphan_candidates(tmp_root: Path) -> tuple[Path, ...]:
     return tuple(candidates)
 
 
-def sweep_review_temp_orphans(*, now: float | None = None) -> dict[str, int]:
-    """Remove review-owned temp roots older than 48 hours before a review."""
-    result = {"roots_reaped": 0, "bytes_freed": 0, "errors": 0}
+def _read_review_temp_root_manifest(root: Path) -> dict[str, Any] | None:
+    """Read and parse .lu-review-root.json manifest if present and valid."""
+    try:
+        root_fd = _open_review_temp_root_fd(root)
+    except (FileNotFoundError, OSError):
+        return None
+    try:
+        flags = os.O_RDONLY | os.O_NOFOLLOW
+        try:
+            manifest_fd = os.open(REVIEW_TEMP_ROOT_MANIFEST_NAME, flags, dir_fd=root_fd)
+        except OSError:
+            return None
+        try:
+            manifest_stat = os.fstat(manifest_fd)
+            if not stat.S_ISREG(manifest_stat.st_mode) or manifest_stat.st_nlink != 1:
+                return None
+            content = os.read(manifest_fd, 4096)
+            data = json.loads(content.decode("utf-8"))
+            if isinstance(data, dict) and data.get("schema_version") == "lu-review-root-v2":
+                return data
+            return None
+        finally:
+            os.close(manifest_fd)
+    finally:
+        os.close(root_fd)
+
+
+def _evaluate_root_owner_liveness(manifest: dict[str, Any]) -> tuple[str, str]:
+    """Evaluate liveness of the recorded root owner process.
+
+    Returns (liveness_status, reason):
+    liveness_status is "alive", "dead", or "uncheckable".
+    If dead, reason indicates "ESRCH", "zombie", or "recycled_pid".
+    """
+    recorded_machine_id = manifest.get("owner_machine_id")
+    current_machine_id = _default_machine_id()
+    if (
+        isinstance(recorded_machine_id, str)
+        and recorded_machine_id.strip()
+        and current_machine_id
+        and recorded_machine_id != current_machine_id
+    ):
+        return "uncheckable", "foreign_machine"
+
+    owner_pid = manifest.get("owner_pid")
+    recorded_started_at = manifest.get("owner_pid_started_at")
+    if not isinstance(owner_pid, int) or owner_pid <= 0 or not isinstance(recorded_started_at, (int, float)):
+        return "uncheckable", "invalid_manifest"
+
+    alive = _process_is_alive(owner_pid)
+    if not alive:
+        return "dead", "ESRCH"
+
+    snapshot = _default_process_snapshot(owner_pid)
+    if snapshot is None or snapshot.started_at is None:
+        return "uncheckable", "start_time_unresolvable"
+
+    if abs(snapshot.started_at - float(recorded_started_at)) > 1.0:
+        return "dead", "recycled_pid"
+
+    return "alive", "owner_alive"
+
+
+def _load_hygiene_yaml_min_free_gb() -> float | None:
+    """Read review_temp_min_free_gb from config/hygiene.yaml if present."""
+    candidates = [
+        Path(__file__).resolve().parents[2] / "config" / "hygiene.yaml",
+        Path.cwd() / "config" / "hygiene.yaml",
+    ]
+    for config_path in candidates:
+        if config_path.is_file():
+            try:
+                import yaml
+                with open(config_path, encoding="utf-8") as f:
+                    data = yaml.safe_load(f)
+                if isinstance(data, dict) and "review_temp_min_free_gb" in data:
+                    val = data["review_temp_min_free_gb"]
+                    if isinstance(val, (int, float)):
+                        return float(val)
+            except Exception:
+                pass
+    return None
+
+
+def _is_disk_pressure_active(tmp_dir: Path, min_free_gb: float = LU_REVIEW_TEMP_MIN_FREE_GB) -> bool:
+    """Check if free disk space at tmp_dir is below the configured threshold."""
+    yaml_val = _load_hygiene_yaml_min_free_gb()
+    if yaml_val is not None:
+        min_free_gb = yaml_val
+    env_val = os.environ.get("LU_REVIEW_TEMP_MIN_FREE_GB")
+    if env_val is not None:
+        with contextlib.suppress(ValueError):
+            min_free_gb = float(env_val)
+    try:
+        free_bytes = shutil.disk_usage(tmp_dir).free
+    except OSError:
+        return False
+    return (free_bytes / (1024 ** 3)) < min_free_gb
+
+
+def sweep_review_temp_orphans(
+    *,
+    now: float | None = None,
+    min_free_gb: float = LU_REVIEW_TEMP_MIN_FREE_GB,
+) -> dict[str, Any]:
+    """Remove review-owned temp roots using liveness triple fencing and age limits."""
+    result: dict[str, Any] = {
+        "roots_reaped": 0,
+        "bytes_freed": 0,
+        "errors": 0,
+        "disk_pressure": False,
+    }
     # Delegate workers override TMPDIR with their lease. The dispatcher keeps
     # this base value so nested review cleanup can still cover both loose and
     # task-namespaced review roots.
     base = Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))
-    cutoff = (time.time() if now is None else now) - REVIEW_TEMP_ORPHAN_MAX_AGE_S
+    current_time = time.time() if now is None else now
+    disk_pressure = _is_disk_pressure_active(base, min_free_gb=min_free_gb)
+    result["disk_pressure"] = disk_pressure
+
+    normal_unmanifested_cutoff = current_time - REVIEW_TEMP_ORPHAN_MAX_AGE_S
+    pressure_unmanifested_cutoff = (
+        current_time - REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S
+    )
+
     for root in _review_temp_orphan_candidates(base):
         try:
             root_stat = root.lstat()
@@ -350,8 +527,42 @@ def sweep_review_temp_orphans(*, now: float | None = None) -> dict[str, int]:
         except OSError:
             result["errors"] += 1
             continue
-        if root_stat.st_mtime >= cutoff:
+
+        manifest = _read_review_temp_root_manifest(root)
+        creation_time = (
+            manifest.get("created_at_epoch")
+            if manifest and isinstance(manifest.get("created_at_epoch"), (int, float))
+            else root_stat.st_mtime
+        )
+        age = current_time - float(creation_time)
+
+        should_reap = False
+        if manifest is not None:
+            liveness, reason = _evaluate_root_owner_liveness(manifest)
+            if liveness == "alive":
+                should_reap = False
+            elif liveness == "dead":
+                should_reap = (
+                    (reason == "ESRCH")
+                    if age < REVIEW_TEMP_GRACE_WINDOW_S and not disk_pressure
+                    else True
+                )
+            else:  # uncheckable
+                cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
+                should_reap = creation_time < cutoff
+        else:
+            cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
+            should_reap = creation_time < cutoff
+
+        if not should_reap:
             continue
+
+        # TOCTOU double check immediately before removal
+        if manifest is not None:
+            recheck_liveness, _ = _evaluate_root_owner_liveness(manifest)
+            if recheck_liveness != "dead":
+                continue
+
         try:
             bytes_freed = _review_temp_root_bytes(root)
             _remove_review_temp_orphan(root)
@@ -360,6 +571,7 @@ def sweep_review_temp_orphans(*, now: float | None = None) -> dict[str, int]:
             continue
         result["roots_reaped"] += 1
         result["bytes_freed"] += bytes_freed
+
     return result
 
 # Process-injection / Git-override variables stripped for every reviewer.
@@ -905,14 +1117,17 @@ def _validate_private_exec_root(
         raise ReviewIsolationError("review_exec_root_wrong_owner")
     if stat.S_IMODE(st.st_mode) & 0o077:
         raise ReviewIsolationError("review_exec_root_not_owner_only")
-    # A freshly created review temp root legitimately contains exactly one entry:
-    # the ownership sentinel written by create_review_temp_root(). Anything else
-    # (or a sentinel that is not a regular non-symlink file) still refuses —
-    # the sentinel integration broke every bridge review on 2026-07-26 when this
-    # check predated the marker.
+    # Fresh review temp roots may contain only ownership sentinels written by
+    # create_review_temp_root(): .lu-review-root and optional .lu-review-root.json.
+    # Anything else still refuses (2026-07-26: pre-marker empty check broke CF).
+    allowed_names = {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
+    saw_marker = False
     for entry in root.iterdir():
-        if entry.name != REVIEW_TEMP_ROOT_MARKER_NAME:
+        if entry.name not in allowed_names:
             raise ReviewIsolationError("review_exec_root_not_empty")
+        if entry.name == REVIEW_TEMP_ROOT_MANIFEST_NAME:
+            # JSON manifest is optional metadata; marker bytes stay the identity.
+            continue
         # Mirror _has_review_temp_root_marker's semantics exactly (#5849): the
         # sentinel must be a sole regular file (st_nlink == 1) whose bytes fullmatch
         # the marker pattern — a hardlinked or forged marker must not pass validation
@@ -933,6 +1148,9 @@ def _validate_private_exec_root(
             os.close(marker_fd)
         if not _REVIEW_TEMP_ROOT_MARKER_RE.fullmatch(marker):
             raise ReviewIsolationError("review_exec_root_marker_invalid")
+        saw_marker = True
+    if not saw_marker:
+        raise ReviewIsolationError("review_exec_root_marker_missing")
     return root
 
 
@@ -3569,6 +3787,9 @@ def prepare_isolated_review_launch(
         raise ReviewIsolationError("review_roots_must_be_parent_owned")
 
     all_rejects = _normalized_reject_roots(reject, reject_roots)
+    if help_text is not None or capabilities is not None:
+        raise ReviewIsolationError("caller_capability_override_forbidden")
+
     snap, write = validate_private_review_roots(
         snapshot_root=snap,
         write_root=write_root,
@@ -3581,8 +3802,6 @@ def prepare_isolated_review_launch(
         write_root=write,
         reject_roots=all_rejects,
     )
-    if help_text is not None or capabilities is not None:
-        raise ReviewIsolationError("caller_capability_override_forbidden")
     abs_argv = ensure_absolute_argv0(argv, reject_root=reject, reject_roots=all_rejects)
     binary = Path(abs_argv[0])
     if expected_binary is not None:

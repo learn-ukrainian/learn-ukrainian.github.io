@@ -13,6 +13,7 @@ cannot strand temporary roots.
 
 from __future__ import annotations
 
+import atexit
 import codecs
 import contextlib
 import hashlib
@@ -21,11 +22,12 @@ import os
 import re
 import shlex
 import shutil
+import signal
 import stat
 import subprocess
 import sys
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -45,6 +47,7 @@ from scripts.review.evidence import (
 )
 from scripts.review.isolation import (
     ISOLATION_POLICY_VERSION,
+    REVIEW_TEMP_ROOT_MANIFEST_NAME,
     REVIEW_TEMP_ROOT_MARKER_NAME,
     SEALED_READ_CHUNK_BYTES,
     ReviewIsolationError,
@@ -2581,6 +2584,7 @@ def _reviewer_context_paths(snapshot: ReviewSnapshot) -> frozenset[str]:
             if rel in {
                 ".review-snapshot-metadata.json",
                 REVIEW_TEMP_ROOT_MARKER_NAME,
+                REVIEW_TEMP_ROOT_MANIFEST_NAME,
             } or rel in inert_unchanged:
                 continue
             if rel.startswith(".review-bundle/"):
@@ -2627,7 +2631,7 @@ def _verify_reviewer_view(
             if path.is_symlink() or not path.is_file():
                 raise ReviewWorktreeError(f"review_view_non_regular:{path}")
             rel = path.relative_to(view).as_posix()
-            if rel == REVIEW_TEMP_ROOT_MARKER_NAME:
+            if rel in {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}:
                 continue
             actual.add(rel)
             source = snapshot.path / rel
@@ -2667,8 +2671,15 @@ def _create_reviewer_view(
             raise ReviewWorktreeError("review_manifest_not_object")
         deleted_paths = _deleted_paths_from_manifest(manifest, snapshot.changed_paths)
         rel_paths = list(context_paths or tuple(sorted(_reviewer_context_paths(snapshot))))
+        # View root already owns its own .lu-review-root(+.json) markers; never
+        # hardlink those from the snap (EEXIST) or overwrite identity.
+        _skip_view_link = frozenset(
+            {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
+        )
         for rel in rel_paths:
             if rel in deleted_paths:
+                continue
+            if rel in _skip_view_link:
                 continue
             source = snapshot.path / rel
             if not source.exists():
@@ -2686,7 +2697,13 @@ def _create_reviewer_view(
             for dirname in dirnames:
                 (Path(dirpath) / dirname).chmod(0o500)
         view.chmod(0o500)
-        _verify_reviewer_view(view, snapshot, context_paths=tuple(rel_paths))
+        verify_paths = tuple(
+            p
+            for p in rel_paths
+            if p
+            not in {REVIEW_TEMP_ROOT_MARKER_NAME, REVIEW_TEMP_ROOT_MANIFEST_NAME}
+        )
+        _verify_reviewer_view(view, snapshot, context_paths=verify_paths)
         return view
     except BaseException:
         _remove_review_root(view)
@@ -2746,6 +2763,56 @@ def _cleanup_review_resources(*, state: Any, roots: tuple[Path, ...]) -> None:
         raise ReviewWorktreeError("review_cleanup_failed:" + " | ".join(errors))
 
 
+@contextlib.contextmanager
+def _hardened_review_signal_handler(
+    get_cleanup_args: Callable[[], tuple[Any, tuple[Path, ...]]],
+) -> Iterator[None]:
+    """Trap termination signals and atexit to clean up review roots on interrupt."""
+    previous_handlers: dict[int, Any] = {}
+    signals_to_trap = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
+    cleaned = False
+
+    def _do_cleanup() -> None:
+        nonlocal cleaned
+        if cleaned:
+            return
+        cleaned = True
+        try:
+            state, roots = get_cleanup_args()
+            _cleanup_review_resources(state=state, roots=roots)
+        except Exception:
+            pass
+
+    def _sig_handler(signum: int, _frame: Any) -> None:
+        _do_cleanup()
+        sys.exit(128 + signum)
+
+    atexit_registered = False
+
+    def _atexit_handler() -> None:
+        _do_cleanup()
+
+    for sig in signals_to_trap:
+        with contextlib.suppress(ValueError, OSError):
+            previous_handlers[sig] = signal.signal(sig, _sig_handler)
+
+    try:
+        atexit.register(_atexit_handler)
+        atexit_registered = True
+    except Exception:
+        pass
+
+    try:
+        yield
+    finally:
+        for sig, handler in previous_handlers.items():
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(sig, handler)
+        if atexit_registered:
+            with contextlib.suppress(Exception):
+                atexit.unregister(_atexit_handler)
+
+
 def isolation_tool_config_for_engine(engine: str) -> dict[str, Any]:
     """Public helper: isolation ``tool_config`` fragment for bridge adapters."""
     return review_isolation_tool_config(engine)
@@ -2800,21 +2867,29 @@ def provision_review_worktree(
     state = None
     reviewer_view: Path | None = None
     reviewer_context_paths: tuple[str, ...] = ()
-    try:
-        write_root = _create_private_write_root()
-        exec_root = _create_private_exec_root()
-        # Resolve exact remote head/base inside the private object repository.
-        branch, pr_number, sha, base_sha = _resolve_exact_remote_target(
-            target,
-            repo_root=fetch_repo,
-            git_bin=git_bin,
-            gh_bin=gh_bin,
-            env=env,
-            repository=repository,
-            remote_url=remote_url,
-            default_branch=default_branch,
+
+    def _get_cleanup_args() -> tuple[Any, tuple[Path, ...]]:
+        return state, tuple(
+            cleanup_root
+            for cleanup_root in (reviewer_view, write_root, exec_root, fetch_repo)
+            if cleanup_root is not None
         )
+
+    with _hardened_review_signal_handler(_get_cleanup_args):
         try:
+            write_root = _create_private_write_root()
+            exec_root = _create_private_exec_root()
+            # Resolve exact remote head/base inside the private object repository.
+            branch, pr_number, sha, base_sha = _resolve_exact_remote_target(
+                target,
+                repo_root=fetch_repo,
+                git_bin=git_bin,
+                gh_bin=gh_bin,
+                env=env,
+                repository=repository,
+                remote_url=remote_url,
+                default_branch=default_branch,
+            )
             snapshot, state = materialize_review_snapshot(
                 fetch_repo,
                 mode="branch" if pr_number is None else "pr",
@@ -2824,92 +2899,90 @@ def provision_review_worktree(
                 changed_paths=(),
                 git_bin=git_bin,
             )
-        except (ReviewSnapshotError, ReviewIsolationError) as exc:
-            raise ReviewWorktreeError(str(exc)) from exc
-        changed_line_numbers = _changed_line_numbers_for_snapshot(
-            snapshot,
-            repo_root=fetch_repo,
-            git_bin=git_bin,
-        )
-        reviewer_context_paths = tuple(sorted(_reviewer_context_paths(snapshot)))
-        reviewer_view = _create_reviewer_view(
-            snapshot,
-            context_paths=reviewer_context_paths,
-        )
-
-        binder = ReviewIsolationEvidenceBinder()
-        provisioned = ProvisionedReviewWorktree(
-            path=reviewer_view,
-            branch=branch,
-            sha=sha,
-            pr_number=pr_number,
-            base_sha=base_sha,
-            source_fingerprint=snapshot.source_fingerprint,
-            source_state_id=snapshot.source_state_id,
-            patch_digest=snapshot.patch_digest,
-            bundle_identity=snapshot.bundle_identity,
-            changed_paths=snapshot.changed_paths,
-            write_root=write_root,
-            exec_root=exec_root,
-            evidence_binder=binder,
-            changed_line_numbers=changed_line_numbers,
-            mode="branch" if pr_number is None else "pr",
-            reject_roots=tuple(sorted({*reject_roots, str(reviewer_view)})),
-            isolation={
-                "live_git": False,
-                "evidence_only": True,
-                "project_instructions": "inert_evidence_only",
-                "isolation_policy_version": ISOLATION_POLICY_VERSION,
-                "source_fingerprint": snapshot.source_fingerprint,
-                "source_state_id": snapshot.source_state_id,
-                "patch_digest": snapshot.patch_digest,
-                "bundle_identity": snapshot.bundle_identity,
-                "changed_path_count": len(snapshot.changed_paths),
-                "review_bundle": ".review-bundle/",
-                "tool_config": review_isolation_tool_config("claude"),
-            },
-        )
-        try:
-            yield provisioned
-            _verify_reviewer_view(
-                reviewer_view,
+            changed_line_numbers = _changed_line_numbers_for_snapshot(
+                snapshot,
+                repo_root=fetch_repo,
+                git_bin=git_bin,
+            )
+            reviewer_context_paths = tuple(sorted(_reviewer_context_paths(snapshot)))
+            reviewer_view = _create_reviewer_view(
                 snapshot,
                 context_paths=reviewer_context_paths,
             )
-            # The ACP transport receives every changed byte parent-bound in its
-            # prompt and has no filesystem/terminal tools. Its caller validates
-            # the canonical response against this still-live snapshot. Other
-            # engines must bind the ordinary sandbox runner receipt here.
-            if acceptance_mode == "acp-inline":
-                return
-            # Source/snapshot/bundle/isolation evidence must match the run.
-            if binder.outcome is None or (binder.outcome == "ok" and binder.response_sha256 is None):
-                raise ReviewWorktreeError("review_result_receipt_missing")
+
+            binder = ReviewIsolationEvidenceBinder()
+            provisioned = ProvisionedReviewWorktree(
+                path=reviewer_view,
+                branch=branch,
+                sha=sha,
+                pr_number=pr_number,
+                base_sha=base_sha,
+                source_fingerprint=snapshot.source_fingerprint,
+                source_state_id=snapshot.source_state_id,
+                patch_digest=snapshot.patch_digest,
+                bundle_identity=snapshot.bundle_identity,
+                changed_paths=snapshot.changed_paths,
+                write_root=write_root,
+                exec_root=exec_root,
+                evidence_binder=binder,
+                changed_line_numbers=changed_line_numbers,
+                mode="branch" if pr_number is None else "pr",
+                reject_roots=tuple(sorted({*reject_roots, str(reviewer_view)})),
+                isolation={
+                    "live_git": False,
+                    "evidence_only": True,
+                    "project_instructions": "inert_evidence_only",
+                    "isolation_policy_version": ISOLATION_POLICY_VERSION,
+                    "source_fingerprint": snapshot.source_fingerprint,
+                    "source_state_id": snapshot.source_state_id,
+                    "patch_digest": snapshot.patch_digest,
+                    "bundle_identity": snapshot.bundle_identity,
+                    "changed_path_count": len(snapshot.changed_paths),
+                    "review_bundle": ".review-bundle/",
+                    "tool_config": review_isolation_tool_config("claude"),
+                },
+            )
             try:
-                verify_review_acceptance(
+                yield provisioned
+                _verify_reviewer_view(
+                    reviewer_view,
                     snapshot,
-                    git_bin=git_bin,
-                    expected_policy_version=ISOLATION_POLICY_VERSION,
-                    expected_capability_digest=binder.expected_capability_digest,
-                    expected_engine=binder.expected_engine,
-                    isolation_evidence=binder.isolation_evidence,
-                    require_isolation_evidence=True,
-                    expected_prompt_sha256=binder.expected_prompt_sha256,
-                    expected_prompt_transport=binder.expected_prompt_transport,
+                    context_paths=reviewer_context_paths,
                 )
-            except ReviewSnapshotError as exc:
-                raise ReviewWorktreeError(str(exc)) from exc
-        except Exception:
-            raise
-    finally:
-        _cleanup_review_resources(
-            state=state,
-            roots=tuple(
-                cleanup_root
-                for cleanup_root in (reviewer_view, write_root, exec_root, fetch_repo)
-                if cleanup_root is not None
-            ),
-        )
+                # The ACP transport receives every changed byte parent-bound in its
+                # prompt and has no filesystem/terminal tools. Its caller validates
+                # the canonical response against this still-live snapshot. Other
+                # engines must bind the ordinary sandbox runner receipt here.
+                if acceptance_mode == "acp-inline":
+                    return
+                # Source/snapshot/bundle/isolation evidence must match the run.
+                if binder.outcome is None or (binder.outcome == "ok" and binder.response_sha256 is None):
+                    raise ReviewWorktreeError("review_result_receipt_missing")
+                try:
+                    verify_review_acceptance(
+                        snapshot,
+                        git_bin=git_bin,
+                        expected_policy_version=ISOLATION_POLICY_VERSION,
+                        expected_capability_digest=binder.expected_capability_digest,
+                        expected_engine=binder.expected_engine,
+                        isolation_evidence=binder.isolation_evidence,
+                        require_isolation_evidence=True,
+                        expected_prompt_sha256=binder.expected_prompt_sha256,
+                        expected_prompt_transport=binder.expected_prompt_transport,
+                    )
+                except ReviewSnapshotError as exc:
+                    raise ReviewWorktreeError(str(exc)) from exc
+            except Exception:
+                raise
+        finally:
+            _cleanup_review_resources(
+                state=state,
+                roots=tuple(
+                    cleanup_root
+                    for cleanup_root in (reviewer_view, write_root, exec_root, fetch_repo)
+                    if cleanup_root is not None
+                ),
+            )
 
 
 @contextlib.contextmanager
@@ -2929,99 +3002,108 @@ def _provision_local_review_worktree(*, repo_root: Path) -> Iterator[Provisioned
     state = None
     reviewer_view: Path | None = None
     reviewer_context_paths: tuple[str, ...] = ()
-    try:
-        write_root = _create_private_write_root()
-        exec_root = _create_private_exec_root()
+
+    def _get_cleanup_args() -> tuple[Any, tuple[Path, ...]]:
+        return state, tuple(
+            cleanup_root
+            for cleanup_root in (reviewer_view, write_root, exec_root)
+            if cleanup_root is not None
+        )
+
+    with _hardened_review_signal_handler(_get_cleanup_args):
         try:
-            resolved_head = resolve_head_identity(root, git_bin=git_bin)
-            local_capture = capture_local_review_state(root, git_bin=git_bin, expected_head_sha=resolved_head)
-            snapshot, state = materialize_review_snapshot(
-                root,
-                mode="local",
-                head_sha=resolved_head,
-                base_sha=None,
-                local_capture=local_capture,
+            write_root = _create_private_write_root()
+            exec_root = _create_private_exec_root()
+            try:
+                resolved_head = resolve_head_identity(root, git_bin=git_bin)
+                local_capture = capture_local_review_state(root, git_bin=git_bin, expected_head_sha=resolved_head)
+                snapshot, state = materialize_review_snapshot(
+                    root,
+                    mode="local",
+                    head_sha=resolved_head,
+                    base_sha=None,
+                    local_capture=local_capture,
+                    git_bin=git_bin,
+                )
+            except (ReviewSnapshotError, ReviewIsolationError) as exc:
+                raise ReviewWorktreeError(str(exc)) from exc
+            changed_line_numbers = _changed_line_numbers_for_snapshot(
+                snapshot,
+                repo_root=root,
                 git_bin=git_bin,
             )
-        except (ReviewSnapshotError, ReviewIsolationError) as exc:
-            raise ReviewWorktreeError(str(exc)) from exc
-        changed_line_numbers = _changed_line_numbers_for_snapshot(
-            snapshot,
-            repo_root=root,
-            git_bin=git_bin,
-        )
-        reviewer_context_paths = tuple(sorted(_reviewer_context_paths(snapshot)))
-        reviewer_view = _create_reviewer_view(
-            snapshot,
-            context_paths=reviewer_context_paths,
-        )
-        env = _isolation_env(root)
-        reject_roots = _repository_worktree_roots(root, git_bin=git_bin, env=env)
-
-        binder = ReviewIsolationEvidenceBinder()
-        provisioned = ProvisionedReviewWorktree(
-            path=reviewer_view,
-            branch="LOCAL",
-            sha=resolved_head,
-            pr_number=None,
-            base_sha=None,
-            source_fingerprint=snapshot.source_fingerprint,
-            source_state_id=snapshot.source_state_id,
-            patch_digest=snapshot.patch_digest,
-            bundle_identity=snapshot.bundle_identity,
-            changed_paths=snapshot.changed_paths,
-            write_root=write_root,
-            exec_root=exec_root,
-            evidence_binder=binder,
-            changed_line_numbers=changed_line_numbers,
-            mode="local",
-            reject_roots=tuple(sorted({*reject_roots, str(reviewer_view)})),
-            isolation={
-                "live_git": False,
-                "evidence_only": True,
-                "project_instructions": "inert_evidence_only",
-                "isolation_policy_version": ISOLATION_POLICY_VERSION,
-                "source_fingerprint": snapshot.source_fingerprint,
-                "source_state_id": snapshot.source_state_id,
-                "patch_digest": snapshot.patch_digest,
-                "bundle_identity": snapshot.bundle_identity,
-                "changed_path_count": len(snapshot.changed_paths),
-                "review_bundle": ".review-bundle/",
-                "local_sealed_snapshot": True,
-            },
-        )
-        try:
-            yield provisioned
-            _verify_reviewer_view(
-                reviewer_view,
+            reviewer_context_paths = tuple(sorted(_reviewer_context_paths(snapshot)))
+            reviewer_view = _create_reviewer_view(
                 snapshot,
                 context_paths=reviewer_context_paths,
             )
-            if binder.outcome is None or (binder.outcome == "ok" and binder.response_sha256 is None):
-                raise ReviewWorktreeError("review_result_receipt_missing")
+            env = _isolation_env(root)
+            reject_roots = _repository_worktree_roots(root, git_bin=git_bin, env=env)
+
+            binder = ReviewIsolationEvidenceBinder()
+            provisioned = ProvisionedReviewWorktree(
+                path=reviewer_view,
+                branch="LOCAL",
+                sha=resolved_head,
+                pr_number=None,
+                base_sha=None,
+                source_fingerprint=snapshot.source_fingerprint,
+                source_state_id=snapshot.source_state_id,
+                patch_digest=snapshot.patch_digest,
+                bundle_identity=snapshot.bundle_identity,
+                changed_paths=snapshot.changed_paths,
+                write_root=write_root,
+                exec_root=exec_root,
+                evidence_binder=binder,
+                changed_line_numbers=changed_line_numbers,
+                mode="local",
+                reject_roots=tuple(sorted({*reject_roots, str(reviewer_view)})),
+                isolation={
+                    "live_git": False,
+                    "evidence_only": True,
+                    "project_instructions": "inert_evidence_only",
+                    "isolation_policy_version": ISOLATION_POLICY_VERSION,
+                    "source_fingerprint": snapshot.source_fingerprint,
+                    "source_state_id": snapshot.source_state_id,
+                    "patch_digest": snapshot.patch_digest,
+                    "bundle_identity": snapshot.bundle_identity,
+                    "changed_path_count": len(snapshot.changed_paths),
+                    "review_bundle": ".review-bundle/",
+                    "local_sealed_snapshot": True,
+                },
+            )
             try:
-                # Do not pass a tautological capability digest from the same
-                # evidence map; validate proof/required set from trusted evidence.
-                verify_review_acceptance(
+                yield provisioned
+                _verify_reviewer_view(
+                    reviewer_view,
                     snapshot,
-                    git_bin=git_bin,
-                    expected_policy_version=ISOLATION_POLICY_VERSION,
-                    expected_capability_digest=binder.expected_capability_digest,
-                    expected_engine=binder.expected_engine,
-                    isolation_evidence=binder.isolation_evidence,
-                    require_isolation_evidence=True,
-                    expected_prompt_sha256=binder.expected_prompt_sha256,
-                    expected_prompt_transport=binder.expected_prompt_transport,
+                    context_paths=reviewer_context_paths,
                 )
-            except ReviewSnapshotError as exc:
-                raise ReviewWorktreeError(str(exc)) from exc
-        except Exception:
-            raise
-    finally:
-        _cleanup_review_resources(
-            state=state,
-            roots=tuple(root for root in (reviewer_view, write_root, exec_root) if root is not None),
-        )
+                if binder.outcome is None or (binder.outcome == "ok" and binder.response_sha256 is None):
+                    raise ReviewWorktreeError("review_result_receipt_missing")
+                try:
+                    # Do not pass a tautological capability digest from the same
+                    # evidence map; validate proof/required set from trusted evidence.
+                    verify_review_acceptance(
+                        snapshot,
+                        git_bin=git_bin,
+                        expected_policy_version=ISOLATION_POLICY_VERSION,
+                        expected_capability_digest=binder.expected_capability_digest,
+                        expected_engine=binder.expected_engine,
+                        isolation_evidence=binder.isolation_evidence,
+                        require_isolation_evidence=True,
+                        expected_prompt_sha256=binder.expected_prompt_sha256,
+                        expected_prompt_transport=binder.expected_prompt_transport,
+                    )
+                except ReviewSnapshotError as exc:
+                    raise ReviewWorktreeError(str(exc)) from exc
+            except Exception:
+                raise
+        finally:
+            _cleanup_review_resources(
+                state=state,
+                roots=tuple(root for root in (reviewer_view, write_root, exec_root) if root is not None),
+            )
 
 
 @contextlib.contextmanager

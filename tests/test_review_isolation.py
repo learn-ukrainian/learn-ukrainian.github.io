@@ -6,6 +6,7 @@ import contextlib
 import hashlib
 import json
 import os
+import secrets
 import stat
 import subprocess
 import textwrap
@@ -158,6 +159,10 @@ def _private_review_roots(tmp_path: Path, label: str = "review") -> tuple[Path, 
         (write / child).mkdir(mode=0o700)
     (write / "empty-mcp.json").write_text('{"mcpServers":{}}\n', encoding="utf-8")
     (write / "empty-mcp.json").chmod(0o400)
+    # Exec-root validation requires the review temp sentinel.
+    marker = execution / ".lu-review-root"
+    marker.write_text(f"lu-review-root-v1:{secrets.token_hex(32)}\n", encoding="ascii")
+    marker.chmod(0o400)
     return write, execution
 
 

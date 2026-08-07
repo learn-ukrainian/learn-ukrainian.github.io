@@ -472,7 +472,7 @@ def _qualifying_reason(
     task_id = _dispatch_task_id(repo_root, info)
     is_dispatch_candidate = task_id is not None
 
-    if is_under_wt and info.detached and clean is True and _is_ancestor_of_origin_main(info.path):
+    if is_under_wt and info.detached and clean is True:
         has_matching_task = False
         task_settled = False
         if is_dispatch_candidate:
@@ -482,15 +482,20 @@ def _qualifying_reason(
                 try:
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
-                    if task_status in ("done", "failed", "no_deliverable") and active_ids is not None and task_id not in active_ids:
+                    if task_status in ("done", "failed", "no_deliverable") and (
+                        active_ids is None or task_id not in active_ids
+                    ):
                         task_settled = True
                 except Exception:
                     pass
 
-        if has_matching_task:
-            if task_settled:
+        ancestor = _is_ancestor_of_origin_main(info.path)
+        if has_matching_task and task_settled:
+            if ancestor:
                 return f"detached HEAD ancestor of origin/main; settled dispatch task-id={task_id}"
-        else:
+            return f"detached HEAD settled dispatch task-id={task_id}"
+
+        if ancestor:
             age_hours = _worktree_age_hours(info.path, now=now)
             if age_hours is not None and age_hours > 24.0:
                 return f"detached HEAD ancestor of origin/main; age {age_hours:.1f}h > 24h"
@@ -502,7 +507,9 @@ def _qualifying_reason(
             try:
                 task_data = json.loads(task_file.read_text(encoding="utf-8"))
                 task_status = task_data.get("status")
-                if task_status in ("done", "failed", "no_deliverable") and active_ids is not None and task_id not in active_ids:
+                if task_status in ("done", "failed", "no_deliverable") and (
+                    active_ids is not None and task_id not in active_ids
+                ):
                     if info.branch:
                         prs, pr_error = _query_pr_states(repo_root, info.branch)
                         if pr_error is None and not any(pr.state == "OPEN" for pr in prs):
@@ -513,6 +520,28 @@ def _qualifying_reason(
                 pass
 
     return None
+
+
+def find_needs_finalize_worktrees(repo_root: Path) -> list[dict[str, Any]]:
+    """Return all worktrees that have a task record with status 'needs_finalize'."""
+    results: list[dict[str, Any]] = []
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except Exception:
+        return []
+    for info in worktrees:
+        task_id = _dispatch_task_id(repo_root, info)
+        if task_id:
+            status = _task_record_status(repo_root, task_id)
+            if status == "needs_finalize":
+                results.append(
+                    {
+                        "path": str(info.path),
+                        "task_id": task_id,
+                        "branch": info.branch,
+                    }
+                )
+    return results
 
 
 def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
