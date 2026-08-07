@@ -22,7 +22,7 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert RULE.is_file(), "missing shared rule SSOT"
     body = RULE.read_text(encoding="utf-8")
     assert "plane-status" in body
-    assert "review-pr" in body
+    assert "review-pr" in body  # named as RETIRED; must not reappear as the active gate
     assert "dual_write" in body or "dual-write" in body
     assert "competing design" in body
     # Post-#5632 Sol alignment (drive-epic skill).
@@ -32,11 +32,11 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "fleet-comms is the durable source of truth" in body.lower()
     assert "legacy stores are read-only" in body.lower()
     assert "acp" in body.lower() and "provider transport" in body.lower()
-    # Direct one-round review regime (operator order 2026-08-06, PR #6423):
-    # the rule must document the direct default AND the opt-in sealed path.
+    # Direct one-round review only (operator 2026-08-06; sealed formal RETIRED 2026-08-07).
     assert "direct" in body.lower() and "one round" in body.lower().replace("-", " ")
-    assert "opt-in" in body.lower()
-    assert "review-pr" in body  # sealed path still documented (opt-in)
+    assert "retired" in body.lower()
+    assert "ask-" in body.lower()
+    assert "opt-in" not in body.lower()  # sealed formal is not opt-in; it is gone
     assert HELPER.is_file(), "missing shared launcher helper"
     helper = HELPER.read_text(encoding="utf-8")
     assert "fleet_comms_cold_clause" in helper
@@ -44,6 +44,8 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "fleet-comms-coordination.md" in helper
     assert "drive-epic" in helper
     assert "authoritative" in helper
+    assert "direct ask" in helper.lower() or "ask-" in helper
+    assert "review-pr" in helper  # named as retired in the cold clause
 
 
 def test_epic_launchers_source_shared_helper_or_rule_pointer() -> None:
@@ -70,11 +72,11 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
         "LU_AGENT_COMM_TRANSPORT",
         "All normal inter-agent asks",
         "2–6 seat discussions",
-        "sealed formal review provider calls use ACP",
         "never fall back to bridge/provider execution",
         "fleet-comms owns durable state",
         "legacy bridge/channel stores are read-only",
         "Continuity: stream lease already claimed",
+        "RETIRED",
     ):
         assert required in helper
 

@@ -704,10 +704,43 @@ def _cmd_list_eligible(args: argparse.Namespace) -> int:
     return 0
 
 
+# Operator 2026-08-07: shielded formal CF is retired. Multi-GB sealed clones
+# under $TMPDIR/shielded-reviews caused disk ENOSPC and process thrash for days.
+# Cross-family review remains: direct ask-* / PR comment verdicts only.
+# Unit tests may set LU_FORMAL_SHIELDED_CF=1 to exercise the old path.
+_FORMAL_SHIELDED_CF_RETIRED_MSG = """\
+review-pr: SHIELDED FORMAL CF IS RETIRED (operator 2026-08-07).
+
+Do not use sealed review-pr / lu-review snaps / shielded-reviews trees.
+Lightweight cross-family review:
+
+  printf '%s\\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \\
+    .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \\
+      --task-id review-<N> --type review
+
+Then post the verdict on the PR (gh pr comment / gh pr review) and merge when CI is green.
+publish-review-verdict / formal sealed jobs are not the default gate.
+"""
+
+
+def formal_shielded_cf_enabled() -> bool:
+    """Return True only when the retired formal path is explicitly re-enabled for tests."""
+    return os.environ.get("LU_FORMAL_SHIELDED_CF", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 def handle_review_pr(args: argparse.Namespace) -> int:
     """CLI handler for ``review-pr``."""
     if getattr(args, "list_eligible", False):
         return _cmd_list_eligible(args)
+
+    if not formal_shielded_cf_enabled():
+        print(_FORMAL_SHIELDED_CF_RETIRED_MSG.rstrip(), file=sys.stderr)
+        return 2
 
     try:
         pr = parse_pr_number(str(args.pr))

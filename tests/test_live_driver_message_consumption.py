@@ -146,4 +146,7 @@ def test_drive_epic_skill_keeps_all_required_live_inbox_boundaries():
     acknowledgement = ".venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver"
     assert text.count(inbox_command) == 4
     assert text.count(acknowledgement) == 4
-    assert ".venv/bin/python -m scripts.ai_agent_bridge asks --task-id review-pr-<PR_NUMBER>" in text
+    # Cross-family gate is direct ask-* only; sealed review-pr is retired.
+    assert "ask-" in text and "RETIRED" in text
+    assert "review-pr" in text  # named only as the retired path
+    assert "asks --task-id review-pr-" not in text

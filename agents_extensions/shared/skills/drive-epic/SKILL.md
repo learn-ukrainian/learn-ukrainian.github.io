@@ -210,26 +210,24 @@ action. Read and apply every `unread` or `read-but-not-live-consumed` entry, the
 ```
 
 ### 6. Cross-family review gate (load-bearing — discussion ≠ review)
+
 A review of record is **independent and cross-family** (outside the author's model
-family; never self-review, never same-family). Route it:
+family; never self-review, never same-family).
+
+**Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
+`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
+closed. Use lightweight direct review:
+
 ```bash
-# PR number is REQUIRED and positional (omitting it exits with a usage error):
-.venv/bin/python -m scripts.ai_agent_bridge review-pr <PR_NUMBER> --reviewer <cross-family-lane>
-.venv/bin/python -m scripts.ai_agent_bridge publish-review-verdict ...                             # publish the sealed verdict
+printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+    --task-id review-<N> --type review
+# Post verdict on the PR, then merge when CI is green.
 ```
-Pick the reviewer family and capability from the served reviewer-seat rule; the writer's
-family is never eligible. For a hard / non-routine change, record the live role selection
-and concrete `--override-reason`; do not hard-wire a reviewer identity in this skill. Read the review CONTENT
-(not just pass/fail), apply the deltas, re-probe gate-driving data yourself before
-trusting "verified". A review request is not a passive notification: after invoking
-`review-pr <PR_NUMBER>`, the requester owns its request state and must explicitly poll
-it on each subsequent cycle with:
-```bash
-.venv/bin/python -m scripts.ai_agent_bridge asks --task-id review-pr-<PR_NUMBER>
-```
-Wait for that request to show `replied`; treat `sent`, `processing`, `timed-out`, or
-`failed` as its actual state and act on it. Do not assume a disconnected reply will
-surface in the live driver's context.
+
+Pick the reviewer family from the served reviewer-seat rule; the writer's family
+is never eligible. Read the review CONTENT (not just pass/fail), apply deltas,
+re-probe gate-driving data yourself.
 
 ### 7. Merge discipline
 PRs only — never commit or merge to `main` directly. **Arm auto-merge the moment the
@@ -245,39 +243,23 @@ another lane's PR with `needs=merge` rather than merging it.
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
 **A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
-promises do not bind; this section does. Leaving worktrees / ACP review runtimes /
-`/tmp` formal-review snaps after merge is a process defect (ENOSPC / disk full is the
-known failure mode). Do not start the next formal `review-pr` or large dispatch until
-cleanup for the just-merged PR is complete.
+promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
+after merge is a process defect (ENOSPC / disk full is the known failure mode).
 
-**Order after `gh pr view <N>` shows `MERGED` (or auto-merge lands):**
+**Order after `gh pr view <N>` shows `MERGED`:**
 
-1. **Confirm** — `gh pr view <N> --json state,mergedAt,mergeCommit` (quote SHA when
-   handoff needs it).
+1. **Confirm** merge SHA.
 2. **Worktree first** — `git worktree remove --force .worktrees/dispatch/<agent>/<task>`
-   (and any other worktree still on that PR branch). Never leave a branch checked out
-   that blocks branch delete.
-3. **Branches** — delete local branch if present; ensure remote is gone
-   (`--delete-branch` on merge, else `git push origin --delete <branch>`); `git fetch
-   --prune`; `git worktree prune`.
-4. **Review / CF residue for that PR** (reap only when no live process holds the path):
-   - `.worktrees/dispatch/acp/runtime-review-<PR>*` — `git worktree unlock` if locked,
-     then `remove --force` (or `rm -rf` if already unregistered)
-   - `/tmp/lu-cf-clean/`, `/tmp/lu-review-*`, `/tmp/lu-pr*` tied to that PR or finished
-     formal snapshots — sealed snaps are often **read-only**: `chmod -R u+w` then
-     `rm -rf`
-   - runtime tmp under `$TMPDIR/learn-ukrainian/<task-id>*` if present
-   - stray worktree `.venv` if a worker created one
-5. **Optional sweeper** — not a substitute for step 4:
+3. **Branches** — local delete + remote gone + `git fetch --prune` + `git worktree prune`
+4. **Bulk reap** (preferred):
    ```bash
-   .venv/bin/python -c "from scripts.review.isolation import sweep_review_temp_orphans; print(sweep_review_temp_orphans())"
+   .venv/bin/python scripts/orchestration/reap_worktrees.py --apply
    ```
-6. **Prove** — `df -h /` and `git worktree list` must show no zombie path for that PR.
-   Record free space in the file handoff when disk was tight this session.
+   Also sweeps orphan review temps under `$TMPDIR` and `$TMPDIR/shielded-reviews` if any
+   leftovers remain from the retired formal path.
+5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
-**Do not** treat `gh pr merge --auto --squash --delete-branch` alone as closeout. **Do
-not** leave locked ACP review worktrees for finished reviews. **Do not** run another
-formal snapshot provision while disk is near full without reaping first.
+**Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
 
 ### 8. Handoff — dual-write, cutover-aware (see §Fleet-comms state below)
 End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;

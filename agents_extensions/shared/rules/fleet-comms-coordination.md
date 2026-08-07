@@ -21,7 +21,7 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
-| **Live routing data** | Caps, ladders, formal CF pins, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
+| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
 | **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
 **Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps/modes are
@@ -34,7 +34,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Half | Status | Surfaces |
 | --- | --- | --- |
 | **Session stream / lease** | Live | `claim_session_supervisor_env`, `SESSION_STREAM_*`, stream tail/digest, canary mint (hook-less seats) |
-| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`, `review-pr`, `publish-review-verdict` |
+| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via direct `ask-*` + PR comment (sealed `review-pr` RETIRED) |
 
 Launchers already claim leases. Drivers must **also** speak the message-plane + CF half.
 
@@ -52,7 +52,7 @@ only for an explicit rollback or compatibility probe.
 | --- | --- |
 | `authority` mode | Fleet-comms is the durable source of truth; legacy stores are read-only migration/projection sources |
 | `dual_write` mode | Compatibility soak/rollback mode, not normal operation |
-| ACP | Provider transport only; durable queues, retries, conversations, artifacts, receipts, and formal jobs belong to fleet-comms |
+| ACP | Provider transport only; durable queues, retries, conversations, artifacts, and receipts belong to fleet-comms |
 | Who may roll back authority / retention apply / eligibility | **Infra/harness lane** with present-tense operator/advisor approval |
 
 Do not create new authoritative bridge, channel, broker, or diary writes. Historical
@@ -74,12 +74,14 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams tail --stream epic:<N> --limit 20
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
-# Cross-family PR review — DIRECT by default (operator order 2026-08-06):
-# ONE round. The requester asks a cross-family lane for verdict + findings at the
-# current head, then posts them on the PR (gh pr comment / gh pr review).
+# Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
+# ONE round. Ask a cross-family lane for verdict + findings at the current head,
+# then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
+# Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
 printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --review
-# Formal sealed path (review-pr / publish-review-verdict) is OPT-IN, high-risk code only.
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review
+# SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
+# do not run it. CLI fails closed unless LU_FORMAL_SHIELDED_CF=1 (unit tests only).
 ```
 
 ### Routing observability contract
@@ -100,14 +102,9 @@ job/reservation state. The dashboard is read-only: its filters, search,
 details, and load-more controls never select, retry, cancel, reclaim, or reroute
 work.
 
-- **agy | kimi** remain `formal_review_eligible: false` until their isolation
-  proofs (#5555–#5556). They **request** CF via `review-pr`; they do not self-seal.
-  Native Grok passed its exact-head isolation proof and is eligible; Cursor
-  Grok remains a non-formal availability fallback.
-- Escalate hard/non-routine CF with Sol (`--reviewer codex --model gpt-5.6-sol`,
-  provider-default ACP effort) or Fable (`--reviewer claude --model claude-fable-5
-  --effort high`) per model-assignment. Every explicit pin also requires
-  `--override-reason` and still passes the normal hard gates.
+- Cross-family review is **direct only** (`ask-<lane>` + post verdict on the PR).
+  Shielded formal `review-pr` / eligibility pins are RETIRED (operator 2026-08-07).
+  Route the reviewer seat by model-assignment (outside the author's family).
 
 ## Standalone TUI/UI contract
 
@@ -118,10 +115,11 @@ Every epic driver session (any harness) MUST:
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Review of record = ONE cross-family round posted on the PR at the current head.
-   Direct ask + posted verdict is the default gate (operator order 2026-08-06); the
-   formal sealed path (`review-pr` / `publish-review-verdict`) is opt-in for
-   high-risk code only. Discussion and same-family chat are still not the gate.
+4. Review of record = ONE cross-family round posted on the PR at the current head
+   (direct ask + posted verdict). **Shielded formal CF (`review-pr`, sealed MCP,
+   multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
+   2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
+   and same-family chat are still not the gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
    - **grok / gemini / kimi:** canary mint/score
@@ -132,12 +130,11 @@ Every epic driver session (any harness) MUST:
 7. Provider drivers inject the **`drive-epic`** binding after their lease and
    provider canary. Interactive launchers never claim a driver lease.
 8. **Post-merge cleanup is mandatory** (operator 2026-08-07). A squash-merge is not
-   done until worktree + branch + CF/review temp residue for that PR are reaped and
-   `df -h /` + `git worktree list` prove no zombie. Order and paths: `drive-epic` skill
-   §7a (worktree before branch; ACP `runtime-review-<PR>*`; `/tmp/lu-cf-clean` /
-   `/tmp/lu-review-*` / `/tmp/lu-pr*` — chmod then rm for read-only sealed snaps). Do
-   not start another formal `review-pr` while disk is near full without reaping first.
-   Session chat promises do not bind; this rule and §7a do.
+   done until worktree + branch + any temp residue for that PR are reaped and
+   `df -h /` + `git worktree list` prove no zombie. Prefer
+   `scripts/orchestration/reap_worktrees.py --apply` (also sweeps review temps
+   under `$TMPDIR` and `$TMPDIR/shielded-reviews`). Do not create formal sealed
+   review trees. Session chat promises do not bind; this rule and §7a do.
 
 ## Operator launch surface (#5632)
 
@@ -169,33 +166,32 @@ Supported fleet seats cold-start through:
    max-only) vs explicit KimiCC (K3 defaults `high`), rollback, and no-auth
    fresh-agent smoke.
 
-Discussion is never formal CF. Formal CF remains `review-pr` /
-`publish-review-verdict` only. ACP is structured provider transport; fleet-comms
-owns the durable record and publication state.
+Discussion is never the review of record. **Shielded formal CF (`review-pr` /
+`publish-review-verdict` / sealed `lu-review-*`) is RETIRED** (operator 2026-08-07).
+Review of record = one direct cross-family `ask-*` + posted PR verdict. ACP is
+structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms owns
+durable coordination state.
 
-### Formal CF thrash ban (operator 2026-08-06)
+### CF thrash ban (operator 2026-08-06; formal path retired 2026-08-07)
 
 Agents MUST NOT:
 
-1. Push **empty commits** whose only purpose is CF reseal / authority-key reset.
-2. Re-run `review-pr` when this head already has sealed **APPROVED** (idempotent stop).
-3. Re-run `review-pr` when the tip tree is unchanged since an APPROVED ancestor
-   (empty reseals void exact-head binding without product change).
-4. Spend formal CF while **GitHub Actions** is in outage/degraded (check githubstatus).
+1. Push **empty commits** whose only purpose is re-triggering review / CI reseal.
+2. Re-request the same cross-family review when the PR head already has an
+   explicit APPROVED verdict for that SHA (idempotent stop).
+3. Burn another review seat when the tip tree is unchanged and no product delta
+   landed.
+4. Spend scarce review seats while **GitHub Actions** is in outage/degraded
+   (check githubstatus) unless the operator overrides.
 
-`review-pr` enforces (2)–(4) fail-closed. Rule (2) — exact-head already sealed
-**APPROVED** — is a HARD idempotent stop and is **never** overridable, including by
-`--allow-cf-thrash`. The override flag applies only to (3) empty-tree-tip reseals and
-(4) the GitHub Actions outage guard, operator-only with `--override-reason …`. Never
-auto-reset branches. (Python fail-closed enforcement is unchanged — this section only
-clarifies which guards the flag reaches.)
+Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF.
 
 ## ACP provider transport
 
 For normal **read-only inter-agent communication**, ACP is the only provider
-transport. Fleet launchers make ordinary `ask-*`, 2–6 participant `discuss`, and
-sealed formal-review calls use the durable ACP controller for enabled routes:
-Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek. The direct
+transport. Fleet launchers make ordinary `ask-*` and 2–6 participant `discuss`
+calls use the durable ACP controller for enabled routes: Codex, Grok, Claude,
+Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek. The direct
 `.venv/bin/python -m scripts.fleet_comms acp-discuss` surface remains available
 to operators. Selection starts no process at cold start and does not change
 `delegate.py`. The default is two rounds and the hard maximum is three.
