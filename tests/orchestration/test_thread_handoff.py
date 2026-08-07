@@ -3763,6 +3763,12 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
     assert all(not record["decision"] for record in template["decision_records"])
     assert all(not record["prohibition"] for record in template["constraint_records"])
     assert all(not record["action"] for record in template["next_actions"])
+    handoff_ref = f"handoff:{state['replacement']['handoff_path']}"
+    assert all(
+        record["source_ref"].startswith(f"{handoff_ref}#")
+        for category in ("goals", "decision_records", "constraint_records", "next_actions")
+        for record in template[category]
+    )
     assert all(
         th.context_canary._parse_and_validate_source_ref(record["source_ref"], category)
         for category, records in (
@@ -3778,7 +3784,9 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
     state_bytes = state_path.read_bytes()
     template_bytes = template_path.read_bytes()
     assert th.main(command) == 0
-    capsys.readouterr()
+    bootstrap = json.loads(capsys.readouterr().out)
+    assert bootstrap["handoff_path"] == state["replacement"]["handoff_path"]
+    assert bootstrap["bootstrap_prompt_path"] == state["replacement"]["bootstrap_prompt_path"]
     assert state_path.read_bytes() == state_bytes
     assert template_path.read_bytes() == template_bytes
 

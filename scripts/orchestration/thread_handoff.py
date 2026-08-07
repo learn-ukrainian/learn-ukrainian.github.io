@@ -236,8 +236,6 @@ def semantic_snapshot_template(state: dict[str, Any], *, generated_at: datetime)
     if not isinstance(lineage_id, str) or not isinstance(rollover_id, str) or not isinstance(handoff_path, str):
         raise ValueError("prepared rollover is missing the reserved snapshot identity or handoff path")
     handoff_ref = f"handoff:{handoff_path}"
-    decision_ref = f"decision:docs/decisions/{rollover_id}.md"
-    queue_ref = f"queue:batch_state/orchestrator-runs/{lineage_id}.json"
     return {
         "generated_at": isoformat_z(generated_at),
         "lineage_id": lineage_id,
@@ -248,7 +246,7 @@ def semantic_snapshot_template(state: dict[str, Any], *, generated_at: datetime)
             for index in range(1, 4)
         ],
         "decision_records": [
-            {"id": f"decision-{index}", "decision": "", "source_ref": f"{decision_ref}#decision-{index}"}
+            {"id": f"decision-{index}", "decision": "", "source_ref": f"{handoff_ref}#decision-{index}"}
             for index in range(1, 4)
         ],
         "constraint_records": [
@@ -260,7 +258,7 @@ def semantic_snapshot_template(state: dict[str, Any], *, generated_at: datetime)
             for index in range(1, 3)
         ],
         "next_actions": [
-            {"id": f"action-{index}", "action": "", "source_ref": f"{queue_ref}#action-{index}"}
+            {"id": f"action-{index}", "action": "", "source_ref": f"{handoff_ref}#action-{index}"}
             for index in range(1, 3)
         ],
     }
@@ -4285,6 +4283,8 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
                 "lineage_id": state["lineage_id"],
                 "rollover_id": replacement["rollover_id"],
                 "state_file": rel(state_path, state_root),
+                "handoff_path": replacement["handoff_path"],
+                "bootstrap_prompt_path": replacement["bootstrap_prompt_path"],
                 "semantic_snapshot_template": rel(template_path, state_root),
                 "semantic_snapshot_file": replacement["semantic_snapshot_path"],
                 "strict_questions_file": replacement["strict_questions_path"],
