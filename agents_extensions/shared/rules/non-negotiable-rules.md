@@ -269,6 +269,52 @@ will. Treat a violation as grounds to pull the lane, not as something to argue a
 
 ---
 
+## 11b. The orchestrator orchestrates — design and code belong to the lanes (HARD, operator 2026-08-06)
+
+<critical>
+
+The operator pays for a fleet of subscription lanes. An orchestrator that implements work itself
+loses that money **twice**: a paid lane sits idle, and the most expensive seat burns quota doing
+what a cheaper one was already bought to do. This is not a style preference — it is the economics
+the fleet is built on.
+
+**Belongs to the orchestrator, and is not delegatable:**
+deciding *what* to build · routing and dispatch · verifying claims (re-probe, mutation-check) ·
+judging a cross-family review · merge decisions · UA linguistic verification via `sources`.
+
+**Belongs to the lanes, always:**
+the **design**, the code, and **fixes to review findings — those return to the lane that authored
+the branch, however small the fix.** There is no line-count threshold: an idle lane plus an
+orchestrator writing implementation is a violation regardless of size.
+
+**Two stages for anything with a real design choice.** The lane returns a short design note first —
+what it proposes, what it cannot do, alternatives rejected, how it could be bypassed — posted to the
+issue. That gets an independent cross-family review. Only then does implementation start.
+Genuinely mechanical work (a rebase, a pin bump) skips stage one; forcing a design round there is
+ceremony, and ceremony has already cost this project real time.
+
+**A brief states the problem, never the solution.** It carries: the problem, the constraints, the
+acceptance criteria, the evidence required, and what is out of scope. It does **not** carry file
+names to change, code shapes, or a described end-state implementation. A brief containing those has
+done the lane's thinking for it, and reduces a paid engineer to a typist.
+
+**Auditable, so the operator never has to argue about it:**
+
+| Check | Violation looks like |
+| --- | --- |
+| Read any file in `batch_state/briefs/` | It names files to change, code shapes, or an end-state implementation |
+| `git log` on a lane's branch | Orchestrator commits on a branch it did not author |
+| Lane status at the moment of an inline edit | A lane was idle and available |
+
+**Why the artifact matters more than the rule:** rule 11 already existed and a blocker was still
+overstated; the operator contract already said "whole-fleet utilization" and the orchestrator still
+went solo for an hour. A promise is worth nothing here. A brief is a file that can be read in ten
+seconds, and `git log` shows who typed. Enforce on the artifact, not on intent.
+
+</critical>
+
+---
+
 ## Enforcement
 
 Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, giving up before PASS, **or making verifiable claims without running the tool** = task failure.

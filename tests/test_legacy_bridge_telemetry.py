@@ -185,7 +185,6 @@ def test_wrapper_records_false_result_and_exception_as_failures(
     [
         {"command_target": "retired", "content": "prompt", "task_id": "task"},
         {"command_target": "glm", "content": "prompt", "task_id": ""},
-        {"command_target": "glm", "content": "prompt", "task_id": "task", "review": True},
     ],
 )
 def test_refused_invocations_do_not_start_coverage_or_usage(
@@ -195,6 +194,24 @@ def test_refused_invocations_do_not_start_coverage_or_usage(
     with pytest.raises(ValueError):
         _acp_compat.run_compat_ask(**kwargs)
     assert not telemetry_db.exists()
+
+
+def test_review_true_runs_as_normal_ask_and_records_usage(
+    telemetry_db: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``review=True`` is accepted as a normal ask (operator order 2026-08-06)."""
+
+    def fake_impl(*_args, **_kwargs):
+        assert _kwargs.get("review") is True
+        return SimpleNamespace(ok=True)
+
+    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", fake_impl)
+    result = _acp_compat.run_compat_ask(
+        "glm", "prompt", task_id="task", review=True
+    )
+    assert result.ok is True
+    assert _rows(telemetry_db)[0][1:6] == ("glm", "operator", 1, 1, 0)
 
 
 def test_storage_outage_never_replaces_bridge_result(

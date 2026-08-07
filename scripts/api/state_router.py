@@ -882,11 +882,9 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
 
         else:
             # CodexBar capacity is unavailable (missing binary, timeout, non-zero exit, malformed JSON, unparseable schema, provider error, or fallback).
-            # Authoritative subscription capacity is ABSENT — mark lane explicitly UNAVAILABLE.
-            # Never present ledger-derived numeric burn/remaining/status as authoritative capacity.
-            agents[lane]["status"] = "unavailable"
-            agents[lane]["burn_pct_7d"] = None
-            agents[lane]["remaining_pct"] = None
+            # Retain ledger-derived burn_pct_7d/remaining_pct/status if available (or "unknown" if no cap/records).
+            # Do NOT overwrite agents[lane]["status"] to "unavailable", which creates a contradictory
+            # status vs health ("healthy: True, status: unavailable").
             err_msg = (cb_data.get("auth_error") if isinstance(cb_data, dict) else None) or "CodexBar usage data unavailable"
             err_kind = (cb_data.get("error_kind") if isinstance(cb_data, dict) else None) or "unavailable"
             err_code = cb_data.get("error_code") if isinstance(cb_data, dict) else None
@@ -918,9 +916,6 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "last_failure_at": cb_data.get("last_failure_at") if isinstance(cb_data, dict) else None,
                 "last_failure_code": cb_data.get("last_failure_code", err_code) if isinstance(cb_data, dict) else err_code,
             }
-            if lane == "claude":
-                agents[lane]["interactive"]["status"] = "unavailable"
-                agents[lane]["interactive"]["burn_pct_7d"] = None
 
     # Hybrid overlay: agent-runtime JSONL burn (rate-limits / outcomes).
     # CodexBar remains authoritative for subscription allotment %; this layer

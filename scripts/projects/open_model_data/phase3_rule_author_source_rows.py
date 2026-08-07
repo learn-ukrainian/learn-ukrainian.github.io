@@ -207,27 +207,63 @@ def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
             raise
 
 
-def _assert_public_safe(value: Any, *, path: str = "$") -> None:
+_SAFE_BINDING_KEYS = frozenset(
+    {
+        "role",
+        "role_name",
+        "actor_role",
+        "controller_identity_id",
+        "task_id",
+        "attestation_task_id",
+        "seat_id",
+        "runtime_id",
+        "binding_id",
+    }
+)
+
+
+def _binding_identity_strings(binding: Mapping[str, Any]) -> set[str]:
+    """Allow only known identity fields — never every nested string recursively."""
+    allowed: set[str] = set()
+    for key, value in binding.items():
+        key_l = str(key).lower()
+        if key_l not in _SAFE_BINDING_KEYS and not key_l.endswith("_id"):
+            continue
+        if isinstance(value, str) and value:
+            allowed.add(value)
+    return allowed
+
+
+def _assert_public_safe(
+    value: Any,
+    *,
+    path: str = "$",
+    approved_strings: frozenset[str] | None = None,
+) -> None:
     forbidden = ("unit_id", "locator", "fingerprint", "source_text", "corrected_text", "source_record", "error", "correct", "doc_id", "body")
+    approved = approved_strings or frozenset(
+        {
+            "phase3_rule_author_source_rows_receipt_v1",
+            IMPLEMENTATION_VERSION,
+        }
+    )
     if isinstance(value, Mapping):
         for key, item in value.items():
             lower = str(key).lower()
             if lower.endswith("policy_fingerprint_sha256") or lower == "partition_public_receipt_body_sha256":
-                _assert_public_safe(item, path=f"{path}.{key}")
+                _assert_public_safe(item, path=f"{path}.{key}", approved_strings=approved)
                 continue
             require(not any(token in lower for token in forbidden), f"receipt exposes forbidden field at {path}.{key}")
-            _assert_public_safe(item, path=f"{path}.{key}")
+            _assert_public_safe(item, path=f"{path}.{key}", approved_strings=approved)
     elif isinstance(value, list):
         for index, item in enumerate(value):
-            _assert_public_safe(item, path=f"{path}[{index}]")
+            _assert_public_safe(item, path=f"{path}[{index}]", approved_strings=approved)
     elif isinstance(value, str):
-        approved = {
-            "phase3_rule_author_source_rows_receipt_v1", IMPLEMENTATION_VERSION,
-            "heldout_steward", "seat_heldout_steward", "controller_phase3_heldout_steward_cursor_runtime_01",
-            "phase3-role-heldout-steward-cursor-v2", "phase3-heldout-partition-seal-cursor-v1",
-            "rule_author_extractor", "controller_phase3_rule_author_agy_runtime_01", "phase3-role-rule-author-agy-v3",
-        }
-        require(value in approved or (len(value) == SHA256_LENGTH and all(char in "0123456789abcdef" for char in value)), f"receipt contains unapproved text at {path}")
+        require(
+            value in approved
+            or (len(value) == SHA256_LENGTH and all(char in "0123456789abcdef" for char in value)),
+            f"receipt contains unapproved text at {path}",
+        )
 
 
 def _clearance_and_bindings(
@@ -286,6 +322,7 @@ def _clearance_and_bindings(
             evaluation_path=evaluation_path,
             coverage_path=coverage_path,
             role_path=role_path,
+            allow_legacy_source_rows=True,
         )
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
@@ -309,8 +346,13 @@ def _clearance_and_bindings(
     public_bindings = partition_receipt.get("input_bindings")
     require(isinstance(public_bindings, Mapping), "partition public input bindings missing")
     clearance_bindings = clearance["input_bindings"]
+    clearance_contract_sha256 = (
+        packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256
+        if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1"
+        else packets.COMBINED_CONTRACT_SHA256
+    )
     for key, actual in {
-        "combined_contract_sha256": packets.COMBINED_CONTRACT_SHA256,
+        "combined_contract_sha256": clearance_contract_sha256,
         "source_universe_receipt_sha256": freeze_sha,
         "evaluation_contract_sha256": sha256_file(evaluation_path),
         "coverage_contract_sha256": sha256_file(coverage_path),
@@ -446,7 +488,7 @@ def build(
         "role_binding": steward,
         "rule_author_binding": author,
         "input_bindings": {
-            "combined_contract_sha256": packets.COMBINED_CONTRACT_SHA256,
+            "combined_contract_sha256": clearance["input_bindings"]["combined_contract_sha256"],
             "source_universe_receipt_sha256": sha256_file(source_universe_dir / packets.LEDGER_RECEIPT),
             "ua_gec_ledger_sha256": ledger_sha,
             "sources_db_sha256": sha256_file(sources_db),
@@ -477,7 +519,18 @@ def build(
     }
     receipt["receipt_sha256"] = receipt_body_sha256(receipt)
     _validate(receipt, "receipt", "source-row receipt")
-    _assert_public_safe(receipt)
+    approved = frozenset(
+        {
+            "phase3_rule_author_source_rows_receipt_v1",
+            IMPLEMENTATION_VERSION,
+            "heldout_steward",
+            "seat_heldout_steward",
+            "rule_author_extractor",
+            * _binding_identity_strings(steward),
+            * _binding_identity_strings(author),
+        }
+    )
+    _assert_public_safe(receipt, approved_strings=approved)
     _atomic_write(public_receipt_path, (canonical_json(receipt) + "\n").encode("utf-8"), PRIVATE_FILE_MODE)
     return receipt
 

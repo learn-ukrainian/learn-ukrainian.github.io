@@ -85,6 +85,17 @@ def test_production_registry_separates_sol_capacity_values() -> None:
         "cold_start_budget_tokens": 104_857,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
     }
+    assert profiles["kimicc_k3_256k"] == {
+        "profile_id": "kimicc_k3_256k",
+        "transport": "kimicc",
+        "main_model_id": "kimi-k3-256k",
+        "model_id_patterns": [r"^kimi-k3-256k$", r"^k3-256k$"],
+        "main_context_window_tokens": 262_144,
+        "auto_compact_capacity_tokens": 249_036,
+        "cold_start_profile": "compact",
+        "cold_start_budget_tokens": 26_214,
+        "rollover_warning_percentages": [75.0, 85.0, 92.0],
+    }
     assert profiles["kimicc_k27"]["main_context_window_tokens"] == 262_144
     assert profiles["kimicc_k27"]["auto_compact_capacity_tokens"] == 249_036
     assert profiles["kimicc_k27_highspeed"]["main_model_id"] == "kimi-k2.7-code-highspeed"
@@ -112,6 +123,21 @@ def test_native_codex_profile_accepts_sol_and_rejects_other_models() -> None:
     assert mismatch["profile_id"] == "fallback"
     assert mismatch["resolution_reason"] == "model-mismatch"
     assert mismatch["expected_profile_id"] == "native_codex"
+
+
+def test_kimicc_k3_256k_profile_is_distinct_from_the_1m_k3_profile() -> None:
+    """k3-256k must never silently borrow the 1M kimicc_k3 window."""
+    trusted = resolve_profile("kimicc_k3_256k", "kimi-k3-256k")
+    alias = resolve_profile("kimicc_k3_256k", "k3-256k")
+    mismatch = resolve_profile("kimicc_k3_256k", "kimi-k3[1m]")
+
+    assert trusted["profile_id"] == "kimicc_k3_256k"
+    assert trusted["trusted"]
+    assert trusted["main_context_window_tokens"] == 262_144
+    assert alias["trusted"]
+    assert mismatch["profile_id"] == "fallback"
+    assert mismatch["resolution_reason"] == "model-mismatch"
+    assert mismatch["expected_profile_id"] == "kimicc_k3_256k"
 
 
 def test_resolution_fails_closed_without_trusted_route_metadata() -> None:

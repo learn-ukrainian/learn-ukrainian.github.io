@@ -28,9 +28,18 @@ tie-breakers.
    scratch directory (like `batch_state/`).
    `core.bare=true` on primary is a **bug** to heal (`git config core.bare false` +
    `extensions.worktreeConfig=true`), never an intentional mode. PRs for everything — no
-   direct commits to main. After merge: delete branch local + remote, remove worktree. Close
-   issues when acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on
-   every commit. Session start/end: sweep worktrees, branches, open PRs — a dangling ref
+   direct commits to main. **After merge, cleanup is mandatory before the next formal
+   review or large dispatch** (operator 2026-08-07; ENOSPC is the known failure): (1)
+   confirm MERGED, (2) `git worktree remove --force` for that PR's dispatch worktree
+   **before** deleting the local branch, (3) delete local + remote branch +
+   `git fetch --prune` + `git worktree prune`, (4) reap finished CF residue for that PR
+   when no process holds it — `.worktrees/dispatch/acp/runtime-review-<PR>*`,
+   `/tmp/lu-cf-clean/`, `/tmp/lu-review-*`, `/tmp/lu-pr*` (read-only sealed snaps need
+   `chmod -R u+w` then `rm -rf`), task runtime tmp, stray worktree `.venv`, (5) prove
+   with `df -h /` and `git worktree list` (no zombie path for that PR). A squash-merge
+   alone is not done. Full checklist: `drive-epic` skill §7a. Close issues when
+   acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on every
+   commit. Session start/end: sweep worktrees, branches, open PRs — a dangling ref
    reads as unfinished work to the rest of the fleet.
 4. **Utilize the whole fleet — together you are stronger.** Substantive design/decisions get
    ≥1 other agent BEFORE committing; solo only for trivial work. Two distinct duties, don't
@@ -39,11 +48,19 @@ tie-breakers.
    OUTSIDE your own model family** — never self-review, never same-family swarms. Keep lanes
    busy — an idle paid lane wastes the operator's money (operator policy: max out paid
    limits; cost is never a reason to hold back — passivity is the failure mode, not spend).
+   **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
+   `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
+   work is **authority brief (Fable or Sol) → heap/practical implement**, not a mid-brain
+   solo marathon. Session breadth floor + handoff report:
+   `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
    table is `model-assignment.md` (served at `/api/rules`). Model names are examples, not
    constants — confirm current capability before relying on a specific string. Distinguish the
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
+   **Tiers:** authority (Fable/Sol) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
+   weaker with a complete advisor packet). Fable remains the Anthropic authority seat even
+   under a small Claude sub — reach via native Claude pin or **Cursor → Fable**.
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
    operations, not an outage. On limit: check `/api/orient` runtime headroom; for
    Claude/Codex budget buckets at `near_cap`, substitute per

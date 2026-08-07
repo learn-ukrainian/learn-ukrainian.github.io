@@ -508,3 +508,34 @@ def test_fresh_codexbar_overlay_omits_ledger_stale_warning(monkeypatch, tmp_path
 
     assert data["diagnostics"]["stale"] is False
     assert not any(">15min" in w or "stale" in w.lower() for w in data["recommendation"]["warnings"])
+
+
+def test_codexbar_probe_failure_does_not_wipe_ledger_status_and_burn(monkeypatch, tmp_path):
+    """When CodexBar lacks weekly_used_pct, retain ledger-derived burn and status instead of 'unavailable'."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 100.0, now)])
+
+    def _failing_codexbar(provider: str) -> dict:
+        return {
+            "lane": provider,
+            "primary_used_pct": None,
+            "weekly_used_pct": None,
+            "status": "unavailable",
+            "auth_error": "CodexBar usage data unavailable",
+            "error_kind": "unavailable",
+            "source": "codexbar",
+            "fetched_at": None,
+            "stale": False,
+            "age_s": None,
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _failing_codexbar)
+
+    data = state_router.compute_routing_budget(now)
+
+    codex = data["agents"]["codex"]
+    assert codex["status"] == "cool"
+    assert codex["burn_pct_7d"] == 10.0
+    assert codex["remaining_pct"] == 90.0
+    assert codex["codexbar"]["status"] == "unavailable"
+
