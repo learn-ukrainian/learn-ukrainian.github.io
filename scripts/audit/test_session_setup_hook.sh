@@ -410,7 +410,10 @@ setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" claude old-thread
 output="$(run_hook "$fixture_root")"
 assert_contains "$output" "PENDING THREAD ROLLOVER DETECTED" "pending packet"
-assert_contains "$output" "--agent claude" "pending packet"
+assert_contains "$output" "bootstrap-replacement -a claude" "pending packet"
+assert_contains "$output" "confirm-replacement -a claude" "pending packet"
+assert_contains "$output" "-t fixture-session-claude" "pending packet"
+assert_contains "$output" "Fill snapshot; first confirm emits questions." "pending packet"
 assert_not_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "pending packet"
 
 # 12. No live packet + no legacy artifacts emits cold-start engine guidance.
@@ -424,9 +427,9 @@ setup_fixture "$fixture_root"
 prepare_fixture "$fixture_root" claude old-claude
 prepare_fixture "$fixture_root" claude-infra old-infra
 output_claude="$(run_hook "$fixture_root" 0 claude)"
-assert_contains "$output_claude" "--agent claude " "engine lane isolation"
+assert_contains "$output_claude" "bootstrap-replacement -a claude" "engine lane isolation"
 output_infra="$(run_hook "$fixture_root" 0 claude-infra)"
-assert_contains "$output_infra" "--agent claude-infra" "engine lane isolation"
+assert_contains "$output_infra" "bootstrap-replacement -a claude-infra" "engine lane isolation"
 
 # 14. Malformed and ambiguous v2 packets stop and do not fall back.
 setup_fixture "$fixture_root"
@@ -490,7 +493,8 @@ assert_not_contains "$output_phantom" "PENDING THREAD ROLLOVER DETECTED" "phanto
 # Canonical slot (what --epic harness must export): live packet is surfaced.
 output_harness="$(run_hook "$fixture_root" 0 "$harness_slot")"
 assert_contains "$output_harness" "PENDING THREAD ROLLOVER DETECTED" "epic harness surfaces claude-infra packet (#5201)"
-assert_contains "$output_harness" "--agent claude-infra" "epic harness surfaces claude-infra packet (#5201)"
+assert_contains "$output_harness" "bootstrap-replacement -a claude-infra" "epic harness surfaces claude-infra packet (#5201)"
+assert_contains "$output_harness" "confirm-replacement -a claude-infra" "epic harness surfaces claude-infra packet (#5201)"
 assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epic harness surfaces claude-infra packet (#5201)"
 
 # 17b. An exhausted aggregate budget leaves the durable lease state unknown;
