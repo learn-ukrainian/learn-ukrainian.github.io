@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Safe post-task reaper for dispatch worktrees.
 
-Reaps the dispatch worktree bound to one task_id only after the task is terminal
-and the worktree is clean.  Optional ACP runtime-review paths are reaped only
-when the owning task is terminal, the path can be bound to that task, and no
-live process holds the path.
+Reaps the dispatch worktree bound to one task_id only after the task is terminal,
+the worktree is clean, and (when a PID is recorded) the process is dead.  ACP
+runtime paths are reaped only when they are explicitly listed in the task state
+(``acp_runtime_paths``), the task is terminal, the path is clean, and no live
+process holds it.
 
 Default mode is dry-run; pass --apply to delete anything.
 """
@@ -14,7 +15,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -105,6 +105,26 @@ def _worktree_path_from_state(state: dict[str, Any]) -> Path | None:
     return None
 
 
+def _acp_runtime_paths_from_state(state: dict[str, Any]) -> list[Path]:
+    """Return ACP runtime paths explicitly bound to this task in state.
+
+    Paths are taken from ``acp_runtime_paths`` (a list of strings).  Name or
+    substring matching is never used; an unbound path is not ours to reap.
+    """
+    raw = state.get("acp_runtime_paths")
+    if not isinstance(raw, list):
+        return []
+    candidates: list[Path] = []
+    for item in raw:
+        if not item:
+            continue
+        try:
+            candidates.append(Path(str(item)).resolve())
+        except OSError:
+            continue
+    return candidates
+
+
 def _is_under_dispatch_worktrees(path: Path) -> bool:
     """True for paths inside .worktrees/dispatch/ but outside the ACP runtime subtree."""
     try:
@@ -112,6 +132,15 @@ def _is_under_dispatch_worktrees(path: Path) -> bool:
     except ValueError:
         return False
     return rel.parts[:1] != ("acp",)
+
+
+def _is_under_acp_runtime_root(path: Path) -> bool:
+    """True for paths inside .worktrees/dispatch/acp/."""
+    try:
+        path.resolve().relative_to(_ACP_RUNTIME_ROOT)
+    except ValueError:
+        return False
+    return True
 
 
 def _is_registered_worktree(path: Path, repo_root: Path) -> bool:
@@ -128,11 +157,16 @@ def _is_registered_worktree(path: Path, repo_root: Path) -> bool:
     return False
 
 
-def _worktree_is_dirty(path: Path) -> bool | None:
+def _worktree_is_dirty(path: Path, *, ignore_deleted_tracked: bool = False) -> bool | None:
     proc = _run_git(["status", "--porcelain"], cwd=path)
     if proc.returncode != 0:
         return None
-    return bool((proc.stdout or "").strip())
+    lines = [line for line in (proc.stdout or "").splitlines() if line.strip()]
+    if ignore_deleted_tracked:
+        # No-checkout ACP runtime worktrees report every tracked file as deleted.
+        # Ignore those baseline deletions; flag only untracked/modified additions.
+        lines = [line for line in lines if not (line[0] == "D" or line[1] == "D")]
+    return bool(lines)
 
 
 def _git_worktree_is_locked(path: Path, repo_root: Path) -> bool:
@@ -156,11 +190,30 @@ def _git_worktree_is_locked(path: Path, repo_root: Path) -> bool:
     return True
 
 
-def _is_path_held_by_process(path: Path) -> bool:
-    """Return True if a live process appears to hold ``path``.
+def _pid_alive(pid: int) -> bool | None:
+    """Return True if ``pid`` is alive, False if dead, None if probe failed.
 
-    Prefers ``lsof`` on the directory.  When lsof is unavailable or fails,
-    falls back to the git worktree lock bit as a conservative proxy.
+    Fail-closed callers must treat ``None`` as 'retain'.
+    """
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return None
+    return True
+
+
+def _probe_path_liveness(path: Path) -> bool | None:
+    """Return True if a live process holds ``path``, False if not, None on error.
+
+    Uses ``lsof +D`` when available.  Any probe failure (missing binary, timeout,
+    nonzero exit, or subprocess error) returns ``None`` so the caller can fail
+    closed and retain the path.
     """
     try:
         proc = subprocess.run(
@@ -171,10 +224,15 @@ def _is_path_held_by_process(path: Path) -> bool:
             check=False,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.SubprocessError):
-        return _git_worktree_is_locked(path, ROOT)
+        return None
     if proc.returncode != 0:
-        return _git_worktree_is_locked(path, ROOT)
+        return None
     return any(line and not line.startswith("COMMAND") for line in (proc.stdout or "").splitlines())
+
+
+def _unlock_worktree(path: Path, repo_root: Path) -> None:
+    """Best-effort unlock of a git worktree before removal."""
+    _run_git(["worktree", "unlock", str(path)], cwd=repo_root)
 
 
 def _remove_worktree(path: Path, repo_root: Path, *, force: bool = True) -> tuple[bool, str | None]:
@@ -191,30 +249,16 @@ def _remove_worktree(path: Path, repo_root: Path, *, force: bool = True) -> tupl
     return True, None
 
 
-def _safe_label(task_id: str) -> str:
-    return re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("-._")[:32]
-
-
-def _find_acp_runtime_worktrees(task_id: str) -> list[Path]:
-    """Find ACP runtime worktrees whose name binds them to task_id.
-
-    Actual ACP execution worktrees are named ``runtime-{label}-{uuid}``.  The
-    skill text also references ``runtime-review-*`` prefixes; we include both
-    shapes but never return paths by prefix alone -- the caller must still
-    require task terminal status and a dead process before reaping.
-    """
-    root = _ACP_RUNTIME_ROOT
-    if not root.is_dir():
-        return []
-    label = _safe_label(task_id)
-    candidates: list[Path] = []
-    for path in root.iterdir():
-        if not path.is_dir():
-            continue
-        name = path.name
-        if name.startswith(f"runtime-{label}-") or (name.startswith("runtime-review-") and label in name):
-            candidates.append(path)
-    return candidates
+def _parse_state_pid(state: dict[str, Any]) -> int | None:
+    """Return a positive integer PID from task state, or None."""
+    raw = state.get("pid")
+    if isinstance(raw, bool):
+        return None
+    if isinstance(raw, int):
+        return raw if raw > 0 else None
+    if isinstance(raw, str) and raw.isdigit():
+        return int(raw) if int(raw) > 0 else None
+    return None
 
 
 def _reap_main_worktree(
@@ -292,6 +336,24 @@ def _reap_main_worktree(
             "error": None,
         }
 
+    pid = _parse_state_pid(state)
+    if pid is not None:
+        alive = _pid_alive(pid)
+        if alive is True:
+            return {
+                "path": str(bound_path),
+                "action": "retained",
+                "reason": f"live process holds worktree (pid={pid})",
+                "error": None,
+            }
+        if alive is None:
+            return {
+                "path": str(bound_path),
+                "action": "retained",
+                "reason": f"liveness probe failed for recorded pid={pid}",
+                "error": None,
+            }
+
     if not apply:
         return {
             "path": str(bound_path),
@@ -316,7 +378,7 @@ def _reap_acp_runtime_worktrees(
     repo_root: Path,
     apply: bool,
 ) -> list[dict[str, Any]]:
-    """Evaluate and optionally reap finished ACP runtime-review worktrees."""
+    """Evaluate and optionally reap ACP runtime worktrees bound in task state."""
     status = state.get("status")
     status_str = str(status) if status is not None else None
 
@@ -326,7 +388,29 @@ def _reap_acp_runtime_worktrees(
         return []
 
     results: list[dict[str, Any]] = []
-    for path in _find_acp_runtime_worktrees(task_id):
+    for path in _acp_runtime_paths_from_state(state):
+        if not path.exists():
+            results.append(
+                {
+                    "path": str(path),
+                    "action": "retained",
+                    "reason": "bound ACP runtime path does not exist",
+                    "error": None,
+                }
+            )
+            continue
+
+        if not _is_under_acp_runtime_root(path):
+            results.append(
+                {
+                    "path": str(path),
+                    "action": "retained",
+                    "reason": "unknown ownership: outside .worktrees/dispatch/acp/",
+                    "error": None,
+                }
+            )
+            continue
+
         if not _is_registered_worktree(path, repo_root):
             results.append(
                 {
@@ -338,12 +422,45 @@ def _reap_acp_runtime_worktrees(
             )
             continue
 
-        if _is_path_held_by_process(path):
+        dirty = _worktree_is_dirty(path, ignore_deleted_tracked=True)
+        if dirty is None:
+            results.append(
+                {
+                    "path": str(path),
+                    "action": "retained",
+                    "reason": "unable to determine worktree cleanliness",
+                    "error": None,
+                }
+            )
+            continue
+        if dirty:
+            results.append(
+                {
+                    "path": str(path),
+                    "action": "retained",
+                    "reason": "worktree has uncommitted changes",
+                    "error": None,
+                }
+            )
+            continue
+
+        liveness = _probe_path_liveness(path)
+        if liveness is True:
             results.append(
                 {
                     "path": str(path),
                     "action": "retained",
                     "reason": "live process holds path",
+                    "error": None,
+                }
+            )
+            continue
+        if liveness is None:
+            results.append(
+                {
+                    "path": str(path),
+                    "action": "retained",
+                    "reason": "liveness probe failed",
                     "error": None,
                 }
             )
@@ -354,18 +471,19 @@ def _reap_acp_runtime_worktrees(
                 {
                     "path": str(path),
                     "action": "would_remove",
-                    "reason": "task terminal and process gone",
+                    "reason": "task terminal, path clean, and process gone",
                     "error": None,
                 }
             )
             continue
 
+        _unlock_worktree(path, repo_root)
         ok, error = _remove_worktree(path, repo_root)
         results.append(
             {
                 "path": str(path),
                 "action": "removed" if ok else "error",
-                "reason": "task terminal and process gone",
+                "reason": "task terminal, path clean, and process gone",
                 "error": error,
             }
         )
@@ -453,7 +571,7 @@ def main(argv: list[str] | None = None) -> int:
         "--include-acp-runtime",
         default=True,
         action=argparse.BooleanOptionalAction,
-        help="Also evaluate ACP runtime-review worktrees bound to the task (default: on)",
+        help="Also evaluate ACP runtime paths listed in task state (default: on)",
     )
     args = parser.parse_args(argv)
 
