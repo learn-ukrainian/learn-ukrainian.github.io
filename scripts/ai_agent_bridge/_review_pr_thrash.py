@@ -13,11 +13,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.fleet_comms.formal_review_jobs import FormalReviewJobsError, open_formal_review_jobs
-from scripts.fleet_comms.review_publication import ReviewPublicationError, parse_sealed_verdict_payload
+from scripts.fleet_comms.review_publication import ReviewPublicationError
 
 _GATE = "cross-family-review"
 _GITHUB_STATUS_COMPONENTS = "https://www.githubstatus.com/api/v2/components.json"
-_ACTIONS_OUTAGE = frozenset({"major_outage", "partial_outage"})
+_ACTIONS_OUTAGE = frozenset({"major_outage", "partial_outage", "degraded_performance"})
 
 
 @dataclass(frozen=True)
@@ -110,15 +110,6 @@ def evaluate_formal_cf_thrash(
     if not head:
         return ThrashDecision("continue", "", 0)
 
-    if check_actions and not allow_thrash:
-        outaged = github_actions_outaged()
-        if outaged is True:
-            return thrash_refuse(
-                "GitHub Actions is in outage/degraded (githubstatus). "
-                "Do not spend formal CF or reseal until Actions recovers. "
-                "Override only with --allow-cf-thrash --override-reason …"
-            )
-
     approved = _load_approved_heads(repository=repository, pr_number=pr_number)
     for approved_head, review_id in approved:
         if approved_head == head:
@@ -131,6 +122,15 @@ def evaluate_formal_cf_thrash(
 
     if allow_thrash:
         return ThrashDecision("continue", "", 0)
+
+    if check_actions:
+        outaged = github_actions_outaged()
+        if outaged is True:
+            return thrash_refuse(
+                "GitHub Actions is in outage/degraded (githubstatus). "
+                "Do not spend formal CF or reseal until Actions recovers. "
+                "Override only with --allow-cf-thrash --override-reason …"
+            )
 
     if git_repo is not None and approved:
         for approved_head, review_id in approved:

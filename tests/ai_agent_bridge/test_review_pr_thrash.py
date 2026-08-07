@@ -141,3 +141,24 @@ def test_github_actions_outaged_parses_status():
         return_value=_Resp(),
     ):
         assert github_actions_outaged() is True
+
+
+def test_already_approved_wins_over_actions_outage():
+    with (
+        patch(
+            "scripts.ai_agent_bridge._review_pr_thrash._load_approved_heads",
+            return_value=[("abc123", "review_1")],
+        ),
+        patch(
+            "scripts.ai_agent_bridge._review_pr_thrash.github_actions_outaged",
+            return_value=True,
+        ),
+    ):
+        d = evaluate_formal_cf_thrash(
+            repository="org/repo",
+            pr_number=1,
+            head_sha="ABC123",
+            git_repo=None,
+        )
+    assert d.action == "already_approved"
+    assert d.exit_code == 0
