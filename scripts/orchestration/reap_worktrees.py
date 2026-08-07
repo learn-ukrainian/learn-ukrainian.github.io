@@ -383,9 +383,11 @@ def _activity_reason(
         task_status = str(raw_status) if raw_status else None
     # Stale "running" rows with a dead worker PID must not block reaping forever
     # (observed: multi-hour dispatch workers left status=running after exit).
-    if task_status in {"queued", "starting", "running", "needs_finalize"}:
-        if _task_pid_alive(task_payload):
-            return f"non-terminal dispatch task-id={task_id} status={task_status}"
+    if (
+        task_status in {"queued", "starting", "running", "needs_finalize"}
+        and _task_pid_alive(task_payload)
+    ):
+        return f"non-terminal dispatch task-id={task_id} status={task_status}"
     if live_cwds is not None:
         worktree = info.path.resolve()
         for cwd in live_cwds:
@@ -1142,7 +1144,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"errors={sweep.get('errors', 0)}",
                 file=sys.stderr,
             )
-        except Exception as exc:  # noqa: BLE001 — never fail worktree reap on sweep
+        except Exception as exc:
             print(f"review_temp_sweep: skipped ({exc})", file=sys.stderr)
     return 1 if any(result.action == "error" for result in results) else 0
 
