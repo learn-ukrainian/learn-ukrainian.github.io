@@ -40,6 +40,7 @@ def test_rule_sources_includes_all_unscoped_files():
         "agents_extensions/shared/rules/delegate-must-use-worktree.md",
         "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/model-assignment.md",
+        "agents_extensions/shared/rules/fleet-driver-routing.md",
         "docs/best-practices/fleet-shared-doctrine.md",
         "docs/best-practices/fleet-role-scorecard.md",
     }
@@ -48,6 +49,14 @@ def test_rule_sources_includes_all_unscoped_files():
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/model-assignment.md"
     ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-driver-routing.md"
+    )
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-driver-routing.md"
+    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-shared-doctrine.md")
     # Fleet-comms mid-cutover rule sits with operational workflow, before model table.
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/workflow.md"

@@ -110,6 +110,33 @@ name. Respect the live caps (in-flight ceilings), the language-lane restriction
 per the served rules), folk carve-outs (cross-family only), and the judge-seat rules.
 On limit: note the substitution and reroute per the fallback table — never block on one lane.
 
+### 3-routing. Mandatory ROUTING_CARD_V1 + breadth (operator GO 2026-08-06)
+
+**Binding full text:** `agents_extensions/shared/rules/fleet-driver-routing.md` (served at
+`/api/rules` after model-assignment).
+
+Before **every** implement `delegate.py dispatch`:
+
+1. Emit a **ROUTING_CARD_V1** (handoff / issue / `batch_state/` receipt) with:
+   `tier` (authority|practical|heap) · `model_x_harness` · `why_this_tier` ·
+   `advisor_packet` (required if tier=heap) · `owned_paths` · `acceptance_cmd` ·
+   ≥2 `alternatives_considered` · `parallel_free_seats`.
+2. **Default bounded work:** Fable or Sol **brief** → heap/practical **worker(s)** —
+   not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
+3. **Fable path:** native `claude-fable-5` or Cursor pin to Fable; do not spend Fable on
+   lockfiles / pointer / smoke jobs.
+4. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
+   written `NOTE: fleet_breadth` with tool-backed blockers.
+5. Before handoff, run and attach:
+   ```bash
+   .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator "$SESSION_HANDOFF_AGENT" --since-hours 24
+   # optional hard check:
+   .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
+   ```
+
+Fixation on one practical seat while free lanes sit idle = utilization failure (same
+family as fleet-first / no-solo for Grok).
+
 ### 3a. Pre-dispatch outcome adequacy (required before substantive phase/epic kickoff)
 
 Freeze the exact prompt before presenting or routing it. Record its SHA-256, user-visible

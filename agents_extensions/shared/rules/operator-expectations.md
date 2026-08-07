@@ -39,11 +39,19 @@ tie-breakers.
    OUTSIDE your own model family** — never self-review, never same-family swarms. Keep lanes
    busy — an idle paid lane wastes the operator's money (operator policy: max out paid
    limits; cost is never a reason to hold back — passivity is the failure mode, not spend).
+   **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
+   `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
+   work is **authority brief (Fable or Sol) → heap/practical implement**, not a mid-brain
+   solo marathon. Session breadth floor + handoff report:
+   `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
    table is `model-assignment.md` (served at `/api/rules`). Model names are examples, not
    constants — confirm current capability before relying on a specific string. Distinguish the
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
+   **Tiers:** authority (Fable/Sol) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
+   weaker with a complete advisor packet). Fable remains the Anthropic authority seat even
+   under a small Claude sub — reach via native Claude pin or **Cursor → Fable**.
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
    operations, not an outage. On limit: check `/api/orient` runtime headroom; for
    Claude/Codex budget buckets at `near_cap`, substitute per
