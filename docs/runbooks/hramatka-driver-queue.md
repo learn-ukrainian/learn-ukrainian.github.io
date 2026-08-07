@@ -6,9 +6,8 @@ across the public/private repo split. Authority: the 2026-08-07 stream-hygiene
 consult (`batch_state/hramatka-drive/CONSULT-VERDICT-stream-hygiene-2026-08-07.md`,
 gitignored local evidence; ACP conversation
 `conversation_7b6241377cd44c7ea5265da5c85efb5c`, claude/codex/agy/kimi converged
-spine, PR-1 of a 4-PR package). This is PR-1 of that package: **docs/rules only.**
-No `stream_fence` / `post_task_reap` / `hygiene_check` code — that is PR-2 through
-PR-4 of the same package.
+spine, PR-1 of a 4-PR package). PR-2 adds the Hramatka-only scope gate below;
+`post_task_reap` and `hygiene_check` remain separate PR-3/PR-4 work.
 
 ## Queue roles
 
@@ -26,6 +25,35 @@ PR-4 of the same package.
 
 Do not treat #4542's own body text as a live queue snapshot — read it for
 charter/authorization context only.
+
+## New-scope gate
+
+Before a Hramatka driver starts a **new dispatch**, **new scope**, or **new PR**,
+run the mechanical gate with a repo-qualified issue target:
+
+```bash
+.venv/bin/python -m scripts.fleet.hramatka_scope_gate \
+  --action new_dispatch \
+  --issue-repo learn-ukrainian/learn-ukrainian.github.io \
+  --issue 4542
+```
+
+It emits JSON with exactly one of `ALLOW`, `ROUTE`, `HOLD`, or `ESCALATE`; only
+`ALLOW` exits zero. `ROUTE` always names its destination, such as
+`infra-harness epic #4707`; `HOLD` means stop the new action; `ESCALATE` means
+surface the item to the operator. The gate is deliberately not applied to
+cleanup, review, escalation, or unblocking the driver's own already-open PR.
+
+Public work must have exact stream membership through Hramatka epic #4542.
+Private work must be tracked by private board #349, carry the exact `hramatka`
+label, or use an explicit `stream:hramatka` body tag. Ordinary mentions of
+Hramatka and any 50%/majority heuristic are not membership evidence. A private
+API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
+never becomes an implicit allow. The gate has no environment-variable bypass.
+
+Private #360 and #212 remain `ESCALATE` because they are operator-only host
+mutation work. This PR intentionally does not add a self-asserted GO/override
+flag: a verified operator authorization belongs in its own audited workflow.
 
 ## Operator-only items — track/escalate, never action solo
 
@@ -45,7 +73,7 @@ defer the fix to a later PR.
 
 ## What this contract does not change
 
-- No `stream_fence`, `post_task_reap`, or `hygiene_check` code ships here.
+- No `post_task_reap` or `hygiene_check` code ships here.
 - No product/teacher-facing features.
 - No private-repo secrets or private task titles are mirrored here beyond bare
   issue numbers.
