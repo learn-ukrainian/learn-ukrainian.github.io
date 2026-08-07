@@ -421,6 +421,58 @@ class TestTextbookExtractionReadiness:
         assert caught.value.receipt["content_page_count"] == 0
         assert caught.value.receipt["ocr_quality_rejected_pages"] == list(range(1, 11))
 
+    def test_rejected_ocr_page_is_audited_but_not_chunked(self, tmp_path, monkeypatch):
+        import scripts.rag.extract_text as extract
+
+        pages = [
+            {
+                "page_number": 1,
+                "text": "N H O I S T R Latin lookalikes " * 8,
+                "extraction_mode": "apple_vision_ocr",
+                "layout": {},
+                "ocr": {"observation_count": 20, "mean_confidence": 0.4},
+            },
+            *[
+                {
+                    "page_number": index,
+                    "text": f"Чистий навчальний текст сторінки {index}. " * 8,
+                    "extraction_mode": "native_text",
+                    "layout": {},
+                    "ocr": {},
+                }
+                for index in range(2, 11)
+            ],
+        ]
+        receipt = extract._page_coverage_receipt(
+            pages,
+            total_pages=10,
+            digital_coverage=extract.PageCoverage(
+                total_pages=10,
+                sampled_pages=tuple(range(1, 11)),
+                readable_pages=tuple(range(2, 11)),
+            ),
+            ocr_requested_pages=[1],
+        )
+        assert receipt["status"] == "pass"
+        assert receipt["ocr_quality_rejected_pages"] == [1]
+        monkeypatch.setattr(
+            extract,
+            "extract_page_records",
+            lambda _path, **_kwargs: (pages, receipt),
+        )
+
+        summary = extract.process_pdf(
+            Path("9-klas-test-author-2026.pdf"),
+            output_dir=tmp_path / "chunks",
+        )
+        rows = [
+            json.loads(line)
+            for line in Path(summary["output_file"]).read_text(encoding="utf-8").splitlines()
+        ]
+        assert 1 not in {row["page_start"] for row in rows}
+        assert summary["pages_recovered"] == 10
+        assert summary["pages_chunked"] == 9
+
     def test_swift_subprocess_contract_orders_pages_and_preserves_metadata(self, tmp_path, monkeypatch):
         import scripts.rag.extract_text as extract
 

@@ -984,7 +984,18 @@ def process_pdf(
     raw_chunks = []
     quality_stats = {"clean": 0, "flagged": 0}
 
-    for page in page_records:
+    # The coverage gate records low-confidence OCR pages for auditability, but
+    # rejected OCR must never become retrieval or training chunks. Native math
+    # and formula pages remain eligible even when the language cleanliness
+    # heuristic flags them; the extra predicate applies only to OCR fallback.
+    chunkable_pages = [
+        page
+        for page in page_records
+        if page.get("extraction_mode") != "apple_vision_ocr"
+        or _is_content_page_record(page)
+    ]
+
+    for page in chunkable_pages:
         page_number = int(page["page_number"])
         chunks = chunk_text(str(page["text"]), f"Сторінка {page_number}")
         for _i, chunk in enumerate(chunks):
@@ -1075,6 +1086,7 @@ def process_pdf(
                 "source_file": meta["pdf_stem"],
                 "page_coverage": coverage_receipt,
                 "chunks": len(all_chunks),
+                "chunked_pages": [int(page["page_number"]) for page in chunkable_pages],
             },
             ensure_ascii=False,
             indent=2,
@@ -1094,6 +1106,7 @@ def process_pdf(
         "clean_chunks": quality_stats["clean"],
         "flagged_chunks": quality_stats["flagged"],
         "pages_recovered": len(page_records),
+        "pages_chunked": len(chunkable_pages),
         "page_coverage": coverage_receipt,
         "output_file": str(output_file),
         "receipt_file": str(receipt_file),

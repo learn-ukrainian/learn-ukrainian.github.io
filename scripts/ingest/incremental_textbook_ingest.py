@@ -33,6 +33,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from wiki.build_sources_db import _build_textbook_row
 from wiki.config import TEXTBOOK_CHUNKS_DIR
 from wiki.extract_sections import (
+    SectionAssignment,
     assign_sections,
     build_section_groups,
     ensure_schema,
@@ -138,6 +139,37 @@ SECTION_INSERT_SQL = """INSERT INTO textbook_sections
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
 
 
+FRONT_MATTER_SECTION = "Вступні матеріали"
+
+
+def _assign_leading_front_matter(
+    assignments: list[SectionAssignment],
+) -> list[SectionAssignment]:
+    """Assign a real parent to preface rows before the first detected heading.
+
+    Title, imprint, contents, and author-preface pages commonly precede the
+    first machine-detectable chapter. They belong to a bounded synthetic front
+    matter section. A source with no detected heading at all still fails closed;
+    this helper does not turn arbitrary unstructured content into a section.
+    """
+    first_assigned = next(
+        (index for index, item in enumerate(assignments) if item.section_title is not None),
+        None,
+    )
+    if first_assigned in {None, 0}:
+        return assignments
+    return [
+        SectionAssignment(
+            row=item.row,
+            page_number=item.page_number,
+            section_title=FRONT_MATTER_SECTION,
+        )
+        if index < first_assigned and item.section_title is None
+        else item
+        for index, item in enumerate(assignments)
+    ]
+
+
 def _rebuild_source_sections(conn: sqlite3.Connection, slug: str) -> tuple[int, int]:
     """Replace only one source's section rows and parent links.
 
@@ -148,7 +180,7 @@ def _rebuild_source_sections(conn: sqlite3.Connection, slug: str) -> tuple[int, 
     """
     ensure_schema(conn)
     source_rows = [row for row in load_textbook_rows(conn) if row.source_file == slug]
-    assignments = assign_sections(source_rows)
+    assignments = _assign_leading_front_matter(assign_sections(source_rows))
     sections = build_section_groups(assignments)
 
     # Null links before deleting section parents so this remains valid if a

@@ -279,6 +279,44 @@ def test_unlinked_school_rows_fail_closed(fixture_env):
     conn.close()
 
 
+def test_leading_front_matter_gets_bounded_parent_section(fixture_env):
+    db, slug = fixture_env
+    jsonl = iti.CHUNKS_DIR / "grade-09" / f"{slug}.jsonl"
+    entries = [
+        {
+            "chunk_id": "front_s0000",
+            "section_title": "Сторінка 1",
+            "text": "Текст без заголовка, який передує першому структурованому розділу.",
+            "author": "popel",
+            "author_uk": None,
+            "grade": 9,
+        },
+        {
+            "chunk_id": "body_s0001",
+            "section_title": "§ 1. Хімія",
+            "text": "Перший структурований розділ підручника.",
+            "author": "popel",
+            "author_uk": None,
+            "grade": 9,
+        },
+    ]
+    jsonl.write_text(
+        "\n".join(json.dumps(entry, ensure_ascii=False) for entry in entries) + "\n",
+        encoding="utf-8",
+    )
+    iti.ingest([slug], db_path=db, dry_run=False)
+    conn = sqlite3.connect(str(db))
+    assert conn.execute(
+        "SELECT section_title, chunk_count FROM textbook_sections WHERE source_file=? ORDER BY section_id",
+        (slug,),
+    ).fetchall() == [(iti.FRONT_MATTER_SECTION, 1), ("§ 1. Хімія", 1)]
+    assert conn.execute(
+        "SELECT COUNT(*) FROM textbooks WHERE source_file=? AND parent_section_id IS NOT NULL",
+        (slug,),
+    ).fetchone()[0] == 2
+    conn.close()
+
+
 def test_unmapped_author_refuses(fixture_env, tmp_path):
     db, _ = fixture_env
     slug = "9-klas-khimiya-nemaie-2017"
