@@ -3,45 +3,38 @@
   "checkpoint_id": "928e88fb7e48",
   "session_id": "session_2edbaf33-8b07-43ee-a5a9-671bbe6cd71e",
   "strategy": "manual-commit",
-  "created_at": "2026-08-07T17:23:22.25839Z",
+  "created_at": "2026-08-07T17:28:07.76369Z",
   "branch": "agy/6412-temp-lifecycle-impl",
   "checkpoints_count": 1,
   "files_touched": [
-    "scripts/ai_agent_bridge/_review_worktree.py",
     "scripts/orchestration/reap_worktrees.py",
     "scripts/review/isolation.py",
     "tests/orchestration/test_scheduled_worktree_cleanup.py",
-    "tests/review/test_temp_lifecycle.py"
+    "tests/review/test_temp_lifecycle.py",
+    "tests/test_review_isolation.py"
   ],
   "agent": "Kimi Code",
   "model": "kimi-code/kimi-for-coding",
   "turn_id": "3c9ca0910d38",
+  "checkpoint_transcript_start": 504,
+  "transcript_lines_at_start": 504,
   "token_usage": {
-    "input_tokens": 127890,
+    "input_tokens": 145835,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 5932800,
-    "output_tokens": 23474,
-    "api_call_count": 60
+    "cache_read_tokens": 8586496,
+    "output_tokens": 28462,
+    "api_call_count": 78
   },
   "initial_attribution": {
-    "calculated_at": "2026-08-07T17:23:22.23648Z",
-    "agent_lines": 0,
+    "calculated_at": "2026-08-07T17:28:07.733127Z",
+    "agent_lines": 5,
     "agent_removed": 0,
-    "human_added": 3,
-    "human_modified": 12,
+    "human_added": 17,
+    "human_modified": 0,
     "human_removed": 0,
-    "total_committed": 3,
-    "total_lines_changed": 15,
-    "agent_percentage": 0,
+    "total_committed": 22,
+    "total_lines_changed": 24,
+    "agent_percentage": 20.833333333333336,
     "metric_version": 2
-  },
-  "prompt_attributions": [
-    {
-      "checkpoint_number": 1,
-      "user_lines_added": 0,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0
-    }
-  ]
+  }
 }
