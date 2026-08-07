@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8b5a8dc07208",
+  "session_id": "fleet-b3c80bf19db74e28830e5d3d555427fa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-07T10:54:04.177156Z",
+  "branch": "agy/6412-temp-lifecycle-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/decisions/drafts/cf-temp-lifecycle.md",
+    "scripts/ai_agent_bridge/_review_worktree.py",
+    "scripts/review/isolation.py",
+    "tests/review/test_temp_lifecycle.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "a002fe811597",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-07T10:54:04.172239Z",
+    "agent_lines": 182,
+    "agent_removed": 7,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 182,
+    "total_lines_changed": 189,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

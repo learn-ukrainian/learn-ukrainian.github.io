@@ -1,0 +1,31 @@
+# Task: PR #6428 delta fixes after GLM CHANGES_REQUESTED
+
+## Context
+- Epic: hramatka / stream epic:4542. Driver: grok-hramatka.
+- PR: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6428
+- Branch: `agy/6412-temp-lifecycle-impl` (authoring lane: agy)
+- Just rebased onto green main (after #6430).
+- Design companion: #6425. Design note path may be under docs/decisions.
+
+## CF findings (must address; quote exact)
+From PR comment (direct CF, glm/zhipu):
+- **F1 BLOCKER:** no mutation test for the 60s grace window for non-ESRCH dead owners (design §9 matrix row 3).
+- **F2 MED:** TOCTOU re-check doesn't skip on 'uncheckable' — contradicts design §4.2 step 4.
+- **F3 LOW:** disk-pressure threshold reads env var only, YAML config path unimplemented.
+- **F4 LOW:** possible double cleanup on signal exit (verify idempotency + test).
+- **F5 INFO:** active_ids=None now treated reapable — defensible but undocumented; add design note + test.
+
+Verified already OK: triple fencing, ESRCH grace-bypass, pre-rmtree re-check, 48h fallback.
+
+## Required outcome
+1. Work on existing branch `agy/6412-temp-lifecycle-impl` via `--branch` or existing worktree if present.
+2. Fix F1–F5 with tests; prefer root-cause over stubs.
+3. Run focused pytest for the temp-lifecycle / janitor modules + ruff on touched files.
+4. Commit with `X-Agent: agy/6428-deltas`, push to the PR branch.
+5. Do NOT self-merge. Return SHA + test evidence. Driver will request DELTA re-review.
+
+## Non-goals
+No plane flips, no formal-review thrash, no unrelated refactors, no linter-config edits.
+
+## Evidence
+Quote raw pytest/ruff output in the return.

@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8b5a8dc07208",
+  "strategy": "manual-commit",
+  "branch": "agy/6412-temp-lifecycle-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/decisions/drafts/cf-temp-lifecycle.md",
+    "scripts/ai_agent_bridge/_review_worktree.py",
+    "scripts/review/isolation.py",
+    "tests/review/test_temp_lifecycle.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8b/5a8dc07208/0/metadata.json",
+      "transcript": "/8b/5a8dc07208/0/full.jsonl",
+      "compact_transcript": "/8b/5a8dc07208/0/transcript.jsonl",
+      "content_hash": "/8b/5a8dc07208/0/content_hash.txt",
+      "prompt": "/8b/5a8dc07208/0/prompt.txt"
+    }
+  ]
+}
