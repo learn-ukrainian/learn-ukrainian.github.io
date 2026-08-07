@@ -207,24 +207,27 @@ def test_review_temp_orphan_sweep_reaps_only_old_loose_and_task_roots(
 
     loose_old = tmp_path / "lu-review-git-old"
     task_old = tmp_path / "learn-ukrainian" / "task" / "lu-review-view-old"
+    shielded_old = tmp_path / "shielded-reviews" / "lu-review-snap-old"
     loose_young = tmp_path / "lu-review-write-young"
     unrelated = tmp_path / "not-review"
-    for root in (loose_old, task_old, loose_young, unrelated):
+    for root in (loose_old, task_old, shielded_old, loose_young, unrelated):
         root.mkdir(parents=True)
         (root / "payload").write_text(root.name, encoding="utf-8")
     now = time.time()
     old = now - isolation.REVIEW_TEMP_ORPHAN_MAX_AGE_S - 1
     os.utime(loose_old, (old, old))
     os.utime(task_old, (old, old))
+    os.utime(shielded_old, (old, old))
     monkeypatch.setattr(isolation.tempfile, "gettempdir", lambda: str(tmp_path))
     monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
 
     result = sweep_review_temp_orphans(now=now)
 
-    assert result["roots_reaped"] == 2
+    assert result["roots_reaped"] == 3
     assert result["errors"] == 0
     assert not loose_old.exists()
     assert not task_old.exists()
+    assert not shielded_old.exists()
     assert loose_young.exists()
     assert unrelated.exists()
 

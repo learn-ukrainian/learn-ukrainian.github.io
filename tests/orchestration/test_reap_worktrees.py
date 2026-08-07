@@ -365,14 +365,16 @@ def test_class_a_fail_safe_skips(
     results = rw.reap_worktrees(repo_root=repo, apply=True)
     assert result_for(results, worktree_path).action == "skipped"
 
-    # Re-create task file for remaining cases
-    task_file.write_text(json.dumps({"status": "running"}), encoding="utf-8")
+    # Re-create task file for remaining cases — live worker PID required
+    task_file.write_text(
+        json.dumps({"status": "running", "pid": os.getpid()}), encoding="utf-8"
+    )
 
-    # Case 4: task status is not done/failed
+    # Case 4: task status is not done/failed and worker PID is live
     results = rw.reap_worktrees(repo_root=repo, apply=True)
     assert result_for(results, worktree_path).action == "skipped"
 
-    # Set status back to done
+    # Set status back to done (no live pid)
     task_file.write_text(json.dumps({"status": "done"}), encoding="utf-8")
 
     # Case 5: dirty tree
@@ -383,10 +385,19 @@ def test_class_a_fail_safe_skips(
     # Clean up dirty file
     (worktree_path / "dirty.txt").unlink()
 
-    # Case 6: branch has open PR
+    # Case 6: open PR but worktree not matching origin tip → keep
+    monkeypatch.setattr(rw, "_origin_matches_head", lambda _path, _branch: False)
     patch_gh(monkeypatch, {"codex/5102-raisa-fail": [{"number": 42, "state": "OPEN"}]})
     results = rw.reap_worktrees(repo_root=repo, apply=True)
     assert result_for(results, worktree_path).action == "skipped"
+
+    # Case 7: open PR + clean tip already on origin → free local worktree
+    monkeypatch.setattr(rw, "_origin_matches_head", lambda _path, _branch: True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    result = result_for(results, worktree_path)
+    assert result.action == "removed"
+    assert "open PR remains on remote" in (result.reason or "")
+    assert not worktree_path.exists()
 
 
 def test_class_b_detached_head_removed(

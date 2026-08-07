@@ -59,7 +59,10 @@ REVIEW_TEMP_ROOT_PREFIXES = (
     "lu-review-view-",
     "lu-review-write-",
 )
-REVIEW_TEMP_ORPHAN_MAX_AGE_S = 48 * 60 * 60
+# Multi-GB formal-review snaps must not sit for days after aborted CF.
+# Six hours is long enough for a healthy review; shorter than the old 48h
+# fail-open that left shielded-reviews full until manual intervention.
+REVIEW_TEMP_ORPHAN_MAX_AGE_S = 6 * 60 * 60
 REVIEW_TEMP_ROOT_MARKER_NAME = ".lu-review-root"
 REVIEW_TEMP_ROOT_MANIFEST_NAME = ".lu-review-root.json"
 LU_REVIEW_TEMP_MIN_FREE_GB = 10.0
@@ -359,15 +362,27 @@ def _review_temp_root_bytes(root: Path) -> int:
 
 
 def _review_temp_orphan_candidates(tmp_root: Path) -> tuple[Path, ...]:
-    """Return only direct review-owned roots under loose and task TMPDIRs."""
+    """Return only direct review-owned roots under loose and task TMPDIRs.
+
+    Also scans ``$TMPDIR/shielded-reviews/`` (formal CF isolation root). Earlier
+    sweeps only looked at ``$TMPDIR/lu-*`` and ``$TMPDIR/learn-ukrainian/*``,
+    so multi-GB ``lu-review-snap-*`` trees under ``shielded-reviews`` never
+    reaped after aborted formal reviews.
+    """
     candidates: list[Path] = []
     parent_sets = [tmp_root]
-    namespace = tmp_root / "learn-ukrainian"
-    try:
-        namespace_stat = namespace.lstat()
-    except FileNotFoundError:
-        namespace_stat = None
-    if namespace_stat is not None and not stat.S_ISLNK(namespace_stat.st_mode) and stat.S_ISDIR(namespace_stat.st_mode):
+    for extra_name in ("learn-ukrainian", "shielded-reviews"):
+        namespace = tmp_root / extra_name
+        try:
+            namespace_stat = namespace.lstat()
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(namespace_stat.st_mode) or not stat.S_ISDIR(namespace_stat.st_mode):
+            continue
+        if extra_name == "shielded-reviews":
+            # Snaps live as direct children of shielded-reviews.
+            parent_sets.append(namespace)
+            continue
         try:
             for path in namespace.iterdir():
                 path_stat = path.lstat()

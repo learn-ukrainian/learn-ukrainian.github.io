@@ -324,7 +324,7 @@ def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
     return relative.parts[1] if len(relative.parts) == 2 else None
 
 
-def _task_record_status(repo_root: Path, task_id: str | None) -> str | None:
+def _task_record(repo_root: Path, task_id: str | None) -> dict[str, Any] | None:
     if not task_id:
         return None
     task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
@@ -332,8 +332,38 @@ def _task_record_status(repo_root: Path, task_id: str | None) -> str | None:
         payload = json.loads(task_file.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
-    status = payload.get("status") if isinstance(payload, dict) else None
+    return payload if isinstance(payload, dict) else None
+
+
+def _task_record_status(repo_root: Path, task_id: str | None) -> str | None:
+    payload = _task_record(repo_root, task_id)
+    if payload is None:
+        return None
+    status = payload.get("status")
     return str(status) if status else None
+
+
+def _task_pid_alive(payload: dict[str, Any] | None) -> bool:
+    """Return True only when task JSON names a live process."""
+    if not payload:
+        return False
+    raw_pid = payload.get("pid")
+    if raw_pid is None:
+        return False
+    try:
+        pid = int(raw_pid)
+    except (TypeError, ValueError):
+        return False
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        # Exists but not signalable by this user — treat as live.
+        return True
+    return True
 
 
 def _activity_reason(
@@ -346,9 +376,16 @@ def _activity_reason(
     task_id = _dispatch_task_id(repo_root, info)
     if task_id and active_ids is not None and task_id in active_ids:
         return f"active dispatch task-id={task_id}"
-    task_status = _task_record_status(repo_root, task_id)
+    task_payload = _task_record(repo_root, task_id)
+    task_status = None
+    if task_payload is not None:
+        raw_status = task_payload.get("status")
+        task_status = str(raw_status) if raw_status else None
+    # Stale "running" rows with a dead worker PID must not block reaping forever
+    # (observed: multi-hour dispatch workers left status=running after exit).
     if task_status in {"queued", "starting", "running", "needs_finalize"}:
-        return f"non-terminal dispatch task-id={task_id} status={task_status}"
+        if _task_pid_alive(task_payload):
+            return f"non-terminal dispatch task-id={task_id} status={task_status}"
     if live_cwds is not None:
         worktree = info.path.resolve()
         for cwd in live_cwds:
@@ -500,22 +537,50 @@ def _qualifying_reason(
             if age_hours is not None and age_hours > 24.0:
                 return f"detached HEAD ancestor of origin/main; age {age_hours:.1f}h > 24h"
 
-    # Class A: settled-dispatch, no PR
+    # Class A: settled dispatch worktree (clean, worker gone).
+    # Open PRs live on the remote — a clean worktree matching origin/<branch>
+    # is safe to drop for disk recovery without closing the PR.
     if is_dispatch_candidate and clean is True:
         task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
         if task_file.exists():
             try:
                 task_data = json.loads(task_file.read_text(encoding="utf-8"))
+                if not isinstance(task_data, dict):
+                    return None
                 task_status = task_data.get("status")
-                if task_status in ("done", "failed", "no_deliverable") and (
-                    active_ids is not None and task_id not in active_ids
-                ):
+                pid_alive = _task_pid_alive(task_data)
+                terminal = task_status in ("done", "failed", "no_deliverable")
+                stuck_dead = (
+                    task_status in ("queued", "starting", "running", "needs_finalize")
+                    and not pid_alive
+                )
+                # Fail closed when Monitor active-task probe is unavailable.
+                settled = (
+                    (terminal or stuck_dead)
+                    and active_ids is not None
+                    and task_id not in active_ids
+                )
+                if settled and not pid_alive:
                     if info.branch:
                         prs, pr_error = _query_pr_states(repo_root, info.branch)
-                        if pr_error is None and not any(pr.state == "OPEN" for pr in prs):
-                            return f"settled dispatch task-id={task_id} status={task_status}"
+                        if pr_error is not None:
+                            return None
+                        open_prs = [pr for pr in prs if pr.state == "OPEN"]
+                        if not open_prs:
+                            return (
+                                f"settled dispatch task-id={task_id} "
+                                f"status={task_status}"
+                            )
+                        if _origin_matches_head(info.path, info.branch):
+                            return (
+                                f"settled dispatch task-id={task_id} "
+                                f"status={task_status}; open PR remains on remote"
+                            )
                     else:
-                        return f"settled dispatch task-id={task_id} status={task_status}"
+                        return (
+                            f"settled dispatch task-id={task_id} "
+                            f"status={task_status}"
+                        )
             except Exception:
                 pass
 
@@ -1063,6 +1128,22 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps([_result_payload(result) for result in results], indent=2))
     else:
         print(format_text_results(results, apply=apply))
+    # Always sweep formal CF temp roots (including $TMPDIR/shielded-reviews)
+    # when applying — worktree reaps alone left multi-GB lu-review snaps.
+    if apply:
+        try:
+            from scripts.review.isolation import sweep_review_temp_orphans
+
+            sweep = sweep_review_temp_orphans()
+            print(
+                "review_temp_sweep: "
+                f"roots_reaped={sweep.get('roots_reaped', 0)} "
+                f"bytes_freed={sweep.get('bytes_freed', 0)} "
+                f"errors={sweep.get('errors', 0)}",
+                file=sys.stderr,
+            )
+        except Exception as exc:  # noqa: BLE001 — never fail worktree reap on sweep
+            print(f"review_temp_sweep: skipped ({exc})", file=sys.stderr)
     return 1 if any(result.action == "error" for result in results) else 0
 
 
