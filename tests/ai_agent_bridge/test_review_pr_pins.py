@@ -51,6 +51,8 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
     [
         ("claude", "claude-sonnet-5", "claude-sonnet-5"),
         ("claude", "claude-fable-5", "claude-fable-5"),
+        ("claude", "claude-opus-5", "claude-opus-5"),
+        ("claude", "claude-opus-4-8", "claude-opus-4-8"),
         ("codex", "gpt-5.6-terra", "gpt-5.6-terra"),
         ("codex", "gpt-5.6-sol", "openai_frontier"),
         ("glm", "glm-5.2", "glm-5.2"),

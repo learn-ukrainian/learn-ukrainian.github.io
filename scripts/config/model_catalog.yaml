@@ -66,7 +66,8 @@ review_scheduler:
   endpoints:
     claude:
       formal_review_eligible: true
-      models: [claude-fable-5, claude-sonnet-5]
+      # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
+      models: [claude-fable-5, claude-sonnet-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -288,8 +289,9 @@ models:
     strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
     notes: >-
-      Anthropic advisory-consultation seat (operator directive 2026-07-31). Advisory is
-      non-binding and does not confer designated approval authority or satisfy formal review.
+      Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
+      on the sealed claude endpoint (review-pr --reviewer claude --model claude-opus-5).
+      Advisory consultations remain non-binding for designated advisor authority (Sol/Fable).
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
       Thinking is ON by default and disabling it is invalid above high effort. Separate
       rate-limit bucket from the Opus 4.x pool.
@@ -618,9 +620,9 @@ review_candidates:
     model_id: claude-opus-4-8
     route: claude
     transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-4-8
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   openai_frontier:
     model_id: gpt-5.6-sol
     route: codex
@@ -705,7 +707,7 @@ review_candidates:
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
     review_profiles: [code, infra]
-    capabilities: [code_review]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-sonnet-5:
     model_id: claude-sonnet-5
     route: claude
@@ -839,10 +841,15 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    # The sealed Claude ACP participant supports Sonnet and Fable at its fixed
-    # high effort. Opus 5 advisory consultations remain non-binding and separate.
+    # Sealed Claude ACP: Sonnet default; Fable / Opus 5 / Opus 4.8 via --model pin
+    # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
     escalate_model_id: claude-fable-5
     escalate_effort: high
+    family_models:
+      - claude-sonnet-5
+      - claude-fable-5
+      - claude-opus-5
+      - claude-opus-4-8
   glm:
     model_id: glm-5.2
     effort: high

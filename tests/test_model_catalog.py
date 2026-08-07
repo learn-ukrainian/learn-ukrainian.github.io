@@ -275,6 +275,12 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
     assert defaults["codex"]["effort"] == "high"
     assert defaults["claude"]["model_id"] == "claude-sonnet-5"
     assert defaults["claude"]["effort"] == "high"
+    assert set(defaults["claude"].get("family_models", [])) >= {
+        "claude-sonnet-5",
+        "claude-fable-5",
+        "claude-opus-5",
+        "claude-opus-4-8",
+    }
     assert defaults["glm"]["model_id"] == "glm-5.2"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
