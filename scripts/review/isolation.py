@@ -171,7 +171,17 @@ def create_review_temp_root(
     dir: str | os.PathLike[str] | None = None,
     context: dict[str, Any] | None = None,
 ) -> Path:
-    """Create a private review root whose cleanup identity is its sentinel."""
+    """Create a private review root whose cleanup identity is its sentinel.
+
+    Production shielded formal CF is retired (operator 2026-08-07). Creating
+    ``lu-review-*`` roots requires ``LU_FORMAL_SHIELDED_CF=1`` (unit tests only).
+    """
+    if prefix.startswith(REVIEW_TEMP_ROOT_PREFIXES) and not _formal_shielded_cf_temps_allowed():
+        raise OSError(
+            "shielded formal CF temp roots are retired; "
+            "set LU_FORMAL_SHIELDED_CF=1 only for unit tests. "
+            "Use direct ask-* cross-family review on the PR instead of review-pr."
+        )
     root = Path(tempfile.mkdtemp(prefix=prefix, dir=dir))
     try:
         _write_review_temp_root_marker(root, prefix=prefix, context=context)
@@ -182,6 +192,15 @@ def create_review_temp_root(
             shutil.rmtree(root)
         raise
     return root
+
+
+def _formal_shielded_cf_temps_allowed() -> bool:
+    return os.environ.get("LU_FORMAL_SHIELDED_CF", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def _has_review_temp_root_marker(root: Path) -> bool:

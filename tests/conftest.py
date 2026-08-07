@@ -445,3 +445,12 @@ Content here.
 
 Practice content.
 """
+
+
+@pytest.fixture(autouse=True)
+def _enable_formal_shielded_cf_for_unit_tests(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Unit tests may still exercise isolation helpers; production CLI stays retired.
+
+    Production / drivers leave LU_FORMAL_SHIELDED_CF unset so review-pr refuses.
+    """
+    monkeypatch.setenv("LU_FORMAL_SHIELDED_CF", "1")

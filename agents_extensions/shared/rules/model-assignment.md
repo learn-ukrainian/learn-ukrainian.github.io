@@ -212,14 +212,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 
   The review of record is ONE direct cross-family round (operator order
   2026-08-06): plain `ask-<lane>` with the diff reference, verdict + findings
-  posted on the PR at the current head by the requester. The **formal sealed
-  path** (`review-pr`) is OPT-IN for high-risk code only. When it is used:
-  Claude, Codex, GLM, and native Grok use the parent-owned exact-head sealed
-  ACP path; the canonical KimiCC K3 adapter remains fail-closed until its
-  authenticated sealed canary passes; AGY remains sealed-ineligible (text-only
-  wrapper). Sealed authority CF model pins (both require `--override-reason`):
-  `review-pr <N> --reviewer codex --model gpt-5.6-sol` or
-  `review-pr <N> --reviewer claude --model claude-fable-5 --effort high`.
+  posted on the PR at the current head by the requester. **Shielded formal CF
+  (`review-pr`, sealed multi-GB `lu-review-*` / `shielded-reviews` isolation) is
+  RETIRED (operator 2026-08-07)** — fail-closed in the CLI. Do not reintroduce
+  it. Lightweight agent review + green CI + merge + worktree/temp cleanup is
+  the path.
 
   <!-- fleet-roster-projection:begin formal_review_eligible -->
   | endpoint | formal_review_eligible |
@@ -502,25 +499,23 @@ The same table lives in `memory/MEMORY.md` rule #M0; this file is the deploy-rul
 
 </critical>
 
-## PR cross-family review (direct by default — operator order 2026-08-06)
+## PR cross-family review (direct only — operator 2026-08-06; sealed formal RETIRED 2026-08-07)
 
-Default review of record: ONE direct round via plain `ask-<lane>` (reference the
-branch/diff for the reviewer to fetch; do not paste huge diffs inline), verdict +
-findings posted on the PR at the current head by the requester.
-
-The sealed path below is **OPT-IN for high-risk code only**:
+Review of record: ONE direct round via plain `ask-<lane>` (reference the branch/diff
+for the reviewer to fetch; do not paste huge diffs inline), verdict + findings posted
+on the PR at the current head by the requester. Then merge when CI is green and reap
+the worktree (`reap_worktrees.py --apply` / `drive-epic` §7a).
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
-# pins: codex→gpt-5.6-terra@high · --reviewer claude→claude-sonnet-5@high · --reviewer glm→glm-5.2
-# after sealed review returns a short verdict file:
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
-  --pr <N> --verdict-file /tmp/verdict.txt --model <model> --family <family> --harness <harness>
+printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+    --task-id review-<N> --type review
 ```
 
-**AGY orchestrator** (`gemini-3.6-flash-high` @ high) runs the loop and still *requests* CF with
-`review-pr` above — do not treat `ask-agy --review` as sealed formal CF until #5555 flips
-`formal_review_eligible`.
+**Shielded formal CF is RETIRED.** Do not run `review-pr` / `publish-review-verdict`
+/ sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails closed (tests may
+set `LU_FORMAL_SHIELDED_CF=1` only). Cross-family still means outside the author's
+model family; discussion and same-family chat are not the gate.
 
 Bridge steers with a **warning** (not refuse) if `ask-* --review` looks like PR CF
 without a sealed target — so agent work is not discarded (#5486 warn-not-reject).

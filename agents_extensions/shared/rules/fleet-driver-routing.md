@@ -67,7 +67,7 @@ the routing card records why heap was refused.
 
 ## 3. Mandatory pre-dispatch routing card
 
-Before **every** `delegate.py dispatch` and before every formal `review-pr`
+Before **every** `delegate.py dispatch` and before every cross-family review
 request that spends a scarce seat, the live driver MUST record (handoff, issue
 comment, or `batch_state/` receipt — not only inner monologue):
 
@@ -143,5 +143,6 @@ later in advisory mode.
 - Does **not** weaken operator-expectations §4 (whole fleet) or §5 (route by fit).  
 - Does **not** replace model-assignment live ladders — it **forces the card** and
   **advisor→heap default**.  
-- Formal CF remains independent and cross-family (`model-assignment` + review-pr).  
+- Cross-family review remains independent (`model-assignment` + direct `ask-*`);
+  shielded formal `review-pr` is retired.  
 - Advisor approval gate for architecture still binds (operator-expectations §12).
