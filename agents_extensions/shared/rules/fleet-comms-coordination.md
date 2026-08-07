@@ -171,8 +171,12 @@ Agents MUST NOT:
    (empty reseals void exact-head binding without product change).
 4. Spend formal CF while **GitHub Actions** is in outage/degraded (check githubstatus).
 
-`review-pr` enforces (2)–(4) fail-closed. Override only with
-`--allow-cf-thrash --override-reason …` (operator-only). Never auto-reset branches.
+`review-pr` enforces (2)–(4) fail-closed. Rule (2) — exact-head already sealed
+**APPROVED** — is a HARD idempotent stop and is **never** overridable, including by
+`--allow-cf-thrash`. The override flag applies only to (3) empty-tree-tip reseals and
+(4) the GitHub Actions outage guard, operator-only with `--override-reason …`. Never
+auto-reset branches. (Python fail-closed enforcement is unchanged — this section only
+clarifies which guards the flag reaches.)
 
 ## ACP provider transport
 
