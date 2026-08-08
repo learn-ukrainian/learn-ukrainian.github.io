@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9c451542aa80",
+  "strategy": "manual-commit",
+  "branch": "grok/6437-no-mid-definition-truncate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/9c/451542aa80/0/metadata.json",
+      "transcript": "/9c/451542aa80/0/full.jsonl",
+      "compact_transcript": "/9c/451542aa80/0/transcript.jsonl",
+      "content_hash": "/9c/451542aa80/0/content_hash.txt",
+      "prompt": "/9c/451542aa80/0/prompt.txt"
+    }
+  ]
+}
