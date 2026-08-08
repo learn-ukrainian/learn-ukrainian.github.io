@@ -4633,9 +4633,7 @@ def _etymology_text_is_displayable(text: str) -> bool:
     if re.search(r"[-–—]\s*$", cleaned):
         return False
     # Unbalanced guillemets / quotes often mark cut dictionary lines.
-    if cleaned.count("«") != cleaned.count("»"):
-        return False
-    return True
+    return cleaned.count("«") == cleaned.count("»")
 
 
 def _etymology(
@@ -5501,10 +5499,7 @@ def _snap_excerpt_to_word_boundary(text: str, start: int, end: int) -> tuple[int
     if start > 0 and not text[start - 1].isspace():
         # Move start forward to next whitespace (drop partial leading word).
         ws = text.find(" ", start)
-        if ws != -1 and ws < end:
-            start = ws + 1
-        else:
-            start = 0
+        start = ws + 1 if ws != -1 and ws < end else 0
     if end < n and not text[end - 1 : end].isspace() and not text[end : end + 1].isspace():
         # Move end backward to previous whitespace (drop partial trailing word).
         ws = text.rfind(" ", start, end)

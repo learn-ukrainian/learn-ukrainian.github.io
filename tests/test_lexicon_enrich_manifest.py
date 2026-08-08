@@ -1421,7 +1421,8 @@ def test_literary_attestation_requires_exact_form_hit() -> None:
 def test_literary_excerpt_indexes_stripped_text_with_source_stress_marks() -> None:
     excerpt = _literary_excerpt("Далека доро́га вела до вікно і саду.", "вікно", radius=8)
 
-    assert excerpt.startswith("…вела до")
+    # Short chunks return the full stress-stripped passage (#6437).
+    assert excerpt == "Далека дорога вела до вікно і саду."
     assert "вікно" in excerpt
 
 
