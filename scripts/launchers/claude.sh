@@ -29,10 +29,13 @@ launcher_adapter_canary() {
 }
 launcher_adapter_exec() {
   local cmd=(claude)
-  # Only pin --model when the caller asked for one; otherwise Claude Code keeps
-  # whatever model is selected in the TUI / user settings.
+  # Only pin --model / --effort when the caller asked for them; otherwise
+  # Claude Code keeps whatever was selected last in the TUI / user settings.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
+  fi
+  if [ -n "${LC_EFFORT:-}" ]; then
+    cmd+=(--effort "$LC_EFFORT")
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
