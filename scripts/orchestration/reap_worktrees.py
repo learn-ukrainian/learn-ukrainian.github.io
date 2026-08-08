@@ -670,8 +670,14 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
 
 
 def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
+    """Remove a worktree only after the caller has completed every P0 guard.
+
+    ``_worktree_clean`` deliberately accepts disposable ignored residue such as
+    a worker's ``.venv``. Git still considers that residue when removing a
+    worktree, so force is required at this final, guarded deletion boundary.
+    """
     proc = _run(
-        ["git", "worktree", "remove", str(info.path)],
+        ["git", "worktree", "remove", "--force", str(info.path)],
         cwd=repo_root,
     )
     if proc.returncode != 0:

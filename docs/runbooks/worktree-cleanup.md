@@ -14,8 +14,11 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
 - it is dirty, locked, outside the repository's `.worktrees/` subtree, or its
   state cannot be verified.
 
-The scheduled job never commits work on the operator's behalf and never uses
-`git worktree remove --force`. Unregistered directories with broken `.git`
+The scheduled job never commits work on the operator's behalf. It uses
+`git worktree remove --force` only as the final deletion step after all P0
+guards and their final TOCTOU checks have passed; this removes disposable
+ignored residue such as a worker `.venv`, not a bypass for cleanliness, PR,
+task, or live-process guards. Unregistered directories with broken `.git`
 pointers are reported as recovery candidates and are never deleted
 automatically.
 
@@ -34,6 +37,9 @@ reaps immediately. The first seven days are capped by
   --restore-branch <branch> \
   --restore-worktree .worktrees/dispatch/<agent>/<task>
 ```
+
+For regular dispatch worktrees, `post_task_reap` delegates automatic removal
+to this same P0 reaper rather than maintaining a second deletion path.
 
 ## Immediate cleanup after merge
 
