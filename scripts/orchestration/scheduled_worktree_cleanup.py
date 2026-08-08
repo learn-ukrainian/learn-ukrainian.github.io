@@ -399,7 +399,14 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             merged_pr_only=True,
         )
         result["results"] = [asdict(row) for row in rows]
-        result["adopted"] = reap_worktrees.adopt_dispatch_worktrees(repo_root)
+        try:
+            result["adopted"] = reap_worktrees.adopt_dispatch_worktrees(repo_root)
+        except Exception as exc:
+            # Adoption only journals currently mounted dispatch worktrees.  A
+            # broken or incomplete repository must not prevent the remaining
+            # local hygiene steps from running.
+            result["adopted"] = []
+            result["errors"].append(f"adoption skipped: {exc}")
         result["errors"].extend(
             f"{row.path}: {row.error or row.reason}"
             for row in rows
