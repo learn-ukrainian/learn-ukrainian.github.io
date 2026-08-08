@@ -838,7 +838,73 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--json", action="store_true", help="Emit compact JSON")
     verify.set_defaults(func=cmd_acp_verify)
 
+    board = sub.add_parser(
+        "cold-start-board",
+        help="Emit fail-open driver cold start board (Sol PR-2)",
+    )
+    board.add_argument(
+        "--format",
+        choices=["json", "markdown"],
+        default="json",
+        help="Output format (default: json)",
+    )
+    board.add_argument(
+        "--stream-id",
+        default=None,
+        help="Optional session stream ID (default: SESSION_STREAM_ID env var)",
+    )
+    board.add_argument(
+        "--agent",
+        default=None,
+        help="Optional agent/harness identifier (default: SESSION_HANDOFF_AGENT or AGENT env var)",
+    )
+    board.add_argument(
+        "--needle",
+        default=None,
+        help="Optional single-token search needle across status",
+    )
+    board.add_argument(
+        "--root",
+        default=None,
+        help="Plane storage root",
+    )
+    board.add_argument(
+        "--repo-root",
+        default=None,
+        help="Repo root",
+    )
+    board.set_defaults(func=cmd_cold_start_board)
+
     return parser
+
+
+def cmd_cold_start_board(args: argparse.Namespace) -> int:
+    """Emit fail-open driver cold start board as JSON or Markdown (PR-2)."""
+    from scripts.fleet_comms.cold_start_board import (
+        build_cold_start_board,
+        render_markdown_board,
+    )
+
+    root = Path(args.root).expanduser() if args.root else None
+    repo_root = Path(args.repo_root).expanduser() if args.repo_root else None
+
+    board_data = build_cold_start_board(
+        stream_id=args.stream_id,
+        agent=args.agent,
+        needle=args.needle,
+        root=root,
+        repo_root=repo_root,
+    )
+
+    output = (
+        render_markdown_board(board_data)
+        if args.format == "markdown"
+        else _json_dump(board_data)
+    )
+
+    sys.stdout.write(output)
+    return EXIT_OK
+
 
 
 def main(argv: list[str] | None = None) -> int:
