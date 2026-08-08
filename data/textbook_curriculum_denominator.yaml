@@ -2462,13 +2462,13 @@ cells:
   coverage:
     coverage_unit_id: g09.finansova
     source_ids:
-    - 3211-pidruchnyk-pidpryiemnyctvo-i-finansova-gramotnist-9-klas-gilberg-2026
+    - 3215-pidpryiemnyctvo-9-klas-rolik-2026
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 66; Grade 8 present; Grade 9 deferred.
+  evidence_note: Official MNP 66; current 2026 Rolik edition is selected.
 - cell_id: g05.vstup_istorii
   grade: 5
   canonical_subject_id: vstup_istorii
@@ -2644,13 +2644,13 @@ cells:
     coverage_unit_id: g09.history_separate
     source_ids: []
     source_groups:
-    - - 3127-istoriia-ukrainy-9-klas-gisem
+    - - 3194-istoriia-ukrainy-9-klas-galimov-2026
     - - 3159-vsesvitnia-istoriia-9-klas-pometun-2026
     source_match_mode: all
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Present under istoriya and vsesvitnia.
+  evidence_note: Current 2026 Galimov history of Ukraine and Pometun world history editions are selected.
   choice_group_id: g09.history_realization
   choice_member_id: separate
   choice_member_requires:
@@ -2770,13 +2770,13 @@ cells:
   coverage:
     coverage_unit_id: g09.pravoznavstvo
     source_ids:
-    - 3236-pravoznavstvo-9-klas-remekh-2026
+    - 3232-pravoznavstvo-9-klas-berendieiev-2026
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 75; deferred in current corpus.
+  evidence_note: Official MNP 75; current 2026 Berendieiev edition is selected.
 - cell_id: g05.mystetstvo_one_of
   grade: 5
   canonical_subject_id: mystetstvo_one_of

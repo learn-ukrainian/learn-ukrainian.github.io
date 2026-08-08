@@ -133,9 +133,12 @@ CURRENT_TEXTBOOK_SOURCE_FILES = (
     "9-klas-ukrajinska-mova-avramenko-2017",
     "9-klas-ukrajinska-mova-voron-2017",
     "9-klas-ukrajinska-mova-zabolotnij-2017",
+    "9-klas-finansova-rolik-2026",
     "9-klas-fizyka-zasiekina-2026",
     "9-klas-heometriya-bevz-2026",
     "9-klas-informatyka-bios-2026",
+    "9-klas-istoriya-ukr-galimov-2026",
+    "9-klas-pravoznavstvo-berendieiev-2026",
     "9-klas-ukrlit-zabolotnyi-2026",
     "9-klas-ukrmova-zabolotnyi-2017",
     "9-klas-zdorovia-gushchyna-2026",
@@ -153,19 +156,21 @@ CURRENT_TEXTBOOK_SOURCE_FILES = (
 
 
 def test_current_textbook_source_files_all_map_to_canonical_subjects() -> None:
-    assert len(CURRENT_TEXTBOOK_SOURCE_FILES) == 96
+    assert len(CURRENT_TEXTBOOK_SOURCE_FILES) == 99
     subjects = [subject_for_source_file(source) for source in CURRENT_TEXTBOOK_SOURCE_FILES]
 
     assert None not in subjects
     assert Counter(subjects) == {
         "ukrmova": 45,
         "ukrlit": 17,
-        "istoriya": 16,
+        "istoriya": 17,
         "bukvar": 4,
         "lexicon": 10,
         "fizyka": 1,
+        "finansova": 1,
         "heometriya": 1,
         "informatyka": 1,
+        "pravoznavstvo": 1,
         "zdorovia": 1,
     }
     assert set(CURRENT_TEXTBOOK_SOURCE_FILES) == set(KNOWN_SOURCE_FILE_SUBJECTS)
@@ -354,8 +359,11 @@ def test_batch3_author_translits_resolve_to_cyrillic() -> None:
     ("stem", "expected_subject"),
     [
         ("9-klas-fizyka-zasiekina-2026", "fizyka"),
+        ("9-klas-finansova-rolik-2026", "finansova"),
         ("9-klas-heometriya-bevz-2026", "heometriya"),
         ("9-klas-informatyka-bios-2026", "informatyka"),
+        ("9-klas-istoriya-ukr-galimov-2026", "istoriya"),
+        ("9-klas-pravoznavstvo-berendieiev-2026", "pravoznavstvo"),
         ("9-klas-ukrlit-zabolotnyi-2026", "ukrlit"),
         ("9-klas-zdorovia-gushchyna-2026", "zdorovia"),
     ],
@@ -392,6 +400,8 @@ def test_new_authors_mapping_sample() -> None:
         "merzlyak": "Мерзляк",
         "grygorovych": "Григорович",
         "zadorozhnyj": "Задорожний",
+        "rolik": "Ролік",
+        "berendieiev": "Берендєєв",
     }
     for translit, expected_uk in samples.items():
         assert AUTHOR_UK_BY_TRANSLIT[translit] == expected_uk

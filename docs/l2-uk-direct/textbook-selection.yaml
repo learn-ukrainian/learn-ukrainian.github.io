@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-08-08
-# Total: 127 books from pidruchnyk.com.ua and shkola.in.ua, retained once in Google Drive
+# Total: 128 books from catalog and publisher sources, retained once in Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
@@ -835,7 +835,22 @@ books:
     year: 2025
     slug: 2950-pidpryiemnyctvo-i-finansova-gramotnist-plastun-8-klas-2025
 
-  # ── GRADE 9 (batch 3 — 2026 NUS rollout, all via Drive) ──
+  # ── GRADE 9 (batch 3 — 2026 NUS rollout, retained in Drive) ──
+  - id: g9-istoriya-ukr-galimov
+    grade: 9
+    subject: istoriya
+    author: Галімов
+    year: 2026
+    slug: 3194-istoriia-ukrainy-9-klas-galimov-2026
+    canonical_source: 9-klas-istoriya-ukr-galimov-2026
+    source_url: https://www.ranok.com.ua/pidruchnyky-9-klas-2026.html
+    fallback_page_urls:
+      - "https://pidruchnyk.com.ua/3194-istoriia-ukrainy-9-klas-galimov-2026.html"
+      - "https://shkola.in.ua/787-istoriia-ukrainy-9-klas-hisem.html"
+    override_pdfs:
+      - "https://api.izzi.digital/datastore/21/publication/1435412/files/2026/07/18/29f62dc1db3afcde8de815c54e21f2c5___istoriia_ukrainy___pidruchnyk_dlia_9_klasu_zakladiv_zagalnoi_serednoi_osvity__a._a._galimov__o._v._gisem__o._o._martinyk__o._m._syrtsova_.pdf"
+    note: "Complete 260-page current edition from the publisher; both catalog Drive previews are view-only"
+
   - id: g9-vsesvitnia-pometun
     grade: 9
     subject: vsesvitnia
@@ -865,15 +880,20 @@ books:
     status: needs_manual_pdf
     gdrive_id: 1zHXgiTgJ47l_0hFn2wIT09BJKVEx6GYc
 
-  - id: g9-pravoznavstvo-remekh
+  - id: g9-pravoznavstvo-berendieiev
     grade: 9
     subject: pravoznavstvo
-    author: Ремех
+    author: Берендєєв
     year: 2026
-    slug: 3236-pravoznavstvo-9-klas-remekh-2026
-    status: needs_manual_pdf
-    gdrive_id: 1fyEjfNw9gUGrtlyPrCNAyj4iXdyxpz2F
-    note: "DEFERRED wave-3b: ALL 6 pravoznavstvo-9 2026 editions Drive view-only (probed 2026-07-06)"
+    slug: 3232-pravoznavstvo-9-klas-berendieiev-2026
+    canonical_source: 9-klas-pravoznavstvo-berendieiev-2026
+    source_url: https://www.ranok.com.ua/pidruchnyky-9-klas-2026.html
+    fallback_page_urls:
+      - "https://pidruchnyk.com.ua/3232-pravoznavstvo-9-klas-berendieiev-2026.html"
+      - "https://shkola.in.ua/3422-pravoznavstvo-9-klas-berendieiev.html"
+    override_pdfs:
+      - "https://api.izzi.digital/datastore/21/publication/1445222/files/2026/07/18/a8370dae1543b17cd78619bb4c1ca353___pravoznavstvo___pidruchnyk_dlia_9_klasu_zakladiv_zagalnoi_serednoi_osvity__berendieiev__s._o.__serhiienko__v._s._.pdf"
+    note: "Complete 180-page current edition from the publisher; catalog Drive copies remain view-only"
 
   - id: g9-pryroda-mandrenko
     grade: 9
@@ -905,15 +925,18 @@ books:
     status: needs_manual_pdf
     gdrive_id: 1vJu-vNVtSMMFfoxiA8QBh7oPbc3Hk-6k
 
-  - id: g9-finansova-hilberh
+  - id: g9-finansova-rolik
     grade: 9
     subject: finansova
-    author: Гільберг
+    author: Ролік
     year: 2026
-    slug: 3211-pidruchnyk-pidpryiemnyctvo-i-finansova-gramotnist-9-klas-gilberg-2026
-    status: needs_manual_pdf
-    gdrive_id: 1iOQa-xFK8ro8n4fKUImI_gF9KMs7_voQ
-    note: "DEFERRED wave-3b: Гільберг + Пластун (shkola 3415) + Ролік all view-only/no-link"
+    slug: 3215-pidpryiemnyctvo-9-klas-rolik-2026
+    canonical_source: 9-klas-finansova-rolik-2026
+    source_url: https://pidruchnyk.com.ua/3215-pidpryiemnyctvo-9-klas-rolik-2026.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/3416-pidpryiemnytstvo-i-finansova-hramotnist-9-klas-rolik.html"
+    gdrive_id: 1Nqiflh0e7WegA3ZVutFVHW3ZYbuROowo
+    note: "Download-enabled current edition selected after six alternatives proved view-only; retained once in Google Drive"
 
   # ── GRADE 10 (batch 3) ──
   - id: g10-algebra-ister
