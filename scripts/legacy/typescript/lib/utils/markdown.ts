@@ -1,13 +1,10 @@
 /**
- * Markdown utilities with Showdown extensions
+ * Markdown utilities for legacy TypeScript activity parsers.
  *
- * Handles:
- * - Standard markdown conversion
- * - Callout blocks: > [!answer], > [!explanation], > [!alt]
- * - Answer hiding with toggle buttons
+ * Showdown was removed (CVE-2026-59710 / CVE-2026-59711; no patched npm
+ * release — vulnerable range is <=2.1.0). HTML conversion is unsupported;
+ * callout / answer *parsing* helpers below remain pure string utilities.
  */
-
-import * as showdown from 'showdown';
 
 // =============================================================================
 // Callout Block Types
@@ -21,194 +18,34 @@ export interface CalloutBlock {
 }
 
 // =============================================================================
-// Showdown Extensions
-// =============================================================================
-
-/**
- * Extension to parse callout blocks like > [!answer] content
- * Converts them to semantic HTML that can be styled/hidden
- * Handles both start-of-line and indented callouts (under list items)
- */
-const calloutExtension: showdown.ShowdownExtension = {
-  type: 'lang',
-  regex: /^(\s*)>\s*\[!(\w+)\]\s*(.+)$/gm,
-  replace: (match: string, indent: string, type: string, content: string) => {
-    const calloutType = type.toLowerCase() as CalloutType;
-    // Process inline markdown (bold, italic) in content
-    const html = content.trim()
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>');
-    return `${indent}<div class="callout callout-${calloutType}" data-callout="${calloutType}">${html}</div>`;
-  }
-};
-
-/**
- * Extension to convert [🔊](audio_id) to Forvo buttons
- * Tries to find preceding **Word** to use as search term.
- * If not found, uses the ID suffix (e.g. "boryspil") which Forvo search might handle.
- */
-const audioLinkExtension: showdown.ShowdownExtension = {
-  type: 'lang',
-  filter: (text: string) => {
-    // 1. Match: **Word** [🔊](audio_id)
-    text = text.replace(
-      /\*\*([^*]+)\*\*\s*\[🔊\]\(audio_[^)]+\)/g,
-      (match, word) => {
-        // Keep the bold word, add the button
-        return `<strong>${word}</strong> <button class="audio-btn" onclick="openForvo('${word}')" title="Listen on Forvo">🔊</button>`;
-      }
-    );
-
-    // 2. Match remaining orphan [🔊](audio_id) (fallback)
-    text = text.replace(
-      /\[🔊\]\(audio_([a-zA-Z0-9_]+)\)/g,
-      (match, idSuffix) => {
-        const fallback = idSuffix.replace(/_/g, ' ');
-        return `<button class="audio-btn" onclick="openForvo('${fallback}')" title="Listen on Forvo (Search)">🔊</button>`;
-      }
-    );
-
-    return text;
-  }
-};
-
-
-
-/**
- * Extension to handle answer blocks with toggle functionality
- * Groups consecutive callouts into hideable sections
- */
-const answerBlockExtension: showdown.ShowdownExtension = {
-  type: 'output',
-  filter: (text: string) => {
-    let answerCount = 0;
-
-    // Find consecutive answer + explanation callouts and wrap them
-    text = text.replace(
-      /(<div class="callout callout-answer"[^>]*>[\s\S]*?<\/div>)(\s*<div class="callout callout-(?:explanation|alt)"[^>]*>[\s\S]*?<\/div>)*/g,
-      (match) => {
-        const id = `ans-${answerCount++}`;
-        return `<button class="show-answer-btn" onclick="toggleAnswer('${id}', this)">Показати відповідь</button><div class="answer-block" id="${id}">${match}</div>`;
-      }
-    );
-
-    return text;
-  }
-};
-
-/**
- * Extension to handle legacy answer formats for backward compatibility
- * Converts old formats to new callout format during parsing
- */
-const legacyAnswerExtension: showdown.ShowdownExtension = {
-  type: 'lang',
-  filter: (text: string) => {
-    // Pattern 1: **Відповідь:** answer
-    text = text.replace(
-      /\*\*(?:Відповідь|Відповіді|Answer|Answers?):\*\*\s*(.+?)(?:\n|$)/gi,
-      '> [!answer] $1\n'
-    );
-
-    // Pattern 2: → ✅ **Правда.** explanation
-    text = text.replace(
-      /→\s*✅\s*\*\*Правда\.\*\*\s*(.+?)(?:\n|$)/g,
-      '> [!answer] true\n> [!explanation] $1\n'
-    );
-
-    // Pattern 3: → ❌ **Міф.** explanation
-    text = text.replace(
-      /→\s*❌\s*\*\*Міф\.\*\*\s*(.+?)(?:\n|$)/g,
-      '> [!answer] false\n> [!explanation] $1\n'
-    );
-
-    // Pattern 4: → **answer** (bold answer)
-    text = text.replace(
-      /→\s*\*\*(.+?)\*\*\s*(?:\n|$)/g,
-      '> [!answer] $1\n'
-    );
-
-    // Pattern 5: → answer (explanation) - arrow with parenthetical
-    text = text.replace(
-      /→\s*(.+?)\s*\((.+?)\)\s*(?:\n|$)/g,
-      '> [!answer] $1\n> [!explanation] $2\n'
-    );
-
-    // Pattern 6: → answer (simple arrow, no parens)
-    // Only match if not already converted and not starting with emoji
-    text = text.replace(
-      /^(\s*)→\s*([^✅❌\*\n][^\n]*?)$/gm,
-      '$1> [!answer] $2'
-    );
-
-    return text;
-  }
-};
-
-// =============================================================================
-// Markdown Converter
+// Markdown Converter (removed)
 // =============================================================================
 
 export interface MarkdownConverterOptions {
-  /**
-   * Enable legacy answer format conversion
-   * When true, old formats (→, **Відповідь:**) are converted to callouts
-   */
   convertLegacyAnswers?: boolean;
-
-  /**
-   * Enable answer hiding with toggle buttons
-   * When true, answer callouts are wrapped in hideable blocks
-   */
   hideAnswers?: boolean;
-
-  /**
-   * Enable table support
-   */
   tables?: boolean;
 }
 
-const defaultOptions: MarkdownConverterOptions = {
-  convertLegacyAnswers: false,  // Disabled: all modules now use native > [!answer] syntax
-  hideAnswers: true,
-  tables: true,
-};
-
 /**
- * Create a configured Showdown converter
+ * @deprecated Showdown removed for XSS CVEs with no upstream patch.
+ * Site content uses Astro / @astrojs/markdown-remark instead.
  */
-export function createMarkdownConverter(options: MarkdownConverterOptions = {}): showdown.Converter {
-  const opts = { ...defaultOptions, ...options };
-
-  const extensions: showdown.ShowdownExtension[] = [
-    calloutExtension,
-    audioLinkExtension,
-  ];
-
-  if (opts.convertLegacyAnswers) {
-    extensions.unshift(legacyAnswerExtension); // Run first
-  }
-
-  if (opts.hideAnswers) {
-    extensions.push(answerBlockExtension); // Run last (on output)
-  }
-
-  const converter = new showdown.Converter({
-    tables: opts.tables,
-    strikethrough: true,
-    simpleLineBreaks: true,
-    extensions,
-  });
-
-  return converter;
+export function createMarkdownConverter(_options: MarkdownConverterOptions = {}): never {
+  throw new Error(
+    "createMarkdownConverter is unavailable: showdown was removed " +
+      "(CVE-2026-59710 / CVE-2026-59711; no fixed npm release). " +
+      "Use the site markdown pipeline."
+  );
 }
 
 /**
- * Convert markdown to HTML with answer handling
+ * @deprecated See createMarkdownConverter.
  */
-export function markdownToHtml(markdown: string, options?: MarkdownConverterOptions): string {
-  const converter = createMarkdownConverter(options);
-  return converter.makeHtml(markdown);
+export function markdownToHtml(_markdown: string, _options?: MarkdownConverterOptions): never {
+  return createMarkdownConverter();
 }
+
 
 // =============================================================================
 // Answer Parsing Utilities
