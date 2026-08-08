@@ -1232,9 +1232,28 @@ def _entry_text_without_headword(text: str, lemma: str, headword: str | None = N
 
 
 def _truncate_text(text: str, limit: int) -> str:
+    """Hard-cap prose when a limit is intentional (idioms, excerpts).
+
+    Prefer breaking at a numbered dictionary sense boundary (e.g. `` 7》``) or a
+    sentence end so learners never see mid-word / mid-sense cutoffs. Dictionary
+    definition cards should pass ``limit=None`` to ``_definition_body`` instead
+    of relying on this for primary VTS/СУМ text (#6437).
+    """
     cleaned = clean_html_entities(text)
     if len(cleaned) <= limit:
         return cleaned
+    window = cleaned[:limit]
+    # Prefer last complete numbered sense (Ukrainian dict mark 》 or ASCII >>).
+    sense_break = max(window.rfind("》"), window.rfind(">>"))
+    if sense_break > limit // 3:
+        # Keep through end of previous sense body (char before next sense number).
+        cut = window.rfind(" ", 0, sense_break)
+        if cut > limit // 4:
+            return window[:cut].rstrip(" ;,") + "…"
+    for sep in (". ", "! ", "? ", "; "):
+        pos = window.rfind(sep)
+        if pos > limit // 3:
+            return window[: pos + 1].rstrip() + "…"
     return cleaned[: limit - 1].rstrip() + "…"
 
 
@@ -2770,14 +2789,25 @@ def _definition_body(
     *,
     headword: str | None = None,
     strip_leading_headword: bool = False,
-    limit: int = 900,
+    limit: int | None = None,
 ) -> str:
+    """Normalize dictionary definition prose for a card.
+
+    Default is **no length cap** (#6437 / operator 2026-08-08): a 900-char hard
+    cut was amputating multi-sense VTS/СУМ articles mid-definition (e.g. свіжий
+    sense 6…). Pass an explicit ``limit`` only for non-primary surfaces that
+    intentionally need a short string.
+    """
     body = _SOURCE_TAIL_RE.sub("", clean_html_entities(str(text or "")))
     if strip_leading_headword and headword:
         pattern = re.compile(rf"^\s*{re.escape(headword)}\b\s*", flags=re.IGNORECASE)
         body = pattern.sub("", body, count=1)
     body = re.sub(r"\s+", " ", clean_html_entities(body)).strip()
-    return _truncate_text(body, limit) if body else ""
+    if not body:
+        return ""
+    if limit is None:
+        return body
+    return _truncate_text(body, limit)
 
 
 # --- «див.» cross-reference resolution (issue #4220) ------------------------
@@ -4503,7 +4533,9 @@ def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | N
     row = _kaikki_row(lookup, lemma)
     if not row:
         return None
-    text = clean_html_entities(str(row.get("etymology_text") or "").strip()[:600])
+    raw = clean_html_entities(str(row.get("etymology_text") or "").strip())
+    # No mid-word hard slice; soft-cap only when extremely long (#6437).
+    text = raw if len(raw) <= 4000 else _truncate_text(raw, 4000)
     if not _kaikki_etymology_text_is_usable(text):
         return None
     if not _kaikki_etymology_is_decolonized(text):
@@ -5436,7 +5468,12 @@ def _fts_phrase(term: str) -> str:
     return f'"{cleaned}"' if cleaned else ""
 
 
-def _literary_excerpt(text: str, lemma: str, *, radius: int = 180) -> str:
+def _literary_excerpt(text: str, lemma: str, *, radius: int = 280) -> str:
+    """Context window around the lemma hit for literary attestation.
+
+    Expanded from 180→280 (#6437) and nudged to nearby sentence boundaries so
+    excerpts are less likely to start/end mid-word.
+    """
     cleaned = re.sub(r"\s+", " ", clean_html_entities(text)).strip()
     term = _strip_stress(lemma).casefold()
     cleaned_stripped = _strip_stress(cleaned)
@@ -5445,6 +5482,15 @@ def _literary_excerpt(text: str, lemma: str, *, radius: int = 180) -> str:
         return ""
     start = max(0, match.start() - radius)
     end = min(len(cleaned_stripped), match.end() + radius)
+    # Expand outward to a sentence boundary when nearby.
+    if start > 0:
+        boundary = cleaned_stripped.rfind(". ", 0, start + 1)
+        if boundary != -1 and start - boundary < 80:
+            start = boundary + 2
+    if end < len(cleaned_stripped):
+        boundary = cleaned_stripped.find(". ", end)
+        if boundary != -1 and boundary - end < 80:
+            end = boundary + 1
     excerpt = cleaned_stripped[start:end].strip()
     if start > 0:
         excerpt = "…" + excerpt
