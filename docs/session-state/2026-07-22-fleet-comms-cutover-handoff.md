@@ -3,9 +3,16 @@ session: "Fleet-comms #5512 — operator cutovers are NEXT SESSION primary targe
 date: 2026-07-22
 epic: 5512
 stream: 4707
-status: open
+status: superseded
 priority: P0-next-cold-start
 ---
+
+> **SUPERSEDED — historical-only.** The `dual_write`/plane-cutover queue below predates the
+> completed cutover. Live state: mode `authority` (production default since operator GO
+> 2026-08-01), cutover closed with evidence on
+> [#6159](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6159). Cold-start
+> action is `.venv/bin/python -m scripts.fleet_comms cold-start-board`, not this file's queue.
+> Body kept below for archive/history only — do not execute it.
 
 # 2026-07-22 — Fleet-comms cutover handoff (binding for next cold-start)
 

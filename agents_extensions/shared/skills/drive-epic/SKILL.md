@@ -332,27 +332,30 @@ Then run the Entire dual-write steps in §8.
 
 ---
 
-## Fleet-comms state — dual-aware, do not race the cutover
+## Fleet-comms state — dual-aware, cutover is closed
 
-The message plane exists but the `dual_write` cutover is an **operator/advisor-gated
-flip owned by the infra/harness lane** (parity receipt → approved enable). Until it
-flips, **file handoffs remain authoritative** (`session_streams --help` itself says: "do
-not use it to cut over or retire file handoffs").
+The message plane's `authority` cutover is **done**: mode `authority` is the production
+default (operator GO 2026-08-01, closed with evidence on
+[#6159](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6159)).
+Fleet-comms is now durable authority for messages/jobs; legacy broker/channel file
+stores are read-only migration/projection inputs, not a live write target.
 
-- **Check first:** `.venv/bin/python -m scripts.fleet_comms plane-status` and
+- **Cold-start first action:**
+  `.venv/bin/python -m scripts.fleet_comms cold-start-board` — probes fleet/plane/stream
+  state so you orient from live data, never memory.
+- **Check plane state:** `.venv/bin/python -m scripts.fleet_comms plane-status` and
   `.venv/bin/python -m agents_extensions.shared.session_streams dual-write-status`.
-- **While `mode: off` / dual-write:** coordinate via the plane where available AND keep
-  the file handoff current (`.claude/<epic>-epic/*DRIVER-HANDOFF.md` where the epic uses
-  one — gitignored local state; or `docs/session-state/` for infra). Successor-claim
-  diagnostics: `session_streams handoff-status` / `handoff-claim` (#5530).
-- **Plane modes are only `off → shadow → dual_write`** (`plane-status`). In **all** of
-  them the file handoff stays authoritative — `dual_write` is shadow/mirror, **not**
-  cutover, and there is **no implemented post-cutover authority state** today. **Never
-  drop the file handoff on your own.** Retiring file handoffs is a future infra step
-  gated on an implemented authority signal the plane does not yet expose — not a config
-  edit a driver makes.
+  Implemented modes are `off | shadow | dual_write | authority` — do not hard-code a
+  mode in prose; always query it fresh.
+- **File handoff still matters:** fleet-comms is durable authority for messages/jobs,
+  but you still write file continuity where the epic uses one (`.claude/<epic>-epic/
+  *DRIVER-HANDOFF.md` — gitignored local state — or `docs/session-state/` for infra); see
+  the dual-write steps in §8. Successor-claim diagnostics: `session_streams
+  handoff-status` / `handoff-claim` (#5530).
+- **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
+  not `review-pr` / sealed `lu-review-*`.
 - **Never** flip the plane, enable retention apply, or invent a competing comms design
-  from this skill — those are the infra lane's gated actions.
+  from this skill — those remain the infra lane's gated actions, even post-cutover.
 
 ---
 
