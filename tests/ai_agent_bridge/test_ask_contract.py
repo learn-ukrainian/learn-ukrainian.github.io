@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -104,6 +105,122 @@ def test_terminal_failure_replays_without_invoking_provider_again(
     assert replay.transport_outcome == "error"
     assert replay.usage_record == {"replayed": True, "transport": "acp"}
     assert invoke.call_count == 1
+
+
+def test_terminalization_conflict_preserves_completed_provider_response(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A bookkeeping collision must not hide the completed provider response."""
+    from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+
+    class TerminalConflictAuthority:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_request(self, **_kwargs):
+            return SimpleNamespace(job_id="job-6367", state="queued")
+
+        def claim_job(self, *_args, **_kwargs):
+            return SimpleNamespace(fence_token=1)
+
+        def finish_job(self, *_args, **_kwargs):
+            raise AuthorityStaleLeaseError("terminalization_conflict")
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield tmp_path
+
+    provider_result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="completed provider response",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+    invoke = Mock(return_value=provider_result)
+    output_path = tmp_path / "response.txt"
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+
+    with pytest.raises(RuntimeError, match="terminal bookkeeping failed after provider response"):
+        _acp_compat._run_compat_ask_impl(
+            "agy",
+            "question",
+            task_id="terminalization-conflict",
+            model="gemini-3.6-flash-high",
+            effort="high",
+            output_path=str(output_path),
+        )
+
+    captured = capsys.readouterr()
+    assert captured.out == "completed provider response\n"
+    assert "terminalization_conflict" in captured.err
+    assert output_path.read_text(encoding="utf-8") == "completed provider response"
+    assert invoke.call_count == 1
+
+
+def test_claim_race_to_terminal_replays_without_invoking_provider(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A terminal race after enqueue must replay instead of spending a provider call."""
+    from scripts.fleet_comms.authority import AuthorityServiceError
+
+    replay_result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="durably completed response",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+
+    class ConcurrentTerminalAuthority:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_request(self, **_kwargs):
+            return SimpleNamespace(job_id="job-race", state="queued")
+
+        def claim_job(self, *_args, **_kwargs):
+            raise AuthorityServiceError("job_not_claimable")
+
+        def get_job(self, _job_id):
+            return SimpleNamespace(job_id="job-race", state="complete")
+
+        def read_job_result(self, _job_id):
+            return _acp_compat._result_receipt(replay_result)
+
+    invoke = Mock(side_effect=AssertionError("terminal job reinvoked provider"))
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", ConcurrentTerminalAuthority)
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+
+    result = _acp_compat._run_compat_ask_impl(
+        "agy",
+        "question",
+        task_id="terminal-claim-race",
+        model="gemini-3.6-flash-high",
+        effort="high",
+    )
+
+    assert result.response == "durably completed response"
+    assert result.usage_record == {"replayed": True, "transport": "acp"}
+    assert invoke.call_count == 0
 
 
 def test_cli_returns_nonzero_for_replayed_or_live_failure(

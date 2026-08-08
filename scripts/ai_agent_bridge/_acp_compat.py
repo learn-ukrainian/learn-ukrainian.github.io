@@ -283,7 +283,7 @@ def _run_compat_ask_impl(
 
     from agent_runtime.runner import invoke_inter_agent
 
-    from scripts.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     key = _idempotency_key(
         participant=participant,
@@ -293,6 +293,7 @@ def _run_compat_ask_impl(
         effort=effort,
     )
     worker_id = f"acp-compat:{os.getpid()}"
+    terminalization_error: Exception | None = None
     with AuthorityService() as authority:
         job = authority.enqueue_request(
             recipient=participant,
@@ -306,13 +307,25 @@ def _run_compat_ask_impl(
             },
             idempotency_key=key,
         )
-        if job.state in {"complete", "failed", "expired", "dead_lettered"}:
+        terminal_states = {"complete", "failed", "expired", "dead_lettered"}
+        if job.state not in terminal_states:
+            try:
+                lease = authority.claim_job(
+                    job.job_id, worker_id, lease_seconds=hard_timeout + 30
+                )
+            except AuthorityServiceError:
+                # A concurrent terminalizer may win after enqueue_request() returns.
+                # Re-read before invoking a provider so an already-durable result is
+                # replayed instead of spending another provider invocation.
+                job = authority.get_job(job.job_id)
+                if job.state not in terminal_states:
+                    raise
+        if job.state in terminal_states:
             replay = authority.read_job_result(job.job_id)
             if replay is None:
                 raise RuntimeError(f"terminal ACP job {job.job_id} has no result receipt")
             result = _replay_result(replay)
         else:
-            lease = authority.claim_job(job.job_id, worker_id, lease_seconds=hard_timeout + 30)
             previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
             os.environ["LU_ACPX_TRANSPORT"] = "active"
             try:
@@ -362,18 +375,24 @@ def _run_compat_ask_impl(
                     os.environ.pop("LU_ACPX_TRANSPORT", None)
                 else:
                     os.environ["LU_ACPX_TRANSPORT"] = previous_transport
-            authority.finish_job(
-                job.job_id,
-                worker_id=worker_id,
-                fence_token=lease.fence_token,
-                state="complete" if bool(getattr(result, "ok", False)) else "failed",
-                result=_result_receipt(result),
-                failure=(
-                    None
-                    if bool(getattr(result, "ok", False))
-                    else _failure_metadata(result=result)
-                ),
-            )
+            try:
+                authority.finish_job(
+                    job.job_id,
+                    worker_id=worker_id,
+                    fence_token=lease.fence_token,
+                    state="complete" if bool(getattr(result, "ok", False)) else "failed",
+                    result=_result_receipt(result),
+                    failure=(
+                        None
+                        if bool(getattr(result, "ok", False))
+                        else _failure_metadata(result=result)
+                    ),
+                )
+            except Exception as exc:
+                # Provider output is the user-visible result.  Do not lose it when
+                # a concurrent terminalizer or another authority failure rejects
+                # bookkeeping after a completed invocation.
+                terminalization_error = exc
     response = str(getattr(result, "response", ""))
     if output_path:
         Path(output_path).write_text(response, encoding="utf-8")
@@ -384,4 +403,11 @@ def _run_compat_ask_impl(
         f"outcome={getattr(result, 'transport_outcome', None) or 'error'}",
         file=sys.stderr,
     )
+    if terminalization_error is not None:
+        message = (
+            "ACP terminal bookkeeping failed after provider response: "
+            f"{terminalization_error}"
+        )
+        print(message, file=sys.stderr)
+        raise RuntimeError(message) from terminalization_error
     return result

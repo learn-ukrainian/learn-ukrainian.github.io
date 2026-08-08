@@ -243,6 +243,43 @@ def test_exact_claim_and_terminal_result_replay_do_not_take_unrelated_work(tmp_p
         assert service.get_job(older.job_id).state == "queued"
 
 
+def test_finish_job_matching_terminal_replay_is_idempotent(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        job = service.enqueue_request(
+            recipient="agy", body="idempotent finish", idempotency_key="terminal-replay"
+        )
+        lease = service.claim_job(job.job_id, "worker", now="2036-06-01T00:00:00Z")
+        first = service.finish_job(
+            job.job_id,
+            worker_id="worker",
+            fence_token=lease.fence_token,
+            state="complete",
+            result=b"provider response",
+            now="2036-06-01T00:00:01Z",
+        )
+
+        replay = service.finish_job(
+            job.job_id,
+            worker_id="worker",
+            fence_token=lease.fence_token,
+            state="complete",
+            result=b"provider response",
+            now="2036-06-01T00:00:02Z",
+        )
+
+        assert replay == first
+        assert service.read_job_result(job.job_id) == b"provider response"
+        with pytest.raises(AuthorityStaleLeaseError, match="terminalization_conflict"):
+            service.finish_job(
+                job.job_id,
+                worker_id="worker",
+                fence_token=lease.fence_token,
+                state="complete",
+                result=b"different provider response",
+                now="2036-06-01T00:00:03Z",
+            )
+
+
 def test_failed_job_retry_preserves_identity_and_attempt_history(tmp_path: Path) -> None:
     with AuthorityService(root=_root(tmp_path)) as service:
         job = service.enqueue_request(
