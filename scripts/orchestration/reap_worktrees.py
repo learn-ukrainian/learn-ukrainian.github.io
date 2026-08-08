@@ -921,13 +921,19 @@ def reap_worktrees(
     safe_only: bool = False,
     live_cwds: set[Path] | None = None,
     merged_pr_only: bool = True,
-    require_activity_probe: bool = False,
+    require_activity_probe: bool | None = None,
 ) -> list[ReapResult]:
-    """Evaluate and optionally reap eligible worktrees."""
+    """Evaluate and optionally reap eligible worktrees.
+
+    Apply mode requires a process-CWD activity probe unless a caller
+    deliberately overrides that policy.
+    """
     repo_root = repo_root.resolve()
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
     active_ids = _active_task_ids()
+    if require_activity_probe is None:
+        require_activity_probe = bool(apply)
     if live_cwds is None:
         live_cwds = _live_cwd_paths(repo_root)
     if require_activity_probe and live_cwds is None:

@@ -689,6 +689,42 @@ def test_apply_cli_requires_process_activity_probe(
         rw.main(["--repo-root", str(repo), "--apply", "--merged"])
 
 
+def test_apply_default_requires_process_activity_probe_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/probe-default")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: None)
+    patch_gh(monkeypatch, {"codex/probe-default": [{"number": 72, "state": "MERGED"}]})
+
+    with pytest.raises(
+        RuntimeError,
+        match="process-CWD activity probe unavailable",
+    ):
+        rw.reap_worktrees(repo_root=repo, apply=True)
+
+    assert worktree.exists()
+
+
+def test_apply_default_accepts_explicit_empty_live_cwds(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/empty-live-cwds")
+    patch_gh(monkeypatch, {"codex/empty-live-cwds": [{"number": 73, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
 def test_reaper_lock_rejects_concurrent_cleanup(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
