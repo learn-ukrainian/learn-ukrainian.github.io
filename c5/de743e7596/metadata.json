@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c5de743e7596",
+  "strategy": "manual-commit",
+  "branch": "grok/6437-no-mid-definition-truncate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c5/de743e7596/0/metadata.json",
+      "transcript": "/c5/de743e7596/0/full.jsonl",
+      "compact_transcript": "/c5/de743e7596/0/transcript.jsonl",
+      "content_hash": "/c5/de743e7596/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
