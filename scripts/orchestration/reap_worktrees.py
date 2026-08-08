@@ -23,6 +23,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration import reaper_lifecycle
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BUILD_AGE_HOURS = 6.0
 
@@ -64,6 +66,7 @@ class ReapResult:
     pr: dict[str, Any] | None = None
     error: str | None = None
     branch_pruned: bool = False
+    recovery_ref: str | None = None
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -624,6 +627,28 @@ def find_needs_finalize_worktrees(repo_root: Path) -> list[dict[str, Any]]:
     return results
 
 
+def adopt_dispatch_worktrees(repo_root: Path) -> list[dict[str, Any]]:
+    """Journal already-mounted dispatch worktrees without inferring ownership.
+
+    Adoption is observation only.  A later enforce pass must still independently
+    prove an exact merged PR head and every P0 guard before it removes anything.
+    """
+    adopted: list[dict[str, Any]] = []
+    for info in list_git_worktrees(repo_root):
+        task_id = _dispatch_task_id(repo_root, info)
+        if task_id is None or not is_under_worktrees(repo_root, info.path):
+            continue
+        row = {
+            "path": str(info.path),
+            "branch": info.branch,
+            "head": info.head,
+            "task_id": task_id,
+        }
+        reaper_lifecycle.append_journal(repo_root, "adopt", **row)
+        adopted.append(row)
+    return adopted
+
+
 def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
     branch = info.branch or "detached"
     add_proc = _run(["git", "add", "-A"], cwd=info.path)
@@ -723,103 +748,160 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
         )
 
-    if dirty:
-        preserve_error = _preserve_dirty_worktree(info)
-        if preserve_error is not None:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="error",
-                reason=f"preserve before reap failed: {reason}",
-                dirty=True,
-                pr=_pr_dict(pr_state),
-                error=preserve_error,
-            )
-        refreshed_head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-        if refreshed_head.returncode != 0:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="error",
-                reason=f"cannot verify preserved worktree HEAD: {reason}",
-                dirty=True,
-                pr=_pr_dict(pr_state),
-                error=_format_failure(refreshed_head),
-            )
-        expected_head = (refreshed_head.stdout or "").strip()
-
-    current_head_proc = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-    current_head = (current_head_proc.stdout or "").strip()
-    if current_head_proc.returncode != 0 or not expected_head or current_head != expected_head:
+    if os.environ.get("LU_REAPER_DISABLED") == "1":
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
             action="skipped",
-            reason=f"HEAD changed during cleanup; originally qualified because {reason}",
+            reason="reaper disabled by LU_REAPER_DISABLED=1",
             dirty=dirty,
             pr=_pr_dict(pr_state),
         )
 
-    current_clean = _worktree_clean(info.path)
-    if current_clean is not True:
+    cap_allowed, cap_reason = reaper_lifecycle.cap_allows_reap(repo_root)
+    if not cap_allowed:
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
             action="skipped",
-            reason=f"worktree changed during cleanup; originally qualified because {reason}",
-            dirty=None if current_clean is None else True,
+            reason=cap_reason or "first-class daily reap cap reached",
+            dirty=dirty,
             pr=_pr_dict(pr_state),
         )
 
-    remove_error = _remove_worktree(repo_root, info)
-    if remove_error is not None:
+    pending_marked = False
+    recovery_ref: str | None = None
+    try:
+        # This reservation is intentionally before the final TOCTOU checks.
+        # Scheduler/delegate consumers can reject a new bind while it exists.
+        reaper_lifecycle.mark_reap_pending(
+            repo_root,
+            worktree_path=info.path,
+            branch=info.branch,
+            head=expected_head,
+            task_id=_dispatch_task_id(repo_root, info),
+        )
+        pending_marked = True
+
+        if dirty:
+            preserve_error = _preserve_dirty_worktree(info)
+            if preserve_error is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=f"preserve before reap failed: {reason}",
+                    dirty=True,
+                    pr=_pr_dict(pr_state),
+                    error=preserve_error,
+                )
+            refreshed_head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+            if refreshed_head.returncode != 0:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=f"cannot verify preserved worktree HEAD: {reason}",
+                    dirty=True,
+                    pr=_pr_dict(pr_state),
+                    error=_format_failure(refreshed_head),
+                )
+            expected_head = (refreshed_head.stdout or "").strip()
+
+        current_head_proc = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+        current_head = (current_head_proc.stdout or "").strip()
+        if current_head_proc.returncode != 0 or not expected_head or current_head != expected_head:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"HEAD changed during cleanup; originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+
+        current_clean = _worktree_clean(info.path)
+        if current_clean is not True:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"worktree changed during cleanup; originally qualified because {reason}",
+                dirty=None if current_clean is None else True,
+                pr=_pr_dict(pr_state),
+            )
+
+        recovery_ref, recovery_error = reaper_lifecycle.create_recovery_ref(
+            repo_root,
+            branch=info.branch,
+            head=current_head,
+        )
+        if recovery_error is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="error",
+                reason=f"could not create recovery material; {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                error=recovery_error,
+            )
+
+        remove_error = _remove_worktree(repo_root, info)
+        if remove_error is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="error",
+                reason=reason,
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                error=remove_error,
+                recovery_ref=recovery_ref,
+            )
+
+        branch_prune_error = None
+        branch_pruned = False
+        if (
+            prune_merged_branches
+            and pr_state is not None
+            and pr_state.state == "MERGED"
+            and pr_state.head_sha == current_head
+        ):
+            branch_prune_error = _prune_branch(
+                repo_root,
+                info.branch,
+                force=True,
+                expected_head=current_head,
+            )
+            branch_pruned = branch_prune_error is None
+
+        if branch_prune_error is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="removed",
+                reason=f"{reason}; branch prune failed",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                error=branch_prune_error,
+                recovery_ref=recovery_ref,
+            )
+
+        reaper_lifecycle.record_reap_for_cap(repo_root)
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
-            action="error",
+            action="preserved_then_removed" if dirty else "removed",
             reason=reason,
             dirty=dirty,
             pr=_pr_dict(pr_state),
-            error=remove_error,
+            branch_pruned=branch_pruned,
+            recovery_ref=recovery_ref,
         )
-
-    branch_prune_error = None
-    branch_pruned = False
-    if (
-        prune_merged_branches
-        and pr_state is not None
-        and pr_state.state == "MERGED"
-        and pr_state.head_sha == current_head
-    ):
-        branch_prune_error = _prune_branch(
-            repo_root,
-            info.branch,
-            force=True,
-            expected_head=current_head,
-        )
-        branch_pruned = branch_prune_error is None
-
-    if branch_prune_error is not None:
-        return ReapResult(
-            path=str(info.path),
-            branch=info.branch,
-            action="removed",
-            reason=f"{reason}; branch prune failed",
-            dirty=dirty,
-            pr=_pr_dict(pr_state),
-            error=branch_prune_error,
-        )
-
-    return ReapResult(
-        path=str(info.path),
-        branch=info.branch,
-        action="preserved_then_removed" if dirty else "removed",
-        reason=reason,
-        dirty=dirty,
-        pr=_pr_dict(pr_state),
-        branch_pruned=branch_pruned,
-    )
-
+    finally:
+        if pending_marked:
+            reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 
 def _target_filter(target_paths: list[Path] | None) -> set[Path] | None:
     if target_paths is None:
@@ -838,7 +920,7 @@ def reap_worktrees(
     now: float | None = None,
     safe_only: bool = False,
     live_cwds: set[Path] | None = None,
-    merged_pr_only: bool = False,
+    merged_pr_only: bool = True,
     require_activity_probe: bool = False,
 ) -> list[ReapResult]:
     """Evaluate and optionally reap eligible worktrees."""
@@ -909,6 +991,19 @@ def reap_worktrees(
                 pr_states, pr_error = _query_pr_states(repo_root, info.branch)
                 pr_state = _best_pr(pr_states)
 
+            if merged_pr_only and pr_error is not None:
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"PR guard unavailable; {pr_error}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                )
+                continue
+
             reason = _qualifying_reason(
                 repo_root=repo_root,
                 info=info,
@@ -940,6 +1035,15 @@ def reap_worktrees(
                 )
                 continue
 
+            reaper_lifecycle.append_journal(
+                repo_root,
+                "plan" if apply else "observe",
+                path=str(info.path),
+                branch=info.branch,
+                head=info.head,
+                reason=reason,
+                pr=_pr_dict(pr_state),
+            )
             results.append(
                 _reap_qualified_worktree(
                     repo_root=repo_root,
@@ -966,6 +1070,20 @@ def reap_worktrees(
                 )
             )
 
+    for result in results:
+        event = "reap" if result.action in {"removed", "preserved_then_removed"} else "skip"
+        reaper_lifecycle.append_journal(
+            repo_root,
+            event,
+            path=result.path,
+            branch=result.branch,
+            action=result.action,
+            reason=result.reason,
+            dirty=result.dirty,
+            pr=result.pr,
+            error=result.error,
+            recovery_ref=result.recovery_ref,
+        )
     return results
 
 
@@ -1055,6 +1173,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Repository root to inspect (default: current git worktree root).",
     )
+    parser.add_argument(
+        "command",
+        nargs="?",
+        choices=("report", "plan", "apply", "journal", "restore"),
+        help="Optional verb: report/plan are dry-run, apply enforces, journal prints evidence.",
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument(
         "--dry-run",
@@ -1106,12 +1230,20 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--legacy-classes",
+        action="store_true",
+        help="Enable pre-P0 non-merged cleanup classes for an explicit manual run.",
+    )
+    parser.add_argument(
         "--worktree",
         action="append",
         type=Path,
         default=None,
         help="Limit evaluation to a registered worktree path. Repeatable.",
     )
+    parser.add_argument("--restore-ref", help="Recovery ref to restore from.")
+    parser.add_argument("--restore-branch", help="Branch identity expected for --restore-ref.")
+    parser.add_argument("--restore-worktree", type=Path, help="New .worktrees/ target for restore.")
     return parser
 
 
@@ -1123,11 +1255,27 @@ def main(argv: list[str] | None = None) -> int:
         if args.repo_root
         else primary_checkout_root(resolve_repo_root())
     )
-    apply = bool(args.apply)
-    merged_mode = bool(getattr(args, "merged", False))
+    apply = bool(args.apply) or args.command == "apply"
+    merged_mode = bool(args.merged) or not bool(args.legacy_classes)
     preserve = bool(args.preserve_then_reap)
-    prune = bool(args.prune_merged_branches) or merged_mode
+    prune = bool(args.prune_merged_branches) or bool(args.merged)
     safe_only = bool(args.safe_only) or merged_mode
+    if args.command == "journal":
+        journal = reaper_lifecycle.journal_path(repo_root)
+        print(journal.read_text(encoding="utf-8") if journal.exists() else "")
+        return 0
+    if args.command == "restore":
+        if not (args.restore_ref and args.restore_branch and args.restore_worktree):
+            parser.error("restore requires --restore-ref, --restore-branch, and --restore-worktree")
+        restored, error = reaper_lifecycle.restore_worktree(
+            repo_root,
+            recovery_ref=args.restore_ref,
+            branch=args.restore_branch,
+            worktree_path=args.restore_worktree,
+        )
+        print(json.dumps({"restored": restored, "error": error}, indent=2))
+        return 0 if restored else 2
+
     results = reap_worktrees(
         repo_root=repo_root,
         apply=apply,

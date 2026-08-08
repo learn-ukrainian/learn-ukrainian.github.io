@@ -19,6 +19,22 @@ The scheduled job never commits work on the operator's behalf and never uses
 pointers are reported as recovery candidates and are never deleted
 automatically.
 
+P0 automatic reaping is restricted to clean `.worktrees/` checkouts whose
+GitHub PR is `MERGED` at the exact local head. Before removal it writes an
+append-only local journal, reserves the path as reap-pending, and creates a
+`refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
+reaps immediately. The first seven days are capped by
+`LU_REAPER_MAX_REAPS_PER_DAY` (default 10); an approved policy lift uses
+`LU_REAPER_LIFT_FIRST_CLASS_CAP=1`. Restore only to a new path under
+`.worktrees/`:
+
+```bash
+.venv/bin/python scripts/orchestration/reap_worktrees.py restore \
+  --restore-ref refs/reaper-rescue/<timestamp>/<branch>-<sha> \
+  --restore-branch <branch> \
+  --restore-worktree .worktrees/dispatch/<agent>/<task>
+```
+
 ## Immediate cleanup after merge
 
 The merge owner removes the exact worktree as soon as GitHub reports the PR
@@ -72,9 +88,8 @@ Each run performs the following in both repository roots:
 
 1. fetches `origin` and prunes deleted remote refs;
 2. prunes stale Git worktree registrations;
-3. removes clean, inactive worktrees that have exact finalized-PR or settled
-   dispatch evidence, plus old detached worktrees already contained by
-   `origin/main`;
+3. automatically removes only clean, inactive worktrees with exact merged-PR
+   head evidence; other legacy/residue classes are observed and skipped;
 4. deletes local branches whose upstream is gone only when their exact head is
    proven merged or is already an ancestor of `origin/main`;
 5. preserves and reports unproven gone branches and orphaned worktree
