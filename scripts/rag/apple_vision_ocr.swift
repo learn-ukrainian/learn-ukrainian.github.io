@@ -139,8 +139,10 @@ private func renderPage(_ page: PDFPage, pageNumber: Int) throws -> CGImage {
     context.setFillColor(CGColor(gray: 1.0, alpha: 1.0))
     context.fill(CGRect(x: 0, y: 0, width: width, height: height))
     context.saveGState()
-    context.translateBy(x: 0, y: CGFloat(height))
-    context.scaleBy(x: scale, y: -scale)
+    // PDFPage.draw renders into Core Graphics' native bottom-left coordinate
+    // space. Flipping the context here produces an upside-down CGImage for
+    // Vision even though ordinary PDF renderers display the source upright.
+    context.scaleBy(x: scale, y: scale)
     page.draw(with: .mediaBox, to: context)
     context.restoreGState()
 

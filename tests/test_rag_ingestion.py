@@ -5,6 +5,8 @@ Tests pure functions only — no network calls, no Qdrant.
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -295,6 +297,45 @@ class TestCheckQuality:
 
 
 class TestTextbookExtractionReadiness:
+    @pytest.mark.skipif(
+        sys.platform != "darwin" or shutil.which("cupsfilter") is None,
+        reason="Apple Vision OCR regression requires macOS and cupsfilter",
+    )
+    def test_apple_vision_ocr_keeps_upright_pdf_orientation(self, tmp_path):
+        source = tmp_path / "upright-ukrainian.txt"
+        source.write_text(
+            "Українська мова. Це якісний шкільний підручник.\n" * 12,
+            encoding="utf-8",
+        )
+        pdf = tmp_path / "upright-ukrainian.pdf"
+        rendered = subprocess.run(
+            ["cupsfilter", "-m", "application/pdf", str(source)],
+            check=True,
+            capture_output=True,
+        )
+        pdf.write_bytes(rendered.stdout)
+
+        helper = ROOT / "scripts" / "rag" / "apple_vision_ocr.swift"
+        completed = subprocess.run(
+            [
+                "swift",
+                str(helper),
+                "--pdf",
+                str(pdf),
+                "--pages",
+                "1",
+                "--mode",
+                "ocr",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        text = json.loads(completed.stdout)["pages"][0]["text"]
+
+        assert "Українська мова" in text
+        assert "шкільний підручник" in text
+
     def test_mojibake_repairs_mixed_run_without_whole_page_bypass(self):
         from scripts.rag.extract_text import _repair_cp1251_mojibake
 
