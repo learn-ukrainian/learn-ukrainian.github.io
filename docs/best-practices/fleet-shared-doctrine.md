@@ -70,6 +70,10 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 ## 4. Cost discipline (Sol / Fable / future xAI ceiling)
 
+- **No-idle paid capacity (operator 2026-08-08):** free/behind seats (Cursor Auto, DeepSeek Flash, AGY, Pool, Z.AI 5h, Claude routine) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. Cutting subscriptions is a last resort after utilization is fixed — see `model-assignment.md` § *No-idle utilization + transport map*.
+- **DeepSeek pin:** `deepseek-v4-flash` only; Pro DO NOT USE.
+- **OpenRouter:** mainly Pool + Gemma; not a general multi-model bus.
+
 - Use ceiling models **often** on *qualifying* hard work — not rarely, and not as free general labor.  
 - **Never** default ceiling models as orchestrator or first-pass implementer.  
 - **Escalation triggers (immediate):** security; high blast radius; unclear invariants; architectural ambiguity with multiple viable options; release-level uncertainty.  

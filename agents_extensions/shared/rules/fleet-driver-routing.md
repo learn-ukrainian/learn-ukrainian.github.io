@@ -45,6 +45,26 @@ Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
 
 ---
 
+### 1b. Free-lane utilization (operator 2026-08-08)
+
+Do **not** fixate on Codex/Claude while free seats sit idle. Live check:
+`codexbar usage --json --provider <lane>` + `/api/delegate/active` + disk.
+
+| Free / behind seat | Prefer for | Pin |
+| --- | --- | --- |
+| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (default `auto`); never CF identity |
+| **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` **only** — **Pro DO NOT USE** |
+| **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |
+| **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (often OpenRouter path) |
+| **Z.AI GLM-5.2** | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; prefer 5h when weekly hot |
+| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority |
+
+**OpenRouter:** mainly **Pool + Gemma**. Can reach more; **do not** use as a general multi-model bus — native/first-party first.
+
+**Codex near_cap:** shed mechanical CI (ruff, fingerprints, lockfile nits) to Cursor Auto / DeepSeek Flash / AGY. Novel/hard work may stay on Terra/Luna.
+
+Full table + transport map: `model-assignment.md` § *No-idle utilization + transport map*.
+
 ## 2. Default execution shape (binding)
 
 For **bounded** work (clear owned paths, objective acceptance command, no open
