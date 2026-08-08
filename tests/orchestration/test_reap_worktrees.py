@@ -12,6 +12,7 @@ from typing import Any
 import pytest
 
 from scripts.orchestration import reap_worktrees as rw
+from scripts.orchestration import reaper_lifecycle
 
 _REAL_RUN = subprocess.run
 
@@ -44,7 +45,7 @@ def init_repo(tmp_path: Path) -> Path:
     git(tmp_path, "init", "--initial-branch=main", str(repo))
     git(repo, "config", "user.email", "tester@example.com")
     git(repo, "config", "user.name", "Test User")
-    (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n", encoding="utf-8")
     (repo / "README.md").write_text("base\n", encoding="utf-8")
     git(repo, "add", ".gitignore", "README.md")
     git(repo, "commit", "-m", "base")
@@ -223,7 +224,7 @@ def test_pushed_origin_clean_worktree_is_removed(
     git(worktree, "push", "-u", "origin", "codex/pushed")
     patch_gh(monkeypatch, {})
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
 
     result = result_for(results, worktree)
     assert result.action == "removed"
@@ -299,7 +300,7 @@ def test_class_a_settled_dispatch_removed(
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     patch_gh(monkeypatch, {"codex/5102-raisa": []})
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     result = result_for(results, worktree_path)
     assert result.action == "removed"
     assert "settled dispatch" in result.reason
@@ -326,7 +327,7 @@ def test_class_a_no_deliverable_dispatch_removed(
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     patch_gh(monkeypatch, {"codex/5800-false-success": []})
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     result = result_for(results, worktree_path)
     assert result.action == "removed"
     assert "settled dispatch" in result.reason
@@ -351,18 +352,18 @@ def test_class_a_fail_safe_skips(
     # Case 1: active task
     monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
     patch_gh(monkeypatch, {"codex/5102-raisa-fail": []})
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Case 2: API down
     monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Case 3: missing task file
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     task_file.unlink()
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Re-create task file for remaining cases — live worker PID required
@@ -371,7 +372,7 @@ def test_class_a_fail_safe_skips(
     )
 
     # Case 4: task status is not done/failed and worker PID is live
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Set status back to done (no live pid)
@@ -379,7 +380,7 @@ def test_class_a_fail_safe_skips(
 
     # Case 5: dirty tree
     (worktree_path / "dirty.txt").write_text("uncommitted change", encoding="utf-8")
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Clean up dirty file
@@ -388,12 +389,12 @@ def test_class_a_fail_safe_skips(
     # Case 6: open PR but worktree not matching origin tip → keep
     monkeypatch.setattr(rw, "_origin_matches_head", lambda _path, _branch: False)
     patch_gh(monkeypatch, {"codex/5102-raisa-fail": [{"number": 42, "state": "OPEN"}]})
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
     # Case 7: open PR + clean tip already on origin → free local worktree
     monkeypatch.setattr(rw, "_origin_matches_head", lambda _path, _branch: True)
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     result = result_for(results, worktree_path)
     assert result.action == "removed"
     assert "open PR remains on remote" in (result.reason or "")
@@ -417,7 +418,7 @@ def test_class_b_detached_head_removed(
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     # Check it is removed because age > 24h and no matching task
-    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now, merged_pr_only=False)
     result = result_for(results, worktree_path)
     assert result.action == "removed"
     assert "detached HEAD ancestor of origin/main" in result.reason
@@ -445,7 +446,7 @@ def test_class_b_settled_task_removed(
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     # Check it is removed even if age is fresh (e.g. 0h) because task is settled
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     result = result_for(results, worktree_path)
     assert result.action == "removed"
     assert "detached HEAD ancestor of origin/main; settled dispatch task-id=detached-task" in result.reason
@@ -469,7 +470,7 @@ def test_class_b_fail_safe_skips(
     os.utime(worktree_path, (old, old))
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, now=now, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
 
@@ -625,6 +626,7 @@ def test_closed_pr_requires_matching_worktree_head(
         apply=True,
         safe_only=True,
         live_cwds=set(),
+        merged_pr_only=False,
     )
 
     assert result_for(results, matching).action == "removed"
@@ -685,6 +687,42 @@ def test_apply_cli_requires_process_activity_probe(
         match="process-CWD activity probe unavailable",
     ):
         rw.main(["--repo-root", str(repo), "--apply", "--merged"])
+
+
+def test_apply_default_requires_process_activity_probe_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/probe-default")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: None)
+    patch_gh(monkeypatch, {"codex/probe-default": [{"number": 72, "state": "MERGED"}]})
+
+    with pytest.raises(
+        RuntimeError,
+        match="process-CWD activity probe unavailable",
+    ):
+        rw.reap_worktrees(repo_root=repo, apply=True)
+
+    assert worktree.exists()
+
+
+def test_apply_default_accepts_explicit_empty_live_cwds(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/empty-live-cwds")
+    patch_gh(monkeypatch, {"codex/empty-live-cwds": [{"number": 73, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert not worktree.exists()
 
 
 def test_reaper_lock_rejects_concurrent_cleanup(
@@ -749,3 +787,120 @@ def test_merged_flag_does_not_remove_settled_dispatch_without_merged_pr(
 
     assert rc == 0
     assert worktree.exists()
+
+
+def test_p0_merged_dispatch_reap_journals_recovery_and_restores(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "p0-round-trip"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/p0-round-trip", path=worktree)
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {"codex/p0-round-trip": [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.recovery_ref is not None
+    assert not worktree.exists()
+    assert reaper_lifecycle.is_reap_pending(repo, worktree) is False
+    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
+    assert '"event": "plan"' in journal
+    assert '"event": "reap"' in journal
+
+    restored, error = reaper_lifecycle.restore_worktree(
+        repo,
+        recovery_ref=result.recovery_ref,
+        branch="codex/p0-round-trip",
+        worktree_path=worktree,
+    )
+    assert restored is True
+    assert error is None
+    assert git(worktree, "rev-parse", "HEAD") == head
+
+
+def test_p0_gh_guard_failure_never_deletes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "gh-unavailable"
+    add_worktree(repo, "codex/gh-unavailable", path=worktree)
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh timeout"))
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == "PR guard unavailable; gh timeout"
+    assert worktree.exists()
+
+
+def test_p0_daily_cap_is_configurable_and_policy_lift_overrides_it(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "cap"
+    add_worktree(repo, "codex/cap", path=worktree)
+    patch_gh(monkeypatch, {"codex/cap": [{"number": 72, "state": "MERGED"}]})
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "0")
+
+    capped = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+    assert capped.action == "skipped"
+    assert "daily reap cap" in capped.reason
+
+    monkeypatch.setenv("LU_REAPER_LIFT_FIRST_CLASS_CAP", "1")
+    lifted = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+    assert lifted.action == "removed"
+
+
+def test_p0_kill_switch_keeps_eligible_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "disabled"
+    add_worktree(repo, "codex/disabled", path=worktree)
+    patch_gh(monkeypatch, {"codex/disabled": [{"number": 73, "state": "MERGED"}]})
+    monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == "reaper disabled by LU_REAPER_DISABLED=1"
+    assert worktree.exists()
+
+
+def test_adoption_journals_existing_dispatch_worktree(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "adopt-me"
+    add_worktree(repo, "codex/adopt-me", path=worktree)
+
+    adopted = rw.adopt_dispatch_worktrees(repo)
+
+    assert adopted == [
+        {
+            "path": str(worktree),
+            "branch": "codex/adopt-me",
+            "head": git(worktree, "rev-parse", "HEAD"),
+            "task_id": "adopt-me",
+        }
+    ]
+    assert '"event": "adopt"' in reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")

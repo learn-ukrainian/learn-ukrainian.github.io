@@ -46,6 +46,16 @@ def hermetic_reap(monkeypatch, tmp_path):
 
     # Tests control process liveness so we stay independent of lsof availability.
     monkeypatch.setattr(post_task_reap, "_probe_path_liveness", lambda _path: False)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    def merged_pr(_repo: Path, branch: str | None):
+        if branch is None:
+            return [], None
+        proc = _run(["git", "rev-parse", f"refs/heads/{branch}"], cwd=repo_root)
+        head = (proc.stdout or "").strip() if proc.returncode == 0 else None
+        return [post_task_reap.reap_worktrees.PullRequestState(1, "MERGED", head)], None
+
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", merged_pr)
 
     return repo_root, tasks_dir
 
@@ -184,7 +194,7 @@ def test_clean_terminal_reap_dry_run(hermetic_reap):
     report = post_task_reap.post_task_reap("clean-task", tasks_dir=tasks_dir, repo_root=repo_root)
 
     assert report["main_worktree"]["action"] == "would_remove"
-    assert "terminal" in report["main_worktree"]["reason"]
+    assert report["main_worktree"]["reason"] == "PR #1 MERGED"
     assert worktree.exists()
 
 
@@ -246,6 +256,25 @@ def test_ambiguous_retain_unregistered_directory(hermetic_reap):
     assert report["main_worktree"]["action"] == "retained"
     assert "not a registered git worktree" in report["main_worktree"]["reason"]
     assert bogus.exists()
+
+
+def test_reap_pending_reservation_refuses_bound_task(hermetic_reap):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "pending-task")
+    _write_task_state(tasks_dir, "pending-task", "done", worktree)
+    post_task_reap.reaper_lifecycle.mark_reap_pending(
+        repo_root,
+        worktree_path=worktree,
+        branch="kimi/pending-task",
+        head=_run(["git", "rev-parse", "HEAD"], cwd=worktree).stdout.strip(),
+        task_id="pending-task",
+    )
+
+    report = post_task_reap.post_task_reap("pending-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert report["main_worktree"]["reason"] == "reap-pending reservation blocks a new task bind"
+    assert worktree.exists()
 
 
 def test_main_worktree_retain_when_pid_alive(hermetic_reap, monkeypatch):

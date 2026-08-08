@@ -347,10 +347,12 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "worktree_prune": None,
         "activity_probe": None,
         "results": [],
+        "adopted": [],
         "branches": [],
         "maintenance": None,
         "orphans": [],
         "errors": [],
+        "reaper_disabled": False,
         "needs_finalize_worktrees": [],
     }
 
@@ -392,15 +394,29 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             prune_merged_branches=True,
             safe_only=True,
             live_cwds=live_cwds,
-            merged_pr_only=False,
+            # P0 automatic enforcement is deliberately limited to exact merged
+            # heads.  Legacy settled/open-PR classes remain manual-only.
+            merged_pr_only=True,
         )
         result["results"] = [asdict(row) for row in rows]
+        try:
+            result["adopted"] = reap_worktrees.adopt_dispatch_worktrees(repo_root)
+        except Exception as exc:
+            # Adoption only journals currently mounted dispatch worktrees.  A
+            # broken or incomplete repository must not prevent the remaining
+            # local hygiene steps from running.
+            result["adopted"] = []
+            result["errors"].append(f"adoption skipped: {exc}")
         result["errors"].extend(
             f"{row.path}: {row.error or row.reason}"
             for row in rows
             if row.action == "error"
         )
-        branches = cleanup_gone_local_branches(repo_root, apply=apply)
+        if apply and os.environ.get("LU_REAPER_DISABLED") == "1":
+            branches = []
+            result["reaper_disabled"] = True
+        else:
+            branches = cleanup_gone_local_branches(repo_root, apply=apply)
         result["branches"] = branches
         result["errors"].extend(
             f"{row['branch']}: {row.get('error') or row['reason']}"

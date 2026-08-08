@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.orchestration import reap_worktrees, reaper_lifecycle
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _TASKS_DIR = ROOT / "batch_state" / "tasks"
@@ -312,11 +313,53 @@ def _reap_main_worktree(
             "error": None,
         }
 
+    state_task_id = state.get("task_id")
+    if state_task_id not in (None, task_id):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "unknown ownership: task-state task_id does not match requested task",
+            "error": None,
+        }
+    try:
+        relative = bound_path.relative_to(_DISPATCH_WORKTREES_ROOT)
+    except ValueError:  # guarded above; retain if the filesystem changed.
+        relative = ()
+    expected_agent = str(state.get("agent") or "")
+    if (
+        len(relative.parts) != 2
+        or relative.parts[1] != task_id
+        or not expected_agent
+        or relative.parts[0] != expected_agent
+    ):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "unknown ownership: task binding does not match dispatch path",
+            "error": None,
+        }
+
+    if reaper_lifecycle.is_reap_pending(repo_root, bound_path):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "reap-pending reservation blocks a new task bind",
+            "error": None,
+        }
+
     if not _is_registered_worktree(bound_path, repo_root):
         return {
             "path": str(bound_path),
             "action": "retained",
             "reason": "unknown ownership: path is not a registered git worktree",
+            "error": None,
+        }
+
+    if _git_worktree_is_locked(bound_path, repo_root):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "registered worktree is locked",
             "error": None,
         }
 
@@ -354,20 +397,38 @@ def _reap_main_worktree(
                 "error": None,
             }
 
-    if not apply:
+    try:
+        rows = reap_worktrees.reap_worktrees(
+            repo_root=repo_root,
+            apply=apply,
+            preserve_then_reap=False,
+            prune_merged_branches=True,
+            target_paths=[bound_path],
+            merged_pr_only=True,
+            require_activity_probe=apply,
+        )
+    except RuntimeError as exc:
         return {
             "path": str(bound_path),
-            "action": "would_remove",
-            "reason": f"task terminal (status={status_str}) and worktree clean",
+            "action": "retained",
+            "reason": "canonical P0 reaper guard failed",
+            "error": str(exc),
+        }
+    if not rows:
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "canonical P0 reaper did not evaluate bound path",
             "error": None,
         }
-
-    ok, error = _remove_worktree(bound_path, repo_root)
+    row = rows[0]
     return {
-        "path": str(bound_path),
-        "action": "removed" if ok else "error",
-        "reason": f"task terminal (status={status_str}) and worktree clean",
-        "error": error,
+        "path": row.path,
+        "action": row.action,
+        "reason": row.reason,
+        "error": row.error,
+        "pr": row.pr,
+        "recovery_ref": row.recovery_ref,
     }
 
 
