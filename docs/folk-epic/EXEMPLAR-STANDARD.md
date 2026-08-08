@@ -146,8 +146,11 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
    Write `site/src/content/docs/folk/<slug>.mdx` from source and **commit it in the same PR** as the
    source edits (the MDX Source Parity gate requires both move together; #3643 tracks the missing
    forward-drift gate).
-3. **Independent content review** — DeepSeek-pro (VESUM-backed), off-seat:
-   `delegate.py dispatch --agent deepseek --model deepseek-v4-flash --mode read-only`. Apply valid deltas.
+3. **Independent content review** — **LANGUAGE-LANES only** (agy / codex / claude / grok-4.5),
+   VESUM-backed via `sources` MCP, off-seat. Example:
+   `delegate.py dispatch --agent agy --mode read-only` (or codex/claude/grok-4.5).
+   **Do not** use deepseek/cursor/kimi/pool/glm for folk or UA content review
+   (LANGUAGE-LANES + no DeepSeek for folk). Apply valid deltas.
 4. `handoff_ready --pr <N>` before declaring ready.
 
 ## 6. Per-module ship checklist (copy this)
@@ -162,5 +165,5 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
 - [ ] Full Ukrainian immersion; no drift to explaining-in-English (#M-13)
 - [ ] `verify_shippable` green (python_qg + assemble + mdx_render); CI astro build green
 - [ ] Site MDX regenerated via `assemble_mdx` and committed in the same PR
-- [ ] DeepSeek-pro content review clean (or deltas applied)
+- [ ] Independent language-lane content review clean (agy/codex/claude/grok-4.5; or deltas applied)
 - [ ] Handoff refreshed in gitignored `.claude/folk-epic/` (NOT in the PR); PR opened, NOT merged to main
