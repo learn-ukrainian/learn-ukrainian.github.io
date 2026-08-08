@@ -2,7 +2,7 @@
 """Evaluate official textbook curriculum cells against a readiness receipt.
 
 The denominator is a curriculum-cell inventory, not a publisher-edition
-Cartesian product. Readiness is evidence for a cell; the 116-book selection
+Cartesian product. Readiness is evidence for a cell; the selected-book count
 remains a separate receipt field.
 """
 

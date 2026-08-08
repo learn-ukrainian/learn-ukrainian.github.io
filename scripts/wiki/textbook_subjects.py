@@ -315,6 +315,8 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "golub": "Голуб",
     "varzatska": "Варзацька",
     "ponomarova": "Пономарова",
+    "arystova": "Аристова",
+    "morze": "Морзе",
     # Additional textbook authors present in the corpus
     "borzenko": "Борзенко",
     "burnejko": "Бурнейко",

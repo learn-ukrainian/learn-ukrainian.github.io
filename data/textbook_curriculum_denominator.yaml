@@ -23,7 +23,7 @@ operation:
 selection_reference:
   path: docs/l2-uk-direct/textbook-selection.yaml
   selected_book_count_is_inventory_only: true
-  selection_note: The 116-book selection is a local inventory selection, not the official curriculum denominator.
+  selection_note: The 127-book selection is a local inventory selection, not the official curriculum denominator.
 requirement_classes:
 - required_common
 - required_one_of
@@ -554,13 +554,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g03.informatyka
-    source_ids: []
+    source_ids:
+    - 1506-ya-doslidzhuyu-svit-3-klas-morze
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: TOP table has Informatics in both grades; no current DB source.
+  evidence_note: Current 2025 Part 2 integrates the informatics educational field; selected as the accepted Grade 3 source.
 - cell_id: g04.informatyka
   grade: 4
   canonical_subject_id: informatyka
@@ -574,13 +575,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g04.informatyka
-    source_ids: []
+    source_ids:
+    - 1592-nformatika-4-klas-voroncova
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: TOP table has Informatics in both grades; no current DB source.
+  evidence_note: Current Grade 4 TOP cohort source selected from the 2021 approved edition catalog.
 - cell_id: g01.mystetstvo
   grade: 1
   canonical_subject_id: mystetstvo
@@ -595,13 +597,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g01.mystetstvo
-    source_ids: []
+    source_ids:
+    - 2719-mystetstvo-1-klas-rublia
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Current 2024 integrated arts source selected from the approved primary cohort.
 - cell_id: g02.mystetstvo
   grade: 2
   canonical_subject_id: mystetstvo
@@ -616,13 +619,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g02.mystetstvo
-    source_ids: []
+    source_ids:
+    - 3051-mystectvo-2-klas-rublia
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Current 2024 integrated arts source selected from the approved primary cohort.
 - cell_id: g03.mystetstvo
   grade: 3
   canonical_subject_id: mystetstvo
@@ -637,13 +641,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g03.mystetstvo
-    source_ids: []
+    source_ids:
+    - 3042-mystectvo-3-klas-arystova
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Current 2025 integrated arts source selected from the approved primary cohort.
 - cell_id: g04.mystetstvo
   grade: 4
   canonical_subject_id: mystetstvo
@@ -658,13 +663,14 @@ cells:
   textbook_applicability: required
   coverage:
     coverage_unit_id: g04.mystetstvo
-    source_ids: []
+    source_ids:
+    - 1610-mystectvo-4-klas-rublya
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Current Grade 4 TOP cohort source selected from the 2021 approved edition catalog.
 - cell_id: g01.fizychna_kultura
   grade: 1
   canonical_subject_id: fizychna_kultura
@@ -1033,13 +1039,14 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g06.zarlit
-    source_ids: []
+    source_ids:
+    - 2623-zaralit-6-klas-voloshchuk-2023
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Separate identity present in DB for every grade 5-9.
+  evidence_note: Current 2023 NUS separate literature source selected for Grade 6.
   choice_group_id: g06.literature_realization
   choice_member_id: separate
   choice_member_requires: *id002
@@ -2785,7 +2792,7 @@ cells:
   coverage:
     coverage_unit_id: g05.mystetstvo_one_of
     source_ids:
-    - 1709-mystectstvo-rublia-5-klas
+    - 1709-mystectvo-rublia-5-klas
     source_groups: []
     source_match_mode: any
     evidence_state: resolved

@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-08-08
-# Total: 120 books from pidruchnyk.com.ua and shkola.in.ua, retained once in Google Drive
+# Total: 127 books from pidruchnyk.com.ua and shkola.in.ua, retained once in Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
@@ -30,6 +30,18 @@ books:
     slug: 3028-bukvar-1-klas-zakhariichuk
     note: "Second opinion, different letter sequence"
 
+  - id: g1-mystetstvo-rublia
+    grade: 1
+    subject: mystetstvo
+    author: Рубля
+    year: 2024
+    slug: 2719-mystetstvo-1-klas-rublia
+    canonical_source: 1-klas-mystetstvo-rublia-2024
+    source_url: https://pidruchnyk.com.ua/2719-mystetstvo-1-klas-rublia.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/1213-mystetstvo-1-klas-rublia-2018.html"
+    note: "Current 2024 integrated arts edition; one canonical Drive copy"
+
   # ── GRADE 2 ──────────────────────────────────────────
   - id: g2-mova-bolshakova
     grade: 2
@@ -47,6 +59,16 @@ books:
     slug: 57-ukrayinska-mova-vashulenko-dubovyk-2-klas
     note: "Classic widely-adopted author"
 
+  - id: g2-mystetstvo-rublia
+    grade: 2
+    subject: mystetstvo
+    author: Рубля
+    year: 2024
+    slug: 3051-mystectvo-2-klas-rublia
+    canonical_source: 2-klas-mystetstvo-rublia-2024
+    source_url: https://pidruchnyk.com.ua/3051-mystectvo-2-klas-rublia.html
+    note: "Current 2024 integrated arts edition; one canonical Drive copy"
+
   # ── GRADE 3 ──────────────────────────────────────────
   - id: g3-mova-vashulenko
     grade: 3
@@ -63,6 +85,32 @@ books:
     year: 2020
     slug: 1504-ukrmova-ta-chytannja-sachenko-3-klas-nush
     note: "Leading reading pedagogy expert"
+
+  - id: g3-informatyka-morze
+    grade: 3
+    subject: informatyka
+    author: Морзе
+    year: 2025
+    slug: 1506-ya-doslidzhuyu-svit-3-klas-morze
+    canonical_source: 3-klas-informatyka-morze-2025
+    source_url: https://pidruchnyk.com.ua/1506-ya-doslidzhuyu-svit-3-klas-morze.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/1391-ya-doslidzhuyu-svit-3-klas-morze-2020-ch-2.html"
+    gdrive_id: 1GkgwJfBO19e2yPWxqJ9KS_uz7-8nm5tm
+    note: "Current 2025 Part 2 integrates informatics; not an obsolete standalone title"
+
+  - id: g3-mystetstvo-arystova
+    grade: 3
+    subject: mystetstvo
+    author: Аристова
+    year: 2025
+    slug: 3042-mystectvo-3-klas-arystova
+    canonical_source: 3-klas-mystetstvo-arystova-2025
+    source_url: https://pidruchnyk.com.ua/3042-mystectvo-3-klas-arystova.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/588-muzychne-mystetstvo-3-klas-arystova.html"
+    gdrive_id: 1Ui8DEcKsPLls8oIJdCeutoxoDPe05tGm
+    note: "Current 2025 integrated arts edition; one canonical Drive copy"
 
   # NUS Grade 3 has no separate reading book — reading is integrated into мова та читання
 
@@ -82,6 +130,26 @@ books:
     year: 2021
     slug: 652-ukrayinska-mova-zaharychuk-4-klas
     note: "NUS 2021 edition"
+
+  - id: g4-informatyka-vorontsova
+    grade: 4
+    subject: informatyka
+    author: Воронцова
+    year: 2021
+    slug: 1592-nformatika-4-klas-voroncova
+    canonical_source: 4-klas-informatyka-vorontsova-2021
+    source_url: https://pidruchnyk.com.ua/1592-nformatika-4-klas-voroncova.html
+    note: "Current Grade 4 TOP cohort edition; one canonical Drive copy"
+
+  - id: g4-mystetstvo-rublia
+    grade: 4
+    subject: mystetstvo
+    author: Рубля
+    year: 2021
+    slug: 1610-mystectvo-4-klas-rublya
+    canonical_source: 4-klas-mystetstvo-rublia-2021
+    source_url: https://pidruchnyk.com.ua/1610-mystectvo-4-klas-rublya.html
+    note: "Current Grade 4 TOP cohort edition; one canonical Drive copy"
 
   # NUS Grade 4 has no separate reading book — reading is integrated into мова та читання
 
@@ -171,6 +239,19 @@ books:
     year: 2023
     slug: 2606-istoriia-6-klas-gisem-2023
     note: "Fallback with PDF available"
+
+  - id: g6-zarlit-voloshchuk
+    grade: 6
+    subject: zarlit
+    author: Волощук
+    year: 2023
+    slug: 2623-zaralit-6-klas-voloshchuk-2023
+    canonical_source: 6-klas-zarubizhna-literatura-voloshchuk-2023
+    source_url: https://pidruchnyk.com.ua/2623-zaralit-6-klas-voloshchuk-2023.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/2866-zarubizhna-literatura-6-klas-voloshchuk-2023.html"
+    gdrive_id: 1BmLetDjtE2F9KwyOzvrfVJTu_ZmVVCpo
+    note: "Current NUS edition; one canonical Drive copy"
 
   # ── GRADE 7 ──────────────────────────────────────────
   - id: g7-mova-avramenko
@@ -621,6 +702,7 @@ books:
     author: Рубля
     year: 2022
     slug: 1709-mystectvo-rublia-5-klas
+    canonical_source: 5-klas-mystetstvo-rublia-2022
     note: "year not in page title — verify on title page at QA"
 
   - id: g5-etyka-meleshchenko
