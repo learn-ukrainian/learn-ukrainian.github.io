@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import ast
 import fcntl
+import inspect
 import json
 import os
 import shutil
@@ -11,6 +13,7 @@ from typing import Any
 
 import pytest
 
+from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle
 
@@ -135,6 +138,79 @@ def test_merged_clean_removes_worktree_and_keeps_branch(
     assert not worktree.exists()
     assert git(repo, "rev-parse", "--verify", "codex/merged")
     assert_main_checkout_unchanged(repo)
+
+
+def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Ignored worker environments do not defeat a fully qualified P0 reap."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/venv-residue")
+    venv_file = worktree / ".venv" / "bin" / "python"
+    venv_file.parent.mkdir(parents=True)
+    venv_file.write_text("worker environment residue\n", encoding="utf-8")
+    patch_gh(monkeypatch, {"codex/venv-residue": [{"number": 6482, "state": "MERGED"}]})
+
+    assert "?? .venv/bin/python" in git(worktree, "status", "--porcelain", "-uall")
+    assert rw._worktree_clean(worktree) is True
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert result.reason == "PR #6482 MERGED"
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_post_task_reap_routes_regular_dispatch_deletion_through_p0_reaper() -> None:
+    """Regular dispatch worktrees have one automatic deletion hand: P0."""
+    source = inspect.getsource(post_task_reap._reap_main_worktree)
+
+    assert "reap_worktrees.reap_worktrees(" in source
+    assert "_remove_worktree(" not in source
+
+
+def test_orchestration_worktree_remove_call_sites_are_allowlisted() -> None:
+    """Keep P0 as the deletion hand, except for explicit task-family cleanup."""
+    project_root = Path(__file__).resolve().parents[2]
+    actual: dict[str, set[str]] = {}
+
+    for source_path in (project_root / "scripts" / "orchestration").rglob("*.py"):
+        source = source_path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(source_path))
+        functions: set[str] = set()
+        for function in ast.walk(tree):
+            if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            command_lists = (
+                list_node
+                for list_node in ast.walk(function)
+                if isinstance(list_node, ast.List)
+            )
+            if any(
+                [
+                    element.value
+                    for element in command_list.elts
+                    if isinstance(element, ast.Constant) and isinstance(element.value, str)
+                ][:3]
+                == ["git", "worktree", "remove"]
+                or [
+                    element.value
+                    for element in command_list.elts
+                    if isinstance(element, ast.Constant) and isinstance(element.value, str)
+                ][:2]
+                == ["worktree", "remove"]
+                for command_list in command_lists
+            ):
+                functions.add(function.name)
+        if functions:
+            actual[str(source_path.relative_to(project_root))] = functions
+
+    assert actual == {
+        "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
+        "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
+    }
 
 
 def test_merged_dirty_is_preserved_by_default(
