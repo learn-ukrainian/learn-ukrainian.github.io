@@ -4,7 +4,8 @@ date: 2026-07-22
 epic: 5512
 stream: 4707
 status: superseded
-priority: P0-next-cold-start
+priority: archived
+superseded-by: "#6159"
 ---
 
 > **SUPERSEDED — historical-only.** The `dual_write`/plane-cutover queue below predates the
@@ -14,9 +15,9 @@ priority: P0-next-cold-start
 > action is `.venv/bin/python -m scripts.fleet_comms cold-start-board`, not this file's queue.
 > Body kept below for archive/history only — do not execute it.
 
-# 2026-07-22 — Fleet-comms cutover handoff (binding for next cold-start)
+# 2026-07-22 — Fleet-comms cutover handoff (HISTORICAL — do not execute)
 
-**Do not wait for the operator to restate targets.** On cold-start, orient then **execute** the queue below.
+**Historical body below is not actionable.** On cold-start, run `cold-start-board` and live #4707 / plane-status instead of this queue.
 
 ## NEXT SESSION — PRIMARY TARGETS (binding)
 

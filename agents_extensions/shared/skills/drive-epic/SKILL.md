@@ -328,7 +328,7 @@ and apply every `unread` or `read-but-not-live-consumed` entry, then run:
 ```
 Record any action or unresolved request in the authoritative file handoff after this
 drain; never claim the handoff is complete because a one-shot worker acknowledged it.
-Then run the Entire dual-write steps in §8.
+Then run the Entire file-handoff steps in §8.
 
 ---
 
@@ -350,7 +350,7 @@ stores are read-only migration/projection inputs, not a live write target.
 - **File handoff still matters:** fleet-comms is durable authority for messages/jobs,
   but you still write file continuity where the epic uses one (`.claude/<epic>-epic/
   *DRIVER-HANDOFF.md` — gitignored local state — or `docs/session-state/` for infra); see
-  the dual-write steps in §8. Successor-claim diagnostics: `session_streams
+  the file-handoff steps in §8. Successor-claim diagnostics: `session_streams
   handoff-status` / `handoff-claim` (#5530).
 - **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
   not `review-pr` / sealed `lu-review-*`.
