@@ -41,3 +41,7 @@ Implemented POC coverage:
 - POC docs may show aggregate counts and invented examples, but must not include
   private source text, private paths, raw textbook snippets, private Ohoiko
   content, or candidate lemma lists.
+
+## Slovnyk hub layers (2026-08-08)
+
+See [`SLOVNYK-HUB-LAYERS.md`](./SLOVNYK-HUB-LAYERS.md) for inventory-driven section map and implementation issues (#6460).

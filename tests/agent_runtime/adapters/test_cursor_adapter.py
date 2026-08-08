@@ -114,8 +114,11 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, monk
         },
     )
 
-    assert "--mode" in plan.cmd
-    assert "plan" in plan.cmd  # default for workspace-write
+    # #6469: workspace-write must NOT default to --mode plan (blocks edits).
+    mode_idxs = [i for i, x in enumerate(plan.cmd) if x == "--mode"]
+    assert not mode_idxs, f"workspace-write default must omit --mode, got {plan.cmd}"
+    assert "--force" in plan.cmd
+    assert "--sandbox" in plan.cmd
     assert "--workspace" in plan.cmd
     assert "/tmp/scoped" in plan.cmd
     assert "--approve-mcps" in plan.cmd
@@ -124,6 +127,41 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, monk
     assert "--model" in plan.cmd
     assert "composer-2.5-heavy" in plan.cmd
     assert "--yolo" not in plan.cmd
+
+
+
+def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_path, monkeypatch):
+    """#6469 regression: write mode must not emit --mode plan."""
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/cursor-agent")
+    plan = adapter.build_invocation(
+        prompt="edit the file",
+        mode="workspace-write",
+        model="auto",
+        cwd=tmp_path,
+        task_id="task-6469",
+        session_id=None,
+        tool_config={"cursor_workspace": str(tmp_path)},
+    )
+    assert "--mode" not in plan.cmd
+    assert "--force" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--sandbox") + 1] == "enabled"
+
+
+def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp_path, monkeypatch):
+    """Callers may still force plan mode for intentional non-write runs."""
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/cursor-agent")
+    plan = adapter.build_invocation(
+        prompt="only plan",
+        mode="workspace-write",
+        model="auto",
+        cwd=tmp_path,
+        task_id="task-6469-plan",
+        session_id=None,
+        tool_config={"cursor_mode": "plan", "cursor_workspace": str(tmp_path)},
+    )
+    assert "--mode" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--mode") + 1] == "plan"
+    assert "--force" not in plan.cmd
 
 
 def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):
