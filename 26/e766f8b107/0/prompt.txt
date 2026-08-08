@@ -1,0 +1,44 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/cold-start-pr2-board
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: cold-start-pr2-board — WP-A + WP-D recipe
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy / gemini-3.6-flash-high worktree
+- why_this_tier: bounded CLI + tests; fleet_comms patterns exist
+- advisor_packet: Kimi cold-start-opt-kimi-impl-design (go-with-changes)
+- owned_paths: scripts/fleet_comms/cold_start_board.py; scripts/fleet_comms/cli.py (subcommand register only); tests/fleet_comms/test_cold_start_board.py; docs/runbooks/driver-cold-start-board.md
+- acceptance_cmd: see PLAN-FINAL PR-2
+- alternatives_considered: [kimi-impl (already advised this design — different lane for breadth), codex near_cap]
+- parallel_free_seats: cursor on PR-1
+
+## Spec (binding — Kimi design)
+- Module `scripts/fleet_comms/cold_start_board.py`: fail-open probes `{status, elapsed_ms, error, data}`; never raise out of probe.
+- CLI: `python -m scripts.fleet_comms cold-start-board [--format json|markdown] [--stream-id] [--agent] [--needle TOKEN]`
+- Defaults: SESSION_STREAM_ID, SESSION_HANDOFF_AGENT
+- Probes: capsule/session env, plane-status, backlog+dead-letters (best-effort current collectors), bottleneck slice if cheap, orient lean (timeout short), issues/streams membership if API up, session_streams tail + handoff-status (RO only — never handoff-claim), entire status + optional one-needle search, inbox check for agent, optional gh pr list if gh present
+- Caps: strings ≤200, lists ≤5, board ≤16KiB, truncated marker
+- Exit 0 if board emitted (even degraded); no lease claim; no writes; no POSTs
+- WP-D: document bootstrap-git recipe in runbook (closed issue cannot bootstrap-github-issue); single-token needles; do not invent SHAs in code
+- Tests: all_probes board structure; probe failure degrades; size cap; no claim/write calls; markdown path if implemented
+
+## Work
+Worktree: `.worktrees/dispatch/agy/cold-start-pr2-board/` branch `agy/cold-start-pr2-board`.
+
+Read prior art: `scripts/cursor_cold_start.py`, `scripts/fleet_comms/cli.py`, `message_plane.read_plane_status`.
+Implement → pytest → ruff on py files → commit `X-Agent: agy/cold-start-pr2-board` → push → PR to #4707 → no auto-merge.
+
+## Constraints
+- <20 files; do not change efficiency_metrics (PR-3); do not rewrite drive-epic (PR-1)
+- Prefer imports over shelling to self where possible
+- #M-4 evidence
+
+## Return
+PR URL, SHA, pytest quote, sample board JSON keys.

@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "26e766f8b107",
+  "session_id": "fleet-09333fb272ae4d7b86197afbd77f63ce",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T08:53:11.199669Z",
+  "branch": "agy/cold-start-pr2-board",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/driver-cold-start-board.md",
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/cold_start_board.py",
+    "tests/fleet_comms/test_cold_start_board.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "61f77dfa57a9",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-08T08:53:11.193438Z",
+    "agent_lines": 980,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 980,
+    "total_lines_changed": 980,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

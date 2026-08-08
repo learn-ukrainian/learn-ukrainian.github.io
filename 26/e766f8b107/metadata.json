@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "26e766f8b107",
+  "strategy": "manual-commit",
+  "branch": "agy/cold-start-pr2-board",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/driver-cold-start-board.md",
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/cold_start_board.py",
+    "tests/fleet_comms/test_cold_start_board.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/26/e766f8b107/0/metadata.json",
+      "transcript": "/26/e766f8b107/0/full.jsonl",
+      "compact_transcript": "/26/e766f8b107/0/transcript.jsonl",
+      "content_hash": "/26/e766f8b107/0/content_hash.txt",
+      "prompt": "/26/e766f8b107/0/prompt.txt"
+    }
+  ]
+}
