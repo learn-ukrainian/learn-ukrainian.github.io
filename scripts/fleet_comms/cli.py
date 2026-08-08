@@ -17,7 +17,8 @@ verdict accept). Optional ``--publish`` posts GitHub comment/status via PR-G.
 Does not cut over ``review-pr`` itself.
 
 ``metrics`` / ``backlog`` / ``dead-letters`` are Sol PR-M efficiency surfaces
-(metadata only; never message content).
+(metadata only; never message content). In plane mode ``authority`` they read
+Fleet Comms authority tables by default; ``--legacy`` forces the broker path.
 """
 
 from __future__ import annotations
@@ -35,9 +36,13 @@ from typing import Any
 
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
+    collect_dead_letters_authority,
     collect_delivery_backlog,
+    collect_delivery_backlog_authority,
     collect_efficiency_metrics,
+    collect_efficiency_metrics_authority,
     collect_stream_bottleneck_metrics,
+    resolve_metrics_source,
 )
 from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
@@ -101,14 +106,50 @@ def _resolve_message_db(args: argparse.Namespace) -> Path:
     return _default_message_db()
 
 
+def _resolve_plane_db(args: argparse.Namespace) -> Path:
+    root = Path(args.root).expanduser() if getattr(args, "root", None) else default_plane_root()
+    return root / "comms.sqlite3"
+
+
+def _force_legacy(args: argparse.Namespace) -> bool:
+    return bool(getattr(args, "legacy", False))
+
+
 def cmd_metrics(args: argparse.Namespace) -> int:
     """Efficiency metrics from durable timestamps (no content)."""
-    db = _resolve_message_db(args)
-    if not db.is_file():
-        sys.stdout.write(_json_dump({"content_included": False, "db_missing": True, "db_path": str(db)}))
-        return EXIT_OK
-    payload = collect_efficiency_metrics(db)
+    source = resolve_metrics_source(force_legacy=_force_legacy(args))
+    if source == "authority":
+        db = _resolve_plane_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "content_included": False,
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
+            )
+            return EXIT_OK
+        payload = collect_efficiency_metrics_authority(db)
+    else:
+        db = _resolve_message_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "content_included": False,
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
+            )
+            return EXIT_OK
+        payload = collect_efficiency_metrics(db)
     payload["db_path"] = str(db)
+    payload["source"] = source
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
@@ -135,51 +176,99 @@ def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
 
 def cmd_backlog(args: argparse.Namespace) -> int:
     """Pending delivery backlog excluding retired endpoints by default."""
-    db = _resolve_message_db(args)
-    if not db.is_file():
-        sys.stdout.write(
-            _json_dump(
-                {
-                    "total": 0,
-                    "by_agent": {},
-                    "by_status": {},
-                    "rows": [],
-                    "db_missing": True,
-                    "db_path": str(db),
-                }
+    source = resolve_metrics_source(force_legacy=_force_legacy(args))
+    exclude_retired = not args.include_retired
+    if source == "authority":
+        db = _resolve_plane_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "total": 0,
+                        "by_agent": {},
+                        "by_status": {},
+                        "rows": [],
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
             )
+            return EXIT_OK
+        payload = collect_delivery_backlog_authority(
+            db,
+            limit=args.limit,
+            exclude_retired=exclude_retired,
         )
-        return EXIT_OK
-    payload = collect_delivery_backlog(
-        db,
-        limit=args.limit,
-        exclude_retired=not args.include_retired,
-    )
+    else:
+        db = _resolve_message_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "total": 0,
+                        "by_agent": {},
+                        "by_status": {},
+                        "rows": [],
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
+            )
+            return EXIT_OK
+        payload = collect_delivery_backlog(
+            db,
+            limit=args.limit,
+            exclude_retired=exclude_retired,
+        )
     payload["db_path"] = str(db)
     payload["content_included"] = False
+    payload["source"] = source
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
 
 def cmd_dead_letters(args: argparse.Namespace) -> int:
     """Dead-letter inventory (metadata only)."""
-    db = _resolve_message_db(args)
-    if not db.is_file():
-        sys.stdout.write(
-            _json_dump(
-                {
-                    "total": 0,
-                    "by_reason": {},
-                    "rows": [],
-                    "db_missing": True,
-                    "db_path": str(db),
-                }
+    source = resolve_metrics_source(force_legacy=_force_legacy(args))
+    if source == "authority":
+        db = _resolve_plane_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "total": 0,
+                        "by_reason": {},
+                        "rows": [],
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
             )
-        )
-        return EXIT_OK
-    payload = collect_dead_letters(db, limit=args.limit)
+            return EXIT_OK
+        payload = collect_dead_letters_authority(db, limit=args.limit)
+    else:
+        db = _resolve_message_db(args)
+        if not db.is_file():
+            sys.stdout.write(
+                _json_dump(
+                    {
+                        "total": 0,
+                        "by_reason": {},
+                        "rows": [],
+                        "db_missing": True,
+                        "db_path": str(db),
+                        "source": source,
+                    }
+                )
+            )
+            return EXIT_OK
+        payload = collect_dead_letters(db, limit=args.limit)
     payload["db_path"] = str(db)
     payload["content_included"] = False
+    payload["source"] = source
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
 
@@ -736,6 +825,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
     )
+    metrics.add_argument(
+        "--root",
+        default=None,
+        help="Plane storage root for authority reads (default: FLEET_COMMS_ROOT or batch_state/fleet-comms/v1)",
+    )
+    metrics.add_argument(
+        "--legacy",
+        action="store_true",
+        help="Force broker SQLite even when plane mode is authority (source=legacy_forced)",
+    )
     metrics.set_defaults(func=cmd_metrics)
 
     bottlenecks = sub.add_parser(
@@ -764,6 +863,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
     )
     backlog.add_argument(
+        "--root",
+        default=None,
+        help="Plane storage root for authority reads (default: FLEET_COMMS_ROOT or batch_state/fleet-comms/v1)",
+    )
+    backlog.add_argument(
         "--limit",
         type=int,
         default=100,
@@ -773,6 +877,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-retired",
         action="store_true",
         help="Include retired endpoints such as gemini (default: exclude)",
+    )
+    backlog.add_argument(
+        "--legacy",
+        action="store_true",
+        help="Force broker SQLite even when plane mode is authority (source=legacy_forced)",
     )
     backlog.set_defaults(func=cmd_backlog)
 
@@ -786,10 +895,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Broker SQLite path (default: AB_DB_PATH or .mcp/servers/message-broker/messages.db)",
     )
     dead.add_argument(
+        "--root",
+        default=None,
+        help="Plane storage root for authority reads (default: FLEET_COMMS_ROOT or batch_state/fleet-comms/v1)",
+    )
+    dead.add_argument(
         "--limit",
         type=int,
         default=100,
         help="Max dead-letter rows (default: 100)",
+    )
+    dead.add_argument(
+        "--legacy",
+        action="store_true",
+        help="Force broker SQLite even when plane mode is authority (source=legacy_forced)",
     )
     dead.set_defaults(func=cmd_dead_letters)
 

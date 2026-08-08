@@ -1,4 +1,9 @@
-"""Sol PR-M: efficiency metrics from durable broker timestamps (no content)."""
+"""Sol PR-M: efficiency metrics from durable broker timestamps (no content).
+
+WP-C (#cold-start-opt): when the message plane is ``authority``, backlog /
+dead-letters / metrics prefer Fleet Comms authority tables (RO). Legacy broker
+collectors stay byte-compatible; callers add an additive ``source`` label.
+"""
 
 from __future__ import annotations
 
@@ -9,7 +14,9 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+from scripts.fleet_comms.message_plane import resolve_plane_mode
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
 # consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
@@ -17,11 +24,29 @@ DISPATCH_BOTTLENECK_THRESHOLD_S = 7_200
 FORMAL_CF_PUBLICATION_THRESHOLD_S = 3_600
 GATE_TO_MERGE_THRESHOLD_S = 3_600
 
+MetricsSource = Literal["authority", "legacy", "legacy_forced"]
+_AUTHORITY_BACKLOG_STATES = ("queued", "running")
+_RETIRED_AGENTS = frozenset({"gemini"})
+
 
 @contextmanager
 def _connect(db_path: Path) -> Iterator[sqlite3.Connection]:
     """Open a read path connection and always close it (sqlite3 `with` only commits)."""
     conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+@contextmanager
+def _connect_ro(db_path: Path) -> Iterator[sqlite3.Connection]:
+    """Open an existing SQLite file read-only (never creates/writes)."""
+    if not db_path.is_file():
+        raise FileNotFoundError(db_path)
+    uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
+    conn = sqlite3.connect(uri, uri=True)
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -41,6 +66,15 @@ def _column_names(conn: sqlite3.Connection, table: str) -> set[str]:
     return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
 
 
+def resolve_metrics_source(*, force_legacy: bool = False) -> MetricsSource:
+    """Choose metrics read source from plane mode and optional ``--legacy`` force."""
+    if force_legacy:
+        return "legacy_forced"
+    if resolve_plane_mode() == "authority":
+        return "authority"
+    return "legacy"
+
+
 def collect_delivery_backlog(
     db_path: Path,
     *,
@@ -48,7 +82,7 @@ def collect_delivery_backlog(
     exclude_retired: bool = True,
 ) -> dict[str, Any]:
     """Pending/dispatched delivery backlog without message bodies."""
-    retired = {"gemini"}
+    retired = set(_RETIRED_AGENTS)
     with _connect(db_path) as conn:
         if not _table_exists(conn, "deliveries"):
             return {"total": 0, "by_agent": {}, "by_status": {}, "rows": []}
@@ -244,6 +278,180 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
             }
 
         return metrics
+
+
+def _empty_backlog(*, exclude_retired: bool) -> dict[str, Any]:
+    return {
+        "total": 0,
+        "by_agent": {},
+        "by_status": {},
+        "exclude_retired": sorted(_RETIRED_AGENTS) if exclude_retired else [],
+        "rows": [],
+    }
+
+
+def collect_delivery_backlog_authority(
+    plane_db: Path,
+    *,
+    limit: int = 100,
+    exclude_retired: bool = True,
+) -> dict[str, Any]:
+    """Authority-plane backlog from ``authority_deliveries`` (queued/running)."""
+    if not plane_db.is_file():
+        return _empty_backlog(exclude_retired=exclude_retired)
+    with _connect_ro(plane_db) as conn:
+        if not _table_exists(conn, "authority_deliveries"):
+            return _empty_backlog(exclude_retired=exclude_retired)
+        placeholders = ",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)
+        rows = conn.execute(
+            f"""
+            SELECT delivery_id, message_id, recipient, state, attempt_count,
+                   created_at, updated_at
+            FROM authority_deliveries
+            WHERE state IN ({placeholders})
+            ORDER BY COALESCE(updated_at, created_at, '') DESC
+            LIMIT ?
+            """,
+            (*_AUTHORITY_BACKLOG_STATES, limit),
+        ).fetchall()
+        by_agent: dict[str, int] = {}
+        by_status: dict[str, int] = {}
+        out_rows: list[dict[str, Any]] = []
+        for r in rows:
+            agent = str(r["recipient"] or "")
+            if exclude_retired and agent in _RETIRED_AGENTS:
+                continue
+            status = str(r["state"] or "")
+            by_agent[agent] = by_agent.get(agent, 0) + 1
+            by_status[status] = by_status.get(status, 0) + 1
+            out_rows.append(
+                {
+                    "delivery_id": r["delivery_id"],
+                    "message_id": r["message_id"],
+                    "to_agent": agent,
+                    "status": status,
+                    "attempt_count": int(r["attempt_count"] or 0),
+                    "dispatched_at": r["updated_at"] or r["created_at"],
+                }
+            )
+        return {
+            "total": len(out_rows),
+            "by_agent": by_agent,
+            "by_status": by_status,
+            "exclude_retired": sorted(_RETIRED_AGENTS) if exclude_retired else [],
+            "rows": out_rows,
+        }
+
+
+def collect_dead_letters_authority(plane_db: Path, *, limit: int = 100) -> dict[str, Any]:
+    """Authority-plane dead letters from ``authority_dead_letters`` (metadata only)."""
+    empty: dict[str, Any] = {"total": 0, "by_reason": {}, "rows": []}
+    if not plane_db.is_file():
+        return empty
+    with _connect_ro(plane_db) as conn:
+        if not _table_exists(conn, "authority_dead_letters"):
+            return empty
+        total = conn.execute("SELECT COUNT(*) AS c FROM authority_dead_letters").fetchone()["c"]
+        by_reason_rows = conn.execute(
+            """
+            SELECT reason_code, COUNT(*) AS c
+            FROM authority_dead_letters
+            GROUP BY reason_code
+            ORDER BY c DESC
+            """
+        ).fetchall()
+        rows = conn.execute(
+            """
+            SELECT dead_letter_id, delivery_id, job_id, reason_code, created_at
+            FROM authority_dead_letters
+            ORDER BY created_at DESC
+            LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()
+        return {
+            "total": int(total),
+            "by_reason": {str(r["reason_code"]): int(r["c"]) for r in by_reason_rows},
+            "rows": [
+                {
+                    "dead_letter_id": r["dead_letter_id"],
+                    "delivery_id": r["delivery_id"],
+                    "job_id": r["job_id"],
+                    "reason": r["reason_code"],
+                    "reason_code": r["reason_code"],
+                    "created_at": r["created_at"],
+                }
+                for r in rows
+            ],
+        }
+
+
+def collect_efficiency_metrics_authority(plane_db: Path) -> dict[str, Any]:
+    """Aggregate authority-plane delivery/job efficiency (timestamps only)."""
+    metrics: dict[str, Any] = {
+        "content_included": False,
+        "deliveries": {},
+        "jobs": {},
+        "dead_letters": 0,
+        "latency_seconds": {},
+    }
+    if not plane_db.is_file():
+        return metrics
+    with _connect_ro(plane_db) as conn:
+        if _table_exists(conn, "authority_deliveries"):
+            for r in conn.execute(
+                "SELECT state, COUNT(*) AS c FROM authority_deliveries GROUP BY state"
+            ):
+                metrics["deliveries"][str(r["state"])] = int(r["c"])
+            lat = conn.execute(
+                """
+                SELECT
+                  COUNT(*) AS n,
+                  AVG(
+                    (julianday(completed_at) - julianday(created_at)) * 86400.0
+                  ) AS avg_s,
+                  MIN(
+                    (julianday(completed_at) - julianday(created_at)) * 86400.0
+                  ) AS min_s,
+                  MAX(
+                    (julianday(completed_at) - julianday(created_at)) * 86400.0
+                  ) AS max_s
+                FROM authority_deliveries
+                WHERE completed_at IS NOT NULL
+                  AND completed_at != ''
+                  AND created_at IS NOT NULL
+                  AND created_at != ''
+                """
+            ).fetchone()
+            if lat and lat["n"]:
+                metrics["latency_seconds"]["delivery_created_to_done"] = {
+                    "n": int(lat["n"]),
+                    "avg": round(float(lat["avg_s"] or 0.0), 3),
+                    "min": round(float(lat["min_s"] or 0.0), 3),
+                    "max": round(float(lat["max_s"] or 0.0), 3),
+                }
+            gemini_pending = conn.execute(
+                f"""
+                SELECT COUNT(*) AS c FROM authority_deliveries
+                WHERE recipient = 'gemini'
+                  AND state IN ({",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)})
+                """,
+                _AUTHORITY_BACKLOG_STATES,
+            ).fetchone()["c"]
+            metrics["retired_endpoint_pending"] = {"gemini": int(gemini_pending)}
+
+        if _table_exists(conn, "authority_jobs"):
+            for r in conn.execute(
+                "SELECT state, COUNT(*) AS c FROM authority_jobs GROUP BY state"
+            ):
+                metrics["jobs"][str(r["state"])] = int(r["c"])
+
+        if _table_exists(conn, "authority_dead_letters"):
+            metrics["dead_letters"] = int(
+                conn.execute("SELECT COUNT(*) AS c FROM authority_dead_letters").fetchone()["c"]
+            )
+
+    return metrics
 
 
 def _parse_timestamp(value: object) -> datetime | None:
