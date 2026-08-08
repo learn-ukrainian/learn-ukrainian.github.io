@@ -76,13 +76,14 @@ or count as a formal review.
 **Lane updates (user-reported 2026-07-18):**
 * **grok**: the lane now offers **grok-4.5 only**, with selectable reasoning effort
   (`low`/`mid`/`high`) — set effort explicitly per dispatch; authoring/review seats run `high`.
-* **cursor**: **composer-2.5-fast is retired** — cursor has no cheap-fast tier; route quick
-  mechanical edits to agy/glm instead. Composer 2.5 (standard) remains the pinned-model choice
-  where family independence matters. **Cursor Auto is a first-class worker default** for
-  code/infra CI fixes and mechanical-with-judgment (`delegate.py --agent cursor` / `ask-cursor`
-  default model is `auto`). Idle Auto quota while Codex is near_cap is a utilization failure
-  (operator 2026-08-08). `cursor:auto` remains **never** a formal-review identity — pin a
-  concrete model when CF family independence matters.
+* **cursor** (operator 2026-08-08 / #6468): **Cursor Auto is the default mechanical worker**
+  for code/infra CI fixes and mechanical-with-judgment (`delegate.py --agent cursor` /
+  `ask-cursor`; default model `auto`). Idle Auto while other seats are near_cap is a
+  **utilization failure**, not a reason to cut subscriptions. Composer 2.5 remains the
+  **pinned-model** choice when family independence matters (formal CF identity). `cursor:auto`
+  is **never** a formal-review identity. **Gate:** cursor-first mechanical tier is blocked until
+  adapter defect **#6469** (plan-only rc=0, zero edits) is fixed — until then note substitution
+  and shed to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.
 * **deepseek** (operator 2026-08-02; hold 2026-08-06; **reaffirmed 2026-08-08**): use
   **`deepseek-v4-flash` only** (first-party OpenCode at `high` for review/research; Hermes for
   tool-heavy implement). **`deepseek-v4-pro` is DO NOT USE** — older SKU; Flash currently
@@ -93,6 +94,21 @@ or count as a formal review.
   (`poolside/laguna-s-2.1` / `poolside/poolside/laguna-s-2.1` via `ab ask-pool`). Do **not**
   default to XS or M.1. Use **`laguna-xs-2.1` only** when the caller explicitly wants the light
   gen-2 seat; **`laguna-m.1` is prior-gen fallback only**. Never invent `s2`/`m2` orthography.
+* **kimi** (operator 2026-08-08 / #6468): **keep and use** — first-class, not a cut candidate.
+  Split tiers: **`kimi-code/k3-256k`** (aliases `k3-256k`) = **everyday fast coding/impl**;
+  **`kimi-code/k3`** (aliases `k3`) @ high/max = **advisory/complex only** (long-context /
+  consequential). Do not burn full-K3 on routine queue when k3-256k fits. Outside Moonshot
+  lineage for CF of non-Moonshot authors; Composer shares Moonshot lineage conservatively.
+* **glm / Z.AI** (operator 2026-08-08 / #6468): **keep and use** — first-class rotation member
+  (`glm-5.2`, z.ai Coding Plan). Prefer the **z.ai account** over any legacy GLM account.
+  Rails unchanged: **LOCAL-ONLY**, bridge-diff, never CI/sensitive. Route everyday local-rail
+  code/security/coherence work here when the 5h or monthly window has headroom.
+* **OpenRouter** (operator 2026-08-08): **mainly Pool + Gemma access.** Can reach more models;
+  **we do not need to** — prefer native/first-party seats. Not a general multi-model bus.
+* **Subscriptions policy (operator 2026-08-08):** **do not trim seats to “simplify.”** Fix
+  **utilization** (no-idle free pools, timed pauses with return-at). Cut only after sustained
+  measured zero use *and* no differentiator need — default is keep Cursor, DeepSeek Flash,
+  Claude, Codex, AGY, Grok, **Kimi**, **Z.AI/GLM**, Pool.
 
 | Task | Tool + model |
 | --- | --- |
@@ -264,12 +280,37 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 This names who orchestrates vs advises vs works. The cross-family review gate, the per-task routing rows
 above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the standing topology over them.
 
-### No-idle utilization + transport map (operator 2026-08-08 — binding)
+### No-idle utilization + transport map (operator 2026-08-08 — binding; builds on #6468)
 
-**Failure mode this prevents:** drivers default everything to Codex/Claude while **Cursor Auto**,
-**DeepSeek Flash**, **AGY**, **Pool**, and **Z.AI/GLM 5h** sit free — then ask whether
-subscriptions are "too much." The portfolio is sized for cross-family quality; **idle paid
-capacity with open in-scope work is a process defect**, not a reason to cut seats first.
+**Canonical issue:** #6468 (Claude hramatka survey + operator refinements; Grok owns folding
+into this topology). **Do not fork a parallel table** — update this section + activity-matrix §2b.
+
+**Failure mode this prevents:** concurrent drivers default everything to Codex/Claude while
+**Cursor Auto**, **DeepSeek Flash**, **AGY**, **Pool**, **Z.AI/GLM**, and **Kimi k3-256k** sit
+free — then ask whether subscriptions are "too much." **Operator policy: utilize, do not trim.**
+The portfolio is sized for cross-family quality; **idle paid capacity with open in-scope work is
+a process defect.**
+
+#### Concurrent driver layout (operator seat reality 2026-08-08)
+
+Typical live driver count (names rotate; count is the constraint):
+
+| Driver seat | Typical concurrency | Role |
+| --- | --- | --- |
+| **Grok** | **~2** concurrent | Daily epic/topology drivers; dispatch-heavy, not solo multi-file |
+| **Claude** | **~1** | Judgment / hard epic / summoned Fable cadence |
+| **Codex** | **1–4** concurrent | Novel/hard impl + bounded Luna; **not** the dump for every mechanical job |
+
+**Multi-driver rules:**
+1. Drivers share the **same free worker pools** — before dispatch, read `/api/delegate/active`
+   and CodexBar so two Groks + four Codexes do not all stampede one near_cap lane.
+2. Claim **disjoint** work (stream epic / issue / owned paths); no duplicate branches.
+3. **Timed pause, not permanent neglect:** a lane at near_cap or operator-paused carries an
+   explicit **return-at** timestamp. Example (2026-08-08 survey): Codex weekly pause ends
+   **2026-08-10T19:47Z** → auto-return to rotation then, not “Codex is dead forever.”
+4. Verify delivery against **git/PR state**, not only task `no_deliverable` flags (#6426 class
+   false negatives poison utilization metrics).
+5. Cursor mechanical tier **activates when #6469 is fixed**; until then substitute with NOTE.
 
 **Before every dispatch / CF spend**, read live headroom (do not cache percentages into policy):
 
@@ -291,11 +332,13 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
 | **glm / Z.AI** (`glm-5.2`) | deep security + large-context coherence audits | **LOCAL-ONLY** China egress; never CI/sensitive; prefer 5h when weekly hot |
 | **grok-4.5** | daily driver / CF (not QG judge) | oversight may be native Grok; don't solo multi-file when free workers exist |
-| **kimi K3** | consequential code + CF outside Moonshot lineage | throttle when short windows farAhead |
-| **codex** Terra/Luna | novel/hard impl; Luna bounded with scope ceiling | **throttle mechanical work when near_cap** — shed to Cursor Auto / DeepSeek Flash / AGY |
+| **kimi** (**keep**) | **`k3-256k` everyday** coding/impl; **`k3` @ high/max** advisory/complex only | don't burn full k3 on routine; throttle 5h windows when farAhead |
+| **glm / Z.AI** (**keep**) | local-rail security + large-context coherence | LOCAL-ONLY; prefer z.ai account; 5h when weekly hot |
+| **codex** Terra/Luna (1–4 drivers) | novel/hard impl; Luna bounded with scope ceiling | **throttle mechanical when near_cap / paused**; return-at resumes rotation; shed to Cursor Auto / Flash / AGY / k3-256k / GLM |
 
-**Throttle (do not feed more mechanical work):** any lane at/ahead of pace or thin reserve
-(e.g. Codex near_cap). **Widen:** `farBehind` + meaningful reserve + free disk.
+**Throttle (do not feed more mechanical work):** any lane at/ahead of pace, thin reserve, or
+timed-paused (e.g. Codex near_cap until return-at). **Widen:** `farBehind` + meaningful reserve +
+free disk. **Never convert a timed pause into permanent neglect of that seat.**
 
 #### Transport map — native first; OpenRouter is not a bus
 

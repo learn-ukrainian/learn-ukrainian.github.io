@@ -45,25 +45,33 @@ Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
 
 ---
 
-### 1b. Free-lane utilization (operator 2026-08-08)
+### 1b. Free-lane utilization (operator 2026-08-08 / #6468)
 
-Do **not** fixate on Codex/Claude while free seats sit idle. Live check:
+**Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `codexbar usage --json --provider <lane>` + `/api/delegate/active` + disk.
+
+**Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
+worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
+stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (default `auto`); never CF identity |
+| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **gated on #6469 fix**; never CF identity |
 | **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` **only** — **Pro DO NOT USE** |
+| **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
+| **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |
-| **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (often OpenRouter path) |
-| **Z.AI GLM-5.2** | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; prefer 5h when weekly hot |
-| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority |
+| **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
+| **Z.AI GLM-5.2** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
+| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
 
-**OpenRouter:** mainly **Pool + Gemma**. Can reach more; **do not** use as a general multi-model bus — native/first-party first.
+**OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap:** shed mechanical CI (ruff, fingerprints, lockfile nits) to Cursor Auto / DeepSeek Flash / AGY. Novel/hard work may stay on Terra/Luna.
+**Codex near_cap / timed pause:** shed mechanical CI to Cursor (post-#6469) / Flash / AGY /
+k3-256k / GLM. **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
+to rotation. Novel/hard may stay on Terra/Luna among the 1–4 Codex drivers.
 
-Full table + transport map: `model-assignment.md` § *No-idle utilization + transport map*.
+Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468**.
 
 ## 2. Default execution shape (binding)
 

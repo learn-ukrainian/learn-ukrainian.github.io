@@ -147,7 +147,7 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
    source edits (the MDX Source Parity gate requires both move together; #3643 tracks the missing
    forward-drift gate).
 3. **Independent content review** — DeepSeek-pro (VESUM-backed), off-seat:
-   `delegate.py dispatch --agent deepseek --model deepseek-v4-pro --mode read-only`. Apply valid deltas.
+   `delegate.py dispatch --agent deepseek --model deepseek-v4-flash --mode read-only`. Apply valid deltas.
 4. `handoff_ready --pr <N>` before declaring ready.
 
 ## 6. Per-module ship checklist (copy this)

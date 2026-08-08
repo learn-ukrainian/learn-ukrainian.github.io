@@ -114,7 +114,7 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   > /tmp/routing-snapshot.json
 
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" resolve-reviewer \
-  --author-model "<the author's actual model/seat, e.g. claude, codex, deepseek-v4-pro>" \
+  --author-model "<the author's actual model/seat, e.g. claude, codex, deepseek-v4-flash>" \
   --review-profile "<same profile as Step 2>" \
   --risk "<same risk as Step 2>" \
   --domain "<code|infra>" \

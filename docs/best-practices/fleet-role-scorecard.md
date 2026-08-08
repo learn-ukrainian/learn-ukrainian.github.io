@@ -55,7 +55,7 @@
 | **GLM-5.2** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
 | **DeepSeek V4 Flash High** | Preliminary top-7 Arena frontend/agentic coding result; fast and inexpensive | Frontend-specific evidence; not critical authority or a UA/folk gate | First-party OpenCode high for Entire-aware review; Hermes high for rich tool execution | Frontier-practical frontend/code worker + CF review |
 | **DeepSeek V4 Flash** | Economical coding + infra CF volume (operator preferred) | Not folk/UA cultural gate; **Pro DO NOT USE** | **First-party only** (`deepseek-direct` / Hermes); OpenRouter deepseek refused | Infra/code CF |
-| **Cursor Composer 2.5** | IDE-native implementation | **Harness**; pin backing **family** for CF | Cursor | Worker |
+| **Cursor Auto** (default worker) / Composer 2.5 (pinned CF identity) | Mechanical code/infra when free; Auto never formal CF identity; gated on #6469 | Cursor harness multi-model | Worker (impl) |
 
 ---
 
