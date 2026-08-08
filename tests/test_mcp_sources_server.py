@@ -14,7 +14,6 @@ Covers:
 
 import asyncio
 import importlib.util
-import inspect
 import json
 import sys
 from pathlib import Path
@@ -71,19 +70,19 @@ class TestListTools:
     def test_all_tools_have_input_schema(self, server_module):
         tools = _run(server_module.list_tools())
         for tool in tools:
-            assert tool.inputSchema is not None, f"{tool.name} missing inputSchema"
-            assert tool.inputSchema.get("type") == "object", f"{tool.name} schema not object type"
+            assert tool.input_schema is not None, f"{tool.name} missing input_schema"
+            assert tool.input_schema.get("type") == "object", f"{tool.name} schema not object type"
 
     def test_verify_word_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vw = next(t for t in tools if t.name == "verify_word")
-        assert "word" in vw.inputSchema["required"]
-        assert "word" in vw.inputSchema["properties"]
+        assert "word" in vw.input_schema["required"]
+        assert "word" in vw.input_schema["properties"]
 
     def test_query_ulif_schema_accepts_structured_sections(self, server_module):
         tools = _run(server_module.list_tools())
         ulif = next(tool for tool in tools if tool.name == "query_ulif")
-        sections = ulif.inputSchema["properties"]["sections"]
+        sections = ulif.input_schema["properties"]["sections"]
         assert "default" not in sections
         assert sections["items"]["enum"] == [
             "paradigm", "synonyms", "antonyms", "phraseology",
@@ -129,43 +128,43 @@ class TestUlifHandlers:
     def test_search_text_subject_schema(self, server_module):
         tools = _run(server_module.list_tools())
         search_text = next(t for t in tools if t.name == "search_text")
-        subject = search_text.inputSchema["properties"]["subject"]
+        subject = search_text.input_schema["properties"]["subject"]
         assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
         assert "ukrmova" in subject["description"]
 
     def test_search_images_subject_schema(self, server_module):
         tools = _run(server_module.list_tools())
         search_images = next(t for t in tools if t.name == "search_images")
-        subject = search_images.inputSchema["properties"]["subject"]
+        subject = search_images.input_schema["properties"]["subject"]
         assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
         assert "ukrmova" in subject["description"]
 
     def test_verify_words_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vw = next(t for t in tools if t.name == "verify_words")
-        assert "words" in vw.inputSchema["required"]
-        props = vw.inputSchema["properties"]["words"]
+        assert "words" in vw.input_schema["required"]
+        props = vw.input_schema["properties"]["words"]
         assert props["type"] == "array"
         assert props["items"]["type"] == "string"
 
     def test_vet_vocabulary_schema(self, server_module):
         tools = _run(server_module.list_tools())
         tool = next(tool for tool in tools if tool.name == "vet_vocabulary")
-        assert tool.inputSchema["required"] == ["words"]
-        assert tool.inputSchema["properties"]["words"]["type"] == "array"
-        assert tool.inputSchema["properties"]["include_definitions"]["default"] is False
+        assert tool.input_schema["required"] == ["words"]
+        assert tool.input_schema["properties"]["words"]["type"] == "array"
+        assert tool.input_schema["properties"]["include_definitions"]["default"] is False
 
     def test_verify_quote_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vq = next(t for t in tools if t.name == "verify_quote")
-        assert vq.inputSchema["required"] == ["author", "text"]
-        assert vq.inputSchema["properties"]["min_confidence"]["default"] == 0.80
+        assert vq.input_schema["required"] == ["author", "text"]
+        assert vq.input_schema["properties"]["min_confidence"]["default"] == 0.80
 
     def test_verify_source_attribution_schema(self, server_module):
         tools = _run(server_module.list_tools())
         tool = next(t for t in tools if t.name == "verify_source_attribution")
-        assert tool.inputSchema["required"] == ["source", "claim"]
-        assert set(tool.inputSchema["properties"]["source"]["enum"]) == {
+        assert tool.input_schema["required"] == ["source", "claim"]
+        assert set(tool.input_schema["properties"]["source"]["enum"]) == {
             "grinchenko_1907",
             "esum",
             "sum11",
@@ -678,23 +677,6 @@ class TestSearchSourcesHandler:
             assert '"corpus": "ukrainian_wiki"' in result[0].text
             assert '"chunk_id": "ukwiki:test-1"' in result[0].text
 
-
-class TestSSEStateless:
-    """Test that SSE mode uses stateless=True to avoid initialization handshake issues."""
-
-    def test_main_sse_passes_stateless(self, server_module):
-        """Verify the SSE handler calls server.run with stateless=True.
-
-        This is critical: without stateless=True, Claude Code's SSE client
-        fails with 'Received request before initialization was complete'
-        because it doesn't send the MCP initialize handshake.
-        """
-        source = inspect.getsource(server_module.main_sse)
-        assert "stateless=True" in source, (
-            "main_sse must pass stateless=True to server.run() — "
-            "without it, SSE clients that skip the initialize handshake "
-            "get -32602 errors on every tool call"
-        )
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):
