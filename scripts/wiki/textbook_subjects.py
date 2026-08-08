@@ -116,8 +116,11 @@ KNOWN_SOURCE_FILE_SUBJECTS: dict[str, str] = {
     "9-klas-ukrajinska-mova-zabolotnij-2017": "ukrmova",
     "9-klas-ukrmova-zabolotnyi-2017": "ukrmova",
     "9-klas-fizyka-zasiekina-2026": "fizyka",
+    "9-klas-finansova-rolik-2026": "finansova",
     "9-klas-heometriya-bevz-2026": "heometriya",
     "9-klas-informatyka-bios-2026": "informatyka",
+    "9-klas-istoriya-ukr-galimov-2026": "istoriya",
+    "9-klas-pravoznavstvo-berendieiev-2026": "pravoznavstvo",
     "9-klas-ukrlit-zabolotnyi-2026": "ukrlit",
     "9-klas-zdorovia-gushchyna-2026": "zdorovia",
     "anna-ohoiko-1000-words-2nd-ed": "lexicon",
@@ -355,6 +358,8 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "masol": "Масол",
     "zapotockyi": "Запотоцький",
     "hilberh": "Гільберг",
+    "rolik": "Ролік",
+    "berendieiev": "Берендєєв",
     # Non-textbook author-name strings already stored in Latin/English on
     # ingestion (literary works, podcast, style-guide author). Map them
     # to Cyrillic so author_uk is uniformly Cyrillic when populated.
