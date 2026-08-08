@@ -1854,7 +1854,9 @@ def _split_idiom_text(text: str, lemma: str, headword: str | None) -> tuple[str,
         definition = " ".join(words[min(len(words), 8) :]).strip() or body
     if not phrase:
         return None
-    return phrase, _truncate_text(definition, 650)
+    # Keep full idiom definitions + examples when feasible (#6437). Old 650-char
+    # cap cut mid-sentence (e.g. «…дотеп…»). Soft-cap only extreme outliers.
+    return phrase, _truncate_text(definition, 4000) if len(definition) > 4000 else definition
 
 
 def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
@@ -1937,7 +1939,10 @@ def _phraseology_definition_body(definition: str, phrase: str) -> str:
         pattern = re.compile(rf"^\s*{re.escape(_clean_phraseology_text(phrase))}\.?\s*", flags=re.IGNORECASE)
         body = pattern.sub("", body, count=1).strip()
     body = re.sub(r"^\d+\.\s*", "", body)
-    return _truncate_text(body, 650)
+    if not body:
+        return ""
+    # Prefer complete idiom gloss + examples; only soft-cap pathological outliers (#6437).
+    return _truncate_text(body, 4000) if len(body) > 4000 else body
 
 
 _FRAZEOLOHICHNYI_FTS_AVAILABLE: dict[str, bool] = {}
@@ -4619,6 +4624,20 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
     return labeled
 
 
+def _etymology_text_is_displayable(text: str) -> bool:
+    """Reject OCR-amputated / mid-token ESUM stubs (e.g. «свіжа во-»)."""
+    cleaned = clean_html_entities(str(text or "")).strip()
+    if len(cleaned) < 8:
+        return False
+    # Trailing hyphen / dash with no closing quote → cut mid-word.
+    if re.search(r"[-–—]\s*$", cleaned):
+        return False
+    # Unbalanced guillemets / quotes often mark cut dictionary lines.
+    if cleaned.count("«") != cleaned.count("»"):
+        return False
+    return True
+
+
 def _etymology(
     conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
 ) -> dict | None:
@@ -4628,7 +4647,13 @@ def _etymology(
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
-    return _mphdict_etymology(lemma) or _kaikki_etymology(kaikki_lookup or {}, lemma)
+    primary = _mphdict_etymology(lemma)
+    if primary and _etymology_text_is_displayable(str(primary.get("text") or "")):
+        return primary
+    fallback = _kaikki_etymology(kaikki_lookup or {}, lemma)
+    if fallback and _etymology_text_is_displayable(str(fallback.get("text") or "")):
+        return fallback
+    return None
 
 
 _GRAC_FREQUENCY_CACHE_DATA: dict[str, Any] | None = None
@@ -5468,11 +5493,31 @@ def _fts_phrase(term: str) -> str:
     return f'"{cleaned}"' if cleaned else ""
 
 
+def _snap_excerpt_to_word_boundary(text: str, start: int, end: int) -> tuple[int, int]:
+    """Avoid mid-word starts/ends (e.g. «…оволення», «світоч л…»)."""
+    n = len(text)
+    start = max(0, min(start, n))
+    end = max(start, min(end, n))
+    if start > 0 and not text[start - 1].isspace():
+        # Move start forward to next whitespace (drop partial leading word).
+        ws = text.find(" ", start)
+        if ws != -1 and ws < end:
+            start = ws + 1
+        else:
+            start = 0
+    if end < n and not text[end - 1 : end].isspace() and not text[end : end + 1].isspace():
+        # Move end backward to previous whitespace (drop partial trailing word).
+        ws = text.rfind(" ", start, end)
+        if ws != -1 and ws > start:
+            end = ws
+    return start, end
+
+
 def _literary_excerpt(text: str, lemma: str, *, radius: int = 280) -> str:
     """Context window around the lemma hit for literary attestation.
 
-    Expanded from 180→280 (#6437) and nudged to nearby sentence boundaries so
-    excerpts are less likely to start/end mid-word.
+    Prefer whole short chunks / full sentences containing the lemma. Never start
+    or end mid-word (#6437; e.g. свіжий «…оволення…світоч л…»).
     """
     cleaned = re.sub(r"\s+", " ", clean_html_entities(text)).strip()
     term = _strip_stress(lemma).casefold()
@@ -5480,17 +5525,29 @@ def _literary_excerpt(text: str, lemma: str, *, radius: int = 280) -> str:
     match = _whole_token_pattern(term).search(cleaned_stripped.casefold())
     if not match:
         return ""
+    # Short literary chunks: show the full passage rather than a window.
+    if len(cleaned_stripped) <= 900:
+        return cleaned_stripped
+    # Prefer the full sentence that contains the lemma when it is reasonably sized.
+    sent_start = cleaned_stripped.rfind(". ", 0, match.start())
+    sent_start = 0 if sent_start == -1 else sent_start + 2
+    sent_end = cleaned_stripped.find(". ", match.end())
+    sent_end = len(cleaned_stripped) if sent_end == -1 else sent_end + 1
+    sentence = cleaned_stripped[sent_start:sent_end].strip()
+    if 40 <= len(sentence) <= 700:
+        return sentence
     start = max(0, match.start() - radius)
     end = min(len(cleaned_stripped), match.end() + radius)
-    # Expand outward to a sentence boundary when nearby.
+    # Expand to nearby sentence boundaries when close.
     if start > 0:
         boundary = cleaned_stripped.rfind(". ", 0, start + 1)
-        if boundary != -1 and start - boundary < 80:
+        if boundary != -1 and start - boundary < 100:
             start = boundary + 2
     if end < len(cleaned_stripped):
         boundary = cleaned_stripped.find(". ", end)
-        if boundary != -1 and boundary - end < 80:
+        if boundary != -1 and boundary - end < 100:
             end = boundary + 1
+    start, end = _snap_excerpt_to_word_boundary(cleaned_stripped, start, end)
     excerpt = cleaned_stripped[start:end].strip()
     if start > 0:
         excerpt = "…" + excerpt

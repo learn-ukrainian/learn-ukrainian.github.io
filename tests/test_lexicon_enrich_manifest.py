@@ -4000,3 +4000,29 @@ def test_literary_excerpt_prefers_nearby_sentence_boundaries() -> None:
     assert "свіжий" in excerpt.casefold() or "свіжий" in excerpt
     # Should not start mid-word without ellipsis marker when expanded.
     assert "моріжок" in excerpt
+
+
+def test_literary_excerpt_uses_full_short_chunk_without_mid_word_cuts() -> None:
+    from scripts.lexicon.enrich_manifest import _literary_excerpt
+
+    full = (
+        "Тільки що ліпше людям велося, то менше кожен відчував задоволення. "
+        "А коли відбудували останню руїну, що залишилася з доби панування дракона, "
+        "то на тому місці, де згоріла потвора, зійшлися найедукованіші голови міста й, "
+        "поклавши квіти на свіжий моріжок у щойно впорядкованому парку, виголосили на честь "
+        "дракона промову, в якій докладно насвітлювалося, що в особі страховиська відійшов "
+        "у небуття єдиний гідний подиву світоч людства."
+    )
+    excerpt = _literary_excerpt(full, "свіжий")
+    assert excerpt.startswith("Тільки")
+    assert excerpt.endswith("людства.")
+    assert "…оволення" not in excerpt
+    assert "світоч л…" not in excerpt
+    assert "свіжий" in excerpt
+
+
+def test_etymology_rejects_mid_cut_esum_stubs() -> None:
+    from scripts.lexicon.enrich_manifest import _etymology_text_is_displayable
+
+    assert not _etymology_text_is_displayable("свіжий, свіжаік «новачок; свіжа во-")
+    assert _etymology_text_is_displayable("From Proto-Slavic *svěžь.")
