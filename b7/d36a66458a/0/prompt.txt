@@ -1,0 +1,37 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/depic-opus5-row
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement public #6480: Opus 5 delta row in the drive-epic skill
+
+ROUTING_CARD_V1: tier=practical · grok-4.5×grok-cli · owned_paths:
+agents_extensions/shared/skills/drive-epic/SKILL.md · acceptance: prompt-lint + pytest green,
+PR open, row style-matches the existing per-model delta table · alternatives: agy (kept as
+optional reviewer), kimi (busy on 382 re-review), codex (paused) · parallel seats: CF review
+by the anthropic seat (deep context on the Opus 5 guidance).
+
+## Evidence preamble (#M-4)
+The mitigation content is DOCUMENTED, not invented: Anthropic's model-migration guide, section
+"Migrating to Claude Opus 5" → Behavioral shifts + checklist. Fetch it yourself
+(https://platform.claude.com/docs/en/about-claude/models/migration-guide.md) and quote the
+blocks you encode; do not paraphrase from memory. The issue body lists the required mitigation
+set.
+
+## Steps
+1. `gh issue view 6480 -R learn-ukrainian/learn-ukrainian.github.io` — the constraint list is
+   binding (method-not-roster; SOURCE tree only — never .claude/ deploy copies).
+2. Worktree from the public repo root: `git worktree add .worktrees/dispatch/grok/depic-opus5
+   -b grok/6480-opus5-row origin/main` (or use your dispatch worktree).
+3. Read agents_extensions/shared/skills/drive-epic/SKILL.md § Per-model capability delta.
+   Author the Opus 5 row + adjust the existing Claude row if needed for consistency
+   (routine driving → Sonnet 5 preference already exists there — keep coherent, no duplication).
+4. Keep it compact: the table row carries deltas; if a mitigation block is too long for a row,
+   follow the existing pattern (the Grok row embeds its FLEET-FIRST block inline — match that).
+5. Run prompt-lint locally if available + affected pytest; ruff n/a for md.
+6. Conventional commit + X-Agent trailer; push; PR closing #6480. Auto-merge NOT armed by you.
+7. Final response: PR URL + the exact row text.

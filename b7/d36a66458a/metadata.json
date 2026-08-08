@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b7d36a66458a",
+  "strategy": "manual-commit",
+  "branch": "grok/6480-opus5-row",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b7/d36a66458a/0/metadata.json",
+      "transcript": "/b7/d36a66458a/0/full.jsonl",
+      "compact_transcript": "/b7/d36a66458a/0/transcript.jsonl",
+      "content_hash": "/b7/d36a66458a/0/content_hash.txt",
+      "prompt": "/b7/d36a66458a/0/prompt.txt"
+    }
+  ]
+}

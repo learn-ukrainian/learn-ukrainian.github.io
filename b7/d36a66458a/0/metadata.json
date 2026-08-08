@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b7d36a66458a",
+  "session_id": "fleet-985d8c61e4fe4458b5d6457dccebc155",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T21:57:39.561281Z",
+  "branch": "grok/6480-opus5-row",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/skills/drive-epic/SKILL.md"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "6571e93c0f4a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-08T21:57:39.550189Z",
+    "agent_lines": 2,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2,
+    "total_lines_changed": 3,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
