@@ -38,7 +38,13 @@ from scripts.fleet_comms.migrations import apply_migrations
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
-    from mcp.types import TextContent, Tool
+    from mcp.types import (
+        CallToolRequestParams,
+        CallToolResult,
+        ListToolsResult,
+        TextContent,
+        Tool,
+    )
 except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
@@ -160,10 +166,7 @@ async def get_db() -> aiosqlite.Connection:
     return db
 
 
-# Initialize server
-server = Server("message-broker")
 
-@server.list_tools()
 async def list_tools() -> list[Tool]:
     """List available tools."""
     return [
@@ -304,7 +307,6 @@ async def list_tools() -> list[Tool]:
         )
     ]
 
-@server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
 
@@ -324,6 +326,25 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         return await handle_list_tasks(arguments)
     else:
         return [TextContent(type="text", text=f"Unknown tool: {name}")]
+
+
+async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
+    """MCP 2.0 registered handler for tools/list."""
+    return ListToolsResult(tools=await list_tools())
+
+
+async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
+    """MCP 2.0 registered handler for tools/call."""
+    result = await call_tool(params.name, params.arguments or {})
+    return CallToolResult(content=result)
+
+
+server = Server(
+    "message-broker",
+    on_list_tools=_on_list_tools,
+    on_call_tool=_on_call_tool,
+)
+
 
 async def handle_send_message(args: dict) -> list[TextContent]:
     """Send a message to another LLM."""

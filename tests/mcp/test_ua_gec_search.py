@@ -61,9 +61,9 @@ def test_search_ua_gec_errors_listed(server_module):
 def test_search_ua_gec_errors_schema(server_module):
     tools = _run(server_module.list_tools())
     tool = next(t for t in tools if t.name == "search_ua_gec_errors")
-    assert "query" in tool.inputSchema["required"]
-    assert "tag_filter" in tool.inputSchema["properties"]
-    assert "require_native_author" in tool.inputSchema["properties"]
+    assert "query" in tool.input_schema["required"]
+    assert "tag_filter" in tool.input_schema["properties"]
+    assert "require_native_author" in tool.input_schema["properties"]
 
 @requires_ua_gec_data
 def test_search_ua_gec_errors_execution(server_module):

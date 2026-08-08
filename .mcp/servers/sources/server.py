@@ -24,7 +24,6 @@ Tools:
 """
 
 import asyncio
-import contextlib
 import json
 import re
 import sys
@@ -48,14 +47,21 @@ from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
-    from mcp.types import TextContent, Tool
+    from mcp.types import (
+        CallToolRequestParams,
+        CallToolResult,
+        ListToolsResult,
+        TextContent,
+        Tool,
+    )
 except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
 
+
 # Server ID published to MCP clients. Matches the key in .mcp.json
 # ("sources"). Agent tool prefixes become mcp__sources__*.
-server = Server("sources")
+server: Server
 
 VERIFY_SOURCE_ATTRIBUTION_SOURCES = (
     "grinchenko_1907",
@@ -83,9 +89,12 @@ COMPLETENESS_NOTES = {
 }
 
 
-@server.list_tools()
 async def list_tools() -> list[Tool]:
-    """List available RAG tools."""
+    """List available RAG tools.
+
+    Kept as a module-level callable for unit tests and backward compat.
+    The registered MCP 2.0 handler is ``_on_list_tools``.
+    """
     return [
         Tool(
             name="search_sources",
@@ -1287,9 +1296,12 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
-@server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
-    """Handle tool calls."""
+    """Handle tool calls.
+
+    Kept as a module-level callable for unit tests and backward compat.
+    The registered MCP 2.0 handler is ``_on_call_tool``.
+    """
     import time as _time
     _t0 = _time.monotonic()
     try:
@@ -1351,6 +1363,20 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}")
         return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
+
+
+async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
+    """MCP 2.0 registered handler for tools/list."""
+    return ListToolsResult(tools=await list_tools())
+
+
+async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
+    """MCP 2.0 registered handler for tools/call."""
+    result = await call_tool(params.name, params.arguments or {})
+    return CallToolResult(content=result)
+
+
+server = Server("sources", on_list_tools=_on_list_tools, on_call_tool=_on_call_tool)
 
 
 async def handle_search_text(args: dict) -> list[TextContent]:
@@ -1680,9 +1706,10 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     words = submitted_words[:500]
     include_definitions = bool(args.get("include_definitions", False))
 
+    from wiki import sources_db as sdb
+
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
-    from wiki import sources_db as sdb
 
     vesum_results = await asyncio.to_thread(verify_words, words)
     lookup_terms = list(dict.fromkeys(
@@ -2374,99 +2401,54 @@ async def main_stdio():
 
 
 def create_http_app():
-    """Create the standalone HTTP app with SSE and Streamable HTTP transports."""
-    import anyio
+    """Create the standalone HTTP app with SSE and Streamable HTTP transports.
+
+    Uses MCP 2.0's built-in ``Server.streamable_http_app`` for the
+    streamable-HTTP endpoint, with ``stateless_http=True`` and
+    ``json_response=True`` so each request is independent and answered with a
+    single JSON body. The legacy SSE endpoint and ``/health`` are wired as
+    custom Starlette routes.
+    """
     from mcp.server.sse import SseServerTransport
-    from mcp.server.streamable_http import StreamableHTTPServerTransport
-    from starlette.applications import Starlette
     from starlette.responses import Response
     from starlette.routing import Mount, Route
 
     sse = SseServerTransport("/messages/")
 
-    def _scope_with_default_accept(scope):
-        method = scope.get("method")
-        default_accept = b"text/event-stream" if method == "GET" else b"application/json"
-        headers = [
-            (name, value)
-            for name, value in scope["headers"]
-            if name.lower() != b"accept"
-        ]
-        accept_values = [
-            value.strip()
-            for name, value in scope["headers"]
-            if name.lower() == b"accept"
-            for value in value.split(b",")
-        ]
-        if not accept_values or accept_values == [b"*/*"]:
-            headers.append((b"accept", default_accept))
-            return {**scope, "headers": headers}
-        return scope
+    class SseEndpoint:
+        """ASGI endpoint for the legacy SSE transport."""
+
+        async def __call__(self, scope, receive, send):
+            try:
+                async with sse.connect_sse(scope, receive, send) as (
+                    read_stream,
+                    write_stream,
+                ):
+                    await server.run(
+                        read_stream,
+                        write_stream,
+                        server.create_initialization_options(),
+                    )
+            except Exception:
+                # Client disconnected (Gemini timeout, rate limit, etc.)
+                # This is normal — don't crash the server
+                pass
 
     async def handle_health(request):
         return Response('{"status":"ok"}', media_type="application/json")
 
-    async def handle_sse(request):
-        try:
-            async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
-                await server.run(
-                    streams[0], streams[1], server.create_initialization_options(),
-                    stateless=True,
-                )
-        except Exception:
-            # Client disconnected (Gemini timeout, rate limit, etc.)
-            # This is normal — don't crash the server
-            pass
-        return Response()
+    custom_routes = [
+        Route("/health", endpoint=handle_health),
+        Route("/sse", endpoint=SseEndpoint()),
+        Mount("/messages/", app=sse.handle_post_message),
+    ]
 
-    class StreamableHTTPEndpoint:
-        async def __call__(self, scope, receive, send):
-            http_transport = StreamableHTTPServerTransport(
-                mcp_session_id=None,
-                is_json_response_enabled=True,
-            )
-            scope = _scope_with_default_accept(scope)
-
-            async with http_transport.connect() as streams:
-                read_stream, write_stream = streams
-
-                async def run_streamable_http_server():
-                    with contextlib.suppress(Exception):
-                        await server.run(
-                            read_stream,
-                            write_stream,
-                            server.create_initialization_options(),
-                            stateless=True,
-                        )
-
-                async with anyio.create_task_group() as tg:
-                    tg.start_soon(run_streamable_http_server)
-                    await http_transport.handle_request(scope, receive, send)
-                    # NOTE (2026-05-21): do NOT call `await http_transport.terminate()` here.
-                    # In mcp==1.26.0 the StreamableHTTPServerTransport.terminate() path
-                    # can emit an additional `http.response.start` frame against the
-                    # already-finalized ASGI response, raising
-                    #     RuntimeError: Expected ASGI message 'http.response.body',
-                    #         but got 'http.response.start'.
-                    # The bug is intermittent (depends on which client and which tool
-                    # path completed first) but reproducible against the production
-                    # server — see logs/mcp-sources.log entries showing the h11_impl
-                    # send() failure following our terminate() call. The
-                    # `async with http_transport.connect()` block cleans up the
-                    # read/write streams on exit, and `tg.cancel_scope.cancel()`
-                    # tears down the in-flight server task — no leak.
-                    tg.cancel_scope.cancel()
-
-    app = Starlette(
-        routes=[
-            Route("/health", endpoint=handle_health),
-            Route("/sse", endpoint=handle_sse),
-            Route("/mcp", endpoint=StreamableHTTPEndpoint(), methods=["GET", "POST", "DELETE"]),
-            Mount("/messages/", app=sse.handle_post_message),
-        ],
+    return server.streamable_http_app(
+        streamable_http_path="/mcp",
+        json_response=True,
+        stateless_http=True,
+        custom_starlette_routes=custom_routes,
     )
-
-    return app
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
@@ -2481,7 +2463,8 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     except FileNotFoundError:
         print("⚠️  Sources database not found. Run: .venv/bin/python scripts/wiki/build_sources_db.py")
 
-    # create_http_app keeps server.run(..., stateless=True) for HTTP transports.
+    # create_http_app wires the HTTP transports without stateless=True
+    # (MCP 2.0's Server.run no longer accepts that parameter).
     app = create_http_app()
 
     print(f"MCP Sources Server (SSE) running on http://{host}:{port}")
