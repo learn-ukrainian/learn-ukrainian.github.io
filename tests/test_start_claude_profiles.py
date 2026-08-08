@@ -34,9 +34,21 @@ def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     assert default.returncode == sonnet.returncode == 0
     assert fable.returncode == 0
     assert "would exec claude --model" not in default.stdout
+    assert "--effort" not in default.stdout
     assert "would exec claude " in default.stdout
     assert "would exec claude --model claude-fable-5" in fable.stdout
     assert "would exec claude --model claude-sonnet-5" in sonnet.stdout
+
+
+def test_claude_interactive_injects_effort_when_explicit() -> None:
+    result = run_launcher("start-claude.sh", "--effort", "high")
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --effort high" in result.stdout
+    assert "would exec claude --model" not in result.stdout
+
+    both = run_launcher("start-claude.sh", "--model", "fable", "--effort", "xhigh")
+    assert both.returncode == 0, both.stderr
+    assert "would exec claude --model claude-fable-5 --effort xhigh" in both.stdout
 
 
 @pytest.mark.parametrize("model", ("not-certified", "gpt-5.6-sol"))
@@ -55,11 +67,13 @@ def test_certified_claude_driver_models_are_revalidated() -> None:
     assert untrusted.returncode == 4
 
 
-def test_claude_driver_defaults_to_opus_xhigh() -> None:
+def test_claude_driver_defaults_to_last_session_without_pins() -> None:
+    """No hardwired model/effort — Claude keeps last TUI/session selection."""
     result = run_launcher("start-claude-driver.sh", "--epic", "devops")
     assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-opus-5" in result.stdout
-    assert "--effort xhigh" in result.stdout
+    assert "would exec claude " in result.stdout
+    assert "would exec claude --model" not in result.stdout
+    assert "--effort" not in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -73,9 +87,28 @@ def test_claude_driver_defaults_to_opus_xhigh() -> None:
 def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]) -> None:
     result = run_launcher("start-claude-driver.sh", *argv)
     assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-opus-5" in result.stdout
-    assert "--effort high" in result.stdout
-    assert "--effort xhigh" not in result.stdout
+    assert "would exec claude --effort high" in result.stdout
+    assert "would exec claude --model" not in result.stdout
+
+
+def test_claude_driver_injects_model_and_effort_when_explicit() -> None:
+    result = run_launcher(
+        "start-claude-driver.sh",
+        "--epic",
+        "devops",
+        "--model",
+        "fable",
+        "--effort",
+        "high",
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-fable-5 --effort high" in result.stdout
+
+
+def test_claude_rejects_unknown_effort() -> None:
+    result = run_launcher("start-claude.sh", "--effort", "ludicrous")
+    assert result.returncode == 2
+    assert "effort" in result.stderr.lower()
 
 
 def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Path) -> None:

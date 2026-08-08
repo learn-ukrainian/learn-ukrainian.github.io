@@ -49,7 +49,9 @@ $driver_mode
 
 Options:
   -h, --help                 Show this help and exit.
-  --model MODEL              Provider model (default: ${LC_MODEL:-provider default}).
+  --model MODEL              Provider model. Claude: omit to keep last TUI/session model.
+  --effort LEVEL             Claude Code effort for this session (e.g. high, xhigh).
+                             Omit to keep last session effort. Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
@@ -60,7 +62,10 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
-  LAUNCHER_MODEL             Default model when --model is omitted.
+  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude =
+                             last session).
+  LAUNCHER_EFFORT            Default Claude effort when --effort is omitted (empty =
+                             last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
 
@@ -134,8 +139,9 @@ launcher_clear_foreign_route_state() {
 launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
-      # Interactive leaves the TUI model alone unless --model / LAUNCHER_MODEL
-      # is set. Driver wrappers pin their own default via LAUNCHER_MODEL.
+      # Both interactive and driver leave model/effort alone unless the caller
+      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
+      # Claude Code keeps the last TUI/session selection.
       LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
@@ -161,6 +167,7 @@ launcher_defaults() {
       ;;
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;
   esac
+  LC_EFFORT="${LAUNCHER_EFFORT:-}"
   LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
   LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
@@ -197,6 +204,12 @@ launcher_parse() {
         shift 2
         ;;
       --model=*) LC_MODEL="${1#*=}"; shift ;;
+      --effort)
+        launcher_need_value "$1" "${2:-}"
+        LC_EFFORT="$2"
+        shift 2
+        ;;
+      --effort=*) LC_EFFORT="${1#*=}"; shift ;;
       --harness)
         launcher_need_value "$1" "${2:-}"
         LC_HARNESS="$2"
@@ -256,12 +269,27 @@ launcher_parse() {
 }
 
 launcher_normalize_model() {
-  # Interactive omits --model unless asked; driver pins Opus 5 via
-  # start-claude-driver.sh. Short aliases normalize to roster identifiers.
+  # Claude omits --model unless asked (interactive and driver). Short aliases
+  # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5' ;;
     claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
     claude:opus|claude:opus-5) LC_MODEL='claude-opus-5' ;;
+  esac
+}
+
+launcher_normalize_effort() {
+  # Claude Code accepts low|medium|high|xhigh|max (and future levels). Empty
+  # means "do not inject --effort" so the last session effort is kept.
+  if [ -z "${LC_EFFORT:-}" ]; then
+    return 0
+  fi
+  case "$LC_EFFORT" in
+    low|medium|high|xhigh|max) return 0 ;;
+    *)
+      launcher_error "unknown --effort '$LC_EFFORT' (expected low|medium|high|xhigh|max)."
+      exit 2
+      ;;
   esac
 }
 
@@ -326,6 +354,10 @@ launcher_validate_mode() {
 launcher_validate_driver_certification() {
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
+  # Claude may omit --model so the TUI keeps the last session selection.
+  if [ "$LC_PROVIDER" = "claude" ] && [ -z "${LC_MODEL:-}" ]; then
+    return 0
+  fi
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
       return 0
@@ -489,6 +521,7 @@ launcher_main() {
   launcher_defaults
   launcher_parse "$@"
   launcher_normalize_model
+  launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.
   export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
