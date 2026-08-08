@@ -1,0 +1,141 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/6474-mcp-sources-2.0
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Port MCP Sources server to SDK 2.0 (#6474)
+
+**Issue:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6474  
+**Stream epic:** #4707 (infra-harness)  
+**Initiator:** grok  
+**ROUTING_CARD:** `batch_state/routing-cards/6474-mcp-sources-2.0.json`
+
+## #M-4 evidence preamble (binding)
+Every claim in your PR / final report must pair: **claim → deterministic tool → quoted raw evidence**. No invented counts, SHAs, or “should work”.
+
+## Layout A (binding)
+- Implement **only** in the dispatch worktree the runtime creates under `.worktrees/dispatch/kimi/6474-mcp-sources-2.0/`.
+- Never commit on the primary checkout. Never push to `main`.
+- Branch: `kimi/6474-mcp-sources-2.0` (auto).
+- Every commit: `X-Agent: kimi/6474-mcp-sources-2.0` trailer.
+- **Do NOT** self-merge, arm auto-merge, or approve your own PR. Open the PR; stop for orchestrator cross-family review.
+
+## Problem (operator-proved)
+Live venv has `mcp==2.0.0` while sources still uses MCP 1.x decorators:
+
+```text
+AttributeError: 'Server' object has no attribute 'list_tools'
+  @server.list_tools()  # .mcp/servers/sources/server.py:86
+```
+
+`./services.sh start sources` therefore never stays healthy on port 8766.  
+`requirements-lock.txt` still pins `mcp==1.28.1` (venv drift). Closed unmerged PR #6410 only touched `trail_mcp.py`.
+
+## User-visible outcome
+After merge + operator venv refresh to the lock: `./services.sh start sources` → process listens on 8766, `GET /health` returns ok, MCP tool list works under SDK 2.x.
+
+## Denominator
+- One Sources MCP process path: `.mcp/servers/sources/server.py` (--standalone + stdio).
+- Dependency pin: `mcp` major 2 in requirements + lock.
+- Co-broken 1.x MCP surfaces that must not break when pin moves to 2.x: `trail_mcp.py`, `.mcp/servers/message-broker/server.py`.
+
+## Non-goals
+- No tool payload redesign; no new Sources tools.
+- No services.sh redesign (optional health-wait/Astro PID fix only if free and separate commit).
+- Do not “fix” by only downgrading the operator venv without landing code+pin on main.
+
+## Implementation plan
+
+### 1. Align dependencies
+- In `requirements.txt`, declare `mcp>=2,<3` with a short comment (sources + trails MCP servers ported to 2.0 API).
+- Sync `requirements-lock.txt` so it pins an installed 2.x (e.g. `mcp==2.0.0` + `mcp-types==2.0.0` as required).
+- Install into the worktree’s use of the shared `.venv` or ensure tests run with 2.x:  
+  ` .venv/bin/pip install 'mcp>=2,<3' ` only if needed for verification — do not leave lock and code disagreeing.
+
+### 2. Port `.mcp/servers/sources/server.py` (primary)
+**Preferred minimal path — low-level `Server` constructor handlers:**
+
+Current (broken on 2.0):
+```python
+from mcp.server import Server
+server = Server("sources")
+@server.list_tools()
+async def list_tools() -> list[Tool]: ...
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[TextContent]: ...
+```
+
+Target shape (match installed 2.0.0 signatures):
+```python
+from mcp.server import Server
+from mcp.types import TextContent, Tool, ListToolsResult, CallToolResult, CallToolRequestParams
+# handlers:
+async def list_tools(ctx, params) -> ListToolsResult:
+    return ListToolsResult(tools=[...])  # same Tool(...) entries as today
+
+async def call_tool(ctx, params: CallToolRequestParams) -> CallToolResult:
+    name = params.name
+    arguments = params.arguments or {}
+    # reuse existing handler dispatch; wrap list[TextContent] as CallToolResult(content=...)
+
+server = Server("sources", on_list_tools=list_tools, on_call_tool=call_tool)
+```
+
+**Also required transport fixes:**
+- `server.run(...)` in 2.0 is `(read_stream, write_stream, initialization_options, raise_exceptions=False)` — **drop `stateless=True`** from both SSE and StreamableHTTP paths (tests currently assert stateless; update them to match 2.0 reality, document in PR).
+- Keep `/health`, `/sse`, `/mcp`, `/messages/` routes.
+- Preserve the in-file note: do **not** reintroduce `http_transport.terminate()` after the ASGI response is finalized.
+- Keep module-level `list_tools` / `call_tool` **callable for unit tests** if tests still import them; either keep thin wrappers named `list_tools`/`call_tool` that tests can call, or update tests to invoke via the registered handlers / `ListToolsResult.tools`. Prefer updating tests cleanly rather than hacks.
+
+**Tool field:** pydantic model uses `input_schema`; JSON alias is still `inputSchema`. Existing tests use `.inputSchema` — verify against 2.0 Tool objects.
+
+### 3. Port co-broken surfaces (same PR — pin forces this)
+- **`scripts/orchestration/trails/trail_mcp.py`**: still imports `mcp.server.fastmcp.FastMCP` (removed). Port to `mcp.server.mcpserver.MCPServer` (see closed PR #6410 intent / MCPServer `.tool` decorator). Keep the three tools and isolation contract; `tests/test_trail_isolation.py` must pass.
+- **`.mcp/servers/message-broker/server.py`**: same decorator break as sources — port with the same pattern so import does not AttributeError under mcp 2.x.
+
+### 4. Tests
+Run (from worktree, with repo `.venv`):
+```bash
+.venv/bin/python -c "import importlib.util; ..."  # import sources server
+.venv/bin/ruff check .mcp/servers/sources/server.py .mcp/servers/message-broker/server.py scripts/orchestration/trails/trail_mcp.py
+.venv/bin/pytest tests/test_mcp_sources_server.py tests/test_mcp_sources_streamable_http.py tests/test_trail_isolation.py tests/mcp/ -q --tb=short
+```
+Fix any test that depended on 1.x decorator side effects or `stateless=True`.
+
+### 5. Standalone smoke (local)
+```bash
+# free port if needed; run from worktree
+.venv/bin/python .mcp/servers/sources/server.py --standalone &
+sleep 2
+curl -fsS http://127.0.0.1:8766/health
+# kill the smoke process after
+```
+Quote outputs in the PR body.
+
+### 6. Git / PR
+```bash
+git status --short --branch
+# commit(s), conventional:
+#   fix(mcp): port sources server to SDK 2.0
+#   fix(mcp): port trail_mcp and message-broker for mcp 2.x
+#   chore(deps): pin mcp>=2,<3
+git push -u origin HEAD
+gh pr create --title "fix(mcp): port sources server to SDK 2.0 (#6474)" \
+  --body "..."  # link Fixes #6474, AC checklist, evidence quotes
+```
+**Stop after PR is open.** Do not merge.
+
+## Stop / residual policy
+- If StreamableHTTP 2.0 API cannot preserve both SSE and streamable paths in one pass: land sources import + list/call tools + `/health` first, and open a residual issue for transport parity — but try full parity first.
+- If you discover an architecture choice (e.g. abandon low-level Server for only MCPServer and drop custom Starlette), **do not invent** — leave a NOTE in the PR and stop for advisor; prefer the low-level port that keeps the existing app factory.
+
+## Completion vocabulary
+- **done** = PR open, tests green, import + health smoke quoted, issue linked, worktree branch pushed.
+- **failed** = blocked with tool-proved reason and residual issue comment.
+
+## Owned paths (hard ceiling)
+Only touch paths listed in the ROUTING_CARD. No linter config, no `.python-version`, no curriculum, no unrelated refactors.

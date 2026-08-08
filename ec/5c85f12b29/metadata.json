@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ec5c85f12b29",
+  "strategy": "manual-commit",
+  "branch": "kimi/6474-mcp-sources-2.0",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".mcp/servers/sources/server.py",
+    "tests/mcp/test_ua_gec_search.py",
+    "tests/test_mcp_sources_server.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ec/5c85f12b29/0/metadata.json",
+      "transcript": "/ec/5c85f12b29/0/full.jsonl",
+      "content_hash": "/ec/5c85f12b29/0/content_hash.txt",
+      "prompt": "/ec/5c85f12b29/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 140507,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 11471720,
+    "output_tokens": 31256,
+    "api_call_count": 98
+  }
+}
