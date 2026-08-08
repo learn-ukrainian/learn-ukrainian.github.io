@@ -171,43 +171,85 @@ def test_post_task_reap_routes_regular_dispatch_deletion_through_p0_reaper() -> 
     assert "_remove_worktree(" not in source
 
 
-def test_orchestration_worktree_remove_call_sites_are_allowlisted() -> None:
-    """Keep P0 as the deletion hand, except for explicit task-family cleanup."""
-    project_root = Path(__file__).resolve().parents[2]
+def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The ACP exception cannot become a general direct worktree deleter."""
+    commands: list[list[str]] = []
+
+    def fake_run_git(args: list[str], **_kwargs: Any) -> subprocess.CompletedProcess[str]:
+        commands.append(args)
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(post_task_reap, "_run_git", fake_run_git)
+    runtime = post_task_reap._ACP_RUNTIME_ROOT / "p2b-runtime"
+
+    ok, error = post_task_reap._remove_worktree(runtime, tmp_path)
+
+    assert ok is True
+    assert error is None
+    assert commands == [["worktree", "remove", "--force", str(runtime)]]
+
+    outside_ok, outside_error = post_task_reap._remove_worktree(tmp_path / "outside", tmp_path)
+
+    assert outside_ok is False
+    assert outside_error == "ACP runtime path is outside .worktrees/dispatch/acp/"
+    assert len(commands) == 1
+
+
+def _raw_worktree_remove_callers(project_root: Path) -> dict[str, set[str]]:
+    """Return production functions constructing a literal ``worktree remove`` command."""
     actual: dict[str, set[str]] = {}
 
-    for source_path in (project_root / "scripts" / "orchestration").rglob("*.py"):
+    for source_path in (project_root / "scripts").rglob("*.py"):
         source = source_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(source_path))
         functions: set[str] = set()
         for function in ast.walk(tree):
             if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
-            command_lists = (
-                list_node
-                for list_node in ast.walk(function)
-                if isinstance(list_node, ast.List)
-            )
+            literal_sequences: list[list[str]] = []
+            for node in ast.walk(function):
+                if isinstance(node, (ast.List, ast.Tuple)):
+                    literal_sequences.append(
+                        [
+                            element.value
+                            for element in node.elts
+                            if isinstance(element, ast.Constant) and isinstance(element.value, str)
+                        ]
+                    )
+            for call in (node for node in ast.walk(function) if isinstance(node, ast.Call)):
+                literal_args: list[str] = []
+                for arg in call.args:
+                    if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                        literal_args.append(arg.value)
+                    elif isinstance(arg, (ast.List, ast.Tuple)):
+                        literal_args.extend(
+                            element.value
+                            for element in arg.elts
+                            if isinstance(element, ast.Constant) and isinstance(element.value, str)
+                        )
+                literal_sequences.append(literal_args)
             if any(
-                [
-                    element.value
-                    for element in command_list.elts
-                    if isinstance(element, ast.Constant) and isinstance(element.value, str)
-                ][:3]
-                == ["git", "worktree", "remove"]
-                or [
-                    element.value
-                    for element in command_list.elts
-                    if isinstance(element, ast.Constant) and isinstance(element.value, str)
-                ][:2]
-                == ["worktree", "remove"]
-                for command_list in command_lists
+                sequence[index : index + 3] == ["git", "worktree", "remove"]
+                or sequence[index : index + 2] == ["worktree", "remove"]
+                for sequence in literal_sequences
+                for index in range(len(sequence))
             ):
                 functions.add(function.name)
         if functions:
             actual[str(source_path.relative_to(project_root))] = functions
+    return actual
 
-    assert actual == {
+
+def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
+    """Reject a new raw deletion hand anywhere below production ``scripts/``."""
+    project_root = Path(__file__).resolve().parents[2]
+    assert _raw_worktree_remove_callers(project_root) == {
+        "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
+        "scripts/delegate.py": {"_release_stale_branch_holders"},
+        "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
         "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
         "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
     }

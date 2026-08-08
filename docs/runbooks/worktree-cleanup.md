@@ -41,6 +41,29 @@ reaps immediately. The first seven days are capped by
 For regular dispatch worktrees, `post_task_reap` delegates automatic removal
 to this same P0 reaper rather than maintaining a second deletion path.
 
+## Deletion ownership
+
+`reap_worktrees._remove_worktree` is the single deletion hand for regular
+dispatch worktrees. `post_task_reap`'s main path and `delegate`'s completed
+worktree cleanup must call the P0 reaper; they must not invoke Git removal
+directly.
+
+The following narrowly bounded dual paths are allowed because they do not
+represent ordinary merged-PR dispatch cleanup:
+
+- `post_task_reap._remove_worktree` removes only task-state-bound ACP runtime
+  paths below `.worktrees/dispatch/acp/`, after its own terminal, clean, and
+  liveness checks; it always uses `--force` for ignored runtime residue.
+- `_acp_execution.acp_execution_cwd` force-removes only the detached,
+  no-checkout ACP workspace it created below `.worktrees/dispatch/acp/` during
+  setup failure or context teardown.
+- `delegate._release_stale_branch_holders` performs a non-force release after
+  clean, synced, terminal-owner checks so a blocked dispatch may reattach its
+  branch. Its normal completed-worktree cleanup still uses the P0 reaper.
+- `task_family.git_safety.remove_worktree` remains the task-family bundle path:
+  its executor repeats frozen-plan, merged-PR, bundle, and candidate checks
+  immediately before deletion. Do not replace or remove that path here.
+
 ## Immediate cleanup after merge
 
 The merge owner removes the exact worktree as soon as GitHub reports the PR
