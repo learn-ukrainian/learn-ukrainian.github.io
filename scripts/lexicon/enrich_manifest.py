@@ -95,6 +95,7 @@ from scripts.lexicon.source_attribution import (
     SLUG_ACADEMIC_LABELS,
     SUM20_ACADEMIC_LABEL,
     SUM20_SHORT_LABEL,
+    SYNONYMS_LABEL,
     VTS_ACADEMIC_LABEL,
     VTS_SHORT_LABEL,
     attach_official_url,
@@ -184,11 +185,10 @@ _GRAC_CORPUS = "grac19a"
 _GRAC_BATCH_SIZE = 25
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = dict(SLUG_ACADEMIC_LABELS)
-# Synonym slugs are retired from the active cache.  Atlas synonym enrichment
-# is mphdict-only; keeping those mirror fetches here would silently continue
-# the replaced scraper even though its result is no longer rendered.
+# Fetch the academic synonym dictionary (sense-split on slovnyk.me). Karavansky
+# remains optional/secondary; primary is ``synonyms`` (СУМ synonym dictionary).
 _SLOVNYK_LOOKUP_SLUGS = tuple(
-    slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms", "synonyms_karavansky"}
+    slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms_karavansky"}
 )
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
@@ -1687,6 +1687,113 @@ def _base_word(term: str) -> str:
     return term.split(" (")[0]
 
 
+def _synonyms_slovnyk_sense_groups(
+    lemma: str,
+    cache: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Parse sense-split synonym groups from slovnyk.me ``/dict/synonyms/``.
+
+    Each paragraph is one sense nest: stressed headwords (often in CAPS) with
+    optional parenthetical glosses and a citation tail. Emits mphdict-compatible
+    ``synsets`` so the Atlas UI can render sense cards, not a flat chip dump.
+    """
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    row = _cache_lookup(cache, "synonyms")
+    if not row:
+        return None
+    raw = clean_html_entities(str(row.get("text") or "")).strip()
+    raw = re.sub(r"\s*Джерело:.*$", "", raw)
+    if not raw:
+        return None
+    # Prefer paragraph-like splits after sentence-ending citation ``).``
+    paragraphs = re.split(r"(?<=\.)\s+(?=[А-ЯІЇЄҐA-Z])", raw)
+    if len(paragraphs) < 2:
+        paragraphs = [raw]
+
+    lemma_key = _lookup_key(lemma)
+    synsets: list[dict[str, Any]] = []
+    flat_items: list[str] = []
+    seen_flat: set[str] = set()
+    synset_id = 0
+    for para in paragraphs:
+        para = re.sub(r"\s+", " ", para).strip()
+        if len(para) < 8:
+            continue
+        # Members: sequences with combining acute or ALLCAPS-ish Ukrainian heads.
+        # Capture token + optional (gloss) and optional register tag.
+        member_pat = re.compile(
+            r"(?P<head>[А-ЯІЇЄҐа-яіїєґ'’́-]{2,40})"
+            r"(?:\s*\((?P<gloss>[^)]{1,120})\))?"
+            r"(?:\s+(?P<reg>рідше|рідко|підсил\.?|діал\.?|розм\.?|підсил))?",
+        )
+        members: list[dict[str, Any]] = []
+        seen_members: set[str] = set()
+        sense_gloss: str | None = None
+        for match in member_pat.finditer(para):
+            head = match.group("head").strip()
+            # Keep heads that look dictionary-stressed or title-ish
+            if "́" not in head and not re.search(r"[А-ЯІЇЄҐ]{2,}", head):
+                continue
+            clean = _strip_stress(head)
+            key = _lookup_key(clean)
+            if not key or key == lemma_key or key in seen_members:
+                if key == lemma_key and match.group("gloss") and not sense_gloss:
+                    sense_gloss = match.group("gloss").strip()
+                continue
+            if len(clean.split()) > 3:
+                continue
+            if not _UKRAINIAN_TEXT_RE.fullmatch(clean.casefold()):
+                continue
+            seen_members.add(key)
+            lemma_form = clean.casefold()
+            member: dict[str, Any] = {
+                "lemma": lemma_form,
+                "stressed": head,
+            }
+            gloss_text = (match.group("gloss") or "").strip()
+            # Parenthetical alternate head (УЧОРА́ШНІЙ) is not a sense gloss.
+            if gloss_text and not re.fullmatch(r"[А-ЯІЇЄҐ́'’-]+", gloss_text.replace(" ", "")):
+                member["gloss"] = {"text": gloss_text}
+                if sense_gloss is None:
+                    sense_gloss = gloss_text
+            members.append(member)
+            if lemma_form not in seen_flat:
+                seen_flat.add(lemma_form)
+                flat_items.append(lemma_form)
+        if not members:
+            continue
+        synset_id += 1
+        synset: dict[str, Any] = {"id": synset_id, "members": members}
+        if sense_gloss:
+            synset["gloss"] = {"text": sense_gloss}
+        synsets.append(synset)
+
+    if not flat_items:
+        # Fall back to legacy flat chip extraction.
+        headword_pos = _headword_pos_for_synonyms(lemma) or ""
+        flat = _synonyms_from_slovnyk_row(row, lemma, headword_pos)
+        if not flat:
+            return None
+        return {
+            "items": flat[:24],
+            "source": SYNONYMS_LABEL,
+            "source_urls": [str(row.get("source_url") or "")] if row.get("source_url") else [],
+        }
+
+    mirror_url = str(row.get("source_url") or "")
+    official_urls, mirror_urls = remap_url_list([mirror_url] if mirror_url else [])
+    block: dict[str, Any] = {
+        "items": flat_items[:48],
+        "synsets": synsets,
+        "source": SYNONYMS_LABEL,
+    }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
+
+
 def _synonyms_mphdict(lemma: str) -> dict[str, Any] | None:
     """Return offline mphdict synonym groups without flattening sense boundaries."""
     result = mphdict_synonyms(lemma)
@@ -1859,27 +1966,86 @@ def _split_idiom_text(text: str, lemma: str, headword: str | None) -> tuple[str,
     return phrase, _truncate_text(definition, 4000) if len(definition) > 4000 else definition
 
 
+def _parse_phraseology_items(text: str, lemma: str) -> list[dict[str, str]]:
+    """Split a slovnyk.me phraseology article into one item per idiom head.
+
+    Heads carry combining acute stress (́). Abbreviations like «і т. ін.» /
+    «зі сл.» are protected so they do not create false head boundaries.
+    """
+    body = _clean_phraseology_text(text)
+    body = re.sub(r"\s*Джерело:.*$", "", body)
+    for variant in _split_lemma_variants(lemma):
+        body = re.sub(rf"^{re.escape(variant)}\s+", "", body, count=1, flags=re.IGNORECASE)
+    protected = _protect_idiom_abbreviation_periods(body)
+    pattern = re.compile(
+        r"(?P<head>[^.]{2,100}?́[^.]{0,80}?)\.\s+"
+        r"(?P<body>.*?)(?=(?:[^.]{0,80}?́[^.]{0,80}?)\.\s+|$)",
+        re.DOTALL,
+    )
+    items: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for match in pattern.finditer(protected):
+        head = _restore_idiom_abbreviation_periods(re.sub(r"\s+", " ", match.group("head"))).strip(" .")
+        definition = _restore_idiom_abbreviation_periods(re.sub(r"\s+", " ", match.group("body"))).strip()
+        # If definition leaked into head after protected abbreviations, split it.
+        leak = re.match(
+            r"^(?P<head>.+?(?:ін\.|д\.))\s+(?P<rest>[А-ЯІЇЄҐ«\"“(—–-].+)$",
+            head,
+        )
+        if leak:
+            head = leak.group("head").strip(" .")
+            definition = f"{leak.group('rest')} {definition}".strip()
+        if len(head) < 3 or len(definition) < 12:
+            continue
+        if "́" not in head or len(head) > 110:
+            continue
+        key = _lookup_key(head)
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append(
+            {
+                "text": head,
+                "phrase": head,
+                "definition": definition if len(definition) <= 4000 else _truncate_text(definition, 4000),
+                "source": PHRASEOLOGY_LABEL,
+            }
+        )
+    return items
+
+
 def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
-    """Phraseology card from the slovnyk.me Фразеологічний page."""
+    """Phraseology cards from the slovnyk.me Фразеологічний page (multi-item)."""
     cache = cache if cache is not None else _slovnyk_cache(lemma)
     row = _cache_lookup(cache, "phraseology")
     if not row:
         return None
-    split = _split_idiom_text(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
-    if not split:
-        return None
-    phrase, definition = split
-    item: dict[str, Any] = {
-        "text": phrase,
-        "phrase": phrase,
-        "definition": definition,
-        "source": PHRASEOLOGY_LABEL,
-    }
+    items = _parse_phraseology_items(str(row.get("text") or ""), lemma)
+    if not items:
+        # Fall back to single-item split for oddly formatted pages.
+        split = _split_idiom_text(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
+        if not split:
+            return None
+        phrase, definition = split
+        items = [
+            {
+                "text": phrase,
+                "phrase": phrase,
+                "definition": definition if len(definition) <= 4000 else _truncate_text(definition, 4000),
+                "source": PHRASEOLOGY_LABEL,
+            }
+        ]
     mirror_url = str(row.get("source_url") or "")
-    attach_official_url(item, mirror_url=mirror_url, slug="phraseology", word=str(row.get("word") or lemma))
+    for item in items:
+        attach_official_url(
+            item,
+            mirror_url=mirror_url,
+            slug="phraseology",
+            word=str(row.get("word") or lemma),
+        )
     official_urls, mirror_urls = remap_url_list([mirror_url] if mirror_url else [])
     block: dict[str, Any] = {
-        "items": [item],
+        "items": items,
         "source": PHRASEOLOGY_LABEL,
     }
     if official_urls:
@@ -5996,7 +6162,12 @@ def enrich_entry(
     # mphdict synonym groups are a local primary source.  A missing database is
     # the only did-not-run state; a present database with no matching set is an
     # authoritative empty result and may retract stale legacy chips.
-    synonyms_gate_ran = mphdict_synonyms_available()
+    slovnyk_synonyms = _synonyms_slovnyk_sense_groups(base, slovnyk_cache)
+    if not slovnyk_synonyms and fallback_base:
+        slovnyk_synonyms = _synonyms_slovnyk_sense_groups(fallback_base, slovnyk_cache)
+    synonyms_gate_ran = bool(slovnyk_synonyms) or mphdict_synonyms_available() or _slovnyk_gate_ran(
+        slovnyk_cache, ("synonyms",)
+    )
     idioms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
     sections: dict[str, object] = {}
     gate_provenance: dict[str, str] = {}
@@ -6010,11 +6181,14 @@ def enrich_entry(
         if outcome:
             gate_provenance[name] = outcome
 
-    synonyms = _synonyms_mphdict(base)
-    if not synonyms and fallback_base:
-        synonyms = _synonyms_mphdict(fallback_base)
-        if synonyms:
-            synonyms = _with_base_source_label(synonyms, fallback_base)
+    # Prefer sense-split academic synonym dictionary; fall back to mphdict chips.
+    synonyms = slovnyk_synonyms
+    if not synonyms:
+        synonyms = _synonyms_mphdict(base)
+        if not synonyms and fallback_base:
+            synonyms = _synonyms_mphdict(fallback_base)
+            if synonyms:
+                synonyms = _with_base_source_label(synonyms, fallback_base)
     # Definition-pointer / closed-map synonyms (#5331): when the caller precomputed
     # reciprocal maps (enrich / worker_enrich / fill_local), merge them; otherwise
     # fall back to the per-lemma forward extractor (same contract as antonyms).

@@ -643,8 +643,10 @@ def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     section = _idioms_slovnyk("яблуко", cache)
 
     assert section is not None
-    assert section["items"][0]["text"] == "яблуко розбрату (чвар), книжн"
-    assert section["items"][0]["phrase"] == "яблуко розбрату (чвар), книжн"
+    # #6459: multi-idiom nests keep the acute stress on the idiom head so learners
+    # see stress placement per idiom, matching _parse_phraseology_items intent.
+    assert section["items"][0]["text"] == "я́блуко ро́збрату (чвар), книжн"
+    assert section["items"][0]["phrase"] == "я́блуко ро́збрату (чвар), книжн"
     assert "Причина ворожнечі" in section["items"][0]["definition"]
 
 
@@ -837,8 +839,10 @@ def test_idioms_merge_slovnyk_cache_and_frazeolohichnyi_fallback(monkeypatch) ->
     section = _idioms(conn, "яблуко", cache)
 
     assert section is not None
+    # #6459: the slovnyk.me phraseology head keeps its acute stress (see stress note
+    # above); the frazeolohichnyi fallback item has no stress marks in its source row.
     assert [item["phrase"] for item in section["items"]] == [
-        "яблуко розбрату (чвар), книжн",
+        "я́блуко ро́збрату (чвар), книжн",
         "голці (яблуку, яблукові) ніде впасти",
     ]
 
@@ -3957,6 +3961,46 @@ def test_offline_carry_over_matches_across_stress_marks(monkeypatch) -> None:
         "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й"
     )
     assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_parse_phraseology_items_splits_multi_idiom_article() -> None:
+    from scripts.lexicon.enrich_manifest import _parse_phraseology_items
+
+    text = (
+        "свіжий виво́дити / ви́вести на чи́сту во́ду кого. Викривати непорядність. "
+        "сві́же о́ко. Той, хто бачить когось уперше. "
+        "сві́жим о́ком, зі сл. гля́нути. Не так, як раніше."
+    )
+    items = _parse_phraseology_items(text, "свіжий")
+    phrases = [item["phrase"] for item in items]
+    assert any("чи́сту во́ду" in p or "чисту воду" in p for p in phrases)
+    assert any("о́ко" in p for p in phrases)
+    assert len(items) >= 2
+
+
+def test_synonyms_slovnyk_sense_groups_parse_nested_senses() -> None:
+    from scripts.lexicon.enrich_manifest import _synonyms_slovnyk_sense_groups
+
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "word": "свіжий",
+                "source_url": "https://slovnyk.me/dict/synonyms/свіжий",
+                "text": (
+                    "БАДЬО́РИЙ (сповнений енергії, сили), БАДЬОРИ́СТИЙ рідше, СВІ́ЖИЙ, "
+                    "ЕНЕРГІ́ЙНИЙ підсил. Голова ніколи не болить (М. Коцюбинський). "
+                    "НОВИ́Й (який щойно з'явився), ОСТА́ННІЙ, СВІ́ЖИЙ підсил. Нові дані. "
+                    "СВІ́ЖИЙ (про хліб), ГАРЯ́ЧИЙ, ТЕ́ПЛИЙ, М'ЯКИ́Й. Ще теплі пиріжки."
+                ),
+            }
+        }
+    }
+    block = _synonyms_slovnyk_sense_groups("свіжий", cache)
+    assert block is not None
+    assert "бадьорий" in [x.casefold() for x in block["items"]]
+    assert "гарячий" in [x.casefold() for x in block["items"]]
+    assert len(block.get("synsets") or []) >= 2
 
 
 def test_definition_body_keeps_full_dictionary_article_by_default() -> None:

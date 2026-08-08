@@ -260,10 +260,15 @@ def test_atlas_adapters_use_mphdict_without_the_legacy_enrichment_sources(monkey
     enrichment_source = inspect.getsource(enrich_manifest.enrich_entry)
     etymology_source = inspect.getsource(enrich_manifest._etymology)
     assert "ukrajinet" not in enrichment_source.casefold()
-    assert "_synonyms_slovnyk" not in enrichment_source
+    # #6459: the legacy flat `_synonyms_slovnyk(` extractor is gone; check the call
+    # form (not a bare substring) so it doesn't false-positive on the intentionally
+    # re-enabled sense-split `_synonyms_slovnyk_sense_groups(` primary source.
+    assert "_synonyms_slovnyk(" not in enrichment_source
     assert "_source_etymology" not in etymology_source
 
 
 def test_active_slovnyk_cache_excludes_retired_synonym_slugs() -> None:
-    assert "synonyms" not in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
+    # #6459: `synonyms` (СУМ synonym dictionary) is intentionally re-enabled as the
+    # primary sense-split source; only the secondary `synonyms_karavansky` stays retired.
+    assert "synonyms" in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
     assert "synonyms_karavansky" not in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
