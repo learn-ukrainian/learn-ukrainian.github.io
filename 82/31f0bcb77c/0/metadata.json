@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8231f0bcb77c",
+  "session_id": "session_23925b6c-c03f-4234-9155-4b8809e89c6d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T14:32:13.473968Z",
+  "branch": "kimi/6474-mcp-sources-2.0",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "requirements-lock.txt",
+    "requirements.txt"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/kimi-for-coding",
+  "turn_id": "d0eade561b67",
+  "token_usage": {
+    "input_tokens": 139814,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 11323496,
+    "output_tokens": 30995,
+    "api_call_count": 97
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-08T14:32:13.440427Z",
+    "agent_lines": 9,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 9,
+    "total_lines_changed": 10,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
