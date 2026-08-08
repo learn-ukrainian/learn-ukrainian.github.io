@@ -81,9 +81,9 @@ or count as a formal review.
   `ask-cursor`; default model `auto`). Idle Auto while other seats are near_cap is a
   **utilization failure**, not a reason to cut subscriptions. Composer 2.5 remains the
   **pinned-model** choice when family independence matters (formal CF identity). `cursor:auto`
-  is **never** a formal-review identity. **Gate:** cursor-first mechanical tier is blocked until
-  adapter defect **#6469** (plan-only rc=0, zero edits) is fixed — until then note substitution
-  and shed to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.
+  is **never** a formal-review identity. **Gate history #6469:** workspace-write defaulted to `--mode plan` (read-only) — fixed in
+  the same utilization PR so Auto can execute. If a future adapter regression returns
+  plan-only rc=0, substitute with NOTE to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.
 * **deepseek** (operator 2026-08-02; hold 2026-08-06; **reaffirmed 2026-08-08**): use
   **`deepseek-v4-flash` only** (first-party OpenCode at `high` for review/research; Hermes for
   tool-heavy implement). **`deepseek-v4-pro` is DO NOT USE** — older SKU; Flash currently
@@ -310,7 +310,7 @@ Typical live driver count (names rotate; count is the constraint):
    **2026-08-10T19:47Z** → auto-return to rotation then, not “Codex is dead forever.”
 4. Verify delivery against **git/PR state**, not only task `no_deliverable` flags (#6426 class
    false negatives poison utilization metrics).
-5. Cursor mechanical tier **activates when #6469 is fixed**; until then substitute with NOTE.
+5. Cursor mechanical tier is **active** once the #6469 adapter fix is on main; substitute with NOTE only on live adapter regression.
 
 **Before every dispatch / CF spend**, read live headroom (do not cache percentages into policy):
 

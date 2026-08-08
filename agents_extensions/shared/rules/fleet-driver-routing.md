@@ -56,7 +56,7 @@ stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **gated on #6469 fix**; never CF identity |
+| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
 | **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` **only** — **Pro DO NOT USE** |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
@@ -67,7 +67,7 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause:** shed mechanical CI to Cursor (post-#6469) / Flash / AGY /
+**Codex near_cap / timed pause:** shed mechanical CI to Cursor Auto / Flash / AGY /
 k3-256k / GLM. **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
 to rotation. Novel/hard may stay on Terra/Luna among the 1–4 Codex drivers.
 

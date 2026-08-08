@@ -147,13 +147,29 @@ class CursorAdapter:
             if self._should_approve_mcps(config, default=False):
                 cmd.append("--approve-mcps")
         elif mode == "workspace-write":
-            cursor_mode = config.get("cursor_mode", "plan")
-            cmd.extend(["--mode", cursor_mode])
-            # Security boundaries from Phase 2 spec
+            # Write-capable mode MUST allow edits. Defaulting to --mode plan
+            # made every workspace-write dispatch plan-only (rc=0, zero edits,
+            # no_deliverable) — issue #6469 / operator cursor utilization #6468.
+            # cursor-agent modes: plan = no edits; ask = read-only Q&A; omit
+            # --mode = agent execution (edits + tools, per -p print docs).
+            # Callers may still pass cursor_mode=plan|ask for intentional
+            # non-write runs.
+            cursor_mode = config.get("cursor_mode")
+            if cursor_mode in ("plan", "ask"):
+                cmd.extend(["--mode", str(cursor_mode)])
+            # Security boundaries from Phase 2 spec: sandbox stays enabled by
+            # default (worktree is the write boundary for force tools).
             if self._should_approve_mcps(config, default=True):
                 cmd.append("--approve-mcps")
             sandbox = config.get("sandbox", "enabled")
             cmd.extend(["--sandbox", sandbox])
+            # Unattended file/shell tools need approval grant; without --force
+            # print-mode can still narrate a plan and exit "successfully".
+            if config.get("force", True) is not False and cursor_mode not in (
+                "plan",
+                "ask",
+            ):
+                cmd.append("--force")
         elif mode == "danger":
             # Danger mode: no --mode flag (cursor-agent default allows edits;
             # --mode plan blocks edits, --mode ask is read-only Q&A — neither
