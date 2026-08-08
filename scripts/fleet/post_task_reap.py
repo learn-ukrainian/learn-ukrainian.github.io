@@ -236,11 +236,16 @@ def _unlock_worktree(path: Path, repo_root: Path) -> None:
     _run_git(["worktree", "unlock", str(path)], cwd=repo_root)
 
 
-def _remove_worktree(path: Path, repo_root: Path, *, force: bool = True) -> tuple[bool, str | None]:
-    cmd = ["worktree", "remove"]
-    if force:
-        cmd.append("--force")
-    cmd.append(str(path))
+def _remove_worktree(path: Path, repo_root: Path) -> tuple[bool, str | None]:
+    """Force-remove one state-bound ACP runtime beneath its dedicated subtree.
+
+    This is deliberately not the regular dispatch deletion path: callers must
+    first establish terminal task ownership, cleanliness, and no live process.
+    Regular dispatch worktrees always go through ``reap_worktrees`` instead.
+    """
+    if not _is_under_acp_runtime_root(path):
+        return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
+    cmd = ["worktree", "remove", "--force", str(path)]
     proc = _run_git(cmd, cwd=repo_root)
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git worktree remove failed").strip()
