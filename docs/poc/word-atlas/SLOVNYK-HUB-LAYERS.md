@@ -70,3 +70,22 @@ sections.usage_notes = { items[{title?, text, source, source_url}], source }  # 
 
 ~73 slovnyk dict slugs observed. Sample hit rates (10 lemmas) ranked vts/newsum/sum/synonyms/phraseology/proverbs/orthography/holoskevych/slang_lviv as high-coverage learner-relevant; many bilingual RU-facing dicts high-coverage but excluded as pillars.
 
+
+## Cross-agent review deltas (2026-08-08)
+
+### Gemini / AGY (language) — fold into UX order
+- Elevate **EN gloss** to header dual-anchor (monolingual VTS still primary).
+- Elevate **morphology / stress strip** earlier (not buried under enrichment).
+- Davydov: **structured summary + expand full essay** (not dump full text in-flow).
+- Progressive disclosure: top card always on; synonym nests per sense; phraseology/proverbs expandable with counts.
+
+### Kimi K3 (design) — **APPROVE** with required schema deltas
+1. `usage_notes` must include block-level `source_urls` + `mirror_source_urls` split (УМІФ attribution).
+2. Proverb section items: optional `entry_slug?` when a standalone `proverb` entry exists (dedup with entry model).
+3. `gloss?` on proverbs = **UK paraphrase only** (EN stays in translation layer).
+4. Policy: **data stores full text**; UI may first-paragraph+expand for long davydov essays; register new section keys in conformance gates before publish.
+5. Ship **phased** (#6458 → #6459 → additive #6462–#6465 → #6466 full re-enrich last).
+
+### Revised “always visible” top card
+Lemma + stress/IPA + POS + aspect link (verbs) + quick EN gloss + primary VTS senses + compact VESUM strip.
+
