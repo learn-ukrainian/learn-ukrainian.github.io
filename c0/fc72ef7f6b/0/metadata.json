@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c0fc72ef7f6b",
+  "session_id": "fleet-326f0d2c8bdb4c00adcd4f0a2ac20786",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T09:19:47.894897Z",
+  "branch": "cursor/cold-start-pr3-metrics",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/efficiency_metrics.py",
+    "tests/fleet_comms/test_efficiency_metrics_authority.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "2566c131f105",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-08T09:19:47.890632Z",
+    "agent_lines": 614,
+    "agent_removed": 41,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 614,
+    "total_lines_changed": 655,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

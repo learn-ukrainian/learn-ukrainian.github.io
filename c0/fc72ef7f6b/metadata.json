@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c0fc72ef7f6b",
+  "strategy": "manual-commit",
+  "branch": "cursor/cold-start-pr3-metrics",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/cli.py",
+    "scripts/fleet_comms/efficiency_metrics.py",
+    "tests/fleet_comms/test_efficiency_metrics_authority.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c0/fc72ef7f6b/0/metadata.json",
+      "transcript": "/c0/fc72ef7f6b/0/full.jsonl",
+      "compact_transcript": "/c0/fc72ef7f6b/0/transcript.jsonl",
+      "content_hash": "/c0/fc72ef7f6b/0/content_hash.txt",
+      "prompt": "/c0/fc72ef7f6b/0/prompt.txt"
+    }
+  ]
+}
