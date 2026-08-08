@@ -643,8 +643,10 @@ def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     section = _idioms_slovnyk("яблуко", cache)
 
     assert section is not None
-    assert section["items"][0]["text"] == "яблуко розбрату (чвар), книжн"
-    assert section["items"][0]["phrase"] == "яблуко розбрату (чвар), книжн"
+    # #6459: multi-idiom nests keep the acute stress on the idiom head so learners
+    # see stress placement per idiom, matching _parse_phraseology_items intent.
+    assert section["items"][0]["text"] == "я́блуко ро́збрату (чвар), книжн"
+    assert section["items"][0]["phrase"] == "я́блуко ро́збрату (чвар), книжн"
     assert "Причина ворожнечі" in section["items"][0]["definition"]
 
 
@@ -837,8 +839,10 @@ def test_idioms_merge_slovnyk_cache_and_frazeolohichnyi_fallback(monkeypatch) ->
     section = _idioms(conn, "яблуко", cache)
 
     assert section is not None
+    # #6459: the slovnyk.me phraseology head keeps its acute stress (see stress note
+    # above); the frazeolohichnyi fallback item has no stress marks in its source row.
     assert [item["phrase"] for item in section["items"]] == [
-        "яблуко розбрату (чвар), книжн",
+        "я́блуко ро́збрату (чвар), книжн",
         "голці (яблуку, яблукові) ніде впасти",
     ]
 
