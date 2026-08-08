@@ -256,6 +256,40 @@ def test_selection_page_slug_matches_canonical_retained_name_by_metadata(tmp_pat
     assert source["db"]["source_files"] == [retained]
 
 
+def test_selection_canonical_source_is_an_exact_retained_alias(tmp_path: Path) -> None:
+    root = tmp_path / "drive"
+    root.mkdir()
+    retained = "5-klas-mystetstvo-rublia-2022"
+    (root / f"{retained}.pdf").write_bytes(b"%PDF-book")
+    _write_jsonl(
+        root / f"{retained}.jsonl",
+        [{"text": "one"}, {"text": "two"}, {"text": "three"}],
+    )
+    selection = tmp_path / "selection.yaml"
+    selection.write_text(
+        """books:
+  - id: g5-mystetstvo-rublia
+    slug: 1709-mystectstvo-rublia-5-klas
+    canonical_source: 5-klas-mystetstvo-rublia-2022
+""",
+        encoding="utf-8",
+    )
+    db = tmp_path / "sources.db"
+    _write_db(db, [(retained, 3)])
+
+    report = readiness.build_report(
+        gdrive_root=root,
+        db_path=db,
+        selection_path=selection,
+    )
+
+    source = _source(report, "1709-mystectstvo-rublia-5-klas")
+    assert source["status"] == "ready"
+    assert source["pdf"]["paths"] == [f"{retained}.pdf"]
+    assert source["chunks"]["paths"] == [f"{retained}.jsonl"]
+    assert source["db"]["source_files"] == [retained]
+
+
 def test_metadata_match_refuses_wrong_year_and_ambiguous_selection(tmp_path: Path) -> None:
     root = tmp_path / "drive"
     root.mkdir()

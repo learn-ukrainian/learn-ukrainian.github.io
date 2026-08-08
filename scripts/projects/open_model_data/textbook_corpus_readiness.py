@@ -104,6 +104,7 @@ _LOCATOR_KEYS = frozenset(
 )
 _SOURCE_KEYS = (
     "source_file",
+    "canonical_source",
     "source_slug",
     "slug",
     "book_slug",
@@ -234,7 +235,23 @@ def _selection_source(
         value = _stem(item)
         return value, value, {_slug_key(value)}, {}
     values = {key: str(item.get(key) or "").strip() for key in _SOURCE_KEYS}
-    display = next((values[key] for key in ("source_file", "slug", "book_slug", "file", "filename", "id", "name") if values[key]), "")
+    display = next(
+        (
+            values[key]
+            for key in (
+                "source_file",
+                "slug",
+                "book_slug",
+                "canonical_source",
+                "file",
+                "filename",
+                "id",
+                "name",
+            )
+            if values[key]
+        ),
+        "",
+    )
     if not display:
         return None
     display = _stem(display)
