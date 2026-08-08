@@ -17,6 +17,8 @@ caps or live modes.
 
 ## Read first (cold-start order)
 
+0. **Epic drivers:** run `.venv/bin/python -m scripts.fleet_comms cold-start-board` first —
+   it probes fleet/plane/stream state so this list starts from live data, not memory.
 1. Operator contract + model assignment via `GET /api/rules` (offline fallbacks
    under `agents_extensions/shared/rules/`).
 2. This runbook — ownership matrix, experimental ACPX boundary, Kimi routes.
