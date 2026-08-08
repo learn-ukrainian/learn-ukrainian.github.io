@@ -1421,7 +1421,8 @@ def test_literary_attestation_requires_exact_form_hit() -> None:
 def test_literary_excerpt_indexes_stripped_text_with_source_stress_marks() -> None:
     excerpt = _literary_excerpt("Далека доро́га вела до вікно і саду.", "вікно", radius=8)
 
-    assert excerpt.startswith("…вела до")
+    # Short chunks return the full stress-stripped passage (#6437).
+    assert excerpt == "Далека дорога вела до вікно і саду."
     assert "вікно" in excerpt
 
 
@@ -3956,3 +3957,73 @@ def test_offline_carry_over_matches_across_stress_marks(monkeypatch) -> None:
         "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й"
     )
     assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
+
+
+def test_definition_body_keeps_full_dictionary_article_by_default() -> None:
+    """#6437: multi-sense dictionary articles must not hard-cap mid-definition."""
+    from scripts.lexicon.enrich_manifest import _definition_body, _truncate_text
+
+    long_article = (
+        "1》 Sense one about quality. "
+        "2》 Sense two about cleanliness. "
+        "3》 Sense three about air. "
+        "4》 Sense four about cool weather. "
+        "5》 Sense five about colour. "
+        "6》 Sense six about appearance and youth. "
+        "7》 Sense seven that would have been cut by a 900-char cap. "
+        "8》 Phraseological tail."
+    )
+    # Pad so the full article exceeds the old 900 default.
+    long_article = long_article + (" extra " * 120)
+    assert len(long_article) > 900
+    body = _definition_body(long_article)
+    assert body == " ".join(long_article.split())
+    assert not body.endswith("…")
+    assert "Sense seven" in body
+    assert "Phraseological tail" in body
+
+    # Explicit limit still truncates, preferring a sense boundary when possible.
+    clipped = _truncate_text(long_article, 200)
+    assert clipped.endswith("…")
+    assert "1》" in clipped
+
+
+def test_literary_excerpt_prefers_nearby_sentence_boundaries() -> None:
+    from scripts.lexicon.enrich_manifest import _literary_excerpt
+
+    text = (
+        "Передісторія дуже довга і не потрібна тут. "
+        "На місці, де згоріла потвора, зійшлися голови міста й поклали квіти "
+        "на свіжий моріжок у парку, виголосивши промову. "
+        "Післямова також зайва для цього уривка."
+    )
+    excerpt = _literary_excerpt(text, "свіжий", radius=40)
+    assert "свіжий" in excerpt.casefold() or "свіжий" in excerpt
+    # Should not start mid-word without ellipsis marker when expanded.
+    assert "моріжок" in excerpt
+
+
+def test_literary_excerpt_uses_full_short_chunk_without_mid_word_cuts() -> None:
+    from scripts.lexicon.enrich_manifest import _literary_excerpt
+
+    full = (
+        "Тільки що ліпше людям велося, то менше кожен відчував задоволення. "
+        "А коли відбудували останню руїну, що залишилася з доби панування дракона, "
+        "то на тому місці, де згоріла потвора, зійшлися найедукованіші голови міста й, "
+        "поклавши квіти на свіжий моріжок у щойно впорядкованому парку, виголосили на честь "
+        "дракона промову, в якій докладно насвітлювалося, що в особі страховиська відійшов "
+        "у небуття єдиний гідний подиву світоч людства."
+    )
+    excerpt = _literary_excerpt(full, "свіжий")
+    assert excerpt.startswith("Тільки")
+    assert excerpt.endswith("людства.")
+    assert "…оволення" not in excerpt
+    assert "світоч л…" not in excerpt
+    assert "свіжий" in excerpt
+
+
+def test_etymology_rejects_mid_cut_esum_stubs() -> None:
+    from scripts.lexicon.enrich_manifest import _etymology_text_is_displayable
+
+    assert not _etymology_text_is_displayable("свіжий, свіжаік «новачок; свіжа во-")
+    assert _etymology_text_is_displayable("From Proto-Slavic *svěžь.")
