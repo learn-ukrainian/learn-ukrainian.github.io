@@ -97,7 +97,6 @@
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.10.1",
-    "@types/showdown": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^8.49.0",
     "@typescript-eslint/parser": "^8.49.0",
     "acpx": ">=0.13.0",
@@ -118,8 +117,7 @@
     "yaml-language-server": "^1.23.0"
   },
   "dependencies": {
-    "better-sqlite3": "^12.5.0",
-    "showdown": "^2.1.0"
+    "better-sqlite3": "^12.5.0"
   },
   "overrides": {
     "uuid": "11.1.1",
