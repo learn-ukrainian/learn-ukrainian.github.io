@@ -45,6 +45,34 @@ Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
 
 ---
 
+### 1b. Free-lane utilization (operator 2026-08-08 / #6468)
+
+**Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
+`codexbar usage --json --provider <lane>` + `/api/delegate/active` + disk.
+
+**Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
+worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
+stampede one hot lane.
+
+| Free / behind seat | Prefer for | Pin |
+| --- | --- | --- |
+| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
+| **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` **only** — **Pro DO NOT USE** |
+| **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
+| **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
+| **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |
+| **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
+| **Z.AI GLM-5.2** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
+| **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
+
+**OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
+
+**Codex near_cap / timed pause:** shed mechanical CI to Cursor Auto / Flash / AGY /
+k3-256k / GLM. **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
+to rotation. Novel/hard may stay on Terra/Luna among the 1–4 Codex drivers.
+
+Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468**.
+
 ## 2. Default execution shape (binding)
 
 For **bounded** work (clear owned paths, objective acceptance command, no open
