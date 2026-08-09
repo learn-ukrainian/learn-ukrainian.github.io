@@ -37,6 +37,7 @@ VTS_SHORT_LABEL = "ВТС"
 KARAVANSKY_LABEL = "Словник синонімів С. Караванського"
 SYNONYMS_LABEL = "Словник синонімів української мови"
 PHRASEOLOGY_LABEL = "Фразеологічний словник української мови"
+PROVERBS_LABEL = "Приповідки або українсько-народня філософія"
 BALLA_LABEL = "Українсько-англійський словник (М. Балла)"
 BALLA_SHORT_LABEL = "Українсько-англійський словник"
 DAVYDOV_LABEL = "«Як ми говоримо» Антоненка-Давидовича"
@@ -69,6 +70,7 @@ SLUG_ACADEMIC_LABELS: dict[str, str] = {
     "synonyms_karavansky": KARAVANSKY_LABEL,
     "synonyms": SYNONYMS_LABEL,
     "phraseology": PHRASEOLOGY_LABEL,
+    "proverbs": PROVERBS_LABEL,
     "ukreng": BALLA_LABEL,
     "davydov": DAVYDOV_LABEL,
     "voloschak": VOLOSHCHAK_LABEL,

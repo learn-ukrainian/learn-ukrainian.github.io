@@ -58,6 +58,7 @@ from scripts.lexicon.enrich_manifest import (
     _parse_translations,
     _prepare_cefr_estimates,
     _proper_noun_wikipedia_meaning,
+    _proverbs_slovnyk,
     _resolve_definition_xref,
     _sense_correct_synonyms,
     _slovnyk_cache,
@@ -74,7 +75,7 @@ from scripts.lexicon.enrich_manifest import (
     clean_gloss,
     clean_html_entities,
 )
-from scripts.lexicon.source_attribution import MIYKLAS_LABEL
+from scripts.lexicon.source_attribution import MIYKLAS_LABEL, PROVERBS_LABEL
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -648,6 +649,164 @@ def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     assert section["items"][0]["text"] == "я́блуко ро́збрату (чвар), книжн"
     assert section["items"][0]["phrase"] == "я́блуко ро́збрату (чвар), книжн"
     assert "Причина ворожнечі" in section["items"][0]["definition"]
+
+
+def test_slovnyk_article_parser_captures_bold_saying_paragraph_structure() -> None:
+    """#6462: slovnyk.me's proverbs page bolds each saying in its own <p> and
+    leaves the following plain-text gloss <p> unbolded. Verified against the
+    live page https://slovnyk.me/dict/proverbs/свіжий (2026-08-09): two
+    bold/plain pairs, no other markup around them."""
+    html = (
+        "<html><head><title>свіжий — Приповідки або українсько-народня філософія</title>"
+        '<link rel="canonical" href="https://slovnyk.me/dict/proverbs/свіжий"></head>'
+        '<body><section id="dictionary-acticle"><article><h1>свіжий</h1>'
+        "<p><span><strong>На свіжий цвіт і бджола сідає, а зів’ялий обминає.</strong></span></p>"
+        "<p><span>Молоде і гарне має більшу привабливість, ніж старе.</span></p>"
+        "<p><span><strong>Свіжий, як сироїжка.</strong></span></p>"
+        "<p><span>Має свіжий вигляд.</span></p>"
+        '<div class="row"><div class="col"><small class="source">'
+        "<span>Джерело: </span><span>Приповідки або українсько-народня філософія</span>"
+        "</small></div></div>"
+        "</article></section></body></html>"
+    )
+
+    row = enrich_manifest_module._parse_slovnyk_entry(
+        html, lemma="свіжий", lookup_word="свіжий", slug="proverbs", url="https://slovnyk.me/dict/proverbs/свіжий"
+    )
+
+    assert row is not None
+    assert row["paragraphs"] == [
+        {"text": "На свіжий цвіт і бджола сідає, а зів’ялий обминає.", "strong": True},
+        {"text": "Молоде і гарне має більшу привабливість, ніж старе.", "strong": False},
+        {"text": "Свіжий, як сироїжка.", "strong": True},
+        {"text": "Має свіжий вигляд.", "strong": False},
+    ]
+    # The Джерело citation sits in a <small>, never a <p>, so it never becomes
+    # a spurious "gloss" paragraph.
+    assert not any("Джерело" in p["text"] for p in row["paragraphs"])
+
+
+def test_parse_proverb_items_pairs_bold_saying_with_plain_gloss() -> None:
+    from scripts.lexicon.enrich_manifest import _parse_proverb_items
+
+    paragraphs = [
+        {"text": "На свіжий цвіт і бджола сідає, а зів’ялий обминає.", "strong": True},
+        {"text": "Молоде і гарне має більшу привабливість, ніж старе.", "strong": False},
+        {"text": "Свіжий, як сироїжка.", "strong": True},
+        {"text": "Має свіжий вигляд.", "strong": False},
+    ]
+
+    items = _parse_proverb_items(paragraphs, "свіжий")
+
+    assert [item["text"] for item in items] == [
+        "На свіжий цвіт і бджола сідає, а зів’ялий обминає",
+        "Свіжий, як сироїжка",
+    ]
+    assert items[0]["gloss"] == "Молоде і гарне має більшу привабливість, ніж старе."
+    assert items[1]["gloss"] == "Має свіжий вигляд."
+    assert all(item["source"] == "Приповідки або українсько-народня філософія" for item in items)
+
+
+def test_parse_proverb_items_keeps_multi_sentence_gloss_as_one_item() -> None:
+    """Verified against https://slovnyk.me/dict/proverbs/робота (2026-08-09): the
+    gloss for "До роботи не силуйте..." is TWO sentences in one <p>. Pairing on
+    the <p> boundary (not sentence-ending periods) must keep it one gloss, not
+    split it into a phantom second proverb."""
+    from scripts.lexicon.enrich_manifest import _parse_proverb_items
+
+    paragraphs = [
+        {"text": "До роботи не силуйте, а до їди таки бийте.", "strong": True},
+        {"text": "Значіння, як і сказано. Байдуже про роботу, аби голоден не був.", "strong": False},
+        {"text": "Набрав роботи, як бик на роги.", "strong": True},
+        {"text": "Набрав обов'язків понад силу.", "strong": False},
+    ]
+
+    items = _parse_proverb_items(paragraphs, "робота")
+
+    assert len(items) == 2
+    assert items[0]["text"] == "До роботи не силуйте, а до їди таки бийте"
+    assert items[0]["gloss"] == "Значіння, як і сказано. Байдуже про роботу, аби голоден не був."
+
+
+def test_parse_proverb_items_drops_bold_paragraph_with_no_gloss_but_keeps_saying() -> None:
+    from scripts.lexicon.enrich_manifest import _parse_proverb_items
+
+    # A trailing bold saying with nothing after it (end of article) still yields
+    # an item; a saying is never dropped just because it has no gloss (gloss is
+    # optional per the design schema, #6462).
+    paragraphs = [{"text": "Тоді маю, як в руці тримаю.", "strong": True}]
+
+    items = _parse_proverb_items(paragraphs, "мати")
+
+    assert items == [{"text": "Тоді маю, як в руці тримаю", "source": PROVERBS_LABEL}]
+
+
+def test_parse_proverb_items_deduplicates_repeated_saying() -> None:
+    from scripts.lexicon.enrich_manifest import _parse_proverb_items
+
+    paragraphs = [
+        {"text": "Свіжий, як сироїжка.", "strong": True},
+        {"text": "Має свіжий вигляд.", "strong": False},
+        {"text": "Свіжий, як сироїжка.", "strong": True},
+        {"text": "Дубль.", "strong": False},
+    ]
+
+    items = _parse_proverb_items(paragraphs, "свіжий")
+
+    assert len(items) == 1
+
+
+def test_proverbs_slovnyk_attaches_mirror_only_attribution() -> None:
+    cache = {
+        "lookups": {
+            "proverbs": {
+                "dictionary_slug": "proverbs",
+                "dictionary_label": "Приповідки або українсько-народня філософія",
+                "source_url": "https://slovnyk.me/dict/proverbs/свіжий",
+                "word": "свіжий",
+                "text": (
+                    "свіжий На свіжий цвіт і бджола сідає, а зів’ялий обминає. "
+                    "Молоде і гарне має більшу привабливість, ніж старе. "
+                    "Свіжий, як сироїжка. Має свіжий вигляд."
+                ),
+                "paragraphs": [
+                    {"text": "На свіжий цвіт і бджола сідає, а зів’ялий обминає.", "strong": True},
+                    {"text": "Молоде і гарне має більшу привабливість, ніж старе.", "strong": False},
+                    {"text": "Свіжий, як сироїжка.", "strong": True},
+                    {"text": "Має свіжий вигляд.", "strong": False},
+                ],
+            }
+        }
+    }
+
+    section = _proverbs_slovnyk("свіжий", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 2
+    assert section["source"] == PROVERBS_LABEL
+    # No official electronic edition is known for this dictionary (unlike
+    # newsum/vts → ULIF), so the mirror URL stays internal-only, never learner-facing
+    # (#5163/#5234): no "source_url" on the block or its items, no "source_urls".
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == ["https://slovnyk.me/dict/proverbs/свіжий"]
+    assert all("source_url" not in item for item in section["items"])
+
+
+def test_proverbs_slovnyk_returns_none_without_paragraph_structure() -> None:
+    """A stale cache row fetched before #6462 (schema without ``paragraphs``)
+    must not crash or fabricate proverb items from the flattened ``text``."""
+    cache = {
+        "lookups": {
+            "proverbs": {
+                "dictionary_slug": "proverbs",
+                "word": "свіжий",
+                "source_url": "https://slovnyk.me/dict/proverbs/свіжий",
+                "text": "свіжий На свіжий цвіт і бджола сідає. Молоде і гарне.",
+            }
+        }
+    }
+
+    assert _proverbs_slovnyk("свіжий", cache) is None
 
 
 def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:

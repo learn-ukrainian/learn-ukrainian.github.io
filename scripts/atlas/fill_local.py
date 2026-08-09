@@ -14,8 +14,8 @@ within the fill cohort).
 Absent-vs-uncovered rule:
 
 - Phase-2-fillable sections stay absent when Phase 1 has no payload:
-  ``meaning``, ``definition_cards``, ``synonyms``, ``idioms``, and
-  ``wiki_reference``.
+  ``meaning``, ``definition_cards``, ``synonyms``, ``idioms``, ``proverbs``,
+  and ``wiki_reference``.
 - Optional evidence sections stay absent when no source-attested datum exists:
   ``antonyms``, ``literary_attestation``, and ``calque_note``.
 - General local article fields that Phase 2 will not fill are marked with an
@@ -54,6 +54,7 @@ PHASE2_FILLABLE_SECTIONS = {
     "definition_cards",
     "synonyms",
     "idioms",
+    "proverbs",
     "wiki_reference",
 }
 OPTIONAL_EVIDENCE_SECTIONS = {
@@ -172,6 +173,8 @@ def _skip_existing_extractors(existing_payloads: dict[str, Any]) -> Iterator[Non
         replacements["_antonyms_wiktionary"] = lambda *args, **kwargs: None
     if "idioms" in existing_payloads:
         replacements["_idioms"] = lambda *args, **kwargs: None
+    if "proverbs" in existing_payloads:
+        replacements["_proverbs_slovnyk"] = lambda *args, **kwargs: None
     if "stress" in existing_payloads:
         replacements["_stress_display_form"] = lambda *args, **kwargs: ""
         replacements["_kaikki_stress"] = lambda *args, **kwargs: None

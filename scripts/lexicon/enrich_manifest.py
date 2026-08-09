@@ -16,8 +16,9 @@ no fabrication):
 - **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — sense-separated offline mphdict groups from the Ukrainian
   synonym database, preserving their original set boundaries.
-- **sections.synonyms / sections.antonyms / sections.idioms** — mphdict synonym
-  groups and local dictionary rows (Вікісловник antonyms; Фразеологічний).
+- **sections.synonyms / sections.antonyms / sections.idioms / sections.proverbs**
+  — mphdict synonym groups and local dictionary rows (Вікісловник antonyms;
+  Фразеологічний; Приповідки).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович, «Неправильно-правильно», Штепа чужослів).
 - **etymology** — offline mphdict ЕСУМ roots, with the source volume/page
@@ -92,6 +93,7 @@ from scripts.lexicon.source_attribution import (
     ESUM_LABEL,
     MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
+    PROVERBS_LABEL,
     SLUG_ACADEMIC_LABELS,
     SUM20_ACADEMIC_LABEL,
     SUM20_SHORT_LABEL,
@@ -191,6 +193,7 @@ _SLOVNYK_LOOKUP_SLUGS = tuple(
     slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms_karavansky"}
 )
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
+_SLOVNYK_PROVERB_SLUGS = ("proverbs",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
@@ -1076,18 +1079,29 @@ def _normalize_manifest_entries(manifest: dict[str, Any]) -> int:
 
 
 class _SlovnykArticleParser(HTMLParser):
-    """Extract only the dictionary article from a slovnyk.me direct-entry page."""
+    """Extract only the dictionary article from a slovnyk.me direct-entry page.
+
+    Also records each top-level ``<p>`` as a ``paragraphs`` entry with whether it
+    is wrapped in ``<strong>``/``<b>`` (the proverbs dictionary bolds the saying
+    and leaves its plain-text gloss paragraph unbolded, #6462). This is additive:
+    ``article_parts``/``h1_parts``/``title_parts``/``canonical_url`` are unchanged,
+    so every other slug's flattened-text extraction keeps its existing behavior.
+    """
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.title_parts: list[str] = []
         self.h1_parts: list[str] = []
         self.article_parts: list[str] = []
+        self.paragraphs: list[dict[str, Any]] = []
         self.canonical_url = ""
         self._in_title = False
         self._in_article_section = False
         self._in_article = False
         self._in_h1 = False
+        self._p_buffer: list[str] | None = None
+        self._p_strong_depth = 0
+        self._p_has_strong = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr = {key: value or "" for key, value in attrs}
@@ -1103,6 +1117,12 @@ class _SlovnykArticleParser(HTMLParser):
             self._in_h1 = True
         if tag in {"p", "li", "br", "div", "h1", "h2", "h3", "small"} and self._in_article:
             self.article_parts.append("\n")
+        if tag == "p" and self._in_article:
+            self._p_buffer = []
+            self._p_strong_depth = 0
+            self._p_has_strong = False
+        if tag in {"strong", "b"} and self._p_buffer is not None:
+            self._p_strong_depth += 1
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
@@ -1115,12 +1135,23 @@ class _SlovnykArticleParser(HTMLParser):
             self._in_article_section = False
         if tag in {"p", "li", "br", "div", "h1", "h2", "h3", "small"} and self._in_article:
             self.article_parts.append("\n")
+        if tag in {"strong", "b"} and self._p_buffer is not None:
+            self._p_strong_depth = max(0, self._p_strong_depth - 1)
+        if tag == "p" and self._p_buffer is not None:
+            text = "".join(self._p_buffer).strip()
+            if text:
+                self.paragraphs.append({"text": text, "strong": self._p_has_strong})
+            self._p_buffer = None
 
     def handle_data(self, data: str) -> None:
         if self._in_title:
             self.title_parts.append(data)
         if self._in_article:
             self.article_parts.append(data)
+        if self._p_buffer is not None:
+            self._p_buffer.append(data)
+            if self._p_strong_depth > 0 and data.strip():
+                self._p_has_strong = True
         if self._in_h1:
             self.h1_parts.append(data)
 
@@ -1272,7 +1303,7 @@ def _parse_slovnyk_entry(
         return None
     headword = clean_html_entities(" ".join(parser.h1_parts)) or lookup_word
     title = clean_html_entities(" ".join(parser.title_parts)) or headword
-    return {
+    row: dict[str, Any] = {
         "dictionary_slug": slug,
         "dictionary_label": _SLOVNYK_DICT_LABELS.get(slug, slug),
         "word": headword,
@@ -1282,6 +1313,15 @@ def _parse_slovnyk_entry(
         "query": lemma,
         "lookup_word": lookup_word,
     }
+    if parser.paragraphs:
+        # Per-<p> bold/plain structure (#6462): lets a consumer like the proverbs
+        # extractor pair a bold saying with its following plain-text gloss without
+        # re-fetching the page — the flattened ``text`` above already lost that
+        # boundary once joined with " ".join(...).
+        row["paragraphs"] = [
+            {"text": clean_html_entities(p["text"]), "strong": bool(p["strong"])} for p in parser.paragraphs
+        ]
+    return row
 
 
 class _SlovnykTransientError(Exception):
@@ -2047,6 +2087,82 @@ def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str
     block: dict[str, Any] = {
         "items": items,
         "source": PHRASEOLOGY_LABEL,
+    }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
+
+
+def _parse_proverb_items(paragraphs: list[dict[str, Any]], lemma: str) -> list[dict[str, Any]]:
+    """Pair each bold saying paragraph on slovnyk.me's proverbs page with its
+    following plain-text gloss paragraph(s), one item per saying (#6462).
+
+    The proverbs dictionary (``Приповідки або українсько-народня філософія``)
+    renders every saying as a single ``<p><strong>…</strong></p>`` immediately
+    followed by zero or more plain ``<p>`` paragraphs that paraphrase it — a
+    multi-sentence gloss (e.g. «Значіння, як і сказано. Байдуже про роботу…»)
+    is one gloss, not two proverbs, so pairing must use the ``<p>`` boundary
+    (``paragraphs``) rather than sentence-ending periods in flattened text.
+    An occasional two-line rhymed couplet (bold first line, plain second line
+    with no true gloss) is a known false-gloss edge case — the raw HTML gives
+    no distinguishing signal from a real paraphrase, so it is accepted as a
+    gloss rather than invented as split proverb text.
+    """
+    items: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    headword = _strip_stress(lemma).casefold()
+    current: dict[str, Any] | None = None
+    gloss_parts: list[str] = []
+
+    def _flush() -> None:
+        if current is None:
+            return
+        gloss = " ".join(gloss_parts).strip()
+        if gloss:
+            current["gloss"] = gloss
+        items.append(current)
+
+    for para in paragraphs:
+        text = re.sub(r"\s+", " ", str(para.get("text") or "")).strip(" .")
+        if not text:
+            continue
+        if para.get("strong"):
+            _flush()
+            key = _lookup_key(text)
+            if key in seen or key == headword:
+                current = None
+                gloss_parts = []
+                continue
+            seen.add(key)
+            current = {"text": text, "source": PROVERBS_LABEL}
+            gloss_parts = []
+        elif current is not None:
+            gloss_parts.append(text if text.endswith((".", "!", "?")) else f"{text}.")
+    _flush()
+    return items
+
+
+def _proverbs_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Приповідки (folk-proverb) items from the slovnyk.me proverbs page (#6462)."""
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    row = _cache_lookup(cache, "proverbs")
+    if not row:
+        return None
+    paragraphs = row.get("paragraphs")
+    if not isinstance(paragraphs, list):
+        return None
+    items = _parse_proverb_items(paragraphs, lemma)
+    if not items:
+        return None
+    mirror_url = str(row.get("source_url") or "")
+    for item in items:
+        attach_official_url(item, mirror_url=mirror_url, slug="proverbs", word=str(row.get("word") or lemma))
+    official_urls, mirror_urls = remap_url_list([mirror_url] if mirror_url else [])
+    block: dict[str, Any] = {
+        "items": items,
+        "source": PROVERBS_LABEL,
     }
     if official_urls:
         block["source_urls"] = official_urls
@@ -6078,7 +6194,7 @@ def _ordered_sections(
     serializes byte-identical to its baseline (#5077 review finding 3).
 
     The recompute rebuilds ``sections`` in a fixed apply order (synonyms, antonyms,
-    homonyms, paronyms, idioms). When the entry already had published sections in a
+    homonyms, paronyms, idioms, proverbs). When the entry already had published sections in a
     different order, that reorder alone produced spurious byte diffs on runs that
     changed nothing. Keys present in the baseline keep the baseline's order; keys new
     to this entry follow in canonical apply order.
@@ -6262,6 +6378,11 @@ def enrich_entry(
     _apply_section("paronyms", paronyms, gate_ran=True)
     idioms = _idioms(conn, lemma, slovnyk_cache)
     _apply_section("idioms", idioms, gate_ran=idioms_gate_ran)
+    proverbs_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_PROVERB_SLUGS)
+    proverbs = _proverbs_slovnyk(lemma, slovnyk_cache)
+    if not proverbs and fallback_base:
+        proverbs = _proverbs_slovnyk(fallback_base, slovnyk_cache)
+    _apply_section("proverbs", proverbs, gate_ran=proverbs_gate_ran)
     if sections:
         entry["sections"] = _ordered_sections(sections, baseline_sections)
     else:
