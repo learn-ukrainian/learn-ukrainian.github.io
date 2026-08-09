@@ -80,7 +80,7 @@ CYCLE002_PARTITION_SHA256 = "3797e005d7c461f192dacb06e23a9028121bd73cb240f2c2851
 CYCLE002_MATERIALIZATION_SHA256 = "e9d89b8fae5193a29a8c3dd055f464fc1290c18f507b669f3efb0720644f6d8c"
 CYCLE002_PACKET_LIMIT = 40
 CYCLE002_PACKET_BYTE_LIMIT = 196_608
-CYCLE002_LABEL_PROMPT_SHA256 = "abb3f15c3ca3bec62adfd446b1e96562e48e65d66f1972a7f02f30d04db6955f"
+CYCLE002_LABEL_PROMPT_SHA256 = "25d8f5a0d13323fc793860d233e903bcb800799641fc2ea19f3f9de731efce9b"
 CYCLE002_PHENOMENA = (
     "direct_address_vocative",
     "impersonal_no_to_expressed_agent",
@@ -1085,6 +1085,31 @@ def _cycle002_packet(
     return value
 
 
+def _cycle002_reference_evidence(source: Mapping[str, Any]) -> dict[str, str] | None:
+    """Expose only frozen human UA-GEC evidence needed to derive exact gold."""
+    if source["family_id"] != "ua_gec":
+        return None
+    record = source["source_record"]
+    require(
+        isinstance(record, Mapping)
+        and set(record)
+        == {"id", "error", "correct", "error_type", "doc_id", "annotator_id", "partition", "is_native", "source_lang"},
+        "cycle002 UA-GEC source record shape drift",
+    )
+    require(
+        all(isinstance(record[key], str) for key in ("error", "correct", "error_type")),
+        "cycle002 UA-GEC reference evidence type drift",
+    )
+    if not all(record[key].strip() for key in ("error", "correct", "error_type")):
+        return None
+    require(record["error"] == source["source_text"], "cycle002 UA-GEC error text drift")
+    return {
+        "kind": "ua_gec_human_annotation",
+        "corrected_text": record["correct"],
+        "error_type": record["error_type"],
+    }
+
+
 def prepare_cycle002(
     *,
     freeze_manifest_path: Path,
@@ -1129,6 +1154,7 @@ def prepare_cycle002(
                 "source_text": source["source_text"],
                 "source_text_sha256": source["source_text_sha256"],
                 "frozen_locator_sha256": source["frozen_locator_sha256"],
+                "reference_evidence": _cycle002_reference_evidence(source),
             }
         )
     require(sha256_value([_identity(row) for row in rows]) == freeze["selection_set_sha256"], "cycle002 packet identity drift")
@@ -1281,17 +1307,22 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
     require(isinstance(gold, Mapping), "cycle002 gold shape drift")
     if label["benchmark_role"] == "positive":
         require(
-            set(gold) == {"kind", "start", "end", "surface_sha256", "expected_correction", "expected_correction_sha256"}
+            set(gold) == {"kind", "start", "end", "expected_correction"}
             and gold.get("kind") == "correction"
             and isinstance(gold.get("start"), int)
             and isinstance(gold.get("end"), int)
             and 0 <= gold["start"] < gold["end"] <= len(source["source_text"])
             and isinstance(gold.get("expected_correction"), str)
-            and gold["expected_correction"].strip()
-            and gold.get("surface_sha256") == sha256_bytes(source["source_text"][gold["start"] : gold["end"]].encode("utf-8"))
-            and gold.get("expected_correction_sha256") == sha256_bytes(gold["expected_correction"].encode("utf-8")),
+            and gold["expected_correction"].strip(),
             "cycle002 positive gold drift",
         )
+        sealed = dict(label)
+        sealed["gold"] = {
+            **gold,
+            "surface_sha256": sha256_bytes(source["source_text"][gold["start"] : gold["end"]].encode("utf-8")),
+            "expected_correction_sha256": sha256_bytes(gold["expected_correction"].encode("utf-8")),
+        }
+        return sealed
     else:
         require(
             gold == {"kind": "abstain", "reason": "acceptable_control" if label["benchmark_role"] == "acceptable_control" else "protected"},
