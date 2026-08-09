@@ -24,7 +24,7 @@ def _git(cwd: Path, *args: str) -> str:
         capture_output=True,
         text=True,
         check=True,
-        env=env,
+        env=env, timeout=30,
     )
     return proc.stdout.strip()
 

@@ -51,7 +51,7 @@ def _action(
 
 def _run_git(*args: str, cwd: Path) -> str:
     return subprocess.run(
-        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True
+        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30
     ).stdout.strip()
 
 

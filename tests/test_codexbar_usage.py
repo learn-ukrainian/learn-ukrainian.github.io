@@ -805,7 +805,7 @@ def test_dashboard_routing_html_renders_unavailable_explicitly():
 
     console.log(innerHTML);
     """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     out = res.stdout
     assert "0.0%" not in out, f"Dashboard rendered 0.0% for unavailable state: {out}"
     assert "style=\"width:0%\"" not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"

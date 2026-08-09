@@ -58,7 +58,7 @@ def shim_fixture(tmp_path: Path) -> dict[str, Path]:
     subprocess.run(
         ["git", "init", "-q", str(workdir)],
         check=True,
-        env={"PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin", "HOME": str(tmp_path)},
+        env={"PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin", "HOME": str(tmp_path)}, timeout=30,
     )
 
     return {"shim": shim_copy, "workdir": workdir, "log": tmp_path / ".venv" / "guard-invocations.log"}

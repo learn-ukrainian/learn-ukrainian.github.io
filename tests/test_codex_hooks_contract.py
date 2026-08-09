@@ -26,7 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PRIMARY_ROOT = Path(
     subprocess.check_output(
         ["git", "-C", str(REPO_ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        text=True,
+        text=True, timeout=30,
     ).strip()
 ).parent
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"

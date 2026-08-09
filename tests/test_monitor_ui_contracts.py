@@ -275,7 +275,7 @@ def test_acp_page_groups_duplicate_fanout_and_keeps_protocol_order():
       withoutSynthesis: groupTranscript(messages.filter(message => message.kind !== 'synthesis'))
     }}));
     """
-    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True)
+    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     output = json.loads(result.stdout)
     grouped = output["grouped"]
 

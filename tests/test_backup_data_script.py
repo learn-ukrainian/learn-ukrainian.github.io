@@ -62,10 +62,10 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         '{"schema_version": 1}\n',
         encoding="utf-8",
     )
-    subprocess.run(["git", "init", "-q", str(project)], check=True)
+    subprocess.run(["git", "init", "-q", str(project)], check=True, timeout=30)
     subprocess.run(
         ["git", "-C", str(project), "add", "README.md", ".gitignore"],
-        check=True,
+        check=True, timeout=30,
     )
     subprocess.run(
         [
@@ -80,7 +80,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
             "-qm",
             "test fixture",
         ],
-        check=True,
+        check=True, timeout=30,
     )
     password_file.write_text("test-only-password\n", encoding="utf-8")
     password_file.chmod(0o600)
@@ -207,7 +207,7 @@ def _run(
         check=False,
         capture_output=True,
         env=environment,
-        text=True,
+        text=True, timeout=30,
     )
 
 

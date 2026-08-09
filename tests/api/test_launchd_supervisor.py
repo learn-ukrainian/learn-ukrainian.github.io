@@ -70,7 +70,7 @@ def test_api_child_disables_bytecode_writes(tmp_path: Path, monkeypatch) -> None
         env=environment,
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
     assert json.loads(inherited.stdout) == {"env": "1", "dont_write": True}
 

@@ -28,7 +28,7 @@ def _canonical_python() -> Path:
         cwd=_REPO_ROOT,
         capture_output=True,
         check=True,
-        text=True,
+        text=True, timeout=30,
     )
     return Path(result.stdout.strip()).parent / ".venv" / "bin" / "python"
 

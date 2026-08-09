@@ -25,7 +25,7 @@ def _script_binding() -> tuple[str, str]:
         ["git", "-C", str(verifier.ROOT), "rev-parse", "origin/main"],
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     ).stdout.strip()
     script = subprocess.run(
         [
@@ -33,7 +33,7 @@ def _script_binding() -> tuple[str, str]:
             f"{merged_main_sha}:scripts/projects/open_model_data/phase3_source_universe.py",
         ],
         check=True,
-        capture_output=True,
+        capture_output=True, timeout=30,
     ).stdout
     return merged_main_sha, verifier.sha256_bytes(script)
 

@@ -145,7 +145,7 @@ def _git(path: Path, *args: str) -> subprocess.CompletedProcess[str]:
         check=True,
         capture_output=True,
         text=True,
-        env=_git_fixture_env(),
+        env=_git_fixture_env(), timeout=30,
     )
 
 
@@ -865,7 +865,7 @@ def test_codex_parent_owned_sealed_reader_lists_reads_and_blocks_escape(
         input=requests + "\n",
         capture_output=True,
         text=True,
-        check=True,
+        check=True, timeout=30,
     )
     responses = [json.loads(line) for line in completed.stdout.splitlines()]
     assert {tool["name"] for tool in responses[1]["result"]["tools"]} == {
@@ -932,7 +932,7 @@ def test_sealed_reader_bounds_escaped_claude_tool_result(tmp_path: Path) -> None
         input=json.dumps(request) + "\n",
         capture_output=True,
         text=True,
-        check=True,
+        check=True, timeout=30,
     )
 
     response = json.loads(completed.stdout)
@@ -977,7 +977,7 @@ def test_codex_sealed_reader_returns_bounded_hash_bound_chunks(tmp_path: Path) -
         input=requests + "\n",
         capture_output=True,
         text=True,
-        check=True,
+        check=True, timeout=30,
     )
     payloads = [
         json.loads(json.loads(line)["result"]["content"][0]["text"])

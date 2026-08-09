@@ -58,16 +58,16 @@ def _write_upstream(root: Path) -> str:
         + "\n",
         encoding="utf-8",
     )
-    subprocess.run(["git", "init", "-q", str(root)], check=True)
-    subprocess.run(["git", "-C", str(root), "config", "user.name", "Test"], check=True)
-    subprocess.run(["git", "-C", str(root), "config", "user.email", "test@example.com"], check=True)
-    subprocess.run(["git", "-C", str(root), "add", "."], check=True)
-    subprocess.run(["git", "-C", str(root), "commit", "-qm", "fixture"], check=True)
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(root), "config", "user.name", "Test"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(root), "config", "user.email", "test@example.com"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(root), "add", "."], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(root), "commit", "-qm", "fixture"], check=True, timeout=30)
     return subprocess.run(
         ["git", "-C", str(root), "rev-parse", "HEAD"],
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     ).stdout.strip()
 
 

@@ -17,7 +17,7 @@ from scripts.projects.open_model_data import phase3_functional_roles as function
 
 def _git(repo: Path, *args: str) -> str:
     return subprocess.run(
-        ["git", "-C", str(repo), *args], check=True, stdout=subprocess.PIPE, text=True,
+        ["git", "-C", str(repo), *args], check=True, stdout=subprocess.PIPE, text=True, timeout=30,
     ).stdout.strip()
 
 

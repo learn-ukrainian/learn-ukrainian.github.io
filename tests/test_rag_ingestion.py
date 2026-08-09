@@ -474,7 +474,7 @@ class TestTextbookExtractionReadiness:
         rendered = subprocess.run(
             ["cupsfilter", "-m", "application/pdf", str(source)],
             check=True,
-            capture_output=True,
+            capture_output=True, timeout=30,
         )
         pdf.write_bytes(rendered.stdout)
 
@@ -492,7 +492,7 @@ class TestTextbookExtractionReadiness:
             ],
             check=True,
             capture_output=True,
-            text=True,
+            text=True, timeout=30,
         )
         text = json.loads(completed.stdout)["pages"][0]["text"]
 

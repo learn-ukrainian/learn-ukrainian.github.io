@@ -718,7 +718,7 @@ def test_direct_lookup_cli_handles_a_stop_action_without_stdout(tmp_path) -> Non
         ],
         capture_output=True,
         check=False,
-        text=True,
+        text=True, timeout=30,
     )
 
     assert completed.returncode == 0

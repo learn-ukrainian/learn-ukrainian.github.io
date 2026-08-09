@@ -66,7 +66,7 @@ def _run(args: list[str], cwd: Path, check: bool = True) -> subprocess.Completed
         cwd=cwd,
         capture_output=True,
         text=True,
-        check=check,
+        check=check, timeout=30,
     )
 
 
