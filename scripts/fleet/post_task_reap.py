@@ -21,6 +21,7 @@ from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration import reap_worktrees, reaper_lifecycle
+from scripts.path_safety import assert_delete_target
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _TASKS_DIR = ROOT / "batch_state" / "tasks"
@@ -134,13 +135,20 @@ def _is_under_dispatch_worktrees(path: Path) -> bool:
     return rel.parts[:1] != ("acp",)
 
 
-def _is_under_acp_runtime_root(path: Path) -> bool:
+def _acp_runtime_root(repo_root: Path) -> Path:
+    """Return the dedicated ACP-runtime subtree for one repository root."""
+    return repo_root.resolve() / ".worktrees" / "dispatch" / "acp"
+
+
+def _is_under_acp_runtime_root(path: Path, repo_root: Path = ROOT) -> bool:
     """True for paths inside .worktrees/dispatch/acp/."""
+    runtime_root = _acp_runtime_root(repo_root).resolve()
     try:
-        path.resolve().relative_to(_ACP_RUNTIME_ROOT)
+        resolved_path = path.resolve()
+        resolved_path.relative_to(runtime_root)
     except ValueError:
         return False
-    return True
+    return resolved_path != runtime_root
 
 
 def _is_registered_worktree(path: Path, repo_root: Path) -> bool:
@@ -242,9 +250,13 @@ def _remove_worktree(path: Path, repo_root: Path) -> tuple[bool, str | None]:
     first establish terminal task ownership, cleanliness, and no live process.
     Regular dispatch worktrees always go through ``reap_worktrees`` instead.
     """
-    if not _is_under_acp_runtime_root(path):
+    if not _is_under_acp_runtime_root(path, repo_root):
         return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-    cmd = ["worktree", "remove", "--force", str(path)]
+    try:
+        target = assert_delete_target(path, repo_root=repo_root)
+    except ValueError as exc:
+        return False, f"delete guard refused ACP runtime target: {exc}"
+    cmd = ["worktree", "remove", "--force", str(target)]
     proc = _run_git(cmd, cwd=repo_root)
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git worktree remove failed").strip()
@@ -465,7 +477,7 @@ def _reap_acp_runtime_worktrees(
             )
             continue
 
-        if not _is_under_acp_runtime_root(path):
+        if not _is_under_acp_runtime_root(path, repo_root):
             results.append(
                 {
                     "path": str(path),

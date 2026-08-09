@@ -163,6 +163,16 @@ def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
     assert_main_checkout_unchanged(repo)
 
 
+def test_final_worktree_delete_hand_refuses_the_repository_root(tmp_path: Path) -> None:
+    """The last deletion boundary cannot turn a bad path into a root removal."""
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(path=repo, branch="codex/bad-path", head="deadbeef")
+
+    error = rw._remove_worktree(repo, info)
+
+    assert error == "delete guard refused worktree target: delete target is the repository root"
+
+
 def test_post_task_reap_routes_regular_dispatch_deletion_through_p0_reaper() -> None:
     """Regular dispatch worktrees have one automatic deletion hand: P0."""
     source = inspect.getsource(post_task_reap._reap_main_worktree)
@@ -183,7 +193,7 @@ def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
         return subprocess.CompletedProcess(args, 0, "", "")
 
     monkeypatch.setattr(post_task_reap, "_run_git", fake_run_git)
-    runtime = post_task_reap._ACP_RUNTIME_ROOT / "p2b-runtime"
+    runtime = tmp_path / ".worktrees" / "dispatch" / "acp" / "p2b-runtime"
 
     ok, error = post_task_reap._remove_worktree(runtime, tmp_path)
 
@@ -196,6 +206,14 @@ def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
     assert outside_ok is False
     assert outside_error == "ACP runtime path is outside .worktrees/dispatch/acp/"
     assert len(commands) == 1
+
+
+def test_acp_runtime_root_is_not_a_removable_runtime_descendant(tmp_path: Path) -> None:
+    """The dedicated ACP directory is a boundary, never a runtime target."""
+    runtime_root = post_task_reap._acp_runtime_root(tmp_path)
+
+    assert post_task_reap._is_under_acp_runtime_root(runtime_root, tmp_path) is False
+    assert post_task_reap._is_under_acp_runtime_root(runtime_root / "runtime-task", tmp_path) is True
 
 
 def _raw_worktree_remove_callers(project_root: Path) -> dict[str, set[str]]:

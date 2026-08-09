@@ -24,9 +24,10 @@ from pathlib import Path
 from typing import Any
 
 from scripts.orchestration import reaper_lifecycle
+from scripts.path_safety import assert_delete_target
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_BUILD_AGE_HOURS = 6.0
+DEFAULT_BUILD_AGE_HOURS = 6
 
 _GIT_ENV_DENYLIST = {
     "GIT_DIR",
@@ -679,8 +680,12 @@ def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
     a worker's ``.venv``. Git still considers that residue when removing a
     worktree, so force is required at this final, guarded deletion boundary.
     """
+    try:
+        target = assert_delete_target(info.path, repo_root=repo_root)
+    except ValueError as exc:
+        return f"delete guard refused worktree target: {exc}"
     proc = _run(
-        ["git", "worktree", "remove", "--force", str(info.path)],
+        ["git", "worktree", "remove", "--force", str(target)],
         cwd=repo_root,
     )
     if proc.returncode != 0:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterable
 from pathlib import Path
 
 # Dual-flavor import: several consumers load this module as top-level
@@ -151,3 +152,58 @@ def trusted_join(base: Path, *parts: str | Path) -> Path:
     if common != abs_base:
         raise ValueError("Path escapes the configured root")
     return Path(target)
+
+
+def assert_delete_target(
+    target: str | Path,
+    *,
+    repo_root: Path,
+    approved_temp_roots: Iterable[Path] = (),
+) -> Path:
+    """Return a resolved deletion target only when it is safely allowlisted.
+
+    Destructive callers must use this immediately before deleting a tree.  It
+    accepts only descendants (never the allowlist root itself) of the
+    repository's ``.worktrees/`` or ``batch_state/tmp/`` directories, the
+    process ``$TMPDIR`` (when configured), or an explicitly supplied approved
+    temporary root.  The repository root, the user's home directory, empty
+    shell expansions, and symlink escapes are all rejected.
+
+    ``approved_temp_roots`` is for a narrow, caller-owned temporary directory;
+    it is not a mechanism to approve a broad parent such as a repository or
+    home directory.
+    """
+    raw_target = str(target)
+    if raw_target.strip() in {"", "."}:
+        raise ValueError("delete target is empty or the current directory")
+    if "$" in raw_target:
+        raise ValueError("delete target contains an unexpanded shell variable")
+
+    resolved_target = Path(raw_target).resolve()
+    resolved_repo_root = repo_root.resolve()
+    home_root = Path.home().resolve()
+    if resolved_target == resolved_repo_root:
+        raise ValueError("delete target is the repository root")
+    if resolved_target == home_root:
+        raise ValueError("delete target is the home directory")
+
+    allowed_roots = [
+        resolved_repo_root / ".worktrees",
+        resolved_repo_root / "batch_state" / "tmp",
+    ]
+    tmpdir = os.environ.get("TMPDIR")
+    if tmpdir:
+        allowed_roots.append(Path(tmpdir).resolve())
+    allowed_roots.extend(Path(root).resolve() for root in approved_temp_roots)
+
+    for root in allowed_roots:
+        if root.parent == root:
+            raise ValueError("approved deletion root must not be the filesystem root")
+        if root in {resolved_repo_root, home_root}:
+            raise ValueError("approved deletion root must not be the repository or home directory")
+        if resolved_target == root:
+            raise ValueError("delete target must be below an approved root, not the root itself")
+        if _is_within(root, resolved_target):
+            return resolved_target
+
+    raise ValueError("delete target is outside approved deletion roots")
