@@ -325,8 +325,9 @@ def subject_for_source_file(source_file: str) -> str | None:
 # bit the batch-2 ingest: 'gisem' existed here-adjacent but not in the tool's
 # local dict). Every value must be title-probed or front-matter-verified.
 AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
-    # University corpus sources (front-matter-verified 2026-08-08).
+    # University corpus sources (front-matter-verified through 2026-08-09).
     "vlasova": "Власова",
+    "aleksiienko": "Алексієнко",
     "haluzynska": "Галузинська",
     "kalinichenko": "Калініченко",
     "dvulychanska": "Двуличанська",
@@ -337,6 +338,14 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "khomik": "Хомік",
     "strokal": "Строкаль",
     "shvets": "Швець",
+    "kupchynska": "Купчинська",
+    "piletskyi": "Пілецький",
+    "torchynska": "Торчинська",
+    "masenko": "Масенко",
+    "komarova": "Комарова",
+    "herman": "Герман",
+    "sharapa": "Шарапа",
+    "tytarenko": "Титаренко",
     # Core mova/lit textbook authors (originally in TRANSLITS)
     "karaman": "Караман",
     "zakhariychuk": "Захарійчук",

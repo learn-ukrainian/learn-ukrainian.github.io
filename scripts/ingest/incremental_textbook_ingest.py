@@ -43,6 +43,13 @@ from projects.open_model_data.textbook_native_exactness import (
     require_production_eligible_entry,
     sha256_file,
 )
+from projects.open_model_data.university_source_policy import (
+    DEFAULT_POLICY_PATH as DEFAULT_UNIVERSITY_POLICY,
+)
+from projects.open_model_data.university_source_policy import (
+    UniversitySourcePolicyError,
+    require_source_admission,
+)
 from wiki.build_sources_db import _build_textbook_row
 from wiki.config import TEXTBOOK_CHUNKS_DIR
 from wiki.extract_sections import (
@@ -141,9 +148,24 @@ def require_verified_ocr(entry: dict, *, slug: str) -> None:
         raise IngestError(str(exc)) from exc
 
 
-def build_rows(slug: str, *, chunks_root: Path | None = None) -> list[tuple]:
+def build_rows(
+    slug: str,
+    *,
+    chunks_root: Path | None = None,
+    university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
+) -> list[tuple]:
     jsonl_path = find_jsonl(slug, chunks_root=chunks_root)
     university_source = slug.startswith("uni-")
+    if university_source:
+        try:
+            require_source_admission(
+                source_file=slug,
+                jsonl_path=jsonl_path,
+                policy_path=university_policy_path,
+                lane="corpus_ingest",
+            )
+        except UniversitySourcePolicyError as exc:
+            raise IngestError(str(exc)) from exc
     grade = "university" if university_source else f"grade-{int(slug.split('-')[0]):02d}"
     rows: list[tuple] = []
     with open(jsonl_path, encoding="utf-8") as fh:
@@ -356,6 +378,7 @@ def ingest(
     chunks_root: Path | None = None,
     quarantine_slugs: list[str] | None = None,
     receipt_path: Path | None = None,
+    university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
 ) -> dict[str, int]:
     """Run one atomic replace/quarantine/FTS-resync cycle.
 
@@ -369,7 +392,28 @@ def ingest(
         raise IngestError(f"sources cannot be replaced and quarantined together: {overlap}")
     counts: dict[str, int] = {}
     receipts: dict[str, dict[str, object]] = {}
-    per_slug_rows = {slug: build_rows(slug, chunks_root=chunks_root) for slug in slugs}  # fail fast, pre-tx
+    per_slug_rows = {
+        slug: build_rows(
+            slug,
+            chunks_root=chunks_root,
+            university_policy_path=university_policy_path,
+        )
+        for slug in slugs
+    }  # fail fast, pre-tx
+    university_admissions: dict[str, dict[str, Any]] = {}
+    for slug in slugs:
+        if not slug.startswith("uni-"):
+            continue
+        jsonl_path = find_jsonl(slug, chunks_root=chunks_root)
+        try:
+            university_admissions[slug] = require_source_admission(
+                source_file=slug,
+                jsonl_path=jsonl_path,
+                policy_path=university_policy_path,
+                lane="corpus_ingest",
+            )
+        except UniversitySourcePolicyError as exc:
+            raise IngestError(str(exc)) from exc
     db_path = Path(db_path)
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
@@ -409,6 +453,8 @@ def ingest(
                 "linked_rows": linked_rows,
                 "section_policy": section_policy,
             }
+            if slug in university_admissions:
+                receipts[slug]["university_source_policy"] = university_admissions[slug]
             print(f"  {slug}: deleted {deleted}, inserted {len(rows)}, sections {section_rows}, links {linked_rows}")
         print("  resyncing textbooks_fts (external-content rebuild)…")
         conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
@@ -455,6 +501,9 @@ def ingest(
         "db_sha256_after": sha256_file(db_path),
         "requested_replace_sources": sorted(slugs),
         "requested_quarantine_sources": sorted(quarantine_slugs),
+        "university_source_policy_sha256": (
+            sha256_file(Path(university_policy_path)) if university_admissions else None
+        ),
         "before": before,
         "after_transaction": after,
         "integrity_check": integrity,
@@ -715,6 +764,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--quarantine-dir", type=Path)
     parser.add_argument("--receipt", type=Path)
+    parser.add_argument(
+        "--university-policy",
+        type=Path,
+        default=DEFAULT_UNIVERSITY_POLICY,
+        help="Hash-bound audience/lane policy required for every uni-* source",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -742,6 +797,7 @@ def main(argv: list[str] | None = None) -> int:
             dry_run=args.dry_run,
             chunks_root=args.chunks_root,
             receipt_path=args.receipt,
+            university_policy_path=args.university_policy,
         )
     except (IngestError, ValueError) as exc:
         # ValueError: _build_textbook_row's strictness gates (author_uk,
