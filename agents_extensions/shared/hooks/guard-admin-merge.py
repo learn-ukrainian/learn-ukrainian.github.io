@@ -61,6 +61,20 @@ def _decolorize(text: str) -> str:
 ADVISORY_NAME_MARKERS = ("advisory",)
 
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
+_FALSE_VALUES = {"false", "f", "0"}
+_VALUE_FLAGS = {
+    "--subject",
+    "-t",
+    "--body",
+    "-b",
+    "--body-file",
+    "-F",
+    "--match-head-commit",
+    "--author-email",
+    "-A",
+    "--repo",
+    "-R",
+}
 
 
 def _is_advisory(name: str) -> bool:
@@ -77,6 +91,26 @@ def _read_payload() -> dict:
 
 def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
+
+
+def _flag_enabled(args: list[str], name: str) -> bool:
+    """Whether the last occurrence of a boolean flag enables it."""
+    enabled = False
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg in _VALUE_FLAGS:
+            i += 2
+            continue
+        if arg.startswith("--") and arg.split("=", 1)[0] in _VALUE_FLAGS:
+            i += 1
+            continue
+        if arg == f"--{name}":
+            enabled = True
+        elif arg.startswith(f"--{name}="):
+            enabled = arg.split("=", 1)[1].strip().lower() not in _FALSE_VALUES
+        i += 1
+    return enabled
 
 
 # --- Command segmentation hardened against glued shell operators (#4876). ---
@@ -224,7 +258,7 @@ def _admin_merge_args(seg: list[str]) -> list[str] | None:
     if seg[i : i + 3] != ["gh", "pr", "merge"]:
         return None
     args = seg[i + 3 :]
-    return args if "--admin" in args else None
+    return args if _flag_enabled(args, "admin") else None
 
 
 def _pr_number(args: list[str]) -> str | None:

@@ -99,8 +99,8 @@ def _run(
         (["gh", "pr", "merge", "123", "--squash", "--delete-branch"], True),
         (["gh", "pr", "merge", "--auto", "--squash"], True),
         (["sudo", "gh", "pr", "merge", "5"], True),
-        # Admin merges remain visible to draft/check protections.
-        (["gh", "pr", "merge", "5", "--admin"], True),
+        # Admin merges belong to guard-admin-merge and are not double-judged here.
+        (["gh", "pr", "merge", "5", "--admin"], False),
         # Disarms auto-merge rather than merging; it is the remedy, not the offence.
         (["gh", "pr", "merge", "5", "--disable-auto"], False),
         (["gh", "pr", "view", "5"], False),
@@ -157,8 +157,33 @@ def test_unrelated_command_is_untouched(monkeypatch):
     assert _run(monkeypatch, "git push origin main") == 0
 
 
-def test_admin_merge_does_not_bypass_failed_checks(monkeypatch):
-    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 2
+def test_admin_merge_is_deferred_to_admin_guard(monkeypatch):
+    judged: list[list[str]] = []
+    monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
+    assert _run(monkeypatch, "gh pr merge 5 --admin", checks=(["Test (pytest)"], [])) == 0
+    assert judged == []
+
+
+@pytest.mark.parametrize(
+    "command,checks,protected",
+    [
+        ("gh pr merge 5 --auto --squash", ([], []), False),
+        ("gh pr comment 5 --body note && gh pr merge --auto 5 --squash", ([], []), False),
+        ("gh pr comment 5 --body note; gh pr merge 5 --squash", (["boundary-and-tests"], []), False),
+        ("printf ready | gh pr merge 5 --squash", ([], ["Test (pytest)"]), False),
+        ("gh pr comment 5 --body note\ngh pr merge 5 --squash", ([], ["Test (pytest)"]), False),
+    ],
+)
+def test_compound_merge_segments_are_judged(monkeypatch, command, checks, protected):
+    assert _run(monkeypatch, command, checks=checks, protected=protected) == 2
+
+
+def test_compound_admin_merge_is_deferred_without_double_judging(monkeypatch):
+    judged: list[list[str]] = []
+    monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
+    command = "gh pr comment 5 --body note && gh pr merge 5 --admin"
+    assert _run(monkeypatch, command, checks=(["boundary-and-tests"], [])) == 0
+    assert judged == []
 
 
 def test_disable_auto_is_not_a_merge(monkeypatch):
@@ -391,11 +416,11 @@ def test_disable_auto_equals_true_is_not_a_merge(monkeypatch):
     )
 
 
-def test_admin_equals_true_is_judged_here(monkeypatch):
-    # guard-admin-merge.py matches the exact token "--admin" only, so `--admin=true`
-    # is invisible to it. Judging it here closes the gap between the two hooks rather
-    # than letting a red admin merge fall between them. P6 also judges bare --admin.
-    assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 2
+def test_admin_equals_true_is_deferred_to_admin_guard(monkeypatch):
+    judged: list[list[str]] = []
+    monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: judged.append(args) or "blocked")
+    assert _run(monkeypatch, "gh pr merge 5 --admin=true", checks=(["Test (pytest)"], [])) == 0
+    assert judged == []
 
 
 @pytest.mark.parametrize(
@@ -644,7 +669,7 @@ def test_flag_looking_value_does_not_force_auto_path():
 
 def test_real_control_flags_still_recognized():
     assert guard._merge_args(["gh", "pr", "merge", "5", "--disable-auto"]) is None
-    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) == ["5", "--admin"]
+    assert guard._merge_args(["gh", "pr", "merge", "5", "--admin"]) is None
     assert guard._flag_enabled(guard._classify(["5", "--auto"])[0], "auto")
 
 

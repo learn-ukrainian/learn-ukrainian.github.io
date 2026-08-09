@@ -609,10 +609,9 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     Skipped: `--disable-auto` (any spelling), which disarms auto-merge rather than
     merging anything and is exactly the remedy this hook's --auto verdict asks for.
 
-    A bare `--admin` is also seen by ``guard-admin-merge.py``, but it remains visible
-    here: P6 rail authorization must have no ``--admin`` bypass. The duplicate status
-    read is conservative; the command is already an explicit protection bypass and an
-    unreadable rail decision must refuse.
+    `--admin` (including its explicit true/false spelling) belongs exclusively to
+    ``guard-admin-merge.py``. Returning None here prevents both PreToolUse hooks from
+    judging the same command; a disabled `--admin=false` remains a normal merge.
     """
     i, via_xargs = _invoked_start(seg)
     if seg[i : i + 3] == ["gh", "pr", "merge"]:
@@ -636,6 +635,8 @@ def _merge_args(seg: list[str]) -> list[str] | None:
         # another; refuse instead.
         args = [*args, _UNREADABLE_MARKER]
     flags, _ = _classify(args)
+    if _flag_enabled(flags, "admin"):
+        return None
     # `gh pr merge --help` prints help and merges nothing — reading the manual is not
     # the offence this guard is for. --help is a bool like any other, so it gets the same
     # spelling treatment (`--help=true`) rather than a bare-token check.
