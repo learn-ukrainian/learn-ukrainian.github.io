@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9e1fa2f3d447",
+  "session_id": "fleet-69c21635ee234633bb1cbd87565c01e6",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T06:13:02.424206Z",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-full-reenrich-campaign.md",
+    "scripts/lexicon/export_open_dataset.py",
+    "scripts/lexicon/merge_translation_delta.py",
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "tests/test_enrich_manifest_cli.py",
+    "tests/test_export_open_dataset_integrity.py",
+    "tests/test_merge_translation_delta.py",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "72ced65d5631",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T06:13:02.419136Z",
+    "agent_lines": 809,
+    "agent_removed": 45,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 809,
+    "total_lines_changed": 854,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

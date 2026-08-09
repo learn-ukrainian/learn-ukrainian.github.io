@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6466-campaign-impl
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement the #6466 campaign tooling (approved design — stage 2)
+
+The design is FROZEN and critic-reviewed; do not redesign. Authority:
+- Design note v1 + reconciliation on issue #6466 (comments of 2026-08-09, frozen SHA
+  `4c232b9bd6b564951a6c86eaa6b1d1aae5469de04363fddcc8115af0a7dd13e8` + reconciliation
+  comment). Read BOTH before writing code.
+- Proven patterns to extend, not replace: `scripts/lexicon/reenrich_thin_manifest_entries.py`
+  (VPS driver), `scripts/lexicon/merge_translation_delta.py` (#6501 additive delta-merge),
+  `launch_reenrich_class_b.sh` work-dir/systemd launcher pattern.
+
+## Deliverables (one PR)
+
+1. **Full-catalog target for the VPS driver**: extend the reenrich driver with a target mode
+   covering ALL catalog entries through full `enrich_entry`, with:
+   - frozen target arrays written at snapshot time (slug lists + counts + SHA-256 into the
+     work dir; summary counters computed only against them);
+   - resume/checkpoint support (the run is many hours; a dead pid must not restart from zero);
+   - categorical binning per target: ENRICHED / DETERMINISTIC_EXCLUSION / UNRESOLVED_RESIDUAL,
+     with per-layer filled counters (proverbs / usage_notes / grinchenko attestation / forms);
+   - circuit breaker on consecutive source/cache misses (abort, distinct exit code).
+2. **Positive-control pre-flight canary**: a small check mode that takes N known-good lemmas
+   (pick them by verifying LOCALLY that each fills all four layer sections from
+   sources.db/cache) and hard-aborts before any batch state is touched if any control fails
+   to fill on the target host. Distinct exit code; no manifest writes on failure.
+3. **Section-aware additive delta-merge**: extend the #6501 delta-merge to copy the new layer
+   sections (and remaining EN translations) additively onto the live published lineage —
+   never overwrite non-empty target fields; keep and extend the invariant suite
+   (entry-count invariance, zero non-empty overwrites, anchor spot-checks, old-gate not
+   rising, residual table). Publish-side CAS: re-fetch published lineage immediately before
+   publish; if moved, recompute the merge and re-run ALL invariants.
+4. **Shard-export integrity**: tmp-file writes + per-shard hash recorded in a manifest +
+   atomic rename (extend the existing export path only as needed).
+5. **Runbook**: `docs/runbooks/atlas-full-reenrich-campaign.md` — exact operator/driver steps
+   (Mac-side deploy of driver to VPS given the stale checkout, snapshot-pin commands, canary,
+   launch, monitor, pull-back, delta-merge, CAS publish, shard export, cleanup proof), per
+   #6466 acceptance "written runbook steps + residual metrics".
+
+## Steps
+
+1. Dispatcher puts you in a worktree. Read the two #6466 comments + the three pattern files
+   FIRST (investigate before coding).
+2. Implement deliverables 1–5. Python: `.venv/bin/python` only; follow existing module
+   conventions; no schema changes; no new enrichment sources.
+3. Tests for every changed/added function (pytest, fixture-based; mirror the existing tests
+   for the delta-merge/driver if present — find them with grep). Mutation-check the canary
+   test: break the cache path in the fixture and prove the canary FAILS.
+4. `.venv/bin/ruff check` clean; run targeted pytest locally and paste output in the PR.
+5. Conventional commit(s) with X-Agent trailer; push; open PR referencing #6466 (and #6462
+   #6463 #6464 #6465 as context, "Refs" not "Closes" — closes happen after driver DoD
+   verification).
+6. Do NOT merge; driver arms auto-merge after cross-family review. Do not touch
+   `.github/workflows/`, deploy config, or the live manifest/pointer.
+
+## Evidence preamble (#M-4)
+Every claim in your PR body must be tool-backed: quote the pytest/ruff command + raw output,
+the invariant-suite dry-run output on a fixture manifest, and the canary failure demo.
