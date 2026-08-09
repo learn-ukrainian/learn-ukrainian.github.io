@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4ee894f63655",
+  "session_id": "fleet-0e93157752034812b5e3454f542d8758",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T18:30:56.538174Z",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/rag/config.py",
+    "tests/rag/test_config_vesum_fallback.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "161497f54451",
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T18:30:56.534633Z",
+    "agent_lines": 108,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 108,
+    "total_lines_changed": 112,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
