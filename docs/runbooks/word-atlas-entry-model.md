@@ -246,19 +246,18 @@ senses:
     learner_uk: "недолік, вада"
     learner_en: ["defect", "flaw", "scarcity"]
     en_disambiguation: "imperfection/flaw (not marriage/ordinal second)"
-    source: "sum20_vetted|btc|dmklinger|manual_native|rag_verified"
+    source: "sum20_vetted|btc|dmklinger|manual_native|rag_verified|ai_minimum"
     completeness: "complete|truncated|draft"
 ```
 
 Field notes:
 
 - `id`: stable per-sense slug. Practice/drill wiring keys off `senses[id]`,
-  never off array position or `learner_en[0]`, so re-ordering or adding a
-  sense cannot silently drift what a learner drills (LINT-003 in the
-  companion issue, not implemented in this PR).
+  never off array position or `learner_en[0]` / `enrichment.translation.en[0]`,
+  so re-ordering or adding a sense cannot silently drift what a learner drills
+  (LINT-003).
 - `uk_source_def`: the raw lexicographical definition (СУМ-20/BTC/etc). This
-  is ingestion data — the lint gate reads it read-only and PR1 does not
-  mutate it.
+  is ingestion data — the lint gate reads it read-only and does not mutate it.
 - `learner_uk` / `learner_en`: the pedagogy-facing gloss and drill target(s).
   `learner_en` is a list because a sense can have more than one accepted EN
   target; a single-item list on a high-risk polysemous word is exactly what
@@ -266,28 +265,36 @@ Field notes:
 - `en_disambiguation`: required whenever `learner_en` is a bare single word
   that reads as a different, unrelated sense in general English (see
   LINT-002 denylist in `scripts/audit/lint_word_atlas.py`).
+- `source`: dictionary-backed values (`sum20_vetted`, `btc`, `dmklinger`,
+  `manual_native`, `rag_verified`) for sourced senses. Use `ai_minimum` when
+  the learner gloss is an AI-minimum placeholder rather than a vetted
+  dictionary sense — honesty over silent thinness (#6437 enrich honesty tags).
+  `apply_sense_honesty_tags` must not overwrite a dictionary-backed `source`
+  already in that sourced set.
 - `completeness`: `truncated` is the honest tag for text a hard cap cut off
   mid-word; a `learner_uk`/`learner_en`/`en_disambiguation` value ending in
-  `...`/`…` without this tag is what LINT-001 flags. `enrich_manifest.py`
-  stopping mid-word hard slices and tagging honestly is tracked separately
-  (issue #6437 D3-4) and is not part of this PR.
+  `...`/`…` without this tag is what LINT-001 flags. `draft` marks thin /
+  incomplete learner text (including AI-minimum glosses). Helpers
+  `truncate_with_honesty` + `apply_sense_honesty_tags` in
+  `scripts/lexicon/enrich_manifest.py` exist for that stamping, but they are
+  **not yet wired into enrich emit paths** in this PR — call-site integration
+  lands in #6437 PR3.
 
-### Lint gate (PR1 scope)
+### Lint gate (PR1 + PR2 scope)
 
-`scripts/audit/lint_word_atlas.py` implements two read-only, advisory rules
-against any manifest carrying `senses[]`:
+`scripts/audit/lint_word_atlas.py` implements three read-only, advisory rules:
 
 | ID | Name | Checks |
 | --- | --- | --- |
 | LINT-001 | `TRUNCATED_TEXT_CUTOFF` | A learner-facing sense field ends `...`/`…` while `completeness != "truncated"`. |
 | LINT-002 | `AMBIGUOUS_BARE_EN` | `learner_en` is a single-item list, the word is in a high-risk polysemy denylist, and `en_disambiguation` is empty. |
+| LINT-003 | `DRILL_SENSE_ID_MISSING` | A practice binding / deck item references a lemma without a non-empty `senseId` / `sense_id` (no `en[0]` fallback). |
 
-LINT-003 (`DRILL_SENSE_ID_MISSING`), LINT-004 (`UNVETTED_EN_SOURCE`), and the
-P1 advisory rules (`MULTI_SENSE_UK_SINGLE_EN`, `POS_TRANSFORMATION_MISMATCH`)
-are scoped for later PRs against this same issue; they are not implemented
-here. No CI gate is wired to `lint_word_atlas.py` in this PR — it runs as a
-standalone advisory check until a residual-count policy is agreed (issue
-#6437 D6-7).
+LINT-004 (`UNVETTED_EN_SOURCE`) and the P1 advisory rules
+(`MULTI_SENSE_UK_SINGLE_EN`, `POS_TRANSFORMATION_MISMATCH`) remain for later PRs
+against this same issue. No CI gate is wired to `lint_word_atlas.py` yet —
+it runs as a standalone advisory check until a residual-count policy is
+agreed (issue #6437 D6-7).
 
 ## Open Decisions
 

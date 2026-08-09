@@ -634,8 +634,57 @@ def _is_english_learner_gloss(label: str) -> bool:
     return latin_letters > cyrillic_letters
 
 
-def _english_translation_gloss(entry: dict[str, Any]) -> str | None:
-    """First short English sense from enrichment.translation.en, if any."""
+def _practice_sense(entry: dict[str, Any]) -> dict[str, Any] | None:
+    """First sense-first row with a stable id (#6437 LINT-003 binding)."""
+    senses = entry.get("senses")
+    if not isinstance(senses, list):
+        return None
+    for sense in senses:
+        if not isinstance(sense, dict):
+            continue
+        sense_id = sense.get("id")
+        if isinstance(sense_id, str) and sense_id.strip():
+            return sense
+    return None
+
+
+def _sense_learner_en(sense: dict[str, Any]) -> str | None:
+    """Short English drill target from a bound sense's ``learner_en`` list."""
+    learner_en = sense.get("learner_en")
+    if not isinstance(learner_en, list):
+        return None
+    cleaned: list[str] = []
+    for raw in learner_en:
+        text = re.sub(r"\s+", " ", str(raw)).strip()
+        text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
+        head = re.split(r"[;(]", text, maxsplit=1)[0]
+        clean = _gloss_clean(head)
+        if clean and _is_english_learner_gloss(clean):
+            cleaned.append(clean)
+    if not cleaned:
+        return None
+    multi = [
+        item
+        for item in cleaned
+        if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
+    ]
+    return multi[0] if multi else cleaned[0]
+
+
+def _english_translation_gloss(
+    entry: dict[str, Any],
+    *,
+    sense: dict[str, Any] | None = None,
+) -> str | None:
+    """English gloss for practice: bound sense first, else legacy enrichment.en.
+
+    When ``sense`` is provided (sense-first entry), only that sense's
+    ``learner_en`` is used — never a silent ``enrichment.translation.en[0]``
+    fallback (#6437 LINT-003).
+    """
+    if sense is not None:
+        return _sense_learner_en(sense)
+
     enrichment = entry.get("enrichment")
     if not isinstance(enrichment, dict):
         return None
@@ -663,21 +712,28 @@ def _english_translation_gloss(entry: dict[str, Any]) -> str | None:
     # Prefer short multi-word learner senses ("fairy tale") over a single academic
     # first gloss ("fable") when both are offered.
     multi = [
-        sense
-        for sense in cleaned
-        if 1 < _meaning_label_word_count(sense) <= 4 and not _meaning_label_is_phrase(sense)
+        item
+        for item in cleaned
+        if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
     ]
     return multi[0] if multi else cleaned[0]
 
 
-def _practice_display_gloss(entry: dict[str, Any], level: str | None, fallback: str) -> str:
+def _practice_display_gloss(
+    entry: dict[str, Any],
+    level: str | None,
+    fallback: str,
+    *,
+    sense: dict[str, Any] | None = None,
+) -> str:
     """Learner-facing gloss for flashcards / recognition.
 
     A1 always prefers English scaffolding when available.
     A1–A2 never keep a long Ukrainian dictionary definition when English exists —
     Wiktionary-style «розповідний твір про вигаданих осіб…» is not an A2 gloss.
+    Sense-first entries bind via ``sense`` and never fall back to ``en[0]``.
     """
-    en = _english_translation_gloss(entry)
+    en = _english_translation_gloss(entry, sense=sense)
     if not en:
         return fallback
     if level == "A1":
@@ -1764,7 +1820,10 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     level = _cefr_level(entry)
     if not lemma or not raw_gloss:
         return None
-    gloss = _practice_display_gloss(entry, level, raw_gloss)
+    # Sense-first binding (#6437): when senses[] exists, key the lexeme off a
+    # stable sense id and read learner_en from that sense — never en[0].
+    sense = _practice_sense(entry)
+    gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
     gloss_clean = _gloss_clean(gloss)
@@ -1792,6 +1851,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "paradigm": paradigm,
         "semanticBucket": _clean_text(entry.get("semantic_bucket")),
     }
+    if sense is not None:
+        lexeme["senseId"] = str(sense["id"]).strip()
     example = entry.get("practice_example")
     if isinstance(example, dict):
         text = _clean_text(example.get("text"))

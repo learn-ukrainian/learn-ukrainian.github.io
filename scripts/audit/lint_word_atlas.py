@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Sense-first Word Atlas entry lint (#6437 PR1): LINT-001 + LINT-002.
+"""Sense-first Word Atlas entry lint (#6437): LINT-001 + LINT-002 + LINT-003.
 
-Read-only, advisory lint over the `senses[]` array documented in
-``docs/runbooks/word-atlas-entry-model.md`` (§ Sense-Level Fields, #6437
-delta). It never mutates a manifest — it only reports.
+Read-only, advisory lint over the `senses[]` array and practice bindings
+documented in ``docs/runbooks/word-atlas-entry-model.md`` (§ Sense-Level
+Fields, #6437 delta). It never mutates a manifest — it only reports.
 
 Rules implemented
 ==================
@@ -14,17 +14,23 @@ Rules implemented
 - **LINT-002** ``AMBIGUOUS_BARE_EN`` — ``learner_en`` is a single-item list,
   the word is in the high-risk polysemy denylist below, and
   ``en_disambiguation`` is missing or blank.
+- **LINT-003** ``DRILL_SENSE_ID_MISSING`` — a practice binding / deck item
+  references a lemma (``lemmaId`` / ``lemma``) without a non-empty
+  ``senseId`` / ``sense_id``. This prohibits silent ``en[0]`` drill
+  fallbacks once sense-first wiring is present.
 
 Rules NOT implemented here (tracked against issue #6437, later PRs):
-LINT-003 ``DRILL_SENSE_ID_MISSING``, LINT-004 ``UNVETTED_EN_SOURCE``,
-LINT-101 ``MULTI_SENSE_UK_SINGLE_EN``, LINT-102 ``POS_TRANSFORMATION_MISMATCH``.
+LINT-004 ``UNVETTED_EN_SOURCE``, LINT-101 ``MULTI_SENSE_UK_SINGLE_EN``,
+LINT-102 ``POS_TRANSFORM_MISMATCH``.
 
 Scope
 =====
-Entries without a ``senses`` array are silently skipped — most of the
-production manifest predates this schema, and PR1 does not bulk-migrate or
-retranslate existing entries (issue #6437 non-goals). This script only lints
-manifests/entries that already carry sense-first data.
+- LINT-001/002: entries without a ``senses`` array are silently skipped —
+  most of the production manifest predates this schema.
+- LINT-003: inspects explicit practice bindings on the manifest
+  (``practice_items`` / per-entry ``practice_bindings``) and optional
+  ``--practice-deck`` shards. Legacy decks without sense-first migration
+  are reported as advisory residual, not CI blockers.
 
 Use when
 ========
@@ -38,6 +44,7 @@ Examples
     .venv/bin/python scripts/audit/lint_word_atlas.py
     .venv/bin/python scripts/audit/lint_word_atlas.py --manifest path/to/manifest.json
     .venv/bin/python scripts/audit/lint_word_atlas.py --manifest path/to/manifest.json \\
+        --practice-deck site/public/lexicon/practice-index.A1.json \\
         --report batch_state/atlas-drive/lint-word-atlas-residual.json
     .venv/bin/python scripts/audit/lint_word_atlas.py --strict   # exit 1 on any finding
 
@@ -117,8 +124,24 @@ AMBIGUOUS_BARE_EN_DENYLIST = frozenset(
     }
 )
 
+# Practice-deck body keys that carry lemma-bound cards (#6437 LINT-003).
+_PRACTICE_CARD_LIST_KEYS = (
+    "items",
+    "cloze",
+    "stress",
+    "classify",
+    "paradigm",
+    "synonym",
+    "heritage",
+    "paronym",
+    "antonym",
+    "homonym",
+)
+
 LINT_001 = "LINT-001"
 LINT_002 = "LINT-002"
+LINT_003 = "LINT-003"
+IMPLEMENTED_RULE_IDS = (LINT_001, LINT_002, LINT_003)
 
 
 @dataclass(frozen=True)
@@ -231,11 +254,86 @@ def _check_ambiguous_bare_en(
     ]
 
 
-def lint_manifest(manifest: dict[str, Any]) -> list[LintFinding]:
-    """Return every LINT-001/LINT-002 finding for a manifest's ``senses[]``.
+def _binding_lemma(item: dict[str, Any]) -> str | None:
+    for key in ("lemmaId", "lemma_id", "lemma", "entry_slug", "slug"):
+        value = item.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
 
-    Entries without a ``senses`` array are silently skipped (see module
-    docstring: PR1 does not lint or migrate legacy non-sense-first entries).
+
+def _binding_sense_id(item: dict[str, Any]) -> str | None:
+    for key in ("senseId", "sense_id", "sense_slug"):
+        value = item.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def _check_drill_sense_id_missing(item: dict[str, Any]) -> LintFinding | None:
+    lemma = _binding_lemma(item)
+    if lemma is None:
+        return None
+    if _binding_sense_id(item) is not None:
+        return None
+    return LintFinding(
+        rule_id=LINT_003,
+        rule_name="DRILL_SENSE_ID_MISSING",
+        entry_slug=lemma,
+        sense_id="<missing-sense-id>",
+        field="senseId",
+        detail=(
+            f"practice binding for lemma {lemma!r} has no senseId/sense_id "
+            "(en[0] fallback is not allowed)"
+        ),
+    )
+
+
+def _practice_bindings_from_manifest(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    bindings: list[dict[str, Any]] = []
+    top_level = manifest.get("practice_items")
+    if isinstance(top_level, list):
+        bindings.extend(item for item in top_level if isinstance(item, dict))
+    for entry in _entries(manifest):
+        per_entry = entry.get("practice_bindings")
+        if not isinstance(per_entry, list):
+            continue
+        slug = _entry_slug(entry)
+        for item in per_entry:
+            if not isinstance(item, dict):
+                continue
+            enriched = dict(item)
+            if _binding_lemma(enriched) is None:
+                enriched.setdefault("lemma", slug)
+            bindings.append(enriched)
+    return bindings
+
+
+def _practice_cards_from_deck(deck: dict[str, Any]) -> list[dict[str, Any]]:
+    cards: list[dict[str, Any]] = []
+    for key in _PRACTICE_CARD_LIST_KEYS:
+        value = deck.get(key)
+        if isinstance(value, list):
+            cards.extend(item for item in value if isinstance(item, dict))
+    return cards
+
+
+def lint_practice_items(items: list[dict[str, Any]]) -> list[LintFinding]:
+    """Return LINT-003 findings for lemma-bound practice items missing sense_id."""
+    findings: list[LintFinding] = []
+    for item in items:
+        finding = _check_drill_sense_id_missing(item)
+        if finding is not None:
+            findings.append(finding)
+    return findings
+
+
+def lint_manifest(manifest: dict[str, Any]) -> list[LintFinding]:
+    """Return LINT-001/002/003 findings for a manifest.
+
+    Entries without a ``senses`` array are skipped for LINT-001/002 (see module
+    docstring). LINT-003 reads explicit practice bindings even when senses are
+    absent, so residual legacy decks stay visible during the advisory soak.
     """
     findings: list[LintFinding] = []
     for entry in _entries(manifest):
@@ -244,14 +342,15 @@ def lint_manifest(manifest: dict[str, Any]) -> list[LintFinding]:
             sense_id = _sense_id(sense)
             findings.extend(_check_truncated_text_cutoff(slug, sense_id, sense))
             findings.extend(_check_ambiguous_bare_en(slug, sense_id, sense))
+    findings.extend(lint_practice_items(_practice_bindings_from_manifest(manifest)))
     return findings
 
 
-def _load_manifest(path: Path) -> dict[str, Any]:
+def _load_json_object(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        print(f"::error::cannot read manifest {path}: {exc}", file=sys.stderr)
+        print(f"::error::cannot read {path}: {exc}", file=sys.stderr)
         sys.exit(2)
     if not isinstance(data, dict):
         print(f"::error::{path} must contain a JSON object", file=sys.stderr)
@@ -259,9 +358,13 @@ def _load_manifest(path: Path) -> dict[str, Any]:
     return data
 
 
+def _load_manifest(path: Path) -> dict[str, Any]:
+    return _load_json_object(path)
+
+
 def print_report(findings: list[LintFinding]) -> None:
     if not findings:
-        print("No LINT-001/LINT-002 findings — sense-first entries lint clean.")
+        print("No LINT-001/LINT-002/LINT-003 findings — sense-first entries lint clean.")
         return
 
     rows = [
@@ -296,7 +399,7 @@ def print_report(findings: list[LintFinding]) -> None:
 def write_report(findings: list[LintFinding], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "rule_ids": [LINT_001, LINT_002],
+        "rule_ids": list(IMPLEMENTED_RULE_IDS),
         "finding_count": len(findings),
         "findings": [asdict(finding) for finding in findings],
     }
@@ -307,7 +410,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Advisory sense-first Word Atlas lint: LINT-001 TRUNCATED_TEXT_CUTOFF + "
-            "LINT-002 AMBIGUOUS_BARE_EN (issue #6437 PR1)."
+            "LINT-002 AMBIGUOUS_BARE_EN + LINT-003 DRILL_SENSE_ID_MISSING (issue #6437)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
@@ -317,6 +420,16 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_FIXTURE,
         help=f"Manifest JSON path with a top-level 'entries' list. Default: {DEFAULT_FIXTURE}.",
+    )
+    parser.add_argument(
+        "--practice-deck",
+        type=Path,
+        action="append",
+        default=None,
+        help=(
+            "Optional practice deck shard JSON to scan for LINT-003 "
+            "(repeatable). Cards with lemmaId/lemma but no senseId are flagged."
+        ),
     )
     parser.add_argument(
         "--report",
@@ -348,6 +461,14 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest = _load_manifest(manifest_path)
     findings = lint_manifest(manifest)
+
+    for deck_arg in args.practice_deck or []:
+        deck_path = deck_arg if deck_arg.is_absolute() else PROJECT_ROOT / deck_arg
+        if not deck_path.exists() or not deck_path.is_file():
+            parser.error(f"practice deck does not exist or is not a file: {deck_path}")
+        deck = _load_json_object(deck_path)
+        findings.extend(lint_practice_items(_practice_cards_from_deck(deck)))
+
     print_report(findings)
 
     if args.report:

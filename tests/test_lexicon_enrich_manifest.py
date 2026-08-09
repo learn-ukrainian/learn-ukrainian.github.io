@@ -4432,6 +4432,70 @@ def test_synonyms_slovnyk_sense_groups_parse_nested_senses() -> None:
     assert len(block.get("synsets") or []) >= 2
 
 
+
+def test_sense_honesty_tags_mark_truncated_and_ai_minimum() -> None:
+    """#6437 PR2: enrich honesty tags label thin/truncated senses explicitly."""
+    from scripts.lexicon.enrich_manifest import (
+        SENSE_COMPLETENESS_DRAFT,
+        SENSE_COMPLETENESS_TRUNCATED,
+        SENSE_SOURCE_AI_MINIMUM,
+        apply_sense_honesty_tags,
+        truncate_with_honesty,
+    )
+
+    clipped, truncated = truncate_with_honesty("a" * 50 + " " + "b" * 50, 40)
+    assert truncated is True
+    assert clipped.endswith("…")
+    tagged = apply_sense_honesty_tags(
+        {"id": "sense-1", "learner_en": ["stub"]},
+        truncated=True,
+    )
+    assert tagged["completeness"] == SENSE_COMPLETENESS_TRUNCATED
+
+    ai_tagged = apply_sense_honesty_tags(
+        {"id": "sense-2", "learner_en": ["stub"]},
+        ai_minimum=True,
+    )
+    assert ai_tagged["source"] == SENSE_SOURCE_AI_MINIMUM
+    assert ai_tagged["completeness"] == SENSE_COMPLETENESS_DRAFT
+
+    intact, was_cut = truncate_with_honesty("short gloss", 40)
+    assert was_cut is False
+    assert intact == "short gloss"
+
+
+def test_apply_sense_honesty_tags_preserves_dictionary_backed_source() -> None:
+    """#6437: ai_minimum must not overwrite sourced dictionary provenance."""
+    from scripts.lexicon.enrich_manifest import (
+        SENSE_COMPLETENESS_DRAFT,
+        SENSE_SOURCE_AI_MINIMUM,
+        SENSE_SOURCE_SOURCED,
+        apply_sense_honesty_tags,
+    )
+
+    for sourced in sorted(SENSE_SOURCE_SOURCED):
+        tagged = apply_sense_honesty_tags(
+            {
+                "id": f"sense-{sourced}",
+                "learner_en": ["stub"],
+                "source": sourced,
+            },
+            ai_minimum=True,
+        )
+        assert tagged["source"] == sourced, (
+            f"ai_minimum must not clobber dictionary-backed source={sourced!r}; "
+            f"got {tagged['source']!r}"
+        )
+        assert tagged["completeness"] == SENSE_COMPLETENESS_DRAFT
+
+    unset_source = apply_sense_honesty_tags(
+        {"id": "sense-unset", "learner_en": ["stub"]},
+        ai_minimum=True,
+    )
+    assert unset_source["source"] == SENSE_SOURCE_AI_MINIMUM
+    assert unset_source["completeness"] == SENSE_COMPLETENESS_DRAFT
+
+
 def test_definition_body_keeps_full_dictionary_article_by_default() -> None:
     """#6437: multi-sense dictionary articles must not hard-cap mid-definition."""
     from scripts.lexicon.enrich_manifest import _definition_body, _truncate_text

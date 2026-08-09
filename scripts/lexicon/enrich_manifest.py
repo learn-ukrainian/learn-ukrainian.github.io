@@ -1269,6 +1269,69 @@ def _entry_text_without_headword(text: str, lemma: str, headword: str | None = N
     return cleaned
 
 
+# Sense honesty tags (#6437 PR2). Sourced senses keep dictionary provenance;
+# AI-minimum / truncated learner text must be labelled so it is never silently
+# thin. LINT-001 reads ``completeness: truncated``; LINT-004 (later) will read
+# ``source`` provenance including ``ai_minimum``.
+SENSE_SOURCE_AI_MINIMUM = "ai_minimum"
+SENSE_SOURCE_SOURCED = frozenset(
+    {
+        "sum20_vetted",
+        "btc",
+        "dmklinger",
+        "manual_native",
+        "rag_verified",
+    }
+)
+SENSE_COMPLETENESS_COMPLETE = "complete"
+SENSE_COMPLETENESS_TRUNCATED = "truncated"
+SENSE_COMPLETENESS_DRAFT = "draft"
+SENSE_COMPLETENESS_VALUES = frozenset(
+    {
+        SENSE_COMPLETENESS_COMPLETE,
+        SENSE_COMPLETENESS_TRUNCATED,
+        SENSE_COMPLETENESS_DRAFT,
+    }
+)
+
+
+def apply_sense_honesty_tags(
+    sense: dict[str, Any],
+    *,
+    truncated: bool = False,
+    ai_minimum: bool = False,
+) -> dict[str, Any]:
+    """Stamp honest ``completeness`` / ``source`` labels on a sense-shaped dict.
+
+    Call whenever enrich emits or mutates a ``senses[]`` row after a hard cap or
+    an AI-minimum gloss write. Does not invent gloss text — it only labels.
+
+    ``ai_minimum`` never overwrites a dictionary-backed ``source`` already in
+    ``SENSE_SOURCE_SOURCED`` (provenance beats the thin-gloss flag).
+    """
+    out = dict(sense)
+    if truncated:
+        out["completeness"] = SENSE_COMPLETENESS_TRUNCATED
+    elif ai_minimum and out.get("completeness") not in SENSE_COMPLETENESS_VALUES:
+        out["completeness"] = SENSE_COMPLETENESS_DRAFT
+    if ai_minimum and out.get("source") not in SENSE_SOURCE_SOURCED:
+        out["source"] = SENSE_SOURCE_AI_MINIMUM
+    return out
+
+
+def truncate_with_honesty(text: str, limit: int) -> tuple[str, bool]:
+    """Hard-cap prose and report whether truncation occurred (#6437 honesty).
+
+    Prefer this over bare ``_truncate_text`` when the caller can stamp
+    ``completeness: truncated`` (or ``apply_sense_honesty_tags``) on the
+    surrounding record. Returns ``(text, truncated)``.
+    """
+    cleaned = clean_html_entities(text)
+    if len(cleaned) <= limit:
+        return cleaned, False
+    return _truncate_text(text, limit), True
+
+
 def _truncate_text(text: str, limit: int) -> str:
     """Hard-cap prose when a limit is intentional (idioms, excerpts).
 
@@ -1276,6 +1339,10 @@ def _truncate_text(text: str, limit: int) -> str:
     sentence end so learners never see mid-word / mid-sense cutoffs. Dictionary
     definition cards should pass ``limit=None`` to ``_definition_body`` instead
     of relying on this for primary VTS/СУМ text (#6437).
+
+    Callers that can carry sense-level honesty metadata should use
+    ``truncate_with_honesty`` + ``apply_sense_honesty_tags`` so truncated text
+    is never silently thin.
     """
     cleaned = clean_html_entities(text)
     if len(cleaned) <= limit:
