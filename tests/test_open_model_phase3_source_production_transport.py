@@ -429,6 +429,12 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"rule_author_extractor" in prompt
+        assert b'"authorResponse"' in prompt
+        assert b'"schema_version"' in prompt
+        assert b'"packet_id"' in prompt
+        assert b'"identity_order"' in prompt
+        assert b'"disposition_code"' in prompt
+        assert b'"additionalProperties":false' in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     first = transport.run_author(manifest_path=root / "manifest.json", invoke=author_invoke)
@@ -457,8 +463,36 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"ukrainian_source_reviewer" in prompt
+        assert b'"reviewResponse"' in prompt
+        assert b'"reviews"' in prompt
+        assert b'"outcome"' in prompt
+        assert b'"additionalProperties":false' in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
     assert "ask-opencode" in commands[-1] and "grok-4.5" in commands[-1]
+
+
+def test_run_rejects_transport_schema_drift_before_invocation(tmp_path: Path) -> None:
+    fixture, _ = _prepare(tmp_path)
+    root = fixture["private_dir"]
+    assert isinstance(root, Path)
+    schema = json.loads(transport.DEFAULT_SCHEMA.read_text())
+    schema["title"] = "drifted after manifest freeze"
+    drifted_schema = tmp_path / "drifted-schema.json"
+    _json(drifted_schema, schema)
+    invoked = False
+
+    def invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
+        nonlocal invoked
+        invoked = True
+        return 1, b"", b"should not run"
+
+    with pytest.raises(transport.SourceProductionError, match="transport schema hash drift"):
+        transport.run_author(
+            manifest_path=root / "manifest.json",
+            schema_path=drifted_schema,
+            invoke=invoke,
+        )
+    assert invoked is False

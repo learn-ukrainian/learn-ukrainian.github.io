@@ -695,6 +695,27 @@ def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, b
     return result.returncode, result.stdout, result.stderr
 
 
+def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str) -> bytes:
+    """Append the exact machine-enforced response contract seen by the parser."""
+    schema = _read_json(schema_path, "source-production transport schema")
+    definitions = schema.get("$defs")
+    require(isinstance(definitions, Mapping), "transport schema definitions missing")
+    response_name = "reviewResponse" if lane == "review" else "authorResponse"
+    required_names = ("identity", "artifact", "decision", response_name)
+    require(all(isinstance(definitions.get(name), Mapping) for name in required_names), "response contract definitions missing")
+    response_contract = {name: definitions[name] for name in required_names}
+    suffix = (
+        "\n\n# Exact machine-enforced response contract\n\n"
+        "The JSON Schema definitions below are authoritative for output shape. "
+        "Return every required field with exactly these names; `additionalProperties: false` "
+        "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+        "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        + canonical_json(response_contract)
+        + "\n"
+    )
+    return prompt + suffix.encode("utf-8")
+
+
 def _run_packets(
     *,
     manifest_path: Path,
@@ -718,7 +739,8 @@ def _run_packets(
         expected_prompt_hash = manifest["bindings"]["author_prompt_sha256"]
     _regular(prompt_path, f"{lane} prompt")
     require(sha256_file(prompt_path) == expected_prompt_hash, f"{lane} prompt hash drift")
-    prompt = prompt_path.read_bytes()
+    require(sha256_file(schema_path) == manifest["bindings"]["transport_schema_sha256"], "transport schema hash drift")
+    prompt = _prompt_with_response_contract(prompt_path.read_bytes(), schema_path, lane)
     last = packet_count if end is None else end
     require(1 <= start <= last <= packet_count, f"invalid {lane} run range")
     runner = invoke or _subprocess_invoke
