@@ -3,6 +3,8 @@ import { cardKey, loadState, rateCard, type PracticeRating } from '../lib/lexico
 import stressDeck from '../data/practice-zno.stress.json';
 import paronymDeck from '../data/practice-zno.paronym.json';
 import lexicalNormDeck from '../data/practice-zno.lexical-norm.json';
+import morphologicalNormDeck from '../data/practice-zno.morphological-norm.json';
+import syntacticNormDeck from '../data/practice-zno.syntactic-norm.json';
 import orthographyDeck from '../data/practice-zno.orthography.json';
 
 export interface ZnoPracticeItem {
@@ -38,7 +40,14 @@ export interface ZnoPracticeProps {
   onBackToDecks?: () => void;
 }
 
-export const ZNO_PRACTICE_DECKS = [stressDeck, paronymDeck, lexicalNormDeck, orthographyDeck] as ZnoPracticeDeck[];
+export const ZNO_PRACTICE_DECKS = [
+  stressDeck,
+  paronymDeck,
+  lexicalNormDeck,
+  morphologicalNormDeck,
+  syntacticNormDeck,
+  orthographyDeck,
+] as ZnoPracticeDeck[];
 
 function taskCountLabel(count: number): string {
   const tail = count % 100;

@@ -35,6 +35,26 @@ WHERE t.task_format = 'single-choice'
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip()
 
+MORPHOLOGICAL_NORM_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND trim(t.topic_norm) = 'morphological_norm'
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
+SYNTACTIC_NORM_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND trim(t.topic_norm) = 'syntactic_norm'
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
 # Pinned from the live source-database query published with ZNO wave 2.  SQLite's
 # built-in lower() does not case-fold Ukrainian, so this deliberately matches the
 # canonical capitalized topic-family label emitted by the ZNO annotation pipeline.
@@ -91,6 +111,16 @@ ORDER BY t.year, t.exam, t.session, t.task_no, t.id
         thin=True,
     ),
     DeckDefinition(key="lexical-norm", title="Лексична норма", predicate_sql=LEXICAL_NORM_SQL),
+    DeckDefinition(
+        key="morphological-norm",
+        title="Морфологічна норма",
+        predicate_sql=MORPHOLOGICAL_NORM_SQL,
+    ),
+    DeckDefinition(
+        key="syntactic-norm",
+        title="Синтаксична норма",
+        predicate_sql=SYNTACTIC_NORM_SQL,
+    ),
     DeckDefinition(key="orthography", title="Орфографія", predicate_sql=ORTHOGRAPHY_SQL),
 )
 

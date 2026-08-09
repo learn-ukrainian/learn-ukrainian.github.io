@@ -6,8 +6,10 @@ from pathlib import Path
 
 from scripts.practice_deck.zno import (
     LEXICAL_NORM_SQL,
+    MORPHOLOGICAL_NORM_SQL,
     ORTHOGRAPHY_LIVE_CANDIDATE_COUNT,
     ORTHOGRAPHY_SQL,
+    SYNTACTIC_NORM_SQL,
     build_zno_shards,
     learner_attribution,
     write_zno_shards,
@@ -35,6 +37,8 @@ def _database(path: Path) -> Path:
         (5, 1, 2021, "zno", "osnovna", 6, "own-statement", "Власна відповідь", '[]', "", "", "", "", ""),
         (6, 1, 2021, "zno", "osnovna", 7, "single-choice", "Орфографія?", '["а", "б", "в", "г", "ґ"]', "Г", "ТЕМА: Орфографія. Апостроф", "", "", ""),
         (7, 1, 2021, "zno", "osnovna", 8, "single-choice", "Зламані варіанти", '["а", "а"]', "А", "ТЕМА: Орфографія. Апостроф", "", "", ""),
+        (8, 1, 2021, "zno", "osnovna", 9, "single-choice", "Морфологія?", '["а", "б", "в", "г", "ґ"]', "В", "ТЕМА: Морфологія", "morphological_norm", "", ""),
+        (9, 1, 2021, "zno", "osnovna", 10, "single-choice", "Синтаксис?", '["а", "б", "в", "г", "ґ"]', "Д", "ТЕМА: Синтаксис", "syntactic_norm", "", ""),
     ]
     connection.executemany("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
@@ -85,6 +89,19 @@ def test_orthography_membership_is_pinned_and_malformed_candidates_drop(tmp_path
     assert residual["decks"]["orthography"]["dropped"] == {"invalid_options": 1}
     assert shards["orthography"]["deckId"] == "zno-orthography"
     assert shards["orthography"]["items"][0]["stem"] == "Орфографія?"
+
+
+def test_morphological_and_syntactic_norm_decks_use_exact_topic_norm_predicates(tmp_path: Path) -> None:
+    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+
+    assert "trim(t.topic_norm) = 'morphological_norm'" in MORPHOLOGICAL_NORM_SQL
+    assert "trim(t.topic_norm) = 'syntactic_norm'" in SYNTACTIC_NORM_SQL
+    assert shards["morphological-norm"]["deckId"] == "zno-morphological-norm"
+    assert shards["morphological-norm"]["items"][0]["stem"] == "Морфологія?"
+    assert shards["syntactic-norm"]["deckId"] == "zno-syntactic-norm"
+    assert shards["syntactic-norm"]["items"][0]["stem"] == "Синтаксис?"
+    assert residual["decks"]["morphological-norm"]["candidates"] == 1
+    assert residual["decks"]["syntactic-norm"]["candidates"] == 1
 
 
 def test_attribution_uses_ucyoo_and_never_a_mirror() -> None:

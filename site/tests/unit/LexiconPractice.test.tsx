@@ -14,6 +14,8 @@ import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import znoStressDeck from '@site/src/data/practice-zno.stress.json';
 import znoParonymDeck from '@site/src/data/practice-zno.paronym.json';
 import znoLexicalNormDeck from '@site/src/data/practice-zno.lexical-norm.json';
+import znoMorphologicalNormDeck from '@site/src/data/practice-zno.morphological-norm.json';
+import znoSyntacticNormDeck from '@site/src/data/practice-zno.syntactic-norm.json';
 import znoOrthographyDeck from '@site/src/data/practice-zno.orthography.json';
 import {
   SRS_STORAGE_KEY,
@@ -912,7 +914,7 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(15);
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(17);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -4402,6 +4404,8 @@ describe('LexiconPractice', () => {
       expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length));
       expect(screen.getByTestId('practice-mode-count-zno-paronym')).toHaveTextContent(String(znoParonymDeck.items.length));
       expect(screen.getByTestId('practice-mode-count-zno-lexical-norm')).toHaveTextContent(String(znoLexicalNormDeck.items.length));
+      expect(screen.getByTestId('practice-mode-count-zno-morphological-norm')).toHaveTextContent(String(znoMorphologicalNormDeck.items.length));
+      expect(screen.getByTestId('practice-mode-count-zno-syntactic-norm')).toHaveTextContent(String(znoSyntacticNormDeck.items.length));
       expect(screen.getByTestId('practice-mode-count-zno-orthography')).toHaveTextContent(String(znoOrthographyDeck.items.length));
       expect(screen.getByTestId('practice-zno-thin-zno-paronym')).toHaveTextContent('Невелика добірка');
       expect(container.querySelector('[data-zno-deck="true"]')).toHaveClass('k3-mode-card');
