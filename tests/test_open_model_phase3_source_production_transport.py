@@ -500,3 +500,23 @@ def test_run_rejects_transport_schema_drift_before_invocation(tmp_path: Path) ->
             invoke=invoke,
         )
     assert invoked is False
+
+
+def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
+    identity = {
+        "family_id": "calque_inventory",
+        "unit_id": "unit.calque.fixture",
+        "unit_sha256": "1" * 64,
+        "locator_sha256": "2" * 64,
+        "source_text_sha256": "3" * 64,
+    }
+    packet = {
+        "packet_id": f"phase3_source_author_packet:{'4' * 64}",
+        "identity_order": [identity],
+    }
+    prompt = transport._prompt_with_response_contract(
+        b"author prompt", transport.DEFAULT_SCHEMA, "author", packet
+    )
+    assert b'"candidate_classes":{"const":[]}' in prompt
+    assert b'"unit_id":{"const":"unit.calque.fixture"}' in prompt
+    assert b'"minItems":1' in prompt and b'"maxItems":1' in prompt

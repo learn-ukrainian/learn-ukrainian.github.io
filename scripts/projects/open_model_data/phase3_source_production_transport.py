@@ -711,6 +711,41 @@ def _prompt_with_response_contract(
     response = response_contract[response_name]
     response["properties"]["packet_id"] = {"const": packet["packet_id"]}
     response["properties"]["identity_order"] = {"const": packet["identity_order"]}
+
+    def exact_decision(identity: Mapping[str, Any]) -> dict[str, Any]:
+        decision = json.loads(canonical_json(definitions["decision"]))
+        decision["properties"]["unit_id"] = {"const": identity["unit_id"]}
+        decision["properties"]["unit_sha256"] = {"const": identity["unit_sha256"]}
+        if identity["family_id"] != "school_textbooks":
+            decision["properties"]["candidate_classes"] = {"const": []}
+        if identity["family_id"] == "pravopys_2026_complete":
+            decision["properties"]["disposition_code"] = {
+                "enum": [
+                    "converted", "not_rule_bearing", "duplicate_representation",
+                    "blocked_with_reason",
+                ]
+            }
+        return decision
+
+    identities = packet["identity_order"]
+    if lane == "author":
+        response["properties"]["decisions"] = {
+            "type": "array", "minItems": len(identities), "maxItems": len(identities),
+            "prefixItems": [exact_decision(identity) for identity in identities], "items": False,
+        }
+    else:
+        review_item = json.loads(canonical_json(response["properties"]["reviews"]["items"]))
+        review_items = []
+        for identity in identities:
+            exact_review = json.loads(canonical_json(review_item))
+            exact_review["properties"]["unit_id"] = {"const": identity["unit_id"]}
+            exact_review["properties"]["unit_sha256"] = {"const": identity["unit_sha256"]}
+            exact_review["properties"]["decision"] = exact_decision(identity)
+            review_items.append(exact_review)
+        response["properties"]["reviews"] = {
+            "type": "array", "minItems": len(identities), "maxItems": len(identities),
+            "prefixItems": review_items, "items": False,
+        }
     suffix = (
         "\n\n# Exact machine-enforced response contract\n\n"
         "The JSON Schema definitions below are authoritative for output shape. "
