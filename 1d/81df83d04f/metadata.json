@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1d81df83d04f",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/rag/test_config_vesum_fallback.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/1d/81df83d04f/0/metadata.json",
+      "transcript": "/1d/81df83d04f/0/full.jsonl",
+      "compact_transcript": "/1d/81df83d04f/0/transcript.jsonl",
+      "content_hash": "/1d/81df83d04f/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
