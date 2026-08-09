@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ZnoPractice, { type ZnoPracticeDeck } from '@site/src/components/ZnoPractice';
@@ -34,5 +34,16 @@ describe('ZnoPractice', () => {
     expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✓ Правильно');
     expect(localStorage.getItem(SRS_STORAGE_KEY)).not.toBeNull();
     expect(loadState().cards.has(cardKey('zno:7', 'choice'))).toBe(true);
+  });
+
+  test('renders a hub-controlled deck without the standalone picker and returns through its callback', async () => {
+    const user = userEvent.setup();
+    const onBackToDecks = vi.fn();
+    render(<ZnoPractice deck={decks[0]} onBackToDecks={onBackToDecks} />);
+
+    expect(screen.queryByRole('heading', { name: 'ЗНО / НМТ' })).not.toBeInTheDocument();
+    expect(screen.getByTestId('zno-practice-item')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'До колод' }));
+    expect(onBackToDecks).toHaveBeenCalledOnce();
   });
 });

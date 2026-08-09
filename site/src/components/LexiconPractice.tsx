@@ -99,7 +99,7 @@ import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
-import ZnoPractice from './ZnoPractice';
+import ZnoPractice, { ZNO_PRACTICE_DECKS, type ZnoPracticeDeck } from './ZnoPractice';
 
 
 /**
@@ -627,6 +627,31 @@ const MODE_META: Record<
     step: 'Питома лексика',
     stepEn: 'Native vocabulary',
     accent: 'teal',
+  },
+};
+
+const ZNO_MODE_META: Record<
+  ZnoPracticeDeck['deckId'],
+  {
+    description: string;
+    descriptionEn: string;
+    accent: 'blue' | 'teal' | 'purple' | 'orange';
+  }
+> = {
+  'zno-stress': {
+    description: 'Тренуйте наголос на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Practise stress placement with official ZNO and NMT items.',
+    accent: 'teal',
+  },
+  'zno-paronym': {
+    description: 'Розрізняйте пароніми на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Distinguish paronyms with official ZNO and NMT items.',
+    accent: 'purple',
+  },
+  'zno-lexical-norm': {
+    description: 'Закріплюйте лексичну норму на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Reinforce lexical norms with official ZNO and NMT items.',
+    accent: 'orange',
   },
 };
 
@@ -1612,6 +1637,8 @@ function LexiconPracticeIsland({
     return () => clearTimeout(timeoutId);
   }, []);
   const [hoveredMode, setHoveredMode] = useState<VisiblePracticeModeFilter | null>(null);
+  const [hoveredZnoDeckId, setHoveredZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
+  const [activeZnoDeckId, setActiveZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
@@ -1661,6 +1688,13 @@ function LexiconPracticeIsland({
     const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
     return title ? { uk: title, en: title } : null;
   }, [selectedDeckFilter, customSets]);
+  const activeZnoDeck = useMemo(
+    () => ZNO_PRACTICE_DECKS.find((candidate) => candidate.deckId === activeZnoDeckId) ?? null,
+    [activeZnoDeckId],
+  );
+  const modeDetail = hoveredZnoDeckId
+    ? ZNO_MODE_META[hoveredZnoDeckId]
+    : MODE_META[hoveredMode ?? 'mixed'];
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
   const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
@@ -3363,9 +3397,8 @@ function LexiconPracticeIsland({
         </p>
       )}
 
-      {sessionPhase === 'idle' && (
+      {sessionPhase === 'idle' && !activeZnoDeck && (
         <>
-          <ZnoPractice />
           {focusedLemmaId && (
             <div
               className="k3-decks-wrapper shadow-sm rounded-xl p-3 my-2 bg-base-200/50"
@@ -3599,8 +3632,8 @@ function LexiconPracticeIsland({
               <h2><ChromeText k="practice.modesTitle" /></h2>
               <p id="mode-detail-line" aria-live="polite" className="k3-mode-detail">
                 {chromeLocale === 'uk'
-                  ? MODE_META[hoveredMode ?? 'mixed'].description
-                  : MODE_META[hoveredMode ?? 'mixed'].descriptionEn}
+                  ? modeDetail.description
+                  : modeDetail.descriptionEn}
               </p>
               <div
                 className="k3-mode-grid"
@@ -3642,6 +3675,47 @@ function LexiconPracticeIsland({
                       <span
                         className="k3-mode-count"
                         data-testid={`practice-mode-count-${practiceMode}`}
+                      >
+                        <span aria-hidden="true">{modeCount}</span>
+                        <span className="sr-only">
+                          {modeCountAccessibleSuffix(modeCount, chromeLocale)}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+                {ZNO_PRACTICE_DECKS.map((znoDeck) => {
+                  const meta = ZNO_MODE_META[znoDeck.deckId];
+                  const modeCount = znoDeck.items.length;
+                  return (
+                    <button
+                      key={znoDeck.deckId}
+                      type="button"
+                      className="k3-mode-card"
+                      data-mode={znoDeck.deckId}
+                      data-zno-deck="true"
+                      data-accent={meta.accent}
+                      data-mode-count={modeCount}
+                      aria-describedby="mode-detail-line"
+                      onMouseEnter={() => setHoveredZnoDeckId(znoDeck.deckId)}
+                      onMouseLeave={() => setHoveredZnoDeckId(null)}
+                      onFocus={() => setHoveredZnoDeckId(znoDeck.deckId)}
+                      onBlur={() => setHoveredZnoDeckId(null)}
+                      onClick={() => setActiveZnoDeckId(znoDeck.deckId)}
+                    >
+                      <span className="k3-mode-title">{znoDeck.title}</span>
+                      <span className="k3-mode-step">ЗНО / НМТ</span>
+                      <span className="k3-mode-desc">
+                        {chromeLocale === 'uk' ? meta.description : meta.descriptionEn}
+                      </span>
+                      {znoDeck.thinDeck ? (
+                        <span className="k3-mode-empty-note" data-testid={`practice-zno-thin-${znoDeck.deckId}`}>
+                          Невелика добірка
+                        </span>
+                      ) : null}
+                      <span
+                        className="k3-mode-count"
+                        data-testid={`practice-mode-count-${znoDeck.deckId}`}
                       >
                         <span aria-hidden="true">{modeCount}</span>
                         <span className="sr-only">
@@ -3801,6 +3875,23 @@ function LexiconPracticeIsland({
           }}
           onDone={finishPractice}
         />
+      )}
+
+      {activeZnoDeck && (
+        <div className="lexicon-practice-stage-shell" data-testid="practice-zno-session">
+          <div className="lexicon-practice-stage-bar">
+            <button type="button" className="stage-back" onClick={() => setActiveZnoDeckId(null)}>
+              <PracticeChromeLabel k="practice.home" />
+            </button>
+            <h2>ЗНО / НМТ · {activeZnoDeck.title}</h2>
+            <span className="queue-pill" data-testid="practice-zno-session-count">
+              {activeZnoDeck.items.length}
+            </span>
+          </div>
+          <div className="lexicon-practice-stage" tabIndex={-1}>
+            <ZnoPractice deck={activeZnoDeck} onBackToDecks={() => setActiveZnoDeckId(null)} />
+          </div>
+        </div>
       )}
 
       {sessionPhase === 'active' && (

@@ -29,9 +29,15 @@ export interface ZnoPracticeDeck {
 
 export interface ZnoPracticeProps {
   decks?: ZnoPracticeDeck[];
+  /**
+   * When supplied by the practice hub, render this deck directly inside the
+   * hub's session frame rather than exposing the legacy standalone deck picker.
+   */
+  deck?: ZnoPracticeDeck | null;
+  onBackToDecks?: () => void;
 }
 
-const DEFAULT_DECKS = [stressDeck, paronymDeck, lexicalNormDeck] as ZnoPracticeDeck[];
+export const ZNO_PRACTICE_DECKS = [stressDeck, paronymDeck, lexicalNormDeck] as ZnoPracticeDeck[];
 
 function taskCountLabel(count: number): string {
   const tail = count % 100;
@@ -56,12 +62,16 @@ function nextDueItem(items: readonly ZnoPracticeItem[], currentId: string | null
     })[0] ?? null;
 }
 
-export default function ZnoPractice({ decks = DEFAULT_DECKS }: ZnoPracticeProps) {
+export default function ZnoPractice({
+  decks = ZNO_PRACTICE_DECKS,
+  deck: controlledDeck,
+  onBackToDecks,
+}: ZnoPracticeProps) {
   const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
   const [itemId, setItemId] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [rated, setRated] = useState(false);
-  const activeDeck = decks.find((deck) => deck.deckId === activeDeckId) ?? null;
+  const activeDeck = controlledDeck ?? decks.find((deck) => deck.deckId === activeDeckId) ?? null;
   const currentItem = useMemo(
     () => activeDeck?.items.find((item) => item.znoTaskId === itemId) ?? nextDueItem(activeDeck?.items ?? [], null),
     [activeDeck, itemId],
@@ -72,6 +82,14 @@ export default function ZnoPractice({ decks = DEFAULT_DECKS }: ZnoPracticeProps)
     setItemId(nextDueItem(deck.items, null)?.znoTaskId ?? null);
     setSelectedIndex(null);
     setRated(false);
+  }
+
+  function backToDecks() {
+    if (controlledDeck) {
+      onBackToDecks?.();
+      return;
+    }
+    setActiveDeckId(null);
   }
 
   function answer(index: number) {
@@ -91,8 +109,12 @@ export default function ZnoPractice({ decks = DEFAULT_DECKS }: ZnoPracticeProps)
 
   return (
     <section className="zno-practice" aria-label="Практика ЗНО та НМТ" data-testid="zno-practice">
-      <h2>ЗНО / НМТ</h2>
-      <p>Офіційні завдання з української мови для інтервального повторення.</p>
+      {!controlledDeck ? (
+        <>
+          <h2>ЗНО / НМТ</h2>
+          <p>Офіційні завдання з української мови для інтервального повторення.</p>
+        </>
+      ) : null}
       {!activeDeck ? (
         <div className="zno-practice-decks">
           {decks.map((deck) => (
@@ -132,7 +154,7 @@ export default function ZnoPractice({ decks = DEFAULT_DECKS }: ZnoPracticeProps)
           ) : null}
           <p className="zno-practice-attribution" lang="uk">{currentItem.attribution}</p>
           <button type="button" onClick={next} disabled={!rated}>Наступне завдання</button>
-          <button type="button" onClick={() => setActiveDeckId(null)}>До колод</button>
+          <button type="button" onClick={backToDecks}>До колод</button>
         </div>
       ) : (
         <p role="status">У цій колоді поки немає придатних завдань.</p>

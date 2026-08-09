@@ -66,6 +66,20 @@ in the browser (quality bar). Pattern: **move generation to build time → stati
 | Choice (meaning MC) | lemma + gloss | every eligible word (free) |
 | **Cloze** | sentence + `blankCase` + `form` + `caseRule` | only words with a vetted sentence |
 
+### 3a. ЗНО / НМТ parallel deck cards (#6496, #6530)
+
+The official ЗНО/НМТ decks (Наголос, Пароніми, Лексична норма) are a parallel
+practice family, not CEFR-sharded Atlas vocabulary. They render as ordinary
+MODES-grid cards with their fixed verified counts and an explicit «ЗНО / НМТ»
+kind label; the thin Пароніми deck is marked as a small collection rather than
+padded. The learner-level selector continues to scope the Atlas modes and the
+mixed session only. It does **not** filter, hide, or reset the exam cards: their
+items are level-independent official assessments, so every published learner
+level exposes the same three cards and each opens the standard practice session
+frame. Exam-card grading remains item-keyed in local SRS, and each prompt keeps
+its УЦОЯО attribution. This conservative rule avoids implying CEFR calibration
+that the source data does not provide while keeping the parallel family visible.
+
 ⟦fleet cursor⟧ **Cloze is scarce** (most words are recognition-only) → it has its own `clozeDue` sub-queue and
 is **soft-capped at ~25% of a session** (a weighting guideline, not a hard ceiling — ⟦fleet codex⟧ **lapsed / urgent-due cloze is EXEMPT** so the scheduler is never starved; unless the learner opts into a "grammar focus"). Build emits
 `clozeCoverage` per level; **CI warns if an A1 deck is <10% cloze-eligible.**
