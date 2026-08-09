@@ -4333,16 +4333,28 @@ def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(
     assert error.value.observed_bytes > error.value.limit_bytes
 
 
-def test_acpx_protocol_envelope_above_legacy_cap_reaches_terminal(tmp_path):
+def test_acpx_over_cap_progress_is_dropped_while_answer_and_terminal_survive(
+    tmp_path, monkeypatch
+):
+    from agent_runtime import runner as runtime_runner
     from agent_runtime.adapters.acpx import AcpxAdapter
+
+    monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
+    monkeypatch.setattr(runtime_runner, "_ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES", 1024)
 
     child = (
         "import json; "
         "print(json.dumps({'jsonrpc':'2.0','method':'progress','params':"
-        "{'text':'x'*(300*1024)}})); "
+        "{'text':'x'*(8*1024)}})); "
         "print(json.dumps({'jsonrpc':'2.0','method':'session/update','params':"
         "{'update':{'sessionUpdate':'agent_message_chunk','content':"
-        "{'type':'text','text':'ok'}}}})); "
+        "{'type':'text','text':'final '}}}})); "
+        "print(json.dumps({'jsonrpc':'2.0','method':'session/update','params':"
+        "{'update':{'sessionUpdate':'tool_call','toolCallId':'read-1',"
+        "'name':'read','status':'completed','rawOutput':'receipt'}}})); "
+        "print(json.dumps({'jsonrpc':'2.0','method':'session/update','params':"
+        "{'update':{'sessionUpdate':'agent_message_chunk','content':"
+        "{'type':'text','text':'answer'}}}})); "
         "print(json.dumps({'jsonrpc':'2.0','id':2,'result':"
         "{'stopReason':'end_turn'}}))"
     )
@@ -4361,7 +4373,58 @@ def test_acpx_protocol_envelope_above_legacy_cap_reaches_terminal(tmp_path):
         stall_timeout=30,
     )
 
-    assert len(execution.stdout_text.encode("utf-8")) > 256 * 1024
+    assert len(execution.stdout_text.encode("utf-8")) < 4 * 1024
+    assert '"method": "progress"' not in execution.stdout_text
+    assert '"stopReason": "end_turn"' in execution.stdout_text
+    assert execution.kill_reason is None
+    assert execution.parse.ok is True
+    assert execution.parse.response == "final answer"
+    assert execution.parse.tool_calls == [
+        {
+            "id": "read-1",
+            "name": "read",
+            "title": "",
+            "arguments": {},
+            "result": "receipt",
+            "status": "completed",
+        }
+    ]
+
+
+def test_acpx_under_cap_progress_is_retained_with_answer_and_terminal(tmp_path, monkeypatch):
+    from agent_runtime import runner as runtime_runner
+    from agent_runtime.adapters.acpx import AcpxAdapter
+
+    monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
+    monkeypatch.setattr(runtime_runner, "_ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES", 1024)
+
+    child = (
+        "import json; "
+        "print(json.dumps({'jsonrpc':'2.0','method':'progress','params':"
+        "{'text':'x'*128}})); "
+        "print(json.dumps({'jsonrpc':'2.0','method':'session/update','params':"
+        "{'update':{'sessionUpdate':'agent_message_chunk','content':"
+        "{'type':'text','text':'ok'}}}})); "
+        "print(json.dumps({'jsonrpc':'2.0','id':2,'result':"
+        "{'stopReason':'end_turn'}}))"
+    )
+    execution = _execute_invocation_plan(
+        agent_name="acpx-kimi-shadow",
+        adapter=AcpxAdapter(),
+        plan=InvocationPlan(cmd=[_TEST_PYTHON, "-c", child], cwd=tmp_path),
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="fixture",
+        session_id=None,
+        entrypoint="acpx-transport",
+        hard_timeout=30,
+        stall_timeout=30,
+    )
+
+    assert '"method": "progress"' in execution.stdout_text
+    assert '"stopReason": "end_turn"' in execution.stdout_text
     assert execution.kill_reason is None
     assert execution.parse.ok is True
     assert execution.parse.response == "ok"

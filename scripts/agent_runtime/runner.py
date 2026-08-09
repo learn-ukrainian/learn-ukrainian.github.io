@@ -30,6 +30,7 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import importlib
+import json
 import logging
 import os
 import re
@@ -142,6 +143,12 @@ _PRIVACY_LIMITED_USAGE_ENTRYPOINTS = frozenset(
 # the adapter independently caps parsed answer text before it can be returned
 # to fleet authority.
 _ACPX_DIRECT_OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
+# ACPX ``progress`` notifications are explicitly ignored by the strict parser:
+# they can carry verbose provider/tool display text, while session updates and
+# terminal results carry the answer and durable outcome. Retain a small,
+# bounded diagnostic prefix of those ignored events, then keep draining (rather
+# than killing) so the final answer and terminal receipt can still arrive.
+_ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES = 256 * 1024
 _SAFE_ACP_FAILURE_CODES = frozenset(
     {
         "acp_adapter_incompatible",
@@ -211,6 +218,34 @@ def _streamed_output_limit(*, agent_name: str, entrypoint: str) -> int | None:
     ):
         return _ACPX_DIRECT_OUTPUT_LIMIT_BYTES
     return None
+
+
+def _bounded_acpx_progress_filter() -> Callable[[str], str | None]:
+    """Retain only a bounded prefix of parser-ignored ACPX progress events.
+
+    The transform deliberately preserves every non-progress line, including
+    ``session/update`` messages (answer, usage, and tool trace) and terminal
+    JSON-RPC results/errors.  A malformed line is retained so the ACPX parser
+    continues to fail closed instead of silently hiding protocol corruption.
+    """
+    retained_progress_bytes = 0
+
+    def filter_line(line: str) -> str | None:
+        nonlocal retained_progress_bytes
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            return line
+        if not isinstance(event, dict) or event.get("method") != "progress":
+            return line
+
+        line_bytes = len(line.encode("utf-8", errors="replace"))
+        if line_bytes > _ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES - retained_progress_bytes:
+            return None
+        retained_progress_bytes += line_bytes
+        return line
+
+    return filter_line
 
 
 def _resolve_plan_telemetry(
@@ -1346,12 +1381,18 @@ def _execute_invocation_plan(
         liveness_paths = tuple(adapter.liveness_signal_paths(plan))
         if plan.output_file is not None and plan.output_file not in liveness_paths:
             liveness_paths = (*liveness_paths, plan.output_file)
+        stdout_line_transform = (
+            _bounded_acpx_progress_filter()
+            if output_limit is not None
+            else None
+        )
         watchdog_state, watchdog_threads = start_watchdog(
             proc,
             list(liveness_paths),
             stdout_master_fd=stdout_master_fd,
             stderr_master_fd=stderr_master_fd,
             track_process_activity=bool(stdout_silence_timeout is not None and stdout_silence_timeout > 0),
+            stdout_line_transform=stdout_line_transform,
         )
         capture_repo_raw = None
         if tool_config:
