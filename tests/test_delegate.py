@@ -2797,6 +2797,7 @@ def test_run_worker_initial_response_timeout_still_reaps_silent_startup(
     excerpt = state["stderr_excerpt"] or ""
     assert "initial_response_timeout" in excerpt
     assert "fired after 1s" in excerpt
+    assert "no first observable startup activity" in excerpt
     assert "--initial-response-timeout" in excerpt
 
 

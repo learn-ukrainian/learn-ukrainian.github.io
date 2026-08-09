@@ -419,8 +419,11 @@ primary is not re-probed immediately.
 
 Eligible trigger classes are deliberately narrow: 401/403 auth failure,
 429/quota exhaustion, 5xx/overloaded, transport failures such as connection
-refused/reset/read timeout, initial-response timeout with no observed output,
-stdout-silence timeout before first stdout, and parsed-but-empty responses.
+refused/reset/read timeout, initial-response timeout with no observable local
+startup activity, stdout-silence timeout before first stdout, and parsed-but-empty
+responses. Startup activity includes stdout/stderr, adapter-declared liveness-file
+updates, and CPU/disk work in the agent process tree. It is intentionally a local
+liveness signal, not proof that a remote provider accepted or completed the task.
 Content-policy refusals, 4xx request-format errors, and mid-stream silence
 timeouts after partial output do not fail over.
 

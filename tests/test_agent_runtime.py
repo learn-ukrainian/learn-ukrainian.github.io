@@ -133,6 +133,7 @@ from agent_runtime.runner import (
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 from agent_runtime.watchdog import (
     WatchdogState,
+    _process_activity_poller,
     _process_tree_has_activity,
     should_kill,
     start_watchdog,
@@ -2714,6 +2715,26 @@ def test_should_kill_silence_timeout_kills_fully_silent_process():
     )
 
 
+def test_initial_response_timeout_accepts_process_tree_activity():
+    """Startup probing treats quiet work as activity, not a missing response."""
+    now = time.monotonic()
+    state = WatchdogState(
+        start_time=now - 120,
+        last_activity=now,
+        observed_io=True,
+    )
+
+    assert (
+        should_kill(
+            state,
+            stall_timeout=180,
+            hard_timeout=3600,
+            initial_response_timeout=60,
+        )
+        is None
+    )
+
+
 def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
     """CPU baselines survive fresh psutil.Process wrappers across polls."""
 
@@ -2751,6 +2772,103 @@ def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
 
     assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
     assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is True
+
+
+def test_process_activity_poller_counts_work_as_startup_activity(monkeypatch):
+    """CPU/disk work satisfies the startup probe as well as a silence probe."""
+    import agent_runtime.watchdog as watchdog_module
+
+    state = WatchdogState(start_time=time.monotonic(), last_activity=time.monotonic())
+    proc = SimpleNamespace(poll=lambda: None)
+    monkeypatch.setattr(watchdog_module, "_process_tree_has_activity", lambda *_args: True)
+    monkeypatch.setattr(
+        watchdog_module,
+        "_sleep_until_stop",
+        lambda current_state, _duration: setattr(current_state, "stop", True),
+    )
+
+    _process_activity_poller(proc, state)
+
+    assert state.observed_io is True
+
+
+def test_initial_response_timeout_allows_quiet_process_work(tmp_path, monkeypatch):
+    """The startup probe enables process-tree liveness polling (#6407)."""
+    import agent_runtime.watchdog as watchdog_module
+
+    class FixtureAdapter:
+        def parse_response(self, *, returncode: int, **_kwargs):
+            return ParseResult(ok=returncode == 0, response="done", stderr_excerpt="")
+
+        def liveness_signal_paths(self, _plan):
+            return ()
+
+    monkeypatch.setattr(watchdog_module, "_process_tree_has_activity", lambda *_args: True)
+    execution = _execute_invocation_plan(
+        agent_name="claude",
+        adapter=FixtureAdapter(),
+        plan=InvocationPlan(
+            cmd=[_TEST_PYTHON, "-c", "import time; time.sleep(2.0)"],
+            cwd=tmp_path,
+        ),
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="initial-response-process-work",
+        session_id=None,
+        entrypoint="runtime",
+        hard_timeout=30,
+        stall_timeout=30,
+        initial_response_timeout=1,
+    )
+
+    assert execution.kill_reason is None
+    assert execution.parse.ok is True
+
+
+def test_initial_response_timeout_allows_quiet_liveness_file_work(tmp_path, monkeypatch):
+    """A worker can update a documented liveness file before responding (#6407)."""
+    import agent_runtime.watchdog as watchdog_module
+
+    liveness_path = tmp_path / "productive-work.txt"
+
+    class FixtureAdapter:
+        def parse_response(self, *, returncode: int, **_kwargs):
+            return ParseResult(ok=returncode == 0, response="done", stderr_excerpt="")
+
+        def liveness_signal_paths(self, _plan):
+            return (liveness_path,)
+
+    monkeypatch.setattr(watchdog_module, "_MTIME_POLL_INTERVAL_S", 0.02)
+    child = """
+from pathlib import Path
+import time
+
+time.sleep(0.2)
+Path("productive-work.txt").write_text("productive work")
+time.sleep(2.0)
+print("done")
+"""
+    execution = _execute_invocation_plan(
+        agent_name="claude",
+        adapter=FixtureAdapter(),
+        plan=InvocationPlan(cmd=[_TEST_PYTHON, "-c", child], cwd=tmp_path),
+        prompt="fixture",
+        mode="read-only",
+        cwd=tmp_path,
+        model="fixture",
+        task_id="initial-response-productivity",
+        session_id=None,
+        entrypoint="runtime",
+        hard_timeout=30,
+        stall_timeout=30,
+        initial_response_timeout=1,
+    )
+
+    assert execution.kill_reason is None
+    assert execution.parse.ok is True
+    assert liveness_path.exists()
 
 
 def test_tail_liveness_skips_binary_sqlite(tmp_path):

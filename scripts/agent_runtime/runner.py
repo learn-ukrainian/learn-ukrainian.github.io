@@ -1391,7 +1391,13 @@ def _execute_invocation_plan(
             list(liveness_paths),
             stdout_master_fd=stdout_master_fd,
             stderr_master_fd=stderr_master_fd,
-            track_process_activity=bool(stdout_silence_timeout is not None and stdout_silence_timeout > 0),
+            track_process_activity=bool(
+                (stdout_silence_timeout is not None and stdout_silence_timeout > 0)
+                or (
+                    initial_response_timeout is not None
+                    and initial_response_timeout > 0
+                )
+            ),
             stdout_line_transform=stdout_line_transform,
         )
         capture_repo_raw = None
@@ -1766,7 +1772,8 @@ def _raise_for_kill_reason(
                 or execution.stderr_text[:500]
                 or (
                     f"initial_response_timeout: {agent_name} produced no "
-                    f"stdout/stderr/liveness activity within "
+                    f"observable startup activity (stdout, stderr, liveness "
+                    f"file, or process-tree CPU/disk work) within "
                     f"{initial_response_timeout}s"
                 )
             ),
@@ -2597,10 +2604,10 @@ def _invoke_impl(
             seconds. Disabled by default. Uses stdout/stderr, liveness-file
             updates, and process-tree CPU/disk activity.
         initial_response_timeout: Optional startup probe in seconds. When set,
-            the runtime kills the subprocess if it produces no stdout/stderr
-            or liveness-file activity within this window (#2071). Distinct
-            from ``stdout_silence_timeout``, which watches composite activity
-            after startup.
+            the runtime kills the subprocess if it produces no stdout/stderr,
+            liveness-file, or process-tree CPU/disk activity within this
+            window (#2071). Distinct from ``stdout_silence_timeout``, which
+            watches composite activity after startup.
         event_sink: Optional ``event_sink(event_name, **fields)`` callback for
             dispatch JSONL observability events.
         effort: Cross-agent reasoning/effort level. First-class peer of
