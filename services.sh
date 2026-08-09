@@ -163,7 +163,7 @@ _cmdline_for_pid() {
     # does not depend on procps personality or command-width formatting, both
     # of which can alter the string used for our service identity match.
     # macOS has no procfs equivalent, so it retains the established ps path.
-    if [ -s "/proc/$pid/cmdline" ] && cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null); then
+    if cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null) && [ -n "$cmdline" ]; then
         # The kernel terminates every argv element with NUL, including argv[0].
         # Remove only the terminal separator introduced by ``tr``.
         printf '%s\n' "${cmdline% }"
