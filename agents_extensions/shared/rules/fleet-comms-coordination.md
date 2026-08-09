@@ -135,6 +135,12 @@ Every epic driver session (any harness) MUST:
    `scripts/orchestration/reap_worktrees.py --apply` (also sweeps review temps
    under `$TMPDIR` and `$TMPDIR/shielded-reviews`). Do not create formal sealed
    review trees. Session chat promises do not bind; this rule and §7a do.
+   The P0 automatic reaper is live: for a merged exact head, use
+   `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged`;
+   `LU_REAPER_DISABLED=1` is its immediate kill switch.
+   `post_task_reap` delegates regular dispatch cleanup to that same reaper, so do not invent a
+   second deletion path. If it cannot run, follow `docs/runbooks/worktree-cleanup.md` for
+   rescue restore and the narrowly allowlisted manual fallback.
 
 ## Operator launch surface (#5632)
 
