@@ -162,6 +162,7 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
         "acp_review_evidence_too_large",
         "acp_session_create_timeout",
         "acp_turn_limit",
+        "github_secondary_rate_limited",
         "adapter_refused",
         "protocol_output_limit",
         "provider_unavailable",

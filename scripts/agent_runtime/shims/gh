@@ -67,6 +67,143 @@ _blocks_gh_command() {
   return 1
 }
 
+_is_secondary_rate_limited() {
+  local output="$1"
+
+  # Only retry GitHub's explicit secondary-limit response.  A broad match on
+  # "rate limit" would incorrectly retry provider quotas, malformed commands,
+  # and ordinary GitHub failures. GitHub documents this as a 403/429 together
+  # with a secondary-rate-limit message.
+  printf '%s' "$output" | grep -Eiq '(HTTP|status)[[:space:]:]*(403|429)' \
+    && printf '%s' "$output" | grep -Eiq 'secondary[[:space:]-]+rate[[:space:]-]+limit'
+}
+
+_secondary_rate_limit_http_status() {
+  local output="$1"
+  if printf '%s' "$output" | grep -Eiq '(HTTP[[:space:]]*429|status[[:space:]]*429)'; then
+    printf '429\n'
+  else
+    printf '403\n'
+  fi
+}
+
+_positive_integer_or_default() {
+  local value="$1"
+  local fallback="$2"
+  if [[ "$value" =~ ^[0-9]+$ ]] && (( value > 0 )); then
+    printf '%s\n' "$value"
+  else
+    printf '%s\n' "$fallback"
+  fi
+}
+
+_nonnegative_integer_or_default() {
+  local value="$1"
+  local fallback="$2"
+  if [[ "$value" =~ ^[0-9]+$ ]]; then
+    printf '%s\n' "$value"
+  else
+    printf '%s\n' "$fallback"
+  fi
+}
+
+_run_with_secondary_rate_limit_retry() {
+  local real_gh="$1"
+  shift
+
+  # GitHub recommends waiting at least one minute when a secondary-limit
+  # response omits Retry-After, then using exponential backoff and a bounded
+  # number of retries. The env overrides make the shim deterministically
+  # testable without weakening production defaults.
+  local max_retries
+  max_retries="$(_positive_integer_or_default "${AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES:-}" 3)"
+  local base_delay_s
+  base_delay_s="$(_nonnegative_integer_or_default "${AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS:-}" 60)"
+
+  local stdin_file=""
+  local stdout_file
+  local stderr_file
+  stdout_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdout.XXXXXX")" || return 1
+  stderr_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stderr.XXXXXX")" || {
+    rm -f "$stdout_file"
+    return 1
+  }
+  if [[ ! -t 0 ]]; then
+    stdin_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdin.XXXXXX")" || {
+      rm -f "$stdout_file" "$stderr_file"
+      return 1
+    }
+    cat >"$stdin_file" || {
+      rm -f "$stdin_file" "$stdout_file" "$stderr_file"
+      return 1
+    }
+  fi
+
+  _cleanup_secondary_retry_tempfiles() {
+    rm -f "$stdin_file" "$stdout_file" "$stderr_file"
+    trap - HUP INT TERM
+  }
+
+  _abort_secondary_retry() {
+    local status="$1"
+    _cleanup_secondary_retry_tempfiles
+    exit "$status"
+  }
+
+  trap '_abort_secondary_retry 129' HUP
+  trap '_abort_secondary_retry 130' INT
+  trap '_abort_secondary_retry 143' TERM
+
+  local attempt=0
+  local exit_status=0
+  local output=""
+  local http_status=""
+  while :; do
+    if [[ -n "$stdin_file" ]]; then
+      if "$real_gh" "$@" <"$stdin_file" >"$stdout_file" 2>"$stderr_file"; then
+        exit_status=0
+      else
+        exit_status=$?
+      fi
+    elif "$real_gh" "$@" >"$stdout_file" 2>"$stderr_file"; then
+      exit_status=0
+    else
+      exit_status=$?
+    fi
+
+    if (( exit_status == 0 )); then
+      cat "$stdout_file"
+      cat "$stderr_file" >&2
+      _cleanup_secondary_retry_tempfiles
+      return 0
+    fi
+
+    output="$(cat "$stdout_file" "$stderr_file")"
+    if ! _is_secondary_rate_limited "$output"; then
+      cat "$stdout_file"
+      cat "$stderr_file" >&2
+      _cleanup_secondary_retry_tempfiles
+      return "$exit_status"
+    fi
+
+    attempt=$((attempt + 1))
+    http_status="$(_secondary_rate_limit_http_status "$output")"
+    if (( attempt > max_retries )); then
+      cat "$stdout_file"
+      cat "$stderr_file" >&2
+      printf 'agent-gh-shim: github_secondary_rate_limited HTTP %s; retries exhausted after %s attempts.\n' \
+        "$http_status" "$max_retries" >&2
+      _cleanup_secondary_retry_tempfiles
+      return "$exit_status"
+    fi
+
+    local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
+    printf 'agent-gh-shim: GitHub HTTP %s throttled; retrying gh in %ss (attempt %s/%s).\n' \
+      "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
+    sleep "$delay_s"
+  done
+}
+
 if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_gh_command "${1:-}" "${@:2}"; then
   _deny
 fi
@@ -76,4 +213,4 @@ real_gh="$(_real_gh)" || {
   exit 127
 }
 
-exec "$real_gh" "$@"
+_run_with_secondary_rate_limit_retry "$real_gh" "$@"
