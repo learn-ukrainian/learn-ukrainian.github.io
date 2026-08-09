@@ -74,6 +74,62 @@ def test_mode_permission_mapping(tmp_path):
         assert _val(plan.cmd, "--permission-mode") == perm
 
 
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_capable_modes_auto_approve_headless_tool_execution(tmp_path, mode):
+    plan = _build("commit and push", tmp_path, mode=mode)
+
+    assert "--always-approve" in plan.cmd
+
+
+def test_read_only_mode_does_not_auto_approve_tool_execution(tmp_path):
+    plan = _build("inspect only", tmp_path, mode="read-only")
+
+    assert _val(plan.cmd, "--permission-mode") == "plan"
+    assert "--always-approve" not in plan.cmd
+
+
+def test_trail_isolation_does_not_inherit_write_approval(tmp_path):
+    tool_config = {
+        "trail_isolation": True,
+        "allowed_tools": "Read,Grep,Glob",
+        "mcp_config_path": str(tmp_path / ".mcp.json"),
+        "setting_sources": "",
+        "strict_mcp_config": True,
+        "tools": "Read,Grep,Glob",
+        "trail_isolation_cwd": str(tmp_path),
+    }
+    with patch(
+        "agent_runtime.adapters.grok_build.assert_trail_isolation_config",
+        return_value=tmp_path,
+    ):
+        plan = _build("inspect trail", tmp_path, mode="read-only", tool_config=tool_config)
+
+    assert _val(plan.cmd, "--permission-mode") == "default"
+    assert "--always-approve" not in plan.cmd
+    assert "Bash" in [plan.cmd[index + 1] for index, item in enumerate(plan.cmd) if item == "--deny"]
+
+
+def test_review_isolation_keeps_its_existing_approval_and_denies(tmp_path):
+    review_root = tmp_path / "review"
+    for child in ("tmp", "home", "exec"):
+        (review_root / child).mkdir(parents=True, exist_ok=True)
+    tool_config = {
+        "review_isolation": True,
+        "review_engine_binary": "/usr/bin/true",
+    }
+    with patch(
+        "scripts.review.isolation.validated_review_write_root",
+        return_value=review_root,
+    ):
+        plan = _build("review evidence", tmp_path, mode="read-only", tool_config=tool_config)
+
+    assert _val(plan.cmd, "--permission-mode") == "bypassPermissions"
+    assert "--always-approve" in plan.cmd
+    denied = [plan.cmd[index + 1] for index, item in enumerate(plan.cmd) if item == "--deny"]
+    assert "Bash" in denied
+    assert {"Write", "Edit", "MultiEdit", "NotebookEdit"} <= set(denied)
+
+
 def test_unsupported_mode_raises(tmp_path):
     with pytest.raises(ValueError, match="unsupported mode"):
         _build("x", tmp_path, mode="bogus")

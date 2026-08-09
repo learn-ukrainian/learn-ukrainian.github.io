@@ -15,8 +15,13 @@ injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
 - ``read-only``       → ``plan``               (analysis only, no mutations)
-- ``workspace-write`` → ``acceptEdits``        (auto-accept file edits, headless)
-- ``danger``          → ``bypassPermissions``  (full autonomy)
+- ``workspace-write`` → ``acceptEdits`` + ``--always-approve``
+  (unattended edits and Bash within the dispatch worktree)
+- ``danger``          → ``bypassPermissions`` + ``--always-approve``
+  (unattended full autonomy within the dispatch worktree)
+
+Trail and review isolation use their own explicit tool/deny policies; they do
+not inherit the ordinary write-dispatch approval grant.
 
 ``resume_policy`` is ``never`` in the registry: the CLI's ``--resume`` +
 cross-session memory risk worktree contamination — the same footgun as Codex.
@@ -57,6 +62,12 @@ _MODE_PERMISSION: dict[str, str] = {
     "workspace-write": "acceptEdits",
     "danger": "bypassPermissions",
 }
+
+# Native Grok separates file-edit acceptance from approval for shell/tool
+# executions. Dispatch worktrees are the write boundary, so non-isolated
+# write-capable dispatches must grant both for ``git push`` / ``gh pr create``
+# to complete without a human approval prompt.
+_UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
 
 # MCP servers that are safe to run under an execution-capable permission mode
 # (read-only data lookups, no mutations). ONLY these may trigger the plan→exec
@@ -237,8 +248,9 @@ class GrokBuildAdapter:
             permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(execution_cwd)])
-        if mcp_read_only and not review_isolation:
+        if (mcp_read_only or mode in _UNATTENDED_WRITE_MODES) and not review_isolation and not trail_isolation:
             cmd.append("--always-approve")
+        if mcp_read_only and not review_isolation:
             cmd.append("--no-plan")
             cmd.append("--disable-web-search")
             for rule in _MCP_REVIEW_DENY_RULES:
