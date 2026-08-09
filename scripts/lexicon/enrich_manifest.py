@@ -3486,6 +3486,43 @@ def _grinchenko_definition_row(conn: sqlite3.Connection, lemma: str) -> str | No
     return None
 
 
+# Fixed (non-headword) Ukrainian words in the Грінченко heritage-card template
+# below (#6510 P1 fix). The headword changes per lemma; this prose does not, but
+# it still runs through the same VESUM gate on every call rather than being
+# assumed correct — ``_vesum_word_analyses`` is itself lru_cached per word, so
+# after the first real card build this costs a handful of dict reads, not a query.
+_GRINCHENKO_TEMPLATE_WORDS: tuple[str, ...] = (
+    "засвідчено",
+    "в",
+    "словнику",
+    "Грінченка",
+    "Це",
+    "один",
+    "із",
+    "найповніших",
+    "домодерних",
+    "реєстрів",
+    "української",
+    "лексики",
+)
+
+
+def _vesum_verified(word: str) -> bool:
+    """Fail-closed VESUM presence check for one word.
+
+    Tries the exact surface form first, then casefolded: VESUM stores most word
+    forms lowercase, so a sentence-initial capital like "Це" is pure orthography,
+    not a distinct word, while a proper noun like "Грінченка" verifies on its
+    exact (capitalized) form.
+    """
+    return bool(_vesum_word_analyses(word)) or bool(_vesum_word_analyses(word.casefold()))
+
+
+def _grinchenko_template_verified() -> bool:
+    """VESUM-gate the fixed prose in the Грінченко heritage card (#6510 P1 fix)."""
+    return all(_vesum_verified(word) for word in _GRINCHENKO_TEMPLATE_WORDS)
+
+
 def _grinchenko_definition_card(
     conn: sqlite3.Connection,
     lemma: str,
@@ -3517,6 +3554,14 @@ def _grinchenko_definition_card(
         if base and base != lemma:
             headword = _grinchenko_definition_row(conn, base)
     if not headword:
+        return None
+    # #6510 P1 fix (cross-family review of #6464): the prior version interpolated
+    # the DB ``word`` into this template with no morphological verification. Both
+    # the DB-sourced headword and the hand-authored fixed prose must be attested
+    # VESUM word forms before any Ukrainian text reaches a learner — either
+    # failing DROPS the card (fail closed) rather than emitting unverified
+    # Ukrainian (#M-4: no invented/unverified text).
+    if not _vesum_verified(headword) or not _grinchenko_template_verified():
         return None
     return {
         "id": "grinchenko",

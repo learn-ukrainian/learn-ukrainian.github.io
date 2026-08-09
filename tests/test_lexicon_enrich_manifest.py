@@ -92,6 +92,20 @@ def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
     )
 
 
+def _patch_grinchenko_vesum(monkeypatch, *headwords: str) -> None:
+    """VESUM-verify the Грінченко card's fixed template prose plus ``headwords``
+    (#6510 P1 fix gate); everything else stays unverified. Call with no
+    ``headwords`` to verify the template only, e.g. to exercise the
+    headword-rejected fail-closed path."""
+    verified = {word.casefold() for word in enrich_manifest_module._GRINCHENKO_TEMPLATE_WORDS}
+    verified.update(word.casefold() for word in headwords)
+
+    def fake_analyses(word: str) -> tuple[tuple[str, str], ...]:
+        return (("x", "noun"),) if word.casefold() in verified else ()
+
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", fake_analyses)
+
+
 def _conn() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
     conn.executescript(
@@ -1340,6 +1354,7 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
     )
     # Isolate from the live VTS lookup — this test asserts СУМ-11 exclusion, not coverage.
     monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
+    _patch_grinchenko_vesum(monkeypatch, "прапор")
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
@@ -1354,7 +1369,7 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
     assert "Знамя" not in grinchenko_card["definitions"][0]
 
 
-def test_grinchenko_definition_card_is_attestation_only_never_the_raw_gloss() -> None:
+def test_grinchenko_definition_card_is_attestation_only_never_the_raw_gloss(monkeypatch) -> None:
     """#6464: the Грінченко (1907) heritage card proves pre-Soviet attestation but
     never reproduces the raw ``definition`` column — that column glosses Ukrainian
     headwords in Russian (a Ukrainian-Russian dictionary compiled under the Ems-era
@@ -1364,6 +1379,7 @@ def test_grinchenko_definition_card_is_attestation_only_never_the_raw_gloss() ->
         "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
         ("хата", "Хата, -ти, ж. Дом, изба, хижина. Моя хата з краю.", "Грінченко"),
     )
+    _patch_grinchenko_vesum(monkeypatch, "хата")
 
     card = _grinchenko_definition_card(conn, "хата")
 
@@ -1382,6 +1398,53 @@ def test_grinchenko_definition_card_absent_when_not_attested() -> None:
     assert _grinchenko_definition_card(conn, "гаджет") is None
 
 
+def test_grinchenko_definition_card_drops_when_headword_not_vesum_verified(monkeypatch) -> None:
+    """#6510 P1 fix: fail-closed VESUM gate. codex flagged that the interpolated
+    headword was never morphologically verified. A headword attested in
+    Грінченко (1907) but absent from VESUM must drop the card — never emit
+    unverified Ukrainian to a learner — even though it is genuinely in the
+    (fixture) 1907 registry."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("хата", "Хата, -ти, ж. Дом, изба, хижина.", "Грінченко"),
+    )
+    # Template prose verifies; the headword itself deliberately does not.
+    _patch_grinchenko_vesum(monkeypatch)
+
+    assert _grinchenko_definition_card(conn, "хата") is None
+
+
+def test_grinchenko_definition_card_drops_when_template_not_vesum_verified(monkeypatch) -> None:
+    """The gate also protects the hand-authored template prose: if VESUM has no
+    record of it (e.g. a future edit introduces a typo or an unattested word),
+    the card must fail closed rather than ship regardless of the headword."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("хата", "Хата, -ти, ж. Дом, изба, хижина.", "Грінченко"),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", lambda word: ())
+
+    assert _grinchenko_definition_card(conn, "хата") is None
+
+
+def test_grinchenko_definition_card_present_when_headword_and_template_verified(monkeypatch) -> None:
+    """The positive path of the #6510 gate: a headword AND the fixed template
+    prose both verifying against VESUM is what actually lets the card through."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("хата", "Хата, -ти, ж. Дом, изба, хижина.", "Грінченко"),
+    )
+    _patch_grinchenko_vesum(monkeypatch, "хата")
+
+    card = _grinchenko_definition_card(conn, "хата")
+
+    assert card is not None
+    assert card["id"] == "grinchenko"
+
+
 def test_grinchenko_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
     """Грінченко only carries dictionary (base) headwords, so an inflected form
     (e.g. водою) must resolve through VESUM's base lemma, same as VTS/СУМ-20."""
@@ -1395,6 +1458,7 @@ def test_grinchenko_definition_card_resolves_inflected_form_to_base_lemma(monkey
         "_vesum_base_lemma",
         lambda word: "вода" if word == "водою" else None,
     )
+    _patch_grinchenko_vesum(monkeypatch, "вода")
 
     card = _grinchenko_definition_card(conn, "водою")
 
@@ -1412,6 +1476,7 @@ def test_definition_cards_grinchenko_always_last_and_optional(monkeypatch) -> No
     )
     monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
     monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
+    _patch_grinchenko_vesum(monkeypatch, "вода")
 
     cards = _definition_cards(conn, "вода", has_sum11_flags=False)
 
