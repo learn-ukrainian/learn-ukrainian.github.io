@@ -4,7 +4,14 @@ import json
 import sqlite3
 from pathlib import Path
 
-from scripts.practice_deck.zno import LEXICAL_NORM_SQL, build_zno_shards, learner_attribution, write_zno_shards
+from scripts.practice_deck.zno import (
+    LEXICAL_NORM_SQL,
+    ORTHOGRAPHY_LIVE_CANDIDATE_COUNT,
+    ORTHOGRAPHY_SQL,
+    build_zno_shards,
+    learner_attribution,
+    write_zno_shards,
+)
 
 
 def _database(path: Path) -> Path:
@@ -26,6 +33,8 @@ def _database(path: Path) -> Path:
         (3, 1, 2021, "zno", "osnovna", 4, "single-choice", "Лексика?", '["а", "б", "в", "г", "ґ"]', "А", "", "lexical_norm", "word_choice", ""),
         (4, 1, 2021, "zno", "osnovna", 5, "single-choice", "Зламані варіанти", '["а", "а"]', "А", "ТЕМА: Наголос", "", "", ""),
         (5, 1, 2021, "zno", "osnovna", 6, "own-statement", "Власна відповідь", '[]', "", "", "", "", ""),
+        (6, 1, 2021, "zno", "osnovna", 7, "single-choice", "Орфографія?", '["а", "б", "в", "г", "ґ"]', "Г", "ТЕМА: Орфографія. Апостроф", "", "", ""),
+        (7, 1, 2021, "zno", "osnovna", 8, "single-choice", "Зламані варіанти", '["а", "а"]', "А", "ТЕМА: Орфографія. Апостроф", "", "", ""),
     ]
     connection.executemany("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
@@ -62,6 +71,20 @@ def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Pat
     output = tmp_path / "out"
     write_zno_shards(first, first_residual, output)
     assert json.loads((output / "practice-zno.paronym.json").read_text(encoding="utf-8"))["thinDeck"] is True
+
+
+def test_orthography_membership_is_pinned_and_malformed_candidates_drop(tmp_path: Path) -> None:
+    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+
+    assert "instr(t.topic_tag, 'Орфограф') > 0" in ORTHOGRAPHY_SQL
+    # This frozen live denominator makes an intentional source-corpus or predicate
+    # change visible in review before the generated shard is refreshed.
+    assert ORTHOGRAPHY_LIVE_CANDIDATE_COUNT == 168
+    assert residual["decks"]["orthography"]["candidates"] == 2
+    assert residual["decks"]["orthography"]["emitted"] == 1
+    assert residual["decks"]["orthography"]["dropped"] == {"invalid_options": 1}
+    assert shards["orthography"]["deckId"] == "zno-orthography"
+    assert shards["orthography"]["items"][0]["stem"] == "Орфографія?"
 
 
 def test_attribution_uses_ucyoo_and_never_a_mirror() -> None:

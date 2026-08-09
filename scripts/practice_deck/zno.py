@@ -35,6 +35,20 @@ WHERE t.task_format = 'single-choice'
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip()
 
+# Pinned from the live source-database query published with ZNO wave 2.  SQLite's
+# built-in lower() does not case-fold Ukrainian, so this deliberately matches the
+# canonical capitalized topic-family label emitted by the ZNO annotation pipeline.
+ORTHOGRAPHY_LIVE_CANDIDATE_COUNT = 168
+ORTHOGRAPHY_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND instr(t.topic_tag, 'Орфограф') > 0
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
 
 @dataclass(frozen=True)
 class DeckDefinition:
@@ -77,6 +91,7 @@ ORDER BY t.year, t.exam, t.session, t.task_no, t.id
         thin=True,
     ),
     DeckDefinition(key="lexical-norm", title="Лексична норма", predicate_sql=LEXICAL_NORM_SQL),
+    DeckDefinition(key="orthography", title="Орфографія", predicate_sql=ORTHOGRAPHY_SQL),
 )
 
 
@@ -158,13 +173,13 @@ def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
         "emptyTopicNorm": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE trim(topic_norm) = ''").fetchone()[0]),
         "emptyKeyOwnStatement": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE task_format = 'own-statement' AND trim(correct_json) = ''").fetchone()[0]),
         "documentsFetchNotOk": int(conn.execute("SELECT count(*) FROM zno_documents WHERE fetch_status <> 'ok'").fetchone()[0]),
-        "waveOneEmitted": emitted,
+        "emittedItems": emitted,
         "intentionalCut": corpus - emitted,
     }
 
 
 def build_zno_shards(db_path: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
-    """Build three deterministic deck payloads and their fail-closed receipt."""
+    """Build deterministic deck payloads and their fail-closed receipt."""
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
