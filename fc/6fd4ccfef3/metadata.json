@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fc6fd4ccfef3",
+  "strategy": "manual-commit",
+  "branch": "cursor/5930-ruff-per-file-scripts",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/checks/activities.py",
+    "scripts/audit/core.py",
+    "scripts/fleet_comms/message_plane.py",
+    "scripts/pipeline/core.py",
+    "scripts/pipeline/parsing.py",
+    "scripts/pipeline/parsing_helpers.py",
+    "scripts/wiki/sources_db.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fc/6fd4ccfef3/0/metadata.json",
+      "transcript": "/fc/6fd4ccfef3/0/full.jsonl",
+      "compact_transcript": "/fc/6fd4ccfef3/0/transcript.jsonl",
+      "content_hash": "/fc/6fd4ccfef3/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
