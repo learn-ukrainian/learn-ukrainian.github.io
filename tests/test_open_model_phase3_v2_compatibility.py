@@ -30,8 +30,8 @@ def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
         "phase3_v2_1_combined_contract_sha256": compatibility.V2_1_COMBINED_SHA256,
         "matrix_sha256": compatibility.sha256_file(compatibility.MATRIX_PATH),
         "inventory_count": 27,
-        "invalidated_count": 22,
-        "rebound_count": 2,
+        "invalidated_count": 21,
+        "rebound_count": 3,
         "valid_count": 3,
         "role_graph_ready": True,
         "source_authoring_blocked": True,
@@ -44,7 +44,7 @@ def test_engine_inventory_is_the_complete_current_v2_1_runtime_schema_closure() 
     bindings = matrix["engine_bindings"]  # type: ignore[index]
     paths = {entry["logical_path"] for entry in bindings}  # type: ignore[index]
     assert paths == compatibility.ENGINE_PATHS
-    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 26
+    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 33
     assert all(entry["artifact_sha256"] for entry in bindings)  # type: ignore[index]
     assert all(not path.startswith("data/projects/open_model_data/evidence/") for path in paths)
 
@@ -119,7 +119,7 @@ def test_pre_v2_role_contract_is_not_reused_as_independence_evidence() -> None:
     assert role_contract["machine_reason"] == "pre_v2_role_contract_invalidated"
     assert matrix["source_authoring"] == {
         "blocked": True,
-        "reason": "v2_1_runtime_migration_and_exact_head_review_pending",
+        "reason": "all_family_evaluation_partition_and_labels_not_frozen",
     }
 
 
