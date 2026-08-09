@@ -87,6 +87,7 @@ ENGINE_PATHS = frozenset({
     "scripts/projects/open_model_data/phase3_source_unit_materialization.py",
     "scripts/projects/open_model_data/phase3_prior_exposure_manifest.py",
     "scripts/projects/open_model_data/phase3_evaluation_freeze.py",
+    "scripts/projects/open_model_data/phase3_heldout_label_transport.py",
     # Every closed Phase 3 schema consumed by the current runtime closure.
     "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
@@ -103,6 +104,8 @@ ENGINE_PATHS = frozenset({
     "data/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md",
 })
 
 
@@ -229,7 +232,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         )
     require(
         matrix["source_authoring"]
-        == {"blocked": True, "reason": "all_family_evaluation_partition_and_labels_not_frozen"},
+        == {"blocked": True, "reason": "heldout_labels_not_frozen"},
         "source-authoring block drift",
     )
     require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")
