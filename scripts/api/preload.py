@@ -66,11 +66,12 @@ OPTIONAL_MODULES = [
 
 DYNAMIC_LOADERS = {
     "scripts.api.runtime_router": {
-        "description": "Loads agent runtime adapters dynamically from scripts/agent_runtime/adapters/",
+        "description": "Loads agent runtime adapters and registry snapshots dynamically.",
         "strategy": "walk_adapters",
         "calls": [
             {"func": "import_module", "caller": "list_runtime_agents"},
             {"func": "import_module", "caller": "list_routing_assignments"},
+            {"func": "spec_from_file_location", "caller": "_load_registry_default_models"},
         ]
     },
     "scripts.api.comms_router": {
