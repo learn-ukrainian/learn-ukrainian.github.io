@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import sys
 import types
@@ -417,6 +418,34 @@ def test_agents_endpoint_returns_known_adapters():
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
     assert codex["default_model"] == "gpt-5.6-terra"
+
+
+def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path, monkeypatch):
+    registry_path = tmp_path / "registry.py"
+    registry_path.write_text("AGENTS = {'codex': {'default_model': 'stale-model'}}\n", encoding="utf-8")
+
+    monkeypatch.setattr(runtime_router, "REGISTRY_PATH", registry_path)
+    monkeypatch.setattr(runtime_router, "_registry_signature", runtime_router._registry_source_signature())
+    monkeypatch.setattr(runtime_router, "_registry_models", {"codex": "stale-model"})
+
+    stale_response = client.get("/api/runtime/agents")
+    stale_codex = next(agent for agent in stale_response.json()["agents"] if agent["name"] == "codex")
+    assert stale_codex["default_model"] == "stale-model"
+
+    previous = registry_path.stat()
+    registry_path.write_text("AGENTS = []\n", encoding="utf-8")
+    os.utime(registry_path, ns=(previous.st_atime_ns, previous.st_mtime_ns + 1))
+
+    failed_response = client.get("/api/runtime/agents")
+    failed_codex = next(agent for agent in failed_response.json()["agents"] if agent["name"] == "codex")
+    assert failed_codex["default_model"] == "stale-model"
+
+    registry_path.write_text("AGENTS = {'codex': {'default_model': 'fresh-model'}}\n", encoding="utf-8")
+    os.utime(registry_path, ns=(previous.st_atime_ns, previous.st_mtime_ns + 2))
+
+    fresh_response = client.get("/api/runtime/agents")
+    fresh_codex = next(agent for agent in fresh_response.json()["agents"] if agent["name"] == "codex")
+    assert fresh_codex["default_model"] == "fresh-model"
 
 
 def test_usage_aggregates_by_agent(tmp_path, monkeypatch):

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import importlib
+import importlib.util
 import inspect
 import ipaddress
 import json
@@ -14,6 +15,7 @@ import sys
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -23,6 +25,7 @@ from .config import BATCH_STATE_DIR, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+import agent_runtime.registry as agent_registry
 from agent_runtime.adapters.acpx import (
     ACPX_CLI_COMPATIBILITY_CONTRACT,
     ACPX_SUPPORTED_PARTICIPANTS,
@@ -53,6 +56,8 @@ from scripts.orchestration.codex_transport_health import current_transport_healt
 router = APIRouter(tags=["runtime"])
 
 ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
+_registry_source = getattr(agent_registry, "__file__", None)
+REGISTRY_PATH = Path(_registry_source).resolve() if _registry_source else None
 USAGE_DIR = BATCH_STATE_DIR / "api_usage"
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
 _RUNTIME_ATTRIBUTION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,99}$")
@@ -168,6 +173,76 @@ _ACP_EVENT_TYPE_ALIASES = {
 }
 
 
+def _registry_source_signature() -> tuple[int, int] | None:
+    """Return a cheap change token for the runtime agent registry source."""
+    if REGISTRY_PATH is None:
+        return None
+    try:
+        stat = REGISTRY_PATH.stat()
+    except OSError:
+        return None
+    return stat.st_mtime_ns, stat.st_size
+
+
+def _registry_default_models(registry: Any) -> dict[str, str | None]:
+    """Snapshot the registry defaults used by runtime observability."""
+    entries = getattr(registry, "AGENTS", None)
+    if not isinstance(entries, dict):
+        raise ValueError("agent registry must define AGENTS as a dictionary")
+
+    defaults: dict[str, str | None] = {}
+    for name, entry in entries.items():
+        if not isinstance(name, str) or not isinstance(entry, dict):
+            raise ValueError("agent registry entries must be string-keyed dictionaries")
+        model = entry.get("default_model")
+        if model is not None and not isinstance(model, str):
+            raise ValueError("agent registry default_model values must be strings or null")
+        defaults[name] = model
+    return defaults
+
+
+def _load_registry_default_models() -> dict[str, str | None]:
+    """Execute the registry source in isolation and return a validated snapshot."""
+    if REGISTRY_PATH is None:
+        raise RuntimeError("agent registry source path is unavailable")
+    spec = importlib.util.spec_from_file_location("agent_runtime._runtime_registry_snapshot", REGISTRY_PATH)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load agent registry from {REGISTRY_PATH}")
+    registry_snapshot = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(registry_snapshot)
+    return _registry_default_models(registry_snapshot)
+
+
+_registry_refresh_lock = Lock()
+_registry_signature = _registry_source_signature()
+_registry_models = _registry_default_models(agent_registry)
+
+
+def _refresh_agent_registry_if_changed() -> None:
+    """Refresh registry-backed defaults after an on-disk registry update.
+
+    The live ``agent_runtime.registry`` module is never reloaded in place: a
+    bad or incomplete write cannot corrupt concurrent runtime consumers. Its
+    last known-good snapshot stays live and the next request retries the load.
+    """
+    global _registry_models, _registry_signature
+
+    signature = _registry_source_signature()
+    if signature is None or signature == _registry_signature:
+        return
+
+    with _registry_refresh_lock:
+        signature = _registry_source_signature()
+        if signature is None or signature == _registry_signature:
+            return
+        try:
+            defaults = _load_registry_default_models()
+        except Exception:
+            return
+        _registry_models = defaults
+        _registry_signature = signature
+
+
 def _parse_iso_datetime(value: str | None) -> datetime | None:
     if not value:
         return None
@@ -279,6 +354,7 @@ def _update_comparison_side(
 
 
 def list_runtime_agents() -> list[dict[str, Any]]:
+    _refresh_agent_registry_if_changed()
     agents: list[dict[str, Any]] = []
     for path in sorted(ADAPTERS_DIR.glob("*.py")):
         if path.stem in {"__init__", "acpx", "base", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
@@ -314,7 +390,7 @@ def list_runtime_agents() -> list[dict[str, Any]]:
             agents.append({
                 "name": str(obj.name),
                 "binary": binary,
-                "default_model": getattr(obj, "default_model", None),
+                "default_model": _registry_models.get(str(obj.name), getattr(obj, "default_model", None)),
                 "supported_modes": sorted(str(mode) for mode in getattr(obj, "supported_modes", [])),
             })
             break
