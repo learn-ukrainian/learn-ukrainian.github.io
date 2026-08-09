@@ -278,13 +278,14 @@ test('practice stress mode renders word-shaped vowel buttons for an N-vowel word
   await expect(stress.locator('[data-testid="practice-stress-verdict"]')).toBeVisible();
 });
 
-test('Stress mode remains available after choosing A2', async ({ page, context }) => {
+test('Stress mode and ZNO decks remain available after choosing A2', async ({ page, context }) => {
   await context.clearCookies();
   await page.goto('/words-of-the-day/practice/');
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
-  await expect(page.locator('button[data-mode]')).toHaveCount(11);
+  await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(3);
+  await expect(page.locator('button[data-mode]')).toHaveCount(14);
 });
 
 test('practice flashcard rating locks the card and waits for explicit next', async ({ page, context }) => {
