@@ -53,7 +53,7 @@ def test_scrubbed_key_formula() -> None:
             "source_id": "private-teacher-lesson-full-source",
             "source_family": "teacher_lesson",
         },
-        "evidence_refs": ["private teacher-lesson document (Krisztian Ukr.docx)"],
+        "evidence_refs": ["private teacher-lesson document (sample-intake.docx)"],
         "surface_admission": {"daily": False, "practice": True, "cloze": False},
     }
 
