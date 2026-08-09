@@ -157,6 +157,19 @@ _pid_on_port() {
 
 _cmdline_for_pid() {
     local pid="$1"
+    local cmdline
+
+    # Linux exposes the argv vector directly.  Unlike ``ps -o args=``, this
+    # does not depend on procps personality or command-width formatting, both
+    # of which can alter the string used for our service identity match.
+    # macOS has no procfs equivalent, so it retains the established ps path.
+    if [[ -r "/proc/$pid/cmdline" ]] && cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null); then
+        # The kernel terminates every argv element with NUL, including argv[0].
+        # Remove only the terminal separator introduced by ``tr``.
+        printf '%s\n' "${cmdline% }"
+        return 0
+    fi
+
     ps -p "$pid" -o args= 2>/dev/null
 }
 

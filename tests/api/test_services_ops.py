@@ -17,9 +17,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 PIDS_DIR = PROJECT_ROOT / ".pids"
 LOGS_DIR = PROJECT_ROOT / "logs"
-# Service commands must use the repository virtual environment, matching the
-# production launcher contract.
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+# Service commands use the repository virtual environment in normal CI.  The
+# explicit override lets a dispatch worktree use the shared project interpreter
+# without creating a worktree-local virtual environment.
+VENV_PYTHON = Path(os.environ.get("SERVICES_TEST_PYTHON", PROJECT_ROOT / ".venv" / "bin" / "python"))
 
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
@@ -175,12 +176,6 @@ def cleanup_pids_and_logs():
     elif api_start_file.exists():
         api_start_file.unlink()
 
-@pytest.mark.skipif(
-    sys.platform != "darwin",
-    reason="services.sh is macOS-targeted local-ops tooling; its process-lifecycle "
-    "behavior diverges on Linux CI (issue #4930 tracks the divergence). The "
-    "platform-neutral logic tests (preload, guards, missing-lsof) run everywhere.",
-)
 def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
     """Test stale pid file / listener interactions hermetically."""
     script_path, port = temp_services_sh
@@ -284,12 +279,6 @@ def test_live_fallback_is_passed_to_launchd_with_a_loud_warning(temp_services_sh
     calls = Path(env["SVC_API_SUPERVISOR_CAPTURE"]).read_text(encoding="utf-8").splitlines()
     assert calls == ["start", "--repo-root", str(PROJECT_ROOT), "--live"]
 
-@pytest.mark.skipif(
-    sys.platform != "darwin",
-    reason="services.sh is macOS-targeted local-ops tooling; its process-lifecycle "
-    "behavior diverges on Linux CI (issue #4930 tracks the divergence). The "
-    "platform-neutral logic tests (preload, guards, missing-lsof) run everywhere.",
-)
 def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh, mock_lsof_env):
     """A deliberate stop asks launchd to disable before touching the listener."""
     script_path, port = temp_services_sh
