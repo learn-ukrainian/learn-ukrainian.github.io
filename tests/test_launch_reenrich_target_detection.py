@@ -145,10 +145,22 @@ def test_remote_wrapper_syncs_current_enrichment_package() -> None:
     assert 'ATLAS_RE_ENRICH_CODE_ROOT=$(printf \'%q\' "$REMOTE_WORK_DIR")' in source
 
 
+def test_remote_wrapper_syncs_live_manifest_to_work_dir_before_launch() -> None:
+    """Full-catalog must never inherit the stale manifest in the VPS repo."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+
+    assert 'LOCAL_LIVE_MANIFEST_CANDIDATE="$WORKTREE/site/src/data/lexicon-manifest.json"' in source
+    assert "PRIMARY_LIVE_MANIFEST=" in source
+    assert 'rsync -a --copy-links --partial "$LOCAL_LIVE_MANIFEST" "$HOST:$REMOTE_WORK_DIR/manifest.json"' in source
+    assert 'stat -L -c \'%s\' $(printf \'%q\' "$REMOTE_WORK_DIR/manifest.json")' in source
+    assert source.index('rsync -a --copy-links --partial "$LOCAL_LIVE_MANIFEST"') < source.index('remote_cmd=')
+
+
 def test_local_launcher_prefers_synced_package_on_systemd_import_path() -> None:
     """The service command resolves ``scripts.*`` from the work-dir first."""
     source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
 
     assert 'CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"' in source
+    assert 'WORK_MANIFEST="$WORK_DIR/manifest.json"' in source
     assert '"$CODE_ROOT/scripts/lexicon/enrich_manifest.py"' in source
     assert 'PYTHONPATH=$(printf \'%q\' "$CODE_ROOT"):\\$PYTHONPATH:$(printf \'%q\' "$REPO")' in source
