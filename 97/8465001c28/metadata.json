@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "978465001c28",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/rag/config.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/rag/test_config_vesum_fallback.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/97/8465001c28/0/metadata.json",
+      "transcript": "/97/8465001c28/0/full.jsonl",
+      "compact_transcript": "/97/8465001c28/0/transcript.jsonl",
+      "content_hash": "/97/8465001c28/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
