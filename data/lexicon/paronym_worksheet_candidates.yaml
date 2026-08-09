@@ -1943,6 +1943,28 @@ zno_annotations:
   task_no: 58
   topic_norm: other
   evidence_quote: Власне висловлення Прочитайте наведений текст. Часто, коли н
+- id: 466
+  year: 2024
+  task_no: 10
+  task_subtype: paronym
+  paronym_pair: змістовий/змістовний
+  override_fields:
+  - task_subtype
+  evidence_quote: змістова доповідь
+- id: 800
+  year: 2016
+  task_no: 2
+  task_subtype: paronym
+  paronym_pair: освічений/освітлений
+  override_fields:
+  - task_subtype
+  evidence_quote: освічене перехрестя
+- id: 1170
+  year: 2013
+  task_no: 12
+  task_subtype: paronym
+  paronym_pair: компанія/кампанія; абонент/абонемент
+  evidence_quote: Передвиборча (компанія, кампанія); Цей (абонент, абонемент)
 candidate_pairs:
 - lemmaA: вистава
   lemmaB: виставка
