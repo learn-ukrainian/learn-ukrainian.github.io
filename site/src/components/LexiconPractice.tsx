@@ -99,6 +99,7 @@ import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
+import ZnoPractice from './ZnoPractice';
 
 
 /**
@@ -3364,6 +3365,7 @@ function LexiconPracticeIsland({
 
       {sessionPhase === 'idle' && (
         <>
+          <ZnoPractice />
           {focusedLemmaId && (
             <div
               className="k3-decks-wrapper shadow-sm rounded-xl p-3 my-2 bg-base-200/50"
