@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c9bf50cf8d1",
+  "strategy": "manual-commit",
+  "branch": "agy/5245-seminar-roster",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/config.py",
+    "tests/test_seminar_roster_config.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8c/9bf50cf8d1/0/metadata.json",
+      "transcript": "/8c/9bf50cf8d1/0/full.jsonl",
+      "compact_transcript": "/8c/9bf50cf8d1/0/transcript.jsonl",
+      "content_hash": "/8c/9bf50cf8d1/0/content_hash.txt",
+      "prompt": "/8c/9bf50cf8d1/0/prompt.txt"
+    }
+  ]
+}

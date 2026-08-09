@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c9bf50cf8d1",
+  "session_id": "fleet-992034b04055471faa9888ab85d8c50f",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T20:29:37.784955Z",
+  "branch": "agy/5245-seminar-roster",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/config.py",
+    "tests/test_seminar_roster_config.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "9bbc241c6767",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T20:29:37.768456Z",
+    "agent_lines": 154,
+    "agent_removed": 37,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 154,
+    "total_lines_changed": 191,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
