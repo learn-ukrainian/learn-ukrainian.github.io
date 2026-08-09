@@ -208,7 +208,7 @@ def test_report_validation_rejects_contract_and_learner_drift(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     matrix = pilot_matrix
-    report = shadow_report
+    report = deepcopy(shadow_report)
     real_sources = pilot._source_records
     monkeypatch.setattr(
         pilot,
