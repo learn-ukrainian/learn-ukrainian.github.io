@@ -1,0 +1,52 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5395663b7cd",
+  "session_id": "fleet-d3a6e75b28fe430596211605d87e10a2",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T03:37:06.919086Z",
+  "branch": "grok/atlas-6463-davydov",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/atlas/atlas_db.py",
+    "scripts/atlas/fill_local.py",
+    "scripts/lexicon/enrich_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "site/src/lexicon/WordAtlasArticle.tsx",
+    "site/src/lib/lexicon/word-atlas-article-model.ts",
+    "site/tests/fixtures/atlas-article-reference/fixture-expression.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-phraseologism.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-proper-name.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-proverb.html",
+    "site/tests/fixtures/atlas-article-reference/будь-ласка.html",
+    "site/tests/fixtures/atlas-article-reference/доконаний-вид.html",
+    "site/tests/fixtures/atlas-article-reference/прапор.html",
+    "site/tests/fixtures/atlas-article-reference/файний.html",
+    "site/tests/fixtures/atlas-article-reference/ілля.html",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "agent": "Project Runner",
+  "model": "grok-4.5",
+  "turn_id": "884d5b6685e7",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T03:37:06.914529Z",
+    "agent_lines": 360,
+    "agent_removed": 21,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 360,
+    "total_lines_changed": 381,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

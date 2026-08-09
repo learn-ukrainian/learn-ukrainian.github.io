@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/grok/atlas-6463-davydov
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Davydov usage essays as a first-class section (#6463, parent #6460/#4387)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: grok-4.5 × native grok CLI (authorship diversity: sonnet authored siblings 6462+6464; grok freed from review seats)
+- why_this_tier: bounded enrichment-source wiring against merged design doc
+- owned_paths: scripts/atlas/**, scripts/lexicon/**, docs/poc/word-atlas/** (doc updates only)
+- acceptance_cmd: pytest (affected) + ruff + existing enrich fixtures
+- alternatives_considered: sonnet (authored both siblings — keep Anthropic seat review-eligible), codex (holds ZNO lane)
+- parallel_free_seats: sonnet, cursor
+
+## Evidence preamble (#M-4)
+Quote raw tool output for every count and dictionary claim. Ukrainian forms verify against
+VESUM / sources MCP — never guessed.
+
+## Context
+- Design of record: `docs/poc/word-atlas/SLOVNYK-HUB-LAYERS.md` (merged PR #6467).
+- Issue #6463: Антоненко-Давидович usage essays become a first-class learner section, NOT
+  warning-only; linguistic_norm + khreshchatyk noted as related sources in the design.
+- Attribution binds (#5163/#5234): credit Антоненко-Давидович's «Як ми говоримо» itself in
+  learner-facing lines, never the mirror site.
+- Sibling patterns: PRs #6458, #6459, and the proverbs PR from #6462 (read its diff — it will
+  have merged before this dispatches).
+
+## Outcome wanted
+An attributed usage-essay section for lemmas Davydov covers, wired per the design doc,
+fixture-tested (no live network in CI), sampled coverage counts reported, existing
+warning-integration migrated coherently (no duplicate presentation of the same essay).
+
+## Steps
+1. Dispatch worktree only. 2. Read design doc + issue + sibling diffs. 3. Short design note on
+issue #6463 (section placement, warning-vs-section migration, attribution line, sampling
+evidence), then implement. 4. Fixture tests + ruff. 5. Conventional commit + X-Agent trailer,
+push, PR referencing #6463/#6460/#4387. 6. NO auto-merge. Report PR number + coverage counts.
+
+## Non-goals
+No full-catalog re-enrich (#6466); no other hub layers.

@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5395663b7cd",
+  "strategy": "manual-commit",
+  "branch": "grok/atlas-6463-davydov",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/atlas/atlas_db.py",
+    "scripts/atlas/fill_local.py",
+    "scripts/lexicon/enrich_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "site/src/lexicon/WordAtlasArticle.tsx",
+    "site/src/lib/lexicon/word-atlas-article-model.ts",
+    "site/tests/fixtures/atlas-article-reference/fixture-expression.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-phraseologism.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-proper-name.html",
+    "site/tests/fixtures/atlas-article-reference/fixture-proverb.html",
+    "site/tests/fixtures/atlas-article-reference/будь-ласка.html",
+    "site/tests/fixtures/atlas-article-reference/доконаний-вид.html",
+    "site/tests/fixtures/atlas-article-reference/прапор.html",
+    "site/tests/fixtures/atlas-article-reference/файний.html",
+    "site/tests/fixtures/atlas-article-reference/ілля.html",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d5/395663b7cd/0/metadata.json",
+      "transcript": "/d5/395663b7cd/0/full.jsonl",
+      "compact_transcript": "/d5/395663b7cd/0/transcript.jsonl",
+      "content_hash": "/d5/395663b7cd/0/content_hash.txt",
+      "prompt": "/d5/395663b7cd/0/prompt.txt"
+    }
+  ]
+}
