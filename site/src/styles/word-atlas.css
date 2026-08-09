@@ -939,6 +939,42 @@ html[data-theme='dark'] .word-hero .practice-cta-hero {
   margin-top: 0;
 }
 
+/* #6465 — compact orthography/Holoskevych/orthoepy form strip, one short row per dictionary. */
+.form-notes-strip {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.form-notes-row {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.form-notes-row dt {
+  color: var(--gray-600);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.form-notes-row dd {
+  margin: 0;
+}
+
+.form-notes-row .tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .source-box {
   margin: 14px 0;
   padding: 16px 22px;

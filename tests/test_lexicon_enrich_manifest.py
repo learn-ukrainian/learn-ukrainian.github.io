@@ -33,6 +33,8 @@ from scripts.lexicon.enrich_manifest import (
     _etymology,
     _etymology_lookup_variants,
     _fill_learner_english_anchor_from_slovnyk_cache,
+    _form_note_item_from_row,
+    _form_notes_slovnyk,
     _grinchenko_definition_card,
     _homonym_relations,
     _homonym_relations_by_headword,
@@ -79,7 +81,15 @@ from scripts.lexicon.enrich_manifest import (
     clean_gloss,
     clean_html_entities,
 )
-from scripts.lexicon.source_attribution import DAVYDOV_LABEL, MIYKLAS_LABEL, PROVERBS_LABEL
+from scripts.lexicon.source_attribution import (
+    DAVYDOV_LABEL,
+    HOLOSKEVYCH_LABEL,
+    MIYKLAS_LABEL,
+    ORTHOEPY_LABEL,
+    ORTHOGRAPHY_LABEL,
+    PROVERBS_LABEL,
+    join_academic_source_labels,
+)
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -957,6 +967,119 @@ def test_usage_notes_and_warning_chips_coexist_without_essay_duplication() -> No
             detail = str(row.get("detail") or "")
             # Evidence is truncated (#warning path) and is not the learner section.
             assert detail != section["items"][0]["text"]
+
+
+def test_form_note_item_from_row_builds_item_with_dictionary_and_source() -> None:
+    row = {
+        "dictionary_slug": "orthography",
+        "dictionary_label": ORTHOGRAPHY_LABEL,
+        "word": "книга",
+        "source_url": "https://slovnyk.me/dict/orthography/книга",
+        "text": "кни́га іменник жіночого роду",
+    }
+    item = _form_note_item_from_row(row, "orthography")
+
+    assert item is not None
+    assert item["dictionary"] == "orthography"
+    assert item["text"] == "кни́га іменник жіночого роду"
+    assert item["source"] == ORTHOGRAPHY_LABEL
+    assert "source_url" not in item
+    assert item["mirror_source_url"] == "https://slovnyk.me/dict/orthography/книга"
+
+
+def test_form_note_item_from_row_strips_source_tail_and_entities() -> None:
+    row = {
+        "dictionary_slug": "holoskevych",
+        "word": "серце",
+        "source_url": "https://slovnyk.me/dict/holoskevych/серце",
+        "text": "Се́рце, се́рця &amp; се́рцю   Джерело: Голоскевич на Slovnyk.me",
+    }
+    item = _form_note_item_from_row(row, "holoskevych")
+
+    assert item is not None
+    assert item["text"] == "Се́рце, се́рця & се́рцю"
+    assert "Джерело" not in item["text"]
+
+
+def test_form_note_item_from_row_returns_none_for_empty_text() -> None:
+    row = {"dictionary_slug": "orthoepy", "word": "х", "text": "   "}
+    assert _form_note_item_from_row(row, "orthoepy") is None
+
+
+def test_form_notes_slovnyk_proof_lemma_sho_all_three_dictionaries() -> None:
+    """#6465 proof lemma що — all three form-strip dictionaries present, mirror-only
+    attribution (no official electronic edition for these slugs)."""
+    cache = {
+        "lookups": {
+            "holoskevych": {
+                "dictionary_slug": "holoskevych",
+                "dictionary_label": HOLOSKEVYCH_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/holoskevych/що",
+                "text": "Що, чого́, чому́, чим, на чо́му́ і на чім; до чо́го; що б, що ж, що то, займ. що, сп., що ж",
+            },
+            "orthography": {
+                "dictionary_slug": "orthography",
+                "dictionary_label": ORTHOGRAPHY_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/orthography/що",
+                "text": "що 1 займенник форма 'віщо' вживається з прийменниками за, через, про та ін.",
+            },
+            "orthoepy": {
+                "dictionary_slug": "orthoepy",
+                "dictionary_label": ORTHOEPY_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/orthoepy/що",
+                "text": "[шчо] чого, чоуму, чим, м. (на) чому/ч'ім",
+            },
+        }
+    }
+
+    section = _form_notes_slovnyk("що", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 3
+    by_dict = {item["dictionary"]: item for item in section["items"]}
+    # The leading bare "Що" headword duplicate is stripped, same as usage_notes.
+    assert by_dict["holoskevych"]["text"].startswith("чого́, чому́")
+    assert by_dict["orthography"]["source"] == ORTHOGRAPHY_LABEL
+    assert by_dict["orthoepy"]["text"].startswith("[шчо]")
+    assert section["source"] == join_academic_source_labels(
+        [ORTHOGRAPHY_LABEL, HOLOSKEVYCH_LABEL, ORTHOEPY_LABEL]
+    )
+    # No known official electronic edition for these three slugs — mirror only.
+    assert "source_urls" not in section
+    assert set(section["mirror_source_urls"]) == {
+        "https://slovnyk.me/dict/holoskevych/що",
+        "https://slovnyk.me/dict/orthography/що",
+        "https://slovnyk.me/dict/orthoepy/що",
+    }
+
+
+def test_form_notes_slovnyk_partial_coverage_when_one_dictionary_missing() -> None:
+    cache = {
+        "lookups": {
+            "orthography": {
+                "dictionary_slug": "orthography",
+                "dictionary_label": ORTHOGRAPHY_LABEL,
+                "word": "серце",
+                "source_url": "https://slovnyk.me/dict/orthography/серце",
+                "text": "се́рце іменник середнього роду",
+            },
+            "holoskevych": None,
+        }
+    }
+
+    section = _form_notes_slovnyk("серце", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 1
+    assert section["items"][0]["dictionary"] == "orthography"
+
+
+def test_form_notes_slovnyk_returns_none_without_any_rows() -> None:
+    cache = {"lookups": {"vts": {"text": "irrelevant", "dictionary_slug": "vts"}}}
+    assert _form_notes_slovnyk("вода", cache) is None
 
 
 def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:

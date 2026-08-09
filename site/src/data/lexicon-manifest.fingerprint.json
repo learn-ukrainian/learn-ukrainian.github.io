@@ -1,5 +1,5 @@
 {
-  "fingerprint": "ef210ef802db7190e03e61c4903c2e1b02a7608fe351397c5be811d70f8e59e1",
+  "fingerprint": "c0d332f44c103ef409d9e962daf770825723f5705c7ddf4b7bf20cde822bc4a9",
   "inputs": {
     "lexicon_code": [
       {
@@ -88,7 +88,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d475a966682571d6907a46eb6f8df942e15d62ff2f006ae8866e377e18832e74"
+        "sha256": "96b040ade80572ea9285f2e582c21e51c22d6a371f2d7c6c1c0972def69ebcd7"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -212,7 +212,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "11e87a16d9caeb90a806e3b3d38beb1911c1b2213cfd3afa64a0c9c41878e671"
+        "sha256": "8beea77725932b24f64a862220e6b75cab2bc2dea25844bd37ff78071e2bcb9c"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
