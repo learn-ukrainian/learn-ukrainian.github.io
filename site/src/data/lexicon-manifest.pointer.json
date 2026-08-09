@@ -1,33 +1,33 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-0778b59991c5.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-3d19f7e85ca7.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "b1ec63f8d8cdf0b1b2d3d7a537c116aadc456fc7dcd6d39a383f07217d701588",
+  "manifest_fingerprint": "74e4ed1db4463c6b4f0ee5ce256e0e311e326b13690250f395efdf7d38410d12",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-05T20:32:25Z",
-  "gz_sha256": "c025ccad9e27f9133f52c13c945d49496281e357333d58f23437aa814a1cd523",
-  "json_sha256": "0778b59991c5ba16564935df08ddd7896d2ea3ceefa2ad3768096e66c4658f39",
-  "gz_bytes": 14196623,
-  "json_bytes": 102569555,
+  "generated_at": "2026-08-09T01:18:30Z",
+  "gz_sha256": "a7c0c8fc0ae58c34360d0ab65690bc599683f941471766367603071d1d51c554",
+  "json_sha256": "3d19f7e85ca711ec9b2031f225815844d2cc06b27a5bc2211395a88376f75867",
+  "gz_bytes": 14560392,
+  "json_bytes": 104498278,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 1270,
+      "poc_thin_pages": 2024,
       "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 50
+      "old_gate_no_english_anchor": 48
     },
     "candidate": {
-      "poc_thin_pages": 2024,
+      "poc_thin_pages": 7924,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 48
     },
     "regressions": {
       "poc_thin_pages": {
-        "baseline": 1270,
-        "candidate": 2024
+        "baseline": 2024,
+        "candidate": 7924
       }
     },
-    "override_reason": "#6369 residual Class-B EN fill: generic release asset stale vs versioned canonical; operator override from existing pointer",
+    "override_reason": "Additive #4220/#4387 EN delta-merge: 5905 translation fills pull previously bare entries into old_gate_enriched, so poc_thin_pages rises (2024→7924) while old_gate_no_english_anchor stays 48, entry count stays 19203, and zero nonempty-EN overwrites. Override authorized by atlas-reenrich-delta-merge brief (option 2).",
     "bootstrap": false
   },
-  "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON. richness_gate.baseline.poc_thin_pages dropped from the prior pointer's recorded 2278 to 1270 because publish_manifest.py recomputes baseline live off the currently published GitHub release asset (download_published_manifest -> audit_manifest, scripts/lexicon/publish_manifest.py) rather than reusing the value recorded in the previous pointer commit; the intervening park_thin_entries.py run (scripts/lexicon/park_thin_entries.py) removed audit-classified thin lemma_article entries from that canonical asset between the two publishes, so 1270 reflects the true current published count, not a re-baselined/relaxed target. The remaining override covers old_gate_no_english_anchor (residual 48, unreachable without wired EN per #6369 scope); teacher P1's own residual on that gate is 0."
+  "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
 }
