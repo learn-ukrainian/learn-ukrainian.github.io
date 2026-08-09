@@ -1,7 +1,8 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-08-08
-# Total: 128 books from catalog and publisher sources, retained once in Google Drive
-# Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
+# Total: 151 logical books from catalog and publisher sources, retained once in Google Drive
+# Strategy: language/literature/history diversity plus one storage-efficient
+# representative for each acquired curriculum cell; alternatives are not duplicated.
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
 # Page URL pattern: https://pidruchnyk.com.ua/{slug}.html
@@ -245,13 +246,12 @@ books:
     subject: zarlit
     author: Волощук
     year: 2023
-    slug: 2623-zaralit-6-klas-voloshchuk-2023
+    slug: ""
     canonical_source: 6-klas-zarubizhna-literatura-voloshchuk-2023
-    source_url: https://pidruchnyk.com.ua/2623-zaralit-6-klas-voloshchuk-2023.html
-    fallback_page_urls:
-      - "https://shkola.in.ua/2866-zarubizhna-literatura-6-klas-voloshchuk-2023.html"
-    gdrive_id: 1BmLetDjtE2F9KwyOzvrfVJTu_ZmVVCpo
-    note: "Current NUS edition; one canonical Drive copy"
+    source_url: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/6-klas-n/movno-lteraturna-osvtnya-galuz/ntegrovan-kursi_1/zarubzhna-lteratura-pdruchnik-dlya-6-klasu-zakladv-zagalno-seredno-osvti-avt-voloshchuk--v-slobodyanyuk-o-m/
+    override_pdfs:
+      - "https://www.geneza.ua/sites/default/files/ebooks/%D0%92%D0%BE%D0%BB%D0%BE%D1%89%D1%83%D0%BA_%D0%97%D0%9B_%D0%9F_6.pdf"
+    note: "Current NUS edition; publisher PDF retains 304 exact native-text chunks after quarantining 42 rows from 32 pages with layout-induced character splitting"
 
   # ── GRADE 7 ──────────────────────────────────────────
   - id: g7-mova-avramenko
@@ -294,6 +294,17 @@ books:
     slug: 2847-istoriia-ukrainy-galimov-7-klas-2024
     note: "Major figure in Ukrainian history pedagogy"
 
+  - id: g7-history-integrated-shchupak
+    grade: 7
+    subject: istoriia
+    author: Щупак, Секиринський, Власова, Кронгауз
+    year: 2024
+    slug: 7-klas-istoriya-shchupak-2024-full
+    canonical_source: 7-klas-istoriya-shchupak-2024-full
+    source_url: https://orioncentr.com.ua/394-nush-7-klas-istoriya-ukrayina-i-svit/
+    gdrive_id: 1zPTuhQsOF-HP2z2a13Nojrm1Mb3OyjX-
+    note: "Publisher's complete 492-PDF-page version of the current integrated course; identity and MON order verified against the front matter, 96.34% native content-page coverage, zero OCR or native-anomaly findings"
+
   # ── GRADE 8 ──────────────────────────────────────────
   - id: g8-mova-avramenko
     grade: 8
@@ -318,6 +329,16 @@ books:
     year: 2025
     slug: 2962-ukrainska-literatura-avramenko-8-klas-2025
     note: "Brand new 2025 edition"
+
+  - id: g8-lit-zabolotnyi
+    grade: 8
+    subject: ukrainska_literatura
+    author: Заболотний, Слоньовська, Ярмульська
+    year: 2025
+    slug: 2964-ukrainska-literatura-zabolotnyi-8-klas-2025
+    canonical_source: 8-klas-ukrlit-zabolotnyi-2025
+    source_url: https://pidruchnyk.com.ua/2964-ukrainska-literatura-zabolotnyi-8-klas-2025.html
+    note: "Complete current edition already retained; title and recommendation pages verified against the PDF, native text only, zero OCR or native-anomaly flags"
 
   - id: g8-hist-shchupak
     grade: 8
@@ -406,6 +427,16 @@ books:
     slug: 3081-ukrmova-10-klas-glazova
     note: "Excellent grammar depth for upper levels"
 
+  - id: g10-mova-avramenko
+    grade: 10
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2018
+    slug: 1229-ukrmova-10-klas-avramenko
+    canonical_source: 10-klas-ukrajinska-mova-avramenko-2018
+    source_url: https://pidruchnyk.com.ua/1229-ukrmova-10-klas-avramenko.html
+    note: "Complete 208-page edition already retained; title, MON order, and ISBN pages verified against the PDF, native text only, zero OCR or native-anomaly flags"
+
   - id: g10-lit-avramenko
     grade: 10
     subject: ukrainska_literatura
@@ -472,12 +503,18 @@ books:
     note: "Major figure in Ukrainian history pedagogy"
 
   # ── WAVE 1 STEM (#4593, added 2026-07-06) ──────────────────
-  - id: g5-informatyka-ryvkind
+  - id: g5-informatyka-morze
     grade: 5
     subject: informatyka
-    author: Ривкінд
+    author: Морзе
     year: 2022
-    slug: 1660-informatyka-5-klas-ryvkind-2022
+    slug: ""
+    canonical_source: 5-klas-informatyka-morze-2022
+    source_url: https://shkola.in.ua/2682-informatyka-5-klas-morze.html
+    fallback_page_urls:
+      - https://shkola.in.ua/2682-informatyka-5-klas-morze.html
+    gdrive_id: 1lUFcZFuOhTTTgAGA9YfUlQAJv_2-1MyC
+    note: "Complete 2022 edition; 99.61% native content-page coverage and 257 ingest-valid chunks; four letter-spaced Примітка headings verified against exact page images"
 
   - id: g5-matematyka-ister
     grade: 5
@@ -486,25 +523,30 @@ books:
     year: 2022
     slug: 1632-matematyka-5-klas-ister-2022
 
-  - id: g6-informatyka-ryvkind
+  - id: g6-informatyka-bondarenko
     grade: 6
     subject: informatyka
-    author: Ривкінд
+    author: Бондаренко
     year: 2023
-    slug: 2686-informatyka-6-klas-ryvkind-2023
-    canonical_source: 6-klas-informatyka-ryvkind-2023
+    slug: ""
+    canonical_source: 6-klas-informatyka-bondarenko-2023
+    source_url: https://shkola.in.ua/2894-informatyka-6-klas-bondarenko.html
     fallback_page_urls:
-      - "https://shkola.in.ua/2898-informatyka-6-klas-ryvkind.html"
+      - https://shkola.in.ua/2894-informatyka-6-klas-bondarenko.html
+    gdrive_id: 1Dem_wcYufOmJFxVPh2f7UnrlY78TI4n1
+    note: "Complete 2023 edition; 70.23% native content-page coverage and 184 ingest-valid chunks; printed figure, spreadsheet, and alphabet labels verified against exact page images"
 
-  - id: g6-matematyka-ister
+  - id: g6-matematyka-tarasenkova
     grade: 6
     subject: matematyka
-    author: Істер
+    author: Тарасенкова
     year: 2023
-    slug: 2590-matematyka-6-klas-ister-2023
-    canonical_source: 6-klas-matematyka-ister-2023
+    slug: ""
+    canonical_source: 6-klas-matematyka-tarasenkova-2023
+    source_url: https://shkola.in.ua/2814-matematyka-6-klas-tarasenkova-2023.html
     fallback_page_urls:
-      - "https://shkola.in.ua/2815-matematyka-6-klas-ister.html"
+      - "https://shkola.in.ua/2814-matematyka-6-klas-tarasenkova-2023.html"
+    note: "Complete current two-part edition; both parts pass native-text extraction and exactness checks (430 retained chunks total)"
 
   - id: g7-algebra-merzliak
     grade: 7
@@ -513,12 +555,29 @@ books:
     year: 2024
     slug: 2892-algebra-merzliak-7-klas-2024
 
-  - id: g7-biolohiya-zadorozhnyi
+  - id: g7-biolohiya-sobol
     grade: 7
     subject: biolohiya
-    author: Задорожний
+    author: Соболь
     year: 2024
-    slug: 2838-biologiia-zadorozhnyi-7-klas-2024
+    slug: ""
+    canonical_source: 7-klas-biolohiya-sobol-2024
+    source_url: https://shkola.in.ua/266-biolohiia-7-klas-sobol.html
+    fallback_page_urls:
+      - "https://shkola.in.ua/266-biolohiia-7-klas-sobol.html"
+    gdrive_id: 1ZB4B8U6uxiNrm1cEMKdg5QOOLIOniMnB
+    note: "Current NUS edition; two diagram-only pages with broken internal font names are evidence-quarantined, leaving 410 exact native-text chunks"
+
+  - id: g7-heohrafiya-dovhan
+    grade: 7
+    subject: heohrafiya
+    author: Довгань
+    year: 2024
+    slug: ""
+    canonical_source: 7-klas-heohrafiya-dovhan-2024
+    source_url: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/7-klas/prirodnicha-galuz/geografya/geografya-pdruchnik-dlya-7-klasu-zakladv-zagalno-seredno-osvti-avt-dovgan-g-d/
+    gdrive_id: 1VsVZlfyTGoi3sKUwKRqMXaCMu8p13ALX
+    note: "Current approved edition; four non-prose map pages and two corrupt logical-text pages quarantined, with printed labels on pages 14, 55, and 59 verified; 343 ingest-valid chunks"
 
   - id: g7-fizyka-bariakhtar
     grade: 7
@@ -534,12 +593,19 @@ books:
     year: 2024
     slug: 2885-geometriia-merzliak-7-klas-2024
 
-  - id: g7-informatyka-ryvkind
+  - id: g7-informatyka-bondarenko
     grade: 7
     subject: informatyka
-    author: Ривкінд
+    author: Бондаренко
     year: 2024
-    slug: 2809-informatyka-ryvkind-7-klas-2024
+    slug: ""
+    canonical_source: 7-klas-informatyka-bondarenko-2024
+    source_url: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/7-klas/nformatichna/nformatika/nformatika-pdruchnik-dlya-7-klasu-zakladv-zagalno-seredno-osvti-avt-bondarenko-o-o-lastovetskiy-v-v-pilipchuk-o-p-shestopalov-e-a/
+    fallback_page_urls:
+      - https://pidruchnyk.com.ua/2805-informatyka-bondarenko-7-klas-2024.html
+      - https://shkola.in.ua/1421-informatyka-7-klas-bondarenko-2020.html
+    gdrive_id: 1AZfqlsBeAHz4v-oea38fSaX_GJoXzloF
+    note: "Complete 2024 edition verified by its title and publication page (MON order 124 of 2024, ISBN 978-617-09-8755-6); 78.06% retained native content-page coverage and 218 ingest-valid chunks; page 2 hidden duplicate text quarantined and printed labels verified against exact page images"
 
   - id: g7-khimiya-hryhorovych
     grade: 7
@@ -548,15 +614,14 @@ books:
     year: 2024
     slug: 2819-khimiia-grygorovych-7-klas-2024
 
-  - id: g8-algebra-merzliak
+  - id: g8-algebra-tarasenkova
     grade: 8
     subject: algebra
-    author: Мерзляк
+    author: Тарасенкова
     year: 2025
-    slug: 2906-algebra-merzliak-8-klas-2025
-    canonical_source: 8-klas-algebra-merzliak-2025
-    fallback_page_urls:
-      - "https://shkola.in.ua/318-alhebra-8-klas-merzliak.html"
+    slug: 2909-algebra-tarasenkova-8-klas-2025
+    canonical_source: 8-klas-algebra-tarasenkova-2025
+    note: "Complete 352-page current edition; 98.03% native content-page coverage, zero OCR and zero Unicode damage"
 
   - id: g8-biolohiya-anderson
     grade: 8
@@ -572,15 +637,17 @@ books:
     year: 2025
     slug: 2971-fizyka-bariakhtar-8-klas-2025
 
-  - id: g8-heometriya-merzliak
+  - id: g8-heometriya-burda-tarasenkova
     grade: 8
     subject: heometriya
-    author: Мерзляк
+    author: Бурда, Тарасенкова
     year: 2025
-    slug: 2912-geometriia-merzliak-8-klas-2025
-    canonical_source: 8-klas-heometriya-merzliak-2025
+    slug: ""
+    canonical_source: 8-klas-heometriya-burda-tarasenkova-2025
+    source_url: https://orioncentr.com.ua/438-nush-8-klas-heometriya-avt-burda-m-i-tarasenkova-n-a/
     fallback_page_urls:
-      - "https://shkola.in.ua/338-heometriia-8-klas-merzliak.html"
+      - "https://lms.e-school.net.ua/assets/courseware/v1/e69a70acb1733f49329f599616a8a85e/asset-v1%3AUIED%2B8thGeom06%2B2024%2Btype%40asset%2Bblock/8_%D0%BA%D0%BB%D0%B0%D1%81_%D0%91%D1%83%D1%80%D0%B4%D0%B0__%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2%D0%B0_%D0%93%D0%B5%D0%BE%D0%BC%D0%B5%D1%82%D1%80%D1%96%D1%8F_%D0%9E%D1%80%D1%96%D0%BE%D0%BD.pdf"
+    note: "Complete current 288-page edition represented in 150 PDF spreads; 95.33% native content-page coverage and 279 ingest-valid chunks after quarantining non-prose overview page 4; remaining math labels and page 148 contents text verified against exact page images"
 
   - id: g8-informatyka-ryvkind
     grade: 8
@@ -602,6 +669,16 @@ books:
     author: Мерзляк
     year: 2017
     slug: 982-algebra-merzlyak-9-klas-2017
+
+  - id: g9-algebra-tarasenkova-current
+    grade: 9
+    subject: algebra
+    author: Тарасенкова
+    year: 2026
+    slug: 9-klas-algebra-tarasenkova-2026
+    canonical_source: 9-klas-algebra-tarasenkova-2026
+    source_url: https://orioncentr.com.ua/60-metodychna-pidtrymka-9-klas-nush/496-nush_9_algebra/
+    note: "Full 338-page publisher PDF; 326 ingest-valid chunks after quarantining corrupt logical page 314; 34 math-heavy pages verified against exact images; atomic database replacement pending"
 
   - id: g9-biolohiya-zadorozhnyi
     grade: 9
@@ -664,12 +741,42 @@ books:
     gdrive_id: 1XLZLstnG5EBc5g9P3vZv8ZrGZfrb3zYr
     note: "Current NUS edition; download-enabled catalog copy retained once in Google Drive"
 
+  - id: g9-informatyka-morze-current
+    grade: 9
+    subject: informatyka
+    author: Морзе
+    year: 2026
+    slug: 9-klas-informatyka-morze-2026
+    canonical_source: 9-klas-informatyka-morze-2026
+    source_url: https://orioncentr.com.ua/nush-9-klas.-informatyka-morze-n.-v.-barna-o.-v./
+    note: "Full 205-page publisher PDF; 229 ingest-valid chunks; pages 88 and 155 verified as intentional labels/code-template tracking; atomic database replacement pending"
+
+  - id: g9-mystetstvo-kondratova-current
+    grade: 9
+    subject: mystetstvo
+    author: Кондратова
+    year: 2025
+    slug: 9-klas-mystetstvo-kondratova-2025
+    canonical_source: 9-klas-mystetstvo-kondratova-2025
+    source_url: https://bohdan-books.com/upload/data_files/tmp_catalog/978-966-10-9223-4_myst-9kl.pdf
+    note: "Full 288-page publisher PDF; 258 ingest-valid chunks after quarantining 30 music-layer or score-dominant pages; atomic database replacement pending"
+
   - id: g9-khimiya-popel
     grade: 9
     subject: khimiya
     author: Попель
     year: 2017
     slug: 1041-himiya-9-klas-popel-2017
+
+  - id: g9-khimiya-yaroshenko-current
+    grade: 9
+    subject: khimiya
+    author: Ярошенко
+    year: 2026
+    slug: 9-klas-khimiya-yaroshenko-2026
+    canonical_source: 9-klas-khimiya-yaroshenko-2026
+    source_url: https://orioncentr.com.ua/nush_9_grade_chemistry/
+    note: "Full 290-page publisher PDF; 306 ingest-valid chunks after quarantining 6 corrupt rows from 5 pages; page 236 chemical codes verified against the exact image; atomic database replacement pending"
 
   # ═══════════════════════════════════════════════════════════════════
   # BATCH 3 (#4593, user-approved 2026-07-06): HIGH+MEDIUM catalog-diff
@@ -769,12 +876,15 @@ books:
     year: 2024
     slug: 2855-vsesvitnia-istoriia-ladychenko-7-klas-2024
 
-  - id: g7-zarlit-voloshchuk
+  - id: g7-zarlit-nikolenko
     grade: 7
     subject: zarlit
-    author: Волощук
+    author: Ніколенко
     year: 2024
-    slug: 2858-zarubizhna-literatura-voloshchuk-7-klas-2024
+    slug: 2862-zarubizhna-literatura-nikolenko-7-klas-2024
+    canonical_source: 7-klas-zarlit-nikolenko-2024
+    source_url: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/7-klas/movno-lteraturna-osvtnya-galuz/zarubzhna-lteratura/zarubzhna-lteratura-pdruchnik-dlya-7-klasu-zakladv-zagalno-seredno-osvti-avt-nkolenko-o-m-matsevko-bekerska-l-v-rudntska-n-p-kovalova-l-l-turyanitsya-v-g-bazilska-n-m-gvozdkova-o-v-lebed-d-o/
+    note: "Current approved complete edition; 100% native content-page coverage, 292 clean chunks, and the intentionally spaced Poe cipher letters on page 164 verified against the exact image"
 
   - id: g7-mystetstvo-masol
     grade: 7
@@ -1105,3 +1215,193 @@ books:
     year: 2018
     slug: 3090-mystectvo-10-11-klas-nazarenko
     note: "combined 10(11) volume, fills mystetstvo-11 slot"
+
+  # ── PHASE 3 CURRICULUM-CELL PACKET ──────────────────
+  # One retained representative per unresolved required cell. Integrated
+  # primary-course volumes also satisfy their documented technology content;
+  # alternatives and duplicate publisher editions are not retained.
+  - id: g1-matematyka-lystopad
+    grade: 1
+    subject: matematyka
+    author: Листопад
+    year: 2025
+    slug: 1211-matematika-1-klas-lystopad
+    canonical_source: 1-klas-matematyka-lystopad-2025
+    source_url: https://pidruchnyk.com.ua/1211-matematika-1-klas-lystopad.html
+
+  - id: g1-yds-zharkova
+    grade: 1
+    subject: ya_doslidzhuiu_svit
+    author: Жаркова
+    year: 2024
+    slug: 2730-ya-doslidzhuiu-svit-1-klas-zharkova-2023
+    canonical_source: 1-klas-ya-doslidzhuiu-svit-zharkova-2024
+    source_url: https://pidruchnyk.com.ua/2730-ya-doslidzhuiu-svit-1-klas-zharkova-2023.html
+    fallback_page_urls:
+      - https://shkola.in.ua/1246-ya-doslidzhuyu-svit-1-klas-zharkova-chastina-1.html
+      - https://shkola.in.ua/1247-ya-doslidzhuyu-svit-1-klas-zharkova-chastina-2.html
+    note: "Two-part integrated course; contents explicitly include Design and Technology."
+
+  - id: g2-matematyka-ister
+    grade: 2
+    subject: matematyka
+    author: Істер
+    year: 2025
+    slug: 3034-matematyka-ister-2-klas
+    canonical_source: 2-klas-matematyka-ister-2025
+    source_url: https://pidruchnyk.com.ua/3034-matematyka-ister-2-klas.html
+    note: "Native-text replacement for the scan-only Гісь edition."
+
+  - id: g2-yds-hrushchynska
+    grade: 2
+    subject: ya_doslidzhuiu_svit
+    author: Грущинська
+    year: 2019
+    source_file: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+    slug: 1286-ya-doslidzhuyu-svit-gruschinska-2-klas
+    canonical_source: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+    source_url: https://pidruchnyk.com.ua/1286-ya-doslidzhuyu-svit-gruschinska-2-klas.html
+    override_pdfs:
+      - https://pidruchnyk.com.ua/uploads/book/2-klas-ja-doslidzhuju-svit-grushhinska-2019-1.pdf
+    note: "Part 1 of the chosen integrated course."
+
+  - id: g2-yds-morze
+    grade: 2
+    subject: ya_doslidzhuiu_svit
+    author: Морзе
+    year: 2019
+    source_file: 2-klas-ya-doslidzhuiu-svit-morze-2019
+    slug: 1286-ya-doslidzhuyu-svit-gruschinska-2-klas
+    canonical_source: 2-klas-ya-doslidzhuiu-svit-morze-2019
+    source_url: https://pidruchnyk.com.ua/1286-ya-doslidzhuyu-svit-gruschinska-2-klas.html
+    override_pdfs:
+      - https://pidruchnyk.com.ua/uploads/book/2-klas-ja-doslidzhuju-svit-morze-2019-2.pdf
+    note: "Part 2 covers Informatics and Design and Technology."
+
+  - id: g3-matematyka-lystopad
+    grade: 3
+    subject: matematyka
+    author: Листопад
+    year: 2020
+    slug: 1502-matematyka-3-klas-lystopad
+    canonical_source: 3-klas-matematyka-lystopad-2020
+    source_url: https://pidruchnyk.com.ua/1502-matematyka-3-klas-lystopad.html
+
+  - id: g3-yds-zharkova
+    grade: 3
+    subject: ya_doslidzhuiu_svit
+    author: Жаркова
+    year: 2020
+    slug: 1545-ya-doslidzhuyu-svit-3-klas-zharkova
+    canonical_source: 3-klas-ya-doslidzhuiu-svit-zharkova-2020
+    source_url: https://pidruchnyk.com.ua/1545-ya-doslidzhuyu-svit-3-klas-zharkova.html
+    fallback_page_urls:
+      - https://shkola.in.ua/1397-ya-doslidzhuyu-svit-3-klas-zharkova-ch-1.html
+      - https://shkola.in.ua/1398-ya-doslidzhuyu-svit-3-klas-zharkova-ch-2.html
+    note: "Two-part integrated course; part 2 includes Design and Technology."
+
+  - id: g4-matematyka-ister
+    grade: 4
+    subject: matematyka
+    author: Істер
+    year: 2021
+    slug: 1570-matematika-4-klas-ster
+    canonical_source: 4-klas-matematyka-ister-2021
+    source_url: https://pidruchnyk.com.ua/1570-matematika-4-klas-ster.html
+
+  - id: g4-yds-zharkova
+    grade: 4
+    subject: ya_doslidzhuiu_svit
+    author: Жаркова
+    year: 2021
+    slug: 1624-ya-doslidzhuyu-svit-4-klas-zharkova
+    canonical_source: 4-klas-ya-doslidzhuiu-svit-zharkova-2021
+    source_url: https://pidruchnyk.com.ua/1624-ya-doslidzhuyu-svit-4-klas-zharkova.html
+    fallback_page_urls:
+      - https://shkola.in.ua/1906-ya-doslidzhuyu-svit-4-klas-zharkova-ch-1.html
+      - https://shkola.in.ua/1907-ya-doslidzhuyu-svit-4-klas-zharkova-ch-2.html
+    note: "Two-part integrated course; part 2 includes Design and Technology."
+
+  - id: g5-tekhnolohiyi-bilenko
+    grade: 5
+    subject: tekhnolohiyi
+    author: Біленко
+    year: 2023
+    slug: 2696-tehnologii-5-klas-bilenko
+    canonical_source: 5-klas-tekhnolohiyi-bilenko-2023
+    source_url: https://pidruchnyk.com.ua/2696-tehnologii-5-klas-bilenko.html
+    fallback_page_urls:
+      - https://shkola.in.ua/2964-tekhnolohii-5-klas-bilenko-2023.html
+
+  - id: g6-tekhnolohiyi-bilenko
+    grade: 6
+    subject: tekhnolohiyi
+    author: Біленко
+    year: 2023
+    slug: 2694-tehnologii-6-klas-bilenko
+    canonical_source: 6-klas-tekhnolohiyi-bilenko-2023
+    source_url: https://pidruchnyk.com.ua/2694-tehnologii-6-klas-bilenko.html
+    fallback_page_urls:
+      - https://shkola.in.ua/2890-tekhnolohii-6-klas-bilenko.html
+
+  - id: g7-tekhnolohiyi-bilenko
+    grade: 7
+    subject: tekhnolohiyi
+    author: Біленко
+    year: 2024
+    slug: ""
+    canonical_source: 7-klas-tekhnolohiyi-bilenko-2024
+    source_url: https://shkola.in.ua/3123-tekhnolohii-7-klas-bilenko.html
+    gdrive_id: 1nZgOzDD597aZQ_DYNLHGdFHOujcaOTUw
+
+  - id: g8-tekhnolohiyi-bilenko
+    grade: 8
+    subject: tekhnolohiyi
+    author: Біленко
+    year: 2025
+    slug: 2953-tekhnologii-bilenko-8-klas-2025
+    canonical_source: 8-klas-tekhnolohiyi-bilenko-2025
+    source_url: https://pidruchnyk.com.ua/2953-tekhnologii-bilenko-8-klas-2025.html
+    fallback_page_urls:
+      - https://shkola.in.ua/3294-tekhnolohii-8-klas-bilenko.html
+
+  - id: g9-tekhnolohiyi-bilenko
+    grade: 9
+    subject: tekhnolohiyi
+    author: Біленко
+    year: 2026
+    slug: ""
+    canonical_source: 9-klas-tekhnolohiyi-bilenko-2026
+    source_url: https://pidruchnyk.com.ua/3239-tekhnologii-9-klas-bilenko-2026.html
+    fallback_page_urls:
+      - https://shkola.in.ua/3424-tekhnolohii-9-klas-bilenko.html
+    gdrive_id: 1mH8Pg8N-32OsWRtxE7-wGTc-Qq1HAY00
+
+  - id: g10-11-tekhnolohiyi-khodzycka
+    grade: 10
+    subject: tekhnolohiyi
+    author: Ходзицька
+    year: 2019
+    slug: 3085-tekhnologii-10-11-klas-khodzycka
+    canonical_source: 10-11-klas-tekhnolohiyi-khodzycka-2019
+    source_url: https://pidruchnyk.com.ua/3085-tekhnologii-10-11-klas-khodzycka.html
+    override_pdfs:
+      - https://pidruchnyk.com.ua/uploads/book/10(11)-klas-tekhnologiji-hodzycka-2019.pdf
+    fallback_page_urls:
+      - https://shkola.in.ua/1694-tekhnolohii-10-11-klas-khodzytska-2019.html
+    note: "One combined volume satisfies the Grade 10 and Grade 11 technology cells."
+
+blocked_candidates:
+  - id: g9-mova-samonova-2025
+    grade: 9
+    subject: ukrainska_mova
+    author: Самонова; Слівінська; Обрадович
+    year: 2025
+    canonical_source: 9-klas-ukrmova-samonova-2025
+    official_catalog_url: https://uied.org.ua/konkurs-pidruchnykiv/perelik-pidruchnykiv-navchalnyh-posibnykiv-dlya-zzso-podanyh-na-konkurs-u-2026-roczi-4-6-7-ta-9-klas/
+    source_url: https://bohdan-books.com/upload/data_files/tmp_catalog/978-966-10-9227-2_ukr-mova-9kl.pdf
+    isbn: 978-966-10-9227-2
+    native_text_canary_state: searchable_front_matter_verified
+    license_or_access_status: public_download_all_rights_reserved
+    admission_state: blocked_for_retention_and_model_corpus
+    note: "Official 2026 Grade 9 competition candidate; excluded from books because the publisher explicitly forbids reproduction without permission."

@@ -25,20 +25,22 @@ STEM_TEXTBOOK_SUBJECTS = {
 }
 
 WAVE1_STEM_TEXTBOOK_SOURCE_FILES = {
-    "5-klas-informatyka-ryvkind-2022": "informatyka",
+    "5-klas-informatyka-morze-2022": "informatyka",
     "5-klas-matematyka-ister-2022": "matematyka",
-    "6-klas-informatyka-ryvkind-2023": "informatyka",
-    "6-klas-matematyka-ister-2023": "matematyka",
+    "6-klas-informatyka-bondarenko-2023": "informatyka",
+    "6-klas-matematyka-tarasenkova-2023-1": "matematyka",
+    "6-klas-matematyka-tarasenkova-2023-2": "matematyka",
     "7-klas-algebra-merzliak-2024": "algebra",
     "7-klas-biolohiya-zadorozhnyi-2024": "biolohiya",
     "7-klas-fizyka-bariakhtar-2024": "fizyka",
     "7-klas-heometriya-merzliak-2024": "heometriya",
-    "7-klas-informatyka-ryvkind-2024": "informatyka",
+    "7-klas-informatyka-bondarenko-2024": "informatyka",
     "7-klas-khimiya-hryhorovych-2024": "khimiya",
     "8-klas-algebra-merzliak-2025": "algebra",
+    "8-klas-algebra-tarasenkova-2025": "algebra",
     "8-klas-biolohiya-anderson-2025": "biolohiya",
     "8-klas-fizyka-bariakhtar-2025": "fizyka",
-    "8-klas-heometriya-merzliak-2025": "heometriya",
+    "8-klas-heometriya-burda-tarasenkova-2025": "heometriya",
     "8-klas-informatyka-ryvkind-2025": "informatyka",
     "8-klas-khimiya-hryhorovych-2025": "khimiya",
     "9-klas-algebra-merzliak-2017": "algebra",
@@ -181,6 +183,8 @@ def test_subject_aliases_normalize_to_canonical_slugs() -> None:
     assert normalize_subject_slug("ukrajinska-literatura") == "ukrlit"
     assert normalize_subject_slug("istoriia") == "istoriya"
     assert normalize_subject_slug("vocabulary") == "lexicon"
+    assert normalize_subject_slug("foreign_language") == "foreign_language"
+    assert normalize_subject_slug("ya_doslidzhuiu_svit") == "ya_doslidzhuiu_svit"
     assert normalize_subject_slug("unknown") is None
 
 
@@ -188,12 +192,16 @@ def test_future_stem_source_files_map_by_token() -> None:
     assert subject_for_source_file("5-klas-informatyka-example-2026") == "informatyka"
     assert subject_for_source_file("7-klas-geometriya-example-2026") == "heometriya"
     assert subject_for_source_file("8-klas-biolohiia-example-2026") == "biolohiya"
+    assert subject_for_source_file("2-klas-angliiska-mova-example-2024") == "foreign_language"
+    assert subject_for_source_file("3-klas-ya-doslidzhuiu-svit-example-2020") == "ya_doslidzhuiu_svit"
+    assert subject_for_source_file("7-klas-tekhnolohiyi-example-2024") == "tekhnolohiyi"
+    assert subject_for_source_file("5-klas-tekhnolohiyi-bilenko-2023") == "tekhnolohiyi"
 
 
 def test_wave1_stem_url_config_slugs_map_to_canonical_subjects() -> None:
     urls = yaml.safe_load((PROJECT_ROOT / "data/pidruchnyk_urls.yaml").read_text())
 
-    assert len(WAVE1_STEM_TEXTBOOK_SOURCE_FILES) == 22
+    assert len(WAVE1_STEM_TEXTBOOK_SOURCE_FILES) == 24
     assert set(WAVE1_STEM_TEXTBOOK_SOURCE_FILES).issubset(urls)
 
     resolved_subjects = {
@@ -348,6 +356,9 @@ def test_batch3_author_translits_resolve_to_cyrillic() -> None:
         "ladychenko": "Ладиченко",
         "bevz": "Бевз",
         "bios": "Біос",
+        "kondratova": "Кондратова",
+        "tarasenkova": "Тарасенкова",
+        "yaroshenko": "Ярошенко",
     }
     from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
@@ -362,6 +373,10 @@ def test_batch3_author_translits_resolve_to_cyrillic() -> None:
         ("9-klas-finansova-rolik-2026", "finansova"),
         ("9-klas-heometriya-bevz-2026", "heometriya"),
         ("9-klas-informatyka-bios-2026", "informatyka"),
+        ("9-klas-informatyka-morze-2026", "informatyka"),
+        ("9-klas-algebra-tarasenkova-2026", "algebra"),
+        ("9-klas-khimiya-yaroshenko-2026", "khimiya"),
+        ("9-klas-mystetstvo-kondratova-2025", "mystetstvo"),
         ("9-klas-istoriya-ukr-galimov-2026", "istoriya"),
         ("9-klas-pravoznavstvo-berendieiev-2026", "pravoznavstvo"),
         ("9-klas-ukrlit-zabolotnyi-2026", "ukrlit"),
@@ -400,8 +415,13 @@ def test_new_authors_mapping_sample() -> None:
         "merzlyak": "Мерзляк",
         "grygorovych": "Григорович",
         "zadorozhnyj": "Задорожний",
+        "sobol": "Соболь",
         "rolik": "Ролік",
         "berendieiev": "Берендєєв",
+        "glukhovtseva": "Глуховцева",
+        "khomik": "Хомік",
+        "strokal": "Строкаль",
+        "shvets": "Швець",
     }
     for translit, expected_uk in samples.items():
         assert AUTHOR_UK_BY_TRANSLIT[translit] == expected_uk

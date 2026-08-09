@@ -15,6 +15,9 @@ The deterministic predicates are:
 * ``chunks_without_pdf``: a chunk JSONL is present and no PDF is present.
 * ``chunks_not_ingested``: chunk JSONL is present but its reconciled SQLite
   row count is zero.
+* ``partial_db_ingest``: chunk JSONL and SQLite rows are both present but the
+  exact row counts differ.  This includes page-level quarantine and cannot be
+  reported as ready.
 * ``db_without_chunks``: SQLite rows are present but no chunk JSONL is present.
 * ``suspect_extraction``: a chunk JSONL has zero, one, or two non-empty rows,
   or a PDF has a known page count of at least 20 and fewer than 0.05 rows per
@@ -119,17 +122,19 @@ _STATUS_ORDER = (
     "pdf_without_chunks",
     "chunks_without_pdf",
     "chunks_not_ingested",
+    "partial_db_ingest",
     "db_without_chunks",
     "suspect_extraction",
     "missing_selected_source",
 )
 _PREDICATES = {
     "ready": (
-        "pdf_present and chunks_present and db_row_count > 0 and not suspect_extraction"
+        "pdf_present and chunks_present and db_row_count == chunk_row_count and not suspect_extraction"
     ),
     "pdf_without_chunks": "pdf_present and not chunks_present",
     "chunks_without_pdf": "chunks_present and not pdf_present",
     "chunks_not_ingested": "chunks_present and db_row_count == 0",
+    "partial_db_ingest": "chunks_present and 0 < db_row_count != chunk_row_count",
     "db_without_chunks": "db_row_count > 0 and not chunks_present",
     "suspect_extraction": (
         "any chunk file has <= 2 rows, or known_pdf_pages >= 20 and rows/pages < 0.05"
@@ -618,6 +623,7 @@ def _source_states(
     selected: bool,
     pdf_present: bool,
     chunks_present: bool,
+    chunk_rows: int,
     db_rows: int,
     suspect: bool,
 ) -> tuple[str, list[str]]:
@@ -630,17 +636,21 @@ def _source_states(
         states.append("chunks_without_pdf")
     if chunks_present and db_rows == 0:
         states.append("chunks_not_ingested")
+    if chunks_present and db_rows > 0 and db_rows != chunk_rows:
+        states.append("partial_db_ingest")
     if db_rows > 0 and not chunks_present:
         states.append("db_without_chunks")
     if suspect:
         states.append("suspect_extraction")
-    if pdf_present and chunks_present and db_rows > 0 and not suspect:
+    if pdf_present and chunks_present and db_rows == chunk_rows and not suspect:
         states.append("ready")
     states = _ordered_states(states)
     if "missing_selected_source" in states:
         primary = "missing_selected_source"
     elif "suspect_extraction" in states:
         primary = "suspect_extraction"
+    elif "partial_db_ingest" in states:
+        primary = "partial_db_ingest"
     elif "ready" in states:
         primary = "ready"
     elif states:
@@ -781,6 +791,7 @@ def build_report(
             selected=selected is not None,
             pdf_present=bool(pdfs),
             chunks_present=bool(chunks),
+            chunk_rows=total_rows,
             db_rows=db_rows,
             suspect=suspect,
         )

@@ -1,0 +1,617 @@
+schema_version: university_corpus_denominator_v1
+operation:
+  as_of: 2026/27
+  counted_in_school_textbook_denominator: false
+  completion_evaluated_separately: true
+  purpose: Advanced Ukrainian-language and domain-prose evidence for machine-learnable content.
+  source_count_policy: Coverage is judged by required topic cells and evidence quality, not by an arbitrary book count.
+  foreign_language_sources: out_of_scope
+normative_hierarchy:
+- rank: 1
+  authority: current_official_ukrainian_orthography
+  role: normative
+- rank: 2
+  authority: official_ukrainian_dictionaries_and_terminology_sources
+  role: normative_support
+- rank: 3
+  authority: accredited_university_textbooks_and_course_materials
+  role: explanatory_support
+- rank: 4
+  authority: historical_or_superseded_orthography_material
+  role: transition_and_comparison_only
+orthography_policy:
+  normative_system: pravopys_2019
+  current_official_edition: pravopys_2026
+  current_edition_effective_date: "2026-03-28"
+  edition_relationship: editorial_technical_update_without_norm_change
+  current_regime: current_2019
+  older_regimes: retain_with_explicit_regime_metadata
+  silent_normalization: forbidden
+  conflict_rule: University sources cannot override the current official orthography.
+source_admission_contract:
+  required_fields:
+  - source_id
+  - title
+  - domain
+  - topic_cell_ids
+  - provenance_url
+  - institution_or_publisher
+  - publication_year
+  - edition
+  - license_or_access_status
+  - reuse_tier
+  - orthography_regime
+  - normative_weight
+  - language_profile
+  - native_text_canary_state
+  - pdf_sha256
+  - jsonl_sha256
+  - drive_pdf_identity
+  - drive_jsonl_identity
+  - database_identity
+  - quality_state
+  - admission_state
+  admission_order:
+  - verify_provenance_and_access
+  - verify_topic_coverage
+  - verify_native_text_or_page_level_ocr_canary
+  - record_orthography_regime_and_normative_weight
+  - create_pdf_and_jsonl_identities
+  - back_up_pdf_and_jsonl_to_google_drive
+  - ingest_into_sources_database
+  - verify_database_identity_and_ukrainian_readability
+  quality_rules:
+    guessed_text: forbidden
+    mojibake: quarantine
+    image_only_without_page_canary: quarantine
+    missing_license_or_access_evidence: quarantine
+    disputed_claims: require_independent_source_or_exclude
+source_states:
+- acquisition_research
+- candidate
+- canary_passed
+- accepted
+- residual_gap
+- quarantined
+topic_cells:
+- cell_id: uni.ukrmova.phonetics_orthography
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [phonetics, phonology, spelling, pronunciation, stress]
+  source_ids: [uni-ukrmova-vlasova-2023, uni-ukrmova-orthography-strokal-2021]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.lexicology_word_formation
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [lexicology, phraseology, semantics, morphemics, word_formation]
+  source_ids: [uni-ukrmova-prof-haluzynska-2006, uni-ukrmova-lexicology-filon-khomik-2010]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.morphology
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [parts_of_speech, inflection, grammatical_categories]
+  source_ids: [uni-ukrmova-vlasova-2023, uni-ukrmova-prof-haluzynska-2006]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.syntax
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [phrase, sentence, clause, word_order, syntactic_relations]
+  source_ids: [uni-ukrmova-prof-haluzynska-2006, uni-ukrmova-syntax-didkivska-shvets-2020]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.punctuation
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [punctuation, sentence_boundaries, direct_speech]
+  source_ids: [uni-ukrmova-punctuation-marynenko-2021]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.stylistics_editing_language_culture
+  domain: ukrainian_language
+  role: normative_support
+  required: true
+  status: canary_passed
+  topics: [stylistics, editing, language_culture, usage, error_analysis]
+  source_ids: [uni-ukrmova-prof-haluzynska-2006]
+  candidate_source_ids: []
+- cell_id: uni.ukrmova.academic_professional
+  domain: ukrainian_language
+  role: explanatory_support
+  required: true
+  status: canary_passed
+  topics: [academic_ukrainian, professional_ukrainian, terminology, document_style]
+  source_ids: [uni-ukrmova-prof-haluzynska-2006]
+  candidate_source_ids: []
+- cell_id: uni.literature.history
+  domain: ukrainian_literature
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [periodization, authors, movements, historical_context]
+  source_ids: [uni-ukrlit-dvulychanska-2017]
+  candidate_source_ids: []
+  evidence_note: >-
+    The broad 2017 Luhansk university course covers the history of Ukrainian
+    literature from antiquity to the present. It is admitted only to the
+    internal-research tier because the repository and PDF expose public access
+    but no reusable license. It cannot enter a release-ready subset.
+- cell_id: uni.literature.theory
+  domain: ukrainian_literature
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [genre, poetics, narratology, versification]
+  source_ids: [uni-ukrlit-kalinichenko-2024]
+  candidate_source_ids: []
+- cell_id: uni.literature.criticism
+  domain: ukrainian_literature
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [close_reading, criticism, interpretation, textual_analysis]
+  source_ids: [uni-ukrlit-kalinichenko-2024]
+  candidate_source_ids: []
+- cell_id: uni.literature.contemporary
+  domain: ukrainian_literature
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [twentieth_century, contemporary_literature, decolonial_reading]
+  source_ids: [uni-ukrlit-kalinichenko-2024]
+  candidate_source_ids: []
+- cell_id: uni.history.chronological_breadth
+  domain: history_of_ukraine
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [ancient, medieval, early_modern, modern, contemporary]
+  source_ids: [uni-istoriya-kalynichenko-olianych-2025]
+  candidate_source_ids: [uni-istoriya-levytska-2015]
+- cell_id: uni.history.historiography_sources
+  domain: history_of_ukraine
+  role: advanced_domain_prose
+  required: true
+  status: candidate
+  topics: [historiography, source_studies, archival_method, historical_argument]
+  source_ids: []
+  candidate_source_ids: [uni-istoriya-levytska-2015]
+- cell_id: uni.history.decolonial_framing
+  domain: history_of_ukraine
+  role: advanced_domain_prose
+  required: true
+  status: candidate
+  topics: [imperial_framing, decolonization, contested_memory, terminology]
+  source_ids: []
+  candidate_source_ids: [uni-istoriya-levytska-2015]
+- cell_id: uni.arts.visual_art
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [painting, sculpture, graphics, photography]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+- cell_id: uni.arts.architecture
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [architecture, urbanism, monuments, heritage]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+- cell_id: uni.arts.music
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [music_history, composers, forms, performance]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+- cell_id: uni.arts.theatre_cinema
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [theatre, cinema, dramaturgy, performance_studies]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+- cell_id: uni.arts.folk_decorative
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [folk_art, decorative_art, crafts, regional_traditions]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+- cell_id: uni.arts.history_criticism
+  domain: arts
+  role: advanced_domain_prose
+  required: true
+  status: canary_passed
+  topics: [art_history, criticism, museum_studies, conservation]
+  source_ids: [uni-mystetstvo-petutina-2012]
+  candidate_source_ids: [uni-mystetstvo-levytska-2015]
+coverage_summary:
+  required_cells: 20
+  canary_passed: 18
+  candidate: 2
+  acquisition_research: 0
+  residual_gap: 0
+  accepted: 0
+  acceptance_gate: A source closes a cell only after its rights, native text, Drive identities, and database identity pass.
+native_exactness_audit:
+  source_count: 12
+  chunk_count: 2681
+  flagged_source_count: 4
+  flagged_chunk_count: 62
+  verified_flagged_chunk_count: 62
+  unverified_flagged_chunk_count: 0
+  flagged_page_count: 38
+  reports:
+  - report_sha256: 143b6e55236551f6578811e89365c361d453edfc606c1157aa4412d4d5943a95
+    drive_identity: university_corpus/jsonl/phase3-university-native-exactness-v5.json
+    source_count: 9
+    chunk_count: 1496
+  - report_sha256: f70857532cb33b3bf43c0b879145cd8aca746ac1b1051b62efc6698afbe81a28
+    drive_identity: university_corpus/jsonl/phase3-university-language-b1-native-exactness-v1.json
+    source_count: 3
+    chunk_count: 1185
+  visual_verification_receipts:
+  - receipt_sha256: d1dfac24a851450f5a12acb5910f4dbd8bf5d40a18d73e22c306c0f1f521d646
+    drive_identity: university_corpus/jsonl/phase3-university-native-visual-verification-v1.json
+  - receipt_sha256: 0d22d965ef18a2f866e37659e4b243bf303411a19728d6ca36e3fc57994fa294
+    drive_identity: university_corpus/jsonl/phase3-university-language-b1-joint-adjudication-v1.json
+  - receipt_sha256: 8d55f1ae06fcd0a9204a4239071c309a3aad45303b1e5f7a7f86762b18e50856
+    drive_identity: university_corpus/jsonl/phase3-university-language-b1-recorded-page-verification-v1.json
+rejected_candidates:
+- source_id: uni-ukrmova-glukhovtseva-2021
+  title: Сучасна українська мова у системі підготовки іноземних студентів
+  provenance_url: https://dspace.luguniv.edu.ua/xmlui/handle/123456789/8866
+  pdf_sha256: 8c288798e23e319553ef4987ae4b87c0eb3e564018191eef7f36729a474c970d
+  rejection_receipt_sha256: 35f65ac91c72e58d7cc7b54fa5765d29e92d2a525f2bfb982ff17c8abc03e2d4
+  quarantine_drive_identity: university_corpus/quarantine/phase3-uni-language-b1/source-rejected/
+  reason: >-
+    Exact page-image comparison found widespread false word boundaries in the
+    PDF logical text layer, including "антологія" extracted as "антоло гія".
+    No inferred joining or guessed repair is allowed. Existing accepted sources
+    cover the same required topic cells.
+- source_id: uni-ukrmova-morphology-aleksiienko-2014
+  title: Сучасна українська мова. Морфологія
+  provenance_url: https://ir.library.knu.ua/entities/publication/fff17548-f61d-4aa6-89ad-58d7848fe103
+  pdf_sha256: 20bdfbd3876327d232df92b293d52ef41ac6abc4ff34a6cef37e18661edfffb5
+  rejection_receipt_sha256: b938efbbc26758e41a96400a4f1d294e33886cbcd1b6d20f3a1d899f47a99c15
+  quarantine_drive_identity: university_corpus/quarantine/phase3-uni-language-b1/source-rejected/
+  reason: >-
+    Exact page-image comparison disproved logical-layer word boundaries,
+    including page 2 "Автори" extracted as "Авто ри" and page 656 "вигуків"
+    extracted with a false split. No inferred joining or guessed repair is
+    allowed. Existing accepted sources cover the morphology cell.
+- title: Історія української культури
+  provenance_url: https://ekhnuir.karazin.ua/items/63df0652-e7a8-47bf-b58f-04986bf10b04
+  alternate_pdf_url: https://philosophy.karazin.ua/ua/kafedra/programms_ua/16/ist_ukr_kult.pdf
+  pdf_sha256: ab82fc73c48a7f220d1d8a678a1ff767e03d38cf6cc2ba3a7036c07b557ac662
+  jsonl_sha256: 145c9b41207b389b94aa25e4107c7e7a7b4067e82cf5e1bc34458d0b58c66689
+  reason: >-
+    The alternate institutional PDF has native text, but exact page-image comparison
+    disproves its word boundaries (for example, page 1 prints "української" while the
+    logical layer yields "українсь кої"). Automated zero-findings is insufficient;
+    the source remains quarantined and no inferred joining is allowed.
+- title: Історія української культури
+  provenance_url: https://ekhnuir.karazin.ua/items/63df0652-e7a8-47bf-b58f-04986bf10b04
+  reason: >-
+    The repository exposes a CC BY-NC item, but the encrypted PDF yielded zero native pages
+    through both pypdf and PDFKit; no OCR substitution is allowed.
+- title: Історія української літератури у 12 томах, том 1
+  provenance_url: https://www.old.nas.gov.ua/UA/Book/Pages/default.aspx?BookID=0000014170
+  reason: >-
+    The authoritative record exposes no complete broad-history PDF; a single-volume locator
+    cannot close the broad-history cell.
+- title: Історія української літератури першої половини ХХ століття
+  provenance_url: https://repository.khpa.edu.ua/items/92bcc6b3-56ba-498f-b8d4-ead778da9172
+  reason: >-
+    The 2022 Kharkiv academy course is explicitly CC BY-NC 4.0 and has a complete
+    PDF, but it covers only the first half of the twentieth century and therefore
+    cannot close the broad literature-history cell.
+sources:
+- source_id: uni-ukrmova-vlasova-2023
+  title: Українська мова. Навчальний посібник для іноземних студентів
+  domain: ukrainian_language
+  topic_cell_ids: [uni.ukrmova.phonetics_orthography, uni.ukrmova.morphology]
+  provenance_url: https://crust.ust.edu.ua/items/ead2b16f-9190-4a64-91fc-abe761e1cf5d
+  institution_or_publisher: Український державний університет науки і технологій
+  publication_year: 2023
+  edition: electronic, 170 pages
+  license_or_access_status: CC BY-NC-SA 4.0 stated in both repository metadata and PDF
+  reuse_tier: noncommercial_share_alike
+  orthography_regime: current_2019
+  normative_weight: explanatory_support
+  native_text_canary_state: pass_no_ocr_171_of_173_pages
+  pdf_sha256: 41e01c69a6a6cb7b4ef316c5b349f6747b8bc969da2865b8bb63888b1806542f
+  jsonl_sha256: fded6a45bf8914585d0178129b926a986722fd023b6ef6f7da529ea32ea60725
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-vlasova-2023.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-vlasova-2023.jsonl
+  database_identity: null
+  quality_state: canary_passed_177_chunks_145_clean_32_bilingual_or_symbol_flagged
+  language_profile: Ukrainian instructional text with English and some Russian glosses
+  admission_state: canary_passed
+- source_id: uni-ukrmova-prof-haluzynska-2006
+  title: Українська мова (за професійним спрямуванням)
+  domain: ukrainian_language
+  topic_cell_ids:
+  - uni.ukrmova.lexicology_word_formation
+  - uni.ukrmova.morphology
+  - uni.ukrmova.syntax
+  - uni.ukrmova.stylistics_editing_language_culture
+  - uni.ukrmova.academic_professional
+  provenance_url: https://dspace.nuft.edu.ua/handle/123456789/1433
+  institution_or_publisher: Національний університет харчових технологій
+  publication_year: 2006
+  edition: навчально-методичний комплекс, 45 pages
+  license_or_access_status: CC BY-NC 4.0 stated by the institutional repository
+  reuse_tier: noncommercial
+  orthography_regime: pre_2019
+  normative_weight: historical_transition_and_explanatory_support_only
+  native_text_canary_state: pass_no_ocr_47_of_47_pages
+  pdf_sha256: c3106974b919e74b27c681dac6514b63d3364845c41761705dd2f7b1dafb7c2b
+  jsonl_sha256: aa84f98a8779c9d4323b52dddad095f0c0a218d1d56619992946dde1fdd04424
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-prof-haluzynska-2006.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-prof-haluzynska-2006.jsonl
+  database_identity: null
+  quality_state: canary_passed_107_chunks_106_clean_1_flagged
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-ukrmova-punctuation-marynenko-2021
+  title: Синтаксис української мови (з правилами пунктуації)
+  domain: ukrainian_language
+  topic_cell_ids: [uni.ukrmova.punctuation]
+  provenance_url: https://ir.library.knu.ua/entities/publication/8449d6a8-ce4b-4df8-8397-e12cc70b71b8
+  institution_or_publisher: Київський національний університет імені Тараса Шевченка
+  publication_year: 2021
+  edition: навчальний посібник, 276 pages
+  license_or_access_status: CC BY-NC stated on the item repository record
+  reuse_tier: noncommercial
+  orthography_regime: current_2019
+  normative_weight: normative_support_below_official_orthography
+  native_text_canary_state: pass_no_ocr_276_of_276_pages_pypdf_backend
+  pdf_sha256: a799f492c62558bf0ad100ddd8205a96f3b9ca2bcda49d10b631053a926028b3
+  jsonl_sha256: 49271a38d4156e3c76373bf0e4b7b97bc5125c9afd70b279a0f49c2101193973
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-punctuation-marynenko-2021.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-punctuation-marynenko-2021.jsonl
+  database_identity: null
+  quality_state: canary_passed_472_chunks_468_clean_4_quality_flagged_zero_exactness_findings
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-ukrmova-lexicology-filon-khomik-2010
+  title: Сучасна українська мова. Лексикологія. Частина 1
+  domain: ukrainian_language
+  topic_cell_ids: [uni.ukrmova.lexicology_word_formation]
+  provenance_url: https://ekhnuir.karazin.ua/items/2b72a79b-f820-4510-8c3d-e771969a5e84
+  institution_or_publisher: Харківський національний університет імені В. Н. Каразіна
+  publication_year: 2010
+  edition: навчальний посібник, 271 PDF pages
+  license_or_access_status: CC BY-NC 4.0 stated by the institutional repository
+  reuse_tier: noncommercial
+  orthography_regime: pre_2019
+  normative_weight: historical_transition_and_explanatory_support_only
+  native_text_canary_state: pass_no_ocr_271_of_271_pages_pypdf_backend
+  pdf_sha256: 47d0448e69994e9ed6a0bff7928d58cea147b7a01e778d43f80bbd7c50b6beee
+  jsonl_sha256: e250f16c5fc1cb0cc3f38f184f03d4b18d98894de050c65510847565f7766666
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-lexicology-filon-khomik-2010.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-lexicology-filon-khomik-2010.jsonl
+  database_identity:
+    source_file: uni-ukrmova-lexicology-filon-khomik-2010
+    inserted_rows: 286
+    linked_rows: 286
+    canonical_db_sha256_after: 1f5123fc516701d9a55fa89c1d7a5b93a3c30a925c6df95f372f6de8e5c045e8
+    receipt_sha256: a9edd5f0c46afc467558656bdac1c874c3f3ac07f40d5db7b7c82060f205306e
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-language-b1-canonical-ingest-v1.json
+  quality_state: accepted_286_chunks_zero_native_exactness_findings
+  language_profile: Ukrainian
+  admission_state: accepted
+- source_id: uni-ukrmova-orthography-strokal-2021
+  title: Український правопис. Практикум
+  domain: ukrainian_language
+  topic_cell_ids: [uni.ukrmova.phonetics_orthography]
+  provenance_url: https://ir.library.knu.ua/entities/publication/934cc071-a48b-4da3-adaf-c8eb2467fefc
+  institution_or_publisher: Київський національний університет імені Тараса Шевченка
+  publication_year: 2021
+  edition: практикум, 363 PDF pages
+  license_or_access_status: CC BY 4.0 stated on the institutional repository record
+  reuse_tier: open_with_attribution
+  orthography_regime: current_2019
+  normative_weight: normative_support_below_official_orthography
+  native_text_canary_state: pass_no_ocr_363_of_363_pages_pypdf_backend
+  pdf_sha256: a53ffc44a9db4c36fc7435df31ede4685ad972933f273eb0ae687f02379ed76f
+  jsonl_sha256: 076735b3a80f7417158701ca219a56d36d212f1f9d8f2a9d694eed5cbdb5a5c9
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-orthography-strokal-2021.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-orthography-strokal-2021.jsonl
+  database_identity:
+    source_file: uni-ukrmova-orthography-strokal-2021
+    inserted_rows: 670
+    linked_rows: 670
+    canonical_db_sha256_after: 1f5123fc516701d9a55fa89c1d7a5b93a3c30a925c6df95f372f6de8e5c045e8
+    receipt_sha256: a9edd5f0c46afc467558656bdac1c874c3f3ac07f40d5db7b7c82060f205306e
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-language-b1-canonical-ingest-v1.json
+  quality_state: accepted_670_chunks_4_printed_layout_findings_verified_1_corrupt_imprint_chunk_excluded
+  language_profile: Ukrainian
+  admission_state: accepted
+- source_id: uni-ukrmova-syntax-didkivska-shvets-2020
+  title: Сучасна українська мова. Синтаксис. Частина 1
+  domain: ukrainian_language
+  topic_cell_ids: [uni.ukrmova.syntax]
+  provenance_url: https://ir.library.knu.ua/entities/publication/bfbe19d1-9582-406b-a4d7-b32c998b9217
+  institution_or_publisher: Київський національний університет імені Тараса Шевченка
+  publication_year: 2020
+  edition: навчальний посібник для іноземних студентів, 182 PDF pages
+  license_or_access_status: CC BY-NC-ND stated on the institutional repository record
+  reuse_tier: noncommercial_no_derivatives
+  orthography_regime: current_2019
+  normative_weight: explanatory_support_below_official_orthography
+  native_text_canary_state: pass_no_ocr_182_of_182_pages_pypdf_backend
+  pdf_sha256: d08bd6e99f8456ab8f937af76767c515c7bd1ea2cd33b292dbc8a7909a6d2e45
+  jsonl_sha256: 3456eb48a47a0c48769c6b3c05c103558bed7e706662621c462513a167aa2e44
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-syntax-didkivska-shvets-2020.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-syntax-didkivska-shvets-2020.jsonl
+  database_identity:
+    source_file: uni-ukrmova-syntax-didkivska-shvets-2020
+    inserted_rows: 229
+    linked_rows: 229
+    canonical_db_sha256_after: 1f5123fc516701d9a55fa89c1d7a5b93a3c30a925c6df95f372f6de8e5c045e8
+    receipt_sha256: a9edd5f0c46afc467558656bdac1c874c3f3ac07f40d5db7b7c82060f205306e
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-language-b1-canonical-ingest-v1.json
+  quality_state: accepted_229_chunks_56_printed_letter_spacing_findings_verified
+  language_profile: Ukrainian instructional text for foreign students
+  admission_state: accepted
+- source_id: uni-ukrlit-kalinichenko-2024
+  title: Втілення авторського міту Олега Лишеги в поетичних циклах «Зима в Тисмениці» та «Снігові і вогню»
+  domain: ukrainian_literature
+  topic_cell_ids: [uni.literature.theory, uni.literature.criticism, uni.literature.contemporary]
+  provenance_url: https://nrplit.ukma.edu.ua/article/view/324984
+  institution_or_publisher: Національний університет «Києво-Могилянська академія»
+  publication_year: 2024
+  edition: journal article, volume 4-5, pages 72-81
+  license_or_access_status: CC BY 4.0 stated in article metadata
+  reuse_tier: open_with_attribution
+  third_party_exclusions: Quoted poems require separate rights clearance and are excluded from release-ready subsets.
+  orthography_regime: current_2019
+  normative_weight: advanced_domain_prose
+  native_text_canary_state: pass_no_ocr_10_of_10_pages_pypdf_backend
+  pdf_sha256: 7c1141d4e2fc2e71dac2ef641a19d87ef9f91db11463d61ea379c59aad79b6aa
+  jsonl_sha256: f8355bff61c181c4e8e9551886cc286e041a4b87aa8b1ae9ed2548ea6f4c7c2d
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrlit-kalinichenko-2024.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrlit-kalinichenko-2024.jsonl
+  database_identity: null
+  quality_state: canary_passed_28_chunks_25_clean_3_citation_or_symbol_flagged
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-ukrlit-dvulychanska-2017
+  title: "Історія української літератури: інтегрований курс"
+  domain: ukrainian_literature
+  topic_cell_ids: [uni.literature.history]
+  provenance_url: https://dspace.luguniv.edu.ua/xmlui/handle/123456789/2130
+  institution_or_publisher: Луганський національний університет імені Тараса Шевченка
+  publication_year: 2017
+  edition: навчально-методичний посібник, 150 numbered pages in a 151-page PDF
+  license_or_access_status: public repository access; PDF copyright notice; no reusable license stated
+  reuse_tier: internal_research_only
+  release_exclusion: Entire source is excluded from release-ready and distributable subsets.
+  orthography_regime: pre_2019
+  normative_weight: historical_transition_and_advanced_domain_prose_only
+  native_text_canary_state: pass_no_ocr_151_of_151_pages_pypdf_backend
+  pdf_sha256: 88801aa8d9b92fe38e99bcc8b0c7e8a4a33f0d1ce73a09f61ea83f0a164111a9
+  jsonl_sha256: aa30b5deb9287fddba6b8dc3775ca0f353758b91c285e8516b07b7e75048d1f2
+  drive_pdf_identity: university_corpus/pdfs/uni-ukrlit-dvulychanska-2017.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrlit-dvulychanska-2017.jsonl
+  database_identity: null
+  quality_state: canary_passed_259_chunks_zero_exactness_findings_internal_only
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-istoriya-levytska-2015
+  title: Історія України
+  domain: history_of_ukraine
+  topic_cell_ids:
+  - uni.history.chronological_breadth
+  - uni.history.historiography_sources
+  - uni.history.decolonial_framing
+  provenance_url: https://dspace.nuft.edu.ua/handle/123456789/21744
+  institution_or_publisher: Національний університет харчових технологій / Кондор-Видавництво
+  publication_year: 2015
+  edition: навчально-методичний посібник, 336 pages represented in 31 PDF pages
+  license_or_access_status: repository states CC BY-NC 4.0; PDF front matter retains publisher copyright
+  reuse_tier: rights_scope_requires_confirmation
+  orthography_regime: pre_2019
+  normative_weight: advanced_domain_prose_candidate
+  native_text_canary_state: pass_no_ocr_31_of_31_pages
+  pdf_sha256: afc4685f627f1b555f88e94c20f8c7280c7d695f382b3cf0d8ea36424f02188a
+  jsonl_sha256: f111c27c136d8099359487fe1ae707b66431bf8420f156b0b1e7321660260710
+  drive_pdf_identity: university_corpus/pdfs/uni-istoriya-levytska-2015.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-istoriya-levytska-2015.jsonl
+  database_identity: null
+  quality_state: native_canary_passed_65_of_65_clean_but_rights_unresolved
+  language_profile: Ukrainian
+  admission_state: candidate
+- source_id: uni-istoriya-kalynichenko-olianych-2025
+  title: Історія України
+  domain: history_of_ukraine
+  topic_cell_ids: [uni.history.chronological_breadth]
+  provenance_url: https://repository.khpa.edu.ua/items/56640219-80c5-418c-919d-660b0c3552d2/full
+  institution_or_publisher: Харківська гуманітарно-педагогічна академія
+  publication_year: 2025
+  edition: курс лекцій, 128 numbered pages in a 129-page PDF
+  license_or_access_status: CC BY-NC 4.0 stated on the item repository record and item license
+  reuse_tier: noncommercial
+  orthography_regime: current_2019
+  normative_weight: advanced_domain_prose
+  native_text_canary_state: pass_no_ocr_128_of_129_pages_pypdf_backend
+  pdf_sha256: dd3e7b45abdde9acebea684b323582f73f2b2189401a193ac9bc88a3e6845d10
+  jsonl_sha256: 9aefd42ef5e6a9691314df7a8870902775a4d44823f36706cd23e80524157694
+  drive_pdf_identity: university_corpus/pdfs/uni-istoriya-kalynichenko-olianych-2025.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-istoriya-kalynichenko-olianych-2025.jsonl
+  database_identity: null
+  quality_state: canary_passed_141_chunks_one_printed_layout_anomaly_jointly_verified
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-mystetstvo-petutina-2012
+  title: Історія української культури. Частина 2. Українська культура Нового та Новітнього часів
+  domain: arts
+  topic_cell_ids:
+  - uni.arts.visual_art
+  - uni.arts.architecture
+  - uni.arts.music
+  - uni.arts.theatre_cinema
+  - uni.arts.folk_decorative
+  - uni.arts.history_criticism
+  provenance_url: https://repository.kpi.kharkov.ua/items/ecbbfc70-e4f7-49c5-8edc-3676ee9e33bc
+  institution_or_publisher: Національний технічний університет «Харківський політехнічний інститут»
+  publication_year: 2012
+  edition: навчальний посібник, частина 2, 135 numbered pages in a 136-page PDF
+  license_or_access_status: CC BY-NC 4.0 stated on the institutional repository record
+  reuse_tier: noncommercial
+  third_party_exclusions: Embedded illustrations are excluded unless independently rights-cleared.
+  orthography_regime: pre_2019
+  normative_weight: advanced_domain_prose
+  native_text_canary_state: pass_no_ocr_136_of_136_pages_pdfkit_backend
+  pdf_sha256: 8093c3694d53a67f05a4f7b9dbec373ee7a53d03da91956adb7be846a3744a3d
+  jsonl_sha256: 2e784c89b65d7fee9ea3a4e46845f1cecb7bc6eee194b9deceead62f775f98bc
+  drive_pdf_identity: university_corpus/pdfs/uni-mystetstvo-petutina-2012.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-mystetstvo-petutina-2012.jsonl
+  database_identity: null
+  quality_state: canary_passed_150_chunks_one_printed_layout_anomaly_jointly_verified
+  language_profile: Ukrainian
+  admission_state: canary_passed
+- source_id: uni-mystetstvo-levytska-2015
+  title: Історія української культури
+  domain: arts
+  topic_cell_ids:
+  - uni.arts.visual_art
+  - uni.arts.architecture
+  - uni.arts.music
+  - uni.arts.theatre_cinema
+  - uni.arts.folk_decorative
+  - uni.arts.history_criticism
+  provenance_url: https://dspace.nuft.edu.ua/handle/123456789/21745
+  institution_or_publisher: Національний університет харчових технологій / Кондор-Видавництво
+  publication_year: 2015
+  edition: навчально-методичний посібник, 326 pages represented in 39 PDF pages
+  license_or_access_status: repository states CC BY-NC 4.0; PDF front matter retains publisher copyright
+  reuse_tier: rights_scope_requires_confirmation
+  third_party_exclusions: Embedded illustrations are excluded unless independently rights-cleared.
+  orthography_regime: pre_2019
+  normative_weight: advanced_domain_prose_candidate
+  native_text_canary_state: pass_no_ocr_39_of_39_pages
+  pdf_sha256: 564fa01a1fb4474f523aff19a5f0eb727ef0f17ff68f617c84dc488bc2ba7896
+  jsonl_sha256: 9020a9fa155a2cda8e5ed6bf48f612c7264342c6cd29ec7a9791a3b3c746ba75
+  drive_pdf_identity: university_corpus/pdfs/uni-mystetstvo-levytska-2015.pdf
+  drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-mystetstvo-levytska-2015.jsonl
+  database_identity: null
+  quality_state: native_canary_passed_97_of_97_clean_but_rights_unresolved
+  language_profile: Ukrainian
+  admission_state: candidate

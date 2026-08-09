@@ -802,6 +802,11 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Show what would be downloaded")
     parser.add_argument("--only", type=int, help="Only download for this grade")
     parser.add_argument(
+        "--ids",
+        nargs="+",
+        help="Only process these exact selection ids (useful for a bounded acquisition packet)",
+    )
+    parser.add_argument(
         "--retained-store",
         "--output-dir",
         dest="retained_store",
@@ -825,6 +830,13 @@ def main():
     books = load_selection()
     if args.only:
         books = [b for b in books if b["grade"] == args.only]
+    if args.ids:
+        requested = set(args.ids)
+        known = {str(book["id"]) for book in books}
+        unknown = sorted(requested - known)
+        if unknown:
+            parser.error("unknown selection id(s): " + ", ".join(unknown))
+        books = [book for book in books if str(book["id"]) in requested]
 
     retained_store = resolve_retained_store(args.retained_store)
     print(f"Selected {len(books)} books to process")

@@ -42,6 +42,18 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
+try:
+    from scripts.projects.open_model_data.textbook_native_exactness import (
+        ExactnessAuditError,
+        require_production_eligible_entry,
+    )
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.projects.open_model_data.textbook_native_exactness import (
+        ExactnessAuditError,
+        require_production_eligible_entry,
+    )
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -366,13 +378,18 @@ def _build_textbook_row(
             "docs/decisions/2026-05-15-cyrillic-native-matcher.md."
         )
     text = str(entry.get("text") or "")
+    stored_grade = (
+        "university"
+        if source_file.startswith("uni-")
+        else entry.get("grade", grade)
+    )
     return (
         entry.get("chunk_id", f"tb-{source_file}-{chunk_index}"),
         entry.get("section_title", ""),
         text,
         source_file,
         subject,
-        entry.get("grade", grade),
+        stored_grade,
         author,
         author_uk,
         # ``char_count`` is a storage/API field, not an extraction token
@@ -380,6 +397,60 @@ def _build_textbook_row(
         # replace the actual SQLite text length.
         len(text),
     )
+
+
+def _require_production_textbook_entry(entry: dict, *, source_file: str) -> None:
+    """Apply the same no-guess verification gate used by incremental ingest."""
+    try:
+        require_production_eligible_entry(entry, source_file=source_file)
+    except ExactnessAuditError as exc:
+        raise ValueError(str(exc)) from exc
+
+
+def _extract_sections_with_university_grade_adapter(db_path: Path):
+    """Build sections while preserving the canonical university DB label.
+
+    The pre-existing section extractor accepts numeric ``grade-*`` labels and
+    stores university sections as numeric grade zero. Textbook rows use the
+    clearer ``university`` label. Adapt only the temporary rebuild database,
+    then restore the canonical label before the validated file is swapped in.
+    """
+    connection = sqlite3.connect(str(db_path))
+    try:
+        university_rows = connection.execute(
+            "SELECT COUNT(*) FROM textbooks WHERE source_file GLOB 'uni-*'"
+        ).fetchone()[0]
+        connection.execute(
+            "UPDATE textbooks SET grade = 'grade-00' WHERE source_file GLOB 'uni-*'"
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    try:
+        return extract_sections(db_path, report_path=DEFAULT_REPORT_PATH)
+    finally:
+        connection = sqlite3.connect(str(db_path))
+        try:
+            connection.execute(
+                "UPDATE textbooks SET grade = 'university' WHERE source_file GLOB 'uni-*'"
+            )
+            restored_rows = connection.execute(
+                "SELECT COUNT(*) FROM textbooks "
+                "WHERE source_file GLOB 'uni-*' AND grade = 'university'"
+            ).fetchone()[0]
+            if restored_rows != university_rows:
+                raise ValueError(
+                    "university grade-label restoration changed the full-rebuild row count"
+                )
+            integrity = connection.execute("PRAGMA integrity_check").fetchone()[0]
+            if integrity != "ok":
+                raise ValueError(
+                    f"database integrity failed after university grade restoration: {integrity}"
+                )
+            connection.commit()
+        finally:
+            connection.close()
 
 
 def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
@@ -792,6 +863,7 @@ def build(db_path: Path | None = None,
                             if not line:
                                 continue
                             entry = json.loads(line)
+                            _require_production_textbook_entry(entry, source_file=source_file)
                             entry = _enrich_author_uk(entry, slug=source_file)
                             batch.append(_build_textbook_row(
                                 entry,
@@ -901,7 +973,7 @@ def build(db_path: Path | None = None,
         conn.close()
         conn = None
 
-        section_report = extract_sections(tmp_db, report_path=DEFAULT_REPORT_PATH)
+        section_report = _extract_sections_with_university_grade_adapter(tmp_db)
         print("\n🧩 Textbook section extraction")
         print(
             "  ✅ Extracted "
