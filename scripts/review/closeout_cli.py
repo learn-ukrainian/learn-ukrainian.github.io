@@ -375,6 +375,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         json.dumps(
             {
                 "selected": asdict(resolution.selected) if resolution.selected else None,
+                "quorum": [asdict(q) for q in resolution.quorum],
+                "quorum_rule": resolution.quorum_rule,
                 "advisory": [asdict(a) for a in resolution.advisory],
                 "trace": [asdict(t) for t in resolution.trace],
                 "substitution_note": resolution.substitution_note,
@@ -386,7 +388,13 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             indent=2,
         )
     )
-    return 1 if resolution.fail_closed_reason or resolution.selected is None else 0
+    if resolution.fail_closed_reason:
+        return 1
+    # A dual-family quorum plan (unattested-harness author) is a successful
+    # resolution: no single reviewer of record, both seats must PASS.
+    if len(resolution.quorum) >= 2:
+        return 0
+    return 1 if resolution.selected is None else 0
 
 
 def _cmd_finding(args: argparse.Namespace) -> int:

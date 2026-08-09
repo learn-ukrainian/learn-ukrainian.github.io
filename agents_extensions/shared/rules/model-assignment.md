@@ -28,6 +28,15 @@ Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degra
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
 
+**Unattested-harness AUTHORS (Cursor Auto) — dual-family quorum (#6489):** when the author ran
+`cursor:auto` (harness attests no pinned model), the resolver returns a **dual-family quorum**
+instead of failing closed: two independent, exact-head PASS verdicts from **distinct** attested,
+formal-review-eligible families — whichever family the hidden author was, at least one verdict is
+necessarily cross-family. A declared `author_family` against an auto attestation is a fail-closed
+conflict, and an explicit reviewer pin cannot substitute for the quorum. Resolved-model attestation
+(or pinned `composer-2.5` authorship) remains the primary provenance path; the quorum is the
+fallback for already-authored Auto work.
+
 **Fable transport order (user directive 2026-07-20):** always dispatch the exact
 `claude-fable-5` model through the native Claude harness first:
 `.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5`.

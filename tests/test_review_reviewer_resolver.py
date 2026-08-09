@@ -24,6 +24,7 @@ from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     TERRA,
+    UNATTESTED_AUTHOR_FAMILY,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -96,6 +97,77 @@ def test_cursor_requires_concrete_model_identity():
     assert resolve_author_family("cursor:claude-opus-4-8") == "anthropic"
     assert resolve_author_family("cursor:composer-2.5") == "moonshot"
     assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
+
+
+def test_cursor_auto_is_unattested_not_unknown():
+    # Cursor Auto positively attests no pinned model (model="auto",
+    # resolved_model=null) — distinct from a silent/bare harness record.
+    assert resolve_author_family("cursor:auto") == UNATTESTED_AUTHOR_FAMILY
+    assert resolve_author_family("cursor-auto") == UNATTESTED_AUTHOR_FAMILY
+    assert resolve_author_family("cursor-tools:auto") == UNATTESTED_AUTHOR_FAMILY
+    assert resolve_author_family("Cursor:AUTO") == UNATTESTED_AUTHOR_FAMILY
+
+
+def test_author_family_override_against_auto_attestation_is_a_conflict():
+    # The harness attests the model was NOT pinned; a caller-asserted single
+    # family cannot be corroborated and must not dodge the quorum.
+    assert resolve_author_family("cursor:auto", author_family="openai") == CONFLICTING_AUTHOR_FAMILY
+    assert resolve_author_family("cursor-auto", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", author_family="openai"))
+    assert resolution.selected is None
+    assert resolution.quorum == ()
+    assert resolution.fail_closed_reason
+
+
+def test_unattested_author_resolves_a_dual_family_quorum():
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor-auto", risk="medium"))
+    assert resolution.fail_closed_reason is None
+    # No single reviewer of record — the quorum is the formal gate.
+    assert resolution.selected is None
+    assert len(resolution.quorum) == 2
+    families = {seat.family for seat in resolution.quorum}
+    assert len(families) == 2
+    assert all(seat.status == "selected" for seat in resolution.quorum)
+    assert "exact-head" in resolution.quorum_rule
+    # Both seats are promoted in the trace, like a single selection would be.
+    selected_in_trace = [entry for entry in resolution.trace if entry.status == "selected"]
+    assert {entry.name for entry in selected_in_trace} == {seat.name for seat in resolution.quorum}
+
+
+def test_unattested_quorum_holds_at_every_risk():
+    for risk in ("low", "medium", "high", "critical"):
+        resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk=risk))
+        assert resolution.fail_closed_reason is None, risk
+        assert len(resolution.quorum) == 2, risk
+        assert len({seat.family for seat in resolution.quorum}) == 2, risk
+
+
+def test_unattested_author_with_single_eligible_family_fails_closed():
+    # A ladder that only offers one family cannot satisfy the quorum.
+    anthropic_only = (
+        (REVIEW_CANDIDATES["claude-sonnet-5"],),
+        (REVIEW_CANDIDATES["claude-fable-5"],),
+    )
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="cursor-auto", risk="medium"),
+        ladder=anthropic_only,
+    )
+    assert resolution.selected is None
+    assert resolution.quorum == ()
+    assert "dual-family quorum unsatisfiable" in resolution.fail_closed_reason
+
+
+def test_unattested_author_rejects_explicit_reviewer_pin():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="cursor-auto",
+            pinned_candidate="gpt-5.6-terra",
+            pressure_override_reason="operator request",
+        )
+    )
+    assert resolution.selected is None
+    assert resolution.quorum == ()
+    assert "pin cannot satisfy the dual-family quorum" in resolution.fail_closed_reason
 
 
 def test_invalid_or_conflicting_author_identity_fails_closed():
