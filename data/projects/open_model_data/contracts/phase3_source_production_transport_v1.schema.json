@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_source_production_transport_v1.schema.json",
+  "title": "Private Phase 3 v2.1 source-production transport",
+  "$defs": {
+    "sha256": {"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "identity": {
+      "type":"object","additionalProperties":false,
+      "required":["family_id","unit_id","unit_sha256","locator_sha256","source_text_sha256"],
+      "properties": {
+        "family_id":{"type":"string","minLength":1},
+        "unit_id":{"type":"string","minLength":1},
+        "unit_sha256":{"$ref":"#/$defs/sha256"},
+        "locator_sha256":{"$ref":"#/$defs/sha256"},
+        "source_text_sha256":{"$ref":"#/$defs/sha256"}
+      }
+    },
+    "authorActor": {
+      "type":"object","additionalProperties":false,
+      "required":["role_id","task_id","provider","exact_model","model_family","harness"],
+      "properties": {
+        "role_id":{"const":"rule_author_extractor"},
+        "task_id":{"const":"phase3-v2-1-rule-author-extraction"},
+        "provider":{"const":"google"},
+        "exact_model":{"const":"gemini-3.6-flash-high"},
+        "model_family":{"const":"gemini"},
+        "harness":{"const":"agy"}
+      }
+    },
+    "reviewActor": {
+      "type":"object","additionalProperties":false,
+      "required":["role_id","task_id","provider","exact_model","model_family","harness"],
+      "properties": {
+        "role_id":{"const":"ukrainian_source_reviewer"},
+        "task_id":{"const":"phase3-v2-1-ukrainian-source-review"},
+        "provider":{"const":"xai"},
+        "exact_model":{"const":"grok-4.5"},
+        "model_family":{"const":"xai"},
+        "harness":{"const":"opencode"}
+      }
+    },
+    "artifact": {
+      "type":"object","additionalProperties":false,
+      "required":["phenomenon","mechanism","matcher","incorrect_pattern","replacements","scope","exceptions","controls","protections","abstentions","evidence_refs","dissent_or_alternatives"],
+      "properties": {
+        "phenomenon":{"type":"string","minLength":1},
+        "mechanism":{"enum":["literal","lemma_morphology","phrase_collocation","government_valency","syntax","semantic_contextual","orthography","punctuation"]},
+        "matcher":{"type":"object","minProperties":1},
+        "incorrect_pattern":{"type":"string"},
+        "replacements":{"type":"array","items":{"type":"string"}},
+        "scope":{"type":"string"},
+        "exceptions":{"type":"array","items":{"type":"string"}},
+        "controls":{"type":"array","items":{"type":"string"}},
+        "protections":{"type":"array","items":{"type":"string"}},
+        "abstentions":{"type":"array","items":{"type":"string"}},
+        "evidence_refs":{"type":"array","items":{"type":"string"}},
+        "dissent_or_alternatives":{"type":"array","items":{"type":"string"}}
+      }
+    },
+    "decision": {
+      "type":"object","additionalProperties":false,
+      "required":["unit_id","unit_sha256","disposition_code","primary_source_role","secondary_source_roles","claim_type","candidate_classes","artifact","consumer_views","rationale"],
+      "properties": {
+        "unit_id":{"type":"string","minLength":1},
+        "unit_sha256":{"$ref":"#/$defs/sha256"},
+        "disposition_code":{"enum":["converted","not_rule_bearing","duplicate_representation","superseded_or_historical","blocked_with_reason"]},
+        "primary_source_role":{"enum":["explicit_rule","correct_example","incorrect_example","corrected_example","editing_exercise","answer_key","distractor","quotation","historical_or_literary_excerpt","metalinguistic_mention","ordinary_narration","ambiguous_or_ocr"]},
+        "secondary_source_roles":{"type":"array","uniqueItems":true,"items":{"enum":["explicit_rule","correct_example","incorrect_example","corrected_example","editing_exercise","answer_key","distractor","quotation","historical_or_literary_excerpt","metalinguistic_mention","ordinary_narration","ambiguous_or_ocr"]}},
+        "claim_type":{"enum":["prescriptive_rule","human_correction_pair","style_preference","acceptable_variant","historical_advice","attestation_only","unresolved"]},
+        "candidate_classes":{"type":"array","uniqueItems":true,"items":{"enum":["rule_bearing","error_correction","editing_exercise","contrast","metalinguistic_candidate"]}},
+        "artifact":{"oneOf":[{"$ref":"#/$defs/artifact"},{"type":"null"}]},
+        "consumer_views":{"type":"array","uniqueItems":true,"items":{"enum":["supervised_pair","preference","protection","filtering","review","automatic","research_only"]}},
+        "rationale":{"type":"string","minLength":1}
+      }
+    },
+    "authorResponse": {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","packet_id","identity_order","decisions","limitations","parse_state"],
+      "properties": {
+        "schema_version":{"const":"phase3_source_production_author_response_v1"},
+        "packet_id":{"type":"string","pattern":"^phase3_source_author_packet:[a-f0-9]{64}$"},
+        "identity_order":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/identity"}},
+        "decisions":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/decision"}},
+        "limitations":{"type":"array","items":{"type":"string"}},
+        "parse_state":{"const":"parsed"}
+      }
+    },
+    "reviewResponse": {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","packet_id","identity_order","reviews","parse_state"],
+      "properties": {
+        "schema_version":{"const":"phase3_source_production_review_response_v1"},
+        "packet_id":{"type":"string","pattern":"^phase3_source_review_packet:[a-f0-9]{64}$"},
+        "identity_order":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/identity"}},
+        "reviews":{"type":"array","minItems":1,"items":{
+          "type":"object","additionalProperties":false,
+          "required":["unit_id","unit_sha256","outcome","decision"],
+          "properties": {
+            "unit_id":{"type":"string","minLength":1},
+            "unit_sha256":{"$ref":"#/$defs/sha256"},
+            "outcome":{"enum":["confirmed","revised"]},
+            "decision":{"$ref":"#/$defs/decision"}
+          }
+        }},
+        "parse_state":{"const":"parsed"}
+      }
+    },
+    "packetEntry": {
+      "type":"object","additionalProperties":false,
+      "required":["packet_index","packet_id","packet_sha256","item_count","relative_path"],
+      "properties": {
+        "packet_index":{"type":"integer","minimum":1},
+        "packet_id":{"type":"string","minLength":1},
+        "packet_sha256":{"$ref":"#/$defs/sha256"},
+        "item_count":{"type":"integer","minimum":1},
+        "relative_path":{"type":"string","minLength":1}
+      }
+    },
+    "packetBounds": {
+      "type":"object","additionalProperties":false,
+      "required":["item_limit","byte_limit"],
+      "properties":{"item_limit":{"type":"integer","minimum":1},"byte_limit":{"type":"integer","minimum":1}}
+    },
+    "reviewPolicy": {
+      "type":"object","additionalProperties":false,
+      "required":["all_converted","all_small_family_intents","large_family_nonconverted_sample_formula","any_sample_miss_requires_full_family_review","escalated_families"],
+      "properties":{
+        "all_converted":{"const":true},
+        "all_small_family_intents":{"const":true},
+        "large_family_nonconverted_sample_formula":{"const":"min(1000,nonconverted_total)"},
+        "any_sample_miss_requires_full_family_review":{"const":true},
+        "escalated_families":{"type":"array","uniqueItems":true,"items":{"enum":["school_textbooks","ua_gec"]}}
+      }
+    },
+    "bindings": {
+      "type":"object","additionalProperties":false,
+      "required":["base_contract_sha256","amendment_sha256","combined_contract_sha256","functional_role_contract_sha256","conflict_graph_sha256","evaluation_cycle_id","author_prompt_sha256","review_prompt_sha256","transport_schema_sha256","materialization_receipt_sha256","materialization_jsonl_sha256","source_freeze_receipt_sha256","evaluation_partition_receipt_sha256","partition_manifest_sha256","author_clearance_sha256","quarantine_sha256","heldout_label_receipt_sha256","heldout_label_receipt_body_sha256","deterministic_partition_dispositions_sha256"],
+      "properties": {
+        "base_contract_sha256":{"const":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256":{"const":"ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256":{"const":"2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256":{"$ref":"#/$defs/sha256"},
+        "conflict_graph_sha256":{"$ref":"#/$defs/sha256"},
+        "evaluation_cycle_id":{"type":"string","minLength":1},
+        "author_prompt_sha256":{"$ref":"#/$defs/sha256"},
+        "review_prompt_sha256":{"$ref":"#/$defs/sha256"},
+        "transport_schema_sha256":{"$ref":"#/$defs/sha256"},
+        "materialization_receipt_sha256":{"$ref":"#/$defs/sha256"},
+        "materialization_jsonl_sha256":{"$ref":"#/$defs/sha256"},
+        "source_freeze_receipt_sha256":{"$ref":"#/$defs/sha256"},
+        "evaluation_partition_receipt_sha256":{"$ref":"#/$defs/sha256"},
+        "partition_manifest_sha256":{"$ref":"#/$defs/sha256"},
+        "author_clearance_sha256":{"$ref":"#/$defs/sha256"},
+        "quarantine_sha256":{"$ref":"#/$defs/sha256"},
+        "heldout_label_receipt_sha256":{"$ref":"#/$defs/sha256"},
+        "heldout_label_receipt_body_sha256":{"$ref":"#/$defs/sha256"},
+        "deterministic_partition_dispositions_sha256":{"$ref":"#/$defs/sha256"}
+      }
+    },
+    "denominator": {
+      "type":"object","additionalProperties":false,
+      "required":["family_totals","author_totals","evaluation_totals","quarantine_totals","total","author","evaluation","quarantine","heldout_labels"],
+      "properties": {
+        "family_totals":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+        "author_totals":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+        "evaluation_totals":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+        "quarantine_totals":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+        "total":{"type":"integer","minimum":1},
+        "author":{"type":"integer","minimum":1},
+        "evaluation":{"type":"integer","minimum":0},
+        "quarantine":{"type":"integer","minimum":0},
+        "heldout_labels":{"type":"integer","minimum":1}
+      }
+    },
+    "familyBinding": {
+      "type":"object","additionalProperties":false,
+      "required":["ledger_sha256","unit_count"],
+      "properties":{"ledger_sha256":{"$ref":"#/$defs/sha256"},"unit_count":{"type":"integer","minimum":0}}
+    },
+    "manifest": {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","bindings","denominator","author","reviewer","packet_bounds","author_packet_count","author_packets","author_identity_set_sha256","source_freeze_family_bindings","created_at","manifest_sha256"],
+      "properties": {
+        "schema_version":{"const":"phase3_source_production_manifest_v1"},
+        "bindings":{"$ref":"#/$defs/bindings"},
+        "denominator":{"$ref":"#/$defs/denominator"},
+        "author":{"$ref":"#/$defs/authorActor"},
+        "reviewer":{"$ref":"#/$defs/reviewActor"},
+        "packet_bounds":{"$ref":"#/$defs/packetBounds"},
+        "author_packet_count":{"type":"integer","minimum":1},
+        "author_packets":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/packetEntry"}},
+        "author_identity_set_sha256":{"$ref":"#/$defs/sha256"},
+        "source_freeze_family_bindings":{"type":"object","additionalProperties":{"$ref":"#/$defs/familyBinding"}},
+        "created_at":{"type":"string","minLength":1},
+        "manifest_sha256":{"$ref":"#/$defs/sha256"}
+      }
+    },
+    "reviewManifest": {
+      "allOf":[
+        {"$ref":"#/$defs/manifestCommon"},
+        {"type":"object","additionalProperties":false,"required":["schema_version","bindings","denominator","author","reviewer","packet_bounds","author_packet_count","author_packets","author_identity_set_sha256","source_freeze_family_bindings","source_manifest_sha256","review_policy","review_selection_sha256","review_selected_count","review_packet_count","review_packets","created_at","manifest_sha256"],"properties":{
+          "schema_version":{"const":"phase3_source_production_review_manifest_v1"},
+          "bindings":{"$ref":"#/$defs/bindings"},"denominator":{"$ref":"#/$defs/denominator"},"author":{"$ref":"#/$defs/authorActor"},"reviewer":{"$ref":"#/$defs/reviewActor"},
+          "packet_bounds":{"$ref":"#/$defs/packetBounds"},"author_packet_count":{"type":"integer","minimum":1},"author_packets":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/packetEntry"}},"author_identity_set_sha256":{"$ref":"#/$defs/sha256"},"source_freeze_family_bindings":{"type":"object","additionalProperties":{"$ref":"#/$defs/familyBinding"}},
+          "source_manifest_sha256":{"$ref":"#/$defs/sha256"},
+          "review_policy":{"$ref":"#/$defs/reviewPolicy"},
+          "review_selection_sha256":{"$ref":"#/$defs/sha256"},"review_selected_count":{"type":"integer","minimum":1},"review_packet_count":{"type":"integer","minimum":1},"review_packets":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/packetEntry"}},"created_at":{"type":"string"},"manifest_sha256":{"$ref":"#/$defs/sha256"}
+        }}
+      ]
+    },
+    "manifestCommon": {"type":"object"},
+    "publicReceipt": {
+      "type":"object","additionalProperties":false,
+      "required":["schema_version","text_free","bindings","manifest_sha256","family_sha256","denominator","review_coverage","review_complete","receipt_sha256"],
+      "properties": {
+        "schema_version":{"const":"phase3_source_production_public_receipt_v1"},
+        "text_free":{"const":true},
+        "bindings":{"$ref":"#/$defs/bindings"},
+        "manifest_sha256":{"$ref":"#/$defs/sha256"},
+        "family_sha256":{"$ref":"#/$defs/sha256"},
+        "denominator":{"type":"object","additionalProperties":false,"required":["input_total","author_produced_total","source_review_selected_total","source_review_revised_total","evaluation_only_total","quarantined_total","converted_total"],"properties":{"input_total":{"type":"integer","minimum":1},"author_produced_total":{"type":"integer","minimum":1},"source_review_selected_total":{"type":"integer","minimum":1},"source_review_revised_total":{"type":"integer","minimum":0},"evaluation_only_total":{"type":"integer","minimum":0},"quarantined_total":{"type":"integer","minimum":0},"converted_total":{"type":"integer","minimum":0}}},
+        "review_coverage":{"$ref":"#/$defs/reviewPolicy"},
+        "review_complete":{"const":true},
+        "receipt_sha256":{"$ref":"#/$defs/sha256"}
+      }
+    }
+  }
+}

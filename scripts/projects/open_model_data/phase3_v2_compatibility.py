@@ -35,6 +35,9 @@ FUNCTIONAL_ROLE_LOGICAL_PATH = "data/projects/open_model_data/evidence/correctio
 CURRENT_EVALUATION_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
 )
+CURRENT_HELDOUT_LABEL_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/phase3_heldout_label_public_receipt_v1.json"
+)
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
     "nine_case_seed": "seed_not_v2_evaluation",
@@ -87,6 +90,7 @@ ENGINE_PATHS = frozenset({
     "scripts/projects/open_model_data/phase3_prior_exposure_manifest.py",
     "scripts/projects/open_model_data/phase3_evaluation_freeze.py",
     "scripts/projects/open_model_data/phase3_heldout_label_transport.py",
+    "scripts/projects/open_model_data/phase3_source_production_transport.py",
     # Every closed Phase 3 schema consumed by the current runtime closure.
     "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
@@ -105,6 +109,9 @@ ENGINE_PATHS = frozenset({
     "data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md",
+    "data/projects/open_model_data/contracts/phase3_source_production_transport_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_source_author_prompt_v1.md",
+    "data/projects/open_model_data/contracts/phase3_source_review_prompt_v1.md",
 })
 
 
@@ -145,7 +152,39 @@ def _tracked_evidence_paths() -> set[str]:
     paths = {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
     if (ROOT / FUNCTIONAL_ROLE_LOGICAL_PATH).is_file():
         paths.add(FUNCTIONAL_ROLE_LOGICAL_PATH)
+    if (ROOT / CURRENT_HELDOUT_LABEL_LOGICAL_PATH).is_file():
+        paths.add(CURRENT_HELDOUT_LABEL_LOGICAL_PATH)
     return paths
+
+
+def _verify_heldout_label_receipt() -> dict[str, Any]:
+    path = ROOT / CURRENT_HELDOUT_LABEL_LOGICAL_PATH
+    receipt = read_json(path)
+    require(
+        receipt.get("schema_version") == "phase3_heldout_label_public_receipt_v1"
+        and receipt.get("text_free") is True
+        and receipt.get("complete") is True
+        and receipt.get("row_count") == 2_000
+        and receipt.get("packet_count") == 50,
+        "heldout label freeze receipt is incomplete",
+    )
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    require(
+        receipt.get("receipt_sha256")
+        == hashlib.sha256((canonical_json(body) + "\n").encode("utf-8")).hexdigest(),
+        "heldout label freeze receipt body hash drift",
+    )
+    bindings = receipt.get("bindings", {})
+    require(
+        bindings.get("base_contract_sha256") == V2_SHA256
+        and bindings.get("amendment_sha256") == V2_1_AMENDMENT_SHA256
+        and bindings.get("combined_contract_sha256") == V2_1_COMBINED_SHA256
+        and bindings.get("functional_role_contract_sha256") == sha256_file(ROOT / FUNCTIONAL_ROLE_LOGICAL_PATH)
+        and bindings.get("label_prompt_sha256")
+        == sha256_file(ROOT / "data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md"),
+        "heldout label freeze receipt contract binding drift",
+    )
+    return receipt
 
 
 def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
@@ -161,6 +200,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
     require(matrix["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "matrix schema binding drift")
     require(matrix["bindings"]["validator_sha256"] == sha256_file(SCRIPT_PATH), "matrix validator binding drift")
     role_result = functional_roles.verify()
+    heldout_label_receipt = _verify_heldout_label_receipt()
     require(
         matrix["functional_role_binding"]
         == {
@@ -201,6 +241,19 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
                 and entry["machine_reason"] == "evaluation_contract_rebound_to_v2_1",
                 "current v2.1 evaluation contract is not rebound",
             )
+        elif entry["logical_path"] == CURRENT_HELDOUT_LABEL_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "source_status"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "heldout_labels_frozen_v2_1",
+                "current heldout label freeze receipt is not rebound",
+            )
+            require(
+                entry["artifact_sha256"] == sha256_file(ROOT / CURRENT_HELDOUT_LABEL_LOGICAL_PATH)
+                and heldout_label_receipt["receipt_sha256"]
+                == "e2d3c170e94fa4762295805c522d1e52adaaaa867e60e8b02a06b19355a9694e",
+                "heldout label freeze identity drift",
+            )
         elif entry["artifact_class"] == "functional_role_contract":
             require(
                 entry["disposition"] == "rebound"
@@ -231,7 +284,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         )
     require(
         matrix["source_authoring"]
-        == {"blocked": True, "reason": "heldout_labels_not_frozen"},
+        == {"blocked": False, "reason": "heldout_labels_frozen_source_transport_ready"},
         "source-authoring block drift",
     )
     require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")
@@ -247,7 +300,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         "rebound_count": sum(entry["disposition"] == "rebound" for entry in entries),
         "valid_count": sum(entry["disposition"] == "valid" for entry in entries),
         "role_graph_ready": True,
-        "source_authoring_blocked": True,
+        "source_authoring_blocked": False,
         "phase4_blocked": True,
     }
 

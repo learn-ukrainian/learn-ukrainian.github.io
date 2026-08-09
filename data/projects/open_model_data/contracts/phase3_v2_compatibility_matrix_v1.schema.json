@@ -43,13 +43,13 @@
     },
     "engine_bindings": {
       "type": "array",
-      "minItems": 36,
-      "maxItems": 36,
+      "minItems": 40,
+      "maxItems": 40,
       "items": {"$ref": "#/$defs/engineEntry"}
     },
     "inventory": {
       "type": "array",
-      "minItems": 27,
+      "minItems": 28,
       "items": {"$ref": "#/$defs/inventoryEntry"}
     },
     "legacy_claims": {
@@ -62,7 +62,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["blocked", "reason"],
-      "properties": {"blocked": {"const": true}, "reason": {"const": "heldout_labels_not_frozen"}}
+      "properties": {"blocked": {"const": false}, "reason": {"const": "heldout_labels_frozen_source_transport_ready"}}
     },
     "phase4": {
       "type": "object",
@@ -89,6 +89,7 @@
             "deterministic_engine_rebound_to_v2",
             "functional_role_contract_rebound_to_v2_1",
             "evaluation_contract_rebound_to_v2_1",
+            "heldout_labels_frozen_v2_1",
             "pre_v2_linguistic_status_invalidated",
             "pre_v2_source_status_invalidated",
             "pre_v2_consumer_status_invalidated",
@@ -105,7 +106,7 @@
       "additionalProperties": false,
       "required": ["logical_path", "artifact_sha256", "disposition", "machine_reason", "phase3_v2_contract_sha256"],
       "properties": {
-        "logical_path": {"pattern": "^(scripts/projects/open_model_data/(phase3_.+|verify_phase3_source_universe_freeze\\.py)|data/projects/open_model_data/contracts/(phase3_.+|correction_protection_(coverage|evaluation)_contract_v1)\\.schema\\.json|data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1\\.md)$"},
+        "logical_path": {"pattern": "^(scripts/projects/open_model_data/(phase3_.+|verify_phase3_source_universe_freeze\\.py)|data/projects/open_model_data/contracts/(phase3_.+|correction_protection_(coverage|evaluation)_contract_v1)\\.schema\\.json|data/projects/open_model_data/contracts/phase3_(heldout_clean_modern_label|source_author|source_review)_prompt_v1\\.md)$"},
         "artifact_sha256": {"$ref": "#/$defs/sha256"},
         "disposition": {"const": "rebound"},
         "machine_reason": {"const": "deterministic_engine_rebound_to_v2"},

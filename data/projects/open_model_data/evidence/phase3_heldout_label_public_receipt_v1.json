@@ -1,0 +1,27 @@
+{
+  "actor": {"exact_model":"gpt-5.6-sol","harness":"codex","model_family":"openai","provider":"openai","role_id":"heldout_label_reviewer","task_id":"phase3-v2-1-heldout-label-review"},
+  "bindings": {
+    "amendment_sha256":"ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b",
+    "base_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+    "combined_contract_sha256":"2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907",
+    "conflict_graph_sha256":"f78fdba628ac7823b148d8e89d417ee44559e834f37958cbea3f467a9c3f65aa",
+    "evaluation_contract_sha256":"8db8cd1de8fdd9a6c345cea98243f1f4d6b3f4a2b2bdd5c15bb7c9543dfdf8e1",
+    "evaluation_cycle_id":"phase3-v2-1-evaluation-cycle-001",
+    "evaluation_freeze_receipt_sha256":"00005536c7783a5f88211cca7aa52246d3fc66fd81d6f3cca666e133ddcf1bba",
+    "functional_role_contract_sha256":"3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b",
+    "label_prompt_sha256":"d607e77fd20ef037385bce365f8854fe51e308ce3b05cafc71ea795e32e37195",
+    "materialization_jsonl_sha256":"e9d89b8fae5193a29a8c3dd055f464fc1290c18f507b669f3efb0720644f6d8c",
+    "materialization_receipt_sha256":"45ee76edddb060f8719b0adf03afb954979f9af0c3c9290a0c822d138a75110f",
+    "packet_order_sha256":"b05905e1576a5024a194eddd67b968cd4f800970578e41e69cf931e43ec9b8a2",
+    "partition_manifest_sha256":"3797e005d7c461f192dacb06e23a9028121bd73cb240f2c2851953a83955aa7d",
+    "selection_set_sha256":"b26bd1a058b41c4f2761884b52b22a074ee563f0e334c462879f36bd555659a0"
+  },
+  "complete": true,
+  "manifest_sha256":"9625b9037c3877f6cb303337bae57fe343425353b7e5865e68ece34db0538f4d",
+  "packet_count": 50,
+  "receipt_sha256":"e2d3c170e94fa4762295805c522d1e52adaaaa867e60e8b02a06b19355a9694e",
+  "row_count": 2000,
+  "schema_version":"phase3_heldout_label_public_receipt_v1",
+  "sealed_labels_sha256":"021aa9a4d37d7a0d98195ee44fc7b9c5fe3d58f98c0fc3c9461b1ea38b11d7f1",
+  "text_free": true
+}
