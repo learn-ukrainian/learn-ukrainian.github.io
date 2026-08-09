@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1615ad380a5d",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/16/15ad380a5d/0/metadata.json",
+      "transcript": "/16/15ad380a5d/0/full.jsonl",
+      "compact_transcript": "/16/15ad380a5d/0/transcript.jsonl",
+      "content_hash": "/16/15ad380a5d/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}

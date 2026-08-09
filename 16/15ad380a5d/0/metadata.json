@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1615ad380a5d",
+  "session_id": "fleet-0e93157752034812b5e3454f542d8758",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T18:38:46.641108Z",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "161497f54451",
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T18:38:46.637362Z",
+    "agent_lines": 4,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 4,
+    "total_lines_changed": 8,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
