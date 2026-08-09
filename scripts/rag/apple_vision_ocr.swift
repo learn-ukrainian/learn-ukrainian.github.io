@@ -47,6 +47,11 @@ private struct OrderedObservation {
     let box: CGRect
 }
 
+private struct NativeLineFragment {
+    let text: String
+    let box: CGRect
+}
+
 private enum OCRFailure: LocalizedError {
     case usage(String)
     case invalidPage(String)
@@ -94,7 +99,7 @@ private func parseArguments() throws -> (URL, String, String) {
         case "--mode":
             index += 1
             guard index < CommandLine.arguments.count else {
-                throw OCRFailure.usage("--mode requires native or ocr")
+                throw OCRFailure.usage("--mode requires native, native-spatial, or ocr")
             }
             mode = CommandLine.arguments[index]
         default:
@@ -110,8 +115,8 @@ private func parseArguments() throws -> (URL, String, String) {
         throw OCRFailure.usage("--pages is required; page numbers are one-based")
     }
 
-    guard mode == "native" || mode == "ocr" else {
-        throw OCRFailure.usage("--mode must be native or ocr")
+    guard mode == "native" || mode == "native-spatial" || mode == "ocr" else {
+        throw OCRFailure.usage("--mode must be native, native-spatial, or ocr")
     }
     return (URL(fileURLWithPath: pdfPath), pagesArgument, mode)
 }
@@ -242,6 +247,53 @@ private func nativePage(_ page: PDFPage, pageNumber: Int) -> OCRPage {
     )
 }
 
+private func nativeSpatialPage(_ page: PDFPage, pageNumber: Int) -> OCRPage {
+    guard let selection = page.selection(for: page.bounds(for: .mediaBox)) else {
+        return OCRPage(
+            page_number: pageNumber,
+            text: "",
+            observation_count: 0,
+            mean_confidence: 0.0,
+            line_break_count: 0
+        )
+    }
+    let fragments = selection.selectionsByLine().compactMap { line -> NativeLineFragment? in
+        let text = (line.string ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else {
+            return nil
+        }
+        return NativeLineFragment(text: text, box: line.bounds(for: page))
+    }.sorted { left, right in
+        if abs(left.box.midY - right.box.midY) > 2.0 {
+            return left.box.midY > right.box.midY
+        }
+        return left.box.minX < right.box.minX
+    }
+
+    var orderedLines: [[NativeLineFragment]] = []
+    for fragment in fragments {
+        if let first = orderedLines.last?.first,
+           abs(first.box.midY - fragment.box.midY) <= 2.0 {
+            orderedLines[orderedLines.count - 1].append(fragment)
+        } else {
+            orderedLines.append([fragment])
+        }
+    }
+    let pageLines = orderedLines.map { line in
+        line.sorted { $0.box.minX < $1.box.minX }
+            .map(\.text)
+            .joined(separator: " ")
+    }
+    let text = pageLines.joined(separator: "\n")
+    return OCRPage(
+        page_number: pageNumber,
+        text: text,
+        observation_count: fragments.count,
+        mean_confidence: text.isEmpty ? 0.0 : 1.0,
+        line_break_count: max(0, pageLines.count - 1)
+    )
+}
+
 private func run() throws -> OCRResponse {
     let (pdfURL, pagesArgument, mode) = try parseArguments()
     guard let document = PDFDocument(url: pdfURL) else {
@@ -272,6 +324,8 @@ private func run() throws -> OCRResponse {
         }
         if mode == "native" {
             pages.append(nativePage(page, pageNumber: pageNumber))
+        } else if mode == "native-spatial" {
+            pages.append(nativeSpatialPage(page, pageNumber: pageNumber))
         } else {
             pages.append(try recognizePage(page, pageNumber: pageNumber, requestRevision: requestRevision))
         }
@@ -283,12 +337,14 @@ private func run() throws -> OCRResponse {
         swift_language_version: "Swift 5+"
     )
     let recognizer = RecognizerMetadata(
-        framework: mode == "native" ? "PDFKit" : "Vision",
-        request: mode == "native" ? "PDFPage.string" : "VNRecognizeTextRequest",
-        recognition_languages: mode == "native" ? [] : ["uk-UA"],
-        recognition_level: mode == "native" ? "native" : "accurate",
+        framework: mode == "ocr" ? "Vision" : "PDFKit",
+        request: mode == "native" ? "PDFPage.string" : (
+            mode == "native-spatial" ? "PDFSelection.selectionsByLine" : "VNRecognizeTextRequest"
+        ),
+        recognition_languages: mode == "ocr" ? ["uk-UA"] : [],
+        recognition_level: mode == "ocr" ? "accurate" : "native",
         uses_cpu_only: true,
-        revision: mode == "native" ? 0 : requestRevision
+        revision: mode == "ocr" ? requestRevision : 0
     )
     return OCRResponse(
         schema_version: schemaVersion,

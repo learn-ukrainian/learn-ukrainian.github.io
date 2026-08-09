@@ -30,6 +30,9 @@ CANONICAL_TEXTBOOK_SUBJECTS: tuple[str, ...] = (
     "zdorovia",
     "etyka",
     "finansova",
+    "foreign_language",
+    "ya_doslidzhuiu_svit",
+    "tekhnolohiyi",
 )
 
 
@@ -167,6 +170,15 @@ _SUBJECT_ALIASES: dict[str, str] = {
     "biology": "biolohiya",
     "chemistry": "khimiya",
     "physics": "fizyka",
+    "angliiska-mova": "foreign_language",
+    "anhliiska-mova": "foreign_language",
+    "english": "foreign_language",
+    "foreign-language": "foreign_language",
+    "ya-doslidzhuiu-svit": "ya_doslidzhuiu_svit",
+    "ya-doslidzhuyu-svit": "ya_doslidzhuiu_svit",
+    "tekhnolohii": "tekhnolohiyi",
+    "tehnologii": "tekhnolohiyi",
+    "tekhnologiyi": "tekhnolohiyi",
 }
 
 
@@ -243,6 +255,22 @@ _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
         ),
     ),
     ("informatyka", ("informatyk", "informatik")),
+    (
+        "foreign_language",
+        ("angliisk", "angliysk", "anhliisk", "anglysk", "english"),
+    ),
+    (
+        "ya_doslidzhuiu_svit",
+        (
+            "ya-doslidzhuiu-svit",
+            "ya-doslidzhuyu-svit",
+            "ja-doslidzhuju-svit",
+        ),
+    ),
+    (
+        "tekhnolohiyi",
+        ("tekhnoloh", "tekhnolog", "tehnolog", "trudove-navch"),
+    ),
     ("matematyka", ("matematyk", "matematik")),
     ("algebra", ("algebra",)),
     ("heometriya", ("heometri", "geometri", "geometry")),
@@ -297,6 +325,18 @@ def subject_for_source_file(source_file: str) -> str | None:
 # bit the batch-2 ingest: 'gisem' existed here-adjacent but not in the tool's
 # local dict). Every value must be title-probed or front-matter-verified.
 AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
+    # University corpus sources (front-matter-verified 2026-08-08).
+    "vlasova": "Власова",
+    "haluzynska": "Галузинська",
+    "kalinichenko": "Калініченко",
+    "dvulychanska": "Двуличанська",
+    "levytska": "Левицька",
+    "marynenko": "Мариненко",
+    "olianych": "Олянич",
+    "glukhovtseva": "Глуховцева",
+    "khomik": "Хомік",
+    "strokal": "Строкаль",
+    "shvets": "Швець",
     # Core mova/lit textbook authors (originally in TRANSLITS)
     "karaman": "Караман",
     "zakhariychuk": "Захарійчук",
@@ -343,6 +383,7 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "ister": "Істер",
     "merzliak": "Мерзляк",
     "zadorozhnyi": "Задорожний",
+    "sobol": "Соболь",
     "bariakhtar": "Бар'яхтар",
     "bevz": "Бевз",
     "bios": "Біос",
@@ -356,8 +397,37 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "fuka": "Фука",
     "komarovska": "Комаровська",
     "masol": "Масол",
+    # Title page: Людмила Кондратова, Мистецтво, Богдан, 2025.
+    "kondratova": "Кондратова",
+    # Current Grade 9 Orion title pages, verified 2026-08-08.
+    "tarasenkova": "Тарасенкова",
+    "yaroshenko": "Ярошенко",
     "zapotockyi": "Запотоцький",
     "hilberh": "Гільберг",
+    "dovhan": "Довгань",
+    "nikolenko": "Ніколенко",
+    "petutina": "Петутіна",
+    # Phase 3 curriculum-cell sources (title/front-matter verified 2026-08-08).
+    "lystopad": "Листопад",
+    "zharkova": "Жаркова",
+    "pukhta": "Пухта",
+    "puhta": "Пухта",
+    "his": "Гісь",
+    "gis": "Гісь",
+    "hubarieva": "Губарєва",
+    "gubarieva": "Губарєва",
+    "hrushchynska": "Грущинська",
+    "grushchynska": "Грущинська",
+    "karpiuk": "Карпюк",
+    "karpyuk": "Карпюк",
+    "pakhomova": "Пахомова",
+    "kosta": "Коста",
+    "bilenko": "Біленко",
+    "khodzycka": "Ходзицька",
+    "khodzytska": "Ходзицька",
+    "hodzycka": "Ходзицька",
+    "burenko": "Буренко",
+    "kuchma": "Кучма",
     "rolik": "Ролік",
     "berendieiev": "Берендєєв",
     # Non-textbook author-name strings already stored in Latin/English on

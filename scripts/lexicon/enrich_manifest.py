@@ -93,6 +93,7 @@ from scripts.lexicon.source_attribution import (
     CORRECTION_DICTIONARIES_LABEL,
     DAVYDOV_LABEL,
     ESUM_LABEL,
+    GRINCHENKO_LABEL,
     MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
     PROVERBS_LABEL,
@@ -3614,6 +3615,110 @@ def _sum11_definition_card(
     return None
 
 
+def _grinchenko_definition_row(conn: sqlite3.Connection, lemma: str) -> str | None:
+    """Return the attested headword spelling if ``lemma`` exists in Грінченко, else None."""
+    for variant in _split_lemma_variants(lemma):
+        row = conn.execute(
+            "SELECT word FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+            (variant,),
+        ).fetchone()
+        if row and row[0]:
+            headword = clean_html_entities(str(row[0])).strip()
+            if headword:
+                return headword
+    return None
+
+
+# Fixed (non-headword) Ukrainian words in the Грінченко heritage-card template
+# below (#6510 P1 fix). The headword changes per lemma; this prose does not, but
+# it still runs through the same VESUM gate on every call rather than being
+# assumed correct — ``_vesum_word_analyses`` is itself lru_cached per word, so
+# after the first real card build this costs a handful of dict reads, not a query.
+_GRINCHENKO_TEMPLATE_WORDS: tuple[str, ...] = (
+    "засвідчено",
+    "в",
+    "словнику",
+    "Грінченка",
+    "Це",
+    "один",
+    "із",
+    "найповніших",
+    "домодерних",
+    "реєстрів",
+    "української",
+    "лексики",
+)
+
+
+def _vesum_verified(word: str) -> bool:
+    """Fail-closed VESUM presence check for one word.
+
+    Tries the exact surface form first, then casefolded: VESUM stores most word
+    forms lowercase, so a sentence-initial capital like "Це" is pure orthography,
+    not a distinct word, while a proper noun like "Грінченка" verifies on its
+    exact (capitalized) form.
+    """
+    return bool(_vesum_word_analyses(word)) or bool(_vesum_word_analyses(word.casefold()))
+
+
+def _grinchenko_template_verified() -> bool:
+    """VESUM-gate the fixed prose in the Грінченко heritage card (#6510 P1 fix)."""
+    return all(_vesum_verified(word) for word in _GRINCHENKO_TEMPLATE_WORDS)
+
+
+def _grinchenko_definition_card(
+    conn: sqlite3.Connection,
+    lemma: str,
+) -> dict[str, Any] | None:
+    """Heritage attestation card for Б. Грінченка «Словарь української мови» (1907).
+
+    #6464. Source choice: the offline ``grinchenko`` table (same digitized 1907 text
+    already used by heritage_classifier.py / search_grinchenko_1907), NOT a live
+    slovnyk.me ``/dict/hrinchenko/`` scrape — verified via WebFetch that the mirror
+    reproduces the identical raw entry, and search_slovnyk_me already blocks
+    re-fetching Грінченко because it is "already indexed locally". Offline avoids a
+    network dependency in CI and duplicate provenance for the same source.
+
+    Content choice: Грінченко's entries gloss Ukrainian headwords IN RUSSIAN — it was
+    compiled as a Ukrainian-Russian dictionary under the Ems-era restrictions.
+    Verified live on multiple samples (прапор → "Знамя"; хата → "Дом, изба, хижина";
+    серце → "Сердце... Гнев"). Reproducing that prose as a learner "definition" would
+    put Russian-language text in a max-immersion Ukrainian product — worse than the
+    already-excluded Soviet-era СУМ-11, which is at least Ukrainian-language. This
+    card therefore never surfaces the raw ``definition`` column: it states only the
+    verified fact of pre-Soviet attestation (headword found in the 1907 registry),
+    never a translated or paraphrased gloss (#M-4: no invented/untranslated text).
+    """
+    headword = _grinchenko_definition_row(conn, lemma)
+    if not headword:
+        # Inflected-form entries (e.g. водою) resolve to their VESUM base lemma —
+        # Грінченко only carries dictionary (base) headwords.
+        base = _vesum_base_lemma(lemma)
+        if base and base != lemma:
+            headword = _grinchenko_definition_row(conn, base)
+    if not headword:
+        return None
+    # #6510 P1 fix (cross-family review of #6464): the prior version interpolated
+    # the DB ``word`` into this template with no morphological verification. Both
+    # the DB-sourced headword and the hand-authored fixed prose must be attested
+    # VESUM word forms before any Ukrainian text reaches a learner — either
+    # failing DROPS the card (fail closed) rather than emitting unverified
+    # Ukrainian (#M-4: no invented/unverified text).
+    if not _vesum_verified(headword) or not _grinchenko_template_verified():
+        return None
+    return {
+        "id": "grinchenko",
+        "source": GRINCHENKO_LABEL,
+        "source_pill": "Грінченко (1907)",
+        "note": "домодерна фіксація · не переклад",
+        "heritage": True,
+        "definitions": [
+            f"«{headword}» засвідчено в словнику Б. Грінченка (1907). "
+            "Це один із найповніших домодерних реєстрів української лексики."
+        ],
+    }
+
+
 def _definition_cards(
     conn: sqlite3.Connection,
     lemma: str,
@@ -3624,10 +3729,12 @@ def _definition_cards(
     # СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization
     # decision 2026-06-26. Show clean modern Ukrainian dictionaries: VTS (Великий
     # тлумачний словник) on top, СУМ-20 below — both when available. Inflected-form
-    # entries resolve to their base lemma inside each builder.
+    # entries resolve to their base lemma inside each builder. Грінченко (1907) is an
+    # optional heritage attestation card, always last (#6464) — never primary.
     vts = _vts_definition_card(lemma, cache)
     sum20 = _sum20_definition_card(lemma, cache)
-    return [card for card in (vts, sum20) if card]
+    grinchenko = _grinchenko_definition_card(conn, lemma)
+    return [card for card in (vts, sum20, grinchenko) if card]
 
 
 _SYNONYM_ADDITION_CAP = 8

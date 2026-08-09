@@ -121,6 +121,20 @@ def sample_data(tmp_path):
 
 
 class TestBuildSourcesDb:
+    def test_full_rebuild_rejects_unverified_native_text_anomaly(self):
+        import wiki.build_sources_db as bdb
+
+        repeated = "Рекомендовано Міністерством освіти і науки України"
+        entry = {
+            "chunk_id": "source_s0001",
+            "text": f"{repeated}\n{repeated}",
+            "extraction_mode": "native_text",
+            "page_extraction_mode": "native_text",
+        }
+
+        with pytest.raises(ValueError, match="requires exact page-image verification"):
+            bdb._require_production_textbook_entry(entry, source_file="7-klas-test-author-2024")
+
     def test_builds_all_tables(self, sample_data, monkeypatch):
         import wiki.build_sources_db as bdb
         from wiki.build_sources_db import build
@@ -171,6 +185,47 @@ class TestBuildSourcesDb:
         conn = sqlite3.connect(str(sample_data["db_path"]))
         assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
         conn.close()
+
+    def test_full_rebuild_uses_canonical_university_grade_label(
+        self, sample_data, monkeypatch
+    ):
+        from scripts.wiki import build_sources_db as bdb
+        from scripts.wiki.build_sources_db import build
+
+        monkeypatch.setattr(bdb, "PROJECT_ROOT", sample_data["project_root"])
+        grade_zero = sample_data["tb_dir"] / "grade-00"
+        grade_zero.mkdir(parents=True)
+        slug = "uni-ukrmova-lexicology-filon-khomik-2010"
+        (grade_zero / f"{slug}.jsonl").write_text(
+            json.dumps(
+                {
+                    "chunk_id": f"{slug}_s0000",
+                    "section_title": "Лексикологія",
+                    "text": "Український університетський текст.",
+                    "grade": 0,
+                    "author": "khomik",
+                    "author_uk": "Хомік",
+                },
+                ensure_ascii=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        build(
+            sample_data["db_path"],
+            sample_data["ext_dir"],
+            sample_data["tb_dir"],
+            sample_data["gdrive"],
+        )
+
+        connection = sqlite3.connect(str(sample_data["db_path"]))
+        grade = connection.execute(
+            "SELECT grade FROM textbooks WHERE source_file = ?",
+            (slug,),
+        ).fetchone()[0]
+        connection.close()
+        assert grade == "university"
 
 
 class TestSourcesDb:

@@ -53,6 +53,7 @@ READINESS_STATUSES = {
     "pdf_without_chunks",
     "chunks_without_pdf",
     "chunks_not_ingested",
+    "partial_db_ingest",
     "db_without_chunks",
     "suspect_extraction",
     "missing_selected_source",
@@ -289,7 +290,7 @@ def _readiness_status(source: Mapping[str, Any]) -> str:
         return "covered"
     if status == "suspect_extraction":
         return "degraded"
-    if status in {"pdf_without_chunks", "chunks_not_ingested"}:
+    if status in {"pdf_without_chunks", "chunks_not_ingested", "partial_db_ingest"}:
         return "extraction_missing"
     if status in {"chunks_without_pdf", "db_without_chunks"}:
         return "degraded"

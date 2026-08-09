@@ -20,10 +20,319 @@ operation:
   future_transitions_not_current:
   - The 2026 primary TOP starts for Grade 1 in September 2028.
   - The 2024 profile standard starts on 1 September 2027.
+future_coverage:
+- future_id: g12.all_subjects
+  grade: 12
+  status: future_not_current
+  hard_denominator: false
+  acquisition_required_now: false
+  earliest_applicable_school_year: 2029/30
+  basis_note: The new profile-school standard starts with Grade 10 on 1 September 2027; Grade 12 is tracked now but is not a current 2026/27 textbook gap.
+  official_program_locator_ids:
+  - MON_P10_12
+phase3_gap_policy:
+  foreign_language_material: retained_non_gating
+  approved_one_of_alternative: not_an_acquisition_gap_when_choice_group_is_satisfied
+  grade_12: future_tracking_only
+  unreadable_or_mojibake_text: repair_from_verified_source_or_replace_never_guess
+  source_admission_order:
+  - verify_provenance_and_access
+  - verify_native_text_or_page_level_ocr_canary
+  - create_pdf_and_jsonl_identities
+  - back_up_pdf_and_jsonl_to_google_drive
+  - ingest_into_sources_database
+  - verify_database_identity_and_ukrainian_readability
+known_quality_repairs:
+- repair_id: g10-11.mystetstvo.mojibake
+  source_id: 3090-mystectvo-10-11-klas-nazarenko
+  audited_latin1_row_count: 12
+  legitimate_foreign_diacritic_row_count: 2
+  affected_row_count: 10
+  missing_book: false
+  status: jsonl_repaired_pending_atomic_database_ingest
+  guessing_allowed: false
+  evidence_directory: textbook_verification/phase3-2026-08-08
+phase3_gap_execution:
+  baseline_readiness_receipt:
+    name: phase3-textbook-readiness-preingest-v27.json
+    sha256: ece4090918aa5615fb569e50b539bea560bfa840e4582980fb77ee19dd0a82ad
+  baseline_coverage_receipt:
+    name: phase3-textbook-coverage-preingest-v27.json
+    sha256: a4b9115df7a5a5f4e7b98638e9af574216d4540b263cfd6cfa8af6668931ff8f
+  hard_denominator_counts:
+    required_cells: 116
+    covered: 77
+    choice_satisfied: 12
+    extraction_missing: 20
+    acquisition_missing: 7
+    unresolved: 0
+  acquisition_interpretation:
+    true_new_source_gap:
+    - g09.ukrmova
+    choice_alternatives_that_must_not_trigger_book_acquisition:
+    - g06.literature_integrated
+    - g07.literature_integrated
+    - g07.natural_7_9_integrated
+    - g08.matematyka_integrated
+    - g09.history_integrated_7_9
+    - g09.natural_7_9_integrated
+  packet_order:
+  - exact_page_verification_and_atomic_reingest
+  - native_text_full_extraction_or_lawful_replacement
+  - covered_source_quality_repair
+  - recompute_readiness_and_coverage
+  exact_page_verification_status:
+    status: jsonl_prepared_pending_atomic_database_ingest
+    verified_row_count: 13
+    evidence_directory: textbook_verification/phase3-2026-08-08
+  covered_source_quality_status:
+    status: jsonl_repaired_pending_atomic_database_ingest
+    repaired_row_count: 10
+    verified_legitimate_foreign_diacritic_row_count: 2
+    evidence_directory: textbook_verification/phase3-2026-08-08
+  database_write_policy:
+    mode: one_atomic_batch_after_all_jsonl_packets_pass
+    fts_rebuild_count: 1
+    per_source_live_database_ingest: forbidden
+    reason: Rebuilding the full external-content FTS index after every source would repeat large WAL/temp growth and can exhaust shared disk.
+  exact_page_verification_packets:
+  - source_file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
+    affected_row_count: 1
+    target_cells: [g01.dyzain_i_tekhnolohii, g01.ya_doslidzhuiu_svit]
+  - source_file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2
+    affected_row_count: 1
+    target_cells: [g01.dyzain_i_tekhnolohii, g01.ya_doslidzhuiu_svit]
+  - source_file: 1-klas-mystetstvo-rublia-2024
+    affected_row_count: 2
+    target_cells: [g01.mystetstvo]
+  - source_file: 3-klas-informatyka-morze-2025
+    affected_row_count: 1
+    target_cells: [g03.informatyka]
+  - source_file: 4-klas-matematyka-ister-2021-2
+    affected_row_count: 1
+    target_cells: [g04.matematyka]
+  - source_file: 7-klas-heometriya-merzliak-2024
+    affected_row_count: 3
+    target_cells: [g07.heometriya, g07.matematyka_integrated]
+  - source_file: 9-klas-geografiia-boiko-2026
+    affected_row_count: 2
+    target_cells: [g09.heohrafiya, g09.natural_7_9_integrated]
+  - source_file: 10-klas-vsesvitnia-istoriia-gisem-2018-stand
+    affected_row_count: 1
+    target_cells: [g10.history_ua_world]
+  - source_file: 11-klas-istoriya-ukr-hlibovska-2024
+    affected_row_count: 1
+    target_cells: [g11.history_ua_world]
+  full_extraction_or_replacement_packets:
+  - source_file: 5-klas-informatyka-morze-2022
+    target_cells: [g05.informatyka]
+    action: replace_unreadable_ryvkind_with_page_verified_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 257
+    pdf_page_count: 257
+    native_content_page_coverage: 0.9961
+    page_verified_legitimate_spaced_heading_pages: [132, 147, 185, 191]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/5-klas-informatyka-morze-2022/visual-exactness-receipt.json
+    rejected_alternatives:
+    - source_file: 5-klas-informatyka-ryvkind-2022
+      reason: PDFKit recovered usable native text from only 1 of 244 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/backend-probes/5-klas-informatyka-ryvkind-2022.pdfkit-native-receipt.json
+  - source_file: 6-klas-informatyka-bondarenko-2023
+    target_cells: [g06.informatyka]
+    action: replace_unreadable_ryvkind_with_page_verified_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 184
+    pdf_page_count: 262
+    native_content_page_coverage: 0.7023
+    page_verified_legitimate_label_pages: [23, 79, 116, 121, 128, 129, 130, 131, 132, 150, 176]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/6-klas-informatyka-bondarenko-2023/visual-exactness-receipt.json
+    rejected_alternatives:
+    - source_file: 6-klas-informatyka-ryvkind-2023
+      reason: PDFKit recovered usable native text from 0 of 245 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/backend-probes/6-klas-informatyka-ryvkind-2023.pdfkit-native-receipt.json
+    - source_file: 6-klas-informatyka-morze-2023
+      reason: PDFKit recovered usable native text from 0 of 260 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/6-klas-informatyka-morze-2023/pdfkit-native-receipt.json
+  - source_file: 6-klas-matematyka-tarasenkova-2023-1
+    target_cells: [g06.matematyka]
+    action: replace_unreadable_candidate_with_complete_native_text_part_1
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 231
+    page_verified_legitimate_math_label_pages: [135, 143, 183, 227]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/6-klas-matematyka-tarasenkova-2023-1/visual-exactness-receipt-v2.json
+  - source_file: 6-klas-matematyka-tarasenkova-2023-2
+    target_cells: [g06.matematyka]
+    action: replace_unreadable_candidate_with_complete_native_text_part_2
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 199
+    page_verified_legitimate_math_label_pages: [23, 24, 129, 195]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/6-klas-matematyka-tarasenkova-2023-2/visual-exactness-receipt-v2.json
+  - source_file: 6-klas-zarubizhna-literatura-voloshchuk-2023
+    target_cells: [g06.zarlit, g06.literature_integrated]
+    action: replace_unreadable_scan_with_publisher_native_text_pdf
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 304
+    quarantined_logical_corruption_pages: [5, 6, 8, 12, 16, 26, 28, 32, 33, 38, 42, 51, 56, 66, 72, 76, 103, 111, 136, 148, 159, 160, 162, 168, 176, 197, 206, 207, 217, 234, 238, 242]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/6-klas-zarubizhna-literatura-voloshchuk-2023/final-label-receipt-v2.json
+  - source_file: 7-klas-biolohiya-sobol-2024
+    target_cells: [g07.biolohiya, g07.natural_7_9_integrated]
+    action: replace_unreadable_scan_with_current_native_text_edition
+    retained_chunk_count: 410
+    quarantined_nonprose_diagram_pages: [2, 283]
+    rights_capability: private_corpus_only_public_download_no_open_license
+  - source_file: 7-klas-heohrafiya-dovhan-2024
+    target_cells: [g07.heohrafiya, g07.natural_7_9_integrated]
+    action: replace_quarantined_hilberh_with_page_verified_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 343
+    quarantined_nonprose_map_pages: [41, 54, 62, 70]
+    quarantined_logical_corruption_pages: [290, 302]
+    page_verified_legitimate_label_pages: [14, 55, 59]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/7-klas-heohrafiya-dovhan-2024/final-label-receipt-v2.json
+  - source_file: 7-klas-informatyka-bondarenko-2024
+    target_cells: [g07.informatyka]
+    action: replace_unreadable_ryvkind_with_page_verified_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 218
+    pdf_page_count: 278
+    retained_native_content_page_coverage: 0.7806
+    quarantined_hidden_duplicate_text_pages: [2]
+    page_verified_legitimate_label_pages: [83, 87, 131, 136, 150, 152, 153, 156, 157, 162, 165, 183]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/7-klas-informatyka-bondarenko-2024/visual-exactness-receipt.json
+    rejected_alternatives:
+    - source_file: 7-klas-informatyka-ryvkind-2024
+      reason: PDFKit recovered usable native text from only 6 of 259 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/backend-probes/7-klas-informatyka-ryvkind-2024.pdfkit-native-receipt.json
+    - source_file: 7-klas-informatyka-morze-2024
+      reason: The encrypted PDF yielded usable native text from 0 of 260 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/7-klas-informatyka-morze-2024/pdfkit-native-receipt.json
+  - source_file: 7-klas-zarlit-nikolenko-2024
+    target_cells: [g07.zarlit, g07.literature_integrated]
+    action: replace_unreadable_voloshchuk_with_complete_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 292
+    page_verified_legitimate_cipher_letter_pages: [164]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/7-klas-zarlit-nikolenko-2024/final-label-receipt-v2.json
+  - source_file: 8-klas-heometriya-burda-tarasenkova-2025
+    target_cells: [g08.heometriya, g08.matematyka_integrated]
+    action: replace_scan_only_merzliak_with_page_verified_native_text_edition
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 279
+    pdf_page_count: 150
+    printed_page_count: 288
+    native_content_page_coverage: 0.9533
+    quarantined_nonprose_overview_pages: [4]
+    page_verified_legitimate_math_label_pages: [28, 60, 62, 74, 75, 90, 91, 112, 116, 124, 125, 126, 136, 139, 148]
+    rights_capability: private_corpus_only_public_download_no_open_license
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/8-klas-heometriya-burda-tarasenkova-2025/final-label-receipt-v2.json
+    rejected_alternatives:
+    - source_file: 8-klas-heometriya-ister-2025
+      reason: The pypdf layer contains widespread intra-word spaces and the PDFKit layer contains widespread soft-hyphen word breaks; neither representation is safe machine-learnable prose without normalization.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/8-klas-heometriya-ister-2025/pdfkit-exactness.json
+  - source_file: 9-klas-istoriya-ukr-galimov-2026
+    target_cells: [g09.history_separate, g09.history_integrated_7_9]
+    action: find_complete_native_text_replacement
+    replacement_status: residual_gap_current_complete_native_source
+    pdfkit_native_probe:
+      total_pages: 260
+      content_page_coverage: 0.15
+      status: fail
+      drive_receipt: textbook_verification/phase3-2026-08-08/backend-probes/9-klas-istoriya-ukr-galimov-2026.pdfkit-native-receipt.json
+    rejected_alternatives:
+    - source_file: 9-klas-istorija-ukrajini-gisem-2017
+      reason: The retained extraction covers only 71.18% of content pages and the exactness audit flags duplicate logical-text lines in 124 chunks across 87 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/9-klas-istorija-ukrajini-gisem-2017/textbook-native-exactness-audit-v1.json
+    blocked_alternatives:
+    - source_file: 9-klas-istoriya-shchupak-2026-part1
+      status: incomplete_multivolume
+      reason: The readable current source explicitly identifies itself as part 1 of a two-part edition; part 2 is not present in the accessible corpus.
+      drive_receipt: quarantine/incomplete-multivolume-v1/9-klas-istoriya-shchupak-2026-part1/9-klas-istoriya-shchupak-2026.receipt.json
+    - source_file: 9-klas-istoriya-ukrainy-vlasov-2026
+      status: acquisition_blocked
+      reason: The current Shkola landing exposes Google Drive file 18ast6HLGr5WK9SvWQMPyfmbF3OxjidsB for preview, but Drive refuses PDF download; no textability canary is possible.
+    - source_file: 9-klas-istoriya-ukrainy-pometun-2026
+      status: edition_identity_blocked
+      reason: The page is labeled 2026, but the exposed reader identifies an older 2017 document; it cannot prove the current edition identity.
+  - source_file: 10-klas-istoriia-ukrainy-hlibovska-2023
+    target_cells: [g10.history_ua_world]
+    action: find_complete_native_text_replacement
+    replacement_status: residual_gap_complete_exact_native_source
+    pdfkit_native_probe:
+      total_pages: 296
+      content_page_coverage: 0.0
+      status: fail
+      drive_receipt: textbook_verification/phase3-2026-08-08/backend-probes/10-klas-istoriia-ukrainy-hlibovska-2023.pdfkit-native-receipt.json
+    rejected_alternatives:
+    - source_file: 10-klas-istorija-ukrajiny-gisem-2018
+      reason: PDFKit recovered only 66.67% content-page coverage and the exactness audit found duplicate logical-text lines in 57 chunks across 48 pages.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/10-klas-istorija-ukrajiny-gisem-2018/textbook-native-exactness-audit-v1.json
+    - source_file: 10-klas-istoriya-ukrainy-pometun-2018
+      reason: PDFKit recovered 95.35% content-page coverage, but visual comparison exposed the nonprinted single-letter glyph run "П б і і і І" in every one of the 246 content-page chunks.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/10-klas-istoriya-ukrainy-pometun-2018/textbook-native-exactness-audit-v2.json
+    - source_file: 10-klas-istoriya-ukrainy-sorochynska-2018
+      reason: PDFKit recovered all 256 pages, but exact page comparison exposed hidden-text substitutions and duplicated word material, including printed "КП(б)У" becoming "КИ(б)У" and printed "створивши" becoming "ство-рививши" on page 128.
+      text_repair_performed: false
+      drive_receipt: textbook_verification/phase3-2026-08-08/rejected-native-candidates/10-klas-istoriya-ukrainy-sorochynska-2018/page-128-visual-exactness.json
+  covered_source_quality_packets:
+  - source_file: 10-11-klas-mystectvo-nazarenko-2018
+    audited_latin1_row_count: 12
+    legitimate_foreign_diacritic_row_count: 2
+    affected_row_count: 10
+    action: exact_source_text_repair_and_atomic_reingest
+  - source_file: 9-klas-algebra-tarasenkova-2026
+    action: exact_page_label_and_atomic_reingest
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 326
+    quarantined_logical_corruption_pages: [314]
+    page_verified_legitimate_math_pages: [7, 26, 56, 60, 66, 71, 73, 79, 84, 105, 106, 108, 118, 139, 164, 166, 177, 178, 182, 212, 213, 214, 216, 226, 230, 240, 241, 251, 262, 273, 292, 293, 294, 315]
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/9-klas-algebra-tarasenkova-2026/final-label-receipt-v2.json
+  - source_file: 9-klas-informatyka-morze-2026
+    action: exact_page_label_and_atomic_reingest
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 229
+    page_verified_legitimate_label_pages: [88, 155]
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/9-klas-informatyka-morze-2026/final-label-receipt-v2.json
+  - source_file: 9-klas-khimiya-yaroshenko-2026
+    action: exact_page_label_and_atomic_reingest
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 306
+    quarantined_logical_corruption_pages: [12, 15, 167, 188, 227]
+    page_verified_legitimate_chemical_code_pages: [236]
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/9-klas-khimiya-yaroshenko-2026/final-label-receipt-v2.json
+  - source_file: 9-klas-mystetstvo-kondratova-2025
+    action: exact_page_label_and_atomic_reingest
+    replacement_status: jsonl_prepared_pending_atomic_database_ingest
+    retained_chunk_count: 258
+    quarantined_logical_corruption_pages: [10, 25, 64, 92, 94, 104, 105, 128, 138, 150, 159, 168, 169, 188, 194, 195, 244, 245, 257, 258, 265]
+    quarantined_nonprose_score_pages: [26, 31, 65, 93, 160, 266, 270, 271, 272]
+    drive_receipt: textbook_verification/phase3-2026-08-08/native-exactness/9-klas-mystetstvo-kondratova-2025/final-label-receipt-v2.json
+  packet_completion_gate:
+  - every affected row is verified against its exact PDF page; no model agreement is evidence
+  - PDF and JSONL identities are present in Google Drive before database mutation
+  - atomic source replacement succeeds with FTS and section-link parity
+  - Ukrainian readability canary passes on the retained JSONL and database rows
+  - readiness and coverage receipts are recomputed from the resulting identities
 selection_reference:
   path: docs/l2-uk-direct/textbook-selection.yaml
   selected_book_count_is_inventory_only: true
-  selection_note: The 127-book selection is a local inventory selection, not the official curriculum denominator.
+  selection_note: The 151-book selection is a local inventory selection, not the official curriculum denominator.
 requirement_classes:
 - required_common
 - required_one_of
@@ -37,6 +346,8 @@ locator_registry:
   MON_BFAQ: https://mon.gov.ua/news/vidpovidaiemo-na-zapytannia-shchodo-onovlenoi-typovoi-osvitnoi-prohramy-dlia-59-klasiv-nush
   MON_U890: https://mon.gov.ua/static-objects/mon/zagalna%20serednya/typovi-programu-2-11/typova-osv-prohr-zzso-iii-stupenya-890.pdf
   MON_UINDEX: https://mon.gov.ua/osvita-2/zagalna-serednya-osvita/osvitni-programi/navchalni-programi-dlya-10-11-klasiv
+  MON_P10_12: https://mon.gov.ua/osvita-2/zagalna-serednya-osvita/osvitni-programi/modelni-navchalni-prohramy-dlia-10-12-klasiv-novoi-ukrainskoi-shkoly-profilna-shkola-z-2027-roku
+  UIED_2026_9: https://uied.org.ua/konkurs-pidruchnykiv/perelik-pidruchnykiv-navchalnyh-posibnykiv-dlya-zzso-podanyh-na-konkurs-u-2026-roczi-4-6-7-ta-9-klas/
   IMZO_ROOT: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/
   IMZO_1_BUKVAR: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/1-klas/1-ukranska-mova-bukvar-1-klas/
   IMZO_3_READ: https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/3-klas/ukranska-mova-ta-chitannya-pdruchnik-dlya-3-klasu-zakladv-zagalno-seredno-osvti-u-2-kh-chastinakh/
@@ -70,8 +381,7 @@ cells:
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: 'Formal TOP cell is integrated ''Українська мова. Навчання грамоти''; IMZO names the approved textbook family
-    ''Українська мова. Буквар''. DB: 394 chunks, 4 files; present.'
+  evidence_note: 'Formal TOP cell is integrated ''Українська мова. Навчання грамоти''; IMZO names the approved textbook family ''Українська мова. Буквар''. DB: 394 chunks, 4 files; present.'
 - cell_id: g02.ukrmova
   grade: 2
   canonical_subject_id: ukrmova
@@ -93,8 +403,7 @@ cells:
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: 'TOP permits separate Ukrainian language plus Reading or an integrated course. DB identity ukrmova: 746 chunks,
-    6 files; present.'
+  evidence_note: 'TOP permits separate Ukrainian language plus Reading or an integrated course. DB identity ukrmova: 746 chunks, 6 files; present.'
 - cell_id: g02.chytannia
   grade: 2
   canonical_subject_id: chytannia
@@ -210,85 +519,89 @@ cells:
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_P12
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g01.foreign_language
-    source_ids: []
+    source_ids:
+    - 2716-angliiska-mova-1-klas-puhta
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g02.foreign_language
   grade: 2
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_P12
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g02.foreign_language
-    source_ids: []
+    source_ids:
+    - 3045-english-2-klas-gubarieva
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g03.foreign_language
   grade: 3
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_P12
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g03.foreign_language
-    source_ids: []
+    source_ids:
+    - 1536-english-3-klas-karpyuk-nush
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g04.foreign_language
   grade: 4
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №743; Savchenko/Shyian primary cohort
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_P12
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g04.foreign_language
-    source_ids: []
+    source_ids:
+    - 1469-anglyska-mova-pavlchenko-4-klas
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; exact edition universe not yet enumerated in the current corpus.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g01.matematyka
   grade: 1
   canonical_subject_id: matematyka
@@ -300,16 +613,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g01.matematyka
-    source_ids: []
+    source_ids:
+    - 1211-matematika-1-klas-lystopad
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g02.matematyka
   grade: 2
   canonical_subject_id: matematyka
@@ -321,16 +635,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g02.matematyka
-    source_ids: []
+    source_ids:
+    - 3034-matematyka-ister-2-klas
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g03.matematyka
   grade: 3
   canonical_subject_id: matematyka
@@ -342,16 +657,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g03.matematyka
-    source_ids: []
+    source_ids:
+    - 1502-matematyka-3-klas-lystopad
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g04.matematyka
   grade: 4
   canonical_subject_id: matematyka
@@ -363,16 +679,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g04.matematyka
-    source_ids: []
+    source_ids:
+    - 1570-matematika-4-klas-ster
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; primary math titles are not represented in current SQLite.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g01.ya_doslidzhuiu_svit
   grade: 1
   canonical_subject_id: ya_doslidzhuiu_svit
@@ -384,16 +701,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g01.ya_doslidzhuiu_svit
-    source_ids: []
+    source_ids:
+    - 2730-ya-doslidzhuiu-svit-1-klas-zharkova-2023
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g02.ya_doslidzhuiu_svit
   grade: 2
   canonical_subject_id: ya_doslidzhuiu_svit
@@ -405,16 +723,18 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g02.ya_doslidzhuiu_svit
     source_ids: []
-    source_groups: []
-    source_match_mode: any
-    evidence_state: unresolved
+    source_groups:
+    - - 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+    - - 2-klas-ya-doslidzhuiu-svit-morze-2019
+    source_match_mode: all
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g03.ya_doslidzhuiu_svit
   grade: 3
   canonical_subject_id: ya_doslidzhuiu_svit
@@ -426,16 +746,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g03.ya_doslidzhuiu_svit
-    source_ids: []
+    source_ids:
+    - 1545-ya-doslidzhuyu-svit-3-klas-zharkova
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g04.ya_doslidzhuiu_svit
   grade: 4
   canonical_subject_id: ya_doslidzhuiu_svit
@@ -447,16 +768,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g04.ya_doslidzhuiu_svit
-    source_ids: []
+    source_ids:
+    - 1624-ya-doslidzhuyu-svit-4-klas-zharkova
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official integrated course; title-level acquisition reconciliation pending.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g01.dyzain_i_tekhnolohii
   grade: 1
   canonical_subject_id: dyzain_i_tekhnolohii
@@ -468,16 +790,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g01.dyzain_i_tekhnolohii
-    source_ids: []
+    source_ids:
+    - 2730-ya-doslidzhuiu-svit-1-klas-zharkova-2023
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: The selected current integrated YDS volume explicitly includes Design and Technology.
 - cell_id: g02.dyzain_i_tekhnolohii
   grade: 2
   canonical_subject_id: dyzain_i_tekhnolohii
@@ -489,16 +812,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g02.dyzain_i_tekhnolohii
-    source_ids: []
+    source_ids:
+    - 2-klas-ya-doslidzhuiu-svit-morze-2019
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Part 2 of the selected integrated YDS course is Informatics and Design and Technology.
 - cell_id: g03.dyzain_i_tekhnolohii
   grade: 3
   canonical_subject_id: dyzain_i_tekhnolohii
@@ -510,16 +834,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g03.dyzain_i_tekhnolohii
-    source_ids: []
+    source_ids:
+    - 1545-ya-doslidzhuyu-svit-3-klas-zharkova
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Part 2 of the selected integrated YDS course includes Design and Technology.
 - cell_id: g04.dyzain_i_tekhnolohii
   grade: 4
   canonical_subject_id: dyzain_i_tekhnolohii
@@ -531,16 +856,17 @@ cells:
   - MON_P34
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g04.dyzain_i_tekhnolohii
-    source_ids: []
+    source_ids:
+    - 1624-ya-doslidzhuyu-svit-4-klas-zharkova
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: approved_primary_basis
-  evidence_note: Official cell; title-level acquisition reconciliation pending.
+  evidence_note: Part 2 of the selected integrated YDS course includes Design and Technology.
 - cell_id: g03.informatyka
   grade: 3
   canonical_subject_id: informatyka
@@ -859,6 +1185,7 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
+  - UIED_2026_9
   textbook_applicability: required
   coverage:
     coverage_unit_id: g09.ukrmova
@@ -870,7 +1197,45 @@ cells:
     - 970-ukrmova-9klas-avramenko
     - 1000-ukrmova-zabolotniy-9-klas-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current 2026/27 NUS source is not enumerated in the selected manifest; 2017 inventory is legacy-only and cannot satisfy this cell.
+  candidate_sources:
+  - source_id: 9-klas-ukrmova-samonova-2025
+    authors: Самонова О. І.; Слівінська С. Ф.; Обрадович О. В.
+    title: Українська мова. Підручник для 9 класу закладів загальної середньої освіти. Частина 1
+    publisher: Навчальна книга — Богдан
+    publication_year: 2025
+    isbn: 978-966-10-9227-2
+    official_catalog_locator_id: UIED_2026_9
+    publisher_pdf_url: https://bohdan-books.com/upload/data_files/tmp_catalog/978-966-10-9227-2_ukr-mova-9kl.pdf
+    native_text_canary_state: searchable_front_matter_verified
+    license_or_access_status: public_download_all_rights_reserved
+    admission_state: blocked_for_retention_and_model_corpus
+    blocker: Publisher front matter forbids reproduction without permission; public download is not an open reuse license.
+  - source_id: 9-klas-ukrmova-zabolotnyi-2026
+    authors: Заболотний О. В.; Заболотний В. В.
+    title: Українська мова. Підручник для 9 класу закладів загальної середньої освіти
+    publisher: Генеза
+    publication_year: 2026
+    official_catalog_locator_id: UIED_2026_9
+    publisher_page_url: https://www.geneza.info/product-page/%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0-%D0%BC%D0%BE%D0%B2%D0%B0-9-%D0%BA%D0%BB%D0%B0%D1%81-%D0%BE-%D0%B7%D0%B0%D0%B1%D0%BE%D0%BB%D0%BE%D1%82%D0%BD%D0%B8%D0%B9
+    gdrive_id: 1UVXK_1FdGLo_NJVwEdpMytIlmV2PoslT
+    completeness_state: complete_single_volume
+    native_text_canary_state: not_downloaded_rights_screen_first
+    license_or_access_status: electronic_viewing_with_copyright_notice_no_reuse_grant_found
+    admission_state: blocked_for_retention_and_model_corpus
+    blocker: Public electronic viewing does not grant retained-corpus or model-use permission.
+  - source_id: 9-klas-ukrmova-avramenko-tyshchenko-2026
+    authors: Авраменко О. М.; Тищенко З. Р.
+    title: Українська мова. Підручник для 9 класу закладів загальної середньої освіти
+    publication_year: 2026
+    official_catalog_locator_id: UIED_2026_9
+    official_preview_url: https://lms.e-school.net.ua/courses/course-v1%3AUIED%2BK02%2B2026/jump_to/block-v1%3AUIED%2BK02%2B2026%2Btype%40vertical%2Bblock%4074a19781b44e41698155d31748d0aad2
+    gdrive_id: 10fEFBD-7JxpoPUGP-wefcU8UgTc9_t0Z
+    completeness_state: complete_single_volume
+    native_text_canary_state: not_downloaded_rights_screen_first
+    license_or_access_status: all_rights_reserved_no_reuse_grant_found
+    admission_state: blocked_for_retention_and_model_corpus
+    blocker: The official preview states that all rights are reserved and supplies no retained-corpus or model-use permission.
+  evidence_note: Three current official-competition candidates are recorded but remain outside source_ids because none grants retained-corpus reuse; the Grade 9 current-cohort acquisition gap is real, not an extraction omission. The 2017 inventory remains legacy-only.
 - cell_id: g05.ukrlit
   grade: 5
   canonical_subject_id: ukrlit
@@ -964,12 +1329,13 @@ cells:
     coverage_unit_id: g08.ukrlit
     source_ids:
     - 2962-ukrainska-literatura-avramenko-8-klas-2025
+    - 2964-ukrainska-literatura-zabolotnyi-8-klas-2025
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Present in DB for every grade 5-9.
+  evidence_note: Current 2025 alternatives are retained; the Заболотний–Слоньовська–Ярмульська edition has complete native-text coverage and verified front matter.
   choice_group_id: g08.literature_realization
   choice_member_id: separate
   choice_member_requires: &id004
@@ -1040,13 +1406,13 @@ cells:
   coverage:
     coverage_unit_id: g06.zarlit
     source_ids:
-    - 2623-zaralit-6-klas-voloshchuk-2023
+    - 6-klas-zarubizhna-literatura-voloshchuk-2023
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Current 2023 NUS separate literature source selected for Grade 6.
+  evidence_note: Voloshchuk 2023 publisher PDF retained as 304 exact native-text chunks after quarantining 42 rows from 32 pages with layout-induced character splitting; pending the one atomic database ingest.
   choice_group_id: g06.literature_realization
   choice_member_id: separate
   choice_member_requires: *id002
@@ -1064,13 +1430,13 @@ cells:
   coverage:
     coverage_unit_id: g07.zarlit
     source_ids:
-    - 2858-zarubizhna-literatura-voloshchuk-7-klas-2024
+    - 7-klas-zarlit-nikolenko-2024
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Separate identity present in DB for every grade 5-9.
+  evidence_note: Nikolenko et al. 2024 retained as 292 exact native-text chunks; the intentionally spaced Poe cipher letters on page 164 were verified against the exact image; pending the one atomic database ingest.
   choice_group_id: g07.literature_realization
   choice_member_id: separate
   choice_member_requires: *id003
@@ -1132,16 +1498,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g05.literature_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 4; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g05.literature_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1156,16 +1522,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g06.literature_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 4; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g06.literature_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1180,16 +1546,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g07.literature_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 4; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g07.literature_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1204,16 +1570,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g08.literature_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 4; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g08.literature_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1228,16 +1594,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.literature_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 4; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g09.literature_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1247,101 +1613,105 @@ cells:
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 5
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g05.foreign_language
-    source_ids: []
+    source_ids:
+    - 1739-angliiska-mova-pakhomova-5-klas-2022
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 47; outside current tracked subject identity.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g06.foreign_language
   grade: 6
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 6
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g06.foreign_language
-    source_ids: []
+    source_ids:
+    - 2598-angliiska-6-klas-pakhomova-2023
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 47; outside current tracked subject identity.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g07.foreign_language
   grade: 7
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 7
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g07.foreign_language
-    source_ids: []
+    source_ids:
+    - 2786-angliiska-mova-kosta-7-klas-2024
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 47; outside current tracked subject identity.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g08.foreign_language
   grade: 8
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 8
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g08.foreign_language
-    source_ids: []
+    source_ids:
+    - 2917-angliiska-mova-karpuk-8-klas-2025
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 47; outside current tracked subject identity.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g09.foreign_language
   grade: 9
   canonical_subject_id: foreign_language
   display_name_uk: Іноземна мова
   cohort_or_effective_basis: current 2026/27; TOP №235 updated by №1120; NUS staged cohort for Grade 9
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g09.foreign_language
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 47; outside current tracked subject identity.
+  evidence_note: Optional non-gating corpus material; no Grade 9 foreign-language acquisition is required for Ukrainian-content Phase 3 completion.
 - cell_id: g05.matematyka
   grade: 5
   canonical_subject_id: matematyka
@@ -1377,13 +1747,13 @@ cells:
   coverage:
     coverage_unit_id: g06.matematyka
     source_ids:
-    - 2590-matematyka-6-klas-ister-2023
+    - 6-klas-matematyka-tarasenkova-2023
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grade 5 present (305 chunks); Grade 6 PDF-only / extraction missing.
+  evidence_note: Grade 5 present (305 chunks); Grade 6 complete two-part Tarasenkova edition prepared with 430 native-text chunks, pending the one atomic database ingest.
 - cell_id: g07.algebra
   grade: 7
   canonical_subject_id: algebra
@@ -1424,13 +1794,13 @@ cells:
   coverage:
     coverage_unit_id: g08.algebra
     source_ids:
-    - 2906-algebra-merzliak-8-klas-2025
+    - 2909-algebra-tarasenkova-8-klas-2025
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  evidence_note: Current Grade 8 NUS algebra source by Тарасенкова is selected with complete native-text extraction; formula-layout rows remain quality-flagged rather than reconstructed.
   choice_group_id: g08.mathematics_realization
   choice_member_id: separate
   choice_member_requires: &id007
@@ -1449,14 +1819,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.algebra
-    source_ids: []
+    source_ids:
+    - 9-klas-algebra-tarasenkova-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 982-algebra-merzlyak-9-klas-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 algebra inventory is retained as legacy-only evidence.
+  evidence_note: Current Grade 9 NUS algebra source by Тарасенкова retains 326 exact native-text chunks after quarantining corrupt logical page 314; 34 math-heavy pages are visually verified; atomic database replacement is pending. The 2017 algebra inventory remains legacy-only evidence.
   choice_group_id: g09.mathematics_realization
   choice_member_id: separate
   choice_member_requires: &id008
@@ -1500,13 +1871,13 @@ cells:
   coverage:
     coverage_unit_id: g08.heometriya
     source_ids:
-    - 2912-geometriia-merzliak-8-klas-2025
+    - 8-klas-heometriya-burda-tarasenkova-2025
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 7 and 9 present; Grade 8 extraction missing.
+  evidence_note: Burda and Tarasenkova 2025 retained as 279 page-verified native-text chunks after exact quarantine of the non-prose overview page, pending the one atomic database ingest; public access does not grant open redistribution.
   choice_group_id: g08.mathematics_realization
   choice_member_id: separate
   choice_member_requires: *id007
@@ -1632,8 +2003,7 @@ cells:
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity
-    is not fully resolved.
+  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity is not fully resolved.
   choice_group_id: g05.natural_science_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1659,8 +2029,7 @@ cells:
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity
-    is not fully resolved.
+  evidence_note: Official MNP 53-54 and FAQ confirms the one-of choice. DB has pryroda in grades 5-6, but variant identity is not fully resolved.
   choice_group_id: g06.natural_science_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1675,16 +2044,16 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g07.natural_7_9_integrated
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 59; no complete current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g07.natural_science_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -1753,13 +2122,13 @@ cells:
   coverage:
     coverage_unit_id: g07.biolohiya
     source_ids:
-    - 2838-biologiia-zadorozhnyi-7-klas-2024
+    - 7-klas-biolohiya-sobol-2024
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 8-9 present; Grade 7 source has only 2 chunks and is effectively empty.
+  evidence_note: Sobol 2024 retained as 410 exact native-text chunks; two diagram-only pages with broken internal font names are quarantined with page-image evidence.
   choice_group_id: g07.natural_science_realization
   choice_member_id: separate
   choice_member_requires: &id009
@@ -1844,7 +2213,7 @@ cells:
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Present in DB for grades 6-9.
+  evidence_note: Hilberh 2024 publisher PDF is quarantined because page-image evidence contradicts extracted word boundaries on pages 26 and 226; replacement remains required.
 - cell_id: g07.heohrafiya
   grade: 7
   canonical_subject_id: heohrafiya
@@ -1860,13 +2229,13 @@ cells:
   coverage:
     coverage_unit_id: g07.heohrafiya
     source_ids:
-    - 7-klas-heohrafiya-hilberh-2024
+    - 7-klas-heohrafiya-dovhan-2024
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Present in DB for grades 6-9.
+  evidence_note: Dovhan 2024 retained as 343 native-text chunks after quarantining four non-prose map pages and two corrupt logical-text pages; pages 14, 55, and 59 were verified as intentionally printed labels.
   choice_group_id: g07.natural_science_realization
   choice_member_id: separate
   choice_member_requires: *id009
@@ -2054,14 +2423,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.khimiya
-    source_ids: []
+    source_ids:
+    - 9-klas-khimiya-yaroshenko-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 1041-himiya-9-klas-popel-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; 2017 chemistry inventory is retained as legacy-only evidence.
+  evidence_note: Current Grade 9 NUS chemistry source by Ярошенко and Коршевнюк retains 306 exact native-text chunks after quarantining 6 corrupt rows from 5 pages; page 236 chemical codes are visually verified; atomic database replacement is pending. The 2017 chemistry inventory remains legacy-only evidence.
   choice_group_id: g09.natural_science_realization
   choice_member_id: separate
   choice_member_requires: *id011
@@ -2079,13 +2449,13 @@ cells:
   coverage:
     coverage_unit_id: g05.informatyka
     source_ids:
-    - 1660-informatyka-5-klas-ryvkind-2022
+    - 5-klas-informatyka-morze-2022
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+  evidence_note: Current 2022 Морзе edition selected with 99.61% native content-page coverage and exact visual verification of its flagged letter-spaced headings.
 - cell_id: g06.informatyka
   grade: 6
   canonical_subject_id: informatyka
@@ -2100,13 +2470,13 @@ cells:
   coverage:
     coverage_unit_id: g06.informatyka
     source_ids:
-    - 2686-informatyka-6-klas-ryvkind-2023
+    - 6-klas-informatyka-bondarenko-2023
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+  evidence_note: Current 2023 Бондаренко edition retained as 184 exact native-text chunks after page-image verification of printed labels; pending the one atomic database ingest.
 - cell_id: g07.informatyka
   grade: 7
   canonical_subject_id: informatyka
@@ -2121,13 +2491,13 @@ cells:
   coverage:
     coverage_unit_id: g07.informatyka
     source_ids:
-    - 2809-informatyka-ryvkind-7-klas-2024
+    - 7-klas-informatyka-bondarenko-2024
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Grades 5, 7, 8, 9 present; Grade 6 PDF-only / extraction missing.
+  evidence_note: Current 2024 Бондаренко edition retained as 218 exact native-text chunks; its hidden duplicate logical-text row on page 2 was quarantined and printed label pages were verified against exact images; pending the one atomic database ingest.
 - cell_id: g08.informatyka
   grade: 8
   canonical_subject_id: informatyka
@@ -2164,13 +2534,14 @@ cells:
     coverage_unit_id: g09.informatyka
     source_ids:
     - 3187-informatyka-9-klas-bios-2026
+    - 9-klas-informatyka-morze-2026
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids:
     - 1046-informatika-9-klas-ryvkind-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS Біос edition is selected; 2017 informatics inventory remains legacy-only evidence.
+  evidence_note: Current Grade 9 NUS Біос and Морзе editions are selected; the Морзе source retains 229 chunks with pages 88 and 155 visually verified, and its atomic database replacement is pending. The 2017 informatics inventory remains legacy-only evidence.
 - cell_id: g05.tekhnolohiyi
   grade: 5
   canonical_subject_id: tekhnolohiyi
@@ -2181,16 +2552,17 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g05.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 2696-tehnologii-5-klas-bilenko
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g06.tekhnolohiyi
   grade: 6
   canonical_subject_id: tekhnolohiyi
@@ -2201,16 +2573,17 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g06.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 2694-tehnologii-6-klas-bilenko
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g07.tekhnolohiyi
   grade: 7
   canonical_subject_id: tekhnolohiyi
@@ -2221,16 +2594,17 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g07.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 7-klas-tekhnolohiyi-bilenko-2024
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g08.tekhnolohiyi
   grade: 8
   canonical_subject_id: tekhnolohiyi
@@ -2241,16 +2615,17 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g08.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 2953-tekhnologii-bilenko-8-klas-2025
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g09.tekhnolohiyi
   grade: 9
   canonical_subject_id: tekhnolohiyi
@@ -2261,16 +2636,17 @@ cells:
   - MON_B235
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: required
   coverage:
     coverage_unit_id: g09.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 9-klas-tekhnolohiyi-bilenko-2026
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 60; no current DB identity or local acquisition mapping.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g05.zdorovia_bezpeka_dobrobut
   grade: 5
   canonical_subject_id: zdorovia_bezpeka_dobrobut
@@ -2533,16 +2909,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g05.history_integrated_5_6
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: FAQ says the school chooses the MNP; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g05.history_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -2558,16 +2934,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g06.history_integrated_5_6
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: FAQ says the school chooses the MNP; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g06.history_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -2666,16 +3042,17 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g07.history_integrated_7_9
-    source_ids: []
+    source_ids:
+    - 7-klas-istoriya-shchupak-2024-full
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 73; no distinct current DB identity.
+  evidence_note: The complete 2024 Щупак–Секиринський–Власова–Кронгауз integrated course is retained from the publisher with verified front matter and native-text coverage.
   choice_group_id: g07.history_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -2691,16 +3068,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g08.history_integrated_7_9
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 73; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g08.history_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -2716,16 +3093,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.history_integrated_7_9
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Official MNP 73; no distinct current DB identity.
+  evidence_note: Approved alternative route; the choice group is satisfied by its selected separate-course member when that member is covered.
   choice_group_id: g09.history_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -2895,14 +3272,15 @@ cells:
   textbook_applicability: choice_required
   coverage:
     coverage_unit_id: g09.mystetstvo_one_of
-    source_ids: []
+    source_ids:
+    - 9-klas-mystetstvo-kondratova-2025
     source_groups: []
     source_match_mode: any
-    evidence_state: legacy_only
+    evidence_state: resolved
     legacy_inventory_source_ids:
     - 9-klas-mystetstvo-masol-2017
     edition_policy: current_nus_cohort
-  evidence_note: Current Grade 9 NUS source is not enumerated; the 2017 art inventory is legacy-only and separate music/visual identities are unresolved.
+  evidence_note: Current Grade 9 NUS integrated-art source by Кондратова retains 258 exact native-text chunks after quarantining 30 music-layer or score-dominant pages; atomic database replacement is pending. The 2017 art inventory remains legacy-only evidence.
   choice_group_id: g09.arts_realization
   choice_member_id: integrated
   choice_member_requires:
@@ -3018,16 +3396,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g05.interfield_course
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+  evidence_note: Optional elective, not a universal textbook denominator cell; no representative is selected.
 - cell_id: g06.interfield_course
   grade: 6
   canonical_subject_id: interfield_course
@@ -3039,16 +3417,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g06.interfield_course
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+  evidence_note: Optional elective, not a universal textbook denominator cell; no representative is selected.
 - cell_id: g07.interfield_course
   grade: 7
   canonical_subject_id: interfield_course
@@ -3060,16 +3438,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g07.interfield_course
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+  evidence_note: Optional elective, not a universal textbook denominator cell; no representative is selected.
 - cell_id: g08.interfield_course
   grade: 8
   canonical_subject_id: interfield_course
@@ -3081,16 +3459,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g08.interfield_course
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+  evidence_note: Optional elective, not a universal textbook denominator cell; no representative is selected.
 - cell_id: g09.interfield_course
   grade: 9
   canonical_subject_id: interfield_course
@@ -3102,16 +3480,16 @@ cells:
   - MON_BFAQ
   official_edition_catalog_locator_ids:
   - IMZO_ROOT
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g09.interfield_course
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_nus_cohort
-  evidence_note: Not a universal denominator cell; include only when a school-selected course is evidenced.
+  evidence_note: Optional elective, not a universal textbook denominator cell; no representative is selected.
 - cell_id: g10.ukrmova
   grade: 10
   canonical_subject_id: ukrmova
@@ -3130,12 +3508,13 @@ cells:
     source_ids:
     - 3081-ukrmova-10-klas-glazova
     - 3082-ukrmova-10-klas-karaman
+    - 1229-ukrmova-10-klas-avramenko
     source_groups: []
     source_match_mode: any
     evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Present in DB for both grades.
+  evidence_note: Present in DB for both grades; the Grade 10 Авраменко alternative has complete native-text coverage and verified front matter.
 - cell_id: g11.ukrmova
   grade: 11
   canonical_subject_id: ukrmova
@@ -3334,43 +3713,45 @@ cells:
   canonical_subject_id: foreign_language
   display_name_uk: Іноземні мови
   cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_UINDEX
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g10.foreign_language
-    source_ids: []
+    source_ids:
+    - 3114-angliiska-10-klas-burenko
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; not represented in current tracked DB.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g11.foreign_language
   grade: 11
   canonical_subject_id: foreign_language
   display_name_uk: Іноземні мови
   cohort_or_effective_basis: current 2026/27; order-890 / 2011 upper-secondary standard; 2027 profile transition is future
-  requirement_class: required_common
+  requirement_class: optional_elective
   official_program_locator_ids:
   - MON_UINDEX
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: optional
   coverage:
     coverage_unit_id: g11.foreign_language
-    source_ids: []
+    source_ids:
+    - 1255-angliyska-11-klas-kuchma
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; not represented in current tracked DB.
+  evidence_note: Retained as useful corpus material, but foreign-language acquisition is outside the Ukrainian-content Phase 3 completion denominator.
 - cell_id: g10.matematyka
   grade: 10
   canonical_subject_id: matematyka
@@ -3602,16 +3983,17 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: profile_conditional
   coverage:
     coverage_unit_id: g10.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 3085-tekhnologii-10-11-klas-khodzycka
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; no current DB identity.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g11.tekhnolohiyi
   grade: 11
   canonical_subject_id: tekhnolohiyi
@@ -3623,16 +4005,17 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: profile_conditional
   coverage:
     coverage_unit_id: g11.tekhnolohiyi
-    source_ids: []
+    source_ids:
+    - 3085-tekhnologii-10-11-klas-khodzycka
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; no current DB identity.
+  evidence_note: One current representative is selected from the reconciled public catalogs and retained once in Google Drive.
 - cell_id: g10.biolohiya_ekolohiya
   grade: 10
   canonical_subject_id: biolohiya_ekolohiya
@@ -3820,16 +4203,16 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: profile_conditional
   coverage:
     coverage_unit_id: g10.pryrodnychi_nauky
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Official program family; exact project-to-edition mapping unresolved.
+  evidence_note: Profile-conditional family; no universal representative is required for the common curriculum denominator.
 - cell_id: g11.pryrodnychi_nauky
   grade: 11
   canonical_subject_id: pryrodnychi_nauky
@@ -3841,16 +4224,16 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: profile_conditional
   coverage:
     coverage_unit_id: g11.pryrodnychi_nauky
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Official program family; exact project-to-edition mapping unresolved.
+  evidence_note: Profile-conditional family; no universal representative is required for the common curriculum denominator.
 - cell_id: g10.ekonomika
   grade: 10
   canonical_subject_id: ekonomika
@@ -4034,16 +4417,16 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: not_required
   coverage:
     coverage_unit_id: g10.fizychna_kultura
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; no textbook identity in current DB.
+  evidence_note: The compulsory curriculum cell has no textbook identity in either reconciled public textbook catalog; the official program remains the source.
 - cell_id: g11.fizychna_kultura
   grade: 11
   canonical_subject_id: fizychna_kultura
@@ -4055,13 +4438,13 @@ cells:
   official_edition_catalog_locator_ids:
   - IMZO_10
   - IMZO_11
-  textbook_applicability: unresolved
+  textbook_applicability: not_required
   coverage:
     coverage_unit_id: g11.fizychna_kultura
     source_ids: []
     source_groups: []
     source_match_mode: any
-    evidence_state: unresolved
+    evidence_state: resolved
     legacy_inventory_source_ids: []
     edition_policy: current_order_890
-  evidence_note: Officially listed; no textbook identity in current DB.
+  evidence_note: The compulsory curriculum cell has no textbook identity in either reconciled public textbook catalog; the official program remains the source.
