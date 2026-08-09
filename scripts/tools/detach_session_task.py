@@ -17,7 +17,6 @@ import os
 import resource
 import shutil
 import signal
-import sys
 import tempfile
 from collections.abc import Sequence
 from pathlib import Path
@@ -47,15 +46,24 @@ def _absolute_output_path(value: str) -> Path:
     path = Path(value).expanduser().resolve()
     if not path.parent.is_dir():
         raise argparse.ArgumentTypeError(f"parent directory does not exist: {path.parent}")
+    if path.is_dir():
+        raise argparse.ArgumentTypeError(f"output path is a directory: {path}")
     return path
 
 
-def _command_is_executable(command: Sequence[str]) -> bool:
+def _resolve_executable(command: Sequence[str]) -> list[str] | None:
     executable = command[0]
     if "/" in executable:
-        candidate = Path(executable)
-        return candidate.is_file() and os.access(candidate, os.X_OK)
-    return shutil.which(executable) is not None
+        candidate = Path(executable).expanduser()
+    else:
+        located = shutil.which(executable)
+        if located is None:
+            return None
+        candidate = Path(located)
+    candidate = candidate.resolve()
+    if not candidate.is_file() or not os.access(candidate, os.X_OK):
+        return None
+    return [str(candidate), *command[1:]]
 
 
 def _pid_is_live(pid: int) -> bool:
@@ -154,6 +162,9 @@ def _detach(
 ) -> int:
     read_fd, write_fd = os.pipe()
     try:
+        # The successful exec closes this acknowledgement descriptor.  The
+        # parent therefore does not report a PID until it has observed EOF.
+        os.set_inheritable(write_fd, False)
         first_child = os.fork()
     except OSError:
         os.close(read_fd)
@@ -163,14 +174,25 @@ def _detach(
     if first_child:
         os.close(write_fd)
         try:
-            payload = os.read(read_fd, 512).decode("ascii", errors="replace").strip()
+            chunks = []
+            while chunk := os.read(read_fd, 512):
+                chunks.append(chunk)
+            payload = b"".join(chunks).decode("ascii", errors="replace").strip()
         finally:
             os.close(read_fd)
         _pid, status = os.waitpid(first_child, 0)
-        if not payload.startswith("OK ") or not os.WIFEXITED(status) or os.WEXITSTATUS(status) != 0:
+        if not os.WIFEXITED(status) or os.WEXITSTATUS(status) != 0:
             raise RuntimeError(payload.removeprefix("ERROR ") or "detached child setup failed")
+        records = payload.splitlines()
+        if not records:
+            raise RuntimeError("detached child setup failed")
+        pid_record, *errors = records
+        if pid_record.startswith("ERROR "):
+            raise RuntimeError(pid_record.removeprefix("ERROR "))
+        if errors and errors[0].startswith("ERROR "):
+            raise RuntimeError(errors[0].removeprefix("ERROR "))
         try:
-            grandchild_pid = int(payload.removeprefix("OK "))
+            grandchild_pid = int(pid_record.removeprefix("PID "))
         except ValueError as exc:
             raise RuntimeError("detached child returned an invalid PID") from exc
         try:
@@ -194,14 +216,10 @@ def _detach(
         _reset_signal_state()
         _close_inherited_fds(preserve=write_fd)
         _redirect_standard_streams(log_file)
-    except BaseException as exc:
-        _send_status(write_fd, f"ERROR {type(exc).__name__}: {exc}")
-        os._exit(1)
-    _send_status(write_fd, f"OK {os.getpid()}")
-    try:
+        os.write(write_fd, f"PID {os.getpid()}\n".encode("ascii"))
         os.execvp(command[0], list(command))
     except BaseException as exc:
-        print(f"detach exec failed: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+        _send_status(write_fd, f"ERROR {type(exc).__name__}: {exc}")
         os._exit(127)
 
 
@@ -221,12 +239,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         command = command[1:]
     if not command:
         raise SystemExit("a command is required after --")
-    if not _command_is_executable(command):
+    resolved_command = _resolve_executable(command)
+    if resolved_command is None:
         raise SystemExit(f"command is not executable: {command[0]}")
     try:
         _refuse_live_pid_file(args.pid_file)
         pid = _detach(
-            command=command,
+            command=resolved_command,
             workdir=args.workdir,
             log_file=args.log_file,
             pid_file=args.pid_file,

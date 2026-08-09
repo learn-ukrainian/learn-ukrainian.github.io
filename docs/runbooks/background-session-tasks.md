@@ -36,13 +36,13 @@ SERVICE_PID="$SERVICE_ROOT/local-teacher.pid"
   -- /bin/bash "$SERVICE_ROOT/start-local-teacher.sh"
 ```
 
-The command prints the detached PID after the new session is established and
-writes the same PID atomically to `--pid-file`. It redirects standard input to
-`/dev/null`, appends both output streams to `--log-file`, removes task-scoped
-temporary-directory and session-lease variables, resets inherited signal state,
-and closes inherited file descriptors. Do not use a `TemporaryDirectory` owned
-by the launching task for the service database, invite state, logs, PID file, or
-working directory.
+The command prints the detached PID only after the new session has successfully
+executed the command, then writes the same PID atomically to `--pid-file`. It
+redirects standard input to `/dev/null`, appends both output streams to
+`--log-file`, removes task-scoped temporary-directory and session-lease
+variables, resets inherited signal state, and closes inherited file descriptors.
+Do not use a `TemporaryDirectory` owned by the launching task for the service
+database, invite state, logs, PID file, or working directory.
 
 The helper refuses to replace a PID file that names a live process. Verify
 readiness using the service's normal health endpoint or its explicit completion
