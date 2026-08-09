@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 import pytest
 import yaml
 
-from scripts.audit.lint_opsec_leaks import _PERSONAL_IDENTIFIER_PATTERNS
+from scripts.audit.lint_opsec_leaks import (
+    _PERSONAL_IDENTIFIER_PATTERNS,
+    _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS,
+)
 from scripts.audit.scrub_decision_ledger_keys import (
     DEFAULT_SCRUBBED_PATH,
     DEFAULT_SOURCE_LEDGER,
@@ -13,11 +17,15 @@ from scripts.audit.scrub_decision_ledger_keys import (
     scrub_decision_row,
 )
 from scripts.audit.source_inventory_review_decisions import (
-    source_inventory_key,
     validate_decision_file,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+_LATIN_STEM = _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS[0]
+_TITLE_STEM = _LATIN_STEM.title()
 
 
 @pytest.fixture(scope="module")
@@ -37,10 +45,10 @@ def test_scrubbed_key_formula() -> None:
         "decision": "approve_for_publish",
         "approved_pos": "noun",
         "approved_gloss": "був",
-        "sense_note": "private teacher-lesson full-source intake (Alona document)",
+        "sense_note": f"private teacher-lesson full-source intake ({_TITLE_STEM} document)",
         "source_inventory": {
             "key": "1c7aef76af3ca86a",
-            "path": "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-alona-full.yaml",
+            "path": f"data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-{_LATIN_STEM}-full.yaml",
             "locator": "private source unit 1000 paragraph 1",
             "source_id": "private-teacher-lesson-full-source",
             "source_family": "teacher_lesson",
@@ -50,14 +58,14 @@ def test_scrubbed_key_formula() -> None:
     }
 
     scrubbed = scrub_decision_row(sample_row, DEFAULT_SCRUBBED_PATH)
-    expected_key = source_inventory_key(
-        lemma="був",
-        inventory_path=DEFAULT_SCRUBBED_PATH,
-        locator="private source unit 1000 paragraph 1",
-    )
+
+    # Independent hashlib.sha256 formula calculation (no circular reuse of source_inventory_key)
+    key_material = f"був\0{DEFAULT_SCRUBBED_PATH}\0private source unit 1000 paragraph 1".encode()
+    expected_key = hashlib.sha256(key_material).hexdigest()[:16]
 
     assert scrubbed["source_inventory"]["path"] == DEFAULT_SCRUBBED_PATH
     assert scrubbed["source_inventory"]["key"] == expected_key
+    assert scrubbed["source_inventory"]["key"] == "783d50decd9ffa7f"
     assert scrubbed["sense_note"] == "private teacher-lesson full-source intake (full document)"
     assert scrubbed["lemma"] == sample_row["lemma"]
     assert scrubbed["decision"] == sample_row["decision"]
@@ -70,7 +78,8 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
 ) -> None:
     assert len(migrated_shards) == 10
 
-    latin_patterns = [pat for token, pat in _PERSONAL_IDENTIFIER_PATTERNS if token == "alona"]
+    latin_patterns = [pat for token, pat in _PERSONAL_IDENTIFIER_PATTERNS if token == _LATIN_STEM]
+    all_patterns = [pat for _, pat in _PERSONAL_IDENTIFIER_PATTERNS]
     assert len(latin_patterns) > 0
 
     for shard_path in migrated_shards:
@@ -79,30 +88,30 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
         for pattern in latin_patterns:
             assert pattern.search(text) is None, f"Leak in {shard_path}: {pattern.search(text)}"
 
-        payload = yaml.safe_load(text)
-        # Check top-level metadata and paths explicitly
+        payload = yaml.load(text, Loader=_SafeLoader)
+        # Check top-level metadata, paths, and notes against all OPSEC identifier patterns (Latin + Cyrillic)
         for field in ("batch_id", "batch_label", "reviewer"):
             val = str(payload.get(field, ""))
-            for pattern in latin_patterns:
-                assert pattern.search(val) is None
+            for pattern in all_patterns:
+                assert pattern.search(val) is None, f"Leak in {field}: {val}"
 
         for row in payload["decisions"]:
             path_val = row["source_inventory"]["path"]
             sense_note_val = row.get("sense_note", "")
-            for pattern in latin_patterns:
-                assert pattern.search(path_val) is None
-                assert pattern.search(sense_note_val) is None
+            for pattern in all_patterns:
+                assert pattern.search(path_val) is None, f"Leak in path: {path_val}"
+                assert pattern.search(sense_note_val) is None, f"Leak in sense_note: {sense_note_val}"
 
 
 def test_shards_concatenate_to_original_decisions(
     migrated_shards: list[Path],
 ) -> None:
-    orig_payload = yaml.safe_load(DEFAULT_SOURCE_LEDGER.read_text(encoding="utf-8"))
+    orig_payload = yaml.load(DEFAULT_SOURCE_LEDGER.read_text(encoding="utf-8"), Loader=_SafeLoader)
     orig_decisions = orig_payload["decisions"]
 
     reconstructed_decisions: list[dict] = []
     for shard_path in migrated_shards:
-        shard_payload = yaml.safe_load(shard_path.read_text(encoding="utf-8"))
+        shard_payload = yaml.load(shard_path.read_text(encoding="utf-8"), Loader=_SafeLoader)
         reconstructed_decisions.extend(shard_payload["decisions"])
 
     assert len(reconstructed_decisions) == len(orig_decisions)
@@ -118,11 +127,9 @@ def test_shards_concatenate_to_original_decisions(
         assert recon["evidence_refs"] == orig["evidence_refs"]
         assert recon["surface_admission"] == orig["surface_admission"]
         assert recon["source_inventory"]["path"] == DEFAULT_SCRUBBED_PATH
-        expected_key = source_inventory_key(
-            lemma=orig["lemma"],
-            inventory_path=DEFAULT_SCRUBBED_PATH,
-            locator=orig["source_inventory"]["locator"],
-        )
+
+        key_material = f"{orig['lemma']}\0{DEFAULT_SCRUBBED_PATH}\0{orig['source_inventory']['locator']}".encode()
+        expected_key = hashlib.sha256(key_material).hexdigest()[:16]
         assert recon["source_inventory"]["key"] == expected_key
 
 

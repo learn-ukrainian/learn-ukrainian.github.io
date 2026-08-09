@@ -23,21 +23,33 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 import yaml
 
+from scripts.audit.lint_opsec_leaks import (
+    _PERSONAL_IDENTIFIER_PATTERNS,
+    _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS,
+)
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+_LATIN_STEM = _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS[0]
+
 DEFAULT_SOURCE_LEDGER = (
-    PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions" / "2026-07-23-alona-full-document-intake.yaml"
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory-review-decisions"
+    / f"2026-07-23-{_LATIN_STEM}-full-document-intake.yaml"
 )
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
-DEFAULT_SCRUBBED_PATH = "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml"
+DEFAULT_SCRUBBED_PATH = (
+    "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml"
+)
 DEFAULT_NUM_SHARDS = 10
 
 
 def scrub_decision_row(row: dict[str, Any], scrubbed_inventory_path: str) -> dict[str, Any]:
     """Return a new decision row with updated inventory path and recomputed key.
 
-    Preserves all non-key fields and row structure byte-identical.
+    Preserves all non-key fields, decision values, and row structure.
     """
     new_row = dict(row)
     source_inv = dict(row["source_inventory"])
@@ -52,7 +64,10 @@ def scrub_decision_row(row: dict[str, Any], scrubbed_inventory_path: str) -> dic
     )
     new_row["source_inventory"] = source_inv
     if "sense_note" in new_row and isinstance(new_row["sense_note"], str):
-        new_row["sense_note"] = new_row["sense_note"].replace("Alona document", "full document")
+        note = new_row["sense_note"]
+        for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            note = pattern.sub("full", note)
+        new_row["sense_note"] = note
     return new_row
 
 
@@ -110,7 +125,7 @@ def migrate_ledger_to_shards(
 ) -> list[Path]:
     """Read source ledger, generate scrubbed shard payloads, and write YAML files to output_dir."""
     raw_text = source_ledger_path.read_text(encoding="utf-8")
-    payload = yaml.safe_load(raw_text)
+    payload = yaml.load(raw_text, Loader=_SafeLoader)
 
     shard_payloads = generate_scrubbed_shards(
         payload=payload,
