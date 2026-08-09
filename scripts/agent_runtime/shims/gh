@@ -120,36 +120,35 @@ _run_with_secondary_rate_limit_retry() {
   local base_delay_s
   base_delay_s="$(_nonnegative_integer_or_default "${AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS:-}" 60)"
 
-  local stdin_file=""
-  local stdout_file
-  local stderr_file
-  stdout_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdout.XXXXXX")" || return 1
-  stderr_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stderr.XXXXXX")" || {
-    rm -f "$stdout_file"
+  _agent_gh_retry_stdin_file=""
+  _agent_gh_retry_stdout_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdout.XXXXXX")" || return 1
+  _agent_gh_retry_stderr_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stderr.XXXXXX")" || {
+    rm -f "$_agent_gh_retry_stdout_file"
     return 1
   }
   if [[ ! -t 0 ]]; then
-    stdin_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdin.XXXXXX")" || {
-      rm -f "$stdout_file" "$stderr_file"
+    _agent_gh_retry_stdin_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdin.XXXXXX")" || {
+      rm -f "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
       return 1
     }
-    cat >"$stdin_file" || {
-      rm -f "$stdin_file" "$stdout_file" "$stderr_file"
+    cat >"$_agent_gh_retry_stdin_file" || {
+      rm -f "$_agent_gh_retry_stdin_file" "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
       return 1
     }
   fi
 
   _cleanup_secondary_retry_tempfiles() {
-    rm -f "$stdin_file" "$stdout_file" "$stderr_file"
-    trap - HUP INT TERM
+    rm -f "$_agent_gh_retry_stdin_file" "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file"
   }
 
   _abort_secondary_retry() {
     local status="$1"
+    trap - EXIT HUP INT TERM
     _cleanup_secondary_retry_tempfiles
     exit "$status"
   }
 
+  trap '_cleanup_secondary_retry_tempfiles' EXIT
   trap '_abort_secondary_retry 129' HUP
   trap '_abort_secondary_retry 130' INT
   trap '_abort_secondary_retry 143' TERM
@@ -158,43 +157,34 @@ _run_with_secondary_rate_limit_retry() {
   local exit_status=0
   local output=""
   local http_status=""
+  local retries_exhausted=false
   while :; do
-    if [[ -n "$stdin_file" ]]; then
-      if "$real_gh" "$@" <"$stdin_file" >"$stdout_file" 2>"$stderr_file"; then
+    if [[ -n "$_agent_gh_retry_stdin_file" ]]; then
+      if "$real_gh" "$@" <"$_agent_gh_retry_stdin_file" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
         exit_status=0
       else
         exit_status=$?
       fi
-    elif "$real_gh" "$@" >"$stdout_file" 2>"$stderr_file"; then
+    elif "$real_gh" "$@" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
       exit_status=0
     else
       exit_status=$?
     fi
 
     if (( exit_status == 0 )); then
-      cat "$stdout_file"
-      cat "$stderr_file" >&2
-      _cleanup_secondary_retry_tempfiles
-      return 0
+      break
     fi
 
-    output="$(cat "$stdout_file" "$stderr_file")"
+    output="$(cat "$_agent_gh_retry_stdout_file" "$_agent_gh_retry_stderr_file")"
     if ! _is_secondary_rate_limited "$output"; then
-      cat "$stdout_file"
-      cat "$stderr_file" >&2
-      _cleanup_secondary_retry_tempfiles
-      return "$exit_status"
+      break
     fi
 
     attempt=$((attempt + 1))
     http_status="$(_secondary_rate_limit_http_status "$output")"
     if (( attempt > max_retries )); then
-      cat "$stdout_file"
-      cat "$stderr_file" >&2
-      printf 'agent-gh-shim: github_secondary_rate_limited HTTP %s; retries exhausted after %s attempts.\n' \
-        "$http_status" "$max_retries" >&2
-      _cleanup_secondary_retry_tempfiles
-      return "$exit_status"
+      retries_exhausted=true
+      break
     fi
 
     local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
@@ -202,6 +192,17 @@ _run_with_secondary_rate_limit_retry() {
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
     sleep "$delay_s"
   done
+
+  # Retry attempts stay private: only the final gh invocation's output reaches
+  # the caller. The durable marker is likewise reserved for a truly exhausted
+  # secondary-rate-limit retry budget.
+  cat "$_agent_gh_retry_stdout_file"
+  cat "$_agent_gh_retry_stderr_file" >&2
+  if [[ "$retries_exhausted" == true ]]; then
+    printf 'agent-gh-shim: github_secondary_rate_limited HTTP %s; retries exhausted after %s attempts.\n' \
+      "$http_status" "$max_retries" >&2
+  fi
+  return "$exit_status"
 }
 
 if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_gh_command "${1:-}" "${@:2}"; then
