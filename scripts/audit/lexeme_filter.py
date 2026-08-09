@@ -16,8 +16,7 @@ Two predicates, deliberately different in strictness:
   headword routes and still render.
 * :func:`is_practice_eligible` — "use as a study card". Stricter: also drops inflected
   duplicates and ``surzhyk_to_avoid`` forms (drilling a learner to *produce* surzhyk is
-  harmful — the daily pool deliberately keeps surzhyk for a "watch out" moment, the
-  practice deck must not).
+  harmful; neutral learner-facing study surfaces must not include them).
 
 Keep this module dependency-free and import it as ``scripts.audit.lexeme_filter`` (the
 generators run via ``python -m scripts.audit.<name>``).
