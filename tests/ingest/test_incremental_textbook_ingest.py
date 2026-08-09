@@ -200,9 +200,80 @@ def test_combined_grade_source_resolves_one_exact_cross_grade_path(tmp_path):
     assert iti.find_jsonl(slug, chunks_root=root) == expected
 
 
+def _write_university_policy(
+    path: Path,
+    *,
+    slug: str,
+    jsonl: Path,
+    audience_class: str = "A_ukrainian_university_audience",
+    allowed_lanes: list[str] | None = None,
+) -> Path:
+    from projects.open_model_data import university_source_policy as usp
+
+    rows = usp.load_jsonl_rows(jsonl)
+    document = {
+        "schema_version": usp.SCHEMA_VERSION,
+        "status": usp.STATUS,
+        "default_disposition": "QUARANTINE_UNTIL_AUDIENCE_PROVEN",
+        "source_count": 1,
+        "sources": [
+            {
+                "source_file": slug,
+                "audience_class": audience_class,
+                "subject_role": (
+                    "ukrainian_linguistics"
+                    if audience_class == "A_ukrainian_university_audience"
+                    else "ukrainian_L2_pedagogy"
+                ),
+                "allowed_lanes": sorted(
+                    allowed_lanes
+                    if allowed_lanes is not None
+                    else ["corpus_ingest", "linguistic_rule_evidence"]
+                ),
+                "evidence": {
+                    "kind": "jsonl_front_matter",
+                    "jsonl_sha256": usp.sha256_file(jsonl),
+                    "page_start": 1,
+                    "page_end": 1,
+                    "rows_sha256": usp.evidence_rows_sha256(
+                        rows,
+                        page_start=1,
+                        page_end=1,
+                    ),
+                    "summary": "Fixture front matter proves the intended audience.",
+                },
+            }
+        ],
+    }
+    path.write_text(json.dumps(document, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
+def test_tracked_university_policy_is_closed_and_default_deny():
+    from projects.open_model_data import university_source_policy as usp
+
+    policy, policy_sha256 = usp.load_policy()
+
+    assert policy["status"] == "ACTIVE_DEFAULT_DENY"
+    assert policy["default_disposition"] == "QUARANTINE_UNTIL_AUDIENCE_PROVEN"
+    assert policy["source_count"] == 14
+    assert len(policy_sha256) == 64
+    by_source = {entry["source_file"]: entry for entry in policy["sources"]}
+    assert by_source["uni-ukrmova-prof-haluzynska-2006"]["allowed_lanes"] == [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence",
+    ]
+    assert by_source["uni-ukrmova-vlasova-2023"]["allowed_lanes"] == []
+    assert by_source["uni-ukrmova-syntax-didkivska-shvets-2020"]["allowed_lanes"] == []
+    assert by_source["uni-ukrmova-lexicology-filon-khomik-2010"]["audience_class"] == (
+        "A_ukrainian_university_audience"
+    )
+
+
 def test_university_source_uses_grade_zero_storage_and_university_db_label(tmp_path):
     root = tmp_path / "university_corpus" / "jsonl"
-    slug = "uni-ukrlit-kalinichenko-2024"
+    slug = "uni-ukrmova-prof-haluzynska-2006"
     expected = root / "grade-00" / f"{slug}.jsonl"
     expected.parent.mkdir(parents=True)
     expected.write_text(
@@ -211,25 +282,110 @@ def test_university_source_uses_grade_zero_storage_and_university_db_label(tmp_p
                 "chunk_id": f"{slug}_s0000",
                 "section_title": "Літературознавча стаття",
                 "text": "Український літературознавчий текст.",
-                "author": "kalinichenko",
+                "author": "haluzynska",
                 "author_uk": None,
                 "grade": 0,
+                "page_start": 1,
+                "page_end": 1,
             },
             ensure_ascii=False,
         )
         + "\n",
         encoding="utf-8",
     )
+    policy = _write_university_policy(tmp_path / "policy.json", slug=slug, jsonl=expected)
 
     assert iti.find_jsonl(slug, chunks_root=root) == expected
-    row = iti.build_rows(slug, chunks_root=root)[0]
-    assert row[4] == "ukrlit"
+    row = iti.build_rows(
+        slug,
+        chunks_root=root,
+        university_policy_path=policy,
+    )[0]
+    assert row[4] == "ukrmova"
     assert row[5] == "university"
-    assert row[7] == "Калініченко"
+    assert row[7] == "Галузинська"
     grouping_row = iti._section_row_for_grouping(
         iti.ChunkRow(1, row[0], "Сторінка 1", row[2], slug, row[5])
     )
     assert grouping_row.grade == "grade-00"
+
+
+def test_university_source_without_audience_policy_is_quarantined(tmp_path):
+    root = tmp_path / "university_corpus" / "jsonl"
+    slug = "uni-ukrmova-unknown-2026"
+    jsonl = root / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "section_title": "Сторінка 1",
+                "text": "Неперевірений університетський матеріал.",
+                "grade": 0,
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    empty_policy = tmp_path / "policy.json"
+    empty_policy.write_text(
+        json.dumps(
+            {
+                "schema_version": "phase3_university_source_policy_v1",
+                "status": "ACTIVE_DEFAULT_DENY",
+                "default_disposition": "QUARANTINE_UNTIL_AUDIENCE_PROVEN",
+                "source_count": 0,
+                "sources": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(iti.IngestError, match="default quarantine applies"):
+        iti.build_rows(
+            slug,
+            chunks_root=root,
+            university_policy_path=empty_policy,
+        )
+
+
+def test_foreign_student_university_source_cannot_enter_corpus(tmp_path):
+    root = tmp_path / "university_corpus" / "jsonl"
+    slug = "uni-ukrmova-foreign-students-2026"
+    jsonl = root / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "section_title": "Сторінка 1",
+                "text": "Українська мова для іноземних студентів.",
+                "grade": 0,
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_university_policy(
+        tmp_path / "policy.json",
+        slug=slug,
+        jsonl=jsonl,
+        audience_class="B_foreign_or_second_language",
+        allowed_lanes=[],
+    )
+
+    with pytest.raises(iti.IngestError, match="denies lane corpus_ingest"):
+        iti.build_rows(
+            slug,
+            chunks_root=root,
+            university_policy_path=policy,
+        )
 
 
 def test_cross_grade_source_fails_closed_when_duplicate_paths_exist(tmp_path):

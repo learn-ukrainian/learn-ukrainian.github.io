@@ -48,6 +48,9 @@ CYCLE002_EVALUATION_LOGICAL_PATH = (
 CYCLE001_VOID_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"
 )
+UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
+)
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
     "nine_case_seed": "seed_not_v2_evaluation",
@@ -318,6 +321,13 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
                 and entry["disposition"] == "rebound"
                 and entry["machine_reason"] == "cycle001_void_receipt_bound_for_cycle002",
                 "cycle001 void receipt is not rebound",
+            )
+        elif entry["logical_path"] == UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "source_status"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "university_source_policy_rebound_to_v2_1",
+                "current university source policy is not rebound",
             )
         elif entry["artifact_class"] == "functional_role_contract":
             require(
