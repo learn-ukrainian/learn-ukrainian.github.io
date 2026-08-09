@@ -32,7 +32,7 @@ CLEAN_BODY = (
 
 
 def _run(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=check)
+    return subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=check, timeout=30)
 
 
 def _init_repo(repo_root: Path) -> None:
@@ -294,7 +294,7 @@ def test_zombie_detection_not_detectable_when_git_worktree_list_fails(hermetic_r
     def fake_run(args, **kwargs):
         if args[:2] == ["git", "worktree"]:
             return subprocess.CompletedProcess(args, 1, stdout="", stderr="boom")
-        return subprocess.run(args, **kwargs)
+        return subprocess.run(args, timeout=30, **kwargs)
 
     monkeypatch.setattr(hygiene.subprocess, "run", fake_run)
 

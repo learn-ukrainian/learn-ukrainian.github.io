@@ -3844,10 +3844,10 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
             check=True,
             capture_output=True,
             text=True,
-            env=env,
+            env=env, timeout=30,
         )
 
-    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env)
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env, timeout=30)
     source.mkdir()
     git(source, "init", "-b", "main")
     git(source, "config", "user.email", "test@example.com")
@@ -3859,7 +3859,7 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
     git(source, "switch", "-c", "claude/predeploy-visibility")
     git(source, "commit", "--allow-empty", "-m", "remote branch head")
     git(source, "push", "-u", "origin", "claude/predeploy-visibility")
-    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env)
+    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env, timeout=30)
     git(client, "branch", "claude/predeploy-visibility", "origin/main")
 
     monkeypatch.setattr(delegate, "_REPO_ROOT", client.resolve())

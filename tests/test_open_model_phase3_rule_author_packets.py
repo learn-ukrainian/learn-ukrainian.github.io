@@ -770,7 +770,7 @@ def test_cli_synthetic_build_and_verify_smoke(tmp_path: Path) -> None:
         cwd=packets.ROOT,
         check=False,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
     assert build.returncode == 0, build.stdout
     verify = subprocess.run(
@@ -797,7 +797,7 @@ def test_cli_synthetic_build_and_verify_smoke(tmp_path: Path) -> None:
         cwd=packets.ROOT,
         check=False,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
     assert verify.returncode == 0, verify.stdout
     assert json.loads(verify.stdout)["ok"] is True

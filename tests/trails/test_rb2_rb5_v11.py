@@ -188,7 +188,7 @@ def _run_rb2_shell_step(
         env={**os.environ, **environment},
         check=False,
         text=True,
-        capture_output=True,
+        capture_output=True, timeout=30,
     )
 
 

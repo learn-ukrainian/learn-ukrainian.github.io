@@ -871,7 +871,7 @@ with _discussion_admission(Path(sys.argv[1])):
     completed = subprocess.run(
         [str(python), "-c", code, str(root)],
         cwd=repo_root,
-        check=False,
+        check=False, timeout=30,
     )
 
     assert completed.returncode == 17

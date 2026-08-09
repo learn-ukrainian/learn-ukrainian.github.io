@@ -47,7 +47,7 @@ def _git(repo: Path, *args: str) -> str:
         check=True,
         capture_output=True,
         text=True,
-        env=_git_env(),
+        env=_git_env(), timeout=30,
     )
     return result.stdout.strip()
 
@@ -59,7 +59,7 @@ def _repo(path: Path, *, remote: str) -> Path:
         check=True,
         capture_output=True,
         text=True,
-        env=_git_env(),
+        env=_git_env(), timeout=30,
     )
     _git(path, "config", "user.email", "test@example.com")
     _git(path, "config", "user.name", "Test")

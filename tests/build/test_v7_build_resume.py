@@ -79,7 +79,7 @@ def _git(cwd: Path, *args: str) -> None:
         ["git", "-C", str(cwd), *args],
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
 
 

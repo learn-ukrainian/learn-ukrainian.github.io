@@ -104,7 +104,7 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         check=True,
         capture_output=True,
         text=True,
-        env=_clean_git_env(),
+        env=_clean_git_env(), timeout=30,
     )
 
 
@@ -116,7 +116,7 @@ def _init_orient_git_repo(tmp_path: Path) -> Path:
         check=True,
         capture_output=True,
         text=True,
-        env=_clean_git_env(),
+        env=_clean_git_env(), timeout=30,
     )
     _git(repo, "config", "user.email", "test@example.com")
     _git(repo, "config", "user.name", "Test")

@@ -20,7 +20,7 @@ GIT_COMMON_DIR = Path(
         capture_output=True,
         check=True,
         cwd=REPO_ROOT,
-        text=True,
+        text=True, timeout=30,
     ).stdout.strip()
 )
 if not GIT_COMMON_DIR.is_absolute():

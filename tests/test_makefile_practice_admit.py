@@ -14,7 +14,7 @@ def test_curated_admit_dry_run_consumes_only_the_local_practice_overlay() -> Non
         cwd=ROOT,
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
 
     output = result.stdout
@@ -34,7 +34,7 @@ def test_gold_slice_dry_run_uses_bounded_local_static_shards_without_cloze() -> 
         cwd=ROOT,
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
 
     output = result.stdout

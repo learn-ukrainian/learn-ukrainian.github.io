@@ -67,7 +67,7 @@ def test_breadcrumb_subprocess_pytest_run(tmp_path: Path) -> None:
             "-o",
             f"cache_dir={tmp_path / '.pytest_cache'}",
         ]
-        res = subprocess.run(cmd, env=env, capture_output=True, text=True, check=False, cwd=str(repo_root))
+        res = subprocess.run(cmd, env=env, capture_output=True, text=True, check=False, cwd=str(repo_root), timeout=30)
         assert res.returncode == 0, f"stdout: {res.stdout}\nstderr: {res.stderr}"
 
         breadcrumb_file = bdir / "breadcrumb_gw1.txt"

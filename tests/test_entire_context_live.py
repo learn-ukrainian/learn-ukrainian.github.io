@@ -35,7 +35,7 @@ def _run_git(repo: Path, *args: str) -> str:
         ["git", "-C", str(repo), *args],
         check=True,
         capture_output=True,
-        text=True,
+        text=True, timeout=30,
     )
     return completed.stdout.strip()
 

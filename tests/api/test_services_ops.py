@@ -202,7 +202,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
-            env=env
+            env=env, timeout=30
         )
 
         assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout, f"mismatch check failed. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
@@ -216,7 +216,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
-            env=env
+            env=env, timeout=30
         )
         assert res_stop.returncode == 0, f"stop failed. returncode={res_stop.returncode}\nstdout:\n{res_stop.stdout}\nstderr:\n{res_stop.stderr}"
         proc.wait(timeout=5)
@@ -225,7 +225,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
     finally:
         if proc.poll() is None:
             proc.terminate()
-            proc.wait()
+            proc.wait(timeout=5)
 
     # Scenario B: stale pid file + NO listener -> the removal path CI observed
     api_pid_file.write_text("999999\n", encoding="utf-8")
@@ -236,7 +236,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
         capture_output=True,
         text=True,
         cwd=str(PROJECT_ROOT),
-        env=env
+        env=env, timeout=30
     )
     assert "removing stale pid file" in res.stderr or "removing stale pid file" in res.stdout, f"stale pid check failed. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
     assert not api_pid_file.exists()
@@ -250,7 +250,7 @@ def test_api_start_delegates_recovery_to_launchd(temp_services_sh, mock_lsof_env
         capture_output=True,
         text=True,
         cwd=str(PROJECT_ROOT),
-        env=env
+        env=env, timeout=30
     )
 
     assert res.returncode == 0, res.stderr
@@ -272,7 +272,7 @@ def test_live_fallback_is_passed_to_launchd_with_a_loud_warning(temp_services_sh
         capture_output=True,
         text=True,
         cwd=str(PROJECT_ROOT),
-        env=env,
+        env=env, timeout=30,
     )
     assert result.returncode == 0, result.stderr
     assert "WARNING: API live mode enabled" in result.stderr
@@ -304,7 +304,7 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
-            env=env
+            env=env, timeout=30
         )
         assert res_stop.returncode == 0, f"stop failed. returncode={res_stop.returncode}\nstdout:\n{res_stop.stdout}\nstderr:\n{res_stop.stderr}"
         assert Path(env["SVC_API_SUPERVISOR_CAPTURE"]).read_text(encoding="utf-8").splitlines() == ["stop"]
@@ -312,9 +312,9 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
     finally:
         if proc.poll() is None:
             proc.terminate()
-            proc.wait()
+            proc.wait(timeout=5)
         # Clean up any started background processes from the start command
-        subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT), env=env)
+        subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT), env=env, timeout=30)
 
 @pytest.mark.skipif(
     shutil.which("lsof") is None or sys.platform != "darwin",
@@ -360,7 +360,7 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
-            env=env,
+            env=env, timeout=30,
         )
 
         assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout
@@ -374,7 +374,7 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
-            env=env,
+            env=env, timeout=30,
         )
 
         # Verify the dummy process was killed
@@ -385,4 +385,4 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
     finally:
         if proc.poll() is None:
             proc.terminate()
-            proc.wait()
+            proc.wait(timeout=5)

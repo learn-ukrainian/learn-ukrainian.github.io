@@ -17,7 +17,7 @@ def _run_probe(*, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
         env={**os.environ, **env},
         capture_output=True,
         text=True,
-        check=False,
+        check=False, timeout=30,
     )
 
 

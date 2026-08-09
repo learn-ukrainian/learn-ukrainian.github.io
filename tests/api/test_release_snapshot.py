@@ -30,7 +30,7 @@ def _run_git(repo_root: Path, *args: str) -> str:
         capture_output=True,
         check=True,
         env=sanitized_git_env(),
-        text=True,
+        text=True, timeout=30,
     )
     return result.stdout.strip()
 
@@ -42,7 +42,7 @@ def _release_test_sha(repo_root: Path) -> str:
         ["git", "diff", "--cached", "--quiet", "HEAD", "--", "scripts", "schemas"],
         cwd=repo_root,
         check=False,
-        env=sanitized_git_env(),
+        env=sanitized_git_env(), timeout=30,
     )
     if staged.returncode == 0:
         return head
@@ -65,7 +65,7 @@ def _release_test_sha(repo_root: Path) -> str:
         check=True,
         env=environment,
         input="release snapshot staged test\n",
-        text=True,
+        text=True, timeout=30,
     )
     return result.stdout.strip()
 
@@ -245,7 +245,7 @@ def test_git_service_environment_targets_live_checkout(tmp_path: Path) -> None:
         env=environment,
         capture_output=True,
         check=True,
-        text=True,
+        text=True, timeout=30,
     )
     assert "?? live-only.txt" in result.stdout
 
