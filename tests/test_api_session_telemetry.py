@@ -89,6 +89,38 @@ def test_session_hit_returns_caller_match_telemetry(
     assert telemetry["source"] == "transcript-jsonl"
 
 
+def test_session_manifest_telemetry_does_not_require_footer_environment(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    """The daemon's optional footer setting cannot gate caller context."""
+    project_root = tmp_path / "learn-ukrainian"
+    project_root.mkdir()
+    session_id = "daemon-session-123"
+    transcript = tmp_path / "official transcripts" / "daemon.jsonl"
+    _write_transcript(transcript)
+    update_session(
+        session_id,
+        transcript_path=str(transcript),
+        provenance="SessionStart",
+        state_root=project_root,
+    )
+    monkeypatch.delenv("AGENT_NO_TELEMETRY_FOOTER", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", raising=False)
+    monkeypatch.setattr(telemetry_response, "PROJECT_ROOT", project_root)
+    monkeypatch.setattr(
+        transcript_tokens, "canonical_state_root", lambda project_root: project_root
+    )
+
+    response = TestClient(app).get(f"/api/state/manifest?session={session_id}")
+
+    assert response.status_code == 200
+    telemetry = response.json()["_telemetry"]
+    assert telemetry["ctx"] == 187_000
+    assert telemetry["caller_match"] is True
+    assert telemetry["transcript"] == "daemon.jsonl"
+
+
 def test_session_record_drives_capacity_provenance_and_mismatch(
     tmp_path,
     monkeypatch,

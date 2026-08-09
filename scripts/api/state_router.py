@@ -2225,4 +2225,7 @@ async def manifest(request: Request):
     research = research_manifest_component()
     if research is not None:
         body["research"] = research
-    return add_json_telemetry(body, session_id=session_id)
+    # A session-bound manifest is the canonical context-discipline
+    # measurement path. Unlike cosmetic response footers, it must not depend
+    # on an environment variable inherited by the long-lived Monitor daemon.
+    return add_json_telemetry(body, session_id=session_id, force=session_id is not None)
