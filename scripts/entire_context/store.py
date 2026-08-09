@@ -17,7 +17,7 @@ import json
 import sqlite3
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any

@@ -1,4 +1,3 @@
-from pathlib import Path
 
 from scripts.generate_mdx.utils import STARLIGHT_DOCS_DIR
 from scripts.manifest_utils import get_modules_for_level

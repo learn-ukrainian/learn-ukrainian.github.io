@@ -9,7 +9,9 @@ re-export gives pyright something it CAN follow without changing runtime
 semantics for the existing importers.
 """
 
-# ruff: noqa: F403, I001
+# ruff: noqa: F401, F403, I001
+# F401/I001: explicit re-imports below are intentional for pyright (star import alone is opaque).
+# F403: star re-export is the runtime shim contract.
 from batch.batch_gemini_config import *  # re-export everything for pyright
 from batch.batch_gemini_config import (
     CASCADE_PER_CALL_MAX_S,

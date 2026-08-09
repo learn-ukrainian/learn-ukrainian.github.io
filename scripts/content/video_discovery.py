@@ -29,8 +29,6 @@ from batch_gemini_config import FLASH_MODEL
 from content.video_discovery_helpers import (
     _default_sources_check,
     _search_blog_dbs,
-    build_discovery_keywords,
-    build_search_keywords,
     cap_query,
     format_blog_discovery,
     format_rag_discovery,

@@ -21,7 +21,6 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
 

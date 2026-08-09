@@ -49,7 +49,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
-from scripts.audit import anchor_primitives, layerb_candidates
+from scripts.audit import layerb_candidates
 from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
 from scripts.audit.llm_reviewer_dispatch import tool_events_from_dispatch_meta
 

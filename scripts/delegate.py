@@ -120,7 +120,6 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
-from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import resolve_repo_root
 from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
 

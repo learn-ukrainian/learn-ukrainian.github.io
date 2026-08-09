@@ -16,36 +16,12 @@ from ..config import (
 
 # Re-export from activity_counting for backward compatibility
 from .activity_counting import (
-    check_activity_ukrainian_content,
-    check_anagram_min_letters,
-    check_resources_placement,
-    check_resources_required,
-    check_unjumble_word_match,
     count_items,
 )
 
 # Re-export from activity_format_checks for backward compatibility
-from .activity_format_checks import (
-    check_activity_header_format,
-    check_cloze_syntax_errors,
-    check_error_correction_format,
-    check_error_correction_hints,
-    check_forbidden_activity_types,
-    check_hints_in_activities,
-    check_malformed_cloze_activities,
-    check_mark_the_words_format,
-    check_yaml_activity_types,
-)
 
 # Re-export from activity_pedagogy_checks for backward compatibility
-from .activity_pedagogy_checks import (
-    check_activity_focus_alignment,
-    check_activity_sequencing,
-    check_activity_variety,
-    check_advanced_activities_presence,
-    check_answer_position_bias,
-    check_matchup_misuse,
-)
 
 # Add parent dir to path for imports
 SCRIPT_DIR = Path(__file__).parent.parent.parent

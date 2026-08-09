@@ -46,7 +46,6 @@ from .gates import (
     evaluate_density,
     evaluate_engagement,
     evaluate_grammar,
-    evaluate_immersion,
     evaluate_lint,
     evaluate_naturalness,
     evaluate_persona,

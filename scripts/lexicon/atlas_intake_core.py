@@ -25,7 +25,6 @@ from scripts.lexicon.content_lexicon_reconciler import (
     PROJECT_ROOT,
     lemmatize_forms,
 )
-from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.manifest_io import load_manifest
 
 LEDGER_KIND = "atlas_source_inventory_review_decisions"

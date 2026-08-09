@@ -43,6 +43,7 @@ import subprocess
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from ._ask_contract import (
     requested_effort,

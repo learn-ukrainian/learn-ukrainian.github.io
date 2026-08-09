@@ -13,7 +13,6 @@ fire-and-forget path's logging. They will be deleted in Phase 6 cleanup.
 """
 
 import atexit
-import contextlib
 import json
 import subprocess
 import sys

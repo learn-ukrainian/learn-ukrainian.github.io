@@ -763,6 +763,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             request_retry_seconds = 0.0
             current_generation = raw_generation
             current_tokens = token_count
+            retry_tokens = 0
             private_attempts: list[dict[str, Any]] = []
             for attempt in range(retries + 1):
                 private_attempts.append(

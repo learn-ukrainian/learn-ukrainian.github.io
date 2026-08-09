@@ -36,8 +36,6 @@ from typing import Any, Literal
 
 from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.paths import (
-    DEFAULT_ROOT_REL,  # re-exported for compatibility
-    ENV_ROOT,  # re-exported for compatibility
     default_plane_root,
 )
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestRecord

@@ -13,7 +13,7 @@ import time
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
 from scripts.api.state_helpers import cache_get_with_age, cache_set
 

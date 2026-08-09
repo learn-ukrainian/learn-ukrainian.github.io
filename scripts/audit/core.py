@@ -31,7 +31,6 @@ from .config import get_level_config, get_word_target
 from .gates import GateResult, evaluate_structure
 
 # Re-export for backward compatibility (used by tests)
-from .lint import check_typography
 from .loaders import (
     get_module_number_from_curriculum,
     load_yaml_meta,

@@ -46,7 +46,7 @@ PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "data" / "primary_text_sources.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
-from scripts.audit.content_surface_gates import scan_module_surface, scan_surface_text
+from scripts.audit.content_surface_gates import scan_module_surface
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
@@ -1628,8 +1628,9 @@ def _build_dictionary_context(
         return ""
 
     try:
-        from scripts.verification import vesum as vesum_lookup
         from wiki import sources_db
+
+        from scripts.verification import vesum as vesum_lookup
     except Exception as exc:
         return f"## Dictionary context\n\n*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
 

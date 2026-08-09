@@ -74,12 +74,6 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
 )
-from scripts.lexicon.esum_garbled import (
-    garbled_esum_entry,
-    has_mojibake_marker,
-    strip_garbled_tail,
-    trim_curated_goroh_text,
-)
 from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.load_relation_candidates import load_approved_synonym_verdicts
@@ -107,7 +101,6 @@ from scripts.lexicon.source_attribution import (
     attach_official_url,
     join_academic_source_labels,
     normalize_academic_label,
-    official_url_for_slug,
     remap_url_list,
 )
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available

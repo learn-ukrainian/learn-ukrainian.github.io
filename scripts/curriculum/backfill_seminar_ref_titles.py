@@ -15,9 +15,8 @@ Preserves existing non-empty `title:` fields.
 Idempotent.
 """
 
-import sys
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote
 
 import yaml
 

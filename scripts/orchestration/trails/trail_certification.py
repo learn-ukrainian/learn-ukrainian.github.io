@@ -26,7 +26,6 @@ from jsonschema import Draft202012Validator, FormatChecker
 from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import (
     CommandExecution,
-    ExitClass,
     InjectedCrash,
     TrailRunResult,
 )

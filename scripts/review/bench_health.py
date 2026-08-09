@@ -11,7 +11,9 @@ from __future__ import annotations
 
 import argparse
 import sys
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 _REPO_ROOT = str(Path(__file__).resolve().parents[2])
 if _REPO_ROOT not in sys.path:

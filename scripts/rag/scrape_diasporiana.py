@@ -41,7 +41,6 @@ import time
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import BinaryIO
 from urllib.parse import urljoin, urlparse
 
 import requests

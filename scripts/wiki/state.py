@@ -5,10 +5,8 @@ article compilation. Build events are logged to wiki/.state/build.log.jsonl.
 """
 
 import json
-from datetime import UTC, datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-
-import yaml
 
 from .config import WIKI_DIR, WIKI_STATE_DIR
 

@@ -11,6 +11,7 @@ import re
 import sqlite3
 import sys
 from pathlib import Path
+from typing import Any
 
 import yaml
 

@@ -6,7 +6,6 @@ open-weights LLM alignment (Gemma, Llama, Mistral).
 """
 
 import json
-import sqlite3
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

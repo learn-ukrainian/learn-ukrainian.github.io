@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from jsonschema import Draft202012Validator, FormatChecker, ValidationError
+from jsonschema import Draft202012Validator, FormatChecker
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_taxonomy.yaml"

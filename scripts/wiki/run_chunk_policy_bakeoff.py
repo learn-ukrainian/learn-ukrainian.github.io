@@ -75,7 +75,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 # These imports follow sys.path manipulation above; ruff's import-order
 # autofix would break them, so they live below the sys.path.insert call.
-from rag.benchmark_embeddings import (  # noqa: I001
+from rag.benchmark_embeddings import (
     LITERARY_SOURCE_FILES,
     SAMPLE_SEED,
     acquire_benchmark_lock,

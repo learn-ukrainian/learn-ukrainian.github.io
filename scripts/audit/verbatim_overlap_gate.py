@@ -34,10 +34,9 @@ import hashlib
 import json
 import re
 import sqlite3
-import sys
 import unicodedata
 from collections import defaultdict
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from pathlib import Path

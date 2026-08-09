@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.lexicon.runner.ledger import CasResult, CasStatus, Ledger
+from scripts.lexicon.runner.ledger import CasStatus, Ledger
 from scripts.lexicon.runner.network_worker import NetworkWorkItem
 from scripts.lexicon.runner.transport import ArtifactRef, PacketItem, build_packet
 

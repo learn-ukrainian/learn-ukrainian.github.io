@@ -59,7 +59,9 @@ ignore = [
 "!scripts/api/**.py" = ["PLC0415"]  # advisory API import-hygiene scope
 "scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
 "tests/*.py" = ["F841", "SIM117"]  # unused variables + nested with OK in tests
-"scripts/*.py" = ["F401", "F811", "E302", "F821"]  # stubs at root — redirect boilerplate
+# NOTE (#5930): do NOT use "scripts/*.py" here — ruff's per-file-ignores globs
+# treat `*` as matching across `/`, so that pattern silenced F401/F811/E302/F821
+# for the entire scripts/ tree. Root redirect stubs no longer need those ignores.
 
 [tool.mypy]
 python_version = "3.12"
