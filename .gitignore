@@ -124,7 +124,7 @@ temp/
 *.yml.bak
 *.yaml.orig
 *.yml.orig
-.venv/
+.venv
 .agent/
 # Local state owned by scripts/deploy_prompts.sh. It records which shared files
 # deploy placed in .agent/ so only those paths can be reaped on a later deploy.
