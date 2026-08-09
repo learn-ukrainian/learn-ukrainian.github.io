@@ -1,0 +1,66 @@
+schema_version: historical-language-corpus-denominator.v1
+status: complete_current_public_api
+phase3_boundary:
+  corpus_role: auxiliary_historical_evidence
+  correction_denominator_member: false
+  linguistic_numerator_member: false
+  rationale: >-
+    Historical inscriptions support provenance-aware language-history work but
+    are not modern correction examples and must not alter the pinned Phase 3
+    correction denominators or evaluation numerators.
+
+collections:
+  - collection_id: saint-sophia-inscriptions
+    source_name: Saint Sophia of Kyiv inscriptions portal
+    portal_url: https://saintsophia.dh.gu.se/
+    api_root: https://saintsophia.dh.gu.se/api/
+    retrieved_at: '2026-08-09T03:57:40.414682Z'
+    retrieval_scope: complete_current_public_api
+    public_record_count: 4157
+    public_record_id_set_sha256: 44b6428c07a8f496e7b933b53fa7476b8ddd54c548c9c397f2a516f26d3e584b
+    endpoint_count: 18
+    raw_response_page_count: 200
+    known_identified_total_lower_bound: 7000
+    known_unexposed_residual: true
+    inaccessible_records_claimed_as_crawled: false
+    disposition_counts:
+      text_bearing: 4144
+      non_textual_or_no_text: 11
+      quarantined_metadata: 2
+    deterministic_quality_findings:
+      date_range_inversion: 1
+      year_outside_configured_ce_bounds: 1
+      epidoc_parse_failure: 0
+    preserved_text_evidence:
+      epidoc_nonempty_parsed: 3133
+      ukrainian_translation_nonempty: 1917
+      ukrainian_commentary_nonempty: 2956
+    historical_stage_labels:
+      current_value: null
+      status: pending_qualified_ukrainian_historical_language_review
+    media_policy:
+      image_or_media_requests: 0
+      images_downloaded: false
+      iiif_or_rti_downloaded: false
+    rights_and_release:
+      storage: private_google_drive
+      redistribution: prohibited_without_explicit_rights_clearance
+      public_repo_posture: locator_and_receipt_only
+    drive_snapshot_relative_path: historical_language_corpus/snapshots/saint-sophia-inscriptions-2026-08-09T033900Z
+    drive_canonical_relative_path: historical_language_corpus/canonical/saint-sophia-inscriptions
+    artifact_sha256:
+      historical_source_records_jsonl: 6199f2a92bd948dfe63d12e9da68637b02a4d16ff58b0ddba3d5e252bb3ec4fe
+      dispositions_jsonl: cde50a40302ef36b7f18b92cf0e43e56e4b230eb7440a3bc6fb8e85261fcc572
+      raw_hash_manifest_json: 2cbb10688e7d044d0eb7b5d54e40551eb61d8bda8121e7398ff19e0dd2d71a94
+      coverage_receipt_json: 2a12ad921efc1d88f7f039e1de133ceed7c4c39715d622c316e1af14ea29c5a7
+      ingest_receipt_json: 84b2d570686b53da9e36af5a7360511f3b987bfbdaa0a011aeb852121ffbad5d
+    canonical_database:
+      historical_source_rows: 4157
+      historical_fts_rows: 4157
+      integrity_check: ok
+      wal_checkpoint: [0, 0, 0]
+      sha256: 98e93c9560ede71bb4affa8626c932604b84dd435f8b2a8606c872ebcfd3a8d5
+      unaffected_table_counts:
+        textbooks: 48760
+        textbooks_fts: 48760
+        textbook_sections: 35293

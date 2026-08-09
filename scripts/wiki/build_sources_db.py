@@ -73,6 +73,15 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from wiki.config import GDRIVE_DATA
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
+    from wiki.historical_sources import (
+        ensure_historical_source_schema,
+    )
+    from wiki.historical_sources import (
+        insert_rows as insert_historical_source_rows,
+    )
+    from wiki.historical_sources import (
+        load_rows as load_historical_source_rows,
+    )
     from wiki.sources import build_literary_row
     from wiki.sources_db import (
         ensure_ulif_dictua_schema,
@@ -84,6 +93,15 @@ if __package__ in {None, ""}:
 else:
     from .config import GDRIVE_DATA
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
+    from .historical_sources import (
+        ensure_historical_source_schema,
+    )
+    from .historical_sources import (
+        insert_rows as insert_historical_source_rows,
+    )
+    from .historical_sources import (
+        load_rows as load_historical_source_rows,
+    )
     from .sources import build_literary_row
     from .sources_db import (
         ensure_ulif_dictua_schema,
@@ -677,7 +695,13 @@ def _validate_build(conn: sqlite3.Connection, expected_counts: dict[str, int]) -
     if integrity != "ok":
         raise BuildValidationError(f"PRAGMA integrity_check returned {integrity!r}")
 
-    for fts_table in ("textbooks_fts", "external_fts", "literary_fts", "wikipedia_fts"):
+    for fts_table in (
+        "textbooks_fts",
+        "external_fts",
+        "literary_fts",
+        "wikipedia_fts",
+        "historical_source_records_fts",
+    ):
         conn.execute(f"INSERT INTO {fts_table}({fts_table}) VALUES ('integrity-check')")
 
 
@@ -817,6 +841,7 @@ def build(db_path: Path | None = None,
         conn.executescript(SCHEMA)
         ensure_ulif_dictua_schema(conn)
         ensure_ukrainian_wiki_schema(conn)
+        ensure_historical_source_schema(conn)
 
         expected_counts: dict[str, int] = {
             "wikipedia": len(wiki_rows),
@@ -910,6 +935,28 @@ def build(db_path: Path | None = None,
                 print(f"  📚 {source_file}: {len(batch)} chunks")
         expected_counts["literary_texts"] = lit_total
         total += lit_total
+
+        # --- Historical source records ---
+        print("\n🏛️ Historical source records")
+        historical_root = gd / "historical_language_corpus" / "canonical"
+        historical_total = 0
+        seen_collections: set[str] = set()
+        if historical_root.exists():
+            for jsonl_path in sorted(
+                historical_root.glob("*/historical_source_records.jsonl")
+            ):
+                rows = load_historical_source_rows(jsonl_path)
+                collection_id = str(rows[0][0])
+                if collection_id in seen_collections:
+                    raise BuildValidationError(
+                        f"duplicate historical collection {collection_id!r} under "
+                        f"{historical_root}"
+                    )
+                seen_collections.add(collection_id)
+                historical_total += insert_historical_source_rows(conn, rows)
+                print(f"  🏛️ {collection_id}: {len(rows)} records")
+        expected_counts["historical_source_records"] = historical_total
+        total += historical_total
 
         # --- Dictionaries ---
         print("\n📕 Dictionaries")
