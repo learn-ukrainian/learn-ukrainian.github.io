@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "90e96c20365b",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-5995-shard-pr4",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/source-inventory-review-decisions/2026-07-23-teacher-lesson-full-document-intake-batch-03.yaml",
+    "scripts/audit/scrub_decision_ledger_keys.py",
+    "tests/test_scrub_decision_ledger_keys.py",
+    "tests/test_source_inventory_review_decisions.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/90/e96c20365b/0/metadata.json",
+      "transcript": "/90/e96c20365b/0/full.jsonl",
+      "compact_transcript": "/90/e96c20365b/0/transcript.jsonl",
+      "content_hash": "/90/e96c20365b/0/content_hash.txt",
+      "prompt": "/90/e96c20365b/0/prompt.txt"
+    }
+  ]
+}
