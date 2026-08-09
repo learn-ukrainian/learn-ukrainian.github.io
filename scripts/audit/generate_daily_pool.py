@@ -159,12 +159,14 @@ def compute_weight(entry: dict[str, Any]) -> int:
 
 def _is_eligible(entry: dict[str, Any]) -> bool:
     """A daily card needs a real lemma headword and a translation; drop grammar metaterms
-    (via is_lexeme_entry) and inflected/normalized duplicates so cards show headwords
-    rather than case forms or grammar labels."""
+    (via is_lexeme_entry), inflected/normalized duplicates, and avoid-classified forms
+    so cards show only learner-safe headwords rather than case forms, grammar labels, or
+    error-modeling lemmas."""
     return (
         is_lexeme_entry(entry)
         and _has_text(entry.get("gloss"))
         and entry.get("primary_source") not in _DERIVED_FORM_SOURCES
+        and entry.get("primary_source") != _SURZHYK_SOURCE
         and is_surface_admitted(entry, SURFACE_DAILY)
     )
 
@@ -280,19 +282,15 @@ def build_pool(
 
     Selection is deterministic but *representative*: within a weight tier we order by a
     stable lemma hash, not by lemma, so a dominant tier (course + early-CEFR words) does not
-    collapse the pool to an alphabetical prefix. The small surzhyk-to-avoid set is reserved
-    so the "avoid this form" tier always surfaces in the rotation.
+    collapse the pool to an alphabetical prefix. Avoid-classified forms are excluded before
+    selection, so error-modeling lemmas cannot surface as neutral daily cards.
     """
     if size < 0:
         raise ValueError("size must be non-negative")
 
     eligible = [entry for entry in entries if _is_eligible(entry)]
-    surzhyk = [e for e in eligible if e.get("primary_source") == _SURZHYK_SOURCE]
-    rest = [e for e in eligible if e.get("primary_source") != _SURZHYK_SOURCE]
-    rest.sort(key=lambda e: (-compute_weight(e), _stable_hash(e["lemma"])))
-
-    ordered = surzhyk + rest
-    selected = [item for entry in ordered[:size] if (item := _pool_item(entry, sentence_inventory)) is not None]
+    eligible.sort(key=lambda e: (-compute_weight(e), _stable_hash(e["lemma"])))
+    selected = [item for entry in eligible[:size] if (item := _pool_item(entry, sentence_inventory)) is not None]
     return sorted(selected, key=lambda item: item["lemma"])
 
 

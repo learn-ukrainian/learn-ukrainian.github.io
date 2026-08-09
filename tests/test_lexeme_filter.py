@@ -79,7 +79,7 @@ def test_practice_rejects_grammar_metaterm():
 
 
 def test_practice_rejects_surzhyk_to_avoid():
-    # Drilling a learner to PRODUCE surzhyk is harmful — daily pool keeps it, deck must not.
+    # Drilling a learner to produce surzhyk is harmful.
     assert is_practice_eligible(_noun(primary_source=SURZHYK_SOURCE)) is False
 
 

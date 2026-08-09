@@ -77,9 +77,11 @@ def test_compute_weight_rules() -> None:
 def test_build_pool_schema_sorting_and_filters() -> None:
     pool = build_pool(fixture_entries(), size=10)
 
-    assert [item["lemma"] for item in pool] == ["авось", "баба", "добрий день", "дім"]
+    assert [item["lemma"] for item in pool] == ["баба", "добрий день", "дім"]
     assert "жмур" not in {item["lemma"] for item in pool}
+    assert "авось" not in {item["lemma"] for item in pool}
     assert "добрий день" in {item["lemma"] for item in pool}
+    assert all(item["k"] != "avoid" for item in pool)
 
     by_lemma = {item["lemma"]: item for item in pool}
     assert by_lemma["баба"] == {
@@ -159,10 +161,10 @@ def test_build_pool_prefers_inventory_example_with_provenance() -> None:
 def test_build_pool_top_n_uses_weight_then_lemma() -> None:
     pool = build_pool(fixture_entries(), size=2)
 
-    assert [item["lemma"] for item in pool] == ["авось", "баба"]
+    assert [item["lemma"] for item in pool] == ["баба", "дім"]
 
 
-def test_build_pool_excludes_derived_forms_and_reserves_surzhyk() -> None:
+def test_build_pool_excludes_derived_forms_and_avoid_classified_lemmas() -> None:
     entries = [
         # Inflected/normalized duplicate — must be dropped even though it has a gloss + course.
         {
@@ -182,7 +184,7 @@ def test_build_pool_excludes_derived_forms_and_reserves_surzhyk() -> None:
             "course_usage": [{"track": "a1", "module_num": 2, "slug": "transport", "context": "x"}],
             "enrichment": {"cefr": {"level": "A1", "source": "estimated", "text": "A1"}},
         },
-        # Lower weight (surzhyk + gloss = 2) — but reserved, so it must still appear at size=1.
+        # Avoid-classified: an error-modeling lemma must never enter a neutral daily pool.
         {
             "lemma": "всьо",
             "url_slug": "vso",
@@ -192,8 +194,12 @@ def test_build_pool_excludes_derived_forms_and_reserves_surzhyk() -> None:
         },
     ]
 
-    assert "автобусом" not in {item["lemma"] for item in build_pool(entries, size=10)}
-    assert [item["lemma"] for item in build_pool(entries, size=1)] == ["всьо"]
+    pool = build_pool(entries, size=10)
+
+    assert "автобусом" not in {item["lemma"] for item in pool}
+    assert "всьо" not in {item["lemma"] for item in pool}
+    assert all(item["k"] != "avoid" for item in pool)
+    assert [item["lemma"] for item in build_pool(entries, size=1)] == ["автобус"]
 
 
 def test_main_writes_deterministic_json_bytes(tmp_path) -> None:
