@@ -6235,6 +6235,202 @@ def test_interrupt_fallback_records_the_complete_outcome(
 # Issue #6426: finalizer deliverable counting on --cwd reuse worktrees
 # ---------------------------------------------------------------------------
 
+def _init_private_remote_worktree(
+    tmp_path: Path, *, stale_local_main: bool = False,
+) -> tuple[Path, Path]:
+    """Create a worktree based on a non-origin private remote.
+
+    The primary checkout is detached.  By default it has no local ``main``
+    branch, modeling a private ``--cwd`` dispatch that pushed its branch to a
+    secondary remote.  With ``stale_local_main``, the local branch remains at
+    the clone's initial commit while ``private/main`` advances before the
+    dispatch worktree is created; this models the stale-base ordering bug.
+    """
+    env = delegate._sanitized_git_env()
+
+    def _git(cwd: Path, *args: str) -> None:
+        subprocess.run(
+            ["git", "-C", str(cwd), *args],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=30,
+        )
+
+    remote = tmp_path / "private.git"
+    source = tmp_path / "source"
+    primary = tmp_path / "private-checkout"
+    subprocess.run(["git", "init", "--bare", "-q", str(remote)], check=True, env=env, timeout=30)
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(source)],
+        check=True,
+        env=env,
+        timeout=30,
+    )
+    _git(source, "config", "user.email", "test@example.com")
+    _git(source, "config", "user.name", "Test")
+    (source / "tracked.txt").write_text("base\n", encoding="utf-8")
+    _git(source, "add", "tracked.txt")
+    _git(source, "commit", "-q", "-m", "initial")
+    _git(source, "remote", "add", "private", str(remote))
+    _git(source, "push", "-u", "private", "main")
+    subprocess.run(
+        ["git", "--git-dir", str(remote), "symbolic-ref", "HEAD", "refs/heads/main"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    subprocess.run(["git", "clone", "-q", str(remote), str(primary)], check=True, env=env, timeout=30)
+    _git(primary, "remote", "rename", "origin", "private")
+    _git(primary, "config", "user.email", "test@example.com")
+    _git(primary, "config", "user.name", "Test")
+    _git(primary, "checkout", "-q", "--detach")
+    if stale_local_main:
+        (source / "base-update.txt").write_text("updated base\n", encoding="utf-8")
+        _git(source, "add", "base-update.txt")
+        _git(source, "commit", "-q", "-m", "advance private main")
+        _git(source, "push", "-q", "private", "main")
+        _git(primary, "fetch", "-q", "private")
+    else:
+        _git(primary, "branch", "-D", "main")
+
+    dispatch_wt = primary / ".worktrees" / "dispatch" / "codex" / "private-task"
+    _git(primary, "worktree", "add", "-q", "-b", "codex/private-task", str(dispatch_wt), "private/main")
+    _git(dispatch_wt, "push", "-u", "private", "codex/private-task")
+    return primary.resolve(), dispatch_wt.resolve()
+
+
+def _commit_private_dispatch_delivery(dispatch_wt: Path) -> None:
+    (dispatch_wt / "feature.py").write_text("print('feature')\n", encoding="utf-8")
+    subprocess.run(["git", "add", "feature.py"], cwd=dispatch_wt, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add feature"], cwd=dispatch_wt, check=True, timeout=30)
+    subprocess.run(
+        ["git", "push", "private", "codex/private-task"],
+        cwd=dispatch_wt,
+        check=True,
+        timeout=30,
+    )
+
+
+def test_count_commits_ahead_uses_private_tracking_remote_without_origin_or_local_base(tmp_path, monkeypatch):
+    """Pushed private-remote commits remain observable when origin/main is absent."""
+    _primary, dispatch_wt = _init_private_remote_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+
+    assert delegate._count_commits_ahead(dispatch_wt, "origin/main") == 0
+    _commit_private_dispatch_delivery(dispatch_wt)
+
+    assert delegate._count_commits_ahead(dispatch_wt, "origin/main") == 1
+    assert delegate._commit_count_base_ref(dispatch_wt, "private/main") == "private/main"
+
+
+def test_finalize_private_remote_pushed_commit_is_a_deliverable(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """A pushed secondary-remote commit must not settle as commit_count_unknown."""
+    main, dispatch_wt = _init_private_remote_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _commit_private_dispatch_delivery(dispatch_wt)
+
+    state_path = delegate._state_path("private-remote-delivery")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "private-remote-delivery",
+        "agent": "codex",
+        "mode": "workspace-write",
+        "cwd": str(dispatch_wt),
+        "worktree_path": str(dispatch_wt),
+        "worktree_base": "main",
+        "status": "running",
+    })
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "Implemented and pushed the private-repository feature.",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6",
+            "effort": "high",
+            "cli_version": "1.0.0",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="private-remote-delivery",
+            agent="codex",
+            prompt="implement feature",
+            mode="workspace-write",
+            cwd_str=str(dispatch_wt),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 1
+    assert state.get("no_deliverable_reason") is None
+
+
+def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """A stale local base must not turn a zero-commit dispatch into a delivery."""
+    main, dispatch_wt = _init_private_remote_worktree(tmp_path, stale_local_main=True)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    assert delegate._commit_count_refs(dispatch_wt, "origin/main") == (
+        "origin/main",
+        "private/main",
+        "main",
+    )
+    assert delegate._count_commits_ahead(dispatch_wt, "origin/main") == 0
+
+    state_path = delegate._state_path("private-remote-zero-commits")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "private-remote-zero-commits",
+        "agent": "codex",
+        "mode": "workspace-write",
+        "cwd": str(dispatch_wt),
+        "worktree_path": str(dispatch_wt),
+        "worktree_base": "main",
+        "status": "running",
+    })
+
+    empty_result = _finalize_mock_result()
+    empty_result.response = ""
+    with patch("agent_runtime.runner.invoke", return_value=empty_result):
+        rc = delegate._run_worker(
+            task_id="private-remote-zero-commits",
+            agent="codex",
+            prompt="inspect the requested change",
+            mode="workspace-write",
+            cwd_str=str(dispatch_wt),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "no_deliverable"
+    assert state["commits_ahead"] == 0
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
+
+
 def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     tmp_tasks_dir, tmp_path, monkeypatch,
 ):
