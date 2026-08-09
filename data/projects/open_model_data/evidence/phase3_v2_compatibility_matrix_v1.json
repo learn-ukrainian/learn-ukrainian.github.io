@@ -12,7 +12,7 @@
   },
   "bindings": {
     "schema_sha256": "3e2b5e24760a753a0d36e304af067b4a0cea2d1c83f70f2e2139356535045bf4",
-    "validator_sha256": "10208c7343e55e14bd8341b9e567e5e78c219ff02c61f3856abb48796614204c"
+    "validator_sha256": "4180ee2f90f49d0b402583822ea5dfe62a29b5996a79afc9ceebdfcdfc2b9e76"
   },
   "functional_role_binding": {
     "logical_path": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json",
