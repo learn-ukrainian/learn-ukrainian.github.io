@@ -42,7 +42,6 @@ from scripts.agent_runtime.adapters.acpx import (
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
-    _invoke_direct_only,
     _invoke_native_once,
     invoke_inter_agent,
     resolve_inter_agent_route,

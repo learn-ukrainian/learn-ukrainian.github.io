@@ -14,7 +14,6 @@ import json
 import os
 import sys
 from collections import defaultdict
-from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any

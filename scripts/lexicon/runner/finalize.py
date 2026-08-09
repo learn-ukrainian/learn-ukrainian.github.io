@@ -25,7 +25,6 @@ import hashlib
 import json
 import os
 import shutil
-import sys
 import tempfile
 import time
 from collections.abc import Callable, Iterator, Sequence
@@ -52,7 +51,6 @@ from scripts.lexicon.runner.deterministic_zip import (
     write_deterministic_zip,
 )
 from scripts.lexicon.runner.ledger import (
-    CasStatus,
     DuplicateRunnerError,
     Ledger,
 )

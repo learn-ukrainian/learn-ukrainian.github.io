@@ -442,7 +442,6 @@ def _build_vocabulary_bank(ctx) -> str:
 
     Issue: #979 AC3
     """
-    import re as _re
     if not ctx.plan:
         return "(No vocabulary bank available)"
     hints = ctx.plan.get("vocabulary_hints", {})

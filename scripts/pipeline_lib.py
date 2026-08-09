@@ -6,7 +6,7 @@ New code should import from pipeline.core directly.
 """
 # ruff: noqa: F403
 from pipeline.core import *
-from pipeline.core import (
+from pipeline.core import (  # noqa: F401
     ACTIVITY_CONFIGS,
     ARCHIVE_DIR,
     ARCHIVE_GIT_REF,

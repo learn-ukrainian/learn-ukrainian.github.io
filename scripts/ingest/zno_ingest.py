@@ -3,7 +3,6 @@ Ingest ZNO booklet metadata and online tasks from zno.osvita.ua into sources.db.
 """
 
 import argparse
-import copy
 import json
 import re
 import sqlite3

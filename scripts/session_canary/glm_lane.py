@@ -29,7 +29,6 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.agent_runtime.adapters.glm import (
-    _CI_ENV_VARS,
     _OPENCODE_MODEL_ROUTES,
     GlmAdapter,
     GlmEgressForbiddenError,

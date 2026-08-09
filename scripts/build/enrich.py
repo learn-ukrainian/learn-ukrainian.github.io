@@ -387,7 +387,7 @@ def _resolve_textbook_url(title: str) -> str:
         import sqlite3
         from pathlib import Path
 
-        from build.textbook_refs import _PDF_BASE, _PDF_NOT_AVAILABLE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
+        from build.textbook_refs import _PDF_BASE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
         db_path = Path(__file__).resolve().parents[2] / "data" / "sources.db"
         if not db_path.exists():
             return ""

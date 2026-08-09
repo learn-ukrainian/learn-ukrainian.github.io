@@ -25,7 +25,7 @@ import json
 import re
 import sqlite3
 import sys
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "81e88cbdf61b2f2fde833d4d7ec3d51d5c9266ac32e63d542f708e0e29794247",
+  "fingerprint": "f71c2545232b2b9f5fe3941b3d9ce8797c484af5fdb023ecc119f328d5a45891",
   "inputs": {
     "lexicon_code": [
       {
@@ -20,7 +20,7 @@
       },
       {
         "path": "scripts/lexicon/atlas_intake_core.py",
-        "sha256": "beb487c52f85dd64949bb7718d88887dbcd254c80d921a6ebf9d86ec95aa5d21"
+        "sha256": "61aa4828ae462ccae3918e564fc0af0bc5ba0543291e7acdcc6219058ff490e2"
       },
       {
         "path": "scripts/lexicon/backfill_course_usage.py",
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "sha256": "f5fd62e8e4a6aa02dd01d042368c874e56a992fa8e69366148c1cb184430920a"
+        "sha256": "41d31feafa143186146c41ca195aea6ec86ec69347e4f97a6f7044f310243a6a"
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
@@ -76,7 +76,7 @@
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "sha256": "982b29b9df1826b3de02fb35967ba80d587c633e308e497249f2e745c4abfcb0"
+        "sha256": "024246cce4d9d676f139816cd2d4f62e8fc6d269f4c380cd14a5ff3afd1a1b46"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
@@ -88,7 +88,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "7208972747eda3961adf88dc0f504d87613393c60b4fc410297f8499082365bb"
+        "sha256": "e8c463749405156394c5dbb31d8092cfc713fb8e0c52ba0e015fe36b2839cc1e"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -180,7 +180,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
-        "sha256": "98081166a4df2a694d1a686ebbf89553761646a36824dcd89ae5618ab04f29ba"
+        "sha256": "328d114f3445890458c43ba0238b48669a2383ba7a54a4f4bdfe49b2dadc6b5d"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
@@ -228,7 +228,7 @@
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
-        "sha256": "bff8437e8f5c9db56bb8eacfdc12d2b8fc293afbfb3bc28a2b611f4c44ee149b"
+        "sha256": "f5db238d65faf2a26d14450e8bbbaaa7b87c7bd43efb05eb3f888c0c7e5972e0"
       }
     ]
   },

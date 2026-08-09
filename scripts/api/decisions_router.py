@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import time
 from datetime import date
-from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, HTTPException, Query

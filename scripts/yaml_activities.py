@@ -20,13 +20,6 @@ try:
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
     from build.activity_renderer import error_correction_render_values
 
-try:
-    import jsonschema
-    HAS_JSONSCHEMA = True
-except ImportError:
-    HAS_JSONSCHEMA = False
-
-
 # =============================================================================
 # DATA CLASSES
 # =============================================================================

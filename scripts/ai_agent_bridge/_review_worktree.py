@@ -21,7 +21,7 @@ import json
 import os
 import re
 import shlex
-import shutil
+import shutil  # noqa: F401  # test seam for trusted transport cleanup
 import signal
 import stat
 import subprocess

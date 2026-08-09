@@ -13,7 +13,6 @@ import uuid
 from collections.abc import Mapping
 from datetime import timedelta
 from pathlib import Path
-from typing import Any
 
 from agents_extensions.shared.session_streams.app_lifecycle import (
     AppLifecycleReceipt,

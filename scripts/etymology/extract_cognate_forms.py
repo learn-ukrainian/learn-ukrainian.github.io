@@ -6,7 +6,7 @@ import argparse
 import json
 import re
 import sqlite3
-from collections import Counter, defaultdict
+from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 

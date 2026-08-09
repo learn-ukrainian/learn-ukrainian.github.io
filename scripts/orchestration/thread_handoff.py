@@ -24,7 +24,7 @@ import urllib.error
 import urllib.request
 import uuid
 from collections.abc import Callable, Mapping
-from contextlib import closing, suppress
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path

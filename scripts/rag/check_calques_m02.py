@@ -6,7 +6,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from rag.source_query import goroh_translate, r2u_translate
+from rag.source_query import r2u_translate
 
 
 def check_calques():

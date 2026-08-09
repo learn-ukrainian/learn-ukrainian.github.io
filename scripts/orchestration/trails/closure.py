@@ -24,7 +24,7 @@ from .authority import (
     VerifiedAuthorityReceipt,
 )
 from .models import TrailRun, TrailRunnerError
-from .store import TrailStore, digest_json, utc_now
+from .store import TrailStore, digest_json
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CLOSURE_ATTESTATION_SCHEMA_PATH = (

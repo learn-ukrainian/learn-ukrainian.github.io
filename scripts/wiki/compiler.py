@@ -11,7 +11,6 @@ import shutil
 import sqlite3
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 from ai_llm.claude_call import call_claude_with_fallback

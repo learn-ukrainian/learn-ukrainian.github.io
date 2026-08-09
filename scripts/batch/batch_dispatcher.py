@@ -68,7 +68,7 @@ from batch.batch_dispatcher_helpers import (
     scan_track,
     select_strategy,
 )
-from batch_gemini_config import PROJECT_ROOT
+from batch_gemini_config import PROJECT_ROOT, get_module_index
 
 log = logging.getLogger("dispatcher")
 

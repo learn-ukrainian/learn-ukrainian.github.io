@@ -12,7 +12,6 @@ Chunks receive only their sealed CEFR row + the run-phase seal hash.
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 import sqlite3
 from collections.abc import Callable, Iterable

@@ -9,7 +9,6 @@ usage logging uniformly across agents.
 """
 
 import atexit
-import contextlib
 import json
 import subprocess
 import sys
@@ -38,7 +37,6 @@ from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
-    GEMINI_CLI,
     GEMINI_DEFAULT_MODEL,
     REPO_ROOT,
 )

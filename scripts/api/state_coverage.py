@@ -11,9 +11,9 @@ from pathlib import Path
 import yaml
 
 try:
-    from path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join, trusted_join  # scripts.api package import (production)
+    from ..path_safety import trusted_join  # scripts.api package import (production)
 
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
 from .state_helpers import (

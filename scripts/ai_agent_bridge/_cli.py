@@ -9,20 +9,17 @@ from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
 
-from ._agy import ask_agy
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import maybe_print_timeout_notice, print_asks, process_background_ask
 from ._broker import bridge_status, broker_cleanup
-from ._claude import ask_claude, process_for_claude
+from ._claude import process_for_claude
 from ._codex import (
-    ask_codex,
-    ask_codex_chain,
     has_codex_headroom,
     process_all_codex,
     process_for_codex,
 )
 from ._config import GEMINI_DEFAULT_MODEL
-from ._cursor import CURSOR_DEFAULT_MODEL, ask_cursor
+from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
 from ._dispatch_wrappers import (
     MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
@@ -30,14 +27,13 @@ from ._dispatch_wrappers import (
     handle_dispatch_fix,
     handle_review_deep,
 )
-from ._gemini import ask_gemini, converse_gemini, process_and_respond
+from ._gemini import converse_gemini, process_and_respond
 from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
-    ask_grok_build,
     process_for_grok_build,
 )
-from ._hermes import HERMES_DEFAULT_MODEL, ask_hermes
-from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL, ask_kimi, process_for_kimi
+from ._hermes import HERMES_DEFAULT_MODEL
+from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL, process_for_kimi
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -54,10 +50,6 @@ from ._opencode import (
     OPENCODE_DEFAULT_MODEL,
     POOL_DEFAULT_VARIANT,
     POOL_MODEL,
-    ask_gemma,
-    ask_glm,
-    ask_opencode,
-    ask_pool,
 )
 
 _CALLER_IDENTITY_ENV_HINTS = (
