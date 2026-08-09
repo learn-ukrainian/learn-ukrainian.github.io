@@ -881,6 +881,7 @@ _NO_DELIVERABLE_STATUS = "no_deliverable"
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
+_NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -1728,6 +1729,27 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     return tuple(sorted(changed))
 
 
+def _is_disposable_auto_finalize_path(path: str) -> bool:
+    """Return whether a changed path is scratch residue, not deliverable content.
+
+    This is intentionally a narrow allowlist of known generated dependency and
+    cache paths. A single other path means the auto-finalizer retains its
+    existing preserve-and-publish behavior rather than guessing whether that
+    content is important.
+    """
+    parts = tuple(part for part in path.replace("\\", "/").split("/") if part and part != ".")
+    if not parts:
+        return True
+    if any(part in {".venv", "node_modules", "__pycache__", ".pytest_cache"} for part in parts):
+        return True
+    return parts[-1].endswith(".pyc")
+
+
+def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
+    """Return whether auto-finalization would publish only disposable residue."""
+    return bool(changed_files) and all(_is_disposable_auto_finalize_path(path) for path in changed_files)
+
+
 def _current_branch(worktree: Path) -> str | None:
     proc = subprocess.run(
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
@@ -1831,6 +1853,12 @@ def _auto_finalize_dirty_worktree(
 
     if not changed_files:
         return AutoFinalizeResult(ok=False, error="clean-tree")
+    if _auto_finalize_is_junk_only(changed_files):
+        return AutoFinalizeResult(
+            ok=False,
+            error=_NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
+            changed_files=changed_files,
+        )
 
     resolved_branch = branch or _current_branch(worktree)
     if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
@@ -3277,6 +3305,13 @@ def _run_worker(
                         needs_finalize = False
                         ok_outcome = True
                         final_status = "done"
+                    elif auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
+                        # A dirty tree with only known scratch residue has no
+                        # user-visible deliverable. Refuse before staging so it
+                        # cannot create a branch, push, or public PR.
+                        needs_finalize = False
+                        no_deliverable = True
+                        no_deliverable_reason = _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON
         # Deliberately broad: this is measurement about a worker that has already
         # finished, and no measurement failure may cost the task its terminal status.
         except Exception as finalize_exc:
@@ -3297,7 +3332,13 @@ def _run_worker(
         # ``DELIVERABLE:`` line is honoured as an optional positive signal.
         # Read-only tasks are excluded: their deliverable may be analysis or
         # an external side effect such as a posted review comment.
-        if mode in _WRITE_CAPABLE_MODES and final_status == "done" and returncode == 0 and not needs_finalize:
+        if (
+            mode in _WRITE_CAPABLE_MODES
+            and final_status == "done"
+            and returncode == 0
+            and not needs_finalize
+            and no_deliverable_reason is None
+        ):
             delivery_declaration = _parse_delivery_declaration(response)
             no_deliverable_reason = _delivery_failure_reason(
                 response,

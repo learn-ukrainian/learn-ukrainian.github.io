@@ -2240,6 +2240,137 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert "X-Agent: agy/auto-finalize-test" in message
 
 
+@pytest.mark.parametrize(
+    ("path", "expected"),
+    [
+        (".venv", True),
+        (".venv/bin/python", True),
+        ("node_modules/example/index.js", True),
+        ("package/__pycache__/module.cpython-312.pyc", True),
+        (".pytest_cache/v/cache/nodeids", True),
+        ("generated.pyc", True),
+        ("scripts/delegate.py", False),
+        ("docs/decision.md", False),
+    ],
+)
+def test_auto_finalize_disposable_path_classification(path: str, expected: bool):
+    assert delegate._is_disposable_auto_finalize_path(path) is expected
+
+
+def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Junk-only residue must settle without staging, pushing, or opening a PR (#6497)."""
+    _sanitize_git_env_for_test(monkeypatch)
+    origin = tmp_path / "origin.git"
+    worktree = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "init", "--bare", str(origin)],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "init", "--initial-branch=main", str(worktree)],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(
+        ["git", "remote", "add", "origin", str(origin)],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "push", "-u", "origin", "main"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "checkout", "-b", "agy/junk-only-finalize-test"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    state_path = delegate._state_path("agy-junk-only-finalize-test")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "agy-junk-only-finalize-test",
+        "worktree_path": str(worktree),
+        "worktree_branch": "agy/junk-only-finalize-test",
+        "worktree_base": "main",
+    })
+    (worktree / ".venv").symlink_to(tmp_path / "primary-venv", target_is_directory=True)
+
+    def fail_push(*_args: Any, **_kwargs: Any) -> None:
+        pytest.fail("junk-only auto-finalize must not push")
+
+    def fail_create_pr(*_args: Any, **_kwargs: Any) -> str:
+        pytest.fail("junk-only auto-finalize must not create a PR")
+
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", fail_push)
+    monkeypatch.setattr(delegate, "_create_auto_finalize_pr", fail_create_pr)
+
+    with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+        rc = delegate._run_worker(
+            task_id="agy-junk-only-finalize-test",
+            agent="agy",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == "junk_only_worktree_changes"
+    assert state["auto_finalize"] == {
+        "ok": False,
+        "commit_sha": None,
+        "pr_url": None,
+        "error": "junk_only_worktree_changes",
+        "changed_files": [".venv"],
+    }
+    assert (worktree / ".venv").is_symlink()
+    assert subprocess.run(
+        ["git", "rev-list", "--count", "origin/main..HEAD"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout.strip() == "0"
+
+
 def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypatch):
     _sanitize_git_env_for_test(monkeypatch)
     worktree = tmp_path / "worktree"
