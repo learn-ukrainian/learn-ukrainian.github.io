@@ -140,8 +140,8 @@ def build_plan(
         "repo_root": str(primary),
         "archive_root": str(archive_root.expanduser()),
         "policy": {
-            "stale_hours": stale_hours,
-            "build_age_hours": build_age_hours,
+            "stale_hours": float(stale_hours),
+            "build_age_hours": float(build_age_hours),
             "safe_only": safe_only,
             "include_home": include_home,
             "session_stream_history_excluded": True,
