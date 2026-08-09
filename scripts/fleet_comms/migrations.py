@@ -639,6 +639,10 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
     known = {migration.version: migration for migration in MIGRATIONS}
     applied = _applied_migrations(conn)
     _validate_applied_migrations(applied, known)
+    # Finish the optimistic read before acquiring a write transaction below.
+    # Some connection configurations retain that read transaction, in which
+    # case SQLite rejects a nested ``BEGIN IMMEDIATE``.
+    conn.commit()
     for migration in MIGRATIONS:
         if migration.version in applied:
             continue
