@@ -907,7 +907,7 @@ describe('LexiconPractice', () => {
     ]);
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: /Наголос/ })).toBeInTheDocument());
+    await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
     expect(dashboard.querySelectorAll('[data-mode]').length).toBe(11);
   });
 
@@ -2191,7 +2191,7 @@ describe('LexiconPractice', () => {
 
     mixedRender.unmount();
     const { container } = render(<LexiconPractice initialDeck={paronymDeck()} />);
-    expect(screen.getByText('Пароніми')).toBeInTheDocument();
+    expect(container.querySelector('[data-mode="paronym"]')).toHaveTextContent('Пароніми');
 
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="paronym"]')!);
 
@@ -2254,9 +2254,9 @@ describe('LexiconPractice', () => {
   });
 
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
-    render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
+    const { container } = render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 
-    expect(screen.getByRole('button', { name: /Пароніми/ })).toBeInTheDocument();
+    expect(container.querySelector('[data-mode="paronym"]')).toHaveTextContent('Пароніми');
   });
 
   test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {
@@ -2687,17 +2687,17 @@ describe('LexiconPractice', () => {
   test("A1 and A2 chrome aria-labels follow pure data-chrome-locale (no slash-dual)", async () => {
     document.documentElement.dataset.chromeLocale = "uk";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
-    const { unmount } = render(<LexiconPractice />);
+    const { container, unmount } = render(<LexiconPractice />);
     // #5503: A1 chrome is pure UK when locale is uk — English only in item content.
-    expect(screen.getByRole("region")).toHaveAttribute(
+    expect(container.querySelector(".lexicon-practice")).toHaveAttribute(
       "aria-label",
       "Практика слів дня",
     );
     unmount();
 
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
-    const { unmount: unmountA2 } = render(<LexiconPractice />);
-    expect(screen.getByRole("region")).toHaveAttribute(
+    const { container: a2Container, unmount: unmountA2 } = render(<LexiconPractice />);
+    expect(a2Container.querySelector(".lexicon-practice")).toHaveAttribute(
       "aria-label",
       "Практика слів дня",
     );
@@ -2705,8 +2705,8 @@ describe('LexiconPractice', () => {
 
     document.documentElement.dataset.chromeLocale = "en";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A1");
-    render(<LexiconPractice />);
-    expect(screen.getByRole("region")).toHaveAttribute(
+    const { container: enContainer } = render(<LexiconPractice />);
+    expect(enContainer.querySelector(".lexicon-practice")).toHaveAttribute(
       "aria-label",
       "Words of the Day Practice",
     );

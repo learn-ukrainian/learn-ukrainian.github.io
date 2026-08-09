@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 4cf2ae934787837493ea93e51b14ba3a25f38f45b1030a022073782837075700
+  components_sha256: 9326942a9e6178311eb7a065b1622db700ddc94bb03388cc9e1c4aecf49472f0
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -2705,6 +2705,39 @@ components:
         description: Short label for a UI or source item.
         ukrainian_text: 'true'
     nested_types: {}
+    example: {}
+    deprecated: false
+    deprecation_reason: null
+  ZnoPractice:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: decks
+        type: ZnoPracticeDeck[]
+        description: decks prop.
+        ukrainian_text: 'false'
+    nested_types:
+      ZnoPracticeDeck:
+      - name: deckId
+        type: string
+        description: deckId prop.
+        ukrainian_text: 'false'
+      - name: title
+        type: string
+        description: title prop.
+        ukrainian_text: 'false'
+      - name: thinDeck
+        type: boolean
+        description: thinDeck prop.
+        ukrainian_text: 'false'
+      - name: items
+        type: ZnoPracticeItem[]
+        description: items prop.
+        ukrainian_text: 'false'
     example: {}
     deprecated: false
     deprecation_reason: null
