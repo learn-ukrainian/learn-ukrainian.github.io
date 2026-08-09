@@ -1259,6 +1259,87 @@ const frontmatter = {
     align-items: stretch;
     gap: 0.3rem;
   }
+  /*
+   * #6544: compact above-fold deck chip. Closed height must stay small so the
+   * Start/Resume CTAs clear HARD-1/HARD-2 at 1366×768; the full Drive/Manage
+   * panel remains folded below the mode grid (#6336).
+   */
+  :global(.k3-active-deck) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.5rem;
+    min-width: 0;
+  }
+  :global(.k3-active-deck-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 48px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--lu-primary) 35%, var(--lu-border));
+    border-radius: 999px;
+    background: var(--lu-surface-raised);
+    color: var(--lu-text);
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  :global(.k3-active-deck-chip.open),
+  :global(.k3-active-deck-chip:hover),
+  :global(.k3-active-deck-chip:focus-visible) {
+    border-color: var(--lu-primary);
+    outline: none;
+  }
+  :global(.k3-active-deck-name) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :global(.k3-active-deck-menu) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    padding: 0.45rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 12px;
+    background: var(--lu-surface);
+  }
+  :global(.k3-active-deck-menu button) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 48px;
+    padding: 0 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--lu-text);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+  :global(.k3-active-deck-menu button.active) {
+    border-color: #3b82f6;
+    background: color-mix(in srgb, #3b82f6 14%, transparent);
+    font-weight: 800;
+  }
+  :global(.k3-active-deck-menu button:hover),
+  :global(.k3-active-deck-menu button:focus-visible) {
+    background: color-mix(in srgb, var(--lu-primary) 10%, transparent);
+    outline: none;
+  }
+  :global(.k3-active-deck-manage) {
+    margin-top: 0.15rem;
+    border-top: 1px solid var(--lu-border) !important;
+    border-radius: 0 0 10px 10px !important;
+    color: var(--lu-text-muted) !important;
+    font-weight: 800 !important;
+  }
   :global(.k3-session-size) {
     display: flex;
     flex-wrap: nowrap;

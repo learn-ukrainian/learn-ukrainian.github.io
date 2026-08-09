@@ -1533,6 +1533,7 @@ function LexiconPracticeIsland({
   const [heritageSelectedLabel, setHeritageSelectedLabel] = useState<string | null>(null);
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [selectedDeckFilter, setSelectedDeckFilter] = useState<string>('all');
+  const [deckPickerOpen, setDeckPickerOpen] = useState(false);
   const [isDriveSyncing, setIsDriveSyncing] = useState(false);
   const [driveSyncMsg, setDriveSyncMsg] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -1643,6 +1644,7 @@ function LexiconPracticeIsland({
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const secondaryToolsRef = useRef<HTMLDetailsElement | null>(null);
   const deckRequestId = useRef(0);
   const sessionStartedAtRef = useRef(Date.now());
   const didInitRef = useRef(false);
@@ -1695,6 +1697,25 @@ function LexiconPracticeIsland({
   const modeDetail = hoveredZnoDeckId
     ? ZNO_MODE_META[hoveredZnoDeckId]
     : MODE_META[hoveredMode ?? 'mixed'];
+
+  // #6544: compact above-fold chip label (keeps Drive/Manage folded per #6336).
+  const activeDeckChipLabel = useMemo(() => {
+    if (selectedDeckFilter === 'virtual_teacher_lesson') {
+      return CHROME_STRINGS[chromeLocale]['practice.deckCurated'];
+    }
+    if (selectedDeckFilter === 'all') {
+      return `${CHROME_STRINGS[chromeLocale]['practice.deckAllWords']} (${learnerLevel})`;
+    }
+    return customSets.find((s) => s.id === selectedDeckFilter)?.title
+      ?? CHROME_STRINGS[chromeLocale]['practice.deckAllWords'];
+  }, [selectedDeckFilter, customSets, chromeLocale, learnerLevel]);
+
+  const activeDeckChipIcon =
+    selectedDeckFilter === 'virtual_teacher_lesson'
+      ? '🎓'
+      : selectedDeckFilter === 'all'
+        ? '🌐'
+        : '⭐';
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
   const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
@@ -2936,12 +2957,25 @@ function LexiconPracticeIsland({
   }
 
   function requestDeckSwitch(nextDeckFilter: string) {
-    if (nextDeckFilter === selectedDeckFilter) return;
+    if (nextDeckFilter === selectedDeckFilter) {
+      setDeckPickerOpen(false);
+      return;
+    }
     if (hasActiveOrResumableSession()) {
       setPendingDeckSwitch({ kind: 'deck', value: nextDeckFilter });
       return;
     }
     setSelectedDeckFilter(nextDeckFilter);
+    setDeckPickerOpen(false);
+  }
+
+  function openSecondaryToolsPanel() {
+    setDeckPickerOpen(false);
+    const panel = secondaryToolsRef.current;
+    if (panel) {
+      panel.open = true;
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }
 
   function requestLevelSwitch(nextLevel: CefrLevel) {
@@ -2961,6 +2995,7 @@ function LexiconPracticeIsland({
     if (!pendingDeckSwitch) return;
     const change = pendingDeckSwitch;
     setPendingDeckSwitch(null);
+    setDeckPickerOpen(false);
     setSessionPhase('idle');
     clearResumeSnapshots();
     setClozeLoaded(false);
@@ -3538,6 +3573,108 @@ function LexiconPracticeIsland({
 
             <div className="k3-session" data-testid="practice-dashboard-session">
               <div className="k3-session-overview">
+                {/*
+                 * #6544: surface the active deck above the fold with a compact
+                 * switcher. Full Drive sync + Manage/Import stay folded below
+                 * the mode grid (HARD-1/HARD-2 fold gates from #6336).
+                 */}
+                <div className="k3-active-deck" data-testid="practice-active-deck">
+                  <span className="k3-session-label"><ChromeText k="practice.deckLabel" /></span>
+                  <button
+                    type="button"
+                    className={`k3-active-deck-chip${deckPickerOpen ? ' open' : ''}`}
+                    data-testid="practice-active-deck-chip"
+                    aria-expanded={deckPickerOpen}
+                    aria-controls="practice-active-deck-menu"
+                    onClick={() => setDeckPickerOpen((open) => !open)}
+                  >
+                    <span aria-hidden="true">{activeDeckChipIcon}</span>
+                    <span className="k3-active-deck-name">{activeDeckChipLabel}</span>
+                    <span className="sr-only"><ChromeText k="practice.deckChange" /></span>
+                  </button>
+                  {deckPickerOpen ? (
+                    <div
+                      id="practice-active-deck-menu"
+                      className="k3-active-deck-menu"
+                      data-testid="practice-active-deck-menu"
+                      role="listbox"
+                      aria-label={CHROME_STRINGS[chromeLocale]['practice.deckChange']}
+                    >
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selectedDeckFilter === 'all'}
+                        className={selectedDeckFilter === 'all' ? 'active' : undefined}
+                        data-testid="practice-deck-option-all"
+                        onClick={() => requestDeckSwitch('all')}
+                      >
+                        {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐{' '}
+                        {chromeLocale === 'uk'
+                          ? `Всі слова (${learnerLevel})`
+                          : `All Words (${learnerLevel})`}
+                      </button>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selectedDeckFilter === 'virtual_teacher_lesson'}
+                        className={
+                          selectedDeckFilter === 'virtual_teacher_lesson' ? 'active' : undefined
+                        }
+                        data-testid="practice-deck-option-virtual_teacher_lesson"
+                        onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
+                      >
+                        {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓{' '}
+                        <ChromeText k="practice.deckCurated" />
+                      </button>
+                      {customSets.map((set) => (
+                        <button
+                          key={set.id}
+                          type="button"
+                          role="option"
+                          aria-selected={selectedDeckFilter === set.id}
+                          className={selectedDeckFilter === set.id ? 'active' : undefined}
+                          data-testid={`practice-deck-option-${set.id}`}
+                          onClick={() => requestDeckSwitch(set.id)}
+                        >
+                          {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        className="k3-active-deck-manage"
+                        data-testid="practice-deck-open-secondary"
+                        onClick={openSecondaryToolsPanel}
+                      >
+                        <ChromeText k="practice.deckManageMore" />
+                      </button>
+                    </div>
+                  ) : null}
+                  {pendingDeckSwitch ? (
+                    <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
+                      <span><ChromeText k="practice.switchSessionOffer" /></span>
+                      <div className="k3-switch-offer-actions">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-accent"
+                          data-testid="practice-switch-session-accept"
+                          onClick={() => {
+                            void acceptDeckSwitch();
+                          }}
+                        >
+                          <ChromeText k="practice.switchSessionAccept" />
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-sm"
+                          data-testid="practice-switch-session-decline"
+                          onClick={declineDeckSwitch}
+                        >
+                          <ChromeText k="practice.switchSessionDecline" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
                 <div
                   className="k3-session-size"
                   role="group"
@@ -3738,7 +3875,11 @@ function LexiconPracticeIsland({
            * below the mode grid, behind the same disclosure pattern the page already
            * uses for secondary material.
            */}
-          <details className="k3-practice-sources" data-testid="practice-secondary-tools">
+          <details
+            ref={secondaryToolsRef}
+            className="k3-practice-sources"
+            data-testid="practice-secondary-tools"
+          >
             <summary><ChromeText k="practice.secondaryToolsTitle" /></summary>
             <div className="k3-practice-sources-content">
               <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -3798,29 +3939,6 @@ function LexiconPracticeIsland({
                     </button>
                   ))}
                 </div>
-                {pendingDeckSwitch ? (
-                  <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
-                    <span><ChromeText k="practice.switchSessionOffer" /></span>
-                    <div className="k3-switch-offer-actions">
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-accent"
-                        data-testid="practice-switch-session-accept"
-                        onClick={acceptDeckSwitch}
-                      >
-                        <ChromeText k="practice.switchSessionAccept" />
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-sm"
-                        data-testid="practice-switch-session-decline"
-                        onClick={declineDeckSwitch}
-                      >
-                        <ChromeText k="practice.switchSessionDecline" />
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
               </div>
 
               {showCreateModal ? (

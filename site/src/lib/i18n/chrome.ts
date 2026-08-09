@@ -345,6 +345,12 @@ const en = {
   'practice.intervalPrefix': 'in',
   'practice.modeNoExercises': 'No exercises yet',
   'practice.secondaryToolsTitle': 'Sync & decks',
+  // #6544 — above-fold active-deck chip (keeps full picker folded per #6336)
+  'practice.deckLabel': 'Deck',
+  'practice.deckAllWords': 'All Words',
+  'practice.deckCurated': 'Curated Deck',
+  'practice.deckChange': 'Change deck',
+  'practice.deckManageMore': 'Manage decks & sync',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
@@ -663,6 +669,12 @@ const uk: Record<ChromeKey, string> = {
   'practice.intervalPrefix': 'через',
   'practice.modeNoExercises': 'Немає вправ',
   'practice.secondaryToolsTitle': 'Синхронізація та колоди',
+  // #6544 — above-fold active-deck chip (keeps full picker folded per #6336)
+  'practice.deckLabel': 'Колода',
+  'practice.deckAllWords': 'Всі слова',
+  'practice.deckCurated': 'Відібрана добірка',
+  'practice.deckChange': 'Змінити колоду',
+  'practice.deckManageMore': 'Менеджер колод і синхронізація',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
