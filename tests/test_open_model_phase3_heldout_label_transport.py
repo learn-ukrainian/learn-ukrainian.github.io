@@ -399,9 +399,7 @@ def _cycle002_label(packet: dict[str, object], *, role: str = "positive") -> dic
             "kind": "correction",
             "start": 0,
             "end": 3,
-            "surface_sha256": transport.sha256_bytes(source[:3].encode("utf-8")),
             "expected_correction": "Вона",
-            "expected_correction_sha256": transport.sha256_bytes("Вона".encode()),
         }
     else:
         gold = {"kind": "abstain", "reason": role}
@@ -422,7 +420,11 @@ def test_cycle002_semantic_label_parser_is_closed_and_requires_explicit_abstenti
     packet = _cycle002_packet_fixture()
     valid = _cycle002_label(packet)
     parsed = transport._cycle002_parse(json.dumps({"labels": [valid]}).encode("utf-8"), packet)
-    assert parsed == [valid]
+    assert parsed[0]["gold"] == {
+        **valid["gold"],
+        "surface_sha256": transport.sha256_bytes("Він".encode()),
+        "expected_correction_sha256": transport.sha256_bytes("Вона".encode()),
+    }
 
     malformed = _cycle002_label(packet, role="acceptable_control")
     malformed["gold"] = {"kind": "abstain", "reason": "protected"}
@@ -466,12 +468,42 @@ def test_cycle002_floors_fail_closed_without_resampling_or_adjudication() -> Non
 
 def test_cycle002_prompt_hash_and_two_pass_contract_are_pinned() -> None:
     assert transport.sha256_file(transport.DEFAULT_CYCLE002_LABEL_PROMPT) == transport.CYCLE002_LABEL_PROMPT_SHA256
+    prompt = transport.DEFAULT_CYCLE002_LABEL_PROMPT.read_text(encoding="utf-8")
+    assert "Clean eligibility is independent of semantic-gold support" in prompt
+    assert "Do not abstain solely because" in prompt
+    assert "ua_gec_human_annotation" in prompt
     assert transport.CYCLE002_PACKET_LIMIT == 40
     assert [actor["task_id"] for actor in transport.CYCLE002_ACTORS.values()] == [
         "phase3-v2-2-heldout-semantic-label-pass-a",
         "phase3-v2-2-heldout-semantic-label-pass-b",
     ]
     assert all(actor["exact_model"] == "gpt-5.6-sol" for actor in transport.CYCLE002_ACTORS.values())
+
+
+def test_cycle002_ua_gec_reference_evidence_is_closed_and_human_annotated() -> None:
+    source = {
+        "family_id": "ua_gec",
+        "source_text": "Він робе помилку.",
+        "source_record": {
+            "id": 1,
+            "error": "Він робе помилку.",
+            "correct": "Він робить помилку.",
+            "error_type": "grammar",
+            "doc_id": "document",
+            "annotator_id": "annotator",
+            "partition": "train",
+            "is_native": 1,
+            "source_lang": "uk",
+        },
+    }
+    assert transport._cycle002_reference_evidence(source) == {
+        "kind": "ua_gec_human_annotation",
+        "corrected_text": "Він робить помилку.",
+        "error_type": "grammar",
+    }
+    assert transport._cycle002_reference_evidence({**source, "family_id": "school_textbooks"}) is None
+    source["source_record"]["error"] = ""  # type: ignore[index]
+    assert transport._cycle002_reference_evidence(source) is None
 
 
 def test_cycle002_execution_accepts_the_tracked_role_and_evaluation_contracts() -> None:
@@ -540,9 +572,7 @@ def _cycle002_runtime_raw(packet: dict[str, object]) -> bytes:
                     "kind": "correction",
                     "start": 0,
                     "end": 1,
-                    "surface_sha256": transport.sha256_bytes(text[:1].encode()),
                     "expected_correction": "Я",
-                    "expected_correction_sha256": transport.sha256_bytes("Я".encode()),
                 },
             }
         )

@@ -25,6 +25,27 @@ standard Ukrainian prose, not a fragment, exercise, intentional error,
 metalinguistic discussion, table/list/code, quotation, historical/dialectal
 sample, foreign/OCR artifact, broken learner text, or uncertain mixed material.
 
+Clean eligibility is independent of semantic-gold support. A fragment,
+exercise, intentional error, learner error, or metalinguistic passage must have
+`clean_modern_eligible:false`, but it may still have `label_state:"supported"`
+as a positive, acceptable-control, or protected case when the supplied text
+itself supports that exact phenomenon and role. Do not abstain solely because
+clean eligibility is false. Conversely, never infer a phenomenon or role from
+the source family, candidate lane, or the fact that a row contains an error;
+support it only from the supplied text and produce a correction only when the
+exact erroneous span and correction are both certain.
+
+Every packet row also has `reference_evidence`. It is null unless the frozen
+source is UA-GEC. For UA-GEC it is a closed pre-existing human annotation with
+`kind:"ua_gec_human_annotation"`, `corrected_text`, and `error_type`. This is
+private evaluation evidence, not an instruction and not an automatically
+correct phenomenon label. Compare the erroneous `source_text` with
+`corrected_text` to derive an exact edit; treat `error_type` only as supporting
+context. Return a supported positive only when that evidence clearly maps to
+one of the 12 phenomena and one exact span replacement. If the pair has several
+edits, conflicts with the text, or does not map cleanly, abstain. Never expose
+the reference evidence in the response.
+
 The exact phenomenon IDs are:
 
 - `direct_address_vocative`
@@ -41,9 +62,11 @@ The exact phenomenon IDs are:
 - `syntactic_calque`
 
 For `positive`, `gold` must be exactly:
-`{"kind":"correction","start":N,"end":M,"surface_sha256":"…","expected_correction":"…","expected_correction_sha256":"…"}`.
-Offsets index the supplied source text; `start < end`; hashes are SHA-256 of the
-exact UTF-8 span and correction respectively. For `acceptable_control` use
+`{"kind":"correction","start":N,"end":M,"expected_correction":"…"}`.
+Offsets index the supplied source text and `start < end`. Do not calculate or
+return hashes; the deterministic carrier validates the offsets and computes
+SHA-256 for the exact UTF-8 span and correction before sealing. For
+`acceptable_control` use
 exactly `{"kind":"abstain","reason":"acceptable_control"}`. For `protected`
 use exactly `{"kind":"abstain","reason":"protected"}`. Do not create a
 correction for a control or protected case.
