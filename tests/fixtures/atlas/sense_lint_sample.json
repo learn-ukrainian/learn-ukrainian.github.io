@@ -1,6 +1,17 @@
 {
   "generated_at": "2026-08-07T00:00:00+00:00",
-  "note": "Small fixture for scripts/audit/lint_word_atlas.py (#6437 PR1). Not derived from the production manifest.",
+  "note": "Small fixture for scripts/audit/lint_word_atlas.py (#6437). Not derived from the production manifest.",
+  "practice_items": [
+    {
+      "lemmaId": "брак",
+      "senseId": "brak_defect",
+      "mode": "classify"
+    },
+    {
+      "lemmaId": "брак",
+      "mode": "classify"
+    }
+  ],
   "entries": [
     {
       "slug": "брак",
@@ -26,6 +37,15 @@
           "en_disambiguation": "matrimony (not the defect/scarcity sense)",
           "source": "sum20_vetted",
           "completeness": "complete"
+        }
+      ],
+      "practice_bindings": [
+        {
+          "sense_id": "brak_defect",
+          "mode": "flashcard"
+        },
+        {
+          "mode": "flashcard"
         }
       ]
     },
@@ -70,6 +90,16 @@
           "en_disambiguation": "",
           "source": "btc",
           "completeness": "truncated"
+        },
+        {
+          "id": "tsytata_ai_minimum",
+          "pos": "noun",
+          "uk_source_def": "короткий AI-мінімум без словникового джерела",
+          "learner_uk": "цитата",
+          "learner_en": ["quote"],
+          "en_disambiguation": "",
+          "source": "ai_minimum",
+          "completeness": "draft"
         }
       ]
     },
