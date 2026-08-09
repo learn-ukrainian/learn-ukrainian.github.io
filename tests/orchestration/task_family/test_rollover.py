@@ -16,6 +16,7 @@ from scripts.orchestration import task_identity
 from scripts.orchestration.task_family import codex_state, rollover, storage
 from scripts.orchestration.task_family.model import RelationType
 from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
+from tests.project_python import project_python
 
 
 def _write_db(path: Path, rows: list[tuple[str, str, str, int, str | None, str]]) -> None:
@@ -240,7 +241,7 @@ def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> 
     repo_root = Path(__file__).resolve().parents[3]
     with advisory_lock(lock_path):
         child = subprocess.Popen(
-            [".venv/bin/python", "-c", code, str(lock_path), str(ready_path), str(acquired_path)],
+            [str(project_python()), "-c", code, str(lock_path), str(ready_path), str(acquired_path)],
             cwd=repo_root,
         )
         deadline = time.monotonic() + 5
@@ -270,7 +271,7 @@ def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.
     environment = os.environ.copy()
     environment.pop("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", None)
     child = subprocess.Popen(
-        [".venv/bin/python", "-c", code, str(lock_path), str(ready_path)],
+        [str(project_python()), "-c", code, str(lock_path), str(ready_path)],
         cwd=repo_root,
         env=environment,
     )

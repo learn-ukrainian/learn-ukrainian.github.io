@@ -23,9 +23,11 @@ from scripts.orchestration.claudex_supervisor import (
     create_rollover_request,
     load_runtime,
 )
+from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_REPO_PYTHON = _REPO_ROOT / ".venv/bin/python"
+def _repo_python() -> Path:
+    return project_python()
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
 _SESSION_ID = "official-session-5265"
 _HANDOFF_AGENT = "claude-infra"
@@ -376,7 +378,7 @@ def test_ordinary_child_crash_never_relaunches(tmp_path: Path) -> None:
     )
 
     completed = subprocess.run(
-        [os.fspath(_REPO_PYTHON), os.fspath(_SUPERVISOR), os.fspath(child), *_argv()],
+        [os.fspath(_repo_python()), os.fspath(_SUPERVISOR), os.fspath(child), *_argv()],
         cwd=_REPO_ROOT,
         env=env,
         capture_output=True,
@@ -414,7 +416,7 @@ def test_valid_rollover_relaunches_exact_route_once(
         ANTHROPIC_AUTH_TOKEN="private-token",
     )
     process = subprocess.Popen(
-        [os.fspath(_REPO_PYTHON), os.fspath(_SUPERVISOR), os.fspath(child), *forwarded],
+        [os.fspath(_repo_python()), os.fspath(_SUPERVISOR), os.fspath(child), *forwarded],
         cwd=_REPO_ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -485,7 +487,7 @@ def test_relaunch_failure_leaves_handoff_lease_for_manual_recovery(tmp_path: Pat
         SUPERVISOR_CHILD_LOG=os.fspath(child_log),
     )
     process = subprocess.Popen(
-        [os.fspath(_REPO_PYTHON), os.fspath(_SUPERVISOR), os.fspath(child), *_argv()],
+        [os.fspath(_repo_python()), os.fspath(_SUPERVISOR), os.fspath(child), *_argv()],
         cwd=_REPO_ROOT,
         env=env,
         stdout=subprocess.PIPE,

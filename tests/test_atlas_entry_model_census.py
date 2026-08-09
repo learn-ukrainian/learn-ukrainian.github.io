@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 from scripts.audit.atlas_entry_model_census import build_entry_model_census, classify_entry
+from tests.project_python import project_python
 
 
 def _entry(**overrides: object) -> dict:
@@ -123,7 +124,7 @@ def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:
 
     json_result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/atlas_entry_model_census.py",
             "--manifest",
             str(manifest_path),
@@ -139,7 +140,7 @@ def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:
 
     md_result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/atlas_entry_model_census.py",
             "--manifest",
             str(manifest_path),
@@ -160,7 +161,7 @@ def test_cli_can_fail_on_legacy_heuristic(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/atlas_entry_model_census.py",
             "--manifest",
             str(manifest_path),

@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.common.git_context import sanitized_git_env
+from tests.project_python import project_python
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -39,7 +40,7 @@ def _init_repo(tmp_path: Path) -> Path:
 def _run_cli(state_file: Path, *args: str) -> subprocess.CompletedProcess[str]:
     project_root = Path(__file__).resolve().parent.parent
     return subprocess.run(
-        [".venv/bin/python", "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args],
+        [str(project_python()), "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args],
         cwd=str(project_root),
         capture_output=True,
         text=True,
@@ -240,7 +241,7 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
     project_root = Path(__file__).resolve().parent.parent
     verify = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/verify_review.py",
             "--review-file",
             str(review_file),

@@ -10,6 +10,7 @@ import pytest
 from scripts.orchestration import rollover_registry_cli, task_identity
 from scripts.orchestration.task_family import rollover
 from scripts.orchestration.task_family import rollover_registry as registry
+from tests.project_python import project_python
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -317,7 +318,7 @@ def test_cli_script_entrypoint_runs_from_repo_root(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     result = subprocess.run(
         [
-            str(repo_root / ".venv/bin/python"),
+            str(project_python()),
             str(repo_root / "scripts/orchestration/rollover_registry_cli.py"),
             "--repo-root",
             str(tmp_path),

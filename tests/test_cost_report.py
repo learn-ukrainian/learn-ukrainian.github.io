@@ -9,6 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import scripts.analytics.cost_report as cost_report
+from tests.project_python import project_python
 
 
 def _write_meta(
@@ -209,7 +210,7 @@ def test_json_output_is_valid_json(tmp_path, monkeypatch, capsys):
 
 def test_cost_report_smoke_runs_on_repo_data():
     result = subprocess.run(
-        [".venv/bin/python", "scripts/analytics/cost_report.py", "--all"],
+        [str(project_python()), "scripts/analytics/cost_report.py", "--all"],
         cwd=Path(__file__).resolve().parent.parent,
         capture_output=True,
         text=True,
