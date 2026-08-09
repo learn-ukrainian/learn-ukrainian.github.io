@@ -18,9 +18,11 @@
 #     worktree so the driver never imports stale enrichment code from $REPO.
 #
 # Does NOT finalize, publish, or pin-flip. This mutates a *work-dir copy* of
-# the manifest only (snapshotted once from the live checkout, then re-used
-# across resumes) — never the live $REPO/site/src/data/lexicon-manifest.json.
-# Pulling the result back for the PR / publish gate is
+# the manifest only. The Mac-side wrapper refreshes that copy from its live
+# catalog before each normal launch; this script retains a live-checkout
+# snapshot fallback only for direct VPS invocation. It never mutates
+# $REPO/site/src/data/lexicon-manifest.json. Pulling the result back for the
+# PR / publish gate is
 # launch_reenrich_class_b_remote.sh's job, run from the Mac-side worktree.
 #
 # Usage (on the VPS):
@@ -126,10 +128,9 @@ if [[ ! -f "$REPO/.venv/bin/python" ]]; then
   exit 1
 fi
 
-# Snapshot the live hydrated manifest into the work-dir exactly once. Resumes
-# reuse this same copy so a prior run's fills are not thrown away — the
-# missing-translation target predicate already skips entries that got filled,
-# so a resumed run only touches what's still outstanding.
+# Direct VPS invocation snapshots the live hydrated manifest into the work-dir
+# only when the Mac-side wrapper did not already sync one. Normal remote runs
+# receive a fresh Mac live-manifest sync before this launcher starts.
 if [[ ! -f "$WORK_MANIFEST" ]]; then
   if [[ ! -f "$LIVE_MANIFEST" ]]; then
     echo "live manifest not found: $LIVE_MANIFEST (nothing to snapshot)" >&2

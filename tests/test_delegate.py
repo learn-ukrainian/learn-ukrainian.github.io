@@ -4054,9 +4054,10 @@ def test_branch_reuse_existing_pr_worktree_with_merge_refuses_staleness_without_
             capture_output=True,
             text=True,
             env=env,
+            timeout=30,
         )
 
-    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env)
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env, timeout=30)
     source.mkdir()
     git(source, "init", "-b", "main")
     git(source, "config", "user.email", "test@example.com")
@@ -4069,7 +4070,7 @@ def test_branch_reuse_existing_pr_worktree_with_merge_refuses_staleness_without_
     git(source, "commit", "--allow-empty", "-m", "PR base")
     git(source, "push", "-u", "origin", branch)
 
-    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env)
+    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env, timeout=30)
     git(client, "config", "user.email", "test@example.com")
     git(client, "config", "user.name", "Test")
     git(client, "config", "core.hooksPath", "/dev/null")

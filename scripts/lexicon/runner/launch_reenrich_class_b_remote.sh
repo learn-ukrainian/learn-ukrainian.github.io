@@ -9,8 +9,8 @@
 # checkout untouched. This is the "OR scp the script from PR branch" fallback
 # from the #6369 dispatch brief.
 #
-# Steps: sync (residual slugs + driver + launcher) -> launch (detached,
-# idempotent, memory-capped) -> optional poll -> pull manifest + log +
+# Steps: sync (live manifest + residual slugs + driver + launcher) -> launch
+# (detached, idempotent, memory-capped) -> optional poll -> pull manifest + log +
 # summary back into this worktree for the PR / publish gate.
 #
 # Usage:
@@ -42,6 +42,13 @@ LOCAL_RESIDUAL="${ATLAS_RE_ENRICH_RESIDUAL:-$WORKTREE/batch_state/atlas-6369-cla
 LOCAL_OUT_DIR="${ATLAS_RE_ENRICH_OUT_DIR:-$WORKTREE/batch_state/class-b-reenrich-pulled}"
 LOCAL_DRIVER="$WORKTREE/scripts/lexicon/reenrich_thin_manifest_entries.py"
 LOCAL_LAUNCHER="$WORKTREE/scripts/lexicon/runner/launch_reenrich_class_b.sh"
+# Full-catalog runs must begin from the Mac's live catalog, not the stale
+# manifest retained in the VPS checkout. Prefer the dispatched worktree when
+# it contains the large catalog; sparse worktrees normally fall back to the
+# operator's primary checkout.
+LOCAL_LIVE_MANIFEST_CANDIDATE="$WORKTREE/site/src/data/lexicon-manifest.json"
+PRIMARY_LIVE_MANIFEST="/Users/krisztiankoos/projects/learn-ukrainian/site/src/data/lexicon-manifest.json"
+MIN_LIVE_MANIFEST_BYTES=1048576
 # The driver imports ``scripts.lexicon.enrich_manifest`` and its supporting
 # modules. The VPS checkout is deliberately allowed to stay stale, so deploy
 # the current scripts package tree into the work-dir instead of trying to
@@ -179,6 +186,16 @@ fi
 echo "sources.db OK (sizes match)"
 
 if [[ "$do_sync_and_launch" == "1" ]]; then
+  LOCAL_LIVE_MANIFEST=""
+  if [[ -f "$LOCAL_LIVE_MANIFEST_CANDIDATE" ]] && (( $(_local_sz "$LOCAL_LIVE_MANIFEST_CANDIDATE") >= MIN_LIVE_MANIFEST_BYTES )); then
+    LOCAL_LIVE_MANIFEST="$LOCAL_LIVE_MANIFEST_CANDIDATE"
+  elif [[ -f "$PRIMARY_LIVE_MANIFEST" ]] && (( $(_local_sz "$PRIMARY_LIVE_MANIFEST") >= MIN_LIVE_MANIFEST_BYTES )); then
+    LOCAL_LIVE_MANIFEST="$PRIMARY_LIVE_MANIFEST"
+  else
+    echo "live lexicon manifest not found or too small (tried worktree + primary checkout)" >&2
+    exit 1
+  fi
+
   if [[ "$TARGET" == "missing-translation" ]]; then
     if [[ ! -f "$LOCAL_RESIDUAL" ]]; then
       echo "local residual dump not found: $LOCAL_RESIDUAL" >&2
@@ -192,6 +209,18 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
 
   echo "syncing driver + current enrichment package -> $HOST:$REMOTE_WORK_DIR (target=$TARGET)"
   ssh_q "mkdir -p $(printf '%q' "$REMOTE_WORK_DIR/scripts")"
+  # Always replace the work-dir input before launch. The VPS checkout's
+  # catalog is deliberately allowed to be stale, but the local launcher uses
+  # this work-dir path as its --manifest input for every target.
+  local_manifest_sz="$(_local_sz "$LOCAL_LIVE_MANIFEST")"
+  echo "syncing live manifest local=$local_manifest_sz path=$LOCAL_LIVE_MANIFEST -> $REMOTE_WORK_DIR/manifest.json"
+  rsync -a --copy-links --partial "$LOCAL_LIVE_MANIFEST" "$HOST:$REMOTE_WORK_DIR/manifest.json"
+  remote_manifest_sz="$(ssh_q "stat -L -c '%s' $(printf '%q' "$REMOTE_WORK_DIR/manifest.json")")"
+  if [[ "$local_manifest_sz" != "$remote_manifest_sz" ]]; then
+    echo "FAIL CLOSED: live manifest still mismatched after rsync (local=$local_manifest_sz remote=$remote_manifest_sz)" >&2
+    exit 1
+  fi
+  echo "live manifest OK (sizes match)"
   # Modules deployed under $REMOTE_WORK_DIR derive their project root from
   # that directory. Materialize a work-dir-only data overlay: the live repo
   # remains read-only, while VESUM sits next to the synced code.
