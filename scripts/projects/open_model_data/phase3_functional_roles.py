@@ -45,6 +45,34 @@ CYCLE001_VOID_RECEIPT_SCHEMA_SHA256 = "3ca1453da5a9442a1e41b558db70a4677c07c5cea
 CYCLE001_VOID_RECEIPT_PRODUCER_SHA256 = "1213a5b24bcfeb5ff7a6bf0348d608d3b8e3f1ad940fda3b0cad507b428ff02d"
 CYCLE001_VOID_RECEIPT_FILE_SHA256 = "2d798dcd468955ea280b78f8e465c4983cdda7f0d495220bff93eb9bb8a790ad"
 CYCLE001_VOID_RECEIPT_SHA256 = "734297bbf9ebb30b4869132b76c5dc1f6f7544a60fc90628c1598718beaa3a5c"
+CYCLE002_LABELING_PROTOCOL = {
+    "reviewer_role_id": "heldout_label_reviewer",
+    "passes": [
+        {
+            "pass_id": "a",
+            "task_id": "phase3-v2-2-heldout-semantic-label-pass-a",
+            "provider": "openai",
+            "model_family": "openai",
+            "harness": "codex",
+            "exact_model": "gpt-5.6-sol",
+        },
+        {
+            "pass_id": "b",
+            "task_id": "phase3-v2-2-heldout-semantic-label-pass-b",
+            "provider": "openai",
+            "model_family": "openai",
+            "harness": "codex",
+            "exact_model": "gpt-5.6-sol",
+        },
+    ],
+    "independence_unit": "task_id",
+    "provider_independent": False,
+    "provider_reuse_disclosed": True,
+    "deterministic_assembly_may_adjudicate": False,
+    "disagreement_disposition": "unresolved_abstention",
+    "heldout_access_scope": "sealed_evaluation_only",
+    "authoring_access_forbidden": True,
+}
 
 ROLE_TASKS = {
     "scope_circularity_critic": "phase3-v2-1-scope-circularity-review",
@@ -426,6 +454,10 @@ def _verify_cycle002_document(path: Path, schema_path: Path, label: str) -> dict
         f"{label} preserved-constraint drift",
     )
     require(
+        value["cycle002_labeling_protocol"] == CYCLE002_LABELING_PROTOCOL,
+        f"{label} cycle002 labeling protocol drift",
+    )
+    require(
         value["source_authoring"]
         == {"blocked": True, "reason": "cycle002_closure_not_established"},
         f"{label} source-authoring closure drift",
@@ -452,6 +484,8 @@ def verify_cycle002_contracts(
     )
     require(
         role["cycle002"] == evaluation_value["cycle002"]
+        and role["cycle002_labeling_protocol"]
+        == evaluation_value["cycle002_labeling_protocol"]
         and role["preserved_constraints"] == evaluation_value["preserved_constraints"],
         "cycle002 role/evaluation contract disagreement",
     )
@@ -460,6 +494,7 @@ def verify_cycle002_contracts(
         "role_contract_sha256": sha256_file(role_path),
         "evaluation_contract_sha256": sha256_file(evaluation_path),
         "evaluation_cycle_id": role["cycle002"]["evaluation_cycle_id"],
+        "labeling_protocol": role["cycle002_labeling_protocol"],
         "source_authoring_blocked": True,
     }
 

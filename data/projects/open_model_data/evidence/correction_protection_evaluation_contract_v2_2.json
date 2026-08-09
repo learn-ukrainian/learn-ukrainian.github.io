@@ -30,6 +30,20 @@
     "frozen_labels_before_extraction": 9392,
     "source_authoring_blocked_until_closure": true
   },
+  "cycle002_labeling_protocol": {
+    "reviewer_role_id": "heldout_label_reviewer",
+    "passes": [
+      {"pass_id": "a", "task_id": "phase3-v2-2-heldout-semantic-label-pass-a", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"},
+      {"pass_id": "b", "task_id": "phase3-v2-2-heldout-semantic-label-pass-b", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"}
+    ],
+    "independence_unit": "task_id",
+    "provider_independent": false,
+    "provider_reuse_disclosed": true,
+    "deterministic_assembly_may_adjudicate": false,
+    "disagreement_disposition": "unresolved_abstention",
+    "heldout_access_scope": "sealed_evaluation_only",
+    "authoring_access_forbidden": true
+  },
   "preserved_constraints": {
     "denominators_unchanged": true,
     "source_unit_total": 67041,
