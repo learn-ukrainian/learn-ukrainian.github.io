@@ -131,9 +131,13 @@ def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
     assert rows["production-qg-disarmed"]["entry"]["state"] == "certified-final"
 
 
-def test_shadow_detects_any_learner_tree_change(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_shadow_detects_any_learner_tree_change(
+    shadow_report: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     real_hashes = pilot._learner_hashes
     calls = 0
+    cached_rows = {str(row["id"]): row for row in deepcopy(shadow_report)["rows"]}
 
     def changed(matrix: dict[str, Any], repo_root: Path) -> dict[str, str]:
         nonlocal calls
@@ -144,6 +148,11 @@ def test_shadow_detects_any_learner_tree_change(monkeypatch: pytest.MonkeyPatch)
         return value
 
     monkeypatch.setattr(pilot, "_learner_hashes", changed)
+    monkeypatch.setattr(
+        pilot,
+        "_row_result",
+        lambda row, _repo_root: deepcopy(cached_rows[str(row["id"])]),
+    )
 
     report = pilot.build_shadow_report(repo_root=REPO_ROOT)
 
