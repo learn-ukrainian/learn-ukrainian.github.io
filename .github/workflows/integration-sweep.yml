@@ -1,0 +1,55 @@
+name: Integration sweep
+
+# The integration-owner role's abandoned-PR liveness net (#5029). This is
+# deliberately scheduled rather than session-bound: scheduled runs execute
+# from main, while manual runs are dry-run unless an operator explicitly opts
+# into applying the already fail-closed decision checks.
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: Arm eligible PRs after the same fail-closed checks.
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: integration-sweep
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: write
+
+jobs:
+  sweep:
+    name: Abandoned PR liveness sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install stream-audit dependency
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Sweep abandoned PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          APPLY: ${{ inputs.apply }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          args=()
+          if [[ "$EVENT_NAME" == "schedule" || "$APPLY" == "true" ]]; then
+            args+=(--apply)
+          fi
+          python -m scripts.orchestration.integration_sweep --repo "$REPOSITORY" "${args[@]}"
