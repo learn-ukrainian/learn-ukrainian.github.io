@@ -424,6 +424,20 @@ def test_dispatch_parser_timeout_defaults():
     assert args.silence_timeout == 3600
 
 
+def test_dispatch_parser_mode_defaults_to_read_only():
+    args = delegate.build_parser().parse_args([
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "defaults",
+        "--prompt",
+        "review the implementation without editing files",
+    ])
+
+    assert args.mode == "read-only"
+
+
 def test_silence_timeout_default_is_3600():
     args = delegate.build_parser().parse_args([
         "dispatch",
@@ -857,6 +871,78 @@ def test_dispatch_rejects_unsupported_native_grok_effort_before_spawn(
     assert delegate.cmd_dispatch(args) == 2
     assert delegate._read_state(delegate._state_path(f"{agent}-{effort}")) is None
     assert "Refusing before worker spawn" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "mode_args",
+    [
+        pytest.param([], id="default-read-only"),
+        pytest.param(["--mode", "read-only"], id="explicit-read-only"),
+    ],
+)
+def test_dispatch_rejects_write_shaped_prompt_in_read_only_mode(
+    tmp_tasks_dir, monkeypatch, capsys, mode_args
+):
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "write-intent",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            *mode_args,
+        ]
+    )
+
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("read-only write intent must fail before worker spawn")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert not (tmp_tasks_dir / "write-intent.json").exists()
+    captured = capsys.readouterr()
+    assert "write-shaped prompt" in captured.err
+    assert "--mode workspace-write --worktree" in captured.err
+
+
+def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(
+    tmp_tasks_dir, tmp_path, capsys
+):
+    prompt_file = tmp_path / "write-brief.md"
+    prompt_file.write_text("- Update scripts/delegate.py and add tests.\n", encoding="utf-8")
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "write-intent-file",
+            "--prompt-file",
+            str(prompt_file),
+        ]
+    )
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert not (tmp_tasks_dir / "write-intent-file.json").exists()
+    assert "write-shaped prompt" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_shaped_prompt_is_admitted_by_write_capable_modes(mode):
+    assert delegate._read_only_write_intent_error(
+        mode=mode,
+        prompt="Fix the dispatch guard and update its tests.",
+    ) is None
+
+
+def test_read_only_change_discussion_is_not_misclassified_as_write_intent():
+    assert delegate._read_only_write_intent_error(
+        mode="read-only",
+        prompt="Review the proposed changes and explain the safest implementation; do not edit files.",
+    ) is None
 
 
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
@@ -6181,4 +6267,3 @@ def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
     assert state.get("commits_ahead", 0) > 0
-

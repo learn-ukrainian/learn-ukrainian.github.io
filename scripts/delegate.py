@@ -911,6 +911,18 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
 # preflight and creating a worktree from the primary checkout stay allowed.
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
+# This is deliberately a narrow, directive-only check.  It catches briefs
+# whose first-order outcome is a repository mutation without treating an
+# ordinary read-only discussion of a proposed change as write intent.
+_WRITE_SHAPED_PROMPT_RE = re.compile(
+    r"""(?imx)
+    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
+    (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
+    |
+    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
+    write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    """,
+)
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
@@ -929,6 +941,25 @@ _WRITE_WORKTREE_HINT = (
     ".worktrees/dispatch/<agent>/<task>/. Alternatively point `--cwd` at an "
     "existing added worktree there."
 )
+
+
+def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
+    """Reject clearly write-shaped briefs before a read-only worker starts.
+
+    ``read-only`` remains the default for genuine review and investigation
+    work.  A directive to change repository content, however, cannot produce
+    its requested deliverable in that mode and must fail before it can look
+    like a successful no-op.  The conservative expression intentionally
+    requires an instruction-shaped line, rather than matching incidental
+    words such as "changes" in a review prompt.
+    """
+    if mode != "read-only" or not _WRITE_SHAPED_PROMPT_RE.search(prompt):
+        return None
+    return (
+        "❌ write-shaped prompt cannot run with --mode read-only. "
+        "Re-run with --mode workspace-write --worktree for repository edits "
+        "(or --mode danger --worktree only when its extra permissions are required)."
+    )
 
 
 def _parse_delivery_declaration(response: str) -> dict[str, Any] | None:
@@ -3661,7 +3692,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
-    state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
@@ -3684,6 +3714,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 1
+    if early_prompt is not None:
+        write_intent_error = _read_only_write_intent_error(
+            mode=args.mode,
+            prompt=early_prompt,
+        )
+        if write_intent_error:
+            print(write_intent_error, file=sys.stderr)
+            return 2
+    state_path = _state_path(task_id)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,
@@ -3773,6 +3812,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         prompt = args.prompt
     else:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
+        return 2
+
+    # stdin prompts were unavailable to the earlier side-effect-free check.
+    write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
+    if write_intent_error:
+        print(write_intent_error, file=sys.stderr)
         return 2
 
     try:
@@ -4970,7 +5015,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         default="read-only",
         choices=["read-only", "workspace-write", "danger"],
-        help="Runtime mode (default: read-only). workspace-write and danger "
+        help="Runtime mode (default: read-only). Read-only rejects write-shaped "
+        "prompts; workspace-write and danger "
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
