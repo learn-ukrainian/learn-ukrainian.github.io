@@ -36,6 +36,18 @@ caps or live modes.
 
 ---
 
+## Cleanup ownership
+
+After a terminal dispatch, run `post_task_reap` for its task ID; it delegates regular
+dispatch cleanup to the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
+`.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged` from outside the target
+worktree. The reaper is the
+only ordinary deletion path: use manual Git removal only when the reaper cannot run, following
+[the worktree-cleanup runbook](worktree-cleanup.md) for `LU_REAPER_DISABLED`, rescue restore,
+and the narrowly allowlisted dual paths.
+
+---
+
 ## Ownership matrix (do not conflate)
 
 | Surface | Owns | Never owns |

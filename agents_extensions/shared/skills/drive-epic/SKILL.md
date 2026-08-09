@@ -11,7 +11,7 @@ You were launched to **drive one epic/track lane** (`SESSION_EPIC` is set). You 
 driver — and Claude when driving a track — follows so orchestration behaves the same
 regardless of which model is in the seat.
 
-**Golden rule of this skill: it teaches the _method_, never the _roster_.** Who is in
+**Golden rule of this skill: it teaches the *method*, never the *roster*.** Who is in
 which lane, which model fits which task, and the current width (CodexBar pace/reserve +
 disk headroom, not a fixed cap) are **live data** that change; always read them fresh from
 the served rules and catalog, never from memory:
@@ -31,6 +31,7 @@ verifiable claim is tool-backed (deterministic-over-hallucination).
 ## The loop (run it every cycle)
 
 ### 0. Orient
+
 ```bash
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
 .venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
@@ -43,6 +44,7 @@ session-health signal **by seat**: **grok / gemini / kimi** have a canary lane �
 hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
 
 ### 0a. Required live-driver inbox drain — cycle start
+
 At the start of **every** cycle, inspect this driver's legacy inbox. The live loop —
 not a detached `process-*` / `ask-*` worker — must read and apply every message marked
 `unread` or `read-but-not-live-consumed`, then record that consumption explicitly:
@@ -93,6 +95,7 @@ Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.
 
 ### 1. Read topology + metrics (don't hold state — query it)
+
 ```bash
 .venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
 .venv/bin/python -m scripts.fleet_comms backlog        # pending/dispatched delivery
@@ -103,6 +106,7 @@ stale in-context snapshot. For per-lane budget health:
 `scripts/delegate.py --check-budget` (+ `/api/state/routing-budget` for subscription lanes).
 
 ### 2. Pick the next unblocked action
+
 Source of next work: your epic's stream tail / handoff, open GH issues for the epic, and
 the build/review queue. **Step 0 of any dispatch:** `gh pr list --state all --search
 "<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
@@ -120,6 +124,7 @@ manufacture busywork (quality > utilization).
   next dispatch in the same session.
 
 ### 3. Route by model × harness fit
+
 Decide the lane from `/api/rules` + `model_catalog.yaml`, **never** from the provider
 name. Respect the live caps (in-flight ceilings), the language-lane restriction
 (UK authoring / linguistic / content review route only to the sanctioned language lanes
@@ -175,6 +180,7 @@ denominator, held-out proof, and residual gap. For normative language evidence, 
 source's pedagogical or evidential role before consuming an occurrence.
 
 ### 4. Dispatch
+
 `scripts/delegate.py dispatch --agent <lane> --worktree ...` with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
@@ -182,6 +188,7 @@ quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
 
 ### 4a. Required live-driver inbox drain — immediately before dispatch
+
 Immediately before each dispatch, repeat the drain so new instructions or a reply cannot
 be missed between routing and worker launch. Read and apply every `unread` or
 `read-but-not-live-consumed` entry before dispatching, then run:
@@ -191,6 +198,7 @@ be missed between routing and worker launch. Read and apply every `unread` or
 ```
 
 ### 5. Settle-loop (never poll by hand)
+
 Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
 Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
 other terminal/attention states: `failed | timeout | rate_limited | cancelled |
@@ -199,9 +207,11 @@ status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work. **After terminal status,**
 run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run by default;
-pass `--apply` to reap the bound dispatch worktree).
+pass `--apply` to reap the bound dispatch worktree). `post_task_reap` delegates removal to
+the P0 reaper; do not substitute a direct Git removal path.
 
 ### 5a. Required live-driver inbox drain — after settle
+
 Once the settle-loop reaches its decision point, drain again before choosing the next
 action. Read and apply every `unread` or `read-but-not-live-consumed` entry, then run:
 ```bash
@@ -230,6 +240,7 @@ is never eligible. Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself.
 
 ### 7. Merge discipline
+
 PRs only — never commit or merge to `main` directly. **Arm auto-merge the moment the
 review gate passes AND blocking CI is green:**
 ```bash
@@ -249,19 +260,24 @@ after merge is a process defect (ENOSPC / disk full is the known failure mode).
 **Order after `gh pr view <N>` shows `MERGED`:**
 
 1. **Confirm** merge SHA.
-2. **Worktree first** — `git worktree remove --force .worktrees/dispatch/<agent>/<task>`
-3. **Branches** — local delete + remote gone + `git fetch --prune` + `git worktree prune`
-4. **Bulk reap** (preferred):
+2. **P0 reaper first** — after all processes have left the target worktree, run:
    ```bash
-   .venv/bin/python scripts/orchestration/reap_worktrees.py --apply
+   .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged \
+     --worktree .worktrees/dispatch/<agent>/<task>
    ```
-   Also sweeps orphan review temps under `$TMPDIR` and `$TMPDIR/shielded-reviews` if any
-   leftovers remain from the retired formal path.
+   This closed loop removes only a clean worktree whose PR is `MERGED` at its exact head.
+3. **Manual fallback only** — if the reaper cannot run, follow
+   [`worktree-cleanup.md`](../../../../docs/runbooks/worktree-cleanup.md) for the
+   kill switch, rescue restore, and allowlisted dual paths before using
+   `git worktree remove`.
+4. **Branches** — after the worktree is reaped, delete the local branch; confirm the remote
+   is gone; then run `git fetch --prune` and `git worktree prune`.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
 
 ### 8. Handoff — dual-write, cutover-aware (see §Fleet-comms state below)
+
 End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;
 the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
 file handoff current — it stays authoritative through every plane mode (below).
@@ -320,6 +336,7 @@ nothing indexed for that needle; `handoff --query` with zero hits may return
 GH issues + file handoff.
 
 ### 8a. Required live-driver inbox drain — before handoff
+
 Immediately before writing or signalling handoff, make one final live-loop drain. Read
 and apply every `unread` or `read-but-not-live-consumed` entry, then run:
 ```bash
