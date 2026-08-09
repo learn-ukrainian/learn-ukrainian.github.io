@@ -1,0 +1,37 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6466-impl-fixes-r2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix round 2 on YOUR PR #6542 (campaign tooling) — address CF review findings
+
+You authored PR #6542 on branch `agy/atlas-6466-campaign-impl`. The cross-family review of
+record (comment on the PR, 2026-08-09) returned REQUEST_CHANGES with 2 blockers + 1 major +
+minors. Read the FULL review comment on the PR first — it contains reproduced evidence.
+
+## Steps
+1. Work in your existing worktree/branch (dispatcher attaches you).
+2. Fix BLOCKER 1 (canary): per-layer positive controls verified against the real local
+   manifest/sources — each of the four layers proven fillable by ≥1 control; no invented
+   lemma list required to hit all four at once; don't synthesize wrong POS. Acceptance: the
+   command below MUST exit 0 on this Mac:
+   `.venv/bin/python scripts/lexicon/reenrich_thin_manifest_entries.py --local --canary`
+   Run it yourself and paste the raw passing output in the PR.
+3. Fix BLOCKER 2 (circuit breaker): count real source/cache misses for not-yet-enriched
+   entries, never `after == before` no-ops. Add a test: an already-enriched prefix of >limit
+   entries must NOT trip the breaker (mutation-check it: revert the fix → test fails).
+4. Fix MAJOR (CAS): make the published-lineage check real — either in merge pre-write or as
+   explicit runbook steps (re-pull published manifest → compare lineage sha from snapshot →
+   re-merge + full invariants if moved). Remove the "automatically detects" overstatement.
+5. Fix minors: `_add_source` throwaway-dict drop; repo-relative runbook paths; duplicate
+   `import argparse`; trailing blank lines.
+6. Full targeted pytest + ruff; conventional commit with X-Agent trailer; push same branch.
+7. Comment on the PR: per-finding one line (what changed) + raw canary pass output.
+8. Do NOT merge; the reviewer re-runs the canary locally as the gate.

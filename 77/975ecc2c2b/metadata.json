@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "77975ecc2c2b",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6466-campaign-impl",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-full-reenrich-campaign.md",
+    "scripts/lexicon/merge_translation_delta.py",
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "scripts/rag/config.py",
+    "tests/test_merge_translation_delta.py",
+    "tests/test_reenrich_thin_manifest_entries.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/77/975ecc2c2b/0/metadata.json",
+      "transcript": "/77/975ecc2c2b/0/full.jsonl",
+      "compact_transcript": "/77/975ecc2c2b/0/transcript.jsonl",
+      "content_hash": "/77/975ecc2c2b/0/content_hash.txt",
+      "prompt": "/77/975ecc2c2b/0/prompt.txt"
+    }
+  ]
+}
