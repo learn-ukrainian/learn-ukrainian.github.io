@@ -3880,6 +3880,121 @@ def test_branch_reuse_real_worktree_head_matches_fetched_origin(tmp_tasks_dir, t
         "origin/claude/predeploy-visibility",
     ).stdout.strip()
 
+    reused_path, reused_branch, telemetry = delegate._ensure_worktree(
+        agent="claude",
+        task_id="predeploy-visibility",
+        raw_path=str(worktree),
+        branch="claude/predeploy-visibility",
+    )
+
+    assert reused_path == worktree.resolve()
+    assert reused_branch == "claude/predeploy-visibility"
+    assert telemetry["reused"] is True
+    assert telemetry["rebased"] is False
+
+
+def test_branch_reuse_existing_pr_worktree_with_merge_refuses_staleness_without_rebase(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """An explicit branch attach never rewrites a stale PR merge history (#5763)."""
+    remote = tmp_path / "remote.git"
+    source = tmp_path / "source"
+    client = tmp_path / "client"
+    attached = tmp_path / "attached-pr"
+    branch = "claude/attached-pr"
+    env = delegate._sanitized_git_env()
+    env.pop("AGENT_NO_MERGE", None)
+
+    def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+
+    subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, env=env)
+    source.mkdir()
+    git(source, "init", "-b", "main")
+    git(source, "config", "user.email", "test@example.com")
+    git(source, "config", "user.name", "Test")
+    git(source, "config", "core.hooksPath", "/dev/null")
+    git(source, "commit", "--allow-empty", "-m", "base")
+    git(source, "remote", "add", "origin", str(remote))
+    git(source, "push", "-u", "origin", "main")
+    git(source, "switch", "-c", branch)
+    git(source, "commit", "--allow-empty", "-m", "PR base")
+    git(source, "push", "-u", "origin", branch)
+
+    subprocess.run(["git", "clone", str(remote), str(client)], check=True, capture_output=True, env=env)
+    git(client, "config", "user.email", "test@example.com")
+    git(client, "config", "user.name", "Test")
+    git(client, "config", "core.hooksPath", "/dev/null")
+    git(client, "worktree", "add", "-b", branch, str(attached), f"origin/{branch}")
+
+    git(source, "switch", "-c", "feature")
+    git(source, "commit", "--allow-empty", "-m", "feature change")
+    git(source, "switch", branch)
+    git(source, "merge", "--no-ff", "feature", "-m", "merge feature into PR")
+    git(source, "push", "origin", branch)
+
+    monkeypatch.setattr(delegate, "_REPO_ROOT", client.resolve())
+    head_before = git(attached, "rev-parse", "HEAD").stdout.strip()
+
+    with pytest.raises(delegate.WorktreeStaleBase, match="automatic rebasing is disabled"):
+        delegate._ensure_worktree(
+            agent="claude",
+            task_id="attached-pr",
+            raw_path=str(attached),
+            branch=branch,
+        )
+
+    assert git(attached, "rev-parse", "HEAD").stdout.strip() == head_before
+    assert git(attached, "status", "--porcelain").stdout == ""
+    assert git(client, "rev-list", "--merges", "--count", f"origin/{branch}").stdout.strip() == "1"
+
+
+def test_resolve_existing_branch_reuse_refuses_unpushed_local_commits(
+    tmp_path, monkeypatch
+):
+    """Immutable-base resolution must not admit an unpushed attached branch."""
+    branch = "claude/attached-pr"
+    worktree = tmp_path / "attached-pr"
+    worktree.mkdir()
+    calls, base_stub = _make_run_stub(
+        abbrev_ref=branch,
+        status_porcelain="",
+        rev_list_count="0",
+    )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] in {
+            f"origin/{branch}",
+            f"refs/heads/{branch}",
+        }:
+            calls.append(list(cmd))
+            sha = "remote-sha" if cmd[-1] == f"origin/{branch}" else "local-sha"
+            return subprocess.CompletedProcess(cmd, 0, sha, "")
+        if cmd[:3] == ["git", "merge-base", "--is-ancestor"]:
+            calls.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 1, "", "")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeBranchDiverged):
+        delegate._resolve_worktree_base_sha(
+            agent="claude",
+            task_id="attached-pr",
+            raw_path=str(worktree),
+            base="main",
+            branch=branch,
+        )
+
+    assert not any(command[:2] == ["git", "rebase"] for command in calls)
+
 
 def test_branch_reuse_refuses_diverged_local_ref(tmp_tasks_dir, tmp_path, monkeypatch):
     branch = "claude/predeploy-visibility"
