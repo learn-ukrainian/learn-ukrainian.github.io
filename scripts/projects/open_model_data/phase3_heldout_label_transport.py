@@ -80,7 +80,7 @@ CYCLE002_PARTITION_SHA256 = "3797e005d7c461f192dacb06e23a9028121bd73cb240f2c2851
 CYCLE002_MATERIALIZATION_SHA256 = "e9d89b8fae5193a29a8c3dd055f464fc1290c18f507b669f3efb0720644f6d8c"
 CYCLE002_PACKET_LIMIT = 40
 CYCLE002_PACKET_BYTE_LIMIT = 196_608
-CYCLE002_LABEL_PROMPT_SHA256 = "25d8f5a0d13323fc793860d233e903bcb800799641fc2ea19f3f9de731efce9b"
+CYCLE002_LABEL_PROMPT_SHA256 = "1682b7aa0219d3f6abb8996d4ef8c6eeb86ef9eb95c37471db6100325e203ab3"
 CYCLE002_PHENOMENA = (
     "direct_address_vocative",
     "impersonal_no_to_expressed_agent",
@@ -1079,7 +1079,7 @@ def _cycle002_packet(
         "oversize_singleton": oversize_singleton,
         "actor": CYCLE002_ACTORS[pass_id],
         "bindings": dict(bindings),
-        "rows": list(rows),
+        "rows": [{"row_index": row_index, **row} for row_index, row in enumerate(rows, start=1)],
     }
     value["packet_id"] = "phase3_cycle002_heldout_label_packet:" + sha256_value(value)
     return value
@@ -1276,15 +1276,21 @@ def _cycle002_packet_load(
 
 def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict[str, Any]:
     required = {
-        "unit_id", "unit_sha256", "label_state", "phenomenon", "benchmark_role", "document_or_edition_identity",
-        "clean_modern_eligible", "modern_genre_id", "gold",
+        "row_index", "label_state", "phenomenon", "benchmark_role", "clean_modern_eligible", "modern_genre_id", "gold",
     }
     require(set(label) == required, "cycle002 reviewer label shape drift")
-    require(_identity(label) == _identity(source), "cycle002 reviewer identity drift")
-    require(
-        label["document_or_edition_identity"] == source["document_or_edition_identity"],
-        "cycle002 reviewer document identity drift",
-    )
+    require(label["row_index"] == source["row_index"], "cycle002 reviewer row index drift")
+    sealed_label = {
+        "unit_id": source["unit_id"],
+        "unit_sha256": source["unit_sha256"],
+        "label_state": label["label_state"],
+        "phenomenon": label["phenomenon"],
+        "benchmark_role": label["benchmark_role"],
+        "document_or_edition_identity": source["document_or_edition_identity"],
+        "clean_modern_eligible": label["clean_modern_eligible"],
+        "modern_genre_id": label["modern_genre_id"],
+        "gold": label["gold"],
+    }
     require(label["label_state"] in {"supported", "abstain"}, "cycle002 label state drift")
     require(type(label["clean_modern_eligible"]) is bool, "cycle002 clean eligibility type drift")
     if label["label_state"] == "abstain":
@@ -1296,7 +1302,7 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
             and label["gold"] == {"kind": "abstain", "reason": "uncertain_or_unsupported"},
             "cycle002 unsupported label must remain explicit abstention",
         )
-        return dict(label)
+        return sealed_label
     require(label["phenomenon"] in CYCLE002_PHENOMENA, "cycle002 phenomenon drift")
     require(label["benchmark_role"] in CYCLE002_ROLES, "cycle002 benchmark role drift")
     if label["clean_modern_eligible"]:
@@ -1316,7 +1322,7 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
             and gold["expected_correction"].strip(),
             "cycle002 positive gold drift",
         )
-        sealed = dict(label)
+        sealed = sealed_label
         sealed["gold"] = {
             **gold,
             "surface_sha256": sha256_bytes(source["source_text"][gold["start"] : gold["end"]].encode("utf-8")),
@@ -1328,7 +1334,7 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
             gold == {"kind": "abstain", "reason": "acceptable_control" if label["benchmark_role"] == "acceptable_control" else "protected"},
             "cycle002 nonpositive gold must be explicit abstention",
         )
-    return dict(label)
+    return sealed_label
 
 
 def _cycle002_parse(raw: bytes, packet: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -1445,7 +1451,19 @@ def run_cycle002(
         "--new-session",
         "--no-timeout",
     ]
-    payload = prompt + b"\n\n" + canonical_json(packet).encode("utf-8")
+    attempt_dir = root / "cycle002" / "raw-attempts" / pass_id / f"{packet_index:04d}"
+    prior_attempts = sorted(attempt_dir.glob("*.raw")) if attempt_dir.exists() else []
+    for path in prior_attempts:
+        _regular(path, "cycle002 prior raw attempt")
+    retry_note = b""
+    if prior_attempts:
+        retry_note = (
+            "\n\nOperational retry attempt "
+            + str(len(prior_attempts) + 1)
+            + ": the previous JSON failed strict deterministic validation. Return a fresh full response, "
+            "preserve row order, and copy every unit_id, unit_sha256, and document identity exactly."
+        ).encode("utf-8")
+    payload = prompt + retry_note + b"\n\n" + canonical_json(packet).encode("utf-8")
     completed = subprocess.run(command, input=payload, capture_output=True, check=False)
     require(completed.returncode == 0, "cycle002 Codex bridge invocation failed")
     return _cycle002_ingest_bytes(

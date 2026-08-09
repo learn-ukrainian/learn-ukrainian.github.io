@@ -379,6 +379,7 @@ def test_retry_receipt_distinguishes_semantic_failure_from_identity_failure(tmp_
 
 def _cycle002_packet_fixture() -> dict[str, object]:
     source = {
+        "row_index": 1,
         "family_id": "school_textbooks",
         "unit_id": "cycle002-unit",
         "unit_sha256": transport.sha256_value(["cycle002-unit"]),
@@ -404,12 +405,10 @@ def _cycle002_label(packet: dict[str, object], *, role: str = "positive") -> dic
     else:
         gold = {"kind": "abstain", "reason": role}
     return {
-        "unit_id": row["unit_id"],
-        "unit_sha256": row["unit_sha256"],
+        "row_index": row["row_index"],
         "label_state": "supported",
         "phenomenon": "direct_address_vocative",
         "benchmark_role": role,
-        "document_or_edition_identity": row["document_or_edition_identity"],
         "clean_modern_eligible": role == "acceptable_control",
         "modern_genre_id": "expository_narrative" if role == "acceptable_control" else None,
         "gold": gold,
@@ -420,6 +419,9 @@ def test_cycle002_semantic_label_parser_is_closed_and_requires_explicit_abstenti
     packet = _cycle002_packet_fixture()
     valid = _cycle002_label(packet)
     parsed = transport._cycle002_parse(json.dumps({"labels": [valid]}).encode("utf-8"), packet)
+    assert parsed[0]["unit_id"] == packet["rows"][0]["unit_id"]  # type: ignore[index]
+    assert parsed[0]["unit_sha256"] == packet["rows"][0]["unit_sha256"]  # type: ignore[index]
+    assert parsed[0]["document_or_edition_identity"] == packet["rows"][0]["document_or_edition_identity"]  # type: ignore[index]
     assert parsed[0]["gold"] == {
         **valid["gold"],
         "surface_sha256": transport.sha256_bytes("Він".encode()),
@@ -432,8 +434,8 @@ def test_cycle002_semantic_label_parser_is_closed_and_requires_explicit_abstenti
         transport._cycle002_parse(json.dumps({"labels": [malformed]}).encode("utf-8"), packet)
 
     retargeted = _cycle002_label(packet)
-    retargeted["document_or_edition_identity"] = "different-document"
-    with pytest.raises(transport.HeldoutLabelTransportError, match="document identity"):
+    retargeted["row_index"] = 2
+    with pytest.raises(transport.HeldoutLabelTransportError, match="row index drift"):
         transport._cycle002_parse(json.dumps({"labels": [retargeted]}).encode("utf-8"), packet)
 
     unsupported = _cycle002_label(packet)
@@ -447,11 +449,14 @@ def test_cycle002_semantic_label_parser_is_closed_and_requires_explicit_abstenti
             "gold": {"kind": "abstain", "reason": "uncertain_or_unsupported"},
         }
     )
-    assert transport._cycle002_parse(json.dumps({"labels": [unsupported]}).encode("utf-8"), packet) == [unsupported]
+    sealed_unsupported = transport._cycle002_parse(json.dumps({"labels": [unsupported]}).encode("utf-8"), packet)[0]
+    assert sealed_unsupported["label_state"] == "abstain"
+    assert sealed_unsupported["unit_id"] == packet["rows"][0]["unit_id"]  # type: ignore[index]
 
 
 def test_cycle002_floors_fail_closed_without_resampling_or_adjudication() -> None:
-    label = _cycle002_label(_cycle002_packet_fixture())
+    packet = _cycle002_packet_fixture()
+    label = transport._cycle002_parse(json.dumps({"labels": [_cycle002_label(packet)]}).encode("utf-8"), packet)[0]
     row = {
         "document_or_edition_identity": label["document_or_edition_identity"],
         "gold": label,
@@ -560,12 +565,10 @@ def _cycle002_runtime_raw(packet: dict[str, object]) -> bytes:
         text = row["source_text"]  # type: ignore[index]
         labels.append(
             {
-                "unit_id": row["unit_id"],
-                "unit_sha256": row["unit_sha256"],
+                "row_index": row["row_index"],
                 "label_state": "supported",
                 "phenomenon": "direct_address_vocative",
                 "benchmark_role": "positive",
-                "document_or_edition_identity": row["document_or_edition_identity"],
                 "clean_modern_eligible": False,
                 "modern_genre_id": None,
                 "gold": {
@@ -624,11 +627,13 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     raw = _cycle002_runtime_raw(packet)
 
     observed: dict[str, object] = {"calls": 0}
+    payloads: list[bytes] = []
 
     def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[bytes]:
         observed["calls"] = int(observed["calls"]) + 1
         observed["command"] = command
         assert kwargs["input"]
+        payloads.append(kwargs["input"])  # type: ignore[arg-type]
         stdout = b"{}" if observed["calls"] == 1 else raw
         return subprocess.CompletedProcess(command, 0, stdout=stdout, stderr=b"")
 
@@ -651,6 +656,8 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     assert observed["command"][2:6] == ["ask-codex", "-", "--from", "operator"]
     assert observed["command"][-4:] == ["--to-model", "gpt-5.6-sol", "--new-session", "--no-timeout"]
     assert "--effort" not in observed["command"]
+    assert b"Operational retry attempt 2" not in payloads[0]
+    assert b"Operational retry attempt 2" in payloads[1]
     selected_attempt = private / "cycle002" / "raw-attempts" / "a" / "0001" / "002.raw"
     assert selected_attempt.read_bytes() == raw
     assert (private / "cycle002" / "raw" / "a" / "0001.raw").read_bytes() == raw
