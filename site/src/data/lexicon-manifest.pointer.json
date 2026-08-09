@@ -1,32 +1,36 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-3d19f7e85ca7.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-814db81c2199.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "74e4ed1db4463c6b4f0ee5ce256e0e311e326b13690250f395efdf7d38410d12",
+  "manifest_fingerprint": "ef210ef802db7190e03e61c4903c2e1b02a7608fe351397c5be811d70f8e59e1",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-09T01:18:30Z",
-  "gz_sha256": "a7c0c8fc0ae58c34360d0ab65690bc599683f941471766367603071d1d51c554",
-  "json_sha256": "3d19f7e85ca711ec9b2031f225815844d2cc06b27a5bc2211395a88376f75867",
-  "gz_bytes": 14560392,
-  "json_bytes": 104498278,
+  "generated_at": "2026-08-09T04:22:02+00:00",
+  "gz_sha256": "cbe9bb1b04d62fadd4bfd857e53f945418b1f61db617911a0fc6fc25bd237bea",
+  "json_sha256": "814db81c219960c5039ac8b94d1510416bce8bc7c56a320c2b51da8cbdb6a7e9",
+  "gz_bytes": 16441438,
+  "json_bytes": 118456553,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 2024,
-      "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 48
-    },
-    "candidate": {
       "poc_thin_pages": 7924,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 48
     },
+    "candidate": {
+      "poc_thin_pages": 8240,
+      "search_no_visible_gloss": 43,
+      "old_gate_no_english_anchor": 118
+    },
     "regressions": {
       "poc_thin_pages": {
-        "baseline": 2024,
-        "candidate": 7924
+        "baseline": 7924,
+        "candidate": 8240
+      },
+      "old_gate_no_english_anchor": {
+        "baseline": 48,
+        "candidate": 118
       }
     },
-    "override_reason": "Additive #4220/#4387 EN delta-merge: 5905 translation fills pull previously bare entries into old_gate_enriched, so poc_thin_pages rises (2024→7924) while old_gate_no_english_anchor stays 48, entry count stays 19203, and zero nonempty-EN overwrites. Override authorized by atlas-reenrich-delta-merge brief (option 2).",
+    "override_reason": "Additive #6370 Ohoiko/ULP promote: +850 VESUM-attested single-word lemmas (19203→20053). Richness: poc_thin_pages 7924→8240 and old_gate_no_english_anchor 48→118 (+70 ULP SUM11-UA gloss rows without deterministic EN translation). Paired/multiword/heritage/OCR residual stays open.",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
