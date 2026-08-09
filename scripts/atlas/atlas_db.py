@@ -64,6 +64,7 @@ ENRICHMENT_SECTIONS = {
     "antonyms",
     "idioms",
     "proverbs",
+    "usage_notes",
     "literary_attestation",
     "wiki_reference",
     "cefr",

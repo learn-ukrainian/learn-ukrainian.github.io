@@ -755,6 +755,37 @@ export default function WordAtlasArticle({
             </section>
           )}
 
+          {(sections?.usage_notes?.items?.length ?? 0) > 0 && (
+            <section className="atlas-section">
+              <h2>Стиль і норма</h2>
+              {sections!.usage_notes!.items.map((note, index) => {
+                const key = note.title || note.text.slice(0, 48) || `usage-note-${index}`;
+                const long = note.text.length > 420;
+                const preview = long ? `${note.text.slice(0, 280).trim()}…` : note.text;
+                return (
+                  <div key={key} className="resource-card">
+                    {note.title && <h3>{note.title}</h3>}
+                    {long ? (
+                      <details>
+                        <summary>{preview}</summary>
+                        <p>{note.text}</p>
+                      </details>
+                    ) : (
+                      <p>{note.text}</p>
+                    )}
+                    {note.source_url && !isMirrorUrl(note.source_url) && safeHref(note.source_url) ? (
+                      <ExtLink className="tag" href={safeHref(note.source_url)!} label={note.source}>
+                        {note.source}
+                      </ExtLink>
+                    ) : (
+                      <span className="tag">{note.source}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
           {enrichment?.literary_attestation && (
             <section className="atlas-section">
               <h2>Літературні засвідчення</h2>

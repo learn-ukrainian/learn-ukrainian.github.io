@@ -16,11 +16,12 @@ no fabrication):
 - **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — sense-separated offline mphdict groups from the Ukrainian
   synonym database, preserving their original set boundaries.
-- **sections.synonyms / sections.antonyms / sections.idioms / sections.proverbs**
-  — mphdict synonym groups and local dictionary rows (Вікісловник antonyms;
-  Фразеологічний; Приповідки).
+- **sections.synonyms / sections.antonyms / sections.idioms / sections.proverbs
+  / sections.usage_notes** — mphdict synonym groups and local dictionary rows
+  (Вікісловник antonyms; Фразеологічний; Приповідки; «Як ми говоримо» essays).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
-  (Антоненко-Давидович, «Неправильно-правильно», Штепа чужослів).
+  (Антоненко-Давидович chips when corrective, «Неправильно-правильно», Штепа
+  чужослів). Full Davydov essays live in ``sections.usage_notes`` (#6463).
 - **etymology** — offline mphdict ЕСУМ roots, with the source volume/page
   citation and bibliography retained from the dictionary export.
 
@@ -90,6 +91,7 @@ from scripts.lexicon.manifest_io import (
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     CORRECTION_DICTIONARIES_LABEL,
+    DAVYDOV_LABEL,
     ESUM_LABEL,
     MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
@@ -194,7 +196,11 @@ _SLOVNYK_LOOKUP_SLUGS = tuple(
 )
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_PROVERB_SLUGS = ("proverbs",)
+# Full essays as sections.usage_notes (#6463). linguistic_norm / khreshchatyk
+# share the same section family later; only davydov is wired in this slice.
+_SLOVNYK_USAGE_NOTE_SLUGS = ("davydov",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
+_USAGE_NOTE_MIN_BODY_CHARS = 40
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
 _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
@@ -2163,6 +2169,143 @@ def _proverbs_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[s
     block: dict[str, Any] = {
         "items": items,
         "source": PROVERBS_LABEL,
+    }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
+
+
+def _strip_leading_headword_once(text: str, lemma: str, headword: str | None = None) -> str:
+    """Remove the dictionary headword once from the start of an essay body.
+
+    Unlike ``_entry_text_without_headword``, this does not re-scan remaining
+    text for the same lemma (which would eat the capitalised first word of a
+    Davydov topic title such as «Що, який, котрий…»).
+    """
+    cleaned = re.sub(r"\s+", " ", clean_html_entities(text)).strip()
+    head = _strip_stress(headword or lemma).strip()
+    if not head:
+        return cleaned
+    return re.sub(
+        rf"^{re.escape(head)}\b[\s:–—-]*",
+        "",
+        cleaned,
+        count=1,
+        flags=re.IGNORECASE,
+    ).strip()
+
+
+def _split_usage_note_title(body: str) -> tuple[str | None, str]:
+    """Split an optional short topic header from a Davydov essay body (#6463).
+
+    «Як ми говоримо» articles usually open with the forms under discussion
+    (e.g. «Що, який, котрий, которий» / «Говорити й казати») then the prose
+    essay. A failed split keeps the full body as ``text`` with no title —
+    never invents a header.
+    """
+    body = re.sub(r"\s+", " ", body).strip()
+    if not body:
+        return None, ""
+    # Body must start with a capital (or opening quote). Allowing a lowercase
+    # word would eat trailing title forms such as «…, которий» before «У…».
+    match = re.match(
+        r"^(.{2,120}?)\s+([А-ЯІЇЄҐ«].+)$",
+        body,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return None, body
+    title = match.group(1).strip(" ,;:—-")
+    rest = match.group(2).strip()
+    if not title or not rest:
+        return None, body
+    # Titles are form-lists / short topic lines, never multi-sentence prose.
+    if "." in title or "!" in title or "?" in title:
+        return None, body
+    if len(title) > 100 or len(title.split()) > 14:
+        return None, body
+    # Prefer titles that look like alternative-form lists or multiword topics.
+    if not (
+        "," in title
+        or " і " in title
+        or " й " in title
+        or " чи " in title
+        or "—" in title
+        or " " in title
+        or "(" in title
+    ):
+        return None, body
+    return title, rest
+
+
+def _usage_note_item_from_row(row: dict[str, Any], lemma: str) -> dict[str, Any] | None:
+    """Build one usage-note item from a davydov-family slovnyk cache row."""
+    raw = _SOURCE_TAIL_RE.sub("", str(row.get("text") or "")).strip()
+    if not raw:
+        return None
+    body = _strip_leading_headword_once(raw, lemma, str(row.get("word") or ""))
+    if len(body) < _USAGE_NOTE_MIN_BODY_CHARS:
+        return None
+    title, essay = _split_usage_note_title(body)
+    if len(essay) < _USAGE_NOTE_MIN_BODY_CHARS:
+        # Title split left a stub — keep the unsplit body.
+        title, essay = None, body
+    slug = str(row.get("dictionary_slug") or "davydov")
+    source = str(
+        row.get("dictionary_label")
+        or SLUG_ACADEMIC_LABELS.get(slug)
+        or DAVYDOV_LABEL
+    )
+    item: dict[str, Any] = {
+        "text": essay,
+        "source": source,
+    }
+    if title:
+        item["title"] = title
+    mirror_url = str(row.get("source_url") or "")
+    attach_official_url(
+        item,
+        mirror_url=mirror_url,
+        slug=slug,
+        word=str(row.get("word") or lemma),
+    )
+    return item
+
+
+def _usage_notes_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Usage / style-norm essays from the davydov family (#6463).
+
+    Full Антоненко-Давидович «Як ми говоримо» text becomes a learner section
+    (not warning-only). Corrective alternative chips remain on the separate
+    ``_warning_slovnyk`` path when the essay text matches corrective cues —
+    chips only, never a second full-text dump of the same essay.
+    """
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    items: list[dict[str, Any]] = []
+    mirror_urls_raw: list[str] = []
+    sources: list[str] = []
+    for slug in _SLOVNYK_USAGE_NOTE_SLUGS:
+        row = _cache_lookup(cache, slug)
+        if not row:
+            continue
+        item = _usage_note_item_from_row(row, lemma)
+        if not item:
+            continue
+        items.append(item)
+        mirror = str(row.get("source_url") or "")
+        if mirror:
+            mirror_urls_raw.append(mirror)
+        source = str(item.get("source") or "")
+        if source and source not in sources:
+            sources.append(source)
+    if not items:
+        return None
+    official_urls, mirror_urls = remap_url_list(mirror_urls_raw)
+    block: dict[str, Any] = {
+        "items": items,
+        "source": join_academic_source_labels(sources) if sources else DAVYDOV_LABEL,
     }
     if official_urls:
         block["source_urls"] = official_urls
@@ -6194,10 +6337,10 @@ def _ordered_sections(
     serializes byte-identical to its baseline (#5077 review finding 3).
 
     The recompute rebuilds ``sections`` in a fixed apply order (synonyms, antonyms,
-    homonyms, paronyms, idioms, proverbs). When the entry already had published sections in a
-    different order, that reorder alone produced spurious byte diffs on runs that
-    changed nothing. Keys present in the baseline keep the baseline's order; keys new
-    to this entry follow in canonical apply order.
+    homonyms, paronyms, idioms, proverbs, usage_notes). When the entry already had
+    published sections in a different order, that reorder alone produced spurious
+    byte diffs on runs that changed nothing. Keys present in the baseline keep the
+    baseline's order; keys new to this entry follow in canonical apply order.
     """
     ordered: dict[str, object] = {}
     for name in baseline:
@@ -6383,6 +6526,11 @@ def enrich_entry(
     if not proverbs and fallback_base:
         proverbs = _proverbs_slovnyk(fallback_base, slovnyk_cache)
     _apply_section("proverbs", proverbs, gate_ran=proverbs_gate_ran)
+    usage_notes_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_USAGE_NOTE_SLUGS)
+    usage_notes = _usage_notes_slovnyk(lemma, slovnyk_cache)
+    if not usage_notes and fallback_base:
+        usage_notes = _usage_notes_slovnyk(fallback_base, slovnyk_cache)
+    _apply_section("usage_notes", usage_notes, gate_ran=usage_notes_gate_ran)
     if sections:
         entry["sections"] = _ordered_sections(sections, baseline_sections)
     else:

@@ -200,6 +200,17 @@ export interface LexiconSections {
     source: string;
     source_urls?: string[];
   };
+  /** Davydov-family usage / style-norm essays (#6463). */
+  usage_notes?: {
+    items: Array<{
+      title?: string;
+      text: string;
+      source: string;
+      source_url?: string;
+    }>;
+    source: string;
+    source_urls?: string[];
+  };
 }
 
 export interface CourseUsage {
@@ -743,6 +754,7 @@ function buildArticleOverview(args: {
   const paronymCount = sections?.paronyms?.items?.length ?? 0;
   const idiomCount = sections?.idioms?.items?.length ?? 0;
   const proverbCount = sections?.proverbs?.items?.length ?? 0;
+  const usageNoteCount = sections?.usage_notes?.items?.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
     definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
@@ -825,6 +837,14 @@ function buildArticleOverview(args: {
           : "очікує джерело",
     },
     {
+      label: "Стиль і норма",
+      ready: usageNoteCount > 0,
+      detail:
+        usageNoteCount > 0
+          ? `${usageNoteCount} ${pluralizeUk(usageNoteCount, ["нарис", "нариси", "нарисів"])}`
+          : "очікує джерело",
+    },
+    {
       label: "Засвідчення",
       ready: Boolean(enrichment?.literary_attestation),
       detail: enrichment?.literary_attestation ? "літературний корпус" : "очікує корпус",
@@ -888,6 +908,7 @@ function buildSourceList(args: {
   if (sections?.paronyms?.source) sources.add(sections.paronyms.source);
   if (sections?.idioms?.source) sources.add(sections.idioms.source);
   if (sections?.proverbs?.source) sources.add(sections.proverbs.source);
+  if (sections?.usage_notes?.source) sources.add(sections.usage_notes.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
   if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");
