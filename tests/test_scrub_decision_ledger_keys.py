@@ -13,6 +13,7 @@ from scripts.audit.lint_opsec_leaks import (
 from scripts.audit.scrub_decision_ledger_keys import (
     DEFAULT_SCRUBBED_PATH,
     DEFAULT_SOURCE_LEDGER,
+    load_source_ledger_payload,
     migrate_ledger_to_shards,
     scrub_decision_row,
 )
@@ -106,7 +107,7 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
 def test_shards_concatenate_to_original_decisions(
     migrated_shards: list[Path],
 ) -> None:
-    orig_payload = yaml.load(DEFAULT_SOURCE_LEDGER.read_text(encoding="utf-8"), Loader=_SafeLoader)
+    orig_payload = load_source_ledger_payload(DEFAULT_SOURCE_LEDGER)
     orig_decisions = orig_payload["decisions"]
 
     reconstructed_decisions: list[dict] = []
