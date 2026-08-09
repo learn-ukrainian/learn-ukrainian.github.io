@@ -211,6 +211,17 @@ export interface LexiconSections {
     source: string;
     source_urls?: string[];
   };
+  /** Compact orthography/Holoskevych/orthoepy form strip (#6465). */
+  form_notes?: {
+    items: Array<{
+      dictionary: "orthography" | "holoskevych" | "orthoepy";
+      text: string;
+      source: string;
+      source_url?: string;
+    }>;
+    source: string;
+    source_urls?: string[];
+  };
 }
 
 export interface CourseUsage {
@@ -284,6 +295,13 @@ export const CONTEXT_LABELS_UK: Record<string, string> = {
 
 export const MARKED_LEARNER_NOTE =
   "Це нестандартні або стилістично забарвлені форми, які трапляються в поезії, фольклорі та давніших текстах. Вони не належать до сучасної літературної норми.";
+
+/** Short row labels for the compact form/pronunciation strip (#6465). */
+export const FORM_NOTE_LABELS: Record<string, string> = {
+  orthography: "Правопис",
+  holoskevych: "Голоскевич, 1929",
+  orthoepy: "Орфоепія",
+};
 
 const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
   "multiword_term",
@@ -755,6 +773,7 @@ function buildArticleOverview(args: {
   const idiomCount = sections?.idioms?.items?.length ?? 0;
   const proverbCount = sections?.proverbs?.items?.length ?? 0;
   const usageNoteCount = sections?.usage_notes?.items?.length ?? 0;
+  const formNoteCount = sections?.form_notes?.items?.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
     definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
@@ -778,6 +797,14 @@ function buildArticleOverview(args: {
       detail: enrichment?.morphology
         ? morphologyFormCountLabel(enrichment.morphology, isFullyMarked)
         : "очікує VESUM",
+    },
+    {
+      label: "Написання і вимова",
+      ready: formNoteCount > 0,
+      detail:
+        formNoteCount > 0
+          ? `${formNoteCount} ${pluralizeUk(formNoteCount, ["джерело", "джерела", "джерел"])}`
+          : "очікує джерело",
     },
     {
       label: "Стилістика",
@@ -909,6 +936,7 @@ function buildSourceList(args: {
   if (sections?.idioms?.source) sources.add(sections.idioms.source);
   if (sections?.proverbs?.source) sources.add(sections.proverbs.source);
   if (sections?.usage_notes?.source) sources.add(sections.usage_notes.source);
+  if (sections?.form_notes?.source) sources.add(sections.form_notes.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
   if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");

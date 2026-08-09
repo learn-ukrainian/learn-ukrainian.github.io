@@ -397,7 +397,7 @@ def test_cached_anchor_fill_runs_only_for_newly_promoted_entries(tmp_path: Path,
     manifest_path = _write_manifest(tmp_path, [_entry("авто")])
     candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
     monkeypatch.setattr(promote, "_slovnyk_cache_path", lambda _lemma: tmp_path / "cache.json")
-    monkeypatch.setattr(promote, "_load_slovnyk_cache_file", lambda _path: {"text": "mother"})
+    monkeypatch.setattr(promote, "_load_current_slovnyk_cache_file", lambda _path: {"text": "mother"})
 
     def fill(entry: dict[str, object], lemma: str, _cache: object) -> bool:
         entry.setdefault("enrichment", {})["translation"] = {"en": ["mother"]}
@@ -440,7 +440,7 @@ def test_cached_anchor_fill_touches_only_translation_and_sources(tmp_path: Path,
         }
     }
     monkeypatch.setattr(promote, "_slovnyk_cache_path", lambda _lemma: tmp_path / "cache.json")
-    monkeypatch.setattr(promote, "_load_slovnyk_cache_file", lambda _path: cache)
+    monkeypatch.setattr(promote, "_load_current_slovnyk_cache_file", lambda _path: cache)
 
     filled, anchorless = promote._fill_cached_anchors_for_new_entries([entry])
 

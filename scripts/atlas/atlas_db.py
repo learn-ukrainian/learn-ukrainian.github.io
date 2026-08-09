@@ -65,6 +65,7 @@ ENRICHMENT_SECTIONS = {
     "idioms",
     "proverbs",
     "usage_notes",
+    "form_notes",
     "literary_attestation",
     "wiki_reference",
     "cefr",

@@ -134,8 +134,8 @@ from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.enrich_manifest import (
     _dmklinger_key,
     _kaikki_translation,
+    _load_current_slovnyk_cache_file,
     _load_kaikki_lookup,
-    _load_slovnyk_cache_file,
     _parse_translations,
     _slovnyk_cache_path,
     _slovnyk_ukreng_translation,
@@ -381,7 +381,7 @@ def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple
         if isinstance(terms, list) and terms and _is_english(str(terms[0])):
             result.setdefault(key, str(terms[0]).strip())
             continue
-        cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
         # ``_slovnyk_ukreng_translation`` populates a missing cache row.  This
         # bulk promoter must stay deterministic and bounded, so only consume an
         # already cached UK→EN response; enrich_manifest owns live lookups.

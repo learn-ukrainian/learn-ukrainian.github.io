@@ -6,6 +6,7 @@ import {
   buildWordAtlasArticleView,
   CASE_ROWS,
   CONTEXT_LABELS_UK,
+  FORM_NOTE_LABELS,
   isMirrorUrl,
   learnerFacingUrls,
   MARKED_LEARNER_NOTE,
@@ -555,6 +556,29 @@ export default function WordAtlasArticle({
                   </details>
                 )
               )}
+            </section>
+          )}
+
+          {(sections?.form_notes?.items?.length ?? 0) > 0 && (
+            <section className="atlas-section">
+              <h2>Написання і вимова</h2>
+              <dl className="form-notes-strip">
+                {sections!.form_notes!.items.map((note) => (
+                  <div key={note.dictionary} className="form-notes-row">
+                    <dt>{FORM_NOTE_LABELS[note.dictionary] ?? note.source}</dt>
+                    <dd>
+                      <span className="ukr">{note.text}</span>{" "}
+                      {note.source_url && !isMirrorUrl(note.source_url) && safeHref(note.source_url) ? (
+                        <ExtLink className="tag" href={safeHref(note.source_url)!} label={note.source}>
+                          {note.source}
+                        </ExtLink>
+                      ) : (
+                        <span className="tag">{note.source}</span>
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </section>
           )}
 

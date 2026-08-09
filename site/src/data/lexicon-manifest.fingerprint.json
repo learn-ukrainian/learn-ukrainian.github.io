@@ -1,5 +1,5 @@
 {
-  "fingerprint": "ef210ef802db7190e03e61c4903c2e1b02a7608fe351397c5be811d70f8e59e1",
+  "fingerprint": "81e88cbdf61b2f2fde833d4d7ec3d51d5c9266ac32e63d542f708e0e29794247",
   "inputs": {
     "lexicon_code": [
       {
@@ -8,11 +8,11 @@
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
-        "sha256": "0fa635732aacc6970242805168ea08470191a11447f0ffe69bcc177ceb0eb543"
+        "sha256": "8bc44dd8a1e46e287d20b32dce2bf4d185354f1db963d51008025940094c08e6"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
-        "sha256": "7e96525ed1f3a9b755d0b0b6f2413c6bc327f4b64d66e013bd5749a843fe3e86"
+        "sha256": "836e3a9464c799e93f8c3a510bf124e45f0ec0ea254ebf0abad4437191de40f4"
       },
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
@@ -36,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
-        "sha256": "065227dcaf26e86bc839ddb75a83a511459c410734adecd8beb3820bd5741231"
+        "sha256": "512220fed8c8aeb0d1ead3ddc63e780d7dbc57a44dc3006ed6611ea7cc031f0b"
       },
       {
         "path": "scripts/lexicon/build_synonym_verdicts_yaml.py",
@@ -88,7 +88,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d475a966682571d6907a46eb6f8df942e15d62ff2f006ae8866e377e18832e74"
+        "sha256": "7208972747eda3961adf88dc0f504d87613393c60b4fc410297f8499082365bb"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -132,7 +132,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "c820ae8560296ab6d1e02c0fa2deca159c001633e91062b2e48e13a971ff1a47"
+        "sha256": "e0aeebad823fb9938d91f09c047bc0952929a26f5b1930b788591a5ec30a53c3"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -153,6 +153,10 @@
       {
         "path": "scripts/lexicon/merge_translation_delta.py",
         "sha256": "cba0e82499265562ae20e6323b357f3c1f1ce1e88ee5da7166706ced8b161955"
+      },
+      {
+        "path": "scripts/lexicon/migrate_slovnyk_cache_v3.py",
+        "sha256": "7001edca9a5f6cc7faf290376e13de2d798b17fd92182dcc2a9228aa9816193c"
       },
       {
         "path": "scripts/lexicon/migrate_source_labels.py",
@@ -184,11 +188,11 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "d1b652b940b1812f5d256a3b3e26b0fa7592b67cd26fba6f8546c7775c8f2b35"
+        "sha256": "d3d2f6a53de33af9653616d07ad68df7e91415f42065df93e5ad39e1215f9aa7"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "c965c4eab082caae301d7430407341643c55a27e64e4715c62a44dd90397e06f"
+        "sha256": "6b68b0170972136ed25c5d8215361c0d6a3f060cefdc00b09a3788bb5b159d8b"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -212,7 +216,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "11e87a16d9caeb90a806e3b3d38beb1911c1b2213cfd3afa64a0c9c41878e671"
+        "sha256": "8beea77725932b24f64a862220e6b75cab2bc2dea25844bd37ff78071e2bcb9c"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
@@ -224,13 +228,13 @@
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
-        "sha256": "faa4f6b7236f37d15e21475f4564fcd311c44305a166aafc301215dbea26e7dd"
+        "sha256": "bff8437e8f5c9db56bb8eacfdc12d2b8fc293afbfb3bc28a2b611f4c44ee149b"
       }
     ]
   },
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 56
+    "lexicon_code_files": 57
   }
 }

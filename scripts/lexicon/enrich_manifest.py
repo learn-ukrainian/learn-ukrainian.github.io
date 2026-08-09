@@ -17,8 +17,9 @@ no fabrication):
 - **synonyms** — sense-separated offline mphdict groups from the Ukrainian
   synonym database, preserving their original set boundaries.
 - **sections.synonyms / sections.antonyms / sections.idioms / sections.proverbs
-  / sections.usage_notes** — mphdict synonym groups and local dictionary rows
-  (Вікісловник antonyms; Фразеологічний; Приповідки; «Як ми говоримо» essays).
+  / sections.usage_notes / sections.form_notes** — mphdict synonym groups and
+  local dictionary rows (Вікісловник antonyms; Фразеологічний; Приповідки; «Як
+  ми говоримо» essays; compact orthography/Holoskevych/orthoepy form strip).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович chips when corrective, «Неправильно-правильно», Штепа
   чужослів). Full Davydov essays live in ``sections.usage_notes`` (#6463).
@@ -202,11 +203,28 @@ _SLOVNYK_PROVERB_SLUGS = ("proverbs",)
 _SLOVNYK_USAGE_NOTE_SLUGS = ("davydov",)
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _USAGE_NOTE_MIN_BODY_CHARS = 40
+# Compact form/pronunciation strip (#6465): the orthographic norm, the 1929
+# Holoskevych spelling for heritage comparison, and the orthoepic (pronunciation)
+# transcription. Entries are single short lines, not essays — the leading bare
+# headword is stripped (like usage_notes); no title split, no essay parsing.
+_SLOVNYK_FORM_NOTE_SLUGS = ("orthography", "holoskevych", "orthoepy")
+_FORM_NOTE_MIN_BODY_CHARS = 3
 _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
 _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _SLOVNYK_BASE = "https://slovnyk.me"
-_SLOVNYK_CACHE_SCHEMA_VERSION = 2
+# v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
+# written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
+# fix landed without a schema bump), so v2 rows can carry corrupted `text` for
+# any dictionary whose page uses inline mid-word markup (letter-level <u>/<sup>
+# in orthoepy is the confirmed case; nothing rules out other slugs). The
+# migration branch below already resets `lookups` to `{}` and forces a refetch
+# whenever `schema_version != _SLOVNYK_CACHE_SCHEMA_VERSION` -- bumping this
+# constant is what actually triggers that reset for every existing v2 row.
+# `scripts/lexicon/migrate_slovnyk_cache_v3.py` applies the same reset directly
+# to on-disk cache files (no network needed) to purge the residue immediately
+# instead of waiting for each lemma's next live touch.
+_SLOVNYK_CACHE_SCHEMA_VERSION = 3
 _OFFLINE_VALUES = {"1", "true", "yes", "on"}
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 
@@ -1372,7 +1390,14 @@ def _parse_slovnyk_entry(
 ) -> dict[str, Any] | None:
     parser = _SlovnykArticleParser()
     parser.feed(page_html)
-    article_text = clean_html_entities(" ".join(parser.article_parts))
+    # Empty-string join (#6465): article_parts already carries explicit "\n" entries
+    # at every block-tag boundary (see handle_starttag/handle_endtag above), so block
+    # separation survives. A space-join instead corrupted any text split mid-word by
+    # an inline tag — e.g. the orthoepy dictionary's letter-level <u>/<sup> phonetic
+    # markup turned "книга" into "кн и га". The structured ``paragraphs`` field below
+    # already used an empty-string join for the same reason; this aligns article_text
+    # with that established, correct pattern.
+    article_text = clean_html_entities("".join(parser.article_parts))
     if not article_text:
         return None
     headword = clean_html_entities(" ".join(parser.h1_parts)) or lookup_word
@@ -1475,11 +1500,35 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
 
 
 def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
+    """Read a cache file's raw JSON with no version gate.
+
+    Internal building block only. ``_slovnyk_cache()`` is the one caller
+    allowed to see a stale ``schema_version`` -- it owns the v1 partial-migrate
+    / v2+ wholesale-discard-and-refetch logic below. Every other reader must go
+    through ``_load_current_slovnyk_cache_file()`` instead, or it will happily
+    hand back a v2 row with corrupted `text` (#6524).
+    """
     try:
         cache = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
     return cache if isinstance(cache, dict) else None
+
+
+def _load_current_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
+    """Read a cache file iff it is already on the current schema version.
+
+    The single version-gated accessor for every *read-only* slovnyk.me cache
+    consumer (definition/synonym extraction, anchor backfills, the build-time
+    mirror's "already cached" check, ...). A stale v1/v2 row must never look
+    authoritative to these callers -- it must look like a cache miss, so the
+    row either gets skipped (never healed by that read path) or, for the
+    mirror, gets queued for a real ``_slovnyk_cache()`` refetch. See #6524.
+    """
+    cache = _load_slovnyk_cache_file(path)
+    if cache is None or cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION:
+        return None
+    return cache
 
 
 def _new_slovnyk_cache(lemma: str, lookup_word: str) -> dict[str, Any]:
@@ -2374,6 +2423,73 @@ def _usage_notes_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dic
     block: dict[str, Any] = {
         "items": items,
         "source": join_academic_source_labels(sources) if sources else DAVYDOV_LABEL,
+    }
+    if official_urls:
+        block["source_urls"] = official_urls
+    if mirror_urls:
+        block["mirror_source_urls"] = mirror_urls
+    return block
+
+
+def _form_note_item_from_row(row: dict[str, Any], slug: str) -> dict[str, Any] | None:
+    """Build one compact form/pronunciation item from a slovnyk cache row (#6465).
+
+    The parsed article text always repeats the page's bare ``<h1>`` headword
+    before the actual (stressed / transcribed) entry line, e.g. "книга кни́га
+    іменник жіночого роду" — strip that leading duplicate once, same as the
+    usage-note essay path, so the item keeps only the attested form itself.
+    Holoskevych entries follow the headword directly with a comma (e.g. "Що,
+    чого́, …") rather than the ":"/"–" the shared stripper already eats, so a
+    leading comma is trimmed too, scoped to this extractor only.
+    """
+    raw = _SOURCE_TAIL_RE.sub("", str(row.get("text") or "")).strip()
+    text = _strip_leading_headword_once(raw, str(row.get("word") or ""), str(row.get("word") or ""))
+    text = text.lstrip(", ").strip()
+    if len(text) < _FORM_NOTE_MIN_BODY_CHARS:
+        return None
+    source = str(row.get("dictionary_label") or SLUG_ACADEMIC_LABELS.get(slug) or slug)
+    item: dict[str, Any] = {
+        "dictionary": slug,
+        "text": text,
+        "source": source,
+    }
+    mirror_url = str(row.get("source_url") or "")
+    attach_official_url(item, mirror_url=mirror_url, slug=slug, word=str(row.get("word") or ""))
+    return item
+
+
+def _form_notes_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Compact orthography/Holoskevych/orthoepy form strip (#6465).
+
+    Complements VESUM morphology, never replaces it: the orthographic-norm
+    spelling, the 1929 Holoskevych heritage spelling, and the orthoepic
+    (pronunciation) transcription, one short item per dictionary that has a
+    cached row for this lemma.
+    """
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    items: list[dict[str, Any]] = []
+    mirror_urls_raw: list[str] = []
+    sources: list[str] = []
+    for slug in _SLOVNYK_FORM_NOTE_SLUGS:
+        row = _cache_lookup(cache, slug)
+        if not row:
+            continue
+        item = _form_note_item_from_row(row, slug)
+        if not item:
+            continue
+        items.append(item)
+        mirror = str(row.get("source_url") or "")
+        if mirror:
+            mirror_urls_raw.append(mirror)
+        source = str(item.get("source") or "")
+        if source and source not in sources:
+            sources.append(source)
+    if not items:
+        return None
+    official_urls, mirror_urls = remap_url_list(mirror_urls_raw)
+    block: dict[str, Any] = {
+        "items": items,
+        "source": join_academic_source_labels(sources),
     }
     if official_urls:
         block["source_urls"] = official_urls
@@ -3817,8 +3933,12 @@ def _canonical_synonym_term(value: object) -> str | None:
 
 
 def _read_cached_slovnyk_rows(lemma: str) -> dict[str, Any]:
-    """Read a pre-existing slovnyk.me cache entry without fetching or writing."""
-    cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+    """Read a pre-existing slovnyk.me cache entry without fetching or writing.
+
+    Stale-schema rows are treated as a miss (empty dict), not surfaced --
+    they must never feed definition/homonym generation directly (#6524).
+    """
+    cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
     return cache if isinstance(cache, dict) else {}
 
 
@@ -6511,10 +6631,10 @@ def _ordered_sections(
     serializes byte-identical to its baseline (#5077 review finding 3).
 
     The recompute rebuilds ``sections`` in a fixed apply order (synonyms, antonyms,
-    homonyms, paronyms, idioms, proverbs, usage_notes). When the entry already had
-    published sections in a different order, that reorder alone produced spurious
-    byte diffs on runs that changed nothing. Keys present in the baseline keep the
-    baseline's order; keys new to this entry follow in canonical apply order.
+    homonyms, paronyms, idioms, proverbs, usage_notes, form_notes). When the entry
+    already had published sections in a different order, that reorder alone produced
+    spurious byte diffs on runs that changed nothing. Keys present in the baseline keep
+    the baseline's order; keys new to this entry follow in canonical apply order.
     """
     ordered: dict[str, object] = {}
     for name in baseline:
@@ -6705,6 +6825,11 @@ def enrich_entry(
     if not usage_notes and fallback_base:
         usage_notes = _usage_notes_slovnyk(fallback_base, slovnyk_cache)
     _apply_section("usage_notes", usage_notes, gate_ran=usage_notes_gate_ran)
+    form_notes_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_FORM_NOTE_SLUGS)
+    form_notes = _form_notes_slovnyk(lemma, slovnyk_cache)
+    if not form_notes and fallback_base:
+        form_notes = _form_notes_slovnyk(fallback_base, slovnyk_cache)
+    _apply_section("form_notes", form_notes, gate_ran=form_notes_gate_ran)
     if sections:
         entry["sections"] = _ordered_sections(sections, baseline_sections)
     else:

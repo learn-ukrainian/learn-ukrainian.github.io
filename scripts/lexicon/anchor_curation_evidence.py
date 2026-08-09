@@ -249,7 +249,7 @@ def audit_entries() -> list[AtlasEntry]:
         lemma = str(entry.get("lemma") or "").strip()
         if not lemma:
             continue
-        cache = enrich_manifest._load_slovnyk_cache_file(enrich_manifest._slovnyk_cache_path(lemma))
+        cache = enrich_manifest._load_current_slovnyk_cache_file(enrich_manifest._slovnyk_cache_path(lemma))
         filled += enrich_manifest._fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, cache)
 
     summary = audit_manifest(working_manifest, sample_limit=300)

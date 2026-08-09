@@ -4,7 +4,9 @@ from pathlib import Path
 import pytest
 
 from scripts.audit.generate_search_index import classification_code
+from scripts.lexicon.enrich_manifest import _SLOVNYK_CACHE_SCHEMA_VERSION
 from scripts.lexicon.heritage_classifier import (
+    _cached_slovnyk_hits,
     classify_lemma,
     classify_surface_form,
     compute_warning_severity,
@@ -137,20 +139,19 @@ def test_common_modern_lemmas_do_not_get_heritage_badges() -> None:
         assert status["is_russianism"] is False
 
 
-def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) -> None:
-    cache_dir = tmp_path / "slovnyk_cache"
-    cache_dir.mkdir()
-    (cache_dir / "кобіта.json").write_text(
+def _write_slovnyk_cache(cache_dir: Path, lemma: str, *, schema_version: int) -> None:
+    cache_dir.mkdir(exist_ok=True)
+    (cache_dir / f"{lemma}.json").write_text(
         json.dumps(
             {
-                "schema_version": 1,
-                "lemma": "кобіта",
-                "lookup_word": "кобіта",
+                "schema_version": schema_version,
+                "lemma": lemma,
+                "lookup_word": lemma,
                 "lookups": {
                     "newsum": {
                         "dictionary_slug": "newsum",
                         "dictionary_label": "Словник української мови у 20 томах (СУМ-20)",
-                        "word": "кобіта",
+                        "word": lemma,
                         "text": "КОБІТА, и, ж., зах. Те саме, що жінка.",
                     }
                 },
@@ -159,6 +160,11 @@ def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) ->
         ),
         encoding="utf-8",
     )
+
+
+def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) -> None:
+    cache_dir = tmp_path / "slovnyk_cache"
+    _write_slovnyk_cache(cache_dir, "кобіта", schema_version=_SLOVNYK_CACHE_SCHEMA_VERSION)
     monkeypatch.setenv("LEXICON_SLOVNYK_CACHE", str(cache_dir))
 
     status = classify_lemma("кобіта", db_path=DB, vesum_db_path=VESUM_DB)
@@ -169,6 +175,26 @@ def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) ->
     assert [(attestation["source"], attestation["ref"]) for attestation in status["attestations"]] == [
         ("VESUM", "кобіта")
     ]
+
+
+def test_cached_slovnyk_hits_rejects_stale_schema_version(monkeypatch, tmp_path) -> None:
+    """#6524 P2 (codex re-verdict): heritage_classifier's own cache reader loaded
+    the raw JSON with no version gate, so a stale v2 row (carrying the #6465
+    corrupted-join text) still surfaced as a heritage attestation. A row that is
+    not on the current schema version must read as a cache miss, not as data."""
+    cache_dir = tmp_path / "slovnyk_cache"
+    _write_slovnyk_cache(cache_dir, "кобіта", schema_version=2)
+    monkeypatch.setenv("LEXICON_SLOVNYK_CACHE", str(cache_dir))
+
+    assert _cached_slovnyk_hits("кобіта") == []
+
+    stale_dir = tmp_path / "slovnyk_cache_current"
+    _write_slovnyk_cache(stale_dir, "кобіта", schema_version=_SLOVNYK_CACHE_SCHEMA_VERSION)
+    monkeypatch.setenv("LEXICON_SLOVNYK_CACHE", str(stale_dir))
+
+    hits = _cached_slovnyk_hits("кобіта")
+    assert len(hits) == 1
+    assert hits[0]["source_family"] == "slovnyk_me"
 
 
 @pytest.mark.parametrize(

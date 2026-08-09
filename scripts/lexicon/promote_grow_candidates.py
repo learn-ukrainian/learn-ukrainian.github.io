@@ -45,7 +45,7 @@ from scripts.lexicon.enrich_manifest import (
     _entry_has_learner_english_anchor,
     _fill_learner_english_anchor_from_slovnyk_cache,
     _is_cyrillic_only_gloss,
-    _load_slovnyk_cache_file,
+    _load_current_slovnyk_cache_file,
     _slovnyk_cache_path,
     apply_participle_presentation,
     promotion_entry_gate_violations,
@@ -905,7 +905,7 @@ def _fill_cached_anchors_for_new_entries(
     anchorless: list[str] = []
     for entry in entries:
         lemma = _candidate_lemma(entry)
-        cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
         if _fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, cache):
             filled.append(lemma)
         if not _entry_has_learner_english_anchor(entry):

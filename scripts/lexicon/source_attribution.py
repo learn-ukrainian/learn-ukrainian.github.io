@@ -55,6 +55,9 @@ ESUM_LABEL = (
 GRINCHYSHYN_LABEL = "Словник паронімів української мови (Д. Г. Гринчишин, О. А. Сербенська, 1986)"
 UKRMOVA_LABEL = "довідник «Укр-мова» (корпусні пари)"
 SYNONYM_VERDICTS_LABEL = "редакторські вердикти синонімів"
+ORTHOGRAPHY_LABEL = "Орфографічний словник української мови"
+HOLOSKEVYCH_LABEL = "Правописний словник Голоскевича (1929)"
+ORTHOEPY_LABEL = "Орфоепічний словник української мови"
 
 
 RELATION_PAIRS_PREFIX = "relation_pairs/"
@@ -75,6 +78,9 @@ SLUG_ACADEMIC_LABELS: dict[str, str] = {
     "davydov": DAVYDOV_LABEL,
     "voloschak": VOLOSHCHAK_LABEL,
     "foreign_shtepa": SHTEPA_LABEL,
+    "orthography": ORTHOGRAPHY_LABEL,
+    "holoskevych": HOLOSKEVYCH_LABEL,
+    "orthoepy": ORTHOEPY_LABEL,
 }
 
 LEGACY_LABEL_ALIASES: dict[str, str] = {
@@ -111,6 +117,9 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         GRINCHYSHYN_LABEL,
         UKRMOVA_LABEL,
         SYNONYM_VERDICTS_LABEL,
+        ORTHOGRAPHY_LABEL,
+        HOLOSKEVYCH_LABEL,
+        ORTHOEPY_LABEL,
     }
 )
 
