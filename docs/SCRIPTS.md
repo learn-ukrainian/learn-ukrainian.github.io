@@ -1363,6 +1363,9 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   not a new coordination plane, and fleet-comms/file handoffs remain durable
   authority.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
+- A local service that must intentionally outlive its launching task needs the
+  [detached-session contract](runbooks/background-session-tasks.md); do not
+  weaken process-group cleanup or keep its state in task `$TMPDIR`.
 
 ### Channel bridge — preferred for multi-turn
 
