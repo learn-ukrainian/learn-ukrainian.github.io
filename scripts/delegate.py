@@ -1976,6 +1976,76 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
     return bool((status_proc.stdout or "").strip())
 
 
+def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
+    """Capture the observable Git state of a read-only worker's checkout.
+
+    The snapshot includes ignored files because a writeful legacy audit can
+    create ignored cache entries that ordinary ``git status`` deliberately
+    hides.  It is diagnostic only: this guard reports leaked paths and never
+    removes them, since a pre-existing user file cannot be attributed safely.
+    """
+    commands = (
+        (
+            "status",
+            ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
+        ),
+        (
+            "ignored",
+            ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+        ),
+    )
+    outputs: dict[str, str] = {}
+    for label, command in commands:
+        try:
+            proc = subprocess.run(
+                command,
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+            )
+        except OSError as exc:
+            return None, f"{label} snapshot could not start: {type(exc).__name__}: {exc}"
+        if proc.returncode != 0:
+            return None, f"{label} snapshot failed: {_format_process_failure(proc)}"
+        outputs[label] = proc.stdout or ""
+
+    entries: dict[str, str] = {}
+    status_records = outputs["status"].split("\0")
+    index = 0
+    while index < len(status_records):
+        record = status_records[index]
+        index += 1
+        if not record:
+            continue
+        if len(record) < 4 or record[2] != " ":
+            return None, "status snapshot returned an unparseable porcelain record"
+        state, path = record[:2], record[3:]
+        entries[path] = state
+        # Porcelain v1 emits the pre-rename/pre-copy path as a second NUL item.
+        if "R" in state or "C" in state:
+            if index >= len(status_records) or not status_records[index]:
+                return None, "status snapshot returned an incomplete rename/copy record"
+            entries[status_records[index]] = f"{state}:source"
+            index += 1
+    for path in outputs["ignored"].split("\0"):
+        if path:
+            entries[path] = "!!"
+    return entries, None
+
+
+def _read_only_mutation_paths(
+    before: dict[str, str], after: dict[str, str]
+) -> list[str]:
+    """Return exact paths whose observable Git state changed during a review."""
+    return sorted(
+        path
+        for path in set(before) | set(after)
+        if before.get(path) != after.get(path)
+    )
+
+
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     tracked = subprocess.run(
         ["git", "diff", "--name-only", "HEAD", "--"],
@@ -3333,6 +3403,15 @@ def _run_worker(
     _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
+    read_only_checkout_pre: dict[str, str] | None = None
+    read_only_checkout_post: dict[str, str] | None = None
+    read_only_snapshot_error: str | None = None
+    read_only_mutation_paths: list[str] = []
+    if mode == "read-only":
+        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+        state["read_only_checkout_pre"] = read_only_checkout_pre
+        state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+        _write_state_atomic(state_path, state)
     start = time.monotonic()
     ok_outcome = False
     stderr_excerpt = None
@@ -3509,6 +3588,22 @@ def _run_worker(
 
         final_state = _read_state(state_path) or {}
 
+        if mode == "read-only":
+            read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            final_state["read_only_checkout_post"] = read_only_checkout_post
+            if read_only_snapshot_error is None and post_snapshot_error is not None:
+                read_only_snapshot_error = post_snapshot_error
+            final_state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+            if read_only_checkout_pre is not None and read_only_checkout_post is not None:
+                read_only_mutation_paths = _read_only_mutation_paths(
+                    read_only_checkout_pre,
+                    read_only_checkout_post,
+                )
+            final_state["read_only_mutation_paths"] = read_only_mutation_paths
+            if read_only_mutation_paths:
+                final_status = "failed"
+                ok_outcome = False
+
         # Write the full response to a result file (may be large).
         if response:
             result_path = state_path.with_suffix(".result")
@@ -3635,6 +3730,11 @@ def _run_worker(
             ok_outcome = False
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+        if read_only_mutation_paths:
+            last_error = (
+                "read-only checkout mutation detected: "
+                + ", ".join(read_only_mutation_paths)
+            )
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
 

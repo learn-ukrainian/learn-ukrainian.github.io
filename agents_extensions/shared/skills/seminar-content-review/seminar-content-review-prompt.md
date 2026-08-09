@@ -4,6 +4,18 @@ You are fact-checking **built** Ukrainian seminar content (FOLK, HIST, BIO, ISTO
 
 **Core principle — "sounds scholarly" ≠ "is accurate".** Confident, specific prose (exact dates, named subtypes, technical terms, attributions) is the *highest*-risk content, not the safest: a fabrication is most dangerous when it is fluent. Treat every specific claim as UNVERIFIED until a source confirms it. Do NOT reward tone.
 
+## Read-only execution contract
+
+Return this review in your response; do not write a repository report or run
+legacy `scripts/audit_module.py` / `scripts.audit.audit_module`. Those legacy
+audits create status and audit artifacts. For deterministic context, use only
+the stdout-only commands named by `seminar-content-review` (no `--output`, no
+`--astro-build`). Do not create `status/`, `audit/`, `review/`, `.cache/`, or
+telemetry artifacts. `module_quality_audit` is advisory coverage evidence, not
+a promotion gate: do not invent a release blocker from it. The active machine
+gate is `verify_shippable`; factual and decolonization findings belong in this
+report, not in a generated checkout artifact.
+
 ## Authority sources — use ALL, in this order of trust
 
 1. **Ukrainian Wikipedia** — `mcp__sources__query_wikipedia` (modes: `summary`, `extract` for deep checks, `sections`/`section`, `search`). Primary authority for people, events, dates, places, cultural categories. Search in Ukrainian.
