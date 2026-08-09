@@ -265,8 +265,9 @@ DEFAULT_HARD_TIMEOUT_S = 7200
 # for build/test/enrich jobs merely because wrapper stdout is expected to be
 # quiet; that recreates the false-kill shape from #3875.
 DEFAULT_SILENCE_TIMEOUT_S = 3600
-# Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
-# activity at startup — distinct from the long silence window above (#2071).
+# Fail fast only when no observable startup activity occurs: stdout/stderr,
+# documented liveness-file updates, or process-tree CPU/disk work. This is
+# distinct from the long silence window above (#2071).
 # 600s: reasoning-heavy models at high/max effort routinely think for minutes
 # before their first token; the old 180s killed healthy workers mid-thought
 # (observed: deepseek review dispatch reaped at 181s, 1s over the limit).
@@ -3200,7 +3201,8 @@ def _run_worker(
             if getattr(exc, "kind", "stall") == "initial_response_timeout":
                 stderr_excerpt = (
                     f"initial_response_timeout fired after {exc.stall_timeout}s "
-                    f"with no first stdout/stderr/liveness activity: {exc} "
+                    f"with no first observable startup activity "
+                    f"(stdout, stderr, liveness file, or process-tree work): {exc} "
                     f"— raise it with --initial-response-timeout "
                     f"(current default {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}s)"
                 )[:500]
@@ -5072,7 +5074,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
         help=(
             "Startup probe: kill the agent CLI if it produces no "
-            "stdout/stderr/liveness activity within this many seconds "
+            "observable startup activity (stdout, stderr, liveness file, or "
+            "process-tree CPU/disk work) within this many seconds "
             f"(default: {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}; 0 disables). "
             "Distinct from --silence-timeout, which watches composite "
             "activity after startup (#2071, #3875)."

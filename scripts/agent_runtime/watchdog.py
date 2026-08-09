@@ -94,6 +94,9 @@ class WatchdogState:
         last_stdout_activity: monotonic timestamp of the most recent stdout
             line. Unlike ``last_activity``, stderr, liveness files, and
             process-tree activity never update this field.
+        observed_io: Whether any startup activity was observed. Despite the
+            historical name, this includes process-tree CPU/disk activity as
+            well as stdout/stderr and liveness-file updates.
         stop: Set to True by the main thread when the watchdog should exit.
         stdout_lines: Accumulated stdout lines captured by the streamer.
             The runner reads this on normal termination to build the final
@@ -413,7 +416,7 @@ def _sleep_until_stop(state: WatchdogState, duration_s: float) -> None:
 
 
 def _process_activity_poller(proc: subprocess.Popen, state: WatchdogState) -> None:
-    """Refresh last_activity while the subprocess tree is doing CPU/disk work."""
+    """Record process-tree CPU/disk work as liveness and startup activity."""
     primed_pids: set[int] = set()
     cpu_baselines: dict[int, float] = {}
     io_baselines: dict[int, tuple[int, int, int, int]] = {}
@@ -428,6 +431,10 @@ def _process_activity_poller(proc: subprocess.Popen, state: WatchdogState) -> No
             io_baselines,
         ):
             state.last_activity = time.monotonic()
+            # ``initial_response_timeout`` must not reject a productive
+            # invocation just because its first user-facing output is delayed.
+            # This covers quiet work such as edits, commits, and PR creation.
+            state.observed_io = True
         _sleep_until_stop(state, _PROCESS_ACTIVITY_POLL_INTERVAL_S)
 
 
@@ -637,8 +644,8 @@ def should_kill(
         None if the process should continue running.
         "hard_timeout" if total runtime exceeded hard_timeout.
         "initial_response_timeout" if the caller enabled startup probing and
-        the subprocess produced no stdout/stderr/liveness activity within that
-        window (#2071 startup hangs with response_chars=0).
+        the subprocess produced no stdout/stderr/liveness/process-tree activity
+        within that window (#2071 startup hangs with response_chars=0).
         "stdout_silence_timeout" if the caller explicitly enabled silence
         detection and no stdout/stderr/liveness/process-tree activity has
         arrived within that window.
