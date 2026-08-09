@@ -87,13 +87,27 @@ _VALID_CONCRETE_FAMILIES: frozenset[str] = frozenset(
 # Fail-closed author-identity outcomes: none of these is a real model family,
 # and a caller must never treat one as matching (or not matching) any
 # candidate's family — resolve_reviewer refuses to select a formal reviewer
-# for any of them.
+# for any of them. The unattested-harness sentinel is still unresolved (no
+# single-reviewer selection is possible against it), but unlike the others it
+# resolves to a dual-family quorum plan instead of a bare refusal.
 UNKNOWN_AUTHOR_FAMILY = "unknown"
 AMBIGUOUS_AUTHOR_FAMILY = "ambiguous"
 CONFLICTING_AUTHOR_FAMILY = "conflict"
+UNATTESTED_AUTHOR_FAMILY = "unattested-harness"
 UNRESOLVED_AUTHOR_FAMILIES: frozenset[str] = frozenset(
-    {UNKNOWN_AUTHOR_FAMILY, AMBIGUOUS_AUTHOR_FAMILY, CONFLICTING_AUTHOR_FAMILY}
+    {UNKNOWN_AUTHOR_FAMILY, AMBIGUOUS_AUTHOR_FAMILY, CONFLICTING_AUTHOR_FAMILY, UNATTESTED_AUTHOR_FAMILY}
 )
+
+# A multi-model harness session that positively attests it ran WITHOUT a
+# pinned model (Cursor Auto records model="auto", resolved_model=null). This
+# differs from a bare ambiguous harness: "ambiguous" means the record is
+# silent about which model ran, so a validated external override may fill the
+# gap; "unattested" means the harness explicitly recorded that no single
+# model was pinned, so no caller-asserted family can be corroborated — a
+# declared author_family against an auto attestation is a fail-closed
+# conflict, never a disambiguation.
+UNATTESTED_MODEL_TOKENS: frozenset[str] = frozenset({"auto"})
+UNATTESTED_HARNESS_SEATS: frozenset[str] = frozenset({"cursor-auto"})
 
 
 def resolve_author_family(author_model: str, author_family: str | None = None) -> str:
@@ -114,7 +128,11 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
     - ``"ambiguous"`` — a multi-model harness with no concrete model and no
       valid override to disambiguate it.
     - ``"conflict"`` — the embedded/resolved model family and an explicit
-      ``author_family`` override disagree.
+      ``author_family`` override disagree, or an override was declared
+      against a positive no-pinned-model (auto) attestation.
+    - ``"unattested-harness"`` — the harness positively attests no pinned
+      model (Cursor Auto). Not selectable as a single-reviewer identity;
+      :func:`resolve_reviewer` answers it with a dual-family quorum plan.
 
     Callers (:func:`resolve_reviewer`) must never select a formal reviewer
     against a fail-closed sentinel — an unresolved author identity is not
@@ -126,8 +144,15 @@ def resolve_author_family(author_model: str, author_family: str | None = None) -
         override = None  # an invalid/unrecognized override does not count as validated
 
     harness_token, sep, embedded = normalized.partition(":")
-    if sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded.strip():
-        resolved = resolve_family(embedded.strip())
+    embedded_token = embedded.strip()
+    if (sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded_token in UNATTESTED_MODEL_TOKENS) or (
+        normalized in UNATTESTED_HARNESS_SEATS
+    ):
+        # The harness attests the model was NOT pinned; a caller-asserted
+        # single family contradicts that attestation instead of resolving it.
+        return CONFLICTING_AUTHOR_FAMILY if override else UNATTESTED_AUTHOR_FAMILY
+    if sep and harness_token in AMBIGUOUS_HARNESS_SEATS and embedded_token:
+        resolved = resolve_family(embedded_token)
     elif normalized in AMBIGUOUS_HARNESS_SEATS or (normalize_seat(normalized) or "") in AMBIGUOUS_HARNESS_SEATS:
         resolved = None  # bare ambiguous harness, no embedded concrete model
     else:
@@ -474,6 +499,22 @@ class ReviewerResolution:
     # reviewer selected, since there is nothing reliable to diff a
     # candidate's family against.
     fail_closed_reason: str | None = None
+    # Dual-family quorum plan for an unattested-harness author (Cursor Auto:
+    # the harness attests no pinned model). ``selected`` stays None — there
+    # is no single reviewer of record; BOTH quorum seats must independently
+    # return an exact-head PASS verdict. Because the seats are from distinct
+    # attested families and the hidden author is at most one family, at
+    # least one quorum verdict is necessarily cross-family.
+    quorum: tuple[CandidateResult, ...] = ()
+    quorum_rule: str | None = None
+
+
+_DUAL_FAMILY_QUORUM_RULE = (
+    "unattested-harness author (harness attests no pinned model): the formal gate "
+    "requires two independent exact-head PASS verdicts from distinct attested, "
+    "formal-review-eligible families; whichever family the hidden author actually "
+    "was, at least one verdict is necessarily cross-family"
+)
 
 
 def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None) -> str | None:
@@ -725,6 +766,26 @@ def evaluate_candidate(
     )
 
 
+def _best_eligible(
+    eligible_by_fit_and_tier: dict[tuple[int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]],
+    *,
+    exclude_families: frozenset[str] = frozenset(),
+) -> tuple[ReviewerCandidate, CandidateResult, int] | None:
+    """Pick the best eligible entry: best (suitability, tier) group first,
+    deterministic selection_score inside it. ``exclude_families`` lets the
+    dual-family quorum path pick a second seat outside the first seat's
+    family without relaxing the fit-before-pressure ordering."""
+    filtered = {
+        fit_key: kept
+        for fit_key, entries in eligible_by_fit_and_tier.items()
+        if (kept := [item for item in entries if item[0].family not in exclude_families])
+    }
+    if not filtered:
+        return None
+    best_fit_and_tier = min(filtered)
+    return min(filtered[best_fit_and_tier], key=lambda item: item[1].selection_score or ())
+
+
 def resolve_reviewer(
     inputs: ResolverInputs,
     ladder: tuple[tuple[ReviewerCandidate, ...], ...] | None = None,
@@ -743,6 +804,13 @@ def resolve_reviewer(
     unrecognized identity, a bare ambiguous-model harness with no
     disambiguation, or a conflicting override). See
     :func:`resolve_author_family`.
+
+    Exception: an ``unattested-harness`` author (Cursor Auto — the harness
+    positively attests no pinned model) resolves to a **dual-family quorum**
+    instead of a bare refusal: ``selected`` stays ``None`` and ``quorum``
+    carries two seats from distinct attested, formal-review-eligible
+    families, each of which must independently PASS at the same exact head.
+    Fewer than two eligible distinct families still fails closed.
     """
     if runtime_state is not None:
         # The state owner injects a transaction-consistent snapshot. This
@@ -817,7 +885,22 @@ def resolve_reviewer(
         )
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
-    if author_family in UNRESOLVED_AUTHOR_FAMILIES:
+    quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY
+    if quorum_required and inputs.pinned_candidate:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_SCHEDULER_POLICY_VERSION,
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=(
+                "explicit reviewer pin cannot satisfy the dual-family quorum required "
+                "for an unattested-harness author — two distinct-family seats must be resolved"
+            ),
+        )
+    if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required:
         reason = {
             UNKNOWN_AUTHOR_FAMILY: (
                 f"author identity unknown — cannot resolve a model family from author_model={inputs.author_model!r}"
@@ -896,6 +979,50 @@ def resolve_reviewer(
                 fit_key = (result.suitability_rank or 0, tier_for_candidate[candidate.name])
                 eligible_by_fit_and_tier.setdefault(fit_key, []).append((candidate, result, rung_index))
 
+    if quorum_required:
+        first = _best_eligible(eligible_by_fit_and_tier)
+        if first is None:
+            quorum_failure = (
+                "dual-family quorum unsatisfiable: no eligible formal-review candidate "
+                "for an unattested-harness author"
+            )
+        else:
+            second = _best_eligible(eligible_by_fit_and_tier, exclude_families=frozenset({first[0].family}))
+            quorum_failure = (
+                f"dual-family quorum unsatisfiable: only one eligible family ({first[0].family!r}) — "
+                "two distinct attested, formal-review-eligible families are required"
+            ) if second is None else None
+        if quorum_failure is not None:
+            return ReviewerResolution(
+                selected=None,
+                advisory=tuple(advisory),
+                trace=tuple(trace),
+                substitution_note=None,
+                policy_version=_SCHEDULER_POLICY_VERSION,
+                catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+                resolved_risk=risk,
+                fail_closed_reason=quorum_failure,
+            )
+        quorum_results: list[CandidateResult] = []
+        for _, seat_result, _ in (first, second):
+            promoted = replace(seat_result, status="selected")
+            for i, entry in enumerate(trace):
+                if entry is seat_result:
+                    trace[i] = promoted
+                    break
+            quorum_results.append(promoted)
+        return ReviewerResolution(
+            selected=None,
+            advisory=tuple(advisory),
+            trace=tuple(trace),
+            substitution_note=None,
+            policy_version=_SCHEDULER_POLICY_VERSION,
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            quorum=tuple(quorum_results),
+            quorum_rule=_DUAL_FAMILY_QUORUM_RULE,
+        )
+
     if inputs.pinned_candidate:
         pinned = [
             item for entries in eligible_by_fit_and_tier.values() for item in entries if item[0].name == inputs.pinned_candidate
@@ -914,11 +1041,7 @@ def resolve_reviewer(
         candidate, best, selected_rung_index = pinned[0]
         selected = best
     elif eligible_by_fit_and_tier:
-        best_fit_and_tier = min(eligible_by_fit_and_tier)
-        candidate, best, selected_rung_index = min(
-            eligible_by_fit_and_tier[best_fit_and_tier],
-            key=lambda item: item[1].selection_score or (),
-        )
+        candidate, best, selected_rung_index = _best_eligible(eligible_by_fit_and_tier)
         selected = best
 
     if selected is not None:
