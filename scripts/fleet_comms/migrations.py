@@ -668,4 +668,4 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
         except Exception:
             conn.rollback()
             raise
-    return MIGRATIONS[-1].version if MIGRATIONS else 0
+    return max(applied.keys(), default=0)

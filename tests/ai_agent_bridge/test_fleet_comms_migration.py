@@ -62,7 +62,9 @@ def test_apply_migrations_closes_prelock_read_transaction_and_returns_version(
 
     monkeypatch.setattr(migrations, "_applied_migrations", retain_initial_read_transaction)
     try:
-        assert migrations.apply_migrations(conn) == MIGRATIONS[-1].version
+        applied_version = migrations.apply_migrations(conn)
+        assert isinstance(applied_version, int)
+        assert applied_version == MIGRATIONS[-1].version
         assert conn.in_transaction is False
     finally:
         conn.close()
