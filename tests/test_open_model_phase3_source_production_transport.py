@@ -543,6 +543,35 @@ def test_run_rejects_transport_schema_drift_before_invocation(tmp_path: Path) ->
     assert invoked is False
 
 
+def test_voided_cycle001_production_cannot_run_or_ingest(tmp_path: Path) -> None:
+    fixture, manifest = _prepare(tmp_path)
+    root = fixture["private_dir"]
+    assert isinstance(root, Path)
+    manifest["denominator"] = transport._expected(None)
+    manifest["manifest_sha256"] = transport.sha256_value(
+        {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+    )
+    _json(root / "manifest.json", manifest)
+    invoked = False
+
+    def invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
+        nonlocal invoked
+        invoked = True
+        return 0, b"{}", b""
+
+    message = "voided evaluation cycle.*may not resume"
+    with pytest.raises(transport.SourceProductionError, match=message):
+        transport.run_author(manifest_path=root / "manifest.json", invoke=invoke)
+    assert invoked is False
+    with pytest.raises(transport.SourceProductionError, match=message):
+        transport.ingest_author(
+            manifest_path=root / "manifest.json",
+            packet_index=1,
+            raw_response_path=tmp_path / "must-not-be-read.raw",
+            provider_invocation_receipt_path=tmp_path / "must-not-be-read.json",
+        )
+
+
 def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
     identity = {
         "family_id": "calque_inventory",

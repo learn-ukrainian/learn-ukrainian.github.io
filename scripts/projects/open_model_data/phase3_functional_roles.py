@@ -21,13 +21,30 @@ if __package__ in {None, ""}:
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_cycle_void_receipt as cycle_void
+
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/correction_protection_functional_role_contract_v2_1.schema.json"
 LEDGER_PATH = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
+CYCLE002_ROLE_SCHEMA_PATH = DATA / "contracts/correction_protection_functional_role_contract_v2_2.schema.json"
+CYCLE002_ROLE_PATH = DATA / "evidence/correction_protection_functional_role_contract_v2_2.json"
+CYCLE002_EVALUATION_SCHEMA_PATH = DATA / "contracts/correction_protection_evaluation_contract_v2_2.schema.json"
+CYCLE002_EVALUATION_PATH = DATA / "evidence/correction_protection_evaluation_contract_v2_2.json"
 BASE_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+V2_1_ROLE_SCHEMA_SHA256 = "ea83fa8a540514ae4206464915c5f78d49baf524414d34bd1a5e983207d3c4cc"
+V2_1_ROLE_SHA256 = "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b"
+V2_1_EVALUATION_SCHEMA_SHA256 = "0e798247de3978631dace09c69b2e81f9a27807e1c8687ff695635d52a131ca3"
+V2_1_EVALUATION_SHA256 = "8db8cd1de8fdd9a6c345cea98243f1f4d6b3f4a2b2bdd5c15bb7c9543dfdf8e1"
+CYCLE001_VOID_RECEIPT_SCHEMA_PATH = "data/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
+CYCLE001_VOID_RECEIPT_PRODUCER_PATH = "scripts/projects/open_model_data/phase3_cycle_void_receipt.py"
+CYCLE001_VOID_RECEIPT_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"
+CYCLE001_VOID_RECEIPT_SCHEMA_SHA256 = "3ca1453da5a9442a1e41b558db70a4677c07c5cea05d699bf96568d8f16b015c"
+CYCLE001_VOID_RECEIPT_PRODUCER_SHA256 = "1213a5b24bcfeb5ff7a6bf0348d608d3b8e3f1ad940fda3b0cad507b428ff02d"
+CYCLE001_VOID_RECEIPT_FILE_SHA256 = "2d798dcd468955ea280b78f8e465c4983cdda7f0d495220bff93eb9bb8a790ad"
+CYCLE001_VOID_RECEIPT_SHA256 = "734297bbf9ebb30b4869132b76c5dc1f6f7544a60fc90628c1598718beaa3a5c"
 
 ROLE_TASKS = {
     "scope_circularity_critic": "phase3-v2-1-scope-circularity-review",
@@ -315,6 +332,135 @@ def verify(path: Path = LEDGER_PATH) -> dict[str, Any]:
         "role_graph_ready": True,
         "source_authoring_blocked": True,
         "phase4_blocked": True,
+    }
+
+
+def _verify_cycle002_document(path: Path, schema_path: Path, label: str) -> dict[str, Any]:
+    value = read_json(path)
+    schema = read_json(schema_path)
+    Draft202012Validator.check_schema(schema)
+    errors = sorted(Draft202012Validator(schema).iter_errors(value), key=lambda error: list(error.path))
+    require(not errors, f"{label} schema violation: {errors[0].message if errors else ''}")
+    preserved = value["preserved_v2_1_artifacts"]
+    require(
+        preserved
+        == {
+            "functional_role_schema_sha256": V2_1_ROLE_SCHEMA_SHA256,
+            "functional_role_evidence_sha256": V2_1_ROLE_SHA256,
+            "evaluation_schema_sha256": V2_1_EVALUATION_SCHEMA_SHA256,
+            "evaluation_evidence_sha256": V2_1_EVALUATION_SHA256,
+        },
+        f"{label} v2.1 preservation binding drift",
+    )
+    void_path = ROOT / CYCLE001_VOID_RECEIPT_LOGICAL_PATH
+    require(
+        sha256_file(ROOT / CYCLE001_VOID_RECEIPT_SCHEMA_PATH)
+        == CYCLE001_VOID_RECEIPT_SCHEMA_SHA256,
+        "cycle001 void-receipt schema hash drift",
+    )
+    require(
+        sha256_file(ROOT / CYCLE001_VOID_RECEIPT_PRODUCER_PATH)
+        == CYCLE001_VOID_RECEIPT_PRODUCER_SHA256,
+        "cycle001 void-receipt producer hash drift",
+    )
+    require(
+        sha256_file(void_path) == CYCLE001_VOID_RECEIPT_FILE_SHA256,
+        "cycle001 void-receipt file hash drift",
+    )
+    try:
+        void_receipt = cycle_void.verify_receipt_value(read_json(void_path))
+    except cycle_void.CycleVoidReceiptError as exc:
+        raise FunctionalRoleError(str(exc)) from exc
+    require(
+        void_receipt["receipt_sha256"] == CYCLE001_VOID_RECEIPT_SHA256,
+        "cycle001 void-receipt identity drift",
+    )
+    expected_void = {
+        "required": True,
+        "schema_logical_path": CYCLE001_VOID_RECEIPT_SCHEMA_PATH,
+        "schema_sha256": CYCLE001_VOID_RECEIPT_SCHEMA_SHA256,
+        "producer_logical_path": CYCLE001_VOID_RECEIPT_PRODUCER_PATH,
+        "producer_sha256": CYCLE001_VOID_RECEIPT_PRODUCER_SHA256,
+        "receipt_logical_path": CYCLE001_VOID_RECEIPT_LOGICAL_PATH,
+        "receipt_file_sha256": CYCLE001_VOID_RECEIPT_FILE_SHA256,
+        "receipt_sha256": CYCLE001_VOID_RECEIPT_SHA256,
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+        "heldout_labels": 2_000,
+        "completed_packet_count": 23,
+        "author_packet_count": 918,
+        "completed_referenced_unit_count": 947,
+        "review_assembly_disposition_ingest_must_be_zero": True,
+    }
+    require(
+        value["cycle001_void_receipt"] == expected_void,
+        f"{label} cycle001 void-receipt binding drift",
+    )
+    require(
+        value["cycle002"]
+        == {
+            "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-002",
+            "predecessor_cycle_void_receipt_required": True,
+            "fresh_release_and_evaluation_freezes_required": True,
+            "frozen_labels_before_extraction": 9_392,
+            "source_authoring_blocked_until_closure": True,
+        },
+        f"{label} cycle002 restart binding drift",
+    )
+    require(
+        value["preserved_constraints"]
+        == {
+            "denominators_unchanged": True,
+            "source_unit_total": 67_041,
+            "author_total": 43_812,
+            "evaluation_total": 9_392,
+            "quarantine_total": 13_837,
+            "breadth_floors_unchanged": True,
+            "phenomenon_count": 12,
+            "positive_floor_per_phenomenon": 30,
+            "acceptable_control_floor_per_phenomenon": 30,
+            "protected_floor_per_phenomenon": 30,
+            "distinct_document_floor_per_stratum": 3,
+            "evaluation_thresholds_unchanged": True,
+            "phase4_block_unchanged": True,
+        },
+        f"{label} preserved-constraint drift",
+    )
+    require(
+        value["source_authoring"]
+        == {"blocked": True, "reason": "cycle002_closure_not_established"},
+        f"{label} source-authoring closure drift",
+    )
+    return value
+
+
+def verify_cycle002_contracts(
+    role_path: Path = CYCLE002_ROLE_PATH,
+    role_schema_path: Path = CYCLE002_ROLE_SCHEMA_PATH,
+    evaluation_path: Path = CYCLE002_EVALUATION_PATH,
+    evaluation_schema_path: Path = CYCLE002_EVALUATION_SCHEMA_PATH,
+) -> dict[str, Any]:
+    """Verify the additive cycle002 contract layer without changing v2.1 semantics."""
+    require(sha256_file(SCHEMA_PATH) == V2_1_ROLE_SCHEMA_SHA256, "v2.1 role schema hash drift")
+    require(sha256_file(LEDGER_PATH) == V2_1_ROLE_SHA256, "v2.1 role evidence hash drift")
+    evaluation_schema = DATA / "contracts/correction_protection_evaluation_contract_v1.schema.json"
+    evaluation = DATA / "evidence/correction_protection_evaluation_contract_v1.json"
+    require(sha256_file(evaluation_schema) == V2_1_EVALUATION_SCHEMA_SHA256, "v2.1 evaluation schema hash drift")
+    require(sha256_file(evaluation) == V2_1_EVALUATION_SHA256, "v2.1 evaluation evidence hash drift")
+    role = _verify_cycle002_document(role_path, role_schema_path, "cycle002 role contract")
+    evaluation_value = _verify_cycle002_document(
+        evaluation_path, evaluation_schema_path, "cycle002 evaluation contract"
+    )
+    require(
+        role["cycle002"] == evaluation_value["cycle002"]
+        and role["preserved_constraints"] == evaluation_value["preserved_constraints"],
+        "cycle002 role/evaluation contract disagreement",
+    )
+    return {
+        "ok": True,
+        "role_contract_sha256": sha256_file(role_path),
+        "evaluation_contract_sha256": sha256_file(evaluation_path),
+        "evaluation_cycle_id": role["cycle002"]["evaluation_cycle_id"],
+        "source_authoring_blocked": True,
     }
 
 

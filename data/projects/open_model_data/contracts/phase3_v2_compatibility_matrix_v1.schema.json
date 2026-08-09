@@ -4,7 +4,7 @@
   "title": "Phase 3 v2 compatibility and invalidation matrix v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256", "legacy_provenance", "bindings", "functional_role_binding", "engine_bindings", "inventory", "legacy_claims", "source_authoring", "phase4"],
+  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256", "legacy_provenance", "bindings", "functional_role_binding", "cycle002_foundation_binding", "engine_bindings", "inventory", "legacy_claims", "source_authoring", "phase4"],
   "properties": {
     "schema_version": {"const": "phase3_v2_compatibility_matrix_v1"},
     "text_free": {"const": true},
@@ -41,6 +41,29 @@
         "role_graph_ready": {"const": true}
       }
     },
+    "cycle002_foundation_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_contract_logical_path", "role_contract_sha256", "role_schema_sha256", "evaluation_contract_logical_path", "evaluation_contract_sha256", "evaluation_schema_sha256", "void_receipt_logical_path", "void_receipt_schema_sha256", "void_receipt_producer_sha256", "void_receipt_file_sha256", "void_receipt_sha256", "validator_sha256", "evaluation_cycle_id", "required_frozen_labels_before_extraction", "source_authoring_blocked", "verified"],
+      "properties": {
+        "role_contract_logical_path": {"const": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_2.json"},
+        "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "role_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_contract_logical_path": {"const": "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v2_2.json"},
+        "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "void_receipt_logical_path": {"const": "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"},
+        "void_receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "void_receipt_producer_sha256": {"$ref": "#/$defs/sha256"},
+        "void_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "void_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "validator_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-002"},
+        "required_frozen_labels_before_extraction": {"const": 9392},
+        "source_authoring_blocked": {"const": true},
+        "verified": {"const": true}
+      }
+    },
     "engine_bindings": {
       "type": "array",
       "minItems": 42,
@@ -62,7 +85,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["blocked", "reason"],
-      "properties": {"blocked": {"const": false}, "reason": {"const": "heldout_labels_frozen_source_transport_ready"}}
+      "properties": {"blocked": {"const": true}, "reason": {"const": "cycle002_closure_not_established"}}
     },
     "phase4": {
       "type": "object",
@@ -90,6 +113,9 @@
             "functional_role_contract_rebound_to_v2_1",
             "evaluation_contract_rebound_to_v2_1",
             "heldout_labels_frozen_v2_1",
+            "cycle002_functional_role_contract_rebound",
+            "cycle002_evaluation_contract_rebound",
+            "cycle001_void_receipt_bound_for_cycle002",
             "pre_v2_linguistic_status_invalidated",
             "pre_v2_source_status_invalidated",
             "pre_v2_consumer_status_invalidated",

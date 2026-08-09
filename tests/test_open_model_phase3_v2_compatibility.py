@@ -29,12 +29,12 @@ def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
         "phase3_v2_1_amendment_sha256": compatibility.V2_1_AMENDMENT_SHA256,
         "phase3_v2_1_combined_contract_sha256": compatibility.V2_1_COMBINED_SHA256,
         "matrix_sha256": compatibility.sha256_file(compatibility.MATRIX_PATH),
-        "inventory_count": 28,
+        "inventory_count": 31,
         "invalidated_count": 21,
-        "rebound_count": 4,
+        "rebound_count": 7,
         "valid_count": 3,
         "role_graph_ready": True,
-        "source_authoring_blocked": False,
+        "source_authoring_blocked": True,
         "phase4_blocked": True,
     }
 
@@ -118,9 +118,25 @@ def test_pre_v2_role_contract_is_not_reused_as_independence_evidence() -> None:
     assert role_contract["disposition"] == "invalidated"
     assert role_contract["machine_reason"] == "pre_v2_role_contract_invalidated"
     assert matrix["source_authoring"] == {
-        "blocked": False,
-        "reason": "heldout_labels_frozen_source_transport_ready",
+        "blocked": True,
+        "reason": "cycle002_closure_not_established",
     }
+
+
+def test_cycle002_foundation_is_bound_and_fail_closed(tmp_path: Path) -> None:
+    matrix = _matrix()
+    binding = matrix["cycle002_foundation_binding"]
+    assert binding["evaluation_cycle_id"] == "phase3-v2-1-evaluation-cycle-002"  # type: ignore[index]
+    assert binding["required_frozen_labels_before_extraction"] == 9_392  # type: ignore[index]
+    assert binding["source_authoring_blocked"] is True  # type: ignore[index]
+    assert binding["verified"] is True  # type: ignore[index]
+
+    drifted = copy.deepcopy(matrix)
+    drifted["cycle002_foundation_binding"]["void_receipt_file_sha256"] = "0" * 64  # type: ignore[index]
+    path = tmp_path / "cycle002-drift.json"
+    _write(path, drifted)
+    with pytest.raises(compatibility.CompatibilityError, match="cycle002 foundation binding drift"):
+        compatibility.verify(path)
 
 
 def test_functional_role_ledger_has_exact_tasks_directed_edges_and_fail_closed_status() -> None:

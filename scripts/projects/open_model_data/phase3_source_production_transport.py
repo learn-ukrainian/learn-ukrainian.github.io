@@ -79,6 +79,7 @@ EXPECTED_AUTHOR = 43_812
 EXPECTED_EVALUATION = 9_392
 EXPECTED_QUARANTINE = 13_837
 EXPECTED_HELDOUT_LABELS = 2_000
+VOIDED_EVALUATION_CYCLE_ID = "phase3-v2-1-evaluation-cycle-001"
 
 AUTHOR = {
     "role_id": "rule_author_extractor",
@@ -346,6 +347,25 @@ def _expected(overrides: Mapping[str, Any] | None) -> dict[str, Any]:
     }
     require(set(result) == required, "expected-total override fields drift")
     return result
+
+
+def _reject_voided_production_cycle(manifest: Mapping[str, Any]) -> None:
+    """Prevent any further provider work or ingest for the voided production run.
+
+    Small hermetic fixtures use denominator overrides to exercise the transport.  The
+    real production manifest is distinguished by the complete, frozen denominator;
+    that exact cycle may never resume after its evaluation freeze changed.
+    """
+    is_voided_production = (
+        manifest.get("bindings", {}).get("evaluation_cycle_id")
+        == VOIDED_EVALUATION_CYCLE_ID
+        and manifest.get("denominator") == _expected(None)
+    )
+    require(
+        not is_voided_production,
+        "voided evaluation cycle phase3-v2-1-evaluation-cycle-001 may not resume; "
+        "start a fresh cycle with fresh evaluation freezes",
+    )
 
 
 def _counts(rows: Sequence[Mapping[str, Any]]) -> dict[str, int]:
@@ -832,6 +852,7 @@ def _run_packets(
         expected_prompt_hash = manifest["bindings"]["review_prompt_sha256"]
     else:
         require(manifest["schema_version"] == "phase3_source_production_manifest_v1", "author run requires source manifest")
+        _reject_voided_production_cycle(manifest)
         packet_count = manifest["author_packet_count"]
         actor, command_name = AUTHOR, "ask-agy"
         expected_prompt_hash = manifest["bindings"]["author_prompt_sha256"]
@@ -994,6 +1015,7 @@ def ingest_author(
 ) -> dict[str, Any]:
     """Preserve and validate one immutable Gemini response."""
     manifest, root = _manifest(manifest_path, schema_path)
+    _reject_voided_production_cycle(manifest)
     packet = _packet_for(manifest, root, packet_index, "author")
     _regular(raw_response_path, "raw author response")
     raw = raw_response_path.read_bytes()

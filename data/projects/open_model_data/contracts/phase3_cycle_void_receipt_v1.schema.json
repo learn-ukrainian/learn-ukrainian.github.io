@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle_void_receipt_v1.schema.json",
+  "title": "Text-free Phase 3 cycle-001 void receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "evaluation_cycle_id", "voided", "void_reason", "manifest_sha256", "heldout_labels", "completed_packet_indices", "completed_packet_count", "author_packet_count", "completed_referenced_unit_count", "execution_chain_sha256", "downstream_ingest", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_cycle_void_receipt_v1"},
+    "text_free": {"const": true},
+    "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+    "voided": {"const": true},
+    "void_reason": {"const": "cycle001_incomplete_author_execution_before_downstream_ingest"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "heldout_labels": {"const": 2000},
+    "completed_packet_indices": {"const": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 45, 776]},
+    "completed_packet_count": {"const": 23},
+    "author_packet_count": {"const": 918},
+    "completed_referenced_unit_count": {"const": 947},
+    "execution_chain_sha256": {"$ref": "#/$defs/sha256"},
+    "downstream_ingest": {"const": {"review": false, "assembly": false, "disposition": false, "author_ingest_not_asserted": true}},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
