@@ -609,15 +609,17 @@ def _ensure_migration_table(conn: sqlite3.Connection) -> None:
     )
 
 
-def apply_migrations(conn: sqlite3.Connection) -> int:
-    """Apply each known migration atomically and refuse unknown future versions."""
-    _ensure_migration_table(conn)
-    conn.commit()
-    known = {migration.version: migration for migration in MIGRATIONS}
-    applied = {
+def _applied_migrations(conn: sqlite3.Connection) -> dict[int, tuple[str, str]]:
+    return {
         int(row[0]): (str(row[1]), str(row[2]))
         for row in conn.execute("SELECT version, name, checksum FROM comms_schema_migrations")
     }
+
+
+def _validate_applied_migrations(
+    applied: dict[int, tuple[str, str]],
+    known: dict[int, Migration],
+) -> None:
     unknown = set(applied).difference(known)
     if unknown:
         raise CommsMigrationError(f"Unsupported future communications schema version(s): {sorted(unknown)}")
@@ -628,11 +630,32 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
         )
         if name != expected.name or checksum not in compatible:
             raise CommsMigrationError(f"Communications migration {version} has an unexpected checksum")
+
+
+def apply_migrations(conn: sqlite3.Connection) -> int:
+    """Apply each known migration atomically and refuse unknown future versions."""
+    _ensure_migration_table(conn)
+    conn.commit()
+    known = {migration.version: migration for migration in MIGRATIONS}
+    applied = _applied_migrations(conn)
+    _validate_applied_migrations(applied, known)
+    # Finish the optimistic read before acquiring a write transaction below.
+    # Some connection configurations retain that read transaction, in which
+    # case SQLite rejects a nested ``BEGIN IMMEDIATE``.
+    conn.commit()
     for migration in MIGRATIONS:
         if migration.version in applied:
             continue
         try:
             conn.execute("BEGIN IMMEDIATE")
+            # A concurrent opener may have committed this version while this
+            # connection waited for the write lock. Re-read only after the
+            # lock is held; the pre-lock snapshot is not safe for INSERTs.
+            applied = _applied_migrations(conn)
+            _validate_applied_migrations(applied, known)
+            if migration.version in applied:
+                conn.commit()
+                continue
             _ensure_delivery_contract_columns(conn)
             for statement in migration.statements:
                 conn.execute(statement)
@@ -641,7 +664,8 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
                 (migration.version, migration.name, migration.checksum, datetime.now(UTC).isoformat()),
             )
             conn.commit()
+            applied[migration.version] = (migration.name, migration.checksum)
         except Exception:
             conn.rollback()
             raise
-    return MIGRATIONS[-1].version if MIGRATIONS else 0
+    return max(applied.keys(), default=0)

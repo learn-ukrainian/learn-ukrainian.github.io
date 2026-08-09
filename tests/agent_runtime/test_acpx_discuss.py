@@ -14,6 +14,7 @@ import pytest
 from scripts.agent_runtime import acpx_discuss
 from scripts.agent_runtime.errors import AgentTimeoutError
 from scripts.agent_runtime.result import Result
+from scripts.fleet_comms import migrations
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.fleet_comms.message_plane import default_plane_root
@@ -1178,8 +1179,21 @@ def test_next_admitted_discussion_recovers_expired_reservation_before_new_calls(
 
 def test_racing_reservations_never_expose_a_conversation_without_created_event(tmp_path, monkeypatch):
     barrier = threading.Barrier(2)
+    migration_read_barrier = threading.Barrier(2)
+    migration_read_state = threading.local()
     returned: list[tuple[str, dict | None]] = []
     errors: list[BaseException] = []
+
+    original_applied_migrations = migrations._applied_migrations
+
+    def synchronize_initial_migration_read(conn):
+        applied = original_applied_migrations(conn)
+        if not getattr(migration_read_state, "initial_read_complete", False):
+            migration_read_state.initial_read_complete = True
+            migration_read_barrier.wait(timeout=2)
+        return applied
+
+    monkeypatch.setattr(migrations, "_applied_migrations", synchronize_initial_migration_read)
 
     def reserve():
         barrier.wait(timeout=2)
@@ -1192,7 +1206,7 @@ def test_racing_reservations_never_expose_a_conversation_without_created_event(t
                     task_digest="a", correlation_digest="b", idempotency_digest="same-key", rounds=1,
                     deadline_at="2099-01-01T00:00:00Z",
                 ))
-            except acpx_discuss.AcpxDiscussionError as exc:
+            except BaseException as exc:
                 errors.append(exc)
         finally:
             controller.close()
@@ -1202,8 +1216,10 @@ def test_racing_reservations_never_expose_a_conversation_without_created_event(t
         thread.start()
     for thread in threads:
         thread.join(timeout=3)
+    assert not any(thread.is_alive() for thread in threads)
     assert len(returned) == 1
     assert len(errors) == 1
+    assert isinstance(errors[0], acpx_discuss.AcpxDiscussionError)
     assert "still in progress" in str(errors[0])
     conversation_ids = {item[0] for item in returned}
     assert len(conversation_ids) == 1
