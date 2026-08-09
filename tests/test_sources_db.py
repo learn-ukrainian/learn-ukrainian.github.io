@@ -63,6 +63,42 @@ def sample_data(tmp_path):
     # Dictionaries (on fake gdrive)
     gdrive = tmp_path / "gdrive"
 
+    historical_dir = (
+        gdrive
+        / "historical_language_corpus"
+        / "canonical"
+        / "saint-sophia-inscriptions"
+    )
+    historical_dir.mkdir(parents=True)
+    historical_row = {
+        "schema_version": "historical-source-record.v1",
+        "collection_id": "saint-sophia-inscriptions",
+        "source_record_id": "1",
+        "title": "Графіті 1",
+        "source_url": "https://saintsophia.dh.gu.se/inscription/1",
+        "published": True,
+        "original_transcription": "тестовий напис",
+        "epidoc_text": "<ab>тестовий напис</ab>",
+        "epidoc_interpretation": "",
+        "interpretative_edition": "тестовий напис",
+        "romanisation": "",
+        "translation_ukr": "",
+        "translation_eng": "",
+        "commentary_ukr": "",
+        "commentary_eng": "",
+        "source_language_label": "Church Slavonic",
+        "source_writing_system_label": "Cyrillic",
+        "min_year": 1100,
+        "max_year": 1200,
+        "stage_label": None,
+        "disposition": "text_bearing",
+        "quality_flags": [],
+        "metadata": {"portal_id": 1},
+        "raw_record_sha256": "0" * 64,
+    }
+    with open(historical_dir / "historical_source_records.jsonl", "w") as f:
+        f.write(json.dumps(historical_row, ensure_ascii=False) + "\n")
+
     # Literary texts (under gdrive, same as real layout)
     lit_dir = gdrive / "literary_texts"
     lit_dir.mkdir(parents=True)
@@ -155,6 +191,7 @@ class TestBuildSourcesDb:
         assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 1
         assert conn.execute("SELECT subject FROM textbooks").fetchone()[0] == "ukrmova"
         assert conn.execute("SELECT COUNT(*) FROM literary_texts").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM historical_source_records").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM grinchenko").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM balla_en_uk").fetchone()[0] == 1
@@ -169,6 +206,11 @@ class TestBuildSourcesDb:
             "SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH '\"родовий\"'"
         ).fetchone()[0]
         assert fts >= 1
+        historical_fts = conn.execute(
+            "SELECT COUNT(*) FROM historical_source_records_fts "
+            "WHERE historical_source_records_fts MATCH '\"напис\"'"
+        ).fetchone()[0]
+        assert historical_fts == 1
         conn.close()
 
     def test_rebuilds_cleanly(self, sample_data, monkeypatch):
