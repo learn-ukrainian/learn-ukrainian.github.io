@@ -39,6 +39,45 @@ def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     }
 
 
+def test_engine_inventory_is_the_complete_current_v2_1_runtime_schema_closure() -> None:
+    matrix = _matrix()
+    bindings = matrix["engine_bindings"]  # type: ignore[index]
+    paths = {entry["logical_path"] for entry in bindings}  # type: ignore[index]
+    assert paths == compatibility.ENGINE_PATHS
+    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 26
+    assert all(entry["artifact_sha256"] for entry in bindings)  # type: ignore[index]
+    assert all(not path.startswith("data/projects/open_model_data/evidence/") for path in paths)
+
+
+def test_engine_inventory_rejects_missing_extra_unhashed_and_historical_v1_only_paths(tmp_path: Path) -> None:
+    baseline = _matrix()
+    cases: list[tuple[dict[str, object], str]] = []
+
+    missing = copy.deepcopy(baseline)
+    missing["engine_bindings"] = missing["engine_bindings"][1:]  # type: ignore[index]
+    cases.append((missing, "schema violation|engine binding set drift"))
+
+    extra = copy.deepcopy(baseline)
+    extra["engine_bindings"].append(copy.deepcopy(extra["engine_bindings"][0]))  # type: ignore[index]
+    cases.append((extra, "schema violation|engine binding set drift"))
+
+    unhashed = copy.deepcopy(baseline)
+    unhashed["engine_bindings"][0]["artifact_sha256"] = ""  # type: ignore[index]
+    cases.append((unhashed, "schema violation|artifact hash drift"))
+
+    historical = copy.deepcopy(baseline)
+    historical["engine_bindings"][0]["logical_path"] = (  # type: ignore[index]
+        "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
+    )
+    cases.append((historical, "schema violation|engine binding set drift"))
+
+    for index, (value, pattern) in enumerate(cases):
+        path = tmp_path / f"engine-matrix-{index}.json"
+        _write(path, value)
+        with pytest.raises(compatibility.CompatibilityError, match=pattern):
+            compatibility.verify(path)
+
+
 def test_matrix_rejects_v2_drift_semantic_reuse_and_missing_claim(tmp_path: Path) -> None:
     baseline = _matrix()
     cases = []

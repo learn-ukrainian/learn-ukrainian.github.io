@@ -28,11 +28,41 @@
     },
     "role_binding": {
       "type": "object", "additionalProperties": false,
-      "required": ["role_id", "controller_identity_id", "reserved_task_id"],
+      "required": ["role_id", "task_id"],
       "properties": {
         "role_id": {"type": "string", "minLength": 1},
-        "controller_identity_id": {"type": "string", "pattern": "^controller_[a-z0-9_]+$"},
-        "reserved_task_id": {"type": "string", "minLength": 1}
+        "task_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "functional_bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id"],
+      "properties": {
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"}
+      }
+    },
+    "role_execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["exact_model", "model_family", "harness"],
+      "properties": {
+        "exact_model": {"type": "string", "minLength": 1}, "model_family": {"type": "string", "minLength": 1},
+        "harness": {"type": "string", "minLength": 1}
+      }
+    },
+    "action_receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt_id", "role_id", "task_id", "action_kind", "provider", "exact_model", "model_family", "harness", "input_manifest_sha256", "output_sha256", "evaluation_cycle_id", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "started_at", "completed_at", "status"],
+      "properties": {
+        "receipt_id": {"type": "string", "minLength": 1}, "role_id": {"type": "string", "minLength": 1}, "task_id": {"type": "string", "minLength": 1}, "action_kind": {"type": "string", "minLength": 1}, "provider": {"type": "string", "minLength": 1},
+        "exact_model": {"type": "string", "minLength": 1}, "model_family": {"type": "string", "minLength": 1}, "harness": {"type": "string", "minLength": 1},
+        "input_manifest_sha256": {"$ref": "#/$defs/sha256"}, "output_sha256": {"$ref": "#/$defs/sha256"}, "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}, "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"}, "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"}, "started_at": {"type": "string", "format": "date-time", "pattern": "Z$"}, "completed_at": {"type": "string", "format": "date-time", "pattern": "Z$"}, "status": {"const": "completed"}
       }
     },
     "unit": {
@@ -51,26 +81,39 @@
     },
     "source_bindings": {
       "type": "object", "additionalProperties": false,
-      "required": ["coverage_contract_sha256", "role_contract_sha256", "source_freeze_receipt_sha256", "school_ledger_sha256", "frozen_unit_identity_sha256", "sources_db_sha256", "metadata_index_sha256", "tracked_file_total", "section_total", "section_tracked_file_total", "section_metadata_sha256"],
+      "required": ["coverage_contract_sha256", "source_freeze_receipt_sha256", "school_ledger_sha256", "frozen_unit_identity_sha256", "sources_db_sha256", "metadata_index_sha256", "tracked_file_total", "section_total", "section_tracked_file_total", "section_metadata_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id"],
       "properties": {
-        "coverage_contract_sha256": {"$ref": "#/$defs/sha256"}, "role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "coverage_contract_sha256": {"$ref": "#/$defs/sha256"},
         "source_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"}, "school_ledger_sha256": {"$ref": "#/$defs/sha256"},
         "frozen_unit_identity_sha256": {"$ref": "#/$defs/sha256"},
         "sources_db_sha256": {"$ref": "#/$defs/sha256"}, "metadata_index_sha256": {"$ref": "#/$defs/sha256"},
         "tracked_file_total": {"const": 168}, "section_total": {"const": 7250},
         "section_tracked_file_total": {"type": "integer", "minimum": 1, "maximum": 168},
-        "section_metadata_sha256": {"$ref": "#/$defs/sha256"}
+        "section_metadata_sha256": {"$ref": "#/$defs/sha256"},
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"}
       }
     },
     "scanner": {
       "type": "object", "additionalProperties": false,
-      "required": ["implementation_version", "script_path", "script_sha256", "candidate_classes", "classification_universe_sha256", "author"],
+      "required": ["implementation_version", "script_path", "script_sha256", "producer_task_id", "candidate_classes", "classification_universe_sha256", "input_manifest_sha256", "rubric_author_role_binding", "rubric_author_execution", "scope_critic_role_binding", "scope_critic_execution", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id"],
       "properties": {
         "implementation_version": {"const": "phase3_textbook_nonhit_v1"}, "script_path": {"const": "scripts/projects/open_model_data/phase3_textbook_nonhit.py"},
         "script_sha256": {"$ref": "#/$defs/sha256"},
+        "producer_task_id": {"const": "phase3-v2-1-textbook-scanner-implementation"},
         "candidate_classes": {"const": ["rule_bearing", "error_correction", "editing_exercise", "contrast", "metalinguistic_candidate"]},
         "classification_universe_sha256": {"$ref": "#/$defs/sha256"},
-        "author": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "rule_author_extractor"}}}]}
+        "input_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "rubric_author_role_binding": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "ukrainian_source_reviewer"}}}]}, "rubric_author_execution": {"$ref": "#/$defs/role_execution"},
+        "scope_critic_role_binding": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "scope_circularity_critic"}}}]}, "scope_critic_execution": {"$ref": "#/$defs/role_execution"},
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"}
       }
     },
     "rubric": {
@@ -87,11 +130,10 @@
     },
     "review_receipt": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "text_free", "scanner_author", "scanner_reviewer", "scanner", "metadata_index_sha256", "classification_universe_sha256", "rubric_sha256", "decision"],
+      "required": ["schema_version", "text_free", "producer_task_id", "scanner", "metadata_index_sha256", "classification_universe_sha256", "rubric_sha256", "input_manifest_sha256", "rubric_author_action_receipt", "scope_critic_action_receipt", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id"],
       "properties": {
-        "schema_version": {"const": "phase3_textbook_scanner_review_receipt_v1"}, "text_free": {"const": true},
-        "scanner_author": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "rule_author_extractor"}}}]},
-        "scanner_reviewer": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "ukrainian_source_reviewer"}}}]},
+        "schema_version": {"const": "phase3_textbook_scanner_inputs_v2_1"}, "text_free": {"const": true},
+        "producer_task_id": {"const": "phase3-v2-1-textbook-scanner-implementation"},
         "scanner": {
           "type": "object", "additionalProperties": false,
           "required": ["implementation_version", "script_path", "script_sha256"],
@@ -102,7 +144,13 @@
           }
         },
         "metadata_index_sha256": {"$ref": "#/$defs/sha256"}, "classification_universe_sha256": {"$ref": "#/$defs/sha256"},
-        "rubric_sha256": {"$ref": "#/$defs/sha256"}, "decision": {"const": "approved"}
+        "rubric_sha256": {"$ref": "#/$defs/sha256"}, "input_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "rubric_author_action_receipt": {"$ref": "#/$defs/action_receipt"}, "scope_critic_action_receipt": {"$ref": "#/$defs/action_receipt"},
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"}
       }
     },
     "scanner_review": {
@@ -125,9 +173,15 @@
     },
     "audit_contract": {
       "type": "object", "additionalProperties": false,
-      "required": ["auditor_role_id", "auditor_identity_id", "auditor_task_id", "sample_formula", "sampler_version", "stratification", "sampling_without_replacement", "entropy_contract", "arbitrary_seed_forbidden", "first_containing_origin_main_squash_merge_required", "unique_canonical_tuple_seed_required", "auditor_sole_attestor_committer", "seed_choice_reroll_reuse_forbidden", "passing_sample_reuse_forbidden", "zero_misses_required", "miss_invalidates_population_and_sample"],
+      "required": ["auditor_role_binding", "auditor_task_id", "auditor_execution", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id", "sample_formula", "sampler_version", "stratification", "sampling_without_replacement", "entropy_contract", "arbitrary_seed_forbidden", "first_containing_origin_main_squash_merge_required", "unique_canonical_tuple_seed_required", "auditor_sole_attestor_committer", "seed_choice_reroll_reuse_forbidden", "passing_sample_reuse_forbidden", "zero_misses_required", "miss_invalidates_population_and_sample"],
       "properties": {
-        "auditor_role_id": {"const": "textbook_nonhit_auditor"}, "auditor_identity_id": {"type": "string", "pattern": "^controller_[a-z0-9_]+$"}, "auditor_task_id": {"type": "string", "minLength": 1}, "sample_formula": {"const": "min(1000,nonhit_total)"},
+        "auditor_role_binding": {"allOf": [{"$ref": "#/$defs/role_binding"}, {"properties": {"role_id": {"const": "textbook_nonhit_auditor"}}}]}, "auditor_task_id": {"const": "phase3-v2-1-textbook-nonhit-audit"},
+        "auditor_execution": {"type": "object", "additionalProperties": false, "required": ["exact_model", "model_family", "harness"], "properties": {"exact_model": {"const": "grok-4.5"}, "model_family": {"const": "xai"}, "harness": {"const": "opencode"}}},
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"}, "sample_formula": {"const": "min(1000,nonhit_total)"},
         "sampler_version": {"const": "phase3_textbook_nonhit_hamilton_v1"}, "stratification": {"const": ["tracked_file", "source_identity"]},
         "sampling_without_replacement": {"const": true}, "entropy_contract": {"const": "approved_common_anti_grinding_v1"}, "arbitrary_seed_forbidden": {"const": true},
         "first_containing_origin_main_squash_merge_required": {"const": true}, "unique_canonical_tuple_seed_required": {"const": true},

@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_textbook_nonhit as scanner
 
 
@@ -56,6 +57,31 @@ def _frozen_unit(row_id: int) -> dict[str, object]:
     }
 
 
+def _action(
+    contract: dict[str, object], *, role_id: str, action_kind: str, input_sha256: str, output_sha256: str, role_sha256: str,
+) -> dict[str, object]:
+    binding = functional_roles.binding_for_role(contract, role_id)
+    execution = next(item for item in contract["functional_roles"] if item["role_id"] == role_id)
+    identity = {
+        "role_id": binding["role_id"], "task_id": binding["task_id"],
+        "input_manifest_sha256": input_sha256,
+        "evaluation_cycle_id": contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "output_sha256": output_sha256, "status": "completed",
+    }
+    return {
+        "receipt_id": "phase3_functional_action:" + scanner._hash(identity),
+        **identity,
+        "action_kind": action_kind, "provider": "fixture",
+        "exact_model": execution["exact_model"], "model_family": execution["model_family"], "harness": execution["harness"],
+        "base_contract_sha256": functional_roles.BASE_SHA256,
+        "amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
+        "functional_role_contract_sha256": role_sha256,
+        "conflict_graph_sha256": functional_roles.conflict_graph_sha256(contract),
+        "started_at": "2026-08-09T00:00:00Z", "completed_at": "2026-08-09T00:01:00Z",
+    }
+
+
 def _fixture_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, total: int = 8) -> dict[str, object]:
     tmp_path.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(scanner, "EXPECTED_UNIT_TOTAL", total)
@@ -68,18 +94,9 @@ def _fixture_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, total: int 
     ledger = tmp_path / "school.units.jsonl"
     ledger.write_text("".join(json.dumps(item, sort_keys=True) + "\n" for item in units), encoding="utf-8")
     coverage, roles, freeze = tmp_path / "coverage.json", tmp_path / "roles.json", tmp_path / "freeze.json"
-    contract_inputs = {"original_prompt_sha256": "a" * 64, "scope_amendment_sha256": "b" * 64, "combined_contract_sha256": "c" * 64}
-    _json(coverage, {"text_free": True, "contract_inputs": contract_inputs, "mandatory_families": [{"family_id": "school_textbooks", "scanner_nonhit_audit": {"auditor_role_id": scanner.AUDITOR_ROLE_ID, "seed_owner_role_id": scanner.AUDITOR_ROLE_ID, "sample_formula": "min(1000,nonhit_total)", "stratification": ["tracked_file", "source_identity"], "rubric_frozen_before_sampling": True, "zero_misses_required": True}}]})
-    role_rows = [
-        (scanner.AUDITOR_ROLE_ID, "controller_auditor", "task-auditor"),
-        (scanner.SCANNER_AUTHOR_ROLE_ID, "controller_author", "task-author"),
-        (scanner.SCANNER_REVIEWER_ROLE_ID, "controller_reviewer", "task-reviewer"),
-    ]
-    _json(roles, {
-        "contract_inputs": contract_inputs, "root": {"controller_identity_id": "controller_root"},
-        "seats": [{"role_id": role, "assignment_state": "assigned_verified", "controller_identity_attested": True, "controller_identity_id": identity} for role, identity, _ in role_rows],
-        "task_bindings": [{"role_id": role, "controller_identity_id": identity, "reserved_task_id": task, "status": "identity_attested_pre_artifact"} for role, identity, task in role_rows],
-    })
+    _json(coverage, {"text_free": True, "mandatory_families": [{"family_id": "school_textbooks", "scanner_nonhit_audit": {"auditor_role_id": scanner.AUDITOR_ROLE_ID, "seed_owner_role_id": scanner.AUDITOR_ROLE_ID, "sample_formula": "min(1000,nonhit_total)", "stratification": ["tracked_file", "source_identity"], "rubric_frozen_before_sampling": True, "zero_misses_required": True}}]})
+    role_value = json.loads(functional_roles.LEDGER_PATH.read_text(encoding="utf-8"))
+    _json(roles, role_value)
     _json(freeze, {
         "text_free": True, "input_sha256": {"sources_db": scanner.sha256_file(sources_db)},
         "families": [{"family_id": "school_textbooks", "unit_count": total, "ledger_sha256": scanner.sha256_file(ledger)}],
@@ -98,12 +115,28 @@ def _fixture_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, total: int 
         school_units=ledger, sources_db=sources_db,
     )
     classified = scanner._validated_classifications(units, bindings["metadata_rows"], classifications)
+    scanner_sha256 = scanner.sha256_file(scanner.ROOT / scanner.SCANNER_SCRIPT_PATH)
+    classification_sha256 = scanner._hash(classified)
+    rubric_sha256 = scanner._hash(rubric)
+    input_sha256 = scanner._hash({"producer_task_id": scanner.SCANNER_IMPLEMENTATION_TASK_ID, "scanner_sha256": scanner_sha256, "metadata_index_sha256": bindings["metadata_index_sha256"], "classification_universe_sha256": classification_sha256, "rubric_sha256": rubric_sha256})
+    author_input_sha256 = scanner._hash({"producer_task_id": scanner.SCANNER_IMPLEMENTATION_TASK_ID, "scanner_sha256": scanner_sha256, "candidate_classes": list(scanner.CANDIDATE_CLASSES), "rubric_id": rubric["rubric_id"]})
+    author_action = _action(
+        role_value, role_id="ukrainian_source_reviewer", action_kind="textbook_eligibility_rubric_fixture_freeze",
+        input_sha256=author_input_sha256, output_sha256=rubric_sha256, role_sha256=bindings["functional_role_contract_sha256"],
+    )
+    critic_input_sha256 = scanner._hash({"rubric_author_action_receipt_sha256": scanner._hash(author_action), "rubric_sha256": rubric_sha256, "positive_fixture_ids": rubric["positive_fixture_ids"], "negative_fixture_ids": rubric["negative_fixture_ids"], "expected_decisions": rubric["expected_decisions"]})
+    critic_action = _action(
+        role_value, role_id="scope_circularity_critic", action_kind="textbook_eligibility_rubric_zero_miss_review",
+        input_sha256=critic_input_sha256, output_sha256=scanner._hash({"rubric_sha256": rubric_sha256, "zero_miss": True}), role_sha256=bindings["functional_role_contract_sha256"],
+    )
     review = {
-        "schema_version": "phase3_textbook_scanner_review_receipt_v1", "text_free": True,
-        "scanner_author": bindings["scanner_author"], "scanner_reviewer": bindings["scanner_reviewer"],
-        "scanner": {"implementation_version": scanner.SCANNER_IMPLEMENTATION_VERSION, "script_path": scanner.SCANNER_SCRIPT_PATH, "script_sha256": scanner.sha256_file(scanner.ROOT / scanner.SCANNER_SCRIPT_PATH)},
-        "metadata_index_sha256": bindings["metadata_index_sha256"], "classification_universe_sha256": scanner._hash(classified),
-        "rubric_sha256": scanner._hash(rubric), "decision": "approved",
+        "schema_version": "phase3_textbook_scanner_inputs_v2_1", "text_free": True,
+        "producer_task_id": scanner.SCANNER_IMPLEMENTATION_TASK_ID,
+        "scanner": {"implementation_version": scanner.SCANNER_IMPLEMENTATION_VERSION, "script_path": scanner.SCANNER_SCRIPT_PATH, "script_sha256": scanner_sha256},
+        "metadata_index_sha256": bindings["metadata_index_sha256"], "classification_universe_sha256": classification_sha256,
+        "rubric_sha256": rubric_sha256, "input_manifest_sha256": input_sha256,
+        "rubric_author_action_receipt": author_action, "scope_critic_action_receipt": critic_action,
+        **{name: bindings[name] for name in ("base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id")},
     }
     review_path = tmp_path / "review.json"
     _json(review_path, review)
@@ -144,14 +177,48 @@ def test_metadata_and_review_tampering_fail_closed(tmp_path: Path, monkeypatch: 
         scanner.build_bundle(**inputs)
     inputs = _fixture_inputs(tmp_path / "review", monkeypatch)
     review = json.loads(inputs["scanner_review_receipt"].read_text(encoding="utf-8"))
-    review["scanner_author"] = review["scanner_reviewer"]
+    review["producer_task_id"] = "phase3-v2-1-textbook-nonhit-audit"
     _json(inputs["scanner_review_receipt"], review)
-    with pytest.raises(scanner.TextbookNonhitError, match="scanner author"):
+    with pytest.raises(scanner.TextbookNonhitError, match="producer task"):
         scanner.build_bundle(**inputs)
     inputs = _fixture_inputs(tmp_path / "db", monkeypatch)
     with sqlite3.connect(inputs["sources_db"]) as connection:
         connection.execute("UPDATE textbooks SET source_file='drifted' WHERE id=1")
     with pytest.raises(scanner.TextbookNonhitError, match="sources database does not match"):
+        scanner.build_bundle(**inputs)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "error"),
+    [
+        ("missing_author", "receipt fields must be closed"),
+        ("swapped", "rubric author action receipt task binding"),
+        ("tampered_critic", "scope critic action input/output binding"),
+    ],
+)
+def test_rubric_author_and_scope_critic_receipts_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, error: str,
+) -> None:
+    inputs = _fixture_inputs(tmp_path, monkeypatch)
+    review_path = inputs["scanner_review_receipt"]
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    if mutation == "missing_author":
+        review.pop("rubric_author_action_receipt")
+    elif mutation == "swapped":
+        review["rubric_author_action_receipt"] = review["scope_critic_action_receipt"]
+    else:
+        review["scope_critic_action_receipt"]["input_manifest_sha256"] = "0" * 64
+    _json(review_path, review)
+    with pytest.raises(scanner.TextbookNonhitError, match=error):
+        scanner.build_bundle(**inputs)
+
+
+def test_legacy_controller_role_contract_is_not_current_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inputs = _fixture_inputs(tmp_path, monkeypatch)
+    _json(inputs["role_contract"], {"root": {"controller_identity_id": "controller_root"}, "seats": []})
+    with pytest.raises(scanner.TextbookNonhitError, match="functional-role"):
         scanner.build_bundle(**inputs)
 
 
@@ -189,18 +256,25 @@ def test_audit_recomputes_sample_and_binds_immutable_auditor_receipt(tmp_path: P
     monkeypatch.setattr(scanner, "_verify_approved_entropy", lambda *args, **kwargs: _entropy())
     sample = scanner.draw_audit_sample(bundle, entropy_receipt={"opaque": "verified-by-common-helper"})
     decisions = [{"unit_id": row["unit_id"], "decision": "agree"} for row in sample["sample_units"]]
+    roles = json.loads(functional_roles.LEDGER_PATH.read_text(encoding="utf-8"))
+    action_input = scanner._hash({"bundle_sha256": scanner._hash(bundle), "sample_sha256": sample["sample_sha256"], "entropy_receipt_sha256": sample["entropy_receipt_sha256"]})
     receipt = {
         "schema_version": "phase3_textbook_nonhit_decision_receipt_v1", "text_free": True,
-        "auditor_role_id": scanner.AUDITOR_ROLE_ID, "auditor_identity_id": "controller_auditor", "auditor_task_id": "task-auditor",
+        "auditor_role_binding": bundle["audit_contract"]["auditor_role_binding"],
         "bundle_sha256": scanner._hash(bundle), "sample_sha256": sample["sample_sha256"],
         "entropy_receipt_sha256": sample["entropy_receipt_sha256"], "decisions": decisions,
         "decisions_sha256": scanner._hash(decisions),
+        "action_receipt": _action(roles, role_id=scanner.AUDITOR_ROLE_ID, action_kind="textbook_nonhit_audit_results", input_sha256=action_input, output_sha256=scanner._hash(decisions), role_sha256=bundle["audit_contract"]["functional_role_contract_sha256"]),
     }
     receipt_path = tmp_path / "decisions.json"
     _json(receipt_path, receipt)
     passed = scanner.validate_audit_results(bundle, sample, entropy_receipt={}, decision_receipt_path=receipt_path)
     assert passed["status"] == "PASS_ZERO_MISSES"
     assert passed["result_sha256"] == scanner._hash({key: value for key, value in passed.items() if key != "result_sha256"})
+    receipt["action_receipt"]["task_id"] = "phase3-v2-1-rule-author-extraction"
+    _json(receipt_path, receipt)
+    with pytest.raises(scanner.TextbookNonhitError, match="task binding"):
+        scanner.validate_audit_results(bundle, sample, entropy_receipt={}, decision_receipt_path=receipt_path)
     sample["sample_units"][0] = dict(bundle["population"]["candidate_units"][0])
     with pytest.raises(scanner.TextbookNonhitError, match="sample differs"):
         scanner.validate_audit_results(bundle, sample, entropy_receipt={}, decision_receipt_path=receipt_path)
@@ -212,12 +286,15 @@ def test_nonagree_result_invalidates_population_and_requires_fresh_entropy(tmp_p
     sample = scanner.draw_audit_sample(bundle, entropy_receipt={})
     decisions = [{"unit_id": row["unit_id"], "decision": "agree"} for row in sample["sample_units"]]
     decisions[0]["decision"] = "ambiguous_eligibility"
+    roles = json.loads(functional_roles.LEDGER_PATH.read_text(encoding="utf-8"))
+    action_input = scanner._hash({"bundle_sha256": scanner._hash(bundle), "sample_sha256": sample["sample_sha256"], "entropy_receipt_sha256": sample["entropy_receipt_sha256"]})
     receipt = {
         "schema_version": "phase3_textbook_nonhit_decision_receipt_v1", "text_free": True,
-        "auditor_role_id": scanner.AUDITOR_ROLE_ID, "auditor_identity_id": "controller_auditor", "auditor_task_id": "task-auditor",
+        "auditor_role_binding": bundle["audit_contract"]["auditor_role_binding"],
         "bundle_sha256": scanner._hash(bundle), "sample_sha256": sample["sample_sha256"],
         "entropy_receipt_sha256": sample["entropy_receipt_sha256"], "decisions": decisions,
         "decisions_sha256": scanner._hash(decisions),
+        "action_receipt": _action(roles, role_id=scanner.AUDITOR_ROLE_ID, action_kind="textbook_nonhit_audit_results", input_sha256=action_input, output_sha256=scanner._hash(decisions), role_sha256=bundle["audit_contract"]["functional_role_contract_sha256"]),
     }
     path = tmp_path / "miss.json"
     _json(path, receipt)

@@ -10,24 +10,25 @@ Ukrainian-review adjudications which this module only validates.
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import math
 import re
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any
 
 from jsonschema import Draft202012Validator, ValidationError
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
+
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json"
-SOURCE_UNIVERSE_DIR = ROOT / "data/projects/open_model_data/evidence/source_universe_v1"
-SOURCE_FREEZE_RECEIPT_PATH = SOURCE_UNIVERSE_DIR / "source-universe-freeze-receipt.json"
-ROLE_CONTRACT_PATH = ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
-SOURCE_FREEZE_RECEIPT_SHA256 = "39061cc9c76d3cc510497dfb1df19639c07f76eb933599a3930137bf60ee31a0"
-ROLE_CONTRACT_SHA256 = "05679fb356fd29fb9a14102a87020b8d06940edd43b3538a05d811bf845260cf"
 SCHEMA_VERSION = "phase3_pravopys_delta_bundle_v1"
+CURRENT_SOURCE_FREEZE_STATUS = "SOURCE_UNIVERSE_CURRENT_V2_1"
+SOURCE_FREEZE_WRAPPER_SCHEMA_VERSION = "phase3_pravopys_source_freeze_wrapper_v2_1"
+LEGACY_SOURCE_FREEZE_STATUS = "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY"
 EDITION_2019 = "pravopys_2019_complete"
 EDITION_2026 = "pravopys_2026_complete"
 EDITION_TOTALS = {EDITION_2019: 1090, EDITION_2026: 1466}
@@ -53,24 +54,17 @@ SEMANTIC_DISPOSITIONS = frozenset({
 })
 UKRAINIAN_REVIEWER_ROLE = "ukrainian_source_reviewer"
 AUDITOR_ROLE = "disposition_auditor"
-UKRAINIAN_REVIEWER_TASK_ID = "review-phase3-recovery-contract-domain-v8"
-UKRAINIAN_REVIEWER_CONTROLLER_ID = "controller_phase3_ukrainian_reviewer_01"
-SOURCE_LEDGER_SHA256 = {
-    EDITION_2019: "fdb02b99bd284813e035687ae64ad41693f9d995b0e1d6666d5b5dfbf1dc9080",
-    EDITION_2026: "dbf53af0f5f1c70790bad4e8e5943f700ea8f0a5d4b1311723cc1ce0fbb22006",
+REVIEW_ACTION_KIND = "pravopys_delta_ukrainian_review"
+AUDIT_ACTION_KIND = "pravopys_delta_audit_results"
+SOURCE_REVIEW_ACTION_KIND = "pravopys_source_freeze_ukrainian_review"
+ROLE_PROVIDERS = {
+    UKRAINIAN_REVIEWER_ROLE: "xai",
+    AUDITOR_ROLE: "anthropic",
 }
-SOURCE_LEDGER_PATHS = {edition: SOURCE_UNIVERSE_DIR / f"{edition}.units.jsonl" for edition in EDITION_TOTALS}
 
 
 class PravopysDeltaError(ValueError):
     """A candidate, adjudication, freeze, or audit artifact is unsafe."""
-
-
-class ApprovedCommonEntropyContract(Protocol):
-    """Narrow post-#6388 integration point; no local entropy implementation."""
-
-    def derive_audit_entropy(self, context: Mapping[str, str]) -> bytes:
-        """Verify the approved tuple and return its common-contract entropy."""
 
 
 def canonical_json(value: Any) -> str:
@@ -89,11 +83,45 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def source_universe_sha256() -> str:
-    """Return the identity hash for the two sealed Pravopys source ledgers."""
+def source_universe_sha256(source_freeze: Mapping[str, Any]) -> str:
+    """Return the identity hash for one caller-supplied current source freeze."""
+    return sha256_json(dict(source_freeze))
+
+
+def source_freeze_input_manifest_sha256(
+    input_sha256: Mapping[str, Any], ledger_sha256: Mapping[str, Any], ledger_unit_counts: Mapping[str, Any],
+) -> str:
+    """Hash the fixed inputs a v2.1 source-review task was given."""
     return sha256_json({
-        "source_freeze_receipt_sha256": SOURCE_FREEZE_RECEIPT_SHA256,
-        "ledger_sha256": SOURCE_LEDGER_SHA256,
+        "input_sha256": dict(input_sha256),
+        "pravopys_ledgers": [
+            {
+                "family_id": edition,
+                "ledger_sha256": ledger_sha256[edition],
+                "unit_count": ledger_unit_counts[edition],
+            }
+            for edition in sorted(EDITION_TOTALS)
+        ],
+    })
+
+
+def source_freeze_review_result_sha256(wrapper: Mapping[str, Any]) -> str:
+    """Hash the closed, non-recursive reviewed-current-freeze result surface."""
+    return sha256_json({
+        field: wrapper[field]
+        for field in (
+            "source_status",
+            "legacy_receipt_sha256",
+            "source_freeze_input_manifest_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "evaluation_cycle_id",
+            "source_review_receipt_locator",
+            "source_review_receipt_sha256",
+        )
     })
 
 
@@ -196,54 +224,130 @@ def generate_candidate_alignment(
     return sorted(records, key=lambda record: record["candidate_id"])
 
 
-def load_frozen_pravopys_ledgers(
-    *,
-    receipt_path: Path = SOURCE_FREEZE_RECEIPT_PATH,
-    ledger_paths: Mapping[str, Path] = SOURCE_LEDGER_PATHS,
-) -> tuple[Mapping[str, Any], list[Mapping[str, Any]], list[Mapping[str, Any]]]:
-    """Load only the two exact, current text-free Pravopys freeze ledgers.
+def _validated_source_freeze(
+    source_freeze: Mapping[str, Any], *, repo_root: Path = ROOT, role_contract_path: Path = functional_roles.LEDGER_PATH,
+) -> tuple[Mapping[str, Any], Path, dict[str, Path]]:
+    """Bind a current v2.1 wrapper to a historical receipt and its ledgers.
 
-    The receipt, receipt manifest, family receipts, and on-disk JSONL bytes are
-    all checked before a caller can use a unit.  This is intentionally not a
-    generic loader: another receipt requires a separately reviewed contract.
+    The historical v1 receipt stays a byte-bound provenance payload.  Current
+    source status exists only in the wrapper and is admitted only with the
+    v2.1 Ukrainian source-review action receipt.
     """
-    _require(receipt_path == SOURCE_FREEZE_RECEIPT_PATH, "unapproved source-freeze receipt path")
-    _require(sha256_file(receipt_path) == SOURCE_FREEZE_RECEIPT_SHA256, "source-freeze receipt SHA drift")
+    manifest = _as_mapping(source_freeze, "source-freeze manifest must be an object")
+    _require(
+        set(manifest) == {
+            "wrapper_schema_version", "legacy_receipt_path", "legacy_receipt_sha256", "source_status",
+            "input_sha256", "ledger_sha256", "ledger_unit_counts",
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
+            "source_freeze_input_manifest_sha256", "source_review_receipt_locator", "source_review_receipt_sha256",
+            "source_review_result_sha256",
+            "source_review_action_receipt",
+        },
+        "source-freeze wrapper fields drift",
+    )
+    _require(manifest.get("wrapper_schema_version") == SOURCE_FREEZE_WRAPPER_SCHEMA_VERSION, "wrong source-freeze wrapper schema")
+    receipt_path_value = manifest.get("legacy_receipt_path")
+    _require(isinstance(receipt_path_value, str) and receipt_path_value, "legacy source-freeze receipt path missing")
+    receipt_path = (repo_root / receipt_path_value).resolve()
+    _require(receipt_path.is_relative_to(repo_root.resolve()), "legacy source-freeze receipt escapes repository root")
+    _require(receipt_path.is_file() and not receipt_path.is_symlink(), "legacy source-freeze receipt is missing")
+    _require(sha256_file(receipt_path) == manifest.get("legacy_receipt_sha256"), "legacy source-freeze receipt SHA drift")
+    _require(manifest.get("source_status") == CURRENT_SOURCE_FREEZE_STATUS, "invalidated or non-current source-freeze status")
     receipt = _read_json(receipt_path)
     _require(receipt.get("schema_version") == "phase3_source_universe_freeze_v1", "wrong source-freeze receipt schema")
     _require(receipt.get("text_free") is True, "source-freeze receipt is not text-free")
-    _require(receipt.get("status") == "SOURCE_UNIVERSE_FROZEN_NOT_COVERAGE_READY", "source-freeze receipt status drift")
-    _require(_as_mapping(receipt.get("input_sha256"), "source-freeze input hashes missing") == {
-        "calque_module": "d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5",
-        "pravopys_2019_pdf": EDITION_HASHES[EDITION_2019],
-        "pravopys_2026_pdf": EDITION_HASHES[EDITION_2026],
-        "r2u_cache": "182e8685b420d982ff753f38e8a4b1043191f10925d2802cb30252c4f7b6e2e7",
-        "sources_db": "eb5e0c3745020def62d5d5cdfb5190bc8a91d6c3dc04b05f5f98f259b3696c4d",
-        "vesum_db": "3ed0fda490c576046c67c65b1b463ab9c7d2948749cc28768f4e83559b541462",
-    }, "source-freeze acquired PDF provenance drift")
+    _require(receipt.get("status") == LEGACY_SOURCE_FREEZE_STATUS, "legacy receipt is not historical-only provenance")
+    _require(receipt.get("input_sha256") == manifest["input_sha256"], "source-freeze input binding drift")
+    input_hashes = _as_mapping(manifest.get("input_sha256"), "source-freeze input hashes missing")
+    _require(
+        set(input_hashes) == {
+            "calque_module", "pravopys_2019_pdf", "pravopys_2026_pdf", "r2u_cache", "sources_db", "vesum_db",
+        }
+        and all(isinstance(value, str) and re.fullmatch(r"[a-f0-9]{64}", value) for value in input_hashes.values()),
+        "source-freeze input hash shape drift",
+    )
+    ledger_hashes = _as_mapping(manifest.get("ledger_sha256"), "source-freeze ledger hashes missing")
+    _require(set(ledger_hashes) == set(EDITION_TOTALS), "source-freeze ledger family set drift")
+    _require(all(isinstance(value, str) and re.fullmatch(r"[a-f0-9]{64}", value) for value in ledger_hashes.values()), "source-freeze ledger hash syntax drift")
+    ledger_unit_counts = _as_mapping(manifest.get("ledger_unit_counts"), "source-freeze ledger counts missing")
+    _require(ledger_unit_counts == EDITION_TOTALS, "source-freeze ledger denominator drift")
     families = {item.get("family_id"): item for item in receipt.get("families", []) if isinstance(item, Mapping)}
-    payloads = {item.get("path"): item for item in _as_mapping(receipt.get("artifact_manifest"), "source-freeze manifest missing").get("payloads", []) if isinstance(item, Mapping)}
-    rows: dict[str, list[Mapping[str, Any]]] = {}
+    payloads = {
+        item.get("path"): item
+        for item in _as_mapping(receipt.get("artifact_manifest"), "source-freeze manifest missing").get("payloads", [])
+        if isinstance(item, Mapping)
+    }
+    ledger_paths: dict[str, Path] = {}
     for edition in EDITION_TOTALS:
-        path = ledger_paths.get(edition)
-        _require(path == SOURCE_LEDGER_PATHS[edition], "unapproved source-freeze ledger path")
-        _require(path.is_file(), "missing frozen Pravopys ledger")
         family = _as_mapping(families.get(edition), "source-freeze family receipt missing")
-        payload = _as_mapping(payloads.get(path.name), "source-freeze payload manifest missing")
-        _require(family == {
-            "family_id": edition,
-            "ledger_file": path.name,
-            "ledger_sha256": SOURCE_LEDGER_SHA256[edition],
-            "unit_count": EDITION_TOTALS[edition],
-        }, "source-freeze family receipt drift")
-        _require(payload.get("sha256") == SOURCE_LEDGER_SHA256[edition], "source-freeze payload SHA drift")
-        _require(sha256_file(path) == SOURCE_LEDGER_SHA256[edition], "frozen Pravopys ledger SHA drift")
+        ledger_name = f"{edition}.units.jsonl"
+        path = receipt_path.parent / ledger_name
+        _require(path.is_file() and not path.is_symlink(), "missing frozen Pravopys ledger")
+        payload = _as_mapping(payloads.get(ledger_name), "source-freeze payload manifest missing")
+        _require(
+            family.get("ledger_file") == ledger_name
+            and family.get("ledger_sha256") == ledger_hashes[edition]
+            and family.get("unit_count") == ledger_unit_counts[edition],
+            "source-freeze family receipt drift",
+        )
+        _require(payload.get("sha256") == ledger_hashes[edition], "source-freeze payload SHA drift")
+        _require(sha256_file(path) == ledger_hashes[edition], "frozen Pravopys ledger SHA drift")
+        ledger_paths[edition] = path
+    role_contract, bindings = load_functional_role_bindings(path=role_contract_path)
+    source_binding = bindings[UKRAINIAN_REVIEWER_ROLE]
+    for field, expected in (
+        ("base_contract_sha256", functional_roles.BASE_SHA256),
+        ("amendment_sha256", functional_roles.AMENDMENT_SHA256),
+        ("combined_contract_sha256", functional_roles.COMBINED_SHA256),
+        ("functional_role_contract_sha256", source_binding["functional_role_contract_sha256"]),
+        ("conflict_graph_sha256", source_binding["conflict_graph_sha256"]),
+        ("evaluation_cycle_id", source_binding["evaluation_cycle_id"]),
+    ):
+        _require(manifest.get(field) == expected, "source-freeze v2.1 contract binding drift")
+    expected_input_manifest = source_freeze_input_manifest_sha256(input_hashes, ledger_hashes, ledger_unit_counts)
+    _require(
+        manifest.get("source_freeze_input_manifest_sha256") == expected_input_manifest,
+        "source-freeze review input manifest binding drift",
+    )
+    _require(
+        isinstance(manifest.get("source_review_receipt_locator"), str)
+        and re.fullmatch(r"immutable://[^\s]+", manifest["source_review_receipt_locator"]) is not None,
+        "immutable source-review receipt locator missing",
+    )
+    _require(
+        isinstance(manifest.get("source_review_receipt_sha256"), str)
+        and re.fullmatch(r"[a-f0-9]{64}", manifest["source_review_receipt_sha256"]) is not None,
+        "immutable source-review receipt hash missing",
+    )
+    expected_result = source_freeze_review_result_sha256(manifest)
+    _require(manifest.get("source_review_result_sha256") == expected_result, "source-freeze review result binding drift")
+    _action_receipt_is_valid(
+        manifest.get("source_review_action_receipt"),
+        role_contract=role_contract,
+        binding=source_binding,
+        action_kind=SOURCE_REVIEW_ACTION_KIND,
+        input_manifest_sha256=expected_input_manifest,
+        output_sha256=expected_result,
+    )
+    return receipt, receipt_path, ledger_paths
+
+
+def load_frozen_pravopys_ledgers(
+    source_freeze: Mapping[str, Any], *, repo_root: Path = ROOT, role_contract_path: Path = functional_roles.LEDGER_PATH,
+) -> tuple[Mapping[str, Any], list[Mapping[str, Any]], list[Mapping[str, Any]]]:
+    """Load current, hash-bound text-free Pravopys ledgers supplied by a manifest."""
+    _, _, ledger_paths = _validated_source_freeze(
+        source_freeze, repo_root=repo_root, role_contract_path=role_contract_path,
+    )
+    rows: dict[str, list[Mapping[str, Any]]] = {}
+    for edition, path in ledger_paths.items():
         ledger = _read_jsonl(path)
         _require(len(ledger) == EDITION_TOTALS[edition], "frozen Pravopys ledger line count drift")
         rows[edition] = ledger
     _unit_view(rows[EDITION_2019], EDITION_2019)
     _unit_view(rows[EDITION_2026], EDITION_2026)
-    return receipt, rows[EDITION_2019], rows[EDITION_2026]
+    return dict(source_freeze), rows[EDITION_2019], rows[EDITION_2026]
 
 
 def _validate_candidates(candidates: Sequence[Mapping[str, Any]], old: Mapping[str, Any], new: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
@@ -280,66 +384,155 @@ def _validate_candidates(candidates: Sequence[Mapping[str, Any]], old: Mapping[s
     return by_id
 
 
-def load_ukrainian_reviewer_binding(*, path: Path = ROLE_CONTRACT_PATH) -> Mapping[str, str]:
-    """Return the exact assigned Ukrainian-reviewer seat/task binding."""
-    _require(path == ROLE_CONTRACT_PATH, "unapproved reviewer role-contract path")
-    _require(sha256_file(path) == ROLE_CONTRACT_SHA256, "reviewer role-contract SHA drift")
-    contract = _read_json(path)
-    _require(contract.get("schema_version") == "correction_protection_role_contract_v1", "wrong reviewer role-contract schema")
-    seats = [item for item in contract.get("seats", []) if isinstance(item, Mapping) and item.get("seat_id") == "seat_ukrainian_source_reviewer"]
-    bindings = [item for item in contract.get("task_bindings", []) if isinstance(item, Mapping) and item.get("role_id") == UKRAINIAN_REVIEWER_ROLE]
-    _require(len(seats) == len(bindings) == 1, "reviewer seat/task binding is missing or ambiguous")
-    _require(seats[0] == {
-        "seat_id": "seat_ukrainian_source_reviewer",
-        "role_id": UKRAINIAN_REVIEWER_ROLE,
-        "assignment_state": "assigned_verified",
-        "controller_identity_id": UKRAINIAN_REVIEWER_CONTROLLER_ID,
-        "controller_identity_attested": True,
-        "ukrainian_capable_required": True,
-        "may_decide": ["source_span_roles", "ukrainian_claims", "source_conflicts", "normative_scope"],
-        "must_not": ["extract_rules_reviewed", "seal_heldout", "score"],
-    }, "Ukrainian reviewer seat drift")
-    _require(bindings[0] == {
-        "role_id": UKRAINIAN_REVIEWER_ROLE,
-        "reserved_task_id": UKRAINIAN_REVIEWER_TASK_ID,
-        "controller_identity_id": UKRAINIAN_REVIEWER_CONTROLLER_ID,
-        "status": "combined_contract_text_approved_pre_artifact",
-        "artifact_approval_claimed": False,
-        "program_completion_claimed": False,
-    }, "Ukrainian reviewer task binding drift")
-    return {
-        "role_contract_sha256": ROLE_CONTRACT_SHA256,
-        "seat_id": "seat_ukrainian_source_reviewer",
-        "role_id": UKRAINIAN_REVIEWER_ROLE,
-        "review_task_id": UKRAINIAN_REVIEWER_TASK_ID,
-        "reviewer_controller_identity": UKRAINIAN_REVIEWER_CONTROLLER_ID,
+def load_functional_role_bindings(
+    *, path: Path = functional_roles.LEDGER_PATH,
+) -> tuple[Mapping[str, Any], dict[str, dict[str, str]]]:
+    """Verify and expose only the v2.1 review/audit task bindings."""
+    _require(path.is_file() and not path.is_symlink(), "functional-role ledger is missing")
+    try:
+        contract = functional_roles.verify_value(functional_roles.read_json(path))
+        bindings = {
+            role_id: functional_roles.binding_for_role(contract, role_id)
+            for role_id in (UKRAINIAN_REVIEWER_ROLE, AUDITOR_ROLE)
+        }
+    except functional_roles.FunctionalRoleError as exc:
+        raise PravopysDeltaError(str(exc)) from exc
+    return contract, {
+        role_id: {
+            **binding,
+            "functional_role_contract_sha256": sha256_file(path),
+            "conflict_graph_sha256": functional_roles.conflict_graph_sha256(contract),
+            "evaluation_cycle_id": str(contract["evaluation_cycle"]["evaluation_cycle_id"]),
+        }
+        for role_id, binding in bindings.items()
     }
 
 
-def _review_is_valid(value: Any, *, semantic: bool, binding: Mapping[str, str]) -> bool:
+def _action_receipt_is_valid(
+    action: Any,
+    *,
+    role_contract: Mapping[str, Any],
+    binding: Mapping[str, str],
+    action_kind: str,
+    input_manifest_sha256: str,
+    output_sha256: str,
+) -> None:
+    receipt = _as_mapping(action, "functional action receipt is missing")
+    _require(set(receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
+    _require(
+        receipt.get("role_id") == binding["role_id"] and receipt.get("task_id") == binding["task_id"],
+        "functional action receipt task binding mismatch",
+    )
+    role = next(item for item in role_contract["functional_roles"] if item["role_id"] == binding["role_id"])
+    _require(
+        all(receipt.get(field) == role[field] for field in ("exact_model", "model_family", "harness")),
+        "functional action receipt lane mismatch",
+    )
+    _require(receipt.get("provider") == ROLE_PROVIDERS[binding["role_id"]], "functional action provider binding mismatch")
+    _require(receipt.get("action_kind") == action_kind, "functional action kind mismatch")
+    _require(
+        receipt.get("input_manifest_sha256") == input_manifest_sha256
+        and receipt.get("output_sha256") == output_sha256,
+        "functional action input/output binding mismatch",
+    )
+    _require(
+        receipt.get("evaluation_cycle_id") == binding["evaluation_cycle_id"]
+        and all(
+            receipt.get(field) == binding[field]
+            for field in (
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        )
+        and receipt.get("base_contract_sha256") == functional_roles.BASE_SHA256
+        and receipt.get("amendment_sha256") == functional_roles.AMENDMENT_SHA256
+        and receipt.get("combined_contract_sha256") == functional_roles.COMBINED_SHA256,
+        "functional action contract or evaluation-cycle binding mismatch",
+    )
+    _require(receipt.get("status") == "completed", "functional action is not complete")
+    _require(
+        all(isinstance(receipt.get(field), str) and receipt[field] for field in ("receipt_id", "started_at", "completed_at")),
+        "functional action metadata incomplete",
+    )
+    identity = {
+        field: receipt[field]
+        for field in ("role_id", "task_id", "input_manifest_sha256", "evaluation_cycle_id", "output_sha256", "status")
+    }
+    _require(
+        receipt["receipt_id"]
+        == "phase3_functional_action:" + hashlib.sha256(canonical_json(identity).encode("utf-8")).hexdigest(),
+        "functional action receipt ID mismatch",
+    )
+
+
+def _review_is_valid(
+    value: Any,
+    *,
+    semantic: bool,
+    binding: Mapping[str, str],
+    role_contract: Mapping[str, Any],
+    review_input_manifest_sha256: str,
+) -> bool:
     review = _as_mapping(value, "delta lacks external Ukrainian adjudication")
-    _require(review.get("role_contract_sha256") == binding["role_contract_sha256"], "review lacks exact role-contract SHA")
-    _require(review.get("seat_id") == binding["seat_id"] and review.get("role_id") == binding["role_id"], "delta reviewer seat/role drift")
-    _require(review.get("review_task_id") == binding["review_task_id"], "delta review task identity drift")
-    _require(review.get("reviewer_controller_identity") == binding["reviewer_controller_identity"], "delta reviewer identity drift")
+    _require(review.get("role_id") == binding["role_id"] and review.get("task_id") == binding["task_id"], "delta reviewer task binding drift")
     _require(isinstance(review.get("review_receipt_locator"), str) and re.fullmatch(r"immutable://[^\s]+", review["review_receipt_locator"]) is not None, "immutable Ukrainian review receipt locator missing")
     _require(isinstance(review.get("review_receipt_sha256"), str) and re.fullmatch(r"[a-f0-9]{64}", review["review_receipt_sha256"]) is not None, "immutable Ukrainian review receipt hash missing")
     _require(isinstance(review.get("evidence_locator"), str) and re.fullmatch(r"immutable://[^\s]+", review["evidence_locator"]) is not None, "immutable review evidence locator missing")
     _require(isinstance(review.get("evidence_sha256"), str) and re.fullmatch(r"[a-f0-9]{64}", review["evidence_sha256"]) is not None, "immutable review evidence hash missing")
     _require(review.get("adjudication_state") == "externally_reviewed", "delta is not externally reviewed")
+    _action_receipt_is_valid(
+        review.get("action_receipt"),
+        role_contract=role_contract,
+        binding=binding,
+        action_kind=REVIEW_ACTION_KIND,
+        input_manifest_sha256=review_input_manifest_sha256,
+        output_sha256=str(review["review_receipt_sha256"]),
+    )
     if semantic:
         _require(review.get("semantic_review") is True, "semantic delta lacks Ukrainian semantic review")
     return True
 
 
+def _delta_review_input_manifest_sha256(
+    source_freeze: Mapping[str, Any], row: Mapping[str, Any],
+) -> str:
+    """Hash the fixed non-review delta inputs that the reviewer was given."""
+    return sha256_json({
+        "source_freeze": dict(source_freeze),
+        "delta": {
+            field: row[field]
+            for field in (
+                "delta_id",
+                "delta_disposition",
+                "candidate_ids",
+                "unit_ids_2019",
+                "unit_ids_2026",
+                "edition_section_identity",
+            )
+        },
+    })
+
+
 def validate_delta_ledger(
     ledger: Sequence[Mapping[str, Any]], candidates: Sequence[Mapping[str, Any]],
     units_2019: Iterable[Mapping[str, Any]], units_2026: Iterable[Mapping[str, Any]],
-    *, reviewer_binding: Mapping[str, str] | None = None,
+    *,
+    source_freeze: Mapping[str, Any],
+    role_contract: Mapping[str, Any],
+    reviewer_binding: Mapping[str, str],
 ) -> dict[str, Any]:
     """Validate externally adjudicated delta rows against both frozen denominators."""
     old, new = _unit_view(units_2019, EDITION_2019), _unit_view(units_2026, EDITION_2026)
-    binding = reviewer_binding or load_ukrainian_reviewer_binding()
+    try:
+        verified_contract = functional_roles.verify_value(role_contract)
+        expected_binding = functional_roles.binding_for_role(verified_contract, UKRAINIAN_REVIEWER_ROLE)
+    except functional_roles.FunctionalRoleError as exc:
+        raise PravopysDeltaError(str(exc)) from exc
+    _require(
+        reviewer_binding["role_id"] == expected_binding["role_id"]
+        and reviewer_binding["task_id"] == expected_binding["task_id"],
+        "Ukrainian reviewer functional binding drift",
+    )
     _require(
         list(candidates) == generate_candidate_alignment(old.values(), new.values()),
         "candidate alignment differs from the deterministic mechanical generator",
@@ -367,7 +560,9 @@ def validate_delta_ledger(
         _review_is_valid(
             item.get("ukrainian_review"),
             semantic=disposition in SEMANTIC_DISPOSITIONS,
-            binding=binding,
+            binding=reviewer_binding,
+            role_contract=verified_contract,
+            review_input_manifest_sha256=_delta_review_input_manifest_sha256(source_freeze, item),
         )
         if disposition in {
             "unchanged",
@@ -420,7 +615,9 @@ def freeze_population(ledger: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     return {"population_frozen": True, "delta_total": len(rows), "population_sha256": sha256_json(rows), "sample_size": audit_sample_size(len(rows))}
 
 
-def validate_auditor_seed(seed_record: Mapping[str, Any], population: Mapping[str, Any]) -> None:
+def validate_auditor_seed(
+    seed_record: Mapping[str, Any], population: Mapping[str, Any], *, source_freeze: Mapping[str, Any],
+) -> None:
     """Validate only the anti-grinding attestation fields, never derive entropy."""
     _require(population.get("population_frozen") is True, "auditor seed precedes population freeze")
     _require(seed_record.get("population_sha256") == population.get("population_sha256"), "auditor seed is not bound to population freeze")
@@ -430,35 +627,56 @@ def validate_auditor_seed(seed_record: Mapping[str, Any], population: Mapping[st
     _require(seed_record.get("audit_id") == "pravopys_delta", "wrong common-entropy audit identity")
     _require(seed_record.get("family_id") == "pravopys_2019_2026_delta", "wrong common-entropy family identity")
     _require(isinstance(seed_record.get("first_containing_origin_main_squash_merge_sha"), str) and len(seed_record["first_containing_origin_main_squash_merge_sha"]) == 40, "first-containing origin/main squash-merge SHA missing")
-    _require(seed_record.get("universe_sha256") == source_universe_sha256(), "common-entropy source-universe binding drift")
+    _require(seed_record.get("universe_sha256") == source_universe_sha256(source_freeze), "common-entropy source-universe binding drift")
+    receipt = _as_mapping(seed_record.get("entropy_receipt"), "approved common entropy receipt is missing")
+    _require(
+        receipt.get("first_containing_merge_sha") == seed_record.get("first_containing_origin_main_squash_merge_sha"),
+        "common entropy first-containing binding drift",
+    )
 
 
 def _approved_entropy_bytes(
-    approved_common_entropy_contract: ApprovedCommonEntropyContract | None,
+    approved_common_entropy_contract: Any | None,
     *,
     seed_record: Mapping[str, Any],
     population: Mapping[str, Any],
-) -> bytes:
-    """Delegate entropy derivation to the approved common contract after #6388.
+    source_freeze: Mapping[str, Any],
+    repo_root: Path,
+) -> tuple[bytes, dict[str, str]]:
+    """Use the approved receipt verifier; injection is test-only plumbing.
 
-    This deliberately provides no fallback, salt, PR lookup, or entropy
-    derivation.  The injected contract alone owns the byte-stable tuple and
-    first-containing-origin/main verification.
+    Production always imports the common verifier.  A supplied verifier may be
+    used by hermetic tests, but it receives the exact production arguments and
+    cannot switch back to a caller-derived entropy protocol.
     """
-    _require(approved_common_entropy_contract is not None, "approved-common-entropy-contract-required")
-    derive = getattr(approved_common_entropy_contract, "derive_audit_entropy", None)
-    _require(callable(derive), "approved-common-entropy-contract-required")
-    context = {
-        "audit_id": str(seed_record["audit_id"]),
-        "family_id": str(seed_record["family_id"]),
-        "first_containing_origin_main_squash_merge_sha": str(seed_record["first_containing_origin_main_squash_merge_sha"]),
-        "population_freeze_sha256": str(population["population_sha256"]),
-        "population_sha256": str(seed_record["population_sha256"]),
-        "universe_sha256": str(seed_record["universe_sha256"]),
-    }
-    entropy = derive(context)
-    _require(isinstance(entropy, bytes) and entropy, "approved common entropy contract returned no entropy")
-    return entropy
+    if approved_common_entropy_contract is None:
+        module = importlib.import_module("scripts.projects.open_model_data.phase3_audit_entropy")
+        verifier = getattr(module, "verify_entropy_receipt", None)
+    else:
+        verifier = (
+            approved_common_entropy_contract
+            if callable(approved_common_entropy_contract)
+            else getattr(approved_common_entropy_contract, "verify_entropy_receipt", None)
+        )
+    _require(callable(verifier), "approved common entropy verifier is unavailable")
+    try:
+        result = verifier(
+            seed_record["entropy_receipt"],
+            purpose="pravopys_delta",
+            frozen_bundle_sha256=source_universe_sha256(source_freeze),
+            frozen_population_sha256=str(population["population_sha256"]),
+            auditor_role_id=AUDITOR_ROLE,
+            auditor_task_id=functional_roles.ROLE_TASKS[AUDITOR_ROLE],
+            repo_root=repo_root,
+        )
+    except Exception as exc:
+        raise PravopysDeltaError("approved common entropy receipt is invalid") from exc
+    _require(isinstance(result, Mapping), "approved common entropy verifier returned invalid result")
+    required = {"derived_seed", "entropy_receipt_sha256", "first_containing_merge_sha", "canonical_tuple_sha256"}
+    _require(set(result) == required and all(isinstance(result[key], str) for key in required), "approved common entropy verifier result shape drift")
+    _require(all(re.fullmatch(r"[a-f0-9]{64}", str(result[key])) for key in required - {"first_containing_merge_sha"}), "approved common entropy verifier returned invalid hashes")
+    _require(re.fullmatch(r"[a-f0-9]{40}", str(result["first_containing_merge_sha"])) is not None, "approved common entropy verifier returned invalid merge SHA")
+    return bytes.fromhex(str(result["derived_seed"])), {key: str(result[key]) for key in required}
 
 
 def draw_audit_sample(
@@ -466,14 +684,18 @@ def draw_audit_sample(
     population: Mapping[str, Any],
     seed_record: Mapping[str, Any],
     *,
-    approved_common_entropy_contract: ApprovedCommonEntropyContract | None = None,
+    source_freeze: Mapping[str, Any],
+    approved_common_entropy_contract: Any | None = None,
+    repo_root: Path = ROOT,
 ) -> dict[str, Any]:
     """Draw the independent, no-replacement Hamilton-stratified audit sample."""
-    validate_auditor_seed(seed_record, population)
-    entropy = _approved_entropy_bytes(
+    validate_auditor_seed(seed_record, population, source_freeze=source_freeze)
+    entropy, entropy_identity = _approved_entropy_bytes(
         approved_common_entropy_contract,
         seed_record=seed_record,
         population=population,
+        source_freeze=source_freeze,
+        repo_root=repo_root,
     )
     rows = sorted((dict(row) for row in ledger), key=lambda row: row["delta_id"])
     _require(population.get("population_sha256") == sha256_json(rows), "audit population changed after freeze")
@@ -491,10 +713,27 @@ def draw_audit_sample(
         sample.extend(ranked[:allocation[key]])
     sample_ids = sorted(row["delta_id"] for row in sample)
     _require(len(sample_ids) == len(set(sample_ids)) == int(population["sample_size"]), "audit sample violates no-replacement size")
-    return {"population_sha256": population["population_sha256"], "sample_size": len(sample_ids), "sample_delta_ids": sample_ids, "stratum_allocation": [{"delta_disposition": key[0], "edition_section_identity": key[1], "sample_count": allocation[key]} for key in sorted(allocation)]}
+    return {
+        "population_sha256": population["population_sha256"],
+        "sample_size": len(sample_ids),
+        "sample_delta_ids": sample_ids,
+        "stratum_allocation": [{"delta_disposition": key[0], "edition_section_identity": key[1], "sample_count": allocation[key]} for key in sorted(allocation)],
+        "entropy_receipt_sha256": entropy_identity["entropy_receipt_sha256"],
+        "first_containing_merge_sha": entropy_identity["first_containing_merge_sha"],
+        "canonical_tuple_sha256": entropy_identity["canonical_tuple_sha256"],
+        "derived_seed_sha256": sha256_json({"derived_seed": entropy_identity["derived_seed"]}),
+    }
 
 
-def validate_audit_results(sample: Mapping[str, Any], results: Sequence[Mapping[str, Any]], population: Mapping[str, Any]) -> None:
+def validate_audit_results(
+    sample: Mapping[str, Any],
+    results: Sequence[Mapping[str, Any]],
+    population: Mapping[str, Any],
+    *,
+    role_contract: Mapping[str, Any],
+    auditor_binding: Mapping[str, str],
+    audit_action_receipt: Mapping[str, Any],
+) -> None:
     _require(sample.get("population_sha256") == population.get("population_sha256"), "audit sample population binding drift")
     expected = set(sample.get("sample_delta_ids", []))
     _require(len(expected) == sample.get("sample_size") == population.get("sample_size"), "audit sample identity/count mismatch")
@@ -507,13 +746,23 @@ def validate_audit_results(sample: Mapping[str, Any], results: Sequence[Mapping[
         _require(item.get("repair_applied") is False, "repair invalidates freeze and sample")
         result_by_id[delta_id] = item
     _require(set(result_by_id) == expected, "audit results do not cover every sampled delta")
+    _action_receipt_is_valid(
+        audit_action_receipt,
+        role_contract=role_contract,
+        binding=auditor_binding,
+        action_kind=AUDIT_ACTION_KIND,
+        input_manifest_sha256=sha256_json(dict(sample)),
+        output_sha256=sha256_json(list(results)),
+    )
 
 
 def validate_bundle(
     bundle: Mapping[str, Any],
     *,
     schema_path: Path = SCHEMA_PATH,
-    approved_common_entropy_contract: ApprovedCommonEntropyContract | None = None,
+    role_contract_path: Path = functional_roles.LEDGER_PATH,
+    repo_root: Path = ROOT,
+    approved_common_entropy_contract: Any | None = None,
 ) -> dict[str, Any]:
     """Validate a complete, closed Pravopys delta bundle and all cross-record invariants."""
     try:
@@ -523,13 +772,11 @@ def validate_bundle(
     except (OSError, json.JSONDecodeError, ValidationError) as exc:
         raise PravopysDeltaError(f"delta bundle schema violation: {exc}") from exc
     _require(bundle.get("schema_version") == SCHEMA_VERSION and bundle.get("text_free") is True, "wrong text-free delta bundle")
-    _, frozen_2019, frozen_2026 = load_frozen_pravopys_ledgers()
-    _require(bundle["source_freeze"] == {
-        "receipt_path": "data/projects/open_model_data/evidence/source_universe_v1/source-universe-freeze-receipt.json",
-        "receipt_sha256": SOURCE_FREEZE_RECEIPT_SHA256,
-        "ledger_sha256": SOURCE_LEDGER_SHA256,
-    }, "source-freeze bundle binding drift")
-    binding = load_ukrainian_reviewer_binding()
+    source_freeze = _as_mapping(bundle["source_freeze"], "source-freeze bundle binding must be an object")
+    _, frozen_2019, frozen_2026 = load_frozen_pravopys_ledgers(
+        source_freeze, repo_root=repo_root, role_contract_path=role_contract_path,
+    )
+    role_contract, bindings = load_functional_role_bindings(path=role_contract_path)
     old = _unit_view(bundle["units_2019"], EDITION_2019)
     new = _unit_view(bundle["units_2026"], EDITION_2026)
     _require(list(old.values()) == frozen_2019 and list(new.values()) == frozen_2026, "bundle unit ledgers are not the exact source-freeze ledgers")
@@ -538,19 +785,34 @@ def validate_bundle(
         bundle["candidate_alignment"],
         old.values(),
         new.values(),
-        reviewer_binding=binding,
+        source_freeze=source_freeze,
+        role_contract=role_contract,
+        reviewer_binding=bindings[UKRAINIAN_REVIEWER_ROLE],
     )
     population = _as_mapping(bundle["population_freeze"], "population freeze must be an object")
     expected_population = freeze_population(bundle["delta_ledger"])
     _require(dict(population) == expected_population, "population freeze drift")
-    validate_auditor_seed(_as_mapping(bundle["auditor_seed"], "auditor seed must be an object"), population)
+    validate_auditor_seed(
+        _as_mapping(bundle["auditor_seed"], "auditor seed must be an object"),
+        population,
+        source_freeze=source_freeze,
+    )
     sample = draw_audit_sample(
         bundle["delta_ledger"],
         population,
         bundle["auditor_seed"],
+        source_freeze=source_freeze,
         approved_common_entropy_contract=approved_common_entropy_contract,
+        repo_root=repo_root,
     )
     _require(bundle["audit_sample"] == sample, "audit sample is not deterministic from independent seed")
-    validate_audit_results(bundle["audit_sample"], bundle["audit_results"], population)
+    validate_audit_results(
+        bundle["audit_sample"],
+        bundle["audit_results"],
+        population,
+        role_contract=role_contract,
+        auditor_binding=bindings[AUDITOR_ROLE],
+        audit_action_receipt=_as_mapping(bundle["audit_action_receipt"], "audit action receipt must be an object"),
+    )
     _require(coverage["delta_population_sha256"] == population["population_sha256"], "ledger/population digest mismatch")
     return {"ok": True, **coverage, "audit_sample_size": population["sample_size"]}
