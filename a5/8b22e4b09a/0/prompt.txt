@@ -1,0 +1,52 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/atlas-6370-promote-850
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Promote the 850 VESUM-attested Ohoiko/ULP lemmas into the Atlas (#6370, parent #4220/#4387)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: (driver fills at dispatch — catalog-data seam must be free, i.e. after
+  atlas-reenrich-delta-merge lands)
+- why_this_tier: bounded promotion through existing enrich/anchor tooling; measurement already
+  done and ledgered
+- owned_paths: scripts/atlas/** (usage), catalog data artifacts
+- acceptance_cmd: pytest (affected) + ruff + existing publish/QG gate
+- alternatives_considered: (filled at dispatch)
+- parallel_free_seats: (filled at dispatch)
+
+## Evidence preamble (#M-4)
+Re-derive every count locally (the ledger may be stale after the delta-merge lands). Ukrainian
+lemma validity: VESUM / sources MCP verified — CODE decides validity, no LLM judging.
+
+## Context
+- Measurement of record (issue #6370 comment 2026-08-07): 1,084 inventory lemmas missing from
+  Atlas; 850 `single_word_vesum_ok` promotion-ready; 218 paired-headword-comma; 12 multiword;
+  1 OCR typo (`тваринa` with Latin 'a'); 3 heritage-flagged.
+- Ledger: `batch_state/atlas-6370-ohoiko-residual.json` (re-derive before acting).
+- The prior agy dispatch ended no_deliverable — nothing was promoted.
+
+## Outcome wanted
+The re-derived `single_word_vesum_ok` set is promoted through the STANDARD enrich/anchor path
+(no raw injection — #5411 lesson), catalog gates green, PR opened with: promoted count,
+per-category residual table (paired/multiword/typo/heritage stay OPEN and named), entry-count
+delta quoted before/after.
+
+## Steps
+1. Dispatch worktree only. 2. Re-derive the residual against the CURRENT catalog (post
+delta-merge). 3. Promote via existing tooling — if the standard path can't handle some subset,
+that subset stays in the named residual; do NOT hand-inject. 4. pytest + ruff + publish gate.
+5. Conventional commit + X-Agent trailer, push, PR referencing #6370/#4220/#4387. 6. NO
+auto-merge. Report PR + counts + residual table.
+
+## Non-goals
+Paired-headword splitting policy (needs its own design decision), multiword phrases, the OCR
+typo fix upstream — all named residual, separate follow-ups.
