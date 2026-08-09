@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import stat
 import sys
 import tempfile
@@ -26,6 +27,7 @@ if __package__ in (None, ""):
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near_duplicate
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
@@ -36,7 +38,7 @@ SCHEMA_PATH = DATA / "contracts/phase3_rule_author_source_rows_v1.schema.json"
 PACKET_SCHEMA_PATH = DATA / "contracts/phase3_rule_author_packet_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_source_rows.py"
 PACKET_SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"
-IMPLEMENTATION_VERSION = "phase3_rule_author_source_rows_v1"
+IMPLEMENTATION_VERSION = "phase3_rule_author_source_rows_v2_1"
 ROWS_FILENAME = "rule_author_source_rows_v1.jsonl"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
@@ -212,7 +214,6 @@ _SAFE_BINDING_KEYS = frozenset(
         "role",
         "role_name",
         "actor_role",
-        "controller_identity_id",
         "task_id",
         "attestation_task_id",
         "seat_id",
@@ -243,7 +244,7 @@ def _assert_public_safe(
     forbidden = ("unit_id", "locator", "fingerprint", "source_text", "corrected_text", "source_record", "error", "correct", "doc_id", "body")
     approved = approved_strings or frozenset(
         {
-            "phase3_rule_author_source_rows_receipt_v1",
+            "phase3_rule_author_source_rows_receipt_v2_1",
             IMPLEMENTATION_VERSION,
         }
     )
@@ -261,7 +262,13 @@ def _assert_public_safe(
     elif isinstance(value, str):
         require(
             value in approved
-            or (len(value) == SHA256_LENGTH and all(char in "0123456789abcdef" for char in value)),
+            or (len(value) == SHA256_LENGTH and all(char in "0123456789abcdef" for char in value))
+            or (
+                value.startswith("phase3_functional_action:")
+                and len(value) == len("phase3_functional_action:") + SHA256_LENGTH
+                and all(char in "0123456789abcdef" for char in value.removeprefix("phase3_functional_action:"))
+            )
+            or re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", value) is not None,
             f"receipt contains unapproved text at {path}",
         )
 
@@ -322,37 +329,31 @@ def _clearance_and_bindings(
             evaluation_path=evaluation_path,
             coverage_path=coverage_path,
             role_path=role_path,
-            allow_legacy_source_rows=True,
-        )
+    )
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
-    require(partition_receipt.get("schema_version") == "phase3_heldout_public_receipt_v1", "wrong partition public receipt")
+    require(partition_receipt.get("schema_version") == "phase3_heldout_public_receipt_v2_1", "wrong partition public receipt")
     require(partition_receipt.get("text_free") is True, "partition public receipt is not text-free")
     require(heldout.receipt_body_sha256(partition_receipt) == partition_receipt.get("receipt_sha256"), "partition public receipt hash drift")
     role_contract = read_json(role_path, "role contract")
     try:
+        functional_roles.verify_value(role_contract)
         expected_steward = heldout.verify_role_binding(role_contract)
-    except heldout.PartitionError as exc:
+    except (functional_roles.FunctionalRoleError, heldout.PartitionError) as exc:
         raise SourceRowsError(str(exc)) from exc
     require(clearance.get("role_binding") == expected_steward, "clearance is not bound to assigned heldout steward")
     try:
         author = packets._derive_role_actor(role_contract, "rule_author_extractor")
     except packets.PacketCompilerError as exc:
         raise SourceRowsError(str(exc)) from exc
-    require(
-        author["controller_identity_id"] != expected_steward["controller_identity_id"],
-        "heldout steward and rule author identities must be distinct",
-    )
+    require(author["task_id"] != expected_steward["task_id"], "heldout steward and rule author task IDs must be distinct")
     public_bindings = partition_receipt.get("input_bindings")
     require(isinstance(public_bindings, Mapping), "partition public input bindings missing")
     clearance_bindings = clearance["input_bindings"]
-    clearance_contract_sha256 = (
-        packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256
-        if clearance.get("schema_version") == "phase3_author_clearance_receipt_v1"
-        else packets.COMBINED_CONTRACT_SHA256
-    )
     for key, actual in {
-        "combined_contract_sha256": clearance_contract_sha256,
+        "phase3_v2_contract_sha256": functional_roles.BASE_SHA256,
+        "phase3_v2_1_amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
         "source_universe_receipt_sha256": freeze_sha,
         "evaluation_contract_sha256": sha256_file(evaluation_path),
         "coverage_contract_sha256": sha256_file(coverage_path),
@@ -364,9 +365,23 @@ def _clearance_and_bindings(
     require(public_bindings.get("sources_db_sha256") == sha256_file(sources_db), "sources DB binding drift")
     for key in ("ua_eval_exclusion_manifest_sha256", "public_canary_exclusion_manifest_sha256"):
         require(clearance_bindings.get(key) == public_bindings.get(key), f"clearance {key} binding drift")
+    action_receipt = clearance.get("action_receipt")
+    require(isinstance(action_receipt, Mapping), "clearance action receipt missing")
+    try:
+        expected_action_receipt = heldout.build_action_receipt(
+            role_contract=role_contract,
+            role_contract_path=role_path,
+            input_bindings=clearance_bindings,
+            output=clearance.get("cleared_units"),
+            execution_metadata=heldout.execution_metadata_from_action(action_receipt),
+        )
+    except heldout.PartitionError as exc:
+        raise SourceRowsError(str(exc)) from exc
+    require(action_receipt == expected_action_receipt, "clearance action receipt drift")
     artifact_hashes = partition_receipt.get("artifact_hashes")
     require(isinstance(artifact_hashes, Mapping), "partition artifact hashes missing")
     require(artifact_hashes.get("author_clearance_sha256") == clearance.get("receipt_sha256"), "clearance receipt binding drift")
+    require(partition_receipt.get("action_receipt") == clearance.get("action_receipt"), "partition action evidence drift")
     for field in ("heldout_excluded", "ua_eval_exclusion_enforced", "public_canary_exclusion_enforced"):
         require(clearance.get(field) is True, f"clearance {field} is not exactly true")
     require(clearance.get("heldout_complement_encoded") is False, "clearance encodes a heldout complement")
@@ -482,12 +497,15 @@ def build(
     _atomic_write(rows_path, payload, PRIVATE_FILE_MODE)
     require((rows_path.stat().st_mode & 0o777) == PRIVATE_FILE_MODE, "private source-row file permissions too open")
     receipt = {
-        "schema_version": "phase3_rule_author_source_rows_receipt_v1",
+        "schema_version": "phase3_rule_author_source_rows_receipt_v2_1",
         "text_free": True,
         "implementation_version": IMPLEMENTATION_VERSION,
         "role_binding": steward,
         "rule_author_binding": author,
+        "action_receipt": clearance["action_receipt"],
         "input_bindings": {
+            "phase3_v2_contract_sha256": clearance["input_bindings"]["phase3_v2_contract_sha256"],
+            "phase3_v2_1_amendment_sha256": clearance["input_bindings"]["phase3_v2_1_amendment_sha256"],
             "combined_contract_sha256": clearance["input_bindings"]["combined_contract_sha256"],
             "source_universe_receipt_sha256": sha256_file(source_universe_dir / packets.LEDGER_RECEIPT),
             "ua_gec_ledger_sha256": ledger_sha,
@@ -495,6 +513,7 @@ def build(
             "evaluation_contract_sha256": sha256_file(evaluation_path),
             "coverage_contract_sha256": sha256_file(coverage_path),
             "role_contract_sha256": sha256_file(role_path),
+            "conflict_graph_sha256": functional_roles.conflict_graph_sha256(read_json(role_path, "role contract")),
             "near_duplicate_policy_sha256": sha256_file(near_duplicate_policy_path),
             "near_duplicate_policy_fingerprint_sha256": near_duplicate.PINNED_POLICY_FINGERPRINT,
             "author_clearance_receipt_sha256": clearance["receipt_sha256"],
@@ -521,11 +540,19 @@ def build(
     _validate(receipt, "receipt", "source-row receipt")
     approved = frozenset(
         {
-            "phase3_rule_author_source_rows_receipt_v1",
+            "phase3_rule_author_source_rows_receipt_v2_1",
             IMPLEMENTATION_VERSION,
             "heldout_steward",
-            "seat_heldout_steward",
             "rule_author_extractor",
+            "phase3-v2-1-heldout-stewardship",
+            "phase3-v2-1-rule-author-extraction",
+            "partition_seal_and_clear_author_units",
+            "local",
+            "phase3-heldout-partition-v1",
+            "deterministic",
+            "local-python",
+            "phase3-v2-1-evaluation-cycle-001",
+            "completed",
             * _binding_identity_strings(steward),
             * _binding_identity_strings(author),
         }

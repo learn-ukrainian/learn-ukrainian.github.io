@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
 from scripts.projects.open_model_data import phase3_rule_author_source_rows as rows
@@ -31,7 +32,7 @@ def _fixture(
 ) -> dict[str, Path]:
     root = tmp_path / "synthetic"
     data = root / "data/projects/open_model_data"
-    role = ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
+    role = ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
     evaluation = ROOT / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
     coverage = ROOT / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json"
     policy = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
@@ -62,11 +63,12 @@ def _fixture(
     freeze_receipt = {"schema_version": "phase3_source_universe_freeze_v1", "text_free": True, "merged_main_sha": "0" * 40, "families": [{"family_id": "ua_gec", "ledger_file": ledger.name, "ledger_sha256": rows.sha256_file(ledger)}]}
     _write(universe / "source-universe-freeze-receipt.json", freeze_receipt)
     steward = heldout.verify_role_binding(heldout.read_json(data / "role.json"))
-    clearance = {"schema_version": "phase3_author_clearance_receipt_v1", "text_free": True, "implementation_version": "phase3_heldout_partition_v1", "role_binding": steward, "input_bindings": {"combined_contract_sha256": packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256, "role_contract_sha256": rows.sha256_file(data / "role.json"), "evaluation_contract_sha256": rows.sha256_file(data / "evaluation.json"), "coverage_contract_sha256": rows.sha256_file(data / "coverage.json"), "source_universe_receipt_sha256": rows.sha256_file(universe / "source-universe-freeze-receipt.json"), "near_duplicate_policy_fingerprint_sha256": packets.near_duplicate.PINNED_POLICY_FINGERPRINT, "ua_eval_exclusion_manifest_sha256": "2" * 64, "public_canary_exclusion_manifest_sha256": "3" * 64}, "cleared_units": [{key: unit[key] for key in ("family_id", "unit_id", "unit_sha256")} for unit in units], "cleared_unit_count": len(units), "heldout_excluded": True, "ua_eval_exclusion_enforced": True, "public_canary_exclusion_enforced": True, "heldout_complement_encoded": False, "fingerprints_encoded": False, "locators_encoded": False}
+    clearance = {"schema_version": "phase3_author_clearance_receipt_v2_1", "text_free": True, "implementation_version": "phase3_heldout_partition_v2_1", "role_binding": steward, "input_bindings": {"phase3_v2_contract_sha256": functional_roles.BASE_SHA256, "phase3_v2_1_amendment_sha256": functional_roles.AMENDMENT_SHA256, "combined_contract_sha256": functional_roles.COMBINED_SHA256, "role_contract_sha256": rows.sha256_file(data / "role.json"), "evaluation_contract_sha256": rows.sha256_file(data / "evaluation.json"), "coverage_contract_sha256": rows.sha256_file(data / "coverage.json"), "source_universe_receipt_sha256": rows.sha256_file(universe / "source-universe-freeze-receipt.json"), "near_duplicate_policy_fingerprint_sha256": packets.near_duplicate.PINNED_POLICY_FINGERPRINT, "ua_eval_exclusion_manifest_sha256": "2" * 64, "public_canary_exclusion_manifest_sha256": "3" * 64}, "cleared_units": [{key: unit[key] for key in ("family_id", "unit_id", "unit_sha256")} for unit in units], "cleared_unit_count": len(units), "heldout_excluded": True, "ua_eval_exclusion_enforced": True, "public_canary_exclusion_enforced": True, "heldout_complement_encoded": False, "fingerprints_encoded": False, "locators_encoded": False}
+    clearance["action_receipt"] = heldout.build_action_receipt(role_contract=heldout.read_json(data / "role.json"), role_contract_path=data / "role.json", input_bindings=clearance["input_bindings"], output=clearance["cleared_units"], execution_metadata={"provider": "local", "started_at": "2026-08-09T00:00:00Z", "completed_at": "2026-08-09T00:00:01Z"})
     clearance["receipt_sha256"] = packets.receipt_body_sha256(clearance)
     clearance_path = root / "private/author_clearance_v1.json"
     _write(clearance_path, clearance)
-    public = {"schema_version": "phase3_heldout_public_receipt_v1", "text_free": True, "input_bindings": {**clearance["input_bindings"], "sources_db_sha256": rows.sha256_file(db)}, "artifact_hashes": {"author_clearance_sha256": clearance["receipt_sha256"]}}
+    public = {"schema_version": "phase3_heldout_public_receipt_v2_1", "text_free": True, "input_bindings": {**clearance["input_bindings"], "sources_db_sha256": rows.sha256_file(db)}, "artifact_hashes": {"author_clearance_sha256": clearance["receipt_sha256"]}, "action_receipt": clearance["action_receipt"]}
     public["receipt_sha256"] = heldout.receipt_body_sha256(public)
     public_path = root / "public/partition.json"
     _write(public_path, public)
@@ -79,12 +81,14 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
 
 def _rewrite_clearance_and_public(paths: dict[str, Path], clearance: dict[str, object]) -> None:
     clearance["cleared_unit_count"] = len(clearance["cleared_units"])
+    clearance["action_receipt"] = heldout.build_action_receipt(role_contract=heldout.read_json(paths["role"]), role_contract_path=paths["role"], input_bindings=clearance["input_bindings"], output=clearance["cleared_units"], execution_metadata={"provider": "local", "started_at": "2026-08-09T00:00:00Z", "completed_at": "2026-08-09T00:00:01Z"})
     clearance["receipt_sha256"] = packets.receipt_body_sha256(
         {key: value for key, value in clearance.items() if key != "receipt_sha256"}
     )
     _write(paths["clearance"], clearance)
     public = rows.read_json(paths["public"], "public")
     public["artifact_hashes"]["author_clearance_sha256"] = clearance["receipt_sha256"]
+    public["action_receipt"] = clearance["action_receipt"]
     public["receipt_sha256"] = heldout.receipt_body_sha256(
         {key: value for key, value in public.items() if key != "receipt_sha256"}
     )
@@ -111,7 +115,7 @@ def test_rows_are_deterministic_private_complete_and_packet_compiler_compatible(
     receipt = rows.read_json(paths["receipt"], "public receipt")
     assert receipt["text_free"] is True and "source_text" not in rows.canonical_json(receipt)
     assert receipt["rule_author_binding"]["role_id"] == "rule_author_extractor"
-    assert receipt["rule_author_binding"]["controller_identity_id"] != receipt["role_binding"]["controller_identity_id"]
+    assert receipt["rule_author_binding"]["task_id"] != receipt["role_binding"]["task_id"]
     assert receipt["input_bindings"]["ua_gec_ledger_sha256"] == rows.sha256_file(paths["universe"] / "ua_gec.units.jsonl")
     assert receipt["input_bindings"]["partition_public_receipt_body_sha256"] == rows.read_json(paths["public"])["receipt_sha256"]
     assert receipt["input_bindings"]["partition_public_receipt_file_sha256"] == rows.sha256_file(paths["public"])
@@ -138,6 +142,19 @@ def test_empty_source_lang_is_schema_valid_and_preserves_frozen_hash(tmp_path: P
     )
     for item in materialized:
         validator.validate(item)
+
+
+def test_source_row_receipt_schema_closes_nested_objects(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    receipt = _build(paths)
+    closed = json.loads(json.dumps(receipt))
+    closed["exclusions"]["unexpected"] = True
+    with pytest.raises(rows.SourceRowsError, match="schema violation"):
+        rows._validate(closed, "receipt", "source-row receipt")
+    missing = json.loads(json.dumps(receipt))
+    del missing["action_receipt"]["task_id"]
+    with pytest.raises(rows.SourceRowsError, match="schema violation"):
+        rows._validate(missing, "receipt", "source-row receipt")
 
 
 def test_rejects_stale_db_test_injection_and_unexpected_or_symlink_private_inputs(tmp_path: Path) -> None:
@@ -180,8 +197,8 @@ def test_clearance_omission_is_exact_not_a_complement(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("mutation, match", [
-    (lambda clearance: clearance.__setitem__("cleared_units", [*clearance["cleared_units"], clearance["cleared_units"][0]]), "duplicate"),
-    (lambda clearance: clearance.__setitem__("cleared_units", [{"family_id": "ua_gec"}]), "schema violation"),
+    (lambda clearance: clearance.__setitem__("cleared_units", [*clearance["cleared_units"], clearance["cleared_units"][0]]), "count or uniqueness"),
+    (lambda clearance: clearance.__setitem__("cleared_units", [{"family_id": "ua_gec"}]), "identity malformed"),
     (lambda clearance: clearance["cleared_units"][0].__setitem__("unit_sha256", "0" * 64), "unit hash drift"),
 ])
 def test_rejects_duplicate_missing_or_wrong_hash_clearance(tmp_path: Path, mutation, match: str) -> None:
@@ -193,7 +210,7 @@ def test_rejects_duplicate_missing_or_wrong_hash_clearance(tmp_path: Path, mutat
         _build(paths)
 
 
-def test_rejects_stale_contract_or_partition_receipt_binding_and_permission_drift(tmp_path: Path) -> None:
+def test_rejects_stale_contract_or_partition_receipt_binding(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     paths["coverage"].write_text("{}\n", encoding="utf-8")
     with pytest.raises(rows.SourceRowsError, match="coverage-contract binding drift"):
@@ -204,6 +221,41 @@ def test_rejects_stale_contract_or_partition_receipt_binding_and_permission_drif
     public["receipt_sha256"] = heldout.receipt_body_sha256({key: value for key, value in public.items() if key != "receipt_sha256"})
     _write(paths["public"], public)
     with pytest.raises(rows.SourceRowsError, match="sources DB binding drift"):
+        _build(paths)
+
+
+def test_rejects_rehashed_but_invalid_clearance_action_identity(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    clearance = rows.read_json(paths["clearance"], "clearance")
+    clearance["action_receipt"]["receipt_id"] = "phase3_functional_action:" + "0" * 64
+    clearance["receipt_sha256"] = packets.receipt_body_sha256(
+        {key: value for key, value in clearance.items() if key != "receipt_sha256"}
+    )
+    _write(paths["clearance"], clearance)
+    public = rows.read_json(paths["public"], "public")
+    public["artifact_hashes"]["author_clearance_sha256"] = clearance["receipt_sha256"]
+    public["action_receipt"] = clearance["action_receipt"]
+    public["receipt_sha256"] = heldout.receipt_body_sha256(
+        {key: value for key, value in public.items() if key != "receipt_sha256"}
+    )
+    _write(paths["public"], public)
+
+    with pytest.raises(rows.SourceRowsError, match="clearance action receipt drift"):
+        _build(paths)
+
+
+def test_rejects_legacy_clearance_and_permission_drift(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path / "legacy-clearance")
+    clearance = rows.read_json(paths["clearance"], "clearance")
+    clearance["schema_version"] = "phase3_author_clearance_receipt_v1"
+    _write(paths["clearance"], clearance)
+    with pytest.raises(rows.SourceRowsError, match="legacy v1 clearance"):
+        _build(paths)
+    paths = _fixture(tmp_path / "old-combined")
+    clearance = rows.read_json(paths["clearance"], "clearance")
+    clearance["input_bindings"]["combined_contract_sha256"] = packets.LEGACY_V1_V3_COMBINED_CONTRACT_SHA256
+    _rewrite_clearance_and_public(paths, clearance)
+    with pytest.raises(rows.SourceRowsError, match="combined-contract binding drift"):
         _build(paths)
     paths = _fixture(tmp_path / "permissions")
     _build(paths)

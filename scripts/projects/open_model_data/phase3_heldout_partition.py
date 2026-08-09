@@ -28,6 +28,7 @@ if __package__ in (None, ""):
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
@@ -36,7 +37,7 @@ ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 DEFAULT_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
 DEFAULT_SOURCES_DB = ROOT / "data/sources.db"
-DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_role_contract_v1.json"
+DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 DEFAULT_EVAL_CONTRACT = DATA / "evidence/correction_protection_evaluation_contract_v1.json"
 DEFAULT_COVERAGE_CONTRACT = DATA / "evidence/correction_protection_coverage_contract_v1.json"
 DEFAULT_NEAR_DUP_POLICY = DATA / "evidence/correction_protection_near_duplicate_policy_v1.json"
@@ -54,14 +55,18 @@ PUBLIC_CANARY_ARTIFACTS = (
     "data/projects/open_model_data/detector/correction_protection_known_answers_v1.json",
 )
 
-CONTROLLER_IDENTITY = "controller_phase3_heldout_steward_cursor_runtime_01"
-ARTIFACT_TASK_ID = "phase3-heldout-partition-seal-cursor-v1"
-ATTESTATION_TASK_ID = "phase3-role-heldout-steward-cursor-v2"
 ROLE_ID = "heldout_steward"
-SEAT_ID = "seat_heldout_steward"
+TASK_ID = "phase3-v2-1-heldout-stewardship"
 
 CAPABILITY_STATE = "NOT_YET_LABELLED_OR_ACTIVATED"
-IMPLEMENTATION_VERSION = "phase3_heldout_partition_v1"
+IMPLEMENTATION_VERSION = "phase3_heldout_partition_v2_1"
+PHASE3_V2_CONTRACT_SHA256 = functional_roles.BASE_SHA256
+PHASE3_V2_1_AMENDMENT_SHA256 = functional_roles.AMENDMENT_SHA256
+PHASE3_V2_1_COMBINED_CONTRACT_SHA256 = functional_roles.COMBINED_SHA256
+# Callers supply this execution metadata; identical metadata makes reruns
+# byte-identical without inventing a completed-action timestamp.
+EXECUTION_METADATA_FIELDS = frozenset({"provider", "started_at", "completed_at"})
+ACTION_KIND = "partition_seal_and_clear_author_units"
 UA_GEC_FAMILY = "ua_gec"
 UA_GEC_TABLE = "ua_gec_errors"
 SHORTFALL_CODE = "NON_UA_GEC_LABEL_BLIND_HELDOUT_NOT_SEALED"
@@ -69,13 +74,17 @@ SHORTFALL_DETAIL = "contract_requires_ua_gec_test_as_mandatory_private_side_only
 SHORTFALL_FAMILIES = "non_ua_gec_evaluation_families_deferred_hash_only"
 PUBLIC_TOKEN_STRINGS = frozenset(
     {
-        "phase3_heldout_public_receipt_v1",
+        "phase3_heldout_public_receipt_v2_1",
         IMPLEMENTATION_VERSION,
         ROLE_ID,
-        SEAT_ID,
-        CONTROLLER_IDENTITY,
-        ATTESTATION_TASK_ID,
-        ARTIFACT_TASK_ID,
+        TASK_ID,
+        "phase3-v2-1-evaluation-cycle-001",
+        ACTION_KIND,
+        "local",
+        "phase3-heldout-partition-v1",
+        "deterministic",
+        "local-python",
+        "completed",
         CAPABILITY_STATE,
         SHORTFALL_CODE,
         SHORTFALL_DETAIL,
@@ -707,90 +716,81 @@ def _build_exclusion_index(
 
 
 def verify_role_binding(role_contract: Mapping[str, Any]) -> dict[str, str]:
-    exclusivity = role_contract.get("identity_exclusivity_contract")
-    require(isinstance(exclusivity, Mapping), "identity exclusivity contract missing")
-    for invariant in (
-        "one_natural_person_or_continuing_agent_identity_per_decision_role_maximum",
-        "same_controller_reuses_identity_across_sessions_task_ids_harnesses_models_and_providers",
-        "controller_identity_attestation_required_before_role_action",
-        "assigned_controller_identity_ids_unique_across_decision_seats",
-        "root_controller_identity_forbidden_from_decision_seats",
-        "unassigned_reserved_seats_may_not_act_or_issue_receipts",
-        "task_binding_must_match_seat_controller_identity",
-    ):
-        require(exclusivity.get(invariant) is True, f"role exclusivity invariant disabled: {invariant}")
-
-    seats = role_contract.get("seats")
-    require(isinstance(seats, list), "role contract seats missing")
-    assigned = [item for item in seats if item.get("assignment_state") == "assigned_verified"]
-    require(assigned, "role contract has no assigned decision seats")
-    controllers = [item.get("controller_identity_id") for item in assigned]
-    require(all(isinstance(identity, str) and identity for identity in controllers), "assigned seat controller missing")
-    require(len(controllers) == len(set(controllers)), "assigned decision seats reuse a controller identity")
+    try:
+        functional_roles.verify_value(role_contract)
+        binding = functional_roles.binding_for_role(role_contract, ROLE_ID)
+    except functional_roles.FunctionalRoleError as exc:
+        raise PartitionError(str(exc)) from exc
+    require(binding == {"role_id": ROLE_ID, "task_id": TASK_ID}, "heldout steward task binding drift")
+    acl = role_contract["heldout_acl"]
+    require(binding["task_id"] in acl["pre_release_read_task_ids"], "heldout steward lacks pre-release access")
     require(
-        all(item.get("controller_identity_attested") is True for item in assigned),
-        "assigned decision seat controller unattested",
+        functional_roles.ROLE_TASKS["rule_author_extractor"] in acl["forbidden_task_ids"],
+        "rule author is not forbidden from heldout access",
     )
+    return binding
 
-    root = role_contract.get("root")
-    require(isinstance(root, Mapping), "root role boundary missing")
-    root_identity = root.get("controller_identity_id")
-    require(isinstance(root_identity, str) and root_identity not in controllers, "root occupies a decision seat")
-    require(root.get("may_hold_decision_role") is False, "root may hold a decision role")
-    require(root.get("decision_role_ids") == [], "root decision-role list is not empty")
 
-    seat = next((item for item in seats if item.get("seat_id") == SEAT_ID), None)
-    require(seat is not None, "heldout steward seat missing")
-    require(seat.get("role_id") == ROLE_ID, "heldout steward role drift")
-    require(seat.get("controller_identity_id") == CONTROLLER_IDENTITY, "heldout steward controller unbound")
-    require(seat.get("controller_identity_attested") is True, "heldout steward controller unattested")
-    require(seat.get("assignment_state") == "assigned_verified", "heldout steward seat not assigned_verified")
+def build_action_receipt(
+    *,
+    role_contract: Mapping[str, Any],
+    role_contract_path: Path,
+    input_bindings: Mapping[str, Any],
+    output: Any,
+    execution_metadata: Mapping[str, str],
+) -> dict[str, str]:
+    """Produce the closed, generic v2.1 action receipt for a steward artifact."""
+    binding = verify_role_binding(role_contract)
+    steward = next(item for item in role_contract["functional_roles"] if item["role_id"] == ROLE_ID)
     require(
-        {"label_linguistic_gold", "extract_rules", "implement_scorer_under_test"}.issubset(
-            set(seat.get("must_not", []))
-        ),
-        "heldout steward prohibited functions drift",
+        set(execution_metadata) == EXECUTION_METADATA_FIELDS
+        and execution_metadata.get("provider") == "local"
+        and all(isinstance(execution_metadata[key], str) and execution_metadata[key] for key in EXECUTION_METADATA_FIELDS),
+        "steward execution metadata is malformed",
     )
-    bindings = role_contract.get("task_bindings")
-    require(isinstance(bindings, list), "role contract task bindings missing")
-    binding_by_role: dict[str, Mapping[str, Any]] = {}
-    seat_by_role = {str(item.get("role_id")): item for item in assigned}
-    require(len(seat_by_role) == len(assigned), "assigned decision role duplicated")
-    for item in bindings:
-        require(isinstance(item, Mapping), "role contract task binding malformed")
-        role_id = item.get("role_id")
-        require(isinstance(role_id, str) and role_id not in binding_by_role, "task binding role missing or duplicated")
-        binding_by_role[role_id] = item
-    require(set(binding_by_role) == set(seat_by_role), "task bindings do not exactly cover assigned seats")
-    for role_id, assigned_seat in seat_by_role.items():
-        require(
-            binding_by_role[role_id].get("controller_identity_id") == assigned_seat.get("controller_identity_id"),
-            f"task binding controller differs from assigned seat: {role_id}",
-        )
-    binding = next((item for item in bindings if item.get("role_id") == ROLE_ID), None)
-    require(binding is not None, "heldout steward task binding missing")
-    require(binding.get("reserved_task_id") == ATTESTATION_TASK_ID, "heldout steward attestation task drift")
-    require(binding.get("controller_identity_id") == CONTROLLER_IDENTITY, "heldout steward task controller drift")
-
-    acl = role_contract.get("heldout_acl")
-    require(isinstance(acl, Mapping), "heldout ACL missing")
-    pre_release = set(acl.get("pre_release_read_roles", []))
-    post_release = set(acl.get("post_release_scorer_roles", []))
-    forbidden = set(acl.get("forbidden_roles", []))
-    require(pre_release == {"heldout_steward", "heldout_label_reviewer"}, "heldout pre-release ACL drift")
-    require(post_release == {"scorer"}, "heldout post-release scorer ACL drift")
-    require(
-        {"rule_author_extractor", "ukrainian_source_reviewer", "outsider_reproducer"}.issubset(forbidden),
-        "heldout forbidden-role ACL drift",
-    )
-    require(not (pre_release & forbidden) and not (post_release & forbidden), "heldout ACL roles overlap")
-    return {
-        "role_id": ROLE_ID,
-        "seat_id": SEAT_ID,
-        "controller_identity_id": CONTROLLER_IDENTITY,
-        "attestation_task_id": ATTESTATION_TASK_ID,
-        "artifact_task_id": ARTIFACT_TASK_ID,
+    input_manifest_sha256 = sha256_bytes(canonical_json(input_bindings).encode("utf-8"))
+    output_sha256 = sha256_bytes(canonical_json(output).encode("utf-8"))
+    identity = {
+        "role_id": binding["role_id"],
+        "task_id": binding["task_id"],
+        "input_manifest_sha256": input_manifest_sha256,
+        "evaluation_cycle_id": str(role_contract["evaluation_cycle"]["evaluation_cycle_id"]),
+        "output_sha256": output_sha256,
+        "status": "completed",
     }
+    receipt = {
+        "receipt_id": "phase3_functional_action:" + sha256_bytes(canonical_json(identity).encode("utf-8")),
+        **binding,
+        "action_kind": ACTION_KIND,
+        "provider": execution_metadata["provider"],
+        "exact_model": str(steward["exact_model"]),
+        "model_family": str(steward["model_family"]),
+        "harness": str(steward["harness"]),
+        "input_manifest_sha256": input_manifest_sha256,
+        "output_sha256": output_sha256,
+        "evaluation_cycle_id": str(role_contract["evaluation_cycle"]["evaluation_cycle_id"]),
+        "base_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
+        "amendment_sha256": PHASE3_V2_1_AMENDMENT_SHA256,
+        "combined_contract_sha256": PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        "functional_role_contract_sha256": sha256_file(role_contract_path),
+        "conflict_graph_sha256": functional_roles.conflict_graph_sha256(role_contract),
+        "started_at": execution_metadata["started_at"],
+        "completed_at": execution_metadata["completed_at"],
+        "status": "completed",
+    }
+    require(set(receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), "steward action receipt field set drift")
+    return receipt
+
+
+def execution_metadata_from_action(action_receipt: Mapping[str, Any]) -> dict[str, str]:
+    """Extract the explicit execution metadata while rejecting unsafe providers."""
+    metadata = {key: action_receipt.get(key) for key in EXECUTION_METADATA_FIELDS}
+    require(
+        metadata["provider"] == "local"
+        and all(isinstance(metadata[key], str) and metadata[key] for key in EXECUTION_METADATA_FIELDS),
+        "steward action execution metadata drift",
+    )
+    return {key: str(value) for key, value in metadata.items()}
 
 
 def _assert_no_forbidden_public_fields(value: Any, *, path: str = "$") -> None:
@@ -825,7 +825,10 @@ def _assert_no_forbidden_public_fields(value: Any, *, path: str = "$") -> None:
         # This receipt has a closed token vocabulary plus SHA-256 bindings.  Do
         # not accept arbitrary ASCII, which could still disclose source prose.
         require(
-            value in PUBLIC_TOKEN_STRINGS or re.fullmatch(r"[a-f0-9]{64}", value) is not None,
+            value in PUBLIC_TOKEN_STRINGS
+            or re.fullmatch(r"[a-f0-9]{64}", value) is not None
+            or re.fullmatch(r"phase3_functional_action:[a-f0-9]{64}", value) is not None
+            or re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", value) is not None,
             f"public receipt contains an unapproved string at {path}",
         )
 
@@ -955,11 +958,12 @@ def build_input_bindings(
     freeze_receipt = source_universe / "source-universe-freeze-receipt.json"
     require(freeze_receipt.is_file(), "source universe freeze receipt missing")
     return {
-        "schema_version": "phase3_heldout_input_bindings_v1",
-        "combined_contract_sha256": "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7",
-        "original_prompt_sha256": "6a563a7526c4ec7a89732f3de5651b0ab2e176ec089abf80f9eb733337db7662",
-        "scope_amendment_sha256": "da0f814f2f12e4974073de1a7b547fc3f27c07f6d903c95fde8f704d4e664132",
+        "schema_version": "phase3_heldout_input_bindings_v2_1",
+        "phase3_v2_contract_sha256": PHASE3_V2_CONTRACT_SHA256,
+        "phase3_v2_1_amendment_sha256": PHASE3_V2_1_AMENDMENT_SHA256,
+        "combined_contract_sha256": PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
         "role_contract_sha256": sha256_file(role_contract_path),
+        "conflict_graph_sha256": functional_roles.conflict_graph_sha256(read_json(role_contract_path)),
         "evaluation_contract_sha256": sha256_file(eval_contract_path),
         "coverage_contract_sha256": sha256_file(coverage_contract_path),
         "source_universe_receipt_sha256": sha256_file(freeze_receipt),
@@ -974,6 +978,7 @@ def build_input_bindings(
 def build_artifacts(
     *,
     root: Path = ROOT,
+    execution_metadata: Mapping[str, str],
     source_universe: Path = DEFAULT_SOURCE_UNIVERSE,
     sources_db: Path = DEFAULT_SOURCES_DB,
     private_dir: Path = DEFAULT_PRIVATE_DIR,
@@ -1045,7 +1050,7 @@ def build_artifacts(
     )
 
     heldout_seal = {
-        "schema_version": "phase3_heldout_seal_receipt_v1",
+        "schema_version": "phase3_heldout_seal_receipt_v2_1",
         "text_free": False,
         "implementation_version": IMPLEMENTATION_VERSION,
         "role_binding": role_binding,
@@ -1056,17 +1061,25 @@ def build_artifacts(
         "sealed_document_count": partitioned["heldout_document_count"],
         "label_state": CAPABILITY_STATE,
     }
+    heldout_seal["action_receipt"] = build_action_receipt(
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        input_bindings=bindings,
+        output=sealed_units,
+        execution_metadata=execution_metadata,
+    )
     heldout_seal = attach_receipt_hash(heldout_seal)
 
-    author_clearance = attach_receipt_hash(
-        {
-            "schema_version": "phase3_author_clearance_receipt_v1",
+    author_clearance = {
+            "schema_version": "phase3_author_clearance_receipt_v2_1",
             "text_free": True,
             "implementation_version": IMPLEMENTATION_VERSION,
             "role_binding": role_binding,
             "input_bindings": {
                 key: bindings[key]
                 for key in (
+                    "phase3_v2_contract_sha256",
+                    "phase3_v2_1_amendment_sha256",
                     "combined_contract_sha256",
                     "role_contract_sha256",
                     "evaluation_contract_sha256",
@@ -1092,8 +1105,15 @@ def build_artifacts(
             "heldout_complement_encoded": False,
             "fingerprints_encoded": False,
             "locators_encoded": False,
-        }
+    }
+    author_clearance["action_receipt"] = build_action_receipt(
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        input_bindings=author_clearance["input_bindings"],
+        output=author_clearance["cleared_units"],
+        execution_metadata=execution_metadata,
     )
+    author_clearance = attach_receipt_hash(author_clearance)
 
     leakage = attach_receipt_hash(
         {
@@ -1130,13 +1150,16 @@ def build_artifacts(
     }
 
     public_receipt = {
-        "schema_version": "phase3_heldout_public_receipt_v1",
+        "schema_version": "phase3_heldout_public_receipt_v2_1",
         "text_free": True,
         "implementation_version": IMPLEMENTATION_VERSION,
         "role_binding": role_binding,
         "input_bindings": {
+            "phase3_v2_contract_sha256": bindings["phase3_v2_contract_sha256"],
+            "phase3_v2_1_amendment_sha256": bindings["phase3_v2_1_amendment_sha256"],
             "combined_contract_sha256": bindings["combined_contract_sha256"],
             "role_contract_sha256": bindings["role_contract_sha256"],
+            "conflict_graph_sha256": bindings["conflict_graph_sha256"],
             "evaluation_contract_sha256": bindings["evaluation_contract_sha256"],
             "coverage_contract_sha256": bindings["coverage_contract_sha256"],
             "source_universe_receipt_sha256": bindings["source_universe_receipt_sha256"],
@@ -1151,6 +1174,7 @@ def build_artifacts(
             "partition_verification_sha256": partition_verification["receipt_sha256"],
             "leakage_verification_sha256": leakage["receipt_sha256"],
         },
+        "action_receipt": author_clearance["action_receipt"],
         "aggregates": {
             "ua_gec_input_total": len(rows),
             "heldout_sealed_unit_total": len(partitioned["heldout_units"]),
@@ -1340,7 +1364,8 @@ def verify_artifacts(
     public_receipt = read_json(public_path)
     require(receipt_body_sha256(public_receipt) == public_receipt.get("receipt_sha256"), "public receipt hash drift")
     _assert_no_forbidden_public_fields(public_receipt)
-    role_binding = verify_role_binding(read_json(role_contract_path))
+    role_contract = read_json(role_contract_path)
+    role_binding = verify_role_binding(role_contract)
     require(public_receipt.get("role_binding") == role_binding, "public role binding drift")
     require(
         public_receipt.get("capability")
@@ -1362,6 +1387,64 @@ def verify_artifacts(
     require(
         public_receipt.get("input_bindings", {}).get("role_contract_sha256") == sha256_file(role_contract_path),
         "public receipt role-contract hash drift",
+    )
+    require(
+        public_receipt.get("input_bindings", {}).get("phase3_v2_contract_sha256") == PHASE3_V2_CONTRACT_SHA256
+        and public_receipt.get("input_bindings", {}).get("phase3_v2_1_amendment_sha256") == PHASE3_V2_1_AMENDMENT_SHA256
+        and public_receipt.get("input_bindings", {}).get("combined_contract_sha256") == PHASE3_V2_1_COMBINED_CONTRACT_SHA256
+        and public_receipt.get("input_bindings", {}).get("conflict_graph_sha256") == functional_roles.conflict_graph_sha256(role_contract),
+        "public receipt v2.1 contract binding drift",
+    )
+    action = public_receipt.get("action_receipt")
+    require(isinstance(action, Mapping), "public receipt lacks v2.1 action receipt")
+    execution_metadata = execution_metadata_from_action(action)
+    public_action_input_bindings = {
+        key: public_receipt["input_bindings"][key]
+        for key in (
+            "phase3_v2_contract_sha256",
+            "phase3_v2_1_amendment_sha256",
+            "combined_contract_sha256",
+            "role_contract_sha256",
+            "evaluation_contract_sha256",
+            "coverage_contract_sha256",
+            "source_universe_receipt_sha256",
+            "near_duplicate_policy_fingerprint_sha256",
+            "ua_eval_exclusion_manifest_sha256",
+            "public_canary_exclusion_manifest_sha256",
+        )
+    }
+    expected_public_action = build_action_receipt(
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        input_bindings=public_action_input_bindings,
+        output=[],
+        execution_metadata=execution_metadata,
+    )
+    # The public receipt carries the exact clearance action evidence; validate
+    # all metadata and contract bindings without deriving private identities.
+    require(set(action) == set(functional_roles.ACTION_RECEIPT_FIELDS), "public action receipt field set drift")
+    require(action["role_id"] == role_binding["role_id"] and action["task_id"] == role_binding["task_id"], "public action role binding drift")
+    require(all(action[key] == expected_public_action[key] for key in ("action_kind", "provider", "exact_model", "model_family", "harness", "evaluation_cycle_id", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "started_at", "completed_at", "status")), "public action receipt contract drift")
+    require(
+        action["input_manifest_sha256"] == expected_public_action["input_manifest_sha256"],
+        "public action input binding drift",
+    )
+    public_action_identity = {
+        key: action[key]
+        for key in (
+            "role_id",
+            "task_id",
+            "input_manifest_sha256",
+            "evaluation_cycle_id",
+            "output_sha256",
+            "status",
+        )
+    }
+    require(
+        action["receipt_id"]
+        == "phase3_functional_action:"
+        + sha256_bytes(canonical_json(public_action_identity).encode("utf-8")),
+        "public action receipt ID drift",
     )
     require(
         public_receipt.get("input_bindings", {}).get("evaluation_contract_sha256") == sha256_file(eval_contract_path),
@@ -1453,6 +1536,7 @@ def verify_artifacts(
         public_receipt["artifact_hashes"]["author_clearance_sha256"] == author["receipt_sha256"],
         "public author clearance hash binding drift",
     )
+    require(public_receipt.get("action_receipt") == author.get("action_receipt"), "public action receipt differs from clearance")
     require(
         public_receipt["artifact_hashes"]["partition_verification_sha256"] == partition_receipt["receipt_sha256"],
         "public partition verification hash binding drift",
@@ -1539,6 +1623,8 @@ def verify_artifacts(
     expected_author_bindings = {
         key: public_receipt["input_bindings"][key]
         for key in (
+            "phase3_v2_contract_sha256",
+            "phase3_v2_1_amendment_sha256",
             "combined_contract_sha256",
             "role_contract_sha256",
             "evaluation_contract_sha256",
@@ -1550,6 +1636,28 @@ def verify_artifacts(
         )
     }
     require(author.get("input_bindings") == expected_author_bindings, "author clearance input binding drift")
+    require(
+        author.get("action_receipt")
+        == build_action_receipt(
+            role_contract=role_contract,
+            role_contract_path=role_contract_path,
+            input_bindings=expected_author_bindings,
+            output=author.get("cleared_units"),
+            execution_metadata=execution_metadata_from_action(author.get("action_receipt", {})),
+        ),
+        "author clearance action receipt drift",
+    )
+    require(
+        heldout_receipt.get("action_receipt")
+        == build_action_receipt(
+            role_contract=role_contract,
+            role_contract_path=role_contract_path,
+            input_bindings=heldout_receipt.get("input_bindings", {}),
+            output=heldout_receipt.get("sealed_units"),
+            execution_metadata=execution_metadata_from_action(heldout_receipt.get("action_receipt", {})),
+        ),
+        "heldout seal action receipt drift",
+    )
     require(partition_receipt.get("zero_overlap") == leakage_receipt.get("zero_overlap"), "private zero-overlap drift")
     require(partition_receipt.get("zero_overlap") == public_receipt.get("zero_overlap"), "public zero-overlap drift")
     require(
@@ -1604,6 +1712,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     build_parser = commands.add_parser("build")
     build_parser.add_argument("--skip-source-freeze-git-binding", action="store_true")
+    build_parser.add_argument("--provider", required=True)
+    build_parser.add_argument("--started-at", required=True)
+    build_parser.add_argument("--completed-at", required=True)
     verify_parser = commands.add_parser("verify")
     verify_parser.add_argument(
         "--public-only",
@@ -1626,6 +1737,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "build":
             result = build_artifacts(
                 root=root,
+                execution_metadata={
+                    "provider": args.provider,
+                    "started_at": args.started_at,
+                    "completed_at": args.completed_at,
+                },
                 source_universe=source_universe,
                 sources_db=sources_db,
                 private_dir=private_dir,

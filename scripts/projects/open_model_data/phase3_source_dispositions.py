@@ -21,22 +21,30 @@ from typing import Any
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.phase3_source_universe import canonical_json, sha256_file
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 DEFAULT_SCHEMA = CONTRACTS / "phase3_source_disposition_input_v1.schema.json"
-DEFAULT_ROLE_CONTRACT = ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
+DEFAULT_ROLE_CONTRACT = (
+    ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+)
 FREEZE_RECEIPT_FILE = "source-universe-freeze-receipt.json"
 OUTPUT_LEDGER_FILE = "phase3-source-dispositions.jsonl"
 OUTPUT_RECEIPT_FILE = "phase3-source-dispositions-receipt.json"
 OUTPUT_FILES = frozenset({OUTPUT_LEDGER_FILE, OUTPUT_RECEIPT_FILE})
-INPUT_SCHEMA_VERSION = "phase3_source_disposition_input_v1"
-OUTPUT_SCHEMA_VERSION = "phase3_source_disposition_receipt_v1"
-SOURCE_REVIEW_RECEIPT_SCHEMA_VERSION = "phase3_source_disposition_review_receipt_v1"
+INPUT_SCHEMA_VERSION = "phase3_source_disposition_input_v2_1"
+OUTPUT_SCHEMA_VERSION = "phase3_source_disposition_receipt_v2_1"
+SOURCE_REVIEW_RECEIPT_SCHEMA_VERSION = "phase3_source_disposition_review_receipt_v2_1"
+PRODUCER_TASK_ID = "phase3-v2-1-disposition-ledger-production"
+ROLE_PROVIDERS = {
+    "rule_author_extractor": "google",
+    "ukrainian_source_reviewer": "xai",
+}
 DISPOSITION_CODES = frozenset({
     "converted", "not_rule_bearing", "duplicate_representation", "evaluation_only",
-    "rights_limited_locator_only", "superseded_or_historical", "blocked_with_reason",
+    "superseded_or_historical", "blocked_with_reason",
 })
 FAMILY_TOTALS = {
     "antonenko_style_guide": 342,
@@ -86,55 +94,101 @@ def _validate_input_schema(input_document: Mapping[str, Any], schema_path: Path)
         raise DispositionError(f"disposition input schema violation at {location}: {exc.message}") from exc
 
 
-def _load_role_bindings(role_contract_path: Path) -> dict[str, dict[str, str]]:
+def _load_role_bindings(role_contract_path: Path) -> tuple[dict[str, Any], dict[str, dict[str, str]]]:
     contract = _read_json(role_contract_path, "role contract")
-    seats = contract.get("seats")
-    task_bindings = contract.get("task_bindings")
-    require(isinstance(seats, list) and isinstance(task_bindings, list), "role contract lacks seats or task bindings")
-    assigned_identities = [
-        seat.get("controller_identity_id")
-        for seat in seats
-        if isinstance(seat, Mapping) and seat.get("assignment_state") == "assigned_verified"
-    ]
+    try:
+        verified = functional_roles.verify_value(contract)
+        result = {
+            role_id: functional_roles.binding_for_role(verified, role_id)
+            for role_id in ("rule_author_extractor", "ukrainian_source_reviewer")
+        }
+    except functional_roles.FunctionalRoleError as exc:
+        raise DispositionError(str(exc)) from exc
     require(
-        all(isinstance(identity, str) and identity for identity in assigned_identities)
-        and len(assigned_identities) == len(set(assigned_identities)),
-        "role contract assigned identities are not unique",
+        result["rule_author_extractor"]["task_id"] != result["ukrainian_source_reviewer"]["task_id"],
+        "role contract reuses extractor and source reviewer task",
     )
-    required_roles = ("rule_author_extractor", "ukrainian_source_reviewer")
-    result: dict[str, dict[str, str]] = {}
-    for role_id in required_roles:
-        seat_matches = [seat for seat in seats if isinstance(seat, Mapping) and seat.get("role_id") == role_id]
-        task_matches = [item for item in task_bindings if isinstance(item, Mapping) and item.get("role_id") == role_id]
-        require(len(seat_matches) == 1 and len(task_matches) == 1, f"role contract must contain exactly one {role_id} binding")
-        seat, task = seat_matches[0], task_matches[0]
-        controller, task_id = seat.get("controller_identity_id"), task.get("reserved_task_id")
-        require(seat.get("assignment_state") == "assigned_verified", f"{role_id} is not assigned and verified")
-        require(seat.get("controller_identity_attested") is True, f"{role_id} identity is not attested")
-        require(isinstance(controller, str) and controller, f"{role_id} lacks controller identity")
-        require(isinstance(task_id, str) and task_id, f"{role_id} lacks task binding")
-        require(task.get("controller_identity_id") == controller, f"{role_id} task binding controller drift")
-        require(task.get("status") == "identity_attested_pre_artifact", f"{role_id} task binding is not pre-artifact attested")
-        result[role_id] = {"controller_identity_id": controller, "task_id": task_id}
     require(
-        result["rule_author_extractor"]["controller_identity_id"] != result["ukrainian_source_reviewer"]["controller_identity_id"],
-        "role contract reuses extractor and source reviewer identity",
+        functional_roles.tasks_conflict(
+            verified,
+            result["rule_author_extractor"]["task_id"],
+            result["ukrainian_source_reviewer"]["task_id"],
+        ),
+        "role graph lacks the author-to-source-review edge",
     )
-    return result
+    return verified, result
+
+
+def _validate_action_receipt(
+    action: Mapping[str, Any],
+    *,
+    role_contract: Mapping[str, Any],
+    role_contract_path: Path,
+    actor: Mapping[str, str],
+    action_kind: str,
+    input_manifest_sha256: str,
+    output_sha256: str,
+) -> None:
+    require(set(action) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
+    require(
+        action.get("role_id") == actor["role_id"]
+        and action.get("task_id") == actor["task_id"],
+        "functional action receipt task binding mismatch",
+    )
+    role = next(item for item in role_contract["functional_roles"] if item["role_id"] == actor["role_id"])
+    require(
+        all(action.get(key) == role[key] for key in ("exact_model", "model_family", "harness")),
+        "functional action receipt lane mismatch",
+    )
+    require(
+        action.get("provider") == ROLE_PROVIDERS[actor["role_id"]],
+        "functional action provider mismatch",
+    )
+    require(action.get("action_kind") == action_kind, "functional action kind mismatch")
+    require(action.get("input_manifest_sha256") == input_manifest_sha256, "functional action input mismatch")
+    require(action.get("output_sha256") == output_sha256, "functional action output mismatch")
+    require(
+        action.get("evaluation_cycle_id") == role_contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "functional action evaluation-cycle binding mismatch",
+    )
+    require(
+        action.get("base_contract_sha256") == functional_roles.BASE_SHA256
+        and action.get("amendment_sha256") == functional_roles.AMENDMENT_SHA256
+        and action.get("combined_contract_sha256") == functional_roles.COMBINED_SHA256,
+        "functional action contract binding mismatch",
+    )
+    require(
+        action.get("functional_role_contract_sha256") == sha256_file(role_contract_path)
+        and action.get("conflict_graph_sha256") == functional_roles.conflict_graph_sha256(role_contract),
+        "functional action role-graph binding mismatch",
+    )
+    require(action.get("status") == "completed", "functional action is not complete")
+    require(
+        all(isinstance(action.get(key), str) and action[key] for key in ("receipt_id", "started_at", "completed_at")),
+        "functional action metadata incomplete",
+    )
+    identity = {
+        key: action[key]
+        for key in ("role_id", "task_id", "input_manifest_sha256", "evaluation_cycle_id", "output_sha256", "status")
+    }
+    require(
+        action["receipt_id"]
+        == "phase3_functional_action:" + sha256_bytes(canonical_json(identity).encode("utf-8")),
+        "functional action receipt ID mismatch",
+    )
 
 
 def _validate_provenance_bindings(
     reviewed: Mapping[str, Any], role_contract_path: Path, source_review_receipt_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     require(source_review_receipt_path.is_file() and not source_review_receipt_path.is_symlink(), "source review receipt is missing")
-    bindings = _load_role_bindings(role_contract_path)
+    role_contract, bindings = _load_role_bindings(role_contract_path)
     author = reviewed["author_binding"]
     reviewer = reviewed["source_review_binding"]
-    require(author["controller_identity_id"] != reviewer["controller_identity_id"], "extractor and source reviewer identities must differ")
+    require(author["task_id"] != reviewer["task_id"], "extractor and source reviewer tasks must differ")
     for role_id, supplied in (("rule_author_extractor", author), ("ukrainian_source_reviewer", reviewer)):
         expected = bindings[role_id]
         require(supplied["role_id"] == role_id, f"{role_id} role binding mismatch")
-        require(supplied["controller_identity_id"] == expected["controller_identity_id"], f"{role_id} controller binding mismatch")
         require(supplied["task_id"] == expected["task_id"], f"{role_id} task binding mismatch")
     require(reviewer["receipt_sha256"] == sha256_file(source_review_receipt_path), "source review receipt binding mismatch")
     receipt = _read_json(source_review_receipt_path, "source review receipt")
@@ -143,11 +197,11 @@ def _validate_provenance_bindings(
             "schema_version",
             "text_free",
             "reviewer_role_id",
-            "controller_identity_id",
             "task_id",
             "source_freeze_receipt_sha256",
             "disposition_families_sha256",
             "verdict",
+            "action_receipt",
         },
         "source review receipt fields are not closed and complete",
     )
@@ -156,7 +210,6 @@ def _validate_provenance_bindings(
         "source review receipt schema or text-free boundary mismatch",
     )
     require(receipt["reviewer_role_id"] == "ukrainian_source_reviewer", "source review receipt role mismatch")
-    require(receipt["controller_identity_id"] == reviewer["controller_identity_id"], "source review receipt controller mismatch")
     require(receipt["task_id"] == reviewer["task_id"], "source review receipt task mismatch")
     require(
         receipt["source_freeze_receipt_sha256"] == reviewed["source_freeze_receipt_sha256"],
@@ -168,6 +221,42 @@ def _validate_provenance_bindings(
         "source review receipt disposition binding mismatch",
     )
     require(receipt["verdict"] == "APPROVE", "source review receipt does not approve the exact dispositions")
+    author_action = author.get("action_receipt")
+    require(isinstance(author_action, Mapping), "source disposition proposal lacks action receipt")
+    families_sha256 = receipt["disposition_families_sha256"]
+    _validate_action_receipt(
+        author_action,
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        actor=author,
+        action_kind="source_disposition_proposal",
+        input_manifest_sha256=sha256_bytes(
+            canonical_json(
+                {"source_freeze_receipt_sha256": receipt["source_freeze_receipt_sha256"]}
+            ).encode("utf-8")
+        ),
+        output_sha256=families_sha256,
+    )
+    review_input_sha256 = sha256_bytes(
+        canonical_json(
+            {
+                "source_freeze_receipt_sha256": receipt["source_freeze_receipt_sha256"],
+                "disposition_families_sha256": families_sha256,
+                "author_action_receipt_id": author_action["receipt_id"],
+            }
+        ).encode("utf-8")
+    )
+    action = receipt.get("action_receipt")
+    require(isinstance(action, Mapping), "source review receipt lacks action receipt")
+    _validate_action_receipt(
+        action,
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        actor=reviewer,
+        action_kind="source_disposition_review",
+        input_manifest_sha256=review_input_sha256,
+        output_sha256=sha256_bytes(canonical_json({"verdict": "APPROVE"}).encode("utf-8")),
+    )
     return dict(author), dict(reviewer)
 
 
@@ -302,6 +391,22 @@ def compile_dispositions(
         require(not unexpected, f"output directory contains stale or unexpected files: {sorted(unexpected)}")
     reviewed = _read_json(reviewed_input_path, "reviewed disposition input")
     _validate_input_schema(reviewed, schema_path)
+    require(
+        reviewed["phase3_v2_contract_sha256"] == functional_roles.BASE_SHA256
+        and reviewed["phase3_v2_1_amendment_sha256"] == functional_roles.AMENDMENT_SHA256
+        and reviewed["combined_contract_sha256"] == functional_roles.COMBINED_SHA256,
+        "Phase 3 v2.1 contract binding mismatch",
+    )
+    require(reviewed["producer_task_id"] == PRODUCER_TASK_ID, "disposition producer task binding mismatch")
+    role_contract = _read_json(role_contract_path, "role contract")
+    try:
+        functional_roles.verify_value(role_contract)
+    except functional_roles.FunctionalRoleError as exc:
+        raise DispositionError(str(exc)) from exc
+    require(
+        reviewed["conflict_graph_sha256"] == functional_roles.conflict_graph_sha256(role_contract),
+        "role conflict-graph binding mismatch",
+    )
     frozen, freeze_receipt_hash, _ = _load_frozen_universe(source_freeze_dir)
     require(reviewed["source_freeze_receipt_sha256"] == freeze_receipt_hash, "source freeze receipt binding mismatch")
     require(reviewed["role_contract_sha256"] == sha256_file(role_contract_path), "role contract binding mismatch")
@@ -351,8 +456,13 @@ def compile_dispositions(
     receipt = {
         "schema_version": OUTPUT_SCHEMA_VERSION,
         "text_free": True,
+        "phase3_v2_contract_sha256": functional_roles.BASE_SHA256,
+        "phase3_v2_1_amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
+        "producer_task_id": PRODUCER_TASK_ID,
         "source_freeze_receipt_sha256": freeze_receipt_hash,
         "role_contract_sha256": sha256_file(role_contract_path),
+        "conflict_graph_sha256": functional_roles.conflict_graph_sha256(role_contract),
         "reviewed_input_sha256": sha256_file(reviewed_input_path),
         "author_binding": author_binding,
         "source_review_binding": source_review_binding,
