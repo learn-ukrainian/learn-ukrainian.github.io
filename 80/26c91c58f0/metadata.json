@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8026c91c58f0",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-5995-shard-pr4",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml",
+    "data/lexicon/source-inventory-review-decisions/2026-07-23-teacher-lesson-full-document-intake-batch-03.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/80/26c91c58f0/0/metadata.json",
+      "transcript": "/80/26c91c58f0/0/full.jsonl",
+      "compact_transcript": "/80/26c91c58f0/0/transcript.jsonl",
+      "content_hash": "/80/26c91c58f0/0/content_hash.txt",
+      "prompt": "/80/26c91c58f0/0/prompt.txt"
+    }
+  ]
+}

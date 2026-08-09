@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8026c91c58f0",
+  "session_id": "fleet-35dd0d7e89da4b36a887aac2d815a687",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T05:26:11.676903Z",
+  "branch": "agy/atlas-5995-shard-pr4",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml",
+    "data/lexicon/source-inventory-review-decisions/2026-07-23-teacher-lesson-full-document-intake-batch-03.yaml"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "d5349e233e64",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T05:26:11.670341Z",
+    "agent_lines": 19956,
+    "agent_removed": 19943,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 19956,
+    "total_lines_changed": 39899,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
