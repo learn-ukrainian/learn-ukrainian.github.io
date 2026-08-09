@@ -319,8 +319,8 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
-  await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(4);
-  await expect(page.locator('button[data-mode]')).toHaveCount(15);
+  await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(6);
+  await expect(page.locator('button[data-mode]')).toHaveCount(17);
   await page.locator('button[data-mode="zno-orthography"]').click();
   await expect(page.getByTestId('practice-zno-session')).toBeVisible();
   await expect(page.getByTestId('zno-practice-item')).toBeVisible();

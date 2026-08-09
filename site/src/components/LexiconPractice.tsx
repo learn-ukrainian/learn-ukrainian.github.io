@@ -653,6 +653,16 @@ const ZNO_MODE_META: Record<
     descriptionEn: 'Reinforce lexical norms with official ZNO and NMT items.',
     accent: 'orange',
   },
+  'zno-morphological-norm': {
+    description: 'Закріплюйте морфологічну норму на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Reinforce morphological norms with official ZNO and NMT items.',
+    accent: 'purple',
+  },
+  'zno-syntactic-norm': {
+    description: 'Закріплюйте синтаксичну норму на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Reinforce syntactic norms with official ZNO and NMT items.',
+    accent: 'teal',
+  },
   'zno-orthography': {
     description: 'Тренуйте орфографію на офіційних завданнях ЗНО та НМТ.',
     descriptionEn: 'Practise orthography with official ZNO and NMT items.',
