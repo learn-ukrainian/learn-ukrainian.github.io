@@ -22,12 +22,16 @@
 # Env overrides:
 #   ATLAS_RUNNER_HOST (default vps), ATLAS_RUN_ROOT, ATLAS_REPO,
 #   ATLAS_RE_ENRICH_WORK_DIR, ATLAS_RE_ENRICH_RESIDUAL (local slugs dump),
+#   ATLAS_LOCAL_VESUM_DB, ATLAS_LOCAL_SLOVNYK_CACHE
+#   (local enrichment data for the work-dir overlay),
+#   ATLAS_RE_ENRICH_PYTHON (default shared project interpreter),
 #   ATLAS_RE_ENRICH_OUT_DIR (local pull-back dir),
 #   ATLAS_RE_ENRICH_POLL_TIMEOUT_S (default 900),
 #   ATLAS_RE_ENRICH_POLL_INTERVAL_S (default 15)
 set -euo pipefail
 
 WORKTREE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python}"
 
 HOST="${ATLAS_RUNNER_HOST:-vps}"
 RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
@@ -38,6 +42,11 @@ LOCAL_RESIDUAL="${ATLAS_RE_ENRICH_RESIDUAL:-$WORKTREE/batch_state/atlas-6369-cla
 LOCAL_OUT_DIR="${ATLAS_RE_ENRICH_OUT_DIR:-$WORKTREE/batch_state/class-b-reenrich-pulled}"
 LOCAL_DRIVER="$WORKTREE/scripts/lexicon/reenrich_thin_manifest_entries.py"
 LOCAL_LAUNCHER="$WORKTREE/scripts/lexicon/runner/launch_reenrich_class_b.sh"
+# The driver imports ``scripts.lexicon.enrich_manifest`` and its supporting
+# modules. The VPS checkout is deliberately allowed to stay stale, so deploy
+# the current scripts package tree into the work-dir instead of trying to
+# maintain a brittle transitive-import allowlist against $REMOTE_REPO.
+LOCAL_SCRIPTS_PACKAGE="$WORKTREE/scripts"
 
 POLL_TIMEOUT_S="${ATLAS_RE_ENRICH_POLL_TIMEOUT_S:-900}"
 POLL_INTERVAL_S="${ATLAS_RE_ENRICH_POLL_INTERVAL_S:-15}"
@@ -68,6 +77,12 @@ done
 
 ssh_q() { ssh -o BatchMode=yes -o ConnectTimeout=10 -- "$HOST" "$@"; }
 scp_q() { scp -o BatchMode=yes -o ConnectTimeout=10 -- "$@"; }
+rsync_q() { rsync -a --delete -e "ssh -o BatchMode=yes -o ConnectTimeout=10" -- "$@"; }
+
+if [[ ! -x "$PYTHON_BIN" ]]; then
+  echo "shared project Python not executable: $PYTHON_BIN" >&2
+  exit 1
+fi
 
 if ! ssh_q "true" 2>/dev/null; then
   echo "cannot reach $HOST over SSH (BatchMode); check ~/.ssh/config" >&2
@@ -99,9 +114,36 @@ if [[ ! -e "$LOCAL_SOURCES_DB_CANDIDATE" ]]; then
     exit 1
   fi
 fi
-LOCAL_SOURCES_DB="$(python3 -c "import pathlib, sys; print(pathlib.Path(sys.argv[1]).resolve())" "$LOCAL_SOURCES_DB_CANDIDATE")"
+LOCAL_SOURCES_DB="$("$PYTHON_BIN" -c "import pathlib, sys; print(pathlib.Path(sys.argv[1]).resolve())" "$LOCAL_SOURCES_DB_CANDIDATE")"
 if [[ ! -f "$LOCAL_SOURCES_DB" ]]; then
   echo "resolved local sources.db is not a regular file: $LOCAL_SOURCES_DB" >&2
+  exit 1
+fi
+
+# Current enrichment also needs VESUM for morphology and to verify dictionary
+# content before learner-facing sections are admitted. The VPS intentionally
+# keeps only sources.db in its stale repo checkout, so materialize VESUM in the
+# disposable work-dir overlay rather than changing that checkout.
+LOCAL_VESUM_DB_CANDIDATE="${ATLAS_LOCAL_VESUM_DB:-$WORKTREE/data/vesum.db}"
+if [[ ! -e "$LOCAL_VESUM_DB_CANDIDATE" ]]; then
+  if [[ -e "/Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db" ]]; then
+    LOCAL_VESUM_DB_CANDIDATE="/Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db"
+  else
+    echo "local vesum.db not found (tried worktree + primary checkout)" >&2
+    exit 1
+  fi
+fi
+LOCAL_VESUM_DB="$("$PYTHON_BIN" -c "import pathlib, sys; print(pathlib.Path(sys.argv[1]).resolve())" "$LOCAL_VESUM_DB_CANDIDATE")"
+if [[ ! -f "$LOCAL_VESUM_DB" ]]; then
+  echo "resolved local vesum.db is not a regular file: $LOCAL_VESUM_DB" >&2
+  exit 1
+fi
+LOCAL_SLOVNYK_CACHE="${ATLAS_LOCAL_SLOVNYK_CACHE:-$WORKTREE/data/lexicon/slovnyk_cache}"
+if [[ ! -d "$LOCAL_SLOVNYK_CACHE" ]]; then
+  LOCAL_SLOVNYK_CACHE="/Users/krisztiankoos/projects/learn-ukrainian/data/lexicon/slovnyk_cache"
+fi
+if [[ ! -d "$LOCAL_SLOVNYK_CACHE" ]]; then
+  echo "local slovnyk cache not found (tried worktree + primary checkout)" >&2
   exit 1
 fi
 
@@ -148,19 +190,47 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
     fi
   fi
 
-  echo "syncing driver + launcher -> $HOST:$REMOTE_WORK_DIR (target=$TARGET)"
-  ssh_q "mkdir -p $(printf '%q' "$REMOTE_WORK_DIR")"
+  echo "syncing driver + current enrichment package -> $HOST:$REMOTE_WORK_DIR (target=$TARGET)"
+  ssh_q "mkdir -p $(printf '%q' "$REMOTE_WORK_DIR/scripts")"
+  # Modules deployed under $REMOTE_WORK_DIR derive their project root from
+  # that directory. Materialize a work-dir-only data overlay: the live repo
+  # remains read-only, while VESUM sits next to the synced code.
+  ssh_q "if test -L $(printf '%q' "$REMOTE_WORK_DIR/data"); then data_target=\$(readlink -f $(printf '%q' "$REMOTE_WORK_DIR/data")); if test \"\$data_target\" != $(printf '%q' "$REMOTE_REPO/data"); then echo 'refusing to replace unexpected work-dir data symlink' >&2; exit 1; fi; rm $(printf '%q' "$REMOTE_WORK_DIR/data"); mkdir -p $(printf '%q' "$REMOTE_WORK_DIR/data"); ln -s $(printf '%q' "$REMOTE_REPO/data/sources.db") $(printf '%q' "$REMOTE_WORK_DIR/data/sources.db"); ln -s $(printf '%q' "$REMOTE_REPO/data/lexicon") $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); elif test ! -d $(printf '%q' "$REMOTE_WORK_DIR/data"); then echo 'work-dir data path is not a directory' >&2; exit 1; fi"
+  # Slovnyk is deliberately offline during VPS runs. Materialize only its
+  # cache directory locally in the overlay, while all other lexicon artifacts
+  # remain linked to the hydrated VPS repo data.
+  ssh_q "if test -L $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); then lexicon_target=\$(readlink -f $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon")); if test \"\$lexicon_target\" != $(printf '%q' "$REMOTE_REPO/data/lexicon"); then echo 'refusing to replace unexpected work-dir lexicon symlink' >&2; exit 1; fi; rm $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); mkdir -p $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); for source_path in $(printf '%q' "$REMOTE_REPO/data/lexicon")/*; do name=\$(basename \"\$source_path\"); if test \"\$name\" != slovnyk_cache; then ln -s \"\$source_path\" $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon")/\"\$name\"; fi; done; elif test ! -d $(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); then echo 'work-dir lexicon path is not a directory' >&2; exit 1; fi"
+  echo "syncing Slovnyk cache into work-dir overlay"
+  rsync_q "$LOCAL_SLOVNYK_CACHE/" "$HOST:$REMOTE_WORK_DIR/data/lexicon/slovnyk_cache/"
+  REMOTE_VESUM_DB="$REMOTE_WORK_DIR/data/vesum.db"
+  local_vesum_sz="$(_local_sz "$LOCAL_VESUM_DB")"
+  remote_vesum_sz="$(ssh_q "if test -f $(printf '%q' "$REMOTE_VESUM_DB"); then stat -L -c '%s' $(printf '%q' "$REMOTE_VESUM_DB"); else echo 0; fi")"
+  echo "vesum.db preflight local=$local_vesum_sz remote=$remote_vesum_sz path=$REMOTE_VESUM_DB"
+  if [[ "$local_vesum_sz" != "$remote_vesum_sz" ]]; then
+    echo "syncing vesum.db into work-dir overlay"
+    rsync -a --partial "$LOCAL_VESUM_DB" "$HOST:$REMOTE_VESUM_DB"
+    remote_vesum_sz="$(ssh_q "stat -L -c '%s' $(printf '%q' "$REMOTE_VESUM_DB")")"
+    echo "vesum.db after rsync local=$local_vesum_sz remote=$remote_vesum_sz"
+    if [[ "$local_vesum_sz" != "$remote_vesum_sz" ]]; then
+      echo "FAIL CLOSED: vesum.db still mismatched after rsync (local=$local_vesum_sz remote=$remote_vesum_sz)" >&2
+      exit 1
+    fi
+  fi
   if [[ "$TARGET" == "missing-translation" ]]; then
     scp_q "$LOCAL_RESIDUAL" "$HOST:$REMOTE_WORK_DIR/class-b-no-en.json"
   fi
   scp_q "$LOCAL_DRIVER" "$HOST:$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py"
   scp_q "$LOCAL_LAUNCHER" "$HOST:$REMOTE_WORK_DIR/launch_reenrich_class_b.sh"
+  # Keep every direct and lazy transitive import current.  The package is
+  # small enough to sync cheaply, and this avoids rerunning a new driver
+  # against a mixture of Mac-current and VPS-stale helper modules.
+  rsync_q "$LOCAL_SCRIPTS_PACKAGE/" "$HOST:$REMOTE_WORK_DIR/scripts/"
   ssh_q "chmod +x $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
 
   echo "launching on $HOST"
   # ATLAS_RE_ENRICH_DRIVER pins the work-dir copy explicitly so a stale
   # in-repo checkout on the VPS can never win the launcher's auto-detection.
-  remote_cmd="ATLAS_RUN_ROOT=$(printf '%q' "$RUN_ROOT") ATLAS_REPO=$(printf '%q' "$REMOTE_REPO") ATLAS_RE_ENRICH_WORK_DIR=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_DRIVER=$(printf '%q' "$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py") bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
+  remote_cmd="ATLAS_RUN_ROOT=$(printf '%q' "$RUN_ROOT") ATLAS_REPO=$(printf '%q' "$REMOTE_REPO") ATLAS_RE_ENRICH_WORK_DIR=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_CODE_ROOT=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_DRIVER=$(printf '%q' "$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py") bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
   # macOS ships bash 3.2, where "${arr[@]}" on a zero-element array throws
   # "unbound variable" under `set -u` (fixed upstream in bash 4.4+) — guard
   # the iteration instead of relying on the expansion alone.
@@ -195,7 +265,7 @@ scp_q "$HOST:$REMOTE_WORK_DIR/reenrich-summary.json" "$LOCAL_OUT_DIR/reenrich-su
 
 if [[ -f "$LOCAL_OUT_DIR/reenrich-summary.json" ]]; then
   echo "--- summary ---"
-  python3 -c "
+  "$PYTHON_BIN" -c "
 import json, sys
 try:
     data = json.load(open('$LOCAL_OUT_DIR/reenrich-summary.json'))
