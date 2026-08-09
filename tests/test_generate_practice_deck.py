@@ -1312,6 +1312,39 @@ def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> No
     assert dated_lexeme["glossClean"] == "fairy tale"
 
 
+
+def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
+    """#6437: sense-first entries bind senseId and never fall back to en[0]."""
+    verifier = JsonVesumVerifier({})
+    entry = {
+        "lemma": "брак",
+        "url_slug": "брак",
+        "gloss": "вада",
+        "pos": "noun",
+        "primary_source": "atlas",
+        "cefr": "A1",
+        "enrichment": {
+            "translation": {
+                "en": ["second", "defect"],
+                "source": "dmklinger",
+            }
+        },
+        "senses": [
+            {
+                "id": "brak_defect",
+                "learner_en": ["defect", "flaw"],
+                "source": "sum20_vetted",
+                "completeness": "complete",
+            }
+        ],
+    }
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None
+    assert lexeme["senseId"] == "brak_defect"
+    assert lexeme["glossClean"] == "defect"
+    assert "second" not in lexeme["gloss"].casefold()
+
+
 def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
     assert _meaning_mc_eligible("justice", "справедливість", "noun") is True
     assert _meaning_mc_eligible("сукупність прав", "право", "noun") is False
