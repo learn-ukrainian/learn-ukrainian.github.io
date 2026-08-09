@@ -142,11 +142,13 @@ def _acp_runtime_root(repo_root: Path) -> Path:
 
 def _is_under_acp_runtime_root(path: Path, repo_root: Path = ROOT) -> bool:
     """True for paths inside .worktrees/dispatch/acp/."""
+    runtime_root = _acp_runtime_root(repo_root).resolve()
     try:
-        path.resolve().relative_to(_acp_runtime_root(repo_root))
+        resolved_path = path.resolve()
+        resolved_path.relative_to(runtime_root)
     except ValueError:
         return False
-    return True
+    return resolved_path != runtime_root
 
 
 def _is_registered_worktree(path: Path, repo_root: Path) -> bool:

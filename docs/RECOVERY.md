@@ -50,6 +50,7 @@ RELEASE_STAGE=/absolute/path/to/empty/hramatka-data-release-stage
 PROJECT_DIR=/absolute/path/to/clean/learn-ukrainian
 
 mkdir -p "$RELEASE_STAGE"
+mkdir -p "$PROJECT_DIR/data"
 # Download the exact reviewed release asset and checksum into $RELEASE_STAGE.
 # Verify the checksum before unpacking; do not use rsync --delete.
 

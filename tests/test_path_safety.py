@@ -64,3 +64,32 @@ def test_symlink_escape_is_blocked(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="outside approved"):
         assert_delete_target(worktrees / "escape", repo_root=repo_root)
+
+
+@pytest.mark.parametrize(
+    ("tmpdir", "approved_temp_roots"),
+    [
+        ("/", ()),
+        (None, (Path("/"),)),
+    ],
+)
+def test_delete_guard_refuses_filesystem_root_as_a_temp_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmpdir: str | None,
+    approved_temp_roots: tuple[Path, ...],
+) -> None:
+    """Neither $TMPDIR nor an explicit root can allow arbitrary deletion."""
+    repo_root = tmp_path / "repo"
+    arbitrary_target = tmp_path / "arbitrary-target"
+    if tmpdir is None:
+        monkeypatch.delenv("TMPDIR", raising=False)
+    else:
+        monkeypatch.setenv("TMPDIR", tmpdir)
+
+    with pytest.raises(ValueError, match="filesystem root"):
+        assert_delete_target(
+            arbitrary_target,
+            repo_root=repo_root,
+            approved_temp_roots=approved_temp_roots,
+        )

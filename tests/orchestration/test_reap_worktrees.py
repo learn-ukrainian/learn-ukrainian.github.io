@@ -208,6 +208,14 @@ def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
     assert len(commands) == 1
 
 
+def test_acp_runtime_root_is_not_a_removable_runtime_descendant(tmp_path: Path) -> None:
+    """The dedicated ACP directory is a boundary, never a runtime target."""
+    runtime_root = post_task_reap._acp_runtime_root(tmp_path)
+
+    assert post_task_reap._is_under_acp_runtime_root(runtime_root, tmp_path) is False
+    assert post_task_reap._is_under_acp_runtime_root(runtime_root / "runtime-task", tmp_path) is True
+
+
 def _raw_worktree_remove_callers(project_root: Path) -> dict[str, set[str]]:
     """Return production functions constructing a literal ``worktree remove`` command."""
     actual: dict[str, set[str]] = {}

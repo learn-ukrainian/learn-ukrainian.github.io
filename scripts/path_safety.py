@@ -197,6 +197,8 @@ def assert_delete_target(
     allowed_roots.extend(Path(root).resolve() for root in approved_temp_roots)
 
     for root in allowed_roots:
+        if root.parent == root:
+            raise ValueError("approved deletion root must not be the filesystem root")
         if root in {resolved_repo_root, home_root}:
             raise ValueError("approved deletion root must not be the repository or home directory")
         if resolved_target == root:
