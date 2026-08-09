@@ -14,7 +14,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError, SourceIn
 FIRST_BATCH = (
     decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
 )
-EXPECTED_COMMITTED_DECISION_FILE_COUNT = 52
+EXPECTED_COMMITTED_DECISION_FILE_COUNT = 53
 COMMITTED_DECISION_FILES = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
 DECISION_LINE = re.compile(r"^\s+decision:\s+([a-z_]+)\s*$")
 
