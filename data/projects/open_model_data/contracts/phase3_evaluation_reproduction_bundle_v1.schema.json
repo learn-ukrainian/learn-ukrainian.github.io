@@ -8,6 +8,7 @@
     "schema_version",
     "text_free",
     "contract_bindings",
+    "artifact_locators",
     "evaluation_input_manifest",
     "evaluation_input_manifest_sha256",
     "scorer_result",
@@ -24,6 +25,7 @@
     "schema_version": {"const": "phase3_evaluation_reproduction_bundle_v1"},
     "text_free": {"const": true},
     "contract_bindings": {"$ref": "#/$defs/contractBindings"},
+    "artifact_locators": {"$ref": "#/$defs/artifactLocators"},
     "evaluation_input_manifest": {"$ref": "#/$defs/evaluationInput"},
     "evaluation_input_manifest_sha256": {"$ref": "#/$defs/sha256"},
     "scorer_result": {"$ref": "#/$defs/scorerResult"},
@@ -39,6 +41,53 @@
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
     "gitSha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "artifactLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "sha256"],
+      "properties": {
+        "relative_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?/)(?!.*//).+$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "artifactLocators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixed_release",
+        "heldout_evaluation_freeze_container",
+        "denominator_contract",
+        "threshold_contract",
+        "published_inputs_manifest",
+        "sealed_evaluator_interface",
+        "release_instructions",
+        "ukrainian_recipe",
+        "english_recipe",
+        "scorer_metrics",
+        "first_build",
+        "second_build",
+        "reproduced_export"
+      ],
+      "properties": {
+        "fixed_release": {"$ref": "#/$defs/artifactLocator"},
+        "heldout_evaluation_freeze_container": {"$ref": "#/$defs/artifactLocator"},
+        "denominator_contract": {"$ref": "#/$defs/artifactLocator"},
+        "threshold_contract": {"$ref": "#/$defs/artifactLocator"},
+        "published_inputs_manifest": {"$ref": "#/$defs/artifactLocator"},
+        "sealed_evaluator_interface": {"$ref": "#/$defs/artifactLocator"},
+        "release_instructions": {"$ref": "#/$defs/artifactLocator"},
+        "ukrainian_recipe": {"$ref": "#/$defs/artifactLocator"},
+        "english_recipe": {"$ref": "#/$defs/artifactLocator"},
+        "scorer_metrics": {"$ref": "#/$defs/artifactLocator"},
+        "first_build": {"$ref": "#/$defs/artifactLocator"},
+        "second_build": {"$ref": "#/$defs/artifactLocator"},
+        "reproduced_export": {"$ref": "#/$defs/artifactLocator"}
+      }
+    },
     "contractBindings": {
       "type": "object",
       "additionalProperties": false,
@@ -268,6 +317,7 @@
         "source_coverage_ready_claimed",
         "linguistically_validated_claimed",
         "consumer_proven_claimed",
+        "phase3_complete_claimed",
         "phase4_authorized"
       ],
       "properties": {
@@ -276,6 +326,7 @@
         "source_coverage_ready_claimed": {"const": false},
         "linguistically_validated_claimed": {"const": false},
         "consumer_proven_claimed": {"const": false},
+        "phase3_complete_claimed": {"const": false},
         "phase4_authorized": {"const": false}
       }
     }

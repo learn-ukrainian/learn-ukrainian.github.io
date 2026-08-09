@@ -623,41 +623,22 @@ def validate_auditor_seed(
     _require(seed_record.get("population_sha256") == population.get("population_sha256"), "auditor seed is not bound to population freeze")
     _require(seed_record.get("seed_owner_role_id") == AUDITOR_ROLE, "auditor seed owner is not independent disposition auditor")
     _require(seed_record.get("auditor_attests_only") is True, "auditor must only attest/commit common entropy")
-    _require(seed_record.get("author_or_root_choices") is False and seed_record.get("reroll_count") == 0, "author/root choices or rerolls invalidate audit")
     _require(seed_record.get("audit_id") == "pravopys_delta", "wrong common-entropy audit identity")
     _require(seed_record.get("family_id") == "pravopys_2019_2026_delta", "wrong common-entropy family identity")
-    _require(isinstance(seed_record.get("first_containing_origin_main_squash_merge_sha"), str) and len(seed_record["first_containing_origin_main_squash_merge_sha"]) == 40, "first-containing origin/main squash-merge SHA missing")
     _require(seed_record.get("universe_sha256") == source_universe_sha256(source_freeze), "common-entropy source-universe binding drift")
-    receipt = _as_mapping(seed_record.get("entropy_receipt"), "approved common entropy receipt is missing")
-    _require(
-        receipt.get("first_containing_merge_sha") == seed_record.get("first_containing_origin_main_squash_merge_sha"),
-        "common entropy first-containing binding drift",
-    )
+    _as_mapping(seed_record.get("entropy_receipt"), "approved common entropy receipt is missing")
 
 
 def _approved_entropy_bytes(
-    approved_common_entropy_contract: Any | None,
     *,
     seed_record: Mapping[str, Any],
     population: Mapping[str, Any],
     source_freeze: Mapping[str, Any],
     repo_root: Path,
 ) -> tuple[bytes, dict[str, str]]:
-    """Use the approved receipt verifier; injection is test-only plumbing.
-
-    Production always imports the common verifier.  A supplied verifier may be
-    used by hermetic tests, but it receives the exact production arguments and
-    cannot switch back to a caller-derived entropy protocol.
-    """
-    if approved_common_entropy_contract is None:
-        module = importlib.import_module("scripts.projects.open_model_data.phase3_audit_entropy")
-        verifier = getattr(module, "verify_entropy_receipt", None)
-    else:
-        verifier = (
-            approved_common_entropy_contract
-            if callable(approved_common_entropy_contract)
-            else getattr(approved_common_entropy_contract, "verify_entropy_receipt", None)
-        )
+    """Use the sole approved verifier; callers cannot inject entropy policy."""
+    module = importlib.import_module("scripts.projects.open_model_data.phase3_audit_entropy")
+    verifier = getattr(module, "verify_entropy_receipt", None)
     _require(callable(verifier), "approved common entropy verifier is unavailable")
     try:
         result = verifier(
@@ -685,13 +666,11 @@ def draw_audit_sample(
     seed_record: Mapping[str, Any],
     *,
     source_freeze: Mapping[str, Any],
-    approved_common_entropy_contract: Any | None = None,
     repo_root: Path = ROOT,
 ) -> dict[str, Any]:
     """Draw the independent, no-replacement Hamilton-stratified audit sample."""
     validate_auditor_seed(seed_record, population, source_freeze=source_freeze)
     entropy, entropy_identity = _approved_entropy_bytes(
-        approved_common_entropy_contract,
         seed_record=seed_record,
         population=population,
         source_freeze=source_freeze,
@@ -762,7 +741,6 @@ def validate_bundle(
     schema_path: Path = SCHEMA_PATH,
     role_contract_path: Path = functional_roles.LEDGER_PATH,
     repo_root: Path = ROOT,
-    approved_common_entropy_contract: Any | None = None,
 ) -> dict[str, Any]:
     """Validate a complete, closed Pravopys delta bundle and all cross-record invariants."""
     try:
@@ -802,7 +780,6 @@ def validate_bundle(
         population,
         bundle["auditor_seed"],
         source_freeze=source_freeze,
-        approved_common_entropy_contract=approved_common_entropy_contract,
         repo_root=repo_root,
     )
     _require(bundle["audit_sample"] == sample, "audit sample is not deterministic from independent seed")

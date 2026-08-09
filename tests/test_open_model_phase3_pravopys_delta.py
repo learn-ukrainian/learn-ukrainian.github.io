@@ -5,12 +5,12 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-import subprocess
 from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_audit_entropy as entropy
 from scripts.projects.open_model_data import phase3_pravopys_delta as delta
 
 
@@ -200,87 +200,20 @@ def _seed(rows: list[dict[str, object]], freeze: dict[str, object]) -> dict[str,
     entropy_receipt = {
         "schema_version": "phase3_audit_entropy_receipt_v1",
         "text_free": True,
-        "purpose": "pravopys_delta",
-        "frozen_universe_sha256": delta.source_universe_sha256(freeze),
-        "frozen_population_sha256": population["population_sha256"],
-        "sampler_plan_sha256": "c" * 64,
-        "frozen_artifact_path": "freeze/sampler-plan.json",
-        "frozen_artifact_sha256": "c" * 64,
-        "auditor_role_id": delta.AUDITOR_ROLE,
-        "auditor_task_id": delta.functional_roles.ROLE_TASKS[delta.AUDITOR_ROLE],
-        "base_contract_sha256": delta.functional_roles.BASE_SHA256,
-        "amendment_sha256": delta.functional_roles.AMENDMENT_SHA256,
-        "combined_contract_sha256": delta.functional_roles.COMBINED_SHA256,
-        "functional_role_contract_sha256": "d" * 64,
-        "conflict_graph_sha256": "e" * 64,
-        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
-        "auditor_only_nonce_commitment": True,
-        "nonce_commitment_count": 1,
-        "auditor_nonce_commitment_sha256": hashlib.sha256(nonce.encode()).hexdigest(),
+        "commitment_path": "data/projects/open_model_data/audit_entropy_commitments/opaque.json",
+        "commitment_sha256": "c" * 64,
+        "commitment_first_containing_merge_sha": "a" * 40,
         "auditor_nonce": nonce,
-        "author_or_root_choices": False,
-        "root_choice_count": 0,
-        "reroll_count": 0,
-        "first_containing_merge_sha": "a" * 40,
     }
     return {
         "population_sha256": population["population_sha256"],
         "seed_owner_role_id": delta.AUDITOR_ROLE,
         "auditor_attests_only": True,
-        "author_or_root_choices": False,
-        "reroll_count": 0,
         "audit_id": "pravopys_delta",
         "family_id": "pravopys_2019_2026_delta",
-        "first_containing_origin_main_squash_merge_sha": "a" * 40,
         "universe_sha256": delta.source_universe_sha256(freeze),
         "entropy_receipt": entropy_receipt,
     }
-
-
-class _Entropy:
-    def verify_entropy_receipt(self, receipt: object, **kwargs: object) -> dict[str, str]:
-        assert receipt and kwargs
-        return {
-            "derived_seed": "f" * 64,
-            "entropy_receipt_sha256": "1" * 64,
-            "first_containing_merge_sha": "a" * 40,
-            "canonical_tuple_sha256": "2" * 64,
-        }
-
-
-def test_default_common_entropy_verifier_binds_pravopys_source_and_population(tmp_path: Path) -> None:
-    freeze, _, _, _, rows, _, _ = _ledger(tmp_path)
-    population = delta.freeze_population(rows)
-    repo = tmp_path / "entropy-repo"
-    repo.mkdir()
-    for args in (("init", "--initial-branch=main"), ("config", "user.email", "test@example.test"), ("config", "user.name", "Test")):
-        subprocess.run(["git", "-C", str(repo), *args], check=True, stdout=subprocess.PIPE)
-    (repo / "README").write_text("initial\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, stdout=subprocess.PIPE)
-    subprocess.run(["git", "-C", str(repo), "commit", "-m", "initial"], check=True, stdout=subprocess.PIPE)
-    artifact = b'{"sampler":"pravopys-v1"}\n'
-    (repo / "frozen").mkdir()
-    (repo / "frozen" / "sampler.json").write_bytes(artifact)
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, stdout=subprocess.PIPE)
-    subprocess.run(["git", "-C", str(repo), "commit", "-m", "freeze sampler"], check=True, stdout=subprocess.PIPE)
-    commit = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], check=True, stdout=subprocess.PIPE, text=True).stdout.strip()
-    subprocess.run(["git", "-C", str(repo), "update-ref", "refs/remotes/origin/main", commit], check=True, stdout=subprocess.PIPE)
-    seed = _seed(rows, freeze)
-    nonce = "b" * 64
-    seed["first_containing_origin_main_squash_merge_sha"] = commit
-    seed["entropy_receipt"].update({
-        "frozen_population_sha256": population["population_sha256"],
-        "sampler_plan_sha256": hashlib.sha256(artifact).hexdigest(),
-        "frozen_artifact_path": "frozen/sampler.json",
-        "frozen_artifact_sha256": hashlib.sha256(artifact).hexdigest(),
-        "functional_role_contract_sha256": delta.sha256_file(delta.functional_roles.LEDGER_PATH),
-        "conflict_graph_sha256": delta.functional_roles.conflict_graph_sha256(delta.functional_roles.verify_value(delta.functional_roles.read_json(delta.functional_roles.LEDGER_PATH))),
-        "auditor_nonce_commitment_sha256": hashlib.sha256(nonce.encode("ascii")).hexdigest(),
-        "first_containing_merge_sha": commit,
-    })
-    sample = delta.draw_audit_sample(rows, population, seed, source_freeze=freeze, repo_root=repo)
-    assert sample["population_sha256"] == population["population_sha256"]
-    assert sample["first_containing_merge_sha"] == commit
 
 
 def test_current_hash_bound_freeze_loads_exact_denominators_and_rejects_old_status(tmp_path: Path) -> None:
@@ -328,11 +261,26 @@ def test_v21_role_bindings_and_closed_review_receipts_are_required(tmp_path: Pat
         delta.validate_delta_ledger(mismatched, candidates, old, new, source_freeze=freeze, role_contract=contract, reviewer_binding=bindings[delta.UKRAINIAN_REVIEWER_ROLE])
 
 
-def test_complete_bundle_requires_current_freeze_and_auditor_receipt(tmp_path: Path) -> None:
+def test_complete_bundle_requires_current_freeze_and_auditor_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
     freeze, old, new, candidates, rows, contract, bindings = _ledger(tmp_path)
     population = delta.freeze_population(rows)
     seed = _seed(rows, freeze)
-    sample = delta.draw_audit_sample(rows, population, seed, source_freeze=freeze, approved_common_entropy_contract=_Entropy())
+    verifier_calls: list[dict[str, object]] = []
+
+    def verifier(receipt: object, **kwargs: object) -> dict[str, str]:
+        assert receipt == seed["entropy_receipt"]
+        verifier_calls.append(kwargs)
+        return {
+            "derived_seed": "f" * 64,
+            "entropy_receipt_sha256": "1" * 64,
+            "first_containing_merge_sha": "a" * 40,
+            "canonical_tuple_sha256": "2" * 64,
+        }
+
+    monkeypatch.setattr(entropy, "verify_entropy_receipt", verifier)
+    sample = delta.draw_audit_sample(rows, population, seed, source_freeze=freeze)
     results = [{"delta_id": identifier, "decision": "agree", "repair_applied": False} for identifier in sample["sample_delta_ids"]]
     audit_action = _action(
         contract,
@@ -355,11 +303,25 @@ def test_complete_bundle_requires_current_freeze_and_auditor_receipt(tmp_path: P
         "audit_results": results,
         "audit_action_receipt": audit_action,
     }
-    assert delta.validate_bundle(bundle, repo_root=tmp_path, approved_common_entropy_contract=_Entropy())["ok"] is True
+    assert delta.validate_bundle(bundle, repo_root=tmp_path)["ok"] is True
+    assert verifier_calls and verifier_calls[0]["auditor_role_id"] == delta.AUDITOR_ROLE
     stale_cycle = copy.deepcopy(bundle)
     stale_cycle["audit_action_receipt"]["evaluation_cycle_id"] = "old-cycle"
     with pytest.raises(delta.PravopysDeltaError, match="contract or evaluation-cycle"):
-        delta.validate_bundle(stale_cycle, repo_root=tmp_path, approved_common_entropy_contract=_Entropy())
+        delta.validate_bundle(stale_cycle, repo_root=tmp_path)
+
+
+def test_public_entropy_verifier_injection_is_not_a_production_api(tmp_path: Path) -> None:
+    freeze, _, _, _, rows, _, _ = _ledger(tmp_path)
+    population = delta.freeze_population(rows)
+    with pytest.raises(TypeError, match="approved_common_entropy_contract"):
+        delta.draw_audit_sample(
+            rows,
+            population,
+            _seed(rows, freeze),
+            source_freeze=freeze,
+            approved_common_entropy_contract=lambda *_args, **_kwargs: None,
+        )
 
 
 def test_schema_is_strict_and_current_contract_shaped() -> None:

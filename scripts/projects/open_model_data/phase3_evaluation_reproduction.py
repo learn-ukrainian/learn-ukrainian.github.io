@@ -4,6 +4,8 @@
 This is a public, text-free mechanics verifier. It never reads held-out
 plaintext, computes linguistic labels, scores a release, or claims that the
 scorer or outsider actions occurred merely because this verifier ran.
+Source-blind and clean-worktree fields remain receipt attestations; only the
+closed artifact bytes and checked-out commit are independently inspected here.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from collections.abc import Mapping
 from datetime import datetime
@@ -68,6 +71,62 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
         raise EvaluationReproductionError(f"cannot read {label}: {path}") from exc
     require(isinstance(value, dict), f"{label} must be an object")
     return value
+
+
+def _artifact_file(
+    artifact_root: Path,
+    relative_path: str,
+    label: str,
+) -> Path:
+    """Return one closed, regular artifact file without following symlinks."""
+
+    require(isinstance(relative_path, str) and relative_path, f"{label} locator path is missing")
+    locator = Path(relative_path)
+    require(not locator.is_absolute(), f"{label} locator must be repo-relative")
+    require(
+        all(part not in {"", ".", ".."} for part in locator.parts),
+        f"{label} locator traversal is forbidden",
+    )
+    try:
+        require(artifact_root.exists() and artifact_root.is_dir(), "artifact root must be an existing directory")
+        require(not artifact_root.is_symlink(), "artifact root may not be a symlink")
+        candidate = artifact_root
+        for part in locator.parts:
+            candidate = candidate / part
+            require(not candidate.is_symlink(), f"{label} locator symlink is forbidden")
+        require(candidate.is_file(), f"{label} artifact is missing or not a regular file")
+    except OSError as exc:
+        raise EvaluationReproductionError(f"cannot inspect {label} artifact") from exc
+    return candidate
+
+
+def _verify_artifact_bytes(
+    artifact_root: Path,
+    locators: Mapping[str, Any],
+    artifact_id: str,
+    receipt_sha256: str,
+) -> None:
+    locator = locators[artifact_id]
+    require(isinstance(locator, Mapping), f"{artifact_id} locator must be an object")
+    require(locator["sha256"] == receipt_sha256, f"{artifact_id} locator hash mismatch")
+    artifact = _artifact_file(artifact_root, locator["relative_path"], artifact_id)
+    require(sha256_file(artifact) == receipt_sha256, f"{artifact_id} artifact bytes hash mismatch")
+
+
+def _verify_outsider_commit(artifact_root: Path, commit_sha: str) -> None:
+    """Bind outsider artifacts to the checked-out local Git commit, read-only."""
+
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(artifact_root), "rev-parse", "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as exc:
+        raise EvaluationReproductionError("cannot inspect artifact-root Git commit") from exc
+    require(completed.returncode == 0, "artifact root is not a local Git worktree")
+    require(completed.stdout.strip() == commit_sha, "artifact root HEAD does not match outsider worktree commit")
 
 
 def _validate_schema(bundle: Mapping[str, Any]) -> None:
@@ -153,7 +212,12 @@ def _validate_action_receipt(
     )
 
 
-def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROLE_CONTRACT_PATH) -> dict[str, Any]:
+def validate_bundle(
+    bundle: Mapping[str, Any],
+    *,
+    role_contract_path: Path = ROLE_CONTRACT_PATH,
+    artifact_root: Path = ROOT,
+) -> dict[str, Any]:
     """Validate one already-produced scorer/outsider evidence bundle."""
 
     _validate_schema(bundle)
@@ -175,6 +239,8 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
         "evaluation-reproduction contract bindings drift",
     )
 
+    artifact_root = Path(artifact_root)
+    artifact_locators = bundle["artifact_locators"]
     evaluation_input = bundle["evaluation_input_manifest"]
     require(evaluation_input["schema_version"] == INPUT_SCHEMA_VERSION, "wrong evaluation input manifest schema")
     require(evaluation_input["evaluation_cycle_id"] == EVALUATION_CYCLE_ID, "evaluation input cycle drift")
@@ -196,6 +262,18 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
         require(SHA256_RE.fullmatch(evaluation_input[field]) is not None, f"invalid evaluation input hash: {field}")
     evaluation_input_sha = sha256_value(evaluation_input)
     require(bundle["evaluation_input_manifest_sha256"] == evaluation_input_sha, "evaluation input manifest hash mismatch")
+    for artifact_id, field in (
+        ("fixed_release", "fixed_release_sha256"),
+        ("heldout_evaluation_freeze_container", "heldout_evaluation_freeze_sha256"),
+        ("denominator_contract", "denominator_contract_sha256"),
+        ("threshold_contract", "threshold_contract_sha256"),
+        ("published_inputs_manifest", "published_inputs_manifest_sha256"),
+        ("sealed_evaluator_interface", "sealed_evaluator_interface_sha256"),
+        ("release_instructions", "release_instructions_sha256"),
+        ("ukrainian_recipe", "ukrainian_recipe_sha256"),
+        ("english_recipe", "english_recipe_sha256"),
+    ):
+        _verify_artifact_bytes(artifact_root, artifact_locators, artifact_id, evaluation_input[field])
 
     scorer_result = bundle["scorer_result"]
     require(scorer_result["evaluation_input_manifest_sha256"] == evaluation_input_sha, "scorer result input mismatch")
@@ -211,6 +289,7 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
     require(scorer_result["status"] == "completed", "scorer result is not complete")
     scorer_result_sha = sha256_value(scorer_result)
     require(bundle["scorer_result_sha256"] == scorer_result_sha, "scorer result hash mismatch")
+    _verify_artifact_bytes(artifact_root, artifact_locators, "scorer_metrics", scorer_result["metrics_sha256"])
     _validate_action_receipt(
         bundle["scorer_action_receipt"],
         role_contract=role_contract,
@@ -236,6 +315,7 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
     ):
         require(outsider_input[field] == evaluation_input[field], f"outsider input binding mismatch: {field}")
     require(GIT_SHA_RE.fullmatch(outsider_input["fresh_worktree_commit_sha"]) is not None, "invalid outsider worktree commit")
+    _verify_outsider_commit(artifact_root, outsider_input["fresh_worktree_commit_sha"])
     require(outsider_input["source_blind"] is True, "outsider is not source-blind")
     require(outsider_input["fresh_clean_worktree"] is True, "outsider did not use a fresh clean worktree")
     require(outsider_input["author_worktree_used"] is False, "outsider used an author worktree")
@@ -252,6 +332,12 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
         reproduction["reproduced_export_sha256"],
     }
     require(len(build_hashes) == 1, "complete builds and outsider export are not byte-identical")
+    for artifact_id, field in (
+        ("first_build", "first_build_sha256"),
+        ("second_build", "second_build_sha256"),
+        ("reproduced_export", "reproduced_export_sha256"),
+    ):
+        _verify_artifact_bytes(artifact_root, artifact_locators, artifact_id, reproduction[field])
     require(reproduction["scorer_metrics_sha256"] == scorer_result["metrics_sha256"], "outsider metrics do not reproduce scorer metrics")
     required_true = (
         "input_bytes_preserved",
@@ -272,7 +358,10 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
         "upload_performed",
         "outreach_performed",
     )
-    require(all(reproduction[field] is True for field in required_true), "outsider reproduction lacks a required positive proof")
+    require(
+        all(reproduction[field] is True for field in required_true),
+        "outsider reproduction lacks a required positive attestation",
+    )
     require(all(reproduction[field] is False for field in required_false), "outsider reproduction crossed a forbidden boundary")
     require(reproduction["status"] == "completed", "outsider reproduction is not complete")
     reproduction_sha = sha256_value(reproduction)
@@ -295,6 +384,7 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
             "source_coverage_ready_claimed": False,
             "linguistically_validated_claimed": False,
             "consumer_proven_claimed": False,
+            "phase3_complete_claimed": False,
             "phase4_authorized": False,
         },
         "evaluation-reproduction verifier made an unauthorized gate claim",
@@ -313,21 +403,44 @@ def validate_bundle(bundle: Mapping[str, Any], *, role_contract_path: Path = ROL
     }
 
 
-def verify(path: Path, *, role_contract_path: Path = ROLE_CONTRACT_PATH) -> dict[str, Any]:
-    return validate_bundle(read_json(path, "evaluation-reproduction bundle"), role_contract_path=role_contract_path)
+def verify(
+    path: Path,
+    *,
+    role_contract_path: Path = ROLE_CONTRACT_PATH,
+    artifact_root: Path = ROOT,
+) -> dict[str, Any]:
+    return validate_bundle(
+        read_json(path, "evaluation-reproduction bundle"),
+        role_contract_path=role_contract_path,
+        artifact_root=artifact_root,
+    )
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Verify Phase 3 scorer and outsider-reproduction receipts.")
     parser.add_argument("bundle", type=Path)
     parser.add_argument("--role-contract", type=Path, default=ROLE_CONTRACT_PATH)
+    parser.add_argument(
+        "--artifact-root",
+        type=Path,
+        default=ROOT,
+        help="Git worktree containing the closed, repo-relative artifact files.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        print(canonical_json(verify(args.bundle, role_contract_path=args.role_contract)))
+        print(
+            canonical_json(
+                verify(
+                    args.bundle,
+                    role_contract_path=args.role_contract,
+                    artifact_root=args.artifact_root,
+                )
+            )
+        )
     except EvaluationReproductionError as exc:
         print(canonical_json({"ok": False, "error": str(exc)}))
         return 2
