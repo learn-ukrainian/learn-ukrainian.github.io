@@ -482,6 +482,33 @@ def _is_ancestor_of_origin_main(path: Path) -> bool:
     return proc.returncode == 0
 
 
+_TERMINAL_DISPATCH_STATUSES = frozenset({"done", "failed", "no_deliverable"})
+
+
+def _terminal_dispatch_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+) -> str | None:
+    """Prove that a dispatch worktree is terminal and no longer owned.
+
+    This deliberately does not infer terminality from a dead PID.  A stale
+    ``running`` record may be recoverable; scheduled cleanup may only reap an
+    explicit terminal record and a known-empty active-task probe.
+    """
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id is None or active_ids is None or task_id in active_ids:
+        return None
+    task_data = _task_record(repo_root, task_id)
+    if task_data is None:
+        return None
+    task_status = task_data.get("status")
+    if task_status not in _TERMINAL_DISPATCH_STATUSES or _task_pid_alive(task_data):
+        return None
+    return f"settled dispatch task-id={task_id} status={task_status}"
+
+
 def _qualifying_reason(
     *,
     repo_root: Path,
@@ -492,6 +519,7 @@ def _qualifying_reason(
     active_ids: set[str] | None = None,
     safe_only: bool = False,
     merged_pr_only: bool = False,
+    include_terminal_dispatches: bool = False,
 ) -> str | None:
     if info.branch is not None:
         if pr_state is not None:
@@ -518,7 +546,7 @@ def _qualifying_reason(
             ):
                 return f"HEAD matches origin/{info.branch}"
 
-    if merged_pr_only:
+    if merged_pr_only and not include_terminal_dispatches:
         return None
 
     # Class B: detached-HEAD worktrees under .worktrees/
@@ -527,7 +555,13 @@ def _qualifying_reason(
     task_id = _dispatch_task_id(repo_root, info)
     is_dispatch_candidate = task_id is not None
 
-    if is_under_wt and info.detached and clean is True:
+    if (
+        not merged_pr_only
+        and not include_terminal_dispatches
+        and is_under_wt
+        and info.detached
+        and clean is True
+    ):
         has_matching_task = False
         task_settled = False
         if is_dispatch_candidate:
@@ -555,52 +589,21 @@ def _qualifying_reason(
             if age_hours is not None and age_hours > 24.0:
                 return f"detached HEAD ancestor of origin/main; age {age_hours:.1f}h > 24h"
 
-    # Class A: settled dispatch worktree (clean, worker gone).
-    # Open PRs live on the remote — a clean worktree matching origin/<branch>
-    # is safe to drop for disk recovery without closing the PR.
-    if is_dispatch_candidate and clean is True:
-        task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
-        if task_file.exists():
-            try:
-                task_data = json.loads(task_file.read_text(encoding="utf-8"))
-                if not isinstance(task_data, dict):
-                    return None
-                task_status = task_data.get("status")
-                pid_alive = _task_pid_alive(task_data)
-                terminal = task_status in ("done", "failed", "no_deliverable")
-                stuck_dead = (
-                    task_status in ("queued", "starting", "running", "needs_finalize")
-                    and not pid_alive
-                )
-                # Fail closed when Monitor active-task probe is unavailable.
-                settled = (
-                    (terminal or stuck_dead)
-                    and active_ids is not None
-                    and task_id not in active_ids
-                )
-                if settled and not pid_alive:
-                    if info.branch:
-                        prs, pr_error = _query_pr_states(repo_root, info.branch)
-                        if pr_error is not None:
-                            return None
-                        open_prs = [pr for pr in prs if pr.state == "OPEN"]
-                        if not open_prs:
-                            return (
-                                f"settled dispatch task-id={task_id} "
-                                f"status={task_status}"
-                            )
-                        if _origin_matches_head(info.path, info.branch):
-                            return (
-                                f"settled dispatch task-id={task_id} "
-                                f"status={task_status}; open PR remains on remote"
-                            )
-                    else:
-                        return (
-                            f"settled dispatch task-id={task_id} "
-                            f"status={task_status}"
-                        )
-            except Exception:
-                pass
+    # Optional Class A: settled dispatch worktree.  This class is intentionally
+    # narrower than the legacy classes: an explicit terminal task record, no
+    # live PID, a known-empty active-task probe, and no open PR are all required.
+    if (
+        is_dispatch_candidate
+        and clean is True
+        and (include_terminal_dispatches or not merged_pr_only)
+    ):
+        terminal_reason = _terminal_dispatch_reason(
+            repo_root=repo_root,
+            info=info,
+            active_ids=active_ids,
+        )
+        if terminal_reason is not None and (pr_state is None or pr_state.state != "OPEN"):
+            return terminal_reason
 
     return None
 
@@ -723,6 +726,7 @@ def _reap_qualified_worktree(
     apply: bool,
     preserve_then_reap: bool,
     prune_merged_branches: bool,
+    require_terminal_dispatch_guards: bool,
 ) -> ReapResult:
     expected_head = info.head
     if dirty is None:
@@ -837,6 +841,59 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
+        if require_terminal_dispatch_guards:
+            current_active_ids = _active_task_ids()
+            current_live_cwds = _live_cwd_paths(repo_root)
+            if current_active_ids is None or current_live_cwds is None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="terminal dispatch guards unavailable during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            terminal_reason = _terminal_dispatch_reason(
+                repo_root=repo_root,
+                info=info,
+                active_ids=current_active_ids,
+            )
+            activity = _activity_reason(
+                repo_root=repo_root,
+                info=info,
+                active_ids=current_active_ids,
+                live_cwds=current_live_cwds,
+            )
+            if terminal_reason is None or activity is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=activity or "terminal dispatch state changed during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            if info.branch is not None:
+                current_prs, current_pr_error = _query_pr_states(repo_root, info.branch)
+                if current_pr_error is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"PR guard unavailable during cleanup; {current_pr_error}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+                if any(pr.state == "OPEN" for pr in current_prs):
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="open PR appeared during cleanup",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
+
         recovery_ref, recovery_error = reaper_lifecycle.create_recovery_ref(
             repo_root,
             branch=info.branch,
@@ -928,6 +985,7 @@ def reap_worktrees(
     live_cwds: set[Path] | None = None,
     merged_pr_only: bool = True,
     require_activity_probe: bool | None = None,
+    include_terminal_dispatches: bool = False,
 ) -> list[ReapResult]:
     """Evaluate and optionally reap eligible worktrees.
 
@@ -1003,7 +1061,7 @@ def reap_worktrees(
                 pr_states, pr_error = _query_pr_states(repo_root, info.branch)
                 pr_state = _best_pr(pr_states)
 
-            if merged_pr_only and pr_error is not None:
+            if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:
                 results.append(
                     ReapResult(
                         path=str(info.path),
@@ -1025,6 +1083,7 @@ def reap_worktrees(
                 active_ids=active_ids,
                 safe_only=safe_only,
                 merged_pr_only=merged_pr_only,
+                include_terminal_dispatches=include_terminal_dispatches,
             )
             if reason is None:
                 if info.branch is None:
@@ -1066,6 +1125,10 @@ def reap_worktrees(
                     apply=apply,
                     preserve_then_reap=preserve_then_reap,
                     prune_merged_branches=prune_merged_branches,
+                    require_terminal_dispatch_guards=(
+                        include_terminal_dispatches
+                        and reason.startswith("settled dispatch task-id=")
+                    ),
                 )
             )
 
@@ -1144,6 +1207,7 @@ def reap_success_worktree(
         apply=apply,
         preserve_then_reap=preserve_then_reap,
         prune_merged_branches=False,
+        require_terminal_dispatch_guards=False,
     )
 
 
@@ -1247,6 +1311,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Enable pre-P0 non-merged cleanup classes for an explicit manual run.",
     )
     parser.add_argument(
+        "--terminal-dispatches",
+        action="store_true",
+        help=(
+            "Also reap clean terminal dispatch worktrees only when their task is "
+            "inactive, its PID is dead, and GitHub confirms no open PR."
+        ),
+    )
+    parser.add_argument(
         "--worktree",
         action="append",
         type=Path,
@@ -1268,7 +1340,9 @@ def main(argv: list[str] | None = None) -> int:
         else primary_checkout_root(resolve_repo_root())
     )
     apply = bool(args.apply) or args.command == "apply"
-    merged_mode = bool(args.merged) or not bool(args.legacy_classes)
+    merged_mode = bool(args.merged) or (
+        not bool(args.legacy_classes) and not bool(args.terminal_dispatches)
+    )
     preserve = bool(args.preserve_then_reap)
     prune = bool(args.prune_merged_branches) or bool(args.merged)
     safe_only = bool(args.safe_only) or merged_mode
@@ -1298,6 +1372,7 @@ def main(argv: list[str] | None = None) -> int:
         safe_only=safe_only,
         merged_pr_only=merged_mode,
         require_activity_probe=apply,
+        include_terminal_dispatches=bool(args.terminal_dispatches),
     )
     if args.json:
         print(json.dumps([_result_payload(result) for result in results], indent=2))

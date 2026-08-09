@@ -40,8 +40,14 @@ task, or live-process guards. Unregistered directories with broken `.git`
 pointers are reported as recovery candidates and are never deleted
 automatically.
 
-P0 automatic reaping is restricted to clean `.worktrees/` checkouts whose
-GitHub PR is `MERGED` at the exact local head. Before removal it writes an
+P0 automatic reaping includes clean `.worktrees/` checkouts whose GitHub PR is
+`MERGED` at the exact local head. The scheduled job also enables a separately
+guarded terminal-dispatch class: only worktrees below `.worktrees/dispatch/`
+whose task record is explicitly `done`, `failed`, or `no_deliverable`, whose PID
+is dead, whose active-task and live-CWD probes are available and clear, and
+whose GitHub query confirms no open PR. Set `LU_REAPER_TERMINAL_DISPATCHES=0`
+to disable only this optional scheduled class during an incident; merged-clean
+reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. The first seven days are capped by
@@ -137,7 +143,8 @@ Each run performs the following in both repository roots:
 1. fetches `origin` and prunes deleted remote refs;
 2. prunes stale Git worktree registrations;
 3. automatically removes only clean, inactive worktrees with exact merged-PR
-   head evidence; other legacy/residue classes are observed and skipped;
+   head evidence, plus the terminal-dispatch class described above; open or
+   GitHub-unknown PR state remains a hard skip;
 4. deletes local branches whose upstream is gone only when their exact head is
    proven merged or is already an ancestor of `origin/main`;
 5. preserves and reports unproven gone branches and orphaned worktree

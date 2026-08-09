@@ -1,0 +1,95 @@
+"""Tests for the allowlisted home-session inventory and retention CLI."""
+
+from __future__ import annotations
+
+import os
+import time
+from pathlib import Path
+
+import pytest
+
+from scripts.hygiene import inventory_home_sessions as inventory
+
+
+def _old_file(path: Path, *, age_days: float = 15.0) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("session\n", encoding="utf-8")
+    timestamp = time.time() - age_days * 86400
+    os.utime(path, (timestamp, timestamp))
+    return path
+
+
+def test_inventory_reports_provider_roots_and_only_stale_session_files(tmp_path: Path) -> None:
+    old = _old_file(tmp_path / ".codex" / "sessions" / "2026" / "old.jsonl")
+    _old_file(tmp_path / ".codex" / "config.toml")
+    recent = _old_file(tmp_path / ".claude" / "projects" / "recent.jsonl", age_days=2)
+
+    roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+
+    by_provider = {root.provider: root for root in roots}
+    assert by_provider["codex"].exists is True
+    assert by_provider["codex"].size_bytes is not None
+    assert by_provider["claude"].session_files == 1
+    assert {candidate.path for candidate in candidates} == {str(old)}
+    assert str(recent) not in {candidate.path for candidate in candidates}
+
+
+def test_apply_requires_explicit_environment_gate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    old = _old_file(tmp_path / ".codex" / "sessions" / "old.jsonl")
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
+
+    with pytest.raises(PermissionError, match="LU_HOME_SESSION_APPLY=1"):
+        inventory.apply_retention(
+            candidates=candidates,
+            home=tmp_path,
+            archive_root=tmp_path / "archive",
+            action="archive",
+            retention_days=14,
+        )
+
+    assert old.exists()
+
+
+def test_apply_archives_only_stale_allowlisted_session_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    old = _old_file(tmp_path / ".codex" / "sessions" / "old.jsonl")
+    config = _old_file(tmp_path / ".codex" / "config.toml")
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+    monkeypatch.setenv(inventory.APPLY_ENV, "1")
+
+    results = inventory.apply_retention(
+        candidates=candidates,
+        home=tmp_path,
+        archive_root=tmp_path / "archive",
+        action="archive",
+        retention_days=14,
+    )
+
+    archived = tmp_path / "archive" / "codex" / "sessions" / "old.jsonl"
+    assert results == [{"path": str(old), "action": "archived", "archive_path": str(archived)}]
+    assert not old.exists()
+    assert archived.read_text(encoding="utf-8") == "session\n"
+    assert config.exists()
+
+
+def test_symlinked_session_file_is_never_a_candidate(tmp_path: Path) -> None:
+    outside = _old_file(tmp_path / "outside.jsonl")
+    session_dir = tmp_path / ".cursor" / "chats"
+    session_dir.mkdir(parents=True)
+    (session_dir / "linked.jsonl").symlink_to(outside)
+
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+
+    assert candidates == []
+    assert outside.exists()
+
+
+def test_retention_boundary_uses_unrounded_file_age(tmp_path: Path) -> None:
+    almost_old = _old_file(tmp_path / ".grok" / "sessions" / "almost-old.jsonl", age_days=13.99)
+
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+
+    assert str(almost_old) not in {candidate.path for candidate in candidates}

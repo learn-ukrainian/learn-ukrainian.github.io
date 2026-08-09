@@ -34,6 +34,16 @@ SCHEMA_VERSION = "scheduled-git-hygiene.v2"
 DEFAULT_INTERVAL_MINUTES = 240
 
 
+def terminal_dispatch_reaping_enabled() -> bool:
+    """Return whether the scheduled terminal-dispatch class is enabled.
+
+    The class is on by default for disk-pressure recovery.  Setting
+    ``LU_REAPER_TERMINAL_DISPATCHES=0`` disables only this optional class while
+    preserving exact merged-PR cleanup.
+    """
+    return os.environ.get("LU_REAPER_TERMINAL_DISPATCHES", "1") != "0"
+
+
 def default_public_repo() -> Path:
     return PROJECT_ROOT
 
@@ -394,9 +404,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             prune_merged_branches=True,
             safe_only=True,
             live_cwds=live_cwds,
-            # P0 automatic enforcement is deliberately limited to exact merged
-            # heads.  Legacy settled/open-PR classes remain manual-only.
+            # Exact merged PR heads remain the primary class.  The terminal
+            # dispatch class is independently fail-closed and can be disabled
+            # with LU_REAPER_TERMINAL_DISPATCHES=0 for incident containment.
             merged_pr_only=True,
+            include_terminal_dispatches=terminal_dispatch_reaping_enabled(),
         )
         result["results"] = [asdict(row) for row in rows]
         try:
