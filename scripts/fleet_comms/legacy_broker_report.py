@@ -101,7 +101,7 @@ def _usage_summary(rows: list[sqlite3.Row], *, bridge: bool) -> dict[str, Any]:
     }
     for row in rows:
         caller = str(row["caller"])
-        count = int(row["count"])
+        count = int(row["count"] or 0)
         bucket = buckets[_usage_bucket(caller, bridge=bridge)]
         bucket["count"] += count
         bucket["by_caller"][caller] = bucket["by_caller"].get(caller, 0) + count

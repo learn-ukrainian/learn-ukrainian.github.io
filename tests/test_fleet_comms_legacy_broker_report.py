@@ -8,8 +8,8 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, main
-from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
+from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, _short_plane_health, main
+from scripts.fleet_comms.legacy_broker_report import _usage_summary, build_legacy_broker_report
 
 
 def _seed_telemetry(path: Path, *, coverage_started_at: datetime) -> None:
@@ -208,6 +208,22 @@ def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys
     assert "broker_report" in help_payload["truth"]
     assert "reap_report" in help_payload["hand"]
     assert {"board", "backlog", "dead"} <= set(help_payload["eyes"])
+
+
+def test_health_and_usage_helpers_tolerate_optional_values() -> None:
+    assert _short_plane_health({"schema": None}) == {
+        "db_exists": False,
+        "enabled": False,
+        "healthy": False,
+        "mode": None,
+        "read_only": False,
+        "schema_version": None,
+    }
+    assert _usage_summary([{"caller": "browser", "count": None}], bridge=False) == {
+        "seat": {"count": 0, "by_caller": {"browser": 0}},
+        "background": {"count": 0, "by_caller": {}},
+        "other": {"count": 0, "by_caller": {}},
+    }
 
 
 def test_fleet_reap_report_forwards_only_the_established_guards(monkeypatch, capsys) -> None:

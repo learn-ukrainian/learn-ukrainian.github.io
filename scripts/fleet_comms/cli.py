@@ -97,7 +97,7 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
 
 def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
     """Return a compact health projection without creating a second authority."""
-    schema = status.get("schema", {})
+    schema = status.get("schema") or {}
     enabled = status.get("enabled") is True
     read_only = status.get("read_only") is True
     db_exists = schema.get("db_exists") is True
