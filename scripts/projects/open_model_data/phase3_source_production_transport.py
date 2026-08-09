@@ -485,12 +485,15 @@ def _identity(row: Mapping[str, Any]) -> dict[str, str]:
 
 
 def _author_item(row: Mapping[str, Any]) -> dict[str, Any]:
+    source_record = dict(row["source_record"])
+    if source_record.get("text") == row["source_text"]:
+        source_record.pop("text")
     return {
         "identity": _identity(row),
         "document_or_edition_identity": row["document_or_edition_identity"],
         "frozen_locator": row["frozen_locator"],
         "source_text": row["source_text"],
-        "source_record": row["source_record"],
+        "source_record": source_record,
     }
 
 
@@ -695,6 +698,100 @@ def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, b
     return result.returncode, result.stdout, result.stderr
 
 
+def _prompt_with_response_contract(
+    prompt: bytes, schema_path: Path, lane: str, packet: Mapping[str, Any]
+) -> bytes:
+    """Append the exact machine-enforced response contract seen by the parser."""
+    schema = _read_json(schema_path, "source-production transport schema")
+    definitions = schema.get("$defs")
+    require(isinstance(definitions, Mapping), "transport schema definitions missing")
+    response_name = "reviewResponse" if lane == "review" else "authorResponse"
+    required_names = ("identity", "artifact", "decision", response_name)
+    require(all(isinstance(definitions.get(name), Mapping) for name in required_names), "response contract definitions missing")
+    response_contract = {
+        name: json.loads(canonical_json(definitions[name])) for name in required_names
+    }
+    response = response_contract[response_name]
+    response["properties"]["packet_id"] = {"const": packet["packet_id"]}
+    response["properties"]["identity_order"] = {"const": packet["identity_order"]}
+
+    def exact_decision(identity: Mapping[str, Any]) -> dict[str, Any]:
+        decision = json.loads(canonical_json(definitions["decision"]))
+        decision["properties"]["unit_id"] = {"const": identity["unit_id"]}
+        decision["properties"]["unit_sha256"] = {"const": identity["unit_sha256"]}
+        if identity["family_id"] != "school_textbooks":
+            decision["properties"]["candidate_classes"] = {"const": []}
+        if identity["family_id"] == "pravopys_2026_complete":
+            decision["properties"]["disposition_code"] = {
+                "enum": [
+                    "converted", "not_rule_bearing", "duplicate_representation",
+                    "blocked_with_reason",
+                ]
+            }
+        converted_views = json.loads(
+            canonical_json(definitions["decision"]["properties"]["consumer_views"])
+        )
+        converted_views["minItems"] = 1
+        decision["allOf"] = [
+            {
+                "if": {
+                    "properties": {"disposition_code": {"const": "converted"}},
+                    "required": ["disposition_code"],
+                },
+                "then": {
+                    "properties": {
+                        "artifact": {"$ref": "#/$defs/artifact"},
+                        "consumer_views": converted_views,
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "artifact": {"const": None},
+                        "consumer_views": {"const": []},
+                    }
+                },
+            }
+        ]
+        return decision
+
+    identities = packet["identity_order"]
+    if lane == "author":
+        response["properties"]["decisions"] = {
+            "type": "array", "minItems": len(identities), "maxItems": len(identities),
+            "prefixItems": [exact_decision(identity) for identity in identities], "items": False,
+        }
+    else:
+        review_item = json.loads(canonical_json(response["properties"]["reviews"]["items"]))
+        review_items = []
+        for identity in identities:
+            exact_review = json.loads(canonical_json(review_item))
+            exact_review["properties"]["unit_id"] = {"const": identity["unit_id"]}
+            exact_review["properties"]["unit_sha256"] = {"const": identity["unit_sha256"]}
+            exact_review["properties"]["decision"] = exact_decision(identity)
+            review_items.append(exact_review)
+        response["properties"]["reviews"] = {
+            "type": "array", "minItems": len(identities), "maxItems": len(identities),
+            "prefixItems": review_items, "items": False,
+        }
+    root_contract = json.loads(canonical_json(response))
+    root_contract["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    root_contract["$defs"] = {
+        name: response_contract[name] for name in ("identity", "artifact", "decision")
+    }
+    suffix = (
+        f"\n\n# Exact machine-enforced {response_name} root contract\n\n"
+        "The JSON Schema below is authoritative for output shape. Your returned JSON "
+        "object is the instance governed by this root schema; never wrap it in an "
+        f"`{response_name}` property. "
+        "Return every required field with exactly these names; `additionalProperties: false` "
+        "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+        "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        + canonical_json(root_contract)
+        + "\n"
+    )
+    return prompt + suffix.encode("utf-8")
+
+
 def _run_packets(
     *,
     manifest_path: Path,
@@ -718,7 +815,8 @@ def _run_packets(
         expected_prompt_hash = manifest["bindings"]["author_prompt_sha256"]
     _regular(prompt_path, f"{lane} prompt")
     require(sha256_file(prompt_path) == expected_prompt_hash, f"{lane} prompt hash drift")
-    prompt = prompt_path.read_bytes()
+    require(sha256_file(schema_path) == manifest["bindings"]["transport_schema_sha256"], "transport schema hash drift")
+    base_prompt = prompt_path.read_bytes()
     last = packet_count if end is None else end
     require(1 <= start <= last <= packet_count, f"invalid {lane} run range")
     runner = invoke or _subprocess_invoke
@@ -730,6 +828,7 @@ def _run_packets(
             skipped += 1
             continue
         packet = _packet_for(manifest, root, index, lane)
+        prompt = _prompt_with_response_contract(base_prompt, schema_path, lane, packet)
         entry = (manifest["review_packets"] if lane == "review" else manifest["author_packets"])[index - 1]
         packet_path = root / entry["relative_path"]
         command = [

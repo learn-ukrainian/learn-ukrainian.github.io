@@ -226,6 +226,24 @@ def test_prepare_is_exact_private_and_excludes_sealed_source_bodies(tmp_path: Pa
     assert all(path.stat().st_mode & 0o077 == 0 for path in root.rglob("*") if path.is_file())
 
 
+def test_author_item_keeps_full_text_once_when_source_record_duplicates_it() -> None:
+    text = "Повний нормативний текст без скорочення."
+    row = {
+        "family_id": "pravopys_2019_complete",
+        "unit_id": "unit.pravopys.fixture",
+        "unit_sha256": "1" * 64,
+        "frozen_locator": {"page": 1},
+        "frozen_locator_sha256": "2" * 64,
+        "source_text_sha256": "3" * 64,
+        "document_or_edition_identity": "edition.fixture",
+        "source_text": text,
+        "source_record": {"text": text, "page_count": 2},
+    }
+    item = transport._author_item(row)
+    assert item["source_text"] == text
+    assert item["source_record"] == {"page_count": 2}
+
+
 def test_end_to_end_assembles_three_exact_dispositions_and_textbook_rows(tmp_path: Path) -> None:
     fixture, manifest = _prepare(tmp_path)
     root = fixture["private_dir"]
@@ -429,6 +447,16 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"rule_author_extractor" in prompt
+        assert b"authorResponse root contract" in prompt
+        assert b'"schema_version"' in prompt
+        assert b'"packet_id"' in prompt
+        assert b'"identity_order"' in prompt
+        assert b'"disposition_code"' in prompt
+        assert b'"additionalProperties":false' in prompt
+        assert b'never wrap it in an `authorResponse` property' in prompt
+        assert b'"$schema":"https://json-schema.org/draft/2020-12/schema"' in prompt
+        assert packet["packet_id"].encode() in prompt
+        assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     first = transport.run_author(manifest_path=root / "manifest.json", invoke=author_invoke)
@@ -457,8 +485,63 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"ukrainian_source_reviewer" in prompt
+        assert b"reviewResponse root contract" in prompt
+        assert b'"reviews"' in prompt
+        assert b'"outcome"' in prompt
+        assert b'"additionalProperties":false' in prompt
+        assert b'never wrap it in an `reviewResponse` property' in prompt
+        assert b'"$schema":"https://json-schema.org/draft/2020-12/schema"' in prompt
+        assert packet["packet_id"].encode() in prompt
+        assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
     assert "ask-opencode" in commands[-1] and "grok-4.5" in commands[-1]
+
+
+def test_run_rejects_transport_schema_drift_before_invocation(tmp_path: Path) -> None:
+    fixture, _ = _prepare(tmp_path)
+    root = fixture["private_dir"]
+    assert isinstance(root, Path)
+    schema = json.loads(transport.DEFAULT_SCHEMA.read_text())
+    schema["title"] = "drifted after manifest freeze"
+    drifted_schema = tmp_path / "drifted-schema.json"
+    _json(drifted_schema, schema)
+    invoked = False
+
+    def invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
+        nonlocal invoked
+        invoked = True
+        return 1, b"", b"should not run"
+
+    with pytest.raises(transport.SourceProductionError, match="transport schema hash drift"):
+        transport.run_author(
+            manifest_path=root / "manifest.json",
+            schema_path=drifted_schema,
+            invoke=invoke,
+        )
+    assert invoked is False
+
+
+def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
+    identity = {
+        "family_id": "calque_inventory",
+        "unit_id": "unit.calque.fixture",
+        "unit_sha256": "1" * 64,
+        "locator_sha256": "2" * 64,
+        "source_text_sha256": "3" * 64,
+    }
+    packet = {
+        "packet_id": f"phase3_source_author_packet:{'4' * 64}",
+        "identity_order": [identity],
+    }
+    prompt = transport._prompt_with_response_contract(
+        b"author prompt", transport.DEFAULT_SCHEMA, "author", packet
+    )
+    assert b'"candidate_classes":{"const":[]}' in prompt
+    assert b'"unit_id":{"const":"unit.calque.fixture"}' in prompt
+    assert b'"minItems":1' in prompt and b'"maxItems":1' in prompt
+    assert b'"artifact":{"const":null}' in prompt
+    assert b'"consumer_views":{"const":[]}' in prompt
+    assert b'"disposition_code":{"const":"converted"}' in prompt
