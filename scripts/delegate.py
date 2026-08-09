@@ -36,6 +36,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "task_id": str,
         "agent": str,
         "model": str,
+        "resolved_model": str,  # Cursor's concrete model, or "unknown"
+        "resolved_model_known": bool,
+        "resolved_model_source": str,
         "effort": str,
         "cli_version": str,
         "mode": str,
@@ -924,6 +927,62 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
     """,
 )
 _NO_DELIVERABLE_STATUS = "no_deliverable"
+_CURSOR_UNKNOWN_MODEL = "unknown"
+_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a"})
+
+
+def _cursor_model_state(
+    *,
+    agent: str,
+    result: Any | None = None,
+    substitution: dict[str, Any] | None = None,
+    initial: bool = False,
+) -> dict[str, Any]:
+    """Return a truthful Cursor model-attribution companion for task state.
+
+    ``model`` remains the requested selector unless the runtime supplied a
+    concrete Cursor model. The separate ``resolved_model`` field makes an
+    unresolved Auto run explicit without promoting ``auto`` to family proof.
+    """
+    if agent != "cursor":
+        return {}
+
+    if initial:
+        return {
+            "resolved_model": _CURSOR_UNKNOWN_MODEL,
+            "resolved_model_known": False,
+            "resolved_model_source": "pending",
+        }
+
+    actual_model: object = None
+    source = "unknown"
+    known_raw: object = None
+    if isinstance(substitution, dict):
+        actual_model = substitution.get("actual_model")
+        known_raw = substitution.get("actual_model_known")
+        source_value = substitution.get("source")
+        if isinstance(source_value, str) and source_value.strip():
+            source = source_value.strip()
+
+    concrete = actual_model.strip() if isinstance(actual_model, str) else ""
+    is_concrete = bool(concrete) and concrete.casefold() not in _NON_CONCRETE_MODEL_VALUES
+    explicitly_unknown = str(known_raw).strip().casefold() in {"false", "0", "no"}
+    resolved_model = concrete if is_concrete and not explicitly_unknown else _CURSOR_UNKNOWN_MODEL
+    known = resolved_model != _CURSOR_UNKNOWN_MODEL
+
+    state = {
+        "resolved_model": resolved_model,
+        "resolved_model_known": known,
+        "resolved_model_source": source,
+    }
+    if result is not None and known:
+        # Keep the legacy ``model`` field useful to consumers that only read
+        # one field, while leaving it at the requested ``auto`` selector when
+        # attribution is unknown.
+        state["model"] = resolved_model
+    return state
+
+
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
@@ -3058,6 +3117,9 @@ def _emit_terminal_dispatch_event(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                "resolved_model": final_state.get("resolved_model"),
+                "resolved_model_known": final_state.get("resolved_model_known"),
+                "resolved_model_source": final_state.get("resolved_model_source"),
                 "effort": final_state.get("effort"),
                 "branch": final_state.get("worktree_branch"),
                 "worktree": final_state.get("worktree_path"),
@@ -3569,6 +3631,11 @@ def _run_worker(
         substitution = result_substitution
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
+    cursor_model_state = _cursor_model_state(
+        agent=agent,
+        result=result,
+        substitution=substitution,
+    )
 
     final_state.update(
         {
@@ -3577,6 +3644,7 @@ def _run_worker(
             # reader between the two writes never sees the status change.
             **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
+            **cursor_model_state,
             "effort": getattr(result, "effort", final_state.get("effort")),
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
@@ -4013,6 +4081,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
+            **_cursor_model_state(agent=dispatch_agent, initial=True),
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
             "mode": args.mode,
@@ -4168,6 +4237,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "attribution_source": attribution.source,
         "agent": dispatch_agent,
         "model": start_telemetry.model,
+        **_cursor_model_state(agent=dispatch_agent, initial=True),
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
         "allow_merge": bool(getattr(args, "allow_merge", False)),
