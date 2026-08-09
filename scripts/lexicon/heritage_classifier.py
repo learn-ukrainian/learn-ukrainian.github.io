@@ -645,10 +645,15 @@ def _slovnyk_cache_path(term: str) -> Path:
 
 
 def _cached_slovnyk_hits(term: str) -> list[dict[str, Any]]:
-    path = _slovnyk_cache_path(term)
-    try:
-        cache = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    # Deferred import: enrich_manifest imports classify_lemma/compute_warning_severity
+    # from this module at its own top level, so a module-level import here would
+    # be circular. _load_current_slovnyk_cache_file() is the one gated reader that
+    # refuses a stale schema_version instead of handing back a v2 row with
+    # corrupted `text` (#6524).
+    from scripts.lexicon.enrich_manifest import _load_current_slovnyk_cache_file
+
+    cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(term))
+    if cache is None:
         return []
     lookups = cache.get("lookups")
     if not isinstance(lookups, dict):
