@@ -64,10 +64,13 @@ from scripts.lexicon.enrich_manifest import (
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
+    _split_usage_note_title,
+    _strip_leading_headword_once,
     _style_markers_in_tag,
     _sum11_definition_card,
     _surface_gloss_hints,
     _translation,
+    _usage_notes_slovnyk,
     _verb_aspect,
     _vts_definition_card,
     _warning_slovnyk,
@@ -76,7 +79,7 @@ from scripts.lexicon.enrich_manifest import (
     clean_gloss,
     clean_html_entities,
 )
-from scripts.lexicon.source_attribution import MIYKLAS_LABEL, PROVERBS_LABEL
+from scripts.lexicon.source_attribution import DAVYDOV_LABEL, MIYKLAS_LABEL, PROVERBS_LABEL
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -822,6 +825,138 @@ def test_proverbs_slovnyk_returns_none_without_paragraph_structure() -> None:
     }
 
     assert _proverbs_slovnyk("свіжий", cache) is None
+
+
+def test_strip_leading_headword_once_does_not_eat_title_capital() -> None:
+    """Proof lemma що: after stripping the lookup headword, the essay title still
+    starts with capital «Що» (must not re-eat the capitalised form)."""
+    raw = (
+        "що Що, який, котрий, которий У багатьох людей, що вивчили українську "
+        "мову не в колисці з уст матері, а з книжок, часом виникає питання."
+    )
+    body = _strip_leading_headword_once(raw, "що", "що")
+    assert body.startswith("Що, який, котрий, которий")
+    # A second naive casefold strip would leave "який, котрий…" — forbidden.
+    assert not body.startswith("який")
+
+
+def test_split_usage_note_title_for_sho_essay() -> None:
+    body = (
+        "Що, який, котрий, которий У багатьох людей, що вивчили українську "
+        "мову не в колисці з уст матері, а з книжок, часом виникає питання."
+    )
+    title, essay = _split_usage_note_title(body)
+    assert title == "Що, який, котрий, которий"
+    assert essay.startswith("У багатьох людей")
+
+
+def test_split_usage_note_title_for_hovoryty_essay() -> None:
+    body = (
+        "Говорити й казати Чи дієслова говорити й казати є абсолютні синоніми, "
+        "як багато хто гадає, чи між ними є якась різниця?"
+    )
+    title, essay = _split_usage_note_title(body)
+    assert title == "Говорити й казати"
+    assert essay.startswith("Чи дієслова говорити")
+
+
+def test_usage_notes_slovnyk_proof_lemma_sho_mirror_only_attribution() -> None:
+    """#6463 proof lemma що — full essay section, book attribution, mirror URL only."""
+    essay = (
+        "що Що, який, котрий, которий У багатьох людей, що вивчили українську "
+        "мову не в колисці з уст матері, а з книжок, часом виникає питання, "
+        "коли саме слід ставити той чи той займенник із цих трьох — що, який, "
+        "котрий. Дехто вважає, ніби відповідно до російського слова который "
+        "треба скрізь на початку підрядного речення ставити тільки займенник "
+        "що. Усі ці здогади не мають під собою реального ґрунту. "
+        "Джерело: «Як ми говоримо» Антоненка-Давидовича на Slovnyk.me"
+    )
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "dictionary_label": DAVYDOV_LABEL,
+                "word": "що",
+                "source_url": "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
+                "text": essay,
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("що", cache)
+
+    assert section is not None
+    assert section["source"] == DAVYDOV_LABEL
+    assert len(section["items"]) == 1
+    item = section["items"][0]
+    assert item["title"] == "Що, який, котрий, которий"
+    assert item["text"].startswith("У багатьох людей")
+    assert "Джерело:" not in item["text"]
+    assert "Slovnyk.me" not in item["text"]
+    assert item["source"] == DAVYDOV_LABEL
+    # No official electronic edition URL for davydov — mirror stays internal.
+    assert "source_urls" not in section
+    assert section["mirror_source_urls"] == ["https://slovnyk.me/dict/davydov/%D1%89%D0%BE"]
+    assert "source_url" not in item
+    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/davydov/%D1%89%D0%BE"
+
+
+def test_usage_notes_slovnyk_returns_none_without_davydov_row() -> None:
+    cache = {"lookups": {"davydov": None, "vts": {"text": "irrelevant", "dictionary_slug": "vts"}}}
+    assert _usage_notes_slovnyk("вода", cache) is None
+
+
+def test_usage_notes_slovnyk_returns_none_for_too_short_stub() -> None:
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "word": "х",
+                "source_url": "https://slovnyk.me/dict/davydov/х",
+                "text": "х коротко",
+            }
+        }
+    }
+    assert _usage_notes_slovnyk("х", cache) is None
+
+
+def test_usage_notes_and_warning_chips_coexist_without_essay_duplication() -> None:
+    """Corrective cues still yield warning alternatives; the full essay is only
+    in usage_notes (no second full-text dump on the warning path)."""
+    essay = (
+        "включати Включати, умикати, виключати, вимикати, поставити, унести, "
+        "пустити «Треба включити електрику»; «Виключи струм», — кажуть "
+        "неправильно, забуваючи, що українською кажуть умикати / вимикати "
+        "струм. Джерело: «Як ми говоримо» Антоненка-Давидовича на Slovnyk.me"
+    )
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "dictionary_label": DAVYDOV_LABEL,
+                "word": "включати",
+                "source_url": "https://slovnyk.me/dict/davydov/включати",
+                "text": essay,
+            }
+        }
+    }
+
+    section = _usage_notes_slovnyk("включати", cache)
+    warning = _warning_slovnyk("включати", cache)
+
+    assert section is not None
+    assert len(section["items"]) == 1
+    assert "умикати" in section["items"][0]["text"] or section["items"][0].get("title")
+    # Warning path may or may not extract clean alternatives from long essays;
+    # when it does, those are short chips — never the full essay body.
+    if warning is not None:
+        for alt in warning["alternatives"]:
+            assert len(alt.split()) <= 3
+            assert len(alt) < 80
+        for row in warning.get("evidence", []):
+            detail = str(row.get("detail") or "")
+            # Evidence is truncated (#warning path) and is not the learner section.
+            assert detail != section["items"][0]["text"]
 
 
 def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:
