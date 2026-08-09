@@ -97,6 +97,37 @@ def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
     assert "PRE_COMMIT_HOME" not in env
 
 
+def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
+    project_venv = delegate._REPO_ROOT / ".venv"
+    foreign_venv = "/tmp/foreign-repo/virtualenv"
+    monkeypatch.setattr(delegate, "_REPO_ROOT", Path(project_venv).parent)
+
+    env = delegate._pinned_worker_venv_env(
+        {
+            "PATH": os.pathsep.join(
+                (f"{foreign_venv}/bin", "/usr/local/bin", "/usr/bin")
+            ),
+            "VIRTUAL_ENV": foreign_venv,
+            "PYTHONHOME": "/tmp/foreign-python-home",
+        }
+    )
+
+    assert env["VIRTUAL_ENV"] == str(project_venv)
+    assert env["PATH"] == os.pathsep.join(
+        (str(project_venv / "bin"), "/usr/local/bin", "/usr/bin")
+    )
+    assert "PYTHONHOME" not in env
+
+
+def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+
+    env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin"})
+
+    assert env["VIRTUAL_ENV"] == str(tmp_path / ".venv")
+    assert env["PATH"] == os.pathsep.join((str(tmp_path / ".venv" / "bin"), "/usr/bin"))
+
+
 # ---------------------------------------------------------------------------
 # State file helpers
 # ---------------------------------------------------------------------------
@@ -3382,6 +3413,52 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     env = recorded["env"]
     assert env["AGENT_NO_MERGE"] == "1"
     assert "AGENT_ALLOW_MERGE" not in env
+
+
+def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
+    import argparse
+
+    recorded: dict[str, object] = {}
+    foreign_venv = "/tmp/foreign-repo/.venv"
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setenv("PATH", f"{foreign_venv}/bin{os.pathsep}/usr/bin")
+    monkeypatch.setenv("VIRTUAL_ENV", foreign_venv)
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="pinned-worker-venv",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    env = recorded["env"]
+    assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
+    assert env["PATH"] == os.pathsep.join(
+        (str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin")
+    )
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(

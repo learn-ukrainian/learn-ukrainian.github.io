@@ -1943,6 +1943,47 @@ def _sanitized_git_env() -> dict[str, str]:
     }
 
 
+def _is_virtualenv_bin_path(entry: str) -> bool:
+    """Return whether a PATH entry is a conventional Python virtualenv bin."""
+    path = Path(entry)
+    return path.name == "bin" and path.parent.name in {".venv", "venv"}
+
+
+def _pinned_worker_venv_env(source: dict[str, str]) -> dict[str, str]:
+    """Pin a detached worker to this repository's venv, never an inherited one.
+
+    A dispatch worker can run arbitrary project commands.  If its parent was
+    launched from a different checkout's activated virtualenv, retaining that
+    ``VIRTUAL_ENV`` or its ``bin`` directory in ``PATH`` lets ``pip`` rewrite
+    that other environment's console scripts.  The worker always receives the
+    canonical project venv path; its explicit ``.venv/bin/python`` spawn
+    command has no fallback if that interpreter is unavailable.
+    """
+    venv_root = _REPO_ROOT / ".venv"
+    venv_bin = venv_root / "bin"
+    pinned = dict(source)
+    inherited_path = source.get("PATH", "")
+    inherited_venv = source.get("VIRTUAL_ENV")
+    inherited_venv_bin = (
+        os.path.normpath(str(Path(inherited_venv) / "bin"))
+        if inherited_venv
+        else None
+    )
+    path_entries = [
+        entry
+        for entry in inherited_path.split(os.pathsep)
+        if entry
+        and not _is_virtualenv_bin_path(entry)
+        and os.path.normpath(entry) != inherited_venv_bin
+    ]
+    pinned["PATH"] = os.pathsep.join((str(venv_bin), *path_entries))
+    pinned["VIRTUAL_ENV"] = str(venv_root)
+    # PYTHONHOME can override the interpreter's calculated prefix and make a
+    # correctly pinned venv behave like an unrelated Python installation.
+    pinned.pop("PYTHONHOME", None)
+    return pinned
+
+
 @dataclass(frozen=True)
 class AutoFinalizeResult:
     ok: bool
@@ -4489,10 +4530,10 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # Pipe the prompt via stdin so it doesn't hit argv length limits.
     # start_new_session=True detaches from our process group — the
     # worker survives our exit, which is what we want.
-    # Explicit env=os.environ.copy() — makes the inherited env
-    # explicit rather than implicit. Callers that want to scrub
-    # secrets from the worker's env can override this here.
-    worker_env = os.environ.copy()
+    # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
+    # not retain a parent process's activated venv: pip can otherwise rewrite
+    # console scripts in that foreign checkout (#5134).
+    worker_env = _pinned_worker_venv_env(os.environ)
     worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
     worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
     _inject_gh_token_for_agent(worker_env, dispatch_agent)
