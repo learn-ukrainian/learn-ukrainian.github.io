@@ -187,11 +187,17 @@ repos:
         name: lesson schema drift gate
         entry: >-
           bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/build/generate_lesson_schema.py && git diff --exit-code
+          scripts/pre_commit/regen_lesson_schema.py && git diff --exit-code
           docs/lesson-schema.yaml'
         language: system
         pass_filenames: false
-        files: ^(site/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
+        files: >-
+          (?x)^(
+            site/src/components/.*\.(tsx|astro)|
+            scripts/build/(generate_lesson_schema\.py|lesson_schema_extractor\.mjs)|
+            scripts/pipeline/config_tables\.py|
+            docs/lesson-contract\.md
+          )$
         stages: [pre-commit]
 
       # Atlas lexicon code-fingerprint must stay in sync with scripts/lexicon/*.py.
