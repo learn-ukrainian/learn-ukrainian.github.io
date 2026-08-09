@@ -9,6 +9,8 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms metrics
     .venv/bin/python -m scripts.fleet_comms backlog
     .venv/bin/python -m scripts.fleet_comms dead-letters
+    .venv/bin/python -m scripts.fleet_comms fleet status
+    .venv/bin/python -m scripts.fleet_comms fleet broker-report --days 7
     .venv/bin/python -m scripts.fleet_comms github-metrics
     .venv/bin/python -m scripts.fleet_comms authority-import --legacy-db /path/to/messages.db --source legacy-broker
 
@@ -45,6 +47,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     resolve_metrics_source,
 )
 from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
+from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
@@ -89,6 +92,90 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
         recent_limit=args.recent_limit,
     )
     sys.stdout.write(_json_dump(status))
+    return EXIT_OK
+
+
+def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
+    """Return a compact health projection without creating a second authority."""
+    schema = status.get("schema") or {}
+    enabled = status.get("enabled") is True
+    read_only = status.get("read_only") is True
+    db_exists = schema.get("db_exists") is True
+    return {
+        "healthy": enabled and read_only and db_exists,
+        "enabled": enabled,
+        "mode": status.get("mode"),
+        "read_only": read_only,
+        "db_exists": db_exists,
+        "schema_version": schema.get("applied_version"),
+    }
+
+
+def cmd_fleet_status(args: argparse.Namespace) -> int:
+    """Facade status: existing plane-status data plus a short health summary."""
+    root = Path(args.root).expanduser() if args.root else None
+    repo_root = Path(args.repo_root).expanduser() if args.repo_root else None
+    telemetry = Path(args.telemetry).expanduser() if args.telemetry else None
+    status = read_plane_status(
+        repo_root=repo_root,
+        root=root,
+        telemetry_path=telemetry,
+        recent_limit=args.recent_limit,
+    )
+    sys.stdout.write(_json_dump({"plane_status": status, "health": _short_plane_health(status)}))
+    return EXIT_OK
+
+
+def cmd_broker_report(args: argparse.Namespace) -> int:
+    """Emit read-only #6106 legacy Broker Ops observation evidence."""
+    routes_db = Path(args.routes_db).expanduser() if args.routes_db else None
+    bridge_db = Path(args.bridge_db).expanduser() if args.bridge_db else None
+    try:
+        payload = build_legacy_broker_report(
+            args.days,
+            routes_db=routes_db,
+            bridge_db=bridge_db,
+        )
+    except ValueError as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
+def cmd_fleet_reap_report(args: argparse.Namespace) -> int:
+    """Run the established reaper with its normal P0 guards, dry by default."""
+    from scripts.orchestration import reap_worktrees
+
+    command = ["--merged", "--apply" if args.apply else "--dry-run"]
+    if args.repo_root:
+        command.extend(["--repo-root", args.repo_root])
+    if args.json:
+        command.append("--json")
+    return int(reap_worktrees.main(command))
+
+
+def cmd_fleet_help(_args: argparse.Namespace) -> int:
+    """Map the facade to existing Truth, Hand, and Eyes surfaces."""
+    sys.stdout.write(
+        _json_dump(
+            {
+                "truth": {
+                    "status": "fleet status (plane-status plus compact health)",
+                    "metrics": "fleet metrics (durable authority metrics)",
+                    "broker_report": "fleet broker-report (legacy retirement evidence)",
+                },
+                "hand": {
+                    "reap_report": "fleet reap-report --apply (existing merged-head reaper guards)",
+                },
+                "eyes": {
+                    "board": "fleet board (cold-start driver board)",
+                    "backlog": "fleet backlog (pending deliveries)",
+                    "dead": "fleet dead (dead-letter inventory)",
+                },
+                "note": "Thin facade only; Fleet Comms remains the authoritative message plane.",
+            }
+        )
+    )
     return EXIT_OK
 
 
@@ -659,6 +746,70 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max recent parity events to include (default: 50)",
     )
     plane.set_defaults(func=cmd_plane_status)
+
+    fleet = sub.add_parser(
+        "fleet",
+        help="Seat-facing facade over existing Fleet Comms read-only surfaces",
+    )
+    fleet_sub = fleet.add_subparsers(dest="fleet_command", required=True)
+
+    fleet_status = fleet_sub.add_parser("status", help="plane-status plus compact health")
+    fleet_status.add_argument("--root", default=None, help="Plane storage root")
+    fleet_status.add_argument("--repo-root", default=None, help="Repo root for plane resolution")
+    fleet_status.add_argument("--telemetry", default=None, help="Parity telemetry JSONL path")
+    fleet_status.add_argument("--recent-limit", type=int, default=50, help="Max recent parity events")
+    fleet_status.set_defaults(func=cmd_fleet_status)
+
+    fleet_board = fleet_sub.add_parser("board", help="Delegate to cold-start-board")
+    fleet_board.add_argument("--format", choices=["json", "markdown"], default="json")
+    fleet_board.add_argument("--stream-id", default=None)
+    fleet_board.add_argument("--agent", default=None)
+    fleet_board.add_argument("--needle", default=None)
+    fleet_board.add_argument("--root", default=None)
+    fleet_board.add_argument("--repo-root", default=None)
+    fleet_board.set_defaults(func=cmd_cold_start_board)
+
+    fleet_metrics = fleet_sub.add_parser("metrics", help="Delegate to metrics")
+    fleet_metrics.add_argument("--db", default=None, help="Legacy broker SQLite path")
+    fleet_metrics.add_argument("--root", default=None, help="Plane storage root")
+    fleet_metrics.add_argument("--legacy", action="store_true", help="Force legacy broker source")
+    fleet_metrics.set_defaults(func=cmd_metrics)
+
+    fleet_backlog = fleet_sub.add_parser("backlog", help="Delegate to backlog")
+    fleet_backlog.add_argument("--db", default=None, help="Legacy broker SQLite path")
+    fleet_backlog.add_argument("--root", default=None, help="Plane storage root")
+    fleet_backlog.add_argument("--limit", type=int, default=100, help="Max rows")
+    fleet_backlog.add_argument("--include-retired", action="store_true")
+    fleet_backlog.add_argument("--legacy", action="store_true", help="Force legacy broker source")
+    fleet_backlog.set_defaults(func=cmd_backlog)
+
+    fleet_dead = fleet_sub.add_parser("dead", help="Delegate to dead-letters")
+    fleet_dead.add_argument("--db", default=None, help="Legacy broker SQLite path")
+    fleet_dead.add_argument("--root", default=None, help="Plane storage root")
+    fleet_dead.add_argument("--limit", type=int, default=100, help="Max rows")
+    fleet_dead.add_argument("--legacy", action="store_true", help="Force legacy broker source")
+    fleet_dead.set_defaults(func=cmd_dead_letters)
+
+    fleet_reap = fleet_sub.add_parser(
+        "reap-report",
+        help="Dry-run merged worktree reap report; --apply keeps established guards",
+    )
+    fleet_reap.add_argument("--repo-root", default=None, help="Repository root to inspect")
+    fleet_reap.add_argument("--apply", action="store_true", help="Apply only existing reaper safeguards")
+    fleet_reap.add_argument("--json", action="store_true", help="Emit reaper JSON")
+    fleet_reap.set_defaults(func=cmd_fleet_reap_report)
+
+    fleet_broker = fleet_sub.add_parser(
+        "broker-report",
+        help="Read-only #6106 legacy Broker Ops usage report",
+    )
+    fleet_broker.add_argument("--days", type=int, default=7, help="Observation window, 1-90 days")
+    fleet_broker.add_argument("--routes-db", default=None, help="Legacy HTTP telemetry SQLite path")
+    fleet_broker.add_argument("--bridge-db", default=None, help="Optional legacy bridge SQLite path")
+    fleet_broker.set_defaults(func=cmd_broker_report)
+
+    fleet_help = fleet_sub.add_parser("help", help="Map Truth, Hand, and Eyes")
+    fleet_help.set_defaults(func=cmd_fleet_help)
 
     formal = sub.add_parser(
         "formal-job",
