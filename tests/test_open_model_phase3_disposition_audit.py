@@ -39,13 +39,11 @@ def _coverage() -> dict[str, Any]:
 
 
 def _roles() -> dict[str, Any]:
-    return {
-        "root": {"controller_identity_id": "controller_fixture_root"},
-        "seats": [{
-            "role_id": "disposition_auditor", "assignment_state": "assigned_verified",
-            "controller_identity_attested": True, "controller_identity_id": "controller_fixture_auditor",
-        }],
-    }
+    return json.loads(audit.DEFAULT_ROLE_CONTRACT.read_text(encoding="utf-8"))
+
+
+def _bindings(roles: dict[str, Any]) -> dict[str, str]:
+    return audit._current_contract_bindings(roles, role_contract_path=audit.DEFAULT_ROLE_CONTRACT)
 
 
 def _ledger(coverage: dict[str, Any], roles: dict[str, Any], unit_ids: list[str]) -> dict[str, Any]:
@@ -71,9 +69,13 @@ def _ledger(coverage: dict[str, Any], roles: dict[str, Any], unit_ids: list[str]
     ]
     total = len(unit_ids)
     return {
-        "schema_version": "phase3_disposition_ledger_v1", "text_free": True,
+        "schema_version": "phase3_disposition_ledger_v2_1", "text_free": True,
         "source_universe_receipt_sha256": _token("a"), "source_universe_payload_manifest_sha256": _token("b"),
-        "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles),
+        "coverage_contract_sha256": audit.sha256_value(coverage),
+        **{key: _bindings(roles)[key] for key in (
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256",
+        )},
         "repair_generation": 0,
         "families": [{
             "family_id": "fixture_source", "frozen_input_identity_total": total, "family_unit_total": total,
@@ -106,25 +108,79 @@ def _seed(freeze: dict[str, Any], roles: dict[str, Any], family_id: str = "fixtu
         population_universe_sha256=population_hash,
     )
     result: dict[str, Any] = {
-        "schema_version": "phase3_disposition_audit_seed_receipt_v1", "text_free": True,
+        "schema_version": "phase3_disposition_audit_seed_receipt_v2_1", "text_free": True,
         "audit_round_id": "audit_round_fixture", "seed": derived_seed,
         "seed_commitment_sha256": audit.sha256_bytes(derived_seed.encode("ascii")),
-        "seed_owner_role_id": "disposition_auditor", "auditor_controller_identity_id": "controller_fixture_auditor",
+        "seed_owner_role_id": "disposition_auditor", "auditor_task_id": _bindings(roles)["auditor_task_id"],
         "source_universe_receipt_sha256": freeze["source_universe_receipt_sha256"],
         "disposition_ledger_sha256": freeze["disposition_ledger_sha256"],
         "population_freeze_sha256": freeze["population_freeze_sha256"],
-        "coverage_contract_sha256": freeze["coverage_contract_sha256"], "role_contract_sha256": freeze["role_contract_sha256"],
+        "coverage_contract_sha256": freeze["coverage_contract_sha256"],
+        **{key: freeze[key] for key in (
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256",
+        )},
         "repair_generation": freeze["repair_generation"], "results_recorded": False, "reroll_count": 0,
-        "prior_sample_reused": False, "proposal_identity_ids": [], "family_id": family_id, "population_kind": population_kind,
+        "prior_sample_reused": False, "proposal_task_ids": [], "family_id": family_id, "population_kind": population_kind,
         "population_sha256": population_hash, "strata_allocation_sha256": audit.sha256_value(population["strata"]),
         "entropy_contract_version": audit.ENTROPY_CONTRACT_VERSION, "origin_main_ref": audit.ORIGIN_MAIN_REF,
         "first_containing_squash_merge_sha": first_commit, "audit_kind": "source_disposition",
         "entropy_tuple": entropy, "entropy_tuple_sha256": derived_seed,
-        "seed_committer_controller_identity_id": "controller_fixture_auditor",
-        "seed_attestor_controller_identity_id": "controller_fixture_auditor", "derivation_mode": "unique_sha256_or_abort",
+        "seed_committer_task_id": _bindings(roles)["auditor_task_id"],
+        "seed_attestor_task_id": _bindings(roles)["auditor_task_id"], "derivation_mode": "unique_sha256_or_abort",
     }
     result.update(changes)
     return result
+
+
+def _action(
+    roles: dict[str, Any], *, input_manifest_sha256: str, output_sha256: str,
+    action_kind: str = "disposition_audit_results",
+) -> dict[str, Any]:
+    bindings = _bindings(roles)
+    execution = next(item for item in roles["functional_roles"] if item["role_id"] == "disposition_auditor")
+    identity = {
+        "role_id": bindings["auditor_role_id"], "task_id": bindings["auditor_task_id"],
+        "input_manifest_sha256": input_manifest_sha256,
+        "evaluation_cycle_id": bindings["evaluation_cycle_id"], "output_sha256": output_sha256,
+        "status": "completed",
+    }
+    return {
+        "receipt_id": "phase3_functional_action:" + audit.sha256_value(identity), **identity,
+        "action_kind": action_kind, "provider": "anthropic", "exact_model": execution["exact_model"],
+        "model_family": execution["model_family"], "harness": execution["harness"],
+        **{key: bindings[key] for key in (
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256",
+        )},
+        "started_at": "2026-08-09T00:00:00Z", "completed_at": "2026-08-09T00:01:00Z",
+    }
+
+
+def _results(manifest: dict[str, Any], freeze: dict[str, Any], roles: dict[str, Any]) -> dict[str, Any]:
+    task_id = _bindings(roles)["auditor_task_id"]
+    rows = [
+        {
+            "family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id,
+            "decision_code": "agree", "auditor_task_id": task_id,
+            "evidence_artifact_locators": ["artifact_result"],
+        }
+        for sample in manifest["samples"] for unit_id in sample["unit_ids"]
+    ]
+    return {
+        "schema_version": "phase3_disposition_audit_results_v2_1", "text_free": True,
+        "sample_manifest_sha256": manifest["sample_manifest_sha256"],
+        "population_freeze_sha256": manifest["population_freeze_sha256"],
+        **{key: freeze[key] for key in (
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256",
+        )},
+        "repair_generation": freeze["repair_generation"], "results": rows,
+        "action_receipt": _action(
+            roles, input_manifest_sha256=manifest["sample_manifest_sha256"],
+            output_sha256=audit.sha256_value(rows),
+        ),
+    }
 
 
 def test_exact_formula_is_not_weakened() -> None:
@@ -177,13 +233,13 @@ def test_population_freeze_and_seed_timing_role_separation(frozen: tuple[dict[st
     freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
     good = _seed(freeze, roles)
     assert audit.validate_seed_receipt(good, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")["ok"] is True
-    for change in ({"results_recorded": True}, {"reroll_count": 1}, {"proposal_identity_ids": ["controller_x"]}):
+    for change in ({"results_recorded": True}, {"reroll_count": 1}, {"proposal_task_ids": ["phase3-task-x"]}):
         with pytest.raises(audit.AuditError):
             audit.validate_seed_receipt(_seed(freeze, roles, **change), freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
-    with pytest.raises(audit.AuditError, match="author or root"):
-        audit.validate_seed_receipt(good, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted", prohibited_identity_ids=["controller_fixture_auditor"])
+    with pytest.raises(audit.AuditError, match="prohibited task"):
+        audit.validate_seed_receipt(good, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted", prohibited_task_ids=[_bindings(roles)["auditor_task_id"]])
     with pytest.raises(audit.AuditError, match="assigned auditor"):
-        audit.validate_seed_receipt(_seed(freeze, roles, auditor_controller_identity_id="controller_author"), freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
+        audit.validate_seed_receipt(_seed(freeze, roles, auditor_task_id="phase3-v2-1-rule-author-extraction"), freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
 
 
 @pytest.mark.parametrize("mutation", ["seed", "tuple", "merge", "committer"])
@@ -198,7 +254,7 @@ def test_entropy_receipt_rejects_every_alternative_derivation(frozen: tuple[dict
     elif mutation == "merge":
         receipt["first_containing_squash_merge_sha"] = _git_token("e")
     else:
-        receipt["seed_committer_controller_identity_id"] = "controller_fixture_root"
+        receipt["seed_committer_task_id"] = "phase3-v2-1-root-orchestration"
     with pytest.raises(audit.AuditError):
         audit.validate_seed_receipt(receipt, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
 
@@ -217,7 +273,7 @@ def test_first_containing_entropy_commit_must_be_origin_main_squash(tmp_path: An
     (repo / "README.md").write_text("fixture\n", encoding="utf-8")
     _git_run(repo, "add", "README.md")
     _git_run(repo, "commit", "-q", "-m", "chore: initialize (#1)")
-    base = {"schema_version": "phase3_disposition_population_freeze_v1", "text_free": True}
+    base = {"schema_version": "phase3_disposition_population_freeze_v2_1", "text_free": True}
     freeze = {**base, "population_freeze_sha256": audit.sha256_value(base)}
     (repo / "freeze.json").write_text(json.dumps(freeze, sort_keys=True) + "\n", encoding="utf-8")
     _git_run(repo, "add", "freeze.json")
@@ -287,14 +343,7 @@ def test_result_codes_and_zero_miss_gate(frozen: tuple[dict[str, Any], dict[str,
     freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
     seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
     manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
-    rows = [
-        {"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]}
-        for sample in manifest["samples"] for unit_id in sample["unit_ids"]
-    ]
-    results = {
-        "schema_version": "phase3_disposition_audit_results_v1", "text_free": True,
-        "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows,
-    }
+    results = _results(manifest, freeze, roles)
     assert audit.validate_audit_results(results, manifest, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)["zero_miss"] is True
     next(row for row in results["results"] if row["sample_kind"] == "nonconverted")["decision_code"] = "disagree_wrong_code"
     with pytest.raises(audit.AuditError, match="zero-nonagree"):
@@ -311,7 +360,9 @@ def test_results_reject_self_hashed_subset_manifest(frozen: tuple[dict[str, Any]
     forged["samples"][0]["sample_size"] = 1
     base = {key: value for key, value in forged.items() if key != "sample_manifest_sha256"}
     forged["sample_manifest_sha256"] = audit.sha256_value(base)
-    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": forged["sample_manifest_sha256"], "population_freeze_sha256": forged["population_freeze_sha256"], "repair_generation": 0, "results": []}
+    results = _results(manifest, freeze, roles)
+    results["sample_manifest_sha256"] = forged["sample_manifest_sha256"]
+    results["population_freeze_sha256"] = forged["population_freeze_sha256"]
     with pytest.raises(audit.AuditError, match="differs from deterministic"):
         audit.validate_audit_results(results, forged, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)
 
@@ -366,8 +417,7 @@ def test_blocked_disposition_cannot_pass_coverage(frozen: tuple[dict[str, Any], 
     freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
     seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
     manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
-    rows = [{"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]} for sample in manifest["samples"] for unit_id in sample["unit_ids"]]
-    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows}
+    results = _results(manifest, freeze, roles)
     with pytest.raises(audit.AuditError, match="blocked_with_reason"):
         audit.validate_audit_results(results, manifest, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, coverage_contract=coverage, role_contract=roles)
 
@@ -377,12 +427,15 @@ def test_bundle_recomputes_every_artifact_binding(frozen: tuple[dict[str, Any], 
     freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
     seeds = [_seed(freeze, roles), _seed(freeze, roles, population_kind="converted")]
     manifest = audit.emit_samples(freeze, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
-    rows = [{"family_id": sample["family_id"], "sample_kind": sample["sample_kind"], "unit_id": unit_id, "decision_code": "agree", "auditor_controller_identity_id": "controller_fixture_auditor", "evidence_artifact_locators": ["artifact_result"]} for sample in manifest["samples"] for unit_id in sample["unit_ids"]]
-    results = {"schema_version": "phase3_disposition_audit_results_v1", "text_free": True, "sample_manifest_sha256": manifest["sample_manifest_sha256"], "population_freeze_sha256": manifest["population_freeze_sha256"], "repair_generation": 0, "results": rows}
+    results = _results(manifest, freeze, roles)
     bundle = {
-        "schema_version": "phase3_disposition_audit_bundle_v1", "text_free": True,
+        "schema_version": "phase3_disposition_audit_bundle_v2_1", "text_free": True,
         "source_universe_receipt_sha256": freeze["source_universe_receipt_sha256"],
-        "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles),
+        "coverage_contract_sha256": audit.sha256_value(coverage),
+        **{key: freeze[key] for key in (
+            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
+            "functional_role_contract_sha256", "conflict_graph_sha256",
+        )},
         "disposition_ledger_sha256": audit.sha256_value(ledger), "population_freeze_sha256": freeze["population_freeze_sha256"],
         "seed_receipt_sha256s": sorted(audit.sha256_value(seed) for seed in seeds),
         "sample_manifest_sha256": manifest["sample_manifest_sha256"], "audit_results_sha256": audit.sha256_value(results),
@@ -403,34 +456,17 @@ def test_schema_is_a_closed_artifact_schema() -> None:
     assert "oneOf" in schema and "ledgerRow" in schema["$defs"] and schema["$defs"]["ledgerRow"]["additionalProperties"] is False
 
 
-def test_lexical_census_requires_hashed_unique_machine_rows(monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = {"artifact_manifest": {"payload_manifest_sha256": _token("b")}}
-    monkeypatch.setattr(audit, "_source_receipt", lambda _: (receipt, _token("a"), {}))
-    structural = json.loads((audit.DEFAULT_SOURCE_UNIVERSE / "lexical_structural_freeze_v1.json").read_text(encoding="utf-8"))
-    families = []
-    for item in structural["families"]:
-        rows = []
-        if item["family_id"] == structural["families"][0]["family_id"]:
-            rows = [{"used_subset_unit_id": "used.fixture.1", "used_subset_unit_sha256": _token("c"), "decision_code": "agree", "evidence_artifact_locators": ["artifact_extraction"]}]
-        families.append({"family_id": item["family_id"], "structural_universe_sha256": item["ordered_rolling_sha256"], "used_subset_census_sha256": audit.sha256_value(rows), "used_subset_total": len(rows), "rows": rows})
-    coverage, roles = _coverage(), _roles()
-    census = {"schema_version": "phase3_lexical_complete_census_v1", "text_free": True, "source_universe_receipt_sha256": _token("a"), "coverage_contract_sha256": audit.sha256_value(coverage), "role_contract_sha256": audit.sha256_value(roles), "release_artifact_manifest_sha256": _token("d"), "used_subset_extraction_artifact_sha256": _token("e"), "auditor_controller_identity_id": "controller_fixture_auditor", "families": families}
-    assert audit.validate_lexical_complete_census(census, coverage_contract=coverage, role_contract=roles)["complete_census"] is True
-    census["families"][0]["rows"].append(deepcopy(census["families"][0]["rows"][0]))
-    census["families"][0]["used_subset_total"] = 2
-    census["families"][0]["used_subset_census_sha256"] = audit.sha256_value(census["families"][0]["rows"])
-    with pytest.raises(audit.AuditError, match="duplicate lexical"):
-        audit.validate_lexical_complete_census(census, coverage_contract=coverage, role_contract=roles)
+def test_historical_controller_lexical_census_is_non_current() -> None:
+    census = {
+        "schema_version": "phase3_lexical_complete_census_v1", "text_free": True,
+        "auditor_controller_identity_id": "controller_fixture_auditor", "families": [],
+    }
+    with pytest.raises(audit.AuditError, match="historical v1"):
+        audit.validate_lexical_complete_census(census, coverage_contract=_coverage(), role_contract=_roles())
 
 
 def _lexical_roles() -> dict[str, Any]:
-    return {
-        "root": {"controller_identity_id": "controller_phase3_root_01"},
-        "seats": [
-            {"role_id": "disposition_auditor", "assignment_state": "assigned_verified", "controller_identity_attested": True, "controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR},
-            {"role_id": "rule_author_extractor", "controller_identity_id": "controller_phase3_rule_author_agy_runtime_01"},
-        ],
-    }
+    return json.loads(lexical.DEFAULT_ROLE_CONTRACT.read_text(encoding="utf-8"))
 
 
 def _lexical_population() -> dict[str, Any]:
@@ -440,9 +476,11 @@ def _lexical_population() -> dict[str, Any]:
         rows = [] if index else [{"family_id": family_id, "unit_id": f"unit.{family_id}.{_token('c')}", "unit_sha256": _token("d"), "evidence_locators": [locator]}]
         families.append({"family_id": family_id, "structural_universe_sha256": _token("e"), "used_subset_total": len(rows), "rows": rows, "used_subset_population_sha256": lexical.sha256_value(rows)})
     base = {
-        "schema_version": "phase3_lexical_used_subset_population_freeze_v1", "text_free": True,
+        "schema_version": "phase3_lexical_used_subset_population_freeze_v2_1", "text_free": True,
         "source_universe_receipt_sha256": _token("1"), "source_universe_payload_manifest_sha256": _token("2"), "lexical_structural_freeze_sha256": _token("3"),
-        "release_artifact_manifest_sha256": _token("4"), "release_files_sha256": _token("5"), "coverage_contract_sha256": _token("6"), "role_contract_sha256": lexical.sha256_value(_lexical_roles()), "implementation_sha256": lexical.implementation_sha256(),
+        "release_artifact_manifest_sha256": _token("4"), "release_files_sha256": _token("5"), "coverage_contract_sha256": _token("6"),
+        **lexical._contract_bindings(_lexical_roles()), "producer_task_id": lexical.POPULATION_FREEZE_TASK,
+        "implementation_sha256": lexical.implementation_sha256(),
         "repair_generation": 0, "families": families,
     }
     return {**base, "population_freeze_sha256": lexical.sha256_value(base)}
@@ -453,7 +491,26 @@ def _complete_census(population: dict[str, Any]) -> dict[str, Any]:
     for family in population["families"]:
         rows = [{**row, "decision_code": "agree"} for row in family["rows"]]
         families.append({"family_id": family["family_id"], "used_subset_total": len(rows), "rows": rows, "used_subset_census_sha256": lexical.sha256_value(rows)})
-    return {"schema_version": "phase3_lexical_complete_census_v2", "text_free": True, "source_universe_receipt_sha256": population["source_universe_receipt_sha256"], "source_universe_payload_manifest_sha256": population["source_universe_payload_manifest_sha256"], "lexical_structural_freeze_sha256": population["lexical_structural_freeze_sha256"], "coverage_contract_sha256": population["coverage_contract_sha256"], "role_contract_sha256": population["role_contract_sha256"], "population_freeze_sha256": population["population_freeze_sha256"], "implementation_sha256": lexical.implementation_sha256(), "repair_generation": 0, "seed_required": False, "auditor_controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR, "families": families}
+    roles = _lexical_roles()
+    result = {
+        "schema_version": "phase3_lexical_complete_census_v2_1", "text_free": True,
+        "source_universe_receipt_sha256": population["source_universe_receipt_sha256"],
+        "source_universe_payload_manifest_sha256": population["source_universe_payload_manifest_sha256"],
+        "lexical_structural_freeze_sha256": population["lexical_structural_freeze_sha256"],
+        "coverage_contract_sha256": population["coverage_contract_sha256"],
+        **lexical._contract_bindings(roles), "population_freeze_sha256": population["population_freeze_sha256"],
+        "implementation_sha256": lexical.implementation_sha256(), "repair_generation": 0,
+        "seed_required": False, "families": families,
+    }
+    result["action_receipt"] = _action(
+        roles,
+        action_kind="lexical_complete_census",
+        input_manifest_sha256=lexical.sha256_value({
+            "population_freeze_sha256": result["population_freeze_sha256"], "repair_generation": 0,
+        }),
+        output_sha256=lexical.sha256_value(families),
+    )
+    return result
 
 
 @pytest.mark.parametrize("mutation", ["omission", "addition", "substitution", "duplicate", "stale", "zero_family", "nonagree", "auditor", "seed"])
@@ -480,7 +537,7 @@ def test_closed_lexical_census_fails_closed_for_population_and_authority(mutatio
     elif mutation == "nonagree":
         first["rows"][0]["decision_code"] = "disagree_invalid_attestation"
     elif mutation == "auditor":
-        census["auditor_controller_identity_id"] = "controller_other"
+        census["auditor_task_id"] = "phase3-v2-1-rule-author-extraction"
     else:
         census["seed"] = _token("f")
     with pytest.raises(lexical.LexicalCoverageError):
@@ -489,8 +546,8 @@ def test_closed_lexical_census_fails_closed_for_population_and_authority(mutatio
 
 def test_complete_census_rejects_stale_population_role_contract() -> None:
     population, roles = _lexical_population(), _lexical_roles()
-    roles["root"]["controller_identity_id"] = "controller_phase3_other_root"
-    with pytest.raises(lexical.LexicalCoverageError, match="role contract"):
+    next(item for item in roles["functional_roles"] if item["role_id"] == "disposition_auditor")["task_id"] = "phase3-v2-1-other-audit"
+    with pytest.raises(lexical.LexicalCoverageError, match="functional-role schema"):
         lexical.validate_complete_census(_complete_census(population), population, role_contract=roles)
 
 
@@ -580,7 +637,23 @@ def test_structural_audit_compares_reopened_duplicate_groups(monkeypatch: pytest
     source = {"artifact_manifest": {"payload_manifest_sha256": _token("d")}}
     monkeypatch.setattr(lexical, "_source_bindings", lambda _: (source, _token("e"), {"families": summaries}, _token("f")))
     monkeypatch.setattr(lexical, "reopen_structural_universe", lambda **_: summaries)
-    receipt = {"schema_version": "phase3_lexical_structural_audit_v1", "text_free": True, "source_universe_receipt_sha256": _token("e"), "source_universe_payload_manifest_sha256": _token("d"), "lexical_structural_freeze_sha256": _token("f"), "coverage_contract_sha256": lexical.sha256_value(coverage), "role_contract_sha256": lexical.sha256_value(roles), "implementation_sha256": lexical.implementation_sha256(), "repair_generation": 0, "auditor_controller_identity_id": lexical.ASSIGNED_DISPOSITION_AUDITOR, "families": deepcopy(summaries)}
+    receipt = {
+        "schema_version": "phase3_lexical_structural_audit_v2_1", "text_free": True,
+        "source_universe_receipt_sha256": _token("e"), "source_universe_payload_manifest_sha256": _token("d"),
+        "lexical_structural_freeze_sha256": _token("f"), "coverage_contract_sha256": lexical.sha256_value(coverage),
+        **lexical._contract_bindings(roles), "implementation_sha256": lexical.implementation_sha256(),
+        "repair_generation": 0, "families": deepcopy(summaries),
+    }
+    receipt["action_receipt"] = _action(
+        roles, action_kind="lexical_structural_audit",
+        input_manifest_sha256=lexical.sha256_value({
+            "source_universe_receipt_sha256": receipt["source_universe_receipt_sha256"],
+            "lexical_structural_freeze_sha256": receipt["lexical_structural_freeze_sha256"],
+            "coverage_contract_sha256": receipt["coverage_contract_sha256"],
+            "implementation_sha256": receipt["implementation_sha256"], "repair_generation": 0,
+        }),
+        output_sha256=lexical.sha256_value(receipt["families"]),
+    )
     assert lexical.validate_structural_audit(receipt, coverage_contract=coverage, role_contract=roles, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))["structural_audit_verified"] is True
     receipt["families"][0][field] = 1 if field.endswith("total") else _token("9")
     with pytest.raises(lexical.LexicalCoverageError, match="reopened lexical"):
@@ -591,14 +664,14 @@ def test_lexical_bundle_cannot_accept_an_unvalidated_structural_receipt(monkeypa
     population, roles = _lexical_population(), _lexical_roles()
     census = _complete_census(population)
     structural = {"invalid": True}
-    bindings = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "role_contract_sha256", "implementation_sha256", "repair_generation")}
-    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v1", "text_free": True, **bindings, "structural_audit_sha256": lexical.sha256_value(structural), "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
+    bindings = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "auditor_task_id", "implementation_sha256", "repair_generation")}
+    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v2_1", "text_free": True, **bindings, "structural_audit_sha256": lexical.sha256_value(structural), "structural_action_receipt_id": _token("7"), "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "census_action_receipt_id": census["action_receipt"]["receipt_id"], "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
     monkeypatch.setattr(lexical, "validate_structural_audit", lambda *args, **kwargs: (_ for _ in ()).throw(lexical.LexicalCoverageError("invalid structural receipt")))
     with pytest.raises(lexical.LexicalCoverageError, match="invalid structural"):
         lexical.validate_lexical_bundle(bundle, structural_audit=structural, population_freeze=population, census=census, role_contract=roles, coverage_contract={"fixture": True}, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
 
 
-@pytest.mark.parametrize("binding", ["source_universe_receipt_sha256", "coverage_contract_sha256", "role_contract_sha256", "repair_generation"])
+@pytest.mark.parametrize("binding", ["source_universe_receipt_sha256", "coverage_contract_sha256", "functional_role_contract_sha256", "repair_generation"])
 def test_lexical_bundle_rejects_stale_cross_receipt_bindings(monkeypatch: pytest.MonkeyPatch, binding: str) -> None:
     roles, coverage = _lexical_roles(), {"coverage": "fixture"}
     population = _lexical_population()
@@ -606,8 +679,9 @@ def test_lexical_bundle_rejects_stale_cross_receipt_bindings(monkeypatch: pytest
     base = {key: value for key, value in population.items() if key != "population_freeze_sha256"}
     population["population_freeze_sha256"] = lexical.sha256_value(base)
     census = _complete_census(population)
-    structural = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "role_contract_sha256", "implementation_sha256", "repair_generation")}
-    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v1", "text_free": True, **structural, "structural_audit_sha256": lexical.sha256_value(structural), "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
+    structural = {name: population[name] for name in ("source_universe_receipt_sha256", "source_universe_payload_manifest_sha256", "lexical_structural_freeze_sha256", "coverage_contract_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "auditor_task_id", "implementation_sha256", "repair_generation")}
+    structural["action_receipt"] = {"receipt_id": _token("7")}
+    bundle = {"schema_version": "phase3_lexical_coverage_bundle_v2_1", "text_free": True, **{key: value for key, value in structural.items() if key != "action_receipt"}, "structural_audit_sha256": lexical.sha256_value(structural), "structural_action_receipt_id": structural["action_receipt"]["receipt_id"], "population_freeze_sha256": population["population_freeze_sha256"], "complete_census_sha256": lexical.sha256_value(census), "census_action_receipt_id": census["action_receipt"]["receipt_id"], "release_artifact_manifest_sha256": population["release_artifact_manifest_sha256"], "first_containing_squash_merge_sha": _git_token("a")}
     monkeypatch.setattr(lexical, "validate_structural_audit", lambda *args, **kwargs: {"ok": True})
     monkeypatch.setattr(lexical, "validate_complete_census", lambda *args, **kwargs: {"ok": True})
     if binding == "repair_generation":

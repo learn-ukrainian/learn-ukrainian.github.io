@@ -16,13 +16,17 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_source_universe as universe
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as freeze
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 DEFAULT_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
-ASSIGNED_DISPOSITION_AUDITOR = "controller_phase3_disposition_auditor_claude_01"
+DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
+ASSIGNED_DISPOSITION_AUDITOR_TASK = functional_roles.ROLE_TASKS["disposition_auditor"]
+POPULATION_FREEZE_TASK = "phase3-v2-1-fixed-release-freeze"
+AUDITOR_PROVIDER = "anthropic"
 LEXICAL_FAMILIES = frozenset(freeze.LEXICAL_FAMILIES)
 SHA256_LENGTH = 64
 IMPLEMENTATION_PATH = "scripts/projects/open_model_data/phase3_lexical_coverage.py"
@@ -107,26 +111,81 @@ def _lexical_contract_families(coverage_contract: Mapping[str, Any]) -> dict[str
     return result
 
 
-def _assigned_auditor(role_contract: Mapping[str, Any]) -> str:
-    seats = role_contract.get("seats")
-    root = role_contract.get("root")
-    require(isinstance(seats, list) and isinstance(root, Mapping), "role contract lacks seats or root")
-    assigned = [seat for seat in seats if isinstance(seat, Mapping) and seat.get("role_id") == "disposition_auditor"]
-    require(len(assigned) == 1, "role contract must name exactly one disposition auditor")
-    auditor = assigned[0]
+def _role_bindings(role_contract: Mapping[str, Any]) -> tuple[dict[str, str], str, str]:
+    """Resolve the exact v2.1 audit task and content/graph bindings."""
+    try:
+        verified = functional_roles.verify_value(role_contract)
+        auditor = functional_roles.binding_for_role(verified, "disposition_auditor")
+    except functional_roles.FunctionalRoleError as exc:
+        raise LexicalCoverageError(str(exc)) from exc
+    require(auditor["task_id"] == ASSIGNED_DISPOSITION_AUDITOR_TASK, "wrong disposition-audit task")
     require(
-        auditor.get("assignment_state") == "assigned_verified" and auditor.get("controller_identity_attested") is True,
-        "disposition auditor is not assigned and attested",
+        functional_roles.tasks_conflict(verified, "phase3-v2-1-disposition-ledger-production", auditor["task_id"]),
+        "role graph lacks the disposition-ledger-to-audit edge",
     )
-    require(auditor.get("controller_identity_id") == ASSIGNED_DISPOSITION_AUDITOR, "wrong assigned disposition auditor")
-    forbidden = {root.get("controller_identity_id")}
-    forbidden.update(
-        seat.get("controller_identity_id")
-        for seat in seats
-        if isinstance(seat, Mapping) and seat.get("role_id") == "rule_author_extractor"
+    default_contract = _read_json(DEFAULT_ROLE_CONTRACT)
+    role_hash = (
+        sha256_file(DEFAULT_ROLE_CONTRACT)
+        if canonical_json(verified) == canonical_json(default_contract)
+        else sha256_value(verified)
     )
-    require(ASSIGNED_DISPOSITION_AUDITOR not in forbidden, "root or rule author cannot attest lexical audit")
-    return ASSIGNED_DISPOSITION_AUDITOR
+    return auditor, role_hash, functional_roles.conflict_graph_sha256(verified)
+
+
+def _validate_action_receipt(
+    action: Mapping[str, Any],
+    *,
+    role_contract: Mapping[str, Any],
+    action_kind: str,
+    input_manifest_sha256: str,
+    output_sha256: str,
+) -> None:
+    auditor, role_hash, graph_hash = _role_bindings(role_contract)
+    require(set(action) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
+    role = next(item for item in role_contract["functional_roles"] if item["role_id"] == "disposition_auditor")
+    expected = {
+        "role_id": auditor["role_id"],
+        "task_id": auditor["task_id"],
+        "action_kind": action_kind,
+        "provider": AUDITOR_PROVIDER,
+        "exact_model": role["exact_model"],
+        "model_family": role["model_family"],
+        "harness": role["harness"],
+        "input_manifest_sha256": input_manifest_sha256,
+        "output_sha256": output_sha256,
+        "evaluation_cycle_id": role_contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "base_contract_sha256": functional_roles.BASE_SHA256,
+        "amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
+        "functional_role_contract_sha256": role_hash,
+        "conflict_graph_sha256": graph_hash,
+        "status": "completed",
+    }
+    require(all(action.get(key) == value for key, value in expected.items()), "functional action binding mismatch")
+    require(
+        all(isinstance(action.get(key), str) and action[key] for key in ("receipt_id", "started_at", "completed_at")),
+        "functional action metadata incomplete",
+    )
+    identity = {
+        key: action[key]
+        for key in ("role_id", "task_id", "input_manifest_sha256", "evaluation_cycle_id", "output_sha256", "status")
+    }
+    require(
+        action["receipt_id"] == "phase3_functional_action:" + sha256_value(identity),
+        "functional action receipt ID mismatch",
+    )
+
+
+def _contract_bindings(role_contract: Mapping[str, Any]) -> dict[str, str]:
+    auditor, role_hash, graph_hash = _role_bindings(role_contract)
+    return {
+        "base_contract_sha256": functional_roles.BASE_SHA256,
+        "amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
+        "functional_role_contract_sha256": role_hash,
+        "conflict_graph_sha256": graph_hash,
+        "auditor_task_id": auditor["task_id"],
+    }
 
 
 def _rolling_update(digest: Any, value: Mapping[str, Any]) -> None:
@@ -241,24 +300,30 @@ def validate_structural_audit(
             "source_universe_payload_manifest_sha256",
             "lexical_structural_freeze_sha256",
             "coverage_contract_sha256",
-            "role_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
             "implementation_sha256",
             "repair_generation",
-            "auditor_controller_identity_id",
+            "auditor_task_id",
             "families",
+            "action_receipt",
         },
         "lexical structural audit",
     )
     require(
-        receipt["schema_version"] == "phase3_lexical_structural_audit_v1" and receipt["text_free"] is True,
+        receipt["schema_version"] == "phase3_lexical_structural_audit_v2_1" and receipt["text_free"] is True,
         "invalid lexical structural audit header",
     )
     require(
         isinstance(receipt["repair_generation"], int) and receipt["repair_generation"] >= 0, "invalid repair generation"
     )
+    contract_bindings = _contract_bindings(role_contract)
     require(
-        receipt["auditor_controller_identity_id"] == _assigned_auditor(role_contract),
-        "structural audit identity is not the assigned auditor",
+        all(receipt.get(key) == value for key, value in contract_bindings.items()),
+        "structural audit role-contract binding mismatch",
     )
     source_receipt, source_hash, frozen, frozen_hash = _source_bindings(source_universe_dir)
     require(receipt["source_universe_receipt_sha256"] == source_hash, "stale source freeze receipt")
@@ -269,7 +334,6 @@ def validate_structural_audit(
     )
     require(receipt["lexical_structural_freeze_sha256"] == frozen_hash, "stale lexical structural freeze")
     require(receipt["coverage_contract_sha256"] == sha256_value(coverage_contract), "stale coverage contract")
-    require(receipt["role_contract_sha256"] == sha256_value(role_contract), "stale role contract")
     require(receipt["implementation_sha256"] == implementation_sha256(), "stale lexical coverage implementation")
     frozen_summaries = {item["family_id"]: item for item in frozen.get("families", [])}
     reopened = {
@@ -320,6 +384,22 @@ def validate_structural_audit(
     require(
         set(observed) == LEXICAL_FAMILIES == set(frozen_summaries) == set(reopened),
         "complete thirteen-family structural audit required",
+    )
+    action = receipt.get("action_receipt")
+    require(isinstance(action, Mapping), "structural audit lacks functional action receipt")
+    action_input = {
+        "source_universe_receipt_sha256": receipt["source_universe_receipt_sha256"],
+        "lexical_structural_freeze_sha256": receipt["lexical_structural_freeze_sha256"],
+        "coverage_contract_sha256": receipt["coverage_contract_sha256"],
+        "implementation_sha256": receipt["implementation_sha256"],
+        "repair_generation": receipt["repair_generation"],
+    }
+    _validate_action_receipt(
+        action,
+        role_contract=role_contract,
+        action_kind="lexical_structural_audit",
+        input_manifest_sha256=sha256_value(action_input),
+        output_sha256=sha256_value(receipt["families"]),
     )
     return {
         "ok": True,
@@ -654,7 +734,7 @@ def freeze_used_subset_population(
             }
         )
     base = {
-        "schema_version": "phase3_lexical_used_subset_population_freeze_v1",
+        "schema_version": "phase3_lexical_used_subset_population_freeze_v2_1",
         "text_free": True,
         "source_universe_receipt_sha256": source_hash,
         "source_universe_payload_manifest_sha256": source_receipt["artifact_manifest"]["payload_manifest_sha256"],
@@ -662,7 +742,8 @@ def freeze_used_subset_population(
         "release_artifact_manifest_sha256": manifest_hash,
         "release_files_sha256": sha256_value(file_rows),
         "coverage_contract_sha256": sha256_value(coverage_contract),
-        "role_contract_sha256": sha256_value(role_contract),
+        **_contract_bindings(role_contract),
+        "producer_task_id": POPULATION_FREEZE_TASK,
         "implementation_sha256": implementation_sha256(),
         "repair_generation": repair_generation,
         "families": families,
@@ -675,7 +756,7 @@ def validate_complete_census(
     population_freeze: Mapping[str, Any],
     *,
     role_contract: Mapping[str, Any],
-    prohibited_identity_ids: Sequence[str] = (),
+    prohibited_task_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Require an exact, complete, non-sampled census of the frozen used set."""
     _text_free(census, "lexical complete census")
@@ -688,30 +769,33 @@ def validate_complete_census(
             "source_universe_payload_manifest_sha256",
             "lexical_structural_freeze_sha256",
             "coverage_contract_sha256",
-            "role_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
             "population_freeze_sha256",
             "implementation_sha256",
             "repair_generation",
             "seed_required",
-            "auditor_controller_identity_id",
+            "auditor_task_id",
             "families",
+            "action_receipt",
         },
         "lexical complete census",
     )
     require(
-        census["schema_version"] == "phase3_lexical_complete_census_v2" and census["text_free"] is True,
+        census["schema_version"] == "phase3_lexical_complete_census_v2_1" and census["text_free"] is True,
         "invalid lexical census header",
     )
     require(census["seed_required"] is False, "lexical census is complete and must not use a seed")
     require(census["implementation_sha256"] == implementation_sha256(), "stale lexical coverage implementation")
+    contract_bindings = _contract_bindings(role_contract)
     require(
-        census["auditor_controller_identity_id"] == _assigned_auditor(role_contract),
-        "lexical census identity is not the assigned auditor",
+        all(census.get(key) == value for key, value in contract_bindings.items()),
+        "lexical census role-contract binding mismatch",
     )
-    require(
-        ASSIGNED_DISPOSITION_AUDITOR not in set(prohibited_identity_ids),
-        "root or rule author cannot attest lexical census",
-    )
+    require(census["auditor_task_id"] not in set(prohibited_task_ids), "prohibited task cannot attest lexical census")
     _exact(
         population_freeze,
         {
@@ -723,7 +807,13 @@ def validate_complete_census(
             "release_artifact_manifest_sha256",
             "release_files_sha256",
             "coverage_contract_sha256",
-            "role_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "auditor_task_id",
+            "producer_task_id",
             "implementation_sha256",
             "repair_generation",
             "families",
@@ -733,16 +823,17 @@ def validate_complete_census(
     )
     base = {key: value for key, value in population_freeze.items() if key != "population_freeze_sha256"}
     require(
-        population_freeze["schema_version"] == "phase3_lexical_used_subset_population_freeze_v1"
+        population_freeze["schema_version"] == "phase3_lexical_used_subset_population_freeze_v2_1"
         and population_freeze["text_free"] is True
         and population_freeze["population_freeze_sha256"] == sha256_value(base),
         "invalid population freeze",
     )
+    require(population_freeze["producer_task_id"] == POPULATION_FREEZE_TASK, "wrong population-freeze task")
     require(
         population_freeze["implementation_sha256"] == implementation_sha256(), "stale population-freeze implementation"
     )
     require(
-        population_freeze["role_contract_sha256"] == sha256_value(role_contract),
+        all(population_freeze.get(key) == value for key, value in contract_bindings.items()),
         "stale population-freeze role contract",
     )
     require(
@@ -755,7 +846,12 @@ def validate_complete_census(
         "source_universe_payload_manifest_sha256",
         "lexical_structural_freeze_sha256",
         "coverage_contract_sha256",
-        "role_contract_sha256",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "conflict_graph_sha256",
+        "auditor_task_id",
         "implementation_sha256",
     ):
         require(census[name] == population_freeze[name], f"stale lexical census binding: {name}")
@@ -826,6 +922,20 @@ def validate_complete_census(
         observed == set(expected) == LEXICAL_FAMILIES,
         "census must include zero-used and nonzero-used rows for all thirteen families",
     )
+    action = census.get("action_receipt")
+    require(isinstance(action, Mapping), "lexical census lacks functional action receipt")
+    _validate_action_receipt(
+        action,
+        role_contract=role_contract,
+        action_kind="lexical_complete_census",
+        input_manifest_sha256=sha256_value(
+            {
+                "population_freeze_sha256": census["population_freeze_sha256"],
+                "repair_generation": census["repair_generation"],
+            }
+        ),
+        output_sha256=sha256_value(census["families"]),
+    )
     return {
         "ok": True,
         "complete_census": True,
@@ -863,10 +973,17 @@ def validate_lexical_bundle(
             "source_universe_payload_manifest_sha256",
             "lexical_structural_freeze_sha256",
             "coverage_contract_sha256",
-            "role_contract_sha256",
+            "base_contract_sha256",
+            "amendment_sha256",
+            "combined_contract_sha256",
+            "functional_role_contract_sha256",
+            "conflict_graph_sha256",
+            "auditor_task_id",
             "structural_audit_sha256",
+            "structural_action_receipt_id",
             "population_freeze_sha256",
             "complete_census_sha256",
+            "census_action_receipt_id",
             "release_artifact_manifest_sha256",
             "implementation_sha256",
             "repair_generation",
@@ -875,7 +992,7 @@ def validate_lexical_bundle(
         "lexical coverage bundle",
     )
     require(
-        bundle["schema_version"] == "phase3_lexical_coverage_bundle_v1" and bundle["text_free"] is True,
+        bundle["schema_version"] == "phase3_lexical_coverage_bundle_v2_1" and bundle["text_free"] is True,
         "invalid lexical bundle header",
     )
     validate_structural_audit(
@@ -893,7 +1010,12 @@ def validate_lexical_bundle(
         "source_universe_payload_manifest_sha256",
         "lexical_structural_freeze_sha256",
         "coverage_contract_sha256",
-        "role_contract_sha256",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "conflict_graph_sha256",
+        "auditor_task_id",
         "implementation_sha256",
         "repair_generation",
     ):
@@ -907,10 +1029,18 @@ def validate_lexical_bundle(
     )
     require(bundle["structural_audit_sha256"] == sha256_value(structural_audit), "structural audit binding mismatch")
     require(
+        bundle["structural_action_receipt_id"] == structural_audit["action_receipt"]["receipt_id"],
+        "structural action receipt binding mismatch",
+    )
+    require(
         bundle["population_freeze_sha256"] == population_freeze["population_freeze_sha256"],
         "population freeze binding mismatch",
     )
     require(bundle["complete_census_sha256"] == sha256_value(census), "complete census binding mismatch")
+    require(
+        bundle["census_action_receipt_id"] == census["action_receipt"]["receipt_id"],
+        "census action receipt binding mismatch",
+    )
     require(
         bundle["release_artifact_manifest_sha256"] == population_freeze["release_artifact_manifest_sha256"],
         "release manifest binding mismatch",
