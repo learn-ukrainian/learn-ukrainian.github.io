@@ -1,0 +1,32 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/public-venv-gitignore
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Public repo — one-line .gitignore fix: ignore .venv symlinks, not only directories
+
+ROUTING_CARD_V1: tier=heap · cursor-auto×cursor-cli (mechanical one-liner) · advisor_packet:
+this brief (fix fully specified by the filed issue) · owned_paths: .gitignore (public repo) ·
+acceptance: `git check-ignore .venv` passes for a SYMLINK named .venv in a scratch worktree ·
+alternatives: inline orchestrator edit (violates lane split), codex (overkill) ·
+parallel_free_seats: grok on the e2e port fix, agy on #382 tests.
+
+## Context
+See the public issue "[delegate][finalize] dispatch finalizer publishes junk-only PRs" (filed
+2026-08-09): workers' shell helpers drop a `.venv` SYMLINK in dispatch worktrees; `.gitignore:127`
+has `.venv/` which matches directories only, so scratch trees go dirty and the finalizer
+publishes junk PRs; worktree reaping also refuses on the same file.
+
+## Steps
+1. Public dispatch worktree (this dispatch's own worktree is fine — you are editing the public repo).
+2. Change `.gitignore` line 127 `.venv/` → `.venv`. Verify no OTHER rule depends on the
+   trailing-slash form (grep for venv rules; keep `embed-venv/` untouched).
+3. Prove: create a `.venv` symlink in the worktree → `git status --porcelain` shows nothing;
+   `git check-ignore -v .venv` names the rule. Quote both. Remove the test symlink.
+4. Run the repo's pre-commit/lint as usual. Conventional commit + trailer; push; PR referencing
+   the issue. NO auto-merge.
+5. Final response: PR URL + the check-ignore evidence.

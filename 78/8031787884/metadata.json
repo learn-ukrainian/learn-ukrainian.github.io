@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "788031787884",
+  "strategy": "manual-commit",
+  "branch": "cursor/public-venv-gitignore",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitignore"
+  ],
+  "sessions": [
+    {
+      "metadata": "/78/8031787884/0/metadata.json",
+      "transcript": "/78/8031787884/0/full.jsonl",
+      "compact_transcript": "/78/8031787884/0/transcript.jsonl",
+      "content_hash": "/78/8031787884/0/content_hash.txt",
+      "prompt": "/78/8031787884/0/prompt.txt"
+    }
+  ]
+}
