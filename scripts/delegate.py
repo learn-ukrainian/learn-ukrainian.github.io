@@ -1682,20 +1682,23 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     return sha or None
 
 
-def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
-    """Return commits on HEAD not reachable from ``base_ref``, or None.
+def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
+    """Return the configured upstream remote for the checked-out branch.
 
-    ``None`` means "cannot count", and a vanished worktree is exactly that: on
-    2026-07-25 a dispatch whose worktree disappeared mid-run raised
-    FileNotFoundError out of here, which killed the finalize path before it
-    could write a terminal status and left the task reading ``running`` with a
-    dead pid — invisible to every settle-loop watching it. The sibling
-    ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
-    contract, and callers already fail closed on ``None``.
+    A reused ``--cwd`` worktree can belong to a private repository whose
+    canonical remote is not named ``origin``.  Its checked-out dispatch branch
+    is the narrowest local source for that repository identity: unlike scanning
+    every configured remote, it cannot accidentally select an unrelated mirror.
     """
     try:
+        branch = _current_branch(worktree)
+    except OSError:
+        return None
+    if not branch or branch == "HEAD":
+        return None
+    try:
         proc = subprocess.run(
-            ["git", "rev-list", "--count", f"{base_ref}..HEAD"],
+            ["git", "config", "--get", f"branch.{branch}.remote"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -1705,27 +1708,72 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     except OSError:
         return None
     if proc.returncode != 0:
-        if base_ref.startswith("origin/"):
-            local_ref = base_ref.removeprefix("origin/")
-            try:
-                proc = subprocess.run(
-                    ["git", "rev-list", "--count", f"{local_ref}..HEAD"],
-                    cwd=worktree,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    env=_sanitized_git_env(),
-                )
-            except OSError:
-                return None
-            if proc.returncode != 0:
-                return None
-        else:
-            return None
-    try:
-        return int((proc.stdout or "").strip())
-    except ValueError:
         return None
+    remote = (proc.stdout or "").strip()
+    return remote or None
+
+
+def _commit_count_refs(worktree: Path, base_ref: str) -> tuple[str, ...]:
+    """Return ordered, local-only base-ref candidates for finalization.
+
+    ``origin/<base>`` remains the canonical candidate for ordinary dispatches.
+    If it is unavailable, count against the local base and then the base branch
+    on the checked-out branch's upstream remote.  The last fallback is required
+    for private/secondary remotes, where a pushed dispatch branch may track
+    ``private/<task>`` and the shared checkout intentionally has neither
+    ``origin/<base>`` nor a local ``<base>`` branch.
+    """
+    candidates = [base_ref]
+    _remote, separator, branch = base_ref.partition("/")
+    if separator:
+        candidates.append(branch)
+    else:
+        branch = base_ref
+
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote and branch:
+        candidates.append(f"{tracking_remote}/{branch}")
+    return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
+
+
+def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
+    """Return commits on HEAD not reachable from an eligible base ref, or None.
+
+    ``None`` means "cannot count", and a vanished worktree is exactly that: on
+    2026-07-25 a dispatch whose worktree disappeared mid-run raised
+    FileNotFoundError out of here, which killed the finalize path before it
+    could write a terminal status and left the task reading ``running`` with a
+    dead pid — invisible to every settle-loop watching it. The sibling
+    ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
+    contract, and callers already fail closed on ``None``.
+    """
+    for candidate in _commit_count_refs(worktree, base_ref):
+        try:
+            proc = subprocess.run(
+                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+            )
+        except OSError:
+            return None
+        if proc.returncode != 0:
+            continue
+        try:
+            return int((proc.stdout or "").strip())
+        except ValueError:
+            return None
+    return None
+
+
+def _commit_count_base_ref(worktree: Path, base_branch: str) -> str:
+    """Keep an explicit available non-origin remote base for finalization."""
+    explicit_ref = base_branch.removeprefix("refs/remotes/")
+    if "/" in explicit_ref and _resolve_sha(worktree, explicit_ref) is not None:
+        return explicit_ref
+    return _origin_base_ref(base_branch)
 
 
 def _origin_base_ref(base_branch: str) -> str:
@@ -3366,7 +3414,7 @@ def _run_worker(
             # set; the riskier auto-finalize action stays scoped to ``danger``.
             if worktree_path and mode in _WRITE_CAPABLE_MODES:
                 base_branch = str(final_state.get("worktree_base") or "main")
-                base_ref = _origin_base_ref(base_branch)
+                base_ref = _commit_count_base_ref(Path(worktree_path), base_branch)
                 commits_ahead = _count_commits_ahead(
                     Path(worktree_path),
                     base_ref,
