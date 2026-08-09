@@ -5876,13 +5876,13 @@ decisions:
     daily: false
     practice: true
     cloze: false
-- lemma: альона
+- lemma: '[REDACTED]'
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: альона
+  approved_gloss: '[REDACTED]'
   sense_note: private teacher-lesson full-source intake (full document)
   source_inventory:
-    key: 736f8307701fe4d5
+    key: 5f51a386a13126b3
     path: data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml
     locator: private source unit 10631 paragraph 1
     source_id: private-teacher-lesson-full-source

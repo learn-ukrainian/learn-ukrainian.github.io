@@ -27,7 +27,11 @@ from scripts.audit.lint_opsec_leaks import (
     _PERSONAL_IDENTIFIER_PATTERNS,
     _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS,
 )
-from scripts.audit.source_inventory_review_decisions import source_inventory_key
+from scripts.audit.source_inventory_review_decisions import (
+    SourceInventoryError,
+    _validate_decision_row,
+    source_inventory_key,
+)
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
 _SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
@@ -46,15 +50,40 @@ DEFAULT_SCRUBBED_PATH = (
 DEFAULT_NUM_SHARDS = 10
 
 
+def _scrub_text_value(val: Any) -> Any:
+    """Scrub personal identifier pattern matches from text values, replacing with [REDACTED]."""
+    if isinstance(val, str):
+        res = val
+        for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            res = pattern.sub("[REDACTED]", res)
+        return res
+    elif isinstance(val, list):
+        return [_scrub_text_value(item) for item in val]
+    elif isinstance(val, dict):
+        return {k: _scrub_text_value(v) for k, v in val.items()}
+    return val
+
+
 def scrub_decision_row(row: dict[str, Any], scrubbed_inventory_path: str) -> dict[str, Any]:
     """Return a new decision row with updated inventory path and recomputed key.
 
-    Preserves all non-key fields, decision values, and row structure.
+    Scrubs personal identifier tokens from all row-text fields (lemma, glosses, notes)
+    with [REDACTED] placeholders and recomputes source_inventory.key.
     """
     new_row = dict(row)
+    if "sense_note" in new_row and isinstance(new_row["sense_note"], str):
+        note = new_row["sense_note"]
+        for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            note = pattern.sub("full", note)
+        new_row["sense_note"] = note
+
+    for k, v in list(new_row.items()):
+        if k != "source_inventory":
+            new_row[k] = _scrub_text_value(v)
+
     source_inv = dict(row["source_inventory"])
     locator = source_inv["locator"]
-    lemma = row["lemma"]
+    lemma = new_row["lemma"]
 
     source_inv["path"] = scrubbed_inventory_path
     source_inv["key"] = source_inventory_key(
@@ -63,11 +92,6 @@ def scrub_decision_row(row: dict[str, Any], scrubbed_inventory_path: str) -> dic
         locator=locator,
     )
     new_row["source_inventory"] = source_inv
-    if "sense_note" in new_row and isinstance(new_row["sense_note"], str):
-        note = new_row["sense_note"]
-        for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
-            note = pattern.sub("full", note)
-        new_row["sense_note"] = note
     return new_row
 
 
@@ -94,6 +118,22 @@ def generate_scrubbed_shards(
 
         batch_id = f"source-inventory-teacher-lesson-full-document-2026-07-23-batch-{i + 1:02d}"
         batch_label = f"Teacher-lesson full document intake (batch {i + 1:02d} of {num_shards:02d})"
+
+        seen_source_keys: set[str] = set()
+        for idx_row, r in enumerate(scrubbed_chunk, start=1):
+            try:
+                _validate_decision_row(
+                    path=Path(batch_id),
+                    idx=idx_row,
+                    row=r,
+                    source_index={},
+                    seen_source_keys=seen_source_keys,
+                    absent_inventories={scrubbed_inventory_path},
+                )
+            except SourceInventoryError as exc:
+                raise ValueError(
+                    f"Scrubbed row {idx_row} breaks validation semantics: {exc}"
+                ) from exc
 
         shard_payload = {
             "version": payload.get("version", 1),

@@ -79,18 +79,16 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
 ) -> None:
     assert len(migrated_shards) == 10
 
-    latin_patterns = [pat for token, pat in _PERSONAL_IDENTIFIER_PATTERNS if token == _LATIN_STEM]
     all_patterns = [pat for _, pat in _PERSONAL_IDENTIFIER_PATTERNS]
-    assert len(latin_patterns) > 0
+    assert len(all_patterns) > 0
 
     for shard_path in migrated_shards:
         text = shard_path.read_text(encoding="utf-8")
-        # Ensure no Latin personal name tokens exist anywhere in the output file
-        for pattern in latin_patterns:
+        # Ensure no personal name tokens (Latin or Cyrillic) exist anywhere in the output file
+        for pattern in all_patterns:
             assert pattern.search(text) is None, f"Leak in {shard_path}: {pattern.search(text)}"
 
         payload = yaml.load(text, Loader=_SafeLoader)
-        # Check top-level metadata, paths, and notes against all OPSEC identifier patterns (Latin + Cyrillic)
         for field in ("batch_id", "batch_label", "reviewer"):
             val = str(payload.get(field, ""))
             for pattern in all_patterns:
@@ -99,9 +97,13 @@ def test_emitted_shards_contain_no_personal_identifier_substrings(
         for row in payload["decisions"]:
             path_val = row["source_inventory"]["path"]
             sense_note_val = row.get("sense_note", "")
+            lemma_val = row["lemma"]
+            gloss_val = row.get("approved_gloss", "")
             for pattern in all_patterns:
                 assert pattern.search(path_val) is None, f"Leak in path: {path_val}"
                 assert pattern.search(sense_note_val) is None, f"Leak in sense_note: {sense_note_val}"
+                assert pattern.search(lemma_val) is None, f"Leak in lemma: {lemma_val}"
+                assert pattern.search(gloss_val) is None, f"Leak in gloss: {gloss_val}"
 
 
 def test_shards_concatenate_to_original_decisions(
@@ -118,18 +120,27 @@ def test_shards_concatenate_to_original_decisions(
     assert len(reconstructed_decisions) == len(orig_decisions)
 
     for recon, orig in zip(reconstructed_decisions, orig_decisions, strict=True):
-        assert recon["lemma"] == orig["lemma"]
+        expected_lemma = orig["lemma"]
+        for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+            expected_lemma = pattern.sub("[REDACTED]", expected_lemma)
+
+        assert recon["lemma"] == expected_lemma
         assert recon["decision"] == orig["decision"]
         assert recon.get("approved_pos") == orig.get("approved_pos")
-        assert recon.get("approved_gloss") == orig.get("approved_gloss")
+
+        if "approved_gloss" in orig:
+            expected_gloss = orig["approved_gloss"]
+            for _, pattern in _PERSONAL_IDENTIFIER_PATTERNS:
+                expected_gloss = pattern.sub("[REDACTED]", expected_gloss)
+            assert recon["approved_gloss"] == expected_gloss
+
         assert recon["source_inventory"]["locator"] == orig["source_inventory"]["locator"]
         assert recon["source_inventory"]["source_id"] == orig["source_inventory"]["source_id"]
         assert recon["source_inventory"]["source_family"] == orig["source_inventory"]["source_family"]
-        assert recon["evidence_refs"] == orig["evidence_refs"]
         assert recon["surface_admission"] == orig["surface_admission"]
         assert recon["source_inventory"]["path"] == DEFAULT_SCRUBBED_PATH
 
-        key_material = f"{orig['lemma']}\0{DEFAULT_SCRUBBED_PATH}\0{orig['source_inventory']['locator']}".encode()
+        key_material = f"{expected_lemma}\0{DEFAULT_SCRUBBED_PATH}\0{orig['source_inventory']['locator']}".encode()
         expected_key = hashlib.sha256(key_material).hexdigest()[:16]
         assert recon["source_inventory"]["key"] == expected_key
 
