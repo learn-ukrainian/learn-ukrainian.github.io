@@ -96,6 +96,7 @@ REVIEWER = {
     "model_family": "xai",
     "harness": "opencode",
 }
+OPENCODE_REVIEW_MODEL = "xai/grok-4.5"
 SMALL_REVIEW_FAMILIES = frozenset(
     {"antonenko_style_guide", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete"}
 )
@@ -698,6 +699,26 @@ def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, b
     return result.returncode, result.stdout, result.stderr
 
 
+def _trailing_json_response(stdout: bytes, label: str) -> bytes:
+    """Extract exactly one trailing JSON object after a provider UI prelude."""
+    try:
+        text = stdout.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise SourceProductionError(f"invalid UTF-8 in {label} provider output") from exc
+    decoder = json.JSONDecoder()
+    candidates: list[tuple[int, int, dict[str, Any]]] = []
+    for match in re.finditer(r"\{", text):
+        try:
+            value, end = decoder.raw_decode(text[match.start():])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict) and not text[match.start() + end:].strip():
+            candidates.append((match.start(), match.start() + end, value))
+    require(len(candidates) == 1, f"{label} provider output lacks one unambiguous trailing JSON object")
+    start, end, _ = candidates[0]
+    return text[start:end].encode("utf-8")
+
+
 def _prompt_with_response_contract(
     prompt: bytes, schema_path: Path, lane: str, packet: Mapping[str, Any]
 ) -> bytes:
@@ -806,7 +827,7 @@ def _run_packets(
     if lane == "review":
         require(manifest["schema_version"] == "phase3_source_production_review_manifest_v1", "review run requires review manifest")
         packet_count = manifest["review_packet_count"]
-        actor, command_name = REVIEWER, "ask-opencode"
+        actor, command_name = REVIEWER, "opencode"
         expected_prompt_hash = manifest["bindings"]["review_prompt_sha256"]
     else:
         require(manifest["schema_version"] == "phase3_source_production_manifest_v1", "author run requires source manifest")
@@ -831,20 +852,33 @@ def _run_packets(
         prompt = _prompt_with_response_contract(base_prompt, schema_path, lane, packet)
         entry = (manifest["review_packets"] if lane == "review" else manifest["author_packets"])[index - 1]
         packet_path = root / entry["relative_path"]
-        command = [
-            ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py", command_name, "-",
-            "--task-id", actor["task_id"], "--to-model", actor["exact_model"],
-            "--data", str(packet_path), "--no-timeout",
-        ]
-        if lane == "author":
-            command.append("--stdout-only")
+        if lane == "review":
+            prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
+            prompt_sha256 = _write_private(prompt_path, prompt)
+            command = [
+                command_name, "run", "--model", OPENCODE_REVIEW_MODEL,
+                "--variant", "high", "--file", str(prompt_path),
+                "--file", str(packet_path), "--format", "default",
+                (
+                    "Follow the attached Phase 3 source-review prompt exactly. Treat the "
+                    "attached packet as the only source evidence. Return only the strict JSON "
+                    f"object required by the root schema. prompt_sha256={prompt_sha256};"
+                    f"packet_sha256={entry['packet_sha256']}"
+                ),
+            ]
+        else:
+            command = [
+                ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py", command_name, "-",
+                "--task-id", actor["task_id"], "--to-model", actor["exact_model"],
+                "--data", str(packet_path), "--no-timeout", "--stdout-only",
+            ]
         started_at = _now()
         exit_code, stdout, stderr = runner(command, prompt)
         completed_at = _now()
         log_dir = root / lane / "provider-logs"
         stdout_hash = _write_private(log_dir / f"{index:05d}.stdout", stdout)
         stderr_hash = _write_private(log_dir / f"{index:05d}.stderr", stderr)
-        raw = stdout
+        raw = _trailing_json_response(stdout, lane) if lane == "review" else stdout
         raw_path = root / lane / "incoming" / f"{index:05d}.raw"
         raw_hash = _write_private(raw_path, raw)
         invocation = {
