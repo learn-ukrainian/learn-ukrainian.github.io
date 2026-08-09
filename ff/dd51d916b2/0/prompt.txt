@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-5995-shard-pr2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #5995 shard rollout — PR 2 (first data shard)
+
+The generator merged (PR #6505). Land the FIRST data shard PR of the Option-A rollout.
+
+## Before anything: re-baseline (blocking)
+PR1's 11-PR size table was computed against a disputed baseline (its own integrity figures were
+retracted in review). On CURRENT main: run the validator, quote 51-file/row output; re-run the
+generator's measured size plan for the full rollout; if any planned PR ≥ 1.8 MB, STOP and report
+the new plan instead of landing anything.
+
+## PR-2 scope (if plan holds)
+Shard 01 only, exactly as the generator emits it: add shard file + remove its rows from the
+legacy ledger, nothing hand-edited. Prove in the PR body: measured `git diff` bytes (< 1.8 MB),
+`validate_committed_decision_files` green on the intermediate state (quote), opsec-safe (no
+identifier tokens — grep your diff locally, never print the token), shard concatenation
+invariant still provable for the remaining rollout.
+pytest (scrub + inventory affected) + ruff. Conventional commit + X-Agent trailer, push, PR
+referencing #5995/#4220. NO auto-merge. Report: PR number + measured size + validator output.
