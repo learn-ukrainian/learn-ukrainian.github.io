@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/correction_protection_evaluation_contract_v2_2.schema.json",
+  "title": "Phase 3 correction/protection cycle002 evaluation preservation contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "preserved_v2_1_artifacts", "cycle001_void_receipt", "cycle002", "preserved_constraints", "source_authoring"],
+  "properties": {
+    "schema_version": {"const": "correction_protection_evaluation_contract_v2_2"},
+    "text_free": {"const": true},
+    "preserved_v2_1_artifacts": {"$ref": "#/$defs/preservedV21"},
+    "cycle001_void_receipt": {"$ref": "#/$defs/voidReceipt"},
+    "cycle002": {"$ref": "#/$defs/cycle002"},
+    "preserved_constraints": {"$ref": "#/$defs/preservedConstraints"},
+    "source_authoring": {"const": {"blocked": true, "reason": "cycle002_closure_not_established"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "preservedV21": {
+      "type": "object", "additionalProperties": false,
+      "required": ["functional_role_schema_sha256", "functional_role_evidence_sha256", "evaluation_schema_sha256", "evaluation_evidence_sha256"],
+      "properties": {
+        "functional_role_schema_sha256": {"const": "ea83fa8a540514ae4206464915c5f78d49baf524414d34bd1a5e983207d3c4cc"},
+        "functional_role_evidence_sha256": {"const": "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b"},
+        "evaluation_schema_sha256": {"const": "0e798247de3978631dace09c69b2e81f9a27807e1c8687ff695635d52a131ca3"},
+        "evaluation_evidence_sha256": {"const": "8db8cd1de8fdd9a6c345cea98243f1f4d6b3f4a2b2bdd5c15bb7c9543dfdf8e1"}
+      }
+    },
+    "voidReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required", "schema_logical_path", "schema_sha256", "producer_logical_path", "producer_sha256", "receipt_logical_path", "receipt_file_sha256", "receipt_sha256", "evaluation_cycle_id", "heldout_labels", "completed_packet_count", "author_packet_count", "completed_referenced_unit_count", "review_assembly_disposition_ingest_must_be_zero"],
+      "properties": {
+        "required": {"const": true},
+        "schema_logical_path": {"const": "data/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"},
+        "schema_sha256": {"const": "3ca1453da5a9442a1e41b558db70a4677c07c5cea05d699bf96568d8f16b015c"},
+        "producer_logical_path": {"const": "scripts/projects/open_model_data/phase3_cycle_void_receipt.py"},
+        "producer_sha256": {"const": "1213a5b24bcfeb5ff7a6bf0348d608d3b8e3f1ad940fda3b0cad507b428ff02d"},
+        "receipt_logical_path": {"const": "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"},
+        "receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+        "heldout_labels": {"const": 2000},
+        "completed_packet_count": {"const": 23},
+        "author_packet_count": {"const": 918},
+        "completed_referenced_unit_count": {"const": 947},
+        "review_assembly_disposition_ingest_must_be_zero": {"const": true}
+      }
+    },
+    "cycle002": {
+      "const": {"evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-002", "predecessor_cycle_void_receipt_required": true, "fresh_release_and_evaluation_freezes_required": true, "frozen_labels_before_extraction": 9392, "source_authoring_blocked_until_closure": true}
+    },
+    "preservedConstraints": {
+      "const": {"denominators_unchanged": true, "source_unit_total": 67041, "author_total": 43812, "evaluation_total": 9392, "quarantine_total": 13837, "breadth_floors_unchanged": true, "phenomenon_count": 12, "positive_floor_per_phenomenon": 30, "acceptable_control_floor_per_phenomenon": 30, "protected_floor_per_phenomenon": 30, "distinct_document_floor_per_stratum": 3, "evaluation_thresholds_unchanged": true, "phase4_block_unchanged": true}
+    }
+  }
+}

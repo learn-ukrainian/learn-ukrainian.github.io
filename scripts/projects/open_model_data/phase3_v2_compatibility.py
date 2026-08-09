@@ -20,6 +20,7 @@ if __package__ in {None, ""}:
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_cycle_void_receipt as cycle_void
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -37,6 +38,15 @@ CURRENT_EVALUATION_LOGICAL_PATH = (
 )
 CURRENT_HELDOUT_LABEL_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/phase3_heldout_label_public_receipt_v1.json"
+)
+CYCLE002_ROLE_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_2.json"
+)
+CYCLE002_EVALUATION_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v2_2.json"
+)
+CYCLE001_VOID_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"
 )
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
@@ -152,10 +162,15 @@ def _tracked_evidence_paths() -> set[str]:
     )
     require(result.returncode == 0, "cannot enumerate tracked evidence")
     paths = {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
-    if (ROOT / FUNCTIONAL_ROLE_LOGICAL_PATH).is_file():
-        paths.add(FUNCTIONAL_ROLE_LOGICAL_PATH)
-    if (ROOT / CURRENT_HELDOUT_LABEL_LOGICAL_PATH).is_file():
-        paths.add(CURRENT_HELDOUT_LABEL_LOGICAL_PATH)
+    for logical_path in (
+        FUNCTIONAL_ROLE_LOGICAL_PATH,
+        CURRENT_HELDOUT_LABEL_LOGICAL_PATH,
+        CYCLE002_ROLE_LOGICAL_PATH,
+        CYCLE002_EVALUATION_LOGICAL_PATH,
+        CYCLE001_VOID_LOGICAL_PATH,
+    ):
+        if (ROOT / logical_path).is_file():
+            paths.add(logical_path)
     return paths
 
 
@@ -202,6 +217,8 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
     require(matrix["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "matrix schema binding drift")
     require(matrix["bindings"]["validator_sha256"] == sha256_file(SCRIPT_PATH), "matrix validator binding drift")
     role_result = functional_roles.verify()
+    cycle002_result = functional_roles.verify_cycle002_contracts()
+    void_receipt = cycle_void.verify_receipt_value(read_json(ROOT / CYCLE001_VOID_LOGICAL_PATH))
     heldout_label_receipt = _verify_heldout_label_receipt()
     require(
         matrix["functional_role_binding"]
@@ -214,6 +231,30 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
             "role_graph_ready": True,
         },
         "functional-role validator binding drift",
+    )
+    require(
+        matrix["cycle002_foundation_binding"]
+        == {
+            "role_contract_logical_path": CYCLE002_ROLE_LOGICAL_PATH,
+            "role_contract_sha256": cycle002_result["role_contract_sha256"],
+            "role_schema_sha256": sha256_file(functional_roles.CYCLE002_ROLE_SCHEMA_PATH),
+            "evaluation_contract_logical_path": CYCLE002_EVALUATION_LOGICAL_PATH,
+            "evaluation_contract_sha256": cycle002_result["evaluation_contract_sha256"],
+            "evaluation_schema_sha256": sha256_file(functional_roles.CYCLE002_EVALUATION_SCHEMA_PATH),
+            "void_receipt_logical_path": CYCLE001_VOID_LOGICAL_PATH,
+            "void_receipt_schema_sha256": sha256_file(cycle_void.SCHEMA_PATH),
+            "void_receipt_producer_sha256": sha256_file(
+                ROOT / "scripts/projects/open_model_data/phase3_cycle_void_receipt.py"
+            ),
+            "void_receipt_file_sha256": sha256_file(ROOT / CYCLE001_VOID_LOGICAL_PATH),
+            "void_receipt_sha256": void_receipt["receipt_sha256"],
+            "validator_sha256": sha256_file(ROOT / "scripts/projects/open_model_data/phase3_functional_roles.py"),
+            "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-002",
+            "required_frozen_labels_before_extraction": 9_392,
+            "source_authoring_blocked": True,
+            "verified": True,
+        },
+        "cycle002 foundation binding drift",
     )
     engine_entries = matrix["engine_bindings"]
     require({entry["logical_path"] for entry in engine_entries} == ENGINE_PATHS, "v2 engine binding set drift")
@@ -256,6 +297,27 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
                 == "e2d3c170e94fa4762295805c522d1e52adaaaa867e60e8b02a06b19355a9694e",
                 "heldout label freeze identity drift",
             )
+        elif entry["logical_path"] == CYCLE002_ROLE_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "functional_role_contract"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "cycle002_functional_role_contract_rebound",
+                "cycle002 functional-role contract is not rebound",
+            )
+        elif entry["logical_path"] == CYCLE002_EVALUATION_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "completion_status"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "cycle002_evaluation_contract_rebound",
+                "cycle002 evaluation contract is not rebound",
+            )
+        elif entry["logical_path"] == CYCLE001_VOID_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "source_status"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "cycle001_void_receipt_bound_for_cycle002",
+                "cycle001 void receipt is not rebound",
+            )
         elif entry["artifact_class"] == "functional_role_contract":
             require(
                 entry["disposition"] == "rebound"
@@ -286,7 +348,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         )
     require(
         matrix["source_authoring"]
-        == {"blocked": False, "reason": "heldout_labels_frozen_source_transport_ready"},
+        == {"blocked": True, "reason": "cycle002_closure_not_established"},
         "source-authoring block drift",
     )
     require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")
@@ -302,7 +364,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         "rebound_count": sum(entry["disposition"] == "rebound" for entry in entries),
         "valid_count": sum(entry["disposition"] == "valid" for entry in entries),
         "role_graph_ready": True,
-        "source_authoring_blocked": False,
+        "source_authoring_blocked": True,
         "phase4_blocked": True,
     }
 
