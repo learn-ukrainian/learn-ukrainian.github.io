@@ -59,6 +59,8 @@ TARGET="missing-translation"
 for ((_i = 0; _i < ${#EXTRA_ARGS[@]}; _i++)); do
   if [[ "${EXTRA_ARGS[_i]}" == "--target" && $((_i + 1)) -lt ${#EXTRA_ARGS[@]} ]]; then
     TARGET="${EXTRA_ARGS[_i + 1]}"
+  elif [[ "${EXTRA_ARGS[_i]}" == --target=* ]]; then
+    TARGET="${EXTRA_ARGS[_i]#--target=}"
   fi
 done
 

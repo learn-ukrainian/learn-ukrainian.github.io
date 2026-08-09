@@ -45,7 +45,12 @@ def _run_local_launcher(tmp_path: Path, *args: str) -> subprocess.CompletedProce
         ((), "missing-translation"),
         (("--limit", "5"), "missing-translation"),
         (("--target", "full-catalog"), "full-catalog"),
+        (("--target=full-catalog",), "full-catalog"),
         (("--target", "full-catalog", "--limit", "10"), "full-catalog"),
+        (
+            ("--target=missing-anchor", "--target", "full-catalog"),
+            "full-catalog",
+        ),
         (("--target", "missing-anchor"), "missing-anchor"),
     ],
 )
@@ -59,7 +64,7 @@ def test_full_catalog_does_not_carry_slugs_file(tmp_path: Path) -> None:
     """The bug this test guards: --target full-catalog must never also
     inject --slugs-file into the driver invocation (see reenrich_thin_entries
     -- a slug_filter silently narrows an already-selected target list)."""
-    proc = _run_local_launcher(tmp_path, "--target", "full-catalog", "--print-target")
+    proc = _run_local_launcher(tmp_path, "--target=full-catalog", "--print-target")
     assert proc.returncode == 0, proc.stderr
     # The print-target hook exits before COMMON_ARGS is built, so this test
     # also asserts the source directly reflects the guard, since the
@@ -83,7 +88,9 @@ def test_full_catalog_does_not_carry_slugs_file(tmp_path: Path) -> None:
         ([], "missing-translation"),
         (["--limit", "10"], "missing-translation"),
         (["--target", "full-catalog"], "full-catalog"),
+        (["--target=full-catalog"], "full-catalog"),
         (["--target", "full-catalog", "--limit", "10"], "full-catalog"),
+        (["--target=missing-anchor", "--target", "full-catalog"], "full-catalog"),
     ],
 )
 def test_remote_target_detection(args: list[str], expected_target: str) -> None:
