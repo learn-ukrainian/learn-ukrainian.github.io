@@ -27,6 +27,10 @@ export interface ZnoPracticeDeck {
   items: ZnoPracticeItem[];
 }
 
+export interface ZnoPracticeProps {
+  decks?: ZnoPracticeDeck[];
+}
+
 const DEFAULT_DECKS = [stressDeck, paronymDeck, lexicalNormDeck] as ZnoPracticeDeck[];
 
 function taskCountLabel(count: number): string {
@@ -52,7 +56,7 @@ function nextDueItem(items: readonly ZnoPracticeItem[], currentId: string | null
     })[0] ?? null;
 }
 
-export default function ZnoPractice({ decks = DEFAULT_DECKS }: { decks?: readonly ZnoPracticeDeck[] }) {
+export default function ZnoPractice({ decks = DEFAULT_DECKS }: ZnoPracticeProps) {
   const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
   const [itemId, setItemId] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);

@@ -22,7 +22,9 @@ const kitRoot = join(repoRoot, 'packages/activity-kit');
 const schemaPath = join(kitRoot, 'src/lu.activity.v1.schema.json');
 const lessonSchemaPath = join(kitRoot, 'src/lu.lesson.v1.schema.json');
 const lessonSupportSchemaPath = join(kitRoot, 'src/lu.lesson-support.v1.schema.json');
-const pythonPath = join(repoRoot, '.venv/bin/python');
+// CI uses the checkout venv. Dispatch worktrees may instead supply the shared
+// project interpreter without creating or activating a worktree-local venv.
+const pythonPath = process.env.LU_ACTIVITY_KIT_PYTHON ?? join(repoRoot, '.venv/bin/python');
 
 const GOLDEN_TYPES = [
   'true-false',
