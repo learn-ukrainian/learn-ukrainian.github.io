@@ -11,10 +11,12 @@ files (``#5393`` sibling guard).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -125,9 +127,6 @@ def export_dataset() -> tuple[int, int]:
 
     entries = manifest.get("entries", [])
 
-    metadata = {k: v for k, v in manifest.items() if k != "entries"}
-    (DATASET_DIR / "_metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
-
     # Group entries by first character
     shards: dict[str, list[dict]] = {}
     for entry in entries:
@@ -143,13 +142,40 @@ def export_dataset() -> tuple[int, int]:
             shards[first_char] = []
         shards[first_char].append(entry)
 
+    shard_integrity: dict[str, dict[str, Any]] = {}
+
     for char, char_entries in shards.items():
-        file_path = DATASET_DIR / f"{char}.jsonl"
-        with open(file_path, "w", encoding="utf-8") as out_f:
+        shard_filename = f"{char}.jsonl"
+        file_path = DATASET_DIR / shard_filename
+        tmp_path = DATASET_DIR / f"{shard_filename}.tmp"
+
+        hasher = hashlib.sha256()
+        total_bytes = 0
+        with open(tmp_path, "w", encoding="utf-8") as out_f:
             for entry in char_entries:
-                out_f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+                line = json.dumps(entry, ensure_ascii=False) + "\n"
+                encoded = line.encode("utf-8")
+                hasher.update(encoded)
+                total_bytes += len(encoded)
+                out_f.write(line)
+
+        tmp_path.replace(file_path)
+        shard_integrity[shard_filename] = {
+            "sha256": hasher.hexdigest(),
+            "bytes": total_bytes,
+            "entries": len(char_entries),
+        }
+
+    metadata = {k: v for k, v in manifest.items() if k != "entries"}
+    metadata["shard_integrity"] = shard_integrity
+
+    meta_file = DATASET_DIR / "_metadata.json"
+    meta_tmp = DATASET_DIR / "_metadata.json.tmp"
+    meta_tmp.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    meta_tmp.replace(meta_file)
 
     return len(entries), len(shards)
+
 
 
 def main(argv: Sequence[str] | None = None) -> int:

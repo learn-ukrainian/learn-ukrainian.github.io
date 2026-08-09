@@ -12,8 +12,10 @@ from pathlib import Path
 
 import pytest
 
+import sys
+
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = sys.executable
 ENRICH_SCRIPT = ROOT / "scripts" / "lexicon" / "enrich_manifest.py"
 BUILD_SCRIPT = ROOT / "scripts" / "lexicon" / "build_data_manifest.py"
 EXPORT_SCRIPT = ROOT / "scripts" / "lexicon" / "export_open_dataset.py"

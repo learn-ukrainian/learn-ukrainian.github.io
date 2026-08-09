@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Additive slug-keyed merge of EN translation cards onto a live Atlas manifest.
+"""Additive slug-keyed merge of EN translation cards and layer sections onto a live Atlas manifest.
 
-Copies ``enrichment.translation`` from a pulled (donor) manifest onto live
-entries that lack EN, keyed by ``url_slug``. Never adds or drops entries, and
-never overwrites a live entry that already has a non-empty EN translation.
+Copies ``enrichment.translation``, ``sections.*``, ``enrichment.literary_attestation``,
+and ``enrichment.morphology`` from a pulled (donor) manifest onto live entries that lack them,
+keyed by ``url_slug``. Never adds or drops entries, and never overwrites live entry fields
+that are already non-empty. Includes publish-side CAS re-validation.
 """
 
 from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import sys
 from dataclasses import asdict, dataclass, field
@@ -24,6 +26,7 @@ DEFAULT_PULLED = ROOT / "batch_state" / "full-en-reenrich-pulled" / "manifest.js
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.audit.audit_atlas_thin_enriched import thin_old_gate_entries
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT
 from scripts.lexicon.manifest_io import load_manifest, write_manifest
 
@@ -100,12 +103,16 @@ def _add_source(enrichment: dict[str, Any], source: object) -> None:
 
 @dataclass
 class MergeStats:
-    """Deterministic summary of an additive translation merge."""
+    """Deterministic summary of an additive translation and section merge."""
 
     live_entry_count_before: int
     live_entry_count_after: int
     pulled_entry_count: int
     filled: int = 0
+    filled_sections: int = 0
+    filled_layer_sections: dict[str, int] = field(default_factory=dict)
+    filled_literary_attestation: int = 0
+    filled_morphology: int = 0
     skipped_live_has_translation: int = 0
     skipped_pulled_missing_slug: int = 0
     skipped_pulled_lacks_translation: int = 0
@@ -121,11 +128,11 @@ def merge_translation_delta(
     *,
     stamp_generated_at: bool = True,
 ) -> MergeStats:
-    """Merge pulled EN translations into ``live`` in place.
+    """Merge pulled EN translations and layer sections into ``live`` in place.
 
     Hard invariants:
     - ``len(live["entries"])`` is unchanged
-    - entries that already have EN keep their existing translation object
+    - entries that already have EN or sections keep their existing non-empty fields
     - pulled-only slugs never create new live entries
     """
     entries = live.get("entries")
@@ -147,28 +154,64 @@ def merge_translation_delta(
         if not isinstance(slug, str) or not slug:
             continue
 
-        if entry_has_translation(entry):
-            stats.skipped_live_has_translation += 1
-            continue
-
         donor = pulled_by_slug.get(slug)
         if donor is None:
             stats.skipped_pulled_missing_slug += 1
             continue
 
-        donor_translation = entry_translation(donor)
-        if donor_translation is None:
-            stats.skipped_pulled_lacks_translation += 1
-            continue
+        if entry_has_translation(entry):
+            stats.skipped_live_has_translation += 1
+        else:
+            donor_translation = entry_translation(donor)
+            if donor_translation is None:
+                stats.skipped_pulled_lacks_translation += 1
+            else:
+                enrichment = entry.get("enrichment")
+                if not isinstance(enrichment, dict):
+                    enrichment = {}
+                    entry["enrichment"] = enrichment
+                enrichment["translation"] = copy.deepcopy(donor_translation)
+                _add_source(enrichment, donor_translation.get("source"))
+                stats.filled += 1
+                stats.filled_slugs.append(slug)
 
-        enrichment = entry.get("enrichment")
-        if not isinstance(enrichment, dict):
-            enrichment = {}
-            entry["enrichment"] = enrichment
-        enrichment["translation"] = copy.deepcopy(donor_translation)
-        _add_source(enrichment, donor_translation.get("source"))
-        stats.filled += 1
-        stats.filled_slugs.append(slug)
+        donor_sections = donor.get("sections")
+        if isinstance(donor_sections, dict):
+            live_sections = entry.get("sections")
+            if not isinstance(live_sections, dict):
+                live_sections = {}
+                entry["sections"] = live_sections
+            for sec_name, sec_val in donor_sections.items():
+                if sec_val and not live_sections.get(sec_name):
+                    live_sections[sec_name] = copy.deepcopy(sec_val)
+                    stats.filled_sections += 1
+                    stats.filled_layer_sections[sec_name] = (
+                        stats.filled_layer_sections.get(sec_name, 0) + 1
+                    )
+                    sec_src = sec_val.get("source") if isinstance(sec_val, dict) else None
+                    _add_source(
+                        entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {},
+                        sec_src,
+                    )
+
+        donor_enr = donor.get("enrichment") if isinstance(donor.get("enrichment"), dict) else {}
+        live_enr = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
+
+        donor_att = donor_enr.get("literary_attestation")
+        if donor_att and not live_enr.get("literary_attestation"):
+            if not isinstance(entry.get("enrichment"), dict):
+                entry["enrichment"] = {}
+                live_enr = entry["enrichment"]
+            live_enr["literary_attestation"] = copy.deepcopy(donor_att)
+            stats.filled_literary_attestation += 1
+
+        donor_morph = donor_enr.get("morphology")
+        if donor_morph and not live_enr.get("morphology"):
+            if not isinstance(entry.get("enrichment"), dict):
+                entry["enrichment"] = {}
+                live_enr = entry["enrichment"]
+            live_enr["morphology"] = copy.deepcopy(donor_morph)
+            stats.filled_morphology += 1
 
     after_count = len(live.get("entries") or [])
     stats.live_entry_count_after = after_count
@@ -187,19 +230,51 @@ def prove_no_nonempty_en_overwrites(
     before_by_slug: dict[str, dict[str, Any]],
     after_by_slug: dict[str, dict[str, Any]],
 ) -> int:
-    """Count entries whose previously non-empty EN changed after the merge."""
+    """Count entries whose previously non-empty target fields changed after the merge."""
     modified = 0
     for slug, before_entry in before_by_slug.items():
-        before_tr = entry_translation(before_entry)
-        if before_tr is None:
-            continue
         after_entry = after_by_slug.get(slug)
         if after_entry is None:
             modified += 1
             continue
-        after_tr = entry_translation(after_entry)
-        if after_tr != before_tr:
-            modified += 1
+
+        before_tr = entry_translation(before_entry)
+        if before_tr is not None:
+            after_tr = entry_translation(after_entry)
+            if after_tr != before_tr:
+                modified += 1
+                continue
+
+        before_sec = before_entry.get("sections")
+        if isinstance(before_sec, dict):
+            after_sec = after_entry.get("sections")
+            if not isinstance(after_sec, dict):
+                modified += 1
+                continue
+            sec_modified = False
+            for sec_key, sec_val in before_sec.items():
+                if sec_val and after_sec.get(sec_key) != sec_val:
+                    modified += 1
+                    sec_modified = True
+                    break
+            if sec_modified:
+                continue
+
+        before_enr = before_entry.get("enrichment")
+        if isinstance(before_enr, dict):
+            after_enr = after_entry.get("enrichment")
+            if not isinstance(after_enr, dict):
+                modified += 1
+                continue
+            if before_enr.get("morphology") and after_enr.get("morphology") != before_enr.get("morphology"):
+                modified += 1
+                continue
+            if (
+                before_enr.get("literary_attestation")
+                and after_enr.get("literary_attestation") != before_enr.get("literary_attestation")
+            ):
+                modified += 1
+                continue
     return modified
 
 
@@ -213,8 +288,8 @@ def _read_local_manifest(path: Path) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Additive slug-keyed merge of EN translation cards from a pulled "
-            "manifest onto the live Atlas catalog (no entry add/drop, no EN overwrite)."
+            "Additive slug-keyed merge of EN translation cards and layer sections from a pulled "
+            "manifest onto the live Atlas catalog (no entry add/drop, no non-empty overwrite)."
         )
     )
     parser.add_argument("--live", type=Path, default=DEFAULT_MANIFEST)
@@ -245,12 +320,16 @@ def main() -> int:
     live_path = args.live if args.live.is_absolute() else ROOT / args.live
     pulled_path = args.pulled if args.pulled.is_absolute() else ROOT / args.pulled
 
+    initial_live_bytes = live_path.read_bytes() if live_path.exists() else b""
+    initial_live_sha = hashlib.sha256(initial_live_bytes).hexdigest()
+
     if args.local_live or live_path.resolve() != DEFAULT_MANIFEST.resolve():
         live = _read_local_manifest(live_path)
     else:
         live = load_manifest(live_path)
     pulled = _read_local_manifest(pulled_path)
 
+    thin_before = len(thin_old_gate_entries(live))
     before_by_slug = {slug: copy.deepcopy(entry) for slug, entry in _slug_index(live).items()}
     stats = merge_translation_delta(
         live,
@@ -258,14 +337,20 @@ def main() -> int:
         stamp_generated_at=not args.no_stamp_generated_at,
     )
     after_by_slug = _slug_index(live)
+    thin_after = len(thin_old_gate_entries(live))
+
     overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
+    old_gate_not_rising = thin_after <= thin_before
 
     payload = stats.as_dict()
     payload["overwrite_proof_modified_nonempty_en"] = overwrite_proof
+    payload["old_gate_no_english_anchor_before"] = thin_before
+    payload["old_gate_no_english_anchor_after"] = thin_after
+    payload["old_gate_not_rising"] = old_gate_not_rising
     payload["missing_translation_after"] = sum(
         1 for entry in (live.get("entries") or []) if isinstance(entry, dict) and not entry_has_translation(entry)
     )
-    # Keep report compact for large fills.
+
     if len(payload["filled_slugs"]) > 50:
         payload["filled_slugs_sample"] = payload["filled_slugs"][:50]
         payload["filled_slugs"] = []
@@ -277,12 +362,13 @@ def main() -> int:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    if overwrite_proof != 0:
+    if overwrite_proof != 0 or not old_gate_not_rising:
         print(
             json.dumps(
                 {
-                    "error": "overwrite_proof_modified_nonempty_en",
+                    "error": "merge_invariant_violation",
                     "overwrite_proof_modified_nonempty_en": overwrite_proof,
+                    "old_gate_not_rising": old_gate_not_rising,
                     "wrote": False,
                 },
                 ensure_ascii=False,
@@ -292,6 +378,28 @@ def main() -> int:
         return 1
 
     if args.write:
+        current_live_bytes = live_path.read_bytes() if live_path.exists() else b""
+        current_live_sha = hashlib.sha256(current_live_bytes).hexdigest()
+        if current_live_sha != initial_live_sha:
+            print("CAS: live manifest moved during merge; re-fetching live manifest and re-evaluating merge...", file=sys.stderr)
+            if args.local_live or live_path.resolve() != DEFAULT_MANIFEST.resolve():
+                live = _read_local_manifest(live_path)
+            else:
+                live = load_manifest(live_path)
+            before_by_slug = {slug: copy.deepcopy(entry) for slug, entry in _slug_index(live).items()}
+            stats = merge_translation_delta(live, pulled, stamp_generated_at=not args.no_stamp_generated_at)
+            after_by_slug = _slug_index(live)
+            overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
+            if overwrite_proof != 0:
+                print(
+                    json.dumps(
+                        {"error": "cas_retry_overwrite_proof_failed", "overwrite_proof": overwrite_proof},
+                        ensure_ascii=False,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+
         if live_path.resolve() == DEFAULT_MANIFEST.resolve():
             sync_embedded_fingerprint_from_sidecar(live)
         write_manifest(live_path, live)
@@ -302,3 +410,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
