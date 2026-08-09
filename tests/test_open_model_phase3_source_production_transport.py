@@ -520,3 +520,6 @@ def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
     assert b'"candidate_classes":{"const":[]}' in prompt
     assert b'"unit_id":{"const":"unit.calque.fixture"}' in prompt
     assert b'"minItems":1' in prompt and b'"maxItems":1' in prompt
+    assert b'"artifact":{"const":null}' in prompt
+    assert b'"consumer_views":{"const":[]}' in prompt
+    assert b'"disposition_code":{"const":"converted"}' in prompt

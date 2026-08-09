@@ -725,6 +725,30 @@ def _prompt_with_response_contract(
                     "blocked_with_reason",
                 ]
             }
+        converted_views = json.loads(
+            canonical_json(definitions["decision"]["properties"]["consumer_views"])
+        )
+        converted_views["minItems"] = 1
+        decision["allOf"] = [
+            {
+                "if": {
+                    "properties": {"disposition_code": {"const": "converted"}},
+                    "required": ["disposition_code"],
+                },
+                "then": {
+                    "properties": {
+                        "artifact": {"$ref": "#/$defs/artifact"},
+                        "consumer_views": converted_views,
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "artifact": {"const": None},
+                        "consumer_views": {"const": []},
+                    }
+                },
+            }
+        ]
         return decision
 
     identities = packet["identity_order"]
