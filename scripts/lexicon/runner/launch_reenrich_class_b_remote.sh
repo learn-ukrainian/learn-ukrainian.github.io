@@ -53,6 +53,17 @@ for arg in "$@"; do
   esac
 done
 
+# Effective target (see launch_reenrich_class_b.sh for the same detection):
+# the class-b residual slug dump is only meaningful for missing-translation
+# runs. A #6466 full-catalog run has no use for it, so don't require or sync
+# a residual file that has nothing to do with the requested target.
+TARGET="missing-translation"
+for ((_i = 0; _i < ${#EXTRA_ARGS[@]}; _i++)); do
+  if [[ "${EXTRA_ARGS[_i]}" == "--target" && $((_i + 1)) -lt ${#EXTRA_ARGS[@]} ]]; then
+    TARGET="${EXTRA_ARGS[_i + 1]}"
+  fi
+done
+
 ssh_q() { ssh -o BatchMode=yes -o ConnectTimeout=10 -- "$HOST" "$@"; }
 scp_q() { scp -o BatchMode=yes -o ConnectTimeout=10 -- "$@"; }
 
@@ -124,18 +135,22 @@ fi
 echo "sources.db OK (sizes match)"
 
 if [[ "$do_sync_and_launch" == "1" ]]; then
-  if [[ ! -f "$LOCAL_RESIDUAL" ]]; then
-    echo "local residual dump not found: $LOCAL_RESIDUAL" >&2
-    exit 1
-  fi
-  if ! grep -q -- '--slugs-file' "$LOCAL_DRIVER"; then
-    echo "local driver at $LOCAL_DRIVER lacks --slugs-file support; this worktree is out of date" >&2
-    exit 1
+  if [[ "$TARGET" == "missing-translation" ]]; then
+    if [[ ! -f "$LOCAL_RESIDUAL" ]]; then
+      echo "local residual dump not found: $LOCAL_RESIDUAL" >&2
+      exit 1
+    fi
+    if ! grep -q -- '--slugs-file' "$LOCAL_DRIVER"; then
+      echo "local driver at $LOCAL_DRIVER lacks --slugs-file support; this worktree is out of date" >&2
+      exit 1
+    fi
   fi
 
-  echo "syncing residual + driver + launcher -> $HOST:$REMOTE_WORK_DIR"
+  echo "syncing driver + launcher -> $HOST:$REMOTE_WORK_DIR (target=$TARGET)"
   ssh_q "mkdir -p $(printf '%q' "$REMOTE_WORK_DIR")"
-  scp_q "$LOCAL_RESIDUAL" "$HOST:$REMOTE_WORK_DIR/class-b-no-en.json"
+  if [[ "$TARGET" == "missing-translation" ]]; then
+    scp_q "$LOCAL_RESIDUAL" "$HOST:$REMOTE_WORK_DIR/class-b-no-en.json"
+  fi
   scp_q "$LOCAL_DRIVER" "$HOST:$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py"
   scp_q "$LOCAL_LAUNCHER" "$HOST:$REMOTE_WORK_DIR/launch_reenrich_class_b.sh"
   ssh_q "chmod +x $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"

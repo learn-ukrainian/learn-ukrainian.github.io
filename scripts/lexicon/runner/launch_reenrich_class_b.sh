@@ -49,6 +49,28 @@ WORK_MANIFEST="$WORK_DIR/manifest.json"
 IN_REPO_DRIVER="$REPO/scripts/lexicon/reenrich_thin_manifest_entries.py"
 WORKDIR_DRIVER="$WORK_DIR/reenrich_thin_manifest_entries.py"
 
+EXTRA_ARGS=("$@")
+
+# Effective target: default missing-translation (this launcher's original,
+# residual-slug-scoped behavior), but a caller-supplied --target in
+# EXTRA_ARGS (e.g. #6466 full-catalog campaigns) overrides it. Mirrors
+# argparse's own last-value-wins semantics for a repeated flag.
+TARGET="missing-translation"
+for ((_i = 0; _i < ${#EXTRA_ARGS[@]}; _i++)); do
+  if [[ "${EXTRA_ARGS[_i]}" == "--target" && $((_i + 1)) -lt ${#EXTRA_ARGS[@]} ]]; then
+    TARGET="${EXTRA_ARGS[_i + 1]}"
+  fi
+done
+
+# Test/debug hook: print the resolved target and exit before any
+# filesystem/systemd side effect (tests/test_launch_reenrich_target_detection.py).
+for arg in "${EXTRA_ARGS[@]-}"; do
+  if [[ "$arg" == "--print-target" ]]; then
+    printf '%s\n' "$TARGET"
+    exit 0
+  fi
+done
+
 mkdir -p "$WORK_DIR"
 cd "$REPO"
 
@@ -78,7 +100,10 @@ if ! grep -q -- '--slugs-file' "$DRIVER" 2>/dev/null; then
   echo "reenrich driver at $DRIVER lacks --slugs-file support; scp the #6398 driver into $WORKDIR_DRIVER or update the checkout" >&2
   exit 1
 fi
-if [[ ! -f "$SLUGS_FILE" ]]; then
+# --slugs-file (and its residual-dump prerequisite) only applies to the
+# missing-translation target — see the guarded COMMON_ARGS block below for
+# why stacking it onto full-catalog would be wrong, not just redundant.
+if [[ "$TARGET" == "missing-translation" && ! -f "$SLUGS_FILE" ]]; then
   echo "residual slugs file not found: $SLUGS_FILE (sync it from the Mac worktree first)" >&2
   exit 1
 fi
@@ -103,16 +128,24 @@ if [[ ! -f "$WORK_MANIFEST" ]]; then
   cp "$LIVE_MANIFEST" "$WORK_MANIFEST"
 fi
 
-EXTRA_ARGS=("$@")
-
 COMMON_ARGS=(
   --manifest "$WORK_MANIFEST"
   --local
-  --target missing-translation
-  --slugs-file "$SLUGS_FILE"
+  --target "$TARGET"
   --sources-db "$SOURCES_DB"
   --write
 )
+# --slugs-file restricts re-enrichment to a residual slug allowlist (see
+# reenrich_thin_manifest_entries.py::reenrich_thin_entries). That's correct
+# for missing-translation (this launcher's original purpose) but WRONG for
+# full-catalog: full-catalog already selects every manifest entry, and
+# stacking a stale --slugs-file on top would silently narrow it back down to
+# whatever residual set happened to be synced to $SLUGS_FILE, defeating the
+# whole point of a full-catalog run while still exiting 0 and looking done.
+# (Existence of $SLUGS_FILE for this target was already validated above.)
+if [[ "$TARGET" == "missing-translation" ]]; then
+  COMMON_ARGS+=(--slugs-file "$SLUGS_FILE")
+fi
 if [[ -f "$KAIKKI_JSON" ]]; then
   COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
 fi
