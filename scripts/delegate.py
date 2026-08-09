@@ -126,6 +126,7 @@ if str(_local_repo_root) not in sys.path:
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import resolve_repo_root
 from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
+from scripts.orchestration import reaper_lifecycle
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -1559,15 +1560,17 @@ def _task_status_candidates_for_worktree(path: Path) -> list[str]:
     return out
 
 
-def _task_status_for_worktree(path: Path) -> str | None:
-    """Load batch_state status for a worktree, or None if owner cannot be resolved.
+def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | None]:
+    """Load the path-bound task record for a dispatch worktree.
 
     Resolution order:
     1. Exact ``worktree_path`` match in any task state (authoritative).
     2. Candidate task IDs reconstructed from the dispatch layout.
 
-    Fail closed: callers must not treat ``None`` as releasable for dispatch
-    holders (#5340 CF F001).
+    ``None`` is meaningful to the branch-holder release path: a legacy holder
+    can have no task record, but only a separate known-empty liveness probe may
+    authorize its release.  Never infer a task record from a path component
+    alone.
     """
     resolved = path.resolve()
     # 1) Authoritative: scan states for worktree_path match.
@@ -1586,8 +1589,8 @@ def _task_status_for_worktree(path: Path) -> str | None:
             continue
         try:
             if Path(str(wt)).resolve() == resolved:
-                status = state.get("status")
-                return str(status) if status is not None else None
+                task_id = state.get("task_id")
+                return (str(task_id) if task_id is not None else None), state
         except OSError:
             continue
 
@@ -1606,10 +1609,17 @@ def _task_status_for_worktree(path: Path) -> str | None:
                 continue
         except OSError:
             continue
-        status = state.get("status")
-        if status is not None:
-            return str(status)
-    return None
+        return task_id, state
+    return None, None
+
+
+def _task_status_for_worktree(path: Path) -> str | None:
+    """Return a path-bound worktree owner's recorded status, when present."""
+    _task_id, state = _task_state_for_worktree(path)
+    if state is None:
+        return None
+    status = state.get("status")
+    return str(status) if status is not None else None
 
 
 def _worktree_is_clean(path: Path) -> bool:
@@ -1648,30 +1658,92 @@ _BRANCH_HOLDER_RELEASABLE_STATUSES = frozenset(
         "crashed",
         "cancelled",
         "dry_run",
-        "needs_finalize",
+        "reaped",
         _NO_DELIVERABLE_STATUS,
     }
 )
 
 
+def _branch_holder_activity_reason(
+    path: Path,
+    *,
+    task_id: str | None,
+    task_state: dict[str, Any] | None,
+) -> str | None:
+    """Return why a branch holder cannot be released while activity is possible.
+
+    Unlike scheduled cleanup, a branch hand-off needs to support legacy
+    holders whose task state has already been removed.  That is safe only when
+    both of the reaper's independent liveness probes are available and empty:
+    the active-dispatch API rules out an attached task and ``lsof`` rules out a
+    process still using the checkout.  Probe failure is a refusal, not evidence
+    of inactivity.
+    """
+    candidate_task_ids = [task_id] if task_id is not None else _task_status_candidates_for_worktree(path)
+    if not candidate_task_ids:
+        return "holder is outside the dispatch layout"
+
+    try:
+        from scripts.orchestration import reap_worktrees
+
+        active_ids = reap_worktrees._active_task_ids()
+        live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+    except Exception as exc:
+        return f"activity probes unavailable ({type(exc).__name__})"
+    if active_ids is None:
+        return "active-task probe unavailable"
+    if live_cwds is None:
+        return "process-CWD activity probe unavailable"
+    active_task_id = next((candidate for candidate in candidate_task_ids if candidate in active_ids), None)
+    if active_task_id is not None:
+        return f"active dispatch task-id={active_task_id}"
+    if reap_worktrees._task_pid_alive(task_state):
+        return f"live task PID for task-id={candidate_task_ids[0]}"
+
+    worktree = path.resolve()
+    for cwd in live_cwds:
+        try:
+            resolved_cwd = cwd.resolve()
+            resolved_cwd.relative_to(worktree)
+        except (OSError, ValueError):
+            continue
+        return f"live process cwd={cwd}"
+    return None
+
+
 def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]:
     """Return (ok, reason) for auto-releasing a worktree holding ``branch`` (#5340).
 
-    Safe only when clean, fully pushed (HEAD == origin/<branch>), and the
-    owning task is known and terminal. Unresolvable owners fail closed so a
-    running dispatch whose state key does not match the path component cannot
-    be force-removed (CF F001 on PR #5708).
+    Safe only when clean and fully pushed (HEAD == origin/<branch>). A bound
+    task must be terminal or already marked reaped; an absent legacy record is
+    allowed only after known-empty active-task and process-CWD probes prove the
+    holder is not live. Reaper reservations always win to avoid attaching a
+    branch while another cleanup owns its removal.
     """
+    if reaper_lifecycle.is_reap_pending(_REPO_ROOT, path):
+        return False, "reaper lifecycle reservation is pending"
     if not _worktree_is_clean(path):
         return False, "dirty"
     if not _worktree_matches_origin_branch(path, branch):
         return False, "HEAD != origin/<branch>"
-    status = _task_status_for_worktree(path)
-    if status is None:
-        return False, "owner task unresolvable (fail-closed)"
+    task_id, task_state = _task_state_for_worktree(path)
+    activity = _branch_holder_activity_reason(
+        path,
+        task_id=task_id,
+        task_state=task_state,
+    )
+    if activity is not None:
+        return False, activity
+    status = (
+        str(task_state.get("status"))
+        if task_state and task_state.get("status") is not None
+        else None
+    )
+    if task_state is None:
+        return True, "clean+synced; task record absent; activity probes empty"
     if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
         return True, f"clean+synced; task status={status}"
-    return False, f"task still active (status={status})"
+    return False, f"task still active or invalid status (status={status})"
 
 
 def _release_stale_branch_holders(

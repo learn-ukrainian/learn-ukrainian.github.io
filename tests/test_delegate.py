@@ -4054,6 +4054,7 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
     # Owning task is terminal (done review).
     delegate._write_state_atomic(
         delegate._state_path("review-5338-deepseek"),
@@ -4106,6 +4107,11 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        delegate,
+        "_branch_holder_activity_reason",
+        lambda *_args, **_kwargs: "active dispatch task-id=atlas-5230-runner-pr1-delta",
+    )
     delegate._write_state_atomic(
         delegate._state_path("atlas-5230-runner-pr1-delta"),
         {
@@ -4125,8 +4131,10 @@ def test_branch_reuse_refuses_clean_holder_with_active_task(
         )
 
 
-def test_branch_reuse_fail_closed_when_owner_unresolvable(tmp_path, monkeypatch, tmp_tasks_dir):
-    """#5340 CF F001: clean synced holder without resolvable task must refuse."""
+def test_branch_reuse_releases_clean_holder_with_absent_task_record(
+    tmp_path, monkeypatch, tmp_tasks_dir
+):
+    """#5340: legacy holder without state releases after empty activity probes."""
     target = tmp_path / "target"
     occupied = (
         Path(delegate._REPO_ROOT)
@@ -4136,28 +4144,149 @@ def test_branch_reuse_fail_closed_when_owner_unresolvable(tmp_path, monkeypatch,
         / "foo"
     )
     branch = "codex/foo"
-    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    calls, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    list_hits = {"n": 0}
+    removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
+            list_hits["n"] += 1
             return subprocess.CompletedProcess(
                 cmd,
                 0,
-                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n" if list_hits["n"] == 1 else "",
                 "",
             )
+        if cmd[:3] == ["git", "worktree", "remove"]:
+            removes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 0, "same-sha", "")
+        calls.pop()
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
-    # No batch_state entry at all — fail closed.
+    from scripts.orchestration import reap_worktrees
 
-    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
-        delegate._ensure_worktree(
-            agent="cursor",
-            task_id="follow-up",
-            raw_path=str(target),
-            branch=branch,
-        )
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    # No batch_state entry at all; a known-empty activity probe permits release.
+
+    _, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="cursor",
+        task_id="follow-up",
+        raw_path=str(target),
+        branch=branch,
+    )
+
+    assert actual_branch == branch
+    assert telemetry["reused"] is False
+    assert removes and str(occupied) in removes[0]
+
+
+def test_branch_holder_rejects_reaper_reservation(tmp_path, monkeypatch, tmp_tasks_dir):
+    """A reaper reservation prevents branch hand-off during removal."""
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reserved"
+    branch = "codex/reserved"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    monkeypatch.setattr(delegate.subprocess, "run", base_stub)
+    monkeypatch.setattr(delegate.reaper_lifecycle, "is_reap_pending", lambda *_args: True)
+
+    releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
+
+    assert releasable is False
+    assert reason == "reaper lifecycle reservation is pending"
+
+
+def test_branch_holder_releases_reaped_task_after_empty_activity_probes(
+    tmp_path, monkeypatch, tmp_tasks_dir
+):
+    """A reaped task record is terminal but still requires empty probes."""
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "reaped"
+    branch = "codex/reaped"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    monkeypatch.setattr(delegate.subprocess, "run", base_stub)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
+    delegate._write_state_atomic(
+        delegate._state_path("reaped"),
+        {"task_id": "reaped", "status": "reaped", "worktree_path": str(occupied)},
+    )
+
+    releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
+
+    assert releasable is True
+    assert reason == "clean+synced; task status=reaped"
+
+
+def test_branch_holder_refuses_needs_finalize_task(tmp_path, monkeypatch, tmp_tasks_dir):
+    """A task awaiting finalization remains mounted for its owner."""
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "finalize"
+    branch = "codex/finalize"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    monkeypatch.setattr(delegate.subprocess, "run", base_stub)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
+    delegate._write_state_atomic(
+        delegate._state_path("finalize"),
+        {"task_id": "finalize", "status": "needs_finalize", "worktree_path": str(occupied)},
+    )
+
+    releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
+
+    assert releasable is False
+    assert reason == "task still active or invalid status (status=needs_finalize)"
+
+
+def test_branch_holder_refuses_task_state_without_status(tmp_path, monkeypatch, tmp_tasks_dir):
+    """A corrupted task record is not equivalent to an absent record."""
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "incomplete"
+    branch = "codex/incomplete"
+    _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
+    monkeypatch.setattr(delegate.subprocess, "run", base_stub)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
+    delegate._write_state_atomic(
+        delegate._state_path("incomplete"),
+        {"task_id": "incomplete", "worktree_path": str(occupied)},
+    )
+
+    releasable, reason = delegate._stale_branch_holder_releasable(occupied, branch)
+
+    assert releasable is False
+    assert reason == "task still active or invalid status (status=None)"
+
+
+def test_branch_holder_absent_task_refuses_live_process_cwd(tmp_path, monkeypatch, tmp_tasks_dir):
+    """Missing state is never enough when a process still uses the holder."""
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: {occupied / "scripts"})
+
+    reason = delegate._branch_holder_activity_reason(
+        occupied,
+        task_id=None,
+        task_state=None,
+    )
+
+    assert reason == f"live process cwd={occupied / 'scripts'}"
+
+
+def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeypatch, tmp_tasks_dir):
+    """Legacy paths may encode the active task with an agent-prefixed ID."""
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: {"codex-legacy"})
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+
+    reason = delegate._branch_holder_activity_reason(
+        occupied,
+        task_id=None,
+        task_state=None,
+    )
+
+    assert reason == "active dispatch task-id=codex-legacy"
 
 
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
@@ -4196,6 +4325,7 @@ def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
     # State file is slash-sanitized original task id, not path component alone.
     delegate._write_state_atomic(
         delegate._state_path("codex/foo"),
