@@ -1717,22 +1717,24 @@ def _commit_count_refs(worktree: Path, base_ref: str) -> tuple[str, ...]:
     """Return ordered, local-only base-ref candidates for finalization.
 
     ``origin/<base>`` remains the canonical candidate for ordinary dispatches.
-    If it is unavailable, count against the local base and then the base branch
-    on the checked-out branch's upstream remote.  The last fallback is required
-    for private/secondary remotes, where a pushed dispatch branch may track
-    ``private/<task>`` and the shared checkout intentionally has neither
-    ``origin/<base>`` nor a local ``<base>`` branch.
+    If it is unavailable, count against the base branch on the checked-out
+    branch's upstream remote before falling back to the local base.  The remote
+    candidate must win because a reused checkout can have a stale local branch.
+    The remote fallback is required for private/secondary remotes, where a
+    pushed dispatch branch may track ``private/<task>`` and the shared checkout
+    intentionally has neither ``origin/<base>`` nor a current local ``<base>``
+    branch.
     """
     candidates = [base_ref]
     _remote, separator, branch = base_ref.partition("/")
-    if separator:
-        candidates.append(branch)
-    else:
+    if not separator:
         branch = base_ref
 
     tracking_remote = _tracking_remote_for_current_branch(worktree)
     if tracking_remote and branch:
         candidates.append(f"{tracking_remote}/{branch}")
+    if separator:
+        candidates.append(branch)
     return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
 
 

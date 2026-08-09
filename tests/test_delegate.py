@@ -6126,13 +6126,16 @@ def test_interrupt_fallback_records_the_complete_outcome(
 # Issue #6426: finalizer deliverable counting on --cwd reuse worktrees
 # ---------------------------------------------------------------------------
 
-def _init_private_remote_worktree(tmp_path: Path) -> tuple[Path, Path]:
-    """Create a worktree whose only base is a non-origin private remote.
+def _init_private_remote_worktree(
+    tmp_path: Path, *, stale_local_main: bool = False,
+) -> tuple[Path, Path]:
+    """Create a worktree based on a non-origin private remote.
 
-    The primary checkout is deliberately detached and has no local ``main``
-    branch.  This models a private ``--cwd`` dispatch that pushed its branch to
-    a secondary remote: the finalizer must discover ``private/main`` from the
-    dispatch branch's upstream, not assume ``origin/main`` exists.
+    The primary checkout is detached.  By default it has no local ``main``
+    branch, modeling a private ``--cwd`` dispatch that pushed its branch to a
+    secondary remote.  With ``stale_local_main``, the local branch remains at
+    the clone's initial commit while ``private/main`` advances before the
+    dispatch worktree is created; this models the stale-base ordering bug.
     """
     env = delegate._sanitized_git_env()
 
@@ -6176,7 +6179,14 @@ def _init_private_remote_worktree(tmp_path: Path) -> tuple[Path, Path]:
     _git(primary, "config", "user.email", "test@example.com")
     _git(primary, "config", "user.name", "Test")
     _git(primary, "checkout", "-q", "--detach")
-    _git(primary, "branch", "-D", "main")
+    if stale_local_main:
+        (source / "base-update.txt").write_text("updated base\n", encoding="utf-8")
+        _git(source, "add", "base-update.txt")
+        _git(source, "commit", "-q", "-m", "advance private main")
+        _git(source, "push", "-q", "private", "main")
+        _git(primary, "fetch", "-q", "private")
+    else:
+        _git(primary, "branch", "-D", "main")
 
     dispatch_wt = primary / ".worktrees" / "dispatch" / "codex" / "private-task"
     _git(primary, "worktree", "add", "-q", "-b", "codex/private-task", str(dispatch_wt), "private/main")
@@ -6260,6 +6270,57 @@ def test_finalize_private_remote_pushed_commit_is_a_deliverable(
     assert state["status"] == "done"
     assert state["commits_ahead"] == 1
     assert state.get("no_deliverable_reason") is None
+
+
+def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """A stale local base must not turn a zero-commit dispatch into a delivery."""
+    main, dispatch_wt = _init_private_remote_worktree(tmp_path, stale_local_main=True)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    assert delegate._commit_count_refs(dispatch_wt, "origin/main") == (
+        "origin/main",
+        "private/main",
+        "main",
+    )
+    assert delegate._count_commits_ahead(dispatch_wt, "origin/main") == 0
+
+    state_path = delegate._state_path("private-remote-zero-commits")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "private-remote-zero-commits",
+        "agent": "codex",
+        "mode": "workspace-write",
+        "cwd": str(dispatch_wt),
+        "worktree_path": str(dispatch_wt),
+        "worktree_base": "main",
+        "status": "running",
+    })
+
+    empty_result = _finalize_mock_result()
+    empty_result.response = ""
+    with patch("agent_runtime.runner.invoke", return_value=empty_result):
+        rc = delegate._run_worker(
+            task_id="private-remote-zero-commits",
+            agent="codex",
+            prompt="inspect the requested change",
+            mode="workspace-write",
+            cwd_str=str(dispatch_wt),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "no_deliverable"
+    assert state["commits_ahead"] == 0
+    assert state["no_deliverable_reason"] == (
+        "write_capable_clean_worktree_zero_commits_short_response"
+    )
+
 
 def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     tmp_tasks_dir, tmp_path, monkeypatch,
