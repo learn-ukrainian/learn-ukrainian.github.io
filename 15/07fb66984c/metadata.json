@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1507fb66984c",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-5995-scrub-impl-pr1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/scrub_decision_ledger_keys.py",
+    "tests/test_scrub_decision_ledger_keys.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/15/07fb66984c/0/metadata.json",
+      "transcript": "/15/07fb66984c/0/full.jsonl",
+      "compact_transcript": "/15/07fb66984c/0/transcript.jsonl",
+      "content_hash": "/15/07fb66984c/0/content_hash.txt",
+      "prompt": "/15/07fb66984c/0/prompt.txt"
+    }
+  ]
+}

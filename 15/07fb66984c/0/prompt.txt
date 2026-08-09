@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-5995-scrub-impl-pr1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement #5995 PR 1: ledger-scrub generator + tests (stream #4220)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: gemini-3.6-flash-high × AGY
+- why_this_tier: implementation of the packaging design this lane authored (Option A, APPROVED
+  with one amendment by cross-family review on #5995); bounded PR-1 scope
+- owned_paths: scripts/audit/**, tests/** (scrub-related), data/lexicon/source-inventory-review-decisions/** (later shard PRs only)
+- acceptance_cmd: the §4 checklist from the approved note (opsec lint, validate_committed_decision_files, five named test files, identifier grep = 0, per-PR size proof)
+- alternatives_considered: codex (busy zno-impl), cursor (just finished delta-merge; author-diversity)
+- parallel_free_seats: cursor, grok
+
+## OPSEC (hard)
+Never print the personal identifier (Latin or Cyrillic variants) into logs, commit messages,
+PR text, or public comments. In code, reference it only where the existing opsec linter already
+defines its regexes. The public issue thread uses `<scrubbed-identifier>` placeholders — keep it
+that way.
+
+## Design of record
+Issue #5995 comments: the agy design note (Option A) + the driver's APPROVE verdict with ONE
+REQUIRED AMENDMENT: measure real per-PR `git diff` byte sizes for the WHOLE rollout (including
+removal of the original 6.85 MiB ledger file) and restructure shard counts so every planned PR
+measurably lands < 1.8 MB. No estimates — quote measured numbers in the PR-1 body as the
+rollout plan of record.
+
+## PR-1 scope (this dispatch)
+1. `scripts/audit/scrub_decision_ledger_keys.py`: deterministic migration — recompute
+   `source_inventory_key` for the scrubbed inventory path, emit shard files, preserve row order
+   and all non-key fields byte-identical.
+2. Fixture tests proving: key recomputation matches the documented formula; no identifier
+   substring survives in emitted shards (test via the linter's own regex source, not a literal);
+   shard set concatenates back to exactly the original decision list; each shard file
+   independently passes `validate_committed_decision_files`.
+3. The measured rollout table (per-PR diff bytes) in the PR body.
+4. NO data-file changes in PR 1 (generator + tests only).
+
+## Steps
+Dispatch worktree only → implement → §4 checklist commands all green (quote outputs) →
+ruff + affected pytest → conventional commit + X-Agent trailer → push → PR referencing #5995,
+#4220. NO auto-merge. Report PR number + measured rollout table.

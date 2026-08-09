@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1507fb66984c",
+  "session_id": "fleet-57eafa533dcc49cfa88c2421b26cc855",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T01:39:25.406496Z",
+  "branch": "agy/atlas-5995-scrub-impl-pr1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/scrub_decision_ledger_keys.py",
+    "tests/test_scrub_decision_ledger_keys.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "e8ff7562056a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T01:39:25.36268Z",
+    "agent_lines": 327,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 327,
+    "total_lines_changed": 327,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
