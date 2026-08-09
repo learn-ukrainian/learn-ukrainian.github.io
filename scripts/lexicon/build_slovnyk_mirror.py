@@ -32,7 +32,7 @@ from pathlib import Path
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_LOOKUP_SLUGS,
     MANIFEST,
-    _load_slovnyk_cache_file,
+    _load_current_slovnyk_cache_file,
     _slovnyk_cache,
     _slovnyk_cache_path,
     _slovnyk_lookup_word,
@@ -40,8 +40,13 @@ from scripts.lexicon.enrich_manifest import (
 
 
 def _is_fully_cached(lemma: str) -> bool:
-    """True if every dictionary slug for ``lemma`` is already cached (any value, incl. miss)."""
-    cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+    """True if every dictionary slug for ``lemma`` is already cached (any value, incl. miss).
+
+    Gated to the current schema version (#6524): a "complete" v2 row must
+    still be queued into ``todo`` below so ``_slovnyk_cache()`` heals it,
+    instead of being skipped forever as already-done.
+    """
+    cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
     if not cache or cache.get("lookup_word") != _slovnyk_lookup_word(lemma):
         return False
     lookups = cache.get("lookups")

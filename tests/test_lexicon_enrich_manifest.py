@@ -1636,6 +1636,52 @@ def test_slovnyk_cache_discards_v2_rows_built_with_the_corrupted_join(monkeypatc
     assert "кн и га" not in persisted["lookups"]["orthoepy"]["text"]
 
 
+def test_read_cached_slovnyk_rows_rejects_stale_schema(monkeypatch, tmp_path) -> None:
+    """#6524 P2 (codex re-verdict): ``_read_cached_slovnyk_rows`` feeds definition and
+    homonym generation directly and read the cache file unconditionally, so a v2 row
+    (carrying the #6465 corrupted-join text) still reached output even after the v3
+    schema bump. It must now go through the same version gate as ``_slovnyk_cache()``
+    -- a stale row reads as a cache miss, not as data."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+
+    cache_path = enrich_manifest_module._slovnyk_cache_path("книга")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "lemma": "книга",
+                "lookup_word": "книга",
+                "lookups": {"orthoepy": {"dictionary_slug": "orthoepy", "text": "кн и га [кн и га] -гие"}},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    assert enrich_manifest_module._read_cached_slovnyk_rows("книга") == {}
+
+
+def test_load_current_slovnyk_cache_file_gate(monkeypatch, tmp_path) -> None:
+    """The single version-gated accessor every read-only cache consumer must use
+    (#6524 P2): returns ``None`` for a missing file or a stale ``schema_version``,
+    and the parsed dict only when the row is current."""
+    path = tmp_path / "cache.json"
+    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) is None
+
+    path.write_text(json.dumps({"schema_version": 2, "lookups": {}}), encoding="utf-8")
+    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) is None
+
+    path.write_text(
+        json.dumps({"schema_version": enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION, "lookups": {}}),
+        encoding="utf-8",
+    )
+    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) == {
+        "schema_version": enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION,
+        "lookups": {},
+    }
+
+
 def test_sum11_is_never_used_as_meaning_source() -> None:
     """СУМ-11 (Soviet-era dictionary) must NEVER surface as a meaning, even when it
     is the only source for a word (decolonization decision 2026-06-26)."""

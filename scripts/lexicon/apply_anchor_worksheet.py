@@ -25,7 +25,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.lexicon.enrich_manifest import (
     _entry_has_learner_english_anchor,
     _fill_learner_english_anchor_from_slovnyk_cache,
-    _load_slovnyk_cache_file,
+    _load_current_slovnyk_cache_file,
     _slovnyk_cache_path,
 )
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, build_fingerprint, write_fingerprint
@@ -232,7 +232,7 @@ def _apply_cached_slovnyk_anchors(manifest: Mapping[str, Any]) -> tuple[str, ...
         lemma = entry.get("lemma")
         if not isinstance(lemma, str) or not lemma.strip():
             continue
-        cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
         if _fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, cache):
             filled.append(lemma)
     return tuple(filled)

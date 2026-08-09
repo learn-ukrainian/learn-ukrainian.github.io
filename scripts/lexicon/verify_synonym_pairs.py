@@ -29,7 +29,7 @@ from scripts.audit.generate_practice_deck import (
     is_practice_eligible,
     read_manifest,
 )
-from scripts.lexicon.enrich_manifest import _slovnyk_cache_path
+from scripts.lexicon.enrich_manifest import _load_current_slovnyk_cache_file, _slovnyk_cache_path
 
 
 def word_in_text(word: str, text: str) -> bool:
@@ -41,14 +41,8 @@ def word_in_text(word: str, text: str) -> bool:
     return w_plain in words
 
 def load_slovnyk_cache(lemma: str) -> dict[str, Any] | None:
-    try:
-        path = _slovnyk_cache_path(lemma)
-        if path.exists():
-            with open(path, encoding="utf-8") as f:
-                return json.load(f)
-    except Exception:
-        pass
-    return None
+    """Read a pre-existing slovnyk.me cache row, gated to the current schema (#6524)."""
+    return _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify synonym pairs from manifest")

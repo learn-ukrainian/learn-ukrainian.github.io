@@ -1500,11 +1500,35 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
 
 
 def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
+    """Read a cache file's raw JSON with no version gate.
+
+    Internal building block only. ``_slovnyk_cache()`` is the one caller
+    allowed to see a stale ``schema_version`` -- it owns the v1 partial-migrate
+    / v2+ wholesale-discard-and-refetch logic below. Every other reader must go
+    through ``_load_current_slovnyk_cache_file()`` instead, or it will happily
+    hand back a v2 row with corrupted `text` (#6524).
+    """
     try:
         cache = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
     return cache if isinstance(cache, dict) else None
+
+
+def _load_current_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
+    """Read a cache file iff it is already on the current schema version.
+
+    The single version-gated accessor for every *read-only* slovnyk.me cache
+    consumer (definition/synonym extraction, anchor backfills, the build-time
+    mirror's "already cached" check, ...). A stale v1/v2 row must never look
+    authoritative to these callers -- it must look like a cache miss, so the
+    row either gets skipped (never healed by that read path) or, for the
+    mirror, gets queued for a real ``_slovnyk_cache()`` refetch. See #6524.
+    """
+    cache = _load_slovnyk_cache_file(path)
+    if cache is None or cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION:
+        return None
+    return cache
 
 
 def _new_slovnyk_cache(lemma: str, lookup_word: str) -> dict[str, Any]:
@@ -3909,8 +3933,12 @@ def _canonical_synonym_term(value: object) -> str | None:
 
 
 def _read_cached_slovnyk_rows(lemma: str) -> dict[str, Any]:
-    """Read a pre-existing slovnyk.me cache entry without fetching or writing."""
-    cache = _load_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+    """Read a pre-existing slovnyk.me cache entry without fetching or writing.
+
+    Stale-schema rows are treated as a miss (empty dict), not surfaced --
+    they must never feed definition/homonym generation directly (#6524).
+    """
+    cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
     return cache if isinstance(cache, dict) else {}
 
 
