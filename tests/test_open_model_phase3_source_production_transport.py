@@ -297,12 +297,14 @@ def test_end_to_end_assembles_three_exact_dispositions_and_textbook_rows(tmp_pat
     source_review = tmp_path / "output/source-review.json"
     public = tmp_path / "output/public.json"
     textbook = tmp_path / "output/textbook.jsonl"
+    reviewed_rule_artifacts = tmp_path / "output/reviewed-rule-artifacts.jsonl"
     receipt = transport.assemble(
         review_manifest_path=root / "review-manifest.json",
         reviewed_input_path=reviewed_input,
         source_review_receipt_path=source_review,
         public_receipt_path=public,
         textbook_classifications_path=textbook,
+        reviewed_rule_artifacts_path=reviewed_rule_artifacts,
     )
     assert receipt["denominator"] == {
         "input_total": 3,
@@ -319,6 +321,8 @@ def test_end_to_end_assembles_three_exact_dispositions_and_textbook_rows(tmp_pat
     assert len(classifications) == 3
     assert sum(bool(row["candidate_classes"]) for row in classifications) == 1
     assert b"source_text" not in public.read_bytes()
+    assert receipt["reviewed_rule_artifacts_sha256"] == transport.sha256_file(reviewed_rule_artifacts)
+    assert all(row["document_or_edition_identity"] == "doc.school_textbooks.fixture" for row in rows)
     assert json.loads(source_review.read_text())["verdict"] == "APPROVE"
 
 
@@ -408,6 +412,7 @@ def test_review_miss_requires_full_large_family_escalation(tmp_path: Path) -> No
             source_review_receipt_path=tmp_path / "source-review.json",
             public_receipt_path=tmp_path / "public.json",
             textbook_classifications_path=tmp_path / "textbook.jsonl",
+            reviewed_rule_artifacts_path=tmp_path / "reviewed-rule-artifacts.jsonl",
         )
 
 

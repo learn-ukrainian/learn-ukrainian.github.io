@@ -211,13 +211,14 @@
     "manifestCommon": {"type":"object"},
     "publicReceipt": {
       "type":"object","additionalProperties":false,
-      "required":["schema_version","text_free","bindings","manifest_sha256","family_sha256","denominator","review_coverage","review_complete","receipt_sha256"],
+      "required":["schema_version","text_free","bindings","manifest_sha256","family_sha256","reviewed_rule_artifacts_sha256","denominator","review_coverage","review_complete","receipt_sha256"],
       "properties": {
         "schema_version":{"const":"phase3_source_production_public_receipt_v1"},
         "text_free":{"const":true},
         "bindings":{"$ref":"#/$defs/bindings"},
         "manifest_sha256":{"$ref":"#/$defs/sha256"},
         "family_sha256":{"$ref":"#/$defs/sha256"},
+        "reviewed_rule_artifacts_sha256":{"$ref":"#/$defs/sha256"},
         "denominator":{"type":"object","additionalProperties":false,"required":["input_total","author_produced_total","source_review_selected_total","source_review_revised_total","evaluation_only_total","quarantined_total","converted_total"],"properties":{"input_total":{"type":"integer","minimum":1},"author_produced_total":{"type":"integer","minimum":1},"source_review_selected_total":{"type":"integer","minimum":1},"source_review_revised_total":{"type":"integer","minimum":0},"evaluation_only_total":{"type":"integer","minimum":0},"quarantined_total":{"type":"integer","minimum":0},"converted_total":{"type":"integer","minimum":0}}},
         "review_coverage":{"$ref":"#/$defs/reviewPolicy"},
         "review_complete":{"const":true},

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_fixed_release_manifest_v1.schema.json",
+  "title": "Phase 3 v2.1 fixed release manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "fixed_release_task_id", "evaluation_cycle_id", "input_hashes", "artifact_hashes", "rule_count", "denominator", "gates", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_fixed_release_manifest_v1"},
+    "text_free": {"const": true},
+    "fixed_release_task_id": {"const": "phase3-v2-1-fixed-release-freeze"},
+    "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+    "input_hashes": {"$ref": "#/$defs/inputHashes"},
+    "artifact_hashes": {"$ref": "#/$defs/artifactHashes"},
+    "rule_count": {"type": "integer", "minimum": 0},
+    "denominator": {"type": "object", "additionalProperties": false, "required": ["source_disposition_total", "sealed_evaluation_total", "sealed_clean_modern_total", "sealed_phenomenon_strata_total"], "properties": {"source_disposition_total": {"const": 67041}, "sealed_evaluation_total": {"const": 9392}, "sealed_clean_modern_total": {"const": 2000}, "sealed_phenomenon_strata_total": {"const": 7392}}},
+    "gates": {"type": "object", "additionalProperties": false, "required": ["reviewed_rules_complete", "disposition_audit_bundle_pins_present", "heldout_labels_complete", "heldout_plaintext_published", "release_mutation_allowed", "source_blind_outsider_required"], "properties": {"reviewed_rules_complete": {"const": true}, "disposition_audit_bundle_pins_present": {"const": true}, "heldout_labels_complete": {"const": true}, "heldout_plaintext_published": {"const": false}, "release_mutation_allowed": {"const": false}, "source_blind_outsider_required": {"const": true}}},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "inputHashes": {"type": "object", "additionalProperties": false, "required": ["reviewed_rule_artifacts_sha256", "source_production_public_receipt_sha256", "disposition_ledger_sha256", "disposition_receipt_sha256", "disposition_audit_bundle_sha256", "heldout_label_public_receipt_sha256", "comprehensive_sealed_label_bundle_sha256", "evaluation_freeze_receipt_sha256", "denominator_contract_sha256", "threshold_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_contract_sha256", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256"], "properties": {"reviewed_rule_artifacts_sha256": {"$ref": "#/$defs/sha256"}, "source_production_public_receipt_sha256": {"$ref": "#/$defs/sha256"}, "disposition_ledger_sha256": {"$ref": "#/$defs/sha256"}, "disposition_receipt_sha256": {"$ref": "#/$defs/sha256"}, "disposition_audit_bundle_sha256": {"$ref": "#/$defs/sha256"}, "heldout_label_public_receipt_sha256": {"$ref": "#/$defs/sha256"}, "comprehensive_sealed_label_bundle_sha256": {"$ref": "#/$defs/sha256"}, "evaluation_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"}, "denominator_contract_sha256": {"$ref": "#/$defs/sha256"}, "threshold_contract_sha256": {"$ref": "#/$defs/sha256"}, "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"}, "conflict_graph_sha256": {"$ref": "#/$defs/sha256"}, "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"}, "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}, "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"}, "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"}}},
+    "artifactHashes": {"type": "object", "additionalProperties": false, "required": ["fixed-release-rules.jsonl", "denominator-contract.json", "threshold-contract.json", "published-inputs-manifest.json", "release-instructions.json", "ukrainian-recipe.json", "english-recipe.json"], "properties": {"fixed-release-rules.jsonl": {"$ref": "#/$defs/sha256"}, "denominator-contract.json": {"$ref": "#/$defs/sha256"}, "threshold-contract.json": {"$ref": "#/$defs/sha256"}, "published-inputs-manifest.json": {"$ref": "#/$defs/sha256"}, "release-instructions.json": {"$ref": "#/$defs/sha256"}, "ukrainian-recipe.json": {"$ref": "#/$defs/sha256"}, "english-recipe.json": {"$ref": "#/$defs/sha256"}}}
+  }
+}
