@@ -2367,8 +2367,9 @@ def _validate_existing_worktree(
     if not allow_rebase:
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {origin_ref}; "
-            "dry-run will not rebase it. Rerun without --dry-run after reviewing "
-            "the worktree."
+            "automatic rebasing is disabled. Synchronize it explicitly (for "
+            "example, `git merge --ff-only "
+            f"{origin_ref}`) before attaching a worker."
         )
 
     print(
@@ -2720,8 +2721,19 @@ def _resolve_worktree_base_sha(
             # Receipt-bound dispatches must leave a reused worktree untouched
             # until admission succeeds. Ordinary follow-ups retain the
             # established auto-rebase behavior.
-            allow_rebase=allow_rebase,
+            # An explicit branch is an attach request, not permission to
+            # rewrite the PR's history. In particular, rebasing an attached
+            # branch can flatten or replay merge commits. A stale attachment
+            # must be synchronized deliberately by its owner.
+            allow_rebase=allow_rebase and requested_branch is None,
         )
+        if requested_branch:
+            # Existing paths used to return before this check, allowing local
+            # commits not present on the PR branch to slip into a new worker.
+            # Validate only after the dirty check above, so a dirty checkout
+            # always receives the most actionable refusal.
+            _fetch_existing_branch(requested_branch)
+            _require_local_branch_is_ancestor_of_origin(requested_branch)
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
@@ -2831,7 +2843,10 @@ def _ensure_worktree(
                 # main would spuriously fail the dry-run or rebase a PR branch
                 # onto main as a validation side effect. (review-4905-grok)
                 base=requested_branch or base,
-                allow_rebase=not dry_run,
+                # `--branch` is an explicit attach request. Never rewrite its
+                # history during provisioning; a stale worktree must be
+                # synchronized deliberately by its owner.
+                allow_rebase=not dry_run and requested_branch is None,
             )
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
