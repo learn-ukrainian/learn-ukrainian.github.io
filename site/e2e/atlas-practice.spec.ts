@@ -263,6 +263,41 @@ test('HARD-2: Ukrainian setup dashboard shows start and resume CTAs without scro
   await assertFirstViewportPracticeCTAs(page, 'uk');
 });
 
+/**
+ * #6544: the active deck must be discoverable above the fold without expanding
+ * the folded Sync & decks panel (#6336 HARD-1/HARD-2 layout). Does not touch
+ * mode-count assertions (those are owned by in-flight #6533).
+ */
+test('A4d: active-deck chip is visible above the fold without opening Sync & decks', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'en'));
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/words-of-the-day/practice/');
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(() => window.scrollTo(0, 0));
+
+  const chip = page.getByTestId('practice-active-deck');
+  await expect(chip).toBeVisible();
+  await expect(page.getByTestId('practice-active-deck-chip')).toContainText(/All Words|Всі слова/);
+
+  const secondary = page.getByTestId('practice-secondary-tools');
+  await expect(secondary).toBeVisible();
+  await expect(secondary).not.toHaveAttribute('open');
+
+  const box = await chip.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.y).toBeGreaterThanOrEqual(0);
+  expect(box!.y + box!.height).toBeLessThanOrEqual(768);
+
+  await page.getByTestId('practice-active-deck-chip').click();
+  await expect(page.getByTestId('practice-active-deck-menu')).toBeVisible();
+  await page.getByTestId('practice-deck-option-virtual_teacher_lesson').click();
+  await expect(page.getByTestId('practice-active-deck-chip')).toContainText(/Curated Deck|Відібрана добірка/);
+  await expect(page.getByTestId('practice-daily-deck-title')).toContainText('Curated Deck');
+  // Switching via the above-fold menu must not force-open the bottom panel.
+  await expect(secondary).not.toHaveAttribute('open');
+});
+
 test('practice stress mode renders word-shaped vowel buttons for an N-vowel word', async ({ page }) => {
   await page.goto('/words-of-the-day/practice/');
 
@@ -555,9 +590,8 @@ test('A5: switching level with a session in progress offers a fresh session; acc
   // The A1 setup session is over; deplete A1 so A2's background lower-level merge (which
   // always fetches A1 as a lower level) cannot reintroduce it into the accepted pool.
   fixtures.depleteLowerLevel('A1');
-  // The switch-session-offer this triggers lives inside the same folded panel as
-  // the deck filter, even though the A2 level button itself is above the fold.
-  await openSecondaryTools(page);
+  // #6544: the switch-session offer lives above the fold next to the active-deck chip
+  // (no longer buried inside practice-secondary-tools).
 
   await page.getByRole('button', { name: 'A2' }).click();
 
@@ -626,7 +660,6 @@ test('A5b: declining the switch offer reverts the selection and leaves the sessi
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
   await prepareResumableMixedSession(page);
-  await openSecondaryTools(page);
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.getByTestId('practice-switch-session-offer')).toBeVisible();

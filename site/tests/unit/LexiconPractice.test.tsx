@@ -4171,6 +4171,21 @@ describe('LexiconPractice', () => {
   });
 
   describe('Curated Deck & Custom Sets Automated UI Selection Tests', () => {
+    test('exposes the active deck above the fold without opening Sync & decks (#6544)', async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      const chip = await screen.findByTestId('practice-active-deck-chip');
+      expect(chip).toHaveTextContent(/All Words \(A1\)/);
+      expect(screen.getByTestId('practice-secondary-tools')).not.toHaveAttribute('open');
+
+      await user.click(chip);
+      await user.click(screen.getByTestId('practice-deck-option-virtual_teacher_lesson'));
+      expect(screen.getByTestId('practice-active-deck-chip')).toHaveTextContent('Curated Deck');
+      expect(screen.getByTestId('practice-secondary-tools')).not.toHaveAttribute('open');
+    });
+
     test.each([
       ['en', 'Curated Deck'],
       ['uk', 'Відібрана добірка'],

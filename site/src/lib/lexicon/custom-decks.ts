@@ -106,8 +106,22 @@ const defaultTeacherLessonVirtualDeck: CustomSet = {
 };
 
 /**
+ * Source tags used by `lexicon-teacher-curated-membership.json` (#6544).
+ * Older filter names (`teacher_lesson` / `private_teacher_lesson`) match zero
+ * members — keep this list aligned with the membership file's real vocabulary.
+ */
+export const TEACHER_CURATED_MEMBERSHIP_SOURCES = ['teacher_inventory', 'homework'] as const;
+
+function isTeacherCuratedMembershipSource(source: string): boolean {
+  return (TEACHER_CURATED_MEMBERSHIP_SOURCES as readonly string[]).includes(source);
+}
+
+/**
  * Returns the built-in, read-only Virtual Special Deck for Teacher Lesson Intake.
  * Its module data is cached — 0 KB extra user storage or hot-path JSON scans.
+ *
+ * TODO(#6544): operator decision — whether the local ~1k practice-admission
+ * subset should be its own selectable deck vs this ~5k Curated Deck union.
  */
 export function getTeacherLessonVirtualDeck(
   entries?: Array<{ lemma: string; sources?: string[] }>,
@@ -115,11 +129,7 @@ export function getTeacherLessonVirtualDeck(
   if (!entries || entries.length === 0) return defaultTeacherLessonVirtualDeck;
 
   const teacherLemmas = entries
-    .filter(
-      (e) =>
-        e.sources &&
-        (e.sources.includes('teacher_lesson') || e.sources.includes('private_teacher_lesson')),
-    )
+    .filter((e) => e.sources?.some(isTeacherCuratedMembershipSource))
     .map((e) => e.lemma);
 
   return {
