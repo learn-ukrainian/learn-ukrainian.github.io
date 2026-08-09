@@ -160,3 +160,82 @@ def test_write_roundtrip_preserves_fill(tmp_path: Path) -> None:
     write_manifest(live_path, live)
     rewritten = json.loads(live_path.read_text(encoding="utf-8"))
     assert entry_has_translation(rewritten["entries"][0])
+
+
+def test_merge_sections_and_attestation_additively() -> None:
+    live = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+                "sections": {"usage_notes": {"essay": "Live essay"}},
+                "enrichment": {"stress": {"form": "вода"}},
+            }
+        ]
+    }
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+                "sections": {
+                    "usage_notes": {"essay": "Pulled essay (do not overwrite)"},
+                    "proverbs": {"items": ["Вода камень точит"]},
+                },
+                "enrichment": {
+                    "translation": {"en": ["water"], "source": "pulled"},
+                    "literary_attestation": [{"id": "grinchenko", "source": "Грінченко"}],
+                    "morphology": {"forms": [{"form": "вода"}]},
+                },
+            }
+        ]
+    }
+
+    stats = merge_translation_delta(live, pulled, stamp_generated_at=False)
+
+    assert stats.filled == 1
+    assert stats.filled_sections == 1
+    assert stats.filled_layer_sections == {"proverbs": 1}
+    assert stats.filled_literary_attestation == 1
+    assert stats.filled_morphology == 1
+
+    entry = live["entries"][0]
+    assert entry["sections"]["usage_notes"] == {"essay": "Live essay"}
+    assert entry["sections"]["proverbs"] == {"items": ["Вода камень точит"]}
+    assert entry["enrichment"]["literary_attestation"] == [{"id": "grinchenko", "source": "Грінченко"}]
+    assert entry["enrichment"]["morphology"] == {"forms": [{"form": "вода"}]}
+
+
+def test_add_source_attaches_section_source_when_enrichment_absent() -> None:
+    live = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+            }
+        ]
+    }
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+                "sections": {
+                    "proverbs": {"items": ["Слово не горобець"], "source": "Приповідки"},
+                },
+            }
+        ]
+    }
+
+    merge_translation_delta(live, pulled, stamp_generated_at=False)
+
+    entry = live["entries"][0]
+    assert "enrichment" in entry
+    assert "sources" in entry["enrichment"]
+    assert "Приповідки" in entry["enrichment"]["sources"]
+
+

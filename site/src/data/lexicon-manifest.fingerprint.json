@@ -1,5 +1,5 @@
 {
-  "fingerprint": "f71c2545232b2b9f5fe3941b3d9ce8797c484af5fdb023ecc119f328d5a45891",
+  "fingerprint": "6dab40fdd6e158390542644ad63aecae6d75b645e006ce2fb1fe4ea642963cc4",
   "inputs": {
     "lexicon_code": [
       {
@@ -96,7 +96,7 @@
       },
       {
         "path": "scripts/lexicon/export_open_dataset.py",
-        "sha256": "73eea9b98d68d6a5105001c4569ec7c0a6f1606f2acf906f27b850c492642a21"
+        "sha256": "ed2ebc27e1d4047f54a4cef1fdf2e3b3d70ec76c2f0689b0f40fbc334427af45"
       },
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
@@ -152,7 +152,7 @@
       },
       {
         "path": "scripts/lexicon/merge_translation_delta.py",
-        "sha256": "cba0e82499265562ae20e6323b357f3c1f1ce1e88ee5da7166706ced8b161955"
+        "sha256": "163458980cd9f7ebe7c3a673bb270d00a4aeaf159afdf53ea034a176e9b80272"
       },
       {
         "path": "scripts/lexicon/migrate_slovnyk_cache_v3.py",
@@ -200,7 +200,7 @@
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "e49053642686b4c446b4b883bd4223090cf86891aa03cbc67a5322de89b05a6a"
+        "sha256": "0ef7b15966f624423f7b6a799906e3fd55f7e78f3a1c9d53c304daf59760516a"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",

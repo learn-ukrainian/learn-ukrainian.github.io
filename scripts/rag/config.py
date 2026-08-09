@@ -13,8 +13,41 @@ LITERARY_DIR = DATA_DIR / "literary_texts"
 
 # ── VESUM morphological dictionary ──────────────────────────────
 VESUM_DIR = DATA_DIR / "vesum"
-VESUM_DB_PATH = DATA_DIR / "vesum.db"
+
+
+def _resolve_vesum_db_path(default_path: Path, project_root: Path) -> Path:
+    """Resolve the VESUM DB path, falling back to the primary checkout's copy.
+
+    Dispatch worktrees exclude ``data/`` via ``worktree.sparsePaths``, so a
+    worktree checkout has no local ``vesum.db``. Fall back to the primary
+    checkout's copy, resolved from the shared ``.git`` common dir (works on
+    any operator's machine) rather than a hardcoded absolute path (#6542
+    review finding). The import is lazy: this module has ~80 importers and
+    most runs (primary checkout, ``default_path`` already exists) never need
+    it.
+    """
+    if default_path.is_file():
+        return default_path
+    try:
+        from scripts.guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    except ImportError:  # scripts/ on sys.path (stripped flavor)
+        from guardrails.worktree_containment import (  # type: ignore[no-redef]
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    try:
+        primary_db = resolve_main_root(project_root) / "data" / "vesum.db"
+    except NotAGitRepositoryError:
+        return default_path
+    return primary_db if primary_db.is_file() else default_path
+
+
+VESUM_DB_PATH = _resolve_vesum_db_path(DATA_DIR / "vesum.db", PROJECT_ROOT)
 VESUM_URL = "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2"
+
 
 # ── Embedding models ───────────────────────────────────────────────
 BGE_M3_MODEL = "BAAI/bge-m3"
