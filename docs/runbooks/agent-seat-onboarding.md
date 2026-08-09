@@ -245,6 +245,17 @@ to Sol or the accountable orchestrator before making a consequential decision.
 - Plane / retention-apply / `formal_review_eligible` flips belong to the
   infra/harness lane after parity + present-tense operator/advisor GO.
 
+### Native Grok dispatch effort
+
+`scripts/delegate.py dispatch --agent grok` accepts only the native Grok CLI
+effort vocabulary: `low`, `medium`, or `high`. The permanent
+`--agent grok-build` alias has the identical contract. Dispatch checks this
+per-agent capability before it creates task state, a worktree, a runtime lease,
+or a worker process; `xhigh` and `max` are refused with a clear error rather
+than silently clamped to a different reasoning level. Omit `--effort` to use
+the native Grok default (`high`). This restriction does not apply to the
+separate historical `grok-hermes` transport.
+
 ### ACPX — structured transport boundary
 
 ACPX is **not** a coordination product and **not** a second fleet bus.

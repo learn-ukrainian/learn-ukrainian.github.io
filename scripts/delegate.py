@@ -161,6 +161,15 @@ _DISPATCH_AGENT_CHOICES = (
     "glm",
 )
 _KIMI_HARNESSES = frozenset({"native", "kimicc"})
+# Dispatch agent → effort validator. Keep this mapping at the dispatch
+# boundary so an effort unsupported by a provider fails before a task state,
+# worktree, runtime lease, or worker process is created. The native Grok alias
+# deliberately shares the canonical adapter's vocabulary; grok-hermes is a
+# different transport and must not inherit the native CLI restriction.
+_EFFORT_VALIDATOR_BY_DISPATCH_AGENT = {
+    "grok": "native_grok",
+    "grok-build": "native_grok",
+}
 _MONITOR_API_BASE_URL = "http://127.0.0.1:8765"
 _logger = logging.getLogger(__name__)
 
@@ -174,6 +183,30 @@ def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
     if harness not in _KIMI_HARNESSES:
         raise ValueError(f"unsupported Kimi harness {harness!r}; expected one of {sorted(_KIMI_HARNESSES)}")
     return harness
+
+
+def _validate_dispatch_effort(agent: str, effort: str | None) -> None:
+    """Fail closed when a dispatch effort cannot reach its selected CLI.
+
+    The top-level ``--effort`` parser accepts the cross-runtime vocabulary.
+    Provider-specific limits belong here, before dispatch creates any durable
+    task or process state. Revalidate after a budget substitution because that
+    can change the effective provider.
+    """
+    if effort is None:
+        return
+    validator = _EFFORT_VALIDATOR_BY_DISPATCH_AGENT.get(agent.strip().lower())
+    if validator == "native_grok":
+        from agent_runtime.adapters.grok_build import validate_grok_effort
+
+        try:
+            validate_grok_effort(effort)
+        except ValueError as exc:
+            raise ValueError(
+                f"--agent {agent} cannot use --effort {effort!r}: {exc}. "
+                "Refusing before worker spawn; choose low, medium, or high, "
+                "or omit --effort for the native Grok default."
+            ) from exc
 
 
 def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
@@ -3578,6 +3611,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     task_id = args.task_id
     try:
+        _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    try:
         attribution = resolve_invocation_attribution(
             explicit=getattr(args, "initiator", None),
             task_id=task_id,
@@ -3739,6 +3777,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         dispatch_agent = _resolve_agent_with_budget_guard(args.agent)
     else:
         dispatch_agent = args.agent
+
+    try:
+        _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
+    except ValueError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
 
     if requested_harness is not None and dispatch_agent != "kimi":
         print(

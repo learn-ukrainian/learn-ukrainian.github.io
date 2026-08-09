@@ -78,6 +78,7 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
     "Bash",
 )
 GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.5"})
+GROK_SUPPORTED_EFFORTS: frozenset[str] = frozenset({"low", "medium", "high"})
 GROK_BUILD_DEFAULT_MODEL = "grok-4.5"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 _TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
@@ -91,6 +92,23 @@ _TRAIL_ISOLATION_TOOL_CONFIG_KEYS: frozenset[str] = frozenset(
         "trail_isolation_cwd",
     }
 )
+
+
+def validate_grok_effort(effort: str | None) -> str | None:
+    """Return a native Grok effort after enforcing its CLI vocabulary.
+
+    ``delegate.py`` calls this before it creates a worker. Keeping the same
+    check here protects direct runtime callers and prevents a malformed
+    environment default from reaching the native CLI.
+    """
+    if effort is None:
+        return None
+    if effort not in GROK_SUPPORTED_EFFORTS:
+        raise ValueError(
+            "native Grok CLI supports --effort values "
+            f"{sorted(GROK_SUPPORTED_EFFORTS)}; got {effort!r}"
+        )
+    return effort
 
 
 def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
@@ -256,10 +274,10 @@ class GrokBuildAdapter:
                     if rule:
                         cmd.extend(["--deny", str(rule)])
 
-        effective_effort = effort or self.default_effort
+        effective_effort = validate_grok_effort(effort or self.default_effort)
         cmd.extend(["-m", requested_model])
         if effective_effort:
-            # grok accepts the same levels as the runtime: low|medium|high|xhigh|max
+            # The native Grok CLI accepts only low|medium|high.
             cmd.extend(["--effort", effective_effort])
 
         disallowed = tc.get("disallowed_tools")
