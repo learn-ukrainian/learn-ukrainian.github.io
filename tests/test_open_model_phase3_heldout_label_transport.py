@@ -624,11 +624,13 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     raw = _cycle002_runtime_raw(packet)
 
     observed: dict[str, object] = {"calls": 0}
+    payloads: list[bytes] = []
 
     def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[bytes]:
         observed["calls"] = int(observed["calls"]) + 1
         observed["command"] = command
         assert kwargs["input"]
+        payloads.append(kwargs["input"])  # type: ignore[arg-type]
         stdout = b"{}" if observed["calls"] == 1 else raw
         return subprocess.CompletedProcess(command, 0, stdout=stdout, stderr=b"")
 
@@ -651,6 +653,8 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     assert observed["command"][2:6] == ["ask-codex", "-", "--from", "operator"]
     assert observed["command"][-4:] == ["--to-model", "gpt-5.6-sol", "--new-session", "--no-timeout"]
     assert "--effort" not in observed["command"]
+    assert b"Operational retry attempt 2" not in payloads[0]
+    assert b"Operational retry attempt 2" in payloads[1]
     selected_attempt = private / "cycle002" / "raw-attempts" / "a" / "0001" / "002.raw"
     assert selected_attempt.read_bytes() == raw
     assert (private / "cycle002" / "raw" / "a" / "0001.raw").read_bytes() == raw

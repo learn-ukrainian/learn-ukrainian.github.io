@@ -1445,7 +1445,19 @@ def run_cycle002(
         "--new-session",
         "--no-timeout",
     ]
-    payload = prompt + b"\n\n" + canonical_json(packet).encode("utf-8")
+    attempt_dir = root / "cycle002" / "raw-attempts" / pass_id / f"{packet_index:04d}"
+    prior_attempts = sorted(attempt_dir.glob("*.raw")) if attempt_dir.exists() else []
+    for path in prior_attempts:
+        _regular(path, "cycle002 prior raw attempt")
+    retry_note = b""
+    if prior_attempts:
+        retry_note = (
+            "\n\nOperational retry attempt "
+            + str(len(prior_attempts) + 1)
+            + ": the previous JSON failed strict deterministic validation. Return a fresh full response, "
+            "preserve row order, and copy every unit_id, unit_sha256, and document identity exactly."
+        ).encode("utf-8")
+    payload = prompt + retry_note + b"\n\n" + canonical_json(packet).encode("utf-8")
     completed = subprocess.run(command, input=payload, capture_output=True, check=False)
     require(completed.returncode == 0, "cycle002 Codex bridge invocation failed")
     return _cycle002_ingest_bytes(
