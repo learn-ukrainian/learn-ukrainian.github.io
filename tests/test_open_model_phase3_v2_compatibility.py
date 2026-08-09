@@ -44,7 +44,7 @@ def test_engine_inventory_is_the_complete_current_v2_1_runtime_schema_closure() 
     bindings = matrix["engine_bindings"]  # type: ignore[index]
     paths = {entry["logical_path"] for entry in bindings}  # type: ignore[index]
     assert paths == compatibility.ENGINE_PATHS
-    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 33
+    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 36
     assert all(entry["artifact_sha256"] for entry in bindings)  # type: ignore[index]
     assert all(not path.startswith("data/projects/open_model_data/evidence/") for path in paths)
 
@@ -119,7 +119,7 @@ def test_pre_v2_role_contract_is_not_reused_as_independence_evidence() -> None:
     assert role_contract["machine_reason"] == "pre_v2_role_contract_invalidated"
     assert matrix["source_authoring"] == {
         "blocked": True,
-        "reason": "all_family_evaluation_partition_and_labels_not_frozen",
+        "reason": "heldout_labels_not_frozen",
     }
 
 

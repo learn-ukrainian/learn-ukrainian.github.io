@@ -11,8 +11,8 @@
     "combined_v1_v3_sha256": "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
   },
   "bindings": {
-    "schema_sha256": "0a960ed10e290366bf07be6f126e3cf05354203cfac48f1c3eba66557f540c72",
-    "validator_sha256": "7b9382c3370c88f64be3c93d1654cae71c303678f869be8f71a39f9800db133d"
+    "schema_sha256": "3e2b5e24760a753a0d36e304af067b4a0cea2d1c83f70f2e2139356535045bf4",
+    "validator_sha256": "10208c7343e55e14bd8341b9e567e5e78c219ff02c61f3856abb48796614204c"
   },
   "functional_role_binding": {
     "logical_path": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json",
@@ -41,6 +41,7 @@
     {"logical_path":"scripts/projects/open_model_data/phase3_source_unit_materialization.py","artifact_sha256":"58219a6ad20c9bbef2c76ed402a0adbc68d9367be58d2245b15704539733d3f5","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"scripts/projects/open_model_data/phase3_prior_exposure_manifest.py","artifact_sha256":"471fcb7ee2c12dad9707e091deedd5e08d3bae1589290e404cc639db54238395","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"scripts/projects/open_model_data/phase3_evaluation_freeze.py","artifact_sha256":"ad996ecc7c2f29e77639138f2440170fbebf4dd579d9476bff00bfe1f2cf7cea","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"scripts/projects/open_model_data/phase3_heldout_label_transport.py","artifact_sha256":"8dbc8f18c449e4b0f48755490f8b1be37533665a348b0251f6e14da5f57f7bb9","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json","artifact_sha256":"14494241d6e00b7b7ca7ca79c37b505755c9d3a37a33ff4890a973d56fe6c414","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json","artifact_sha256":"1fefacca7b85f7b48a8edd37149dc28138dc1a0ea161f6bfa2e605f8e3287afa","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json","artifact_sha256":"02f6fbc044a8cabe158ed495cbb8d925aa83250b7dbf45d7232f82b401931fb1","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
@@ -55,7 +56,9 @@
     {"logical_path":"data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json","artifact_sha256":"633ecb29e00bc5a1c3157af1857e24c555c8e0f326aa95305768a694f079464f","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"data/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json","artifact_sha256":"0e798247de3978631dace09c69b2e81f9a27807e1c8687ff695635d52a131ca3","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     {"logical_path":"data/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json","artifact_sha256":"3cfa999e549efccd7e221828e45a077cd341838a64f050b93e018f8be5f292f5","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
-    {"logical_path":"data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json","artifact_sha256":"3d3f87989c091fd80b484c00baf1118f83de05c252e5d7ea88dfbd2d24f01a22","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
+    {"logical_path":"data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json","artifact_sha256":"3d3f87989c091fd80b484c00baf1118f83de05c252e5d7ea88dfbd2d24f01a22","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"data/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json","artifact_sha256":"ccdf0bf31c69dc7a76f06216ef65cbc71f6ad951b609975b23719a8a46525231","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+    {"logical_path":"data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md","artifact_sha256":"981c5570690a70d96e5ed69a5bec178cad626a0437eef1eb3bdc5b5413029848","disposition":"rebound","machine_reason":"deterministic_engine_rebound_to_v2","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"}
   ],
   "inventory": [
     {"artifact_id":"schema:correction_protection_functional_role_contract_v2_1","logical_path":"data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json","artifact_sha256":"3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b","artifact_class":"functional_role_contract","disposition":"rebound","machine_reason":"functional_role_contract_rebound_to_v2_1","phase3_v2_contract_sha256":"298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
@@ -93,6 +96,6 @@
     {"claim_id":"breadth_floor_100_total","disposition":"invalidated","machine_reason":"legacy_floor_not_v2_completion"},
     {"claim_id":"breadth_floor_25_automatic","disposition":"invalidated","machine_reason":"legacy_floor_not_v2_completion"}
   ],
-  "source_authoring": {"blocked":true,"reason":"all_family_evaluation_partition_and_labels_not_frozen"},
+  "source_authoring": {"blocked":true,"reason":"heldout_labels_not_frozen"},
   "phase4": {"blocked":true,"reason":"phase3_v2_rebuild_review_and_completion_not_established"}
 }

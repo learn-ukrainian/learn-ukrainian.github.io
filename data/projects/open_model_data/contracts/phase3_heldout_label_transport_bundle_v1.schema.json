@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_heldout_label_transport_bundle_v1.schema.json",
+  "title": "Private Phase 3 v2.1 heldout-label transport bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "bindings", "packet_count", "row_count", "packets", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_heldout_label_manifest_v1"},
+    "text_free": {"const": true},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "packet_count": {"type": "integer", "minimum": 1},
+    "row_count": {"const": 2000},
+    "packets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/packetBinding"}},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id", "evaluation_contract_sha256", "label_prompt_sha256", "materialization_receipt_sha256", "materialization_jsonl_sha256", "evaluation_freeze_receipt_sha256", "partition_manifest_sha256", "selection_set_sha256", "packet_order_sha256"],
+      "properties": {
+        "base_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
+        "combined_contract_sha256": {"const": "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+        "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "label_prompt_sha256": {"const": "981c5570690a70d96e5ed69a5bec178cad626a0437eef1eb3bdc5b5413029848"},
+        "materialization_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "materialization_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "partition_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "selection_set_sha256": {"$ref": "#/$defs/sha256"},
+        "packet_order_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "packetBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packet_index", "packet_id", "packet_sha256", "row_count", "identity_set_sha256"],
+      "properties": {"packet_index": {"type": "integer", "minimum": 1}, "packet_id": {"type": "string", "pattern": "^heldout_label_packet:[a-f0-9]{64}$"}, "packet_sha256": {"$ref": "#/$defs/sha256"}, "row_count": {"type": "integer", "minimum": 1}, "identity_set_sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "transportReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "packet_index", "packet_id", "packet_sha256", "bindings", "raw_sha256", "raw_byte_count", "response_sha256", "sealed_rows_sha256", "attempt_kind", "retry_count", "invalid_first_raw_sha256", "invalid_first_failure", "actor", "identity_order_bijection", "text_free", "receipt_sha256"],
+      "properties": {"schema_version": {"const": "phase3_heldout_label_transport_receipt_v1"}, "packet_index": {"type": "integer", "minimum": 1}, "packet_id": {"type": "string", "pattern": "^heldout_label_packet:[a-f0-9]{64}$"}, "packet_sha256": {"$ref": "#/$defs/sha256"}, "bindings": {"$ref": "#/$defs/bindings"}, "raw_sha256": {"$ref": "#/$defs/sha256"}, "raw_byte_count": {"type": "integer", "minimum": 0}, "response_sha256": {"$ref": "#/$defs/sha256"}, "sealed_rows_sha256": {"$ref": "#/$defs/sha256"}, "attempt_kind": {"enum": ["first", "retry-01"]}, "retry_count": {"enum": [0, 1]}, "invalid_first_raw_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]}, "invalid_first_failure": {"enum": [null, "strict_json", "response_shape", "label_schema_or_semantics", "identity_order"]}, "actor": {"$ref": "#/$defs/actor"}, "identity_order_bijection": {"const": true}, "text_free": {"const": true}, "receipt_sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "actor": {"type": "object", "additionalProperties": false, "required": ["role_id", "task_id", "provider", "model_family", "harness", "exact_model"], "properties": {"role_id": {"const": "heldout_label_reviewer"}, "task_id": {"const": "phase3-v2-1-heldout-label-review"}, "provider": {"const": "openai"}, "model_family": {"const": "openai"}, "harness": {"const": "codex"}, "exact_model": {"const": "gpt-5.6-sol"}}},
+    "publicReceipt": {"type": "object", "additionalProperties": false, "required": ["schema_version", "text_free", "bindings", "manifest_sha256", "sealed_labels_sha256", "row_count", "packet_count", "actor", "complete", "receipt_sha256"], "properties": {"schema_version": {"const": "phase3_heldout_label_public_receipt_v1"}, "text_free": {"const": true}, "bindings": {"$ref": "#/$defs/bindings"}, "manifest_sha256": {"$ref": "#/$defs/sha256"}, "sealed_labels_sha256": {"$ref": "#/$defs/sha256"}, "row_count": {"const": 2000}, "packet_count": {"type": "integer", "minimum": 1}, "actor": {"$ref": "#/$defs/actor"}, "complete": {"const": true}, "receipt_sha256": {"$ref": "#/$defs/sha256"}}}
+  }
+}
