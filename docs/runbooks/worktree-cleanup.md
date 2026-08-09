@@ -3,6 +3,24 @@
 This runbook covers immediate post-merge cleanup and the local macOS Git
 hygiene backstop for both Learn Ukrainian repositories.
 
+## Shared Python environment
+
+The primary checkout's `.venv` is the only project virtual environment.
+Dispatch worktrees must never create, copy, symlink, activate, or use a local
+`.venv`. From any linked worktree, derive and invoke the absolute primary
+interpreter instead:
+
+```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/test_delegate.py
+```
+
+Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
+The dispatch launcher records a warning when a local `.venv` is already present;
+do not delete it while a task might be active. After the normal merged-PR guards
+pass, the P0 reaper removes the entire disposable worktree, including ignored
+environment residue.
+
 ## Safety contract
 
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
@@ -32,7 +50,8 @@ reaps immediately. The first seven days are capped by
 `.worktrees/`:
 
 ```bash
-.venv/bin/python scripts/orchestration/reap_worktrees.py restore \
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" scripts/orchestration/reap_worktrees.py restore \
   --restore-ref refs/reaper-rescue/<timestamp>/<branch>-<sha> \
   --restore-branch <branch> \
   --restore-worktree .worktrees/dispatch/<agent>/<task>
@@ -74,7 +93,7 @@ terminal has left the target worktree:
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 cd "$PRIMARY_REPO"
 
-.venv/bin/python scripts/orchestration/reap_worktrees.py \
+"$PRIMARY_REPO/.venv/bin/python" scripts/orchestration/reap_worktrees.py \
   --repo-root "$PRIMARY_REPO" \
   --apply \
   --merged \

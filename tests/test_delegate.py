@@ -2868,6 +2868,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["pid"] == 24680
     assert state["worktree_base_sha"] == "deadbeef"
     assert state["worktree_reused"] is False
+    assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
     assert "delegate worktree" in recorded_prompt["text"]
     assert ".worktrees/codex-1383" in recorded_prompt["text"]
     # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
@@ -3936,6 +3937,51 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     assert "scripts" in set_calls[0]
     assert telemetry["sparse"] is not None
     assert telemetry["sparse"]["excluded"] == ["curriculum", "wiki"]
+    assert telemetry["local_venv"] == {"present": False, "kind": None, "path": None}
+
+
+def test_inspect_worktree_local_venv_records_directory_and_symlink(tmp_path):
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+
+    assert delegate._inspect_worktree_local_venv(worktree) == {
+        "present": False,
+        "kind": None,
+        "path": None,
+    }
+
+    local_venv = worktree / ".venv"
+    local_venv.mkdir()
+    assert delegate._inspect_worktree_local_venv(worktree) == {
+        "present": True,
+        "kind": "directory",
+        "path": str(local_venv),
+    }
+
+    local_venv.rmdir()
+    local_venv.symlink_to(tmp_path / "primary-venv", target_is_directory=True)
+    assert delegate._inspect_worktree_local_venv(worktree) == {
+        "present": True,
+        "kind": "symlink",
+        "path": str(local_venv),
+    }
+
+
+def test_record_worktree_local_venv_warning_is_non_destructive(tmp_path, capsys):
+    worktree = tmp_path / "worktree"
+    local_venv = worktree / ".venv"
+    local_venv.mkdir(parents=True)
+    telemetry: dict[str, object] = {}
+
+    delegate._record_worktree_local_venv_warning(worktree, telemetry)
+
+    assert local_venv.is_dir()
+    assert telemetry["local_venv"] == {
+        "present": True,
+        "kind": "directory",
+        "path": str(local_venv),
+    }
+    assert "contains a local .venv" in capsys.readouterr().err
 
 
 def test_normalize_sparse_include_dedupes_and_strips():
@@ -4039,6 +4085,18 @@ def test_augment_prompt_mentions_sparse_exclusions():
     assert "curriculum" in text
     assert "wiki" in text
     assert "sparse" in text.lower() or "Sparse" in text
+
+
+def test_augment_prompt_requires_absolute_primary_venv():
+    worktree = Path("/tmp/dispatch-worktree")
+
+    text = delegate._augment_prompt_with_worktree("Implement the fix.", worktree)
+
+    primary_python = delegate._REPO_ROOT / ".venv" / "bin" / "python"
+    assert str(primary_python) in text
+    assert "Never create, copy, symlink, activate, or use a `.venv`" in text
+    assert "`python -m venv .venv`" in text
+    assert "Do not change `PYTHONPATH`" in text
 
 
 def test_augment_write_prompt_offers_optional_delivery_declaration():

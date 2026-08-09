@@ -104,6 +104,17 @@ def test_five_ownership_surfaces(onboarding: str) -> None:
     assert "deferred" in lower
 
 
+def test_onboarding_requires_the_primary_venv_for_dispatch(onboarding: str) -> None:
+    """Worker onboarding must prevent a per-worktree environment copy."""
+    assert "Shared Python environment" in onboarding
+    assert '"$PRIMARY_REPO/.venv/bin/python"' in onboarding
+    for prohibited in (
+        "must never create, copy, symlink, activate, or use its own `.venv`",
+        "`python -m venv .venv`",
+    ):
+        assert prohibited in onboarding
+
+
 def test_human_comms_pages_have_distinct_read_only_roles(onboarding: str) -> None:
     lower = onboarding.lower()
     for page in ("acp conversations", "channels", "broker ops", "build events", "runtime"):

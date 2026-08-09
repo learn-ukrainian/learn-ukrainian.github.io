@@ -182,13 +182,22 @@ Same-family helper output, design panels, and channel chat never seal a PR.
 
 ### Delegate is execution, not coordination
 
+#### Shared Python environment
+
+The primary checkout's `.venv` is shared project tooling; a dispatch worktree
+must never create, copy, symlink, activate, or use its own `.venv`. Derive the
+primary root from the linked worktree and invoke its interpreter by absolute
+path. Never fall back to `python`, `.venv/bin/python`, or `python -m venv .venv`.
+
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
-  --agent <lane> \
-  --task-id <id> \
-  --prompt-file <path> \
-  --worktree
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py dispatch \
+  --agent <lane> --task-id <id> --prompt-file <path> --worktree
 ```
+
+The delegate worker preamble repeats this constraint. If preparation finds a
+local worktree `.venv`, it records a warning rather than removing a potentially
+active environment; the merged-PR worktree reaper disposes of it safely.
 
 Workers implement inside `.worktrees/dispatch/<agent>/<task>/`. They do not
 become a second coordination plane.
