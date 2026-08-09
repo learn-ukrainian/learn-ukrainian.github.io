@@ -1,5 +1,5 @@
 {
-  "fingerprint": "c0d332f44c103ef409d9e962daf770825723f5705c7ddf4b7bf20cde822bc4a9",
+  "fingerprint": "28cf409db5332c6f194d82aa606bcf519e009a4eefb83aa78c7091afac4661b0",
   "inputs": {
     "lexicon_code": [
       {
@@ -88,7 +88,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "96b040ade80572ea9285f2e582c21e51c22d6a371f2d7c6c1c0972def69ebcd7"
+        "sha256": "d44467d0a8c1ea38857e2d23218a361dc67b8371bcbd63b03435dd440cc6097d"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -153,6 +153,10 @@
       {
         "path": "scripts/lexicon/merge_translation_delta.py",
         "sha256": "cba0e82499265562ae20e6323b357f3c1f1ce1e88ee5da7166706ced8b161955"
+      },
+      {
+        "path": "scripts/lexicon/migrate_slovnyk_cache_v3.py",
+        "sha256": "7001edca9a5f6cc7faf290376e13de2d798b17fd92182dcc2a9228aa9816193c"
       },
       {
         "path": "scripts/lexicon/migrate_source_labels.py",
@@ -231,6 +235,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 56
+    "lexicon_code_files": 57
   }
 }

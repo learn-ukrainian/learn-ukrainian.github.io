@@ -969,6 +969,49 @@ def test_usage_notes_and_warning_chips_coexist_without_essay_duplication() -> No
             assert detail != section["items"][0]["text"]
 
 
+def test_parse_slovnyk_entry_reconstructs_inline_markup_word_through_form_notes() -> None:
+    """Regression for PR #6524's P1: the flattened ``article_text`` path in
+    ``_parse_slovnyk_entry`` must survive slovnyk.me's letter-level inline markup
+    (orthoepy wraps individual sounds in ``<u>``/``<sup>``, splitting a word across
+    several ``handle_data`` calls) without corrupting it, AND separate ``<p>`` prose
+    blocks must keep the space between them. Exercised end to end through the real
+    learner-facing consumer (``_form_notes_slovnyk``), not just the parser return
+    value -- a regression to the old ``" ".join(...)`` would turn "книга" into
+    "кн и га" here and would be invisible to a parser-only assertion if the consumer
+    happened to re-glue tokens some other way."""
+    html = (
+        "<html><head><title>книга — Орфоепічний словник української мови</title>"
+        '<link rel="canonical" href="https://slovnyk.me/dict/orthoepy/книга"></head>'
+        '<body><section id="dictionary-acticle"><article><h1>книга</h1>'
+        "<p><span>кн<u>и</u>га</span></p>"
+        "<p><span>[кн<sup>и</sup>га] -гие, д. і м. -из'і</span></p>"
+        "</article></section></body></html>"
+    )
+
+    row = enrich_manifest_module._parse_slovnyk_entry(
+        html, lemma="книга", lookup_word="книга", slug="orthoepy", url="https://slovnyk.me/dict/orthoepy/книга"
+    )
+
+    assert row is not None
+    # Inline <u>/<sup> tags split "книга" across three handle_data() calls each
+    # time it appears; the empty-string join must reconstruct the whole word.
+    assert "кн и га" not in row["text"]
+    # h1 headword duplicate + first <p> line + bracketed second <p> line.
+    assert row["text"].count("книга") == 3
+    # The two separate <p> blocks keep the space between them (block boundary),
+    # they must not glue into "книга[кни..." with zero separating whitespace.
+    assert "книга [книга]" in row["text"]
+    assert "книга[книга]" not in row["text"]
+
+    section = _form_notes_slovnyk("книга", {"lookups": {"orthoepy": row}})
+
+    assert section is not None
+    item = section["items"][0]
+    assert "кн и га" not in item["text"]
+    assert item["text"].startswith("книга")
+    assert "-гие, д. і м. -из'і" in item["text"]
+
+
 def test_form_note_item_from_row_builds_item_with_dictionary_and_source() -> None:
     row = {
         "dictionary_slug": "orthography",
@@ -1544,11 +1587,53 @@ def test_slovnyk_cache_migrates_v1_none_misses_to_retryable_absences(monkeypatch
     persisted = json.loads(cache_path.read_text(encoding="utf-8"))
 
     assert calls == ["synonyms", "phraseology"]
-    assert cache["schema_version"] == 2
+    assert cache["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
     assert cache["lookups"]["newsum"]["text"] == "kept hit"
     assert cache["lookups"]["synonyms"]["text"] == "refetched synonyms"
-    assert persisted["schema_version"] == 2
+    assert persisted["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
     assert persisted["lookups"]["phraseology"]["text"] == "refetched phraseology"
+
+
+def test_slovnyk_cache_discards_v2_rows_built_with_the_corrupted_join(monkeypatch, tmp_path) -> None:
+    """#6524 P1: schema_version==2 predates the article_text join fix (#6465), so a
+    v2 row can carry the "кн и га"-style corruption from the old ``" ".join(...)``.
+    Bumping ``_SLOVNYK_CACHE_SCHEMA_VERSION`` must discard every v2 row wholesale
+    (not selectively -- the corrupted rows carry no marker distinguishing them from
+    clean ones) and force a refetch, same as the existing v1 migration."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("orthoepy",))
+
+    cache_path = enrich_manifest_module._slovnyk_cache_path("книга")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "lemma": "книга",
+                "lookup_word": "книга",
+                "fetched_at": "2026-01-01T00:00:00+00:00",
+                "lookups": {
+                    "orthoepy": {"dictionary_slug": "orthoepy", "text": "кн и га [кн и га] -гие"},
+                },
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str) -> dict[str, str]:
+        return {"dictionary_slug": slug, "text": "книга [книга] -гие"}
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+
+    cache = _slovnyk_cache("книга")
+    persisted = json.loads(cache_path.read_text(encoding="utf-8"))
+
+    assert cache["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
+    assert "кн и га" not in cache["lookups"]["orthoepy"]["text"]
+    assert persisted["schema_version"] == enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
+    assert "кн и га" not in persisted["lookups"]["orthoepy"]["text"]
 
 
 def test_sum11_is_never_used_as_meaning_source() -> None:

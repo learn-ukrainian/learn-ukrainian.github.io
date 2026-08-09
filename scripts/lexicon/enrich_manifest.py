@@ -213,7 +213,18 @@ _SLOVNYK_UKRENG_SLUG = "ukreng"
 _SLOVNYK_UKRENG_LABEL = BALLA_LABEL
 _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _SLOVNYK_BASE = "https://slovnyk.me"
-_SLOVNYK_CACHE_SCHEMA_VERSION = 2
+# v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
+# written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
+# fix landed without a schema bump), so v2 rows can carry corrupted `text` for
+# any dictionary whose page uses inline mid-word markup (letter-level <u>/<sup>
+# in orthoepy is the confirmed case; nothing rules out other slugs). The
+# migration branch below already resets `lookups` to `{}` and forces a refetch
+# whenever `schema_version != _SLOVNYK_CACHE_SCHEMA_VERSION` -- bumping this
+# constant is what actually triggers that reset for every existing v2 row.
+# `scripts/lexicon/migrate_slovnyk_cache_v3.py` applies the same reset directly
+# to on-disk cache files (no network needed) to purge the residue immediately
+# instead of waiting for each lemma's next live touch.
+_SLOVNYK_CACHE_SCHEMA_VERSION = 3
 _OFFLINE_VALUES = {"1", "true", "yes", "on"}
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 
