@@ -1,0 +1,27 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6517-reword
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Reword commit on YOUR PR #6517 — identifier in commit message
+
+Your shard-01 commit message on `agy/atlas-5995-shard-pr2` contains the identifier-bearing
+legacy filename. The DIFF may show the existing public path (unavoidable until the final PR
+removes the file), but PR/commit TEXT is a permanent amplifying surface and must not repeat it —
+the issue thread uses [REDACTED] for a reason.
+
+1. `git commit --amend` reword ONLY (no tree change): replace the filename/token with
+   "the legacy ledger ([REDACTED] filename)". Verify locally the token count in the new message
+   is 0 without printing the token.
+2. Force-push the branch (PR not merged; rewrite is safe).
+3. STANDING RULE for shard PRs 3–11 you will do next: never print the legacy filename or the
+   token in any commit message, PR body, comment, or report — use [REDACTED]. The driver has
+   already scrubbed PR #6517's body.
+Report: new commit SHA + confirmation of 0 token hits in message.

@@ -3,7 +3,7 @@
   "checkpoint_id": "ffdd51d916b2",
   "strategy": "manual-commit",
   "branch": "agy/atlas-5995-shard-pr2",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
     "data/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml",
     "data/lexicon/source-inventory-review-decisions/2026-07-23-teacher-lesson-full-document-intake-batch-01.yaml",
@@ -18,6 +18,13 @@
       "compact_transcript": "/ff/dd51d916b2/0/transcript.jsonl",
       "content_hash": "/ff/dd51d916b2/0/content_hash.txt",
       "prompt": "/ff/dd51d916b2/0/prompt.txt"
+    },
+    {
+      "metadata": "/ff/dd51d916b2/1/metadata.json",
+      "transcript": "/ff/dd51d916b2/1/full.jsonl",
+      "compact_transcript": "/ff/dd51d916b2/1/transcript.jsonl",
+      "content_hash": "/ff/dd51d916b2/1/content_hash.txt",
+      "prompt": "/ff/dd51d916b2/1/prompt.txt"
     }
   ]
 }
