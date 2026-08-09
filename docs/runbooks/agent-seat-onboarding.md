@@ -443,12 +443,14 @@ unrestricted loop, hidden failover, or retry. Each model call is capped at 300
 seconds, the whole conversation at 1,200 seconds, and content at 160k reliable
 tokens or 512 KiB.
 
-Raw ACP JSON-RPC traffic and parsed answer content have separate hard bounds.
-Each enabled participant may emit at most a 16 MiB protocol envelope so a
-valid terminal frame is not killed by provider-specific progress events. The
-strict parser then admits at most 512 KiB of answer text to the caller or
-fleet-authority receipt. Exceeding either bound fails terminally without a
-provider retry or bridge fallback.
+Captured ACP JSON-RPC traffic and parsed answer content have separate hard
+bounds. Parser-ignored `progress` notifications retain at most 256 KiB of
+diagnostic content, then continue to drain without consuming the protocol
+envelope; this reserves room for the answer, tool trace, and terminal receipt.
+All retained protocol events remain capped at 16 MiB, while the strict parser
+admits at most 512 KiB of answer text to the caller or fleet-authority receipt.
+Exceeding either retained-envelope or parsed-answer bound fails terminally
+without a provider retry or bridge fallback.
 
 Calls initiated from the protected primary checkout keep the same containment
 guard. The compatibility entrypoints create a short-lived detached,

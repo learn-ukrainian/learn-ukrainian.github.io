@@ -38,7 +38,7 @@ import re
 import subprocess
 import threading
 import time
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -121,7 +121,12 @@ class WatchdogState:
     stderr_lines: list[str] = field(default_factory=list)
 
 
-def _stdout_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
+def _stdout_streamer(
+    proc: subprocess.Popen,
+    state: WatchdogState,
+    *,
+    stdout_line_transform: Callable[[str], str | None] | None = None,
+) -> None:
     """Background thread: read stdout line-by-line, bump last_activity.
 
     Exits when the pipe closes (subprocess terminates) or state.stop is True.
@@ -131,9 +136,12 @@ def _stdout_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
         for line in iter(proc.stdout.readline, ""):
             if state.stop:
                 break
-            state.stdout_lines.append(line)
-            state.last_activity = time.monotonic()
-            state.last_stdout_activity = state.last_activity
+            _emit_line(
+                state,
+                line,
+                is_stderr=False,
+                stdout_line_transform=stdout_line_transform,
+            )
     except (ValueError, OSError):
         # Pipe closed or subprocess killed. Normal shutdown path.
         pass
@@ -188,6 +196,7 @@ def _pty_line_streamer(
     state: WatchdogState,
     *,
     is_stderr: bool,
+    stdout_line_transform: Callable[[str], str | None] | None = None,
 ) -> None:
     """Background thread: read from a PTY master fd, emit complete lines.
 
@@ -236,7 +245,12 @@ def _pty_line_streamer(
                 if line.endswith("\r\n"):
                     line = line[:-2] + "\n"
                 line = _strip_ansi(line)
-                _emit_line(state, line, is_stderr=is_stderr)
+                _emit_line(
+                    state,
+                    line,
+                    is_stderr=is_stderr,
+                    stdout_line_transform=stdout_line_transform,
+                )
     except (ValueError, OSError):
         # Master fd closed underneath us (e.g. cleanup raced ahead);
         # treat as clean shutdown — same semantics as the pipe path.
@@ -248,16 +262,33 @@ def _pty_line_streamer(
             tail = bytes(buffer).decode("utf-8", errors="replace")
             tail = tail.replace("\r\n", "\n")
             tail = _strip_ansi(tail)
-            _emit_line(state, tail, is_stderr=is_stderr)
+            _emit_line(
+                state,
+                tail,
+                is_stderr=is_stderr,
+                stdout_line_transform=stdout_line_transform,
+            )
 
 
-def _emit_line(state: WatchdogState, line: str, *, is_stderr: bool) -> None:
+def _emit_line(
+    state: WatchdogState,
+    line: str,
+    *,
+    is_stderr: bool,
+    stdout_line_transform: Callable[[str], str | None] | None = None,
+) -> None:
     """Append a decoded line to the relevant state buffer + bump activity."""
     now = time.monotonic()
     if is_stderr:
         state.stderr_lines.append(line)
     else:
-        state.stdout_lines.append(line)
+        retained_line = (
+            stdout_line_transform(line)
+            if stdout_line_transform is not None
+            else line
+        )
+        if retained_line is not None:
+            state.stdout_lines.append(retained_line)
         state.last_stdout_activity = now
     state.last_activity = now
     state.observed_io = True
@@ -407,6 +438,7 @@ def start_watchdog(
     stdout_master_fd: int | None = None,
     stderr_master_fd: int | None = None,
     track_process_activity: bool = False,
+    stdout_line_transform: Callable[[str], str | None] | None = None,
 ) -> tuple[WatchdogState, list[threading.Thread]]:
     """Start the stdout streamer + mtime poller threads for a running subprocess.
 
@@ -423,6 +455,8 @@ def start_watchdog(
             semantics as ``stdout_master_fd``.
         track_process_activity: When True, poll process-tree CPU/disk activity
             and refresh ``last_activity`` while the process tree is doing work.
+        stdout_line_transform: Optional runner-owned transform applied before
+            retaining a stdout line. Dropped lines still refresh liveness.
 
     When the fd kwargs are ``None`` the watchdog falls back to the
     legacy pipe-mode streamers — exercised by the ``DELEGATE_DISABLE_PTY``
@@ -443,7 +477,10 @@ def start_watchdog(
         t_stdout = threading.Thread(
             target=_pty_line_streamer,
             args=(stdout_master_fd, state),
-            kwargs={"is_stderr": False},
+            kwargs={
+                "is_stderr": False,
+                "stdout_line_transform": stdout_line_transform,
+            },
             name=f"watchdog-stdout-{proc.pid}",
             daemon=True,
         )
@@ -453,6 +490,7 @@ def start_watchdog(
         t_stdout = threading.Thread(
             target=_stdout_streamer,
             args=(proc, state),
+            kwargs={"stdout_line_transform": stdout_line_transform},
             name=f"watchdog-stdout-{proc.pid}",
             daemon=True,
         )
