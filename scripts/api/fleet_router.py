@@ -24,12 +24,21 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+from scripts.fleet_comms.cli import fleet_help_payload, fleet_status_payload
+from scripts.fleet_comms.cold_start_board import build_cold_start_board
+from scripts.fleet_comms.efficiency_metrics import (
+    collect_dead_letters_authority,
+    collect_delivery_backlog_authority,
+    collect_efficiency_metrics_authority,
+)
 from scripts.fleet_comms.endpoints import load_endpoint_registry
+from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
+from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
 router = APIRouter(tags=["fleet"])
@@ -368,6 +377,213 @@ def _safe_plane_status() -> dict[str, Any]:
             "parity_fail_count": int(telemetry.get("parity_fail_count") or 0),
         },
     }
+
+
+def _facade_authority_payload(
+    collector: Callable[[Path], dict[str, Any]],
+) -> dict[str, Any]:
+    """Run an authority collector fail-open without creating a plane database."""
+    db_path = _plane_db_path()
+    if not db_path.is_file():
+        return {
+            "content_included": False,
+            "db_missing": True,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    try:
+        payload = collector(db_path)
+    except (OSError, sqlite3.Error, ValueError) as exc:
+        logger.warning("Fleet facade authority collector unavailable: %s", type(exc).__name__)
+        return {
+            "content_included": False,
+            "db_error": type(exc).__name__,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    payload["db_path"] = str(db_path)
+    payload["read_only"] = True
+    payload["source"] = "authority"
+    return payload
+
+
+def _facade_backlog_payload(limit: int) -> dict[str, Any]:
+    """Return the existing authority backlog projection for the thin facade."""
+    db_path = _plane_db_path()
+    if not db_path.is_file():
+        return {
+            "total": 0,
+            "by_agent": {},
+            "by_status": {},
+            "rows": [],
+            "content_included": False,
+            "db_missing": True,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    try:
+        payload = collect_delivery_backlog_authority(
+            db_path, limit=limit, exclude_retired=True
+        )
+    except (OSError, sqlite3.Error, ValueError) as exc:
+        logger.warning("Fleet facade authority backlog unavailable: %s", type(exc).__name__)
+        return {
+            "total": 0,
+            "by_agent": {},
+            "by_status": {},
+            "rows": [],
+            "content_included": False,
+            "db_error": type(exc).__name__,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    payload["content_included"] = False
+    payload["db_path"] = str(db_path)
+    payload["read_only"] = True
+    payload["source"] = "authority"
+    return payload
+
+
+def _facade_dead_letters_payload(limit: int) -> dict[str, Any]:
+    """Return the existing authority dead-letter projection for the thin facade."""
+    db_path = _plane_db_path()
+    if not db_path.is_file():
+        return {
+            "total": 0,
+            "by_reason": {},
+            "rows": [],
+            "content_included": False,
+            "db_missing": True,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    try:
+        payload = collect_dead_letters_authority(db_path, limit=limit)
+    except (OSError, sqlite3.Error, ValueError) as exc:
+        logger.warning("Fleet facade authority dead letters unavailable: %s", type(exc).__name__)
+        return {
+            "total": 0,
+            "by_reason": {},
+            "rows": [],
+            "content_included": False,
+            "db_error": type(exc).__name__,
+            "db_path": str(db_path),
+            "read_only": True,
+            "source": "authority",
+        }
+    payload["content_included"] = False
+    payload["db_path"] = str(db_path)
+    payload["read_only"] = True
+    payload["source"] = "authority"
+    return payload
+
+
+def _facade_reap_report() -> dict[str, Any]:
+    """Return the established merged-head reaper report in dry-run mode only."""
+    try:
+        results = reap_worktrees.reap_worktrees(
+            repo_root=reap_worktrees.primary_checkout_root(Path(LIVE_REPO_ROOT)),
+            apply=False,
+            prune_merged_branches=True,
+            safe_only=True,
+            merged_pr_only=True,
+            require_activity_probe=False,
+        )
+        return {
+            "read_only": True,
+            "apply": False,
+            "report": [reap_worktrees._result_payload(result) for result in results],
+        }
+    except (OSError, RuntimeError, ValueError) as exc:
+        logger.warning("Fleet facade dry-run reaper unavailable: %s", type(exc).__name__)
+        return {
+            "read_only": True,
+            "apply": False,
+            "error": f"dry_run_unavailable: {type(exc).__name__}",
+            "report": [],
+        }
+
+
+@router.get("/facade")
+@router.get("/facade/help")
+def fleet_facade_help() -> dict[str, Any]:
+    """Index the read-only CLI facade routes available to seats and the Monitor UI."""
+    payload = fleet_help_payload()
+    payload.update(
+        {
+            "read_only": True,
+            "endpoints": {
+                "help": "/api/fleet/facade/help",
+                "status": "/api/fleet/facade/status",
+                "board": "/api/fleet/facade/board",
+                "metrics": "/api/fleet/facade/metrics",
+                "backlog": "/api/fleet/facade/backlog",
+                "dead": "/api/fleet/facade/dead",
+                "broker_report": "/api/fleet/facade/broker-report?days=7",
+                "reap_report": "/api/fleet/facade/reap-report",
+            },
+        }
+    )
+    return payload
+
+
+@router.get("/facade/status")
+def fleet_facade_status() -> dict[str, Any]:
+    """Expose the CLI fleet-status payload without a second health authority."""
+    status = read_plane_status(repo_root=Path(PROJECT_ROOT), recent_limit=50)
+    payload = fleet_status_payload(status)
+    payload["read_only"] = True
+    return payload
+
+
+@router.get("/facade/board")
+def fleet_facade_board(
+    stream_id: str | None = Query(default=None),
+    agent: str | None = Query(default=None),
+    needle: str | None = Query(default=None),
+) -> dict[str, Any]:
+    """Expose the JSON cold-start board already used by the fleet CLI."""
+    return build_cold_start_board(
+        stream_id=stream_id,
+        agent=agent,
+        needle=needle,
+        repo_root=Path(PROJECT_ROOT),
+    )
+
+
+@router.get("/facade/metrics")
+def fleet_facade_metrics() -> dict[str, Any]:
+    """Return authority-plane metrics through the existing collector."""
+    return _facade_authority_payload(collect_efficiency_metrics_authority)
+
+
+@router.get("/facade/backlog")
+def fleet_facade_backlog(limit: int = Query(default=100, ge=1, le=500)) -> dict[str, Any]:
+    """Return the authority-plane delivery backlog; retired endpoints stay excluded."""
+    return _facade_backlog_payload(limit)
+
+
+@router.get("/facade/dead")
+def fleet_facade_dead(limit: int = Query(default=100, ge=1, le=500)) -> dict[str, Any]:
+    """Return the authority-plane dead-letter inventory without message bodies."""
+    return _facade_dead_letters_payload(limit)
+
+
+@router.get("/facade/broker-report")
+def fleet_facade_broker_report(days: int = Query(default=7, ge=1, le=90)) -> dict[str, Any]:
+    """Expose the legacy Broker Ops retirement report through its shared builder."""
+    return build_legacy_broker_report(days)
+
+
+@router.get("/facade/reap-report")
+def fleet_facade_reap_report() -> dict[str, Any]:
+    """Expose the guarded reaper's dry-run report; apply is never an API option."""
+    return _facade_reap_report()
 
 
 def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> dict[str, int]:

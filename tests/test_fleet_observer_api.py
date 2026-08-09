@@ -203,6 +203,111 @@ def test_absent_plane_db_returns_deterministic_read_only_empty_states(
     assert not fleet_root.exists(), "observer must not create a missing plane root"
 
 
+def test_facade_routes_reuse_read_only_fleet_projections(
+    client: TestClient,
+    fleet_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_plane(fleet_root)
+    monkeypatch.setattr(
+        fleet_router,
+        "build_cold_start_board",
+        lambda **_kwargs: {"board_status": "ok", "probes": {}},
+    )
+    monkeypatch.setattr(
+        fleet_router,
+        "_facade_reap_report",
+        lambda: {"read_only": True, "apply": False, "report": []},
+    )
+
+    help_response = client.get("/api/fleet/facade")
+    help_alias = client.get("/api/fleet/facade/help")
+    status = client.get("/api/fleet/facade/status")
+    board = client.get("/api/fleet/facade/board", params={"stream_id": "core"})
+    metrics = client.get("/api/fleet/facade/metrics")
+    backlog = client.get("/api/fleet/facade/backlog", params={"limit": 1})
+    dead = client.get("/api/fleet/facade/dead", params={"limit": 1})
+    broker = client.get("/api/fleet/facade/broker-report", params={"days": 7})
+    reap = client.get("/api/fleet/facade/reap-report")
+
+    for response in (
+        help_response,
+        help_alias,
+        status,
+        board,
+        metrics,
+        backlog,
+        dead,
+        broker,
+        reap,
+    ):
+        assert response.status_code == 200
+
+    assert help_response.json()["endpoints"]["reap_report"].endswith("/reap-report")
+    assert help_alias.json()["truth"] == help_response.json()["truth"]
+    assert status.json()["health"]["mode"] == "shadow"
+    assert board.json() == {"board_status": "ok", "probes": {}}
+    assert metrics.json()["source"] == "authority"
+    assert metrics.json()["read_only"] is True
+    assert backlog.json()["content_included"] is False
+    assert dead.json()["content_included"] is False
+    assert broker.json()["schema"] == "fleet-broker-report.v1"
+    assert broker.json()["read_only"] is True
+    assert reap.json() == {"read_only": True, "apply": False, "report": []}
+
+
+def test_facade_missing_plane_db_is_fail_open(
+    client: TestClient, fleet_root: Path
+) -> None:
+    assert not fleet_root.exists()
+
+    status = client.get("/api/fleet/facade/status").json()
+    metrics = client.get("/api/fleet/facade/metrics").json()
+    backlog = client.get("/api/fleet/facade/backlog").json()
+    dead = client.get("/api/fleet/facade/dead").json()
+
+    assert status["plane_status"]["schema"]["db_exists"] is False
+    for payload in (metrics, backlog, dead):
+        assert payload["db_missing"] is True
+        assert payload["read_only"] is True
+
+
+def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_reap_worktrees(**kwargs: object) -> list:
+        calls.append(kwargs)
+        return [
+            fleet_router.reap_worktrees.ReapResult(
+                path="/repo/.worktrees/dispatch/codex/facade",
+                branch="codex/api-fleet-facade",
+                action="would_remove",
+                reason="PR #1 MERGED",
+                dirty=False,
+            )
+        ]
+
+    monkeypatch.setattr(fleet_router.reap_worktrees, "reap_worktrees", fake_reap_worktrees)
+
+    payload = fleet_router._facade_reap_report()
+
+    assert payload["read_only"] is True
+    assert payload["apply"] is False
+    assert payload["report"][0]["action"] == "would_remove"
+    assert calls == [
+        {
+            "repo_root": fleet_router.reap_worktrees.primary_checkout_root(
+                fleet_router.Path(fleet_router.LIVE_REPO_ROOT)
+            ),
+            "apply": False,
+            "prune_merged_branches": True,
+            "safe_only": True,
+            "merged_pr_only": True,
+            "require_activity_probe": False,
+        }
+    ]
+
+
 def test_plane_health_and_overview_expose_pre_flip_read_only_posture(
     client: TestClient, fleet_root: Path
 ) -> None:
