@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "611a2e25ae0d",
+  "session_id": "fleet-31104851d856418ba0b7cba326df5149",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T06:03:42.181752Z",
+  "branch": "cursor/6519-xdist-report-tampering",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_curriculum_lifecycle_pilot.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "433ef33ae8d5",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T06:03:42.160121Z",
+    "agent_lines": 84,
+    "agent_removed": 23,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 84,
+    "total_lines_changed": 107,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

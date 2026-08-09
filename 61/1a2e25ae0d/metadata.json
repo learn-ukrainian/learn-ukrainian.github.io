@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "611a2e25ae0d",
+  "strategy": "manual-commit",
+  "branch": "cursor/6519-xdist-report-tampering",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_curriculum_lifecycle_pilot.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/61/1a2e25ae0d/0/metadata.json",
+      "transcript": "/61/1a2e25ae0d/0/full.jsonl",
+      "compact_transcript": "/61/1a2e25ae0d/0/transcript.jsonl",
+      "content_hash": "/61/1a2e25ae0d/0/content_hash.txt",
+      "prompt": "/61/1a2e25ae0d/0/prompt.txt"
+    }
+  ]
+}
