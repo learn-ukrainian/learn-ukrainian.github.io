@@ -142,9 +142,18 @@ def _unavailable_session_payload(reason: str) -> dict[str, Any]:
     }
 
 
-def build_telemetry_payload(session_id: str | None = None) -> dict[str, Any] | None:
-    """Build the ``_telemetry`` block for JSON responses."""
-    if not telemetry_footer_enabled():
+def build_telemetry_payload(
+    session_id: str | None = None,
+    *,
+    force: bool = False,
+) -> dict[str, Any] | None:
+    """Build the ``_telemetry`` block for JSON responses.
+
+    ``force`` is reserved for a caller-scoped measurement contract. It keeps
+    that measurement available when the long-lived Monitor daemon did not
+    inherit the optional presentation-footer environment variable.
+    """
+    if not force and not telemetry_footer_enabled():
         return None
 
     if session_id:
@@ -204,9 +213,10 @@ def add_json_telemetry(
     payload: dict[str, Any],
     *,
     session_id: str | None = None,
+    force: bool = False,
 ) -> dict[str, Any]:
     """Add top-level ``_telemetry`` to a JSON-compatible dict when enabled."""
-    telemetry = build_telemetry_payload(session_id)
+    telemetry = build_telemetry_payload(session_id, force=force)
     if telemetry is None:
         return payload
     return {**payload, "_telemetry": telemetry}

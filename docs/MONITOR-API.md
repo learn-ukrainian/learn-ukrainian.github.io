@@ -53,7 +53,9 @@ Text responses append a tail footer:
 ```
 
 JSON responses add a top-level `_telemetry` object instead of changing
-the response text. Pass `?session=<uuid>` or header `X-Session-Id`
+the response text. A session-bound `/api/state/manifest` request always
+includes this measurement, independently of the optional footer setting on
+the long-lived Monitor daemon. Pass `?session=<uuid>` or header `X-Session-Id`
 (query wins) on telemetry-bearing endpoints (`/api/orient`, `/api/rules`,
 `/api/session/current`, `/api/state/manifest`).
 
