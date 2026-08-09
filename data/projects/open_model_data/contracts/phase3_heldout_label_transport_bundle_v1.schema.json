@@ -27,7 +27,7 @@
         "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
         "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
         "evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
-        "label_prompt_sha256": {"const": "981c5570690a70d96e5ed69a5bec178cad626a0437eef1eb3bdc5b5413029848"},
+        "label_prompt_sha256": {"const": "8e557d7524c275352d51fb515992d7b1fb5c155fe02765720a18e5ccec026933"},
         "materialization_receipt_sha256": {"$ref": "#/$defs/sha256"},
         "materialization_jsonl_sha256": {"$ref": "#/$defs/sha256"},
         "evaluation_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
