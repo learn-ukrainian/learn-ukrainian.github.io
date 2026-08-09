@@ -16,7 +16,13 @@ DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
 CIRCUIT_BREAKER_EXIT_CODE = 70
 CANARY_FAILURE_EXIT_CODE = 75
-DEFAULT_CANARY_LEMMAS = ["свіжий", "хліб", "вода", "сонце"]
+DEFAULT_CANARY_CONTROLS: dict[str, list[dict[str, Any]]] = {
+    "proverbs": [{"lemma": "вода", "pos": "noun", "url_slug": "вода"}],
+    "usage_notes": [{"lemma": "аби", "pos": "conjunction", "url_slug": "аби"}],
+    "grinchenko": [{"lemma": "хліб", "pos": "noun", "url_slug": "хліб"}],
+    "forms": [{"lemma": "свіжий", "pos": "adjective", "url_slug": "свіжий"}],
+}
+DEFAULT_CANARY_LEMMAS = ["вода", "аби", "хліб", "свіжий"]
 
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -80,32 +86,47 @@ def run_canary_check(
     conn: sqlite3.Connection,
     kaikki_lookup: dict[str, dict[str, Any]],
     *,
+    canary_controls: dict[str, list[dict[str, Any]]] | None = None,
     canary_lemmas: list[str] | None = None,
     has_sum11_flags: bool = False,
 ) -> dict[str, Any]:
-    """Pre-flight positive control canary check on known-good control lemmas.
+    """Pre-flight positive control canary check on known-good control entries.
 
-    Each control lemma must fill all 4 layer sections:
-    proverbs, usage_notes, grinchenko attestation, forms.
+    Each layer (proverbs, usage_notes, grinchenko, forms) must be proven fillable
+    by at least one positive control entry evaluated with its real POS.
     """
-    lemmas = canary_lemmas or DEFAULT_CANARY_LEMMAS
+    if canary_controls is None:
+        if canary_lemmas is not None:
+            canary_controls = {
+                layer: [{"lemma": lemma, "pos": "noun", "url_slug": lemma} for lemma in canary_lemmas]
+                for layer in ("proverbs", "usage_notes", "grinchenko", "forms")
+            }
+        else:
+            canary_controls = DEFAULT_CANARY_CONTROLS
+
     results: dict[str, Any] = {}
-    for lemma in lemmas:
-        entry = {"lemma": lemma, "pos": "noun", "url_slug": lemma}
-        enrich_manifest.enrich_entry(
-            entry,
-            conn,
-            kaikki_lookup,
-            has_sum11_flags=has_sum11_flags,
-        )
-        coverage = _entry_layer_coverage(entry)
-        missing = [layer for layer, filled in coverage.items() if not filled]
-        results[lemma] = {**coverage, "passed": len(missing) == 0, "missing_layers": missing}
-        if missing:
+    for layer in ("proverbs", "usage_notes", "grinchenko", "forms"):
+        controls = canary_controls.get(layer, [])
+        layer_passed = False
+        for ctrl in controls:
+            entry = dict(ctrl)
+            enrich_manifest.enrich_entry(
+                entry,
+                conn,
+                kaikki_lookup,
+                has_sum11_flags=has_sum11_flags,
+            )
+            coverage = _entry_layer_coverage(entry)
+            lemma_key = f"{ctrl['lemma']}:{layer}"
+            results[lemma_key] = {**coverage, "tested_layer": layer, "passed": coverage[layer]}
+            if coverage[layer]:
+                layer_passed = True
+                break
+        if not layer_passed:
             return {
                 "success": False,
-                "failed_lemma": lemma,
-                "missing_layers": missing,
+                "failed_layer": layer,
+                "missing_layers": [layer],
                 "details": results,
             }
     return {"success": True, "details": results}
@@ -401,9 +422,13 @@ def reenrich_thin_entries(
                     existing_wiki_reference if isinstance(existing_wiki_reference, dict) else None
                 ),
             )
+            was_enriched = had_anchor or had_translation or (_categorize_entry(entry) == "ENRICHED")
             after = json.dumps(entry, ensure_ascii=False, sort_keys=True)
             if after != before:
                 changed += 1
+
+            is_now_enriched = has_learner_english_anchor(entry) or _has_translation(entry) or (_categorize_entry(entry) == "ENRICHED")
+            if was_enriched or is_now_enriched or after != before:
                 consecutive_misses = 0
             else:
                 consecutive_misses += 1
@@ -455,8 +480,6 @@ def reenrich_thin_entries(
 
 
 def main() -> int:
-    import argparse
-
     parser = argparse.ArgumentParser(
         description="Re-enrich old-gate-enriched Atlas entries missing learner English anchors."
     )

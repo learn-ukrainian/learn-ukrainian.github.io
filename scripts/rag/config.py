@@ -12,9 +12,13 @@ CHUNKS_DIR = DATA_DIR / "textbook_chunks"
 LITERARY_DIR = DATA_DIR / "literary_texts"
 
 # ── VESUM morphological dictionary ──────────────────────────────
+_PRIMARY_ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian")
 VESUM_DIR = DATA_DIR / "vesum"
 VESUM_DB_PATH = DATA_DIR / "vesum.db"
+if not VESUM_DB_PATH.is_file() and (_PRIMARY_ROOT / "data" / "vesum.db").is_file():
+    VESUM_DB_PATH = _PRIMARY_ROOT / "data" / "vesum.db"
 VESUM_URL = "https://github.com/brown-uk/dict_uk/releases/download/v6.8.0/dict_corp_vis.txt.bz2"
+
 
 # ── Embedding models ───────────────────────────────────────────────
 BGE_M3_MODEL = "BAAI/bge-m3"

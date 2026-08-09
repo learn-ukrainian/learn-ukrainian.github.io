@@ -277,14 +277,9 @@ def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest, "enrich_entry", fake_enrich_entry)
 
     with sqlite3.connect(":memory:") as conn:
-        res = reenrich.run_canary_check(conn, {}, canary_lemmas=["вода"])
+        res = reenrich.run_canary_check(conn, {})
 
     assert res["success"] is True
-    assert res["details"]["вода"]["passed"] is True
-    assert res["details"]["вода"]["proverbs"] is True
-    assert res["details"]["вода"]["usage_notes"] is True
-    assert res["details"]["вода"]["grinchenko"] is True
-    assert res["details"]["вода"]["forms"] is True
 
 
 def test_canary_check_fails_and_aborts_mutation_check(monkeypatch) -> None:
@@ -298,12 +293,71 @@ def test_canary_check_fails_and_aborts_mutation_check(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest, "enrich_entry", broken_enrich_entry)
 
     with sqlite3.connect(":memory:") as conn:
-        res = reenrich.run_canary_check(conn, {}, canary_lemmas=["вода"])
+        res = reenrich.run_canary_check(conn, {})
 
     assert res["success"] is False
-    assert res["failed_lemma"] == "вода"
+    assert res["failed_layer"] == "proverbs"
     assert "proverbs" in res["missing_layers"]
-    assert "grinchenko" in res["missing_layers"]
+
+
+def test_circuit_breaker_trips_on_consecutive_misses(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {"lemma": "item1", "url_slug": "item1", "enrichment": {}},
+            {"lemma": "item2", "url_slug": "item2", "enrichment": {}},
+            {"lemma": "item3", "url_slug": "item3", "enrichment": {}},
+        ]
+    }
+
+    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
+        pass
+
+    monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="full-catalog",
+            circuit_breaker_limit=2,
+        )
+
+    assert summary["circuit_breaker_tripped"] is True
+    assert summary["consecutive_misses"] == 2
+
+
+def test_already_enriched_prefix_does_not_trip_circuit_breaker(monkeypatch) -> None:
+    """Already-enriched entries (e.g. resume run) must not trip the circuit breaker."""
+    manifest = {
+        "entries": [
+            {
+                "lemma": f"item{i}",
+                "url_slug": f"item{i}",
+                "pos": "noun",
+                "enrichment": {"translation": {"en": ["word"], "source": "slovnyk.me"}},
+            }
+            for i in range(60)
+        ]
+    }
+
+    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
+        pass
+
+    monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="full-catalog",
+            circuit_breaker_limit=50,
+        )
+
+    assert summary["circuit_breaker_tripped"] is False
+    assert summary["consecutive_misses"] == 0
+
 
 
 def test_write_target_snapshot(tmp_path: Path) -> None:
@@ -372,30 +426,4 @@ def test_full_catalog_target_and_categorical_binning(monkeypatch) -> None:
     assert layers["proverbs"] == 1
     assert layers["forms"] == 1
 
-
-def test_circuit_breaker_trips_on_consecutive_misses(monkeypatch) -> None:
-    manifest = {
-        "entries": [
-            {"lemma": "item1", "url_slug": "item1", "enrichment": {}},
-            {"lemma": "item2", "url_slug": "item2", "enrichment": {}},
-            {"lemma": "item3", "url_slug": "item3", "enrichment": {}},
-        ]
-    }
-
-    def noop_enrich(entry, conn, me_lookup, *, has_sum11_flags=False):
-        pass
-
-    monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
-
-    with sqlite3.connect(":memory:") as conn:
-        summary = reenrich.reenrich_thin_entries(
-            manifest,
-            conn=conn,
-            kaikki_lookup={},
-            target="full-catalog",
-            circuit_breaker_limit=2,
-        )
-
-    assert summary["circuit_breaker_tripped"] is True
-    assert summary["consecutive_misses"] == 2
 

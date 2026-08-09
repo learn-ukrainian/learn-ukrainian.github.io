@@ -189,10 +189,11 @@ def merge_translation_delta(
                         stats.filled_layer_sections.get(sec_name, 0) + 1
                     )
                     sec_src = sec_val.get("source") if isinstance(sec_val, dict) else None
-                    _add_source(
-                        entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {},
-                        sec_src,
-                    )
+                    enrichment = entry.get("enrichment")
+                    if not isinstance(enrichment, dict):
+                        enrichment = {}
+                        entry["enrichment"] = enrichment
+                    _add_source(enrichment, sec_src)
 
         donor_enr = donor.get("enrichment") if isinstance(donor.get("enrichment"), dict) else {}
         live_enr = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}

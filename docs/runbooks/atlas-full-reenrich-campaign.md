@@ -24,7 +24,7 @@ Because the remote VPS repo checkout (`/home/ops/atlas-runner/repo`) is delibera
 Run the positive-control canary check locally against your target environment:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/lexicon/reenrich_thin_manifest_entries.py \
+.venv/bin/python scripts/lexicon/reenrich_thin_manifest_entries.py \
   --local \
   --canary
 ```
@@ -102,7 +102,7 @@ Artifacts pulled into `batch_state/class-b-reenrich-pulled/`:
 Merge the pulled donor manifest onto the live published manifest additively:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/lexicon/merge_translation_delta.py \
+.venv/bin/python scripts/lexicon/merge_translation_delta.py \
   --live site/src/data/lexicon-manifest.json \
   --pulled batch_state/class-b-reenrich-pulled/manifest.json \
   --local-live \
@@ -116,14 +116,17 @@ Verification output checks:
 
 ---
 
-### 7. Publish-Side Compare-And-Swap (CAS) & Pointer Update
+### 7. Published Lineage Verification, CAS & Pointer Update
 
-If the live manifest moved on the remote release target during long merges, `merge_translation_delta.py` automatically detects SHA-256 drift immediately prior to write, re-fetches the live lineage, and re-validates all invariants before committing.
+`merge_translation_delta.py` performs a pre-write Compare-And-Swap (CAS) guard on the local `live_path` file bytes pre/post merge.
+For published release lineage verification prior to publishing:
 
-Verify fingerprint sidecar and pointer gate:
+1. Re-pull the published manifest / pointer (`lexicon-manifest.pointer.json` or release asset) and compare `json_sha256` against the baseline recorded at snapshot time.
+2. If the published release lineage moved (SHA-256 drift), re-pull the published manifest as live baseline, re-run `merge_translation_delta.py`, and verify full invariants (`overwrite_proof == 0`, `old_gate_not_rising == true`, entry count invariance).
+3. Verify fingerprint sidecar and pointer gate:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/lexicon/publish_manifest.py \
+.venv/bin/python scripts/lexicon/publish_manifest.py \
   --manifest site/src/data/lexicon-manifest.json \
   --verify-only
 ```
@@ -135,7 +138,7 @@ Verify fingerprint sidecar and pointer gate:
 Export the open dataset shards with temporary-file atomic renames and per-shard SHA-256 hashes:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/lexicon/export_open_dataset.py \
+.venv/bin/python scripts/lexicon/export_open_dataset.py \
   --write
 ```
 

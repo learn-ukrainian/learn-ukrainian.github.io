@@ -207,3 +207,35 @@ def test_merge_sections_and_attestation_additively() -> None:
     assert entry["enrichment"]["literary_attestation"] == [{"id": "grinchenko", "source": "Грінченко"}]
     assert entry["enrichment"]["morphology"] == {"forms": [{"form": "вода"}]}
 
+
+def test_add_source_attaches_section_source_when_enrichment_absent() -> None:
+    live = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+            }
+        ]
+    }
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "вода",
+                "lemma": "вода",
+                "pos": "noun",
+                "sections": {
+                    "proverbs": {"items": ["Слово не горобець"], "source": "Приповідки"},
+                },
+            }
+        ]
+    }
+
+    merge_translation_delta(live, pulled, stamp_generated_at=False)
+
+    entry = live["entries"][0]
+    assert "enrichment" in entry
+    assert "sources" in entry["enrichment"]
+    assert "Приповідки" in entry["enrichment"]["sources"]
+
+
