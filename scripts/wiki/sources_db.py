@@ -38,7 +38,7 @@ from scripts.lexicon.esum_garbled import (
 from . import slovnyk_me
 from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
-from .dense_rerank import _get_tokenizer, rerank_candidates
+from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections  # noqa: F401
 from .query_builder import build_query_buckets
 from .sum20_official import (
     PARSER_VERSION as SUM20_PARSER_VERSION,

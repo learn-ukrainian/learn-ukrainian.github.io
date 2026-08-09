@@ -149,6 +149,10 @@ def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> Non
 # ============================================================================
 
 from pipeline.config_tables import (
+    ACTIVITY_CONFIGS,  # noqa: F401
+    IMMERSION_RULES,  # noqa: F401
+    LEVEL_CONSTRAINTS,  # noqa: F401
+    TRACK_SKILLS,  # noqa: F401
     _build_exact_section_titles,
     _build_vocabulary_bank,
     _get_checkpoint_guidance,
@@ -160,6 +164,7 @@ from pipeline.config_tables import (
     get_activity_config,
     get_expansion_method,
     get_h3_word_range,
+    get_immersion_rule,  # noqa: F401
     get_item_minimums_table,
     get_level_constraints,
     get_level_label,
@@ -189,6 +194,7 @@ def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> su
 # Backward-compat re-exports from pipeline.dispatch
 from pipeline.dispatch import (
     dispatch_gemini,
+    dispatch_gemini_raw,  # noqa: F401
     save_gemini_session,
 )
 
