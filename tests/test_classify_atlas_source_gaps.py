@@ -4,6 +4,7 @@ import json
 import subprocess
 
 from scripts.audit.classify_atlas_source_gaps import classify_manifest, rendered_sections
+from tests.project_python import project_python
 
 
 def _entry(**overrides: object) -> dict:
@@ -178,7 +179,7 @@ def test_cli_can_fail_on_unclassified_gaps(tmp_path) -> None:
 
     blocked = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/classify_atlas_source_gaps.py",
             "--manifest",
             str(manifest_path),
@@ -196,7 +197,7 @@ def test_cli_can_fail_on_unclassified_gaps(tmp_path) -> None:
 
     subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/classify_atlas_source_gaps.py",
             "--manifest",
             str(manifest_path),
@@ -220,7 +221,7 @@ def test_cli_emits_machine_readable_formats(tmp_path) -> None:
 
     json_result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/classify_atlas_source_gaps.py",
             "--manifest",
             str(manifest_path),
@@ -241,7 +242,7 @@ def test_cli_emits_machine_readable_formats(tmp_path) -> None:
 
     tsv_result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/classify_atlas_source_gaps.py",
             "--manifest",
             str(manifest_path),
@@ -270,7 +271,7 @@ def test_cli_rejects_negative_unclassified_gap_limit(tmp_path) -> None:
 
     result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/classify_atlas_source_gaps.py",
             "--manifest",
             str(manifest_path),

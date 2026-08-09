@@ -18,6 +18,7 @@ from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
 from scripts.orchestration.task_family import rollover, rollover_registry
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -368,7 +369,7 @@ def test_direct_script_help_from_repository_root():
     env.pop("CODEX_SESSION_ID", None)
 
     completed = subprocess.run(
-        [".venv/bin/python", "scripts/orchestration/thread_handoff.py", "--help"],
+        [str(project_python()), "scripts/orchestration/thread_handoff.py", "--help"],
         cwd=repo_root,
         capture_output=True,
         text=True,

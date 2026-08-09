@@ -20,6 +20,7 @@ from scripts.orchestration.red_ci_known_failures import (
     load_and_validate_registry,
     main,
 )
+from tests.project_python import project_python
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -711,7 +712,7 @@ def test_direct_lookup_cli_handles_a_stop_action_without_stdout(tmp_path) -> Non
 
     completed = subprocess.run(
         [
-            str(PROJECT_ROOT / ".venv/bin/python"),
+            str(project_python()),
             str(PROJECT_ROOT / "scripts/orchestration/red_ci_known_failures.py"),
             *_lookup_args(registry_path, receipt_path, output_path),
         ],

@@ -8,6 +8,7 @@ from scripts.audit.audit_atlas_poc_richness import (
     classify_entry,
     rendered_sections,
 )
+from tests.project_python import project_python
 
 
 def _entry(**overrides: object) -> dict:
@@ -146,7 +147,7 @@ def test_audit_cli_runs_as_direct_script(tmp_path) -> None:
 
     result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/audit_atlas_poc_richness.py",
             "--manifest",
             str(manifest_path),
@@ -200,7 +201,7 @@ def test_audit_cli_enforces_explicit_max_counts(tmp_path) -> None:
 
     blocked = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/audit_atlas_poc_richness.py",
             "--manifest",
             str(manifest_path),
@@ -218,7 +219,7 @@ def test_audit_cli_enforces_explicit_max_counts(tmp_path) -> None:
 
     subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/audit_atlas_poc_richness.py",
             "--manifest",
             str(manifest_path),

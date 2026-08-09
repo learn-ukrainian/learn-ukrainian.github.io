@@ -3,13 +3,14 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from tests.project_python import project_python
+
 SCRIPT = Path("scripts/audit/lint_anti_menu.py")
-PYTHON = Path(".venv/bin/python")
 
 
 def run_linter(path: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [str(PYTHON), str(SCRIPT), "--text", str(path)],
+        [str(project_python()), str(SCRIPT), "--text", str(path)],
         capture_output=True,
         check=False,
         text=True,
@@ -233,7 +234,7 @@ making a concrete recommendation.
 
 def test_stdin_uses_stdin_label_and_informative_snippet() -> None:
     result = subprocess.run(
-        [str(PYTHON), str(SCRIPT), "--stdin"],
+        [str(project_python()), str(SCRIPT), "--stdin"],
         capture_output=True,
         check=False,
         input="Should I merge this now or wait for another review?\n",

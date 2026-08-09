@@ -2,11 +2,13 @@
 
 import subprocess
 
+from tests.project_python import project_python
+
 
 def test_v7_build_help_lists_no_resume_not_resume() -> None:
     """--resume flag was removed; --no-resume is the new opt-out."""
     out = subprocess.run(
-        [".venv/bin/python", "scripts/build/v7_build.py", "--help"],
+        [str(project_python()), "scripts/build/v7_build.py", "--help"],
         capture_output=True,
         text=True,
         check=True,

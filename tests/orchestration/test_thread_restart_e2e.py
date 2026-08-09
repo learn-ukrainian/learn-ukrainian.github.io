@@ -22,9 +22,9 @@ from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLi
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-REPO_PYTHON = REPO_ROOT / ".venv/bin/python"
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
 HANDOFF_CANARY = REPO_ROOT / "scripts/orchestration/thread_handoff_canary.py"
 CONTEXT_CANARY = REPO_ROOT / "scripts/context_canary.py"
@@ -194,7 +194,7 @@ exec {os.fspath(REPO_ROOT / ".venv" / "bin" / "python")!r} "$@"
 
 def handoff_command(primary: Path, *args: str) -> list[str | Path]:
     return [
-        REPO_PYTHON,
+        project_python(),
         HANDOFF,
         "--repo-root",
         primary,
@@ -542,13 +542,13 @@ def strict_evidence(primary: Path, packet: dict, *, wrong_answer: bool = False) 
     snapshot = semantic_snapshot(lease)
     write_json(snapshot_path, snapshot)
     minted = run(
-        [REPO_PYTHON, CONTEXT_CANARY, "mint", "--snapshot", snapshot_path, "--out", probe_path],
+        [project_python(), CONTEXT_CANARY, "mint", "--snapshot", snapshot_path, "--out", probe_path],
         cwd=primary,
         check=True,
     )
     assert "minted 10 anchors" in minted.stdout
     run(
-        [REPO_PYTHON, CONTEXT_CANARY, "questions", "--probe", probe_path, "--out", questions_path],
+        [project_python(), CONTEXT_CANARY, "questions", "--probe", probe_path, "--out", questions_path],
         cwd=primary,
         check=True,
     )
@@ -565,7 +565,7 @@ def strict_evidence(primary: Path, packet: dict, *, wrong_answer: bool = False) 
     write_json(answers_path, answers)
     scored = run(
         [
-            REPO_PYTHON,
+            project_python(),
             CONTEXT_CANARY,
             "score",
             "--probe",
@@ -593,7 +593,7 @@ def canary_proof(primary: Path, packet: dict, *, challenge: str | None = None) -
     proof_path = primary / replacement["canary_proof_path"]
     run(
         [
-            REPO_PYTHON,
+            project_python(),
             HANDOFF_CANARY,
             "--rollover-id",
             packet["rollover_id"],
@@ -993,7 +993,7 @@ def test_app_style_worktree_bootstrap_deploys_hook_and_discovers_canonical_packe
             "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "32000",
             "SESSION_HANDOFF_AGENT": "codex",
             "CODEX_THREAD_ID": "fresh-app-thread",
-            "THREAD_ROLLOVER_PYTHON": str(REPO_PYTHON),
+            "THREAD_ROLLOVER_PYTHON": str(project_python()),
             "THREAD_ROLLOVER_SCRIPT": str(HANDOFF),
         }
     )

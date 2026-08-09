@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 from scripts.audit.check_static_practice_assets import check_assets
+from tests.project_python import project_python
 
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
 
@@ -407,7 +408,7 @@ def test_cli_reports_missing_static_shard(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/check_static_practice_assets.py",
             "--daily-pool",
             str(daily_pool),
@@ -680,7 +681,7 @@ def test_cli_prints_coverage_table(tmp_path: Path) -> None:
 
     result = subprocess.run(
         [
-            ".venv/bin/python",
+            str(project_python()),
             "scripts/audit/check_static_practice_assets.py",
             "--daily-pool",
             str(daily_pool),
