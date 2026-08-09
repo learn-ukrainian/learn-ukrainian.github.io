@@ -54,6 +54,9 @@ def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
     "seg,is_admin",
     [
         (["gh", "pr", "merge", "--admin"], True),
+        (["gh", "pr", "merge", "123", "--admin=true"], True),
+        (["gh", "pr", "merge", "123", "--admin=false"], False),
+        (["gh", "pr", "merge", "123", "--subject", "--admin"], False),
         (["gh", "pr", "merge", "123", "--admin", "--squash"], True),
         (["sudo", "gh", "pr", "merge", "--admin"], True),
         (["gh", "pr", "merge", "--squash"], False),
@@ -93,6 +96,10 @@ def test_unrelated_command_is_untouched(monkeypatch):
 
 def test_admin_with_failing_required_check_blocked(monkeypatch):
     assert _run(monkeypatch, "gh pr merge 5 --admin", failing=["Test (pytest)"]) == 2
+
+
+def test_admin_equals_true_with_failing_required_check_blocked(monkeypatch):
+    assert _run(monkeypatch, "gh pr merge 5 --admin=true", failing=["Test (pytest)"]) == 2
 
 
 def test_admin_with_only_green_or_advisory_allowed(monkeypatch):
