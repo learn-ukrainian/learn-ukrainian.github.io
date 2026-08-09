@@ -4,13 +4,14 @@
   "title": "Phase 3 correction/protection cycle002 functional-role preservation contract",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "text_free", "preserved_v2_1_artifacts", "cycle001_void_receipt", "cycle002", "preserved_constraints", "source_authoring"],
+  "required": ["schema_version", "text_free", "preserved_v2_1_artifacts", "cycle001_void_receipt", "cycle002", "cycle002_labeling_protocol", "preserved_constraints", "source_authoring"],
   "properties": {
     "schema_version": {"const": "correction_protection_functional_role_contract_v2_2"},
     "text_free": {"const": true},
     "preserved_v2_1_artifacts": {"$ref": "#/$defs/preservedV21"},
     "cycle001_void_receipt": {"$ref": "#/$defs/voidReceipt"},
     "cycle002": {"$ref": "#/$defs/cycle002"},
+    "cycle002_labeling_protocol": {"$ref": "#/$defs/labelingProtocol"},
     "preserved_constraints": {"$ref": "#/$defs/preservedConstraints"},
     "source_authoring": {"const": {"blocked": true, "reason": "cycle002_closure_not_established"}}
   },
@@ -48,6 +49,22 @@
     },
     "cycle002": {
       "const": {"evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-002", "predecessor_cycle_void_receipt_required": true, "fresh_release_and_evaluation_freezes_required": true, "frozen_labels_before_extraction": 9392, "source_authoring_blocked_until_closure": true}
+    },
+    "labelingProtocol": {
+      "const": {
+        "reviewer_role_id": "heldout_label_reviewer",
+        "passes": [
+          {"pass_id": "a", "task_id": "phase3-v2-2-heldout-semantic-label-pass-a", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"},
+          {"pass_id": "b", "task_id": "phase3-v2-2-heldout-semantic-label-pass-b", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"}
+        ],
+        "independence_unit": "task_id",
+        "provider_independent": false,
+        "provider_reuse_disclosed": true,
+        "deterministic_assembly_may_adjudicate": false,
+        "disagreement_disposition": "unresolved_abstention",
+        "heldout_access_scope": "sealed_evaluation_only",
+        "authoring_access_forbidden": true
+      }
     },
     "preservedConstraints": {
       "const": {"denominators_unchanged": true, "source_unit_total": 67041, "author_total": 43812, "evaluation_total": 9392, "quarantine_total": 13837, "breadth_floors_unchanged": true, "phenomenon_count": 12, "positive_floor_per_phenomenon": 30, "acceptable_control_floor_per_phenomenon": 30, "protected_floor_per_phenomenon": 30, "distinct_document_floor_per_stratum": 3, "evaluation_thresholds_unchanged": true, "phase4_block_unchanged": true}

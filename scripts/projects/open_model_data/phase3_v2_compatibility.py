@@ -121,6 +121,7 @@ ENGINE_PATHS = frozenset({
     "data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md",
+    "data/projects/open_model_data/contracts/phase3_heldout_semantic_gold_label_prompt_v1.md",
     "data/projects/open_model_data/contracts/phase3_source_production_transport_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_source_author_prompt_v1.md",
     "data/projects/open_model_data/contracts/phase3_source_review_prompt_v1.md",

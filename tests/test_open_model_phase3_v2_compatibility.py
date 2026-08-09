@@ -44,7 +44,7 @@ def test_engine_inventory_is_the_complete_current_v2_1_runtime_schema_closure() 
     bindings = matrix["engine_bindings"]  # type: ignore[index]
     paths = {entry["logical_path"] for entry in bindings}  # type: ignore[index]
     assert paths == compatibility.ENGINE_PATHS
-    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 42
+    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 43
     assert all(entry["artifact_sha256"] for entry in bindings)  # type: ignore[index]
     assert all(not path.startswith("data/projects/open_model_data/evidence/") for path in paths)
 

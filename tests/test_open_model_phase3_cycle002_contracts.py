@@ -24,6 +24,12 @@ def test_cycle002_contracts_bind_the_actual_cycle001_void_receipt() -> None:
     result = roles.verify_cycle002_contracts()
     assert result["ok"] is True
     assert result["evaluation_cycle_id"] == "phase3-v2-1-evaluation-cycle-002"
+    assert [item["task_id"] for item in result["labeling_protocol"]["passes"]] == [
+        "phase3-v2-2-heldout-semantic-label-pass-a",
+        "phase3-v2-2-heldout-semantic-label-pass-b",
+    ]
+    assert result["labeling_protocol"]["provider_independent"] is False
+    assert result["labeling_protocol"]["deterministic_assembly_may_adjudicate"] is False
     assert result["source_authoring_blocked"] is True
 
 
@@ -77,6 +83,28 @@ def test_cycle002_contracts_reject_restart_gate_drift(
     role_path = _json(tmp_path / "role.json", role)
     evaluation_path = _json(tmp_path / "evaluation.json", evaluation)
     with pytest.raises(roles.FunctionalRoleError, match=r"schema violation|binding drift"):
+        roles.verify_cycle002_contracts(role_path=role_path, evaluation_path=evaluation_path)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("provider_independent", True),
+        ("provider_reuse_disclosed", False),
+        ("deterministic_assembly_may_adjudicate", True),
+        ("disagreement_disposition", "deterministic_winner"),
+    ],
+)
+def test_cycle002_contracts_reject_labeling_protocol_drift(
+    tmp_path: Path, field: str, value: object
+) -> None:
+    role = copy.deepcopy(_value(roles.CYCLE002_ROLE_PATH))
+    evaluation = copy.deepcopy(_value(roles.CYCLE002_EVALUATION_PATH))
+    role["cycle002_labeling_protocol"][field] = value  # type: ignore[index]
+    evaluation["cycle002_labeling_protocol"][field] = value  # type: ignore[index]
+    role_path = _json(tmp_path / "role.json", role)
+    evaluation_path = _json(tmp_path / "evaluation.json", evaluation)
+    with pytest.raises(roles.FunctionalRoleError, match=r"schema violation|protocol drift"):
         roles.verify_cycle002_contracts(role_path=role_path, evaluation_path=evaluation_path)
 
 
