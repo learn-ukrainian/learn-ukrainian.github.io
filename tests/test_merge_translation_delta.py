@@ -54,7 +54,6 @@ def test_preserves_existing_en_even_when_pulled_differs() -> None:
     assert stats.filled == 0
     assert stats.skipped_live_has_translation == 1
     assert live["entries"][0]["enrichment"]["translation"] == before
-    assert stats.overwritten_nonempty_en == 0
 
 
 def test_slug_absent_in_pulled_is_ignored() -> None:
@@ -118,6 +117,21 @@ def test_overwrite_proof_reports_zero_for_clean_merge() -> None:
     assert prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug) == 0
     assert entry_translation(live["entries"][0]) == {"en": ["m", "million"], "source": "live"}
     assert entry_translation(live["entries"][1]) == {"en": ["gap"], "source": "pulled"}
+
+
+def test_overwrite_proof_returns_nonzero_when_nonempty_en_changes() -> None:
+    """Mutation check: the proof must fail when a nonempty EN object actually changes."""
+    before_by_slug = {
+        "kiwi": _entry("kiwi", "ківі", en=["kiwi 2"], source="live-balla"),
+        "млн": _entry("млн", "млн", en=["m", "million"], source="live"),
+    }
+    after_by_slug = {
+        "kiwi": _entry("kiwi", "ківі", en=["different"], source="mutated"),
+        "млн": copy.deepcopy(before_by_slug["млн"]),
+    }
+
+    assert prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug) > 0
+    assert prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug) == 1
 
 
 def test_sync_embedded_fingerprint_from_sidecar(tmp_path: Path) -> None:

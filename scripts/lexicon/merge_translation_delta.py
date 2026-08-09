@@ -109,7 +109,6 @@ class MergeStats:
     skipped_live_has_translation: int = 0
     skipped_pulled_missing_slug: int = 0
     skipped_pulled_lacks_translation: int = 0
-    overwritten_nonempty_en: int = 0
     filled_slugs: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict[str, Any]:
@@ -176,10 +175,6 @@ def merge_translation_delta(
     if after_count != before_count:
         raise RuntimeError(
             f"entry-count invariant broken: before={before_count} after={after_count}"
-        )
-    if stats.overwritten_nonempty_en != 0:
-        raise RuntimeError(
-            f"overwrite invariant broken: overwritten_nonempty_en={stats.overwritten_nonempty_en}"
         )
 
     if stamp_generated_at:
@@ -281,6 +276,20 @@ def main() -> int:
         report_path = args.report if args.report.is_absolute() else ROOT / args.report
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    if overwrite_proof != 0:
+        print(
+            json.dumps(
+                {
+                    "error": "overwrite_proof_modified_nonempty_en",
+                    "overwrite_proof_modified_nonempty_en": overwrite_proof,
+                    "wrote": False,
+                },
+                ensure_ascii=False,
+            ),
+            file=sys.stderr,
+        )
+        return 1
 
     if args.write:
         if live_path.resolve() == DEFAULT_MANIFEST.resolve():
