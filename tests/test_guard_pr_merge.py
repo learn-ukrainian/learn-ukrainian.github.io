@@ -437,6 +437,28 @@ def test_wrapper_with_options_is_still_judged(cmd):
     assert _any_merge(cmd)
 
 
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env -i gh pr merge 5 --squash",
+        "env -i FOO=1 gh pr merge 5 --squash",
+        "env -u FOO gh pr merge 5 --squash",
+        "sudo -u root gh pr merge 5 --squash",
+        "sudo --preserve-env gh pr merge 5 --squash",
+        "sudo -E gh pr merge 5 --squash",
+        "time -p gh pr merge 5 --squash",
+        "nice -n 10 gh pr merge 5 --squash",
+        "stdbuf -oL gh pr merge 5 --squash",
+    ],
+)
+def test_wrapper_options_land_on_pr_merge_verb(cmd):
+    seg = guard._segments(cmd)[0]
+    i, via_xargs = guard._invoked_start(seg)
+    assert not via_xargs
+    assert seg[i : i + 3] == ["gh", "pr", "merge"]
+    assert _any_merge(cmd)
+
+
 def test_unwrapped_mention_is_not_a_merge():
     # The wrapper scan must not turn any stray token run into a merge.
     assert not _any_merge("echo gh pr merge 5")

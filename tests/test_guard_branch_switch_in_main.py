@@ -314,6 +314,24 @@ def test_wrapper_and_assignment_prefixes_still_inspected(cmd):
     assert _dangerous(cmd) is not None
 
 
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env -i git branch -D main",
+        "env -i FOO=1 git branch -D main",
+        "env -u FOO git branch -D main",
+        "sudo -u root git branch -D main",
+        "sudo --preserve-env git branch -D main",
+        "sudo -E git branch -D main",
+        "time -p git branch -D main",
+        "nice -n 10 git branch -D main",
+        "stdbuf -oL git branch -D main",
+    ],
+)
+def test_wrapper_options_do_not_hide_branch_verb(cmd):
+    assert _dangerous(cmd) is not None
+
+
 def test_unclosed_heredoc_does_not_hide_trailing_danger():
     # A never-closing marker must NOT drop the real command after it (#4877
     # fail-open): the buffered lines were not a real heredoc body.
