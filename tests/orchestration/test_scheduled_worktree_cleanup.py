@@ -56,6 +56,51 @@ def test_apply_fails_closed_without_process_probe(tmp_path: Path, monkeypatch) -
     assert result["results"] == []
 
 
+def test_scheduled_cleanup_enables_terminal_dispatch_class_by_default(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "reap_worktrees",
+        lambda **kwargs: captured.update(kwargs) or [],
+    )
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+
+    cleanup._repo_result(repo, apply=False)
+
+    assert captured["merged_pr_only"] is True
+    assert captured["include_terminal_dispatches"] is True
+
+
+def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    captured: dict[str, object] = {}
+    monkeypatch.setenv("LU_REAPER_TERMINAL_DISPATCHES", "0")
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "reap_worktrees",
+        lambda **kwargs: captured.update(kwargs) or [],
+    )
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+
+    cleanup._repo_result(repo, apply=False)
+
+    assert captured["include_terminal_dispatches"] is False
+
+
 def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     orphan = repo / ".worktrees" / "dispatch" / "codex" / "orphan"

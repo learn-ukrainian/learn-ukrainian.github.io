@@ -453,6 +453,115 @@ def test_class_a_no_deliverable_dispatch_removed(
     assert not worktree_path.exists()
 
 
+def test_terminal_dispatch_class_reaps_only_explicit_terminal_task(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "terminal-scheduled"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/terminal-scheduled", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "failed"}), encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {"codex/terminal-scheduled": []})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "settled dispatch task-id=terminal-scheduled status=failed"
+    assert not worktree.exists()
+
+
+def test_terminal_dispatch_class_preserves_open_or_unknown_pr(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "terminal-pr-guard"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/terminal-pr-guard", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {"codex/terminal-pr-guard": [{"number": 99, "state": "OPEN"}]})
+
+    open_result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert open_result.action == "skipped"
+    assert worktree.exists()
+
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([], "gh unavailable"))
+    unknown_result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert unknown_result.action == "skipped"
+    assert unknown_result.reason == "PR guard unavailable; gh unavailable"
+    assert worktree.exists()
+
+
+def test_terminal_dispatch_class_does_not_infer_terminal_from_dead_running_pid(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "dead-running-pid"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/dead-running-pid", path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "running", "pid": 999999}), encoding="utf-8"
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {"codex/dead-running-pid": []})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
 def test_class_a_fail_safe_skips(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -510,13 +619,12 @@ def test_class_a_fail_safe_skips(
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
 
-    # Case 7: open PR + clean tip already on origin → free local worktree
+    # Case 7: an open PR remains protected even when its clean head is on origin.
     monkeypatch.setattr(rw, "_origin_matches_head", lambda _path, _branch: True)
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
     result = result_for(results, worktree_path)
-    assert result.action == "removed"
-    assert "open PR remains on remote" in (result.reason or "")
-    assert not worktree_path.exists()
+    assert result.action == "skipped"
+    assert worktree_path.exists()
 
 
 def test_class_b_detached_head_removed(
