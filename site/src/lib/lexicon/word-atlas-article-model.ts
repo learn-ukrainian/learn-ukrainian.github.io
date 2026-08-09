@@ -190,6 +190,16 @@ export interface LexiconSections {
     source: string;
     source_urls?: string[];
   };
+  proverbs?: {
+    items: Array<{
+      text: string;
+      gloss?: string;
+      source: string;
+      source_url?: string;
+    }>;
+    source: string;
+    source_urls?: string[];
+  };
 }
 
 export interface CourseUsage {
@@ -732,6 +742,7 @@ function buildArticleOverview(args: {
   const homonymCount = sections?.homonyms?.items?.length ?? 0;
   const paronymCount = sections?.paronyms?.items?.length ?? 0;
   const idiomCount = sections?.idioms?.items?.length ?? 0;
+  const proverbCount = sections?.proverbs?.items?.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
     definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
@@ -806,6 +817,14 @@ function buildArticleOverview(args: {
           : "очікує джерело",
     },
     {
+      label: "Приповідки",
+      ready: proverbCount > 0,
+      detail:
+        proverbCount > 0
+          ? `${proverbCount} ${pluralizeUk(proverbCount, ["приповідка", "приповідки", "приповідок"])}`
+          : "очікує джерело",
+    },
+    {
       label: "Засвідчення",
       ready: Boolean(enrichment?.literary_attestation),
       detail: enrichment?.literary_attestation ? "літературний корпус" : "очікує корпус",
@@ -868,6 +887,7 @@ function buildSourceList(args: {
   if (sections?.homonyms?.source) sources.add(sections.homonyms.source);
   if (sections?.paronyms?.source) sources.add(sections.paronyms.source);
   if (sections?.idioms?.source) sources.add(sections.idioms.source);
+  if (sections?.proverbs?.source) sources.add(sections.proverbs.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
   if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");

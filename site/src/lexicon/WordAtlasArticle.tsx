@@ -736,6 +736,25 @@ export default function WordAtlasArticle({
             </section>
           )}
 
+          {(sections?.proverbs?.items?.length ?? 0) > 0 && (
+            <section className="atlas-section">
+              <h2>Приповідки</h2>
+              {sections!.proverbs!.items.map((proverb) => (
+                <div key={proverb.text} className="resource-card">
+                  <h3>{proverb.text}</h3>
+                  {proverb.gloss && <p>{proverb.gloss}</p>}
+                  {proverb.source_url && !isMirrorUrl(proverb.source_url) && safeHref(proverb.source_url) ? (
+                    <ExtLink className="tag" href={safeHref(proverb.source_url)!} label={proverb.source}>
+                      {proverb.source}
+                    </ExtLink>
+                  ) : (
+                    <span className="tag">{proverb.source}</span>
+                  )}
+                </div>
+              ))}
+            </section>
+          )}
+
           {enrichment?.literary_attestation && (
             <section className="atlas-section">
               <h2>Літературні засвідчення</h2>
