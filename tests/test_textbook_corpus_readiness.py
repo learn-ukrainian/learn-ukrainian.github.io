@@ -83,6 +83,36 @@ def test_reconciles_required_statuses_and_counts(tmp_path: Path) -> None:
     }
 
 
+def test_partial_page_quarantine_cannot_be_reported_as_ready(tmp_path: Path) -> None:
+    root = tmp_path / "drive"
+    root.mkdir()
+    (root / "partial.pdf").write_bytes(b"%PDF-partial")
+    _write_jsonl(
+        root / "partial.jsonl",
+        [
+            {"chunk_id": "partial_s0000", "text": "one"},
+            {"chunk_id": "partial_s0001", "text": "two"},
+            {"chunk_id": "partial_s0002", "text": "three"},
+        ],
+    )
+    selection = tmp_path / "selection.yaml"
+    _write_selection(selection, "partial")
+    db = tmp_path / "sources.db"
+    _write_db(db, [("partial", 2)])
+
+    report = readiness.build_report(
+        gdrive_root=root,
+        db_path=db,
+        selection_path=selection,
+    )
+    source = _source(report, "partial")
+
+    assert source["status"] == "partial_db_ingest"
+    assert source["states"] == ["partial_db_ingest"]
+    assert source["chunks"]["row_count"] == 3
+    assert source["db"]["row_count"] == 2
+
+
 def test_split_volumes_are_one_selected_source_with_explicit_components(tmp_path: Path) -> None:
     root = tmp_path / "drive"
     root.mkdir()
