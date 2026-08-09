@@ -33,6 +33,7 @@ from scripts.lexicon.enrich_manifest import (
     _etymology,
     _etymology_lookup_variants,
     _fill_learner_english_anchor_from_slovnyk_cache,
+    _grinchenko_definition_card,
     _homonym_relations,
     _homonym_relations_by_headword,
     _idioms,
@@ -1342,10 +1343,79 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
-    # СУМ-11 card (even a flagged one) must be absent — only the СУМ-20 card survives.
-    assert [card["id"] for card in cards] == ["sum20"]
+    # СУМ-11 card (even a flagged one) must be absent — only СУМ-20 and the
+    # Грінченко heritage attestation (#6464) survive, in that order.
+    assert [card["id"] for card in cards] == ["sum20", "grinchenko"]
     assert all("СУМ-11" not in (card.get("source") or "") for card in cards)
     assert all(card["id"] not in ("sum11", "sum11-flagged") for card in cards)
+    # Грінченко glosses Ukrainian headwords in Russian (pre-Soviet Ukrainian-Russian
+    # dictionary) — the card must never leak that raw Russian text to learners.
+    grinchenko_card = cards[-1]
+    assert "Знамя" not in grinchenko_card["definitions"][0]
+
+
+def test_grinchenko_definition_card_is_attestation_only_never_the_raw_gloss() -> None:
+    """#6464: the Грінченко (1907) heritage card proves pre-Soviet attestation but
+    never reproduces the raw ``definition`` column — that column glosses Ukrainian
+    headwords in Russian (a Ukrainian-Russian dictionary compiled under the Ems-era
+    restrictions), which would put Russian text in front of learners."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("хата", "Хата, -ти, ж. Дом, изба, хижина. Моя хата з краю.", "Грінченко"),
+    )
+
+    card = _grinchenko_definition_card(conn, "хата")
+
+    assert card is not None
+    assert card["id"] == "grinchenko"
+    assert card["source"] == "Словарь української мови Б. Грінченка (1907–1909)"
+    assert card["source_pill"] == "Грінченко (1907)"
+    assert "«хата»" in card["definitions"][0]
+    for russian_only in ("Дом", "изба", "хижина"):
+        assert russian_only not in card["definitions"][0]
+
+
+def test_grinchenko_definition_card_absent_when_not_attested() -> None:
+    conn = _conn()
+
+    assert _grinchenko_definition_card(conn, "гаджет") is None
+
+
+def test_grinchenko_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
+    """Грінченко only carries dictionary (base) headwords, so an inflected form
+    (e.g. водою) must resolve through VESUM's base lemma, same as VTS/СУМ-20."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("вода", "ВодА, -дИ, ж. Вода.", "Грінченко"),
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_base_lemma",
+        lambda word: "вода" if word == "водою" else None,
+    )
+
+    card = _grinchenko_definition_card(conn, "водою")
+
+    assert card is not None
+    assert "«вода»" in card["definitions"][0]
+
+
+def test_definition_cards_grinchenko_always_last_and_optional(monkeypatch) -> None:
+    """Грінченко is additive/optional and always sorts after VTS + СУМ-20 (design doc:
+    'VTS primary; optional SUM-20 examples; optional Грінченко heritage card')."""
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("вода", "ВодА, -дИ, ж. Вода.", "Грінченко"),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
+
+    cards = _definition_cards(conn, "вода", has_sum11_flags=False)
+
+    assert [card["id"] for card in cards] == ["grinchenko"]
 
 
 def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:

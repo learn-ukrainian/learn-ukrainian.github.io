@@ -91,6 +91,7 @@ from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     CORRECTION_DICTIONARIES_LABEL,
     ESUM_LABEL,
+    GRINCHENKO_LABEL,
     MPHDICT_SYNONYMS_LABEL,
     PHRASEOLOGY_LABEL,
     PROVERBS_LABEL,
@@ -3471,6 +3472,65 @@ def _sum11_definition_card(
     return None
 
 
+def _grinchenko_definition_row(conn: sqlite3.Connection, lemma: str) -> str | None:
+    """Return the attested headword spelling if ``lemma`` exists in Грінченко, else None."""
+    for variant in _split_lemma_variants(lemma):
+        row = conn.execute(
+            "SELECT word FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+            (variant,),
+        ).fetchone()
+        if row and row[0]:
+            headword = clean_html_entities(str(row[0])).strip()
+            if headword:
+                return headword
+    return None
+
+
+def _grinchenko_definition_card(
+    conn: sqlite3.Connection,
+    lemma: str,
+) -> dict[str, Any] | None:
+    """Heritage attestation card for Б. Грінченка «Словарь української мови» (1907).
+
+    #6464. Source choice: the offline ``grinchenko`` table (same digitized 1907 text
+    already used by heritage_classifier.py / search_grinchenko_1907), NOT a live
+    slovnyk.me ``/dict/hrinchenko/`` scrape — verified via WebFetch that the mirror
+    reproduces the identical raw entry, and search_slovnyk_me already blocks
+    re-fetching Грінченко because it is "already indexed locally". Offline avoids a
+    network dependency in CI and duplicate provenance for the same source.
+
+    Content choice: Грінченко's entries gloss Ukrainian headwords IN RUSSIAN — it was
+    compiled as a Ukrainian-Russian dictionary under the Ems-era restrictions.
+    Verified live on multiple samples (прапор → "Знамя"; хата → "Дом, изба, хижина";
+    серце → "Сердце... Гнев"). Reproducing that prose as a learner "definition" would
+    put Russian-language text in a max-immersion Ukrainian product — worse than the
+    already-excluded Soviet-era СУМ-11, which is at least Ukrainian-language. This
+    card therefore never surfaces the raw ``definition`` column: it states only the
+    verified fact of pre-Soviet attestation (headword found in the 1907 registry),
+    never a translated or paraphrased gloss (#M-4: no invented/untranslated text).
+    """
+    headword = _grinchenko_definition_row(conn, lemma)
+    if not headword:
+        # Inflected-form entries (e.g. водою) resolve to their VESUM base lemma —
+        # Грінченко only carries dictionary (base) headwords.
+        base = _vesum_base_lemma(lemma)
+        if base and base != lemma:
+            headword = _grinchenko_definition_row(conn, base)
+    if not headword:
+        return None
+    return {
+        "id": "grinchenko",
+        "source": GRINCHENKO_LABEL,
+        "source_pill": "Грінченко (1907)",
+        "note": "домодерна фіксація · не переклад",
+        "heritage": True,
+        "definitions": [
+            f"«{headword}» засвідчено в словнику Б. Грінченка (1907). "
+            "Це один із найповніших домодерних реєстрів української лексики."
+        ],
+    }
+
+
 def _definition_cards(
     conn: sqlite3.Connection,
     lemma: str,
@@ -3481,10 +3541,12 @@ def _definition_cards(
     # СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization
     # decision 2026-06-26. Show clean modern Ukrainian dictionaries: VTS (Великий
     # тлумачний словник) on top, СУМ-20 below — both when available. Inflected-form
-    # entries resolve to their base lemma inside each builder.
+    # entries resolve to their base lemma inside each builder. Грінченко (1907) is an
+    # optional heritage attestation card, always last (#6464) — never primary.
     vts = _vts_definition_card(lemma, cache)
     sum20 = _sum20_definition_card(lemma, cache)
-    return [card for card in (vts, sum20) if card]
+    grinchenko = _grinchenko_definition_card(conn, lemma)
+    return [card for card in (vts, sum20, grinchenko) if card]
 
 
 _SYNONYM_ADDITION_CAP = 8
