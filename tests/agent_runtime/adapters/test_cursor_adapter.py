@@ -244,6 +244,116 @@ def test_cursor_adapter_parse_response_success(adapter):
     assert result.tool_calls[0]["name"] == "mcp__sources__search_text"
 
 
+def test_cursor_adapter_attributes_concrete_model_from_stream_metadata(adapter):
+    stdout = "\n".join(
+        [
+            json.dumps(
+                {
+                    "type": "system",
+                    "subtype": "init",
+                    "session_id": "cursor-session-model",
+                    "model": "auto",
+                }
+            ),
+            json.dumps({"type": "text", "content": "Completed."}),
+            json.dumps({"type": "result", "model": "composer-2.5"}),
+        ]
+    )
+
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.substitution is not None
+    assert result.substitution["requested_model"] == "auto"
+    assert result.substitution["actual_model"] == "composer-2.5"
+    assert result.substitution["actual_model_known"] is True
+    assert result.substitution["source"] == "cursor-stream-json"
+
+
+def test_cursor_adapter_does_not_infer_model_from_assistant_text(adapter):
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "system", "subtype": "init", "model": "auto"}),
+            json.dumps(
+                {
+                    "type": "message",
+                    "role": "assistant",
+                    "content": "The model is composer-2.5, but this is only prose.",
+                }
+            ),
+        ]
+    )
+
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.substitution is not None
+    assert result.substitution["actual_model"] is None
+    assert result.substitution["actual_model_known"] is False
+    assert result.substitution["source"] == "unknown"
+
+
+def test_cursor_adapter_reads_concrete_model_from_session_transcript(adapter, monkeypatch):
+    adapter._workspace = "/tmp/cursor-model-test"
+    monkeypatch.setattr(
+        adapter,
+        "_read_session_transcript_events",
+        lambda _workspace, _session_id: [
+            {"type": "result", "model_id": "claude-sonnet-4-5"},
+        ],
+    )
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "system", "session_id": "cursor-session-transcript"}),
+            json.dumps({"type": "text", "content": "Completed."}),
+        ]
+    )
+
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.substitution is not None
+    assert result.substitution["actual_model"] == "claude-sonnet-4-5"
+    assert result.substitution["actual_model_known"] is True
+    assert result.substitution["source"] == "cursor-transcript"
+
+
+def test_cursor_adapter_does_not_use_unrelated_existing_transcript_model(adapter, monkeypatch):
+    adapter._workspace = "/tmp/cursor-model-test"
+    monkeypatch.setattr(adapter, "_find_session_id_on_disk", lambda _workspace: "old-session")
+    monkeypatch.setattr(
+        adapter,
+        "_read_session_transcript_events",
+        lambda _workspace, _session_id: [{"type": "result", "model": "composer-2.5"}],
+    )
+
+    result = adapter.parse_response(
+        stdout=json.dumps({"type": "text", "content": "Completed."}),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.substitution is not None
+    assert result.substitution["actual_model"] is None
+    assert result.substitution["actual_model_known"] is False
+    assert result.substitution["source"] == "unknown"
+
+
 def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(adapter):
     """Prompt/tool text is part of stream-json stdout, not a provider signal."""
     stdout = "\n".join(

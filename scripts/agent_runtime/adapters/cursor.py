@@ -25,6 +25,7 @@ import json
 import logging
 import re
 import shutil
+from collections.abc import Mapping
 from pathlib import Path
 
 from ..result import ParseResult
@@ -45,6 +46,37 @@ _RATE_LIMIT_PATTERNS = (
     r"\b429\b",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
+
+# Cursor's automatic route is a selector, not an attributable model. Keep
+# this boundary structural: assistant prose, tool input, and arbitrary log
+# text must never become model evidence merely because they contain the word
+# "model".
+_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a"})
+_MODEL_KEYS = frozenset(
+    {
+        "model",
+        "modelid",
+        "model_id",
+        "actualmodel",
+        "actual_model",
+        "resolvedmodel",
+        "resolved_model",
+    }
+)
+_MODEL_CONTAINER_KEYS = frozenset(
+    {
+        "data",
+        "info",
+        "meta",
+        "metadata",
+        "message",
+        "result",
+        "response",
+        "run",
+        "session",
+    }
+)
+_MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
 
 
 class CursorAdapter:
@@ -322,7 +354,6 @@ class CursorAdapter:
     ) -> ParseResult:
         """Parse cursor-agent JSONL output into a ParseResult."""
         _ = output_file
-        _ = plan
         _ = call_start_time
 
         # Parse JSONL events
@@ -331,9 +362,11 @@ class CursorAdapter:
 
         # Detect the session ID of the current run
         session_id = None
+        session_id_source: str | None = None
         for event in events:
             if "sessionId" in event or "session_id" in event:
                 session_id = str(event.get("sessionId") or event.get("session_id"))
+                session_id_source = "cursor-stream-json"
                 break
 
         # If not found in stdout events, scan the filesystem for a new transcript
@@ -350,26 +383,48 @@ class CursorAdapter:
                     if candidates:
                         newest = max(candidates, key=lambda p: p.stat().st_mtime)
                         session_id = newest.name
+                        session_id_source = "cursor-new-transcript"
                 except OSError:
                     pass
 
         # If still not found, check the disk generally for the newest one
         if not session_id and getattr(self, "_workspace", None):
             session_id = self._find_session_id_on_disk(self._workspace)
+            if session_id:
+                # This may be an older, unrelated session. It can preserve the
+                # adapter's existing response fallback, but it is not evidence
+                # for the model used by this invocation.
+                session_id_source = "cursor-existing-transcript"
 
         # The final response is usually the last 'content' or 'text' event
         # in the stream. parse_json_events + normalize_tool_calls handles
         # most of this, but we need to extract the assistant's final prose.
         response = _extract_response_from_events(events)
-        if not response and session_id and getattr(self, "_workspace", None):
-            transcript_events = self._read_session_transcript_events(
-                self._workspace,
-                session_id,
-            )
+        resolved_model = _extract_concrete_model_from_events(events)
+        resolved_model_source = "cursor-stream-json" if resolved_model else None
+        transcript_events: list[dict] = []
+        if session_id and getattr(self, "_workspace", None) and (not response or not resolved_model):
+            transcript_events = self._read_session_transcript_events(self._workspace, session_id)
             transcript_response = _extract_response_from_events(transcript_events)
-            if transcript_response:
+            if not response and transcript_response:
                 response = transcript_response
                 tool_calls = normalize_tool_calls(transcript_events)
+            if not resolved_model and session_id_source in {
+                "cursor-stream-json",
+                "cursor-new-transcript",
+            }:
+                resolved_model = _extract_concrete_model_from_events(transcript_events)
+                if resolved_model:
+                    resolved_model_source = "cursor-transcript"
+
+        # Some Cursor versions put structured metadata on stderr while the
+        # assistant stream remains on stdout. Parse only JSON events here;
+        # never infer a model from free-form diagnostics.
+        if not resolved_model and stderr:
+            stderr_events = parse_json_events(stderr, source="cursor-stderr", logger=_logger)
+            resolved_model = _extract_concrete_model_from_events(stderr_events)
+            if resolved_model:
+                resolved_model_source = "cursor-stderr-json"
 
         # Cursor's stream-json stdout contains much more than the assistant's
         # response: it can echo the user prompt and tool output verbatim. Those
@@ -390,6 +445,22 @@ class CursorAdapter:
         if not ok:
             stderr_excerpt = (stderr or stdout).strip()[:500]
 
+        requested_model = _requested_model_from_plan(plan, default=self.default_model)
+        model_attribution = {
+            "requested_provider": "cursor",
+            "requested_model": requested_model,
+            "actual_provider": "cursor",
+            # Keep the raw actual value empty when no trusted model was
+            # reported. The dispatch layer adds the human-readable
+            # ``resolved_model: unknown`` companion field without turning
+            # unknown into a fake provider/model route.
+            "actual_model": resolved_model,
+            "actual_model_known": bool(resolved_model),
+            "substituted": bool(resolved_model and resolved_model != requested_model),
+            "source": resolved_model_source or "unknown",
+            "marker": None,
+        }
+
         return ParseResult(
             ok=ok,
             response=response,
@@ -397,6 +468,7 @@ class CursorAdapter:
             rate_limited=rate_limited,
             session_id=session_id,
             tool_calls=tool_calls,
+            substitution=model_attribution,
         )
 
     def _read_session_transcript_events(
@@ -471,3 +543,81 @@ def _extract_text_content(content: object) -> str:
     if isinstance(content, str):
         return content
     return ""
+
+
+def _requested_model_from_plan(plan: InvocationPlan | None, *, default: str) -> str:
+    """Read Cursor's requested selector without treating it as actual output."""
+    if plan is not None:
+        metadata = plan.metadata
+        if isinstance(metadata, Mapping):
+            fleet = metadata.get("entire_fleet")
+            if isinstance(fleet, Mapping):
+                requested = fleet.get("requested_model")
+                if isinstance(requested, str) and requested.strip():
+                    return requested.strip()
+        try:
+            model_index = plan.cmd.index("--model")
+            requested = plan.cmd[model_index + 1]
+        except (ValueError, IndexError):
+            requested = None
+        if isinstance(requested, str) and requested.strip():
+            return requested.strip()
+    return default
+
+
+def _concrete_model_value(value: object) -> str | None:
+    """Return a concrete model ID from a structured scalar/object value."""
+    if isinstance(value, str):
+        candidate = value.strip()
+    elif isinstance(value, Mapping):
+        for key in _MODEL_ID_KEYS:
+            nested = value.get(key)
+            if not isinstance(nested, str) or not nested.strip():
+                continue
+            candidate = nested.strip()
+            if candidate.casefold() not in _NON_CONCRETE_MODEL_VALUES:
+                return candidate
+        return None
+    else:
+        return None
+
+    if candidate.casefold() in _NON_CONCRETE_MODEL_VALUES:
+        return None
+    return candidate or None
+
+
+def _concrete_model_from_structured(value: object, *, depth: int = 0) -> str | None:
+    """Find a model only through known metadata containers.
+
+    In particular, ``content``, ``text``, ``input``, and tool arguments are
+    not traversed. That boundary prevents a prompt or assistant response from
+    being mistaken for provider metadata.
+    """
+    if depth > 4:
+        return None
+    if isinstance(value, Mapping):
+        for raw_key, nested in value.items():
+            key = str(raw_key).replace("-", "_").casefold()
+            if key in _MODEL_KEYS:
+                candidate = _concrete_model_value(nested)
+                if candidate:
+                    return candidate
+            elif key in _MODEL_CONTAINER_KEYS and isinstance(nested, (Mapping, list)):
+                candidate = _concrete_model_from_structured(nested, depth=depth + 1)
+                if candidate:
+                    return candidate
+    elif isinstance(value, list):
+        for nested in value:
+            candidate = _concrete_model_from_structured(nested, depth=depth + 1)
+            if candidate:
+                return candidate
+    return None
+
+
+def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
+    """Extract the first concrete model reported by Cursor's structured data."""
+    for event in events:
+        candidate = _concrete_model_from_structured(event)
+        if candidate:
+            return candidate
+    return None

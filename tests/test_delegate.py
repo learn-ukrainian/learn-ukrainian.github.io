@@ -1413,6 +1413,115 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["returncode_reason"] is None
 
 
+def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_path):
+    state_path = delegate._state_path("cursor-resolved-model")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "cursor-resolved-model",
+            "agent": "cursor",
+            "model": "auto",
+        },
+    )
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "auto",
+            "effort": "unknown",
+            "cli_version": "2026.08.04",
+            "substitution": {
+                "requested_model": "auto",
+                "actual_model": "composer-2.5",
+                "actual_model_known": True,
+                "source": "cursor-stream-json",
+                "substituted": True,
+            },
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="cursor-resolved-model",
+            agent="cursor",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["model"] == "composer-2.5"
+    assert state["resolved_model"] == "composer-2.5"
+    assert state["resolved_model_known"] is True
+    assert state["resolved_model_source"] == "cursor-stream-json"
+
+
+def test_run_worker_records_unknown_cursor_model_without_inventing_selector(
+    tmp_tasks_dir,
+    tmp_path,
+):
+    state_path = delegate._state_path("cursor-unknown-model")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "cursor-unknown-model",
+            "agent": "cursor",
+            "model": "auto",
+        },
+    )
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "auto",
+            "effort": "unknown",
+            "cli_version": "2026.08.04",
+            "substitution": {
+                "requested_model": "auto",
+                "actual_model": None,
+                "actual_model_known": False,
+                "source": "unknown",
+                "substituted": False,
+            },
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="cursor-unknown-model",
+            agent="cursor",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["model"] == "auto"
+    assert state["resolved_model"] == "unknown"
+    assert state["resolved_model_known"] is False
+    assert state["resolved_model_source"] == "unknown"
+
+
 def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     tmp_tasks_dir,
     tmp_path,
@@ -6122,6 +6231,7 @@ def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
     assert state.get("commits_ahead", 0) > 0
+
     assert state["worktree_path"] == str(dispatch_wt)
 
 
@@ -6181,4 +6291,3 @@ def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
     assert state.get("commits_ahead", 0) > 0
-
