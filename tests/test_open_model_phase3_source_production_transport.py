@@ -429,12 +429,14 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"rule_author_extractor" in prompt
-        assert b'"authorResponse"' in prompt
+        assert b"authorResponse root contract" in prompt
         assert b'"schema_version"' in prompt
         assert b'"packet_id"' in prompt
         assert b'"identity_order"' in prompt
         assert b'"disposition_code"' in prompt
         assert b'"additionalProperties":false' in prompt
+        assert b'never wrap it in an `authorResponse` property' in prompt
+        assert b'"$schema":"https://json-schema.org/draft/2020-12/schema"' in prompt
         assert packet["packet_id"].encode() in prompt
         assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
@@ -465,10 +467,12 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
             "parse_state": "parsed",
         }
         assert b"ukrainian_source_reviewer" in prompt
-        assert b'"reviewResponse"' in prompt
+        assert b"reviewResponse root contract" in prompt
         assert b'"reviews"' in prompt
         assert b'"outcome"' in prompt
         assert b'"additionalProperties":false' in prompt
+        assert b'never wrap it in an `reviewResponse` property' in prompt
+        assert b'"$schema":"https://json-schema.org/draft/2020-12/schema"' in prompt
         assert packet["packet_id"].encode() in prompt
         assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""

@@ -770,13 +770,20 @@ def _prompt_with_response_contract(
             "type": "array", "minItems": len(identities), "maxItems": len(identities),
             "prefixItems": review_items, "items": False,
         }
+    root_contract = json.loads(canonical_json(response))
+    root_contract["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    root_contract["$defs"] = {
+        name: response_contract[name] for name in ("identity", "artifact", "decision")
+    }
     suffix = (
-        "\n\n# Exact machine-enforced response contract\n\n"
-        "The JSON Schema definitions below are authoritative for output shape. "
+        f"\n\n# Exact machine-enforced {response_name} root contract\n\n"
+        "The JSON Schema below is authoritative for output shape. Your returned JSON "
+        "object is the instance governed by this root schema; never wrap it in an "
+        f"`{response_name}` property. "
         "Return every required field with exactly these names; `additionalProperties: false` "
         "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
         "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
-        + canonical_json(response_contract)
+        + canonical_json(root_contract)
         + "\n"
     )
     return prompt + suffix.encode("utf-8")
