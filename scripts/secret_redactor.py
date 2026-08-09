@@ -25,7 +25,9 @@ covered, unconditionally.
 
 from __future__ import annotations
 
+import math
 import re
+from collections import Counter
 from collections.abc import Mapping
 from itertools import pairwise
 from typing import Any
@@ -82,6 +84,21 @@ _TOKEN_PATTERNS = (
     ),
 )
 
+# A non-vendor secret can appear inside an OAuth/provider error message without
+# a secret-named key. Restrict the generic detector to long ASCII token runs so
+# natural-language prose is not treated as a credential. Punctuated candidates
+# need substantially more entropy because prose commonly has dates, versions,
+# and hyphenated title case; unpunctuated alphanumeric/letter-only candidates
+# have separate thresholds for their narrower alphabets.
+_OPAQUE_TOKEN_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_+./~=-])(?P<value>[A-Za-z0-9_+./~-]{32,})(?:={1,2})?"
+    r"(?![A-Za-z0-9_+./~=-])"
+)
+_OPAQUE_TOKEN_MIN_ENTROPY = 3.5
+_OPAQUE_ALPHA_TOKEN_MIN_ENTROPY = 4.0
+_OPAQUE_PUNCTUATED_TOKEN_MIN_ENTROPY = 4.5
+_OPAQUE_TOKEN_PUNCTUATION = frozenset("_+./~-")
+
 
 def redact_text(value: str | None) -> str | None:
     """Redact token-looking substrings from text before external egress."""
@@ -98,6 +115,7 @@ def redact_text(value: str | None) -> str | None:
         )
     for pattern in _TOKEN_PATTERNS:
         text = pattern.sub(REDACTION, text)
+    text = _OPAQUE_TOKEN_PATTERN.sub(_redact_opaque_token_match, text)
     return text
 
 
@@ -138,6 +156,33 @@ def _is_secret_key(key: str) -> bool:
 def _is_code_expression(value: str) -> bool:
     """True when an unquoted RHS carries call/subscript/collection punctuation."""
     return any(char in _CODE_EXPRESSION_CHARS for char in value)
+
+
+def _shannon_entropy(value: str) -> float:
+    """Return the per-character Shannon entropy for an ASCII token candidate."""
+    length = len(value)
+    return -sum(
+        (count / length) * math.log2(count / length)
+        for count in Counter(value).values()
+    )
+
+
+def _looks_like_opaque_secret(value: str) -> bool:
+    """True for a high-entropy opaque token rather than ordinary prose."""
+    if not any(char.isalpha() for char in value):
+        return False
+
+    entropy = _shannon_entropy(value)
+    if _OPAQUE_TOKEN_PUNCTUATION.intersection(value):
+        return entropy >= _OPAQUE_PUNCTUATED_TOKEN_MIN_ENTROPY
+    if not any(char.isdigit() for char in value):
+        return entropy >= _OPAQUE_ALPHA_TOKEN_MIN_ENTROPY
+    return entropy >= _OPAQUE_TOKEN_MIN_ENTROPY
+
+
+def _redact_opaque_token_match(match: re.Match[str]) -> str:
+    """Redact only generic candidates that satisfy the entropy detector."""
+    return REDACTION if _looks_like_opaque_secret(match.group("value")) else match.group(0)
 
 
 def _redact_assignment_match(match: re.Match[str]) -> str:

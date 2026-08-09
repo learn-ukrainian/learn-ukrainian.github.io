@@ -93,6 +93,48 @@ def test_redact_text_still_redacts_known_token_shapes_anywhere():
     assert REDACTION in redact_text(f"the token is {jwt} in prose")
 
 
+_OPAQUE_TOKEN = "9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c"
+
+
+@pytest.mark.parametrize(
+    ("prose", "opaque_token"),
+    [
+        ('{"detail": "refresh failed for ' + _OPAQUE_TOKEN + '"}', _OPAQUE_TOKEN),
+        ('{"error_description": "token ' + _OPAQUE_TOKEN + ' is expired"}', _OPAQUE_TOKEN),
+        ('{"message": "bad token ' + _OPAQUE_TOKEN + '"}', _OPAQUE_TOKEN),
+        ("refresh failed: " + _OPAQUE_TOKEN + " rejected", _OPAQUE_TOKEN),
+        (
+            "provider returned bW9ja1Rva2VuQWxwaGE5ODc2NTQzMjEwQmV0YQ== in an error",
+            "bW9ja1Rva2VuQWxwaGE5ODc2NTQzMjEwQmV0YQ==",
+        ),
+        (
+            "provider returned AbCdEfGhIjKlMnOpQrSt/UvWxYz0123456789abcdef in an error",
+            "AbCdEfGhIjKlMnOpQrSt/UvWxYz0123456789abcdef",
+        ),
+        (
+            "provider returned aBqLmNwErTyUiOpAsDfGhJkLzXcVbNmQ in an error",
+            "aBqLmNwErTyUiOpAsDfGhJkLzXcVbNmQ",
+        ),
+    ],
+)
+def test_redact_text_redacts_opaque_high_entropy_tokens_embedded_in_prose(prose, opaque_token):
+    """Regression for #5825: unrecognised opaque values must not leak in prose."""
+    redacted = redact_text(prose)
+
+    assert REDACTION in redacted
+    assert opaque_token not in redacted
+
+
+def test_redact_text_preserves_natural_language_and_low_entropy_identifiers():
+    text = (
+        "The pneumonoultramicroscopicsilicovolcanoconiosis lesson covers "
+        "release-2026-08-production-candidate, chapter-2026-08-Production-Candidate, "
+        "and abcabcabcabcabcabcabcabc1234."
+    )
+
+    assert redact_text(text) == text
+
+
 def test_redact_text_redacts_unquoted_passphrase_but_not_code():
     # Documented narrow allowance: a bare whitespace-separated passphrase assigned
     # to a secret-named key is redacted (fail-closed), while code expressions —
