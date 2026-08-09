@@ -702,6 +702,12 @@ def _validate_build(conn: sqlite3.Connection, expected_counts: dict[str, int]) -
         "wikipedia_fts",
         "historical_source_records_fts",
     ):
+        exists = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+            (fts_table,),
+        ).fetchone()
+        if exists is None:
+            continue
         conn.execute(f"INSERT INTO {fts_table}({fts_table}) VALUES ('integrity-check')")
 
 
