@@ -1,5 +1,5 @@
 {
-  "fingerprint": "74e4ed1db4463c6b4f0ee5ce256e0e311e326b13690250f395efdf7d38410d12",
+  "fingerprint": "826cc225ec1db87714441f2fdf240d47632019e6f1d19bd161b49d88e059a326",
   "inputs": {
     "lexicon_code": [
       {
@@ -151,6 +151,10 @@
         "sha256": "b76c9ff8e5db5929aa051f111fb50cb27cb0a304dc6d260f0f650ffc3f2bcf24"
       },
       {
+        "path": "scripts/lexicon/merge_translation_delta.py",
+        "sha256": "cba0e82499265562ae20e6323b357f3c1f1ce1e88ee5da7166706ced8b161955"
+      },
+      {
         "path": "scripts/lexicon/migrate_source_labels.py",
         "sha256": "08a943e9fa5e39923a30d330af2eb5511e77de4d6116824d863302f8ddf1a056"
       },
@@ -227,6 +231,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 55
+    "lexicon_code_files": 56
   }
 }
