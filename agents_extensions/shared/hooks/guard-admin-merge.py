@@ -115,9 +115,9 @@ def _flag_enabled(args: list[str], name: str) -> bool:
 
 # --- Command segmentation hardened against glued shell operators (#4876). ---
 # Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
-# so the helpers are copied, not imported. Keep the four copies in
-# guard-branch-switch-in-main.py, guard-admin-merge.py, guard-push-pytest.py,
-# and guard-pr-merge.py in sync.
+# so the helpers are copied, not imported. Keep the three active copies in
+# guard-branch-switch-in-main.py, guard-admin-merge.py, and guard-pr-merge.py
+# in sync.
 
 
 def _strip_quotes(token: str) -> str:
@@ -239,13 +239,65 @@ def _is_env_assignment(tok: str) -> bool:
     return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
 
 
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers / env-assignments / brace-group open so a
-    `env FOO=1 gh pr merge --admin` or `{ gh pr merge --admin; }` is not
-    missed (#4877)."""
+_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
+
+_WRAPPER_VALUE_OPTIONS = {
+    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
+    "sudo": frozenset(
+        {
+            "-u",
+            "--user",
+            "-g",
+            "--group",
+            "-r",
+            "--role",
+            "-t",
+            "--type",
+            "-C",
+            "--close-from",
+            "-c",
+            "--command-timeout",
+            "-T",
+        }
+    ),
+    "time": frozenset({"-f", "--format", "-o", "--output"}),
+    "nice": frozenset({"-n", "--adjustment"}),
+    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
+}
+
+
+def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
+    """Return the first command word after one transparent wrapper.
+
+    A missing operand for a recognised value-taking option cannot execute a
+    command, so the scan consumes to the end instead of guessing a verb.
+    """
+    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
     while i < len(seg):
         tok = seg[i]
-        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(tok):
+        if tok == "--":
+            return i + 1
+        if not tok.startswith("-") or tok == "-":
+            return i
+        i += 1
+        if tok in value_options:
+            if i >= len(seg):
+                return len(seg)
+            i += 1
+    return i
+
+
+def _skip_command_prefix(seg: list[str], i: int) -> int:
+    """Advance past wrappers (and their flags), assignments, and ``{``.
+
+    Thus `sudo -u root gh pr merge --admin` reaches `gh`, rather than stopping
+    on the wrapper option (#4878).
+    """
+    while i < len(seg):
+        tok = seg[i]
+        if tok in _WRAPPERS:
+            i = _skip_wrapper_options(tok, seg, i + 1)
+        elif tok == "{" or _is_env_assignment(tok):
             i += 1
         else:
             break

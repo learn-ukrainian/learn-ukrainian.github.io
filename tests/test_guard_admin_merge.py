@@ -202,6 +202,24 @@ def test_wrapper_assignment_brace_admin_detected(cmd):
     assert _any_admin(cmd)
 
 
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env -i gh pr merge 5 --admin",
+        "env -i FOO=1 gh pr merge 5 --admin",
+        "env -u FOO gh pr merge 5 --admin",
+        "sudo -u root gh pr merge 5 --admin",
+        "sudo --preserve-env gh pr merge 5 --admin",
+        "sudo -E gh pr merge 5 --admin",
+        "time -p gh pr merge 5 --admin",
+        "nice -n 10 gh pr merge 5 --admin",
+        "stdbuf -oL gh pr merge 5 --admin",
+    ],
+)
+def test_wrapper_options_do_not_hide_admin_merge_verb(cmd):
+    assert _any_admin(cmd)
+
+
 def test_unclosed_heredoc_does_not_hide_admin():
     assert _any_admin("cat <<'NOEND'\nnote\ngh pr merge 5 --admin")
 
