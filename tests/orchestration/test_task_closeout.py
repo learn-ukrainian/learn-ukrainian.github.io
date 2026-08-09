@@ -140,6 +140,7 @@ def _observation(
                     {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}
                 ],
                 "body": pr_body,
+                "closing_issue_numbers": [],
             },
             "comments": [{"url": REVIEW_URL, "body": "PASS", "created_at": NOW}],
             "deployments": [],
@@ -296,6 +297,53 @@ def test_auto_merge_is_blocked_until_current_head_review(tmp_path: Path) -> None
     assert "outside-family review" in ledger["mutation_receipts"][-1]["detail"]
 
 
+def test_auto_merge_rejects_closing_reference_when_scope_is_retained(tmp_path: Path) -> None:
+    path, ledger = _ledger(tmp_path)
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger,
+        status="open",
+        summary="A follow-up is still required.",
+        now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["pr"]["closing_issue_numbers"] = [42]
+    adapter = FakeAdapter(observation)
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="closing references contradict"):
+        task_closeout.perform_mutation(
+            path,
+            adapter,
+            action="arm-auto-merge",
+            authorized_by="codex/6096-close-keyword-guard",
+            branch="codex/42-closeout",
+            worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+            now=NOW,
+        )
+
+    assert adapter.calls == []
+
+
+def test_auto_merge_allows_declared_lifecycle_issue_closing_reference(tmp_path: Path) -> None:
+    path, _ = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["pr"]["closing_issue_numbers"] = [42]
+    adapter = FakeAdapter(observation)
+
+    result = task_closeout.perform_mutation(
+        path,
+        adapter,
+        action="arm-auto-merge",
+        authorized_by="codex/6096-close-keyword-guard",
+        branch="codex/42-closeout",
+        worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+        now=NOW,
+    )
+
+    assert result["remote_mutation_performed"] is True
+    assert adapter.calls == ["arm-auto-merge"]
+
+
 def test_missing_authorization_is_durable_and_nonmutating(tmp_path: Path) -> None:
     path, _ = _ledger(tmp_path)
 
@@ -382,6 +430,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                         }
                     ],
                     "body": "Refs #42",
+                    "closingIssuesReferences": [],
                 }
             )
         if "issues/77/comments" in command:

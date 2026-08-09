@@ -694,7 +694,28 @@ jobs:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
 
   # ---------------------------------------------------------------------
-  # 5. CI Gate — the sole required check. Every job above is unconditional,
+  # 5. pr-body-references — GitHub parses closing references lexically, so a
+  # negated phrase can still close an issue. This job deliberately reads the
+  # event body rather than repository files and runs on PR body edits.
+  # ---------------------------------------------------------------------
+  pr-body-references:
+    name: PR body issue-reference guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Reject negated closing references
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: |
+          printf '%s' "$PR_BODY" | python scripts/audit/lint_pr_closing_references.py --stdin
+
+  # ---------------------------------------------------------------------
+  # 6. CI Gate — the sole required check. Every job above is unconditional,
   #    so `skipped` is as much a failure as `failure`/`cancelled`: there is
   #    no legitimate reason for any of them to not report `success`.
   # ---------------------------------------------------------------------
@@ -749,6 +770,7 @@ jobs:
       - contracts
       - frontend
       - security
+      - pr-body-references
       - coverage-floor
     steps:
       - name: Report required-job results
