@@ -908,7 +908,7 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(11);
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(14);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -4374,6 +4374,33 @@ describe('LexiconPractice', () => {
         expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
       );
       expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('0');
+    });
+
+    test('#6530 embeds level-independent ЗНО/НМТ decks in the modes grid and session frame', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27');
+      expect(screen.getByTestId('practice-mode-count-zno-paronym')).toHaveTextContent('6');
+      expect(screen.getByTestId('practice-mode-count-zno-lexical-norm')).toHaveTextContent('24');
+      expect(screen.getByTestId('practice-zno-thin-zno-paronym')).toHaveTextContent('Невелика добірка');
+      expect(container.querySelector('[data-zno-deck="true"]')).toHaveClass('k3-mode-card');
+      expect(screen.queryByTestId('zno-practice')).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'A2' }));
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27'),
+      );
+
+      await user.click(container.querySelector<HTMLButtonElement>('[data-mode="zno-stress"]')!);
+      expect(screen.getByTestId('practice-zno-session')).toBeInTheDocument();
+      expect(screen.getByTestId('zno-practice-item')).toBeInTheDocument();
+      expect(screen.getByText(/Джерело: УЦОЯО/)).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-dashboard-hero')).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'До колод' }));
+      expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27');
     });
   });
 });
