@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "77971a8578fc",
+  "session_id": "fleet-827a3620374d4299b5a6f65478fb9c37",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-09T01:39:35.107346Z",
+  "branch": "cursor/atlas-6437-lint003",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/SCRIPTS.md",
+    "docs/runbooks/word-atlas-entry-model.md",
+    "scripts/audit/generate_practice_deck.py",
+    "scripts/audit/lint_word_atlas.py",
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/fixtures/atlas/sense_lint_sample.json",
+    "tests/test_generate_practice_deck.py",
+    "tests/test_lexicon_enrich_manifest.py",
+    "tests/test_lint_word_atlas.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "08a4acf4872b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-09T01:39:35.09135Z",
+    "agent_lines": 462,
+    "agent_removed": 52,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 462,
+    "total_lines_changed": 514,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

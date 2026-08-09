@@ -1,0 +1,48 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/atlas-6437-lint003
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# LINT-003 DRILL_SENSE_ID_MISSING + enrich honesty tags (#6437 PR2, parent #4387)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: composer-2.5 × cursor CLI
+- why_this_tier: bounded lint/gate code (not UK-language judgment); cursor freed after
+  delta-merge; sibling lint PR1 (#6438) gives the established pattern
+- owned_paths: the sense-lint gate module PR #6438 introduced + its tests (verify exact paths
+  from that PR's diff); practice deck generator only where sense_id binding is emitted
+- acceptance_cmd: pytest (affected) + ruff; lint gate self-test on real manifest quoted
+- alternatives_considered: codex (busy zno-impl), sonnet (busy 6464 — and same-family review
+  economics), agy (busy 5995-pr1)
+- parallel_free_seats: none (all lanes engaged)
+
+## Evidence preamble (#M-4)
+Every rule-hit count quoted from a real gate run on the current manifest. No invented counts.
+
+## Context
+- Issue #6437: PR1 (#6438, MERGED) shipped the sense-first schema doc + LINT-001/002 advisory.
+- This dispatch = PR2: **LINT-003 `DRILL_SENSE_ID_MISSING`** — practice binds a lemma without
+  `sense_id` (no `en[0]` fallback) — plus the **enrich honesty tags** the issue's Gemini
+  consultation agreed (tags that mark AI-minimum glosses vs sourced senses so entries are
+  honestly labeled, not silently thin).
+- Read PR #6438's diff first — extend its gate module and test pattern; do NOT invent a second
+  lint framework.
+- Advisory-first like PR1: report counts, do not hard-fail CI in this PR unless the count is 0.
+- NOTE: two sibling open PRs touch scripts/atlas (#6503 proverbs, #6464 in flight) — your scope
+  is the LINT/GATE seam, not section extraction; if you find yourself editing extraction code,
+  STOP and report.
+
+## Steps
+Dispatch worktree only → read #6437 + #6438 diff → implement LINT-003 + honesty tags + tests →
+run the gate on the current manifest and quote raw rule-hit counts (incl. the ~8450 ellipsis
+residual class if your run reproduces it — re-derive, don't assume) → ruff + affected pytest →
+conventional commit + X-Agent trailer → push → PR referencing #6437/#4387 → NO auto-merge.
+Report PR number + rule-hit counts + what stays residual for PR3.
