@@ -95,6 +95,11 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def fleet_status_payload(status: dict[str, Any]) -> dict[str, Any]:
+    """Return the shared facade status payload for CLI and Monitor callers."""
+    return {"plane_status": status, "health": _short_plane_health(status)}
+
+
 def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
     """Return a compact health projection without creating a second authority."""
     schema = status.get("schema") or {}
@@ -122,7 +127,7 @@ def cmd_fleet_status(args: argparse.Namespace) -> int:
         telemetry_path=telemetry,
         recent_limit=args.recent_limit,
     )
-    sys.stdout.write(_json_dump({"plane_status": status, "health": _short_plane_health(status)}))
+    sys.stdout.write(_json_dump(fleet_status_payload(status)))
     return EXIT_OK
 
 
@@ -154,27 +159,30 @@ def cmd_fleet_reap_report(args: argparse.Namespace) -> int:
     return int(reap_worktrees.main(command))
 
 
+def fleet_help_payload() -> dict[str, Any]:
+    """Map the seat-facing facade to the existing Truth, Hand, and Eyes surfaces."""
+    return {
+        "truth": {
+            "status": "fleet status (plane-status plus compact health)",
+            "metrics": "fleet metrics (durable authority metrics)",
+            "broker_report": "fleet broker-report (legacy retirement evidence)",
+        },
+        "hand": {
+            "reap_report": "fleet reap-report --apply (existing merged-head reaper guards)",
+        },
+        "eyes": {
+            "board": "fleet board (cold-start driver board)",
+            "backlog": "fleet backlog (pending deliveries)",
+            "dead": "fleet dead (dead-letter inventory)",
+        },
+        "note": "Thin facade only; Fleet Comms remains the authoritative message plane.",
+    }
+
+
 def cmd_fleet_help(_args: argparse.Namespace) -> int:
     """Map the facade to existing Truth, Hand, and Eyes surfaces."""
     sys.stdout.write(
-        _json_dump(
-            {
-                "truth": {
-                    "status": "fleet status (plane-status plus compact health)",
-                    "metrics": "fleet metrics (durable authority metrics)",
-                    "broker_report": "fleet broker-report (legacy retirement evidence)",
-                },
-                "hand": {
-                    "reap_report": "fleet reap-report --apply (existing merged-head reaper guards)",
-                },
-                "eyes": {
-                    "board": "fleet board (cold-start driver board)",
-                    "backlog": "fleet backlog (pending deliveries)",
-                    "dead": "fleet dead (dead-letter inventory)",
-                },
-                "note": "Thin facade only; Fleet Comms remains the authoritative message plane.",
-            }
-        )
+        _json_dump(fleet_help_payload())
     )
     return EXIT_OK
 
