@@ -198,7 +198,19 @@ def test_handle_ask_codex_chain_is_retired():
         _handle_ask_codex(args)
 
 
-def test_ask_codex_chain_dispatches_issues_sequentially():
+def test_ask_codex_chain_dispatches_issues_sequentially(monkeypatch):
+    """Use a fixed Claude identity rather than the agent session environment."""
+    for variable in (
+        "SESSION_HANDOFF_AGENT",
+        "CLAUDE_AGENT_NAME",
+        "CODEX_SESSION",
+        "GROK_AGENT",
+        "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
+        "GEMINI_SESSION",
+    ):
+        monkeypatch.delenv(variable, raising=False)
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/project")
+
     with patch("ai_agent_bridge._codex.ask_codex", side_effect=[11, 12]) as ask_codex_mock:
         message_ids = ask_codex_chain(
             "Fix {issue_ref} via {task_id}",
