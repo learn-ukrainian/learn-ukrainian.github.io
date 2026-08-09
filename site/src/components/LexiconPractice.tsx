@@ -653,6 +653,11 @@ const ZNO_MODE_META: Record<
     descriptionEn: 'Reinforce lexical norms with official ZNO and NMT items.',
     accent: 'orange',
   },
+  'zno-orthography': {
+    description: 'Тренуйте орфографію на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Practise orthography with official ZNO and NMT items.',
+    accent: 'blue',
+  },
 };
 
 function visiblePracticeMode(mode: PracticeModeFilter): VisiblePracticeModeFilter {

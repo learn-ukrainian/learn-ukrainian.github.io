@@ -908,7 +908,7 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(14);
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(15);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -4398,6 +4398,7 @@ describe('LexiconPractice', () => {
       expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27');
       expect(screen.getByTestId('practice-mode-count-zno-paronym')).toHaveTextContent('6');
       expect(screen.getByTestId('practice-mode-count-zno-lexical-norm')).toHaveTextContent('24');
+      expect(screen.getByTestId('practice-mode-count-zno-orthography')).toHaveTextContent('165');
       expect(screen.getByTestId('practice-zno-thin-zno-paronym')).toHaveTextContent('Невелика добірка');
       expect(container.querySelector('[data-zno-deck="true"]')).toHaveClass('k3-mode-card');
       expect(screen.queryByTestId('zno-practice')).not.toBeInTheDocument();
