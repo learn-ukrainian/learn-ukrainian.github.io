@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a5046ce3196d",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6544-deck-visibility",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/e2e/atlas-practice.spec.ts",
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/lib/i18n/chrome.ts",
+    "site/src/lib/lexicon/custom-decks.ts",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/custom-decks-membership.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a5/046ce3196d/0/metadata.json",
+      "transcript": "/a5/046ce3196d/0/full.jsonl",
+      "compact_transcript": "/a5/046ce3196d/0/transcript.jsonl",
+      "content_hash": "/a5/046ce3196d/0/content_hash.txt",
+      "prompt": "/a5/046ce3196d/0/prompt.txt"
+    }
+  ]
+}

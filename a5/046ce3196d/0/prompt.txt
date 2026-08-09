@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/atlas-6544-deck-visibility
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement #6544 — un-bury the deck picker without reverting #6336's layout goals
+
+Read issue #6544 FIRST (root cause + fix scope + evidence) and PR #6336's rationale comment
+in `site/src/components/LexiconPractice.tsx` (~line 3663: fold rationale re HARD-1/HARD-2
+above-the-fold gates). Both constraints bind: the deck feature must be discoverable, AND the
+above-the-fold simplicity gates must hold.
+
+## Scope
+- The active deck must be visible above the fold with a discoverable switching affordance
+  (see #6544 "Fix scope" — e.g. current-deck chip near the session box; the exact mechanism
+  is yours, keep it minimal and consistent with the existing design system).
+- Fix the latent dead filter: `getTeacherLessonVirtualDeck(entries)` filters on sources
+  `teacher_lesson`/`private_teacher_lesson` but the membership vocabulary is
+  `teacher_inventory`/`homework` (0 matches). Align the filter with the real vocabulary (and
+  add a test pinning the real source names so the next drift fails loudly).
+- Do NOT decide the "~1k curated subset as its own deck" question — #6544 flags it for the
+  operator; leave a code TODO referencing #6544 only if natural.
+- e2e: extend site/e2e/atlas-practice.spec.ts — deck affordance visible without expanding
+  the bottom panel; existing panel tests keep passing. NOTE: e2e mode-count assertions are
+  being touched by PR #6533 (in flight) — do not conflict with it; rebase if it lands first.
+
+## Steps
+1. Dispatcher puts you in a worktree. Investigate before coding (read the two refs above).
+2. Implement; keep the diff tight (no drive-by refactors).
+3. Run the practice e2e spec + vitest locally; lint TS. Paste raw output in the PR.
+4. Conventional commit with X-Agent trailer; push; open PR with "Refs #6544" (not Closes —
+   driver verifies visually per DoD before closing).
+5. Do NOT merge; do NOT touch auto-merge.
