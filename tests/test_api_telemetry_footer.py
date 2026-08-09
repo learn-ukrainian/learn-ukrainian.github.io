@@ -104,8 +104,20 @@ def test_current_context_telemetry_skips_newest_transcript_without_usage(
     tmp_path,
     monkeypatch,
 ) -> None:
-    projects = tmp_path / ".claude" / "projects"
-    project_dir = projects / "-tmp-learn-ukrainian"
+    # Exclusive server/test hooks must not leak into this fixture — when set,
+    # resolve_transcript_paths returns only that path and never scans HOME.
+    monkeypatch.delenv("LEARN_UKRAINIAN_TRANSCRIPT_PATH", raising=False)
+    monkeypatch.delenv("CLAUDE_TRANSCRIPT_PATH", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    project_root = tmp_path / "learn-ukrainian"
+    project_root.mkdir()
+    # Match scripts.api.telemetry.transcript_tokens._claude_project_dir_name
+    # (resolved path with "/" → "-") so candidates come from the exact dir,
+    # not the *learn-ukrainian* fallback glob.
+    project_dir = (
+        tmp_path / ".claude" / "projects" / str(project_root.resolve()).replace("/", "-")
+    )
     project_dir.mkdir(parents=True)
     older = project_dir / "older.jsonl"
     older.write_text(
@@ -130,9 +142,8 @@ def test_current_context_telemetry_skips_newest_transcript_without_usage(
         encoding="utf-8",
     )
     newer.touch()
-    monkeypatch.setenv("HOME", str(tmp_path))
 
-    telemetry = current_context_telemetry(tmp_path / "learn-ukrainian")
+    telemetry = current_context_telemetry(project_root)
 
     assert telemetry is not None
     assert telemetry.transcript_path == older

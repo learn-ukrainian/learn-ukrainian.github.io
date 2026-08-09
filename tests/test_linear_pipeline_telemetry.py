@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
+import yaml
 
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
@@ -18,6 +19,38 @@ def _event_sink(events: list[dict[str, Any]]):
         events.append({"event": event, "ts": "2026-05-05T00:00:00+00:00", **fields})
 
     return sink
+
+
+def _qg_fixture_plan(tmp_path: Path) -> Path:
+    """Minimal plan for run_python_qg unit tests (no curriculum/ checkout required)."""
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": "a1-020",
+                "level": "A1",
+                "sequence": 20,
+                "slug": "my-morning",
+                "title": "Мій ранок",
+                "subtitle": "Зворотні дієслова",
+                "word_target": 89,
+                "content_outline": [
+                    {
+                        "section": "Діалоги",
+                        "words": 89,
+                        "points": ["Introduce a morning dialogue."],
+                    }
+                ],
+                "references": [
+                    {"title": "Караман Grade 10, p.176", "verbatim_required": False}
+                ],
+            },
+            allow_unicode=True,
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    return plan_path
 
 
 def _writer_prompt() -> str:
@@ -363,7 +396,7 @@ def test_writer_rule_fired_event_emitted_on_known_failure_class(tmp_path: Path) 
 
     linear_pipeline.run_python_qg(
         module_dir,
-        linear_pipeline.plan_path_for("a1", "my-morning"),
+        _qg_fixture_plan(tmp_path),
         verify_words_fn=verify_words,
         event_sink=_event_sink(events),
     )
@@ -397,7 +430,7 @@ def test_python_qg_surface_policy_scans_yaml_sidecars(tmp_path: Path) -> None:
 
     report = linear_pipeline.run_python_qg(
         module_dir,
-        linear_pipeline.plan_path_for("a1", "my-morning"),
+        _qg_fixture_plan(tmp_path),
         verify_words_fn=verify_words,
     )
 
