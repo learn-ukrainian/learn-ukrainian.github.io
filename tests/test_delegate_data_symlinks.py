@@ -21,7 +21,7 @@ def test_main_checkout_root_resolves_primary_checkout_from_worktree(tmp_path):
     assert delegate._main_checkout_root(worktree) == main_repo
 
 
-def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
+def test_provision_data_symlinks_links_data_and_node_modules_but_not_venv(tmp_path):
     main_repo = tmp_path / "main"
     worktree = tmp_path / "worktree"
     data_dir = main_repo / "data"
@@ -30,10 +30,10 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
     sources_db = data_dir / "sources.db"
     vesum_db.touch()
     sources_db.touch()
-    venv_dir = main_repo / ".venv"
+    primary_venv = main_repo / ".venv"
     node_modules_dir = main_repo / "node_modules"
     site_node_modules_dir = main_repo / "site" / "node_modules"
-    venv_dir.mkdir()
+    primary_venv.mkdir()
     node_modules_dir.mkdir()
     site_node_modules_dir.mkdir(parents=True)
 
@@ -41,17 +41,16 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
 
     vesum_link = worktree / "data" / "vesum.db"
     sources_link = worktree / "data" / "sources.db"
-    venv_link = worktree / ".venv"
     node_modules_link = worktree / "node_modules"
     site_node_modules_link = worktree / "site" / "node_modules"
     assert vesum_link.is_symlink()
     assert sources_link.is_symlink()
-    assert venv_link.is_symlink()
+    assert not (worktree / ".venv").exists()
+    assert not (worktree / ".venv").is_symlink()
     assert node_modules_link.is_symlink()
     assert site_node_modules_link.is_symlink()
     assert vesum_link.readlink() == vesum_db.resolve()
     assert sources_link.readlink() == sources_db.resolve()
-    assert venv_link.readlink() == venv_dir.resolve()
     assert node_modules_link.readlink() == node_modules_dir.resolve()
     assert site_node_modules_link.readlink() == site_node_modules_dir.resolve()
 
@@ -59,12 +58,12 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
 
     assert vesum_link.is_symlink()
     assert sources_link.is_symlink()
-    assert venv_link.is_symlink()
+    assert not (worktree / ".venv").exists()
+    assert not (worktree / ".venv").is_symlink()
     assert node_modules_link.is_symlink()
     assert site_node_modules_link.is_symlink()
     assert vesum_link.readlink() == vesum_db.resolve()
     assert sources_link.readlink() == sources_db.resolve()
-    assert venv_link.readlink() == venv_dir.resolve()
     assert node_modules_link.readlink() == node_modules_dir.resolve()
     assert site_node_modules_link.readlink() == site_node_modules_dir.resolve()
 

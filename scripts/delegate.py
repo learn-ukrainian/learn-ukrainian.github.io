@@ -2104,10 +2104,12 @@ def _validate_existing_worktree(
 def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
-    Worktrees omit gitignored DBs and dependency directories, but quality
+    Worktrees omit gitignored DBs and Node dependency directories, but quality
     gates open them relative to the running checkout. Use symlinks so each
     delegated worktree sees the same local files without copying multi-GB
-    directories.
+    directories. The primary Python environment is deliberately excluded:
+    workers invoke its absolute interpreter and must not receive a local
+    ``.venv`` symlink.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -2127,7 +2129,6 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     for relative_path in (
         "data/vesum.db",
         "data/sources.db",
-        ".venv",
         "node_modules",
         "site/node_modules",
     ):
@@ -2345,6 +2346,53 @@ def _apply_dispatch_sparse_checkout(
     return telemetry
 
 
+def _inspect_worktree_local_venv(worktree_path: Path) -> dict[str, str | bool | None]:
+    """Describe a prohibited worktree-local environment without modifying it.
+
+    Dispatch worktrees share the primary checkout's project interpreter. Git
+    does not copy ignored files into a new worktree, but an adapter or worker
+    can still create a local ``.venv`` after creation. Record an early warning
+    in dispatch state instead of deleting a possibly active environment; the
+    P0 reaper remains the sole automatic deletion hand after merge.
+    """
+    candidate = worktree_path / ".venv"
+    try:
+        candidate.lstat()
+    except FileNotFoundError:
+        return {"present": False, "kind": None, "path": None}
+    except OSError as exc:
+        return {
+            "present": False,
+            "kind": "unreadable",
+            "path": str(candidate),
+            "error": type(exc).__name__,
+        }
+
+    if candidate.is_symlink():
+        kind = "symlink"
+    elif candidate.is_dir():
+        kind = "directory"
+    else:
+        kind = "file"
+    return {"present": True, "kind": kind, "path": str(candidate)}
+
+
+def _record_worktree_local_venv_warning(
+    worktree_path: Path,
+    telemetry: dict[str, Any],
+) -> None:
+    """Attach local-venv state to telemetry and warn when it is present."""
+    local_venv = _inspect_worktree_local_venv(worktree_path)
+    telemetry["local_venv"] = local_venv
+    if local_venv.get("present"):
+        print(
+            "⚠️  dispatch worktree contains a local .venv; do not use, copy, or "
+            f"replace it. Use the primary interpreter {_REPO_ROOT / '.venv' / 'bin' / 'python'} "
+            f"instead: {worktree_path / '.venv'} ({local_venv.get('kind')}).",
+            file=sys.stderr,
+        )
+
+
 def _resolve_worktree_base_sha(
     *,
     agent: str,
@@ -2437,6 +2485,7 @@ def _ensure_worktree(
         "layout": layout,
         "reused": False,
         "sparse": None,
+        "local_venv": None,
     }
 
     if requested_branch:
@@ -2506,6 +2555,7 @@ def _ensure_worktree(
             full_checkout=full_checkout,
             sparse_include=sparse_include,
         )
+        _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
     if dry_run:
@@ -2612,6 +2662,7 @@ def _ensure_worktree(
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
+    _record_worktree_local_venv_warning(worktree_path, telemetry)
     return worktree_path, worktree_branch, telemetry
 
 
@@ -2656,6 +2707,12 @@ def _augment_prompt_with_worktree(
         "`origin` here points at the canonical GitHub remote and fetch works from any "
         "linked worktree. NEVER use the primary checkout as a source of freshness "
         "(no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n"
+        "\n[shared project interpreter]\n"
+        "Never create, copy, symlink, activate, or use a `.venv` inside this worktree. "
+        f"Run every project Python command with `{_REPO_ROOT / '.venv' / 'bin' / 'python'}` "
+        "(the absolute primary interpreter), never `python`, `.venv/bin/python`, or "
+        "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
+        "cwd is a worktree.\n"
         f"{sparse_note}{delivery_note}\n"
         f"{prompt}"
     )
@@ -3939,6 +3996,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_reused": bool(worktree_telemetry.get("reused")),
         "worktree_layout": worktree_layout,
         "worktree_sparse": worktree_telemetry.get("sparse"),
+        "worktree_local_venv": worktree_telemetry.get("local_venv"),
         "runtime_tmp_root": str(runtime_tmp_root),
         "tmp_bytes_freed": None,
         "tmp_reap_error": None,
