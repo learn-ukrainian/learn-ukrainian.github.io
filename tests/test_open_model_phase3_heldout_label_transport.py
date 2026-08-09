@@ -618,7 +618,9 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
         pass_id="a",
         private_dir=private,
     )
-    assert observed["command"][-5:] == ["gpt-5.6-sol", "--effort", "high", "--new-session", "--no-timeout"]
+    assert observed["command"][2:6] == ["ask-codex", "-", "--from", "operator"]
+    assert observed["command"][-4:] == ["--to-model", "gpt-5.6-sol", "--new-session", "--no-timeout"]
+    assert "--effort" not in observed["command"]
     selected_attempt = private / "cycle002" / "raw-attempts" / "a" / "0001" / "002.raw"
     assert selected_attempt.read_bytes() == raw
     assert (private / "cycle002" / "raw" / "a" / "0001.raw").read_bytes() == raw
