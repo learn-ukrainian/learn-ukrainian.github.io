@@ -228,6 +228,17 @@ _INTRALINE_DUPLICATE_MIN_CHARS = 25
 _INTRALINE_DUPLICATE_MIN_OCCURRENCES = 3
 
 
+def _repair_dollar_hyphen(text: str) -> str:
+    """Return the legacy opt-in repair for a measured 2017 font mapping.
+
+    Native extraction no longer applies this transform automatically: the
+    source-exact path records the same pattern as Unicode damage and requires
+    visual verification.  Keep the helper for callers that already possess
+    source-specific evidence that ``$`` represents a compound hyphen.
+    """
+    return _INTRA_CYRILLIC_DOLLAR_RE.sub(r"\1-\2", text)
+
+
 def _suspicious_latin1_run_count(text: str) -> int:
     """Count likely encoding-damage runs without decoding or replacing them."""
     run_length = 0
