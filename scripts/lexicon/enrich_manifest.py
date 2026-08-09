@@ -1299,13 +1299,16 @@ def apply_sense_honesty_tags(
 
     Call whenever enrich emits or mutates a ``senses[]`` row after a hard cap or
     an AI-minimum gloss write. Does not invent gloss text — it only labels.
+
+    ``ai_minimum`` never overwrites a dictionary-backed ``source`` already in
+    ``SENSE_SOURCE_SOURCED`` (provenance beats the thin-gloss flag).
     """
     out = dict(sense)
     if truncated:
         out["completeness"] = SENSE_COMPLETENESS_TRUNCATED
     elif ai_minimum and out.get("completeness") not in SENSE_COMPLETENESS_VALUES:
         out["completeness"] = SENSE_COMPLETENESS_DRAFT
-    if ai_minimum:
+    if ai_minimum and out.get("source") not in SENSE_SOURCE_SOURCED:
         out["source"] = SENSE_SOURCE_AI_MINIMUM
     return out
 

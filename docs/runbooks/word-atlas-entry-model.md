@@ -269,13 +269,16 @@ Field notes:
   `manual_native`, `rag_verified`) for sourced senses. Use `ai_minimum` when
   the learner gloss is an AI-minimum placeholder rather than a vetted
   dictionary sense — honesty over silent thinness (#6437 enrich honesty tags).
+  `apply_sense_honesty_tags` must not overwrite a dictionary-backed `source`
+  already in that sourced set.
 - `completeness`: `truncated` is the honest tag for text a hard cap cut off
   mid-word; a `learner_uk`/`learner_en`/`en_disambiguation` value ending in
   `...`/`…` without this tag is what LINT-001 flags. `draft` marks thin /
-  incomplete learner text (including AI-minimum glosses). Enrich helpers
+  incomplete learner text (including AI-minimum glosses). Helpers
   `truncate_with_honesty` + `apply_sense_honesty_tags` in
-  `scripts/lexicon/enrich_manifest.py` stamp these labels when emitting
-  sense-shaped rows.
+  `scripts/lexicon/enrich_manifest.py` exist for that stamping, but they are
+  **not yet wired into enrich emit paths** in this PR — call-site integration
+  lands in #6437 PR3.
 
 ### Lint gate (PR1 + PR2 scope)
 
