@@ -250,20 +250,16 @@ coverage_summary:
 native_exactness_audit:
   source_count: 12
   chunk_count: 2681
-  flagged_source_count: 4
-  flagged_chunk_count: 62
-  verified_flagged_chunk_count: 62
+  flagged_source_count: 1
+  flagged_chunk_count: 1
+  verified_flagged_chunk_count: 1
   unverified_flagged_chunk_count: 0
-  flagged_page_count: 38
+  flagged_page_count: 1
   reports:
-  - report_sha256: 143b6e55236551f6578811e89365c361d453edfc606c1157aa4412d4d5943a95
-    drive_identity: university_corpus/jsonl/phase3-university-native-exactness-v5.json
-    source_count: 9
-    chunk_count: 1496
-  - report_sha256: f70857532cb33b3bf43c0b879145cd8aca746ac1b1051b62efc6698afbe81a28
-    drive_identity: university_corpus/jsonl/phase3-university-language-b1-native-exactness-v1.json
-    source_count: 3
-    chunk_count: 1185
+  - report_sha256: a0b8ec0b009278f3a831959d92d483dc23c3224c6ad8c9510126e55f726ba3d8
+    drive_identity: university_corpus/jsonl/phase3-university-native-exactness-v6.json
+    source_count: 12
+    chunk_count: 2681
   visual_verification_receipts:
   - receipt_sha256: d1dfac24a851450f5a12acb5910f4dbd8bf5d40a18d73e22c306c0f1f521d646
     drive_identity: university_corpus/jsonl/phase3-university-native-visual-verification-v1.json
@@ -338,7 +334,13 @@ sources:
   jsonl_sha256: fded6a45bf8914585d0178129b926a986722fd023b6ef6f7da529ea32ea60725
   drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-vlasova-2023.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-vlasova-2023.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-ukrmova-vlasova-2023
+    inserted_rows: 177
+    linked_rows: 177
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_177_chunks_145_clean_32_bilingual_or_symbol_flagged
   language_profile: Ukrainian instructional text with English and some Russian glosses
   admission_state: canary_passed
@@ -364,7 +366,13 @@ sources:
   jsonl_sha256: aa84f98a8779c9d4323b52dddad095f0c0a218d1d56619992946dde1fdd04424
   drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-prof-haluzynska-2006.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-prof-haluzynska-2006.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-ukrmova-prof-haluzynska-2006
+    inserted_rows: 107
+    linked_rows: 107
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_107_chunks_106_clean_1_flagged
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -385,7 +393,13 @@ sources:
   jsonl_sha256: 49271a38d4156e3c76373bf0e4b7b97bc5125c9afd70b279a0f49c2101193973
   drive_pdf_identity: university_corpus/pdfs/uni-ukrmova-punctuation-marynenko-2021.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrmova-punctuation-marynenko-2021.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-ukrmova-punctuation-marynenko-2021
+    inserted_rows: 472
+    linked_rows: 472
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_472_chunks_468_clean_4_quality_flagged_zero_exactness_findings
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -488,7 +502,13 @@ sources:
   jsonl_sha256: f8355bff61c181c4e8e9551886cc286e041a4b87aa8b1ae9ed2548ea6f4c7c2d
   drive_pdf_identity: university_corpus/pdfs/uni-ukrlit-kalinichenko-2024.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrlit-kalinichenko-2024.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-ukrlit-kalinichenko-2024
+    inserted_rows: 28
+    linked_rows: 28
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_28_chunks_25_clean_3_citation_or_symbol_flagged
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -510,7 +530,13 @@ sources:
   jsonl_sha256: aa30b5deb9287fddba6b8dc3775ca0f353758b91c285e8516b07b7e75048d1f2
   drive_pdf_identity: university_corpus/pdfs/uni-ukrlit-dvulychanska-2017.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-ukrlit-dvulychanska-2017.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-ukrlit-dvulychanska-2017
+    inserted_rows: 259
+    linked_rows: 259
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_259_chunks_zero_exactness_findings_internal_only
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -534,7 +560,13 @@ sources:
   jsonl_sha256: f111c27c136d8099359487fe1ae707b66431bf8420f156b0b1e7321660260710
   drive_pdf_identity: university_corpus/pdfs/uni-istoriya-levytska-2015.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-istoriya-levytska-2015.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-istoriya-levytska-2015
+    inserted_rows: 65
+    linked_rows: 65
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: native_canary_passed_65_of_65_clean_but_rights_unresolved
   language_profile: Ukrainian
   admission_state: candidate
@@ -555,7 +587,13 @@ sources:
   jsonl_sha256: 9aefd42ef5e6a9691314df7a8870902775a4d44823f36706cd23e80524157694
   drive_pdf_identity: university_corpus/pdfs/uni-istoriya-kalynichenko-olianych-2025.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-istoriya-kalynichenko-olianych-2025.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-istoriya-kalynichenko-olianych-2025
+    inserted_rows: 141
+    linked_rows: 141
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_141_chunks_one_printed_layout_anomaly_jointly_verified
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -583,7 +621,13 @@ sources:
   jsonl_sha256: 2e784c89b65d7fee9ea3a4e46845f1cecb7bc6eee194b9deceead62f775f98bc
   drive_pdf_identity: university_corpus/pdfs/uni-mystetstvo-petutina-2012.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-mystetstvo-petutina-2012.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-mystetstvo-petutina-2012
+    inserted_rows: 150
+    linked_rows: 150
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: canary_passed_150_chunks_one_printed_layout_anomaly_jointly_verified
   language_profile: Ukrainian
   admission_state: canary_passed
@@ -611,7 +655,13 @@ sources:
   jsonl_sha256: 9020a9fa155a2cda8e5ed6bf48f612c7264342c6cd29ec7a9791a3b3c746ba75
   drive_pdf_identity: university_corpus/pdfs/uni-mystetstvo-levytska-2015.pdf
   drive_jsonl_identity: university_corpus/jsonl/grade-00/uni-mystetstvo-levytska-2015.jsonl
-  database_identity: null
+  database_identity:
+    source_file: uni-mystetstvo-levytska-2015
+    inserted_rows: 97
+    linked_rows: 97
+    canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
+    receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
+    receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
   quality_state: native_canary_passed_97_of_97_clean_but_rights_unresolved
   language_profile: Ukrainian
   admission_state: candidate

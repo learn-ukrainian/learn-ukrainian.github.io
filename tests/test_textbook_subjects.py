@@ -422,6 +422,7 @@ def test_new_authors_mapping_sample() -> None:
         "khomik": "Хомік",
         "strokal": "Строкаль",
         "shvets": "Швець",
+        "dvulychanska": "Двуличанська",
     }
     for translit, expected_uk in samples.items():
         assert AUTHOR_UK_BY_TRANSLIT[translit] == expected_uk

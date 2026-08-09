@@ -220,11 +220,7 @@ def test_university_layer_is_separate_and_topic_complete() -> None:
         for source in sources.values()
         if source["admission_state"] == "accepted"
     )
-    assert all(
-        source["database_identity"] is None
-        for source in sources.values()
-        if source["admission_state"] != "accepted"
-    )
+    assert all(source["database_identity"] is not None for source in sources.values())
     assert sources["uni-ukrlit-kalinichenko-2024"]["reuse_tier"] == "open_with_attribution"
     assert sources["uni-istoriya-levytska-2015"]["reuse_tier"] == "rights_scope_requires_confirmation"
     assert sources["uni-ukrmova-punctuation-marynenko-2021"]["native_text_canary_state"] == (
@@ -235,8 +231,8 @@ def test_university_layer_is_separate_and_topic_complete() -> None:
     )
     assert university["native_exactness_audit"]["source_count"] == 12
     assert university["native_exactness_audit"]["chunk_count"] == 2681
-    assert university["native_exactness_audit"]["flagged_chunk_count"] == 62
-    assert university["native_exactness_audit"]["verified_flagged_chunk_count"] == 62
+    assert university["native_exactness_audit"]["flagged_chunk_count"] == 1
+    assert university["native_exactness_audit"]["verified_flagged_chunk_count"] == 1
     assert university["native_exactness_audit"]["unverified_flagged_chunk_count"] == 0
     assert sum(report["source_count"] for report in university["native_exactness_audit"]["reports"]) == 12
     rejected_ids = {

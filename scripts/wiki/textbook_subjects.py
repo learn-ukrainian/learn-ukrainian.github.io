@@ -329,6 +329,7 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "vlasova": "Власова",
     "haluzynska": "Галузинська",
     "kalinichenko": "Калініченко",
+    "dvulychanska": "Двуличанська",
     "levytska": "Левицька",
     "marynenko": "Мариненко",
     "olianych": "Олянич",
