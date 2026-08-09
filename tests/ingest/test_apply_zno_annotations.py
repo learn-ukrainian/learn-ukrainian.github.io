@@ -163,6 +163,37 @@ def test_apply_conflict_refusal(temp_db: Path, write_worksheet) -> None:
         conn.close()
 
 
+def test_apply_explicit_field_override(temp_db: Path, write_worksheet) -> None:
+    conn = sqlite3.connect(temp_db)
+    try:
+        conn.execute("UPDATE zno_tasks SET task_subtype = 'lexical_error' WHERE id = 1")
+        conn.commit()
+    finally:
+        conn.close()
+
+    worksheet = write_worksheet(
+        [
+            {
+                "id": 1,
+                "task_subtype": "paronym",
+                "paronym_pair": "освічений/освітлений",
+                "override_fields": ["task_subtype"],
+            }
+        ]
+    )
+
+    result = run_applier(temp_db, worksheet)
+    assert result.returncode == 0
+    assert "Summary: 1 updated / 0 skipped-identical / 0 conflicts" in result.stdout
+
+    conn = sqlite3.connect(temp_db)
+    try:
+        row = conn.execute("SELECT task_subtype, paronym_pair FROM zno_tasks WHERE id = 1").fetchone()
+        assert row == ("paronym", "освічений/освітлений")
+    finally:
+        conn.close()
+
+
 def test_apply_dry_run(temp_db: Path, write_worksheet) -> None:
     annotations = [
         {

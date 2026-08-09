@@ -11,6 +11,10 @@ import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeck
 import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
 import PracticeSessionSummary, { type SessionSummaryStats } from '@site/src/components/PracticeSessionSummary';
 import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
+import znoStressDeck from '@site/src/data/practice-zno.stress.json';
+import znoParonymDeck from '@site/src/data/practice-zno.paronym.json';
+import znoLexicalNormDeck from '@site/src/data/practice-zno.lexical-norm.json';
+import znoOrthographyDeck from '@site/src/data/practice-zno.orthography.json';
 import {
   SRS_STORAGE_KEY,
   DAILY_PRACTICE_DECK_SIZE,
@@ -4395,17 +4399,17 @@ describe('LexiconPractice', () => {
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
 
-      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27');
-      expect(screen.getByTestId('practice-mode-count-zno-paronym')).toHaveTextContent('6');
-      expect(screen.getByTestId('practice-mode-count-zno-lexical-norm')).toHaveTextContent('24');
-      expect(screen.getByTestId('practice-mode-count-zno-orthography')).toHaveTextContent('165');
+      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length));
+      expect(screen.getByTestId('practice-mode-count-zno-paronym')).toHaveTextContent(String(znoParonymDeck.items.length));
+      expect(screen.getByTestId('practice-mode-count-zno-lexical-norm')).toHaveTextContent(String(znoLexicalNormDeck.items.length));
+      expect(screen.getByTestId('practice-mode-count-zno-orthography')).toHaveTextContent(String(znoOrthographyDeck.items.length));
       expect(screen.getByTestId('practice-zno-thin-zno-paronym')).toHaveTextContent('Невелика добірка');
       expect(container.querySelector('[data-zno-deck="true"]')).toHaveClass('k3-mode-card');
       expect(screen.queryByTestId('zno-practice')).not.toBeInTheDocument();
 
       await user.click(screen.getByRole('button', { name: 'A2' }));
       await waitFor(() =>
-        expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27'),
+        expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length)),
       );
 
       await user.click(container.querySelector<HTMLButtonElement>('[data-mode="zno-stress"]')!);
@@ -4416,7 +4420,7 @@ describe('LexiconPractice', () => {
 
       await user.click(screen.getByRole('button', { name: 'До колод' }));
       expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
-      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent('27');
+      expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length));
     });
   });
 });

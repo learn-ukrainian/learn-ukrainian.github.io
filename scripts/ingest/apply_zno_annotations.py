@@ -97,6 +97,15 @@ def main() -> int:
         prop_task_subtype = annotation.get("task_subtype")
         prop_paronym_pair = annotation.get("paronym_pair")
         prop_stress_word = annotation.get("stress_word")
+        override_fields = annotation.get("override_fields", [])
+        if not isinstance(override_fields, list) or not all(
+            isinstance(field, str) and field in {"topic_norm", "task_subtype", "paronym_pair", "stress_word"}
+            for field in override_fields
+        ):
+            print(f"Error: Task ID {task_id} has invalid override_fields", file=sys.stderr)
+            conn.close()
+            return 1
+        override_fields_set = set(override_fields)
 
         prop_topic_norm_norm = prop_topic_norm if prop_topic_norm is not None else ""
         prop_task_subtype_norm = prop_task_subtype if prop_task_subtype is not None else ""
@@ -115,7 +124,7 @@ def main() -> int:
             db_norm = db_row[col]
 
             if db_norm != prop_norm:
-                if db_norm == "":
+                if db_norm == "" or col in override_fields_set:
                     has_diff = True
                 else:
                     has_conflict = True
