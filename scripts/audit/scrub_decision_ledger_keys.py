@@ -116,6 +116,37 @@ def generate_scrubbed_shards(
     return shards
 
 
+def load_source_ledger_payload(
+    source_ledger_path: Path = DEFAULT_SOURCE_LEDGER,
+    output_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Read decision payload, combining existing committed shards and legacy ledger if present."""
+    combined_decisions: list[dict[str, Any]] = []
+    base_payload: dict[str, Any] = {}
+
+    search_dir = source_ledger_path.parent
+    if search_dir.exists():
+        existing_shards = sorted(search_dir.glob("2026-07-23-teacher-lesson-full-document-intake-batch-*.yaml"))
+        for sp in existing_shards:
+            sp_payload = yaml.load(sp.read_text(encoding="utf-8"), Loader=_SafeLoader)
+            if not base_payload:
+                base_payload = sp_payload
+            combined_decisions.extend(sp_payload.get("decisions", []))
+
+    if source_ledger_path.exists():
+        leg_payload = yaml.load(source_ledger_path.read_text(encoding="utf-8"), Loader=_SafeLoader)
+        if not base_payload:
+            base_payload = leg_payload
+        combined_decisions.extend(leg_payload.get("decisions", []))
+
+    if not base_payload:
+        raise FileNotFoundError(f"Source ledger not found at {source_ledger_path}")
+
+    payload = dict(base_payload)
+    payload["decisions"] = combined_decisions
+    return payload
+
+
 def migrate_ledger_to_shards(
     source_ledger_path: Path = DEFAULT_SOURCE_LEDGER,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
@@ -124,8 +155,7 @@ def migrate_ledger_to_shards(
     dry_run: bool = False,
 ) -> list[Path]:
     """Read source ledger, generate scrubbed shard payloads, and write YAML files to output_dir."""
-    raw_text = source_ledger_path.read_text(encoding="utf-8")
-    payload = yaml.load(raw_text, Loader=_SafeLoader)
+    payload = load_source_ledger_payload(source_ledger_path=source_ledger_path, output_dir=output_dir)
 
     shard_payloads = generate_scrubbed_shards(
         payload=payload,
@@ -181,7 +211,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    if not args.source_ledger.is_file():
+    if not args.source_ledger.is_file() and not list(args.output_dir.glob("2026-07-23-teacher-lesson-full-document-intake-batch-*.yaml")):
         print(f"Error: source ledger not found at {args.source_ledger}", file=sys.stderr)
         return 1
 
