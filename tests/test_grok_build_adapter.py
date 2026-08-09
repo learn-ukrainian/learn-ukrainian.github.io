@@ -23,6 +23,7 @@ from agent_runtime.adapters.base import AgentAdapter, InvocationPlan
 from agent_runtime.adapters.grok_build import (
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
+    GROK_SUPPORTED_EFFORTS,
     GrokBuildAdapter,
     _adapt_prompt_for_grok_build_mcp,
     _parse_json_object,
@@ -88,6 +89,16 @@ def test_default_effort_is_applied(tmp_path):
     plan = _build("x", tmp_path)
     assert _val(plan.cmd, "-m") == GROK_BUILD_DEFAULT_MODEL
     assert _val(plan.cmd, "--effort") == GROK_BUILD_DEFAULT_EFFORT
+
+
+@pytest.mark.parametrize("effort", ["xhigh", "max"])
+def test_unsupported_native_effort_raises_before_invocation(tmp_path, effort):
+    with pytest.raises(ValueError, match="native Grok CLI supports --effort values"):
+        _build("x", tmp_path, effort=effort)
+
+
+def test_native_grok_effort_vocabulary_matches_cli_contract():
+    assert frozenset({"low", "medium", "high"}) == GROK_SUPPORTED_EFFORTS
 
 
 def test_hyphen_leading_prompt_uses_prompt_file(tmp_path):

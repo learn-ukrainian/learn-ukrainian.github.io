@@ -828,6 +828,43 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 # cmd_dispatch guards
 # ---------------------------------------------------------------------------
 
+
+@pytest.mark.parametrize("agent", ["grok", "grok-build"])
+@pytest.mark.parametrize("effort", ["xhigh", "max"])
+def test_dispatch_rejects_unsupported_native_grok_effort_before_spawn(
+    tmp_tasks_dir, monkeypatch, capsys, agent, effort
+):
+    """Native Grok must reject generic-only efforts before task side effects."""
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            agent,
+            "--task-id",
+            f"{agent}-{effort}",
+            "--prompt",
+            "hi",
+            "--effort",
+            effort,
+        ]
+    )
+
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("unsupported native Grok effort must not spawn a worker")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path(f"{agent}-{effort}")) is None
+    assert "Refusing before worker spawn" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("agent", ["grok", "grok-build"])
+@pytest.mark.parametrize("effort", ["low", "medium", "high"])
+def test_dispatch_accepts_native_grok_effort_vocabulary(agent, effort):
+    """The dispatch guard admits every native Grok CLI effort level."""
+    delegate._validate_dispatch_effort(agent, effort)
+
 def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
     """Dispatching with a task-id that's already running must fail fast."""
     path = delegate._state_path("duplicate-task")
