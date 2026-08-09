@@ -16,7 +16,12 @@ from scripts.projects.open_model_data import phase3_source_universe as freeze_mo
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json"
 POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
-ROLE = ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
+ROLE = ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+EXECUTION_METADATA = {
+    "provider": "local",
+    "started_at": "2026-08-09T00:00:00Z",
+    "completed_at": "2026-08-09T00:00:01Z",
+}
 
 
 def _write(path: Path, value: object) -> None:
@@ -153,7 +158,7 @@ def _build_fixture_root(tmp_path: Path) -> Path:
 
     # Copy real role/eval/coverage/near-dup policy bindings into the fixture tree.
     for relative in (
-        "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json",
+        "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json",
         "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json",
@@ -300,6 +305,7 @@ def _build_fixture_artifacts(root: Path) -> tuple[Path, Path]:
     public = root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"
     heldout.build_artifacts(
         root=root,
+        execution_metadata=EXECUTION_METADATA,
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
         sources_db=root / "data/sources.db",
         private_dir=private,
@@ -403,6 +409,7 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
     public = root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"
     first = heldout.build_artifacts(
         root=root,
+        execution_metadata=EXECUTION_METADATA,
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
         sources_db=root / "data/sources.db",
         private_dir=private,
@@ -419,6 +426,7 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
     public_bytes_before_reconstruction_metadata_rerun = (public / "public_receipt_v1.json").read_bytes()
     second = heldout.build_artifacts(
         root=root,
+        execution_metadata=EXECUTION_METADATA,
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
         sources_db=root / "data/sources.db",
         private_dir=private,
@@ -478,9 +486,8 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
     heldout._assert_no_forbidden_public_fields(public_receipt)
     assert public_receipt["capability"]["state"] == "NOT_YET_LABELLED_OR_ACTIVATED"
     assert public_receipt["zero_overlap"]["test_excluded_from_author_clearance"] is True
-    assert public_receipt["role_binding"]["controller_identity_id"] == heldout.CONTROLLER_IDENTITY
-    assert public_receipt["role_binding"]["artifact_task_id"] == heldout.ARTIFACT_TASK_ID
-    assert public_receipt["role_binding"]["attestation_task_id"] == heldout.ATTESTATION_TASK_ID
+    assert public_receipt["role_binding"] == {"role_id": "heldout_steward", "task_id": "phase3-v2-1-heldout-stewardship"}
+    assert public_receipt["action_receipt"]["combined_contract_sha256"] == heldout.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
     body = public / "public_receipt_v1.json"
     assert "alpha beta" not in body.read_text(encoding="utf-8")
 
@@ -505,6 +512,7 @@ def test_private_seal_tamper_byte_locator_fingerprint_fail(tmp_path: Path) -> No
     public = root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"
     heldout.build_artifacts(
         root=root,
+        execution_metadata=EXECUTION_METADATA,
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
         sources_db=root / "data/sources.db",
         private_dir=private,
@@ -627,19 +635,55 @@ def test_public_receipt_rejects_arbitrary_ascii_after_rehash(tmp_path: Path) -> 
         _verify_fixture_artifacts(root, private, public, require_private=False)
 
 
-def test_role_contract_duplicate_controller_and_steward_permission_drift_fail() -> None:
-    role_contract = heldout.read_json(ROLE)
-    duplicate = json.loads(json.dumps(role_contract))
-    label_seat = next(seat for seat in duplicate["seats"] if seat["role_id"] == "heldout_label_reviewer")
-    label_seat["controller_identity_id"] = heldout.CONTROLLER_IDENTITY
-    with pytest.raises(heldout.PartitionError, match="reuse a controller identity"):
-        heldout.verify_role_binding(duplicate)
+def test_v2_1_schema_closure_and_action_receipt_tamper_fail_closed(tmp_path: Path) -> None:
+    root = _build_fixture_root(tmp_path)
+    private, public = _build_fixture_artifacts(root)
+    schema = heldout.read_json(root / SCHEMA.relative_to(ROOT))
+    author_path = private / "author_clearance_v1.json"
+    public_path = public / "public_receipt_v1.json"
+    author = heldout.read_json(author_path)
+    unexpected = json.loads(json.dumps(author))
+    unexpected["input_bindings"]["unexpected"] = "0" * 64
+    with pytest.raises(heldout.PartitionError, match="schema validation failed"):
+        heldout._schema_validate(unexpected, schema, "authorClearanceReceipt")
+    missing = json.loads(json.dumps(author))
+    del missing["action_receipt"]["task_id"]
+    with pytest.raises(heldout.PartitionError, match="schema validation failed"):
+        heldout._schema_validate(missing, schema, "authorClearanceReceipt")
 
-    weakened = json.loads(json.dumps(role_contract))
-    steward = next(seat for seat in weakened["seats"] if seat["role_id"] == heldout.ROLE_ID)
-    steward["must_not"].remove("extract_rules")
-    with pytest.raises(heldout.PartitionError, match="prohibited functions drift"):
-        heldout.verify_role_binding(weakened)
+    author["action_receipt"]["receipt_id"] = "phase3_functional_action:" + "0" * 64
+    author = heldout.attach_receipt_hash(author)
+    heldout.write_private_json(author_path, author)
+    receipt = heldout.read_json(public_path)
+    receipt["artifact_hashes"]["author_clearance_sha256"] = author["receipt_sha256"]
+    receipt["action_receipt"] = author["action_receipt"]
+    heldout.write_public_json(public_path, heldout.attach_receipt_hash(receipt))
+    with pytest.raises(heldout.PartitionError, match="public action receipt ID drift"):
+        _verify_fixture_artifacts(root, private, public)
+
+
+def test_public_only_verification_recomputes_action_identity(tmp_path: Path) -> None:
+    root = _build_fixture_root(tmp_path)
+    private, public = _build_fixture_artifacts(root)
+    public_path = public / "public_receipt_v1.json"
+    receipt = heldout.read_json(public_path)
+    receipt["action_receipt"]["receipt_id"] = "phase3_functional_action:" + "0" * 64
+    heldout.write_public_json(public_path, heldout.attach_receipt_hash(receipt))
+
+    with pytest.raises(heldout.PartitionError, match="public action receipt ID drift"):
+        _verify_fixture_artifacts(root, private, public, require_private=False)
+
+
+def test_v1_role_contract_and_v2_1_binding_drift_fail_closed() -> None:
+    role_contract = heldout.read_json(ROLE)
+    legacy = heldout.read_json(ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json")
+    with pytest.raises(heldout.PartitionError, match="functional-role"):
+        heldout.verify_role_binding(legacy)
+
+    drifted = json.loads(json.dumps(role_contract))
+    drifted["contract_inputs"]["combined_contract_sha256"] = "0" * 64
+    with pytest.raises(heldout.PartitionError, match="functional-role schema violation"):
+        heldout.verify_role_binding(drifted)
 
 
 def test_private_permissions_are_verified_for_directory_and_every_artifact(tmp_path: Path) -> None:
@@ -790,6 +834,7 @@ def test_malformed_comparison_fail_closed_and_source_drift(tmp_path: Path) -> No
     with pytest.raises(heldout.PartitionError, match=r"row count drifts|missing"):
         heldout.build_artifacts(
             root=root,
+            execution_metadata=EXECUTION_METADATA,
             source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
             sources_db=root / "data/sources.db",
             private_dir=root / "batch_state/open-model-data/phase3-heldout",
@@ -822,6 +867,12 @@ def test_cli_build_verify_smoke(tmp_path: Path) -> None:
             "--schema",
             str(root / SCHEMA.relative_to(ROOT)),
             "build",
+            "--provider",
+            EXECUTION_METADATA["provider"],
+            "--started-at",
+            EXECUTION_METADATA["started_at"],
+            "--completed-at",
+            EXECUTION_METADATA["completed_at"],
             "--skip-source-freeze-git-binding",
         ]
     )

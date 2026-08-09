@@ -70,16 +70,85 @@ def _freeze(tmp_path: Path, totals: dict[str, int]) -> tuple[Path, dict[str, lis
 
 
 def _role_contract(path: Path) -> None:
-    _json(path, {
-        "seats": [
-            {"role_id": "rule_author_extractor", "assignment_state": "assigned_verified", "controller_identity_attested": True, "controller_identity_id": "controller.extractor"},
-            {"role_id": "ukrainian_source_reviewer", "assignment_state": "assigned_verified", "controller_identity_attested": True, "controller_identity_id": "controller.source_reviewer"},
-        ],
-        "task_bindings": [
-            {"role_id": "rule_author_extractor", "reserved_task_id": "task.extractor", "controller_identity_id": "controller.extractor", "status": "identity_attested_pre_artifact"},
-            {"role_id": "ukrainian_source_reviewer", "reserved_task_id": "task.source_reviewer", "controller_identity_id": "controller.source_reviewer", "status": "identity_attested_pre_artifact"},
-        ],
-    })
+    path.write_bytes(dispositions.DEFAULT_ROLE_CONTRACT.read_bytes())
+
+
+def _action(
+    role: Path,
+    *,
+    role_id: str,
+    action_kind: str,
+    input_sha: str,
+    output_sha: str,
+) -> dict[str, object]:
+    contract = json.loads(role.read_text(encoding="utf-8"))
+    actor = next(item for item in contract["functional_roles"] if item["role_id"] == role_id)
+    identity = {
+        "role_id": actor["role_id"],
+        "task_id": actor["task_id"],
+        "input_manifest_sha256": input_sha,
+        "evaluation_cycle_id": contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "output_sha256": output_sha,
+        "status": "completed",
+    }
+    return {
+        "receipt_id": "phase3_functional_action:"
+        + dispositions.sha256_bytes(canonical_json(identity).encode("utf-8")),
+        "role_id": actor["role_id"],
+        "task_id": actor["task_id"],
+        "action_kind": action_kind,
+        "provider": dispositions.ROLE_PROVIDERS[role_id],
+        "exact_model": actor["exact_model"],
+        "model_family": actor["model_family"],
+        "harness": actor["harness"],
+        "input_manifest_sha256": input_sha,
+        "output_sha256": output_sha,
+        "evaluation_cycle_id": contract["evaluation_cycle"]["evaluation_cycle_id"],
+        "base_contract_sha256": dispositions.functional_roles.BASE_SHA256,
+        "amendment_sha256": dispositions.functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": dispositions.functional_roles.COMBINED_SHA256,
+        "functional_role_contract_sha256": dispositions.sha256_file(role),
+        "conflict_graph_sha256": dispositions.functional_roles.conflict_graph_sha256(contract),
+        "started_at": "2026-08-09T00:00:00Z",
+        "completed_at": "2026-08-09T00:00:01Z",
+        "status": "completed",
+    }
+
+
+def _author_action(role: Path, *, freeze_sha: str, families_sha: str) -> dict[str, object]:
+    return _action(
+        role,
+        role_id="rule_author_extractor",
+        action_kind="source_disposition_proposal",
+        input_sha=dispositions.sha256_bytes(
+            canonical_json({"source_freeze_receipt_sha256": freeze_sha}).encode("utf-8")
+        ),
+        output_sha=families_sha,
+    )
+
+
+def _review_action(
+    role: Path,
+    *,
+    freeze_sha: str,
+    families_sha: str,
+    author_action_receipt_id: str,
+) -> dict[str, object]:
+    return _action(
+        role,
+        role_id="ukrainian_source_reviewer",
+        action_kind="source_disposition_review",
+        input_sha=dispositions.sha256_bytes(
+            canonical_json(
+                {
+                    "source_freeze_receipt_sha256": freeze_sha,
+                    "disposition_families_sha256": families_sha,
+                    "author_action_receipt_id": author_action_receipt_id,
+                }
+            ).encode("utf-8")
+        ),
+        output_sha=dispositions.sha256_bytes(canonical_json({"verdict": "APPROVE"}).encode("utf-8")),
+    )
 
 
 def _input(freeze: Path, units: dict[str, list[dict[str, str]]], totals: dict[str, int], role: Path) -> dict[str, object]:
@@ -105,23 +174,47 @@ def _input(freeze: Path, units: dict[str, list[dict[str, str]]], totals: dict[st
         })
     document = {
         "schema_version": dispositions.INPUT_SCHEMA_VERSION, "text_free": True,
+        "phase3_v2_contract_sha256": dispositions.functional_roles.BASE_SHA256,
+        "phase3_v2_1_amendment_sha256": dispositions.functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": dispositions.functional_roles.COMBINED_SHA256,
+        "producer_task_id": dispositions.PRODUCER_TASK_ID,
         "source_freeze_receipt_sha256": dispositions.sha256_file(freeze / dispositions.FREEZE_RECEIPT_FILE),
         "role_contract_sha256": dispositions.sha256_file(role),
-        "author_binding": {"role_id": "rule_author_extractor", "controller_identity_id": "controller.extractor", "task_id": "task.extractor"},
-        "source_review_binding": {"role_id": "ukrainian_source_reviewer", "controller_identity_id": "controller.source_reviewer", "task_id": "task.source_reviewer", "receipt_sha256": "0" * 64},
+        "conflict_graph_sha256": dispositions.functional_roles.conflict_graph_sha256(
+            json.loads(role.read_text(encoding="utf-8"))
+        ),
+        "author_binding": dispositions.functional_roles.binding_for_role(
+            json.loads(role.read_text(encoding="utf-8")), "rule_author_extractor"
+        ),
+        "source_review_binding": {
+            **dispositions.functional_roles.binding_for_role(
+                json.loads(role.read_text(encoding="utf-8")), "ukrainian_source_reviewer"
+            ),
+            "receipt_sha256": "0" * 64,
+        },
         "families": families,
     }
+    families_sha = dispositions.sha256_bytes(canonical_json(document["families"]).encode("utf-8"))
+    author_action = _author_action(
+        role,
+        freeze_sha=document["source_freeze_receipt_sha256"],
+        families_sha=families_sha,
+    )
+    document["author_binding"]["action_receipt"] = author_action
     review_receipt = {
         "schema_version": dispositions.SOURCE_REVIEW_RECEIPT_SCHEMA_VERSION,
         "text_free": True,
         "reviewer_role_id": "ukrainian_source_reviewer",
-        "controller_identity_id": "controller.source_reviewer",
-        "task_id": "task.source_reviewer",
+        "task_id": document["source_review_binding"]["task_id"],
         "source_freeze_receipt_sha256": document["source_freeze_receipt_sha256"],
-        "disposition_families_sha256": dispositions.sha256_bytes(
-            canonical_json(document["families"]).encode("utf-8")
-        ),
+        "disposition_families_sha256": families_sha,
         "verdict": "APPROVE",
+        "action_receipt": _review_action(
+            role,
+            freeze_sha=document["source_freeze_receipt_sha256"],
+            families_sha=families_sha,
+            author_action_receipt_id=author_action["receipt_id"],
+        ),
     }
     _json(role.parent / "source-review-receipt.json", review_receipt)
     document["source_review_binding"]["receipt_sha256"] = dispositions.sha256_file(
@@ -145,6 +238,18 @@ def _refresh_review_receipt(document: dict[str, object], role: Path) -> None:
     receipt["disposition_families_sha256"] = dispositions.sha256_bytes(
         canonical_json(document["families"]).encode("utf-8")
     )
+    author_action = _author_action(
+        role,
+        freeze_sha=receipt["source_freeze_receipt_sha256"],
+        families_sha=receipt["disposition_families_sha256"],
+    )
+    document["author_binding"]["action_receipt"] = author_action
+    receipt["action_receipt"] = _review_action(
+        role,
+        freeze_sha=receipt["source_freeze_receipt_sha256"],
+        families_sha=receipt["disposition_families_sha256"],
+        author_action_receipt_id=author_action["receipt_id"],
+    )
     _json(receipt_path, receipt)
     document["source_review_binding"]["receipt_sha256"] = dispositions.sha256_file(receipt_path)
 
@@ -160,6 +265,8 @@ def test_compiles_exact_text_free_bijection_and_zero_receipt(tmp_path: Path, tin
         "input_disposition_row_count": 0, "output_disposition_row_count": 0, "status": "ZERO_FAMILY_ACCOUNTED",
     }
     assert receipt["disposition_ledger"]["row_count"] == 7
+    assert receipt["combined_contract_sha256"] == dispositions.functional_roles.COMBINED_SHA256
+    assert receipt["producer_task_id"] == dispositions.PRODUCER_TASK_ID
     assert receipt["author_binding"] == document["author_binding"]
     assert receipt["source_review_binding"] == document["source_review_binding"]
     assert all(item["ledger_universe_sha256"] == item["audit_universe_sha256"] for item in receipt["families"])
@@ -256,6 +363,31 @@ def test_converted_disposition_forbids_nonconversion_payload(tmp_path: Path, tin
         _compile(tmp_path, freeze, document, role)
 
 
+def test_rights_limit_cannot_replace_a_v2_disposition(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
+    freeze, units = _freeze(tmp_path, tiny_totals)
+    role = tmp_path / "roles.json"
+    _role_contract(role)
+    document = _input(freeze, units, tiny_totals, role)
+    row = next(item for item in document["families"] if item["family_id"] == "ua_gec")["dispositions"][0]
+    for key in (
+        "canonical_identity",
+        "source_role",
+        "claim_type",
+        "evidence_locator_sha256s",
+        "consumer_view",
+        "predicate_sha256",
+        "artifact_sha256",
+    ):
+        row.pop(key)
+    row["disposition_code"] = "rights_limited_locator_only"
+    row["nonconversion"] = {
+        "reason_code": "rights_limit_is_only_a_capability_tag",
+        "unit_specific_locator_sha256": _sha(row["unit_id"]),
+    }
+    with pytest.raises(dispositions.DispositionError, match="schema violation"):
+        _compile(tmp_path, freeze, document, role)
+
+
 def test_repeated_nonconversion_reason_requires_predicate_or_rationale(tmp_path: Path, tiny_totals: dict[str, int], monkeypatch: pytest.MonkeyPatch) -> None:
     totals = dict(tiny_totals)
     totals["ua_gec"] = 10
@@ -296,8 +428,8 @@ def test_fails_closed_on_provenance_binding_and_zero_receipt_tampering(tmp_path:
     role = tmp_path / "roles.json"
     _role_contract(role)
     document = _input(freeze, units, tiny_totals, role)
-    document["author_binding"]["controller_identity_id"] = "controller.other"
-    with pytest.raises(dispositions.DispositionError, match="rule_author_extractor controller binding mismatch"):
+    document["author_binding"]["controller_identity_id"] = "obsolete.controller.identity"
+    with pytest.raises(dispositions.DispositionError, match="schema violation"):
         _compile(tmp_path, freeze, document, role)
     document = _input(freeze, units, tiny_totals, role)
     zero = next(item for item in document["families"] if item["family_id"] == "other_normative_style_inventory")
@@ -318,9 +450,9 @@ def test_fails_closed_on_role_contract_hash_tampering(tmp_path: Path, tiny_total
 
 @pytest.mark.parametrize("tamper, error", [
     ("missing", "schema violation"),
-    ("swapped", "rule_author_extractor controller binding mismatch"),
-    ("self_review", "identities must differ"),
-    ("wrong_task", "rule_author_extractor task binding mismatch"),
+    ("swapped", "schema violation"),
+    ("self_review", "schema violation"),
+    ("wrong_task", "schema violation"),
     ("receipt", "source review receipt binding mismatch"),
 ])
 def test_fails_closed_on_source_authoring_provenance_tampering(
@@ -333,10 +465,11 @@ def test_fails_closed_on_source_authoring_provenance_tampering(
     if tamper == "missing":
         document.pop("author_binding")
     elif tamper == "swapped":
-        document["author_binding"]["controller_identity_id"] = "controller.source_reviewer"
-        document["source_review_binding"]["controller_identity_id"] = "controller.extractor"
+        author_task = document["author_binding"]["task_id"]
+        document["author_binding"]["task_id"] = document["source_review_binding"]["task_id"]
+        document["source_review_binding"]["task_id"] = author_task
     elif tamper == "self_review":
-        document["source_review_binding"]["controller_identity_id"] = "controller.extractor"
+        document["source_review_binding"]["task_id"] = document["author_binding"]["task_id"]
     elif tamper == "wrong_task":
         document["author_binding"]["task_id"] = "task.other"
     else:
@@ -345,30 +478,34 @@ def test_fails_closed_on_source_authoring_provenance_tampering(
         _compile(tmp_path, freeze, document, role)
 
 
-def test_fails_closed_on_drifted_role_contract_identity(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
+def test_fails_closed_on_drifted_role_contract_task(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
     freeze, units = _freeze(tmp_path, tiny_totals)
     role = tmp_path / "roles.json"
     _role_contract(role)
     document = _input(freeze, units, tiny_totals, role)
     contract = json.loads(role.read_text(encoding="utf-8"))
-    contract["seats"][0]["controller_identity_id"] = "controller.drifted"
-    contract["task_bindings"][0]["controller_identity_id"] = "controller.drifted"
+    next(item for item in contract["functional_roles"] if item["role_id"] == "rule_author_extractor")[
+        "task_id"
+    ] = "phase3-v2-1-drifted-author"
     _json(role, contract)
     document["role_contract_sha256"] = dispositions.sha256_file(role)
-    with pytest.raises(dispositions.DispositionError, match="rule_author_extractor controller binding mismatch"):
+    with pytest.raises(dispositions.DispositionError, match="functional-role schema violation"):
         _compile(tmp_path, freeze, document, role)
 
 
-def test_fails_closed_on_unattested_role_task_status(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
+def test_fails_closed_on_obsolete_role_contract(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
     freeze, units = _freeze(tmp_path, tiny_totals)
     role = tmp_path / "roles.json"
     _role_contract(role)
     document = _input(freeze, units, tiny_totals, role)
-    contract = json.loads(role.read_text(encoding="utf-8"))
-    contract["task_bindings"][0]["status"] = "reserved_not_launched"
-    _json(role, contract)
+    role.write_bytes(
+        (
+            dispositions.ROOT
+            / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json"
+        ).read_bytes()
+    )
     document["role_contract_sha256"] = dispositions.sha256_file(role)
-    with pytest.raises(dispositions.DispositionError, match="task binding is not pre-artifact attested"):
+    with pytest.raises(dispositions.DispositionError, match="schema violation"):
         _compile(tmp_path, freeze, document, role)
 
 
@@ -380,6 +517,65 @@ def test_source_review_receipt_binds_exact_disposition_payload(tmp_path: Path, t
     family = next(item for item in document["families"] if item["family_id"] == "ua_gec")
     family["dispositions"][0]["artifact_sha256"] = "f" * 64
     with pytest.raises(dispositions.DispositionError, match="source review receipt disposition binding mismatch"):
+        _compile(tmp_path, freeze, document, role)
+
+
+@pytest.mark.parametrize(
+    "field,value,error",
+    [
+        ("provider", "wrong-provider", "was expected"),
+        ("exact_model", "wrong-model", "lane mismatch"),
+        ("input_manifest_sha256", "0" * 64, "action input mismatch"),
+        ("output_sha256", "0" * 64, "action output mismatch"),
+        ("conflict_graph_sha256", "0" * 64, "role-graph binding mismatch"),
+        ("receipt_id", "phase3_functional_action:" + "0" * 64, "receipt ID mismatch"),
+    ],
+)
+def test_source_author_action_receipt_fails_closed(
+    tmp_path: Path,
+    tiny_totals: dict[str, int],
+    field: str,
+    value: str,
+    error: str,
+) -> None:
+    freeze, units = _freeze(tmp_path, tiny_totals)
+    role = tmp_path / "roles.json"
+    _role_contract(role)
+    document = _input(freeze, units, tiny_totals, role)
+    document["author_binding"]["action_receipt"][field] = value
+    with pytest.raises(dispositions.DispositionError, match=error):
+        _compile(tmp_path, freeze, document, role)
+
+
+@pytest.mark.parametrize(
+    "field,value,error",
+    [
+        ("provider", "wrong-provider", "provider mismatch"),
+        ("task_id", "phase3-v2-1-heldout-label-review", "task binding mismatch"),
+        ("exact_model", "wrong-model", "lane mismatch"),
+        ("input_manifest_sha256", "0" * 64, "action input mismatch"),
+        ("conflict_graph_sha256", "0" * 64, "role-graph binding mismatch"),
+        ("status", "failed", "action is not complete"),
+        ("receipt_id", "phase3_functional_action:" + "0" * 64, "receipt ID mismatch"),
+    ],
+)
+def test_source_review_action_receipt_fails_closed(
+    tmp_path: Path,
+    tiny_totals: dict[str, int],
+    field: str,
+    value: str,
+    error: str,
+) -> None:
+    freeze, units = _freeze(tmp_path, tiny_totals)
+    role = tmp_path / "roles.json"
+    _role_contract(role)
+    document = _input(freeze, units, tiny_totals, role)
+    receipt_path = tmp_path / "source-review-receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["action_receipt"][field] = value
+    _json(receipt_path, receipt)
+    document["source_review_binding"]["receipt_sha256"] = dispositions.sha256_file(receipt_path)
+    with pytest.raises(dispositions.DispositionError, match=error):
         _compile(tmp_path, freeze, document, role)
 
 
