@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_audit_entropy_receipt_v1.schema.json",
+  "title": "Phase 3 approved common anti-grinding entropy receipt v1",
+  "$ref": "#/$defs/reveal",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "sha1": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+    "reveal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "text_free", "commitment_path", "commitment_sha256", "commitment_first_containing_merge_sha", "auditor_nonce"],
+      "properties": {
+        "schema_version": {"const": "phase3_audit_entropy_receipt_v1"},
+        "text_free": {"const": true},
+        "commitment_path": {"$ref": "#/$defs/path"},
+        "commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "commitment_first_containing_merge_sha": {"$ref": "#/$defs/sha1"},
+        "auditor_nonce": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "text_free", "purpose", "frozen_universe_sha256", "frozen_population_sha256", "sampler_plan_path", "sampler_plan_sha256", "sampler_plan_first_containing_merge_sha", "auditor_role_id", "auditor_task_id", "base_contract_sha256", "amendment_sha256", "combined_contract_sha256", "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id", "author_or_root_choices", "root_choice_count", "reroll_count", "pre_nonce_binding_sha256", "auditor_nonce_commitment_sha256"],
+      "properties": {
+        "schema_version": {"const": "phase3_audit_entropy_commitment_v1"},
+        "text_free": {"const": true},
+        "purpose": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "frozen_universe_sha256": {"$ref": "#/$defs/sha256"},
+        "frozen_population_sha256": {"$ref": "#/$defs/sha256"},
+        "sampler_plan_path": {"$ref": "#/$defs/path"},
+        "sampler_plan_sha256": {"$ref": "#/$defs/sha256"},
+        "sampler_plan_first_containing_merge_sha": {"$ref": "#/$defs/sha1"},
+        "auditor_role_id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "auditor_task_id": {"type": "string", "pattern": "^phase3-v2-1-[a-z0-9-]+$"},
+        "base_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "amendment_sha256": {"$ref": "#/$defs/sha256"},
+        "combined_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "functional_role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-001"},
+        "author_or_root_choices": {"const": false},
+        "root_choice_count": {"const": 0},
+        "reroll_count": {"const": 0},
+        "pre_nonce_binding_sha256": {"$ref": "#/$defs/sha256"},
+        "auditor_nonce_commitment_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

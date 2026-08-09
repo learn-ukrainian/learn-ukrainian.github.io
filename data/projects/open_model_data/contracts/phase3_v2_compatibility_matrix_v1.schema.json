@@ -43,8 +43,8 @@
     },
     "engine_bindings": {
       "type": "array",
-      "minItems": 4,
-      "maxItems": 4,
+      "minItems": 26,
+      "maxItems": 26,
       "items": {"$ref": "#/$defs/engineEntry"}
     },
     "inventory": {
@@ -104,7 +104,7 @@
       "additionalProperties": false,
       "required": ["logical_path", "artifact_sha256", "disposition", "machine_reason", "phase3_v2_contract_sha256"],
       "properties": {
-        "logical_path": {"enum": ["scripts/projects/open_model_data/phase3_rule_author_packets.py", "scripts/projects/open_model_data/phase3_rule_author_runner.py", "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json", "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json"]},
+        "logical_path": {"pattern": "^(scripts/projects/open_model_data/(phase3_.+|verify_phase3_source_universe_freeze\\.py)|data/projects/open_model_data/contracts/(phase3_.+|correction_protection_coverage_contract_v1)\\.schema\\.json)$"},
         "artifact_sha256": {"$ref": "#/$defs/sha256"},
         "disposition": {"const": "rebound"},
         "machine_reason": {"const": "deterministic_engine_rebound_to_v2"},

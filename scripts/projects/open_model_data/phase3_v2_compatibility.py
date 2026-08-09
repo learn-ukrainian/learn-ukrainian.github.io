@@ -62,12 +62,38 @@ INVALIDATION_REASONS = {
     "role_contract_status": "pre_v2_role_contract_invalidated",
     "phase2_artifact": "phase2_rows_not_phase3_evidence",
 }
-ENGINE_PATHS = {
+ENGINE_PATHS = frozenset({
+    # v2.1 packet compilation and execution.
     "scripts/projects/open_model_data/phase3_rule_author_packets.py",
     "scripts/projects/open_model_data/phase3_rule_author_runner.py",
+    # v2.1 source population, release, and audit mechanics.
+    "scripts/projects/open_model_data/phase3_heldout_partition.py",
+    "scripts/projects/open_model_data/phase3_rule_author_source_rows.py",
+    "scripts/projects/open_model_data/phase3_source_dispositions.py",
+    "scripts/projects/open_model_data/phase3_disposition_audit.py",
+    "scripts/projects/open_model_data/phase3_audit_entropy.py",
+    "scripts/projects/open_model_data/phase3_lexical_coverage.py",
+    "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
+    "scripts/projects/open_model_data/phase3_pravopys_delta.py",
+    "scripts/projects/open_model_data/phase3_evaluation_reproduction.py",
+    # Direct, load-bearing deterministic validators imported by the live paths.
+    "scripts/projects/open_model_data/phase3_near_duplicate.py",
+    "scripts/projects/open_model_data/phase3_source_universe.py",
+    "scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py",
+    # Every closed Phase 3 schema consumed by the current runtime closure.
     "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
-}
+    "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_rule_author_source_rows_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_source_disposition_input_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_disposition_audit_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_textbook_nonhit_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/correction_protection_coverage_contract_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_evaluation_reproduction_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json",
+})
 
 
 class CompatibilityError(ValueError):
