@@ -2091,6 +2091,70 @@ def test_run_worker_does_not_flag_read_only_tiny_response(
     assert state["status"] == "done"
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] is None
+    assert state["read_only_checkout_pre"] == {}
+    assert state["read_only_checkout_post"] == {}
+    assert state["read_only_mutation_paths"] == []
+
+
+def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#4840: read-only seminar review leaks must be visible but never deleted."""
+    worktree = tmp_path / "seminar-review"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    (worktree / ".gitignore").write_text(".cache/\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitignore"], cwd=worktree, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "fixture"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    leaked_paths = [
+        ".cache/lemma-frequency-c1-999.json",
+        "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md",
+        "curriculum/l2-uk-en/bio/andrii-malyshko/status/module.json",
+    ]
+    state_path = delegate._state_path("read-only-seminar-leak")
+    delegate._write_state_atomic(state_path, {"task_id": "read-only-seminar-leak"})
+    result = _finalize_mock_result()
+
+    def legacy_audit_side_effect(*_args, **_kwargs):
+        for relative_path in leaked_paths:
+            target = worktree / relative_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("legacy audit leak\n", encoding="utf-8")
+        return result
+
+    with patch("agent_runtime.runner.invoke", side_effect=legacy_audit_side_effect):
+        rc = delegate._run_worker(
+            task_id="read-only-seminar-leak",
+            agent="codex",
+            prompt="Review the seminar module without edits.",
+            mode="read-only",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["read_only_checkout_pre"] == {}
+    assert state["read_only_mutation_paths"] == leaked_paths
+    assert state["read_only_checkout_post"] == {
+        ".cache/lemma-frequency-c1-999.json": "!!",
+        "curriculum/l2-uk-en/bio/andrii-malyshko/audit/module-audit.md": "??",
+        "curriculum/l2-uk-en/bio/andrii-malyshko/status/module.json": "??",
+    }
+    assert state["last_error"] == "read-only checkout mutation detected: " + ", ".join(leaked_paths)
+    assert all((worktree / relative_path).exists() for relative_path in leaked_paths)
 
 
 def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
