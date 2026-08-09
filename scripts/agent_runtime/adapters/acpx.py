@@ -119,7 +119,11 @@ CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT = "installed>=0.64.2<1"
 AGY_CLI_COMPATIBILITY_CONTRACT = "text-plan-sandbox-v1"
 OPENCODE_CLI_COMPATIBILITY_CONTRACT = "native-acp-pure-v1"
 HERMES_CLI_COMPATIBILITY_CONTRACT = "text-oneshot-isolated-v1"
+# Sealed reviewers retain their deliberately constrained baseline unless their
+# adapter derives a reviewed evidence-reading budget. Ordinary advisory asks
+# need enough turns for a model to consult and return a complete response.
 ACPX_DEFAULT_MAX_TURNS = 1
+ACPX_ORDINARY_ASK_MAX_TURNS = 8
 _CLAUDE_ACP_SEALED_READ_CHUNK_BYTES = 24 * 1024
 _CLAUDE_ACP_INLINE_RESULT_CHARS = 48 * 1024
 _CLAUDE_ACP_FALLBACK_READ_CHUNK_BYTES = 8 * 1024
@@ -1629,10 +1633,16 @@ class AcpxAdapter:
             builtin_agent="codex",
         )
 
+        max_turns = (
+            ACPX_DEFAULT_MAX_TURNS
+            if sealed_review_mcp_config is not None
+            else ACPX_ORDINARY_ASK_MAX_TURNS
+        )
         cmd: list[str] = _confinement_prefix_argv(
             binary,
             cwd,
             sealed_review_mcp_config=sealed_review_mcp_config,
+            max_turns=max_turns,
         )
         if model:
             cmd.extend(["--model", model])
@@ -2007,8 +2017,11 @@ class _AcpxDiscussionAdapter:
         return {}
 
     def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
-        _ = sealed_review_mcp_config
-        return ACPX_DEFAULT_MAX_TURNS
+        return (
+            ACPX_DEFAULT_MAX_TURNS
+            if sealed_review_mcp_config is not None
+            else ACPX_ORDINARY_ASK_MAX_TURNS
+        )
 
     def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
         _ = sealed_review_mcp_config
@@ -2158,7 +2171,7 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
 
     def _max_turns(self, sealed_review_mcp_config: str | None) -> int:
         if sealed_review_mcp_config is None:
-            return ACPX_DEFAULT_MAX_TURNS
+            return ACPX_ORDINARY_ASK_MAX_TURNS
         return _claude_sealed_review_max_turns(sealed_review_mcp_config)
 
     def _system_prompt(self, sealed_review_mcp_config: str | None) -> str | None:
@@ -2424,10 +2437,16 @@ class AcpxGrokShadowAdapter:
             _GROK_SEALED_REVIEW_PROFILE_SHA256 if sealed_review else _GROK_PROFILE_SHA256
         )
         agent_command = _build_grok_agent_command(grok_binary, profile_path)
+        max_turns = (
+            ACPX_DEFAULT_MAX_TURNS
+            if sealed_review_mcp_config is not None
+            else ACPX_ORDINARY_ASK_MAX_TURNS
+        )
         cmd: list[str] = _confinement_prefix_argv(
             acpx_binary,
             cwd,
             sealed_review_mcp_config=sealed_review_mcp_config,
+            max_turns=max_turns,
         )
         # --agent is a single shell-safe command string. Do not combine with a
         # positional agent token (acpx grammar), and never emit built-in

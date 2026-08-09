@@ -712,7 +712,7 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert ("--auth-policy", "fail") in pairs
     assert ("--non-interactive-permissions", "fail") in pairs
     assert ("--allowed-tools", "") in pairs
-    assert ("--max-turns", "1") in pairs
+    assert ("--max-turns", "8") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert ("--format", "json") in pairs
     assert "--deny-all" in plan.cmd
@@ -1510,7 +1510,7 @@ def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch)
     assert ("--auth-policy", "fail") in pairs
     assert ("--non-interactive-permissions", "fail") in pairs
     assert ("--allowed-tools", "") in pairs
-    assert ("--max-turns", "1") in pairs
+    assert ("--max-turns", "8") in pairs
     assert ("--prompt-retries", "0") in pairs
     assert "--deny-all" in plan.cmd
     assert "--no-fs" in plan.cmd
@@ -1843,8 +1843,32 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
 
     # Four bounded recovery turns + ToolSearch + four change-evidence chunks + verdict.
     assert acpx_module._claude_sealed_review_max_turns(str(config_path)) == 10
-    assert AcpxClaudeShadowAdapter()._max_turns(None) == 1
+    assert AcpxClaudeShadowAdapter()._max_turns(None) == 8
     assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 10
+
+
+def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+
+    with acpx_module.active_discussion_scope():
+        plan = AcpxClaudeShadowAdapter().build_invocation(
+            prompt="advise on the next infrastructure priority",
+            mode="read-only",
+            cwd=tmp_path,
+            model="claude-fable-5",
+            task_id="t-claude-advisory",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "claude",
+                "correlation_id": "corr-claude-advisory",
+                "idempotency_key": "idem-claude-advisory",
+            },
+        )
+
+    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
+    assert ("--max-turns", "8") in pairs
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5", "claude-fable-5"])
