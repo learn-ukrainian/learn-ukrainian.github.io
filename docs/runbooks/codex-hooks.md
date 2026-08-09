@@ -175,10 +175,20 @@ accumulate past the outer hook deadline. Hook-owned advisory locks use a
 one-second bounded wait; the lock remains fail-safe, while a live but wedged
 owner can no longer stall a new session indefinitely.
 
-A `SIGKILL` can land after `claim-thread-lease` persists the lease but before the
-claim reports back to SessionStart. In that case the session must stop and the
-lease can remain held; do not force-release based only on a claim timeout. The
-lease-lifecycle work in the infrastructure lane is making this recovery explicit.
+A durable thread lease records the harness process PID, process start time, and
+machine identity. A new session reclaims the lease immediately when that exact
+process is dead or the PID has been reused; it never steals from a confirmed-live
+owner, regardless of heartbeat age. `heartbeat_at` is diagnostic only. If process
+liveness cannot be checked, the claim fails closed and prints a CAS-scoped
+`release-thread-lease --force` command bound to the observed owner and generation.
+Use only that exact command after verifying the owner is gone; a confirmed-live
+owner also requires the explicit `--acknowledge-live-owner` flag.
+
+Normal `SessionEnd` runs `release-thread-lease` and leaves a released tombstone so
+the next claim retains a monotonic generation fence. `SIGKILL` can skip that hook,
+and can land after a claim is persisted but before SessionStart receives its
+result. In that case the session must stop; do not force-release based only on a
+claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
