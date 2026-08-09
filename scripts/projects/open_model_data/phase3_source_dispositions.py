@@ -14,13 +14,14 @@ import json
 import os
 import tempfile
 from collections import Counter
-from collections.abc import Iterable, Mapping
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from scripts.projects.open_model_data import phase3_disposition_audit as disposition_audit
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.phase3_source_universe import canonical_json, sha256_file
 
@@ -32,9 +33,10 @@ DEFAULT_ROLE_CONTRACT = (
 )
 FREEZE_RECEIPT_FILE = "source-universe-freeze-receipt.json"
 OUTPUT_LEDGER_FILE = "phase3-source-dispositions.jsonl"
+OUTPUT_AUDIT_LEDGER_FILE = "phase3-disposition-ledger.json"
 OUTPUT_RECEIPT_FILE = "phase3-source-dispositions-receipt.json"
-OUTPUT_FILES = frozenset({OUTPUT_LEDGER_FILE, OUTPUT_RECEIPT_FILE})
-INPUT_SCHEMA_VERSION = "phase3_source_disposition_input_v2_1"
+OUTPUT_FILES = frozenset({OUTPUT_LEDGER_FILE, OUTPUT_AUDIT_LEDGER_FILE, OUTPUT_RECEIPT_FILE})
+INPUT_SCHEMA_VERSION = "phase3_source_disposition_input_v2_2"
 OUTPUT_SCHEMA_VERSION = "phase3_source_disposition_receipt_v2_1"
 SOURCE_REVIEW_RECEIPT_SCHEMA_VERSION = "phase3_source_disposition_review_receipt_v2_1"
 PRODUCER_TASK_ID = "phase3-v2-1-disposition-ledger-production"
@@ -200,6 +202,7 @@ def _validate_provenance_bindings(
             "task_id",
             "source_freeze_receipt_sha256",
             "disposition_families_sha256",
+            "reviewed_rule_artifacts_sha256",
             "verdict",
             "action_receipt",
         },
@@ -219,6 +222,10 @@ def _validate_provenance_bindings(
         receipt["disposition_families_sha256"]
         == sha256_bytes(canonical_json(reviewed["families"]).encode("utf-8")),
         "source review receipt disposition binding mismatch",
+    )
+    require(
+        receipt["reviewed_rule_artifacts_sha256"] == reviewed["reviewed_rule_artifacts_sha256"],
+        "source review receipt reviewed-rule-artifacts binding mismatch",
     )
     require(receipt["verdict"] == "APPROVE", "source review receipt does not approve the exact dispositions")
     author_action = author.get("action_receipt")
@@ -311,15 +318,6 @@ def _load_frozen_universe(source_freeze_dir: Path) -> tuple[dict[str, list[dict[
     return frozen, sha256_file(receipt_path), receipt
 
 
-def _rolling_universe_sha256(rows: Iterable[Mapping[str, str]]) -> str:
-    digest = hashlib.sha256()
-    for row in rows:
-        encoded = canonical_json(dict(row)).encode("utf-8")
-        digest.update(len(encoded).to_bytes(8, "big"))
-        digest.update(encoded)
-    return digest.hexdigest()
-
-
 def _validate_family_rows(family: Mapping[str, Any], frozen_rows: list[dict[str, str]]) -> list[dict[str, Any]]:
     family_id = str(family["family_id"])
     input_rows = family["dispositions"]
@@ -363,6 +361,112 @@ def _validate_family_rows(family: Mapping[str, Any], frozen_rows: list[dict[str,
     return output
 
 
+def _audit_locator(prefix: str, sha256: str) -> str:
+    """Render a text-free immutable locator accepted by the audit runtime."""
+    return f"{prefix}.{sha256}"
+
+
+def _audit_shape_row(row: Mapping[str, Any], repeated_reason_count: int | None) -> dict[str, Any]:
+    """Translate a schema-validated review row into the audit's closed v2.1 shape."""
+    converted = row["disposition_code"] == "converted"
+    if converted:
+        consumer = row["consumer_view"]
+        return {
+            "unit_id": row["unit_id"],
+            "unit_sha256": row["unit_sha256"],
+            "unit_locator_sha256": row["locator_sha256"],
+            "disposition_code": row["disposition_code"],
+            "document_or_edition_identity": row["document_or_edition_identity"],
+            "source_role": row["source_role"],
+            "claim_type": row["claim_type"],
+            "canonical_content_identity": row["canonical_identity"],
+            "evidence_artifact_locators": [
+                _audit_locator("evidence", value) for value in row["evidence_locator_sha256s"]
+            ],
+            "consumer_view_ids": [consumer["view_id"]],
+            "conversion_predicate_locator": _audit_locator("predicate", row["predicate_sha256"]),
+            "reason_locator": None,
+            "repeated_reason_count": None,
+            "predicate_or_rationale_locator": None,
+        }
+    nonconversion = row["nonconversion"]
+    reason_locator = f"reason.{nonconversion['reason_code']}"
+    predicate_or_rationale_sha256 = nonconversion.get("reason_predicate_sha256") or nonconversion.get(
+        "unit_specific_rationale_sha256"
+    )
+    return {
+        "unit_id": row["unit_id"],
+        "unit_sha256": row["unit_sha256"],
+        "unit_locator_sha256": row["locator_sha256"],
+        "disposition_code": row["disposition_code"],
+        "document_or_edition_identity": row["document_or_edition_identity"],
+        "source_role": None,
+        "claim_type": None,
+        "canonical_content_identity": None,
+        "evidence_artifact_locators": [],
+        "consumer_view_ids": [],
+        "conversion_predicate_locator": None,
+        "reason_locator": reason_locator,
+        "repeated_reason_count": repeated_reason_count,
+        "predicate_or_rationale_locator": (
+            _audit_locator("predicate_or_rationale", predicate_or_rationale_sha256)
+            if repeated_reason_count is not None and repeated_reason_count >= 10
+            else None
+        ),
+    }
+
+
+def _audit_shape_ledger(
+    *,
+    source_freeze_receipt: Mapping[str, Any],
+    source_freeze_receipt_sha256: str,
+    coverage_contract: Mapping[str, Any],
+    role_contract_sha256: str,
+    conflict_graph_sha256: str,
+    family_receipts: list[dict[str, Any]],
+    family_rows: Mapping[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    """Build the exact closed ledger consumed by the independent audit runtime."""
+    artifact_manifest = source_freeze_receipt.get("artifact_manifest")
+    require(isinstance(artifact_manifest, Mapping), "source freeze lacks artifact manifest for audit ledger")
+    payload_manifest_sha256 = artifact_manifest.get("payload_manifest_sha256")
+    require(isinstance(payload_manifest_sha256, str), "source freeze lacks payload manifest hash for audit ledger")
+    audit_families: list[dict[str, Any]] = []
+    receipts_by_family = {item["family_id"]: item for item in family_receipts}
+    for family_id in sorted(FAMILY_IDS):
+        rows = family_rows[family_id]
+        reason_counts = Counter(
+            f"reason.{row['nonconversion']['reason_code']}"
+            for row in rows
+            if row["disposition_code"] != "converted"
+        )
+        translated = [
+            _audit_shape_row(
+                row,
+                reason_counts[f"reason.{row['nonconversion']['reason_code']}"]
+                if row["disposition_code"] != "converted"
+                else None,
+            )
+            for row in rows
+        ]
+        translated.sort(key=lambda row: row["unit_id"])
+        audit_families.append({**receipts_by_family[family_id], "rows": translated})
+    return {
+        "schema_version": "phase3_disposition_ledger_v2_1",
+        "text_free": True,
+        "source_universe_receipt_sha256": source_freeze_receipt_sha256,
+        "source_universe_payload_manifest_sha256": payload_manifest_sha256,
+        "coverage_contract_sha256": disposition_audit.sha256_value(coverage_contract),
+        "base_contract_sha256": functional_roles.BASE_SHA256,
+        "amendment_sha256": functional_roles.AMENDMENT_SHA256,
+        "combined_contract_sha256": functional_roles.COMBINED_SHA256,
+        "functional_role_contract_sha256": role_contract_sha256,
+        "conflict_graph_sha256": conflict_graph_sha256,
+        "repair_generation": 0,
+        "families": audit_families,
+    }
+
+
 def _stage(path: Path, content: bytes) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False) as handle:
@@ -380,11 +484,13 @@ def compile_dispositions(
     source_review_receipt_path: Path,
     schema_path: Path = DEFAULT_SCHEMA,
     role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
+    audit_coverage_contract_path: Path = disposition_audit.DEFAULT_COVERAGE_CONTRACT,
 ) -> dict[str, Any]:
     """Fail closed unless reviewed input is an exact disposition of the freeze."""
     require(reviewed_input_path.is_file(), "reviewed disposition input is missing")
     require(schema_path.is_file(), "disposition input schema is missing")
     require(role_contract_path.is_file(), "role contract is missing")
+    require(audit_coverage_contract_path.is_file(), "audit coverage contract is missing")
     if output_dir.exists():
         require(output_dir.is_dir() and not output_dir.is_symlink(), "output directory is not a real directory")
         unexpected = {path.name for path in output_dir.iterdir()} - OUTPUT_FILES
@@ -407,13 +513,14 @@ def compile_dispositions(
         reviewed["conflict_graph_sha256"] == functional_roles.conflict_graph_sha256(role_contract),
         "role conflict-graph binding mismatch",
     )
-    frozen, freeze_receipt_hash, _ = _load_frozen_universe(source_freeze_dir)
+    frozen, freeze_receipt_hash, source_freeze_receipt = _load_frozen_universe(source_freeze_dir)
     require(reviewed["source_freeze_receipt_sha256"] == freeze_receipt_hash, "source freeze receipt binding mismatch")
     require(reviewed["role_contract_sha256"] == sha256_file(role_contract_path), "role contract binding mismatch")
     families = reviewed["families"]
     family_map = {item["family_id"]: item for item in families}
     require(len(family_map) == len(families) and set(family_map) == FAMILY_IDS, "reviewed input family set is not exact")
     all_rows: list[dict[str, Any]] = []
+    rows_by_family: dict[str, list[dict[str, Any]]] = {}
     family_receipts: list[dict[str, Any]] = []
     for family_id in sorted(FAMILY_IDS):
         family = family_map[family_id]
@@ -421,19 +528,20 @@ def compile_dispositions(
         require(family["ledger_sha256"] == sha256_file(source_ledger), f"input ledger binding mismatch: {family_id}")
         rows = _validate_family_rows(family, frozen[family_id])
         all_rows.extend(rows)
-        frozen_bindings = sorted(frozen[family_id], key=lambda row: row["unit_id"])
-        audit_bindings = sorted(
-            ({key: str(row[key]) for key in ("unit_id", "unit_sha256", "locator_sha256")} for row in rows),
-            key=lambda row: row["unit_id"],
-        )
+        rows_by_family[family_id] = rows
+        audit_bindings = [
+            {"unit_id": row["unit_id"], "unit_sha256": row["unit_sha256"]}
+            for row in frozen[family_id]
+        ]
+        audit_universe_sha256 = disposition_audit.source_family_universe_sha256(audit_bindings)
         family_receipts.append({
             "family_id": family_id,
             "frozen_input_identity_total": len(frozen[family_id]),
             "family_unit_total": FAMILY_TOTALS[family_id],
             "ledger_input_total": len(rows),
             "disposition_row_sum": len(rows),
-            "ledger_universe_sha256": _rolling_universe_sha256(frozen_bindings),
-            "audit_universe_sha256": _rolling_universe_sha256(audit_bindings),
+            "ledger_universe_sha256": audit_universe_sha256,
+            "audit_universe_sha256": audit_universe_sha256,
         })
     for receipt in family_receipts:
         require(
@@ -446,6 +554,17 @@ def compile_dispositions(
     )
     all_rows.sort(key=lambda row: (str(row["family_id"]), str(row["unit_id"])))
     ledger_bytes = b"".join((canonical_json(row) + "\n").encode("utf-8") for row in all_rows)
+    audit_coverage_contract = _read_json(audit_coverage_contract_path, "audit coverage contract")
+    audit_ledger = _audit_shape_ledger(
+        source_freeze_receipt=source_freeze_receipt,
+        source_freeze_receipt_sha256=freeze_receipt_hash,
+        coverage_contract=audit_coverage_contract,
+        role_contract_sha256=sha256_file(role_contract_path),
+        conflict_graph_sha256=functional_roles.conflict_graph_sha256(role_contract),
+        family_receipts=family_receipts,
+        family_rows=rows_by_family,
+    )
+    audit_ledger_bytes = (canonical_json(audit_ledger) + "\n").encode("utf-8")
     zero_receipt = {
         "family_id": "other_normative_style_inventory",
         "frozen_input_identity_total": 0,
@@ -469,12 +588,18 @@ def compile_dispositions(
         "families": family_receipts,
         "zero_family_receipt": zero_receipt,
         "disposition_ledger": {"path": OUTPUT_LEDGER_FILE, "sha256": sha256_bytes(ledger_bytes), "row_count": len(all_rows)},
+        "audit_disposition_ledger": {
+            "path": OUTPUT_AUDIT_LEDGER_FILE,
+            "sha256": sha256_bytes(audit_ledger_bytes),
+            "row_count": len(all_rows),
+        },
     }
     receipt_bytes = (canonical_json(receipt) + "\n").encode("utf-8")
     staged: list[tuple[Path, Path]] = []
     try:
         staged = [
             (_stage(output_dir / OUTPUT_LEDGER_FILE, ledger_bytes), output_dir / OUTPUT_LEDGER_FILE),
+            (_stage(output_dir / OUTPUT_AUDIT_LEDGER_FILE, audit_ledger_bytes), output_dir / OUTPUT_AUDIT_LEDGER_FILE),
             (_stage(output_dir / OUTPUT_RECEIPT_FILE, receipt_bytes), output_dir / OUTPUT_RECEIPT_FILE),
         ]
         for temporary, target in staged:
@@ -494,6 +619,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--source-review-receipt", dest="source_review_receipt_path", type=Path, required=True)
     parser.add_argument("--schema", dest="schema_path", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--role-contract", dest="role_contract_path", type=Path, default=DEFAULT_ROLE_CONTRACT)
+    parser.add_argument(
+        "--audit-coverage-contract",
+        dest="audit_coverage_contract_path",
+        type=Path,
+        default=disposition_audit.DEFAULT_COVERAGE_CONTRACT,
+    )
     return parser.parse_args(argv)
 
 

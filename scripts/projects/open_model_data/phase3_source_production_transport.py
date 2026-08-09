@@ -603,6 +603,7 @@ def prepare(
                 {
                     **_identity(item),
                     "frozen_locator": item["frozen_locator"],
+                    "document_or_edition_identity": item["document_or_edition_identity"],
                     "disposition_code": code,
                     "reason_code": reason_code,
                     "reason_predicate_sha256": sha256_value(
@@ -1217,11 +1218,14 @@ def _action_receipt(
     }
 
 
-def _disposition(identity: Mapping[str, str], decision: Mapping[str, Any]) -> dict[str, Any]:
+def _disposition(
+    identity: Mapping[str, str], decision: Mapping[str, Any], document_or_edition_identity: str,
+) -> dict[str, Any]:
     base = {
         "unit_id": identity["unit_id"],
         "unit_sha256": identity["unit_sha256"],
         "locator_sha256": identity["locator_sha256"],
+        "document_or_edition_identity": document_or_edition_identity,
         "disposition_code": decision["disposition_code"],
     }
     if decision["disposition_code"] == "converted":
@@ -1258,6 +1262,7 @@ def assemble(
     source_review_receipt_path: Path,
     public_receipt_path: Path,
     textbook_classifications_path: Path,
+    reviewed_rule_artifacts_path: Path,
     role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
     schema_path: Path = DEFAULT_SCHEMA,
     disposition_schema_path: Path = DEFAULT_DISPOSITION_SCHEMA,
@@ -1266,7 +1271,13 @@ def assemble(
     manifest, root = _manifest(review_manifest_path, schema_path)
     require(manifest["schema_version"] == "phase3_source_production_review_manifest_v1", "not a review manifest")
     _assert_nonoverlap(
-        (reviewed_input_path, source_review_receipt_path, public_receipt_path, textbook_classifications_path),
+        (
+            reviewed_input_path,
+            source_review_receipt_path,
+            public_receipt_path,
+            textbook_classifications_path,
+            reviewed_rule_artifacts_path,
+        ),
         (review_manifest_path, role_contract_path, schema_path, disposition_schema_path),
     )
     decisions, items = _all_author_decisions(manifest, root, schema_path)
@@ -1306,7 +1317,9 @@ def assemble(
     for row in decisions:
         identity = row["identity"]
         decision = reviewed_decisions[identity["unit_id"]]
-        dispositions_by_family[identity["family_id"]].append(_disposition(identity, decision))
+        dispositions_by_family[identity["family_id"]].append(
+            _disposition(identity, decision, str(items[identity["unit_id"]]["document_or_edition_identity"]))
+        )
         if decision["disposition_code"] == "converted":
             artifacts.append(
                 {
@@ -1333,6 +1346,7 @@ def assemble(
                 "unit_id": row["unit_id"],
                 "unit_sha256": row["unit_sha256"],
                 "locator_sha256": row["locator_sha256"],
+                "document_or_edition_identity": row["document_or_edition_identity"],
                 "disposition_code": row["disposition_code"],
                 "nonconversion": {
                     "reason_code": row["reason_code"],
@@ -1363,6 +1377,7 @@ def assemble(
             }
         )
     require(sum(len(family["dispositions"]) for family in families) == manifest["denominator"]["total"], "final disposition denominator drift")
+    reviewed_rule_artifacts_sha256 = _write_private_jsonl(reviewed_rule_artifacts_path, artifacts)
     role_contract, role_sha, graph_sha = _role_bindings(role_contract_path)
     family_sha = sha256_value(families)
     started_at = manifest["created_at"]
@@ -1393,12 +1408,13 @@ def assemble(
         "task_id": REVIEWER["task_id"],
         "source_freeze_receipt_sha256": manifest["bindings"]["source_freeze_receipt_sha256"],
         "disposition_families_sha256": family_sha,
+        "reviewed_rule_artifacts_sha256": reviewed_rule_artifacts_sha256,
         "verdict": "APPROVE",
         "action_receipt": review_action,
     }
     _write_private_json(source_review_receipt_path, source_review_receipt)
     reviewed_input = {
-        "schema_version": "phase3_source_disposition_input_v2_1",
+        "schema_version": "phase3_source_disposition_input_v2_2",
         "text_free": True,
         "phase3_v2_contract_sha256": BASE_SHA256,
         "phase3_v2_1_amendment_sha256": AMENDMENT_SHA256,
@@ -1407,6 +1423,7 @@ def assemble(
         "source_freeze_receipt_sha256": manifest["bindings"]["source_freeze_receipt_sha256"],
         "role_contract_sha256": role_sha,
         "conflict_graph_sha256": graph_sha,
+        "reviewed_rule_artifacts_sha256": reviewed_rule_artifacts_sha256,
         "author_binding": {"role_id": AUTHOR["role_id"], "task_id": AUTHOR["task_id"], "action_receipt": author_action},
         "source_review_binding": {
             "role_id": REVIEWER["role_id"], "task_id": REVIEWER["task_id"],
@@ -1420,13 +1437,13 @@ def assemble(
     textbook.sort(key=lambda row: row["unit_id"])
     require(len(textbook) == manifest["denominator"]["family_totals"].get("school_textbooks", 0), "textbook classification denominator drift")
     _write_private_jsonl(textbook_classifications_path, textbook)
-    _write_private_jsonl(root / "assembled" / "reviewed-rule-artifacts.jsonl", artifacts)
     public = {
         "schema_version": "phase3_source_production_public_receipt_v1",
         "text_free": True,
         "bindings": manifest["bindings"],
         "manifest_sha256": sha256_file(review_manifest_path),
         "family_sha256": family_sha,
+        "reviewed_rule_artifacts_sha256": reviewed_rule_artifacts_sha256,
         "denominator": {
             "input_total": manifest["denominator"]["total"],
             "author_produced_total": manifest["denominator"]["author"],

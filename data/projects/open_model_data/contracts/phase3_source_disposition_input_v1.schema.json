@@ -4,9 +4,9 @@
   "title": "Phase 3 v2.1 reviewed source-disposition input (text-free)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "phase3_v2_1_amendment_sha256", "combined_contract_sha256", "producer_task_id", "source_freeze_receipt_sha256", "role_contract_sha256", "conflict_graph_sha256", "author_binding", "source_review_binding", "families"],
+  "required": ["schema_version", "text_free", "phase3_v2_contract_sha256", "phase3_v2_1_amendment_sha256", "combined_contract_sha256", "producer_task_id", "source_freeze_receipt_sha256", "role_contract_sha256", "conflict_graph_sha256", "reviewed_rule_artifacts_sha256", "author_binding", "source_review_binding", "families"],
   "properties": {
-    "schema_version": {"const": "phase3_source_disposition_input_v2_1"},
+    "schema_version": {"const": "phase3_source_disposition_input_v2_2"},
     "text_free": {"const": true},
     "phase3_v2_contract_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
     "phase3_v2_1_amendment_sha256": {"const": "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"},
@@ -15,6 +15,7 @@
     "source_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
     "role_contract_sha256": {"$ref": "#/$defs/sha256"},
     "conflict_graph_sha256": {"$ref": "#/$defs/sha256"},
+    "reviewed_rule_artifacts_sha256": {"$ref": "#/$defs/sha256"},
     "author_binding": {"$ref": "#/$defs/author_binding"},
     "source_review_binding": {"$ref": "#/$defs/source_review_binding"},
     "families": {
@@ -97,11 +98,12 @@
     "disposition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["unit_id", "unit_sha256", "locator_sha256", "disposition_code"],
+      "required": ["unit_id", "unit_sha256", "locator_sha256", "document_or_edition_identity", "disposition_code"],
       "properties": {
         "unit_id": {"$ref": "#/$defs/opaque_id"},
         "unit_sha256": {"$ref": "#/$defs/sha256"},
         "locator_sha256": {"$ref": "#/$defs/sha256"},
+        "document_or_edition_identity": {"$ref": "#/$defs/opaque_id"},
         "disposition_code": {"enum": ["converted", "not_rule_bearing", "duplicate_representation", "evaluation_only", "superseded_or_historical", "blocked_with_reason"]},
         "canonical_identity": {"$ref": "#/$defs/opaque_id"},
         "source_role": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,80}$"},

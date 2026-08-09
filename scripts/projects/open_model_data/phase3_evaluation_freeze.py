@@ -28,6 +28,7 @@ if __package__ in (None, ""):
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_fixed_release as fixed_release
 from scripts.projects.open_model_data import phase3_functional_roles as roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_unit_materialization as materializer
@@ -48,6 +49,10 @@ PUBLIC_FILE_MODE = 0o644
 PARTITION_FILENAME = "partition_manifest_v1.jsonl"
 CLEARANCE_FILENAME = "author_clearance_v1.jsonl"
 QUARANTINE_FILENAME = "quarantine_v1.jsonl"
+SEALED_INTERFACE_FILENAME = "sealed-evaluator-interface.json"
+EVALUATION_INPUT_FILENAME = "evaluation-input-manifest.json"
+SEALED_INTERFACE_RECEIPT_VERSION = "phase3_sealed_evaluator_interface_receipt_v1"
+SEALED_INTERFACE_ACTION_KIND = "custody_heldout_bytes_locators_fingerprints"
 FAMILIES = materializer.FAMILIES
 TOTALS = {
     "antonenko_style_guide": 342,
@@ -551,7 +556,13 @@ def _prepare_private_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True, mode=PRIVATE_DIR_MODE)
     os.chmod(path, PRIVATE_DIR_MODE)
     require(stat.S_IMODE(path.stat().st_mode) == PRIVATE_DIR_MODE, "private evaluation directory must be 0700")
-    allowed = {PARTITION_FILENAME, CLEARANCE_FILENAME, QUARANTINE_FILENAME}
+    allowed = {
+        PARTITION_FILENAME,
+        CLEARANCE_FILENAME,
+        QUARANTINE_FILENAME,
+        SEALED_INTERFACE_FILENAME,
+        EVALUATION_INPUT_FILENAME,
+    }
     for child in path.iterdir():
         require(child.name in allowed and child.is_file() and not child.is_symlink(), "unexpected private evaluation artifact")
 
@@ -717,7 +728,262 @@ def build(
     return receipt
 
 
+def _read_private_json_list(path: Path, label: str) -> list[dict[str, Any]]:
+    _regular_private(path, label)
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EvaluationFreezeError(f"cannot read {label}: {path}") from exc
+    require(isinstance(value, list) and all(isinstance(row, dict) for row in value), f"{label} must be a JSON list of objects")
+    return value
+
+
+def _private_partition_rows(path: Path, freeze_receipt: Mapping[str, Any]) -> list[dict[str, Any]]:
+    _regular_private(path, "private partition manifest")
+    require(
+        freeze_receipt.get("artifact_hashes", {}).get("partition_manifest_sha256") == sha256_file(path),
+        "private partition hash drift",
+    )
+    rows: list[dict[str, Any]] = []
+    try:
+        for number, raw in enumerate(path.read_bytes().splitlines(), start=1):
+            row = json.loads(raw.decode("utf-8"))
+            require(isinstance(row, dict), f"private partition row {number} must be an object")
+            require(
+                set(row) == {"family_id", "unit_id", "unit_sha256", "reason", "candidate_lane", "source_text_sha256", "frozen_locator_sha256"},
+                "private partition row shape drift",
+            )
+            rows.append(row)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise EvaluationFreezeError(f"cannot read private partition manifest: {path}") from exc
+    require(len(rows) == 9392 and len({row["unit_id"] for row in rows}) == 9392, "sealed partition denominator drift")
+    return rows
+
+
+def _comprehensive_label_bundle(
+    path: Path,
+    *,
+    sealed_labels_path: Path,
+    partition_path: Path,
+    evaluation_freeze_receipt_path: Path,
+) -> dict[str, Any]:
+    """Verify the explicit 9,392-row label closure; 2,000-only labels are unsafe."""
+
+    bundle = _read_json(path, "comprehensive sealed-label bundle")
+    required = {
+        "schema_version", "text_free", "evaluation_cycle_id", "evaluation_freeze_receipt_sha256",
+        "partition_manifest_sha256", "sealed_labels_sha256", "row_count", "clean_modern_row_count",
+        "phenomenon_strata_row_count", "phenomenon_stratum_commitments", "complete",
+        "frozen_before_rule_extraction", "receipt_sha256",
+    }
+    require(set(bundle) == required, "comprehensive sealed-label bundle is not closed")
+    require(bundle["schema_version"] == "phase3_comprehensive_sealed_label_bundle_v1" and bundle["text_free"] is True, "wrong comprehensive sealed-label bundle")
+    require(bundle["evaluation_cycle_id"] == "phase3-v2-1-evaluation-cycle-001", "sealed-label cycle drift")
+    require(bundle["evaluation_freeze_receipt_sha256"] == sha256_file(evaluation_freeze_receipt_path), "sealed-label freeze receipt drift")
+    require(bundle["partition_manifest_sha256"] == sha256_file(partition_path), "sealed-label partition drift")
+    require(bundle["sealed_labels_sha256"] == sha256_file(sealed_labels_path), "sealed-label payload drift")
+    require(
+        bundle["row_count"] == 9392
+        and bundle["clean_modern_row_count"] == 2000
+        and bundle["phenomenon_strata_row_count"] == 7392,
+        "comprehensive labels must cover 2,000 clean_modern plus 7,392 phenomenon strata",
+    )
+    commitments = bundle["phenomenon_stratum_commitments"]
+    require(isinstance(commitments, Mapping) and set(commitments) == set(PHENOMENA), "phenomenon stratum commitments are incomplete")
+    require(all(isinstance(value, str) and len(value) == 64 for value in commitments.values()), "invalid phenomenon stratum commitment")
+    require(bundle["complete"] is True and bundle["frozen_before_rule_extraction"] is True, "sealed labels were not closed before extraction")
+    body = dict(bundle)
+    claimed = body.pop("receipt_sha256")
+    require(claimed == sha256_value(body), "comprehensive sealed-label receipt hash drift")
+    return bundle
+
+
+def _sealed_interface_rows(
+    *,
+    labels: Sequence[Mapping[str, Any]],
+    partition_rows: Sequence[Mapping[str, Any]],
+    materialized_rows: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    partition_by_id = {row["unit_id"]: row for row in partition_rows}
+    materialized_by_id = {row["unit_id"]: row for row in materialized_rows}
+    require(len(materialized_by_id) == 67041, "private materialization denominator drift")
+    output: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    lane_counts = {"clean_modern": 0, "phenomenon_strata": 0}
+    for label in labels:
+        require(isinstance(label.get("unit_id"), str) and isinstance(label.get("unit_sha256"), str), "sealed label identity is missing")
+        unit_id = label["unit_id"]
+        partition = partition_by_id.get(unit_id)
+        source = materialized_by_id.get(unit_id)
+        require(unit_id not in seen and partition is not None and source is not None, "sealed label is not an exact partition/materialization member")
+        seen.add(unit_id)
+        require(label["unit_sha256"] == partition["unit_sha256"] == source["unit_sha256"], "sealed label unit hash drift")
+        require(source["family_id"] == partition["family_id"] and source["source_text_sha256"] == partition["source_text_sha256"], "sealed label source binding drift")
+        lane = partition["candidate_lane"]
+        require(lane in lane_counts, "only frozen evaluation lanes may enter the scorer interface")
+        lane_counts[lane] += 1
+        label_payload = dict(label)
+        label_payload.pop("unit_id")
+        label_payload.pop("unit_sha256")
+        require("source_text" not in label_payload and "source_record" not in label_payload, "sealed label payload duplicates source bytes")
+        output.append(
+            {
+                "unit_id": unit_id,
+                "unit_sha256": source["unit_sha256"],
+                "family_id": source["family_id"],
+                "document_or_edition_identity": source["document_or_edition_identity"],
+                "source_text": source["source_text"],
+                "source_text_sha256": source["source_text_sha256"],
+                "candidate_lane": lane,
+                "label": label_payload,
+            }
+        )
+    require(seen == set(partition_by_id), "sealed labels do not exactly cover the frozen evaluation partition")
+    require(lane_counts == {"clean_modern": 2000, "phenomenon_strata": 7392}, "sealed interface lane denominator drift")
+    return sorted(output, key=lambda row: row["unit_id"])
+
+
+def emit_sealed_interface(
+    *,
+    release_manifest_path: Path,
+    comprehensive_sealed_label_bundle_path: Path,
+    sealed_labels_path: Path,
+    partition_path: Path,
+    source_jsonl: Path,
+    materialization_receipt_path: Path,
+    evaluation_freeze_receipt_path: Path,
+    private_dir: Path,
+    public_receipt_path: Path,
+    role_contract_path: Path = DEFAULT_ROLE_CONTRACT,
+    started_at: str,
+    completed_at: str,
+) -> dict[str, Any]:
+    """Open the scorer-only interface only after the release and all labels seal.
+
+    This fails closed for the historical 2,000-row clean_modern label lane:
+    scorer input requires all 9,392 frozen evaluation identities.
+    """
+
+    manifest = fixed_release.validate_manifest(release_manifest_path)
+    freeze_receipt = _read_json(evaluation_freeze_receipt_path, "evaluation freeze receipt")
+    require(
+        manifest["input_hashes"]["evaluation_freeze_receipt_sha256"] == sha256_file(evaluation_freeze_receipt_path),
+        "fixed release is not bound to this evaluation freeze",
+    )
+    labels_bundle = _comprehensive_label_bundle(
+        comprehensive_sealed_label_bundle_path,
+        sealed_labels_path=sealed_labels_path,
+        partition_path=partition_path,
+        evaluation_freeze_receipt_path=evaluation_freeze_receipt_path,
+    )
+    labels = _read_private_json_list(sealed_labels_path, "comprehensive sealed labels")
+    require(len(labels) == 9392, "2,000-only sealed labels cannot open the scorer interface")
+    materialization_receipt = _read_json(materialization_receipt_path, "materialization receipt")
+    materialized_rows = _private_source_rows(source_jsonl, materialization_receipt)
+    partition_rows = _private_partition_rows(partition_path, freeze_receipt)
+    rows = _sealed_interface_rows(labels=labels, partition_rows=partition_rows, materialized_rows=materialized_rows)
+    role_contract = _read_json(role_contract_path, "functional role contract")
+    binding = _role_binding(role_contract)
+    interface: dict[str, Any] = {
+        "schema_version": "phase3_sealed_evaluator_interface_v1",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+        "release_manifest_sha256": manifest["manifest_sha256"],
+        "fixed_release_sha256": manifest["artifact_hashes"]["fixed-release-rules.jsonl"],
+        "heldout_evaluation_freeze_sha256": sha256_file(comprehensive_sealed_label_bundle_path),
+        "denominator_contract_sha256": manifest["artifact_hashes"]["denominator-contract.json"],
+        "threshold_contract_sha256": manifest["artifact_hashes"]["threshold-contract.json"],
+        "row_count": 9392,
+        "lane_counts": {"clean_modern": 2000, "phenomenon_strata": 7392},
+        "phenomenon_stratum_commitments": dict(labels_bundle["phenomenon_stratum_commitments"]),
+        "rows": rows,
+    }
+    interface["interface_manifest_sha256"] = sha256_value(interface)
+    _prepare_private_dir(private_dir)
+    interface_path = private_dir / SEALED_INTERFACE_FILENAME
+    _atomic_write(interface_path, canonical_bytes(interface), PRIVATE_FILE_MODE)
+    evaluation_input = {
+        "schema_version": "phase3_evaluation_input_manifest_v1",
+        "evaluation_cycle_id": interface["evaluation_cycle_id"],
+        "fixed_release_task_id": fixed_release.TASK_ID,
+        "fixed_release_sha256": interface["fixed_release_sha256"],
+        "heldout_evaluation_freeze_sha256": interface["heldout_evaluation_freeze_sha256"],
+        "denominator_contract_sha256": interface["denominator_contract_sha256"],
+        "threshold_contract_sha256": interface["threshold_contract_sha256"],
+        "published_inputs_manifest_sha256": manifest["artifact_hashes"]["published-inputs-manifest.json"],
+        "sealed_evaluator_interface_sha256": sha256_file(interface_path),
+        "release_instructions_sha256": manifest["artifact_hashes"]["release-instructions.json"],
+        "ukrainian_recipe_sha256": manifest["artifact_hashes"]["ukrainian-recipe.json"],
+        "english_recipe_sha256": manifest["artifact_hashes"]["english-recipe.json"],
+        "release_mutation_allowed": False,
+        "threshold_mutation_allowed": False,
+        "heldout_plaintext_exposed": False,
+    }
+    _atomic_write(private_dir / EVALUATION_INPUT_FILENAME, canonical_bytes(evaluation_input), PRIVATE_FILE_MODE)
+    output = {
+        "sealed_evaluator_interface_sha256": evaluation_input["sealed_evaluator_interface_sha256"],
+        "evaluation_input_manifest_sha256": sha256_value(evaluation_input),
+        "row_count": 9392,
+    }
+    receipt = {
+        "schema_version": SEALED_INTERFACE_RECEIPT_VERSION,
+        "text_free": True,
+        "role_binding": binding,
+        "release_manifest_sha256": manifest["manifest_sha256"],
+        "evaluation_freeze_receipt_sha256": sha256_file(evaluation_freeze_receipt_path),
+        "comprehensive_sealed_label_bundle_sha256": sha256_file(comprehensive_sealed_label_bundle_path),
+        "output": output,
+        "gates": {"fixed_release_validated_first": True, "complete_partition_labels_required": True, "heldout_plaintext_exported": False, "outsider_receives_freeze_container": False},
+    }
+    receipt["action_receipt"] = _action_receipt(
+        role_contract=role_contract,
+        role_contract_path=role_contract_path,
+        input_sha256=sha256_value({"release_manifest_sha256": manifest["manifest_sha256"], "labels_bundle_sha256": sha256_file(comprehensive_sealed_label_bundle_path)}),
+        output_sha256=sha256_value(output),
+        started_at=started_at,
+        completed_at=completed_at,
+    )
+    receipt["action_receipt"]["action_kind"] = SEALED_INTERFACE_ACTION_KIND
+    receipt["receipt_sha256"] = sha256_value(receipt)
+    _atomic_write(public_receipt_path, canonical_bytes(receipt), PUBLIC_FILE_MODE)
+    return {"interface": interface, "evaluation_input": evaluation_input, "receipt": receipt}
+
+
 def main(argv: Sequence[str] | None = None) -> int:
+    cli_argv = list(sys.argv[1:] if argv is None else argv)
+    if cli_argv and cli_argv[0] == "emit-sealed-interface":
+        parser = argparse.ArgumentParser(description="Emit the scorer-only sealed interface after release freeze.")
+        parser.add_argument("--release-manifest", type=Path, required=True)
+        parser.add_argument("--comprehensive-sealed-label-bundle", type=Path, required=True)
+        parser.add_argument("--sealed-labels", type=Path, required=True)
+        parser.add_argument("--partition", type=Path, required=True)
+        parser.add_argument("--source-jsonl", type=Path, required=True)
+        parser.add_argument("--materialization-receipt", type=Path, required=True)
+        parser.add_argument("--evaluation-freeze-receipt", type=Path, required=True)
+        parser.add_argument("--private-dir", type=Path, required=True)
+        parser.add_argument("--public-receipt", type=Path, required=True)
+        parser.add_argument("--role-contract", type=Path, default=DEFAULT_ROLE_CONTRACT)
+        parser.add_argument("--started-at", required=True)
+        parser.add_argument("--completed-at", required=True)
+        args = parser.parse_args(cli_argv[1:])
+        try:
+            result = emit_sealed_interface(
+                release_manifest_path=args.release_manifest,
+                comprehensive_sealed_label_bundle_path=args.comprehensive_sealed_label_bundle,
+                sealed_labels_path=args.sealed_labels,
+                partition_path=args.partition,
+                source_jsonl=args.source_jsonl,
+                materialization_receipt_path=args.materialization_receipt,
+                evaluation_freeze_receipt_path=args.evaluation_freeze_receipt,
+                private_dir=args.private_dir,
+                public_receipt_path=args.public_receipt,
+                role_contract_path=args.role_contract,
+                started_at=args.started_at,
+                completed_at=args.completed_at,
+            )
+        except EvaluationFreezeError as exc:
+            parser.error(str(exc))
+        sys.stdout.write(canonical_json({"ok": True, "receipt_sha256": result["receipt"]["receipt_sha256"]}) + "\n")
+        return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-jsonl", type=Path, required=True)
     parser.add_argument("--materialization-receipt", type=Path, required=True)
@@ -730,7 +996,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--started-at", required=True)
     parser.add_argument("--completed-at", required=True)
-    args = parser.parse_args(argv)
+    args = parser.parse_args(cli_argv)
     try:
         receipt = build(
             source_jsonl=args.source_jsonl,

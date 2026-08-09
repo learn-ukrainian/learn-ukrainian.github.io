@@ -43,8 +43,8 @@
     },
     "engine_bindings": {
       "type": "array",
-      "minItems": 40,
-      "maxItems": 40,
+      "minItems": 42,
+      "maxItems": 42,
       "items": {"$ref": "#/$defs/engineEntry"}
     },
     "inventory": {

@@ -81,6 +81,7 @@ ENGINE_PATHS = frozenset({
     "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
     "scripts/projects/open_model_data/phase3_pravopys_delta.py",
     "scripts/projects/open_model_data/phase3_evaluation_reproduction.py",
+    "scripts/projects/open_model_data/phase3_fixed_release.py",
     # Direct, load-bearing deterministic validators imported by the live paths.
     "scripts/projects/open_model_data/phase3_near_duplicate.py",
     "scripts/projects/open_model_data/phase3_source_universe.py",
@@ -103,6 +104,7 @@ ENGINE_PATHS = frozenset({
     "data/projects/open_model_data/contracts/correction_protection_coverage_contract_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_evaluation_reproduction_bundle_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_fixed_release_manifest_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json",
     "data/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json",

@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
+from scripts.projects.open_model_data import phase3_disposition_audit as audit
 from scripts.projects.open_model_data import phase3_source_dispositions as dispositions
 from scripts.projects.open_model_data.phase3_source_universe import canonical_json
 
@@ -64,7 +65,10 @@ def _freeze(tmp_path: Path, totals: dict[str, int]) -> tuple[Path, dict[str, lis
         })
         unit_rows[family_id] = rows
     _json(freeze / dispositions.FREEZE_RECEIPT_FILE, {
-        "schema_version": "phase3_source_universe_freeze_v1", "text_free": True, "families": families,
+        "schema_version": "phase3_source_universe_freeze_v1",
+        "text_free": True,
+        "artifact_manifest": {"payload_manifest_sha256": _sha("payload-manifest")},
+        "families": families,
     })
     return freeze, unit_rows
 
@@ -159,6 +163,7 @@ def _input(freeze: Path, units: dict[str, list[dict[str, str]]], totals: dict[st
         for unit in units[family_id]:
             rows.append({
                 **unit,
+                "document_or_edition_identity": f"document.{family_id}",
                 "disposition_code": "converted",
                 "canonical_identity": f"canonical.{_sha(unit['unit_id'])}",
                 "source_role": "reviewed_source",
@@ -183,6 +188,7 @@ def _input(freeze: Path, units: dict[str, list[dict[str, str]]], totals: dict[st
         "conflict_graph_sha256": dispositions.functional_roles.conflict_graph_sha256(
             json.loads(role.read_text(encoding="utf-8"))
         ),
+        "reviewed_rule_artifacts_sha256": _sha("reviewed-rule-artifacts"),
         "author_binding": dispositions.functional_roles.binding_for_role(
             json.loads(role.read_text(encoding="utf-8")), "rule_author_extractor"
         ),
@@ -208,6 +214,7 @@ def _input(freeze: Path, units: dict[str, list[dict[str, str]]], totals: dict[st
         "task_id": document["source_review_binding"]["task_id"],
         "source_freeze_receipt_sha256": document["source_freeze_receipt_sha256"],
         "disposition_families_sha256": families_sha,
+        "reviewed_rule_artifacts_sha256": document["reviewed_rule_artifacts_sha256"],
         "verdict": "APPROVE",
         "action_receipt": _review_action(
             role,
@@ -272,6 +279,53 @@ def test_compiles_exact_text_free_bijection_and_zero_receipt(tmp_path: Path, tin
     assert all(item["ledger_universe_sha256"] == item["audit_universe_sha256"] for item in receipt["families"])
     rendered = (tmp_path / "out" / dispositions.OUTPUT_LEDGER_FILE).read_text(encoding="utf-8")
     assert "secret" not in rendered
+
+
+def test_emits_audit_shape_ledger_accepted_by_independent_validator(
+    tmp_path: Path, tiny_totals: dict[str, int], monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    freeze, units = _freeze(tmp_path, tiny_totals)
+    role = tmp_path / "roles.json"
+    _role_contract(role)
+    document = _input(freeze, units, tiny_totals, role)
+    _compile(tmp_path, freeze, document, role)
+    ledger = json.loads((tmp_path / "out" / dispositions.OUTPUT_AUDIT_LEDGER_FILE).read_text(encoding="utf-8"))
+    source_receipt = json.loads((freeze / dispositions.FREEZE_RECEIPT_FILE).read_text(encoding="utf-8"))
+    audit_units = {
+        family_id: [
+            {
+                "unit_id": row["unit_id"],
+                "unit_sha256": row["unit_sha256"],
+                "unit_locator_sha256": row["locator_sha256"],
+            }
+            for row in rows
+        ]
+        for family_id, rows in units.items()
+    }
+    monkeypatch.setattr(
+        audit,
+        "_source_receipt",
+        lambda _: (source_receipt, dispositions.sha256_file(freeze / dispositions.FREEZE_RECEIPT_FILE), audit_units),
+    )
+    coverage = audit.read_json(audit.DEFAULT_COVERAGE_CONTRACT)
+    roles = audit.read_json(role)
+    assert audit.validate_disposition_ledger(
+        ledger,
+        source_universe_dir=freeze,
+        coverage_contract=coverage,
+        role_contract=roles,
+        role_contract_path=role,
+    )["ok"] is True
+    drifted = deepcopy(ledger)
+    drifted["families"][0]["audit_universe_sha256"] = "0" * 64
+    with pytest.raises(audit.AuditError, match="audit universe hash mismatch"):
+        audit.validate_disposition_ledger(
+            drifted,
+            source_universe_dir=freeze,
+            coverage_contract=coverage,
+            role_contract=roles,
+            role_contract_path=role,
+        )
 
 
 def test_cli_wires_argument_destinations_to_compiler(
@@ -432,8 +486,12 @@ def test_fails_closed_on_provenance_binding_and_zero_receipt_tampering(tmp_path:
     with pytest.raises(dispositions.DispositionError, match="schema violation"):
         _compile(tmp_path, freeze, document, role)
     document = _input(freeze, units, tiny_totals, role)
+    document["reviewed_rule_artifacts_sha256"] = "0" * 64
+    with pytest.raises(dispositions.DispositionError, match="reviewed-rule-artifacts binding mismatch"):
+        _compile(tmp_path, freeze, document, role)
+    document = _input(freeze, units, tiny_totals, role)
     zero = next(item for item in document["families"] if item["family_id"] == "other_normative_style_inventory")
-    zero["dispositions"].append({"unit_id": "unit.fake.abc", "unit_sha256": "0" * 64, "locator_sha256": "0" * 64, "disposition_code": "blocked_with_reason", "nonconversion": {"reason_code": "fake", "unit_specific_locator_sha256": "0" * 64}})
+    zero["dispositions"].append({"unit_id": "unit.fake.abc", "unit_sha256": "0" * 64, "locator_sha256": "0" * 64, "document_or_edition_identity": "document.fake", "disposition_code": "blocked_with_reason", "nonconversion": {"reason_code": "fake", "unit_specific_locator_sha256": "0" * 64}})
     with pytest.raises(dispositions.DispositionError, match="does not match freeze"):
         _compile(tmp_path, freeze, document, role)
 
