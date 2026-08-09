@@ -435,6 +435,8 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
         assert b'"identity_order"' in prompt
         assert b'"disposition_code"' in prompt
         assert b'"additionalProperties":false' in prompt
+        assert packet["packet_id"].encode() in prompt
+        assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     first = transport.run_author(manifest_path=root / "manifest.json", invoke=author_invoke)
@@ -467,6 +469,8 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
         assert b'"reviews"' in prompt
         assert b'"outcome"' in prompt
         assert b'"additionalProperties":false' in prompt
+        assert packet["packet_id"].encode() in prompt
+        assert transport.canonical_json(packet["identity_order"]).encode() in prompt
         return 0, (transport.canonical_json(response) + "\n").encode(), b""
 
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)

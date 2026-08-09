@@ -695,7 +695,9 @@ def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, b
     return result.returncode, result.stdout, result.stderr
 
 
-def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str) -> bytes:
+def _prompt_with_response_contract(
+    prompt: bytes, schema_path: Path, lane: str, packet: Mapping[str, Any]
+) -> bytes:
     """Append the exact machine-enforced response contract seen by the parser."""
     schema = _read_json(schema_path, "source-production transport schema")
     definitions = schema.get("$defs")
@@ -703,7 +705,12 @@ def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str) 
     response_name = "reviewResponse" if lane == "review" else "authorResponse"
     required_names = ("identity", "artifact", "decision", response_name)
     require(all(isinstance(definitions.get(name), Mapping) for name in required_names), "response contract definitions missing")
-    response_contract = {name: definitions[name] for name in required_names}
+    response_contract = {
+        name: json.loads(canonical_json(definitions[name])) for name in required_names
+    }
+    response = response_contract[response_name]
+    response["properties"]["packet_id"] = {"const": packet["packet_id"]}
+    response["properties"]["identity_order"] = {"const": packet["identity_order"]}
     suffix = (
         "\n\n# Exact machine-enforced response contract\n\n"
         "The JSON Schema definitions below are authoritative for output shape. "
@@ -740,7 +747,7 @@ def _run_packets(
     _regular(prompt_path, f"{lane} prompt")
     require(sha256_file(prompt_path) == expected_prompt_hash, f"{lane} prompt hash drift")
     require(sha256_file(schema_path) == manifest["bindings"]["transport_schema_sha256"], "transport schema hash drift")
-    prompt = _prompt_with_response_contract(prompt_path.read_bytes(), schema_path, lane)
+    base_prompt = prompt_path.read_bytes()
     last = packet_count if end is None else end
     require(1 <= start <= last <= packet_count, f"invalid {lane} run range")
     runner = invoke or _subprocess_invoke
@@ -752,6 +759,7 @@ def _run_packets(
             skipped += 1
             continue
         packet = _packet_for(manifest, root, index, lane)
+        prompt = _prompt_with_response_contract(base_prompt, schema_path, lane, packet)
         entry = (manifest["review_packets"] if lane == "review" else manifest["author_packets"])[index - 1]
         packet_path = root / entry["relative_path"]
         command = [
