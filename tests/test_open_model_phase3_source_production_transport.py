@@ -226,6 +226,24 @@ def test_prepare_is_exact_private_and_excludes_sealed_source_bodies(tmp_path: Pa
     assert all(path.stat().st_mode & 0o077 == 0 for path in root.rglob("*") if path.is_file())
 
 
+def test_author_item_keeps_full_text_once_when_source_record_duplicates_it() -> None:
+    text = "Повний нормативний текст без скорочення."
+    row = {
+        "family_id": "pravopys_2019_complete",
+        "unit_id": "unit.pravopys.fixture",
+        "unit_sha256": "1" * 64,
+        "frozen_locator": {"page": 1},
+        "frozen_locator_sha256": "2" * 64,
+        "source_text_sha256": "3" * 64,
+        "document_or_edition_identity": "edition.fixture",
+        "source_text": text,
+        "source_record": {"text": text, "page_count": 2},
+    }
+    item = transport._author_item(row)
+    assert item["source_text"] == text
+    assert item["source_record"] == {"page_count": 2}
+
+
 def test_end_to_end_assembles_three_exact_dispositions_and_textbook_rows(tmp_path: Path) -> None:
     fixture, manifest = _prepare(tmp_path)
     root = fixture["private_dir"]

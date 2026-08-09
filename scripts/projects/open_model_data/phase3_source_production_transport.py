@@ -485,12 +485,15 @@ def _identity(row: Mapping[str, Any]) -> dict[str, str]:
 
 
 def _author_item(row: Mapping[str, Any]) -> dict[str, Any]:
+    source_record = dict(row["source_record"])
+    if source_record.get("text") == row["source_text"]:
+        source_record.pop("text")
     return {
         "identity": _identity(row),
         "document_or_edition_identity": row["document_or_edition_identity"],
         "frozen_locator": row["frozen_locator"],
         "source_text": row["source_text"],
-        "source_record": row["source_record"],
+        "source_record": source_record,
     }
 
 
