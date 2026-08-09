@@ -173,7 +173,8 @@ class GhGitHubAdapter:
                 repository,
                 "--json",
                 "number,url,state,isDraft,headRefOid,headRefName,mergeCommit,mergedAt,"
-                "autoMergeRequest,reviewDecision,reviews,statusCheckRollup,body",
+                "autoMergeRequest,reviewDecision,reviews,statusCheckRollup,body,"
+                "closingIssuesReferences",
             ]
         )
         checks: list[dict[str, Any]] = []
@@ -200,6 +201,15 @@ class GhGitHubAdapter:
                 )
         auto = pr.get("autoMergeRequest") or {}
         merge_commit = pr.get("mergeCommit") or {}
+        closing_references = pr.get("closingIssuesReferences")
+        if not isinstance(closing_references, list):
+            raise task_lifecycle.LifecycleError("GitHub PR closing-reference response is not a list")
+        closing_issue_numbers: list[int] = []
+        for reference in closing_references:
+            number = reference.get("number") if isinstance(reference, dict) else None
+            if not isinstance(number, int) or number < 1:
+                raise task_lifecycle.LifecycleError("GitHub PR closing reference lacks a valid issue number")
+            closing_issue_numbers.append(number)
         return {
             "number": pr.get("number"),
             "url": pr.get("url"),
@@ -215,6 +225,7 @@ class GhGitHubAdapter:
             "reviews": pr.get("reviews") or [],
             "checks": checks,
             "body": pr.get("body") or "",
+            "closing_issue_numbers": sorted(set(closing_issue_numbers)),
         }
 
     def _comments(self, repository: str, pr_number: int) -> list[dict[str, Any]]:
@@ -348,6 +359,7 @@ class GhGitHubAdapter:
             "reviews": [],
             "checks": [],
             "body": "",
+            "closing_issue_numbers": [],
         }
         comments: list[dict[str, Any]] = []
         deployments: list[dict[str, Any]] = []
@@ -534,6 +546,7 @@ def _assert_mutation_ready(
         if fatal:
             raise task_lifecycle.LifecycleError("AC sync blocked: " + "; ".join(fatal))
     elif action == "arm-auto-merge":
+        _assert_closing_references_match_disposition(ledger, observation)
         if hard:
             raise task_lifecycle.LifecycleError("auto-merge blocked: " + "; ".join(hard))
         if task_lifecycle.STATE_RANK.get(evaluation["last_success_state"], -1) < task_lifecycle.STATE_RANK[
@@ -559,6 +572,32 @@ def _assert_mutation_ready(
         if ledger["remaining_scope"]["status"] == "open":
             raise task_lifecycle.LifecycleError("issue close is blocked by untransferred remaining scope")
     return evaluation
+
+
+def _assert_closing_references_match_disposition(
+    ledger: Mapping[str, Any], observation: Mapping[str, Any]
+) -> None:
+    """Fail closed when GitHub closing references contradict retained scope."""
+
+    raw_numbers = observation["github"]["pr"].get("closing_issue_numbers")
+    if not isinstance(raw_numbers, list) or any(
+        not isinstance(number, int) or number < 1 for number in raw_numbers
+    ):
+        raise task_lifecycle.LifecycleError("authoritative PR closing references are unavailable or malformed")
+    closing_numbers = set(raw_numbers)
+    remaining_scope = ledger["remaining_scope"]["status"]
+    expected = (
+        {int(ledger["identity"]["github_issue_number"])}
+        if remaining_scope == "none"
+        else set()
+    )
+    unexpected = sorted(closing_numbers - expected)
+    if unexpected:
+        rendered = ", ".join(f"#{number}" for number in unexpected)
+        raise task_lifecycle.LifecycleError(
+            "GitHub closing references contradict the declared remaining-scope disposition: "
+            f"{rendered}"
+        )
 
 
 def _record_failed_mutation(
