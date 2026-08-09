@@ -14,12 +14,25 @@ from scripts.orchestration import curriculum_lifecycle_pilot as pilot
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def _report() -> dict[str, Any]:
+@pytest.fixture(scope="module")
+def pilot_matrix() -> dict[str, Any]:
+    return pilot.load_matrix(repo_root=REPO_ROOT)
+
+
+@pytest.fixture(scope="module")
+def shadow_report() -> dict[str, Any]:
+    """One shadow report per xdist worker.
+
+    Several tests need a PASS report. Rebuilding it per test re-runs preparation
+    and prompt resolution for every matrix row and is what pushed
+    ``test_report_tampering_and_false_pass_fail_closed`` past the CI thread
+    timeout under shard load (#6519 → worker ``os._exit``).
+    """
     return pilot.build_shadow_report(repo_root=REPO_ROOT)
 
 
-def test_matrix_is_complete_strict_and_shadow_only() -> None:
-    matrix = pilot.load_matrix(repo_root=REPO_ROOT)
+def test_matrix_is_complete_strict_and_shadow_only(pilot_matrix: dict[str, Any]) -> None:
+    matrix = pilot_matrix
 
     assert matrix["mode"] == "shadow"
     assert len(matrix["rows"]) == 22
@@ -37,8 +50,10 @@ def test_matrix_is_complete_strict_and_shadow_only() -> None:
         pilot._validate(invalid, REPO_ROOT / pilot.MATRIX_SCHEMA_PATH, "fixture")
 
 
-def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost() -> None:
-    report = _report()
+def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost(
+    shadow_report: dict[str, Any],
+) -> None:
+    report = shadow_report
 
     assert report["verdict"] == "PASS"
     assert report["learner_tree"]["unchanged"] is True
@@ -61,12 +76,16 @@ def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost() 
     }
 
 
-def test_shadow_report_is_exactly_reproducible_at_one_source_tree() -> None:
-    assert _report() == _report()
+def test_shadow_report_is_exactly_reproducible_at_one_source_tree(
+    shadow_report: dict[str, Any],
+) -> None:
+    assert shadow_report == pilot.build_shadow_report(repo_root=REPO_ROOT)
 
 
-def test_built_level_profiles_do_not_leak_cross_level_policy() -> None:
-    rows = {row["id"]: row for row in _report()["rows"]}
+def test_built_level_profiles_do_not_leak_cross_level_policy(
+    shadow_report: dict[str, Any],
+) -> None:
+    rows = {row["id"]: row for row in shadow_report["rows"]}
 
     assert rows["a1-built-shadow"]["prompt"]["policy_checks_passed"] is True
     assert rows["a2-built-shadow"]["prompt"]["policy_checks_passed"] is True
@@ -88,8 +107,10 @@ def test_built_level_profiles_do_not_leak_cross_level_policy() -> None:
     )
 
 
-def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt() -> None:
-    row = next(row for row in _report()["rows"] if row["id"] == "bio-built-shadow")
+def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt(
+    shadow_report: dict[str, Any],
+) -> None:
+    row = next(row for row in shadow_report["rows"] if row["id"] == "bio-built-shadow")
 
     assert row["passed"] is True
     assert row["entry"]["state"] == "built-preparation-drift"
@@ -97,8 +118,10 @@ def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt() -> Non
     assert row["prompt"]["profile"] == "seminar-bio"
 
 
-def test_fixture_rows_prove_owned_pause_resume_and_qg_modes() -> None:
-    rows = {row["scenario"]: row for row in _report()["rows"] if row["kind"] == "fixture"}
+def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
+    shadow_report: dict[str, Any],
+) -> None:
+    rows = {row["scenario"]: row for row in shadow_report["rows"] if row["kind"] == "fixture"}
 
     assert rows["partial-ambiguous"]["disposition"] == "paused-built-artifact-owner"
     assert rows["reviewer-instability"]["disposition"] == "paused-audit-tooling-owner"
@@ -129,9 +152,39 @@ def test_shadow_detects_any_learner_tree_change(monkeypatch: pytest.MonkeyPatch)
     assert all(row["mutation_detected"] and not row["passed"] for row in report["rows"])
 
 
-def test_report_tampering_and_false_pass_fail_closed() -> None:
-    matrix = pilot.load_matrix(repo_root=REPO_ROOT)
-    valid_report = _report()
+def test_report_tampering_and_false_pass_fail_closed(
+    pilot_matrix: dict[str, Any],
+    shadow_report: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Fail-closed on identity / row / metrics tampering.
+
+    ``validate_report_value(..., verify_current_rows=True)`` re-runs preparation
+    and prompt resolution for every matrix row. This test historically paid that
+    cost twice on top of ``build_shadow_report``, which is fine alone (~13–22s)
+    but under CI xdist shard load exceeded the 110s faulthandler / 120s thread
+    timeout and killed the worker via ``os._exit`` (#6519).
+
+    Freeze one captured current-replay (the just-built PASS report's rows plus
+    one learner-hash snapshot) so both fail-closed branches still execute the
+    real validator against current evidence without a second full I/O replay.
+    """
+    matrix = pilot_matrix
+    valid_report = shadow_report
+    current_rows = {row["id"]: row for row in valid_report["rows"]}
+    frozen_learner_hashes = pilot._learner_hashes(matrix, REPO_ROOT)
+
+    monkeypatch.setattr(
+        pilot,
+        "_row_result",
+        lambda row, _repo_root: deepcopy(current_rows[str(row["id"])]),
+    )
+    monkeypatch.setattr(
+        pilot,
+        "_learner_hashes",
+        lambda _matrix, _repo_root: dict(frozen_learner_hashes),
+    )
+
     report = deepcopy(valid_report)
     report["rows"][0]["passed"] = False
 
@@ -150,10 +203,12 @@ def test_report_tampering_and_false_pass_fail_closed() -> None:
 
 
 def test_report_validation_rejects_contract_and_learner_drift(
+    pilot_matrix: dict[str, Any],
+    shadow_report: dict[str, Any],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    matrix = pilot.load_matrix(repo_root=REPO_ROOT)
-    report = _report()
+    matrix = pilot_matrix
+    report = shadow_report
     real_sources = pilot._source_records
     monkeypatch.setattr(
         pilot,
@@ -176,8 +231,11 @@ def test_report_validation_rejects_contract_and_learner_drift(
         pilot.validate_report_value(report, matrix=matrix, repo_root=REPO_ROOT)
 
 
-def test_live_scope_rejects_fixture_historical_and_nonpassing_rows() -> None:
-    rows = {row["id"]: row for row in _report()["rows"]}
+def test_live_scope_rejects_fixture_historical_and_nonpassing_rows(
+    shadow_report: dict[str, Any],
+) -> None:
+    # deepcopy: this test mutates a nested row; the module fixture is shared.
+    rows = {row["id"]: row for row in deepcopy(shadow_report)["rows"]}
 
     with pytest.raises(pilot.PilotError, match="repository rows only"):
         pilot._authorized_selectors(
@@ -201,10 +259,12 @@ def test_live_scope_rejects_fixture_historical_and_nonpassing_rows() -> None:
         )
 
 
-def test_live_scope_enforces_maximum_mutating_modules() -> None:
+def test_live_scope_enforces_maximum_mutating_modules(
+    shadow_report: dict[str, Any],
+) -> None:
     rows = {
         row["id"]: row
-        for row in _report()["rows"]
+        for row in deepcopy(shadow_report)["rows"]
         if row["passed"] and row["kind"] == "repository"
     }
     row_ids = list(rows)[:2]
@@ -226,9 +286,10 @@ def test_matrix_override_must_remain_repository_backed(tmp_path: Path) -> None:
 
 
 def test_same_family_live_authorization_is_rejected_before_scope_or_git_lookup(
+    shadow_report: dict[str, Any],
     tmp_path: Path,
 ) -> None:
-    report = _report()
+    report = shadow_report
     report_path = tmp_path / "report.json"
     report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
     report_sha256 = pilot._sha256_bytes(report_path.read_bytes())
