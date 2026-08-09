@@ -128,3 +128,27 @@ def test_remote_wrapper_skips_residual_requirement_for_full_catalog() -> None:
     residual_scp_idx = source.index('scp_q "$LOCAL_RESIDUAL"')
     assert residual_check_idx > guard_idx
     assert residual_scp_idx > guard_idx
+
+
+def test_remote_wrapper_syncs_current_enrichment_package() -> None:
+    """The work-dir driver must not import its enrichment code from stale $REPO."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+
+    assert 'LOCAL_SCRIPTS_PACKAGE="$WORKTREE/scripts"' in source
+    assert 'rsync_q "$LOCAL_SCRIPTS_PACKAGE/" "$HOST:$REMOTE_WORK_DIR/scripts/"' in source
+    assert 'ATLAS_LOCAL_VESUM_DB' in source
+    assert 'REMOTE_VESUM_DB="$REMOTE_WORK_DIR/data/vesum.db"' in source
+    assert 'ATLAS_LOCAL_SLOVNYK_CACHE' in source
+    assert 'rsync_q "$LOCAL_SLOVNYK_CACHE/" "$HOST:$REMOTE_WORK_DIR/data/lexicon/slovnyk_cache/"' in source
+    assert "refusing to replace unexpected work-dir data symlink" in source
+    assert "syncing vesum.db into work-dir overlay" in source
+    assert 'ATLAS_RE_ENRICH_CODE_ROOT=$(printf \'%q\' "$REMOTE_WORK_DIR")' in source
+
+
+def test_local_launcher_prefers_synced_package_on_systemd_import_path() -> None:
+    """The service command resolves ``scripts.*`` from the work-dir first."""
+    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
+
+    assert 'CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"' in source
+    assert '"$CODE_ROOT/scripts/lexicon/enrich_manifest.py"' in source
+    assert 'PYTHONPATH=$(printf \'%q\' "$CODE_ROOT"):\\$PYTHONPATH:$(printf \'%q\' "$REPO")' in source

@@ -14,6 +14,8 @@
 #   - reenrich_thin_manifest_entries.py   driver copy with --slugs-file
 #     support, IF the in-repo checkout at $REPO is still stale (no
 #     --slugs-file flag). The in-repo driver is preferred once it catches up.
+#   - scripts/lexicon/... and its supporting imports, synced from the Mac
+#     worktree so the driver never imports stale enrichment code from $REPO.
 #
 # Does NOT finalize, publish, or pin-flip. This mutates a *work-dir copy* of
 # the manifest only (snapshotted once from the live checkout, then re-used
@@ -27,6 +29,7 @@
 #
 # Env overrides:
 #   ATLAS_RUN_ROOT, ATLAS_REPO, ATLAS_RE_ENRICH_WORK_DIR,
+#   ATLAS_RE_ENRICH_CODE_ROOT,
 #   ATLAS_RE_ENRICH_UNIT, ATLAS_RE_ENRICH_DRIVER, ATLAS_RE_ENRICH_SLUGS_FILE,
 #   ATLAS_SOURCES_DB, ATLAS_KAIKKI_JSON, ATLAS_LIVE_MANIFEST
 set -euo pipefail
@@ -34,6 +37,7 @@ set -euo pipefail
 RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
+CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"
 UNIT="${ATLAS_RE_ENRICH_UNIT:-atlas-class-b-reenrich.service}"
 LOG="$WORK_DIR/reenrich.log"
 PID_FILE="$WORK_DIR/reenrich-driver.pid"
@@ -98,6 +102,10 @@ if [[ ! -f "$DRIVER" ]]; then
   echo "reenrich driver not found: $DRIVER" >&2
   exit 1
 fi
+if [[ ! -f "$CODE_ROOT/scripts/lexicon/enrich_manifest.py" ]]; then
+  echo "synced enrichment package not found: $CODE_ROOT/scripts/lexicon/enrich_manifest.py" >&2
+  exit 1
+fi
 if ! grep -q -- '--slugs-file' "$DRIVER" 2>/dev/null; then
   echo "reenrich driver at $DRIVER lacks --slugs-file support; scp the #6398 driver into $WORKDIR_DRIVER or update the checkout" >&2
   exit 1
@@ -156,12 +164,9 @@ fi
 # into its own artifact without fighting systemd-run's StandardOutput
 # property. stderr still folds into the shared log.
 #
-# PYTHONPATH=$REPO is required when DRIVER is the work-dir copy: that file's
-# own `sys.path` bootstrap assumes it lives 2 levels under the real repo
-# root (scripts/lexicon/<file>.py -> parents[2] == repo root) to import its
-# sibling `scripts.audit.*` / `scripts.lexicon.*` packages. A flat work-dir
-# copy breaks that assumption; PYTHONPATH makes the real package tree
-# resolvable regardless of where the file itself was invoked from.
+# PYTHONPATH puts the synced work-dir package before the stale VPS checkout.
+# The driver then imports the exact enrichment code deployed by the Mac-side
+# wrapper, while $REPO remains available for its hydrated data files and venv.
 # systemd-run --user starts units with a fresh environment (it does not
 # inherit the launching shell's exports), so this must be set inside the
 # wrapped command, not via `export` before systemd-run.
@@ -174,7 +179,7 @@ run_cmd() {
     printf '%q ' "${EXTRA_ARGS[@]}"
   fi
 }
-WRAPPED="cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
+WRAPPED="cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$PYTHONPATH:$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
 
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
