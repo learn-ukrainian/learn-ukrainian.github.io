@@ -27,7 +27,7 @@ from scripts.orchestration import reaper_lifecycle
 from scripts.path_safety import assert_delete_target
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_BUILD_AGE_HOURS = 6.0
+DEFAULT_BUILD_AGE_HOURS = 6
 
 _GIT_ENV_DENYLIST = {
     "GIT_DIR",
