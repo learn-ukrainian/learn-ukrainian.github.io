@@ -28,12 +28,17 @@ ARTIFACT_NAMES = (
     "correction_protection_role_contract_v1.json",
 )
 BINDING_INPUT_NAMES = (
-    "phase3-recovery-prompt-v1.md",
-    "phase3-recovery-scope-amendment-v3.md",
+    "phase3-recovery-prompt-v2-draft.md",
+    "phase3-recovery-role-execution-amendment-v2.1.md",
 )
-PROMPT_HASH = "6a563a7526c4ec7a89732f3de5651b0ab2e176ec089abf80f9eb733337db7662"
-AMENDMENT_HASH = "da0f814f2f12e4974073de1a7b547fc3f27c07f6d903c95fde8f704d4e664132"
-COMBINED_HASH = "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7"
+PROMPT_HASH = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+AMENDMENT_HASH = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
+COMBINED_HASH = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+LEGACY_CONTRACT_INPUTS = {
+    "original_prompt_sha256": "6a563a7526c4ec7a89732f3de5651b0ab2e176ec089abf80f9eb733337db7662",
+    "scope_amendment_sha256": "da0f814f2f12e4974073de1a7b547fc3f27c07f6d903c95fde8f704d4e664132",
+    "combined_contract_sha256": "bf387adaeb180d11ade272819d77e1eb3d3fdecc43982fff9c775039c9e0bed7",
+}
 PRAVOPYS_2026_HASH = "E593956BFBA6737D991A76FA86970DB9C10A5CD7FD8895BAE67F2B9A950C3A92"
 PRAVOPYS_2019_HASH = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
 PRAVOPYS_2026_DECISION_LOCATOR = "https://mova.gov.ua/rozyasnennya/rishennia-2026/berezen-2026/rishennia-47-vid-1-bereznia"
@@ -106,6 +111,64 @@ EVALUATION_FAMILIES = {
     "pravopys_2019_complete",
     "pravopys_2026_complete",
     "other_normative_style_inventory",
+}
+NONLEXICAL_DISPOSITION_TOTALS = {
+    "antonenko_style_guide": 342,
+    "ua_gec": 8937,
+    "school_textbooks": 54979,
+    "antonenko_textbook_representation": 169,
+    "calque_inventory": 58,
+    "pravopys_2019_complete": 1090,
+    "pravopys_2026_complete": 1466,
+    "other_normative_style_inventory": 0,
+}
+NONLEXICAL_DISPOSITION_AGGREGATE = 67041
+FUNCTIONAL_ROLE_EVALUATION_CYCLE = {
+    "functional_role_contract_logical_path": "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json",
+    "functional_role_contract_schema_version": "correction_protection_functional_role_contract_v2_1",
+    "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+    "release_freeze_binding_field": "fixed_release_sha256",
+    "evaluation_freeze_binding_field": "heldout_evaluation_freeze_sha256",
+    "activation_requires_both_freeze_bindings": True,
+    "action_receipts_must_match_evaluation_cycle_id": True,
+    "voided_cycle_may_not_resume": True,
+    "restart_requires_new_cycle_id_and_fresh_freezes": True,
+}
+HELDOUT_PARTITION_EXTRACTION_BLOCKER = {
+    "required_heldout_family_partitions": [
+        "antonenko_style_guide",
+        "antonenko_textbook_representation",
+        "calque_inventory",
+        "ua_gec",
+        "school_textbooks",
+        "pravopys_2019_complete",
+        "pravopys_2026_complete",
+        "other_normative_style_inventory",
+    ],
+    "all_required_family_partitions_must_be_frozen_before_transport": True,
+    "transport_must_reject_missing_freeze": True,
+    "transport_must_reject_missing_pre_extraction_freeze_receipt": True,
+    "reviewed_taxonomy_sha256": "45fb450abf0f7bed5cae697089f1d47e7b5550e63b46563e8b7074045b0a34b3",
+    "reviewed_release_category_matrix_sha256": "20b34734abdce72539e4960d8481bd0a4767154e6fe74c8f440e72384a15d8f7",
+}
+V2_1_BREADTH_FLOORS = {
+    "automatic_identity_count_must_be_positive": True,
+    "predeclared_nonoverlapping_automatic_phenomena_minimum": 2,
+    "mandatory_families_per_predeclared_automatic_phenomenon_minimum": 2,
+    "retained_automatic_phenomena_minimum": 4,
+    "retained_automatic_mechanisms_minimum": 3,
+    "retained_automatic_mandatory_families_minimum": 3,
+    "nonduplicate_heldout_positives_per_released_automatic_identity_minimum": 2,
+    "learning_views": {
+        "supervised_pair_minimum": 30,
+        "preference_minimum": 30,
+        "distinct_documents_per_view_minimum": 3,
+        "additional_nonempty_protection_filtering_or_review_view_required": True,
+    },
+    "surface_pair_key_definition": "frozen_literal_or_normalized_incorrect_to_correct_surface_pair_only",
+    "canary_neighbour_share_maximum": 0.1,
+    "canary_rule_identity_share_maximum": 0.1,
+    "canary_heldout_positive_share_maximum": 0.1,
 }
 ROLE_IDS = {
     "scope_circularity_critic",
@@ -187,13 +250,16 @@ def _validate_hashes(repo_root: Path, artifacts: list[dict[str, Any]]) -> bool:
         BINDING_INPUT_NAMES[0]: PROMPT_HASH,
         BINDING_INPUT_NAMES[1]: AMENDMENT_HASH,
     }
-    for artifact in artifacts:
-        inputs = artifact["contract_inputs"]
-        require(inputs == {
-            "original_prompt_sha256": PROMPT_HASH,
-            "scope_amendment_sha256": AMENDMENT_HASH,
-            "combined_contract_sha256": COMBINED_HASH,
-        }, "contract input hashes are not the approved freeze")
+    require(
+        artifacts[0]["contract_inputs"] == LEGACY_CONTRACT_INPUTS
+        and artifacts[2]["contract_inputs"] == LEGACY_CONTRACT_INPUTS,
+        "legacy coverage or role provenance binding changed",
+    )
+    require(artifacts[1]["contract_inputs"] == {
+        "phase3_v2_base_sha256": PROMPT_HASH,
+        "functional_role_amendment_sha256": AMENDMENT_HASH,
+        "combined_contract_sha256": COMBINED_HASH,
+    }, "evaluation contract input hashes are not the approved v2.1 freeze")
     batch_state = locate_shared_batch_state(repo_root)
     if batch_state is None:
         return False
@@ -202,9 +268,9 @@ def _validate_hashes(repo_root: Path, artifacts: list[dict[str, Any]]) -> bool:
         require(path.is_file(), f"missing binding input: {name}")
         require(sha256_file(path) == expected, f"binding input hash mismatch: {name}")
     combined_bytes = (
-        (batch_state / "phase3-recovery-prompt-v1.md").read_bytes()
+        (batch_state / BINDING_INPUT_NAMES[0]).read_bytes()
         + b"\n---\n"
-        + (batch_state / "phase3-recovery-scope-amendment-v3.md").read_bytes()
+        + (batch_state / BINDING_INPUT_NAMES[1]).read_bytes()
     )
     require(hashlib.sha256(combined_bytes).hexdigest() == COMBINED_HASH, "combined binding input hash mismatch")
     return True
@@ -339,7 +405,45 @@ def _validate_evaluation(evaluation: dict[str, Any], repo_root: Path) -> None:
     require(set(evaluation["matcher_mechanisms"]) == MATCHER_MECHANISMS, "matcher mechanism classes changed")
     require(set(evaluation["phenomena"]) == EVALUATION_PHENOMENA, "evaluation phenomenon classes changed")
     require(set(evaluation["source_families"]) == EVALUATION_FAMILIES, "evaluation source families changed")
+    require(
+        evaluation["functional_role_evaluation_cycle"] == FUNCTIONAL_ROLE_EVALUATION_CYCLE,
+        "functional-role evaluation cycle changed",
+    )
+    disposition_totals = evaluation["nonlexical_disposition_totals"]
+    require(
+        disposition_totals["family_totals"] == NONLEXICAL_DISPOSITION_TOTALS,
+        "nonlexical disposition family totals changed",
+    )
+    require(
+        disposition_totals["aggregate_total"] == NONLEXICAL_DISPOSITION_AGGREGATE,
+        "nonlexical disposition aggregate changed",
+    )
+    require(
+        disposition_totals["denominator_semantics"]
+        == "disposition_totals_only_not_source_universe_or_heldout_partition_denominators",
+        "nonlexical disposition denominator semantics changed",
+    )
+    heldout_blocker = evaluation["heldout_partition_extraction_blocker"]
+    require(
+        heldout_blocker == HELDOUT_PARTITION_EXTRACTION_BLOCKER,
+        "heldout partition absence became a deferral or enabled production transport",
+    )
     matrix = evaluation["release_category_matrix"]
+    reviewed_taxonomy = {
+        "matcher_mechanisms": evaluation["matcher_mechanisms"],
+        "phenomena": evaluation["phenomena"],
+        "source_families": evaluation["source_families"],
+    }
+    require(
+        hashlib.sha256((canonical_json(reviewed_taxonomy) + "\n").encode("utf-8")).hexdigest()
+        == heldout_blocker["reviewed_taxonomy_sha256"],
+        "reviewed taxonomy hash mismatch",
+    )
+    require(
+        hashlib.sha256((canonical_json(matrix) + "\n").encode("utf-8")).hexdigest()
+        == heldout_blocker["reviewed_release_category_matrix_sha256"],
+        "reviewed release-category matrix hash mismatch",
+    )
     require(matrix["matrix_encoding"] == "complete_cartesian_predeclaration_v1", "category matrix encoding changed")
     require(set(matrix["source_families"]) == EVALUATION_FAMILIES, "incomplete category-matrix source families")
     require(set(matrix["phenomena"]) == EVALUATION_PHENOMENA, "incomplete category-matrix phenomena")
@@ -385,12 +489,7 @@ def _validate_evaluation(evaluation: dict[str, Any], repo_root: Path) -> None:
     exact_gate = {"positive_per_phenomenon": 30, "acceptable_control_per_phenomenon": 30, "protected_per_phenomenon": 30, "distinct_documents_per_stratum": 3, "precision_minimum": 0.98, "recall_minimum": 0.8, "protected_destructive_changes_maximum": 0, "control_false_corrections_maximum": 0}
     require({key: gate[key] for key in exact_gate} == exact_gate, "per-phenomenon threshold weakened")
     require(gate["pooling_forbidden"] is True, "per-phenomenon pooling permitted")
-    floors = evaluation["breadth_floors"]
-    require({key: floors[key] for key in ("total_canonical_rule_identities_minimum", "total_phenomena_minimum", "total_mechanisms_minimum", "total_source_families_minimum")} == {"total_canonical_rule_identities_minimum": 100, "total_phenomena_minimum": 6, "total_mechanisms_minimum": 4, "total_source_families_minimum": 4}, "total breadth floors weakened")
-    require({key: floors[key] for key in ("automatic_canonical_rule_identities_minimum", "automatic_phenomena_minimum", "automatic_mechanisms_minimum", "automatic_source_families_minimum")} == {"automatic_canonical_rule_identities_minimum": 25, "automatic_phenomena_minimum": 4, "automatic_mechanisms_minimum": 3, "automatic_source_families_minimum": 3}, "automatic breadth floors weakened")
-    require(floors["automatic_categories_minimum"] == 4 and floors["automatic_rule_activations_minimum"] == 2, "automatic breadth/activation floor weakened")
-    require(floors["surface_pair_key_definition"] == "frozen_literal_or_normalized_incorrect_to_correct_surface_pair_only", "surface-pair key rule weakened")
-    require(all(floors[key] == 0.1 for key in ("canary_neighbour_share_maximum", "canary_rule_identity_share_maximum", "canary_heldout_positive_share_maximum")), "canary cap weakened")
+    require(evaluation["breadth_floors"] == V2_1_BREADTH_FLOORS, "v2.1 non-vacuity/breadth contract changed")
     require(evaluation["residual_map_required"] is True, "residual-map requirement missing")
     require(set(evaluation["status_blockers"]) == {
         "near_duplicate_implementation_and_fixture_manifest_with_independent_code_review_and_scope_critic_challenge_required_before_partition",

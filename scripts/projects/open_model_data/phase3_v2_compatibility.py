@@ -33,6 +33,9 @@ V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17
 V2_1_COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
 MATRIX_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
 FUNCTIONAL_ROLE_LOGICAL_PATH = "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+CURRENT_EVALUATION_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
+)
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
     "nine_case_seed": "seed_not_v2_evaluation",
@@ -80,6 +83,10 @@ ENGINE_PATHS = frozenset({
     "scripts/projects/open_model_data/phase3_near_duplicate.py",
     "scripts/projects/open_model_data/phase3_source_universe.py",
     "scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py",
+    "scripts/projects/open_model_data/phase3_recovery_contracts.py",
+    "scripts/projects/open_model_data/phase3_source_unit_materialization.py",
+    "scripts/projects/open_model_data/phase3_prior_exposure_manifest.py",
+    "scripts/projects/open_model_data/phase3_evaluation_freeze.py",
     # Every closed Phase 3 schema consumed by the current runtime closure.
     "data/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
@@ -93,6 +100,9 @@ ENGINE_PATHS = frozenset({
     "data/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_evaluation_reproduction_bundle_v1.schema.json",
     "data/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json",
+    "data/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
 })
 
 
@@ -182,7 +192,14 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         require(path.is_file() and not path.is_symlink(), f"matrix artifact missing or aliased: {entry['logical_path']}")
         require(sha256_file(path) == entry["artifact_sha256"], f"matrix artifact hash drift: {entry['logical_path']}")
         require(entry["phase3_v2_contract_sha256"] == V2_SHA256, "entry v2 pin drift")
-        if entry["artifact_class"] == "functional_role_contract":
+        if entry["logical_path"] == CURRENT_EVALUATION_LOGICAL_PATH:
+            require(
+                entry["artifact_class"] == "completion_status"
+                and entry["disposition"] == "rebound"
+                and entry["machine_reason"] == "evaluation_contract_rebound_to_v2_1",
+                "current v2.1 evaluation contract is not rebound",
+            )
+        elif entry["artifact_class"] == "functional_role_contract":
             require(
                 entry["disposition"] == "rebound"
                 and entry["machine_reason"] == "functional_role_contract_rebound_to_v2_1",
@@ -212,7 +229,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         )
     require(
         matrix["source_authoring"]
-        == {"blocked": True, "reason": "v2_1_runtime_migration_and_exact_head_review_pending"},
+        == {"blocked": True, "reason": "all_family_evaluation_partition_and_labels_not_frozen"},
         "source-authoring block drift",
     )
     require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")

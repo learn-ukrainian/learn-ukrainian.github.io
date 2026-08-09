@@ -24,11 +24,23 @@ def _write_json(path: Path, value: dict[str, Any]) -> None:
 
 def _isolated_root(tmp_path: Path) -> Path:
     target = tmp_path / "repo"
-    target.mkdir()
+    target.mkdir(parents=True)
     destination = target / "data/projects/open_model_data"
-    destination.parent.mkdir(parents=True)
-    shutil.copytree(CONTRACTS, destination / "contracts")
-    shutil.copytree(EVIDENCE, destination / "evidence")
+    contract_destination = destination / "contracts"
+    evidence_destination = destination / "evidence"
+    contract_destination.mkdir(parents=True)
+    evidence_destination.mkdir()
+    # Each test mutates only the three contract artifacts. Copying the whole
+    # 65 MB evidence tree per case made one focused run retain 5.6 GB in
+    # pytest's basetemp until teardown.
+    for name in contracts.SCHEMA_NAMES:
+        shutil.copy2(CONTRACTS / name, contract_destination / name)
+    for name in contracts.ARTIFACT_NAMES:
+        shutil.copy2(EVIDENCE / name, evidence_destination / name)
+    shutil.copy2(
+        EVIDENCE / "correction_protection_near_duplicate_policy_v1.json",
+        evidence_destination / "correction_protection_near_duplicate_policy_v1.json",
+    )
     implementation = target / contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE
     implementation.parent.mkdir(parents=True)
     shutil.copy2(ROOT / contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE, implementation)
@@ -38,8 +50,8 @@ def _isolated_root(tmp_path: Path) -> Path:
 def _install_synthetic_binding_inputs(root: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
     batch_state = root / "batch_state"
     batch_state.mkdir()
-    prompt = batch_state / "phase3-recovery-prompt-v1.md"
-    amendment = batch_state / "phase3-recovery-scope-amendment-v3.md"
+    prompt = batch_state / contracts.BINDING_INPUT_NAMES[0]
+    amendment = batch_state / contracts.BINDING_INPUT_NAMES[1]
     prompt.write_bytes(b"synthetic reviewed prompt\n")
     amendment.write_bytes(b"synthetic reviewed amendment\n")
     prompt_hash = contracts.sha256_file(prompt)
@@ -48,14 +60,13 @@ def _install_synthetic_binding_inputs(root: Path, monkeypatch: pytest.MonkeyPatc
     monkeypatch.setattr(contracts, "PROMPT_HASH", prompt_hash)
     monkeypatch.setattr(contracts, "AMENDMENT_HASH", amendment_hash)
     monkeypatch.setattr(contracts, "COMBINED_HASH", combined_hash)
-    for name in contracts.ARTIFACT_NAMES:
-        path, artifact = _artifact(root, name)
-        artifact["contract_inputs"] = {
-            "original_prompt_sha256": prompt_hash,
-            "scope_amendment_sha256": amendment_hash,
-            "combined_contract_sha256": combined_hash,
-        }
-        _write_json(path, artifact)
+    path, artifact = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    artifact["contract_inputs"] = {
+        "phase3_v2_base_sha256": prompt_hash,
+        "functional_role_amendment_sha256": amendment_hash,
+        "combined_contract_sha256": combined_hash,
+    }
+    _write_json(path, artifact)
     return prompt, amendment
 
 
@@ -209,6 +220,82 @@ def test_weakened_per_phenomenon_threshold_fails_closed(tmp_path: Path) -> None:
         contracts.validate_contracts(root)
 
 
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("phase3_v2_base_sha256", "0" * 64),
+        ("functional_role_amendment_sha256", "0" * 64),
+        ("combined_contract_sha256", "0" * 64),
+    ],
+)
+def test_stale_or_drifted_v2_1_evaluation_hash_fails_closed(
+    tmp_path: Path, field: str, replacement: str
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["contract_inputs"][field] = replacement
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match=r"schema violation|approved v2.1 freeze"):
+        contracts.validate_contracts(root)
+
+
+def test_retired_v1_evaluation_hash_shape_fails_closed(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["contract_inputs"] = contracts.LEGACY_CONTRACT_INPUTS
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match="schema violation"):
+        contracts.validate_contracts(root)
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("all_required_family_partitions_must_be_frozen_before_transport", False),
+        ("transport_must_reject_missing_freeze", False),
+        ("transport_must_reject_missing_pre_extraction_freeze_receipt", False),
+        ("reviewed_taxonomy_sha256", "0" * 64),
+        ("reviewed_release_category_matrix_sha256", "0" * 64),
+    ],
+)
+def test_heldout_transport_requirements_and_review_pins_cannot_weaken(
+    tmp_path: Path, field: str, replacement: bool | str
+) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["heldout_partition_extraction_blocker"][field] = replacement
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match=r"schema violation|heldout partition absence"):
+        contracts.validate_contracts(root)
+
+
+def test_required_heldout_family_partition_set_cannot_shrink(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["heldout_partition_extraction_blocker"]["required_heldout_family_partitions"].remove(
+        "antonenko_textbook_representation"
+    )
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match="schema violation"):
+        contracts.validate_contracts(root)
+
+
+def test_nonlexical_disposition_totals_and_cycle_binding_cannot_drift(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["nonlexical_disposition_totals"]["aggregate_total"] = 67040
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match=r"schema violation|nonlexical disposition aggregate"):
+        contracts.validate_contracts(root)
+
+    cycle_root = _isolated_root(tmp_path / "cycle")
+    path, evaluation = _artifact(cycle_root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["functional_role_evaluation_cycle"]["evaluation_cycle_id"] = "deferred-cycle"
+    _write_json(path, evaluation)
+    with pytest.raises(contracts.ContractError, match=r"schema violation|functional-role evaluation cycle"):
+        contracts.validate_contracts(cycle_root)
+
+
 def test_wrong_current_2026_hash_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
@@ -275,10 +362,10 @@ def test_mechanism_and_breadth_freezes_are_required(tmp_path: Path, field: str) 
         contracts.validate_contracts(root)
 
 
-def test_automatic_category_floor_cannot_drop_below_four(tmp_path: Path) -> None:
+def test_v2_1_nonvacuity_breadth_floor_cannot_drift(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    evaluation["breadth_floors"]["automatic_categories_minimum"] = 3
+    evaluation["breadth_floors"]["retained_automatic_phenomena_minimum"] = 3
     _write_json(path, evaluation)
     with pytest.raises(contracts.ContractError):
         contracts.validate_contracts(root)
@@ -290,10 +377,9 @@ def test_combined_contract_hash_is_recomputed(tmp_path: Path, monkeypatch: pytes
     amendment.write_text(amendment.read_text(encoding="utf-8") + "\nmutation\n", encoding="utf-8")
     mutated_hash = contracts.sha256_file(amendment)
     monkeypatch.setattr(contracts, "AMENDMENT_HASH", mutated_hash)
-    for name in contracts.ARTIFACT_NAMES:
-        path, artifact = _artifact(root, name)
-        artifact["contract_inputs"]["scope_amendment_sha256"] = mutated_hash
-        _write_json(path, artifact)
+    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
+    evaluation["contract_inputs"]["functional_role_amendment_sha256"] = mutated_hash
+    _write_json(path, evaluation)
     with pytest.raises(contracts.ContractError, match="combined binding input hash mismatch"):
         contracts.validate_contracts(root)
 
@@ -319,7 +405,7 @@ def test_partial_local_binding_state_returns_json_error(tmp_path: Path, capsys: 
     root = _isolated_root(tmp_path)
     batch_state = root / "batch_state"
     batch_state.mkdir()
-    (batch_state / "phase3-recovery-prompt-v1.md").write_text("partial\n", encoding="utf-8")
+    (batch_state / contracts.BINDING_INPUT_NAMES[0]).write_text("partial\n", encoding="utf-8")
     assert contracts.main(["--repo-root", str(root)]) == 1
     result = json.loads(capsys.readouterr().out)
     assert result["ok"] is False

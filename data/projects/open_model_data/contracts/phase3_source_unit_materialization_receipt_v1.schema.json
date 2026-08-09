@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_source_unit_materialization_receipt_v1.schema.json",
+  "title": "Phase 3 private source-unit materialization public receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "implementation_version", "no_leakage", "source_universe_receipt_sha256", "private_jsonl_sha256", "private_record_count", "family_counts", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_source_unit_materialization_receipt_v1"},
+    "text_free": {"const": true},
+    "implementation_version": {"const": "phase3_source_unit_materialization_v1"},
+    "no_leakage": {"const": true},
+    "source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "private_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+    "private_record_count": {"const": 67041},
+    "family_counts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["antonenko_style_guide", "ua_gec", "school_textbooks", "antonenko_textbook_representation", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete", "other_normative_style_inventory"],
+      "properties": {
+        "antonenko_style_guide": {"const": 342}, "ua_gec": {"const": 8937}, "school_textbooks": {"const": 54979}, "antonenko_textbook_representation": {"const": 169}, "calque_inventory": {"const": 58}, "pravopys_2019_complete": {"const": 1090}, "pravopys_2026_complete": {"const": 1466}, "other_normative_style_inventory": {"const": 0}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}
