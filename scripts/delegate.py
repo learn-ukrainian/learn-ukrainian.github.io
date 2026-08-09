@@ -1058,9 +1058,9 @@ def _resolve_cwd_path(raw: str) -> Path:
     return p.resolve()
 
 
-def _is_verified_added_worktree(path: Path) -> bool:
-    """True if ``path`` resolves inside a git-registered worktree that is not the
-    primary checkout.
+def _resolve_verified_worktree_path(path: Path) -> Path | None:
+    """Return canonical Path of the containing registered worktree if ``path`` resolves
+    inside a git-registered worktree that is not the primary checkout, else None.
 
     "Verified" means the containing worktree appears in ``git worktree list``. A
     bare directory that only *looks* like ``.worktrees/**`` but was never
@@ -1073,13 +1073,21 @@ def _is_verified_added_worktree(path: Path) -> bool:
     try:
         main_root = wc.resolve_main_root(start)
     except wc.NotAGitRepositoryError:
-        return False
+        return None
     for worktree in wc.registered_worktrees(main_root):
         if worktree == main_root:
             continue
         if target == worktree or target.is_relative_to(worktree):
-            return True
-    return False
+            return worktree
+    return None
+
+
+def _is_verified_added_worktree(path: Path) -> bool:
+    """True if ``path`` resolves inside a git-registered worktree that is not the
+    primary checkout.
+    """
+    return _resolve_verified_worktree_path(path) is not None
+
 
 
 def _apply_worktree_git_ceiling(worker_env: dict[str, str], worktree_path: Path) -> None:
@@ -1665,7 +1673,23 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     except OSError:
         return None
     if proc.returncode != 0:
-        return None
+        if base_ref.startswith("origin/"):
+            local_ref = base_ref.removeprefix("origin/")
+            try:
+                proc = subprocess.run(
+                    ["git", "rev-list", "--count", f"{local_ref}..HEAD"],
+                    cwd=worktree,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=_sanitized_git_env(),
+                )
+            except OSError:
+                return None
+            if proc.returncode != 0:
+                return None
+        else:
+            return None
     try:
         return int((proc.stdout or "").strip())
     except ValueError:
@@ -3281,6 +3305,13 @@ def _run_worker(
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
         worktree_path = final_state.get("worktree_path")
+        if not worktree_path and final_state.get("cwd"):
+            candidate_cwd = Path(final_state.get("cwd"))
+            resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
+            if resolved_wt:
+                worktree_path = str(resolved_wt)
+                final_state["worktree_path"] = worktree_path
+
         if worktree_path:
             dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
 
@@ -3909,6 +3940,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
+        elif args.cwd:
+            candidate_cwd = _resolve_cwd_path(args.cwd)
+            resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
+            if resolved_wt:
+                dry_run_worktree = resolved_wt
+                dry_run_branch = _current_branch(resolved_wt)
+                dry_run_worktree_telemetry["base_sha"] = _resolve_sha(resolved_wt)
 
         try:
             runtime_tmp_root, runtime_tmp_namespace_root = _create_runtime_tmp_lease(task_id)
@@ -4023,6 +4061,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
             return 1
+    elif args.cwd:
+        candidate_cwd = _resolve_cwd_path(args.cwd)
+        resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
+        if resolved_wt:
+            worktree_path = resolved_wt
+            worktree_branch = _current_branch(resolved_wt)
+            worktree_telemetry["reused"] = True
+            worktree_telemetry["layout"] = _classify_worktree_layout(resolved_wt)
+            worktree_telemetry["base_sha"] = _resolve_sha(resolved_wt)
+            worktree_telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+                resolved_wt,
+                full_checkout=full_checkout,
+                sparse_include=sparse_include,
+            )
+            _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
 
     try:
         runtime_tmp_root, runtime_tmp_namespace_root = _create_runtime_tmp_lease(task_id)

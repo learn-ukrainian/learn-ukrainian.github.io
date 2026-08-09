@@ -6033,3 +6033,151 @@ def test_interrupt_fallback_records_the_complete_outcome(
     assert state["returncode"] == 0
     assert state.get("finished_at")
     assert isinstance(state.get("duration_s"), float)
+
+
+# ---------------------------------------------------------------------------
+# Issue #6426: finalizer deliverable counting on --cwd reuse worktrees
+# ---------------------------------------------------------------------------
+
+def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """Dispatch with --cwd pointing to a registered worktree populates worktree_path and metadata."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        agent="codex",
+        task_id="task-cwd-reuse-meta",
+        mode="workspace-write",
+        cwd=str(dispatch_wt),
+        worktree=None,
+        base="main",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("task-cwd-reuse-meta"))
+    assert state is not None
+    assert state["worktree_path"] == str(dispatch_wt)
+    assert state["worktree_reused"] is True
+    assert state["worktree_branch"] is not None
+
+
+def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """Reused --cwd worktree with commits ahead of base counts commits_ahead > 0 and settles as done."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    # Add a commit inside the reused worktree
+    (dispatch_wt / "feature.py").write_text("print('feature')\n", encoding="utf-8")
+    subprocess.run(["git", "add", "feature.py"], cwd=dispatch_wt, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "add feature"], cwd=dispatch_wt, check=True, timeout=30)
+
+    state_path = delegate._state_path("task-cwd-commits")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "task-cwd-commits",
+        "agent": "codex",
+        "mode": "workspace-write",
+        "cwd": str(dispatch_wt),
+        "status": "running",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "Implemented feature.",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6",
+            "effort": "high",
+            "cli_version": "1.0.0",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="task-cwd-commits",
+            agent="codex",
+            prompt="implement feature",
+            mode="workspace-write",
+            cwd_str=str(dispatch_wt),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state.get("no_deliverable_reason") is None
+    assert state.get("commits_ahead", 0) > 0
+    assert state["worktree_path"] == str(dispatch_wt)
+
+
+def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """When worktree_path is missing in state, _run_worker resolves it from cwd if inside a registered worktree."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    (dispatch_wt / "fix.txt").write_text("fix\n", encoding="utf-8")
+    subprocess.run(["git", "add", "fix.txt"], cwd=dispatch_wt, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "fix"], cwd=dispatch_wt, check=True, timeout=30)
+
+    # State file lacks worktree_path but has cwd
+    state_path = delegate._state_path("task-legacy-cwd")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "task-legacy-cwd",
+        "agent": "codex",
+        "mode": "workspace-write",
+        "cwd": str(dispatch_wt),
+        "worktree_path": None,
+        "status": "running",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "Fixed issue.",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.6",
+            "effort": "high",
+            "cli_version": "1.0.0",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="task-legacy-cwd",
+            agent="codex",
+            prompt="fix issue",
+            mode="workspace-write",
+            cwd_str=str(dispatch_wt),
+            model=None,
+            hard_timeout=60,
+            effort="high",
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state.get("no_deliverable_reason") is None
+    assert state.get("commits_ahead", 0) > 0
+
