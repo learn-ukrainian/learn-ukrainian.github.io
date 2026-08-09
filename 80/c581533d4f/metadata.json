@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "80c581533d4f",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6437-lint003",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/word-atlas-entry-model.md",
+    "scripts/lexicon/enrich_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/80/c581533d4f/0/metadata.json",
+      "transcript": "/80/c581533d4f/0/full.jsonl",
+      "compact_transcript": "/80/c581533d4f/0/transcript.jsonl",
+      "content_hash": "/80/c581533d4f/0/content_hash.txt",
+      "prompt": "/80/c581533d4f/0/prompt.txt"
+    }
+  ]
+}
