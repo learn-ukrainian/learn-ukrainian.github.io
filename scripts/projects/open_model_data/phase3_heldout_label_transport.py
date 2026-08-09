@@ -881,7 +881,7 @@ def _write_public_json(path: Path, value: Mapping[str, Any]) -> str:
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        os.chmod(path, 0o644)
+        os.chmod(path, PRIVATE_FILE_MODE)
     except BaseException:
         with contextlib.suppress(OSError):
             temporary.unlink()

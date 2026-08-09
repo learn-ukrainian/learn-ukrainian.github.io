@@ -558,13 +558,15 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
     partition.write_text("fixture\n", encoding="utf-8")
     materialization.write_text("fixture\n", encoding="utf-8")
     private = tmp_path / "private"
+    public_freeze = tmp_path / "public" / "freeze.json"
     freeze = transport.freeze_cycle002(
         partition_path=partition,
         materialization_jsonl=materialization,
         private_dir=private,
-        public_receipt_path=tmp_path / "public" / "freeze.json",
+        public_receipt_path=public_freeze,
     )
     assert freeze["row_count"] == 3 and freeze["fresh_freeze"] is True
+    assert stat.S_IMODE(public_freeze.stat().st_mode) == transport.PRIVATE_FILE_MODE
     manifest = transport.prepare_cycle002(
         freeze_manifest_path=private / "cycle002-freeze-manifest.json",
         partition_path=partition,
