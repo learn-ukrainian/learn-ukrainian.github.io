@@ -1,0 +1,61 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/atlas-reenrich-delta-merge
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Additive delta-merge: recover 5,905 EN translations onto the live catalog (#4220/#4387)
+
+ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: composer-2.5 × cursor CLI
+- why_this_tier: continuation of atlas-land-full-en-reenrich (same lane, full context); bounded,
+  invariant-guarded data merge; decision cross-checked AGREE by codex (atlas-delta-merge-check)
+- owned_paths: scripts/atlas/**, scripts/lexicon/**, batch_state/full-en-reenrich-pulled/** (read)
+- acceptance_cmd: pytest (affected) + ruff + existing publish gate
+- alternatives_considered: full 4h47m VPS re-run without merge (wastes 5905 recoverable cards; REJECTED), wholesale pointer swap (drops 1479 entries, regresses #6432; REJECTED)
+- parallel_free_seats: grok, agy
+
+## Authorization
+Your STOP in `atlas-land-full-en-reenrich` was correct. The driver + codex cross-check now
+authorize option 2 from your report: an additive slug-keyed merge helper. This brief IS the
+approval you asked for.
+
+## Evidence preamble (#M-4)
+Every count in your PR body quoted from raw tool output (command + cwd + output), re-derived
+locally — including the invariant proofs below.
+
+## Context (from your prior task, verified)
+- Pulled lineage: `batch_state/full-en-reenrich-pulled/manifest.json`, sha256 922f04649b5e…,
+  17,724 entries; all pulled slugs exist in the live catalog.
+- Live published lineage: pointer 0778b59991c5…, 19,203 entries.
+- Pulled carries 5,905 translation cards the live catalog lacks.
+
+## Outcome wanted
+The live catalog gains every translation card it lacks from the pulled lineage, published
+through the existing publish gate in one PR — with these HARD invariants proven in the PR body:
+1. Entry count stays exactly 19,203 (zero entries added or dropped).
+2. Zero overwrites: an entry that already has EN keeps its existing EN untouched
+   (prove: diff count of modified-but-previously-nonempty EN fields == 0).
+3. The #6432 anchors (ківі, млн) keep their current live EN.
+4. Old-gate no-english-anchor count does not regress (currently 48 on live; must not rise).
+5. Post-merge missing_translation re-derived and quoted (expected ≈ 4943 minus recovered overlap
+   — measure, don't assume).
+
+## Steps
+1. New dispatch worktree (dispatcher-created).
+2. Build the merge helper in the atlas/lexicon tooling where the sibling manifest tools live —
+   deterministic, fixture-tested (small synthetic manifests covering: missing-EN copy,
+   existing-EN preserved, slug-absent-in-pulled ignored, count invariance).
+3. Run it on the real data; capture the invariant proofs; run the existing publish gate.
+4. pytest (affected) + ruff; conventional commit + X-Agent trailer; push; PR referencing #4220,
+   #4387 and this brief. Do NOT arm auto-merge.
+5. Report: PR number, all five invariant proofs, residual missing_translation count.
+
+## Non-goals
+- No re-enrich runs (the fresh targeted VPS run against current lineage is a SEPARATE follow-up
+  the driver will queue after this merges).
+- No schema changes, no shard re-export.
