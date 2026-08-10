@@ -232,6 +232,10 @@ def test_quoted_git_in_commit_message_not_blocked(cmd):
 def test_branch_force_reason_unit():
     assert guard._branch_force_reason(["-D", "feature"], "feature") is not None
     assert guard._branch_force_reason(["-D", "feature"], "main") is None
+    assert guard._branch_force_reason(["-D", "main"], "feature") is not None
+    assert guard._branch_force_reason(["-d", "--force", "feature"], "main") is None
+    assert guard._branch_force_reason(["--delete", "--force", "feature"], "main") is None
+    assert guard._branch_force_reason(["-Df", "feature"], "main") is None
     assert guard._branch_force_reason(["-M", "old", "new"], "old") is not None
     assert guard._branch_force_reason(["-M", "new"], "main") is not None
     assert guard._branch_force_reason(["-f", "feature", "ref"], "main") is not None
@@ -240,6 +244,104 @@ def test_branch_force_reason_unit():
     assert guard._branch_force_reason(["-m", "old", "new"], "main") is None
     assert guard._branch_force_reason(["feature"], "main") is None
     assert guard._branch_force_reason([], "main") is None
+
+
+# --- #4674: sanctioned squash-merge force-delete -----------------------------
+
+
+def _add_bare_origin(repo: Path, remote_path: Path) -> None:
+    remote_path.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "init", "--bare", str(remote_path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    _git(repo, "remote", "add", "origin", str(remote_path))
+
+
+def test_issue_4674_force_delete_never_pushed_is_allowed(repos):
+    public = repos["public"]
+    _git(public, "branch", "local-only")
+    reason = guard._command_danger_reason(
+        "git branch -D local-only",
+        session_cwd=public,
+    )
+    assert reason is None
+
+
+def test_issue_4674_force_delete_upstream_gone_is_allowed(repos, tmp_path):
+    public = repos["public"]
+    _add_bare_origin(public, tmp_path / "origin.git")
+    _git(public, "checkout", "-b", "squash-merged")
+    _git(public, "commit", "--allow-empty", "-m", "feature")
+    _git(public, "push", "-u", "origin", "squash-merged")
+    _git(public, "checkout", "main")
+    _git(public, "push", "origin", "--delete", "squash-merged")
+    reason = guard._command_danger_reason(
+        "git branch -D squash-merged",
+        session_cwd=public,
+    )
+    assert reason is None
+
+
+def test_issue_4674_force_delete_fully_pushed_live_remote_is_allowed(repos, tmp_path):
+    public = repos["public"]
+    _add_bare_origin(public, tmp_path / "origin.git")
+    _git(public, "checkout", "-b", "fully-pushed")
+    _git(public, "commit", "--allow-empty", "-m", "feature")
+    _git(public, "push", "-u", "origin", "fully-pushed")
+    _git(public, "checkout", "main")
+    reason = guard._command_danger_reason(
+        "git branch -D fully-pushed",
+        session_cwd=public,
+    )
+    assert reason is None
+
+
+def test_issue_4674_force_delete_live_remote_with_unpushed_is_blocked(repos, tmp_path):
+    public = repos["public"]
+    _add_bare_origin(public, tmp_path / "origin.git")
+    _git(public, "checkout", "-b", "unpushed-wip")
+    _git(public, "commit", "--allow-empty", "-m", "pushed")
+    _git(public, "push", "-u", "origin", "unpushed-wip")
+    _git(public, "commit", "--allow-empty", "-m", "local-only")
+    _git(public, "checkout", "main")
+    reason = guard._command_danger_reason(
+        "git branch -D unpushed-wip",
+        session_cwd=public,
+    )
+    assert reason is not None
+    assert "unpushed" in reason
+
+
+def test_issue_4674_force_delete_checked_out_in_worktree_is_blocked(repos):
+    public = repos["public"]
+    reason = guard._command_danger_reason(
+        "git branch -D topic",
+        session_cwd=public,
+    )
+    assert reason is not None
+    assert "worktree" in reason
+
+
+def test_issue_4674_delete_force_spellings_follow_same_policy(repos, tmp_path):
+    public = repos["public"]
+    _add_bare_origin(public, tmp_path / "origin.git")
+    _git(public, "checkout", "-b", "spell-check")
+    _git(public, "commit", "--allow-empty", "-m", "pushed")
+    _git(public, "push", "-u", "origin", "spell-check")
+    _git(public, "commit", "--allow-empty", "-m", "local-only")
+    _git(public, "checkout", "main")
+    for command in (
+        "git branch -d --force spell-check",
+        "git branch --delete --force spell-check",
+        "git branch -Df spell-check",
+    ):
+        reason = guard._command_danger_reason(command, session_cwd=public)
+        assert reason is not None, command
+        assert "unpushed" in reason
 
 
 # --- #4876: glued-operator evasion class ------------------------------------
