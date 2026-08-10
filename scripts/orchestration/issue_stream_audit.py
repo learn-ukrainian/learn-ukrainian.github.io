@@ -7,8 +7,9 @@ native migration is pending) a ``#N`` reference in a stream epic's body.
 Usage:
   .venv/bin/python -m scripts.orchestration.issue_stream_audit           # human summary
   .venv/bin/python -m scripts.orchestration.issue_stream_audit --json    # machine output
-  .venv/bin/python -m scripts.orchestration.issue_stream_audit --check   # exit 1 on orphans
+  .venv/bin/python -m scripts.orchestration.issue_stream_audit --check   # exit 1 on membership failures
   .venv/bin/python -m scripts.orchestration.issue_stream_audit --from-cache --max-age 3600
+  .venv/bin/python -m scripts.orchestration.issue_stream_audit --max-confirmed-age-days 14
   .venv/bin/python -m scripts.orchestration.issue_stream_audit --migrate # body refs → native sub-issues
 
 Cache: batch_state/issue_stream_audit.json (gitignored runtime state) — written on
@@ -33,6 +34,7 @@ import sys
 import tempfile
 import time
 from collections.abc import Callable
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -41,8 +43,14 @@ from scripts.api.config import LIVE_REPO_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
+WORKSTREAMS_PATH = ROOT / "docs" / "WORKSTREAMS.md"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"
 ISSUE_REF_RE = re.compile(r"#(\d{2,6})\b")
+ISSUE_RANGE_RE = re.compile(r"#(\d{2,6})\s*[–-]\s*#(\d{2,6})\b")
+CONFIRMED_AT_RE = re.compile(r"\bconfirmed-at\s*:\s*(\d{4}-\d{2}-\d{2})\b", re.IGNORECASE)
+MILESTONE_MARKER_RE = re.compile(r"\b(STALE|VACANT)\b", re.IGNORECASE)
+DEFAULT_MAX_CONFIRMED_AGE_DAYS = 14
+MAX_MILESTONE_ISSUE_RANGE = 100
 
 # ADR-011 P4 — private keys added to the cache report for the strict adoption
 # gate/observability. They carry an exact effective issue→epic membership index
@@ -597,6 +605,143 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
     return registry
 
 
+def _table_cells(line: str) -> list[str]:
+    """Split one simple Markdown table row without treating prose as a row."""
+    stripped = line.strip()
+    if not (stripped.startswith("|") and stripped.endswith("|")):
+        return []
+    return [cell.strip() for cell in stripped[1:-1].split("|")]
+
+
+def _milestone_issue_numbers(text: str) -> set[int]:
+    """Extract explicit issue references, including small Markdown #N–#M ranges."""
+    numbers = {int(match) for match in ISSUE_REF_RE.findall(text)}
+    for start_text, end_text in ISSUE_RANGE_RE.findall(text):
+        start, end = int(start_text), int(end_text)
+        if start <= end and end - start < MAX_MILESTONE_ISSUE_RANGE:
+            numbers.update(range(start, end + 1))
+    return numbers
+
+
+def load_milestone_rows(path: Path = WORKSTREAMS_PATH) -> list[dict]:
+    """Read the bounded stream-milestone table from ``docs/WORKSTREAMS.md``.
+
+    The workstreams document deliberately remains the orientation layer, not a
+    second registry.  This parser only accepts its named table and carries the
+    row fields needed for advisory drift warnings.  ``confirmed-at: YYYY-MM-DD``
+    may appear in any row cell; rows without that explicit marker are not aged.
+    """
+    lines = path.read_text(encoding="utf-8").splitlines()
+    in_section = False
+    header: dict[str, int] | None = None
+    rows: list[dict] = []
+    for line in lines:
+        if line.startswith("## "):
+            if in_section:
+                break
+            in_section = line.strip() == "## Stream milestones (the focus layer)"
+            continue
+        if not in_section:
+            continue
+        cells = _table_cells(line)
+        if not cells:
+            continue
+        normalized = [cell.casefold() for cell in cells]
+        if normalized == ["stream", "state", "current milestone", "done when"]:
+            header = {name: index for index, name in enumerate(normalized)}
+            continue
+        if header is None or all(re.fullmatch(r"[-:\\s]+", cell) for cell in cells):
+            continue
+        if len(cells) != len(header):
+            continue
+        row_text = " ".join(cells)
+        confirmed_match = CONFIRMED_AT_RE.search(row_text)
+        confirmed_at: date | None = None
+        if confirmed_match:
+            # An invalid marker cannot establish a date and therefore must not
+            # produce a fabricated staleness age.
+            with contextlib.suppress(ValueError):
+                confirmed_at = date.fromisoformat(confirmed_match.group(1))
+        # STALE/VACANT are row-state markers only.  Matching the whole row
+        # incorrectly turns incidental milestone prose (for example, "stale
+        # cache") into a state warning.
+        marker_match = MILESTONE_MARKER_RE.search(cells[header["state"]])
+        rows.append(
+            {
+                "stream": cells[header["stream"]],
+                "state": cells[header["state"]],
+                "milestone": cells[header["current milestone"]],
+                "marker": marker_match.group(1) if marker_match else None,
+                "confirmed_at": confirmed_at,
+                "issue_numbers": _milestone_issue_numbers(cells[header["current milestone"]]),
+            }
+        )
+    return rows
+
+
+def milestone_warnings(
+    rows: list[dict],
+    issue_states: dict[int, str],
+    *,
+    unavailable_issue_numbers: set[int] | None = None,
+    today: date | None = None,
+    max_confirmed_age_days: int = DEFAULT_MAX_CONFIRMED_AGE_DAYS,
+) -> list[dict]:
+    """Return advisory stream-milestone hygiene warnings.
+
+    These signals intentionally do not affect the exact-one-stream membership
+    invariant or the auditor's ``ok`` result.  They are visible at cold start
+    so a driver can correct a stale orientation row without blocking unrelated
+    work.
+    """
+    if max_confirmed_age_days < 1:
+        raise ValueError("max_confirmed_age_days must be positive")
+    observation_date = today or date.today()
+    unavailable = unavailable_issue_numbers or set()
+    warnings: list[dict] = []
+    for row in rows:
+        marker = row.get("marker")
+        if marker:
+            warnings.append(
+                {
+                    "code": "milestone_row_marked",
+                    "stream": row["stream"],
+                    "marker": marker.upper(),
+                }
+            )
+        for number in sorted(row.get("issue_numbers") or ()):
+            if issue_states.get(number, "").upper() == "CLOSED":
+                warnings.append(
+                    {
+                        "code": "milestone_closed_issue",
+                        "stream": row["stream"],
+                        "issue": number,
+                    }
+                )
+            elif number in unavailable:
+                warnings.append(
+                    {
+                        "code": "milestone_issue_state_unavailable",
+                        "stream": row["stream"],
+                        "issue": number,
+                    }
+                )
+        confirmed_at = row.get("confirmed_at")
+        if confirmed_at is not None:
+            age_days = (observation_date - confirmed_at).days
+            if age_days > max_confirmed_age_days:
+                warnings.append(
+                    {
+                        "code": "milestone_confirmed_at_stale",
+                        "stream": row["stream"],
+                        "confirmed_at": confirmed_at.isoformat(),
+                        "age_days": age_days,
+                        "max_age_days": max_confirmed_age_days,
+                    }
+                )
+    return warnings
+
+
 def _gh_json(args: list[str], timeout_s: float = 30.0, *, cwd: Path = ROOT):
     proc = subprocess.run(
         ["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd
@@ -612,6 +757,41 @@ def fetch_open_issues(repo_root: Path = ROOT) -> list[dict]:
          "--json", "number,title"],
         cwd=repo_root,
     )
+
+
+def fetch_issue_states(
+    numbers: set[int],
+    repo_root: Path = ROOT,
+    *,
+    known_open_issue_numbers: set[int] | None = None,
+) -> tuple[dict[int, str], set[int]]:
+    """Resolve milestone states without letting advisory lookup abort an audit.
+
+    ``fetch_open_issues`` already established that its returned issue numbers
+    are open.  Reuse that authoritative snapshot and only issue a per-issue
+    lookup for closed or otherwise unknown milestone references.
+    """
+    states: dict[int, str] = {}
+    unavailable: set[int] = set()
+    known_open = known_open_issue_numbers or set()
+    for number in sorted(numbers):
+        if number in known_open:
+            states[number] = "OPEN"
+            continue
+        try:
+            issue = _gh_json(
+                ["issue", "view", str(number), "--json", "number,state"], cwd=repo_root
+            )
+        except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+            unavailable.add(number)
+            continue
+        resolved_number = issue.get("number")
+        state = issue.get("state")
+        if isinstance(resolved_number, int) and isinstance(state, str):
+            states[resolved_number] = state
+        else:
+            unavailable.add(number)
+    return states, unavailable
 
 
 # Keyed by resolved repo root so a closeout invocation configured for one
@@ -839,15 +1019,20 @@ def _effective_membership(
     return index
 
 
-def run_audit(repo_root: Path | None = None) -> dict:
+def run_audit(
+    repo_root: Path | None = None,
+    *,
+    max_confirmed_age_days: int = DEFAULT_MAX_CONFIRMED_AGE_DAYS,
+) -> dict:
     """Run one live audit, scoped to ``repo_root`` (defaults to this module's
     own checkout, ``ROOT``, preserving the plain-CLI default behavior).
 
-    Every input — the stream registry, ``gh`` execution cwd for open-issue and
-    epic-membership fetches, and the cache the report is written to — uses the
-    SAME resolved root, so a caller auditing a non-default checkout (e.g. a
-    closeout invocation bound to another worktree) never validates membership
-    against, or writes a cache into, this module's own repo instead.
+    Every input — the stream registry, workstream milestone table, ``gh``
+    execution cwd for issue/membership fetches, and the cache the report is
+    written to — uses the SAME resolved root, so a caller auditing a
+    non-default checkout (e.g. a closeout invocation bound to another
+    worktree) never validates membership against, or writes a cache into, this
+    module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
     registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
@@ -858,6 +1043,26 @@ def run_audit(repo_root: Path | None = None) -> dict:
         for epic in epics
     }
     report = classify(open_issues, registry, membership)
+    milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
+    milestone_numbers = {
+        number for row in milestone_rows for number in row["issue_numbers"]
+    }
+    open_issue_numbers = {
+        issue["number"]
+        for issue in open_issues
+        if isinstance(issue.get("number"), int)
+    }
+    issue_states, unavailable_numbers = fetch_issue_states(
+        milestone_numbers,
+        root,
+        known_open_issue_numbers=open_issue_numbers,
+    )
+    report["warnings"] = milestone_warnings(
+        milestone_rows,
+        issue_states,
+        unavailable_issue_numbers=unavailable_numbers,
+        max_confirmed_age_days=max_confirmed_age_days,
+    )
     cache_path = root / "batch_state" / "issue_stream_audit.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -1111,21 +1316,57 @@ def human_summary(report: dict) -> str:
         )
     if report["closed_or_missing_epics"]:
         lines.append(f"⚠️ stream epics not open: {report['closed_or_missing_epics']}")
+    for warning in report.get("warnings") or []:
+        if warning["code"] == "milestone_row_marked":
+            lines.append(
+                f"WARN: stream milestone {warning['stream']} marked {warning['marker']}"
+            )
+        elif warning["code"] == "milestone_closed_issue":
+            lines.append(
+                f"WARN: stream milestone {warning['stream']} references closed "
+                f"issue #{warning['issue']}"
+            )
+        elif warning["code"] == "milestone_issue_state_unavailable":
+            lines.append(
+                f"WARN: stream milestone {warning['stream']} could not verify "
+                f"issue #{warning['issue']} status"
+            )
+        elif warning["code"] == "milestone_confirmed_at_stale":
+            lines.append(
+                f"WARN: stream milestone {warning['stream']} confirmed-at "
+                f"{warning['confirmed_at']} is {warning['age_days']} days old "
+                f"(max {warning['max_age_days']})"
+            )
     return "\n".join(lines)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true")
-    parser.add_argument("--check", action="store_true", help="exit 1 unless ok")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="exit 1 on membership invariant failures; milestone warnings remain non-fatal",
+    )
     parser.add_argument("--from-cache", action="store_true")
     parser.add_argument("--max-age", type=int, default=3600)
+    parser.add_argument(
+        "--max-confirmed-age-days",
+        type=int,
+        default=DEFAULT_MAX_CONFIRMED_AGE_DAYS,
+        help=(
+            "warn when an explicit confirmed-at: YYYY-MM-DD marker is older than this "
+            "many days (default: %(default)s)"
+        ),
+    )
     parser.add_argument("--migrate", action="store_true")
     parser.add_argument("--refresh-worker", metavar="RUN_ID", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
 
     if args.refresh_worker:
         return _run_refresh_worker(args.refresh_worker)
+    if args.max_confirmed_age_days < 1:
+        parser.error("--max-confirmed-age-days must be positive")
 
     report = read_cache(args.max_age) if args.from_cache else None
     if report is None:
@@ -1133,12 +1374,12 @@ def main(argv: list[str] | None = None) -> int:
             # Hook path: never block a session start on the network.
             print("issue-stream audit: no fresh cache (run the auditor to refresh)")
             return 0
-        report = run_audit()
+        report = run_audit(max_confirmed_age_days=args.max_confirmed_age_days)
 
     if args.migrate:
         created = migrate(report)
         print(f"created {created} native sub-issue link(s)")
-        report = run_audit()
+        report = run_audit(max_confirmed_age_days=args.max_confirmed_age_days)
 
     print(json.dumps(report, ensure_ascii=False, indent=1) if args.json
           else human_summary(report))
