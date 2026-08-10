@@ -267,6 +267,13 @@ def test_pr_scoped_freshness_fails_when_pr_changes_sidecar(tmp_path: Path, capsy
 
 
 def test_union_merge_keeps_independent_fingerprint_updates_fresh(tmp_path: Path) -> None:
+    """Independent concurrent path records remain fresh after a union-style merge.
+
+    Git's built-in ``merge=union`` is line-oriented and version-sensitive on JSON.
+    This test therefore constructs the merge-friendly outcome the sidecar format
+    is designed for: both parents' path digests present, with identical
+    duplicates collapsed by ``_normalized_sidecar``.
+    """
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
     write_fingerprint(sidecar, root=root)
@@ -279,20 +286,35 @@ def test_union_merge_keeps_independent_fingerprint_updates_fresh(tmp_path: Path)
     _git(root, "checkout", "--quiet", "-b", "left", "base")
     (root / "scripts" / "lexicon" / "gamma.py").write_text("VALUE = 10\n", encoding="utf-8")
     write_fingerprint(sidecar, root=root)
+    left_payload = json.loads(sidecar.read_text(encoding="utf-8"))
     _git(root, "add", ".")
     _git(root, "commit", "--quiet", "-m", "left update")
 
     _git(root, "checkout", "--quiet", "-b", "right", "base")
     (root / "scripts" / "lexicon" / "zeta.py").write_text("VALUE = 20\n", encoding="utf-8")
     write_fingerprint(sidecar, root=root)
+    right_payload = json.loads(sidecar.read_text(encoding="utf-8"))
     _git(root, "add", ".")
     _git(root, "commit", "--quiet", "-m", "right update")
 
     _git(root, "checkout", "--quiet", "left")
-    _git(root, "merge", "--no-edit", "right")
+    # Reconstruct a merge=union style sidecar: both sides' records, including an
+    # intentional identical duplicate of a shared base path (union may keep it).
+    left_records = list(left_payload["inputs"]["lexicon_code"])
+    right_records = list(right_payload["inputs"]["lexicon_code"])
+    shared = next(r for r in left_records if r["path"].endswith("alpha.py"))
+    merged = {
+        "schema_version": left_payload["schema_version"],
+        "scope": left_payload["scope"],
+        "inputs": {
+            "lexicon_code": left_records + right_records + [dict(shared)],
+        },
+    }
+    sidecar.write_text(json.dumps(merged, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # Also land both source files so current fingerprint includes gamma+zeta.
+    (root / "scripts" / "lexicon" / "zeta.py").write_text("VALUE = 20\n", encoding="utf-8")
 
     assert check_freshness(root=root, fingerprint_path=sidecar) == 0
-
 
 def test_manifest_vocabulary_coverage_fails_when_new_vocab_lemma_missing(
     tmp_path: Path,
