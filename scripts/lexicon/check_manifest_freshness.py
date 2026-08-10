@@ -60,8 +60,17 @@ def _normalized_sidecar(payload: object) -> dict | None:
             return None
         path = record["path"]
         digest = record["sha256"]
-        if not isinstance(path, str) or not isinstance(digest, str) or path in by_path:
+        if not isinstance(path, str) or not isinstance(digest, str):
             return None
+        previous_digest = by_path.get(path)
+        if previous_digest is not None:
+            # Git's union driver may retain an unchanged record from both
+            # parents.  Identical records carry the same source-of-truth
+            # assertion, so collapse them.  Different hashes for one path
+            # remain an ambiguous concurrent edit and must fail closed.
+            if previous_digest != digest:
+                return None
+            continue
         by_path[path] = digest
 
     return {

@@ -186,6 +186,28 @@ def test_manifest_freshness_check_fails_cleanly_on_malformed_sidecar(tmp_path: P
     assert "Atlas manifest stale vs lexicon code" in capsys.readouterr().out
 
 
+def test_manifest_freshness_allows_identical_union_duplicate_record(tmp_path: Path) -> None:
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+    payload = sidecar_payload(write_fingerprint(sidecar, root=root))
+    records = payload["inputs"]["lexicon_code"]
+    records.append(dict(records[0]))
+    sidecar.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    assert check_freshness(root=root, fingerprint_path=sidecar) == 0
+
+
+def test_manifest_freshness_rejects_conflicting_union_duplicate_record(tmp_path: Path) -> None:
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+    payload = sidecar_payload(write_fingerprint(sidecar, root=root))
+    records = payload["inputs"]["lexicon_code"]
+    records.append({"path": records[0]["path"], "sha256": "not-the-recorded-hash"})
+    sidecar.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    assert check_freshness(root=root, fingerprint_path=sidecar) == 2
+
+
 def test_pr_scoped_freshness_allows_unrelated_drift(tmp_path: Path, capsys) -> None:
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
