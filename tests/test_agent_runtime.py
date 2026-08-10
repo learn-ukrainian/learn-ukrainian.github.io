@@ -22,6 +22,7 @@ import hashlib
 import json
 import logging
 import os
+import select
 import subprocess
 import sys
 import time
@@ -4496,11 +4497,17 @@ def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
             break
         time.sleep(0.01)
     assert ready.exists()
+    readable, _, _ = select.select([proc.stderr], [], [], 2)
+    assert readable, "shim did not enter secondary-rate-limit backoff"
+    # The retry diagnostic is emitted immediately before the delay starts.
+    # Give the shell a scheduling turn so SIGTERM reaches active backoff code.
+    time.sleep(0.05)
 
     proc.terminate()
-    proc.communicate(timeout=15)
+    _, stderr = proc.communicate(timeout=2)
 
     assert proc.returncode == 143
+    assert "retrying gh in 30s" in stderr
     assert list(temp_dir.iterdir()) == []
 
 
