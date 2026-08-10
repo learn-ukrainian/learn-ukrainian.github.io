@@ -1,0 +1,56 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/4811-runner-queue-starvation
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix zizmor red on PR #6598 (cursor/4811-runner-queue-starvation)
+
+## Goal
+Land runner-slot / CI Gate queue-starvation recovery (#4811) without
+`workflow_run` (zizmor flags it as fundamentally insecure).
+
+## Failure
+Code scanning annotation on `.github/workflows/ci-gate-queue-recovery.yml`
+lines 14–17:
+`use of fundamentally insecure workflow trigger: workflow_run`
+
+## Required (existing branch)
+Worktree: `.worktrees/dispatch/cursor/4811-runner-queue-starvation`
+Branch: `cursor/4811-runner-queue-starvation` (PR #6598)
+
+Replace `on: workflow_run` with a **secure** pattern that still recovers
+cancelled CI Gate tails once under fleet load. Preferred options (pick best
+practice, document choice in workflow comments):
+
+**Option A (recommended):** `schedule` (e.g. every 10–15 min) + `workflow_dispatch`
+that scans recent failed/cancelled CI runs via `gh api` and re-runs only
+cancelled tail jobs once (reuse `scripts/ci/queue_starvation_recovery.py`).
+Checkout remains default-branch only; never execute recovery logic from the
+subject run's head SHA. Keep `actions: write` least privilege.
+
+**Option B:** Invoke recovery as a **final job inside `ci.yml`** when
+`needs.*.result` shows cancelled tail while upstreams success — no second
+workflow. Must not re-run genuine failures.
+
+Do **not** silence zizmor with an unconstrained allowlist unless you add a
+documented, narrow exception AND a compensating control (default branch
+checkout + no untrusted code execution) — prefer removing `workflow_run`.
+
+Update tests/docs as needed. Run local unit tests:
+```
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest \
+  tests/test_ci_queue_starvation.py -q
+```
+`actionlint` clean if available.
+
+Commit `X-Agent: cursor/4811-runner-queue-starvation`, push. No new PR / no merge.
+
+## Non-goals
+Do not cut always-on runner slots further without re-proving. Parked issues out.
