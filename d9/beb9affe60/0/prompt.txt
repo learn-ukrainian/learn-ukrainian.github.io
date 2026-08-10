@@ -1,0 +1,58 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/5802-review-gate-integrity
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix CI red on PR #6594 (cursor/5802-review-gate-integrity)
+
+## Goal
+Land the out-of-surface finding-path refusal (#5802) without blowing the
+review_pr prompt 4 KiB cap.
+
+## Failure (tool-backed)
+`tests/ai_agent_bridge/test_review_pr.py::test_invalid_json_is_captured_before_*`
+raise:
+`ReviewSafetyError: review_pr_prompt_exceeds_cap: bytes=4716 limit=4096`
+
+Root cause: `_DEFAULT_CHECKLIST` Layer-3 surface text +
+`prepend_read_only_contract` leaves ~97 bytes headroom; injecting
+`_ground_truth_brief_from_checkout` / full path inventory pushes ~700 bytes over.
+
+## Required fix (in existing worktree + branch)
+Worktree: `.worktrees/dispatch/cursor/5802-review-gate-integrity`
+Branch: `cursor/5802-review-gate-integrity` (PR #6594)
+Do NOT open a new PR. Commit + push to the existing branch.
+
+1. Keep the Layer-3 / three-dot surface policy (product value of #5802).
+2. Make the injected ground-truth block **pointer-budgeted**:
+   - Prefer a compact brief (repo, PR, base/head SHAs, path *count*,
+     instruction to read sealed snapshot / `gh pr view --json files`).
+   - If full path inventory would exceed remaining budget under
+     `MAX_REVIEW_REQUEST_BYTES`, truncate to a short form — never raise
+     `review_pr_prompt_exceeds_cap` for a normal PR surface.
+   - `build_review_pr_prompt` base (no ground_truth) must stay ≤ 4096.
+3. Do **not** raise `MAX_REVIEW_REQUEST_BYTES` unless you prove the checklist
+   alone exceeds it after legitimate shrink.
+4. Shrink Layer-3 prose in `_DEFAULT_CHECKLIST` if needed (keep semantics).
+5. Tests: existing cap tests must pass; add/adjust a test that a large
+   changed_paths inventory still yields a prompt ≤ 4096 (compact brief).
+6. Run:
+   ```
+   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest \
+     tests/ai_agent_bridge/test_review_pr.py tests/test_fleet_comms_review_ground_truth.py -q
+   ```
+7. Commit with `X-Agent: cursor/5802-review-gate-integrity` trailer, push.
+
+## Non-goals
+Do not merge. Do not change review gate semantics beyond prompt size.
+Do not touch parked issues 6093/6013/6283/4384.
+
+## Success
+Pushed tip on PR #6594; local pytest green for the files above.
