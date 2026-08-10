@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "21ead05dfd5e",
+  "strategy": "manual-commit",
+  "branch": "cursor/5802-review-gate-integrity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_review_pr.py",
+    "scripts/fleet_comms/review_ground_truth.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/21/ead05dfd5e/0/metadata.json",
+      "transcript": "/21/ead05dfd5e/0/full.jsonl",
+      "compact_transcript": "/21/ead05dfd5e/0/transcript.jsonl",
+      "content_hash": "/21/ead05dfd5e/0/content_hash.txt",
+      "prompt": "/21/ead05dfd5e/0/prompt.txt"
+    }
+  ]
+}
