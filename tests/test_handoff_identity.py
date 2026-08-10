@@ -139,8 +139,17 @@ def test_unknown_selector_fails_closed() -> None:
 def test_devops_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
-    assert registry["infra-harness"]["epics"] == [4707]
+    infra_epics = registry["infra-harness"]["epics"]
+    devops_epics = registry["devops"]["epics"]
+
+    assert 4707 in infra_epics
+    assert 5880 in infra_epics
+    assert 5885 in infra_epics
+    assert 5703 not in infra_epics
     assert registry["devops"]["epics"] == [5703]
+    assert 4707 not in devops_epics
+    assert 5880 not in devops_epics
+    assert 5885 not in devops_epics
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
