@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,8 @@ import yaml
 from scripts.ci.queue_starvation_recovery import (
     TAIL_JOB_NAMES,
     decide_queue_starvation_rerun,
+    scan_and_recover,
+    select_candidate_runs,
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -89,20 +92,27 @@ def test_hygiene_uses_one_composite_checks_job() -> None:
         assert retired not in jobs, f"{retired} must stay folded into hygiene-checks (#4811)"
 
 
-def test_recovery_workflow_is_default_branch_only_and_write_scoped() -> None:
+def test_recovery_workflow_is_schedule_dispatch_default_branch_and_write_scoped() -> None:
     workflow = _load(_RECOVERY)
     triggers = _triggers(workflow)
-    assert triggers["workflow_run"]["workflows"] == ["CI"]
-    assert triggers["workflow_run"]["types"] == ["completed"]
+    text = _RECOVERY.read_text(encoding="utf-8")
+    assert "workflow_run" not in triggers
+    assert "schedule" in triggers
+    assert "workflow_dispatch" in triggers
+    assert triggers["schedule"]
+    assert "cron" in triggers["schedule"][0]
     recover = workflow["jobs"]["recover"]
     assert recover["permissions"] == {"contents": "read", "actions": "write"}
     checkout = next(
         step for step in recover["steps"] if str(step.get("uses", "")).startswith("actions/checkout@")
     )
     assert "ref" not in checkout.get("with", {}), (
-        "recovery must not checkout the completed run's head SHA while holding actions:write"
+        "recovery must not checkout a subject run's head SHA while holding actions:write"
     )
-    assert "queue_starvation_recovery.py" in _RECOVERY.read_text(encoding="utf-8")
+    assert "--scan" in text
+    assert "queue_starvation_recovery.py" in text
+    # Documented Option A: no privileged reaction to untrusted workflow completions.
+    assert "Do NOT use workflow_run" in text or "do not use workflow_run" in text.lower()
 
 
 def _jobs(*rows: tuple[str, str, int]) -> list[dict]:
@@ -217,3 +227,91 @@ def test_cli_emits_github_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     text = out.read_text(encoding="utf-8")
     assert "should_rerun=true" in text
     assert "job_ids=99" in text
+
+
+def test_select_candidate_runs_filters_by_conclusion_and_lookback() -> None:
+    now = datetime(2026, 8, 10, 12, 0, tzinfo=UTC)
+    runs = [
+        {
+            "id": 1,
+            "name": "CI",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "run_attempt": 1,
+            "updated_at": "2026-08-10T11:50:00Z",
+        },
+        {
+            "id": 2,
+            "name": "CI",
+            "status": "completed",
+            "conclusion": "success",
+            "run_attempt": 1,
+            "updated_at": "2026-08-10T11:55:00Z",
+        },
+        {
+            "id": 3,
+            "name": "Hygiene",
+            "status": "completed",
+            "conclusion": "failure",
+            "run_attempt": 1,
+            "updated_at": "2026-08-10T11:55:00Z",
+        },
+        {
+            "id": 4,
+            "name": "CI",
+            "status": "completed",
+            "conclusion": "failure",
+            "run_attempt": 1,
+            "updated_at": "2026-08-10T09:00:00Z",
+        },
+    ]
+    selected = select_candidate_runs(runs, now=now, lookback_minutes=90)
+    assert [run["id"] for run in selected] == [1]
+
+
+def test_scan_and_recover_applies_only_matching_cancelled_tails() -> None:
+    now = datetime(2026, 8, 10, 12, 0, tzinfo=UTC)
+    runs = [
+        {
+            "id": 101,
+            "name": "CI",
+            "status": "completed",
+            "conclusion": "cancelled",
+            "run_attempt": 1,
+            "updated_at": (now - timedelta(minutes=10)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        },
+        {
+            "id": 102,
+            "name": "CI",
+            "status": "completed",
+            "conclusion": "failure",
+            "run_attempt": 1,
+            "updated_at": (now - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        },
+    ]
+    jobs_by_run = {
+        101: _jobs(
+            ("Python (pytest) [1/4]", "success", 11),
+            ("CI Gate", "cancelled", 99),
+        ),
+        102: _jobs(
+            ("Python (pytest) [1/4]", "failure", 21),
+            ("CI Gate", "cancelled", 29),
+        ),
+    }
+    reran: list[int] = []
+
+    actions = scan_and_recover(
+        runs,
+        fetch_jobs=lambda run_id: jobs_by_run[run_id],
+        rerun_job=reran.append,
+        apply=True,
+        now=now,
+        lookback_minutes=90,
+    )
+    assert [action.run_id for action in actions] == [101, 102]
+    assert actions[0].decision.should_rerun is True
+    assert actions[0].applied is True
+    assert actions[1].decision.should_rerun is False
+    assert actions[1].applied is False
+    assert reran == [99]
