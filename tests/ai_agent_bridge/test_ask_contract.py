@@ -395,6 +395,26 @@ def test_acp_replay_preserves_explicit_none_effort_applied() -> None:
     assert replay.usage_record["effort_applied"] is None
 
 
+def test_acp_failed_result_receipt_serializes_none_effort_as_unapplied() -> None:
+    result = SimpleNamespace(
+        ok=False,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="",
+        stderr_excerpt="provider failed",
+        duration_s=1.0,
+        returncode=1,
+        effort=None,
+        transport_metadata=None,
+        transport_outcome="error",
+    )
+
+    payload = json.loads(_acp_compat._result_receipt(result))
+
+    assert payload["effort"] == "unknown"
+    assert payload["effort_applied"] is None
+
+
 def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> None:
     """Native grok ask prompt includes NATIVE_ASK_TOOL_CONTRACT when not review-provisioned; absent on review-provisioned, reverted builders, and full drivers (#5893)."""
     from ai_agent_bridge._ask_contract import NATIVE_ASK_TOOL_CONTRACT

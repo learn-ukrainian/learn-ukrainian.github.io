@@ -48,7 +48,13 @@ def _result_receipt(
     effort_requested: str | None = None,
 ) -> bytes:
     actual_model = str(getattr(result, "model", ""))
-    effort_applied = str(getattr(result, "effort", "unknown"))
+    raw_effort = getattr(result, "effort", None)
+    if raw_effort is None or raw_effort == "unknown":
+        effort_applied = None
+        effort_str = "unknown"
+    else:
+        effort_applied = str(raw_effort)
+        effort_str = effort_applied
     payload = {
         "ok": bool(getattr(result, "ok", False)),
         "agent": str(getattr(result, "agent", "")),
@@ -57,11 +63,11 @@ def _result_receipt(
         "stderr_excerpt": getattr(result, "stderr_excerpt", None),
         "duration_s": float(getattr(result, "duration_s", 0.0)),
         "returncode": getattr(result, "returncode", None),
-        "effort": effort_applied,
+        "effort": effort_str,
         "from_model": actual_model,
         "model_requested": model_requested or actual_model,
         "effort_requested": effort_requested,
-        "effort_applied": effort_applied if effort_applied != "unknown" else None,
+        "effort_applied": effort_applied,
         "harness": "acp",
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
