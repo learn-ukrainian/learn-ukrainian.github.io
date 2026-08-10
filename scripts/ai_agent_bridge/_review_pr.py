@@ -410,7 +410,7 @@ def _fit_ground_truth_into_budget(ground_truth: str, max_bytes: int) -> str | No
         return text
     kept: list[str] = []
     for line in text.splitlines():
-        candidate = "\n".join(kept + [line])
+        candidate = "\n".join([*kept, line])
         if len(candidate.encode("utf-8")) > max_bytes:
             break
         kept.append(line)

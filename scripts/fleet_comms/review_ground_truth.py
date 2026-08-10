@@ -273,7 +273,7 @@ def format_ground_truth_brief(
         if shown >= file_cap:
             break
         line = f"- `{_change_marker(entry.change_type)}` `{entry.path}`"
-        candidate = "\n".join(lines + [line]) + "\n"
+        candidate = "\n".join([*lines, line]) + "\n"
         if max_bytes is not None and len(candidate.encode("utf-8")) > max_bytes:
             break
         lines.append(line)
@@ -281,7 +281,7 @@ def format_ground_truth_brief(
     omitted = path_count - shown
     if omitted and shown:
         omit_line = f"- … and {omitted} more paths (omitted under prompt budget)"
-        candidate = "\n".join(lines + [omit_line]) + "\n"
+        candidate = "\n".join([*lines, omit_line]) + "\n"
         if max_bytes is None or len(candidate.encode("utf-8")) <= max_bytes:
             lines.append(omit_line)
     if shown == 0:
