@@ -80,6 +80,82 @@ def test_body_reference_counts_but_flags_pending_migration(registry):
     )
     assert report["orphans"] == []
     assert report["pending_native_link"] == [7]
+    assert report["accepted_capped_fallback"] == []
+
+
+def test_body_reference_on_capped_epic_is_accepted_fallback(tmp_path):
+    path = tmp_path / "issue_streams.yaml"
+    path.write_text(
+        textwrap.dedent(
+            """
+            schema_version: 1
+            capped_epics:
+              100:
+                reason: "GitHub sub-issue limit"
+                max_native: 100
+            streams:
+              infra:
+                title: "Infra"
+                epics: [100, 101]
+            """
+        ),
+        encoding="utf-8",
+    )
+    registry = load_registry(path)
+
+    report = classify(
+        _issues(100, 101, 7),
+        registry,
+        {100: (set(), {7}), 101: (set(), set())},
+    )
+
+    assert registry["infra"] == [100, 101]
+    assert registry.capped_epics == {
+        100: {"reason": "GitHub sub-issue limit", "max_native": 100}
+    }
+    assert report["pending_native_link"] == []
+    assert report["accepted_capped_fallback"] == [7]
+    assert report["ok"] is True
+    summary = issue_stream_audit.human_summary(report)
+    assert "accepted capped-parent body fallback: 1 (no migration required)" in summary
+    assert "run --migrate" not in summary
+
+
+def test_project_registry_declares_capped_infra_parent_and_program_epics():
+    registry = load_registry(issue_stream_audit.REGISTRY_PATH)
+
+    assert registry["infra-harness"] == [4707, 5880, 5885]
+    assert registry.capped_epics[4707] == {
+        "reason": "GitHub 100-sub-issue hard cap (#5912)",
+        "max_native": 100,
+    }
+
+
+def test_migrate_skips_marked_capped_parent(monkeypatch, capsys):
+    registry = issue_stream_audit.IssueStreamRegistry(
+        {"infra": [100]},
+        {100: {"reason": "GitHub sub-issue limit", "max_native": 100}},
+    )
+    monkeypatch.setattr(issue_stream_audit, "load_registry", lambda: registry)
+    monkeypatch.setattr(
+        issue_stream_audit,
+        "fetch_epic_membership",
+        lambda _epic: pytest.fail("capped parent must not be queried for migration"),
+    )
+
+    assert issue_stream_audit.migrate({"pending_native_link": [7]}) == 0
+    assert "skipping capped epic #100" in capsys.readouterr().err
+
+
+def test_registry_rejects_unknown_capped_epic_keys(tmp_path):
+    path = tmp_path / "issue_streams.yaml"
+    path.write_text(
+        "streams:\n  infra:\n    title: Infra\n    epics: [100]\n"
+        "capped_epics:\n  100:\n    reason: cap\n    max_native: 100\n    typo: nope\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="unknown keys"):
+        load_registry(path)
 
 
 def test_multi_homed_across_streams_flagged(registry):

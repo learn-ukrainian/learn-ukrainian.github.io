@@ -9,6 +9,10 @@
 # - New issues link their stream epic at creation time.
 # - Epics themselves (and their child drive boards) are exempt from membership.
 schema_version: 1
+capped_epics:
+  4707:
+    reason: "GitHub 100-sub-issue hard cap (#5912)"
+    max_native: 100
 streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
@@ -21,7 +25,7 @@ streams:
     epics: [4706]
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
-    epics: [4707]
+    epics: [4707, 5880, 5885]  # capped umbrella + fleet taxonomy + weak-driver trails
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]
