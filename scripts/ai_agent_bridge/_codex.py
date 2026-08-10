@@ -488,13 +488,19 @@ def _extract_effort(msg: dict) -> str | None:
 def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
     """Send bridge error back to sender."""
     print(f"\n❌ Codex CLI error: {error_msg[:500]}")
+    from ._ask_contract import failed_response_provenance
+
+    data, from_model = failed_response_provenance(
+        msg, bridge_model="codex-bridge-error", harness="codex"
+    )
     send_message(
         content=f"[Bridge Error] Codex CLI failed:\n{error_msg[:500]}",
         task_id=msg["task_id"],
         msg_type="error",
         from_llm="codex",
         to_llm=msg["from"],
-        from_model="codex-bridge-error",
+        data=data,
+        from_model=from_model,
     )
     acknowledge(message_id)
     record_ask_failure(
@@ -508,6 +514,11 @@ def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
     """Defer a rate-limited message without acknowledging the inbound row."""
     print(f"\n⛔ Codex rate limited - message {message_id} deferred")
     print(f"   Reason: {reason}")
+    from ._ask_contract import failed_response_provenance
+
+    data, from_model = failed_response_provenance(
+        msg, bridge_model="codex-bridge-rate-limited", harness="codex"
+    )
     send_message(
         content=(
             "[Codex rate limited] Usage limit hit.\n"
@@ -520,7 +531,8 @@ def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
         msg_type="error",
         from_llm="codex",
         to_llm=msg["from"],
-        from_model="codex-bridge-rate-limited",
+        data=data,
+        from_model=from_model,
     )
     record_ask_failure(message_id, reason)
 

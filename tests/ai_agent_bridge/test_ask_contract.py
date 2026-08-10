@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from ai_agent_bridge import _acp_compat, _cli
 from ai_agent_bridge._ask_contract import (
     EFFORT_CHOICES,
+    failed_response_provenance,
     resolve_model_selection,
     response_provenance,
     unsupported_effort_note,
@@ -103,7 +104,15 @@ def test_terminal_failure_replays_without_invoking_provider_again(
 
     assert replay.ok is False
     assert replay.transport_outcome == "error"
-    assert replay.usage_record == {"replayed": True, "transport": "acp"}
+    assert replay.usage_record == {
+        "from_model": "gemini-3.6-flash-high",
+        "model_requested": "gemini-3.6-flash-high",
+        "effort_requested": "high",
+        "effort_applied": None,
+        "harness": "acp",
+        "replayed": True,
+        "transport": "acp",
+    }
     assert invoke.call_count == 1
 
 
@@ -219,7 +228,10 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
     )
 
     assert result.response == "durably completed response"
-    assert result.usage_record == {"replayed": True, "transport": "acp"}
+    assert result.usage_record["replayed"] is True
+    assert result.usage_record["transport"] == "acp"
+    assert result.usage_record["from_model"] == "gemini-3.6-flash-high"
+    assert result.usage_record["harness"] == "acp"
     assert invoke.call_count == 0
 
 
@@ -305,6 +317,102 @@ def test_every_response_provenance_shape_has_required_fields(harness: str) -> No
         "harness": harness,
         "model_requested": "requested",
     }
+
+
+def test_failed_response_provenance_preserves_request_and_marks_unapplied_effort() -> None:
+    data, from_model = failed_response_provenance(
+        {"data": json.dumps({"to_model": "requested", "effort": "xhigh"})},
+        bridge_model="agy-bridge-error",
+        harness="agy",
+    )
+
+    assert from_model == "agy-bridge-error"
+    assert json.loads(data) == {
+        "effort_applied": None,
+        "effort_reason": "bridge execution failed before the requested effort could be applied",
+        "effort_requested": "xhigh",
+        "from_model": "agy-bridge-error",
+        "harness": "agy",
+        "model_requested": "requested",
+    }
+
+
+def test_acp_result_receipt_and_replay_preserve_response_provenance() -> None:
+    result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="answer",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+
+    receipt = _acp_compat._result_receipt(
+        result, model_requested="gemini-3.6-flash-high", effort_requested="high"
+    )
+    payload = json.loads(receipt)
+    assert {key: payload[key] for key in ("from_model", "model_requested", "effort_requested", "effort_applied", "harness")} == {
+        "from_model": "gemini-3.6-flash-high",
+        "model_requested": "gemini-3.6-flash-high",
+        "effort_requested": "high",
+        "effort_applied": "high",
+        "harness": "acp",
+    }
+    replay = _acp_compat._replay_result(receipt)
+    assert replay.usage_record == {
+        "from_model": "gemini-3.6-flash-high",
+        "model_requested": "gemini-3.6-flash-high",
+        "effort_requested": "high",
+        "effort_applied": "high",
+        "harness": "acp",
+        "replayed": True,
+        "transport": "acp",
+    }
+
+
+def test_acp_replay_preserves_explicit_none_effort_applied() -> None:
+    result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="answer",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+    payload = json.loads(_acp_compat._result_receipt(result))
+    payload["effort_applied"] = None
+
+    replay = _acp_compat._replay_result(json.dumps(payload).encode("utf-8"))
+
+    assert replay.usage_record["effort_applied"] is None
+
+
+def test_acp_failed_result_receipt_serializes_none_effort_as_unapplied() -> None:
+    result = SimpleNamespace(
+        ok=False,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="",
+        stderr_excerpt="provider failed",
+        duration_s=1.0,
+        returncode=1,
+        effort=None,
+        transport_metadata=None,
+        transport_outcome="error",
+    )
+
+    payload = json.loads(_acp_compat._result_receipt(result))
+
+    assert payload["effort"] == "unknown"
+    assert payload["effort_applied"] is None
 
 
 def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> None:

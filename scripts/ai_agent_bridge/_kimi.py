@@ -183,9 +183,14 @@ def _build_kimi_prompt(
 
 def _handle_kimi_error(msg: dict, message_id: int, reason: str) -> None:
     """Persist a terminal Kimi failure and unblock the original ask."""
+    from ._ask_contract import failed_response_provenance
+
+    data, from_model = failed_response_provenance(
+        msg, bridge_model="kimi-bridge-error", harness="kimi"
+    )
     send_message(
         content=f"[Kimi error] {reason}", task_id=msg["task_id"], msg_type="error",
-        from_llm="kimi", to_llm=msg["from"],
+        from_llm="kimi", to_llm=msg["from"], data=data, from_model=from_model,
     )
     acknowledge(message_id)
     record_ask_failure(message_id, reason, timed_out="timeout" in reason.lower() or "stalled" in reason.lower())
