@@ -24,7 +24,7 @@ Blocked in a protected PRIMARY checkout:
   - git checkout <non-main-branch>          (when target is a branch, not a path)
   - git branch -M <current-branch>          (force-rename HEAD)
   - git branch -f <name>                    (force-move a branch ref)
-  - git branch -D <protected|checked-out|live-remote+unpushed>
+  - git branch -D <protected|checked-out|never-pushed|live-remote+unpushed>
 
 Allowed in the MAIN worktree:
   - git checkout main / master / HEAD / HEAD~N
@@ -39,9 +39,10 @@ Allowed in the MAIN worktree:
 Sanctioned ``git branch -D`` / ``--delete --force`` (#4674 / #M-10a):
   Squash-merged tips are never ancestors of main, so ``-d`` refuses. Force-
   delete is allowed from the primary only when the target is none of:
-  protected (main/master), checked out in any worktree, or carrying a live
-  upstream with unpushed local commits. Gone-upstream, never-pushed, and
-  fully-pushed live remotes may be force-deleted.
+  protected (main/master), checked out in any worktree, never-pushed (no
+  upstream / no remote backup), or carrying a live upstream with unpushed
+  local commits. Gone-upstream and fully-pushed live remotes may be
+  force-deleted. Never-pushed locals need merge proof or push-then-gone.
 """
 from __future__ import annotations
 
@@ -350,11 +351,47 @@ def _checked_out_branches(repo_root: Path) -> set[str]:
     return checked
 
 
+def _branch_is_never_pushed(repo_root: Path, branch: str) -> bool:
+    """True when ``branch`` has no upstream configured (no remote backup).
+
+    Distinct from gone-upstream: after a remote tip delete, ``@{upstream}``
+    fails to resolve even though ``branch.<name>.remote`` / ``.merge`` remain
+    set. Never-pushed has no tracking config at all, so ``-D`` would
+    permanently discard local-only commits (#4674 CF).
+    """
+    try:
+        remote = subprocess.run(
+            ["git", "config", "--get", f"branch.{branch}.remote"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_git_probe_env(),
+        )
+        merge = subprocess.run(
+            ["git", "config", "--get", f"branch.{branch}.merge"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_git_probe_env(),
+        )
+    except FileNotFoundError:
+        return False
+    return (
+        remote.returncode != 0
+        or merge.returncode != 0
+        or not remote.stdout.strip()
+        or not merge.stdout.strip()
+    )
+
+
 def _branch_has_live_remote_with_unpushed(repo_root: Path, branch: str) -> bool:
     """True when ``branch`` tracks a still-present upstream and is ahead of it.
 
-    Squash-merge cleanup (#4674): gone upstream or no upstream → safe to
-    force-delete. A live upstream with local-only commits must refuse.
+    Squash-merge cleanup (#4674): gone upstream (tracking set, tip missing)
+    is safe to force-delete. A live upstream with local-only commits must
+    refuse. Never-pushed is handled separately by ``_branch_is_never_pushed``.
     """
     try:
         upstream = subprocess.run(
@@ -422,6 +459,11 @@ def _force_delete_target_reason(
         return (
             f"git branch -D {branch} force-deletes a branch checked out in a "
             "worktree"
+        )
+    if _branch_is_never_pushed(repo_root, branch):
+        return (
+            f"git branch -D {branch} would permanently discard a never-pushed "
+            "local branch with no remote backup"
         )
     if _branch_has_live_remote_with_unpushed(repo_root, branch):
         return (
@@ -839,8 +881,8 @@ def main() -> int:
             "  # ...edits, commits, push, PR...\n"
             "  # back in the main project dir:\n"
             "  git worktree remove .worktrees/<purpose>/<branch-name>\n"
-            "  git branch -D <branch-name>  # sanctioned when not checked "
-            "out and not live+unpushed (#4674)\n\n"
+            "  git branch -D <branch-name>  # sanctioned when gone-upstream "
+            "or fully-pushed; never-pushed stays blocked (#4674)\n\n"
             "Hook source: .claude/hooks/guard-branch-switch-in-main.py\n"
         )
         return 2

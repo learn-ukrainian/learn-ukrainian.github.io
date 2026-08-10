@@ -190,11 +190,14 @@ git branch -D <agent>/<task>
 
 + not `main` / `master`
 + not checked out in any worktree
++ not **never-pushed** (no upstream configured — no remote backup)
 + not carrying a **live** upstream with **unpushed** local commits
 
-Gone-upstream (typical post-squash remote delete), never-pushed locals, and
-fully-pushed live remotes may be force-deleted. Force-rename (`-M`) and
-force-move (`-f` / bare `--force`) stay blocked on the primary.
+Gone-upstream (typical post-squash remote delete) and fully-pushed live
+remotes may be force-deleted. Never-pushed locals stay blocked: push first
+(then delete after gone-upstream), or keep the merge/PR proof path — do not
+`-D` a tip that exists only on disk. Force-rename (`-M`) and force-move
+(`-f` / bare `--force`) stay blocked on the primary.
 
 Scheduled gone-upstream pruning (`scripts/orchestration/scheduled_worktree_cleanup.py`)
 and the post-merge auto-prune hook remain complementary paths; they do not
@@ -202,7 +205,7 @@ replace this sanctioned interactive cleanup.
 
 Stale-ref sweep (follow-up): if `git branch` still lists leftovers from prior
 sessions, delete each with the same `-D` rules above — do not broaden the
-guard or skip the live-remote+unpushed check.
+guard or skip the never-pushed / live-remote+unpushed checks.
 
 ## Monitor API surface
 

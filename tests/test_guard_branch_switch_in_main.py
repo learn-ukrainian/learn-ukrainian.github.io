@@ -261,14 +261,15 @@ def _add_bare_origin(repo: Path, remote_path: Path) -> None:
     _git(repo, "remote", "add", "origin", str(remote_path))
 
 
-def test_issue_4674_force_delete_never_pushed_is_allowed(repos):
+def test_issue_4674_force_delete_never_pushed_is_blocked(repos):
     public = repos["public"]
     _git(public, "branch", "local-only")
     reason = guard._command_danger_reason(
         "git branch -D local-only",
         session_cwd=public,
     )
-    assert reason is None
+    assert reason is not None
+    assert "never-pushed" in reason
 
 
 def test_issue_4674_force_delete_upstream_gone_is_allowed(repos, tmp_path):
@@ -495,8 +496,15 @@ def test_protected_primary_current_branch_force_ops_block(repos, root_key, opera
     assert guard._command_danger_reason(f"git -C {root} {operation}", repos["other"]) is not None
 
 
-def test_private_non_current_branch_pruning_is_allowed(repos):
-    command = f"git -C {repos['private']} branch -D merged-feature"
+def test_private_non_current_branch_pruning_is_allowed(repos, tmp_path):
+    """Private primary may still -D a sanctioned (fully-pushed) non-HEAD tip."""
+    private = repos["private"]
+    _add_bare_origin(private, tmp_path / "private-origin.git")
+    _git(private, "checkout", "-b", "merged-feature")
+    _git(private, "commit", "--allow-empty", "-m", "feature")
+    _git(private, "push", "-u", "origin", "merged-feature")
+    _git(private, "checkout", "main")
+    command = f"git -C {private} branch -D merged-feature"
     assert guard._command_danger_reason(command, repos["public"]) is None
 
 
