@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2577dede99c8",
+  "session_id": "fleet-a0ba8db7decb416b8e022ae84ba2f84d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-10T05:40:57.218151Z",
+  "branch": "cursor/4811-runner-queue-starvation",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/README.md",
+    ".github/workflows/ci-gate-queue-recovery.yml",
+    ".github/workflows/ci.yml",
+    ".github/workflows/hygiene.yml",
+    "scripts/ci/__init__.py",
+    "scripts/ci/queue_starvation_recovery.py",
+    "tests/test_ci_queue_starvation.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "f92840a61a10",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-10T05:40:57.205982Z",
+    "agent_lines": 632,
+    "agent_removed": 163,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 632,
+    "total_lines_changed": 795,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

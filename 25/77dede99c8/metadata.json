@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2577dede99c8",
+  "strategy": "manual-commit",
+  "branch": "cursor/4811-runner-queue-starvation",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/README.md",
+    ".github/workflows/ci-gate-queue-recovery.yml",
+    ".github/workflows/ci.yml",
+    ".github/workflows/hygiene.yml",
+    "scripts/ci/__init__.py",
+    "scripts/ci/queue_starvation_recovery.py",
+    "tests/test_ci_queue_starvation.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/25/77dede99c8/0/metadata.json",
+      "transcript": "/25/77dede99c8/0/full.jsonl",
+      "compact_transcript": "/25/77dede99c8/0/transcript.jsonl",
+      "content_hash": "/25/77dede99c8/0/content_hash.txt",
+      "prompt": "/25/77dede99c8/0/prompt.txt"
+    }
+  ]
+}
