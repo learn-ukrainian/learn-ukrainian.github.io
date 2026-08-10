@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import textwrap
 import threading
+from datetime import date
 
 import pytest
 
@@ -13,9 +14,13 @@ from scripts.orchestration.issue_stream_audit import (
     _MAX_SUBISSUE_PAGES,
     _paginate_subissues,
     classify,
+    fetch_issue_states,
+    load_milestone_rows,
     load_registry,
+    main,
     make_issue_resolver,
     make_membership_resolver,
+    milestone_warnings,
     read_membership_index,
     run_audit,
     validate_membership_report,
@@ -131,6 +136,108 @@ def test_native_link_wins_over_prose_mention(registry):
     )
     assert report["multi_homed"] == []
     assert report["orphans"] == []
+
+
+# --------------------------------------------------------------------------- #
+# #5898 — advisory stream-milestone hygiene. These fixtures never invoke gh;
+# issue states are injected into the pure warning classifier.
+# --------------------------------------------------------------------------- #
+def test_milestone_warnings_cover_marked_rows_closed_issues_and_old_confirmations(tmp_path):
+    workstreams = tmp_path / "WORKSTREAMS.md"
+    workstreams.write_text(
+        textwrap.dedent(
+            """
+            # Workstreams
+
+            ## Stream milestones (the focus layer)
+
+            | Stream | State | Current milestone | Done when |
+            | --- | --- | --- | --- |
+            | product | STALE | Repair #41 [confirmed-at: 2026-01-01] | Never inspect #99 |
+            | intake | ACTIVE | Rebuild #42 | — |
+            | corpus | *(operator to set)* | *(VACANT — choose #50–#52)* | — |
+
+            ## Next section
+            | Stream | State | Current milestone | Done when |
+            | ignored | STALE | #100 | — |
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    rows = load_milestone_rows(workstreams)
+    assert [row["stream"] for row in rows] == ["product", "intake", "corpus"]
+    assert rows[0]["issue_numbers"] == {41}
+    assert rows[2]["issue_numbers"] == {50, 51, 52}
+
+    warnings = milestone_warnings(
+        rows,
+        {41: "OPEN", 42: "CLOSED", 50: "CLOSED", 51: "OPEN"},
+        unavailable_issue_numbers={52},
+        today=date(2026, 2, 1),
+        max_confirmed_age_days=14,
+    )
+
+    assert warnings == [
+        {"code": "milestone_row_marked", "stream": "product", "marker": "STALE"},
+        {
+            "code": "milestone_confirmed_at_stale",
+            "stream": "product",
+            "confirmed_at": "2026-01-01",
+            "age_days": 31,
+            "max_age_days": 14,
+        },
+        {"code": "milestone_closed_issue", "stream": "intake", "issue": 42},
+        {"code": "milestone_row_marked", "stream": "corpus", "marker": "VACANT"},
+        {"code": "milestone_closed_issue", "stream": "corpus", "issue": 50},
+        {
+            "code": "milestone_issue_state_unavailable",
+            "stream": "corpus",
+            "issue": 52,
+        },
+    ]
+
+
+def test_milestone_issue_state_lookup_degrades_to_warning(monkeypatch):
+    def fake_gh_json(args, **_kwargs):
+        if args[2] == "41":
+            return {"number": 41, "state": "CLOSED"}
+        raise RuntimeError("not found")
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    states, unavailable = fetch_issue_states({41, 42})
+
+    assert states == {41: "CLOSED"}
+    assert unavailable == {42}
+
+
+def test_milestone_warnings_are_non_fatal_in_check_mode(monkeypatch, capsys):
+    report = classify(
+        _issues(100, 150, 200),
+        {"product": [100, 150], "infra": [200]},
+        {100: (set(), set()), 150: (set(), set()), 200: (set(), set())},
+    )
+    report["warnings"] = [
+        {"code": "milestone_row_marked", "stream": "product", "marker": "STALE"},
+        {"code": "milestone_closed_issue", "stream": "infra", "issue": 42},
+        {"code": "milestone_issue_state_unavailable", "stream": "infra", "issue": 43},
+        {
+            "code": "milestone_confirmed_at_stale",
+            "stream": "infra",
+            "confirmed_at": "2026-01-01",
+            "age_days": 31,
+            "max_age_days": 14,
+        },
+    ]
+    monkeypatch.setattr(issue_stream_audit, "run_audit", lambda **_kwargs: report)
+
+    assert main(["--check"]) == 0
+    output = capsys.readouterr().out
+    assert "WARN: stream milestone product marked STALE" in output
+    assert "WARN: stream milestone infra references closed issue #42" in output
+    assert "WARN: stream milestone infra could not verify issue #43 status" in output
+    assert "WARN: stream milestone infra confirmed-at 2026-01-01 is 31 days old (max 14)" in output
+    assert "ok: True" in output
 
 
 # --------------------------------------------------------------------------- #
@@ -460,6 +567,14 @@ def _make_repo(root, *, epics: list[int]) -> None:
     (root / "scripts" / "config").mkdir(parents=True)
     (root / "scripts" / "config" / "issue_streams.yaml").write_text(
         "streams:\n  s:\n    title: s\n    epics: " + json.dumps(epics) + "\n",
+        encoding="utf-8",
+    )
+    (root / "docs").mkdir()
+    (root / "docs" / "WORKSTREAMS.md").write_text(
+        "## Stream milestones (the focus layer)\n\n"
+        "| Stream | State | Current milestone | Done when |\n"
+        "| --- | --- | --- | --- |\n"
+        "| s | ACTIVE | No issue references | — |\n",
         encoding="utf-8",
     )
 
