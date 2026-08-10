@@ -117,10 +117,13 @@ def test_write_uses_manifest_serializer_and_restamps_fingerprint(tmp_path: Path)
         }
     ]
     assert existing["course_usage"] == [{"track": "b1", "module_num": 99, "slug": "existing"}]
-    assert (
-        payload["manifest_fingerprint"]["fingerprint"]
-        == json.loads(fingerprint_path.read_text(encoding="utf-8"))["fingerprint"]
-    )
+    written = json.loads(fingerprint_path.read_text(encoding="utf-8"))
+    # Sidecar is merge-friendly (inputs only); manifest embeds derived digest.
+    assert "inputs" in written
+    assert "fingerprint" not in written
+    assert payload["manifest_fingerprint"]["schema_version"] == written["schema_version"]
+    assert payload["manifest_fingerprint"]["fingerprint"]
+    assert len(payload["manifest_fingerprint"]["fingerprint"]) == 64
     assert result.manifest_written is True
     assert result.fingerprint_written is True
 
