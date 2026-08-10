@@ -372,7 +372,7 @@ def _ground_truth_brief_from_checkout(
 
     deleted: set[str] = set()
     try:
-        from scripts.ai_agent_bridge._review_worktree import (
+        from ._review_worktree import (
             ReviewWorktreeError,
             _deleted_paths_from_manifest,
         )
