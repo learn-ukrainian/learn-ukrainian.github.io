@@ -1,10 +1,10 @@
 """Tests for deriving API seminar roster from curriculum.yaml (#5245)."""
 
 from pathlib import Path
-import pytest
+
 import yaml
 
-from scripts.api import config, state_helpers, dashboard_helpers
+from scripts.api import config, state_helpers
 from scripts.orchestration import curriculum_readiness
 
 
@@ -17,7 +17,7 @@ def test_seminar_track_ids_derived_from_curriculum_manifest() -> None:
         if info.get("type") == "track"
     }
 
-    assert config.SEMINAR_TRACK_IDS == expected_seminar
+    assert expected_seminar == config.SEMINAR_TRACK_IDS
     assert "lit-doc" not in config.SEMINAR_TRACK_IDS
     assert "lit-crimea" not in config.SEMINAR_TRACK_IDS
     assert "hist" in config.SEMINAR_TRACK_IDS
