@@ -121,6 +121,7 @@ _run_with_secondary_rate_limit_retry() {
   base_delay_s="$(_nonnegative_integer_or_default "${AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS:-}" 60)"
 
   _agent_gh_retry_stdin_file=""
+  _agent_gh_retry_sleep_pid=""
   _agent_gh_retry_stdout_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdout.XXXXXX")" || return 1
   _agent_gh_retry_stderr_file="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stderr.XXXXXX")" || {
     rm -f "$_agent_gh_retry_stdout_file"
@@ -144,6 +145,11 @@ _run_with_secondary_rate_limit_retry() {
   _abort_secondary_retry() {
     local status="$1"
     trap - EXIT HUP INT TERM
+    if [[ -n "$_agent_gh_retry_sleep_pid" ]]; then
+      kill "$_agent_gh_retry_sleep_pid" 2>/dev/null || true
+      wait "$_agent_gh_retry_sleep_pid" 2>/dev/null || true
+      _agent_gh_retry_sleep_pid=""
+    fi
     _cleanup_secondary_retry_tempfiles
     exit "$status"
   }
@@ -190,7 +196,16 @@ _run_with_secondary_rate_limit_retry() {
     local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
     printf 'agent-gh-shim: GitHub HTTP %s throttled; retrying gh in %ss (attempt %s/%s).\n' \
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
-    sleep "$delay_s"
+    # Bash can defer TERM's trap while it waits for a foreground command. Keep
+    # the full backoff in a tracked child and only make short foreground waits,
+    # so the abort trap kills the backoff child within one polling interval.
+    sleep "$delay_s" </dev/null >/dev/null 2>&1 &
+    _agent_gh_retry_sleep_pid=$!
+    while kill -0 "$_agent_gh_retry_sleep_pid" 2>/dev/null; do
+      sleep 0.2
+    done
+    wait "$_agent_gh_retry_sleep_pid" 2>/dev/null || true
+    _agent_gh_retry_sleep_pid=""
   done
 
   # Retry attempts stay private: only the final gh invocation's output reaches
