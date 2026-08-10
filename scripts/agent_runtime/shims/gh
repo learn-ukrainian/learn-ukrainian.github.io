@@ -196,14 +196,10 @@ _run_with_secondary_rate_limit_retry() {
     local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
     printf 'agent-gh-shim: GitHub HTTP %s throttled; retrying gh in %ss (attempt %s/%s).\n' \
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
-    # Bash can defer TERM's trap while it waits for a foreground command. Keep
-    # the full backoff in a tracked child and only make short foreground waits,
-    # so the abort trap kills the backoff child within one polling interval.
+    # Bash's wait builtin returns when TERM interrupts it, letting the abort
+    # trap kill the tracked backoff child immediately.
     sleep "$delay_s" </dev/null >/dev/null 2>&1 &
     _agent_gh_retry_sleep_pid=$!
-    while kill -0 "$_agent_gh_retry_sleep_pid" 2>/dev/null; do
-      sleep 0.2
-    done
     wait "$_agent_gh_retry_sleep_pid" 2>/dev/null || true
     _agent_gh_retry_sleep_pid=""
   done
