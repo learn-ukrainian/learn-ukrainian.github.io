@@ -1,11 +1,9 @@
 name: CI
 
-# CI Gate reboot (#5762). The prior control plane (4-way pytest sharding +
-# a deterministic-selection planner + JUnit reconstruction + a paths-filtered
-# `changes` job gating every required job) caused four consecutive gate
-# failures and a two-day outage — every failure was in the verification
-# machinery, never in the tests themselves. This file replaces it with four
-# required jobs that always run, plus one aggregator.
+# CI Gate reboot (#5762) made every required job unconditional after the prior
+# paths-filtered control plane caused four consecutive gate failures. #5744
+# restores the proven pytest topology: one deterministic planner, four
+# duration-balanced file shards, and JUnit reconstruction inside CI Gate.
 #
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): pytest must NEVER be
 # selected or skipped by changed files. Five separate incidents shipped a
@@ -32,14 +30,81 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------
-  # 1. python — the full test suite, one job, no sharding, no path filter.
+  # 1. pytest-plan — collect once, then produce all four LPT file plans from
+  #    one duration dataset restored from a successful main run (#5744).
   # ---------------------------------------------------------------------
-  # Four PARALLEL JOBS, not one xdist session (#5776, 3-seat advisor panel).
-  # Sharding was never the bug — changed-files SELECTION was. This keeps the
-  # reboot's invariant (no test is chosen or skipped by what changed) and
-  # restores the only topology that has ever completed: the single-session
-  # design never finished once, stalling ~94-95% with ~23 minutes of silence on
-  # a DIFFERENT test each run.
+  pytest-plan:
+    name: Pytest plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Install planner dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.13.0
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+
+      - name: Restore successful-main pytest duration dataset
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ci-artifacts/pytest-durations.json
+          key: pytest-shard-durations-v1-main-${{ github.sha }}
+          restore-keys: |
+            pytest-shard-durations-v1-main-
+
+      - name: Plan all duration-balanced pytest shards
+        run: |
+          .venv/bin/python scripts/ci/pytest_shards.py plan \
+            --durations ci-artifacts/pytest-durations.json \
+            --output-dir ci-artifacts/plans
+
+      - name: Upload pytest plans
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-plans
+          path: ci-artifacts/plans/
+          if-no-files-found: error
+          retention-days: 1
+
+  # ---------------------------------------------------------------------
+  # 2. python — execute the planner's four unconditional test partitions.
+  # ---------------------------------------------------------------------
+  # The selection still never consults changed files: every collected test runs
+  # exactly once. Four parallel jobs are the topology that completed under the
+  # #5776 hang investigation; one xdist session did not.
   python:
     name: Python (pytest) [${{ matrix.shard }}/4]
     runs-on: ubuntu-latest
@@ -48,6 +113,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
+    needs: [pytest-plan]
     permissions:
       contents: read
     steps:
@@ -148,61 +214,70 @@ jobs:
       - name: Ruff
         run: .venv/bin/python -m ruff check scripts/
 
-      # The playground perf probe is deselected here and run as its own
-      # serial step below — it is the one SERIAL_TESTS entry with a real
-      # isolation claim (a wall-clock latency assertion that is flaky under
-      # parallel resource contention; confirmed locally: it failed inside
-      # the `-n auto` bulk run and passed standalone). The two cache tests
-      # that used to need isolation do not: #2002's autouse fixture already
-      # fixed that class, so they run as ordinary members of the suite.
-      # Coverage is collected only on pushes to `main`, matching the behaviour
-      # this file replaces — it is a trend floor, not a per-PR gate, and
-      # instrumentation costs wall-clock on every PR for no added signal.
-      # QUARANTINE — #5776, one node, temporary, owned.
-      # test_main_cli_encode_flag_wires_ingest_to_manifest HANGS in a full
-      # parallel run: it started at 15:54:23 in run 30163791890 and had produced
-      # nothing 23 minutes later when the new 45-minute cap killed the job. It
-      # passes ALONE in 0.57s and `pytest tests/wiki -n 2` completes in 15s, so
-      # it is an interaction with full-suite state, not a bad test.
-      #
-      # This is a NAMED node with an open issue, not a path filter: it cannot
-      # grow to hide unrelated tests, and it does not reintroduce changed-files
-      # selection (the defect this reboot exists to remove, #3873 #4888 #4936
-      # #5351 #5354). If the cause turns out to be shared global state, the hang
-      # will simply move — and the cap now makes that a bounded, visible failure
-      # rather than a silent six-hour stall.
-      - name: Run pytest
+      - name: Download the single planner's shard plans
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pytest-plans
+          path: ci-artifacts/plans
+
+      # The playground probe is deliberately excluded from the planner's bulk
+      # collection and is run serially on shard 1. It is a named isolation
+      # exception, never a changed-file filter; all other collected tests run
+      # through the file-grouped LPT plan exactly once.
+      - name: Run planned pytest shard
+        id: pytest
+        continue-on-error: true
         timeout-minutes: 25
-        # The predicate is evaluated by the expression engine and reaches the
-        # shell as the literal string "true"/"false" via env — `github.ref` is
-        # never spliced into `run:`, so a hostile branch name cannot inject.
         env:
           IS_MAIN_PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           SHARD: ${{ matrix.shard }}
           PYTEST_BREADCRUMB_DIR: .pytest_breadcrumbs
         run: |
+          set -o pipefail
+          mkdir -p ci-artifacts
+          cp "ci-artifacts/plans/pytest-shard-${SHARD}/plan.json" ci-artifacts/plan.json
+          cp "ci-artifacts/plans/pytest-shard-${SHARD}/test-nodeids.txt" ci-artifacts/test-nodeids.txt
+          if grep -q '^tests/agent_runtime/test_acp_text_agent.py::' ci-artifacts/test-nodeids.txt; then
+            npm ci --ignore-scripts
+          fi
           cov_args=""
           if [ "$IS_MAIN_PUSH" = "true" ]; then
             cov_args="--cov=scripts --cov-report="
           fi
-          # Round-robin over SORTED test files. Deterministic, depends only on the
-          # file list, and every file lands in exactly one shard — so the union is
-          # always the whole suite. Nothing here consults the diff.
-          split_py="import pathlib,sys;fs=sorted(str(p) for p in pathlib.Path('tests').rglob('test_*.py'));print(chr(10).join(fs[int(sys.argv[1])-1::4]))"
-          mapfile -t shard_files < <(.venv/bin/python -c "$split_py" "$SHARD")
-          echo "shard $SHARD: ${#shard_files[@]} test files"
-          if [ "${#shard_files[@]}" -eq 0 ]; then echo "::error::empty shard"; exit 1; fi
-          # The text ACP protocol test executes the project-owned Node server,
-          # which imports the exact SDK pinned in package-lock.json. Install
-          # Node dependencies only in the shard that owns that test file.
-          if printf '%s\n' "${shard_files[@]}" | grep -Fxq \
-            'tests/agent_runtime/test_acp_text_agent.py'; then
-            npm ci --ignore-scripts
-          fi
           # shellcheck disable=SC2086  # cov_args is a deliberate word-split argument list
-          .venv/bin/python -m pytest "${shard_files[@]}" -n auto --strict-markers \
-            --timeout=120 --timeout-method=thread --durations=25 $cov_args \
-            --deselect=tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast
+          .venv/bin/python scripts/ci/pytest_shards.py run --nodeids ci-artifacts/test-nodeids.txt -- \
+            -n auto --dist=loadfile --strict-markers --timeout=120 --timeout-method=thread \
+            --junitxml=ci-artifacts/main-junit.xml --durations=0 $cov_args \
+            2>&1 | tee ci-artifacts/main.log
+
+      - name: Playground perf probe (serial, shard 1 only)
+        id: playground
+        if: matrix.shard == 1
+        continue-on-error: true
+        run: |
+          for attempt in 1 2 3; do
+            echo "playground smoke attempt ${attempt}/3"
+            if .venv/bin/python -m pytest \
+              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
+              -v --tb=short --junitxml=ci-artifacts/playground-junit.xml; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
+
+      - name: Upload pytest shard plan and results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-shard-${{ matrix.shard }}
+          path: ci-artifacts/
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Fail after preserving pytest evidence
+        if: steps.pytest.outcome != 'success' || (matrix.shard == 1 && steps.playground.outcome != 'success')
+        run: exit 1
 
       - name: Upload test breadcrumbs
         if: always()
@@ -220,15 +295,10 @@ jobs:
       # its removal as a P1: without it a green CI Gate could accompany an
       # arbitrarily large coverage regression.
       #
-      # Simpler than what it replaces: the four shards ran as separate JOBS, so
-      # main had to upload four `.coverage.shard-*` artifacts and `coverage
-      # combine` them. One job with `-n auto` means pytest-cov combines the
-      # xdist workers itself, and `coverage report` just reads the result.
-      # The floor moves to its own job: with four shards no single one sees the
-      # whole suite, so enforcing per-shard would measure a quarter and pass
-      # vacuously. Each shard publishes its data; `coverage-floor` combines.
+      # Each matrix shard publishes its xdist-combined data. The floor stays in
+      # its own job because no individual shard observes the whole suite.
       - name: Upload shard coverage data
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.pytest.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-shard-${{ matrix.shard }}
@@ -237,24 +307,8 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      # Wall-clock perf probe. Kept serial, after the main body, with its
-      # existing retry-on-flake: /api/rag/search_text can 500 on an FTS
-      # rebuild race under load.
-      - name: Playground perf probe (serial)
-        run: |
-          for attempt in 1 2 3; do
-            echo "playground smoke attempt ${attempt}/3"
-            if .venv/bin/python -m pytest \
-              tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast \
-              -v --tb=short; then
-              exit 0
-            fi
-            sleep 3
-          done
-          exit 1
-
   # ---------------------------------------------------------------------
-  # 2. contracts — deterministic drift/artifact checks. Unconditional:
+  # 3. contracts — deterministic drift/artifact checks. Unconditional:
   #    every check here diffs against origin/main or a committed file
   #    itself, so an untouched input is a fast no-op, not a skip.
   # ---------------------------------------------------------------------
@@ -555,7 +609,7 @@ jobs:
           printf '%s' "$PR_BODY" | .venv/bin/python scripts/audit/lint_pr_closing_references.py --stdin
 
   # ---------------------------------------------------------------------
-  # 3. frontend — build + vitest. Unconditional.
+  # 4. frontend — build + vitest. Unconditional.
   # ---------------------------------------------------------------------
   frontend:
     name: Frontend (build + vitest)
@@ -695,10 +749,58 @@ jobs:
         run: npx playwright test
 
   # ---------------------------------------------------------------------
+  # ---------------------------------------------------------------------
   # 4. Coverage floor + CI Gate. Secret scanning and the PR-body reference
   #    guard live inside `contracts` (#4811 slot cut). Every remaining
   #    required job above is unconditional, so `skipped` is as much a
   #    failure as `failure`/`cancelled`.
+
+  # Duration data is intentionally published only after every matrix member of
+  # a push to main succeeds. PRs and failed main runs can consume a prior main
+  # dataset but can never overwrite it.
+  pytest-duration-publish:
+    name: Publish pytest durations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.python.result == 'success'
+    needs: [python]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Restore prior successful-main duration dataset
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ci-artifacts/pytest-durations.json
+          key: pytest-shard-durations-v1-main-${{ github.sha }}
+          restore-keys: |
+            pytest-shard-durations-v1-main-
+      - name: Download pytest shard results
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pytest-shard-*
+          path: ci-artifacts
+      - name: Publish successful-main durations and p95 summary
+        run: |
+          python scripts/ci/pytest_shards.py publish-durations \
+            --log ci-artifacts/pytest-shard-1/main.log \
+            --log ci-artifacts/pytest-shard-2/main.log \
+            --log ci-artifacts/pytest-shard-3/main.log \
+            --log ci-artifacts/pytest-shard-4/main.log \
+            --previous ci-artifacts/pytest-durations.json \
+            --output ci-artifacts/pytest-durations.json \
+            --summary "${GITHUB_STEP_SUMMARY}"
+      - name: Save successful-main duration dataset
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ci-artifacts/pytest-durations.json
+          key: pytest-shard-durations-v1-main-${{ github.sha }}
+
   # ---------------------------------------------------------------------
   # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
@@ -747,11 +849,25 @@ jobs:
     timeout-minutes: 10
     if: always()
     needs:
+      - pytest-plan
       - python
       - contracts
       - frontend
       - coverage-floor
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Download pytest plans and JUnit results
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pytest-shard-*
+          path: ci-artifacts
+      - name: Verify pytest shard completeness
+        run: python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts
       - name: Report required-job results
         env:
           RESULTS: ${{ join(needs.*.result, ',') }}
