@@ -310,3 +310,54 @@ def require_source_admission(
         "policy_entry_sha256": sha256_value(entry),
         "evidence_rows_sha256": actual_rows_sha256,
     }
+
+
+def require_source_quarantine(
+    *,
+    source_file: str,
+    jsonl_path: Path,
+    policy_path: Path,
+) -> dict[str, Any]:
+    """Return hash-bound v3 quarantine metadata or refuse source removal."""
+    document, policy_sha256 = load_policy(policy_path)
+    _require(
+        document["schema_version"] == V3_SCHEMA_VERSION,
+        f"{source_file}: source-level content quarantine requires a v3 policy",
+    )
+    entry = next(
+        (item for item in document["sources"] if item["source_file"] == source_file),
+        None,
+    )
+    _require(
+        entry is not None,
+        f"{source_file}: no verified university source policy entry; removal refused",
+    )
+    _require(
+        entry["content_disposition"] == "quarantine" and not entry["allowed_lanes"],
+        f"{source_file}: university source policy does not authorize quarantine",
+    )
+    evidence = entry["evidence"]
+    actual_jsonl_sha256 = sha256_file(jsonl_path)
+    _require(
+        actual_jsonl_sha256 == evidence["jsonl_sha256"],
+        f"{source_file}: JSONL changed since quarantine evidence was reviewed",
+    )
+    rows = load_jsonl_rows(jsonl_path)
+    actual_rows_sha256 = evidence_rows_sha256(
+        rows,
+        page_start=evidence["page_start"],
+        page_end=evidence["page_end"],
+    )
+    _require(
+        actual_rows_sha256 == evidence["rows_sha256"],
+        f"{source_file}: front-matter quarantine evidence changed",
+    )
+    return {
+        "audience_class": entry["audience_class"],
+        "subject_role": entry["subject_role"],
+        "content_disposition": entry["content_disposition"],
+        "allowed_lanes": entry["allowed_lanes"],
+        "policy_sha256": policy_sha256,
+        "policy_entry_sha256": sha256_value(entry),
+        "evidence_rows_sha256": actual_rows_sha256,
+    }

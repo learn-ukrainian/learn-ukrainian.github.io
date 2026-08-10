@@ -363,6 +363,47 @@ def test_v3_content_quarantine_overrides_proven_audience(tmp_path):
             policy_path=policy,
             lane="corpus_ingest",
         )
+    quarantine = usp.require_source_quarantine(
+        source_file=slug,
+        jsonl_path=jsonl,
+        policy_path=policy,
+    )
+    assert quarantine["content_disposition"] == "quarantine"
+
+
+def test_v3_source_quarantine_refuses_non_quarantine_disposition(tmp_path):
+    from projects.open_model_data import university_source_policy as usp
+
+    slug = "uni-ukrmova-context-only-2026"
+    jsonl = tmp_path / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "text": "Контекстне джерело.",
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_v3_university_policy(
+        tmp_path / "policy.json",
+        slug=slug,
+        jsonl=jsonl,
+        content_disposition="contextual_only",
+        allowed_lanes=["contextual_retrieval", "corpus_ingest"],
+    )
+
+    with pytest.raises(usp.UniversitySourcePolicyError, match="does not authorize quarantine"):
+        usp.require_source_quarantine(
+            source_file=slug,
+            jsonl_path=jsonl,
+            policy_path=policy,
+        )
 
 
 def test_v3_contextual_source_can_enter_corpus_but_not_rule_lane(tmp_path):
@@ -783,6 +824,79 @@ def test_replace_and_quarantine_share_one_atomic_fts_rebuild(fixture_env):
         conn.execute("SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH 'неперевірений'").fetchone()[0] == 0
     )
     assert conn.execute("SELECT COUNT(*) FROM textbooks_fts WHERE textbooks_fts MATCH 'фотосинтез'").fetchone()[0] == 3
+    conn.close()
+
+
+def test_university_content_quarantine_is_policy_bound_and_receipted(tmp_path):
+    slug = "uni-ukrmova-content-rejected-2026"
+    chunks_root = tmp_path / "chunks"
+    jsonl = chunks_root / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "title": "Відхилене джерело",
+                "text": "Контент відхилено після перевірки.",
+                "page_start": 1,
+                "page_end": 1,
+                "author": "",
+                "author_uk": "",
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_v3_university_policy(
+        tmp_path / "policy.json",
+        slug=slug,
+        jsonl=jsonl,
+        content_disposition="quarantine",
+        allowed_lanes=[],
+    )
+    db = tmp_path / "sources.db"
+    conn = sqlite3.connect(db)
+    conn.executescript(SCHEMA)
+    conn.execute(
+        """INSERT INTO textbooks
+           (chunk_id, title, text, source_file, subject, grade, author, author_uk, char_count)
+           VALUES (?, 'Відхилене джерело', 'Контент відхилено', ?, 'ukrmova',
+                   'university', '', '', 17)""",
+        (f"{slug}_s0000", slug),
+    )
+    conn.execute("INSERT INTO textbooks_fts(textbooks_fts) VALUES('rebuild')")
+    conn.commit()
+    conn.close()
+    receipt_path = tmp_path / "receipt.json"
+
+    assert iti.main(
+        [
+            "--quarantine-slugs",
+            slug,
+            "--chunks-root",
+            str(chunks_root),
+            "--db",
+            str(db),
+            "--university-policy",
+            str(policy),
+            "--receipt",
+            str(receipt_path),
+        ]
+    ) == 0
+
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["requested_replace_sources"] == []
+    assert receipt["requested_quarantine_sources"] == [slug]
+    assert receipt["per_source"][0]["disposition"] == (
+        "quarantined_by_university_source_policy"
+    )
+    assert receipt["per_source"][0]["university_source_policy"]["content_disposition"] == (
+        "quarantine"
+    )
+    conn = sqlite3.connect(db)
+    assert conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (slug,)).fetchone()[0] == 0
+    assert conn.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0] == 0
     conn.close()
 
 
