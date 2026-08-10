@@ -62,6 +62,29 @@ def test_agents_md_carries_binding_digest() -> None:
     assert "independent held-out evaluation" in body, "digest lost held-out proof requirement"
 
 
+def test_agents_md_is_a_bounded_offline_digest() -> None:
+    """#6449: Codex injects AGENTS.md before work, so keep a tested compact
+    safety digest while retaining both live and local paths to full policy."""
+    path = REPO / "AGENTS.md"
+    body = path.read_text(encoding="utf-8")
+
+    assert len(path.read_bytes()) <= 9 * 1024, "AGENTS.md exceeded its 9 KiB static-injection budget"
+    for required in (
+        "GET /api/rules?format=markdown",
+        "agents_extensions/shared/rules/_load-via-api.md",
+        "primary checkout belongs to the human and services",
+        "agents_extensions/` first",
+        "never use bare `python`",
+        "Never modify `.python-version`, `.yamllint`, or `.markdownlint.json`",
+        "Do not weaken, skip, stub, or comment out tests",
+        "X-Agent: <agent>/<task-id>",
+        "independent cross-family",
+        "Never print or commit secrets",
+        "entire-context",
+    ):
+        assert required in body, f"AGENTS.md lost required offline guardrail: {required}"
+
+
 def test_gemini_md_carries_binding_digest() -> None:
     """agy/gemini one-shots boot from GEMINI.md, not AGENTS.md — proven by the
     2026-07-05 live canary (agy answered NOT LOADED before this digest)."""
