@@ -81,9 +81,13 @@ def test_parse_inventory_and_brief_marks_three_dot_trap() -> None:
     brief = format_ground_truth_brief(inventory)
     assert "three-dot" in brief
     assert "two-dot" in brief
-    assert "`M` `scripts/a.py`" in brief
-    assert "`D` `tests/b.py`" in brief
+    assert "**Changed paths:** 2 (1 deleted)" in brief
+    assert "gh pr view 5802 --json files" in brief
     assert "merge-base" in brief
+    # Path samples are optional and budget-gated; request them explicitly.
+    with_paths = format_ground_truth_brief(inventory, max_files=12)
+    assert "`M` `scripts/a.py`" in with_paths
+    assert "`D` `tests/b.py`" in with_paths
 
 
 def test_validate_findings_refuses_two_dot_artifact_paths() -> None:
