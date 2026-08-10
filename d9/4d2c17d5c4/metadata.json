@@ -1,0 +1,17 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d94d2c17d5c4",
+  "strategy": "manual-commit",
+  "branch": "cursor/5802-review-gate-integrity",
+  "checkpoints_count": 1,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/d9/4d2c17d5c4/0/metadata.json",
+      "transcript": "/d9/4d2c17d5c4/0/full.jsonl",
+      "compact_transcript": "/d9/4d2c17d5c4/0/transcript.jsonl",
+      "content_hash": "/d9/4d2c17d5c4/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
