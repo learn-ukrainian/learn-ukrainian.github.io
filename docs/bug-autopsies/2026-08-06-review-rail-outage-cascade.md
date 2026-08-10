@@ -104,4 +104,6 @@ justifies fail-stop design and this autopsy — not deletion of independent revi
 
 ## Links
 
-- Related reviews and outage notes in this file body.
+- Issue #4811 (CI runner-queue starvation / related outage lessons)
+- Related formal-review rail incidents referenced in body; outage day 2026-08-06
+- Sample commit: `402120edac` (queue starvation recovery PR branch tip lineage)
