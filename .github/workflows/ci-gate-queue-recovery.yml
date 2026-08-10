@@ -1,0 +1,92 @@
+name: CI Gate queue-starvation recovery
+
+# Stopgap for #4811: when the required CI Gate job is cancelled after waiting
+# for a GitHub-hosted runner (empty logs, ~15 min) while every upstream job
+# succeeded, re-run only the cancelled tail jobs once.
+#
+# Trigger choice (zizmor / supply-chain): Option A — schedule + workflow_dispatch.
+# Do NOT use workflow_run. zizmor flags workflow_run as a fundamentally insecure
+# trigger: a privileged actions:write job must not fire on completions of
+# untrusted workflow runs. Instead we poll recent CI conclusions from the
+# default branch and decide with scripts/ci/queue_starvation_recovery.py.
+#
+# Compensating controls:
+#   - default-branch checkout only (never the subject run's head SHA)
+#   - fail-closed signature (no genuine pytest/contract re-runs)
+#   - max one recovery attempt per run (run_attempt < max_attempts)
+#   - actions: write least privilege on this job only
+#
+# Does NOT re-run when cancel-in-progress cancelled mid-run jobs (non-tail
+# cancels). Org concurrent job capacity remains the owner root fix.
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    # Every 15 minutes — covers the ~15 min runner-queue cancel window without
+    # an event-driven workflow_run trigger.
+    - cron: '4,19,34,49 * * * *'
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: POST job re-runs for matching cancelled CI Gate tails.
+        required: false
+        default: true
+        type: boolean
+      lookback_minutes:
+        description: Only consider CI runs updated within this many minutes.
+        required: false
+        default: '90'
+        type: string
+
+concurrency:
+  group: ci-gate-queue-recovery
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    name: Scan and re-run cancelled CI Gate (once)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Default-branch checkout only. This job has actions:write — never
+          # execute recovery logic from a subject CI run's head SHA.
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Scan recent CI runs for queue starvation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          APPLY_INPUT: ${{ inputs.apply }}
+          LOOKBACK_INPUT: ${{ inputs.lookback_minutes }}
+        run: |
+          set -euo pipefail
+          args=(
+            --scan
+            --repo "${REPO}"
+            --max-attempts 2
+            --github-output
+          )
+          # Scheduled runs always apply. Manual runs honor the apply input
+          # (default true) so operators can dry-run with apply=false.
+          if [[ "${EVENT_NAME}" == "schedule" || "${APPLY_INPUT}" == "true" ]]; then
+            args+=(--apply)
+          fi
+          lookback="${LOOKBACK_INPUT:-90}"
+          if [[ ! "${lookback}" =~ ^[0-9]+$ ]] || [[ "${lookback}" -lt 1 ]]; then
+            echo "::error::lookback_minutes must be a positive integer (got ${lookback})"
+            exit 1
+          fi
+          args+=(--lookback-minutes "${lookback}")
+          python scripts/ci/queue_starvation_recovery.py "${args[@]}"

@@ -1,6 +1,6 @@
 # Autopsy: review-rail cascade + GitHub outage merge freeze (2026-08-06)
 
-## What broke (symptoms, one day)
+## Symptom
 - Zero PRs merged for a full working day despite ~10 review rounds executed; operator escalated
   to near-cancellation.
 - The formal sealed review rail failed 7× against 1 legitimate catch: a stale authority lease
@@ -19,7 +19,7 @@
 - Delegate finalizer reported false `no_deliverable` for pushed work 3× (#6426), burning a
   verification round-trip each time.
 
-## Why (root causes)
+## Root cause
 1. **Exact-head formality without delta awareness.** Any new SHA — even a 6-byte docs fix —
    invalidated the review and forced a complete fresh read. Cost scaled with ceremony, not risk.
 2. **No platform-health input.** Reviews, reruns, and merge automation had no notion of
@@ -48,7 +48,9 @@
 - #6426 filed: finalizer false no_deliverable on --cwd reuse worktrees.
 - Operator allowlisted orchestration commands past the auto-mode classifier.
 
-## Prevention candidates (fleet discussion 2026-08-07 — decide, then implement)
+## Prevention
+
+### Prevention candidates (fleet discussion 2026-08-07 — decide, then implement)
 P1. **Delta re-reviews**: a re-review after fixes receives the prior verdict + the incremental
     diff (prev-head..new-head) only; full re-read only when the delta is architectural.
 P2. **Platform-health gate**: one cached probe (githubstatus API) consulted by review/rerun/
@@ -99,3 +101,9 @@ ledgers/reconciliation daemons, no AST diff engine, no verdict registry, no docs
 rule, no platform-health required CI check, no automated admin merges, no credential heartbeat
 cron, no per-guard override UI, no new retry counters/dashboards/SLOs. The 7:1 failure ratio
 justifies fail-stop design and this autopsy — not deletion of independent review itself.
+
+## Links
+
+- Issue #4811 (CI runner-queue starvation / related outage lessons)
+- Related formal-review rail incidents referenced in body; outage day 2026-08-06
+- Sample commit: `402120edac` (queue starvation recovery PR branch tip lineage)
