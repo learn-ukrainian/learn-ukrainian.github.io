@@ -1,0 +1,45 @@
+{
+  "schema": "vesum-form-key-vectors",
+  "schemaVersion": 1,
+  "rules": {
+    "base": "normalizeAtlasText (NFC, strip U+0301, uk-UA lowercase, trim)",
+    "apostropheCanonicalization": {
+      "variants": [
+        "U+0027",
+        "U+2019",
+        "U+02BB"
+      ],
+      "canonical": "U+02BC"
+    }
+  },
+  "cases": [
+    {
+      "input": "П'ЯТЬ",
+      "expected": "пʼять"
+    },
+    {
+      "input": "п’ять",
+      "expected": "пʼять"
+    },
+    {
+      "input": "пʻять",
+      "expected": "пʼять"
+    },
+    {
+      "input": "пʼять",
+      "expected": "пʼять"
+    },
+    {
+      "input": "Ґанок",
+      "expected": "ґанок"
+    },
+    {
+      "input": "абре́віатура",
+      "expected": "абревіатура"
+    },
+    {
+      "input": "  Слово  ",
+      "expected": "слово"
+    }
+  ]
+}

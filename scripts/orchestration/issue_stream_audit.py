@@ -1,9 +1,8 @@
 """Issue-stream auditor — every open GH issue must belong to exactly one stream epic.
 
 Registry: scripts/config/issue_streams.yaml (streams → epic issue numbers).
-Membership: native GitHub sub-issue of a stream epic, OR a ``#N`` reference in
-a stream epic's body. Body references normally await native migration, except
-for explicitly capped parent epics where they are an accepted fallback.
+Membership: native GitHub sub-issue of a stream epic, OR (fallback while the
+native migration is pending) a ``#N`` reference in a stream epic's body.
 
 Usage:
   .venv/bin/python -m scripts.orchestration.issue_stream_audit           # human summary
@@ -37,7 +36,6 @@ import time
 from collections.abc import Callable
 from datetime import date
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -592,78 +590,19 @@ def _run_refresh_worker(run_id: str) -> int:
         _release_lock(fd)
 
 
-class IssueStreamRegistry(dict[str, list[int]]):
-    """Stream-to-epic mapping with validated, opt-in parent-cap metadata.
-
-    It deliberately remains a ``dict`` subclass so existing registry consumers
-    can continue to use ``.items()``, ``.values()``, and mapping equality.
-    """
-
-    def __init__(self, streams: dict[str, list[int]], capped_epics: dict[int, dict[str, Any]]):
-        super().__init__(streams)
-        self.capped_epics = capped_epics
-
-
-def _capped_epic_specs(registry: dict[str, list[int]]) -> dict[int, dict[str, Any]]:
-    """Return validated cap metadata when supplied by ``load_registry``."""
-    raw = getattr(registry, "capped_epics", {})
-    return raw if isinstance(raw, dict) else {}
-
-
-def load_registry(path: Path = REGISTRY_PATH) -> IssueStreamRegistry:
-    """Load the registry, rejecting unknown keys and malformed cap metadata."""
+def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
+    """Return {stream_key: [epic_numbers]}."""
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
-    if not isinstance(doc, dict):
-        raise ValueError("issue_streams.yaml must contain a mapping")
-    unknown_top_level = set(doc) - {"schema_version", "streams", "capped_epics"}
-    if unknown_top_level:
-        raise ValueError(f"issue_streams.yaml has unknown keys: {sorted(unknown_top_level)}")
-    schema_version = doc.get("schema_version", 1)
-    if schema_version != 1:
-        raise ValueError(f"unsupported issue-streams schema_version: {schema_version!r}")
     streams = doc.get("streams") or {}
-    if not isinstance(streams, dict):
-        raise ValueError("issue_streams.yaml streams must be a mapping")
     registry: dict[str, list[int]] = {}
     for key, spec in streams.items():
-        if not isinstance(key, str) or not key:
-            raise ValueError("issue-streams stream keys must be non-empty strings")
-        if not isinstance(spec, dict):
-            raise ValueError(f"stream {key!r} must be a mapping")
-        unknown_stream_keys = set(spec) - {"title", "epics"}
-        if unknown_stream_keys:
-            raise ValueError(f"stream {key!r} has unknown keys: {sorted(unknown_stream_keys)}")
         epics = [int(n) for n in (spec.get("epics") or [])]
         if not epics:
             raise ValueError(f"stream {key!r} has no epics")
         registry[key] = epics
     if not registry:
         raise ValueError("issue_streams.yaml defines no streams")
-    registered_epics = {epic for epics in registry.values() for epic in epics}
-    raw_capped_epics = doc.get("capped_epics") or {}
-    if not isinstance(raw_capped_epics, dict):
-        raise ValueError("capped_epics must be a mapping")
-    capped_epics: dict[int, dict[str, Any]] = {}
-    for raw_epic, spec in raw_capped_epics.items():
-        try:
-            epic = int(raw_epic)
-        except (TypeError, ValueError) as exc:
-            raise ValueError(f"capped epic key is not an issue number: {raw_epic!r}") from exc
-        if epic not in registered_epics:
-            raise ValueError(f"capped epic #{epic} is not registered in any stream")
-        if not isinstance(spec, dict):
-            raise ValueError(f"capped epic #{epic} must be a mapping")
-        unknown_cap_keys = set(spec) - {"reason", "max_native"}
-        if unknown_cap_keys:
-            raise ValueError(f"capped epic #{epic} has unknown keys: {sorted(unknown_cap_keys)}")
-        reason = spec.get("reason")
-        max_native = spec.get("max_native")
-        if not isinstance(reason, str) or not reason.strip():
-            raise ValueError(f"capped epic #{epic} requires a non-empty reason")
-        if isinstance(max_native, bool) or not isinstance(max_native, int) or max_native < 1:
-            raise ValueError(f"capped epic #{epic} requires positive integer max_native")
-        capped_epics[epic] = {"reason": reason, "max_native": max_native}
-    return IssueStreamRegistry(registry, capped_epics)
+    return registry
 
 
 def _table_cells(line: str) -> list[str]:
@@ -965,7 +904,6 @@ def classify(
 ) -> dict:
     """Pure classification — unit-testable without network."""
     epic_numbers = {e for epics in registry.values() for e in epics}
-    capped_epics = _capped_epic_specs(registry)
     stream_of_epic = {e: key for key, epics in registry.items() for e in epics}
 
     native_epics: dict[int, set[int]] = {}
@@ -1001,12 +939,6 @@ def classify(
         n for n in open_numbers
         if n not in epic_numbers and owning_epics.get(n) and n not in native_linked
     )
-    pending_native_link = sorted(
-        n for n in body_only if not (owning_epics[n] & set(capped_epics))
-    )
-    accepted_capped_fallback = sorted(
-        n for n in body_only if owning_epics[n] & set(capped_epics)
-    )
     missing_epics = sorted(e for e in epic_numbers if e not in open_numbers)
 
     return {
@@ -1022,8 +954,7 @@ def classify(
             }
             for n in multi_homed
         ],
-        "pending_native_link": pending_native_link,
-        "accepted_capped_fallback": accepted_capped_fallback,
+        "pending_native_link": body_only,
         "closed_or_missing_epics": missing_epics,
         # The invariant is EXACTLY ONE EFFECTIVE EPIC — multi-homed violates it
         # (codex F1), including two epics that happen to share one stream.
@@ -1327,7 +1258,6 @@ def migrate(report: dict) -> int:
     winner order-dependent instead of deliberate. Resolve them manually.
     """
     registry = load_registry()
-    capped_epics = _capped_epic_specs(registry)
     ambiguous = {m["number"] for m in report.get("multi_homed", [])}
     if ambiguous:
         print(
@@ -1338,14 +1268,6 @@ def migrate(report: dict) -> int:
     created = 0
     for stream_key, epics in registry.items():
         for epic in epics:
-            cap = capped_epics.get(epic)
-            if cap is not None:
-                print(
-                    f"skipping capped epic #{epic}: {cap['reason']} "
-                    f"(max_native={cap['max_native']}); body fallback is accepted",
-                    file=sys.stderr,
-                )
-                continue
             native, refs = fetch_epic_membership(epic)
             pending = sorted(
                 refs - native - ambiguous
@@ -1391,11 +1313,6 @@ def human_summary(report: dict) -> str:
         lines.append(
             f"pending native sub-issue link: {len(report['pending_native_link'])}"
             " (run --migrate)"
-        )
-    if report.get("accepted_capped_fallback"):
-        lines.append(
-            f"accepted capped-parent body fallback: "
-            f"{len(report['accepted_capped_fallback'])} (no migration required)"
         )
     if report["closed_or_missing_epics"]:
         lines.append(f"⚠️ stream epics not open: {report['closed_or_missing_epics']}")

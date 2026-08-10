@@ -22,27 +22,17 @@ Blocked in a protected PRIMARY checkout:
   - git switch -c <name>
   - git switch <non-main-branch>
   - git checkout <non-main-branch>          (when target is a branch, not a path)
-  - git branch -M <current-branch>          (force-rename HEAD)
+  - git branch -D / -M <current-branch>     (force-delete / force-rename HEAD)
   - git branch -f <name>                    (force-move a branch ref)
-  - git branch -D <protected|checked-out|never-pushed|live-remote+unpushed>
 
 Allowed in the MAIN worktree:
   - git checkout main / master / HEAD / HEAD~N
   - git checkout -- <path>                  (file-level discard / restore)
   - git branch -d / -m <name>               (safe delete-if-merged / rename)
-  - git branch -D <name>                    (sanctioned force-delete; see below)
   - git branch <name>                       (create; does not switch)
   - git status / git log / git worktree add / ...
   - non-git commands
   - git commit -m "...body mentioning git checkout -b... / git branch -D..."
-
-Sanctioned ``git branch -D`` / ``--delete --force`` (#4674 / #M-10a):
-  Squash-merged tips are never ancestors of main, so ``-d`` refuses. Force-
-  delete is allowed from the primary only when the target is none of:
-  protected (main/master), checked out in any worktree, never-pushed (no
-  upstream / no remote backup), or carrying a live upstream with unpushed
-  local commits. Gone-upstream and fully-pushed live remotes may be
-  force-deleted. Never-pushed locals need merge proof or push-then-gone.
 """
 from __future__ import annotations
 
@@ -63,9 +53,6 @@ SWITCH_VERBS = frozenset({"checkout", "switch"})
 # NEVER list ``--detach`` / ``--orphan`` here — bare ``git checkout --detach``
 # leaves target=None and was previously allowed (#4857 recurrence class).
 SAFE_TARGETS = frozenset({"main", "master", "HEAD", "-"})
-
-# Never force-delete these from a protected primary, even when not HEAD.
-PROTECTED_BRANCHES = frozenset({"main", "master"})
 
 # Full-length or abbreviated object names (SHA-1/SHA-256 hex) that would
 # detach HEAD when used as ``git checkout <sha>``.
@@ -329,217 +316,44 @@ def _segments_with_following_operator(command: str) -> list[tuple[list[str], str
     return segments
 
 
-def _checked_out_branches(repo_root: Path) -> set[str]:
-    """Return local branch names currently checked out in any worktree."""
-    try:
-        out = subprocess.run(
-            ["git", "worktree", "list", "--porcelain"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=True,
-            env=_git_probe_env(),
-        ).stdout
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return set()
-    checked: set[str] = set()
-    for line in out.splitlines():
-        if line.startswith("branch "):
-            ref = line[len("branch ") :].strip()
-            if ref.startswith("refs/heads/"):
-                checked.add(ref[len("refs/heads/") :])
-    return checked
+def _branch_force_reason(args: list[str], current_branch: str | None) -> str | None:
+    """Reason string if a `git branch` invocation force-deletes/force-renames.
 
-
-def _branch_is_never_pushed(repo_root: Path, branch: str) -> bool:
-    """True when ``branch`` has no upstream configured (no remote backup).
-
-    Distinct from gone-upstream: after a remote tip delete, ``@{upstream}``
-    fails to resolve even though ``branch.<name>.remote`` / ``.merge`` remain
-    set. Never-pushed has no tracking config at all, so ``-D`` would
-    permanently discard local-only commits (#4674 CF).
-    """
-    try:
-        remote = subprocess.run(
-            ["git", "config", "--get", f"branch.{branch}.remote"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_git_probe_env(),
-        )
-        merge = subprocess.run(
-            ["git", "config", "--get", f"branch.{branch}.merge"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_git_probe_env(),
-        )
-    except FileNotFoundError:
-        return False
-    return (
-        remote.returncode != 0
-        or merge.returncode != 0
-        or not remote.stdout.strip()
-        or not merge.stdout.strip()
-    )
-
-
-def _branch_has_live_remote_with_unpushed(repo_root: Path, branch: str) -> bool:
-    """True when ``branch`` tracks a still-present upstream and is ahead of it.
-
-    Squash-merge cleanup (#4674): gone upstream (tracking set, tip missing)
-    is safe to force-delete. A live upstream with local-only commits must
-    refuse. Never-pushed is handled separately by ``_branch_is_never_pushed``.
-    """
-    try:
-        upstream = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", f"{branch}@{{upstream}}"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_git_probe_env(),
-        )
-    except FileNotFoundError:
-        return False
-    if upstream.returncode != 0:
-        return False
-    upstream_name = upstream.stdout.strip()
-    if not upstream_name:
-        return False
-
-    # Gone upstream after prune: tracking ref remains configured but missing.
-    exists = subprocess.run(
-        ["git", "rev-parse", "--verify", "--quiet", f"{branch}@{{upstream}}"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_git_probe_env(),
-    )
-    if exists.returncode != 0:
-        return False
-
-    ahead = subprocess.run(
-        ["git", "rev-list", "--count", f"{branch}@{{upstream}}..{branch}"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_git_probe_env(),
-    )
-    if ahead.returncode != 0:
-        # Fail closed when we cannot prove the tip is fully pushed.
-        return True
-    try:
-        return int((ahead.stdout or "0").strip() or "0") > 0
-    except ValueError:
-        return True
-
-
-def _force_delete_target_reason(
-    branch: str,
-    *,
-    current_branch: str | None,
-    repo_root: Path | None,
-) -> str | None:
-    """Return a block reason for force-deleting ``branch``, else None."""
-    if branch in PROTECTED_BRANCHES:
-        return (
-            f"git branch -D {branch} force-deletes a protected trunk branch "
-            "in the main worktree"
-        )
-    if current_branch and branch == current_branch:
-        return "git branch -D force-deletes the checked-out branch in the main worktree"
-    if repo_root is None:
-        return None
-    if branch in _checked_out_branches(repo_root):
-        return (
-            f"git branch -D {branch} force-deletes a branch checked out in a "
-            "worktree"
-        )
-    if _branch_is_never_pushed(repo_root, branch):
-        return (
-            f"git branch -D {branch} would permanently discard a never-pushed "
-            "local branch with no remote backup"
-        )
-    if _branch_has_live_remote_with_unpushed(repo_root, branch):
-        return (
-            f"git branch -D {branch} would discard unpushed commits while a "
-            "live upstream still exists"
-        )
-    return None
-
-
-def _branch_force_reason(
-    args: list[str],
-    current_branch: str | None,
-    repo_root: Path | None = None,
-) -> str | None:
-    """Reason string if a `git branch` invocation is a blocked force op.
-
-    Force-delete (``-D`` / ``--delete --force`` / ``-d --force`` / ``-Df``) is
-    the sanctioned #M-10a cleanup path for squash-merged locals. It is
-    allowed only when every named target passes
-    ``_force_delete_target_reason``. Force-rename of HEAD and force-move of
-    any ref stay blocked.
+    Blocks only force operations which affect the currently checked-out branch:
+      - `git branch -D <current>`     (force delete, == --delete --force)
+      - `git branch -M <current> <new>` / `git branch -M <new>`
+      - `git branch -f <name> <ref>`  / `--force` (force-move a ref)
+      - any combined short cluster carrying D/M/f (e.g. `-Df`)
 
     Intentionally ALLOWED (non-destructive): `-d` (delete-if-merged),
     `-m` (rename), plain `git branch` (list), `git branch <name>` (create).
+    Uppercase D/M and lowercase `f` are the force indicators; their
+    lowercase counterparts `d`/`m` are the safe ops, so a simple
+    character-membership test discriminates correctly.
     """
     force_delete = False
     force_rename = False
-    force_move = False
-    saw_delete = False
     positions: list[str] = []
     for a in args:
         if a == "--force":
-            force_move = True
-            continue
-        if a == "--delete":
-            saw_delete = True
-            continue
-        # Single-dash short flag cluster (e.g. -D, -M, -f, -Df).
+            return "git branch --force rewrites/force-deletes a branch ref in the main worktree"
+        # Single-dash short flag cluster (e.g. -D, -M, -f, -Df). Long flags
+        # (`--`) other than --force are not force ops and fall through.
         if len(a) >= 2 and a[0] == "-" and a[1] != "-":
             flags = a[1:]
-            if "D" in flags:
-                force_delete = True
-            if "d" in flags:
-                saw_delete = True
-            if "M" in flags:
-                force_rename = True
             if "f" in flags:
-                force_move = True
+                return f"git branch {a} force-moves a branch ref in the main worktree"
+            force_delete = force_delete or "D" in flags
+            force_rename = force_rename or "M" in flags
         elif not a.startswith("-"):
             positions.append(a)
 
-    # ``-d --force`` / ``--delete --force`` / ``-Df`` are force-delete, not
-    # force-move. Bare ``-f`` / ``--force`` without a delete flag stays blocked.
-    if force_delete or (saw_delete and force_move):
-        force_delete = True
-        force_move = False
-
-    if force_move:
-        return (
-            "git branch --force/-f force-moves a branch ref in the main worktree"
-        )
-
+    if force_delete and current_branch and current_branch in positions:
+        return "git branch -D force-deletes the checked-out branch in the main worktree"
     if force_rename and current_branch and (
         len(positions) == 1 or positions[0] == current_branch
     ):
         return "git branch -M force-renames the checked-out branch in the main worktree"
-
-    if force_delete:
-        for branch in positions:
-            reason = _force_delete_target_reason(
-                branch,
-                current_branch=current_branch,
-                repo_root=repo_root,
-            )
-            if reason:
-                return reason
     return None
 
 
@@ -701,9 +515,7 @@ def _cd_target(seg: list[str], effective_cwd: Path) -> Path | None:
 
 
 def _segment_is_dangerous(
-    seg: list[str],
-    current_branch: str | None = "main",
-    repo_root: Path | None = None,
+    seg: list[str], current_branch: str | None = "main"
 ) -> str | None:
     """Return a human-readable reason string if seg is a dangerous git op,
     else None."""
@@ -715,9 +527,8 @@ def _segment_is_dangerous(
     # `git branch -D/-M/-f` force-deletes or force-renames a branch ref —
     # destructive and irreversible in the MAIN worktree. Safe variants
     # (`-d` delete-if-merged, `-m` rename, plain list/create) are allowed.
-    # Sanctioned `-D` of a non-checked-out squash-merged tip is allowed (#4674).
     if verb == "branch":
-        return _branch_force_reason(args, current_branch, repo_root)
+        return _branch_force_reason(args, current_branch)
 
     if verb not in SWITCH_VERBS:
         return None
@@ -851,11 +662,7 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         # allowed. Ask git rather than relying only on the path spelling.
         if not _in_main_worktree(repo_root):
             continue
-        reason = _segment_is_dangerous(
-            segment,
-            _checked_out_branch(repo_root),
-            repo_root,
-        )
+        reason = _segment_is_dangerous(segment, _checked_out_branch(repo_root))
         if reason:
             return reason
     return None
@@ -869,23 +676,21 @@ def main() -> int:
 
     reason = _command_danger_reason(command)
     if reason:
-        sys.stderr.write(
-            f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"
-            "A protected PRIMARY worktree must stay on `main`. "
-            "All feature work happens in added worktrees so the main\n"
-            "tree is always reviewable.\n\n"
-            "Use this pattern instead (from the main project dir):\n\n"
-            "  git worktree add .worktrees/<purpose>/<branch-name> "
-            "-b <branch-name>\n"
-            "  cd .worktrees/<purpose>/<branch-name>\n"
-            "  # ...edits, commits, push, PR...\n"
-            "  # back in the main project dir:\n"
-            "  git worktree remove .worktrees/<purpose>/<branch-name>\n"
-            "  git branch -D <branch-name>  # sanctioned when gone-upstream "
-            "or fully-pushed; never-pushed stays blocked (#4674)\n\n"
-            "Hook source: .claude/hooks/guard-branch-switch-in-main.py\n"
-        )
-        return 2
+            sys.stderr.write(
+                f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"
+                "A protected PRIMARY worktree must stay on `main`. "
+                "All feature work happens in added worktrees so the main\n"
+                "tree is always reviewable.\n\n"
+                "Use this pattern instead (from the main project dir):\n\n"
+                "  git worktree add .worktrees/<purpose>/<branch-name> "
+                "-b <branch-name>\n"
+                "  cd .worktrees/<purpose>/<branch-name>\n"
+                "  # ...edits, commits, push, PR...\n"
+                "  # back in the main project dir:\n"
+                "  git worktree remove .worktrees/<purpose>/<branch-name>\n\n"
+                "Hook source: .claude/hooks/guard-branch-switch-in-main.py\n"
+            )
+            return 2
 
     return 0
 

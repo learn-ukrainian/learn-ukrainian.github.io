@@ -126,6 +126,10 @@
         "sha256": "583f2cfd82892779321bdd91e7127212750f0be7ac430c2bec9512cef71e1084"
       },
       {
+        "path": "scripts/lexicon/generate_vesum_form_shards.py",
+        "sha256": "69eb198d99c3e7931cfb69c598d3ed994521b7e888dc8bd49b337e7cd2480ecf"
+      },
+      {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
         "sha256": "3ebbbc8c379784a5c10b261a72a10c895a1f4308027ce3c85e49dabf0de347fb"
       },
@@ -228,6 +232,10 @@
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",
         "sha256": "f5db238d65faf2a26d14450e8bbbaaa7b87c7bd43efb05eb3f888c0c7e5972e0"
+      },
+      {
+        "path": "scripts/lexicon/vesum_form_key.py",
+        "sha256": "395d77478ebddaed38b6a94cc15227deec39e7aafa8735a7d8d434ccbdf6c79a"
       }
     ]
   },

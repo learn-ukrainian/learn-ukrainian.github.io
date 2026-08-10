@@ -9,11 +9,27 @@
  * unattested string is ever silently treated as confirmed vocabulary. CEFR is
  * optional guidance: an attested row with a real learner gloss remains
  * selectable even when no CEFR level is published, without inventing one.
+ *
+ * #5882 residual (Fable GO SHARDED-EXACT): a form absent from the Atlas index
+ * can still be a REAL Ukrainian word form the MVP simply doesn't know about
+ * yet — VESUM (`site/src/lib/lexicon/vesum-form-shard.ts`) covers 6.7M forms.
+ * Classification order: (1) direct Atlas hit; (2) fold-up — the form is a
+ * VESUM-known inflection of an Atlas-attested lemma, and UNAMBIGUOUSLY so
+ * (exactly one distinct Atlas row reachable through the VESUM lemma
+ * candidates) — treated as attested via the lemma's own Atlas row; (3)
+ * `vesum_form` — VESUM knows the form but either no candidate lemma is
+ * Atlas-attested, or ≥2 distinct Atlas rows are reachable (a true homograph:
+ * folding would silently guess which word the learner meant); (4)
+ * `unverified` — VESUM has no record of the form at all, OR its shard fetch
+ * degraded (network/host failure). `vesum_form` is never save-eligible in
+ * this PR (see `isSaveEligiblePasteCandidate`) — it is a transparency signal
+ * ("this is a real word form"), not a confirmed dictionary entry.
  */
 
 import { CEFR_LEVELS, parseCefrLevel, type CefrLevel } from './levels';
+import { vesumFormKey, type VesumFormResult } from './vesum-form-key';
 
-export type PasteCandidateStatus = 'atlas_attested' | 'unverified';
+export type PasteCandidateStatus = 'atlas_attested' | 'vesum_form' | 'unverified';
 
 /** Minimal shape this module needs from a search-index row (see search.ts SearchRow). */
 export interface AtlasAttestationRow {
@@ -30,13 +46,25 @@ export interface PasteCandidate {
   atlasSlug: string | null;
   gloss: string | null;
   selected: boolean;
+  /** Distinct lemmas VESUM records for this form when status is
+   * 'vesum_form' (informational only — never a save-eligibility signal).
+   * Null for every other status. */
+  vesumLemmas: readonly string[] | null;
+  /** True when a VESUM shard fetch failed for this form — classification
+   * fell back to the MVP-only 'unverified' path instead of a real VESUM
+   * miss (binding design point 6: lose recall, never precision). */
+  degraded: boolean;
 }
 
 export interface PasteCandidateCounts {
   total: number;
   selected: number;
   attested: number;
+  vesumForm: number;
   unverified: number;
+  /** Count of candidates whose VESUM shard fetch failed — surfaced as a
+   * user-visible degradation notice, distinct from a real VESUM miss. */
+  degraded: number;
   byLevel: Record<CefrLevel, number>;
 }
 
@@ -58,37 +86,84 @@ function cleanGloss(gloss: string | null): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function attestedCandidateFromRow(text: string, row: AtlasAttestationRow): PasteCandidate {
+  const cefr = parseCefrLevel(row.c);
+  const gloss = cleanGloss(row.g);
+  return {
+    text,
+    cefr,
+    status: 'atlas_attested',
+    atlasSlug: row.s,
+    gloss,
+    // Missing CEFR is still eligible guidance-wise when the row has a real
+    // gloss; preserve the legacy attested selection for rows with CEFR.
+    selected: cefr !== null || gloss !== null,
+    vesumLemmas: null,
+    degraded: false,
+  };
+}
+
 /**
- * Classify pasted-text candidate words against the Atlas attestation index.
- * No candidate is ever assigned an invented CEFR level or gloss: both are
- * `null` unless a real Atlas row backs them.
+ * Classify pasted-text candidate words against the Atlas attestation index,
+ * with an optional VESUM form-shard fold-up pass (#5882 residual). No
+ * candidate is ever assigned an invented CEFR level or gloss: both are
+ * `null` unless a real Atlas row backs them, whether reached directly or via
+ * an unambiguous VESUM fold.
+ *
+ * `vesumResults` is keyed by `vesumFormKey(word)` — pre-resolved by
+ * `VesumFormShardClient.resolve()` (`vesum-form-shard.ts`) before calling
+ * this pure function. Omitting it (or a form missing from the map) is
+ * equivalent to VESUM being fully unavailable: those forms classify exactly
+ * as the pre-#5882-residual MVP did.
  */
 export function classifyPasteCandidates(
   lemmaKeys: readonly string[],
   attestationIndex: ReadonlyMap<string, AtlasAttestationRow>,
+  vesumResults?: ReadonlyMap<string, VesumFormResult>,
 ): PasteCandidate[] {
   return lemmaKeys.map((text) => {
-    const row = attestationIndex.get(text.toLocaleLowerCase());
-    if (row) {
-      const cefr = parseCefrLevel(row.c);
+    const directRow = attestationIndex.get(text.toLocaleLowerCase());
+    if (directRow) return attestedCandidateFromRow(text, directRow);
+
+    const vesumResult = vesumResults?.get(vesumFormKey(text));
+    if (!vesumResult || vesumResult.lemmas.length === 0) {
       return {
         text,
-        cefr,
-        status: 'atlas_attested',
-        atlasSlug: row.s,
-        gloss: cleanGloss(row.g),
-        // Missing CEFR is still eligible guidance-wise when the row has a real
-        // gloss; preserve the legacy attested selection for rows with CEFR.
-        selected: cefr !== null || cleanGloss(row.g) !== null,
+        cefr: null,
+        status: 'unverified',
+        atlasSlug: null,
+        gloss: null,
+        selected: false,
+        vesumLemmas: null,
+        degraded: vesumResult?.degraded ?? false,
       };
     }
+
+    // Fold-up: unambiguous only when exactly one DISTINCT Atlas row is
+    // reachable through the VESUM lemma candidates. ≥2 distinct rows is a
+    // true homograph (binding design point 5) — never auto-fold, because
+    // folding the wrong lemma would silently misattest a word the learner
+    // never actually saw confirmed.
+    const reachableRows = new Map<string, AtlasAttestationRow>();
+    for (const lemma of vesumResult.lemmas) {
+      const row = attestationIndex.get(lemma.toLocaleLowerCase());
+      if (row) reachableRows.set(row.s, row);
+    }
+
+    if (reachableRows.size === 1) {
+      const [row] = reachableRows.values();
+      return attestedCandidateFromRow(text, row);
+    }
+
     return {
       text,
       cefr: null,
-      status: 'unverified',
+      status: 'vesum_form',
       atlasSlug: null,
       gloss: null,
       selected: false,
+      vesumLemmas: vesumResult.lemmas,
+      degraded: false,
     };
   });
 }
@@ -126,11 +201,16 @@ export function summarizePasteCandidates(
   >;
   let selected = 0;
   let attested = 0;
+  let vesumForm = 0;
   let unverified = 0;
+  let degraded = 0;
 
   for (const candidate of candidates) {
     if (candidate.status === 'atlas_attested') attested++;
+    else if (candidate.status === 'vesum_form') vesumForm++;
     else unverified++;
+
+    if (candidate.degraded) degraded++;
 
     if (candidate.selected) {
       selected++;
@@ -138,5 +218,5 @@ export function summarizePasteCandidates(
     }
   }
 
-  return { total: candidates.length, selected, attested, unverified, byLevel };
+  return { total: candidates.length, selected, attested, vesumForm, unverified, degraded, byLevel };
 }
