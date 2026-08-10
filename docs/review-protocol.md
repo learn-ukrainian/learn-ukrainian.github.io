@@ -26,19 +26,26 @@ and non-JSON chatter **fail closed**.
 1. **DIFF vs FILE**: lines outside the diff still exist on the branch. A
    “missing” claim must prove absence with **file** evidence (`claim_type:
    "missing"` plus verbatim context), not “I don’t see it in the diff.”
-2. **Primary location on the change**: for `claim_type: "present"`, the
+2. **Three-dot surface only (#5802)**: every finding `location.path` MUST appear
+   on the PR’s three-dot / merge-base file list (`gh pr view <N> --json files`,
+   sealed snapshot `changed_paths`, or
+   `git diff $(git merge-base <base> <head>)...<head>`). **Never** use two-dot
+   `git diff <base-tip>..<head>` against a moved base tip — that invents
+   deletions of files main gained after the fork and produces confident-but-false
+   BLOCK verdicts. Formal accept refuses out-of-surface paths.
+3. **Primary location on the change**: for `claim_type: "present"`, the
    primary line range must land on a **changed line** of the frozen target.
    Missing-code claims use contextual evidence and must not invent a diff line
    for code that is not there.
-3. **No invented line numbers**: every location must resolve on the exact
+4. **No invented line numbers**: every location must resolve on the exact
    frozen head/local snapshot. Prefer an exact match at the claimed
    `start_line`; identical text earlier in the file must not steal a later
    true match. `end_line` must equal the exact verbatim span (no inflated
    ranges that intersect unrelated changed lines). On mismatch, report the
    deterministic first actual match and `line_mismatch`.
-4. **Path safety**: no absolute paths, no `..`, no drive paths, no symlink
+5. **Path safety**: no absolute paths, no `..`, no drive paths, no symlink
    escapes, no paths outside the reviewed changed surface.
-5. **Decode/read failures** become a stable fail-closed evidence outcome
+6. **Decode/read failures** become a stable fail-closed evidence outcome
    (`quote_missing` with detail), never an uncaught exception.
 
 ## Canonical reviewer JSON

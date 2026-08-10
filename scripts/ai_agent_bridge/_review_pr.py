@@ -309,33 +309,34 @@ _DEFAULT_CHECKLIST = """\
 
 **PR:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/{pr}
 **Reviewer seat:** {reviewer_model} @ effort={reviewer_effort} (transport={reviewer})
-**Expected:** pull the PR evidence yourself (sealed snapshot / gh). Do not request
-the operator to paste the diff.
+**Expected:** pull PR evidence yourself (sealed snapshot / gh). Do not ask the operator to paste the diff.
+
+### Diff semantics (Layer 3 / #5802)
+Three-dot evidence only: sealed snapshot, `gh pr view {pr} --json files`,
+`gh pr diff {pr}`, or `git diff $(git merge-base <base> <head>)...<head>`.
+Never two-dot `git diff <base-tip>..<head>` — a moved base invents false
+deletions. Every finding `location.path` must be on the PR three-dot file list.
 
 ### Required output
-Emit exactly one canonical `code-review-findings.v1` JSON object — no markdown
-or trailing `VERDICT:` line. It must contain `overall`
-(`correctness`, `explanation`, `confidence`) and every finding with its
-canonical location and evidence fields. Publication derives the GitHub gate
-verdict from this evidence and preserves the review body in the PR comment.
-Use `"correct"`, `"incorrect"`, or `"uncertain"` for `overall.correctness`.
-Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
+Emit exactly one `code-review-findings.v1` JSON object — no markdown or trailing
+`VERDICT:` line. Include `overall` (`correctness`, `explanation`, `confidence`)
+and findings with canonical location/evidence fields. Publication derives the
+GitHub gate verdict from this evidence. Use `"correct"`, `"incorrect"`, or
+`"uncertain"` for `overall.correctness`. Every `confidence` value MUST be a JSON number from 0.0 through 1.0 (for
 example, `0.95`), never a string such as `"high"`. Every finding priority MUST
 be exactly one of `"P0"`, `"P1"`, `"P2"`, or `"P3"`; labels such as `"high"`,
 `"medium"`, and `"low"` invalidate the whole review. Every finding category
 MUST be exactly one of `"bug"`, `"security"`, `"correctness"`, `"regression"`,
 `"api"`, `"tests"`, `"docs"`, `"performance"`, `"style"`, or `"other"`;
-aliases such as `"maintainability"` invalidate the whole review. A clean review
-therefore
-has exactly this shape (replace the explanation, not the field types):
+aliases such as `"maintainability"` invalidate the whole review. Clean review
+shape:
 `{{"schema_version":"code-review-findings.v1","overall":{{"correctness":"correct","explanation":"No actionable findings.","confidence":0.95}},"findings":[]}}`
-Each finding object has exactly these fields: `id`, `title`, `body`, `priority`,
-`confidence`, `category`, `location`, `verbatim`, `why_wrong`, `smallest_fix`,
-and `sources`. Do not add provider annotations such as `verbatim_note`, even
-when their value would be null. Every `sources` value MUST be a non-empty
-array. Use exactly `["none"]` when no external source applies; otherwise use
-non-empty source strings and never mix `"none"` with another value. Put claim
-type `"present"` or `"missing"` only inside the
+Finding fields: `id`, `title`, `body`, `priority`, `confidence`, `category`,
+`location`, `verbatim`, `why_wrong`, `smallest_fix`, `sources`. Do not add
+provider annotations such as `verbatim_note`. Every `sources` value MUST be a
+non-empty array. Use exactly `["none"]` when no external source applies;
+otherwise non-empty source strings and never mix `"none"` with another value.
+Put claim type `"present"` or `"missing"` only inside the
 `location` object alongside `path`, `start_line`, and `end_line`; never add
 `claim_type` at the finding root. `end_line` is inclusive and must equal
 `start_line + (number of lines in verbatim) - 1`; a one-line verbatim on line 7
@@ -351,6 +352,78 @@ def parse_pr_number(raw: str) -> int:
     return int(match.group("num"))
 
 
+def _ground_truth_brief_from_checkout(
+    checkout: Any,
+    *,
+    repository: str,
+    pr_number: int,
+    max_bytes: int | None = None,
+) -> str | None:
+    """Build a pointer-budgeted three-dot surface brief from a sealed snapshot."""
+    changed_paths = tuple(getattr(checkout, "changed_paths", ()) or ())
+    head_sha = str(getattr(checkout, "sha", "") or "").strip()
+    base_sha = str(getattr(checkout, "base_sha", "") or "").strip()
+    if not changed_paths or not head_sha or not base_sha:
+        return None
+    from scripts.fleet_comms.review_ground_truth import (
+        format_ground_truth_brief,
+        inventory_from_path_status,
+    )
+
+    deleted: set[str] = set()
+    try:
+        from ._review_worktree import (
+            ReviewWorktreeError,
+            _deleted_paths_from_manifest,
+        )
+
+        manifest_path = Path(checkout.path) / ".review-bundle" / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        deleted = set(_deleted_paths_from_manifest(manifest, changed_paths))
+    except (OSError, json.JSONDecodeError, TypeError, ValueError, ReviewWorktreeError):
+        deleted = set()
+
+    entries: list[tuple[str, str]] = []
+    for path in changed_paths:
+        entries.append((path, "DELETED" if path in deleted else "MODIFIED"))
+    inventory = inventory_from_path_status(
+        repository=repository,
+        pr_number=pr_number,
+        head_sha=head_sha,
+        base_ref_oid=base_sha,
+        entries=entries,
+    )
+    # Pointer-first: path *count* + gh/sealed instruction. Sample path lines
+    # are omitted here so normal PR surfaces stay under MAX_REVIEW_REQUEST_BYTES;
+    # build_review_pr_prompt also budget-fits any caller-supplied block.
+    return format_ground_truth_brief(
+        inventory, max_bytes=max_bytes, max_files=0
+    )
+
+
+def _fit_ground_truth_into_budget(ground_truth: str, max_bytes: int) -> str | None:
+    """Keep a ground-truth block under ``max_bytes``, preferring the pointer header."""
+    text = ground_truth.strip()
+    if max_bytes <= 0:
+        return None
+    if len(text.encode("utf-8")) <= max_bytes:
+        return text
+    kept: list[str] = []
+    for line in text.splitlines():
+        candidate = "\n".join([*kept, line])
+        if len(candidate.encode("utf-8")) > max_bytes:
+            break
+        kept.append(line)
+        # Stop once the authoritative-pointer line is in — drop path samples.
+        if "gh pr view" in line or line.startswith("Authoritative"):
+            break
+    if kept:
+        return "\n".join(kept)
+    raw = text.encode("utf-8")[:max_bytes]
+    trimmed = raw.decode("utf-8", errors="ignore").rstrip()
+    return trimmed or None
+
+
 def build_review_pr_prompt(
     pr: int,
     *,
@@ -358,6 +431,7 @@ def build_review_pr_prompt(
     model: str,
     effort: str,
     extra: str | None = None,
+    ground_truth: str | None = None,
 ) -> str:
     body = _DEFAULT_CHECKLIST.format(
         pr=pr,
@@ -368,6 +442,12 @@ def build_review_pr_prompt(
     if extra and extra.strip():
         body = f"{body}\n\n## Additional scope\n{extra.strip()}\n"
     body = prepend_read_only_contract(body)
+    if ground_truth and ground_truth.strip():
+        # Final shape is ``f"{body}\\n\\n{gt}\\n"`` → 3 newline bytes of overhead.
+        remaining = MAX_REVIEW_REQUEST_BYTES - len(body.encode("utf-8")) - 3
+        fitted = _fit_ground_truth_into_budget(ground_truth.strip(), remaining)
+        if fitted:
+            body = f"{body}\n\n{fitted}\n"
     assert_content_size(body, limit=MAX_REVIEW_REQUEST_BYTES, label="review_pr_prompt")
     return body
 
@@ -1228,12 +1308,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             file=sys.stderr,
                         )
                         return 2
+                    ground_truth = _ground_truth_brief_from_checkout(
+                        checkout,
+                        repository=DEFAULT_REPOSITORY,
+                        pr_number=pr,
+                    )
                     prompt = build_review_pr_prompt(
                         pr,
                         reviewer=routing_reservation.resolved_route,
                         model=model,
                         effort=effort or "provider_default",
                         extra=args.extra,
+                        ground_truth=ground_truth,
                     )
                     invocation_evidence = checkout.review_prompt_evidence(
                         "acp-claude" if participant == "claude" else "acp"

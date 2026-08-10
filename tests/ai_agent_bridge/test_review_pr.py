@@ -382,6 +382,64 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "never add\n`claim_type` at the finding root" in prompt
     assert "`end_line` is inclusive" in prompt
     assert "`start_line + (number of lines in verbatim) - 1`" in prompt
+    assert "three-dot" in prompt
+    assert "two-dot" in prompt
+    assert "#5802" in prompt
+
+
+def test_build_review_pr_prompt_injects_ground_truth_block() -> None:
+    model, effort = review_pr.formal_cf_pin("codex")
+    prompt = review_pr.build_review_pr_prompt(
+        5802,
+        reviewer="codex",
+        model=model,
+        effort=effort,
+        ground_truth=(
+            "### Orchestrator-verified PR surface (three-dot / merge-base)\n"
+            "**Changed paths:** 1 (0 deleted)\n"
+            "Authoritative list: sealed snapshot or `gh pr view 5802 --json files`.\n"
+            "- `M` `scripts/a.py`\n"
+        ),
+    )
+    assert "Orchestrator-verified PR surface" in prompt
+    assert "`M` `scripts/a.py`" in prompt
+    assert "Additional scope" not in prompt
+
+
+def test_build_review_pr_prompt_large_path_inventory_stays_under_cap() -> None:
+    """Large three-dot inventories must stay pointer-budgeted (≤ 4 KiB)."""
+    from ai_agent_bridge._review_safety import MAX_REVIEW_REQUEST_BYTES
+    from scripts.fleet_comms.review_ground_truth import (
+        format_ground_truth_brief,
+        inventory_from_path_status,
+    )
+
+    model, effort = review_pr.formal_cf_pin("codex")
+    entries = tuple(
+        (f"scripts/pkg/module_{index:04d}.py", "MODIFIED") for index in range(500)
+    )
+    inventory = inventory_from_path_status(
+        repository="learn-ukrainian/learn-ukrainian.github.io",
+        pr_number=5802,
+        head_sha="a" * 40,
+        base_ref_oid="b" * 40,
+        entries=entries,
+    )
+    # Unbudgeted formatter may include a short path sample; prompt builder must
+    # still fit the injection under the review request cap.
+    brief = format_ground_truth_brief(inventory, max_files=200)
+    assert len(brief.encode("utf-8")) > 1024
+    prompt = review_pr.build_review_pr_prompt(
+        5802,
+        reviewer="codex",
+        model=model,
+        effort=effort,
+        ground_truth=brief,
+    )
+    assert len(prompt.encode("utf-8")) <= MAX_REVIEW_REQUEST_BYTES
+    assert "**Changed paths:** 500" in prompt
+    assert "gh pr view 5802 --json files" in prompt
+    assert "three-dot" in prompt
 
 
 def test_list_eligible_prints_seat_status_without_provisioning(capsys) -> None:
