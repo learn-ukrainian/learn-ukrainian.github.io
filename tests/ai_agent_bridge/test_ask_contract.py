@@ -104,11 +104,14 @@ def test_terminal_failure_replays_without_invoking_provider_again(
 
     assert replay.ok is False
     assert replay.transport_outcome == "error"
-    assert replay.usage_record["replayed"] is True
-    assert replay.usage_record["transport"] == "acp"
-    assert set(replay.usage_record) == {
-        "from_model", "model_requested", "effort_requested", "effort_applied",
-        "harness", "replayed", "transport",
+    assert replay.usage_record == {
+        "from_model": "gemini-3.6-flash-high",
+        "model_requested": "gemini-3.6-flash-high",
+        "effort_requested": "high",
+        "effort_applied": "high",
+        "harness": "acp",
+        "replayed": True,
+        "transport": "acp",
     }
     assert invoke.call_count == 1
 

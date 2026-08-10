@@ -101,8 +101,26 @@ def _replay_result(raw: bytes) -> object:
         "harness": payload.get("harness") or "acp",
     }
     provenance.update({"replayed": True, "transport": "acp"})
+    if not payload["ok"]:
+        return Result(
+            ok=False,
+            agent=str(payload["agent"]),
+            model=str(payload["model"]),
+            mode="read-only",
+            response=str(payload["response"]),
+            stderr_excerpt=payload.get("stderr_excerpt"),
+            duration_s=float(payload["duration_s"]),
+            session_id=None,
+            rate_limited=payload.get("transport_outcome") == "rate_limited",
+            stalled=False,
+            returncode=payload.get("returncode"),
+            effort=str(payload["effort"]),
+            usage_record=provenance,
+            transport_metadata=payload.get("transport_metadata"),
+            transport_outcome=payload.get("transport_outcome"),
+        )
     return Result(
-        ok=bool(payload["ok"]),
+        ok=True,
         agent=str(payload["agent"]),
         model=str(payload["model"]),
         mode="read-only",
