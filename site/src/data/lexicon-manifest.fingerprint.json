@@ -143,7 +143,7 @@
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
-        "sha256": "89c1e139989fcbee4a2947f6ca7ac87d279f4e1ec3139829186a7d7d4f455982"
+        "sha256": "ec8b76e8979fbbb533f31e8fddc2933fb354ae943203f17d8d7b4648e4bde796"
       },
       {
         "path": "scripts/lexicon/measure_manifest_coverage.py",
@@ -231,6 +231,6 @@
       }
     ]
   },
-  "schema_version": 2,
+  "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 }

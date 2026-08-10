@@ -19,7 +19,7 @@ LEXICON_CODE_EXCLUDES = frozenset(
         "scripts/lexicon/manifest_io.py",
     }
 )
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 1
 SCOPE = "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 
 
