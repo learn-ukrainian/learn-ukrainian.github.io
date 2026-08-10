@@ -4366,6 +4366,181 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
     assert proc.stdout.strip() == "real-gh pr merge 1234"
 
 
+def test_gh_shim_retries_mocked_secondary_rate_limit_and_replays_stdin(tmp_path):
+    """A GitHub 403 secondary limit retries without losing a PR/comment body."""
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    attempts = tmp_path / "attempts"
+    fake_gh.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"attempts={attempts!s}\n"
+        "count=0\n"
+        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        "count=$((count + 1))\n"
+        "printf '%s' \"$count\" >\"$attempts\"\n"
+        "if [[ \"$count\" == 1 ]]; then\n"
+        "  printf 'retry-output-should-not-leak\\n'\n"
+        "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
+        "  exit 1\n"
+        "fi\n"
+        "printf 'real-gh %s stdin=%s\\n' \"$*\" \"$(cat)\"\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "issue", "comment", "5146", "-F", "-"],
+        input="preserved comment body\n",
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode == 0
+    assert attempts.read_text(encoding="utf-8") == "2"
+    assert proc.stdout.strip() == "real-gh issue comment 5146 -F - stdin=preserved comment body"
+    assert "retry-output-should-not-leak" not in proc.stdout
+    assert "You have exceeded a secondary rate limit" not in proc.stderr
+    assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
+    assert "github_secondary_rate_limited" not in proc.stderr
+
+
+def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path):
+    """Intermediate secondary-limit output stays private until retries exhaust."""
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    attempts = tmp_path / "attempts"
+    fake_gh.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"attempts={attempts!s}\n"
+        "count=0\n"
+        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        "count=$((count + 1))\n"
+        "printf '%s' \"$count\" >\"$attempts\"\n"
+        "printf 'attempt-%s-stdout\\n' \"$count\"\n"
+        "printf 'HTTP 403: secondary rate limit on attempt %s\\n' \"$count\" >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "issue", "comment", "5146"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode == 1
+    assert attempts.read_text(encoding="utf-8") == "3"
+    assert proc.stdout == "attempt-3-stdout\n"
+    assert "attempt-1-stdout" not in proc.stdout
+    assert "attempt-2-stdout" not in proc.stdout
+    assert "secondary rate limit on attempt 1" not in proc.stderr
+    assert "secondary rate limit on attempt 2" not in proc.stderr
+    assert proc.stderr.count("github_secondary_rate_limited") == 1
+
+
+def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    ready = tmp_path / "ready"
+    temp_dir = tmp_path / "shim-temp"
+    temp_dir.mkdir()
+    fake_gh.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"ready={ready!s}\n"
+        "printf 'ready' >\"$ready\"\n"
+        "printf 'HTTP 403: secondary rate limit.\\n' >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.Popen(
+        [str(shim), "issue", "comment", "5146"],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "30",
+            "PATH": os.environ.get("PATH", ""),
+            "TMPDIR": str(temp_dir),
+        },
+    )
+    for _ in range(100):
+        if ready.exists():
+            break
+        time.sleep(0.01)
+    assert ready.exists()
+
+    proc.terminate()
+    proc.communicate(timeout=15)
+
+    assert proc.returncode == 143
+    assert list(temp_dir.iterdir()) == []
+
+
+def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    attempts = tmp_path / "attempts"
+    fake_gh.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"attempts={attempts!s}\n"
+        "count=0\n"
+        "[[ -f \"$attempts\" ]] && count=$(cat \"$attempts\")\n"
+        "printf '%s' \"$((count + 1))\" >\"$attempts\"\n"
+        "printf 'secondary rate limit incident #403\\n' >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "pr", "create"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode == 1
+    assert attempts.read_text(encoding="utf-8") == "1"
+    assert "throttled; retrying" not in proc.stderr
+
+
 def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
     shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "git"
     fake_git = tmp_path / "real-git"
@@ -4624,6 +4799,7 @@ def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
             "acp_review_evidence_too_large",
         ),
         ("error", False, False, "acp_adapter_missing", None, "acp_adapter_missing"),
+        ("error", False, False, "github_secondary_rate_limited", 1, "github_secondary_rate_limited"),
         ("error", False, False, None, 1, "transport_error"),
         ("rate_limited", True, False, None, 1, "rate_limited"),
     ],

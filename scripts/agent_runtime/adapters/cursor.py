@@ -47,6 +47,14 @@ _RATE_LIMIT_PATTERNS = (
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
+# This marker is emitted only by our GH shim after it has recognized a
+# GitHub-side secondary-limit response. It must not trip Cursor's provider
+# cooldown: the Cursor model is still available, and the worker can succeed
+# after the shim's bounded retry. If retries are exhausted, preserve the
+# distinct failure for delegate recovery rather than calling it a provider
+# rate limit.
+_GITHUB_SECONDARY_RATE_LIMIT_MARKER = "agent-gh-shim: github_secondary_rate_limited"
+
 # Cursor's automatic route is a selector, not an attributable model. Keep
 # this boundary structural: assistant prose, tool input, and arbitrary log
 # text must never become model evidence merely because they contain the word
@@ -437,7 +445,14 @@ class CursorAdapter:
         # stderr diagnostic is rate-limited.
         usable_response = bool(response)
         failed_call = returncode != 0 or not usable_response
-        rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
+        github_secondary_rate_limited = (
+            failed_call and _GITHUB_SECONDARY_RATE_LIMIT_MARKER in (stderr or "")
+        )
+        rate_limited = (
+            failed_call
+            and not github_secondary_rate_limited
+            and bool(_RATE_LIMIT_RE.search(stderr or ""))
+        )
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
@@ -469,6 +484,9 @@ class CursorAdapter:
             session_id=session_id,
             tool_calls=tool_calls,
             substitution=model_attribution,
+            failure_code=(
+                "github_secondary_rate_limited" if github_secondary_rate_limited else None
+            ),
         )
 
     def _read_session_transcript_events(

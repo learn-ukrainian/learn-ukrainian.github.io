@@ -437,6 +437,22 @@ def test_cursor_adapter_parse_response_rate_limited(adapter):
     assert "429" in result.stderr_excerpt
 
 
+def test_cursor_adapter_secondary_github_limit_is_not_a_cursor_provider_limit(adapter):
+    result = adapter.parse_response(
+        stdout="",
+        stderr=(
+            "HTTP 403: You have exceeded a secondary rate limit.\n"
+            "agent-gh-shim: github_secondary_rate_limited HTTP 403; retries exhausted after 3 attempts."
+        ),
+        returncode=1,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.rate_limited is False
+    assert result.failure_code == "github_secondary_rate_limited"
+
+
 def test_cursor_adapter_parse_response_message_format(adapter):
     stdout = """
 {"type": "message", "role": "assistant", "content": [{"type": "text", "text": "Hello world"}]}
