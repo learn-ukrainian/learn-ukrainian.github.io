@@ -2,6 +2,9 @@
 
 import os
 from pathlib import Path
+from typing import Any
+
+import yaml
 
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
@@ -38,44 +41,89 @@ MESSAGE_DB = Path(
 # Dashboards directory (for static file serving)
 DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
 
-# Levels configuration — keep in sync with:
-#   assess_research.py (TRACKS), batch_dispatcher_config.py (TRACKS), manifest_utils.py (CORE_LEVELS/TRACKS)
-LEVELS = [
-    # Core levels
-    {"id": "a1", "name": "A1 - Beginner", "path": "a1"},
-    {"id": "a2", "name": "A2 - Elementary", "path": "a2"},
-    {"id": "b1", "name": "B1 - Intermediate", "path": "b1"},
-    {"id": "b2", "name": "B2 - Upper Intermediate", "path": "b2"},
-    {"id": "c1", "name": "C1 - Advanced", "path": "c1"},
-    {"id": "c2", "name": "C2 - Mastery", "path": "c2"},
-    # Seminar tracks
-    {"id": "hist", "name": "HIST - History Track", "path": "hist"},
-    {"id": "istorio", "name": "ISTORIO - History Track", "path": "istorio"},
-    {"id": "bio", "name": "BIO - Biography Track", "path": "bio"},
-    {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
-    {"id": "lit-essay", "name": "LIT-ESSAY - Essays", "path": "lit-essay"},
-    {"id": "lit-hist-fic", "name": "LIT-HIST-FIC - Historical Fiction", "path": "lit-hist-fic"},
-    {"id": "lit-fantastika", "name": "LIT-FANTASTIKA - Fantasy/Sci-Fi", "path": "lit-fantastika"},
-    {"id": "lit-war", "name": "LIT-WAR - War Literature", "path": "lit-war"},
-    {"id": "lit-humor", "name": "LIT-HUMOR - Humor", "path": "lit-humor"},
-    {"id": "lit-youth", "name": "LIT-YOUTH - Youth & YA", "path": "lit-youth"},
-    {"id": "lit-doc", "name": "LIT-DOC - Fact & Testimony", "path": "lit-doc"},
-    {"id": "lit-drama", "name": "LIT-DRAMA - Modern Stage", "path": "lit-drama"},
-    {"id": "lit-crimea", "name": "LIT-CRIMEA - Voices of Crimea", "path": "lit-crimea"},
-    # Historical language tracks
-    {"id": "oes", "name": "OES - Old East Slavic", "path": "oes"},
-    {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
-    # Specialized culture tracks
-    {"id": "folk", "name": "FOLK - Folk Culture", "path": "folk"},
-]
-
-# Seminar tracks (require Phase 0 research)
-SEMINAR_TRACK_IDS = {
-    "hist", "istorio", "bio",
-    "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
-    "lit-doc", "lit-drama", "lit-crimea",
-    "oes", "ruth", "folk",
+_KNOWN_LEVEL_NAMES = {
+    "a1": "A1 - Beginner",
+    "a2": "A2 - Elementary",
+    "b1": "B1 - Intermediate",
+    "b2": "B2 - Upper Intermediate",
+    "c1": "C1 - Advanced",
+    "c2": "C2 - Mastery",
+    "hist": "HIST - History Track",
+    "istorio": "ISTORIO - History Track",
+    "bio": "BIO - Biography Track",
+    "lit": "LIT - Literature Track",
+    "lit-essay": "LIT-ESSAY - Essays",
+    "lit-hist-fic": "LIT-HIST-FIC - Historical Fiction",
+    "lit-fantastika": "LIT-FANTASTIKA - Fantasy/Sci-Fi",
+    "lit-war": "LIT-WAR - War Literature",
+    "lit-humor": "LIT-HUMOR - Humor",
+    "lit-youth": "LIT-YOUTH - Youth & YA",
+    "lit-doc": "LIT-DOC - Fact & Testimony",
+    "lit-drama": "LIT-DRAMA - Modern Stage",
+    "lit-crimea": "LIT-CRIMEA - Voices of Crimea",
+    "oes": "OES - Old East Slavic",
+    "ruth": "RUTH - Ruthenian",
+    "folk": "FOLK - Folk Culture",
 }
+
+
+def _read_manifest_levels(repo_root: Path | None = None) -> dict[str, Any] | None:
+    """Read levels mapping directly from curriculum.yaml manifest."""
+    root = repo_root or LIVE_REPO_ROOT
+    manifest_path = root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    if not manifest_path.exists():
+        manifest_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    if manifest_path.exists():
+        try:
+            data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and isinstance(data.get("levels"), dict):
+                return data["levels"]
+        except Exception:
+            pass
+    return None
+
+
+def load_seminar_track_ids(repo_root: Path | None = None) -> set[str]:
+    """Derive active seminar track IDs from curriculum.yaml manifest."""
+    levels = _read_manifest_levels(repo_root)
+    if levels is not None:
+        return {
+            track_id
+            for track_id, cfg in levels.items()
+            if isinstance(cfg, dict) and cfg.get("type") == "track"
+        }
+    # Fallback if manifest fails to load
+    return {
+        "hist", "istorio", "bio", "lit", "lit-essay", "lit-hist-fic",
+        "lit-fantastika", "lit-war", "lit-humor", "lit-youth", "lit-drama",
+        "oes", "ruth", "folk",
+    }
+
+
+def load_levels(repo_root: Path | None = None) -> list[dict[str, str]]:
+    """Derive active levels and tracks list from curriculum.yaml manifest."""
+    levels = _read_manifest_levels(repo_root)
+    if levels is not None:
+        return [
+            {
+                "id": track_id,
+                "name": _KNOWN_LEVEL_NAMES.get(track_id, f"{track_id.upper()} - {track_id}"),
+                "path": track_id,
+            }
+            for track_id in levels
+        ]
+    return [
+        {"id": k, "name": v, "path": k}
+        for k, v in _KNOWN_LEVEL_NAMES.items()
+    ]
+
+
+
+# Levels configuration — derived from curriculum.yaml
+LEVELS = load_levels()
+
+# Seminar tracks (require Phase 0 research) — derived from curriculum.yaml
+SEMINAR_TRACK_IDS = load_seminar_track_ids()
 
 # Batch state directory
 BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
@@ -83,3 +131,4 @@ BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
 # Server settings
 API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only
 API_PORT = 8765
+
