@@ -6,8 +6,10 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 | Workflow | Purpose | Trigger | Notes |
 |----------|---------|---------|-------|
-| `ci.yml` | Lint (ruff), Quality Gates (radon), Lint Prompts, Agent Config, root-script guard, MDX source parity, lesson-schema drift, **Test (pytest)**, Frontend (build + vitest), Secret Scanning (trufflehog) | PR / push to main | `Test (pytest)` is the only **required** status check. Required path is hermetic — no network model downloads (Stanza/HF tests are `slow` and excluded; see `docs/bug-autopsies/stanza-model-md5-flake.md`). pytest gates on **Python/test/runtime** paths only; agent/MCP/prompt config uses the lightweight Agent Config lane, and `site/**` gates the frontend job. |
+| `ci.yml` | Required path: pytest shards, contracts (schema/MDX/atlas/BIO + secret scan + PR-body guard), frontend, coverage floor, **CI Gate**; advisory E2E after gate | PR / push to main / merge_group | `CI Gate` is the only **required** status check. Always-on parallel fan-out is capped (#4811). |
+| `ci-gate-queue-recovery.yml` | Re-run cancelled CI Gate once when upstream jobs succeeded (runner-queue starvation) | `workflow_run` on CI completed | Stopgap for #4811; never re-runs genuine failures; default-branch logic only. |
 | `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". |
+| `hygiene.yml` | Advisory radon / prompt lint / postmortem / agent-config / scripts-root checks | PR | Composite `hygiene-checks` job (#4811 slot cut); not in CI Gate. |
 | `integration-sweep.yml` | Arms auto-merge for abandoned reviewed PRs | Every 15 min / manual | Fail-closed membership, current-head approval, required-CI, and idle-owner checks; manual runs default to dry-run. |
 | `security-audit.yml` | Advisory dependency-vuln report (`pip-audit` + `npm audit`) | PR / weekly | Report-only; visibility layer over the dependabot backlog. Does not block. |
 | `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |

@@ -7,6 +7,9 @@ name: Hygiene (advisory)
 # sole required check and none of these jobs are in its `needs`. Safe to
 # path-filter, unlike pytest — an advisory check skipping on an unrelated
 # change is a non-event, not a silent regression.
+#
+# #4811: the five former single-purpose jobs are one composite so a scripts/
+# touch cannot claim five concurrent runner slots while CI Gate waits.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
@@ -70,11 +73,15 @@ jobs:
               - 'docs/bug-autopsies/**'
               - 'scripts/audit/check_postmortems.py'
 
-  quality-gates:
-    name: Quality Gates (radon)
+  hygiene-checks:
+    name: Hygiene checks
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: [changes]
-    if: needs.changes.outputs.python == 'true'
+    if: >-
+      needs.changes.outputs.python == 'true'
+      || needs.changes.outputs.agent_config == 'true'
+      || needs.changes.outputs.postmortems == 'true'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -85,10 +92,19 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: needs.changes.outputs.agent_config == 'true'
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
       - name: Install radon
+        if: needs.changes.outputs.python == 'true'
         run: pip install radon
 
       - name: Collect changed scripts for radon
+        if: needs.changes.outputs.python == 'true'
         id: changed-scripts
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -134,7 +150,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: No F-grade functions in changed files (CC > 40)
-        if: steps.changed-scripts.outputs.files != ''
+        if: needs.changes.outputs.python == 'true' && steps.changed-scripts.outputs.files != ''
         env:
           CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
         run: |
@@ -148,7 +164,7 @@ jobs:
           echo "✅ No F-grade functions in changed files"
 
       - name: No MI=C files in changed files (MI < 10)
-        if: steps.changed-scripts.outputs.files != ''
+        if: needs.changes.outputs.python == 'true' && steps.changed-scripts.outputs.files != ''
         env:
           CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
         run: |
@@ -161,125 +177,8 @@ jobs:
           fi
           echo "✅ No MI=C files in changed files"
 
-  lint-prompts:
-    name: Lint Prompts
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: '3.12'
-
-      - name: Lint prompt templates
-        run: python scripts/lint/lint_prompts.py
-
-  postmortem-hygiene:
-    name: Postmortem Hygiene
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.postmortems == 'true'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: '3.12'
-
-      # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m`
-      # would import scripts.audit/__init__ which needs pyyaml (absent on
-      # bare setup-python).
-      - name: Validate bug-autopsy fields + INDEX freshness (#3725)
-        run: python scripts/audit/check_postmortems.py --check
-
-  agent-config:
-    name: Agent Config
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.agent_config == 'true'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: '3.12'
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Validate agent JSON config
-        run: |
-          jq empty \
-            .mcp.json \
-            .cursor/mcp.json \
-            agents_extensions/shared/settings.json
-          if [[ -f agents_extensions/shared/settings.local.json ]]; then
-            jq empty agents_extensions/shared/settings.local.json
-          fi
-
-      - name: Validate agent shell entrypoints
-        run: |
-          bash -n \
-            start-claude.sh \
-            start-claude-driver.sh \
-            start-codex.sh \
-            start-codex-driver.sh \
-            start-gemini.sh \
-            start-gemini-driver.sh \
-            start-grok.sh \
-            start-grok-driver.sh \
-            start-kimi.sh \
-            start-glm.sh \
-            scripts/lib/launcher_core.sh \
-            scripts/lib/codex_cc_route.sh \
-            scripts/lib/glmcc_route.sh \
-            scripts/launchers/*.sh \
-            scripts/lib/handoff_identity.sh \
-            scripts/lib/claude_route_guard.sh \
-            scripts/deploy_prompts.sh \
-            scripts/check_rules_deployment.sh
-
-      - name: Create local test venv
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest pyyaml
-
-      - name: Verify agent extension deployment
-        run: |
-          npm run agents:deploy --silent
-          bash scripts/check_rules_deployment.sh
-
-      - name: Run focused agent config tests
-        run: |
-          .venv/bin/python -m pytest \
-            tests/test_deploy_script_idempotency.py \
-            tests/test_agent_runtime_tool_config.py \
-            -v --tb=short
-
-  scripts-root-guard:
-    name: No new root scripts
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.python == 'true'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
       - name: Check for non-stub scripts in scripts/ root
+        if: needs.changes.outputs.python == 'true'
         env:
           EVENT_NAME: ${{ github.event_name }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -335,3 +234,69 @@ jobs:
             exit 1
           fi
           echo "✅ No new root-level scripts"
+
+      - name: Lint prompt templates
+        if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
+        run: python scripts/lint/lint_prompts.py
+
+      # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m`
+      # would import scripts.audit/__init__ which needs pyyaml (absent on
+      # bare setup-python).
+      - name: Validate bug-autopsy fields + INDEX freshness (#3725)
+        if: needs.changes.outputs.postmortems == 'true'
+        run: python scripts/audit/check_postmortems.py --check
+
+      - name: Validate agent JSON config
+        if: needs.changes.outputs.agent_config == 'true'
+        run: |
+          jq empty \
+            .mcp.json \
+            .cursor/mcp.json \
+            agents_extensions/shared/settings.json
+          if [[ -f agents_extensions/shared/settings.local.json ]]; then
+            jq empty agents_extensions/shared/settings.local.json
+          fi
+
+      - name: Validate agent shell entrypoints
+        if: needs.changes.outputs.agent_config == 'true'
+        run: |
+          bash -n \
+            start-claude.sh \
+            start-claude-driver.sh \
+            start-codex.sh \
+            start-codex-driver.sh \
+            start-gemini.sh \
+            start-gemini-driver.sh \
+            start-grok.sh \
+            start-grok-driver.sh \
+            start-kimi.sh \
+            start-glm.sh \
+            scripts/lib/launcher_core.sh \
+            scripts/lib/codex_cc_route.sh \
+            scripts/lib/glmcc_route.sh \
+            scripts/launchers/*.sh \
+            scripts/lib/handoff_identity.sh \
+            scripts/lib/claude_route_guard.sh \
+            scripts/deploy_prompts.sh \
+            scripts/check_rules_deployment.sh
+
+      - name: Create local test venv
+        if: needs.changes.outputs.agent_config == 'true'
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install pytest pyyaml
+
+      - name: Verify agent extension deployment
+        if: needs.changes.outputs.agent_config == 'true'
+        run: |
+          npm run agents:deploy --silent
+          bash scripts/check_rules_deployment.sh
+
+      - name: Run focused agent config tests
+        if: needs.changes.outputs.agent_config == 'true'
+        run: |
+          .venv/bin/python -m pytest \
+            tests/test_deploy_script_idempotency.py \
+            tests/test_agent_runtime_tool_config.py \
+            -v --tb=short

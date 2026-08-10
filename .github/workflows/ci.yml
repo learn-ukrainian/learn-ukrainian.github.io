@@ -542,6 +542,18 @@ jobs:
           )
           PY
 
+      # Folded from standalone jobs (#4811): each extra always-on job competed for
+      # the account concurrent-runner pool and delayed CI Gate (last to start).
+      - uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
+        with:
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
+
+      - name: Reject negated closing references
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: |
+          printf '%s' "$PR_BODY" | .venv/bin/python scripts/audit/lint_pr_closing_references.py --stdin
+
   # ---------------------------------------------------------------------
   # 3. frontend — build + vitest. Unconditional.
   # ---------------------------------------------------------------------
@@ -612,11 +624,17 @@ jobs:
   # viewport, CTAs below the fold — tracked separately). It becomes
   # required in a follow-up PR once that regression is fixed and the job
   # is demonstrably stable.
+  #
+  # #4811: do not start until CI Gate succeeded. Running E2E in parallel
+  # with the required fan-out burns a concurrent runner slot for ~5 min
+  # and helps starve the last-to-start required job under fleet load.
   # ---------------------------------------------------------------------
   frontend-e2e:
     name: Frontend E2E (playwright)
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    needs: [ci-gate]
+    if: ${{ always() && needs.ci-gate.result == 'success' }}
     permissions:
       contents: read
     steps:
@@ -677,47 +695,10 @@ jobs:
         run: npx playwright test
 
   # ---------------------------------------------------------------------
-  # 4. security — deterministic secret scanning. Unconditional.
-  # ---------------------------------------------------------------------
-  security:
-    name: Secret Scanning (gitleaks)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - uses: trufflesecurity/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11 # v3.96.0
-        with:
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
-
-  # ---------------------------------------------------------------------
-  # 5. pr-body-references — GitHub parses closing references lexically, so a
-  # negated phrase can still close an issue. This job deliberately reads the
-  # event body rather than repository files and runs on PR body edits.
-  # ---------------------------------------------------------------------
-  pr-body-references:
-    name: PR body issue-reference guard
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Reject negated closing references
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: |
-          printf '%s' "$PR_BODY" | python scripts/audit/lint_pr_closing_references.py --stdin
-
-  # ---------------------------------------------------------------------
-  # 6. CI Gate — the sole required check. Every job above is unconditional,
-  #    so `skipped` is as much a failure as `failure`/`cancelled`: there is
-  #    no legitimate reason for any of them to not report `success`.
+  # 4. Coverage floor + CI Gate. Secret scanning and the PR-body reference
+  #    guard live inside `contracts` (#4811 slot cut). Every remaining
+  #    required job above is unconditional, so `skipped` is as much a
+  #    failure as `failure`/`cancelled`.
   # ---------------------------------------------------------------------
   # Enforces the 35% floor ONCE, over the combined four-shard data. Restores the
   # guarantee cross-family review flagged as a P1 when the reboot dropped it.
@@ -769,8 +750,6 @@ jobs:
       - python
       - contracts
       - frontend
-      - security
-      - pr-body-references
       - coverage-floor
     steps:
       - name: Report required-job results

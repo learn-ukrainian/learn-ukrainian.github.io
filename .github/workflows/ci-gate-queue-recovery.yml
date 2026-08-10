@@ -1,0 +1,98 @@
+name: CI Gate queue-starvation recovery
+
+# Stopgap for #4811: when the required CI Gate job is cancelled after waiting
+# for a GitHub-hosted runner (empty logs, ~15 min) while every upstream job
+# succeeded, re-run only the cancelled tail jobs once.
+#
+# Does NOT re-run genuine pytest/contract failures. Does NOT re-run when
+# cancel-in-progress cancelled mid-run jobs (non-tail cancels). Org concurrent
+# job capacity remains the owner root fix; this only unblocks merges.
+
+permissions:
+  contents: read
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+concurrency:
+  group: ci-gate-queue-recovery-${{ github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    name: Re-run cancelled CI Gate (once)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # failure covers the case where CI Gate never starts and the aggregator
+    # records cancelled while the workflow conclusion is failure/cancelled.
+    if: >-
+      github.event.workflow_run.conclusion == 'cancelled'
+      || github.event.workflow_run.conclusion == 'failure'
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Default-branch checkout only. This job has actions:write — never
+          # execute recovery logic from the completed run's head SHA.
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Fetch jobs for the completed CI run
+        id: jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/${REPO}/actions/runs/${RUN_ID}/jobs" \
+            --jq '.jobs[] | {id, name, conclusion, status}' \
+            | jq -s '.' > "${RUNNER_TEMP}/ci-jobs.json"
+          echo "path=${RUNNER_TEMP}/ci-jobs.json" >> "$GITHUB_OUTPUT"
+
+      - name: Decide whether this is queue starvation
+        id: decide
+        env:
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          JOBS_PATH: ${{ steps.jobs.outputs.path }}
+        run: |
+          set -euo pipefail
+          python scripts/ci/queue_starvation_recovery.py \
+            --jobs-json "${JOBS_PATH}" \
+            --run-attempt "${RUN_ATTEMPT}" \
+            --max-attempts 2 \
+            --workflow-name "${WORKFLOW_NAME}" \
+            --github-output
+
+      - name: Re-run cancelled tail jobs
+        if: steps.decide.outputs.should_rerun == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_IDS: ${{ steps.decide.outputs.job_ids }}
+          REASON: ${{ steps.decide.outputs.reason }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          echo "Recovery reason: $REASON"
+          if [[ -z "${JOB_IDS}" ]]; then
+            echo "::error::should_rerun=true but job_ids is empty"
+            exit 1
+          fi
+          IFS=',' read -r -a ids <<< "${JOB_IDS}"
+          for job_id in "${ids[@]}"; do
+            echo "Re-running job ${job_id}"
+            gh api --method POST "repos/${REPO}/actions/jobs/${job_id}/rerun"
+          done
+
+      - name: No recovery needed
+        if: steps.decide.outputs.should_rerun != 'true'
+        env:
+          REASON: ${{ steps.decide.outputs.reason }}
+        run: echo "Skipping recovery — ${REASON}"
