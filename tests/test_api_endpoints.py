@@ -213,8 +213,11 @@ class TestDashboardOverviewEndpoint:
         summary_counts = {track: stats["total"] for track, stats in summary["tracks"].items()}
 
         assert overview_counts == summary_counts
-        assert overview_counts["lit-doc"] == summary_counts["lit-doc"]
-        assert overview_counts["lit-crimea"] == summary_counts["lit-crimea"]
+        # Retired aliases must not reappear once roster is manifest-derived (#5245).
+        assert "lit-doc" not in overview_counts
+        assert "lit-crimea" not in overview_counts
+        assert "hist" in overview_counts
+        assert overview_counts["hist"] == summary_counts["hist"]
 
     def test_overview_reuses_state_summary_cache_and_track_specific_research_metric(self):
         summary = client.get("/api/state/summary?fresh=true").json()
