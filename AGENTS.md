@@ -87,8 +87,15 @@ non-skippable:
   bounded search before prioritization or dispatch. Treat results as body-free,
   supplemental locators; record use only when a verified locator informed work.
 - Before delegation, classify role, task family, track, and owned paths for the
-  Project Research Registry. Give helpers disjoint paths and bounded authority;
-  same-family helpers do not satisfy the cross-family review gate.
+  Project Research Registry. Before every `delegate.py dispatch`, the accountable
+  orchestrator records a scoped classification using `--research-role`,
+  `--research-task-family`, `--research-track`, and `--research-owned-path`, or
+  deliberately classifies it as genuinely generic or unknown and omits all
+  `--research-*` flags. A surfaced pointer is not proof of consumption; verify
+  attributed consumption before final disposition. Full contract:
+  `agents_extensions/shared/rules/workflow.md` § Project Research Registry.
+  Give helpers disjoint paths and bounded authority; same-family helpers do not
+  satisfy the cross-family review gate.
 
 ## Completion
 
