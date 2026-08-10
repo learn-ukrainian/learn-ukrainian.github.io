@@ -364,6 +364,28 @@ interface ChoiceOption {
   kind?: 'answer' | 'calque' | 'distractor';
 }
 
+/**
+ * Shared className + data-* attrs for every `.mc-opt` choice button (classify,
+ * paradigm, synonym, word-to-meaning choice, paronym, heritage). Marks the
+ * learner's own pick — right or wrong — not just the correct answer: before
+ * this, a wrong pick rendered identically to an untouched distractor and the
+ * learner could not tell which option they had chosen (#6620).
+ */
+function mcOptionAttrs(option: ChoiceOption, answerLocked: boolean, selected: boolean) {
+  const correct = answerLocked && option.correct;
+  const wrong = answerLocked && selected && !option.correct;
+  const classes = ['mc-opt'];
+  if (selected) classes.push('selected');
+  if (correct) classes.push('correct');
+  if (wrong) classes.push('wrong');
+  return {
+    className: classes.join(' '),
+    'data-selected': selected ? 'true' : undefined,
+    'data-correct': correct ? 'true' : undefined,
+    'data-wrong': wrong ? 'true' : undefined,
+  } as const;
+}
+
 interface HeritageFeedback {
   kind: 'correct' | 'calque' | 'wrong';
   textUk: string;
@@ -667,6 +689,21 @@ const ZNO_MODE_META: Record<
     description: 'Тренуйте орфографію на офіційних завданнях ЗНО та НМТ.',
     descriptionEn: 'Practise orthography with official ZNO and NMT items.',
     accent: 'blue',
+  },
+  'zno-morphology': {
+    description: 'Закріплюйте морфологію на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Reinforce morphology with official ZNO and NMT items.',
+    accent: 'purple',
+  },
+  'zno-syntax': {
+    description: 'Тренуйте синтаксис і розділові знаки на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Practise syntax and punctuation with official ZNO and NMT items.',
+    accent: 'teal',
+  },
+  'zno-phonetics': {
+    description: 'Тренуйте фонетику на офіційних завданнях ЗНО та НМТ.',
+    descriptionEn: 'Practise phonetics with official ZNO and NMT items.',
+    accent: 'orange',
   },
 };
 
@@ -1546,6 +1583,10 @@ function LexiconPracticeIsland({
   const [paradigmSelectedLabel, setParadigmSelectedLabel] = useState<string | null>(null);
   const [paronymSelectedLabel, setParonymSelectedLabel] = useState<string | null>(null);
   const [heritageSelectedLabel, setHeritageSelectedLabel] = useState<string | null>(null);
+  /** Generic wrong/selected marking for classify/paradigm/synonym/choice MC lists
+   * (paronym and heritage keep their own dedicated state above — those feed
+   * PracticeFormRail/slot copy, not just the option list). */
+  const [choiceSelectedLabel, setChoiceSelectedLabel] = useState<string | null>(null);
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [selectedDeckFilter, setSelectedDeckFilter] = useState<string>('all');
   const [deckPickerOpen, setDeckPickerOpen] = useState(false);
@@ -1752,6 +1793,7 @@ function LexiconPracticeIsland({
     setParadigmSelectedLabel(null);
     setParonymSelectedLabel(null);
     setHeritageSelectedLabel(null);
+    setChoiceSelectedLabel(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
     matchedSelectedRatingRef.current = null;
@@ -3200,6 +3242,7 @@ function LexiconPracticeIsland({
       ? paronymFeedbackFor(selection.paronym, option)
       : null;
     setAnswerLocked(true);
+    setChoiceSelectedLabel(option.label);
     if (selection.paradigm) setParadigmSelectedLabel(option.label);
     if (selection.paronym) setParonymSelectedLabel(option.label);
     if (selection.heritage) setHeritageSelectedLabel(option.label);
@@ -4078,6 +4121,7 @@ function LexiconPracticeIsland({
                     paradigmSelectedLabel={paradigmSelectedLabel}
                     paronymSelectedLabel={paronymSelectedLabel}
                     heritageSelectedLabel={heritageSelectedLabel}
+                    choiceSelectedLabel={choiceSelectedLabel}
                     onClozeInput={setClozeInput}
                     onFlashcardRating={handleFlashcardRating}
                     onChoice={handleChoice}
@@ -4135,6 +4179,7 @@ function PracticeItem({
   paradigmSelectedLabel,
   paronymSelectedLabel,
   heritageSelectedLabel,
+  choiceSelectedLabel,
   onClozeInput,
   onFlashcardRating,
   onChoice,
@@ -4160,6 +4205,7 @@ function PracticeItem({
   paradigmSelectedLabel: string | null;
   paronymSelectedLabel: string | null;
   heritageSelectedLabel: string | null;
+  choiceSelectedLabel: string | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
@@ -4345,7 +4391,7 @@ function PracticeItem({
           {drillOptions.map((option, index) => (
             <li key={`${option.label}-${index}`}>
               <button
-                className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+                {...mcOptionAttrs(option, answerLocked, choiceSelectedLabel === option.label)}
                 type="button"
                 disabled={answerLocked}
                 onClick={() => onChoice(option)}
@@ -4463,7 +4509,7 @@ function PracticeItem({
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
             <button
-              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              {...mcOptionAttrs(option, answerLocked, choiceSelectedLabel === option.label)}
               type="button"
               disabled={answerLocked}
               onClick={() => onChoice(option)}
@@ -4544,7 +4590,7 @@ function PracticeParonym({
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
             <button
-              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              {...mcOptionAttrs(option, answerLocked, selectedLabel === option.label)}
               type="button"
               disabled={answerLocked}
               onClick={() => onChoice(option)}
@@ -4647,7 +4693,7 @@ function PracticeHeritage({
         {options.map((option, index) => (
           <li key={`${option.label}-${index}`}>
             <button
-              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              {...mcOptionAttrs(option, answerLocked, selectedLabel === option.label)}
               type="button"
               disabled={answerLocked}
               onClick={() => onChoice(option)}

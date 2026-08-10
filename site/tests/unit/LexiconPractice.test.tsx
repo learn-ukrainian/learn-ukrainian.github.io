@@ -914,7 +914,9 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(17);
+    // 11 MODE_CARD_ORDER lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
+    // morphology/syntax/phonetics to the prior 6).
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(20);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -4103,6 +4105,67 @@ describe('LexiconPractice', () => {
       } else {
         expect(screen.queryByTestId('practice-form-rail')).not.toBeInTheDocument();
       }
+    });
+  });
+
+  describe('mc-opt selected/correct/wrong marking (#6620)', () => {
+    // Before this fix, `.mc-opt` only ever gained the `correct` class after
+    // lock — a wrong pick rendered identically to an untouched distractor, so
+    // the learner had no visual record of what they had actually chosen.
+    // Classify/paradigm/synonym additionally had NO selected-option tracking
+    // at all (only paradigm/paronym/heritage's dedicated *SelectedLabel state
+    // existed pre-fix); this covers every `.mc-opt`-rendering mode.
+    test.each([
+      { mode: 'classify', deck: classifyDeck(), testId: 'practice-classify', wrongName: /чоловічий/, correctName: /жіночий/ },
+      { mode: 'paradigm', deck: paradigmDeck(), testId: 'practice-paradigm', wrongName: /кава/, correctName: /кави/ },
+      { mode: 'synonym', deck: synonymDeck(), testId: 'practice-synonym', wrongName: /чай/, correctName: /кава/ },
+      { mode: 'paronym', deck: paronymDeck(), testId: 'practice-paronym', wrongName: /біжить/, correctName: /бігає/ },
+      { mode: 'heritage', deck: heritageDeck(), testId: 'practice-heritage', wrongName: /хата/, correctName: /дім/ },
+    ])('$mode: wrong pick is marked red, correct option is marked green', async ({ mode, deck, testId, wrongName, correctName }) => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />);
+
+      const scope = within(screen.getByTestId(testId));
+      const wrongButton = scope.getByRole('button', { name: wrongName });
+      const correctButton = scope.getByRole('button', { name: correctName });
+
+      await user.click(wrongButton);
+
+      expect(wrongButton).toHaveAttribute('data-selected', 'true');
+      expect(wrongButton).toHaveAttribute('data-wrong', 'true');
+      expect(wrongButton).not.toHaveAttribute('data-correct');
+      expect(wrongButton).toHaveClass('mc-opt', 'selected', 'wrong');
+
+      expect(correctButton).toHaveAttribute('data-correct', 'true');
+      expect(correctButton).not.toHaveAttribute('data-selected');
+      expect(correctButton).toHaveClass('mc-opt', 'correct');
+      expect(correctButton).not.toHaveClass('selected');
+      expect(correctButton).not.toHaveClass('wrong');
+    });
+
+    test('word-to-meaning choice: wrong pick is marked red, correct option is marked green', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
+      const scope = within(screen.getByTestId('practice-choice'));
+
+      const promptText = screen.getByText(/^Що означає «/).textContent ?? '';
+      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river' };
+      const promptWord = Object.keys(promptToGloss).find((word) => promptText.includes(word))!;
+      const correctGloss = promptToGloss[promptWord];
+
+      const options = scope.getAllByRole('button');
+      const correctButton = options.find((button) => button.textContent?.includes(correctGloss))!;
+      const wrongButton = options.find((button) => button !== correctButton)!;
+
+      await user.click(wrongButton);
+
+      expect(wrongButton).toHaveAttribute('data-selected', 'true');
+      expect(wrongButton).toHaveAttribute('data-wrong', 'true');
+      expect(wrongButton).toHaveClass('mc-opt', 'selected', 'wrong');
+
+      expect(correctButton).toHaveAttribute('data-correct', 'true');
+      expect(correctButton).not.toHaveAttribute('data-selected');
+      expect(correctButton).toHaveClass('mc-opt', 'correct');
     });
   });
 

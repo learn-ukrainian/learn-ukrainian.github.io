@@ -69,6 +69,44 @@ WHERE t.task_format = 'single-choice'
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip()
 
+# Wave 3 (#6620): broad topic_tag families that were sitting untapped in the
+# corpus while only four thin/repetitive decks shipped. Same single-choice +
+# letter-validity gates as every deck above; no new leniency.
+#
+# `topic_tag` for `instr(topic_tag, 'Синтаксис')` already carries the
+# "Розділові знаки" (punctuation) subtags — e.g. "Синтаксис. Розділові знаки в
+# складному реченні." — so punctuation is folded into this syntax deck rather
+# than split into a fifth near-duplicate deck.
+MORPHOLOGY_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND instr(t.topic_tag, 'Морфолог') > 0
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
+SYNTAX_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND instr(t.topic_tag, 'Синтаксис') > 0
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
+PHONETICS_SQL = """
+SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
+       t.correct_json, t.topic_tag
+FROM zno_tasks AS t
+WHERE t.task_format = 'single-choice'
+  AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
+  AND instr(t.topic_tag, 'Фонетик') > 0
+ORDER BY t.year, t.exam, t.session, t.task_no, t.id
+""".strip()
+
 
 @dataclass(frozen=True)
 class DeckDefinition:
@@ -122,6 +160,9 @@ ORDER BY t.year, t.exam, t.session, t.task_no, t.id
         predicate_sql=SYNTACTIC_NORM_SQL,
     ),
     DeckDefinition(key="orthography", title="Орфографія", predicate_sql=ORTHOGRAPHY_SQL),
+    DeckDefinition(key="morphology", title="Морфологія", predicate_sql=MORPHOLOGY_SQL),
+    DeckDefinition(key="syntax", title="Синтаксис і пунктуація", predicate_sql=SYNTAX_SQL),
+    DeckDefinition(key="phonetics", title="Фонетика", predicate_sql=PHONETICS_SQL),
 )
 
 
