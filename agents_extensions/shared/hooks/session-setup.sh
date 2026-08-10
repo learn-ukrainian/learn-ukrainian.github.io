@@ -250,6 +250,24 @@ fi
 # audits are deliberately absent here. They are optional orientation data and
 # belong behind /api/orient, not on the synchronous session-availability path.
 
+# Dispatch-lane self-test (#4879). Build the active lane's normal adapter
+# invocation, then run only its resolved CLI's --version command. This catches
+# a broken local binary or package shim without sending a model request. Keep
+# it bounded and advisory: a failed probe must surface the unavailable lane,
+# never prevent a SessionStart response from reaching the operator.
+LANE_PROBE_SCRIPT="$PROJECT_DIR/scripts/agent_runtime/lane_probe.py"
+if [ -f "$LANE_PROBE_SCRIPT" ]; then
+  LANE_PROBE_RC=0
+  LANE_PROBE_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
+    -m scripts.agent_runtime.lane_probe --agent "$HANDOFF_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
+  if [ "$LANE_PROBE_RC" -ne 0 ]; then
+    LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
+    ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $HANDOFF_AGENT: $LANE_PROBE_REASON")
+  fi
+  unset LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
+fi
+unset LANE_PROBE_SCRIPT
+
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
 MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
 MEMORY_FILE="$MEMORY_DIR/MEMORY.md"
