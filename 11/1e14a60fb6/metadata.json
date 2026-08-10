@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "111e14a60fb6",
+  "strategy": "manual-commit",
+  "branch": "cursor/5802-review-gate-integrity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/best-practices/agent-bridge.md",
+    "docs/review-protocol.md",
+    "scripts/ai_agent_bridge/_review_pr.py",
+    "scripts/fleet_comms/formal_review_finalize.py",
+    "scripts/fleet_comms/review_ground_truth.py",
+    "tests/ai_agent_bridge/test_review_pr.py",
+    "tests/test_fleet_comms_formal_finalize.py",
+    "tests/test_fleet_comms_review_ground_truth.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/11/1e14a60fb6/0/metadata.json",
+      "transcript": "/11/1e14a60fb6/0/full.jsonl",
+      "compact_transcript": "/11/1e14a60fb6/0/transcript.jsonl",
+      "content_hash": "/11/1e14a60fb6/0/content_hash.txt",
+      "prompt": "/11/1e14a60fb6/0/prompt.txt"
+    }
+  ]
+}
