@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_university_reconciliation_v3.schema.json",
+  "title": "Phase 3 v3 university denominator/database reconciliation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "as_of", "text_free", "authority_boundary", "inputs", "database", "source_counts", "set_hashes", "expected_sources", "extra_database_sources", "gates", "status", "blockers"],
+  "properties": {
+    "schema_version": {"const": "phase3_university_reconciliation_v3"},
+    "as_of": {"type": "string", "minLength": 1},
+    "text_free": {"const": true},
+    "authority_boundary": {"type": "object", "additionalProperties": false, "required": ["database_identity_only", "may_admit_or_quarantine_sources", "may_assign_linguistic_authority"], "properties": {"database_identity_only": {"const": true}, "may_admit_or_quarantine_sources": {"const": false}, "may_assign_linguistic_authority": {"const": false}}},
+    "inputs": {"type": "object", "additionalProperties": false, "required": ["denominator_path", "denominator_sha256", "database_path", "database_sha256"], "properties": {"denominator_path": {"type": "string", "minLength": 1}, "denominator_sha256": {"$ref": "#/$defs/sha256"}, "database_path": {"type": "string", "minLength": 1}, "database_sha256": {"$ref": "#/$defs/sha256"}}},
+    "database": {"type": "object", "additionalProperties": false, "required": ["textbook_rows", "textbook_section_rows", "textbook_fts_rows", "university_rows", "university_sources", "integrity_check", "foreign_key_failure_count"], "properties": {"textbook_rows": {"type": "integer", "minimum": 0}, "textbook_section_rows": {"type": "integer", "minimum": 0}, "textbook_fts_rows": {"type": "integer", "minimum": 0}, "university_rows": {"type": "integer", "minimum": 0}, "university_sources": {"type": "integer", "minimum": 0}, "integrity_check": {"type": "string", "minLength": 1}, "foreign_key_failure_count": {"type": "integer", "minimum": 0}}},
+    "source_counts": {"type": "object", "additionalProperties": false, "required": ["expected_sources", "expected_rows", "exact_match_sources", "missing_sources", "mismatched_sources", "extra_sources", "extra_rows"], "properties": {"expected_sources": {"type": "integer", "minimum": 0}, "expected_rows": {"type": "integer", "minimum": 0}, "exact_match_sources": {"type": "integer", "minimum": 0}, "missing_sources": {"type": "integer", "minimum": 0}, "mismatched_sources": {"type": "integer", "minimum": 0}, "extra_sources": {"type": "integer", "minimum": 0}, "extra_rows": {"type": "integer", "minimum": 0}}},
+    "set_hashes": {"type": "object", "additionalProperties": false, "required": ["expected_source_files_sha256", "observed_university_source_files_sha256"], "properties": {"expected_source_files_sha256": {"$ref": "#/$defs/sha256"}, "observed_university_source_files_sha256": {"$ref": "#/$defs/sha256"}}},
+    "expected_sources": {"type": "array", "items": {"$ref": "#/$defs/expectedSource"}},
+    "extra_database_sources": {"type": "array", "items": {"$ref": "#/$defs/extraSource"}},
+    "gates": {"type": "object", "additionalProperties": false, "required": ["database_identity_reconciled", "university_content_audit_complete", "proceed_to_source_freeze"], "properties": {"database_identity_reconciled": {"type": "boolean"}, "university_content_audit_complete": {"const": false}, "proceed_to_source_freeze": {"const": false}}},
+    "status": {"enum": ["mismatch_requires_reconciliation", "identity_reconciled_content_audit_pending"]},
+    "blockers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "observed": {"type": "object", "required": ["source_file", "observed_rows", "observed_linked_rows", "observed_fts_rows", "observed_sections"], "properties": {"source_file": {"type": "string", "minLength": 1}, "observed_rows": {"type": "integer", "minimum": 0}, "observed_linked_rows": {"type": "integer", "minimum": 0}, "observed_fts_rows": {"type": "integer", "minimum": 0}, "observed_sections": {"type": "integer", "minimum": 0}}},
+    "expectedSource": {"type": "object", "additionalProperties": false, "required": ["source_id", "source_file", "domain", "admission_state", "expected_rows", "expected_linked_rows", "observed_rows", "observed_linked_rows", "observed_fts_rows", "observed_sections", "status"], "properties": {"source_id": {"type": "string", "minLength": 1}, "source_file": {"type": "string", "minLength": 1}, "domain": {"type": "string", "minLength": 1}, "admission_state": {"type": "string", "minLength": 1}, "expected_rows": {"type": "integer", "minimum": 0}, "expected_linked_rows": {"type": "integer", "minimum": 0}, "observed_rows": {"type": "integer", "minimum": 0}, "observed_linked_rows": {"type": "integer", "minimum": 0}, "observed_fts_rows": {"type": "integer", "minimum": 0}, "observed_sections": {"type": "integer", "minimum": 0}, "status": {"enum": ["exact_count_link_fts_match", "missing_from_database", "row_count_mismatch", "linked_row_mismatch", "fts_row_mismatch"]}}},
+    "extraSource": {"type": "object", "additionalProperties": false, "required": ["source_file", "observed_rows", "observed_linked_rows", "observed_fts_rows", "observed_sections", "denominator_status"], "properties": {"source_file": {"type": "string", "minLength": 1}, "observed_rows": {"type": "integer", "minimum": 0}, "observed_linked_rows": {"type": "integer", "minimum": 0}, "observed_fts_rows": {"type": "integer", "minimum": 0}, "observed_sections": {"type": "integer", "minimum": 0}, "denominator_status": {"enum": ["rejected_candidate", "unlisted"]}}}
+  }
+}
