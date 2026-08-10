@@ -382,6 +382,26 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "never add\n`claim_type` at the finding root" in prompt
     assert "`end_line` is inclusive" in prompt
     assert "`start_line + (number of lines in verbatim) - 1`" in prompt
+    assert "three-dot" in prompt
+    assert "two-dot" in prompt
+    assert "#5802" in prompt
+
+
+def test_build_review_pr_prompt_injects_ground_truth_block() -> None:
+    model, effort = review_pr.formal_cf_pin("codex")
+    prompt = review_pr.build_review_pr_prompt(
+        5802,
+        reviewer="codex",
+        model=model,
+        effort=effort,
+        ground_truth=(
+            "### Orchestrator-verified PR surface (three-dot / merge-base)\n"
+            "- `M` `scripts/a.py`\n"
+        ),
+    )
+    assert "Orchestrator-verified PR surface" in prompt
+    assert "`M` `scripts/a.py`" in prompt
+    assert "Additional scope" not in prompt
 
 
 def test_list_eligible_prints_seat_status_without_provisioning(capsys) -> None:

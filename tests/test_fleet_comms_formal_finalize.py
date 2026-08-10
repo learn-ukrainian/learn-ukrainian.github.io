@@ -21,8 +21,14 @@ _MODEL = "glm-5.2"
 
 
 class FakeGh:
-    def __init__(self, *, head: str = _SHA) -> None:
+    def __init__(
+        self,
+        *,
+        head: str = _SHA,
+        files: list[dict[str, str]] | None = None,
+    ) -> None:
         self.head = head
+        self.files = files
         self.calls: list[list[str]] = []
 
     def __call__(
@@ -30,7 +36,22 @@ class FakeGh:
     ) -> subprocess.CompletedProcess[str]:
         self.calls.append(list(command))
         if len(command) >= 3 and command[1] == "pr" and command[2] == "view":
-            return subprocess.CompletedProcess(command, 0, stdout=f"{self.head}\n", stderr="")
+            joined = " ".join(command)
+            if "files" in joined:
+                files = self.files
+                if files is None:
+                    files = [{"path": "scripts/cache.py", "changeType": "MODIFIED"}]
+                payload = {
+                    "headRefOid": self.head,
+                    "baseRefOid": "b" * 40,
+                    "files": files,
+                }
+                return subprocess.CompletedProcess(
+                    command, 0, stdout=json.dumps(payload), stderr=""
+                )
+            return subprocess.CompletedProcess(
+                command, 0, stdout=f"{self.head}\n", stderr=""
+            )
         if len(command) >= 3 and command[1] == "pr" and command[2] == "comment":
             return subprocess.CompletedProcess(
                 command, 0, stdout="https://example.test/c\n", stderr=""
