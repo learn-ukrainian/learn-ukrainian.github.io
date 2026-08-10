@@ -99,3 +99,7 @@ ledgers/reconciliation daemons, no AST diff engine, no verdict registry, no docs
 rule, no platform-health required CI check, no automated admin merges, no credential heartbeat
 cron, no per-guard override UI, no new retry counters/dashboards/SLOs. The 7:1 failure ratio
 justifies fail-stop design and this autopsy — not deletion of independent review itself.
+
+## Links
+
+- Related reviews and outage notes in this file body.
