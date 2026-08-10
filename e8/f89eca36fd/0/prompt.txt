@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/4674-squash-branch-delete
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# #4674 Sanctioned path to delete squash-merged local branches
+
+## Problem
+Memory rule #M-10a wants `git branch -D` after squash-merge (tips never ancestors of main). `guard-branch-switch-in-main.py` blocks `branch -D` categorically — including branches not checked out anywhere.
+
+## Goal
+Add a **sanctioned** cleanup path for local branches that are squash-merged (or otherwise safe to force-delete) without weakening the guard for active/checked-out branches or primary-checkout safety.
+
+## Likely approach (research first; pick best practice)
+- Allow `git branch -D <name>` only when:
+  - branch is not currently checked out in any worktree
+  - branch is not `main`/`master`/protected
+  - optional: branch has an upstream that was deleted, or is not an ancestor of origin/main (squash-merge signature)
+- Or: explicit env flag / subcommand documented in RECOVERY.md / git hygiene docs
+- Tests: unit tests for the guard script covering allow + refuse cases
+
+## Owned paths
+- hooks / `agents_extensions/shared/hooks/guard-branch-switch-in-main.py` (or current path)
+- tests for that guard
+- short docs if required (`docs/best-practices/git-hygiene.md` or RECOVERY)
+
+## Requirements
+- Do not weaken primary-checkout write protection
+- Tool-backed tests; no linter-config / python-version changes
+- PR links #4674; X-Agent trailer; do not merge
+
+## Success
+PR open; tests prove sanctioned delete works and unsafe deletes still refuse.

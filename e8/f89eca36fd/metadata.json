@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e8f89eca36fd",
+  "strategy": "manual-commit",
+  "branch": "cursor/4674-squash-branch-delete",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/hooks/guard-branch-switch-in-main.py",
+    "docs/best-practices/git-hygiene.md",
+    "docs/best-practices/gitflow.md",
+    "tests/test_guard_branch_switch_in_main.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e8/f89eca36fd/0/metadata.json",
+      "transcript": "/e8/f89eca36fd/0/full.jsonl",
+      "compact_transcript": "/e8/f89eca36fd/0/transcript.jsonl",
+      "content_hash": "/e8/f89eca36fd/0/content_hash.txt",
+      "prompt": "/e8/f89eca36fd/0/prompt.txt"
+    }
+  ]
+}
