@@ -582,9 +582,11 @@ of a second server:
 ./services.sh rebuild astro     # clean then build
 ```
 
-> Public deploy is separate and **manual**: the `deploy-pages.yml` GitHub Actions
-> workflow (`workflow_dispatch`) — auto-deploy on push to `main` is disabled.
-> Running services locally never touches the live site.
+> Public deploy is separate: the `deploy-pages.yml` GitHub Actions workflow retains
+> manual `workflow_dispatch` for certified content, and automatically deploys a
+> `main` push only when the diff since the last successful Pages deployment contains
+> approved site code and no content drift. Running services locally never touches the
+> live site.
 
 ### Key Files
 
