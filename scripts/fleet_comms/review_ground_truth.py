@@ -30,8 +30,10 @@ _SHA_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 _KNOWN_CHANGE_TYPES = frozenset(
     {"ADDED", "DELETED", "MODIFIED", "RENAMED", "COPIED", "CHANGED"}
 )
-# Cap the brief so pointer-only prompts stay bounded (#5802 injects metadata, not diffs).
-_MAX_BRIEF_FILES = 200
+# Path lines are optional and only appended when they fit the prompt budget.
+# Default sample is tiny — review_pr prompts have ~0.5 KiB headroom after the
+# checklist + read-only contract (#5802).
+_MAX_BRIEF_FILES = 12
 
 
 class ReviewGroundTruthError(RuntimeError):
@@ -205,43 +207,85 @@ def fetch_pr_change_inventory(
     )
 
 
-def format_ground_truth_brief(inventory: PrChangeInventory) -> str:
-    """Render a compact, pasteable ground-truth block for review briefs."""
-    lines = [
-        "### Orchestrator-verified PR surface (three-dot / merge-base)",
-        f"**PR:** #{inventory.pr_number} (`{inventory.repository}`)",
-        f"**Head SHA:** `{inventory.head_sha}`",
-        f"**Base tip OID:** `{inventory.base_ref_oid}` "
-        "(informational only — do **not** two-dot against this tip)",
-        f"**Changed paths:** {len(inventory.files)} "
-        f"({len(inventory.deleted_paths)} deleted)",
-        "",
-        "Authoritative file list (GitHub PR files = three-dot semantics):",
-    ]
-    shown = inventory.files[:_MAX_BRIEF_FILES]
-    for entry in shown:
-        marker = {
-            "ADDED": "A",
-            "DELETED": "D",
-            "MODIFIED": "M",
-            "RENAMED": "R",
-            "COPIED": "C",
-            "CHANGED": "M",
-        }.get(entry.change_type, "?")
-        lines.append(f"- `{marker}` `{entry.path}`")
-    omitted = len(inventory.files) - len(shown)
-    if omitted:
-        lines.append(f"- … and {omitted} more paths (truncated in brief)")
-    lines.extend(
+def _change_marker(change_type: str) -> str:
+    return {
+        "ADDED": "A",
+        "DELETED": "D",
+        "MODIFIED": "M",
+        "RENAMED": "R",
+        "COPIED": "C",
+        "CHANGED": "M",
+    }.get(change_type, "?")
+
+
+def format_ground_truth_brief(
+    inventory: PrChangeInventory,
+    *,
+    max_bytes: int | None = None,
+    max_files: int | None = None,
+) -> str:
+    """Render a pointer-budgeted ground-truth block for review briefs.
+
+    Always includes repo/PR/SHAs/path *count* plus an instruction to read the
+    sealed snapshot or ``gh pr view --json files``. Path inventory lines are
+    appended only while they fit under ``max_bytes`` (when set) and
+    ``max_files`` (default ``_MAX_BRIEF_FILES``).
+    """
+    path_count = len(inventory.files)
+    deleted_count = len(inventory.deleted_paths)
+    header = "\n".join(
         [
-            "",
-            "**Diff trap (#5802):** never use `git diff <base-tip>..<head>` "
-            "(two-dot). Against a moved base that invents deletions of files "
-            "main gained after the merge-base. Prefer this list, "
-            "`gh pr view <N> --json files`, `gh pr diff <N>`, or "
-            "`git diff $(git merge-base <base> <head>)...<head>` (three-dot).",
+            "### Orchestrator-verified PR surface (three-dot / merge-base)",
+            f"**PR:** #{inventory.pr_number} (`{inventory.repository}`)",
+            f"**Head SHA:** `{inventory.head_sha}`",
+            f"**Base tip OID:** `{inventory.base_ref_oid}` "
+            "(informational — never two-dot against this tip)",
+            f"**Changed paths:** {path_count} ({deleted_count} deleted)",
+            (
+                "Authoritative list: sealed snapshot or "
+                f"`gh pr view {inventory.pr_number} --json files`. "
+                "Never two-dot `git diff <base-tip>..<head>`."
+            ),
         ]
     )
+    compact = header + "\n"
+    if max_bytes is not None and len(compact.encode("utf-8")) > max_bytes:
+        # Last-resort stub: still carry the SHAs + count that fit.
+        stub = (
+            f"### PR surface (three-dot / #5802)\n"
+            f"`{inventory.repository}` #{inventory.pr_number} "
+            f"head=`{inventory.head_sha}` base=`{inventory.base_ref_oid}` "
+            f"paths={path_count} ({deleted_count} deleted). "
+            f"Read sealed snapshot / `gh pr view {inventory.pr_number} --json files`.\n"
+        )
+        if len(stub.encode("utf-8")) <= max_bytes:
+            return stub
+        raw = stub.encode("utf-8")[: max(0, max_bytes)]
+        return raw.decode("utf-8", errors="ignore")
+
+    file_cap = _MAX_BRIEF_FILES if max_files is None else max(0, max_files)
+    if file_cap <= 0 or not inventory.files:
+        return compact
+
+    lines = [header, "", "Sample paths (truncated; full list via gh / sealed snapshot):"]
+    shown = 0
+    for entry in inventory.files:
+        if shown >= file_cap:
+            break
+        line = f"- `{_change_marker(entry.change_type)}` `{entry.path}`"
+        candidate = "\n".join(lines + [line]) + "\n"
+        if max_bytes is not None and len(candidate.encode("utf-8")) > max_bytes:
+            break
+        lines.append(line)
+        shown += 1
+    omitted = path_count - shown
+    if omitted and shown:
+        omit_line = f"- … and {omitted} more paths (omitted under prompt budget)"
+        candidate = "\n".join(lines + [omit_line]) + "\n"
+        if max_bytes is None or len(candidate.encode("utf-8")) <= max_bytes:
+            lines.append(omit_line)
+    if shown == 0:
+        return compact
     return "\n".join(lines) + "\n"
 
 
