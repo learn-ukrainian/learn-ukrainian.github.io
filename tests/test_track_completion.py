@@ -2204,4 +2204,4 @@ def test_pages_deploy_installs_schema_runtime_and_emits_exact_head_marker() -> N
     assert "learn-ukrainian-deployment-${GITHUB_SHA}.txt" in workflow
     assert "printf '%s\\n' \"$GITHUB_SHA\"" in workflow
     assert "workflow_dispatch:" in trigger_block
-    assert "push:" not in trigger_block
+    assert "push:" in trigger_block

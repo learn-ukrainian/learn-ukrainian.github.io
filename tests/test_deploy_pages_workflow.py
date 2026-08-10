@@ -4,6 +4,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy, read_nul_delimited_paths
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
 REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
@@ -66,3 +68,47 @@ def test_pages_deploy_vendors_atlas_tree_after_build_before_size_gate() -> None:
     assert steps.index(build_site) < steps.index(vendor)
     assert steps.index(vendor) < steps.index(size_gate)
     assert steps.index(size_gate) < steps.index(upload)
+
+
+def test_auto_deploy_accepts_only_site_code_since_last_successful_deployment(tmp_path: Path) -> None:
+    """#5356: content drift and unknown paths must keep Pages manual-only."""
+    assert decide_auto_deploy(["site/src/components/Practice.tsx"]).deploy is True
+    assert decide_auto_deploy(["site/src/content/docs/a1/hello.mdx"]).reason == "content_drift"
+    assert decide_auto_deploy(["site/src/data/lexicon-manifest.json"]).reason == "content_drift"
+    assert decide_auto_deploy(["curriculum/l2-uk-en/a1/01-hello.md"]).reason == "content_drift"
+    assert decide_auto_deploy(["scripts/build/site.py"]).reason == "unknown_path"
+    assert decide_auto_deploy([]).reason == "no_changed_paths"
+
+    changed_paths = tmp_path / "changed-paths.nul"
+    changed_paths.write_bytes(b"site/src/components/Practice.tsx\0site/src/styles/app.css\0")
+    assert read_nul_delimited_paths(changed_paths) == (
+        "site/src/components/Practice.tsx",
+        "site/src/styles/app.css",
+    )
+
+
+def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
+    """The manual certification route remains available beside the push preflight."""
+    workflow_text = WORKFLOW.read_text(encoding="utf-8")
+    trigger_block = workflow_text.split("on:\n", 1)[1].split("permissions:\n", 1)[0]
+    workflow = yaml.safe_load(workflow_text)
+
+    assert "push:\n    branches: [main]" in trigger_block
+    assert "workflow_dispatch:" in trigger_block
+    assert workflow["permissions"]["actions"] == "read"
+
+    eligibility = workflow["jobs"]["auto-deploy-eligibility"]
+    assert eligibility["if"] == "github.event_name == 'push'"
+    assert eligibility["outputs"]["deploy"] == "${{ steps.classify.outputs.deploy }}"
+
+    deploy = workflow["jobs"]["deploy"]
+    assert deploy["needs"] == "auto-deploy-eligibility"
+    assert "workflow_dispatch" in deploy["if"]
+    assert "outputs.deploy == 'true'" in deploy["if"]
+
+    preflight = "\n".join(step.get("run", "") for step in eligibility["steps"])
+    assert "actions/workflows/deploy-pages.yml/runs" in preflight
+    assert "git cat-file -e" in preflight
+    assert "git merge-base --is-ancestor" in preflight
+    assert "git diff --no-renames --name-only --diff-filter=ACDMRT -z" in preflight
+    assert "scripts/deploy/auto_deploy_eligibility.py" in preflight

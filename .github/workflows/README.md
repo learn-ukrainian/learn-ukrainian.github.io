@@ -13,7 +13,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 | `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |
 | `validate-yaml.yml` | YAML syntax / schema validation | PR / push | |
 | `rules-deployment-check.yml` | Agent-rule deploy idempotency check | PR / push | |
-| `deploy-pages.yml` | Build Site + deploy to GitHub Pages | **Manual** (`workflow_dispatch`) | Auto-deploy on push is intentionally disabled. |
+| `deploy-pages.yml` | Build Site + deploy to GitHub Pages | Manual, plus safe `main` pushes | Pushes deploy only when every changed path since the last successful Pages deployment is approved site code; curriculum, generated site content/data, and unknown paths stay manual. |
 
 ## Supply-chain hardening
 

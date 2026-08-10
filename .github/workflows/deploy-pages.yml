@@ -2,11 +2,16 @@
 name: Deploy to GitHub Pages
 
 on:
-  # The curriculum lifecycle dispatches this only after production QG reaches
-  # CERTIFIED_FINAL. A push trigger would deploy provisional merged content.
+  # #5356: only deploy a pushed main revision after a fail-closed preflight
+  # proves that no curriculum or generated site content changed since the last
+  # successful Pages deployment.  Manual dispatch remains the certification
+  # route for learner-content changes.
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -16,7 +21,60 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  auto-deploy-eligibility:
+    name: Determine automatic deployment eligibility
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.classify.outputs.deploy }}
+    steps:
+      - name: Checkout full main history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Resolve the last successful Pages deployment
+        id: last-deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          runs_json="$(
+            curl --fail --silent --show-error --retry 3 --connect-timeout 10 --max-time 30 \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${REPOSITORY}/actions/workflows/deploy-pages.yml/runs?branch=main&status=success&per_page=1"
+          )"
+          last_deploy_sha="$(jq --exit-status --raw-output '.workflow_runs[0].head_sha' <<< "$runs_json")"
+          git cat-file -e "${last_deploy_sha}^{commit}"
+          git merge-base --is-ancestor "$last_deploy_sha" "$GITHUB_SHA"
+          printf 'sha=%s\n' "$last_deploy_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Classify all changes since that deployment
+        id: classify
+        env:
+          LAST_DEPLOY_SHA: ${{ steps.last-deploy.outputs.sha }}
+        run: |
+          set -euo pipefail
+          changed_paths="$RUNNER_TEMP/changed-paths.nul"
+          git diff --no-renames --name-only --diff-filter=ACDMRT -z \
+            "$LAST_DEPLOY_SHA" "$GITHUB_SHA" > "$changed_paths"
+          python scripts/deploy/auto_deploy_eligibility.py \
+            --changed-paths "$changed_paths" \
+            --github-output "$GITHUB_OUTPUT"
+
   deploy:
+    needs: auto-deploy-eligibility
+    if: >-
+      always() && (github.event_name == 'workflow_dispatch' ||
+      needs.auto-deploy-eligibility.outputs.deploy == 'true')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
