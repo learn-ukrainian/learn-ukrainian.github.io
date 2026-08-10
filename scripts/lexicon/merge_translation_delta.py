@@ -26,7 +26,10 @@ DEFAULT_PULLED = ROOT / "batch_state" / "full-en-reenrich-pulled" / "manifest.js
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.audit.audit_atlas_thin_enriched import thin_old_gate_entries
+from scripts.audit.audit_atlas_thin_enriched import (
+    has_learner_english_anchor,
+    thin_old_gate_entries,
+)
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT
 from scripts.lexicon.manifest_io import load_manifest, write_manifest
 
@@ -279,6 +282,76 @@ def prove_no_nonempty_en_overwrites(
     return modified
 
 
+def anchor_loss_slugs(
+    before_by_slug: dict[str, dict[str, Any]],
+    after_by_slug: dict[str, dict[str, Any]],
+) -> list[str]:
+    """Return slugs that had a learner English anchor before the merge but lost it.
+
+    The old-gate thin count (``thin_old_gate_entries``) counts entries that are
+    enrichment-gated but lack a learner English anchor. An additive layer fill
+    (morphology, literary_attestation, layer sections) on a previously-empty
+    entry can legitimately raise that raw count without ever touching an
+    existing anchor -- that is intentional residual-policy behavior, not a
+    regression. Anchor *loss* -- an entry that had a learner English anchor
+    before the merge and no longer has one after -- is the actual invariant
+    violation, since it can only happen if the merge stripped or replaced a
+    non-empty translation/gloss/meaning field.
+    """
+    lost: list[str] = []
+    for slug, before_entry in before_by_slug.items():
+        if not has_learner_english_anchor(before_entry):
+            continue
+        after_entry = after_by_slug.get(slug)
+        if after_entry is None or not has_learner_english_anchor(after_entry):
+            lost.append(slug)
+    return lost
+
+
+def build_merge_report(
+    live: dict[str, Any],
+    pulled: dict[str, Any],
+    *,
+    stamp_generated_at: bool = True,
+) -> dict[str, Any]:
+    """Run the merge in place on ``live`` and return the full stats/invariant payload.
+
+    No file I/O -- callers (``main`` and tests) own reading/writing the manifest.
+    """
+    thin_before = len(thin_old_gate_entries(live))
+    before_by_slug = {slug: copy.deepcopy(entry) for slug, entry in _slug_index(live).items()}
+    stats = merge_translation_delta(live, pulled, stamp_generated_at=stamp_generated_at)
+    after_by_slug = _slug_index(live)
+    thin_after = len(thin_old_gate_entries(live))
+
+    overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
+    lost_slugs = anchor_loss_slugs(before_by_slug, after_by_slug)
+    old_gate_anchor_loss = len(lost_slugs)
+    # The hard gate is anchor LOSS, not the raw thin count: an additive layer
+    # fill on a previously-empty entry is expected to raise
+    # old_gate_no_english_anchor_after (residual-policy fills onto UA-gloss-
+    # only lemmas), but must never strip an anchor an entry already had.
+    old_gate_not_rising = old_gate_anchor_loss == 0
+
+    payload = stats.as_dict()
+    payload["overwrite_proof_modified_nonempty_en"] = overwrite_proof
+    payload["old_gate_no_english_anchor_before"] = thin_before
+    payload["old_gate_no_english_anchor_after"] = thin_after
+    payload["old_gate_anchor_loss"] = old_gate_anchor_loss
+    payload["old_gate_not_rising"] = old_gate_not_rising
+    if lost_slugs:
+        payload["old_gate_anchor_loss_slugs_sample"] = lost_slugs[:50]
+    payload["missing_translation_after"] = sum(
+        1 for entry in (live.get("entries") or []) if isinstance(entry, dict) and not entry_has_translation(entry)
+    )
+
+    if len(payload["filled_slugs"]) > 50:
+        payload["filled_slugs_sample"] = payload["filled_slugs"][:50]
+        payload["filled_slugs"] = []
+
+    return payload
+
+
 def _read_local_manifest(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
@@ -330,31 +403,10 @@ def main() -> int:
         live = load_manifest(live_path)
     pulled = _read_local_manifest(pulled_path)
 
-    thin_before = len(thin_old_gate_entries(live))
-    before_by_slug = {slug: copy.deepcopy(entry) for slug, entry in _slug_index(live).items()}
-    stats = merge_translation_delta(
-        live,
-        pulled,
-        stamp_generated_at=not args.no_stamp_generated_at,
-    )
-    after_by_slug = _slug_index(live)
-    thin_after = len(thin_old_gate_entries(live))
-
-    overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
-    old_gate_not_rising = thin_after <= thin_before
-
-    payload = stats.as_dict()
-    payload["overwrite_proof_modified_nonempty_en"] = overwrite_proof
-    payload["old_gate_no_english_anchor_before"] = thin_before
-    payload["old_gate_no_english_anchor_after"] = thin_after
-    payload["old_gate_not_rising"] = old_gate_not_rising
-    payload["missing_translation_after"] = sum(
-        1 for entry in (live.get("entries") or []) if isinstance(entry, dict) and not entry_has_translation(entry)
-    )
-
-    if len(payload["filled_slugs"]) > 50:
-        payload["filled_slugs_sample"] = payload["filled_slugs"][:50]
-        payload["filled_slugs"] = []
+    payload = build_merge_report(live, pulled, stamp_generated_at=not args.no_stamp_generated_at)
+    overwrite_proof = payload["overwrite_proof_modified_nonempty_en"]
+    old_gate_anchor_loss = payload["old_gate_anchor_loss"]
+    old_gate_not_rising = payload["old_gate_not_rising"]
 
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 
@@ -369,6 +421,7 @@ def main() -> int:
                 {
                     "error": "merge_invariant_violation",
                     "overwrite_proof_modified_nonempty_en": overwrite_proof,
+                    "old_gate_anchor_loss": old_gate_anchor_loss,
                     "old_gate_not_rising": old_gate_not_rising,
                     "wrote": False,
                 },
@@ -379,6 +432,7 @@ def main() -> int:
         return 1
 
     if args.write:
+        entry_count_after = payload["live_entry_count_after"]
         current_live_bytes = live_path.read_bytes() if live_path.exists() else b""
         current_live_sha = hashlib.sha256(current_live_bytes).hexdigest()
         if current_live_sha != initial_live_sha:
@@ -390,6 +444,7 @@ def main() -> int:
             before_by_slug = {slug: copy.deepcopy(entry) for slug, entry in _slug_index(live).items()}
             stats = merge_translation_delta(live, pulled, stamp_generated_at=not args.no_stamp_generated_at)
             after_by_slug = _slug_index(live)
+            entry_count_after = stats.live_entry_count_after
             overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
             if overwrite_proof != 0:
                 print(
@@ -404,7 +459,7 @@ def main() -> int:
         if live_path.resolve() == DEFAULT_MANIFEST.resolve():
             sync_embedded_fingerprint_from_sidecar(live)
         write_manifest(live_path, live)
-        print(json.dumps({"wrote": str(live_path), "entries": stats.live_entry_count_after}, ensure_ascii=False))
+        print(json.dumps({"wrote": str(live_path), "entries": entry_count_after}, ensure_ascii=False))
 
     return 0
 

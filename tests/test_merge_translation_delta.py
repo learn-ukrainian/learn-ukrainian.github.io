@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from scripts.lexicon.merge_translation_delta import (
+    anchor_loss_slugs,
     entry_has_translation,
     entry_translation,
     merge_translation_delta,
@@ -237,5 +238,90 @@ def test_add_source_attaches_section_source_when_enrichment_absent() -> None:
     assert "enrichment" in entry
     assert "sources" in entry["enrichment"]
     assert "Приповідки" in entry["enrichment"]["sources"]
+
+
+def test_morphology_only_fill_on_empty_enrichment_raises_thin_but_no_anchor_loss() -> None:
+    """Layer fill onto a UA-gloss-only lemma is intentional residual policy.
+
+    The raw old-gate thin count (``thin_old_gate_entries``) may rise -- the entry
+    goes from "no enrichment at all" to "enrichment without an English anchor" --
+    but that is not an invariant violation because the entry never had an anchor
+    to lose. ``anchor_loss_slugs`` must report zero for this case.
+    """
+    from scripts.audit.audit_atlas_thin_enriched import thin_old_gate_entries
+
+    live = {
+        "entries": [
+            {"url_slug": "gap", "lemma": "прогалина", "pos": "noun", "enrichment": {}},
+        ]
+    }
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "gap",
+                "lemma": "прогалина",
+                "pos": "noun",
+                "enrichment": {"morphology": {"forms": [{"form": "прогалина"}]}},
+            }
+        ]
+    }
+    before_by_slug = {e["url_slug"]: copy.deepcopy(e) for e in live["entries"]}
+    thin_before = len(thin_old_gate_entries(live))
+
+    stats = merge_translation_delta(live, pulled, stamp_generated_at=False)
+    after_by_slug = {e["url_slug"]: e for e in live["entries"]}
+    thin_after = len(thin_old_gate_entries(live))
+
+    assert stats.filled_morphology == 1
+    assert thin_before == 0
+    assert thin_after == 1  # raw thin count rose -- expected, intentional layer fill
+    assert anchor_loss_slugs(before_by_slug, after_by_slug) == []  # but no real regression
+
+
+def test_anchor_loss_is_detected_as_hard_failure() -> None:
+    """An entry that had a learner English anchor and lost it is a real regression,
+    independent of whether the raw old-gate thin count moved.
+    """
+    before_by_slug = {
+        "kiwi": _entry("kiwi", "ківі", en=["kiwi"], source="live"),
+    }
+    mutated_after = copy.deepcopy(before_by_slug["kiwi"])
+    del mutated_after["enrichment"]["translation"]
+    after_by_slug = {"kiwi": mutated_after}
+
+    lost = anchor_loss_slugs(before_by_slug, after_by_slug)
+    assert lost == ["kiwi"]
+
+
+def test_build_merge_report_end_to_end_matches_cli_invariant() -> None:
+    """Full report: raw thin rises from an intentional fill, but old_gate_not_rising
+    (the CLI hard gate) stays True because no anchor was lost.
+    """
+    from scripts.lexicon.merge_translation_delta import build_merge_report
+
+    live = {
+        "entries": [
+            {"url_slug": "gap", "lemma": "прогалина", "pos": "noun", "enrichment": {}},
+            _entry("kiwi", "ківі", en=["kiwi"], source="live"),
+        ]
+    }
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "gap",
+                "lemma": "прогалина",
+                "pos": "noun",
+                "enrichment": {"morphology": {"forms": [{"form": "прогалина"}]}},
+            },
+            _entry("kiwi", "ківі", en=["different"], source="pulled"),
+        ]
+    }
+
+    payload = build_merge_report(live, pulled, stamp_generated_at=False)
+
+    assert payload["old_gate_no_english_anchor_after"] > payload["old_gate_no_english_anchor_before"]
+    assert payload["overwrite_proof_modified_nonempty_en"] == 0
+    assert payload["old_gate_anchor_loss"] == 0
+    assert payload["old_gate_not_rising"] is True
 
 

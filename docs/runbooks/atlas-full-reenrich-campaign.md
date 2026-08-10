@@ -112,7 +112,11 @@ Merge the pulled donor manifest onto the live published manifest additively:
 
 Verification output checks:
 - `overwrite_proof_modified_nonempty_en: 0` (zero non-empty target field overwrites).
-- `old_gate_not_rising: true` (count of old-gate unanchored entries did not increase).
+- `old_gate_not_rising: true` — the hard gate is now anchor *loss* (`old_gate_anchor_loss: 0`:
+  no entry that had a learner English anchor before the merge lost it after), not the raw
+  `old_gate_no_english_anchor_before/after` count. An additive layer fill (morphology,
+  sections, literary_attestation) onto a previously-empty, UA-gloss-only entry can legitimately
+  raise the raw count — that's intentional residual-policy behavior, not a regression.
 
 ---
 
@@ -122,7 +126,7 @@ Verification output checks:
 For published release lineage verification prior to publishing:
 
 1. Re-pull the published manifest / pointer (`lexicon-manifest.pointer.json` or release asset) and compare `json_sha256` against the baseline recorded at snapshot time.
-2. If the published release lineage moved (SHA-256 drift), re-pull the published manifest as live baseline, re-run `merge_translation_delta.py`, and verify full invariants (`overwrite_proof == 0`, `old_gate_not_rising == true`, entry count invariance).
+2. If the published release lineage moved (SHA-256 drift), re-pull the published manifest as live baseline, re-run `merge_translation_delta.py`, and verify full invariants (`overwrite_proof == 0`, `old_gate_anchor_loss == 0` / `old_gate_not_rising == true`, entry count invariance).
 3. Verify fingerprint sidecar and pointer gate:
 
 ```bash
