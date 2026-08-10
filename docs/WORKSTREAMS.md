@@ -62,7 +62,7 @@ is the single source of truth for membership (auditor:
 | atlas-practice | #4387, #4700, #5331 | Word Atlas + Practice Hub product & UX |
 | atlas-intake | #4220, #4378, #5224 | Full-corpus intake into the Atlas |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
-| infra-harness | #4707 | Infra & fleet reliability (hooks, dispatch, routing) |
+| infra-harness | #4707, #5880, #5885 | Infra & fleet reliability (hooks, dispatch, routing). #4707 is capped at GitHub's 100-sub-issue limit; #5880 and #5885 are program membership roots. |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
 | open-model-data | #6321 (successor to closed #6164 and #6056) | Build evidence-bearing prepared Ukrainian data products on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence, not a gate. Every shipped artifact names a concrete consumer decision/use case. Current truth: #6375 is the active Phase 3 v2.1 functional-role and runtime rebinding task; #6333 is historical `ENGINE_READY` evidence only and establishes no linguistic, source, consumer, or completion status; Phase 4 remains blocked. |
