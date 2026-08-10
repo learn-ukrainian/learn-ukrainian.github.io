@@ -1,5 +1,4 @@
 {
-  "fingerprint": "6dab40fdd6e158390542644ad63aecae6d75b645e006ce2fb1fe4ea642963cc4",
   "inputs": {
     "lexicon_code": [
       {
@@ -52,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
-        "sha256": "8918fff75c16bb38c28e469f3ccc415e4141f777de3ca8a3d819aca78e19aaa6"
+        "sha256": "0e93fc75ce5359cae5b252a0b1f697156ec4bb37e103af558449a11fd5e9ebc8"
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
@@ -144,7 +143,7 @@
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
-        "sha256": "06db0476943928e3440767172e3bb9f91718d4504580dc156867e66b5535b5fb"
+        "sha256": "89c1e139989fcbee4a2947f6ca7ac87d279f4e1ec3139829186a7d7d4f455982"
       },
       {
         "path": "scripts/lexicon/measure_manifest_coverage.py",
@@ -232,9 +231,6 @@
       }
     ]
   },
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
-  "stats": {
-    "lexicon_code_files": 57
-  }
+  "schema_version": 2,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 }

@@ -19,7 +19,8 @@ LEXICON_CODE_EXCLUDES = frozenset(
         "scripts/lexicon/manifest_io.py",
     }
 )
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+SCOPE = "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -58,7 +59,7 @@ def build_fingerprint(root: Path = ROOT) -> dict[str, Any]:
     code_inputs = lexicon_code_inputs(root)
     payload = {
         "schema_version": SCHEMA_VERSION,
-        "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+        "scope": SCOPE,
         "inputs": {
             "lexicon_code": code_inputs,
         },
@@ -72,9 +73,26 @@ def build_fingerprint(root: Path = ROOT) -> dict[str, Any]:
     }
 
 
+def sidecar_payload(fingerprint: dict[str, Any]) -> dict[str, Any]:
+    """Return the merge-friendly, source-of-truth portion of a fingerprint.
+
+    The aggregate digest and file count are derived values.  Keeping them out
+    of the committed sidecar means independent script edits update distinct
+    input records instead of all rewriting one shared line.
+    """
+    return {
+        "schema_version": fingerprint["schema_version"],
+        "scope": fingerprint["scope"],
+        "inputs": fingerprint["inputs"],
+    }
+
+
 def write_fingerprint(path: Path = DEFAULT_FINGERPRINT, *, root: Path = ROOT) -> dict[str, Any]:
     """Write the deterministic fingerprint sidecar and return its payload."""
     payload = build_fingerprint(root)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(sidecar_payload(payload), ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     return payload
