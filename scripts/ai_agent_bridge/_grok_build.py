@@ -604,12 +604,19 @@ Standing rules for bridge Q&A:
 def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
     """Record a Grok Build failure as a response message and acknowledge."""
     print(f"\nGrok Build error for message #{message_id}: {reason}")
+    from ._ask_contract import failed_response_provenance
+
+    data, from_model = failed_response_provenance(
+        msg, bridge_model="grok-bridge-error", harness="grok"
+    )
     send_message(
         content=f"[Grok Build error] {reason}",
         task_id=msg["task_id"],
         msg_type="error",
         from_llm="grok-build",
         to_llm=msg["from"],
+        data=data,
+        from_model=from_model,
     )
     acknowledge(message_id)
     record_ask_failure(

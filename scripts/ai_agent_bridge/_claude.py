@@ -30,6 +30,7 @@ from agent_runtime.runner import invoke as runtime_invoke
 from secret_redactor import redact_text
 
 from ._ask_contract import (
+    failed_response_provenance,
     resolve_model_selection,
     response_provenance,
     unsupported_effort_note,
@@ -56,6 +57,11 @@ from ._review_worktree import (
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5"
 CLAUDE_ADVISORY_MODEL = "claude-opus-5"
+
+
+def _claude_error_provenance(msg: dict, bridge_model: str) -> tuple[str, str]:
+    """Return the uniform provenance required for a terminal Claude error."""
+    return failed_response_provenance(msg, bridge_model=bridge_model, harness="claude")
 
 
 def resolve_claude_ask_model(msg_type: str, to_model: str | None) -> str:
@@ -330,11 +336,14 @@ def _run_claude_sync_via_runtime(
 
     except RateLimitedError as exc:
         print(f"\n⏳ Claude rate limited: {exc}")
+        provenance_data, from_model = _claude_error_provenance(
+            msg, "claude-bridge-rate-limited"
+        )
         send_message(
             content=f"[Bridge Error] Claude rate limited: {exc}",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
-            from_model="claude-bridge-rate-limited",
+            data=provenance_data, from_model=from_model,
         )
         _response_sent = True
         acknowledge(message_id)
@@ -342,6 +351,7 @@ def _run_claude_sync_via_runtime(
     except (AgentStalledError, AgentTimeoutError) as exc:
         timeout_mins = timeout_val // 60
         print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit): {exc}")
+        provenance_data, from_model = _claude_error_provenance(msg, "claude-bridge-timeout")
         send_message(
             content=(
                 f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. "
@@ -349,28 +359,32 @@ def _run_claude_sync_via_runtime(
             ),
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
-            from_model="claude-bridge-timeout",
+            data=provenance_data, from_model=from_model,
         )
         _response_sent = True
         acknowledge(message_id)
         record_ask_failure(message_id, str(exc), timed_out=True)
     except AgentUnavailableError:
         print("❌ claude CLI not found. Is it installed?")
+        provenance_data, from_model = _claude_error_provenance(msg, "claude-bridge-not-found")
         send_message(
             content="[Bridge Error] Claude CLI not found on system",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
-            from_model="claude-bridge-not-found",
+            data=provenance_data, from_model=from_model,
         )
         _response_sent = True
         acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
         record_ask_failure(message_id, "Claude CLI not found")
     except ReviewWorktreeError as exc:
+        provenance_data, from_model = _claude_error_provenance(
+            msg, "claude-bridge-review-checkout"
+        )
         send_message(
             content=f"[Bridge Error] Claude review checkout failed: {exc}",
             task_id=msg['task_id'], msg_type="error",
             from_llm="claude", to_llm=msg['from'],
-            from_model="claude-bridge-review-checkout",
+            data=provenance_data, from_model=from_model,
         )
         _response_sent = True
         acknowledge(message_id)
@@ -517,10 +531,11 @@ def _handle_claude_error(msg, message_id, stderr):
     print(f"\n❌ Claude CLI error: {error_msg[:500]}")
     sys.stdout.flush()
 
+    provenance_data, from_model = _claude_error_provenance(msg, "claude-bridge-error")
     send_message(
         content=f"[Bridge Error] Claude CLI failed:\n{error_msg[:500]}",
         task_id=msg['task_id'], msg_type="error",
-        from_llm="claude", to_llm=msg['from'], from_model="claude-bridge-error"
+        from_llm="claude", to_llm=msg['from'], data=provenance_data, from_model=from_model
     )
     acknowledge(message_id)
     record_ask_failure(message_id, error_msg)
@@ -530,10 +545,11 @@ def _handle_claude_error(msg, message_id, stderr):
 def _send_claude_fallback_error(msg, message_id):
     """Send fallback error when Claude process fails without sending a response."""
     try:
+        provenance_data, from_model = _claude_error_provenance(msg, "claude-bridge-error")
         send_message(
             content=f"[Bridge Error] Claude process failed unexpectedly for message #{message_id}. Check logs.",
             task_id=msg['task_id'], msg_type="error",
-            from_llm="claude", to_llm=msg['from'], from_model="claude-bridge-error"
+            from_llm="claude", to_llm=msg['from'], data=provenance_data, from_model=from_model
         )
         acknowledge(message_id)
         record_ask_failure(message_id, "Claude process failed unexpectedly")

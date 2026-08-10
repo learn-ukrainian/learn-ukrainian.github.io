@@ -91,3 +91,19 @@ def response_provenance(
     if effort_reason:
         metadata["effort_reason"] = effort_reason
     return json.dumps(metadata, sort_keys=True), actual_model
+
+
+def failed_response_provenance(
+    message: Mapping[str, Any],
+    *,
+    bridge_model: str,
+    harness: str,
+) -> tuple[str, str]:
+    """Stamp a terminal bridge error without inventing an applied effort."""
+    return response_provenance(
+        message,
+        actual_model=bridge_model,
+        harness=harness,
+        effort_applied=None,
+        effort_reason="bridge execution failed before the requested effort could be applied",
+    )

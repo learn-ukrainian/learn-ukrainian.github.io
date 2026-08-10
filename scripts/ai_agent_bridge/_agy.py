@@ -389,12 +389,19 @@ def _extract_target_model(msg: dict) -> str | None:
 def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
     """Record an Agy failure as a response message and acknowledge."""
     print(f"\n❌ Agy error for message #{message_id}: {reason}")
+    from ._ask_contract import failed_response_provenance
+
+    data, from_model = failed_response_provenance(
+        msg, bridge_model="agy-bridge-error", harness="agy"
+    )
     send_message(
         content=f"[Agy error] {reason}",
         task_id=msg["task_id"],
         msg_type="error",
         from_llm="agy",
         to_llm=msg["from"],
+        data=data,
+        from_model=from_model,
     )
     acknowledge(message_id)
     record_ask_failure(

@@ -41,16 +41,28 @@ def require_compat_target(command_target: str) -> str:
         ) from exc
 
 
-def _result_receipt(result: object) -> bytes:
+def _result_receipt(
+    result: object,
+    *,
+    model_requested: str | None = None,
+    effort_requested: str | None = None,
+) -> bytes:
+    actual_model = str(getattr(result, "model", ""))
+    effort_applied = str(getattr(result, "effort", "unknown"))
     payload = {
         "ok": bool(getattr(result, "ok", False)),
         "agent": str(getattr(result, "agent", "")),
-        "model": str(getattr(result, "model", "")),
+        "model": actual_model,
         "response": str(getattr(result, "response", "")),
         "stderr_excerpt": getattr(result, "stderr_excerpt", None),
         "duration_s": float(getattr(result, "duration_s", 0.0)),
         "returncode": getattr(result, "returncode", None),
-        "effort": str(getattr(result, "effort", "unknown")),
+        "effort": effort_applied,
+        "from_model": actual_model,
+        "model_requested": model_requested or actual_model,
+        "effort_requested": effort_requested,
+        "effort_applied": effort_applied if effort_applied != "unknown" else None,
+        "harness": "acp",
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
     }
@@ -77,6 +89,18 @@ def _replay_result(raw: bytes) -> object:
             "transport_metadata": payload.get("transport_metadata"),
             "transport_outcome": payload.get("transport_outcome", "error"),
         }
+    actual_model = str(payload.get("from_model") or payload.get("model") or "acp-bridge-error")
+    applied_effort = payload.get("effort_applied")
+    if applied_effort is None and payload.get("effort") not in {None, "unknown"}:
+        applied_effort = payload["effort"]
+    provenance = {
+        "from_model": actual_model,
+        "model_requested": payload.get("model_requested") or actual_model,
+        "effort_requested": payload.get("effort_requested"),
+        "effort_applied": applied_effort,
+        "harness": payload.get("harness") or "acp",
+    }
+    provenance.update({"replayed": True, "transport": "acp"})
     return Result(
         ok=bool(payload["ok"]),
         agent=str(payload["agent"]),
@@ -90,7 +114,7 @@ def _replay_result(raw: bytes) -> object:
         stalled=False,
         returncode=payload.get("returncode"),
         effort=str(payload["effort"]),
-        usage_record={"replayed": True, "transport": "acp"},
+        usage_record=provenance,
         transport_metadata=payload.get("transport_metadata"),
         transport_outcome=payload.get("transport_outcome"),
     )
@@ -354,7 +378,7 @@ def _run_compat_ask_impl(
                         {
                             "ok": False,
                             "agent": participant,
-                            "model": model or "",
+                            "model": model or f"{participant}-bridge-error",
                             "response": "",
                             "stderr_excerpt": (
                                 f"{type(exc).__name__}: terminal ACP invocation failed"
@@ -362,6 +386,11 @@ def _run_compat_ask_impl(
                             "duration_s": 0.0,
                             "returncode": 1,
                             "effort": effort or "unknown",
+                            "from_model": model or f"{participant}-bridge-error",
+                            "model_requested": model or f"{participant}-bridge-error",
+                            "effort_requested": effort,
+                            "effort_applied": None,
+                            "harness": "acp",
                             "transport_metadata": None,
                             "transport_outcome": "error",
                         },
@@ -381,7 +410,11 @@ def _run_compat_ask_impl(
                     worker_id=worker_id,
                     fence_token=lease.fence_token,
                     state="complete" if bool(getattr(result, "ok", False)) else "failed",
-                    result=_result_receipt(result),
+                    result=_result_receipt(
+                        result,
+                        model_requested=model,
+                        effort_requested=effort,
+                    ),
                     failure=(
                         None
                         if bool(getattr(result, "ok", False))
