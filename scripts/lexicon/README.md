@@ -273,3 +273,34 @@ dedupes. When `--ledger-out` is supplied, `--inventory-out` must be the same
 project-relative path as `--inventory-path`; this keeps every ledger reference
 valid once the staged inventory is reviewed. The generated decision ledger retains
 `production_outputs_updated: []`.
+
+## VESUM form-level shard generation (#5882 residual, Fable GO SHARDED-EXACT)
+
+Paste-text deck import (`site/src/components/LexiconCustomDeckManager.tsx`)
+needs to tell a real Ukrainian word FORM apart from a genuinely unverified
+string, even when the form's lemma isn't (yet) an Atlas entry. VESUM covers
+6.7M forms — too large to commit — so it is hash-sharded into ~4096
+form→lemma(s) JSON files at build/deploy time:
+
+```bash
+.venv/bin/python -m scripts.lexicon.generate_vesum_form_shards
+```
+
+This writes shard files directly to `site/public/lexicon/vesum-forms/`
+(gitignored — same pattern as the Atlas search shards under
+`site/public/lexicon/search/`) plus a `_manifest.json` audit-stats file in
+the same directory. It reads `data/vesum.db` by default (`--db-path` to
+override) and enforces a size budget (total ≤60MB gz, shard p95 ≤25KB gz),
+failing loud if either is exceeded — run it locally wherever `data/vesum.db`
+is present, or wire it into a CI/deploy step that has it. It is NOT part of
+`npm run hydrate` in this PR.
+
+The client (`site/src/lib/lexicon/vesum-form-shard.ts`) fetches only the one
+shard a pasted word's normalized key hashes to
+(`site/src/lib/lexicon/vesum-form-key.ts`), and degrades that single lookup
+to "unverified" rather than failing the whole import on a fetch error. The
+key-normalization + hash must stay byte-identical between
+`scripts/lexicon/vesum_form_key.py` and the TypeScript twin — golden-tested
+via `vesum_form_key_vectors.json` (see
+`tests/test_generate_vesum_form_shards.py` and
+`site/tests/unit/vesum-form-shard.test.ts`).

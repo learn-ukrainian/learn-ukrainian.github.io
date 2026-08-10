@@ -165,9 +165,7 @@ Never run these without explicit user instruction:
 - `git reset --hard`
 - `git checkout .` or `git restore .`
 - `git clean -f`
-- `git branch -D {branch}` — except the sanctioned post-squash-merge
-  cleanup documented in [`git-hygiene.md`](git-hygiene.md#post-merge-local-branch-cleanup-4674--m-10a)
-  (gone-upstream or fully-pushed; never-pushed stays blocked)
+- `git branch -D {branch}`
 - `git commit --amend` (on published commits)
 - `git rebase -i` (interactive rebase)
 

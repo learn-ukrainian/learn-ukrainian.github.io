@@ -25,6 +25,7 @@ import {
   type AtlasAttestationRow,
   type PasteCandidate,
 } from '../lib/lexicon/paste-text-vocab';
+import { VesumFormShardClient } from '../lib/lexicon/vesum-form-shard';
 import type { PracticeClozeItem } from '../lib/lexicon/srs';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 
@@ -61,6 +62,20 @@ export function loadAttestationIndex(shardBaseUrl: string): Promise<Map<string, 
   return promise;
 }
 
+// Module-level cache: one VESUM form-shard client per shard base URL, reused
+// across wizard opens so already-fetched shards stay cached (#5882 residual).
+const vesumShardClients = new Map<string, VesumFormShardClient>();
+
+function loadVesumShardClient(shardBaseUrl: string): VesumFormShardClient {
+  const key = shardBaseUrl.trim().replace(/\/+$/, '');
+  let client = vesumShardClients.get(key);
+  if (!client) {
+    client = new VesumFormShardClient(fetch.bind(globalThis), `${key}/vesum-forms/`);
+    vesumShardClients.set(key, client);
+  }
+  return client;
+}
+
 export function LexiconCustomDeckManager({
   chromeLocale,
   activeDeckFilter,
@@ -84,7 +99,9 @@ export function LexiconCustomDeckManager({
   // Candidates extracted from document or paste
   const [candidates, setCandidates] = useState<CandidateWord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [levelFilter, setLevelFilter] = useState<'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'UNVERIFIED'>('ALL');
+  const [levelFilter, setLevelFilter] = useState<
+    'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'VESUM_FORM' | 'UNVERIFIED'
+  >('ALL');
   const [isClassifying, setIsClassifying] = useState(false);
   const [attestationError, setAttestationError] = useState<string | null>(null);
 
@@ -141,10 +158,14 @@ export function LexiconCustomDeckManager({
     }
   }, [chromeLocale]);
 
-  // Extract candidate words, then classify each against the VESUM-verified
-  // Atlas index: attested words get a real gloss and optional CEFR guidance;
-  // everything else is flagged "unverified" and left deselected (#5882 — no
-  // silent invent).
+  // Extract candidate words, then classify each in three tiers (#5882 residual):
+  // a direct hit against the VESUM-verified Atlas index gets a real gloss and
+  // optional CEFR guidance; a form VESUM recognizes as an unambiguous inflection
+  // of an Atlas-attested lemma folds up to that same tier; everything else that
+  // VESUM still recognizes as a real word form is flagged "vesum_form" (deselected,
+  // not save-eligible); anything neither index knows is "unverified". Nothing is
+  // ever invented — a VESUM shard fetch failure degrades to unverified, never to
+  // a guessed attestation.
   const processTextToCandidates = useCallback(async (words: string[], defaultTitle = ''): Promise<void> => {
     const uniqueWords = Array.from(new Set(words.map((w) => w.toLowerCase().trim()).filter((w) => w.length >= 2)));
 
@@ -161,9 +182,12 @@ export function LexiconCustomDeckManager({
           : 'Could not verify words against the Atlas dictionary. All words are flagged unverified.',
       );
     }
+    // VesumFormShardClient.resolve() never throws — a shard fetch failure
+    // degrades the affected forms instead, surfaced via cefrCounts.degraded.
+    const vesumResults = await loadVesumShardClient(shardBaseUrl).resolve(uniqueWords);
     setIsClassifying(false);
 
-    setCandidates(classifyPasteCandidates(uniqueWords, index));
+    setCandidates(classifyPasteCandidates(uniqueWords, index, vesumResults));
     if (defaultTitle && !deckTitle) {
       setDeckTitle(defaultTitle);
     }
@@ -260,7 +284,14 @@ export function LexiconCustomDeckManager({
   const filteredCandidates = useMemo(() => {
     return candidates.map((item, originalIdx) => ({ ...item, originalIdx })).filter((item) => {
       if (levelFilter === 'UNVERIFIED' && item.status !== 'unverified') return false;
-      else if (levelFilter !== 'ALL' && levelFilter !== 'UNVERIFIED' && item.cefr !== levelFilter) return false;
+      else if (levelFilter === 'VESUM_FORM' && item.status !== 'vesum_form') return false;
+      else if (
+        levelFilter !== 'ALL' &&
+        levelFilter !== 'UNVERIFIED' &&
+        levelFilter !== 'VESUM_FORM' &&
+        item.cefr !== levelFilter
+      )
+        return false;
       if (searchQuery && !item.text.includes(searchQuery.toLowerCase().trim())) return false;
       return true;
     });
@@ -577,14 +608,32 @@ export function LexiconCustomDeckManager({
                   </div>
 
                   {/* Attestation banner — every candidate is checked against the Atlas
-                      dictionary; nothing outside it is treated as confirmed vocabulary. */}
-                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: '#94a3b8', margin: '0.5rem 0 0.75rem' }}>
+                      dictionary, then (#5882 residual) against VESUM's 6.7M
+                      recognized word forms; nothing outside either is treated
+                      as confirmed vocabulary. */}
+                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: '#94a3b8', margin: '0.5rem 0 0.75rem', flexWrap: 'wrap' }}>
                     <span>✅ {chromeLocale === 'uk' ? `У словнику: ${cefrCounts.attested}` : `In dictionary: ${cefrCounts.attested}`}</span>
+                    <span>🧬 {chromeLocale === 'uk' ? `Форма VESUM: ${cefrCounts.vesumForm}` : `VESUM word form: ${cefrCounts.vesumForm}`}</span>
                     <span>❓ {chromeLocale === 'uk' ? `Неперевірено: ${cefrCounts.unverified}` : `Unverified: ${cefrCounts.unverified}`}</span>
                   </div>
                   {attestationError ? (
                     <p style={{ color: '#fbbf24', fontSize: '0.8rem', marginBottom: '0.5rem' }}>{attestationError}</p>
-                  ) : cefrCounts.unverified > 0 ? (
+                  ) : null}
+                  {cefrCounts.degraded > 0 ? (
+                    <p style={{ color: '#fbbf24', fontSize: '0.78rem', marginBottom: '0.5rem' }}>
+                      {chromeLocale === 'uk'
+                        ? `Перевірку форм VESUM тимчасово недоступно для ${cefrCounts.degraded} слів(а) — їх позначено неперевіреними, а не вгадано.`
+                        : `Form-level VESUM verification was unavailable for ${cefrCounts.degraded} word(s) — they're flagged unverified rather than guessed.`}
+                    </p>
+                  ) : null}
+                  {cefrCounts.vesumForm > 0 ? (
+                    <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginBottom: '0.5rem' }}>
+                      {chromeLocale === 'uk'
+                        ? 'Слова 🧬 — це реальні форми української мови (перевірено VESUM), але ще не в кураторському словнику Atlas; їх не можна зберегти як базові картки.'
+                        : "Words marked 🧬 are real Ukrainian word forms (VESUM-verified) but not yet in the curated Atlas dictionary — they can't be saved as basic cards yet."}
+                    </p>
+                  ) : null}
+                  {cefrCounts.unverified > 0 ? (
                     <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginBottom: '0.5rem' }}>
                       {chromeLocale === 'uk'
                         ? 'Неперевірені слова відсутні в нашому словнику Atlas і не обрані за замовчуванням — перегляньте перед додаванням.'
@@ -601,7 +650,7 @@ export function LexiconCustomDeckManager({
                       onChange={(e) => setSearchQuery(e.target.value)}
                       style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '0.8rem', flex: 1 }}
                     />
-                    {(['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'UNVERIFIED'] as const).map((lvl) => (
+                    {(['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'VESUM_FORM', 'UNVERIFIED'] as const).map((lvl) => (
                       <button
                         key={lvl}
                         type="button"
@@ -609,7 +658,7 @@ export function LexiconCustomDeckManager({
                         onClick={() => setLevelFilter(lvl)}
                         style={{ fontSize: '0.75rem' }}
                       >
-                        {lvl === 'UNVERIFIED' ? '❓' : lvl}
+                        {lvl === 'UNVERIFIED' ? '❓' : lvl === 'VESUM_FORM' ? '🧬' : lvl}
                       </button>
                     ))}
                   </div>
@@ -634,16 +683,28 @@ export function LexiconCustomDeckManager({
                     {filteredCandidates.map((item) => (
                       <div
                         key={item.originalIdx}
-                        className={`word-inspector-chip ${item.selected ? 'selected' : 'excluded'}`}
+                        className={`word-inspector-chip ${item.selected ? 'selected' : 'excluded'} ${item.status === 'vesum_form' ? 'vesum-form-chip' : ''}`}
                         onClick={() => toggleCandidateSelection(item.originalIdx)}
-                        title={item.status === 'unverified'
-                          ? (chromeLocale === 'uk' ? 'Немає в словнику Atlas — неперевірено' : 'Not in the Atlas dictionary — unverified')
-                          : (item.gloss ?? undefined)}
+                        title={
+                          item.status === 'vesum_form'
+                            ? (chromeLocale === 'uk'
+                                ? `Форма слова: ${(item.vesumLemmas ?? []).join(', ')} — не в словнику Atlas`
+                                : `Word form of: ${(item.vesumLemmas ?? []).join(', ')} — not in the Atlas dictionary`)
+                            : item.status === 'unverified'
+                              ? (item.degraded
+                                  ? (chromeLocale === 'uk'
+                                      ? 'Перевірку форм VESUM тимчасово недоступно для цього слова'
+                                      : 'Form-level VESUM verification was unavailable for this word')
+                                  : (chromeLocale === 'uk' ? 'Немає в словнику Atlas — неперевірено' : 'Not in the Atlas dictionary — unverified'))
+                              : (item.gloss ?? undefined)
+                        }
                       >
                         <span>{item.selected ? '✓' : '✗'}</span>
                         <span>{item.text}</span>
-                        <span className={`word-chip-badge badge-${item.cefr ? item.cefr.toLowerCase() : 'unverified'}`}>
-                          {item.cefr ?? '❓'}
+                        <span
+                          className={`word-chip-badge badge-${item.cefr ? item.cefr.toLowerCase() : item.status === 'vesum_form' ? 'vesum-form' : 'unverified'}`}
+                        >
+                          {item.cefr ?? (item.status === 'vesum_form' ? '🧬' : '❓')}
                         </span>
                       </div>
                     ))}
