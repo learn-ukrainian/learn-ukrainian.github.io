@@ -90,9 +90,12 @@ def _replay_result(raw: bytes) -> object:
             "transport_outcome": payload.get("transport_outcome", "error"),
         }
     actual_model = str(payload.get("from_model") or payload.get("model") or "acp-bridge-error")
-    applied_effort = payload.get("effort_applied")
-    if applied_effort is None and payload.get("effort") not in {None, "unknown"}:
+    if "effort_applied" in payload:
+        applied_effort = payload["effort_applied"]
+    elif payload.get("effort") not in {None, "unknown"}:
         applied_effort = payload["effort"]
+    else:
+        applied_effort = None
     provenance = {
         "from_model": actual_model,
         "model_requested": payload.get("model_requested") or actual_model,

@@ -108,7 +108,7 @@ def test_terminal_failure_replays_without_invoking_provider_again(
         "from_model": "gemini-3.6-flash-high",
         "model_requested": "gemini-3.6-flash-high",
         "effort_requested": "high",
-        "effort_applied": "high",
+        "effort_applied": None,
         "harness": "acp",
         "replayed": True,
         "transport": "acp",
@@ -372,6 +372,27 @@ def test_acp_result_receipt_and_replay_preserve_response_provenance() -> None:
         "replayed": True,
         "transport": "acp",
     }
+
+
+def test_acp_replay_preserves_explicit_none_effort_applied() -> None:
+    result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.6-flash-high",
+        response="answer",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+    payload = json.loads(_acp_compat._result_receipt(result))
+    payload["effort_applied"] = None
+
+    replay = _acp_compat._replay_result(json.dumps(payload).encode("utf-8"))
+
+    assert replay.usage_record["effort_applied"] is None
 
 
 def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> None:
