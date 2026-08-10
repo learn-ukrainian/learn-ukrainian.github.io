@@ -235,8 +235,9 @@ adversarial Claude review run. It hardcodes `--agent claude --mode
 read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
 effort override is passed, then builds a review prompt from either
 `gh pr view` plus `gh pr diff` or the target file/directory contents.
-Use it for blocking logic/security/test review, not for stylistic
-preferences. Prefer `review-pr` for ordinary formal CF review.
+Use **three-dot** evidence only (`gh pr diff`, `gh pr view --json files`,
+or merge-base…HEAD) — never two-dot `base-tip..HEAD` against a moved base
+(#5802). Prefer `review-pr` for ordinary formal CF review.
 
 ### Worktree cleanup (post-merge painpoint)
 

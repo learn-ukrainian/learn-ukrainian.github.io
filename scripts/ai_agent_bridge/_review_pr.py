@@ -312,6 +312,15 @@ _DEFAULT_CHECKLIST = """\
 **Expected:** pull the PR evidence yourself (sealed snapshot / gh). Do not request
 the operator to paste the diff.
 
+### Diff semantics (Layer 3 / #5802 — non-negotiable)
+Use **three-dot** evidence only: the sealed snapshot manifest, `gh pr view {pr}
+--json files`, `gh pr diff {pr}`, or
+`git diff $(git merge-base <base> <head>)...<head>`.
+**Never** use two-dot `git diff <base-tip>..<head>` against a moved base tip —
+that invents deletions of files main gained after the merge-base and produces
+confident-but-false BLOCK verdicts. Every finding `location.path` MUST appear
+on the PR's three-dot file list; paths outside that surface are gate-invalid.
+
 ### Required output
 Emit exactly one canonical `code-review-findings.v1` JSON object — no markdown
 or trailing `VERDICT:` line. It must contain `overall`
@@ -351,6 +360,49 @@ def parse_pr_number(raw: str) -> int:
     return int(match.group("num"))
 
 
+def _ground_truth_brief_from_checkout(
+    checkout: Any,
+    *,
+    repository: str,
+    pr_number: int,
+) -> str | None:
+    """Build a human-readable three-dot surface brief from a sealed snapshot."""
+    changed_paths = tuple(getattr(checkout, "changed_paths", ()) or ())
+    head_sha = str(getattr(checkout, "sha", "") or "").strip()
+    base_sha = str(getattr(checkout, "base_sha", "") or "").strip()
+    if not changed_paths or not head_sha or not base_sha:
+        return None
+    from scripts.fleet_comms.review_ground_truth import (
+        format_ground_truth_brief,
+        inventory_from_path_status,
+    )
+
+    deleted: set[str] = set()
+    try:
+        from scripts.ai_agent_bridge._review_worktree import (
+            ReviewWorktreeError,
+            _deleted_paths_from_manifest,
+        )
+
+        manifest_path = Path(checkout.path) / ".review-bundle" / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        deleted = set(_deleted_paths_from_manifest(manifest, changed_paths))
+    except (OSError, json.JSONDecodeError, TypeError, ValueError, ReviewWorktreeError):
+        deleted = set()
+
+    entries: list[tuple[str, str]] = []
+    for path in changed_paths:
+        entries.append((path, "DELETED" if path in deleted else "MODIFIED"))
+    inventory = inventory_from_path_status(
+        repository=repository,
+        pr_number=pr_number,
+        head_sha=head_sha,
+        base_ref_oid=base_sha,
+        entries=entries,
+    )
+    return format_ground_truth_brief(inventory)
+
+
 def build_review_pr_prompt(
     pr: int,
     *,
@@ -358,6 +410,7 @@ def build_review_pr_prompt(
     model: str,
     effort: str,
     extra: str | None = None,
+    ground_truth: str | None = None,
 ) -> str:
     body = _DEFAULT_CHECKLIST.format(
         pr=pr,
@@ -365,6 +418,8 @@ def build_review_pr_prompt(
         reviewer_model=model,
         reviewer_effort=effort,
     )
+    if ground_truth and ground_truth.strip():
+        body = f"{body}\n\n{ground_truth.strip()}\n"
     if extra and extra.strip():
         body = f"{body}\n\n## Additional scope\n{extra.strip()}\n"
     body = prepend_read_only_contract(body)
@@ -1228,12 +1283,18 @@ def handle_review_pr(args: argparse.Namespace) -> int:
                             file=sys.stderr,
                         )
                         return 2
+                    ground_truth = _ground_truth_brief_from_checkout(
+                        checkout,
+                        repository=DEFAULT_REPOSITORY,
+                        pr_number=pr,
+                    )
                     prompt = build_review_pr_prompt(
                         pr,
                         reviewer=routing_reservation.resolved_route,
                         model=model,
                         effort=effort or "provider_default",
                         extra=args.extra,
+                        ground_truth=ground_truth,
                     )
                     invocation_evidence = checkout.review_prompt_evidence(
                         "acp-claude" if participant == "claude" else "acp"

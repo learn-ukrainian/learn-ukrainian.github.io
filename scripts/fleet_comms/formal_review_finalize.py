@@ -25,6 +25,11 @@ from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJobsError,
     FormalReviewJobService,
 )
+from scripts.fleet_comms.review_ground_truth import (
+    ReviewGroundTruthError,
+    fetch_pr_change_inventory,
+    validate_findings_against_inventory,
+)
 from scripts.fleet_comms.review_publication import (
     DEFAULT_GATE_KIND,
     ReviewEvidence,
@@ -235,6 +240,23 @@ def finalize_formal_review_verdict(
     sha = sha.strip().lower()
     if not _SHA_RE.match(sha):
         raise FormalReviewFinalizeError(f"invalid_head_sha: {sha!r}")
+
+    # Layer 3 (#5802): refuse findings that cite paths outside GitHub's
+    # three-dot PR file surface (two-dot-against-moved-base artifact).
+    if review_evidence is not None and review_evidence.findings:
+        try:
+            inventory = fetch_pr_change_inventory(
+                repository=repository,
+                pr_number=pr_number,
+                runner=runner,
+            )
+            validate_findings_against_inventory(
+                review_evidence,
+                inventory,
+                expected_head_sha=sha,
+            )
+        except (ReviewGroundTruthError, ReviewPublicationError) as exc:
+            raise FormalReviewFinalizeError(str(exc)) from exc
 
     job_created = False
     with FormalReviewJobService(root=plane_root) as service:
