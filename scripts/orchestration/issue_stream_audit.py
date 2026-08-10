@@ -662,7 +662,10 @@ def load_milestone_rows(path: Path = WORKSTREAMS_PATH) -> list[dict]:
             # produce a fabricated staleness age.
             with contextlib.suppress(ValueError):
                 confirmed_at = date.fromisoformat(confirmed_match.group(1))
-        marker_match = MILESTONE_MARKER_RE.search(row_text)
+        # STALE/VACANT are row-state markers only.  Matching the whole row
+        # incorrectly turns incidental milestone prose (for example, "stale
+        # cache") into a state warning.
+        marker_match = MILESTONE_MARKER_RE.search(cells[header["state"]])
         rows.append(
             {
                 "stream": cells[header["stream"]],
@@ -757,12 +760,24 @@ def fetch_open_issues(repo_root: Path = ROOT) -> list[dict]:
 
 
 def fetch_issue_states(
-    numbers: set[int], repo_root: Path = ROOT
+    numbers: set[int],
+    repo_root: Path = ROOT,
+    *,
+    known_open_issue_numbers: set[int] | None = None,
 ) -> tuple[dict[int, str], set[int]]:
-    """Resolve milestone issue states without letting advisory lookup abort an audit."""
+    """Resolve milestone states without letting advisory lookup abort an audit.
+
+    ``fetch_open_issues`` already established that its returned issue numbers
+    are open.  Reuse that authoritative snapshot and only issue a per-issue
+    lookup for closed or otherwise unknown milestone references.
+    """
     states: dict[int, str] = {}
     unavailable: set[int] = set()
+    known_open = known_open_issue_numbers or set()
     for number in sorted(numbers):
+        if number in known_open:
+            states[number] = "OPEN"
+            continue
         try:
             issue = _gh_json(
                 ["issue", "view", str(number), "--json", "number,state"], cwd=repo_root
@@ -1032,7 +1047,16 @@ def run_audit(
     milestone_numbers = {
         number for row in milestone_rows for number in row["issue_numbers"]
     }
-    issue_states, unavailable_numbers = fetch_issue_states(milestone_numbers, root)
+    open_issue_numbers = {
+        issue["number"]
+        for issue in open_issues
+        if isinstance(issue.get("number"), int)
+    }
+    issue_states, unavailable_numbers = fetch_issue_states(
+        milestone_numbers,
+        root,
+        known_open_issue_numbers=open_issue_numbers,
+    )
     report["warnings"] = milestone_warnings(
         milestone_rows,
         issue_states,

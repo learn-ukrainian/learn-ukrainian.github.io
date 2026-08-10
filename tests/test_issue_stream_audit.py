@@ -155,7 +155,7 @@ def test_milestone_warnings_cover_marked_rows_closed_issues_and_old_confirmation
             | --- | --- | --- | --- |
             | product | STALE | Repair #41 [confirmed-at: 2026-01-01] | Never inspect #99 |
             | intake | ACTIVE | Rebuild #42 | — |
-            | corpus | *(operator to set)* | *(VACANT — choose #50–#52)* | — |
+            | corpus | *(VACANT — operator to set)* | Choose #50–#52 | — |
 
             ## Next section
             | Stream | State | Current milestone | Done when |
@@ -198,6 +198,27 @@ def test_milestone_warnings_cover_marked_rows_closed_issues_and_old_confirmation
     ]
 
 
+def test_milestone_marker_is_scoped_to_state_cell(tmp_path):
+    workstreams = tmp_path / "WORKSTREAMS.md"
+    workstreams.write_text(
+        textwrap.dedent(
+            """
+            ## Stream milestones (the focus layer)
+
+            | Stream | State | Current milestone | Done when |
+            | --- | --- | --- | --- |
+            | product | ACTIVE | Refresh stale cache for #41 | — |
+            | intake | VACANT | Assign #42 | — |
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    rows = load_milestone_rows(workstreams)
+
+    assert [row["marker"] for row in rows] == [None, "VACANT"]
+
+
 def test_milestone_issue_state_lookup_degrades_to_warning(monkeypatch):
     def fake_gh_json(args, **_kwargs):
         if args[2] == "41":
@@ -209,6 +230,71 @@ def test_milestone_issue_state_lookup_degrades_to_warning(monkeypatch):
 
     assert states == {41: "CLOSED"}
     assert unavailable == {42}
+
+
+def test_milestone_issue_state_lookup_reuses_known_open_issues(monkeypatch):
+    def unexpected_gh_json(*_args, **_kwargs):
+        raise AssertionError("known-open issue must not be queried")
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", unexpected_gh_json)
+
+    states, unavailable = fetch_issue_states({41}, known_open_issue_numbers={41})
+
+    assert states == {41: "OPEN"}
+    assert unavailable == set()
+
+
+def test_milestone_warnings_report_closed_issue_and_ignore_invalid_confirmation():
+    warnings = milestone_warnings(
+        [
+            {
+                "stream": "product",
+                "marker": None,
+                "issue_numbers": {41},
+                "confirmed_at": date(2026, 1, 1),
+            },
+            {
+                "stream": "intake",
+                "marker": None,
+                "issue_numbers": set(),
+                # Invalid confirmed-at values are ignored by the parser, so
+                # they must not be invented into age warnings downstream.
+                "confirmed_at": None,
+            },
+        ],
+        {41: "CLOSED"},
+        today=date(2026, 2, 1),
+        max_confirmed_age_days=14,
+    )
+
+    assert warnings == [
+        {"code": "milestone_closed_issue", "stream": "product", "issue": 41},
+        {
+            "code": "milestone_confirmed_at_stale",
+            "stream": "product",
+            "confirmed_at": "2026-01-01",
+            "age_days": 31,
+            "max_age_days": 14,
+        },
+    ]
+
+
+def test_invalid_confirmed_at_marker_is_ignored(tmp_path):
+    workstreams = tmp_path / "WORKSTREAMS.md"
+    workstreams.write_text(
+        textwrap.dedent(
+            """
+            ## Stream milestones (the focus layer)
+
+            | Stream | State | Current milestone | Done when |
+            | --- | --- | --- | --- |
+            | product | ACTIVE | Repair #41 [confirmed-at: 2026-02-30] | — |
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_milestone_rows(workstreams)[0]["confirmed_at"] is None
 
 
 def test_milestone_warnings_are_non_fatal_in_check_mode(monkeypatch, capsys):
@@ -238,6 +324,25 @@ def test_milestone_warnings_are_non_fatal_in_check_mode(monkeypatch, capsys):
     assert "WARN: stream milestone infra could not verify issue #43 status" in output
     assert "WARN: stream milestone infra confirmed-at 2026-01-01 is 31 days old (max 14)" in output
     assert "ok: True" in output
+
+
+def test_max_confirmed_age_days_cli_reaches_audit(monkeypatch, capsys):
+    observed: dict[str, int] = {}
+    report = classify(
+        _issues(100, 150, 200),
+        {"product": [100, 150], "infra": [200]},
+        {100: (set(), set()), 150: (set(), set()), 200: (set(), set())},
+    )
+
+    def fake_run_audit(**kwargs):
+        observed.update(kwargs)
+        return report
+
+    monkeypatch.setattr(issue_stream_audit, "run_audit", fake_run_audit)
+
+    assert main(["--max-confirmed-age-days", "21"]) == 0
+    assert observed == {"max_confirmed_age_days": 21}
+    assert "ok: True" in capsys.readouterr().out
 
 
 # --------------------------------------------------------------------------- #
