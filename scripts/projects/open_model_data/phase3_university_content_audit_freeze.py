@@ -167,6 +167,7 @@ def _policy_sets(policy: Mapping[str, Any]) -> dict[str, set[str]]:
 def _validate_topics(
     topics: Any,
     candidate_ids: set[str],
+    mandatory_ids: set[str],
     quarantine_ids: set[str],
     *,
     expected_statuses: Counter[str],
@@ -193,6 +194,10 @@ def _validate_topics(
         require(isinstance(depth, str) and depth.strip(), f"{area}: missing supported depth")
         require(isinstance(needed, str) and needed.strip(), f"{area}: missing qualified-source gap")
         if status == "sufficient":
+            require(
+                bool(supporting) and set(supporting) <= mandatory_ids,
+                f"{area}: sufficient row requires mandatory authority sources",
+            )
             require(needed.startswith("None;"), f"{area}: sufficient row must state that no source is needed")
         else:
             require(not needed.startswith("None;"), f"{area}: incomplete row cannot suppress its source need")
@@ -245,6 +250,7 @@ def validate_document(
     _validate_topics(
         topic_coverage["topics"],
         policy_sets["candidate"],
+        policy_sets["mandatory"],
         policy_sets["quarantine"],
         expected_statuses=Counter({"partial": 21, "sufficient": 5}),
     )
@@ -401,6 +407,7 @@ def build_document(
     _validate_topics(
         matrix_topics,
         policy_sets["candidate"],
+        policy_sets["mandatory"],
         policy_sets["quarantine"],
         expected_statuses=Counter({"partial": 22, "sufficient": 4}),
     )

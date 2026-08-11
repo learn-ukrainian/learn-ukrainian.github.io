@@ -100,6 +100,21 @@ def test_rejects_suppressed_partial_gap_even_with_fresh_receipt_hash() -> None:
         freeze.validate_document(_rehash(document))
 
 
+def test_authority_lane() -> None:
+    document = copy.deepcopy(_artifact())
+    universe = document["source_universe"]
+    contextual_id = next(
+        iter(
+            set(universe["database_resident_source_ids"])
+            - set(universe["mandatory_conversion_source_ids"])
+        )
+    )
+    topic = next(row for row in document["topic_coverage"]["topics"] if row["status"] == "sufficient")
+    topic["supporting_source_ids"] = [contextual_id]
+    with pytest.raises(freeze.UniversityContentAuditFreezeError, match="mandatory authority"):
+        freeze.validate_document(_rehash(document))
+
+
 def test_rejects_source_coverage_or_phase_completion_claims() -> None:
     for field in ("source_coverage_ready", "overall_phase3_source_freeze_ready", "phase3_complete"):
         document = copy.deepcopy(_artifact())
