@@ -116,6 +116,10 @@ class IngestError(RuntimeError):
     """Deterministic ingest failure."""
 
 
+class PostCommitIngestError(IngestError):
+    """The database commit landed, but a post-commit proof step failed."""
+
+
 def find_jsonl(slug: str, *, chunks_root: Path | None = None) -> Path:
     """Resolve one source JSONL under the explicit or canonical chunk root."""
     root = Path(chunks_root) if chunks_root is not None else CHUNKS_DIR
@@ -497,6 +501,7 @@ def ingest(
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
     checkpoint: list[int] | None = None
+    post_commit_error: str | None = None
     try:
         conn.execute("PRAGMA foreign_keys = ON")
         journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
@@ -576,9 +581,20 @@ def ingest(
             conn.execute("COMMIT")
             committed = True
         if journal_mode == "wal":
-            checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-            if checkpoint != [0, 0, 0]:
-                raise IngestError(f"WAL checkpoint did not settle after ingest: {checkpoint}")
+            try:
+                checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+            except sqlite3.Error as exc:
+                if not committed:
+                    raise
+                post_commit_error = (
+                    "WAL checkpoint failed after ingest: "
+                    f"{type(exc).__name__}: {exc}"
+                )
+            if checkpoint is not None and checkpoint != [0, 0, 0]:
+                message = f"WAL checkpoint did not settle after ingest: {checkpoint}"
+                if not committed:
+                    raise IngestError(message)
+                post_commit_error = message
     except BaseException:
         # Explicit rollback (review, PR #4624): never leave the live DB with
         # an open write transaction on the error path.
@@ -588,7 +604,13 @@ def ingest(
         conn.close()
     receipt_document = {
         "schema_version": "incremental-textbook-ingest.v2",
-        "status": "committed" if committed else "dry_run_rolled_back",
+        "status": (
+            "committed_with_post_commit_error"
+            if post_commit_error is not None
+            else "committed"
+            if committed
+            else "dry_run_rolled_back"
+        ),
         "execution_scope": (
             "copied_database_rehearsal"
             if copied_database_rehearsal
@@ -618,6 +640,7 @@ def ingest(
         "foreign_key_failure_hash_after": foreign_key_hash_after,
         "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
         "wal_checkpoint": checkpoint,
+        "post_commit_error": post_commit_error,
         "per_source": [receipts[slug] for slug in sorted(receipts)],
     }
     if receipt_path is not None:
@@ -627,6 +650,8 @@ def ingest(
         )
     for _slug, receipt in receipts.items():
         print(f"  receipt: {json.dumps(receipt, ensure_ascii=False, sort_keys=True)}")
+    if post_commit_error is not None:
+        raise PostCommitIngestError(post_commit_error)
     return counts
 
 
@@ -708,6 +733,7 @@ def quarantine_native_anomaly_chunks(
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
     checkpoint: list[int] | None = None
+    post_commit_error: str | None = None
     try:
         conn.execute("PRAGMA foreign_keys = ON")
         journal_mode = str(conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
@@ -811,9 +837,17 @@ def quarantine_native_anomaly_chunks(
             conn.execute("COMMIT")
             committed = True
             if journal_mode == "wal":
-                checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
-                if checkpoint != [0, 0, 0]:
-                    raise IngestError(f"WAL checkpoint did not settle after quarantine: {checkpoint}")
+                try:
+                    checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
+                except sqlite3.Error as exc:
+                    post_commit_error = (
+                        "WAL checkpoint failed after quarantine: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+                if checkpoint is not None and checkpoint != [0, 0, 0]:
+                    post_commit_error = (
+                        f"WAL checkpoint did not settle after quarantine: {checkpoint}"
+                    )
     except BaseException:
         conn.rollback()
         raise
@@ -822,7 +856,13 @@ def quarantine_native_anomaly_chunks(
 
     return {
         "schema_version": "textbook-native-anomaly-quarantine.v1",
-        "status": "committed" if committed else "dry_run_rolled_back",
+        "status": (
+            "committed_with_post_commit_error"
+            if post_commit_error is not None
+            else "committed"
+            if committed
+            else "dry_run_rolled_back"
+        ),
         "policy": "Exact audited chunk ids only; no text repair, replacement, or inferred deletion.",
         "audit_path": str(Path(audit_path)),
         "audit_sha256": sha256_file(Path(audit_path)),
@@ -845,6 +885,7 @@ def quarantine_native_anomaly_chunks(
         "foreign_key_failure_hash_after": foreign_key_hash_after,
         "foreign_key_failures_unchanged": foreign_key_failures_after == foreign_key_failures_before,
         "wal_checkpoint": checkpoint,
+        "post_commit_error": post_commit_error,
         "per_source": per_source,
     }
 
@@ -919,6 +960,12 @@ def main(argv: list[str] | None = None) -> int:
                     json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
                 )
             print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
+            if receipt["post_commit_error"] is not None:
+                print(
+                    f"COMMITTED_WITH_POST_COMMIT_ERROR: {receipt['post_commit_error']}",
+                    file=sys.stderr,
+                )
+                return 3
             return 0
         slugs = list(WAVE1_SLUGS) if args.wave1 else list(args.slugs or [])
         counts = ingest(
@@ -932,6 +979,9 @@ def main(argv: list[str] | None = None) -> int:
             copied_database_rehearsal=args.copied_db_rehearsal,
             live_ingest_gate_path=args.live_ingest_gate,
         )
+    except PostCommitIngestError as exc:
+        print(f"COMMITTED_WITH_POST_COMMIT_ERROR: {exc}", file=sys.stderr)
+        return 3
     except (IngestError, ValueError) as exc:
         # ValueError: _build_textbook_row's strictness gates (author_uk,
         # unmapped subject) — surface cleanly instead of a traceback.
