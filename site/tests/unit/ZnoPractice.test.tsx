@@ -30,10 +30,56 @@ describe('ZnoPractice', () => {
     const user = userEvent.setup();
     render(<ZnoPractice decks={decks} />);
     await user.click(screen.getByTestId('zno-deck-zno-paronym'));
-    await user.click(screen.getByRole('button', { name: 'Б. друга' }));
+    const correctOption = screen.getByRole('button', { name: 'Б друга' });
+    await user.click(correctOption);
     expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✓ Правильно');
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveClass('correct');
+    expect(correctOption).toHaveAttribute('data-selected', 'true');
+    expect(correctOption).toHaveAttribute('data-correct', 'true');
+    expect(correctOption).toHaveClass('selected', 'correct');
     expect(localStorage.getItem(SRS_STORAGE_KEY)).not.toBeNull();
     expect(loadState().cards.has(cardKey('zno:7', 'choice'))).toBe(true);
+  });
+
+  test('marks the learner\'s wrong pick red and the correct option green', async () => {
+    const user = userEvent.setup();
+    render(<ZnoPractice decks={decks} />);
+    await user.click(screen.getByTestId('zno-deck-zno-paronym'));
+    const wrongOption = screen.getByRole('button', { name: 'А перша' });
+    const correctOption = screen.getByRole('button', { name: 'Б друга' });
+    await user.click(wrongOption);
+
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✗ Правильна відповідь: Б');
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveClass('wrong');
+
+    expect(wrongOption).toHaveAttribute('data-selected', 'true');
+    expect(wrongOption).toHaveAttribute('data-wrong', 'true');
+    expect(wrongOption).not.toHaveAttribute('data-correct');
+    expect(wrongOption).toHaveClass('selected', 'wrong');
+
+    expect(correctOption).toHaveAttribute('data-correct', 'true');
+    expect(correctOption).not.toHaveAttribute('data-selected');
+    expect(correctOption).toHaveClass('correct');
+    expect(correctOption).not.toHaveClass('selected', 'wrong');
+  });
+
+  test('renders a distinct passage card for multi-line reading-comprehension stems', async () => {
+    const passageDecks: ZnoPracticeDeck[] = [{
+      deckId: 'zno-orthography', title: 'Орфографія', thinDeck: false,
+      items: [{
+        znoTaskId: 'zno:9', znoMode: 'choice', taskFormat: 'single-choice',
+        stem: 'Прочитайте текст і виконайте завдання\n(1) Усе починається з дитинства.\nОкремо в цьому тексті пишуться слова',
+        options: ['перша', 'друга', 'третя', 'четверта'], correctLetter: 'А', correctIndex: 0,
+        year: 2022, exam: 'nmt', session: 'sesiya-1', taskNo: 5, topicTag: 'Орфографія',
+        attribution: 'Джерело: УЦОЯО · НМТ 2022, сесія 1 · завдання №5',
+      }],
+    }];
+    const user = userEvent.setup();
+    render(<ZnoPractice decks={passageDecks} />);
+    await user.click(screen.getByTestId('zno-deck-zno-orthography'));
+    expect(screen.getByText('Прочитайте текст і виконайте завдання')).toBeInTheDocument();
+    const passage = screen.getByText(/Усе починається з дитинства/);
+    expect(passage).toHaveClass('zno-practice-passage');
   });
 
   test('renders a hub-controlled deck without the standalone picker and returns through its callback', async () => {

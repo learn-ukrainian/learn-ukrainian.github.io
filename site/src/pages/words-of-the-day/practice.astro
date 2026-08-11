@@ -773,15 +773,39 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  /*
+   * #6620: the learner's own pick must be visually distinct even before/instead
+   * of the correct/wrong verdict — `.selected` alone (borderless-primary outline)
+   * is what a mid-click state or a non-graded pick renders as; `.correct`/`.wrong`
+   * always co-occur with `.selected` once the item is locked (see mcOptionAttrs).
+   */
+  :global(.mc-opt.selected) {
+    border-color: var(--lu-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lu-primary) 35%, transparent);
+  }
+
   :global(.mc-opt.correct) {
     border-color: var(--lu-green);
     background: var(--lu-state-correct-bg);
     color: var(--lu-state-correct-fg);
+    box-shadow: none;
   }
 
   :global(.mc-opt.correct .mc-key) {
     border-color: var(--lu-green);
     color: var(--lu-state-correct-fg);
+  }
+
+  :global(.mc-opt.wrong) {
+    border-color: var(--lu-red);
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+    box-shadow: none;
+  }
+
+  :global(.mc-opt.wrong .mc-key) {
+    border-color: var(--lu-red);
+    color: var(--lu-state-wrong-fg);
   }
 
   :global(.cz-task) {
@@ -2031,5 +2055,200 @@ const frontmatter = {
   }
   :global(.practice-stress-verdict.wrong) {
     color: var(--lu-red);
+  }
+
+  /*
+   * #6620: `.zno-practice*` had zero CSS — selected/correct/wrong classes were
+   * dead, and the stem rendered as a flat `pre-wrap` wall of text. This block
+   * gives ZnoPractice the same option/verdict language as `.mc-opt` (shared
+   * tokens, same min-height, same green/red states) plus a dedicated passage
+   * card for multi-line reading-comprehension stems.
+   */
+  :global(.zno-practice) {
+    display: grid;
+    gap: 1rem;
+    color: var(--lu-text);
+  }
+
+  :global(.zno-practice-decks) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+
+  :global(.zno-practice-decks button) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    min-height: 64px;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  :global(.zno-practice-item) {
+    display: grid;
+    gap: 0.85rem;
+    max-width: 760px;
+  }
+
+  :global(.zno-practice-title) {
+    margin: 0;
+    color: var(--lu-text-muted);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  :global(.zno-practice-thin) {
+    margin: 0;
+    color: var(--lu-orange);
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  :global(.zno-practice-instruction) {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1.2rem;
+    font-weight: 850;
+    line-height: 1.4;
+  }
+
+  :global(.zno-practice-passage) {
+    margin: 0;
+    max-width: 68ch;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+    color: var(--lu-text);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  :global(.zno-practice-options) {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.zno-practice-option) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 1px solid var(--lu-border);
+    border-radius: 12px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  }
+
+  :global(.zno-practice-option:hover:not(:disabled)) {
+    border-color: var(--lu-primary);
+    transform: translateX(2px);
+  }
+
+  :global(.zno-practice-option:disabled) {
+    cursor: default;
+  }
+
+  :global(.zno-practice-option-key) {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    color: var(--lu-text-muted);
+    font-size: 0.85rem;
+    font-weight: 900;
+  }
+
+  :global(.zno-practice-option-text) {
+    line-height: 1.45;
+  }
+
+  :global(.zno-practice-option.selected) {
+    border-color: var(--lu-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lu-primary) 35%, transparent);
+  }
+
+  :global(.zno-practice-option.correct) {
+    border-color: var(--lu-green);
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+    box-shadow: none;
+  }
+
+  :global(.zno-practice-option.correct .zno-practice-option-key) {
+    border-color: var(--lu-green);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.zno-practice-option.wrong) {
+    border-color: var(--lu-red);
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+    box-shadow: none;
+  }
+
+  :global(.zno-practice-option.wrong .zno-practice-option-key) {
+    border-color: var(--lu-red);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.zno-practice-verdict) {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    border-radius: 10px;
+    font-weight: 900;
+  }
+
+  :global(.zno-practice-verdict.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.zno-practice-verdict.wrong) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.zno-practice-attribution) {
+    margin: 0;
+    color: var(--lu-text-muted);
+    font-size: 0.82rem;
+  }
+
+  :global(.zno-practice-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  :global(.zno-practice-next) {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+  }
+
+  @media (max-width: 560px) {
+    :global(.zno-practice-passage) {
+      max-width: none;
+    }
   }
 </style>

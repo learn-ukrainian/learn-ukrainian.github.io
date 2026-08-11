@@ -7,9 +7,12 @@ from pathlib import Path
 from scripts.practice_deck.zno import (
     LEXICAL_NORM_SQL,
     MORPHOLOGICAL_NORM_SQL,
+    MORPHOLOGY_SQL,
     ORTHOGRAPHY_LIVE_CANDIDATE_COUNT,
     ORTHOGRAPHY_SQL,
+    PHONETICS_SQL,
     SYNTACTIC_NORM_SQL,
+    SYNTAX_SQL,
     build_zno_shards,
     learner_attribution,
     write_zno_shards,
@@ -39,6 +42,9 @@ def _database(path: Path) -> Path:
         (7, 1, 2021, "zno", "osnovna", 8, "single-choice", "Зламані варіанти", '["а", "а"]', "А", "ТЕМА: Орфографія. Апостроф", "", "", ""),
         (8, 1, 2021, "zno", "osnovna", 9, "single-choice", "Морфологія?", '["а", "б", "в", "г", "ґ"]', "В", "ТЕМА: Морфологія", "morphological_norm", "", ""),
         (9, 1, 2021, "zno", "osnovna", 10, "single-choice", "Синтаксис?", '["а", "б", "в", "г", "ґ"]', "Д", "ТЕМА: Синтаксис", "syntactic_norm", "", ""),
+        (10, 1, 2021, "zno", "osnovna", 11, "single-choice", "Морфологія без норми?", '["а", "б", "в", "г", "ґ"]', "А", "ТЕМА: Морфологія. Іменник", "", "", ""),
+        (11, 1, 2021, "zno", "osnovna", 12, "single-choice", "Синтаксис. Розділові знаки?", '["а", "б", "в", "г", "ґ"]', "Б", "ТЕМА: Синтаксис. Розділові знаки в реченні", "", "", ""),
+        (12, 1, 2021, "zno", "osnovna", 13, "single-choice", "Фонетика?", '["а", "б", "в", "г", "ґ"]', "В", "ТЕМА: Фонетика", "", "", ""),
     ]
     connection.executemany("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
@@ -102,6 +108,30 @@ def test_morphological_and_syntactic_norm_decks_use_exact_topic_norm_predicates(
     assert shards["syntactic-norm"]["items"][0]["stem"] == "Синтаксис?"
     assert residual["decks"]["morphological-norm"]["candidates"] == 1
     assert residual["decks"]["syntactic-norm"]["candidates"] == 1
+
+
+def test_wave_3_decks_emit_from_broad_topic_tag_families(tmp_path: Path) -> None:
+    """#6620: morphology/syntax/phonetics were untapped topic_tag families sitting
+    behind the four thin/repetitive original decks; this pins their predicates and
+    proves each emits real, letter-valid items when candidates exist."""
+    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+
+    assert "instr(t.topic_tag, 'Морфолог') > 0" in MORPHOLOGY_SQL
+    assert "instr(t.topic_tag, 'Синтаксис') > 0" in SYNTAX_SQL
+    assert "instr(t.topic_tag, 'Фонетик') > 0" in PHONETICS_SQL
+
+    assert shards["morphology"]["deckId"] == "zno-morphology"
+    assert residual["decks"]["morphology"]["candidates"] == 2
+    assert residual["decks"]["morphology"]["emitted"] == 2
+
+    assert shards["syntax"]["deckId"] == "zno-syntax"
+    assert residual["decks"]["syntax"]["candidates"] == 2
+    assert residual["decks"]["syntax"]["emitted"] == 2
+
+    assert shards["phonetics"]["deckId"] == "zno-phonetics"
+    assert residual["decks"]["phonetics"]["candidates"] == 1
+    assert residual["decks"]["phonetics"]["emitted"] == 1
+    assert shards["phonetics"]["items"][0]["stem"] == "Фонетика?"
 
 
 def test_attribution_uses_ucyoo_and_never_a_mirror() -> None:
