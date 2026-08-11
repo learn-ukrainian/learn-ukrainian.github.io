@@ -1,0 +1,446 @@
+{
+  "schema": "heritage-calque-wave1-residual",
+  "counts": {
+    "total_raw_rows": 1807,
+    "unique_clean_pairs": 1807,
+    "routed_extend_existing": 24,
+    "routed_new_candidate": 276,
+    "routed_unresolved": 1461,
+    "routed_sense_restricted_conflict": 46,
+    "frames_emitted_extend": 17,
+    "frames_emitted_new": 205,
+    "new_pairs_emitted": 170,
+    "residual_no_carrier": 6,
+    "capped_skipped": 0,
+    "per_pair_capped": 25,
+    "homonym_ambiguous": 47
+  },
+  "residual_no_carrier": [
+    {
+      "error": "З місця",
+      "correct": "Одразу",
+      "route": "new_pair",
+      "nativeSlug": "одразу"
+    },
+    {
+      "error": "бормотати",
+      "correct": "бурмотіти",
+      "route": "new_pair",
+      "nativeSlug": "бурмотіти"
+    },
+    {
+      "error": "ум",
+      "correct": "розум",
+      "route": "new_pair",
+      "nativeSlug": "розум"
+    },
+    {
+      "error": "Жарко",
+      "correct": "Спекотно",
+      "route": "new_pair",
+      "nativeSlug": "спекотно"
+    },
+    {
+      "error": "правда",
+      "correct": "щоправда",
+      "route": "new_pair",
+      "nativeSlug": "щоправда"
+    },
+    {
+      "error": "рад",
+      "correct": "радий",
+      "route": "new_pair",
+      "nativeSlug": "радий"
+    }
+  ],
+  "capped_skipped": [],
+  "per_pair_capped": [
+    {
+      "error": "Да",
+      "correct": "Так",
+      "route": "extend_existing",
+      "nativeSlug": "так"
+    },
+    {
+      "error": "Таким чином",
+      "correct": "Так",
+      "route": "extend_existing",
+      "nativeSlug": "так"
+    },
+    {
+      "error": "Це вірно",
+      "correct": "Так",
+      "route": "extend_existing",
+      "nativeSlug": "так"
+    },
+    {
+      "error": "да",
+      "correct": "так",
+      "route": "extend_existing",
+      "nativeSlug": "так"
+    },
+    {
+      "error": "до такої міри",
+      "correct": "так",
+      "route": "extend_existing",
+      "nativeSlug": "так"
+    },
+    {
+      "error": "все більшим і",
+      "correct": "дедалі",
+      "route": "new_pair",
+      "nativeSlug": "дедалі"
+    },
+    {
+      "error": "все сильніше й",
+      "correct": "дедалі",
+      "route": "new_pair",
+      "nativeSlug": "дедалі"
+    },
+    {
+      "error": "как",
+      "correct": "як",
+      "route": "new_pair",
+      "nativeSlug": "як"
+    },
+    {
+      "error": "наскільки",
+      "correct": "як",
+      "route": "new_pair",
+      "nativeSlug": "як"
+    },
+    {
+      "error": "у вигляді",
+      "correct": "як",
+      "route": "new_pair",
+      "nativeSlug": "як"
+    },
+    {
+      "error": "виглядає як",
+      "correct": "здається",
+      "route": "new_pair",
+      "nativeSlug": "здається"
+    },
+    {
+      "error": "вродє",
+      "correct": "здається",
+      "route": "new_pair",
+      "nativeSlug": "здається"
+    },
+    {
+      "error": "кажись",
+      "correct": "здається",
+      "route": "new_pair",
+      "nativeSlug": "здається"
+    },
+    {
+      "error": "ніяк",
+      "correct": "здається",
+      "route": "new_pair",
+      "nativeSlug": "здається"
+    },
+    {
+      "error": "у тому числі",
+      "correct": "зокрема",
+      "route": "new_pair",
+      "nativeSlug": "зокрема"
+    },
+    {
+      "error": "з того момену",
+      "correct": "відтоді",
+      "route": "new_pair",
+      "nativeSlug": "відтоді"
+    },
+    {
+      "error": "прям",
+      "correct": "геть",
+      "route": "new_pair",
+      "nativeSlug": "геть"
+    },
+    {
+      "error": "по сторонам",
+      "correct": "довкола",
+      "route": "new_pair",
+      "nativeSlug": "довкола"
+    },
+    {
+      "error": "настільки",
+      "correct": "такий",
+      "route": "new_pair",
+      "nativeSlug": "такий"
+    },
+    {
+      "error": "Доктор",
+      "correct": "Лікарю",
+      "route": "new_pair",
+      "nativeSlug": "лікарю"
+    },
+    {
+      "error": "Докторе",
+      "correct": "Лікарю",
+      "route": "new_pair",
+      "nativeSlug": "лікарю"
+    },
+    {
+      "error": "Доктор",
+      "correct": "лікарю",
+      "route": "new_pair",
+      "nativeSlug": "лікарю"
+    },
+    {
+      "error": "Доку",
+      "correct": "лікарю",
+      "route": "new_pair",
+      "nativeSlug": "лікарю"
+    },
+    {
+      "error": "являються",
+      "correct": "є",
+      "route": "new_pair",
+      "nativeSlug": "є"
+    },
+    {
+      "error": "являється",
+      "correct": "є",
+      "route": "new_pair",
+      "nativeSlug": "є"
+    }
+  ],
+  "homonym_ambiguous": [
+    {
+      "error": "співпадіння",
+      "correct": "збіг",
+      "route": "extend_existing"
+    },
+    {
+      "error": "хорошо",
+      "correct": "добре",
+      "route": "extend_existing"
+    },
+    {
+      "error": "в цілому",
+      "correct": "загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "В принципі",
+      "correct": "Загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "у цілому",
+      "correct": "загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "В загальному",
+      "correct": "Загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "В цілому",
+      "correct": "Загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "Вцілому",
+      "correct": "Загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "в принципі",
+      "correct": "Загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "в принципі",
+      "correct": "загалом",
+      "route": "new_pair"
+    },
+    {
+      "error": "На даний момент",
+      "correct": "Зараз",
+      "route": "new_pair"
+    },
+    {
+      "error": "в даний час",
+      "correct": "зараз",
+      "route": "new_pair"
+    },
+    {
+      "error": "даний момент",
+      "correct": "зараз",
+      "route": "new_pair"
+    },
+    {
+      "error": "на даний час",
+      "correct": "зараз",
+      "route": "new_pair"
+    },
+    {
+      "error": "у даний час",
+      "correct": "зараз",
+      "route": "new_pair"
+    },
+    {
+      "error": "Більш за все",
+      "correct": "Найбільше",
+      "route": "new_pair"
+    },
+    {
+      "error": "Краще за все",
+      "correct": "Найбільше",
+      "route": "new_pair"
+    },
+    {
+      "error": "В інакшому випадку",
+      "correct": "Інакше",
+      "route": "new_pair"
+    },
+    {
+      "error": "по хорошому",
+      "correct": "краще",
+      "route": "new_pair"
+    },
+    {
+      "error": "більше всього",
+      "correct": "найчастіше",
+      "route": "new_pair"
+    },
+    {
+      "error": "Ай да",
+      "correct": "Оце",
+      "route": "new_pair"
+    },
+    {
+      "error": "на протязі",
+      "correct": "протягом",
+      "route": "new_pair"
+    },
+    {
+      "error": "часи порядка",
+      "correct": "часом",
+      "route": "new_pair"
+    },
+    {
+      "error": "Велике",
+      "correct": "Дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "Сильно",
+      "correct": "Дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "велике",
+      "correct": "дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "особа",
+      "correct": "дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "особо",
+      "correct": "дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "супер",
+      "correct": "дуже",
+      "route": "new_pair"
+    },
+    {
+      "error": "даному",
+      "correct": "цьому",
+      "route": "new_pair"
+    },
+    {
+      "error": "слідує",
+      "correct": "варто",
+      "route": "new_pair"
+    },
+    {
+      "error": "пеньондзи",
+      "correct": "гроші",
+      "route": "new_pair"
+    },
+    {
+      "error": "криша",
+      "correct": "дах",
+      "route": "new_pair"
+    },
+    {
+      "error": "понятно",
+      "correct": "зрозуміло",
+      "route": "new_pair"
+    },
+    {
+      "error": "Ляпота)",
+      "correct": "Краса",
+      "route": "new_pair"
+    },
+    {
+      "error": "будуще",
+      "correct": "майбутнє",
+      "route": "new_pair"
+    },
+    {
+      "error": "чуть",
+      "correct": "мало",
+      "route": "new_pair"
+    },
+    {
+      "error": "ниць",
+      "correct": "нічого",
+      "route": "new_pair"
+    },
+    {
+      "error": "охотно",
+      "correct": "охоче",
+      "route": "new_pair"
+    },
+    {
+      "error": "взрид",
+      "correct": "плач",
+      "route": "new_pair"
+    },
+    {
+      "error": "потиху",
+      "correct": "помалу",
+      "route": "new_pair"
+    },
+    {
+      "error": "відправитись",
+      "correct": "піти",
+      "route": "new_pair"
+    },
+    {
+      "error": "рта",
+      "correct": "рота",
+      "route": "new_pair"
+    },
+    {
+      "error": "іменно",
+      "correct": "саме",
+      "route": "new_pair"
+    },
+    {
+      "error": "Да",
+      "correct": "Та",
+      "route": "new_pair"
+    },
+    {
+      "error": "Дане",
+      "correct": "Це",
+      "route": "new_pair"
+    },
+    {
+      "error": "шахмати",
+      "correct": "шахи",
+      "route": "new_pair"
+    }
+  ]
+}
