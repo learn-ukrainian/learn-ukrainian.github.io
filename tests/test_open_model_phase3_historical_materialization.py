@@ -201,15 +201,43 @@ def _run(tmp_path: Path, *, unsafe_member: bool = False):
     return receipt, output, receipt_path
 
 
-def test_conllu_analysis_maps_one_source_token_to_many_unicode_tokens(tmp_path: Path) -> None:
+def test_conllu_analysis_preserves_authoritative_source_tokenization(tmp_path: Path) -> None:
     ud_dir, _, _ = _make_inputs(tmp_path)
     source_hash = file_sha256(ud_dir / "fixture.conllu")
     sentences = parse_conllu(ud_dir / "fixture.conllu", source_file_sha256=source_hash)
     record = build_ud_record(sentences[0])
     analysis = next(item for item in record["linguistic_analyses"] if item["source_surface"] == "С[ы]на")
-    assert len(analysis["token_ids"]) == 5
+    assert analysis["token_ids"] == ["tok:000005"]
+    assert record["text_layers"][0]["tokens"][4]["text"] == "С[ы]на"
+    assert record["analysis_provenance"]["tokenization_alignment"] == "exact"
     assert record["safeguards"]["modern_correction_eligible"] is False
     assert record["provider_calls"] is False
+
+
+def test_conllu_source_boundaries_override_generic_compound_tokenization(tmp_path: Path) -> None:
+    path = tmp_path / "compound.conllu"
+    path.write_text(
+        """# newdoc = uk__compound__1436
+# lang = orv-uk
+# sent_id = uk__compound__1436-1
+# text = А-любо.
+1\tА\tа\tCCONJ\t_\t_\t3\tcc\t_\tSpaceAfter=No
+2\t-\t-\tPUNCT\t_\t_\t1\tpunct\t_\tSpaceAfter=No
+3\tлюбо\tлюбо\tCCONJ\t_\t_\t0\troot\t_\tSpaceAfter=No
+4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_
+""",
+        encoding="utf-8",
+    )
+    sentence = parse_conllu(path, source_file_sha256=file_sha256(path))[0]
+    record = build_ud_record(sentence)
+
+    assert [token["text"] for token in record["text_layers"][0]["tokens"]] == ["А", "-", "любо", "."]
+    assert [analysis["token_ids"] for analysis in record["linguistic_analyses"]] == [
+        ["tok:000001"],
+        ["tok:000002"],
+        ["tok:000003"],
+        ["tok:000004"],
+    ]
 
 
 def test_rejects_cyclic_ud_dependency_graph(tmp_path: Path) -> None:
@@ -263,8 +291,48 @@ def test_ud_overlap_is_rejected(tmp_path: Path) -> None:
     text, spans = materialization._ud_surface(sentence)
     overlapping_spans = list(spans)
     overlapping_spans[1] = overlapping_spans[0]
-    with pytest.raises(HistoricalMaterializationError, match="overlap deterministic tokens"):
+    with pytest.raises(HistoricalMaterializationError, match="stale UD analysis span"):
         materialization._ud_analyses(sentence, text, overlapping_spans)
+
+
+def test_ud_surface_preserves_source_comment_whitespace(tmp_path: Path) -> None:
+    ud_dir, _, _ = _make_inputs(tmp_path)
+    path = ud_dir / "fixture.conllu"
+    path.write_text(
+        UD_FIXTURE.replace(
+            "# text = Во имя Отца и С[ы]на.",
+            "# text = Во  имя Отца и С[ы]на.",
+        ),
+        encoding="utf-8",
+    )
+    sentence = parse_conllu(path, source_file_sha256=file_sha256(path))[0]
+    text, spans = materialization._ud_surface(sentence)
+    assert text == "Во  имя Отца и С[ы]на."
+    assert [text[start:end] for start, end in spans] == [
+        "Во",
+        "имя",
+        "Отца",
+        "и",
+        "С[ы]на",
+        ".",
+    ]
+    record = build_ud_record(sentence)
+    assert record["text_layers"][0]["text"] == text
+
+
+def test_ud_surface_rejects_non_whitespace_comment_disagreement(tmp_path: Path) -> None:
+    ud_dir, _, _ = _make_inputs(tmp_path)
+    path = ud_dir / "fixture.conllu"
+    path.write_text(
+        UD_FIXTURE.replace(
+            "# text = Во имя Отца и С[ы]на.",
+            "# text = Во інше Отца и С[ы]на.",
+        ),
+        encoding="utf-8",
+    )
+    sentence = parse_conllu(path, source_file_sha256=file_sha256(path))[0]
+    with pytest.raises(HistoricalMaterializationError, match="disagrees with token rows"):
+        build_ud_record(sentence)
 
 
 def test_canary_is_deterministic_text_private_and_receipt_text_free(tmp_path: Path) -> None:
