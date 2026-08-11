@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_full_materialization_receipt_v1.schema.json",
+  "title": "Phase 3 historical full-materialization text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mode",
+    "text_free",
+    "gate_sha256",
+    "inputs",
+    "denominators",
+    "selection",
+    "outputs",
+    "coverage",
+    "safeguards",
+    "phase_boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_historical_full_materialization_receipt_v1"
+    },
+    "mode": {
+      "const": "full"
+    },
+    "text_free": {
+      "const": true
+    },
+    "gate_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canary_receipt_file_sha256",
+        "ud_file_sha256",
+        "plug2_archive_sha256",
+        "plug2_metadata_sha256"
+      ],
+      "properties": {
+        "canary_receipt_file_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ud_file_sha256": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "plug2_archive_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "plug2_metadata_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ud_explicit_orv_uk",
+        "ud_other_or_unresolved_sentences",
+        "plug2",
+        "plug2_candidate_uk_token_sum"
+      ],
+      "properties": {
+        "ud_explicit_orv_uk": {
+          "$ref": "#/$defs/udDenominator"
+        },
+        "ud_other_or_unresolved_sentences": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plug2": {
+          "$ref": "#/$defs/plug2Denominator"
+        },
+        "plug2_candidate_uk_token_sum": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "ud_selected_sentences",
+        "ud_selection_sha256",
+        "plug2_selected_documents",
+        "plug2_selection_sha256"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "all_eligible_units_sorted_by_immutable_identity"
+        },
+        "ud_selected_sentences": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ud_selection_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "plug2_selected_documents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "plug2_selection_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ud",
+        "plug2",
+        "total_compressed_bytes",
+        "total_compressed_gib",
+        "ceiling_gib"
+      ],
+      "properties": {
+        "ud": {
+          "$ref": "#/$defs/output"
+        },
+        "plug2": {
+          "$ref": "#/$defs/output"
+        },
+        "total_compressed_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_compressed_gib": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 5
+        },
+        "ceiling_gib": {
+          "const": 5.0
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_materialization_complete",
+        "ud_eligible_set_equal",
+        "plug2_eligible_set_equal",
+        "non_eligible_inputs_excluded",
+        "periodization_assignment_state"
+      ],
+      "properties": {
+        "full_materialization_complete": {
+          "const": true
+        },
+        "ud_eligible_set_equal": {
+          "const": true
+        },
+        "plug2_eligible_set_equal": {
+          "const": true
+        },
+        "non_eligible_inputs_excluded": {
+          "const": true
+        },
+        "periodization_assignment_state": {
+          "const": "unresolved_pending_qualified_historical_review"
+        }
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "source_bytes_preserved",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "historical_forms_protected": {
+          "const": true
+        },
+        "modern_correction_eligible": {
+          "const": false
+        },
+        "source_bytes_preserved": {
+          "const": true
+        },
+        "provider_calls": {
+          "const": false
+        },
+        "phase4_authorized": {
+          "const": false
+        }
+      }
+    },
+    "phase_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_freeze_ready",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "source_freeze_ready": {
+          "const": false
+        },
+        "source_coverage_ready": {
+          "const": false
+        },
+        "phase3_complete": {
+          "const": false
+        },
+        "phase4_blocked": {
+          "const": true
+        }
+      }
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "udDenominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documents",
+        "sentences",
+        "token_rows"
+      ],
+      "properties": {
+        "documents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sentences": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "token_rows": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "plug2Denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documents",
+        "token_sum",
+        "uk_documents",
+        "non_uk_or_unknown_documents"
+      ],
+      "properties": {
+        "documents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "token_sum": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uk_documents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "non_uk_or_unknown_documents": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "records",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "pattern": "^[^/]+\\.jsonl\\.gz$"
+        },
+        "records": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

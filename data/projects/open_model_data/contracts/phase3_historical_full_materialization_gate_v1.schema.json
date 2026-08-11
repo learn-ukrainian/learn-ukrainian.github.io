@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_full_materialization_gate_v1.schema.json",
+  "title": "Phase 3 historical full-materialization authorization gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "bindings",
+    "source_denominators",
+    "rights",
+    "execution",
+    "residuals",
+    "phase_boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_historical_full_materialization_gate_v1"
+    },
+    "text_free": {
+      "const": true
+    },
+    "status": {
+      "const": "AUTHORIZED_ONCE_FOR_EXACT_FULL_MATERIALIZATION"
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "historical_periodization_freeze_sha256",
+        "historical_representation_schema_sha256",
+        "historical_materializer_sha256",
+        "canary_receipt_file_sha256",
+        "canary_ud_output_sha256",
+        "canary_plug2_output_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "phase3_reboot_prompt_v3_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "historical_periodization_freeze_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "historical_representation_schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "historical_materializer_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canary_receipt_file_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canary_ud_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canary_plug2_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "source_denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ud",
+        "plug2"
+      ],
+      "properties": {
+        "ud": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dataset_id",
+            "commit_sha",
+            "file_sha256",
+            "eligible_language",
+            "documents",
+            "sentences",
+            "token_rows"
+          ],
+          "properties": {
+            "dataset_id": {
+              "const": "ud-old-east-slavic-ruthenian-05a029e00ccf"
+            },
+            "commit_sha": {
+              "const": "05a029e00ccf1a374c91a22d17fb6310e646d628"
+            },
+            "file_sha256": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/sha256"
+              }
+            },
+            "eligible_language": {
+              "const": "orv-uk"
+            },
+            "documents": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "sentences": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "token_rows": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "plug2": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dataset_id",
+            "doi",
+            "archive_sha256",
+            "metadata_sha256",
+            "eligible_original_language",
+            "documents",
+            "uk_documents",
+            "non_uk_or_unknown_documents",
+            "token_sum",
+            "uk_token_sum"
+          ],
+          "properties": {
+            "dataset_id": {
+              "const": "plug2-zenodo-19482961"
+            },
+            "doi": {
+              "const": "10.5281/zenodo.19482961"
+            },
+            "archive_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "metadata_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "eligible_original_language": {
+              "const": "UK"
+            },
+            "documents": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "uk_documents": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "non_uk_or_unknown_documents": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "token_sum": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "uk_token_sum": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ud_license",
+        "plug2_license",
+        "attribution_required",
+        "public_training_permitted",
+        "source_specific_rights_preserved"
+      ],
+      "properties": {
+        "ud_license": {
+          "const": "CC BY-SA 4.0"
+        },
+        "plug2_license": {
+          "const": "CC BY 4.0"
+        },
+        "attribution_required": {
+          "const": true
+        },
+        "public_training_permitted": {
+          "const": true
+        },
+        "source_specific_rights_preserved": {
+          "const": true
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_materialization_authorized",
+        "single_use",
+        "selection_algorithm",
+        "immutable_output",
+        "output_outside_git_required",
+        "output_ceiling_gib",
+        "minimum_free_disk_gib",
+        "projected_compressed_gib",
+        "provider_calls_authorized",
+        "stop_conditions"
+      ],
+      "properties": {
+        "full_materialization_authorized": {
+          "const": true
+        },
+        "single_use": {
+          "const": true
+        },
+        "selection_algorithm": {
+          "const": "all_eligible_units_sorted_by_immutable_identity"
+        },
+        "immutable_output": {
+          "const": true
+        },
+        "output_outside_git_required": {
+          "const": true
+        },
+        "output_ceiling_gib": {
+          "const": 5.0
+        },
+        "minimum_free_disk_gib": {
+          "type": "number",
+          "minimum": 5
+        },
+        "projected_compressed_gib": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 5
+        },
+        "provider_calls_authorized": {
+          "const": false
+        },
+        "stop_conditions": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "input_hash_drift",
+              "denominator_drift",
+              "metadata_archive_set_mismatch",
+              "non_utf8_source_member",
+              "historical_representation_validation_failure",
+              "compressed_output_ceiling_exceeded",
+              "minimum_free_disk_not_met"
+            ]
+          }
+        }
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "periodization_assignment_pending_qualified_review",
+        "saint_sophia_current_database_reconciliation_pending",
+        "nimchuk_primary_full_text_pending"
+      ],
+      "properties": {
+        "periodization_assignment_pending_qualified_review": {
+          "const": true
+        },
+        "saint_sophia_current_database_reconciliation_pending": {
+          "const": true
+        },
+        "nimchuk_primary_full_text_pending": {
+          "const": true
+        }
+      }
+    },
+    "phase_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_freeze_ready",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "source_freeze_ready": {
+          "const": false
+        },
+        "source_coverage_ready": {
+          "const": false
+        },
+        "phase3_complete": {
+          "const": false
+        },
+        "phase4_blocked": {
+          "const": true
+        }
+      }
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}
