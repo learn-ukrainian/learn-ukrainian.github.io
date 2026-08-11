@@ -32,6 +32,8 @@
       "required": [
         "phase3_recovery_prompt_v2_sha256",
         "phase3_reboot_prompt_v3_sha256",
+        "full_materialization_gate_schema_sha256",
+        "full_materialization_receipt_schema_sha256",
         "historical_periodization_freeze_sha256",
         "historical_representation_schema_sha256",
         "historical_representation_implementation_sha256",
@@ -47,6 +49,12 @@
           "$ref": "#/$defs/sha256"
         },
         "phase3_reboot_prompt_v3_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "full_materialization_gate_schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "full_materialization_receipt_schema_sha256": {
           "$ref": "#/$defs/sha256"
         },
         "historical_periodization_freeze_sha256": {

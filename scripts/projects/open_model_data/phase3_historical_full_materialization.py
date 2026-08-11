@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -43,13 +44,12 @@ DEFAULT_GATE_PATH = DATA / "admission/phase3_historical_full_materialization_gat
 PERIODIZATION_FREEZE_PATH = (
     DATA / "admission/phase3_historical_periodization_freeze_v1.json"
 )
-HISTORICAL_REPRESENTATION_SCHEMA_PATH = (
-    DATA / "contracts/phase3_historical_representation_v3.schema.json"
-)
 
 GATE_SCHEMA_VERSION = "phase3_historical_full_materialization_gate_v1"
 RECEIPT_SCHEMA_VERSION = "phase3_historical_full_materialization_receipt_v1"
-EXPECTED_GATE_FILE_SHA256 = "a2bad8d9e0374ac5cfffa9a8c0303bca536ffffd4915d58c74f34ad984ca657c"
+EXPECTED_GATE_FILE_SHA256 = "c0b5f49583bdd467cfcc491734cc9756fac02fbf3150f35097fff8fa4bf9c848"
+GATE_SCHEMA_SHA256 = "83089700449318897d87ea8577725e77e9ac634b32096b7ea718ec85cc036a04"
+RECEIPT_SCHEMA_SHA256 = "65468a558a01de40facdf9e0dfff589c39f91f7c16617753e4ff7ff176a264f3"
 
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
@@ -140,6 +140,8 @@ def build_gate(
         "bindings": {
             "phase3_recovery_prompt_v2_sha256": V2_PROMPT_SHA256,
             "phase3_reboot_prompt_v3_sha256": V3_PROMPT_SHA256,
+            "full_materialization_gate_schema_sha256": GATE_SCHEMA_SHA256,
+            "full_materialization_receipt_schema_sha256": RECEIPT_SCHEMA_SHA256,
             "historical_periodization_freeze_sha256": PERIODIZATION_FREEZE_SHA256,
             "historical_representation_schema_sha256": (
                 HISTORICAL_REPRESENTATION_SCHEMA_SHA256
@@ -227,6 +229,14 @@ def validate_gate_document(gate: Mapping[str, Any]) -> dict[str, Any]:
     require(bindings["phase3_recovery_prompt_v2_sha256"] == V2_PROMPT_SHA256, "v2 prompt drift")
     require(bindings["phase3_reboot_prompt_v3_sha256"] == V3_PROMPT_SHA256, "v3 prompt drift")
     require(
+        bindings["full_materialization_gate_schema_sha256"] == GATE_SCHEMA_SHA256,
+        "full materialization gate schema binding drift",
+    )
+    require(
+        bindings["full_materialization_receipt_schema_sha256"] == RECEIPT_SCHEMA_SHA256,
+        "full materialization receipt schema binding drift",
+    )
+    require(
         bindings["historical_periodization_freeze_sha256"] == PERIODIZATION_FREEZE_SHA256,
         "historical periodization binding drift",
     )
@@ -278,8 +288,10 @@ def verify_runtime_bindings() -> None:
         Path(historical.__file__).resolve(): HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
         Path(linguistic.__file__).resolve(): LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
         PERIODIZATION_FREEZE_PATH: PERIODIZATION_FREEZE_SHA256,
-        HISTORICAL_REPRESENTATION_SCHEMA_PATH: HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
+        historical.SCHEMA_PATH: HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
         linguistic.SCHEMA_PATH: LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
+        GATE_SCHEMA_PATH: GATE_SCHEMA_SHA256,
+        RECEIPT_SCHEMA_PATH: RECEIPT_SCHEMA_SHA256,
     }
     for path, expected_sha256 in runtime_bindings.items():
         require(path.is_file(), f"missing bound runtime file: {path}")
@@ -347,6 +359,7 @@ def materialize_full(
     require(receipt_output.parent.resolve() == private_output_dir.resolve(), "receipt must be inside immutable output")
     require(receipt_output.name == RECEIPT_FILENAME, "receipt filename is not the frozen value")
     require(not private_output_dir.exists(), "immutable full output directory already exists")
+    require(private_output_dir.parent.is_dir(), "output parent directory does not exist")
     free_gib = shutil.disk_usage(private_output_dir.parent).free / (1024**3)
     require(
         free_gib >= gate["execution"]["minimum_free_disk_gib"],
@@ -566,7 +579,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             receipt_output=args.receipt_output,
             progress=_progress,
         )
-    except (HistoricalFullMaterializationError, base.HistoricalMaterializationError) as exc:
+    except (
+        HistoricalFullMaterializationError,
+        base.HistoricalMaterializationError,
+        historical.HistoricalRepresentationError,
+        linguistic.LinguisticRepresentationError,
+        SchemaError,
+        OSError,
+        zipfile.BadZipFile,
+    ) as exc:
         print(canonical_json({"status": "blocked", "error": str(exc)}))
         return 2
     print(

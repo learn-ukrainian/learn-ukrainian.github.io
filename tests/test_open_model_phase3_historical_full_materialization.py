@@ -165,9 +165,25 @@ def test_tracked_gate_is_exact_reproducible_and_fail_closed() -> None:
     assert gate["residuals"]["saint_sophia_current_database_reconciliation_pending"] is True
 
 
-def test_runtime_bindings_are_exact_and_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize(
+    "binding_name",
+    [
+        "CANARY_MATERIALIZER_SHA256",
+        "HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256",
+        "LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256",
+        "PERIODIZATION_FREEZE_SHA256",
+        "HISTORICAL_REPRESENTATION_SCHEMA_SHA256",
+        "LINGUISTIC_REPRESENTATION_SCHEMA_SHA256",
+        "GATE_SCHEMA_SHA256",
+        "RECEIPT_SCHEMA_SHA256",
+    ],
+)
+def test_runtime_bindings_are_exact_and_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    binding_name: str,
+) -> None:
     full.verify_runtime_bindings()
-    monkeypatch.setattr(full, "CANARY_MATERIALIZER_SHA256", "0" * 64)
+    monkeypatch.setattr(full, binding_name, "0" * 64)
     with pytest.raises(full.HistoricalFullMaterializationError, match="runtime file drift"):
         full.verify_runtime_bindings()
 
@@ -275,6 +291,60 @@ def test_full_run_rejects_receipt_collision(tmp_path: Path) -> None:
             receipt_output=output / "ud-orv-uk-full.jsonl.gz",
         )
     assert not output.exists()
+
+
+def test_full_run_rejects_missing_output_parent(tmp_path: Path) -> None:
+    ud_dir, archive, metadata = _source_inputs(tmp_path)
+    output = tmp_path / "missing" / full.OUTPUT_DIRECTORY_NAME
+    with pytest.raises(full.HistoricalFullMaterializationError, match="parent directory"):
+        full.materialize_full(
+            gate=_fixture_gate(ud_dir, archive, metadata),
+            gate_file_sha256="f" * 64,
+            ud_dir=ud_dir,
+            plug2_archive=archive,
+            plug2_metadata=metadata,
+            private_output_dir=output,
+            receipt_output=output / full.RECEIPT_FILENAME,
+        )
+    assert not output.exists()
+
+
+def test_main_reports_historical_validation_failure_as_blocked(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(full, "load_gate", lambda path: ({}, "a" * 64))
+    monkeypatch.setattr(full, "verify_canary", lambda **kwargs: None)
+
+    def fail_materialization(**kwargs: object) -> dict[str, object]:
+        raise historical.HistoricalRepresentationError("fixture validation failure")
+
+    monkeypatch.setattr(full, "materialize_full", fail_materialization)
+    result = full.main(
+        [
+            "--canary-receipt",
+            "canary-receipt.json",
+            "--canary-ud-output",
+            "ud.jsonl.gz",
+            "--canary-plug2-output",
+            "plug2.jsonl.gz",
+            "--ud-dir",
+            "ud",
+            "--plug2-archive",
+            "plug2.zip",
+            "--plug2-metadata",
+            "metadata.psv",
+            "--private-output-dir",
+            full.OUTPUT_DIRECTORY_NAME,
+            "--receipt-output",
+            f"{full.OUTPUT_DIRECTORY_NAME}/{full.RECEIPT_FILENAME}",
+        ]
+    )
+    assert result == 2
+    assert json.loads(capsys.readouterr().out) == {
+        "status": "blocked",
+        "error": "fixture validation failure",
+    }
 
 
 def test_historical_schema_validator_is_cached() -> None:
