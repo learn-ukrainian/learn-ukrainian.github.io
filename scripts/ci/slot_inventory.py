@@ -18,9 +18,10 @@ from typing import Any
 
 import yaml
 
-# #5818: main's measured PR inventory is 28 runner slots (25 top-level jobs,
-# including the four-way pytest matrix). Two slots are deliberate headroom.
-CI_SLOT_CEILING = 30
+# #5818/#5907: the measured PR inventory is 29 runner slots (including the
+# parallel pytest fastlane and four-way pytest matrix). Two slots are deliberate
+# headroom for an incident response without silently oversubscribing runners.
+CI_SLOT_CEILING = 31
 
 # CI's planner and its Python job document a four-way pytest topology. This
 # constant is also the fail-closed count for that job should its shard matrix
