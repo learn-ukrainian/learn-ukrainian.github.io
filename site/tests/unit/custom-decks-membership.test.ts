@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest';
 
 import {
   getTeacherLessonVirtualDeck,
+  getTeacherTableVirtualDeck,
   TEACHER_CURATED_MEMBERSHIP_SOURCES,
 } from '../../src/lib/lexicon/custom-decks';
 
@@ -56,5 +57,23 @@ describe('getTeacherLessonVirtualDeck membership sources (#6544)', () => {
       { lemma: 'дзвінок', sources: ['homework'] },
     ]);
     expect(deadOnly.lemma_keys).toEqual(['жива', 'дзвінок']);
+  });
+});
+
+describe('getTeacherTableVirtualDeck weekly source boundary (#4387)', () => {
+  test('uses the committed public, lemma-only Teacher table payload', () => {
+    const deck = getTeacherTableVirtualDeck();
+
+    expect(deck).toMatchObject({
+      id: 'virtual_teacher_table',
+      title: 'Teacher table',
+      titleUk: 'Таблиця зі слів',
+    });
+    expect(deck.cloze_items).toBeUndefined();
+
+    // Current Combined Master Vocabulary Table (#3): 1066 data rows → 1047 unique UK.
+    expect(deck.lemma_keys.length).toBe(1047);
+    expect(deck.lemma_keys.some((key) => /\s/.test(key))).toBe(true);
+    expect(deck.lemma_keys[0]).toBe('Справедливий');
   });
 });

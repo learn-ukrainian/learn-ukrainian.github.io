@@ -5,6 +5,7 @@
  */
 
 import type { PracticeClozeItem } from './srs';
+import teacherTableData from '../../data/lexicon-teacher-table-deck.json';
 
 export interface CustomSet {
   id: string;
@@ -17,6 +18,10 @@ export interface CustomSet {
   deleted_at?: string;
   device_id: string;
   revision: number;
+}
+
+export interface VirtualSpecialSet extends CustomSet {
+  titleUk: string;
 }
 
 export const CUSTOM_SETS_STORAGE_KEY = 'learn_ukrainian_custom_sets_v1';
@@ -105,6 +110,18 @@ const defaultTeacherLessonVirtualDeck: CustomSet = {
   revision: 1,
 };
 
+const defaultTeacherTableVirtualDeck: VirtualSpecialSet = {
+  id: teacherTableData.id,
+  title: teacherTableData.title,
+  titleUk: teacherTableData.titleUk,
+  description: 'Practice set from the Combined Master Vocabulary Table.',
+  lemma_keys: teacherTableData.lemma_keys,
+  created_at: '2026-08-11T00:00:00.000Z',
+  updated_at: '2026-08-11T00:00:00.000Z',
+  device_id: 'system',
+  revision: 1,
+};
+
 /**
  * Source tags used by `lexicon-teacher-curated-membership.json` (#6544).
  * Older filter names (`teacher_lesson` / `private_teacher_lesson`) match zero
@@ -137,6 +154,14 @@ export function getTeacherLessonVirtualDeck(
     lemma_keys: teacherLemmas,
     updated_at: new Date().toISOString(),
   };
+}
+
+/**
+ * Returns the built-in Practice set extracted only from the teacher master
+ * table. It intentionally has no cloze or broader Curated Deck membership.
+ */
+export function getTeacherTableVirtualDeck(): VirtualSpecialSet {
+  return defaultTeacherTableVirtualDeck;
 }
 
 export function readLocalCustomSets(): CustomSet[] {
