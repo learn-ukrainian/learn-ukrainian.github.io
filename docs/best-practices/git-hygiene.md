@@ -14,6 +14,13 @@ accumulates across sessions, silently drifts past merged PRs, and
 eventually produces surprises like "why is this build crashing on an
 import that's clearly in main?"
 
+## Primary-ref audit tripwire
+
+The primary checkout's `reference-transaction` hook records committed `HEAD`
+and local-branch updates in `.agent/primary-ref-audit.jsonl`. This is an audit
+tripwire only, not protection: it is bypassable (for example,
+`core.hooksPath=/dev/null`) and never blocks a Git ref update.
+
 ## Why this is a rule, not a suggestion
 
 Real incident 2026-04-24: a pilot build of `a1/sounds-letters-and-hello`
