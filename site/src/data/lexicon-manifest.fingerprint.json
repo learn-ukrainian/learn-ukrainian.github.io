@@ -1,4 +1,6 @@
 {
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -226,6 +228,10 @@
         "sha256": "8beea77725932b24f64a862220e6b75cab2bc2dea25844bd37ff78071e2bcb9c"
       },
       {
+        "path": "scripts/lexicon/sync_teacher_table_deck.py",
+        "sha256": "2e971c0e77ad3f76df3d9a95971e79e31d342e7f97e36b8bd56d704523a3239a"
+      },
+      {
         "path": "scripts/lexicon/triage_needs_review.py",
         "sha256": "f9f954fdbebca4490702cf3bee46a774c87da23386a26c4634f7b81a7d4c2225"
       },
@@ -242,7 +248,5 @@
         "sha256": "395d77478ebddaed38b6a94cc15227deec39e7aafa8735a7d8d434ccbdf6c79a"
       }
     ]
-  },
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
+  }
 }

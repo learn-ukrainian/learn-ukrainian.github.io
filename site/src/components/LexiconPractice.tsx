@@ -92,6 +92,7 @@ import {
   filterTeacherClozeItems,
   getCachedLowercaseLemmaKeySet,
   getTeacherLessonVirtualDeck,
+  getTeacherTableVirtualDeck,
   readLocalCustomSets,
   saveLocalCustomSet,
   deleteLocalCustomSet,
@@ -1372,6 +1373,9 @@ function resolveDeckLemmaKeySet(
   if (deckFilter === 'virtual_teacher_lesson') {
     return getCachedLowercaseLemmaKeySet(getTeacherLessonVirtualDeck().lemma_keys);
   }
+  if (deckFilter === 'virtual_teacher_table') {
+    return getCachedLowercaseLemmaKeySet(getTeacherTableVirtualDeck().lemma_keys);
+  }
   const customSet = customSets.find((set) => set.id === deckFilter);
   return customSet ? getCachedLowercaseLemmaKeySet(customSet.lemma_keys) : null;
 }
@@ -1385,6 +1389,7 @@ function resolveDeckLemmaKeySet(
 function resolveDeckLemmaKeys(deckFilter: string, customSets: CustomSet[]): string[] | null {
   if (deckFilter === 'all') return null;
   if (deckFilter === 'virtual_teacher_lesson') return getTeacherLessonVirtualDeck().lemma_keys;
+  if (deckFilter === 'virtual_teacher_table') return getTeacherTableVirtualDeck().lemma_keys;
   return customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? [];
 }
 
@@ -1740,6 +1745,10 @@ function LexiconPracticeIsland({
     if (selectedDeckFilter === 'virtual_teacher_lesson') {
       return { uk: 'Відібрана добірка', en: 'Curated Deck' };
     }
+    if (selectedDeckFilter === 'virtual_teacher_table') {
+      const teacherTableDeck = getTeacherTableVirtualDeck();
+      return { uk: teacherTableDeck.titleUk, en: teacherTableDeck.title };
+    }
     const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
     return title ? { uk: title, en: title } : null;
   }, [selectedDeckFilter, customSets]);
@@ -1756,6 +1765,10 @@ function LexiconPracticeIsland({
     if (selectedDeckFilter === 'virtual_teacher_lesson') {
       return CHROME_STRINGS[chromeLocale]['practice.deckCurated'];
     }
+    if (selectedDeckFilter === 'virtual_teacher_table') {
+      const teacherTableDeck = getTeacherTableVirtualDeck();
+      return chromeLocale === 'uk' ? teacherTableDeck.titleUk : teacherTableDeck.title;
+    }
     if (selectedDeckFilter === 'all') {
       return `${CHROME_STRINGS[chromeLocale]['practice.deckAllWords']} (${learnerLevel})`;
     }
@@ -1766,6 +1779,8 @@ function LexiconPracticeIsland({
   const activeDeckChipIcon =
     selectedDeckFilter === 'virtual_teacher_lesson'
       ? '🎓'
+      : selectedDeckFilter === 'virtual_teacher_table'
+        ? '📋'
       : selectedDeckFilter === 'all'
         ? '🌐'
         : '⭐';
@@ -3692,6 +3707,21 @@ function LexiconPracticeIsland({
                         {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓{' '}
                         <ChromeText k="practice.deckCurated" />
                       </button>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selectedDeckFilter === 'virtual_teacher_table'}
+                        className={
+                          selectedDeckFilter === 'virtual_teacher_table' ? 'active' : undefined
+                        }
+                        data-testid="practice-deck-option-virtual_teacher_table"
+                        onClick={() => requestDeckSwitch('virtual_teacher_table')}
+                      >
+                        {selectedDeckFilter === 'virtual_teacher_table' ? '✓ ' : ''}📋{' '}
+                        {chromeLocale === 'uk'
+                          ? getTeacherTableVirtualDeck().titleUk
+                          : getTeacherTableVirtualDeck().title}
+                      </button>
                       {customSets.map((set) => (
                         <button
                           key={set.id}
@@ -3992,6 +4022,15 @@ function LexiconPracticeIsland({
                     style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
                   >
                     {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck'}
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="practice-deck-teacher-table"
+                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_table' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
+                    onClick={() => requestDeckSwitch('virtual_teacher_table')}
+                    style={selectedDeckFilter === 'virtual_teacher_table' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
+                  >
+                    {selectedDeckFilter === 'virtual_teacher_table' ? '✓ ' : ''}📋 {chromeLocale === 'uk' ? getTeacherTableVirtualDeck().titleUk : getTeacherTableVirtualDeck().title}
                   </button>
                   {customSets.map((set) => (
                     <button

@@ -22,8 +22,19 @@ DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lexicon.enrich_manifest import _entry_has_learner_english_anchor
 from scripts.lexicon.manifest_io import load_manifest
+
+# Keep this helper local so Contracts CI (slim venv, no requests) can import this
+# module without loading enrich_manifest → slovnyk_me → requests.
+
+
+def _is_learner_english_text(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    if not text:
+        return False
+    return any("a" <= ch.lower() <= "z" for ch in text)
 
 
 def old_gate_enriched(entry: dict[str, Any]) -> bool:
@@ -33,7 +44,23 @@ def old_gate_enriched(entry: dict[str, Any]) -> bool:
 
 def has_learner_english_anchor(entry: dict[str, Any]) -> bool:
     """Return True when an entry has a learner-facing English meaning anchor."""
-    return _entry_has_learner_english_anchor(entry)
+    gloss = entry.get("gloss")
+    if _is_learner_english_text(gloss):
+        return True
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return False
+    translation = enrichment.get("translation")
+    if isinstance(translation, dict):
+        terms = translation.get("en")
+        if isinstance(terms, list) and any(_is_learner_english_text(term) for term in terms):
+            return True
+    meaning = enrichment.get("meaning")
+    if isinstance(meaning, dict):
+        definitions = meaning.get("definitions")
+        if isinstance(definitions, list) and any(_is_learner_english_text(item) for item in definitions):
+            return True
+    return False
 
 
 def thin_old_gate_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:

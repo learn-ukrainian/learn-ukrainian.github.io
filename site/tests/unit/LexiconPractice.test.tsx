@@ -4367,6 +4367,33 @@ describe('LexiconPractice', () => {
     });
 
     test.each([
+      ['en', 'Teacher table', 'Таблиця зі слів'],
+      ['uk', 'Таблиця зі слів', 'Таблиця зі слів'],
+    ] as const)('selects and scopes the %s Teacher table special set', async (locale, label, ukrainianTitle) => {
+      document.documentElement.dataset.chromeLocale = locale;
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      await user.click(screen.getByTestId('practice-active-deck-chip'));
+      const tableOption = screen.getByTestId('practice-deck-option-virtual_teacher_table');
+      expect(tableOption).toHaveTextContent(label);
+      expect(tableOption).toHaveAttribute('aria-selected', 'false');
+
+      await user.click(tableOption);
+      expect(screen.getByTestId('practice-active-deck-chip')).toHaveTextContent(label);
+
+      await user.click(screen.getByTestId('practice-active-deck-chip'));
+      expect(screen.getByTestId('practice-deck-option-virtual_teacher_table')).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
+      const dailyTitle = await screen.findByTestId('practice-daily-deck-title');
+      expect(dailyTitle.querySelector('[data-loc="uk"]')).toHaveTextContent(
+        `Слова дня — ${ukrainianTitle}`,
+      );
+    });
+
+    test.each([
       ['en', 'Private Curated Deck'],
       ['uk', 'Приватна відібрана добірка'],
     ] as const)('renders the %s manager unlock title', (locale, label) => {
