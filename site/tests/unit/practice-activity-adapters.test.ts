@@ -47,6 +47,10 @@ describe('heritage practice activity adapters', () => {
     expect(heritageToErrorCorrection(heritage(overrides))).toBeNull();
   });
 
+  test('rejects a multi-word calque from ErrorCorrection', () => {
+    expect(heritageToErrorCorrection(heritage({ calque: 'так як' }))).toBeNull();
+  });
+
   test('adapts a full source sentence into a deterministic non-trivial unjumble question', () => {
     const question = heritageToUnjumble(heritage(), 42);
     expect(question).toMatchObject({

@@ -53,9 +53,12 @@ export function UnjumbleQuestion({
   onComplete,
   disabled = false,
 }: UnjumbleQuestionProps) {
-  // Parse words (can be separated by /, |, or ,) and shuffle so they're never in correct order
+  // Preserve punctuation inside already-jumbled slash-delimited tokens while
+  // retaining the legacy separators used by lesson MDX inputs.
   const wordList = useMemo(() => {
-    const rawWords = words.split(/[\/|,]\s*/).map(w => w.trim());
+    const rawWords = (
+      wordsAreJumbled ? words.split(' / ') : words.split(/[\/|,]\s*/)
+    ).map(w => w.trim());
     const correctOrder = answer.split(/\s+/);
 
     // Shuffle ensuring words are NOT in the correct answer order

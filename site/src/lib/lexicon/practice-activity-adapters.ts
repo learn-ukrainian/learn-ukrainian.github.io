@@ -81,6 +81,7 @@ export function heritageToErrorCorrection(
   const sentence = fillSingleBlank(item.prompt, item.calque);
   const options = sourceOptions(item);
   if (!sentence || !options || !item.calque.trim() || !item.answer.trim()) return null;
+  if (contentWords(item.calque).length !== 1) return null;
   if (!appearsExactlyOnce(sentence, item.calque)) return null;
   return {
     sentence,

@@ -155,6 +155,25 @@ describe('UnjumbleQuestion', () => {
     );
     expect(tilesIn(container, 'word-bank').length).toBe(3);
   });
+
+  test('preserves punctuation inside already-jumbled tokens during round-trip', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <UnjumbleQuestion
+        words="дім, / який / ..."
+        answer="дім, який ..."
+        wordsAreJumbled
+      />
+    );
+
+    for (const word of ['дім,', 'який', '...']) {
+      const wordBank = within(container.querySelector('[data-activity="word-bank"]')!);
+      await user.click(wordBank.getByRole('button', { name: word }));
+    }
+    await user.click(submitBtn(container));
+
+    expect(container.querySelector('[data-activity="feedback"]')).toHaveAttribute('data-correct', 'true');
+  });
 });
 
 // ── Unjumble wrapper ──────────────────────────────────────────────────────────
