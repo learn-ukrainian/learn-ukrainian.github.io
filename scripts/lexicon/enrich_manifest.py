@@ -60,6 +60,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+
 def _requests():
     """Lazy import so audit helpers can load without network deps in slim CI venvs."""
     import requests as _requests_mod
