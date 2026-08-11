@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from scripts.lexicon.merge_translation_delta import (
+    count_anchor_loss,
     entry_has_translation,
     entry_translation,
     merge_translation_delta,
@@ -206,6 +207,51 @@ def test_merge_sections_and_attestation_additively() -> None:
     assert entry["sections"]["proverbs"] == {"items": ["Вода камень точит"]}
     assert entry["enrichment"]["literary_attestation"] == [{"id": "grinchenko", "source": "Грінченко"}]
     assert entry["enrichment"]["morphology"] == {"forms": [{"form": "вода"}]}
+
+
+def test_morphology_only_fill_on_empty_enrichment_does_not_trip_anchor_loss() -> None:
+    """A morphology-only fill onto a previously-unenriched entry must not read as anchor loss.
+
+    It gives the entry its first `enrichment` block (so the old thin-gate's raw count can
+    rise -- it now counts as "enriched but thin"), but no English anchor existed before and
+    none was removed, so old_gate_anchor_loss must stay 0.
+    """
+    live = {
+        "entries": [
+            {"url_slug": "гора", "lemma": "гора", "pos": "noun"},
+        ]
+    }
+    before_by_slug = {e["url_slug"]: copy.deepcopy(e) for e in live["entries"]}
+    pulled = {
+        "entries": [
+            {
+                "url_slug": "гора",
+                "lemma": "гора",
+                "pos": "noun",
+                "enrichment": {"morphology": {"forms": [{"form": "гора"}]}},
+            }
+        ]
+    }
+
+    stats = merge_translation_delta(live, pulled, stamp_generated_at=False)
+    after_by_slug = {e["url_slug"]: e for e in live["entries"]}
+
+    assert stats.filled_morphology == 1
+    assert live["entries"][0]["enrichment"]["morphology"] == {"forms": [{"form": "гора"}]}
+    assert prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug) == 0
+    assert count_anchor_loss(before_by_slug, after_by_slug) == 0
+
+
+def test_stripping_english_anchor_trips_anchor_loss() -> None:
+    """Mutation check: an entry that loses its EN anchor must be caught, no matter the cause."""
+    before_by_slug = {
+        "kiwi": _entry("kiwi", "ківі", en=["kiwi 2"], source="live-balla"),
+    }
+    stripped = copy.deepcopy(before_by_slug["kiwi"])
+    stripped["enrichment"]["translation"]["en"] = []
+    after_by_slug = {"kiwi": stripped}
+
+    assert count_anchor_loss(before_by_slug, after_by_slug) == 1
 
 
 def test_add_source_attaches_section_source_when_enrichment_absent() -> None:
