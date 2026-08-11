@@ -6,6 +6,10 @@
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
+        "path": "scripts/lexicon/admit_teacher_table.py",
+        "sha256": "11544f3a5dfceb10aa5e091a8cab40bb8405ac11343776bc5be71cc29d8ea9c3"
+      },
+      {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
         "sha256": "8bc44dd8a1e46e287d20b32dce2bf4d185354f1db963d51008025940094c08e6"
       },
