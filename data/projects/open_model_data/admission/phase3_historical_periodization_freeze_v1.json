@@ -1,0 +1,619 @@
+{
+  "bindings": {
+    "phase3_complete_source_policy_v4_sha256": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559",
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+  },
+  "evidence": [
+    {
+      "authority": "qualified_university_synthesis",
+      "document_sha256": "77713275fe6d1b903fef8ddfc5a171595798d547f87c898b6b0f0d696b6f5a37",
+      "evidence_id": "university_five_stage_pages_13_14",
+      "evidence_role": "direct_framework_exposition",
+      "full_text_state": "locally_acquired",
+      "locator": {
+        "bibliographic_citation": "О. Купчинська, К. Пілецький. Історична граматика української мови. Практичне заняття 1, с. 13–14.",
+        "chunk_ids": [
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024_s0012",
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024_s0013"
+        ],
+        "pages": [13, 14],
+        "project_relative_path": "university_corpus/jsonl/grade-00/uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024.jsonl",
+        "source_url": null
+      },
+      "rights_scope": "contextual_retrieval",
+      "source_id": "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "supports_framework_ids": [
+        "university_five_stage_synthesis"
+      ],
+      "title": "Історична граматика української мови"
+    },
+    {
+      "authority": "primary_scholarship",
+      "document_sha256": "717b1e5a05e52549eb7f12a98ea74254362788be453a9737515c7baa34b92c55",
+      "evidence_id": "shevelov_historical_phonology_primary",
+      "evidence_role": "primary_framework_text",
+      "full_text_state": "locally_acquired",
+      "locator": {
+        "bibliographic_citation": "Юрій Шевельов. Історична фонологія української мови. Харків: Акта, 2002.",
+        "chunk_ids": [
+          "850100d0_c0049"
+        ],
+        "pages": [],
+        "project_relative_path": "literary_texts/wave9-shevelov-fonolohiia.jsonl",
+        "source_url": "http://izbornyk.org.ua/shevelov/shev.htm"
+      },
+      "rights_scope": "research_only",
+      "source_id": "wave9-shevelov-fonolohiia",
+      "supports_framework_ids": [
+        "shevelov_detailed_six_period"
+      ],
+      "title": "Історична фонологія української мови"
+    },
+    {
+      "authority": "qualified_university_reproduction",
+      "document_sha256": "77713275fe6d1b903fef8ddfc5a171595798d547f87c898b6b0f0d696b6f5a37",
+      "evidence_id": "nimchuk_university_reproduction_pages_16_17",
+      "evidence_role": "secondary_reproduction",
+      "full_text_state": "locally_acquired",
+      "locator": {
+        "bibliographic_citation": "О. Купчинська, К. Пілецький. Історична граматика української мови, завдання 5 і список літератури, с. 16–17.",
+        "chunk_ids": [
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024_s0015",
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024_s0016"
+        ],
+        "pages": [16, 17],
+        "project_relative_path": "university_corpus/jsonl/grade-00/uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024.jsonl",
+        "source_url": null
+      },
+      "rights_scope": "contextual_retrieval",
+      "source_id": "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "supports_framework_ids": [
+        "nimchuk_five_stage_with_middle_subperiods"
+      ],
+      "title": "Історична граматика української мови"
+    },
+    {
+      "authority": "peer_reviewed_secondary",
+      "document_sha256": "988c15d6b7db9d5c29d1c2ef200bbc4423265459721bb05bba3edb9631bd7dad",
+      "evidence_id": "nimchuk_uzhnu_peer_review_2023",
+      "evidence_role": "corroborating_peer_review",
+      "full_text_state": "locally_acquired",
+      "locator": {
+        "bibliographic_citation": "Ю. Юсип-Якимович, О. Тимко-Дітко. Мова Української держави: В. В. Німчук до проблеми періодизації розвитку української мови. Науковий вісник Ужгородського університету. Серія: Філологія. 2023. Вип. 2 (50). С. 500–507.",
+        "chunk_ids": [],
+        "pages": [500, 501, 502, 503, 504, 505, 506, 507],
+        "project_relative_path": "historical_language_corpus/raw/qualified-periodization-wave-g/uzhnu-nimchuk-periodization-review-yusyp-yakymovych-tymko-ditko-2023.pdf",
+        "source_url": "https://visnyk-philology.uzhnu.edu.ua/article/view/309569"
+      },
+      "rights_scope": "research_only",
+      "source_id": "uzhnu-nimchuk-periodization-review-2023",
+      "supports_framework_ids": [
+        "nimchuk_five_stage_with_middle_subperiods"
+      ],
+      "title": "Мова Української держави: В. В. Німчук до проблеми періодизації розвитку української мови"
+    },
+    {
+      "authority": "bibliographic_only",
+      "document_sha256": null,
+      "evidence_id": "nimchuk_primary_article_bibliography",
+      "evidence_role": "primary_bibliographic_locator",
+      "full_text_state": "bibliographic_only",
+      "locator": {
+        "bibliographic_citation": "В. В. Німчук. Періодизація як напрямок дослідження генези та історії української мови. Мовознавство. 1997. № 6. С. 3–14; 1998. № 1. С. 3–12.",
+        "chunk_ids": [],
+        "pages": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        "project_relative_path": null,
+        "source_url": null
+      },
+      "rights_scope": "bibliographic_only",
+      "source_id": "nimchuk-periodization-movoznavstvo-1997-1998",
+      "supports_framework_ids": [
+        "nimchuk_five_stage_with_middle_subperiods"
+      ],
+      "title": "Періодизація як напрямок дослідження генези та історії української мови"
+    }
+  ],
+  "frameworks": [
+    {
+      "attributed_to": "Кваліфікований університетський синтез О. Купчинської та К. Пілецького",
+      "authority": "qualified_university_synthesis",
+      "evidence_ids": [
+        "university_five_stage_pages_13_14"
+      ],
+      "framework_id": "university_five_stage_synthesis",
+      "primary_stage_count": 5,
+      "stages": [
+        {
+          "ambiguity": [
+            "Початкову межу джерело не встановлює; кінець VI століття подано як межу з похибкою століття."
+          ],
+          "end_boundary": {
+            "earliest_year": 500,
+            "label": "до VI ст. н. е.",
+            "latest_year": 599,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "university_five_stage_pages_13_14"
+          ],
+          "label_uk": "Праслов’янська мова з протосхіднослов’янськими діалектами",
+          "parent_stage_id": null,
+          "stage_id": "praslovianska",
+          "start_boundary": {
+            "earliest_year": null,
+            "label": "відкрита початкова межа",
+            "latest_year": null,
+            "precision": "open"
+          }
+        },
+        {
+          "ambiguity": [],
+          "end_boundary": {
+            "earliest_year": 999,
+            "label": "кінець X ст.",
+            "latest_year": 999,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "university_five_stage_pages_13_14"
+          ],
+          "label_uk": "Протоукраїнська мова",
+          "parent_stage_id": null,
+          "stage_id": "protoukrainska",
+          "start_boundary": {
+            "earliest_year": 600,
+            "label": "VII ст.",
+            "latest_year": 600,
+            "precision": "century"
+          }
+        },
+        {
+          "ambiguity": [
+            "У джерелі цей етап названо староукраїнським; інші схеми вживають інші назви."
+          ],
+          "end_boundary": {
+            "earliest_year": 1399,
+            "label": "кінець XIV ст.",
+            "latest_year": 1399,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "university_five_stage_pages_13_14"
+          ],
+          "label_uk": "Староукраїнська мова",
+          "parent_stage_id": null,
+          "stage_id": "staroukrainska",
+          "start_boundary": {
+            "earliest_year": 1000,
+            "label": "XI ст.",
+            "latest_year": 1000,
+            "precision": "century"
+          }
+        },
+        {
+          "ambiguity": [
+            "Кінець XVIII століття перекривається з початком нової української доби."
+          ],
+          "end_boundary": {
+            "earliest_year": 1780,
+            "label": "кінець XVIII ст.",
+            "latest_year": 1799,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "university_five_stage_pages_13_14"
+          ],
+          "label_uk": "Середньоукраїнська мова",
+          "parent_stage_id": null,
+          "stage_id": "serednoukrainska",
+          "start_boundary": {
+            "earliest_year": 1400,
+            "label": "XV ст.",
+            "latest_year": 1400,
+            "precision": "century"
+          }
+        },
+        {
+          "ambiguity": [
+            "Початок визначено як кінець XVIII століття, а не як один точний рік."
+          ],
+          "end_boundary": {
+            "earliest_year": null,
+            "label": "дотепер",
+            "latest_year": null,
+            "precision": "open"
+          },
+          "evidence_ids": [
+            "university_five_stage_pages_13_14"
+          ],
+          "label_uk": "Нова українська мова",
+          "parent_stage_id": null,
+          "stage_id": "nova_ukrainska",
+          "start_boundary": {
+            "earliest_year": 1780,
+            "label": "з кінця XVIII ст.",
+            "latest_year": 1799,
+            "precision": "approximate_boundary"
+          }
+        }
+      ]
+    },
+    {
+      "attributed_to": "Юрій Шевельов",
+      "authority": "primary_scholarship",
+      "evidence_ids": [
+        "shevelov_historical_phonology_primary"
+      ],
+      "framework_id": "shevelov_detailed_six_period",
+      "primary_stage_count": 6,
+      "stages": [
+        {
+          "ambiguity": [
+            "Початкову межу не подано; середину XI століття нормалізовано як діапазон."
+          ],
+          "end_boundary": {
+            "earliest_year": 1040,
+            "label": "до середини XI ст.",
+            "latest_year": 1060,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Протоукраїнський період",
+          "parent_stage_id": null,
+          "stage_id": "protoukrainskyi",
+          "start_boundary": {
+            "earliest_year": null,
+            "label": "відкрита початкова межа",
+            "latest_year": null,
+            "precision": "open"
+          }
+        },
+        {
+          "ambiguity": [
+            "Середина XI століття подана як приблизна межа."
+          ],
+          "end_boundary": {
+            "earliest_year": 1399,
+            "label": "кінець XIV ст.",
+            "latest_year": 1399,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Давньоукраїнський період",
+          "parent_stage_id": null,
+          "stage_id": "davnoukrainskyi",
+          "start_boundary": {
+            "earliest_year": 1040,
+            "label": "від середини XI ст.",
+            "latest_year": 1060,
+            "precision": "approximate_boundary"
+          }
+        },
+        {
+          "ambiguity": [
+            "Середина XVI століття подана як приблизна межа."
+          ],
+          "end_boundary": {
+            "earliest_year": 1540,
+            "label": "до середини XVI ст.",
+            "latest_year": 1560,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Ранньосередньоукраїнський період",
+          "parent_stage_id": null,
+          "stage_id": "rannoserendoukrainskyi",
+          "start_boundary": {
+            "earliest_year": 1400,
+            "label": "від початку XV ст.",
+            "latest_year": 1400,
+            "precision": "century"
+          }
+        },
+        {
+          "ambiguity": [
+            "Обидві межі подано як приблизні, а не як точні роки."
+          ],
+          "end_boundary": {
+            "earliest_year": 1700,
+            "label": "до перших років XVIII ст.",
+            "latest_year": 1709,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Середньоукраїнський період",
+          "parent_stage_id": null,
+          "stage_id": "serednoukrainskyi",
+          "start_boundary": {
+            "earliest_year": 1540,
+            "label": "від середини XVI ст.",
+            "latest_year": 1560,
+            "precision": "approximate_boundary"
+          }
+        },
+        {
+          "ambiguity": [
+            "Кінцева межа перекривається з останніми роками XVIII століття."
+          ],
+          "end_boundary": {
+            "earliest_year": 1770,
+            "label": "до останніх років XVIII ст.",
+            "latest_year": 1799,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Пізньосередньоукраїнський період",
+          "parent_stage_id": null,
+          "stage_id": "piznoserednoukrainskyi",
+          "start_boundary": {
+            "earliest_year": 1700,
+            "label": "решта XVIII ст. після перших років",
+            "latest_year": 1709,
+            "precision": "approximate_boundary"
+          }
+        },
+        {
+          "ambiguity": [
+            "Початок визначено як останні роки XVIII століття."
+          ],
+          "end_boundary": {
+            "earliest_year": null,
+            "label": "дотепер",
+            "latest_year": null,
+            "precision": "open"
+          },
+          "evidence_ids": [
+            "shevelov_historical_phonology_primary"
+          ],
+          "label_uk": "Сучасний період",
+          "parent_stage_id": null,
+          "stage_id": "suchasnyi",
+          "start_boundary": {
+            "earliest_year": 1770,
+            "label": "від останніх років XVIII ст.",
+            "latest_year": 1799,
+            "precision": "approximate_boundary"
+          }
+        }
+      ]
+    },
+    {
+      "attributed_to": "Василь Німчук",
+      "authority": "qualified_university_reproduction",
+      "evidence_ids": [
+        "nimchuk_university_reproduction_pages_16_17",
+        "nimchuk_uzhnu_peer_review_2023",
+        "nimchuk_primary_article_bibliography"
+      ],
+      "framework_id": "nimchuk_five_stage_with_middle_subperiods",
+      "primary_stage_count": 5,
+      "stages": [
+        {
+          "ambiguity": [
+            "Межу VI–VII століть не зведено до одного року."
+          ],
+          "end_boundary": {
+            "earliest_year": 500,
+            "label": "до VI–VII ст.",
+            "latest_year": 699,
+            "precision": "range"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Праслов’янська мова з протосхіднослов’янськими діалектами",
+          "parent_stage_id": null,
+          "stage_id": "praslovianska_z_protoskhidnoslovianskymy_dialektamy",
+          "start_boundary": {
+            "earliest_year": null,
+            "label": "відкрита початкова межа",
+            "latest_year": null,
+            "precision": "open"
+          }
+        },
+        {
+          "ambiguity": [
+            "Початок VII–VIII століть не зведено до одного року."
+          ],
+          "end_boundary": {
+            "earliest_year": 999,
+            "label": "до кінця X ст.",
+            "latest_year": 999,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Прасхіднослов’янська мовна єдність із протоукраїнськими діалектами",
+          "parent_stage_id": null,
+          "stage_id": "praskhidnoslovianska_yednist",
+          "start_boundary": {
+            "earliest_year": 600,
+            "label": "з VII–VIII ст.",
+            "latest_year": 799,
+            "precision": "range"
+          }
+        },
+        {
+          "ambiguity": [
+            "Назва збережена як атрибутований термін Німчука і не ототожнюється з сучасною російською мовою."
+          ],
+          "end_boundary": {
+            "earliest_year": 1299,
+            "label": "кінець XIII ст.",
+            "latest_year": 1299,
+            "precision": "century"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Давньоруськоукраїнська мова",
+          "parent_stage_id": null,
+          "stage_id": "davnorusko_ukrainska",
+          "start_boundary": {
+            "earliest_year": 1000,
+            "label": "XI ст.",
+            "latest_year": 1000,
+            "precision": "century"
+          }
+        },
+        {
+          "ambiguity": [
+            "Початок XIV–XV століть і кінець XVII століття є діапазонними межами."
+          ],
+          "end_boundary": {
+            "earliest_year": 1680,
+            "label": "до кінця XVII ст.",
+            "latest_year": 1699,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Середньоукраїнська, або середньоукраїноруська, мова",
+          "parent_stage_id": null,
+          "stage_id": "serednoukrainska_abo_serednoukrainoruska",
+          "start_boundary": {
+            "earliest_year": 1300,
+            "label": "з XIV–XV ст.",
+            "latest_year": 1499,
+            "precision": "range"
+          }
+        },
+        {
+          "ambiguity": [
+            "Це підперіод середньоукраїнської доби; початок XIV–XV століть лишається діапазоном."
+          ],
+          "end_boundary": {
+            "earliest_year": 1549,
+            "label": "до першої половини XVI ст.",
+            "latest_year": 1549,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Рання середньоукраїнська мова",
+          "parent_stage_id": "serednoukrainska_abo_serednoukrainoruska",
+          "stage_id": "rannia_serednoukrainska",
+          "start_boundary": {
+            "earliest_year": 1300,
+            "label": "з XIV–XV ст.",
+            "latest_year": 1499,
+            "precision": "range"
+          }
+        },
+        {
+          "ambiguity": [
+            "Це підперіод середньоукраїнської доби; кінець XVII століття лишається приблизною межею."
+          ],
+          "end_boundary": {
+            "earliest_year": 1680,
+            "label": "до кінця XVII ст.",
+            "latest_year": 1699,
+            "precision": "approximate_boundary"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Пізня середньоукраїнська мова",
+          "parent_stage_id": "serednoukrainska_abo_serednoukrainoruska",
+          "stage_id": "piznia_serednoukrainska",
+          "start_boundary": {
+            "earliest_year": 1550,
+            "label": "друга половина XVI ст.",
+            "latest_year": 1550,
+            "precision": "approximate_boundary"
+          }
+        },
+        {
+          "ambiguity": [
+            "Початок визначено як кінець XVII століття, а не як один точний рік."
+          ],
+          "end_boundary": {
+            "earliest_year": null,
+            "label": "відкрита сучасна межа",
+            "latest_year": null,
+            "precision": "open"
+          },
+          "evidence_ids": [
+            "nimchuk_university_reproduction_pages_16_17",
+            "nimchuk_uzhnu_peer_review_2023"
+          ],
+          "label_uk": "Новоукраїнська мова",
+          "parent_stage_id": null,
+          "stage_id": "novoukrainska",
+          "start_boundary": {
+            "earliest_year": 1680,
+            "label": "від кінця XVII ст.",
+            "latest_year": 1699,
+            "precision": "approximate_boundary"
+          }
+        }
+      ]
+    }
+  ],
+  "overall_phase3_source_freeze_ready": false,
+  "periodization_layer_ready": true,
+  "provider_calls": false,
+  "receipt_sha256": "e90a985bb249e05c46d79d84d9d46bfcfdfce3427acf875d0db3b8940b333c0b",
+  "remaining_gaps": [
+    {
+      "blocking_for": [
+        "primary_source_grade_for_nimchuk_framework",
+        "overall_phase3_historical_source_freeze"
+      ],
+      "description": "The exact two-part 1997/1998 Nimchuk article is bibliographically located but its original full text has not been locally acquired and byte-hashed. Qualified university and peer-reviewed reproductions support comparison-only use.",
+      "gap_id": "nimchuk_1997_1998_primary_full_text",
+      "kind": "primary_full_text_not_locally_acquired",
+      "nonblocking_for": [
+        "qualified_source_attributed_periodization_comparison",
+        "historical_record_candidate_assignment"
+      ],
+      "owner": "phase3_source_acquisition"
+    }
+  ],
+  "schema_version": "phase3_historical_periodization_freeze_v1",
+  "scope": {
+    "canonical_framework_id": null,
+    "frameworks_preserved_without_collapse": true,
+    "historical_forms_protected": true,
+    "historical_ruskyi_auto_mapped_to_modern_russian": false,
+    "modern_correction_eligible": false,
+    "modern_only": false,
+    "old_east_slavic_is_modern_russian": false,
+    "permitted_derived_bundles": [
+      "historical_recognition",
+      "periodization",
+      "language_label_disambiguation",
+      "language_change_explanation"
+    ],
+    "prohibited_uses": [
+      "modern_correction_gold",
+      "modern_normative_rule_authority",
+      "framework_collapse",
+      "scalar_language_age_ranking",
+      "old_east_slavic_equals_modern_russian"
+    ],
+    "scalar_language_age_claim_allowed": false
+  },
+  "source_text_committed": false,
+  "status": "COMPARATIVE_PERIODIZATION_FROZEN_PRIMARY_NIMCHUK_TEXT_GAP"
+}

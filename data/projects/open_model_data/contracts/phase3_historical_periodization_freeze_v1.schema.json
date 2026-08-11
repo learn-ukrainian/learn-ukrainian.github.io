@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_periodization_freeze_v1.schema.json",
+  "title": "Phase 3 historical Ukrainian comparative periodization freeze v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_text_committed",
+    "provider_calls",
+    "bindings",
+    "scope",
+    "evidence",
+    "frameworks",
+    "remaining_gaps",
+    "periodization_layer_ready",
+    "overall_phase3_source_freeze_ready",
+    "status",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_periodization_freeze_v1"},
+    "source_text_committed": {"const": false},
+    "provider_calls": {"const": false},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_complete_source_policy_v4_sha256"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_complete_source_policy_v4_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scope": {"$ref": "#/$defs/scope"},
+    "evidence": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "frameworks": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/framework"},
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": {"framework_id": {"const": "university_five_stage_synthesis"}},
+            "required": ["framework_id"]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {"framework_id": {"const": "shevelov_detailed_six_period"}},
+            "required": ["framework_id"]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {"framework_id": {"const": "nimchuk_five_stage_with_middle_subperiods"}},
+            "required": ["framework_id"]
+          }
+        }
+      ]
+    },
+    "remaining_gaps": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/gap"}
+    },
+    "periodization_layer_ready": {"const": true},
+    "overall_phase3_source_freeze_ready": {"const": false},
+    "status": {"const": "COMPARATIVE_PERIODIZATION_FROZEN_PRIMARY_NIMCHUK_TEXT_GAP"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modern_only",
+        "canonical_framework_id",
+        "frameworks_preserved_without_collapse",
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "historical_ruskyi_auto_mapped_to_modern_russian",
+        "old_east_slavic_is_modern_russian",
+        "scalar_language_age_claim_allowed",
+        "permitted_derived_bundles",
+        "prohibited_uses"
+      ],
+      "properties": {
+        "modern_only": {"const": false},
+        "canonical_framework_id": {"type": "null"},
+        "frameworks_preserved_without_collapse": {"const": true},
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "historical_ruskyi_auto_mapped_to_modern_russian": {"const": false},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "scalar_language_age_claim_allowed": {"const": false},
+        "permitted_derived_bundles": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "historical_recognition",
+              "periodization",
+              "language_label_disambiguation",
+              "language_change_explanation"
+            ]
+          }
+        },
+        "prohibited_uses": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "modern_correction_gold",
+              "modern_normative_rule_authority",
+              "framework_collapse",
+              "scalar_language_age_ranking",
+              "old_east_slavic_equals_modern_russian"
+            ]
+          }
+        }
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_relative_path",
+        "chunk_ids",
+        "pages",
+        "source_url",
+        "bibliographic_citation"
+      ],
+      "properties": {
+        "project_relative_path": {"type": ["string", "null"], "minLength": 1},
+        "chunk_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "pages": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "source_url": {"type": ["string", "null"], "pattern": "^https?://[^\\s]+$"},
+        "bibliographic_citation": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "evidence_role",
+        "source_id",
+        "title",
+        "document_sha256",
+        "full_text_state",
+        "authority",
+        "rights_scope",
+        "supports_framework_ids",
+        "locator"
+      ],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/identifier"},
+        "evidence_role": {
+          "enum": [
+            "direct_framework_exposition",
+            "primary_framework_text",
+            "secondary_reproduction",
+            "primary_bibliographic_locator",
+            "corroborating_peer_review"
+          ]
+        },
+        "source_id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "document_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "full_text_state": {"enum": ["locally_acquired", "bibliographic_only"]},
+        "authority": {
+          "enum": [
+            "qualified_university_synthesis",
+            "primary_scholarship",
+            "qualified_university_reproduction",
+            "peer_reviewed_secondary",
+            "bibliographic_only"
+          ]
+        },
+        "rights_scope": {"enum": ["contextual_retrieval", "research_only", "bibliographic_only"]},
+        "supports_framework_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "locator": {"$ref": "#/$defs/locator"}
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "earliest_year", "latest_year", "precision"],
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "earliest_year": {"type": ["integer", "null"]},
+        "latest_year": {"type": ["integer", "null"]},
+        "precision": {"enum": ["open", "century", "range", "approximate_boundary"]}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "label_uk",
+        "parent_stage_id",
+        "start_boundary",
+        "end_boundary",
+        "evidence_ids",
+        "ambiguity"
+      ],
+      "properties": {
+        "stage_id": {"$ref": "#/$defs/identifier"},
+        "label_uk": {"type": "string", "minLength": 1},
+        "parent_stage_id": {
+          "oneOf": [
+            {"$ref": "#/$defs/identifier"},
+            {"type": "null"}
+          ]
+        },
+        "start_boundary": {"$ref": "#/$defs/boundary"},
+        "end_boundary": {"$ref": "#/$defs/boundary"},
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "ambiguity": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "framework": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "framework_id",
+        "attributed_to",
+        "authority",
+        "primary_stage_count",
+        "evidence_ids",
+        "stages"
+      ],
+      "properties": {
+        "framework_id": {"$ref": "#/$defs/identifier"},
+        "attributed_to": {"type": "string", "minLength": 1},
+        "authority": {
+          "enum": [
+            "qualified_university_synthesis",
+            "primary_scholarship",
+            "qualified_university_reproduction"
+          ]
+        },
+        "primary_stage_count": {"type": "integer", "minimum": 1},
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/stage"}
+        }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "kind",
+        "description",
+        "blocking_for",
+        "nonblocking_for",
+        "owner"
+      ],
+      "properties": {
+        "gap_id": {"$ref": "#/$defs/identifier"},
+        "kind": {"const": "primary_full_text_not_locally_acquired"},
+        "description": {"type": "string", "minLength": 1},
+        "blocking_for": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "nonblocking_for": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "owner": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
