@@ -452,6 +452,22 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 )
         except Exception as exc:
             result["errors"].append(f"review temp sweep failed: {exc}")
+        try:
+            leak_res = sweep_tmp_leaks(apply=apply)
+            result["tmp_leak_sweep"] = {
+                "roots_reaped": leak_res.get("roots_reaped", 0),
+                "bytes_freed": leak_res.get("bytes_freed", 0),
+                "candidates": leak_res.get("candidates", 0),
+                "skipped_live": leak_res.get("skipped_live", 0),
+                "errors": leak_res.get("errors", 0),
+                "disk_pressure": leak_res.get("disk_pressure"),
+            }
+            if leak_res.get("errors"):
+                result["errors"].append(
+                    f"tmp leak sweep encountered {leak_res['errors']} error(s)"
+                )
+        except Exception as exc:
+            result["errors"].append(f"tmp leak sweep failed: {exc}")
 
         result["needs_finalize_worktrees"] = (
             reap_worktrees.find_needs_finalize_worktrees(repo_root)
