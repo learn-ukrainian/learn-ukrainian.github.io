@@ -28,6 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.orchestration import reap_worktrees
+from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
 SCHEMA_VERSION = "scheduled-git-hygiene.v2"

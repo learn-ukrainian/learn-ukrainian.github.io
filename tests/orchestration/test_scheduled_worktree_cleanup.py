@@ -73,6 +73,7 @@ def test_scheduled_cleanup_enables_terminal_dispatch_class_by_default(
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0})
 
     cleanup._repo_result(repo, apply=False)
 
@@ -95,6 +96,7 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0})
 
     cleanup._repo_result(repo, apply=False)
 
