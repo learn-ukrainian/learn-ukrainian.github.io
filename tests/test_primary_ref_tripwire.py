@@ -16,7 +16,9 @@ def run_git(repository: Path, *arguments: str, hooks_path: Path | None = None) -
     if hooks_path is not None:
         command.extend(["-c", f"core.hooksPath={hooks_path}"])
     command.extend(arguments)
-    return subprocess.run(command, cwd=repository, check=True, capture_output=True, text=True)
+    return subprocess.run(
+        command, cwd=repository, check=True, capture_output=True, text=True, timeout=30
+    )
 
 
 def initialise_repository(tmp_path: Path) -> tuple[Path, str, str]:
@@ -69,6 +71,7 @@ def test_nul_delimited_payload_is_recorded(tmp_path: Path) -> None:
         input=f"{first} {second} refs/heads/nul-payload\0",
         text=True,
         env=os.environ.copy(),
+        timeout=30,
     )
 
     record = next(record for record in audit_records(repository) if record["ref"] == "refs/heads/nul-payload")
