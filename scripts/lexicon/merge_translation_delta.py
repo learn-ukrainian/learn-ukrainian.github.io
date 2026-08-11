@@ -26,7 +26,10 @@ DEFAULT_PULLED = ROOT / "batch_state" / "full-en-reenrich-pulled" / "manifest.js
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.audit.audit_atlas_thin_enriched import thin_old_gate_entries
+from scripts.audit.audit_atlas_thin_enriched import (
+    has_learner_english_anchor,
+    thin_old_gate_entries,
+)
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT
 from scripts.lexicon.manifest_io import load_manifest, write_manifest
 
@@ -279,6 +282,29 @@ def prove_no_nonempty_en_overwrites(
     return modified
 
 
+def count_anchor_loss(
+    before_by_slug: dict[str, dict[str, Any]],
+    after_by_slug: dict[str, dict[str, Any]],
+) -> int:
+    """Count slugs whose learner English anchor existed before the merge and is gone after.
+
+    This is the binding non-regression invariant. Raw ``thin_old_gate_entries`` counts can
+    rise even on a clean additive merge: a morphology- or layer-only fill gives a
+    previously-unenriched entry its first ``enrichment`` block, which flips it into the old
+    gate's "enriched" bucket without ever adding an English anchor. That inflates the thin
+    count but loses nothing -- the anchor was never there to begin with. Anchor *loss* per
+    slug (had one, now doesn't) is the real signal an additive merge must never produce.
+    """
+    lost = 0
+    for slug, before_entry in before_by_slug.items():
+        if not has_learner_english_anchor(before_entry):
+            continue
+        after_entry = after_by_slug.get(slug)
+        if after_entry is None or not has_learner_english_anchor(after_entry):
+            lost += 1
+    return lost
+
+
 def _read_local_manifest(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
@@ -341,13 +367,19 @@ def main() -> int:
     thin_after = len(thin_old_gate_entries(live))
 
     overwrite_proof = prove_no_nonempty_en_overwrites(before_by_slug, after_by_slug)
+    old_gate_anchor_loss = count_anchor_loss(before_by_slug, after_by_slug)
     old_gate_not_rising = thin_after <= thin_before
 
     payload = stats.as_dict()
     payload["overwrite_proof_modified_nonempty_en"] = overwrite_proof
     payload["old_gate_no_english_anchor_before"] = thin_before
     payload["old_gate_no_english_anchor_after"] = thin_after
+    # Telemetry only: raw thin-gate count naturally rises when a morphology/layer-only fill
+    # gives a previously-unenriched entry its first `enrichment` block (see
+    # count_anchor_loss docstring). It is not the blocking invariant -- old_gate_anchor_loss
+    # below is.
     payload["old_gate_not_rising"] = old_gate_not_rising
+    payload["old_gate_anchor_loss"] = old_gate_anchor_loss
     payload["missing_translation_after"] = sum(
         1 for entry in (live.get("entries") or []) if isinstance(entry, dict) and not entry_has_translation(entry)
     )
@@ -363,12 +395,13 @@ def main() -> int:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    if overwrite_proof != 0 or not old_gate_not_rising:
+    if overwrite_proof != 0 or old_gate_anchor_loss != 0:
         print(
             json.dumps(
                 {
                     "error": "merge_invariant_violation",
                     "overwrite_proof_modified_nonempty_en": overwrite_proof,
+                    "old_gate_anchor_loss": old_gate_anchor_loss,
                     "old_gate_not_rising": old_gate_not_rising,
                     "wrote": False,
                 },
