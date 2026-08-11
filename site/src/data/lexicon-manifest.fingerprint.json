@@ -134,6 +134,10 @@
         "sha256": "3ebbbc8c379784a5c10b261a72a10c895a1f4308027ce3c85e49dabf0de347fb"
       },
       {
+        "path": "scripts/lexicon/heritage_calque_wave.py",
+        "sha256": "057d13f949991c2bc25ab066f5600f4272bf659f401cc136e10e63489570aa0a"
+      },
+      {
         "path": "scripts/lexicon/heritage_classifier.py",
         "sha256": "e0aeebad823fb9938d91f09c047bc0952929a26f5b1930b788591a5ec30a53c3"
       },

@@ -5023,6 +5023,52 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
     return candidates
 
 
+def _merge_heritage_pair_overlay(
+    base_pairs: list[dict[str, Any]],
+    overlay_pairs: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Merge an additive heritage overlay (e.g. a GEC-calque wave) into curated pairs.
+
+    An overlay row whose ``nativeSlug`` matches a curated pair contributes only
+    new ``frames`` (deduplicated by ``sentence_with_slot``) into that pair —
+    the curated pair's own citations/rationale/severity keep governing. An
+    overlay row with a ``nativeSlug`` absent from the curated set is appended
+    as a new pair, carrying its own required fields.
+    """
+    by_native_slug: dict[str, dict[str, Any]] = {}
+    for pair in base_pairs:
+        slug = _clean_text(pair.get("nativeSlug"))
+        if slug:
+            by_native_slug.setdefault(slug, pair)
+    merged = list(base_pairs)
+    for overlay_pair in overlay_pairs:
+        slug = _clean_text(overlay_pair.get("nativeSlug"))
+        overlay_frames = overlay_pair.get("frames")
+        overlay_frames = overlay_frames if isinstance(overlay_frames, list) else []
+        target = by_native_slug.get(slug) if slug else None
+        if target is not None:
+            existing_frames = target.get("frames")
+            existing_frames = existing_frames if isinstance(existing_frames, list) else []
+            existing_sentences = {
+                _clean_text(frame.get("sentence_with_slot"))
+                for frame in existing_frames
+                if isinstance(frame, dict)
+            }
+            new_frames = [
+                frame
+                for frame in overlay_frames
+                if isinstance(frame, dict)
+                and _clean_text(frame.get("sentence_with_slot")) not in existing_sentences
+            ]
+            if new_frames:
+                target["frames"] = [*existing_frames, *new_frames]
+        else:
+            merged.append(overlay_pair)
+            if slug:
+                by_native_slug[slug] = overlay_pair
+    return merged
+
+
 def read_heritage_pairs(path: Path | None) -> list[dict[str, Any]]:
     if path is None or not path.exists():
         print("WARN: no curated heritage pairs found; emitting empty heritage deck", file=sys.stderr)
@@ -5034,6 +5080,20 @@ def read_heritage_pairs(path: Path | None) -> list[dict[str, Any]]:
     if not isinstance(pairs, list):
         raise ValueError("heritage pairs must be a list or an object with pairs list")
     rows = [row for row in pairs if isinstance(row, dict)]
+    # Small additive wave overlays stay CF-reviewable as separate files while
+    # the hand-curated base file remains stable (mirrors the sentence
+    # inventory .residual convention above). Add a suffix here for each new
+    # wave; each is merged by nativeSlug via _merge_heritage_pair_overlay.
+    for suffix in (".wave1-calque",):
+        overlay_path = path.with_name(path.stem + suffix + path.suffix)
+        if not overlay_path.exists():
+            continue
+        overlay_payload = yaml.safe_load(overlay_path.read_text(encoding="utf-8")) or []
+        overlay_pairs = overlay_payload.get("pairs") if isinstance(overlay_payload, dict) else overlay_payload
+        if not isinstance(overlay_pairs, list):
+            raise ValueError(f"{overlay_path} heritage pairs must be a list or an object with pairs list")
+        overlay_rows = [row for row in overlay_pairs if isinstance(row, dict)]
+        rows = _merge_heritage_pair_overlay(rows, overlay_rows)
     if not rows:
         print("WARN: curated heritage pairs empty; emitting empty heritage deck", file=sys.stderr)
     return rows
