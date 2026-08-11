@@ -19,6 +19,7 @@ import re
 import shutil
 import stat
 import tempfile
+import unicodedata
 import zipfile
 from collections import Counter
 from collections.abc import Iterable, Iterator, Mapping, Sequence
@@ -36,7 +37,6 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import (
     sha256_bytes,
     sha256_text,
     sha256_value,
-    tokenize,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -223,6 +223,34 @@ def parse_conllu(path: Path, *, source_file_sha256: str) -> list[UdSentence]:
 
 
 def _ud_surface(sentence: UdSentence) -> tuple[str, list[tuple[int, int]]]:
+    comment = sentence.source_comment_text
+    if comment and comment != "[Omitted long context line]":
+        spans: list[tuple[int, int]] = []
+        cursor = 0
+        for index, token in enumerate(sentence.tokens):
+            if index:
+                previous = sentence.tokens[index - 1]
+                if "SpaceAfter=No" not in previous.misc.split("|"):
+                    whitespace_start = cursor
+                    while cursor < len(comment) and comment[cursor].isspace():
+                        cursor += 1
+                    _require(
+                        cursor > whitespace_start,
+                        f"CoNLL-U # text omits an encoded token boundary: {sentence.sent_id}",
+                    )
+            _require(
+                comment.startswith(token.form, cursor),
+                f"CoNLL-U # text disagrees with token rows: {sentence.sent_id}",
+            )
+            start = cursor
+            cursor += len(token.form)
+            spans.append((start, cursor))
+        _require(
+            cursor == len(comment),
+            f"CoNLL-U # text has trailing content outside token rows: {sentence.sent_id}",
+        )
+        return comment, spans
+
     parts: list[str] = []
     spans: list[tuple[int, int]] = []
     cursor = 0
@@ -235,18 +263,32 @@ def _ud_surface(sentence: UdSentence) -> tuple[str, list[tuple[int, int]]]:
             parts.append(" ")
             cursor += 1
     text = "".join(parts)
-    comment = sentence.source_comment_text
-    if comment and comment != "[Omitted long context line]":
-        _require(comment == text, f"CoNLL-U # text does not round-trip token rows: {sentence.sent_id}")
     return text, spans
 
 
+def _ud_tokens(sentence: UdSentence, text: str, spans: Sequence[tuple[int, int]]) -> list[dict[str, Any]]:
+    tokens: list[dict[str, Any]] = []
+    for index, (source_token, (start, end)) in enumerate(zip(sentence.tokens, spans, strict=True), start=1):
+        _require(text[start:end] == source_token.form, f"stale UD token span: {sentence.sent_id}:{source_token.token_id}")
+        has_lexical_character = any(
+            unicodedata.category(char)[0] in {"L", "N", "M"} or char == "_" for char in source_token.form
+        )
+        tokens.append(
+            {
+                "token_id": f"tok:{index:06d}",
+                "kind": "word" if has_lexical_character else "punctuation",
+                "text": source_token.form,
+                "normalized_text": unicodedata.normalize("NFC", source_token.form),
+                "start": start,
+                "end": end,
+                "paragraph_index": 0,
+                "sentence_index": 0,
+            }
+        )
+    return tokens
+
+
 def _ud_analyses(sentence: UdSentence, text: str, spans: Sequence[tuple[int, int]]) -> list[dict[str, Any]]:
-    deterministic = tokenize(
-        text,
-        paragraph_span={"start": 0, "end": len(text)},
-        sentence_span={"start": 0, "end": len(text)},
-    )
     analyses: list[dict[str, Any]] = []
     analysis_id_by_token = {
         token.token_id: f"ud-analysis:{sentence.sent_id}:{token.token_id}" for token in sentence.tokens
@@ -260,20 +302,9 @@ def _ud_analyses(sentence: UdSentence, text: str, spans: Sequence[tuple[int, int
             _require(head not in seen, f"UD dependency cycle: {sentence.sent_id}:{head}")
             seen.add(head)
             head = heads[head]
-    claimed_token_ids: set[str] = set()
-    for source_token, (start, end) in zip(sentence.tokens, spans, strict=True):
-        token_ids = [item["token_id"] for item in deterministic if item["start"] >= start and item["end"] <= end]
-        _require(bool(token_ids), f"UD token has no deterministic mapping: {sentence.sent_id}:{source_token.token_id}")
-        mapped = [item for item in deterministic if item["token_id"] in token_ids]
-        _require(
-            mapped[0]["start"] == start and mapped[-1]["end"] == end,
-            f"UD token mapping does not cover its source surface: {sentence.sent_id}:{source_token.token_id}",
-        )
-        _require(
-            claimed_token_ids.isdisjoint(token_ids),
-            f"UD analyses overlap deterministic tokens: {sentence.sent_id}:{source_token.token_id}",
-        )
-        claimed_token_ids.update(token_ids)
+    for index, (source_token, (start, end)) in enumerate(zip(sentence.tokens, spans, strict=True), start=1):
+        _require(text[start:end] == source_token.form, f"stale UD analysis span: {sentence.sent_id}:{source_token.token_id}")
+        token_ids = [f"tok:{index:06d}"]
         analyses.append(
             {
                 "analysis_id": analysis_id_by_token[source_token.token_id],
@@ -335,6 +366,7 @@ def build_ud_record(sentence: UdSentence) -> dict[str, Any]:
     metadata_evidence_id = "ud-source-metadata"
     rights = _rights("CC BY-SA 4.0")
     min_year, max_year, certainty = _year_context(sentence.created)
+    tokens = _ud_tokens(sentence, text, spans)
     analyses = _ud_analyses(sentence, text, spans)
     return build_historical_representation(
         record_id=f"ud-orv-uk:{sha256_value(locator)[:24]}",
@@ -359,6 +391,7 @@ def build_ud_record(sentence: UdSentence) -> dict[str, Any]:
             {
                 "layer_id": "original_diplomatic",
                 "text": text,
+                "tokens": tokens,
                 "authority": "source_transcription",
                 "evidence_ids": [source_evidence_id],
             }
@@ -394,7 +427,7 @@ def build_ud_record(sentence: UdSentence) -> dict[str, Any]:
             "resource_identity": "Universal Dependencies Old East Slavic-Ruthenian",
             "resource_version": UD_COMMIT,
             "license": "CC BY-SA 4.0",
-            "tokenization_alignment": "adapted",
+            "tokenization_alignment": "exact",
         },
         evidence=[
             {

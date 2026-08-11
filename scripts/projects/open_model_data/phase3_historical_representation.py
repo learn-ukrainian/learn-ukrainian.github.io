@@ -93,8 +93,9 @@ def _normalization(text: str) -> dict[str, Any]:
 
 
 def _normalize_text_layer(raw: Mapping[str, Any]) -> dict[str, Any]:
+    base_fields = {"layer_id", "text", "authority", "evidence_ids"}
     _require(
-        set(raw) == {"layer_id", "text", "authority", "evidence_ids"},
+        set(raw) in {frozenset(base_fields), frozenset(base_fields | {"tokens"})},
         "text layer input fields must be exact",
     )
     layer_id = raw["layer_id"]
@@ -110,10 +111,37 @@ def _normalize_text_layer(raw: Mapping[str, Any]) -> dict[str, Any]:
         "offset_basis": "unicode_code_points",
         "source_layer_preserved": True,
         "normalization": _normalization(text),
-        "tokens": tokenize(text, paragraph_span=span, sentence_span=span),
+        "tokens": (
+            [dict(token) for token in raw["tokens"]]
+            if "tokens" in raw
+            else tokenize(text, paragraph_span=span, sentence_span=span)
+        ),
         "authority": raw["authority"],
         "evidence_ids": list(raw["evidence_ids"]),
     }
+
+
+def _validate_source_tokens(text: str, tokens: Sequence[Mapping[str, Any]]) -> None:
+    """Validate an authoritative source-token layer without retokenizing it."""
+    _require(bool(tokens), "source-token layer must not be empty")
+    previous_end = 0
+    for index, token in enumerate(tokens, start=1):
+        _require(token["token_id"] == f"tok:{index:06d}", "source-token ids must be sequential")
+        start, end = token["start"], token["end"]
+        _require(start >= previous_end and start < end <= len(text), "source-token offsets are invalid")
+        _require(text[previous_end:start].isspace() or start == previous_end, "source-token gap is not whitespace")
+        _require(text[start:end] == token["text"], "source token does not round-trip Unicode offsets")
+        _require(
+            token["normalized_text"] == unicodedata.normalize("NFC", token["text"]),
+            "source-token normalization is stale",
+        )
+        has_lexical_character = any(
+            unicodedata.category(char)[0] in {"L", "N", "M"} or char == "_" for char in token["text"]
+        )
+        expected_kind = "word" if has_lexical_character else "punctuation"
+        _require(token["kind"] == expected_kind, "source-token kind is inconsistent with its surface")
+        previous_end = end
+    _require(text[previous_end:].isspace() or previous_end == len(text), "source-token trailing gap is not whitespace")
 
 
 def _normalize_evidence(raw: Mapping[str, Any]) -> dict[str, Any]:
@@ -371,16 +399,20 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
     layers_by_id = {item["layer_id"]: item for item in layers}
     original = layers_by_id["original_diplomatic"]
     _require(original["authority"] == "source_transcription", "original layer must retain source authority")
+    provenance = packet["analysis_provenance"]
     for layer in layers:
         text = layer["text"]
         _require(layer["text_utf8_sha256"] == sha256_bytes(text.encode("utf-8")), "stale text UTF-8 hash")
         _require(layer["text_sha256"] == sha256_text(text), "stale text hash")
         _require(layer["normalization"] == _normalization(text), "stale text normalization facts")
         span = {"start": 0, "end": len(text)}
-        _require(
-            layer["tokens"] == tokenize(text, paragraph_span=span, sentence_span=span),
-            "historical tokens do not round-trip Unicode offsets",
-        )
+        deterministic_tokens = tokenize(text, paragraph_span=span, sentence_span=span)
+        if layer["tokens"] != deterministic_tokens:
+            _require(
+                provenance["status"] == "present" and provenance["tokenization_alignment"] == "exact",
+                "non-deterministic source tokens require exact analysis provenance",
+            )
+            _validate_source_tokens(text, layer["tokens"])
 
     evidence = packet["evidence"]
     evidence_ids = [item["evidence_id"] for item in evidence]
@@ -465,7 +497,6 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
     _assert_evidence_references(packet["linguistic_features"], evidence_id_set, "linguistic feature")
 
     analyses = packet["linguistic_analyses"]
-    provenance = packet["analysis_provenance"]
     _require(
         (not analyses and provenance["status"] == "absent") or (analyses and provenance["status"] == "present"),
         "analysis provenance status disagrees with analyses",
@@ -499,6 +530,28 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
         )
         if head is not None:
             _require(analysis_by_id[head]["layer_id"] == layer_id, "analysis head crosses text layers")
+
+    if provenance["status"] == "present" and provenance["tokenization_alignment"] == "exact":
+        token_references = [
+            (analysis["layer_id"], token_id)
+            for analysis in analyses
+            for token_id in analysis["token_ids"]
+        ]
+        analysis_layer_ids = {analysis["layer_id"] for analysis in analyses}
+        exact_layer_tokens = {
+            (layer["layer_id"], token["token_id"])
+            for layer in layers
+            if layer["layer_id"] in analysis_layer_ids
+            for token in layer["tokens"]
+        }
+        _require(
+            len(token_references) == len(set(token_references)),
+            "exact source-token analyses must not overlap",
+        )
+        _require(
+            set(token_references) == exact_layer_tokens,
+            "exact source-token analyses must cover every source token",
+        )
 
     classification = packet["classification"]
     _require(classification["primary_role_id"] in HISTORICAL_PRIMARY_ROLES, "non-historical primary role is forbidden")
