@@ -172,6 +172,56 @@ def test_surface_resolved_to_an_existing_canonical_entry_is_linked_and_enriched(
     assert measure_table_coverage(rows, staged) == {"missing": [], "thin": [], "covered": rows}
 
 
+def test_two_missing_surfaces_for_one_new_vesum_lemma_share_one_atlas_entry() -> None:
+    rows = [TableRow("форми", "forms"), TableRow("форму", "form")]
+    manifest = {"entries": []}
+
+    def surface_lookup(words: list[str], _db: Path) -> dict[str, list[dict[str, str]]]:
+        return {word: [{"lemma": "форма", "pos": "noun"}] for word in words}
+
+    staged, artifacts = admit_and_enrich(
+        rows=rows,
+        manifest=manifest,
+        vesum_db=Path("fixture-vesum.db"),
+        vesum_lookup=surface_lookup,
+        dictionary_lookup=None,
+    )
+
+    assert len(staged["entries"]) == 1
+    assert staged["entries"][0]["lemma"] == "форма"
+    assert staged["entries"][0]["teacher_table_keys"] == ["форми", "форму"]
+    assert artifacts["counts"]["admitted"] == 1
+    assert artifacts["counts"]["canonical_links"] == 1
+    assert measure_table_coverage(rows, staged) == {"missing": [], "thin": [], "covered": rows}
+
+
+def test_admitted_translation_is_not_overwritten_by_a_formerly_thin_canonical_row() -> None:
+    rows = [TableRow("форму", "inflected form"), TableRow("форма", "canonical form")]
+    manifest = {"entries": [{"lemma": "форма", "url_slug": "форма", "enrichment": {}}]}
+
+    def surface_lookup(words: list[str], _db: Path) -> dict[str, list[dict[str, str]]]:
+        return {word: [{"lemma": "форма", "pos": "noun"}] for word in words}
+
+    staged, artifacts = admit_and_enrich(
+        rows=rows,
+        manifest=manifest,
+        vesum_db=Path("fixture-vesum.db"),
+        vesum_lookup=surface_lookup,
+        dictionary_lookup=None,
+    )
+
+    entry = staged["entries"][0]
+    assert entry["enrichment"]["translation"]["en"] == ["inflected form"]
+    assert artifacts["counts"]["re_enriched"] == 1
+    assert artifacts["translation_delta"]["entries"] == [
+        {
+            "uk": "форму",
+            "url_slug": "форма",
+            "translation": entry["enrichment"]["translation"],
+        }
+    ]
+
+
 def test_cli_refuses_to_overwrite_its_manifest_input(tmp_path) -> None:
     manifest = tmp_path / "manifest.json"
     manifest.write_text('{"entries": []}', encoding="utf-8")

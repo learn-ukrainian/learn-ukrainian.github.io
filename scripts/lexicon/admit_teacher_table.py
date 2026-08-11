@@ -494,6 +494,10 @@ def admit_and_enrich(
         canonical_entry = by_key.get(_lemma_key(atlas_lemma))
         if canonical_entry is not None:
             linked = _link_teacher_table_key(canonical_entry, row)
+            # Keep the in-progress index synchronized with every table key.
+            # A later table surface can resolve to this same canonical article
+            # before the final full index rebuild below.
+            by_key[row.key] = canonical_entry
             if linked:
                 canonical_links.append(
                     {
@@ -539,6 +543,10 @@ def admit_and_enrich(
         slug = _unique_teacher_table_slug(base_slug, slugs)
         candidate["url_slug"] = slug
         staged["entries"].append(candidate)
+        # Index both the canonical VESUM lemma and the teacher-table surface.
+        # Distinct table surfaces can resolve to one new canonical lemma; the
+        # second must link to this article rather than admitting a duplicate.
+        by_key[_lemma_key(atlas_lemma)] = candidate
         by_key[row.key] = candidate
         slugs.add(slug)
         admitted.append(candidate)
@@ -554,6 +562,11 @@ def admit_and_enrich(
         entry = by_key.get(row.key)
         if entry is None:
             raise AssertionError("a pre-existing table key disappeared during teacher-table intake")
+        # A missing surface may have resolved to this formerly thin canonical
+        # entry in the admission pass.  Preserve that translation and its audit
+        # record instead of overwriting and double-counting it here.
+        if _has_translation(entry):
+            continue
         if not _is_english(row.english):
             residuals.append(
                 _residual(
