@@ -480,15 +480,21 @@ function heritageDeck({ includeItems = true } = {}): PracticeDeckData {
   };
 }
 
-function seedForHeritagePresentation(kind: 'error-correction' | 'unjumble'): number {
+function seedForHeritagePresentation(
+  kind: 'error-correction' | 'unjumble' | 'fill-in' | 'match-up' | 'mark-the-words',
+  availableItems: readonly PracticeHeritageItem[] = [],
+): number {
   for (let seed = 0; seed < 512; seed += 1) {
-    if (selectHeritagePracticePresentation(heritagePracticeItem(), seed).kind === kind) return seed;
+    if (selectHeritagePracticePresentation(heritagePracticeItem(), seed, availableItems).kind === kind) return seed;
   }
   throw new Error(`no deterministic ${kind} presentation seed found`);
 }
 
-function useHeritagePresentationSeed(kind: 'error-correction' | 'unjumble') {
-  const seed = seedForHeritagePresentation(kind);
+function useHeritagePresentationSeed(
+  kind: 'error-correction' | 'unjumble' | 'fill-in' | 'match-up' | 'mark-the-words',
+  availableItems: readonly PracticeHeritageItem[] = [],
+) {
+  const seed = seedForHeritagePresentation(kind, availableItems);
   vi.spyOn(Date, 'now').mockReturnValue(0);
   vi.spyOn(Math, 'random').mockReturnValue(seed / 4294967296);
 }
@@ -505,6 +511,38 @@ function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDe
     })),
     cloze: [],
   };
+}
+
+function heritageMatchDeck(): PracticeDeckData {
+  const deck = heritageDeck();
+  deck.heritage = [
+    heritagePracticeItem(),
+    {
+      ...heritagePracticeItem(),
+      heritageId: 'heritage-knyha',
+      lemmaId: 'knyha',
+      srsKey: cardKey('knyha', 'heritage'),
+      lemma: 'книга',
+      nativeLemma: 'книга',
+      prompt: 'Я читаю ___ щодня.',
+      answer: 'книгу',
+      calque: 'кнігу',
+      options: [{ label: 'книгу' }, { label: 'кнігу' }, { label: 'газету' }],
+    },
+    {
+      ...heritagePracticeItem(),
+      heritageId: 'heritage-oselia',
+      lemmaId: 'oselia',
+      srsKey: cardKey('oselia', 'heritage'),
+      lemma: 'оселя',
+      nativeLemma: 'оселя',
+      prompt: 'Вона повернулася до ___ ввечері.',
+      answer: 'оселі',
+      calque: 'дому',
+      options: [{ label: 'оселі' }, { label: 'дому' }, { label: 'школи' }],
+    },
+  ];
+  return deck;
 }
 
 /**
@@ -1972,7 +2010,10 @@ describe('LexiconPractice', () => {
     expect(
       screen.queryByTestId('practice-heritage') ??
         screen.queryByTestId('practice-heritage-error-correction') ??
-        screen.queryByTestId('practice-heritage-unjumble'),
+        screen.queryByTestId('practice-heritage-unjumble') ??
+        screen.queryByTestId('practice-heritage-fill-in') ??
+        screen.queryByTestId('practice-heritage-match-up') ??
+        screen.queryByTestId('practice-heritage-mark-the-words'),
     ).toBeInTheDocument();
 
     mixedRender.unmount();
@@ -2116,6 +2157,72 @@ describe('LexiconPractice', () => {
     await user.click(within(activity).getByRole('button', { name: 'Перевірити' }));
 
     expect(activity.querySelector('[data-activity="feedback"]')).toHaveAttribute('data-correct', 'true');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        cardKey: cardKey('dim', 'heritage'),
+        mode: 'heritage',
+        rating: 'good',
+      });
+    });
+  });
+
+  test('mixed heritage renders FillIn, locks after a wrong chip, and records again', async () => {
+    useHeritagePresentationSeed('fill-in');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+
+    const activity = await screen.findByTestId('practice-heritage-fill-in');
+    await user.click(within(activity).getByRole('button', { name: 'хата' }));
+
+    expect(activity.querySelector('[data-activity="fillin-feedback"]')).toHaveAttribute('data-correct', 'false');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        cardKey: cardKey('dim', 'heritage'),
+        mode: 'heritage',
+        rating: 'again',
+      });
+    });
+  });
+
+  test('mixed heritage renders MarkTheWords, keeps green feedback visible, and records good', async () => {
+    useHeritagePresentationSeed('mark-the-words');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+
+    const activity = await screen.findByTestId('practice-heritage-mark-the-words');
+    await user.click(within(activity).getByRole('button', { name: 'дім' }));
+    await user.click(within(activity).getByRole('button', { name: 'Перевірити' }));
+
+    expect(activity).toHaveTextContent('Чудово! Ви знайшли всі правильні слова.');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        cardKey: cardKey('dim', 'heritage'),
+        mode: 'heritage',
+        rating: 'good',
+      });
+    });
+  });
+
+  test('mixed heritage renders a source-backed MatchUp board and records good after every pair', async () => {
+    const deck = heritageMatchDeck();
+    useHeritagePresentationSeed('match-up', deck.heritage);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="mixed" />);
+
+    const activity = await screen.findByTestId('practice-heritage-match-up');
+    const left = within(activity.querySelector<HTMLElement>('[data-activity="match-left-column"]')!);
+    const right = within(activity.querySelector<HTMLElement>('[data-activity="match-right-column"]')!);
+    for (const [calque, correction] of [['дом', 'дім'], ['кнігу', 'книгу'], ['дому', 'оселі']]) {
+      await user.click(left.getByRole('button', { name: calque }));
+      await user.click(right.getByRole('button', { name: correction }));
+    }
+
+    await waitFor(() => {
+      expect(activity.querySelector('[data-activity="match-feedback"]')).toHaveAttribute('data-correct', 'true');
+    });
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     await waitFor(() => {
       expect(storedState().reviews[0]).toMatchObject({
@@ -2376,7 +2483,10 @@ describe('LexiconPractice', () => {
         expect(
           screen.queryByTestId('practice-heritage') ??
             screen.queryByTestId('practice-heritage-error-correction') ??
-            screen.queryByTestId('practice-heritage-unjumble'),
+            screen.queryByTestId('practice-heritage-unjumble') ??
+            screen.queryByTestId('practice-heritage-fill-in') ??
+            screen.queryByTestId('practice-heritage-match-up') ??
+            screen.queryByTestId('practice-heritage-mark-the-words'),
         ).toBeInTheDocument();
       });
       expect(screen.queryByTestId('practice-flashcards')).not.toBeInTheDocument();

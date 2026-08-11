@@ -37,8 +37,11 @@ export interface MatchUpProps {
    * @ukrainianText false
    */
   matchedPairCoding?: 'semantic-four';
-  onComplete?: () => void;
+  /** Called once after every pair is connected correctly. */
+  onComplete?: (correct: boolean) => void;
   onMatch?: (pairIndex: number, rating: 'again' | 'hard' | 'good') => void;
+  /** Lets a host lock the board after it has recorded the result. */
+  disabled?: boolean;
 }
 
 export { default } from '../../../packages/activity-kit/src/components/MatchUp';

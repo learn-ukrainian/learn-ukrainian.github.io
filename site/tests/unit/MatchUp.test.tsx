@@ -60,13 +60,13 @@ describe('MatchUp', () => {
 
   test('left column preserves the original order', () => {
     const { container } = render(<MatchUp pairs={pairs} />);
-    const texts = leftTiles(container).map(b => b.textContent?.trim());
+    const texts = leftTiles(container).map((b) => b.textContent?.trim());
     expect(texts).toEqual(['Cat', 'Dog', 'Cow']);
   });
 
   test('right column contains all right texts regardless of shuffle order', () => {
     const { container } = render(<MatchUp pairs={pairs} />);
-    const texts = rightTiles(container).map(b => b.textContent?.trim());
+    const texts = rightTiles(container).map((b) => b.textContent?.trim());
     expect(new Set(texts)).toEqual(new Set(['Meow', 'Bark', 'Moo']));
   });
 
@@ -88,6 +88,49 @@ describe('MatchUp', () => {
   test('renders instruction text when provided', () => {
     render(<MatchUp pairs={pairs} instruction="Match sounds to animals" />);
     expect(screen.getByText('Match sounds to animals')).toBeInTheDocument();
+  });
+
+  test('does not permit a host-locked board to start a match', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MatchUp pairs={pairs} disabled />);
+
+    await user.click(leftTiles(container)[0]);
+
+    expect(leftTiles(container)[0]).toBeDisabled();
+    expect(leftTiles(container)[0]).toHaveAttribute('data-selected', 'false');
+  });
+
+  test('reports a correct completion to the Practice host', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    const { container } = render(<MatchUp pairs={pairs} onComplete={onComplete} />);
+
+    for (const pair of pairs) {
+      await user.click(
+        leftTiles(container).find((button) => button.textContent?.trim() === pair.left)!,
+      );
+      await user.click(findRightByText(container, pair.right));
+    }
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith(true);
+  });
+
+  test('reports an incorrect completion after a wrong pairing attempt', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    const { container } = render(<MatchUp pairs={pairs} onComplete={onComplete} />);
+
+    await user.click(leftTiles(container)[0]);
+    await user.click(findRightByText(container, 'Bark'));
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    for (const pair of pairs) {
+      await user.click(leftTiles(container).find((button) => button.textContent?.trim() === pair.left)!);
+      await user.click(findRightByText(container, pair.right));
+    }
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith(false);
   });
 
   test('clicking a correct pair marks both tiles as matched', async () => {
@@ -240,7 +283,7 @@ describe('MatchUp', () => {
         pairs={lessonPairs}
         instruction="Match each Ukrainian noun with its English cue."
         isUkrainian={false}
-      />
+      />,
     );
 
     expect(screen.getByText('Match each Ukrainian noun with its English cue.')).toBeInTheDocument();
@@ -393,10 +436,13 @@ describe('MatchUp', () => {
       expect(barkTile).toHaveClass('wrong');
       expect(onMatch).not.toHaveBeenCalled();
 
-      await waitFor(() => {
-        expect(catTile).not.toHaveClass('wrong');
-        expect(barkTile).not.toHaveClass('wrong');
-      }, { timeout: 500 });
+      await waitFor(
+        () => {
+          expect(catTile).not.toHaveClass('wrong');
+          expect(barkTile).not.toHaveClass('wrong');
+        },
+        { timeout: 500 },
+      );
 
       expect(onMatch).not.toHaveBeenCalled();
     });

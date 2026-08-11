@@ -7,6 +7,8 @@ import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
 import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
 import PracticeStress from './PracticeStress';
 import { ErrorCorrectionItem } from './ErrorCorrection';
+import { FillInQuestion } from './FillIn';
+import { MarkTheWordsActivity } from './MarkTheWords';
 import { UnjumbleQuestion } from './Unjumble';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS, type ChromeKey } from '../lib/i18n/chrome';
@@ -4274,6 +4276,18 @@ function PracticeItem({
 }) {
   const [matchingPromptIndex, setMatchingPromptIndex] = useState<number | null>(0);
   const matchedPairIndexesRef = useRef<Set<number>>(new Set());
+  // MatchUp intentionally resets when its pair-array prop changes. Keep an
+  // adapted heritage board referentially stable while the host locks and shows
+  // feedback, otherwise its successful board would clear before the learner
+  // could see the green state.
+  const heritagePresentation = useMemo(
+    () => (
+      selection.mode === 'heritage' && selection.heritage && presentationVariants
+        ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [])
+        : { kind: 'mc' as const }
+    ),
+    [deck.heritage, presentationVariants, selection.heritage, selection.mode, sessionSeed],
+  );
 
   if (selection.mode === 'flashcards') {
     const intervalPreviews = previewRatingIntervals(
@@ -4374,9 +4388,7 @@ function PracticeItem({
   }
 
   if (selection.mode === 'heritage' && selection.heritage) {
-    const presentation = presentationVariants
-      ? selectHeritagePracticePresentation(selection.heritage, sessionSeed)
-      : { kind: 'mc' as const };
+    const presentation = heritagePresentation;
     if (presentation.kind === 'error-correction') {
       return (
         <div data-testid="practice-heritage-error-correction">
@@ -4393,6 +4405,43 @@ function PracticeItem({
       return (
         <div data-testid="practice-heritage-unjumble">
           <UnjumbleQuestion
+            {...presentation.item}
+            isUkrainian={chromeLocale === 'uk'}
+            disabled={answerLocked}
+            onComplete={onHeritageActivityComplete}
+          />
+        </div>
+      );
+    }
+    if (presentation.kind === 'fill-in') {
+      return (
+        <div data-testid="practice-heritage-fill-in">
+          <FillInQuestion
+            {...presentation.item}
+            isUkrainian={chromeLocale === 'uk'}
+            disabled={answerLocked}
+            onComplete={onHeritageActivityComplete}
+          />
+        </div>
+      );
+    }
+    if (presentation.kind === 'match-up') {
+      return (
+        <div data-testid="practice-heritage-match-up">
+          <MatchUp
+            {...presentation.item}
+            instruction="З’єднайте кальку з питомим українським відповідником."
+            isUkrainian={chromeLocale === 'uk'}
+            disabled={answerLocked}
+            onComplete={onHeritageActivityComplete}
+          />
+        </div>
+      );
+    }
+    if (presentation.kind === 'mark-the-words') {
+      return (
+        <div data-testid="practice-heritage-mark-the-words">
+          <MarkTheWordsActivity
             {...presentation.item}
             isUkrainian={chromeLocale === 'uk'}
             disabled={answerLocked}

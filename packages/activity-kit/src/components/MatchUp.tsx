@@ -38,14 +38,15 @@ export interface MatchUpProps {
    * @ukrainianText false
    */
   matchedPairCoding?: 'semantic-four';
-  onComplete?: () => void;
+  /** Called once after every pair is connected correctly. */
+  onComplete?: (correct: boolean) => void;
   onMatch?: (pairIndex: number, rating: 'again' | 'hard' | 'good') => void;
+  /** Lets a host lock the board after it has recorded the result. */
+  disabled?: boolean;
 }
 
-
 const MATCH_PAIR_HUES = [
-  199, 32, 262, 174, 239, 92, 286, 151, 215, 49,
-  271, 188, 230, 108, 300, 164, 206, 67, 253, 181,
+  199, 32, 262, 174, 239, 92, 286, 151, 215, 49, 271, 188, 230, 108, 300, 164, 206, 67, 253, 181,
   222, 132, 288, 192, 243, 78, 278, 142, 218, 58,
 ] as const;
 const MATCH_PAIR_COLOR_COUNT = MATCH_PAIR_HUES.length;
@@ -93,6 +94,7 @@ export default function MatchUp({
   matchedPairCoding,
   onComplete,
   onMatch,
+  disabled = false,
 }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
@@ -102,6 +104,7 @@ export default function MatchUp({
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
   const [misses, setMisses] = useState<Record<number, number>>({});
   const completedRef = useRef(false);
+  const hadIncorrectAttemptRef = useRef(false);
 
   // Reset state when pairs change (attempt counting resets between boards)
   useEffect(() => {
@@ -113,6 +116,7 @@ export default function MatchUp({
     setWrongPair(null);
     setMisses({});
     completedRef.current = false;
+    hadIncorrectAttemptRef.current = false;
   }, [pairs]);
 
   // Shuffle right side (deterministic — seeded by content)
@@ -122,13 +126,14 @@ export default function MatchUp({
   }, [pairs]);
 
   const handleLeftClick = (index: number) => {
-    if (matchedRef.current.has(index) || wrongPair) return;
+    if (disabled || matchedRef.current.has(index) || wrongPair) return;
     setSelectedLeft(index);
     setWrongPair(null);
   };
 
   const handleRightClick = (originalIndex: number) => {
-    if (selectedLeft === null || matchedRef.current.has(originalIndex) || wrongPair) return;
+    if (disabled || selectedLeft === null || matchedRef.current.has(originalIndex) || wrongPair)
+      return;
 
     if (selectedLeft === originalIndex) {
       // Correct match
@@ -145,6 +150,7 @@ export default function MatchUp({
       setSelectedLeft(null);
     } else {
       // Wrong match
+      hadIncorrectAttemptRef.current = true;
       setMisses((prev) => ({
         ...prev,
         [selectedLeft]: (prev[selectedLeft] || 0) + 1,
@@ -157,13 +163,12 @@ export default function MatchUp({
     }
   };
 
-
   const allMatched = matched.size === pairs.length;
 
   useEffect(() => {
     if (allMatched && !completedRef.current) {
       completedRef.current = true;
-      onComplete?.();
+      onComplete?.(!hadIncorrectAttemptRef.current);
     }
     if (!allMatched) completedRef.current = false;
   }, [allMatched, onComplete]);
@@ -175,7 +180,10 @@ export default function MatchUp({
     return circledNumber(order);
   };
 
-  const pairAccessibleName = (originalIndex: number, side: 'left' | 'right'): string | undefined => {
+  const pairAccessibleName = (
+    originalIndex: number,
+    side: 'left' | 'right',
+  ): string | undefined => {
     if (matchedPairCoding !== 'semantic-four' || !matched.has(originalIndex)) return undefined;
     const pair = pairs[originalIndex];
     if (!pair) return undefined;
@@ -197,7 +205,9 @@ export default function MatchUp({
     <>
       <span lang="uk">Знайдіть пару</span>
       {' / '}
-      <span style={{ fontSize: '0.8rem', opacity: 0.8 }} lang="en">Match Up</span>
+      <span style={{ fontSize: '0.8rem', opacity: 0.8 }} lang="en">
+        Match Up
+      </span>
     </>
   );
   const successLabel = isUkrainian ? (
@@ -206,7 +216,9 @@ export default function MatchUp({
     <>
       <span lang="uk">✓ Все з’єднано правильно!</span>
       {' / '}
-      <span style={{ fontSize: '0.9rem', opacity: 0.8 }} lang="en">All matched correctly!</span>
+      <span style={{ fontSize: '0.9rem', opacity: 0.8 }} lang="en">
+        All matched correctly!
+      </span>
     </>
   );
 
@@ -261,7 +273,11 @@ export default function MatchUp({
               data-matched={matched.has(index) ? 'true' : 'false'}
               data-pair-color={matched.has(index) ? index % MATCH_PAIR_COLOR_COUNT : undefined}
               data-pair-coding={matchedPairCoding}
-              data-pair-token={matchedPairCoding === 'semantic-four' ? index % SEMANTIC_FOUR_TOKENS.length : undefined}
+              data-pair-token={
+                matchedPairCoding === 'semantic-four'
+                  ? index % SEMANTIC_FOUR_TOKENS.length
+                  : undefined
+              }
               data-selected={selectedLeft === index ? 'true' : 'false'}
               data-original-index={index}
               aria-pressed={selectedLeft === index}
@@ -272,11 +288,13 @@ export default function MatchUp({
                   : getMatchedPairStyle(index, matched.has(index))
               }
               onClick={() => handleLeftClick(index)}
-              disabled={matched.has(index)}
+              disabled={disabled || matched.has(index)}
             >
               {parseMarkdown(pair.left)}
               {matchedPairCoding === 'semantic-four' && pairTag(index) ? (
-                <span className="matchPairTag" aria-hidden="true">{pairTag(index)}</span>
+                <span className="matchPairTag" aria-hidden="true">
+                  {pairTag(index)}
+                </span>
               ) : null}
             </button>
           ))}
@@ -288,14 +306,22 @@ export default function MatchUp({
               className={`matchItem ${matched.has(originalIndex) ? 'matched' : ''} ${
                 wrongPair?.right === originalIndex ? 'wrong' : ''
               } ${
-                matchedPairCoding === 'semantic-four' && matched.has(originalIndex) ? PAIR_CODING_CLASS : ''
+                matchedPairCoding === 'semantic-four' && matched.has(originalIndex)
+                  ? PAIR_CODING_CLASS
+                  : ''
               }`}
               data-activity="match-right-tile"
               data-matched={matched.has(originalIndex) ? 'true' : 'false'}
               data-original-index={originalIndex}
-              data-pair-color={matched.has(originalIndex) ? originalIndex % MATCH_PAIR_COLOR_COUNT : undefined}
+              data-pair-color={
+                matched.has(originalIndex) ? originalIndex % MATCH_PAIR_COLOR_COUNT : undefined
+              }
               data-pair-coding={matchedPairCoding}
-              data-pair-token={matchedPairCoding === 'semantic-four' ? originalIndex % SEMANTIC_FOUR_TOKENS.length : undefined}
+              data-pair-token={
+                matchedPairCoding === 'semantic-four'
+                  ? originalIndex % SEMANTIC_FOUR_TOKENS.length
+                  : undefined
+              }
               style={
                 matchedPairCoding === 'semantic-four'
                   ? getSemanticTokenStyle(originalIndex)
@@ -303,11 +329,13 @@ export default function MatchUp({
               }
               aria-label={pairAccessibleName(originalIndex, 'right')}
               onClick={() => handleRightClick(originalIndex)}
-              disabled={matched.has(originalIndex)}
+              disabled={disabled || matched.has(originalIndex)}
             >
               {parseMarkdown(pairs[originalIndex].right)}
               {matchedPairCoding === 'semantic-four' && pairTag(originalIndex) ? (
-                <span className="matchPairTag" aria-hidden="true">{pairTag(originalIndex)}</span>
+                <span className="matchPairTag" aria-hidden="true">
+                  {pairTag(originalIndex)}
+                </span>
               ) : null}
             </button>
           ))}
