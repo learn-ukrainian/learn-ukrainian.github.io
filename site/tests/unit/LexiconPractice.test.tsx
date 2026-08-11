@@ -42,6 +42,7 @@ import {
   type CustomSet,
 } from '@site/src/lib/lexicon/custom-decks';
 import { dateSeed, pickDaily, type DailyWord } from '@site/src/lib/lexicon/daily';
+import { selectHeritagePracticePresentation } from '@site/src/lib/lexicon/practice-activity-adapters';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -477,6 +478,19 @@ function heritageDeck({ includeItems = true } = {}): PracticeDeckData {
     synonym: [],
     heritage: includeItems ? [heritagePracticeItem()] : [],
   };
+}
+
+function seedForHeritagePresentation(kind: 'error-correction' | 'unjumble'): number {
+  for (let seed = 0; seed < 512; seed += 1) {
+    if (selectHeritagePracticePresentation(heritagePracticeItem(), seed).kind === kind) return seed;
+  }
+  throw new Error(`no deterministic ${kind} presentation seed found`);
+}
+
+function useHeritagePresentationSeed(kind: 'error-correction' | 'unjumble') {
+  const seed = seedForHeritagePresentation(kind);
+  vi.spyOn(Date, 'now').mockReturnValue(0);
+  vi.spyOn(Math, 'random').mockReturnValue(seed / 4294967296);
 }
 
 function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDeckData {
@@ -1944,7 +1958,7 @@ describe('LexiconPractice', () => {
     expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
   });
 
-  test('heritage renders in mixed sessions and heritage focus mode', async () => {
+  test('heritage renders as a sourced presentation in mixed sessions and as MC in heritage focus mode', async () => {
     const user = userEvent.setup();
     const mixedRender = render(
       <LexiconPractice
@@ -1955,10 +1969,11 @@ describe('LexiconPractice', () => {
       />,
     );
 
-    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
-    expect(screen.getByText('Оберіть питоме українське слово.')).toBeInTheDocument();
-    expect(screen.getByTestId('practice-heritage-severity')).toHaveTextContent('Російська калька');
-    expect(screen.getByText(/Я бачу/)).toBeInTheDocument();
+    expect(
+      screen.queryByTestId('practice-heritage') ??
+        screen.queryByTestId('practice-heritage-error-correction') ??
+        screen.queryByTestId('practice-heritage-unjumble'),
+    ).toBeInTheDocument();
 
     mixedRender.unmount();
     const { container } = render(<LexiconPractice initialDeck={heritageDeck()} />);
@@ -2064,6 +2079,49 @@ describe('LexiconPractice', () => {
         mode: 'heritage',
         rating: 'good',
         cardKey: cardKey('dim', 'heritage'),
+      });
+    });
+  });
+
+  test('mixed heritage renders error correction, keeps red feedback visible, and records again on failure', async () => {
+    useHeritagePresentationSeed('error-correction');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+
+    const activity = await screen.findByTestId('practice-heritage-error-correction');
+    await user.click(activity.querySelector<HTMLElement>('[data-word="дом"]')!);
+    await user.click(within(activity).getByRole('button', { name: 'хата' }));
+
+    expect(activity.querySelector('[data-activity="error-correction-feedback"]')).toHaveAttribute('data-correct', 'false');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        cardKey: cardKey('dim', 'heritage'),
+        mode: 'heritage',
+        rating: 'again',
+      });
+    });
+  });
+
+  test('mixed heritage renders unjumble, keeps green feedback visible, and records good on success', async () => {
+    useHeritagePresentationSeed('unjumble');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+
+    const activity = await screen.findByTestId('practice-heritage-unjumble');
+    const wordBank = within(activity.querySelector<HTMLElement>('[data-activity="word-bank"]')!);
+    for (const word of ['Я', 'бачу', 'дім', 'щодня.']) {
+      await user.click(wordBank.getByRole('button', { name: word }));
+    }
+    await user.click(within(activity).getByRole('button', { name: 'Перевірити' }));
+
+    expect(activity.querySelector('[data-activity="feedback"]')).toHaveAttribute('data-correct', 'true');
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        cardKey: cardKey('dim', 'heritage'),
+        mode: 'heritage',
+        rating: 'good',
       });
     });
   });
@@ -2315,7 +2373,11 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice initialDeck={multiLemmaDeck} autoStart={false} />);
 
       await waitFor(() => {
-        expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+        expect(
+          screen.queryByTestId('practice-heritage') ??
+            screen.queryByTestId('practice-heritage-error-correction') ??
+            screen.queryByTestId('practice-heritage-unjumble'),
+        ).toBeInTheDocument();
       });
       expect(screen.queryByTestId('practice-flashcards')).not.toBeInTheDocument();
 

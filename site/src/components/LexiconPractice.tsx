@@ -6,6 +6,8 @@ import PracticeFlashcard from './PracticeFlashcard';
 import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
 import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
 import PracticeStress from './PracticeStress';
+import { ErrorCorrectionItem } from './ErrorCorrection';
+import { UnjumbleQuestion } from './Unjumble';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS, type ChromeKey } from '../lib/i18n/chrome';
 import {
@@ -97,6 +99,7 @@ import {
 } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
+import { selectHeritagePracticePresentation } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 import ZnoPractice, { ZNO_PRACTICE_DECKS, type ZnoPracticeDeck } from './ZnoPractice';
@@ -3249,6 +3252,19 @@ function LexiconPracticeIsland({
     setPendingOutcome(outcome);
   }
 
+  function handleHeritageActivityComplete(correct: boolean) {
+    if (!selection || answerLocked) return;
+    const rating: PracticeRating = correct ? 'good' : 'again';
+    const outcome = recordReview(selection, rating);
+    setAnswerLocked(true);
+    setFeedback({
+      uk: `${selection.lemma.lemma}: ${correct ? 'Правильно' : 'Ще раз'}`,
+      en: `${selection.lemma.lemma}: ${correct ? 'Correct' : 'Again'}`,
+    });
+    pendingOutcomeRef.current = outcome;
+    setPendingOutcome(outcome);
+  }
+
   function submitCloze(value: string, source: 'typed' | 'chip') {
     if (!selection?.cloze) return;
     const answer = value.trim();
@@ -4121,6 +4137,8 @@ function LexiconPracticeIsland({
                     onMatchingComplete={handleMatchingComplete}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
+                    onHeritageActivityComplete={handleHeritageActivityComplete}
+                    presentationVariants={mode === 'mixed'}
                     onBackToModes={finishPractice}
                     showEnglishSubtitles={showEnglishSubtitles}
                     chromeLocale={chromeLocale}
@@ -4179,6 +4197,8 @@ function PracticeItem({
   onMatchingComplete,
   onMatchingMatch,
   onClozeSubmit,
+  onHeritageActivityComplete,
+  presentationVariants,
   onBackToModes,
   showEnglishSubtitles,
   chromeLocale,
@@ -4205,6 +4225,8 @@ function PracticeItem({
   onMatchingComplete(): void;
   onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
+  onHeritageActivityComplete(correct: boolean): void;
+  presentationVariants: boolean;
   /** P0-2: option-build failures (empty matching/choice pools) get a real exit, not just prose. */
   onBackToModes(): void;
   showEnglishSubtitles: boolean;
@@ -4313,6 +4335,33 @@ function PracticeItem({
   }
 
   if (selection.mode === 'heritage' && selection.heritage) {
+    const presentation = presentationVariants
+      ? selectHeritagePracticePresentation(selection.heritage, sessionSeed)
+      : { kind: 'mc' as const };
+    if (presentation.kind === 'error-correction') {
+      return (
+        <div data-testid="practice-heritage-error-correction">
+          <ErrorCorrectionItem
+            {...presentation.item}
+            isUkrainian={chromeLocale === 'uk'}
+            disabled={answerLocked}
+            onComplete={onHeritageActivityComplete}
+          />
+        </div>
+      );
+    }
+    if (presentation.kind === 'unjumble') {
+      return (
+        <div data-testid="practice-heritage-unjumble">
+          <UnjumbleQuestion
+            {...presentation.item}
+            isUkrainian={chromeLocale === 'uk'}
+            disabled={answerLocked}
+            onComplete={onHeritageActivityComplete}
+          />
+        </div>
+      );
+    }
     return (
       <PracticeHeritage
         item={selection.heritage}
