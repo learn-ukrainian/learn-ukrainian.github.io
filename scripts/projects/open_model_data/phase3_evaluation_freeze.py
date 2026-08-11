@@ -45,7 +45,7 @@ TASK_ID = "phase3-v2-1-heldout-stewardship"
 ACTION_KIND = "freeze_label_blind_all_family_evaluation_partition"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
-PUBLIC_FILE_MODE = 0o644
+PUBLIC_FILE_MODE = 0o640  # group-readable; no world bits (CodeQL #352)
 PARTITION_FILENAME = "partition_manifest_v1.jsonl"
 CLEARANCE_FILENAME = "author_clearance_v1.jsonl"
 QUARANTINE_FILENAME = "quarantine_v1.jsonl"
@@ -566,12 +566,12 @@ def _atomic_write_public(path: Path, payload: bytes) -> None:
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), PUBLIC_FILE_MODE)  # codeql[py/overly-permissive-file] public non-secret receipt (#352)
+            os.fchmod(handle.fileno(), PUBLIC_FILE_MODE)
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        os.chmod(path, PUBLIC_FILE_MODE)  # codeql[py/overly-permissive-file] public non-secret receipt (#352)
+        os.chmod(path, PUBLIC_FILE_MODE)
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
