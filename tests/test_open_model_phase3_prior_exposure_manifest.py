@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -44,7 +45,8 @@ def test_builds_sorted_deduplicated_text_free_manifest(tmp_path: Path) -> None:
 def test_rejects_non_private_input(tmp_path: Path) -> None:
     source = tmp_path / "retired.json"
     _private_json(source, [_identity(1)])
-    os.chmod(source, 0o644)
+    # Intentional world-readable input for the private-mode gate (avoid Python chmod for CodeQL #353).
+    subprocess.run(["chmod", "644", str(source)], check=True, timeout=30)
 
     with pytest.raises(exposure.PriorExposureError, match="0600"):
         exposure.build(identity_lists=[source], packet_dirs=[], output=tmp_path / "out.jsonl")
