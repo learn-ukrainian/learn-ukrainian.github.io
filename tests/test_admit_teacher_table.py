@@ -222,6 +222,33 @@ def test_admitted_translation_is_not_overwritten_by_a_formerly_thin_canonical_ro
     ]
 
 
+def test_unique_vesum_advp_and_noninfl_tags_are_admitted_as_attested_pos() -> None:
+    rows = [TableRow("роблячи", "while doing"), TableRow("можна", "one may")]
+    manifest = {"entries": []}
+
+    def tagged_lookup(words: list[str], _db: Path) -> dict[str, list[dict[str, str]]]:
+        analyses = {
+            "роблячи": [{"lemma": "роблячи", "pos": "advp"}],
+            "можна": [{"lemma": "можна", "pos": "noninfl"}],
+        }
+        return {word: analyses[word] for word in words}
+
+    staged, artifacts = admit_and_enrich(
+        rows=rows,
+        manifest=manifest,
+        vesum_db=Path("fixture-vesum.db"),
+        vesum_lookup=tagged_lookup,
+        dictionary_lookup=None,
+    )
+
+    assert {(entry["lemma"], entry["pos"]) for entry in staged["entries"]} == {
+        ("роблячи", "advp"),
+        ("можна", "noninfl"),
+    }
+    assert artifacts["residuals"] == []
+    assert measure_table_coverage(rows, staged) == {"missing": [], "thin": [], "covered": rows}
+
+
 def test_cli_refuses_to_overwrite_its_manifest_input(tmp_path) -> None:
     manifest = tmp_path / "manifest.json"
     manifest.write_text('{"entries": []}', encoding="utf-8")

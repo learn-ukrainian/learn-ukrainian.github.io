@@ -7,7 +7,7 @@
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
-        "sha256": "c2603fcf218724e5b0049b51ef81a774d34638e5ffc68cae7db84e811931202c"
+        "sha256": "8aeffd076ce7079479de18a71019a72489cd448987cebd63708e076841f1f32e"
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
