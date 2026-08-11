@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_materialization_receipt_v1.schema.json",
+  "title": "Phase 3 historical canary materialization text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "mode", "text_free", "inputs", "denominators", "selection", "outputs", "projection", "residuals", "safeguards"],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_materialization_receipt_v1"},
+    "mode": {"const": "canary"},
+    "text_free": {"const": true},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud", "plug2"],
+      "properties": {
+        "ud": {"$ref": "#/$defs/udInput"},
+        "plug2": {"$ref": "#/$defs/plug2Input"}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud_explicit_orv_uk", "ud_other_or_unresolved_sentences", "plug2", "plug2_original_counts", "plug2_orthography_counts", "plug2_candidate_uk_token_sum"],
+      "properties": {
+        "ud_explicit_orv_uk": {"$ref": "#/$defs/udDenominator"},
+        "ud_other_or_unresolved_sentences": {"type": "integer", "minimum": 0},
+        "plug2": {"$ref": "#/$defs/plug2Denominator"},
+        "plug2_original_counts": {"$ref": "#/$defs/languageCounts"},
+        "plug2_orthography_counts": {"$ref": "#/$defs/orthographyCounts"},
+        "plug2_candidate_uk_token_sum": {"type": "integer", "minimum": 1}
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "ud_fraction", "ud_selected_sentences", "ud_selection_sha256", "plug2_fraction", "plug2_selected_documents", "plug2_selection_sha256"],
+      "properties": {
+        "algorithm": {"type": "string", "minLength": 1},
+        "ud_fraction": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.01},
+        "ud_selected_sentences": {"type": "integer", "minimum": 1},
+        "ud_selection_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "plug2_fraction": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.01},
+        "plug2_selected_documents": {"type": "integer", "minimum": 1},
+        "plug2_selection_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud", "plug2"],
+      "properties": {
+        "ud": {"$ref": "#/$defs/output"},
+        "plug2": {"$ref": "#/$defs/output"}
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud_compressed_gib", "plug2_compressed_gib", "total_compressed_gib", "ceiling_gib", "within_ceiling"],
+      "properties": {
+        "ud_compressed_gib": {"type": "number", "minimum": 0},
+        "plug2_compressed_gib": {"type": "number", "minimum": 0},
+        "total_compressed_gib": {"type": "number", "minimum": 0, "maximum": 5},
+        "ceiling_gib": {"const": 5.0},
+        "within_ceiling": {"const": true}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud_untagged_or_other_excluded", "plug2_non_uk_or_unknown_excluded", "unlabeled_orthography_not_inferred", "periodization_unresolved_pending_qualified_evidence", "full_materialization_authorized"],
+      "properties": {
+        "ud_untagged_or_other_excluded": {"const": true},
+        "plug2_non_uk_or_unknown_excluded": {"const": true},
+        "unlabeled_orthography_not_inferred": {"const": true},
+        "periodization_unresolved_pending_qualified_evidence": {"const": true},
+        "full_materialization_authorized": {"const": false}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["historical_forms_protected", "modern_correction_eligible", "provider_calls", "phase4_authorized"],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nonnegativeCounts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "languageCounts": {
+      "allOf": [
+        {"$ref": "#/$defs/nonnegativeCounts"},
+        {"propertyNames": {"pattern": "^(UNKNOWN|[A-Z]{2,3})$"}}
+      ]
+    },
+    "orthographyCounts": {
+      "allOf": [
+        {"$ref": "#/$defs/nonnegativeCounts"},
+        {"propertyNames": {"enum": ["CONT", "LUKR", "SKRY", "ZHEL", "unlabeled"]}}
+      ]
+    },
+    "udInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "commit_sha", "file_sha256"],
+      "properties": {
+        "dataset_id": {"const": "ud-old-east-slavic-ruthenian-05a029e00ccf"},
+        "commit_sha": {"const": "05a029e00ccf1a374c91a22d17fb6310e646d628"},
+        "file_sha256": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha256"}}
+      }
+    },
+    "plug2Input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "doi", "archive_sha256", "metadata_sha256"],
+      "properties": {
+        "dataset_id": {"const": "plug2-zenodo-19482961"},
+        "doi": {"const": "10.5281/zenodo.19482961"},
+        "archive_sha256": {"$ref": "#/$defs/sha256"},
+        "metadata_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "udDenominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documents", "sentences", "token_rows"],
+      "properties": {
+        "documents": {"type": "integer", "minimum": 1},
+        "sentences": {"type": "integer", "minimum": 1},
+        "token_rows": {"type": "integer", "minimum": 1}
+      }
+    },
+    "plug2Denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documents", "token_sum", "uk_documents", "non_uk_or_unknown_documents"],
+      "properties": {
+        "documents": {"type": "integer", "minimum": 1},
+        "token_sum": {"type": "integer", "minimum": 1},
+        "uk_documents": {"type": "integer", "minimum": 1},
+        "non_uk_or_unknown_documents": {"type": "integer", "minimum": 0}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256"],
+      "properties": {
+        "filename": {"type": "string", "pattern": "^[^/]+\\.jsonl\\.gz$"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}
