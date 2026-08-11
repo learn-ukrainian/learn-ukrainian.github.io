@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_university_source_admission_review_v1.schema.json",
+  "title": "Phase 3 university source-admission review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reviewer_identity",
+    "role",
+    "verified_inputs",
+    "denominator",
+    "decisions",
+    "findings",
+    "complete_residuals",
+    "review_disposition",
+    "policy_generation_authorized",
+    "database_ingest_authorized",
+    "source_freeze_authorized",
+    "phase3_complete",
+    "phase4_blocked"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_v3_final_source_admission_review_v1"},
+    "reviewer_identity": {"const": "controller_phase3_ukrainian_reviewer_01"},
+    "role": {"const": "ukrainian_source_reviewer"},
+    "verified_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "university_source_matrix_v3_sha256",
+        "tracked_university_policy_v3_sha256",
+        "university_corpus_reconciliation_v3_sha256",
+        "final_drive_backup_receipt_sha256",
+        "prior_reviews_verified"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_matrix_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "tracked_university_policy_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "university_corpus_reconciliation_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "final_drive_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "prior_reviews_verified": {"const": true}
+      }
+    },
+    "denominator": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {"$ref": "#/$defs/decision"}
+    },
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "complete_residuals": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "review_disposition": {"enum": ["APPROVE_POLICY_GENERATION", "CHANGES_REQUIRED"]},
+    "policy_generation_authorized": {"type": "boolean"},
+    "database_ingest_authorized": {"const": false},
+    "source_freeze_authorized": {"const": false},
+    "phase3_complete": {"const": false},
+    "phase4_blocked": {"const": true}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sourceRole": {
+      "enum": [
+        "explicit_rule",
+        "correct_example",
+        "incorrect_example",
+        "corrected_example",
+        "editing_exercise",
+        "answer_key",
+        "distractor",
+        "quotation",
+        "historical_or_literary_excerpt",
+        "metalinguistic_mention",
+        "ordinary_narration",
+        "ambiguous_or_ocr"
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "final_disposition",
+        "source_state",
+        "audience_class",
+        "allowed_lanes",
+        "orthography_regime",
+        "rights_capability",
+        "primary_source_roles",
+        "claim_types",
+        "supported_uses",
+        "prohibited_uses",
+        "exactness_status",
+        "evidence_hashes",
+        "missing_evidence",
+        "reason"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^uni-ukrmova-"},
+        "final_disposition": {
+          "enum": ["admit_scoped", "contextual_only", "quarantine", "needs_more_evidence"]
+        },
+        "source_state": {"enum": ["db_resident", "staged_not_ingested"]},
+        "audience_class": {"const": "A_ukrainian_university_audience"},
+        "allowed_lanes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["contextual_retrieval", "corpus_ingest", "linguistic_rule_evidence"]
+          }
+        },
+        "orthography_regime": {"enum": ["pre_2019", "post_2019", "mixed_or_not_applicable"]},
+        "rights_capability": {
+          "enum": [
+            "cc_by_4_0",
+            "cc_by_nc_4_0_noncommercial_only",
+            "internal_research_only",
+            "rights_scope_requires_confirmation"
+          ]
+        },
+        "primary_source_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sourceRole"}
+        },
+        "claim_types": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "prescriptive_rule",
+              "human_correction_pair",
+              "style_preference",
+              "acceptable_variant",
+              "historical_advice",
+              "attestation_only",
+              "unresolved"
+            ]
+          }
+        },
+        "supported_uses": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "prohibited_uses": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "exactness_status": {
+          "enum": ["verified_for_scoped_use", "context_only", "failed", "insufficient"]
+        },
+        "evidence_hashes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "source_id", "finding", "required_action"],
+      "properties": {
+        "severity": {"enum": ["material", "minor"]},
+        "source_id": {"type": ["string", "null"]},
+        "finding": {"type": "string", "minLength": 1},
+        "required_action": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
