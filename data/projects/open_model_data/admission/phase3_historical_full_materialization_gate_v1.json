@@ -1,0 +1,86 @@
+{
+  "bindings": {
+    "canary_plug2_output_sha256": "4903747b4a8f079b75732aa7c983958e64c9b6ddf8f598afa733e900f0f03716",
+    "canary_receipt_file_sha256": "ef4bb2e499b6338fbcef90930052eef2de06a9176f4f1143fa74b2e2f3517071",
+    "canary_ud_output_sha256": "5c2ea7d88aa44adb300b7765a6854569afa4651738bd3ec554b1a501931cc710",
+    "full_materialization_gate_schema_sha256": "83089700449318897d87ea8577725e77e9ac634b32096b7ea718ec85cc036a04",
+    "full_materialization_receipt_schema_sha256": "65468a558a01de40facdf9e0dfff589c39f91f7c16617753e4ff7ff176a264f3",
+    "historical_materializer_sha256": "c513800757bf8c421a1163398932c68e4ad390e0b2774c1d6dd24049692ce829",
+    "historical_periodization_freeze_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198",
+    "historical_representation_implementation_sha256": "7783583b7422f77b8ddfb53d984ea748e8a998b2d4a76cef7a8a326416f6d9f4",
+    "historical_representation_schema_sha256": "37db223de63aaa3ce05dc154193b86ae4db8022c6f14f49a9035ebb5d37d4441",
+    "linguistic_representation_implementation_sha256": "0609635b31b2af469ff8427751bc3a5161b160d84d1d9e6065d85e0afffc58b5",
+    "linguistic_representation_schema_sha256": "07dffdbc6220adfd088a1e3a19d369093d6331c67fa648880c59ca10d56b2489",
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+  },
+  "execution": {
+    "canonical_output_directory": "phase3-v3-full-ud-orv-uk-plug2-uk-v1",
+    "full_materialization_authorized": true,
+    "immutable_output": true,
+    "minimum_free_disk_gib": 8.0,
+    "output_ceiling_gib": 5.0,
+    "output_outside_git_required": true,
+    "projected_compressed_gib": 1.8481288392973172,
+    "provider_calls_authorized": false,
+    "selection_algorithm": "all_eligible_units_sorted_by_immutable_identity",
+    "stop_conditions": [
+      "input_hash_drift",
+      "denominator_drift",
+      "metadata_archive_set_mismatch",
+      "non_utf8_source_member",
+      "historical_representation_validation_failure",
+      "compressed_output_ceiling_exceeded",
+      "minimum_free_disk_not_met"
+    ]
+  },
+  "phase_boundaries": {
+    "phase3_complete": false,
+    "phase4_blocked": true,
+    "source_coverage_ready": false,
+    "source_freeze_ready": false
+  },
+  "receipt_sha256": "6f7dbcb0dc06d9b02e41c763b7e8ffaedac8ce893131c73093cb3555ca96ab48",
+  "residuals": {
+    "nimchuk_primary_full_text_pending": true,
+    "periodization_assignment_pending_qualified_review": true,
+    "saint_sophia_current_database_reconciliation_pending": true
+  },
+  "rights": {
+    "attribution_required": true,
+    "plug2_license": "CC BY 4.0",
+    "public_training_permitted": true,
+    "source_specific_rights_preserved": true,
+    "ud_license": "CC BY-SA 4.0"
+  },
+  "schema_version": "phase3_historical_full_materialization_gate_v1",
+  "source_denominators": {
+    "plug2": {
+      "archive_sha256": "ff1ff139049539fc7c9ab69b006c12444567989758738baa948cfa0837aabe23",
+      "dataset_id": "plug2-zenodo-19482961",
+      "documents": 56245,
+      "doi": "10.5281/zenodo.19482961",
+      "eligible_original_language": "UK",
+      "metadata_sha256": "a9f79149606b570ebd6895020292eb06016d883e5c75dcb38a6e2cfd15378494",
+      "non_uk_or_unknown_documents": 165,
+      "token_sum": 74497787,
+      "uk_documents": 56080,
+      "uk_token_sum": 71802066
+    },
+    "ud": {
+      "commit_sha": "05a029e00ccf1a374c91a22d17fb6310e646d628",
+      "dataset_id": "ud-old-east-slavic-ruthenian-05a029e00ccf",
+      "documents": 82,
+      "eligible_language": "orv-uk",
+      "file_sha256": {
+        "orv_ruthenian-ud-dev.conllu": "a2047c4c734dab0a5b68f888979a3ca14670d217d7dcc11bb12b775f2dbbfd1d",
+        "orv_ruthenian-ud-test.conllu": "f34964cee7d6a38b3dd39ceb4dbde38a4fd9aacd8512272c19318027e044ea0d",
+        "orv_ruthenian-ud-train.conllu": "fc13f73dc71e5fac95938eba424b3d5236bfa8edd8ce7bd0e28db2d28a2f9680"
+      },
+      "sentences": 1311,
+      "token_rows": 35081
+    }
+  },
+  "status": "AUTHORIZED_FOR_EXACT_FULL_MATERIALIZATION",
+  "text_free": true
+}

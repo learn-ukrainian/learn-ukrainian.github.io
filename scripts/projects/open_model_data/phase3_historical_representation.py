@@ -9,6 +9,7 @@ model output as linguistic authority.
 from __future__ import annotations
 
 import copy
+import functools
 import json
 import unicodedata
 from collections.abc import Mapping, Sequence
@@ -61,6 +62,7 @@ def _is_sha256(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
 
 
+@functools.cache
 def _schema_validator() -> Draft202012Validator:
     try:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
