@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 import { shuffleNotCorrect } from './utils';
@@ -15,7 +15,7 @@ function getWordColor(word: string, index: number): string {
   return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
 }
 
-interface UnjumbleQuestionProps {
+export interface UnjumbleQuestionProps {
   /**
    * @schemaDescription Words shown to the learner.
    * @ukrainianText true
@@ -36,31 +36,46 @@ interface UnjumbleQuestionProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  /** Skip the legacy shuffle when a host provides deterministic jumbled tokens. */
+  wordsAreJumbled?: boolean;
+  /** Called once when the learner checks a complete sentence. */
+  onComplete?: (correct: boolean) => void;
+  /** Lets a host lock retry after it has recorded the result. */
+  disabled?: boolean;
 }
 
-export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQuestionProps) {
+export function UnjumbleQuestion({
+  words,
+  answer,
+  hint,
+  isUkrainian,
+  wordsAreJumbled = false,
+  onComplete,
+  disabled = false,
+}: UnjumbleQuestionProps) {
   // Parse words (can be separated by /, |, or ,) and shuffle so they're never in correct order
   const wordList = useMemo(() => {
     const rawWords = words.split(/[\/|,]\s*/).map(w => w.trim());
     const correctOrder = answer.split(/\s+/);
 
     // Shuffle ensuring words are NOT in the correct answer order
-    const shuffled = shuffleNotCorrect(rawWords, correctOrder);
+    const shuffled = wordsAreJumbled ? rawWords : shuffleNotCorrect(rawWords, correctOrder);
 
     return shuffled.map((word, idx) => ({
       id: `word-${idx}`,
       text: word,
       color: getWordColor(word, idx)
     }));
-  }, [words, answer]);
+  }, [words, answer, wordsAreJumbled]);
 
   const [availableWords, setAvailableWords] = useState(wordList);
   const [selectedWords, setSelectedWords] = useState<typeof wordList>([]);
   const [showResult, setShowResult] = useState(false);
   const [draggedWord, setDraggedWord] = useState<string | null>(null);
+  const completionReportedRef = useRef(false);
 
   const handleWordClick = (word: typeof wordList[0], fromSelected: boolean) => {
-    if (showResult) return;
+    if (disabled || showResult) return;
 
     if (fromSelected) {
       // Move back to available
@@ -85,7 +100,7 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
 
   const handleDropOnSentence = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!draggedWord || showResult) return;
+    if (!draggedWord || disabled || showResult) return;
 
     const word = availableWords.find(w => w.id === draggedWord);
     if (word) {
@@ -97,7 +112,7 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
 
   const handleDropOnBank = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!draggedWord || showResult) return;
+    if (!draggedWord || disabled || showResult) return;
 
     const word = selectedWords.find(w => w.id === draggedWord);
     if (word) {
@@ -111,7 +126,7 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
   const handleDropOnWord = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!draggedWord || showResult) return;
+    if (!draggedWord || disabled || showResult) return;
 
     const draggedFromSelected = selectedWords.find(w => w.id === draggedWord);
     const draggedFromAvailable = availableWords.find(w => w.id === draggedWord);
@@ -136,13 +151,20 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
   };
 
   const handleCheck = () => {
+    if (disabled || showResult) return;
     setShowResult(true);
+    if (!completionReportedRef.current) {
+      completionReportedRef.current = true;
+      onComplete?.(isCorrect);
+    }
   };
 
   const handleReset = () => {
+    if (disabled) return;
     setAvailableWords(wordList);
     setSelectedWords([]);
     setShowResult(false);
+    completionReportedRef.current = false;
   };
 
   const userAnswer = selectedWords.map(w => w.text).join(' ');
@@ -174,12 +196,12 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
                 color: 'white',
                 cursor: showResult ? 'default' : 'grab'
               }}
-              draggable={!showResult}
+              draggable={!showResult && !disabled}
               onDragStart={(e) => handleDragStart(e, word.id)}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDropOnWord(e, index)}
               onClick={() => handleWordClick(word, true)}
-              disabled={showResult}
+              disabled={showResult || disabled}
             >
               {word.text}
             </button>
@@ -205,10 +227,10 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
               color: 'white',
               cursor: showResult ? 'default' : 'grab'
             }}
-            draggable={!showResult}
+            draggable={!showResult && !disabled}
             onDragStart={(e) => handleDragStart(e, word.id)}
             onClick={() => handleWordClick(word, false)}
-            disabled={showResult}
+            disabled={showResult || disabled}
           >
             {word.text}
           </button>
@@ -220,12 +242,12 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
           <button
             className={styles.submitButton}
             onClick={handleCheck}
-            disabled={availableWords.length > 0}
+            disabled={availableWords.length > 0 || disabled}
           >
             {checkBtnLabel}
           </button>
         ) : (
-          <button className={styles.resetButton} onClick={handleReset}>
+          <button className={styles.resetButton} onClick={handleReset} disabled={disabled}>
             {retryBtnLabel}
           </button>
         )}

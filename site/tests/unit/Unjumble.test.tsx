@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UnjumbleQuestion } from '@site/src/components/Unjumble';
@@ -99,6 +99,22 @@ describe('UnjumbleQuestion', () => {
     await user.click(submitBtn(container));
 
     expect(container.querySelector('[data-activity="feedback"]')).toBeInTheDocument();
+  });
+
+  test('reports completion to a practice host after checking', async () => {
+    const onComplete = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <UnjumbleQuestion words="the / dog / runs" answer="the dog runs" onComplete={onComplete} />,
+    );
+
+    for (const word of ['the', 'dog', 'runs']) {
+      await user.click(within(container.querySelector('[data-activity="word-bank"]')!).getByRole('button', { name: word }));
+    }
+    await user.click(submitBtn(container));
+
+    expect(onComplete).toHaveBeenCalledOnce();
+    expect(onComplete).toHaveBeenCalledWith(true);
   });
 
   test('reset restores initial state', async () => {

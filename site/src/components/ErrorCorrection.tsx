@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 import { shuffle } from './utils';
 
-interface ErrorCorrectionItemProps {
+export interface ErrorCorrectionItemProps {
   /**
    * @schemaDescription Sentence shown to the learner.
    * @ukrainianText true
@@ -34,6 +34,10 @@ interface ErrorCorrectionItemProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  /** Called once after a complete answer; false includes reveal-only completion. */
+  onComplete?: (correct: boolean) => void;
+  /** Lets a host lock this item after it has recorded the result. */
+  disabled?: boolean;
 }
 
 type Step = 'identify' | 'fix' | 'complete';
@@ -44,7 +48,9 @@ export function ErrorCorrectionItem({
   correctForm,
   options,
   explanation,
-  isUkrainian
+  isUkrainian,
+  onComplete,
+  disabled = false,
 }: ErrorCorrectionItemProps) {
   // Shuffle options on mount
   const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
@@ -54,6 +60,15 @@ export function ErrorCorrectionItem({
   const [selectedFix, setSelectedFix] = useState<string | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
   const [revealedCorrection, setRevealedCorrection] = useState(false);
+  const completionReportedRef = useRef(false);
+
+  const complete = (correct: boolean) => {
+    setStep('complete');
+    if (!completionReportedRef.current) {
+      completionReportedRef.current = true;
+      onComplete?.(correct);
+    }
+  };
 
   // Split sentence into words while preserving punctuation
   const words = sentence.match(/[\wа-яіїєґА-ЯІЇЄҐ']+|[^\s\wа-яіїєґА-ЯІЇЄҐ']+|\s+/gi) || [];
@@ -69,7 +84,7 @@ export function ErrorCorrectionItem({
   };
 
   const handleWordClick = (word: string) => {
-    if (step !== 'identify') return;
+    if (disabled || step !== 'identify') return;
 
     // Clean word for comparison (remove punctuation)
     const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
@@ -91,11 +106,11 @@ export function ErrorCorrectionItem({
   };
 
   const handleNoError = () => {
-    if (step !== 'identify') return;
+    if (disabled || step !== 'identify') return;
 
     if (errorWord === null) {
       // Correct - there was no error
-      setStep('complete');
+      complete(true);
     } else {
       // Wrong - there was an error
       setWrongAttempts(prev => [...prev, '__no_error__']);
@@ -103,27 +118,29 @@ export function ErrorCorrectionItem({
   };
 
   const handleFixSelect = (fix: string) => {
-    if (step !== 'fix') return;
+    if (disabled || step !== 'fix') return;
 
     setRevealedCorrection(false);
     setSelectedFix(fix);
-    setStep('complete');
+    complete(fix === correctForm);
   };
 
   const handleRevealCorrection = () => {
-    if (step !== 'fix' || shuffledOptions.length > 0) return;
+    if (disabled || step !== 'fix' || shuffledOptions.length > 0) return;
 
     setRevealedCorrection(true);
     setSelectedFix(correctForm);
-    setStep('complete');
+    complete(false);
   };
 
   const handleReset = () => {
+    if (disabled) return;
     setStep('identify');
     setSelectedWord(null);
     setSelectedFix(null);
     setWrongAttempts([]);
     setRevealedCorrection(false);
+    completionReportedRef.current = false;
   };
 
   const isFixCorrect = selectedFix === correctForm;
@@ -207,6 +224,7 @@ export function ErrorCorrectionItem({
           className={`${styles.noErrorButton} ${wrongAttempts.includes('__no_error__') ? styles.noErrorWrong : ''}`}
           data-activity="error-correction-no-error"
           onClick={handleNoError}
+          disabled={disabled}
         >
           {noErrorLabel}
         </button>
@@ -223,6 +241,7 @@ export function ErrorCorrectionItem({
                 className={styles.chip}
                 data-activity="error-correction-fix-chip"
                 onClick={() => handleFixSelect(option)}
+                disabled={disabled}
               >
                 {option}
               </button>
@@ -240,6 +259,7 @@ export function ErrorCorrectionItem({
               className={styles.chip}
               data-activity="error-correction-reveal"
               onClick={handleRevealCorrection}
+              disabled={disabled}
             >
               {revealCorrectionLabel}
             </button>
@@ -269,7 +289,7 @@ export function ErrorCorrectionItem({
             )}
           </div>
           <div className={styles.buttonRow}>
-            <button className={styles.resetButton} onClick={handleReset}>
+            <button className={styles.resetButton} onClick={handleReset} disabled={disabled}>
               {retryBtnLabel}
             </button>
           </div>

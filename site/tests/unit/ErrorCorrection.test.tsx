@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
@@ -172,6 +172,18 @@ describe('ErrorCorrectionItem (correct → identify → fix → complete path)',
     expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
     expect(feedback(container)).toBeNull();
     expect(noErrorBtn(container)).toBeInTheDocument();
+  });
+
+  test('reports one correct completion to a practice host', async () => {
+    const onComplete = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(<ErrorCorrectionItem {...baseProps} onComplete={onComplete} />);
+
+    await user.click(wordByText(container, 'goed'));
+    await user.click(fixChipByText(container, 'went'));
+
+    expect(onComplete).toHaveBeenCalledOnce();
+    expect(onComplete).toHaveBeenCalledWith(true);
   });
 });
 
