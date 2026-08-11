@@ -48,6 +48,7 @@ def test_ci_folds_secret_scan_and_pr_body_into_contracts() -> None:
     assert "lint_pr_closing_references.py" in contracts_steps
     assert set(jobs["ci-gate"]["needs"]) == {
         "pytest-plan",
+        "pytest-fastlane",
         "python",
         "contracts",
         "frontend",

@@ -8,7 +8,9 @@ name: CI
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): pytest must NEVER be
 # selected or skipped by changed files. Five separate incidents shipped a
 # regression to main because a data-only change skipped pytest under a
-# path-filtered required check. Every required job below is unconditional.
+# path-filtered required check. Every required job below is unconditional,
+# except that pytest-fastlane uses changed files only to choose its separate
+# early signal; it never alters the full-suite plan or its shard execution.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}
@@ -100,7 +102,81 @@ jobs:
           retention-days: 1
 
   # ---------------------------------------------------------------------
-  # 2. python — execute the planner's four unconditional test partitions.
+  # 2. pytest-fastlane — direct changed-test signal, independent of the full
+  #    matrix. Its selection may be empty, but the job itself always runs and
+  #    CI Gate records its result. It has no `needs`, so it cannot delay the
+  #    planner or the unconditional Python shards.
+  # ---------------------------------------------------------------------
+  pytest-fastlane:
+    name: Pytest fastlane (changed tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install fastlane test dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.13.0
+          .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+
+      - name: Select directly changed test modules
+        id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'origin/main' }}
+        run: |
+          set -euo pipefail
+          base_ref="$BASE_SHA"
+          if [[ -z "$base_ref" || "$base_ref" =~ ^0+$ ]]; then
+            base_ref="origin/main"
+          fi
+          mkdir -p ci-artifacts
+          .venv/bin/python scripts/ci/changed_tests.py \
+            --base "$base_ref" \
+            --output ci-artifacts/fastlane-test-files.txt
+          if [[ -s ci-artifacts/fastlane-test-files.txt ]]; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+            echo "Selected test modules:"
+            cat ci-artifacts/fastlane-test-files.txt
+          else
+            echo "has_tests=false" >> "$GITHUB_OUTPUT"
+            echo "No directly changed test modules; fastlane has an empty advisory plan."
+          fi
+
+      - name: Run directly changed test modules
+        if: steps.plan.outputs.has_tests == 'true'
+        run: |
+          set -euo pipefail
+          mapfile -t test_files < ci-artifacts/fastlane-test-files.txt
+          if printf '%s\n' "${test_files[@]}" | grep -qx 'tests/agent_runtime/test_acp_text_agent.py'; then
+            npm ci --ignore-scripts
+          fi
+          .venv/bin/python -m pytest \
+            --strict-markers --timeout=120 --timeout-method=thread --durations=10 \
+            "${test_files[@]}"
+
+  # ---------------------------------------------------------------------
+  # 3. python — execute the planner's four unconditional test partitions.
   # ---------------------------------------------------------------------
   # The selection still never consults changed files: every collected test runs
   # exactly once. Four parallel jobs are the topology that completed under the
@@ -850,6 +926,7 @@ jobs:
     if: always()
     needs:
       - pytest-plan
+      - pytest-fastlane
       - python
       - contracts
       - frontend

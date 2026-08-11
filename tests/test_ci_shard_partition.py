@@ -161,6 +161,9 @@ def test_ci_workflow_uses_single_planner_and_ci_gate_verifier() -> None:
     workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
 
     assert "pytest-plan:" in workflow
+    assert "pytest-fastlane:" in workflow
+    assert "changed_tests.py" in workflow
+    assert "timeout-minutes: 10" in workflow
     assert "pytest_shards.py plan" in workflow
     assert workflow.count("pytest_shards.py plan") == 1
     assert "pytest_shards.py verify-artifacts" in workflow

@@ -13,7 +13,14 @@ CURATED_MEMBERSHIP ?= site/src/data/lexicon-teacher-curated-membership.json
 CURATED_MEMBERSHIP_HOMEWORK ?= .claude/atlas-epic/plans/curated-seed/curated-seed.jsonl
 CURATED_MEMBERSHIP_TEACHER ?= site/src/data/lexicon-teacher-cloze.json
 
-.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh curated-membership practice-admit-curated-seed practice-gold-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish
+.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh curated-membership practice-admit-curated-seed practice-gold-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish help test-linux-fs
+
+help:
+	@printf '%s\n' 'test-linux-fs  Run Linux filesystem-parity guardrail tests (see docs/runbooks/ci-gate.md)'
+
+# Linux parity probe for filesystem-sensitive guardrails. See docs/runbooks/ci-gate.md.
+test-linux-fs:
+	bash scripts/ci/linux_fs_parity.sh
 
 # Refresh practice JSON API copies + /atlas runtime for local/dev word-page CTA.
 atlas-practice-api-hydrate:
