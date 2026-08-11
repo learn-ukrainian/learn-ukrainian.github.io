@@ -1,11 +1,13 @@
 """Tests for lane health tracking and the routing-budget overlay."""
 
 import json
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from scripts.analytics.cost_report import CostRecord
-from scripts.api import state_router
+from scripts.api import codexbar_usage as codexbar_usage_mod
+from scripts.api import state_helpers, state_router
 from scripts.api.lane_health import (
     compute_lane_health,
     is_spawn_phase_failure,
@@ -255,6 +257,29 @@ gemini:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", budget_path)
     monkeypatch.setattr(state_router, "TASKS_DIR", tmp_path)
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    # These tests exercise ledger burn plus task-file health. Keep process-global
+    # CodexBar cache entries and host agent-runtime JSONL from changing that
+    # deliberately narrow fixture when the module runs inside a full CI shard.
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
+    monkeypatch.setattr(
+        state_router,
+        "summarize_lane_runtime",
+        lambda _provider: {
+            "source": "agent_runtime_jsonl",
+            "window_s": 300,
+            "ok": 0,
+            "error": 0,
+            "rate_limited": 0,
+            "timeout": 0,
+            "other": 0,
+            "total": 0,
+            "last_outcome_at": None,
+            "last_rate_limited_at": None,
+            "models_rate_limited": [],
+            "headroom_blocked": False,
+            "headroom_reason": "",
+        },
+    )
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
@@ -285,6 +310,41 @@ def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
         "lane claude skipped for recommendation: 2 spawn failures in 45m" in w
         for w in rec["warnings"]
     )
+
+
+def test_recommendation_ignores_seeded_external_telemetry_cache(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    records = [
+        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
+        _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
+        _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
+    ]
+    poisoned_codex_usage = {
+        "status": "healthy",
+        "lane": "codex",
+        "weekly_used_pct": 95.0,
+    }
+    observed_at = time.monotonic()
+    monkeypatch.setitem(
+        state_helpers._ttl_cache,
+        "codexbar_usage:codex",
+        (observed_at, poisoned_codex_usage),
+    )
+    monkeypatch.setitem(
+        codexbar_usage_mod._last_good_data,
+        "codex",
+        (observed_at, poisoned_codex_usage),
+    )
+    assert codexbar_usage_mod.get_provider_usage_data("codex")["weekly_used_pct"] == 95.0
+
+    _configure_test_budgets(monkeypatch, tmp_path, records)
+    _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=45))
+    _write_task(tmp_path, "task-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=15))
+
+    budget = state_router.compute_routing_budget(now)
+
+    assert budget["agents"]["codex"]["burn_pct_7d"] == 20.0
+    assert budget["recommendation"]["primary_agent_for_code"] == "codex"
 
 
 def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
@@ -364,4 +424,3 @@ def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_
     assert rec["primary_agent_for_code"] != "inline_orchestrator"
     assert not any("all agents near cap" in w for w in rec["warnings"])
     assert "All agents are hot or near cap" not in rec["rationale"]
-
