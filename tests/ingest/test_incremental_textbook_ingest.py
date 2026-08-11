@@ -36,6 +36,48 @@ END;
 """
 
 
+class _CheckpointResult:
+    def __init__(self, row: tuple[int, int, int]) -> None:
+        self._row = row
+
+    def fetchone(self) -> tuple[int, int, int]:
+        return self._row
+
+
+class _PostCommitCheckpointFailureConnection:
+    def __init__(self, connection: sqlite3.Connection) -> None:
+        object.__setattr__(self, "_connection", connection)
+        object.__setattr__(self, "_checkpoint_calls", 0)
+
+    def execute(self, sql: str, parameters=()):
+        if sql == "PRAGMA wal_checkpoint(TRUNCATE)":
+            object.__setattr__(self, "_checkpoint_calls", self._checkpoint_calls + 1)
+            if self._checkpoint_calls == 2:
+                return _CheckpointResult((1, 5, 3))
+        return self._connection.execute(sql, parameters)
+
+    def __getattr__(self, name: str):
+        return getattr(self._connection, name)
+
+    def __setattr__(self, name: str, value) -> None:
+        setattr(self._connection, name, value)
+
+
+def _install_post_commit_checkpoint_failure(monkeypatch, db: Path):
+    original_connect = sqlite3.connect
+    conn = original_connect(str(db))
+    try:
+        assert conn.execute("PRAGMA journal_mode=WAL").fetchone()[0].lower() == "wal"
+    finally:
+        conn.close()
+
+    def connect(*args, **kwargs):
+        return _PostCommitCheckpointFailureConnection(original_connect(*args, **kwargs))
+
+    monkeypatch.setattr(iti.sqlite3, "connect", connect)
+    return original_connect
+
+
 @pytest.fixture()
 def fixture_env(tmp_path, monkeypatch):
     db = tmp_path / "sources.db"
@@ -145,6 +187,140 @@ def test_normal_ingest_writes_integrity_receipt(fixture_env, tmp_path):
     assert receipt["foreign_key_failures_unchanged"] is True
     assert receipt["db_sha256_before"] != receipt["db_sha256_after"]
     assert receipt["per_source"][0]["fts"]["parity"] is True
+
+
+def test_post_commit_checkpoint_failure_is_receipted(fixture_env, tmp_path, monkeypatch):
+    db, slug = fixture_env
+    receipt_path = tmp_path / "post-commit-error-receipt.json"
+    original_connect = _install_post_commit_checkpoint_failure(monkeypatch, db)
+
+    with pytest.raises(
+        iti.PostCommitIngestError,
+        match=r"WAL checkpoint did not settle after ingest: \[1, 5, 3\]",
+    ):
+        iti.ingest(
+            [slug],
+            db_path=db,
+            dry_run=False,
+            receipt_path=receipt_path,
+        )
+
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["status"] == "committed_with_post_commit_error"
+    assert receipt["post_commit_error"] == (
+        "WAL checkpoint did not settle after ingest: [1, 5, 3]"
+    )
+    assert receipt["wal_checkpoint"] == [1, 5, 3]
+    conn = original_connect(str(db))
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 3
+    finally:
+        conn.close()
+
+
+def test_main_distinguishes_post_commit_error_from_rollback(tmp_path, monkeypatch, capsys):
+    def committed_then_failed(*_args, **_kwargs):
+        raise iti.PostCommitIngestError("checkpoint remained busy")
+
+    monkeypatch.setattr(iti, "ingest", committed_then_failed)
+
+    result = iti.main(
+        [
+            "--slugs",
+            "9-klas-khimiya-popel-2017",
+            "--db",
+            str(tmp_path / "sources.db"),
+        ]
+    )
+
+    assert result == 3
+    assert "COMMITTED_WITH_POST_COMMIT_ERROR: checkpoint remained busy" in capsys.readouterr().err
+
+
+def test_live_gate_wiring_records_authorized_cutover_scope(fixture_env, tmp_path, monkeypatch):
+    db, slug = fixture_env
+    receipt_path = tmp_path / "live-cutover-receipt.json"
+    gate_path = tmp_path / "live-ingest-gate.json"
+    gate_sha256 = "a" * 64
+    captured: dict = {}
+
+    monkeypatch.setattr(
+        iti,
+        "load_policy",
+        lambda _path: (
+            {
+                "schema_version": "phase3_complete_source_policy_v4",
+                "database_ingest": {"live_ingest_authorized": False},
+            },
+            "b" * 64,
+        ),
+    )
+
+    def validate_gate(**kwargs):
+        captured.update(kwargs)
+        return gate_sha256
+
+    monkeypatch.setattr(iti, "validate_live_ingest_preconditions", validate_gate)
+    monkeypatch.setattr(iti, "EXPECTED_LIVE_DB_SHA256", iti.sha256_file(db))
+    monkeypatch.setattr(
+        iti,
+        "LIVE_INGEST_COUNTS_BEFORE",
+        {"textbook_rows": 0, "fts_rows": 0, "section_rows": 0},
+    )
+
+    counts = iti.ingest(
+        [slug],
+        db_path=db,
+        dry_run=False,
+        receipt_path=receipt_path,
+        live_ingest_gate_path=gate_path,
+    )
+
+    assert counts == {slug: 3}
+    assert captured["gate_path"] == gate_path
+    assert captured["db_path"] == db
+    assert captured["source_ids"] == [slug]
+    assert captured["source_policy_sha256"] == "b" * 64
+    assert captured["receipt_path"] == receipt_path
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["execution_scope"] == "live_database_authorized_cutover"
+    assert receipt["live_ingest_gate_sha256"] == gate_sha256
+
+
+def test_live_gate_rechecks_preimage_after_acquiring_write_lock(fixture_env, tmp_path, monkeypatch):
+    db, slug = fixture_env
+    monkeypatch.setattr(
+        iti,
+        "load_policy",
+        lambda _path: (
+            {
+                "schema_version": "phase3_complete_source_policy_v4",
+                "database_ingest": {"live_ingest_authorized": False},
+            },
+            "b" * 64,
+        ),
+    )
+    monkeypatch.setattr(
+        iti,
+        "validate_live_ingest_preconditions",
+        lambda **_kwargs: "a" * 64,
+    )
+    monkeypatch.setattr(iti, "sha256_file", lambda _path: "0" * 64)
+
+    with pytest.raises(iti.IngestError, match="changed after gate validation"):
+        iti.ingest(
+            [slug],
+            db_path=db,
+            dry_run=False,
+            receipt_path=tmp_path / "receipt.json",
+            live_ingest_gate_path=tmp_path / "gate.json",
+        )
+
+    conn = sqlite3.connect(db)
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 0
+    finally:
+        conn.close()
 
 
 def test_dry_run_receipt_proves_database_hash_is_unchanged(fixture_env, tmp_path):
@@ -769,6 +945,73 @@ def test_hash_bound_native_anomaly_quarantine_removes_only_exact_archived_chunk(
     assert replay["removed_chunk_count"] == 0
     assert replay["already_absent_chunk_count"] == 1
     assert replay["per_source"][0]["section_policy"] == "unchanged_already_absent"
+
+
+def test_quarantine_post_commit_checkpoint_failure_is_receipted(
+    fixture_env,
+    tmp_path,
+    monkeypatch,
+):
+    db, slug = fixture_env
+    iti.ingest([slug], db_path=db, dry_run=False)
+    audit_path = tmp_path / "audit.json"
+    audit_path.write_text("{}\n", encoding="utf-8")
+    quarantine_dir = tmp_path / "quarantine"
+    quarantine_dir.mkdir()
+    monkeypatch.setattr(
+        iti,
+        "load_native_anomaly_quarantine_plan",
+        lambda *_args, **_kwargs: {slug: [f"{slug}_s0001"]},
+    )
+    original_connect = _install_post_commit_checkpoint_failure(monkeypatch, db)
+
+    receipt = iti.quarantine_native_anomaly_chunks(
+        audit_path=audit_path,
+        chunks_root=iti.CHUNKS_DIR,
+        quarantine_dir=quarantine_dir,
+        db_path=db,
+        dry_run=False,
+    )
+
+    assert receipt["status"] == "committed_with_post_commit_error"
+    assert receipt["post_commit_error"] == (
+        "WAL checkpoint did not settle after quarantine: [1, 5, 3]"
+    )
+    assert receipt["wal_checkpoint"] == [1, 5, 3]
+    conn = original_connect(str(db))
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 2
+    finally:
+        conn.close()
+
+
+def test_quarantine_cli_writes_post_commit_receipt_before_exit(tmp_path, monkeypatch, capsys):
+    receipt_path = tmp_path / "quarantine-receipt.json"
+    receipt = {
+        "schema_version": "textbook-native-anomaly-quarantine.v1",
+        "status": "committed_with_post_commit_error",
+        "post_commit_error": "checkpoint remained busy",
+    }
+    monkeypatch.setattr(
+        iti,
+        "quarantine_native_anomaly_chunks",
+        lambda **_kwargs: receipt,
+    )
+
+    result = iti.main(
+        [
+            "--quarantine-audit",
+            str(tmp_path / "audit.json"),
+            "--quarantine-dir",
+            str(tmp_path / "quarantine"),
+            "--receipt",
+            str(receipt_path),
+        ]
+    )
+
+    assert result == 3
+    assert json.loads(receipt_path.read_text(encoding="utf-8")) == receipt
+    assert "COMMITTED_WITH_POST_COMMIT_ERROR: checkpoint remained busy" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("marker", ["extraction_mode", "page_extraction_mode"])

@@ -1,0 +1,93 @@
+{
+  "bindings": {
+    "complete_source_policy_v4_sha256": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559",
+    "compressed_pre_ingest_database_sha256": "c89d8d2898b7aa7470e8f3888245fb0d85fe74c075d27a9483da262ad3147a5f",
+    "copied_database_rehearsal_receipt_sha256": "a50310fbb526bb68ebe93f6046af56778c860c7b7731a46488dd188465215183",
+    "independent_cross_family_review_sha256": "e85a5d5a2681362765cdee879dc19bc7299ff329aa001d69f7ae5616bed55137",
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "pr6631_drive_backup_receipt_sha256": "8792d76bca226c603ebc45c8315dcf197231c955aace7c2a78768943ce7f177b",
+    "pr6631_drive_provider_verification_sha256": "10aa43b2c2722fc74c05f471363fe99f0f187a3c692d5f0367cd33b0dd5d4129",
+    "pr6631_merge_commit": "c88928cf6deaeb84d7487681885314d7b2bb729c",
+    "pr6631_package_manifest_sha256": "1c818a2a54ac1dbf57f9ab21d4bb114b365d9ef5205499504f59b5a5967046a5",
+    "pre_ingest_backup_provider_verification_sha256": "4cf978220e05aaaf4b999422db48d1239a35fd2245a17e1f8fc4bb5b293621ef",
+    "pre_ingest_backup_receipt_sha256": "f97faa4273a1079b76e6f47ddaf188a383aa516f91df768d1909c6e38409023a"
+  },
+  "copied_database_rehearsal": {
+    "counts_after": {
+      "fts_rows": 50153,
+      "section_rows": 36322,
+      "textbook_rows": 50153
+    },
+    "counts_before": {
+      "fts_rows": 49568,
+      "section_rows": 35777,
+      "textbook_rows": 49568
+    },
+    "database_sha256_after": "e3c7d01dec04c6b7c6c8ea8dbe8fab11e0b3cdb9fea9c1280a927167a236f70b",
+    "database_sha256_before": "4b7b6aa7913b415114f270b497141fc706a0c9f1dabf2fdbae7cd4db8110a391",
+    "execution_scope": "copied_database_rehearsal",
+    "foreign_key_failures_unchanged": true,
+    "inserted_rows": 585,
+    "integrity_check": "ok",
+    "per_source_fts_and_linkage_passed": true,
+    "source_count": 4,
+    "status": "committed"
+  },
+  "database": {
+    "counts_after_expected": {
+      "fts_rows": 50153,
+      "section_rows": 36322,
+      "source_count": 187,
+      "textbook_rows": 50153,
+      "university_rows": 4078,
+      "university_source_count": 20
+    },
+    "counts_before": {
+      "fts_rows": 49568,
+      "section_rows": 35777,
+      "source_count": 183,
+      "textbook_rows": 49568,
+      "university_rows": 3493,
+      "university_source_count": 16
+    },
+    "foreign_key_failure_count": 134836,
+    "foreign_key_failure_hash": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb",
+    "integrity_check": "ok",
+    "journal_mode": "wal",
+    "requested_sources_absent_before": true,
+    "sha256_before": "c7068a4e4b9e0e7fac3b4f918857bcd36c2f56e524f81e686d222e7155a78739",
+    "target_locator": "primary_checkout:data/sources.db"
+  },
+  "execution": {
+    "exact_preimage_required": true,
+    "exact_source_set_required": true,
+    "live_ingest_authorized": true,
+    "post_ingest_backup_required": true,
+    "provider_work_authorized": false,
+    "receipt_required": true,
+    "single_use": true
+  },
+  "phase3_complete": false,
+  "phase4_blocked": true,
+  "pre_ingest_backup": {
+    "compressed_database_filename": "sources-c7068a4e4b9e.db.gz",
+    "compressed_database_sha256": "c89d8d2898b7aa7470e8f3888245fb0d85fe74c075d27a9483da262ad3147a5f",
+    "drive_item_id_present": true,
+    "google_drive_relative_path": "Projects/learn-ukrainian-data/backups/phase3-6375/20260811T090325Z",
+    "gzip_test_passed": true,
+    "provider_uploaded": true,
+    "provider_uploading": false,
+    "restored_database_sha256": "c7068a4e4b9e0e7fac3b4f918857bcd36c2f56e524f81e686d222e7155a78739"
+  },
+  "receipt_sha256": "5cd3383be7441e48db18631162633944ec7ea33bd6da618ca39c552c1b1b9e6e",
+  "requested_sources": [
+    "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+    "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+    "uni-ukrmova-morphology-volkova-maslo-2012",
+    "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+  ],
+  "schema_version": "phase3_live_ingest_gate_v1",
+  "source_freeze_ready": false,
+  "status": "AUTHORIZED_ONCE_FOR_EXACT_PREIMAGE",
+  "text_free": true
+}
