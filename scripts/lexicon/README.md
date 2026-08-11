@@ -246,6 +246,33 @@ Malformed rows fail before candidate output is written. Source-fed candidates
 use the same `auto_merge` / `needs_review` payload as content-grown candidates
 and carry `source_provenance` through promotion.
 
+### Current teacher-table local intake (#4387)
+
+`admit_teacher_table.py` keeps the current teacher table private and local by
+default while making its vocabulary available to the local Atlas/Practice
+pipeline. It reads the supplied current extract and manifest snapshot, performs
+an exact table-key remeasurement, VESUM-attests each missing single-token row,
+and keeps missing multiword rows as `expression` entries. It prefers local
+Dmklinger/Kaikki/Balla English cards when they are unambiguous, with the table
+English as a learner-usable fallback.
+
+```bash
+.venv/bin/python -m scripts.lexicon.admit_teacher_table \
+  --extract path/to/current-teacher-table.json \
+  --queue path/to/current-teacher-table-queue.json \
+  --manifest-in path/to/atlas-manifest.json \
+  --manifest-out batch_state/atlas/teacher-table/lexicon-manifest.staged.json \
+  --report-dir batch_state/atlas/teacher-table \
+  --write
+```
+
+The command refuses to overwrite `--manifest-in`. Its ignored output directory
+contains `admission-delta.json`, `translation-delta.json`, and `report.json`.
+Every remaining missing or thin table key is named in `report.json` with a
+deterministic reason; a VESUM-unattested single token is a residual, never an
+invented morphology. It does **not** publish the staged snapshot or grant
+redistribution rights; that cutover remains operator-controlled.
+
 ## Full Curriculum Intake
 
 The Phase 1 curriculum machine scans the full running text of in-scope module
@@ -254,7 +281,7 @@ source inventory and report, and can emit a decision-ledger-compatible append
 when explicit batch metadata is supplied. It never changes the Atlas manifest
 or Daily Word, Practice, or Cloze surfaces.
 
-~~~bash
+```bash
 .venv/bin/python -m scripts.lexicon.curriculum_atlas_intake \
   --inventory-out data/lexicon/source-inventory/curriculum-full-text-intake.json \
   --inventory-path data/lexicon/source-inventory/curriculum-full-text-intake.json \
@@ -263,7 +290,7 @@ or Daily Word, Practice, or Cloze surfaces.
   --batch-id curriculum-full-text-intake-2026-07-14 \
   --batch-label "curriculum full-text intake" \
   --reviewed-at 2026-07-14
-~~~
+```
 
 The classifier is fail-closed. Missing or ambiguous VESUM data, missing English
 anchors, uncertain heritage results, and conflicting metadata enter
