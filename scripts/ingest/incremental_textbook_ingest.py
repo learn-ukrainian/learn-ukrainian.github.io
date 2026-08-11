@@ -49,6 +49,7 @@ from projects.open_model_data.university_source_policy import (
 from projects.open_model_data.university_source_policy import (
     UniversitySourcePolicyError,
     require_source_admission,
+    require_source_quarantine,
 )
 from wiki.build_sources_db import _build_textbook_row
 from wiki.config import TEXTBOOK_CHUNKS_DIR
@@ -414,6 +415,19 @@ def ingest(
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
+    university_quarantines: dict[str, dict[str, Any]] = {}
+    for slug in quarantine_slugs:
+        if not slug.startswith("uni-"):
+            continue
+        jsonl_path = find_jsonl(slug, chunks_root=chunks_root)
+        try:
+            university_quarantines[slug] = require_source_quarantine(
+                source_file=slug,
+                jsonl_path=jsonl_path,
+                policy_path=university_policy_path,
+            )
+        except UniversitySourcePolicyError as exc:
+            raise IngestError(str(exc)) from exc
     db_path = Path(db_path)
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
@@ -435,10 +449,16 @@ def ingest(
             deleted_sections = conn.execute("DELETE FROM textbook_sections WHERE source_file = ?", (slug,)).rowcount
             receipts[slug] = {
                 "source_file": slug,
-                "disposition": "quarantined_unverified_ocr",
+                "disposition": (
+                    "quarantined_by_university_source_policy"
+                    if slug in university_quarantines
+                    else "quarantined_unverified_ocr"
+                ),
                 "deleted_rows": deleted,
                 "deleted_sections": deleted_sections,
             }
+            if slug in university_quarantines:
+                receipts[slug]["university_source_policy"] = university_quarantines[slug]
             print(f"  {slug}: quarantined {deleted} rows and {deleted_sections} sections")
         for slug, rows in per_slug_rows.items():
             deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
@@ -502,7 +522,9 @@ def ingest(
         "requested_replace_sources": sorted(slugs),
         "requested_quarantine_sources": sorted(quarantine_slugs),
         "university_source_policy_sha256": (
-            sha256_file(Path(university_policy_path)) if university_admissions else None
+            sha256_file(Path(university_policy_path))
+            if university_admissions or university_quarantines
+            else None
         ),
         "before": before,
         "after_transaction": after,
@@ -746,7 +768,7 @@ def quarantine_native_anomaly_chunks(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    group = parser.add_mutually_exclusive_group(required=True)
+    group = parser.add_mutually_exclusive_group()
     group.add_argument("--slugs", nargs="+", help="Canonical source_file slugs")
     group.add_argument("--wave1", action="store_true", help="Ingest the 22 #4593 wave-1 books")
     group.add_argument(
@@ -763,6 +785,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--quarantine-dir", type=Path)
+    parser.add_argument(
+        "--quarantine-slugs",
+        nargs="+",
+        default=[],
+        help="Whole source_file slugs to quarantine in the same atomic transaction",
+    )
     parser.add_argument("--receipt", type=Path)
     parser.add_argument(
         "--university-policy",
@@ -771,6 +799,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Hash-bound audience/lane policy required for every uni-* source",
     )
     args = parser.parse_args(argv)
+
+    if not (args.slugs or args.wave1 or args.quarantine_audit or args.quarantine_slugs):
+        parser.error("one of --slugs, --wave1, --quarantine-audit, or --quarantine-slugs is required")
+    if args.quarantine_audit and args.quarantine_slugs:
+        parser.error("--quarantine-audit cannot be combined with --quarantine-slugs")
 
     try:
         if args.quarantine_audit:
@@ -790,13 +823,14 @@ def main(argv: list[str] | None = None) -> int:
                 )
             print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
             return 0
-        slugs = list(WAVE1_SLUGS) if args.wave1 else list(args.slugs)
+        slugs = list(WAVE1_SLUGS) if args.wave1 else list(args.slugs or [])
         counts = ingest(
             slugs,
             db_path=args.db,
             dry_run=args.dry_run,
             chunks_root=args.chunks_root,
             receipt_path=args.receipt,
+            quarantine_slugs=args.quarantine_slugs,
             university_policy_path=args.university_policy,
         )
     except (IngestError, ValueError) as exc:

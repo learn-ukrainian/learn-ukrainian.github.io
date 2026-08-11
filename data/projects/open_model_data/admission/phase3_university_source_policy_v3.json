@@ -1,0 +1,349 @@
+{
+  "schema_version": "phase3_university_source_policy_v3",
+  "status": "ACTIVE_DEFAULT_DENY",
+  "default_disposition": "QUARANTINE_UNTIL_AUDIENCE_AND_CONTENT_CLASSIFIED",
+  "source_count": 20,
+  "sources": [
+    {
+      "source_file": "uni-istoriya-kalynichenko-olianych-2025",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "history",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "9aefd42ef5e6a9691314df7a8870902775a4d44823f36706cd23e80524157694",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "6de0b6f8ae2a9ed1a29161dad76ed003098b315698630b61effdf23bb053df4c",
+        "summary": "Kharkiv Humanitarian-Pedagogical Academy front matter identifies a 2025 History of Ukraine university coursebook for higher-education students; content review limits it to contextual historical prose."
+      }
+    },
+    {
+      "source_file": "uni-istoriya-levytska-2015",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "history",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "f111c27c136d8099359487fe1ae707b66431bf8420f156b0b1e7321660260710",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "6233f862eee3afe045b706f84fb7df9e6a07c898d1a938a3b47f29adb0f51ee1",
+        "summary": "NUFT front matter identifies a native-university History of Ukraine textbook; repository and publisher rights conflict requires private contextual handling."
+      }
+    },
+    {
+      "source_file": "uni-mystetstvo-levytska-2015",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "arts_and_culture",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "9020a9fa155a2cda8e5ed6bf48f612c7264342c6cd29ec7a9791a3b3c746ba75",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "3a9252d79ed1684e9b9bb567a1e0e0fc8b0cf3d908d15ab5a258a30122f10e4e",
+        "summary": "NUFT front matter identifies a native-university History of Ukrainian Culture textbook; repository and publisher rights conflict requires private contextual handling."
+      }
+    },
+    {
+      "source_file": "uni-mystetstvo-petutina-2012",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "arts_and_culture",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "2e784c89b65d7fee9ea3a4e46845f1cecb7bc6eee194b9deceead62f775f98bc",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "d87e9f7c62bb9a2ef1bc6efd983d7fe56ef3097c977799a8c1dc592b564cca4c",
+        "summary": "KhPI front matter identifies a History of Ukrainian Culture teaching text for native university students; content review limits it to contextual arts prose."
+      }
+    },
+    {
+      "source_file": "uni-ukrlit-dvulychanska-2017",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_literature",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "aa30b5deb9287fddba6b8dc3775ca0f353758b91c285e8516b07b7e75048d1f2",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "85ba06bcb90ce6988100647faf953fc1a171b7da1718d55a541677f58d72cda9",
+        "summary": "Luhansk National University front matter identifies a Ukrainian-literature-history course for native philology students; no reusable open license was confirmed, so use remains private and contextual."
+      }
+    },
+    {
+      "source_file": "uni-ukrlit-kalinichenko-2024",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_literature",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "f8355bff61c181c4e8e9551886cc286e041a4b87aa8b1ae9ed2548ea6f4c7c2d",
+        "page_start": 1,
+        "page_end": 2,
+        "rows_sha256": "4e974624dc7a8a73a8c763322ff5be177ec85ffd31169d2aee0f7697944c05af",
+        "summary": "NaUKMA journal front matter identifies a 2024 Ukrainian literary-studies article for academic readers; content review limits it to contextual literary criticism."
+      }
+    },
+    {
+      "source_file": "uni-ukrmova-dialectology-torchynska-2017",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "b8d349c725f0964817111c05bdb6c8dcdba6ac35139b91ea65ccdafe042fc89c",
+        "page_start": 2,
+        "page_end": 6,
+        "rows_sha256": "2f24ce001b5ecb222bfa84e5065607403de26edcc3c9b5ec87b4a368329ed7fa",
+        "summary": "Khmelnytskyi National University front matter identifies this Ukrainian dialectology handbook for the Ukrainian Language and Literature programs 014 and 035 and students of philological faculties."
+      },
+      "content_disposition": "contextual_only"
+    },
+    {
+      "source_file": "uni-ukrmova-glukhovtseva-2021",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "8c4b7a81dc668f734a69c2608fea42c6cc8767cd8672bbee3e6b1ebdb0145cd4",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "0790c0f078045fd0934d354b704f43c8a5b0902fc6c5e2a8fe51ad45e47f4540",
+        "summary": "Luhansk National University front matter identifies a modern-Ukrainian linguistics manual for the Ukrainian Language and Literature bachelor/master program and students-philologists."
+      },
+      "content_disposition": "quarantine"
+    },
+    {
+      "source_file": "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "77713275fe6d1b903fef8ddfc5a171595798d547f87c898b6b0f0d696b6f5a37",
+        "page_start": 1,
+        "page_end": 3,
+        "rows_sha256": "e9b7d4bd56c4f0733c118e244e463184cb9d6385ec42df579acd59952b3fa7d0",
+        "summary": "Lviv University Ukrainian Language Department front matter identifies this historical Ukrainian grammar handbook for philological-faculty students and covers the continuous development of Ukrainian phonology, morphology, syntax, word formation, and lexis."
+      },
+      "content_disposition": "contextual_only"
+    },
+    {
+      "source_file": "uni-ukrmova-lexicology-filon-khomik-2010",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "e250f16c5fc1cb0cc3f38f184f03d4b18d98894de050c65510847565f7766666",
+        "page_start": 1,
+        "page_end": 2,
+        "rows_sha256": "d776afe1cbd58fe220129017a8ee38ed3fdeecc8095246f919e9c837e245fbdb",
+        "summary": "The title and bibliographic pages identify this modern-Ukrainian lexicology manual as intended for students of philological specialties."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-morphology-aleksiienko-2014",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [],
+      "evidence": {
+        "kind": "jsonl_front_matter_and_official_course",
+        "jsonl_sha256": "55f727f53a2c188fce3638609d2210c84069c7afa443ef07ece1be44d5995cb0",
+        "page_start": 1,
+        "page_end": 6,
+        "rows_sha256": "866ff30853865ba708d5fcdd7c483573e38a0c9460a8c256677be539312fcfa7",
+        "summary": "KNU front matter binds this modern-Ukrainian morphology manual; the official Ukrainian-language-and-literature course catalog names it as required literature: https://infopacket.knu.ua/SubjectInfo?subjectId=115285"
+      },
+      "content_disposition": "quarantine"
+    },
+    {
+      "source_file": "uni-ukrmova-orthography-strokal-2021",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "076735b3a80f7417158701ca219a56d36d212f1f9d8f2a9d694eed5cbdb5a5c9",
+        "page_start": 2,
+        "page_end": 5,
+        "rows_sha256": "cf17e55e314dc5535c81b39bb0dcb7fb10c920fd41d3b5a7820552cac603be58",
+        "summary": "KNU Institute of Philology front matter names Ukrainian-language, editing, translation, applied-linguistics, and Ukrainian-philology programs and students-philologists."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-phonetics-komarova-2015",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "4a14321ebb452dd2cf2d1b78aafd4395fdd8e0af394a31cea9bfee7b883b5757",
+        "page_start": 1,
+        "page_end": 2,
+        "rows_sha256": "73c1ac4d2df3a6f043b3a3a88e23dddaed4b92b1eb2e14b08c5ef3237a815dc8",
+        "summary": "Uman State Pedagogical University front matter identifies this modern Ukrainian phonetics, phonology, orthoepy, graphics, and orthography handbook as a Faculty of Ukrainian Philology teaching text for university students-philologists."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-prof-haluzynska-2006",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "aa84f98a8779c9d4323b52dddad095f0c0a218d1d56619992946dde1fdd04424",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "e0ed8c525c872d91cc8016581e73393da7603cfa824fa9b7cb551ed8b0c874d3",
+        "summary": "NUFT front matter identifies a Ukrainian-medium professional-language course for students of all specialties and describes its Ukrainian lexical, orthoepic, grammatical, stylistic, and literary-language content."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-punctuation-marynenko-2021",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "49271a38d4156e3c76373bf0e4b7b97bc5125c9afd70b279a0f49c2101193973",
+        "page_start": 2,
+        "page_end": 2,
+        "rows_sha256": "5dcb417a72870d14d3c705c065c8dd85b6b803b74c7ece782b147b4374e8d125",
+        "summary": "The reviewed front matter identifies a modern-Ukrainian syntax and punctuation manual for university humanities students and practicing journalists."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-sociolinguistics-masenko-2010",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter_and_official_course",
+        "jsonl_sha256": "a8f0ff3d73a2e5726f660cba56bf629b303ae80634cd9fc94567d1080de18d3b",
+        "page_start": 1,
+        "page_end": 6,
+        "rows_sha256": "69ef6b61c9cd0eb59feda0070702b4e1e6c278e8f45a3d1d996f933c7bc3e8b4",
+        "summary": "NaUKMA front matter identifies this Ukrainian sociolinguistics course handbook for philological-faculty students; Lviv University also assigns it in the Ukrainistics course program: https://philology.lnu.edu.ua/wp-content/uploads/2020/04/Sotsiolinhvistyka_dosvid-Ukrainy-i-svitu_RP_035.01_014.01_Butkovs-ka.pdf"
+      },
+      "content_disposition": "contextual_only"
+    },
+    {
+      "source_file": "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "0ecaf0dcc1f4f8d32dc3efec22993ee9826d52c69ac9d707b36d2149827dcddd",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "5d5a2d36e70f62ad4729e7c849de0493031434feb324013e419d536ca498c4a3",
+        "summary": "Zhytomyr State University front matter identifies this Ukrainian stylistics and culture-of-language teaching text for BA 035.01 Ukrainian Language and Literature and covers functional styles, stylistic resources, grammatical stylistics, and modern literary-language norms."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-syntax-didkivska-shvets-2020",
+      "audience_class": "B_foreign_or_second_language",
+      "subject_role": "ukrainian_L2_pedagogy",
+      "allowed_lanes": [],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "3456eb48a47a0c48769c6b3c05c103558bed7e706662621c462513a167aa2e44",
+        "page_start": 1,
+        "page_end": 5,
+        "rows_sha256": "ece7d3061fa4301fc129849dabc79bd28a366d91b250d3dfd194458293811b2c",
+        "summary": "The title and preface explicitly identify this syntax manual as designed for foreign philology students and foreign-language communicators."
+      },
+      "content_disposition": "quarantine"
+    },
+    {
+      "source_file": "uni-ukrmova-syntax-herman-2021",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "190b142ad0ba501791a58f4694b5839fb02bfeba0a12bf6a8c4c877f9a803c90",
+        "page_start": 1,
+        "page_end": 3,
+        "rows_sha256": "92f4e5781c684b6501327f04b2dfc67a452926044e1460faecc704c504afec9f",
+        "summary": "Sumy State Pedagogical University front matter identifies this modern Ukrainian complex-sentence syntax handbook for fourth-year students in program 014 Secondary Education (Ukrainian Language and Literature)."
+      },
+      "content_disposition": "admit_candidate"
+    },
+    {
+      "source_file": "uni-ukrmova-vlasova-2023",
+      "audience_class": "B_foreign_or_second_language",
+      "subject_role": "ukrainian_L2_pedagogy",
+      "allowed_lanes": [],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "fded6a45bf8914585d0178129b926a986722fd023b6ef6f7da529ea32ea60725",
+        "page_start": 2,
+        "page_end": 3,
+        "rows_sha256": "a9e3e55a14d84886d8f87fc09d1a0e33494a81542a87a12a2dd4ad370d7016d0",
+        "summary": "The title page and bibliographic record explicitly identify this as a Ukrainian-language textbook for foreign students."
+      },
+      "content_disposition": "quarantine"
+    }
+  ]
+}
