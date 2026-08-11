@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/merge_translation_delta.py",
-        "sha256": "ea68d272a2fb0df30ebda5d434a540ee9ee9fda45a680c617ba7566f0533236f"
+        "sha256": "f8ede84be0231383c1d47701856e805b92518aa6e2ae9d6f1132cbcc97bec9f4"
       },
       {
         "path": "scripts/lexicon/migrate_slovnyk_cache_v3.py",

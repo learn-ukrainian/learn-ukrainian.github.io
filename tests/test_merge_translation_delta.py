@@ -136,17 +136,25 @@ def test_overwrite_proof_returns_nonzero_when_nonempty_en_changes() -> None:
 
 
 def test_sync_embedded_fingerprint_from_sidecar(tmp_path: Path) -> None:
+    from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload
+    from scripts.lexicon.merge_translation_delta import sync_embedded_fingerprint_from_sidecar
+
+    root = Path(__file__).resolve().parents[1]
+    full = build_fingerprint(root)
     sidecar = tmp_path / "lexicon-manifest.fingerprint.json"
     sidecar.write_text(
-        json.dumps({"schema_version": 1, "fingerprint": "abc123"}, ensure_ascii=False) + "\n",
+        json.dumps(sidecar_payload(full), ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     live = {"entries": [_entry("x", "ікс")]}
-    from scripts.lexicon.merge_translation_delta import sync_embedded_fingerprint_from_sidecar
-
-    payload = sync_embedded_fingerprint_from_sidecar(live, fingerprint_path=sidecar)
-    assert payload["fingerprint"] == "abc123"
-    assert live["manifest_fingerprint"] == {"schema_version": 1, "fingerprint": "abc123"}
+    payload = sync_embedded_fingerprint_from_sidecar(
+        live, fingerprint_path=sidecar, root=root
+    )
+    assert payload["fingerprint"] == full["fingerprint"]
+    assert live["manifest_fingerprint"] == {
+        "schema_version": full["schema_version"],
+        "fingerprint": full["fingerprint"],
+    }
 
 
 def test_write_roundtrip_preserves_fill(tmp_path: Path) -> None:

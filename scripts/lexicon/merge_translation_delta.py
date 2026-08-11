@@ -38,25 +38,42 @@ def sync_embedded_fingerprint_from_sidecar(
     manifest: dict[str, Any],
     *,
     fingerprint_path: Path = DEFAULT_FINGERPRINT,
+    root: Path = ROOT,
 ) -> dict[str, Any]:
-    """Embed the committed fingerprint sidecar without regenerating it.
+    """Embed derived fingerprint for publish; committed sidecar stays merge-friendly.
 
-    Sparse worktrees may omit fingerprint inputs (for example ``curriculum/``),
-    so ``write_fingerprint`` / ``build_fingerprint`` can drift. Publishing only
-    requires the embedded value to match the committed sidecar.
+    Committed ``lexicon-manifest.fingerprint.json`` stores only
+    ``{schema_version, scope, inputs}`` (see ``sidecar_payload``). The aggregate
+    digest is derived via ``build_fingerprint`` at write time so sparse
+    worktrees and merge-union sidecars both work. When the sidecar exists,
+    its merge-friendly body must match ``sidecar_payload(build_fingerprint)``
+    so we fail closed on stale code/sidecar pairs.
     """
-    payload = json.loads(fingerprint_path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"{fingerprint_path} must contain a JSON object")
-    schema_version = payload.get("schema_version")
-    fingerprint = payload.get("fingerprint")
-    if schema_version is None or not isinstance(fingerprint, str) or not fingerprint:
-        raise ValueError(f"{fingerprint_path} missing schema_version/fingerprint")
+    from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload
+
+    full = build_fingerprint(root)
+    if fingerprint_path.exists():
+        committed = json.loads(fingerprint_path.read_text(encoding="utf-8"))
+        if not isinstance(committed, dict):
+            raise ValueError(f"{fingerprint_path} must contain a JSON object")
+        expected = sidecar_payload(full)
+        # Compare canonical body (ignore derived fingerprint/stats if present)
+        committed_body = {
+            "schema_version": committed.get("schema_version"),
+            "scope": committed.get("scope"),
+            "inputs": committed.get("inputs"),
+        }
+        if committed_body != expected:
+            raise ValueError(
+                f"{fingerprint_path} does not match current lexicon code; "
+                "run write_fingerprint / make atlas fingerprint step and re-commit."
+            )
     manifest["manifest_fingerprint"] = {
-        "schema_version": schema_version,
-        "fingerprint": fingerprint,
+        "schema_version": full["schema_version"],
+        "fingerprint": full["fingerprint"],
     }
-    return payload
+    return full
+
 
 
 def entry_has_translation(entry: dict[str, Any]) -> bool:
