@@ -44,6 +44,7 @@ def test_builds_sorted_deduplicated_text_free_manifest(tmp_path: Path) -> None:
 def test_rejects_non_private_input(tmp_path: Path) -> None:
     source = tmp_path / "retired.json"
     _private_json(source, [_identity(1)])
+    # codeql[py/overly-permissive-file] negative test of private-input gate (must reject world-readable; code-scanning #353)
     os.chmod(source, 0o644)
 
     with pytest.raises(exposure.PriorExposureError, match="0600"):

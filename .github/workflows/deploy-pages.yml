@@ -10,11 +10,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Workflow-level: least privilege. pages/id-token write stay on the deploy job
+# only (zizmor excessive-permissions / code-scanning #358 #359).
 permissions:
   actions: read
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
@@ -71,6 +71,10 @@ jobs:
             --github-output "$GITHUB_OUTPUT"
 
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     needs: auto-deploy-eligibility
     if: >-
       always() && (github.event_name == 'workflow_dispatch' ||
