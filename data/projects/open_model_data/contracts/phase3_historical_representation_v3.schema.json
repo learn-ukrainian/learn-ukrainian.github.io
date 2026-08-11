@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_representation_v3.schema.json",
+  "title": "Phase 3 v3 source-grounded historical Ukrainian representation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "source",
+    "historical_context",
+    "text_layers",
+    "alignments",
+    "periodizations",
+    "language_labels",
+    "language_layers",
+    "linguistic_features",
+    "interpretations",
+    "linguistic_analyses",
+    "analysis_provenance",
+    "evidence",
+    "rights",
+    "classification",
+    "safeguards",
+    "provider_calls"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_representation_v3"},
+    "record_id": {"type": "string", "minLength": 1},
+    "source": {"$ref": "#/$defs/source"},
+    "historical_context": {"$ref": "#/$defs/historicalContext"},
+    "text_layers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/textLayer"}},
+    "alignments": {"type": "array", "items": {"$ref": "#/$defs/alignment"}},
+    "periodizations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/periodization"}},
+    "language_labels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/languageLabel"}},
+    "language_layers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/languageLayer"}},
+    "linguistic_features": {"type": "array", "items": {"$ref": "#/$defs/feature"}},
+    "interpretations": {"type": "array", "items": {"$ref": "#/$defs/interpretation"}},
+    "linguistic_analyses": {"type": "array", "items": {"$ref": "#/$defs/analysis"}},
+    "analysis_provenance": {"$ref": "#/$defs/analysisProvenance"},
+    "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "rights": {"$ref": "#/$defs/rights"},
+    "classification": {"$ref": "#/$defs/classification"},
+    "safeguards": {"$ref": "#/$defs/safeguards"},
+    "provider_calls": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "locator": {"type": "object", "minProperties": 1, "additionalProperties": true},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_identity",
+        "document_or_edition_identity",
+        "source_record_identity",
+        "frozen_locator",
+        "frozen_locator_sha256",
+        "source_document_bytes_sha256",
+        "source_record_bytes_sha256"
+      ],
+      "properties": {
+        "collection_identity": {"type": "string", "minLength": 1},
+        "document_or_edition_identity": {"type": "string", "minLength": 1},
+        "source_record_identity": {"type": "string", "minLength": 1},
+        "frozen_locator": {"$ref": "#/$defs/locator"},
+        "frozen_locator_sha256": {"$ref": "#/$defs/sha256"},
+        "source_document_bytes_sha256": {"$ref": "#/$defs/sha256"},
+        "source_record_bytes_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "historicalContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_year",
+        "max_year",
+        "date_certainty",
+        "region",
+        "polity",
+        "genre",
+        "manuscript_or_inscription_identity",
+        "script",
+        "orthography"
+      ],
+      "properties": {
+        "min_year": {"type": ["integer", "null"]},
+        "max_year": {"type": ["integer", "null"]},
+        "date_certainty": {"enum": ["exact", "range", "approximate", "unknown"]},
+        "region": {"type": ["string", "null"]},
+        "polity": {"type": ["string", "null"]},
+        "genre": {"type": ["string", "null"]},
+        "manuscript_or_inscription_identity": {"type": ["string", "null"]},
+        "script": {"type": ["string", "null"]},
+        "orthography": {"type": ["string", "null"]}
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nfc", "nfkc", "nfc_sha256", "nfkc_sha256", "source_is_nfc", "source_is_nfkc"],
+      "properties": {
+        "nfc": {"type": "string"},
+        "nfkc": {"type": "string"},
+        "nfc_sha256": {"$ref": "#/$defs/sha256"},
+        "nfkc_sha256": {"$ref": "#/$defs/sha256"},
+        "source_is_nfc": {"type": "boolean"},
+        "source_is_nfkc": {"type": "boolean"}
+      }
+    },
+    "token": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token_id", "kind", "text", "normalized_text", "start", "end", "paragraph_index", "sentence_index"],
+      "properties": {
+        "token_id": {"type": "string", "pattern": "^tok:[0-9]{6}$"},
+        "kind": {"enum": ["word", "punctuation"]},
+        "text": {"type": "string", "minLength": 1},
+        "normalized_text": {"type": "string", "minLength": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "paragraph_index": {"const": 0},
+        "sentence_index": {"const": 0}
+      }
+    },
+    "textLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer_id",
+        "text",
+        "text_utf8_sha256",
+        "text_sha256",
+        "offset_basis",
+        "source_layer_preserved",
+        "normalization",
+        "tokens",
+        "authority",
+        "evidence_ids"
+      ],
+      "properties": {
+        "layer_id": {"enum": ["original_diplomatic", "restored_reading", "modern_ukrainian_translation"]},
+        "text": {"type": "string", "minLength": 1},
+        "text_utf8_sha256": {"$ref": "#/$defs/sha256"},
+        "text_sha256": {"$ref": "#/$defs/sha256"},
+        "offset_basis": {"const": "unicode_code_points"},
+        "source_layer_preserved": {"const": true},
+        "normalization": {"$ref": "#/$defs/normalization"},
+        "tokens": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/token"}},
+        "authority": {"enum": ["source_transcription", "qualified_human", "deterministic_derivation", "unresolved"]},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "alignmentSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_start", "source_end", "source_text", "target_start", "target_end", "target_text"],
+      "properties": {
+        "source_start": {"type": "integer", "minimum": 0},
+        "source_end": {"type": "integer", "minimum": 0},
+        "source_text": {"type": "string"},
+        "target_start": {"type": "integer", "minimum": 0},
+        "target_end": {"type": "integer", "minimum": 0},
+        "target_text": {"type": "string"}
+      }
+    },
+    "alignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alignment_id", "from_layer_id", "to_layer_id", "segments", "authority", "evidence_ids", "ambiguity"],
+      "properties": {
+        "alignment_id": {"type": "string", "minLength": 1},
+        "from_layer_id": {"enum": ["original_diplomatic", "restored_reading", "modern_ukrainian_translation"]},
+        "to_layer_id": {"enum": ["original_diplomatic", "restored_reading", "modern_ukrainian_translation"]},
+        "segments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/alignmentSegment"}},
+        "authority": {"enum": ["source_transcription", "qualified_human", "deterministic_derivation", "unresolved"]},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "periodization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["framework_id", "framework_label", "stage_id", "stage_label", "start_year", "end_year", "status", "attribution", "evidence_ids", "ambiguity"],
+      "properties": {
+        "framework_id": {"type": "string", "minLength": 1},
+        "framework_label": {"type": "string", "minLength": 1},
+        "stage_id": {"type": "string", "minLength": 1},
+        "stage_label": {"type": "string", "minLength": 1},
+        "start_year": {"type": ["integer", "null"]},
+        "end_year": {"type": ["integer", "null"]},
+        "status": {"enum": ["qualified_source_attributed", "provisional", "disputed", "unresolved"]},
+        "attribution": {"type": "string", "minLength": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "languageLabel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "label_kind", "attribution", "scope", "status", "evidence_ids", "ambiguity"],
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "label_kind": {"enum": ["document_era", "modern_scholarly", "corpus_annotation"]},
+        "attribution": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1},
+        "status": {"enum": ["attested", "attributed", "contested", "unresolved"]},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "languageLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language_layer_id", "label", "role", "status", "evidence_ids", "ambiguity"],
+      "properties": {
+        "language_layer_id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "role": {"enum": ["primary", "church_slavonic", "chancery_ruthenian", "local_vernacular", "polish", "latin", "russian", "mixed", "other"]},
+        "status": {"enum": ["attested", "attributed", "possible", "unresolved"]},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "text"],
+      "properties": {
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "text": {"type": "string"}
+      }
+    },
+    "feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature_id", "domain", "claim", "layer_id", "spans", "status", "attribution", "evidence_ids", "ambiguity"],
+      "properties": {
+        "feature_id": {"type": "string", "minLength": 1},
+        "domain": {"enum": ["script", "orthography", "phonology", "morphology", "syntax", "lexicon"]},
+        "claim": {"type": "string", "minLength": 1},
+        "layer_id": {"enum": ["original_diplomatic", "restored_reading", "modern_ukrainian_translation"]},
+        "spans": {"type": "array", "items": {"$ref": "#/$defs/span"}},
+        "status": {"enum": ["attested", "qualified_source_attributed", "disputed", "unresolved"]},
+        "attribution": {"type": "string", "minLength": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interpretation_id", "claim", "status", "attribution", "evidence_ids", "alternatives", "ambiguity"],
+      "properties": {
+        "interpretation_id": {"type": "string", "minLength": 1},
+        "claim": {"type": "string", "minLength": 1},
+        "status": {"enum": ["qualified_source_attributed", "disputed", "unresolved"]},
+        "attribution": {"type": "string", "minLength": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "alternatives": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analysis_id", "layer_id", "source_token_id", "source_surface", "token_ids", "lemma", "pos", "morph", "head_analysis_id", "dependency", "ambiguity"],
+      "properties": {
+        "analysis_id": {"type": "string", "minLength": 1},
+        "layer_id": {"enum": ["original_diplomatic", "restored_reading", "modern_ukrainian_translation"]},
+        "source_token_id": {"type": ["string", "null"], "minLength": 1},
+        "source_surface": {"type": "string", "minLength": 1},
+        "token_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^tok:[0-9]{6}$"}},
+        "lemma": {"type": ["string", "null"]},
+        "pos": {"type": ["string", "null"]},
+        "morph": {"type": "object", "additionalProperties": {"type": "string"}},
+        "head_analysis_id": {"type": ["string", "null"]},
+        "dependency": {"type": ["string", "null"]},
+        "ambiguity": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "analysisProvenance": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {"status": {"const": "absent"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "resource_identity", "resource_version", "license", "tokenization_alignment"],
+          "properties": {
+            "status": {"const": "present"},
+            "resource_identity": {"type": "string", "minLength": 1},
+            "resource_version": {"type": "string", "minLength": 1},
+            "license": {"type": "string", "minLength": 1},
+            "tokenization_alignment": {"enum": ["exact", "adapted", "partial"]}
+          }
+        }
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "kind", "locator", "locator_sha256", "source_document_bytes_sha256", "evidence_text", "evidence_text_sha256", "text_exposure", "authority", "rights"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["source_record", "source_metadata", "qualified_scholarship", "aligned_historical_source", "deterministic_derivation"]},
+        "locator": {"$ref": "#/$defs/locator"},
+        "locator_sha256": {"$ref": "#/$defs/sha256"},
+        "source_document_bytes_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence_text": {"type": "string", "minLength": 1},
+        "evidence_text_sha256": {"$ref": "#/$defs/sha256"},
+        "text_exposure": {"enum": ["verbatim", "paraphrase", "metadata_only"]},
+        "authority": {"enum": ["source_transcription", "qualified_human", "deterministic_derivation", "unresolved"]},
+        "rights": {"$ref": "#/$defs/rights"}
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "license", "reuse_scope", "attribution_required"],
+      "properties": {
+        "status": {"enum": ["admitted", "private_inspection_only", "restricted", "unresolved", "excluded"]},
+        "license": {"type": "string", "minLength": 1},
+        "reuse_scope": {"enum": ["public_training", "research_only", "private_inspection_only", "excluded"]},
+        "attribution_required": {"type": "boolean"}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_role_id", "claim_type", "consumer_views", "derived_bundles", "derived_bundle_rights", "evidence_grade"],
+      "properties": {
+        "primary_role_id": {"enum": ["explicit_rule", "correct_example", "incorrect_example", "corrected_example", "editing_exercise", "answer_key", "distractor", "quotation", "historical_or_literary_excerpt", "metalinguistic_mention", "ordinary_narration", "ambiguous_or_ocr"]},
+        "claim_type": {"enum": ["prescriptive_rule", "human_correction_pair", "style_preference", "acceptable_variant", "historical_advice", "attestation_only", "unresolved"]},
+        "consumer_views": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["supervised_pair", "preference", "protection", "filtering", "review", "automatic", "research_only"]}},
+        "derived_bundles": {"type": "array", "uniqueItems": true, "items": {"enum": ["historical_recognition", "historical_alignment", "periodization", "language_label_disambiguation", "language_change_explanation"]}},
+        "derived_bundle_rights": {"type": "array", "items": {"$ref": "#/$defs/bundleRights"}},
+        "evidence_grade": {"type": "string", "minLength": 1}
+      }
+    },
+    "bundleRights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_id", "rights"],
+      "properties": {
+        "bundle_id": {"enum": ["historical_recognition", "historical_alignment", "periodization", "language_label_disambiguation", "language_change_explanation"]},
+        "rights": {"$ref": "#/$defs/rights"}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["historical_forms_protected", "modern_correction_eligible", "russkyi_auto_mapped_to_modern_russian", "old_east_slavic_is_modern_russian", "scalar_language_age_claim_allowed"],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "russkyi_auto_mapped_to_modern_russian": {"const": false},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "scalar_language_age_claim_allowed": {"const": false}
+      }
+    }
+  }
+}
