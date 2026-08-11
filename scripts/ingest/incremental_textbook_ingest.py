@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -48,6 +49,7 @@ from projects.open_model_data.university_source_policy import (
 )
 from projects.open_model_data.university_source_policy import (
     UniversitySourcePolicyError,
+    load_policy,
     require_source_admission,
     require_source_quarantine,
 )
@@ -380,6 +382,7 @@ def ingest(
     quarantine_slugs: list[str] | None = None,
     receipt_path: Path | None = None,
     university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
+    copied_database_rehearsal: bool = False,
 ) -> dict[str, int]:
     """Run one atomic replace/quarantine/FTS-resync cycle.
 
@@ -391,6 +394,38 @@ def ingest(
     overlap = sorted(set(slugs) & set(quarantine_slugs))
     if overlap:
         raise IngestError(f"sources cannot be replaced and quarantined together: {overlap}")
+    db_path = Path(db_path)
+    university_requested = any(
+        slug.startswith("uni-") for slug in [*slugs, *quarantine_slugs]
+    )
+    policy_document: dict[str, Any] | None = None
+    if university_requested:
+        try:
+            policy_document, _policy_sha256 = load_policy(university_policy_path)
+        except UniversitySourcePolicyError as exc:
+            raise IngestError(str(exc)) from exc
+    if copied_database_rehearsal:
+        if dry_run:
+            raise IngestError("copied-database rehearsal must commit to the disposable database copy")
+        if policy_document is None or policy_document["schema_version"] != "phase3_complete_source_policy_v4":
+            raise IngestError("copied-database rehearsal requires the complete v4 source policy")
+        if not db_path.is_file():
+            raise IngestError("copied-database rehearsal target does not exist")
+        same_as_live = db_path.resolve() == DEFAULT_DB.resolve()
+        if DEFAULT_DB.is_file() and db_path.is_file():
+            same_as_live = same_as_live or os.path.samefile(db_path, DEFAULT_DB)
+        if same_as_live:
+            raise IngestError("copied-database rehearsal refuses the live sources database")
+    if (
+        policy_document is not None
+        and policy_document["schema_version"] == "phase3_complete_source_policy_v4"
+        and not dry_run
+        and policy_document["database_ingest"]["live_ingest_authorized"] is False
+        and not copied_database_rehearsal
+    ):
+        raise IngestError(
+            "complete v4 source policy does not authorize live ingest; run an explicit copied-database rehearsal"
+        )
     counts: dict[str, int] = {}
     receipts: dict[str, dict[str, object]] = {}
     per_slug_rows = {
@@ -428,7 +463,6 @@ def ingest(
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
-    db_path = Path(db_path)
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
     checkpoint: list[int] | None = None
@@ -516,6 +550,13 @@ def ingest(
     receipt_document = {
         "schema_version": "incremental-textbook-ingest.v2",
         "status": "committed" if committed else "dry_run_rolled_back",
+        "execution_scope": (
+            "copied_database_rehearsal"
+            if copied_database_rehearsal
+            else "dry_run"
+            if dry_run
+            else "live_database"
+        ),
         "db_path": str(db_path),
         "db_sha256_before": db_sha256_before,
         "db_sha256_after": sha256_file(db_path),
@@ -784,6 +825,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Canonical textbook chunk directory (Google Drive mount or fixture root)",
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--copied-db-rehearsal",
+        action="store_true",
+        help="Commit only to an existing disposable DB copy under the complete v4 policy",
+    )
     parser.add_argument("--quarantine-dir", type=Path)
     parser.add_argument(
         "--quarantine-slugs",
@@ -832,6 +878,7 @@ def main(argv: list[str] | None = None) -> int:
             receipt_path=args.receipt,
             quarantine_slugs=args.quarantine_slugs,
             university_policy_path=args.university_policy,
+            copied_database_rehearsal=args.copied_db_rehearsal,
         )
     except (IngestError, ValueError) as exc:
         # ValueError: _build_textbook_row's strictness gates (author_uk,

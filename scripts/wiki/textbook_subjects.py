@@ -326,6 +326,7 @@ def subject_for_source_file(source_file: str) -> str | None:
 # local dict). Every value must be title-probed or front-matter-verified.
 AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     # University corpus sources (front-matter-verified through 2026-08-09).
+    "bilyk": "Катерина Білик",
     "vlasova": "Власова",
     "aleksiienko": "Алексієнко",
     "haluzynska": "Галузинська",

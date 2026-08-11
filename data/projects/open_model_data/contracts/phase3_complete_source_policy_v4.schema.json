@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_complete_source_policy_v4.schema.json",
+  "title": "Phase 3 complete source policy v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "default_disposition",
+    "bindings",
+    "source_count",
+    "disposition_counts",
+    "database_ingest",
+    "sources",
+    "source_freeze_ready",
+    "phase3_complete",
+    "phase4_blocked",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_complete_source_policy_v4"},
+    "text_free": {"const": true},
+    "status": {"const": "ACTIVE_DEFAULT_DENY"},
+    "default_disposition": {"const": "QUARANTINE_UNTIL_REVIEWED"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "university_source_matrix_v3_sha256",
+        "university_source_admission_gate_v1_sha256",
+        "university_source_policy_v3_sha256",
+        "university_corpus_reconciliation_v3_sha256",
+        "pr6630_drive_backup_receipt_sha256",
+        "pr6630_merge_commit"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_matrix_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_admission_gate_v1_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_policy_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "university_corpus_reconciliation_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6630_drive_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6630_merge_commit": {"$ref": "#/$defs/sha1"}
+      }
+    },
+    "source_count": {"const": 30},
+    "disposition_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admit_scoped", "contextual_only", "quarantine", "total"],
+      "properties": {
+        "admit_scoped": {"const": 11},
+        "contextual_only": {"const": 15},
+        "quarantine": {"const": 4},
+        "total": {"const": 30}
+      }
+    },
+    "database_ingest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eligible_source_ids",
+        "staged_not_ingested_source_ids",
+        "staged_expected_rows",
+        "staged_expected_row_count",
+        "copied_database_rehearsal_required",
+        "live_ingest_authorized"
+      ],
+      "properties": {
+        "eligible_source_ids": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_id"}
+        },
+        "staged_not_ingested_source_ids": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_id"}
+        },
+        "staged_expected_rows": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+            "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+            "uni-ukrmova-morphology-volkova-maslo-2012",
+            "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+          ],
+          "properties": {
+            "uni-ukrmova-corpus-linguistics-khpi-2021-part-1": {"const": 47},
+            "uni-ukrmova-corpus-linguistics-khpi-2021-part-2": {"const": 51},
+            "uni-ukrmova-morphology-volkova-maslo-2012": {"const": 205},
+            "uni-ukrmova-text-linguistics-shevel-bilyk-2024": {"const": 282}
+          }
+        },
+        "staged_expected_row_count": {"const": 585},
+        "copied_database_rehearsal_required": {"const": true},
+        "live_ingest_authorized": {"const": false}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "source_freeze_ready": {"const": false},
+    "phase3_complete": {"const": false},
+    "phase4_blocked": {"const": true},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "minLength": 3,
+      "maxLength": 128
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_]*$",
+      "minLength": 2,
+      "maxLength": 128
+    },
+    "token_array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/token"}
+    },
+    "jsonl_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_locator",
+        "audience_class",
+        "subject_role",
+        "evidence_kind",
+        "jsonl_sha256",
+        "page_start",
+        "page_end",
+        "rows_sha256"
+      ],
+      "properties": {
+        "source_locator": {
+          "type": "string",
+          "pattern": "^university_corpus/[A-Za-z0-9._/-]+[.]jsonl$",
+          "maxLength": 256
+        },
+        "audience_class": {
+          "enum": [
+            "A_ukrainian_university_audience",
+            "B_foreign_or_second_language",
+            "C_unproven"
+          ]
+        },
+        "subject_role": {
+          "enum": [
+            "ukrainian_linguistics",
+            "ukrainian_L2_pedagogy",
+            "ukrainian_literature",
+            "history",
+            "arts_and_culture"
+          ]
+        },
+        "evidence_kind": {
+          "enum": ["jsonl_front_matter", "jsonl_front_matter_and_official_course"]
+        },
+        "jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "page_start": {"type": "integer", "minimum": 1},
+        "page_end": {"type": "integer", "minimum": 1},
+        "rows_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_kind",
+        "final_disposition",
+        "source_state",
+        "custody_state",
+        "allowed_lanes",
+        "orthography_regime",
+        "rights_capability",
+        "primary_source_roles",
+        "claim_types",
+        "supported_uses",
+        "prohibited_uses",
+        "exactness_status",
+        "evidence_hashes"
+      ],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/source_id"},
+        "source_kind": {"enum": ["university_jsonl", "external_reference"]},
+        "final_disposition": {"enum": ["admit_scoped", "contextual_only", "quarantine"]},
+        "source_state": {
+          "enum": [
+            "db_resident",
+            "staged_not_ingested",
+            "db_resident_contextual",
+            "reference_only",
+            "quarantined"
+          ]
+        },
+        "custody_state": {"$ref": "#/$defs/token"},
+        "allowed_lanes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["contextual_retrieval", "corpus_ingest", "linguistic_rule_evidence"]
+          }
+        },
+        "orthography_regime": {"$ref": "#/$defs/token"},
+        "rights_capability": {"$ref": "#/$defs/token"},
+        "primary_source_roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "explicit_rule",
+              "correct_example",
+              "incorrect_example",
+              "corrected_example",
+              "editing_exercise",
+              "answer_key",
+              "distractor",
+              "quotation",
+              "historical_or_literary_excerpt",
+              "metalinguistic_mention",
+              "ordinary_narration",
+              "ambiguous_or_ocr"
+            ]
+          }
+        },
+        "claim_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "prescriptive_rule",
+              "human_correction_pair",
+              "style_preference",
+              "acceptable_variant",
+              "historical_advice",
+              "attestation_only",
+              "unresolved"
+            ]
+          }
+        },
+        "supported_uses": {"$ref": "#/$defs/token_array"},
+        "prohibited_uses": {"$ref": "#/$defs/token_array"},
+        "exactness_status": {
+          "enum": ["verified_for_scoped_use", "context_only", "failed"]
+        },
+        "evidence_hashes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "jsonl_evidence": {"$ref": "#/$defs/jsonl_evidence"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"source_kind": {"const": "university_jsonl"}}},
+          "then": {"required": ["jsonl_evidence"]},
+          "else": {
+            "not": {"required": ["jsonl_evidence"]},
+            "properties": {
+              "allowed_lanes": {"not": {"contains": {"const": "corpus_ingest"}}}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"final_disposition": {"const": "quarantine"}}},
+          "then": {
+            "properties": {
+              "allowed_lanes": {"maxItems": 0},
+              "primary_source_roles": {"maxItems": 0},
+              "claim_types": {"maxItems": 0},
+              "exactness_status": {"const": "failed"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"final_disposition": {"const": "admit_scoped"}}},
+          "then": {
+            "properties": {
+              "allowed_lanes": {
+                "allOf": [
+                  {"contains": {"const": "contextual_retrieval"}},
+                  {"contains": {"const": "corpus_ingest"}}
+                ]
+              },
+              "primary_source_roles": {"minItems": 1},
+              "claim_types": {"minItems": 1},
+              "exactness_status": {"const": "verified_for_scoped_use"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}
