@@ -443,12 +443,6 @@ export interface SrsFlags {
   storageWriteFailed: boolean;
   storageFull: boolean;
   settingsCorrupt: boolean;
-  clockJump: ClockJump | null;
-}
-
-export interface ClockJump {
-  direction: 'forward' | 'backward';
-  deltaDays: number;
 }
 
 export interface LoadedSrsState {
@@ -750,7 +744,7 @@ function currentStorage(): StorageLike {
   return activeStorage ?? resolveStorage();
 }
 
-function emptyFlags(clockJump: ClockJump | null = null): SrsFlags {
+function emptyFlags(): SrsFlags {
   return {
     corrupt: false,
     migrationFailed: false,
@@ -759,7 +753,6 @@ function emptyFlags(clockJump: ClockJump | null = null): SrsFlags {
     storageWriteFailed: false,
     storageFull: false,
     settingsCorrupt: false,
-    clockJump,
   };
 }
 
@@ -1048,21 +1041,6 @@ function serializeSettings(settings: SrsSettings): string {
   });
 }
 
-export function detectClockJump(
-  previous: Date | number | string | undefined,
-  now: Date | number = Date.now(),
-): ClockJump | null {
-  const previousTime = toTime(previous);
-  const nowTime = toTime(now);
-  if (previousTime === null || nowTime === null) return null;
-  const delta = nowTime - previousTime;
-  if (Math.abs(delta) <= 7 * DAY_MS) return null;
-  return {
-    direction: delta > 0 ? 'forward' : 'backward',
-    deltaDays: Math.round(Math.abs(delta) / DAY_MS),
-  };
-}
-
 export function loadState(
   storage: StorageLike = resolveStorage(),
   now: Date | number = Date.now(),
@@ -1111,7 +1089,6 @@ export function loadState(
     const state = hydrateStore(parsed as unknown as PersistedSrsSchemaV4, settings, raw, {
       ...emptyFlags(),
       settingsCorrupt,
-      clockJump: detectClockJump((parsed as unknown as PersistedSrsSchemaV4).lastSavedAt, now),
     });
     if (state) {
       if (compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES)) {
@@ -1139,7 +1116,6 @@ export function loadState(
       ...emptyFlags(),
       migrated: true,
       settingsCorrupt,
-      clockJump: detectClockJump(migrated.lastSavedAt, now),
     });
     if (!state) throw new Error('migrated SRS schema is invalid');
     activeState = state;
