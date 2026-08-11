@@ -566,14 +566,12 @@ def _atomic_write_public(path: Path, payload: bytes) -> None:
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as handle:
-            # codeql[py/overly-permissive-file] public evaluation receipt is non-secret by design (code-scanning #352)
-            os.fchmod(handle.fileno(), PUBLIC_FILE_MODE)
+            os.fchmod(handle.fileno(), PUBLIC_FILE_MODE)  # codeql[py/overly-permissive-file] public non-secret receipt (#352)
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        # codeql[py/overly-permissive-file] public evaluation receipt is non-secret by design (code-scanning #352)
-        os.chmod(path, PUBLIC_FILE_MODE)
+        os.chmod(path, PUBLIC_FILE_MODE)  # codeql[py/overly-permissive-file] public non-secret receipt (#352)
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
