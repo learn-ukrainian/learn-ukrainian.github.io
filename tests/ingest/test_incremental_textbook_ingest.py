@@ -303,7 +303,7 @@ def test_tracked_v3_policy_separates_audience_from_content_fitness():
 
     policy_path = (
         Path(__file__).resolve().parents[2]
-        / "data/projects/open_model_data/evidence/phase3_university_source_policy_v3.json"
+        / "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
     )
     policy, policy_sha256 = usp.load_policy(policy_path)
     by_source = {entry["source_file"]: entry for entry in policy["sources"]}
