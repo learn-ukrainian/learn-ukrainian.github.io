@@ -1,0 +1,436 @@
+{
+  "schema_version": "phase3_university_content_audit_freeze_v1",
+  "text_free": true,
+  "status": "UNIVERSITY_CONTENT_AUDIT_FROZEN_PARTIAL_COVERAGE",
+  "bindings": {
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+    "complete_source_policy_v4_sha256": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559",
+    "university_source_matrix_v3_sha256": "e2e82934ec26b7d98002cdf87f5326b84fb2d3d7900fe675920ba99e84d190de",
+    "university_source_matrix_canonical_payload_sha256": "935970fc72beb40c6e52b295dcad7ff756d9a6b8491b3eed11a56eadb3ce6c12",
+    "final_source_admission_review_sha256": "8267f65aefdd8d14d24f1255c7bda4b7b92bc06f62f4c6e234696f39bd9ad22a",
+    "live_ingest_gate_v1_sha256": "594b2de8ae357b4c33594a8d933d683284f4824c0c833624b20dffe75c6f6a63",
+    "live_ingest_receipt_sha256": "899ecc0fe9a4aa86f7c6d169da914f4620922f0b8d6dfef4d820de7e826bc872",
+    "post_live_backup_receipt_sha256": "6e2ce685a52f061b0dc8590159f9d25130ae9e08127c24e87c1725f4670dfa68",
+    "pr6633_drive_backup_receipt_sha256": "13e6be4a518a1ad8654d732278650ccbd79de845b77b401661b8226f7d80aec2",
+    "historical_periodization_freeze_v1_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"
+  },
+  "database": {
+    "sha256": "de9a46838be3a4a6a2eb979ebdaf64b4d3d9984134b0074281d01b9cfd384876",
+    "textbook_rows": 50153,
+    "fts_rows": 50153,
+    "section_rows": 36322,
+    "total_sources": 187,
+    "university_rows": 4078,
+    "university_sources": 20,
+    "integrity_check": "ok",
+    "foreign_key_failure_count": 134836,
+    "foreign_key_failure_sha256": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"
+  },
+  "source_universe": {
+    "candidate_source_count": 30,
+    "candidate_source_ids": [
+      "khpi-ukrainian-morphological-tagging-petrasova-et-al-2017",
+      "lang-uk-tokenize-uk",
+      "naukma-ukrainian-tokenization-stemming-hlybovets-tochytskyi-2017",
+      "uni-istoriya-kalynichenko-olianych-2025",
+      "uni-istoriya-levytska-2015",
+      "uni-mystetstvo-levytska-2015",
+      "uni-mystetstvo-petutina-2012",
+      "uni-ukrlit-dvulychanska-2017",
+      "uni-ukrlit-kalinichenko-2024",
+      "uni-ukrmova-computational-linguistics-vakhovska-2023",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-dialectology-torchynska-2017",
+      "uni-ukrmova-error-typology-minchak-2023",
+      "uni-ukrmova-glukhovtseva-2021",
+      "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "uni-ukrmova-lexicology-filon-khomik-2010",
+      "uni-ukrmova-morphology-aleksiienko-2014",
+      "uni-ukrmova-morphology-kobchenko-2025",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-orthography-strokal-2021",
+      "uni-ukrmova-phonetics-komarova-2015",
+      "uni-ukrmova-prof-haluzynska-2006",
+      "uni-ukrmova-punctuation-marynenko-2021",
+      "uni-ukrmova-sociolinguistics-masenko-2010",
+      "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "uni-ukrmova-syntax-didkivska-shvets-2020",
+      "uni-ukrmova-syntax-herman-2021",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024",
+      "uni-ukrmova-vlasova-2023"
+    ],
+    "database_resident_source_count": 20,
+    "database_resident_source_ids": [
+      "uni-istoriya-kalynichenko-olianych-2025",
+      "uni-istoriya-levytska-2015",
+      "uni-mystetstvo-levytska-2015",
+      "uni-mystetstvo-petutina-2012",
+      "uni-ukrlit-dvulychanska-2017",
+      "uni-ukrlit-kalinichenko-2024",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-dialectology-torchynska-2017",
+      "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "uni-ukrmova-lexicology-filon-khomik-2010",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-orthography-strokal-2021",
+      "uni-ukrmova-phonetics-komarova-2015",
+      "uni-ukrmova-prof-haluzynska-2006",
+      "uni-ukrmova-punctuation-marynenko-2021",
+      "uni-ukrmova-sociolinguistics-masenko-2010",
+      "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "uni-ukrmova-syntax-herman-2021",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+    ],
+    "reference_only_source_count": 6,
+    "reference_only_source_ids": [
+      "khpi-ukrainian-morphological-tagging-petrasova-et-al-2017",
+      "lang-uk-tokenize-uk",
+      "naukma-ukrainian-tokenization-stemming-hlybovets-tochytskyi-2017",
+      "uni-ukrmova-computational-linguistics-vakhovska-2023",
+      "uni-ukrmova-error-typology-minchak-2023",
+      "uni-ukrmova-morphology-kobchenko-2025"
+    ],
+    "quarantine_source_count": 4,
+    "quarantine_source_ids": [
+      "uni-ukrmova-glukhovtseva-2021",
+      "uni-ukrmova-morphology-aleksiienko-2014",
+      "uni-ukrmova-syntax-didkivska-shvets-2020",
+      "uni-ukrmova-vlasova-2023"
+    ],
+    "mandatory_conversion_source_count": 11,
+    "mandatory_conversion_source_ids": [
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-lexicology-filon-khomik-2010",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-orthography-strokal-2021",
+      "uni-ukrmova-phonetics-komarova-2015",
+      "uni-ukrmova-prof-haluzynska-2006",
+      "uni-ukrmova-punctuation-marynenko-2021",
+      "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "uni-ukrmova-syntax-herman-2021",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+    ],
+    "disposition_counts": {
+      "admit_scoped": 11,
+      "contextual_only": 15,
+      "quarantine": 4,
+      "total": 30
+    },
+    "live_ingested_source_ids": [
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+    ],
+    "live_ingested_rows": 585
+  },
+  "topic_coverage": {
+    "counts": {
+      "areas_required": 26,
+      "missing": 0,
+      "partial": 21,
+      "sufficient": 5
+    },
+    "topics": [
+      {
+        "area": "phonetics",
+        "status": "partial",
+        "supported_depth": "definitions, theory, rules, exceptions, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-phonetics-komarova-2015",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Modern post-2019 university textbook dedicated to theoretical phonetics and acoustic phonology (e.g. Hryshchenko et al. post-2019 edition)."
+      },
+      {
+        "area": "phonology",
+        "status": "partial",
+        "supported_depth": "definitions, theory, rules, paradigms, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-phonetics-komarova-2015"
+        ],
+        "qualified_source_needed": "Dedicated university course manual on Ukrainian phonology and morphonology."
+      },
+      {
+        "area": "orthoepy",
+        "status": "partial",
+        "supported_depth": "definitions, rules, exceptions, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-phonetics-komarova-2015",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Post-2019 standard Ukrainian orthoepy handbook with updated stress and pronunciation norms."
+      },
+      {
+        "area": "accentology",
+        "status": "partial",
+        "supported_depth": "rules, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-phonetics-komarova-2015",
+          "uni-ukrmova-orthography-strokal-2021"
+        ],
+        "qualified_source_needed": "Dedicated modern university manual on Ukrainian accentology and accentual paradigms."
+      },
+      {
+        "area": "graphics",
+        "status": "partial",
+        "supported_depth": "definitions, rules, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-phonetics-komarova-2015",
+          "uni-ukrmova-orthography-strokal-2021"
+        ],
+        "qualified_source_needed": "Historical and modern Ukrainian graphic system reference text (including Cyrillic transliteration and typography norms)."
+      },
+      {
+        "area": "orthography",
+        "status": "sufficient",
+        "supported_depth": "definitions, theory, rules, exceptions, paradigms, examples, exercises, answer keys",
+        "supporting_source_ids": [
+          "uni-ukrmova-orthography-strokal-2021",
+          "uni-ukrmova-phonetics-komarova-2015",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "None; covered under post-2019 orthography regime by Strokal (2021)."
+      },
+      {
+        "area": "morphemics",
+        "status": "partial",
+        "supported_depth": "definitions, theory, rules, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-lexicology-filon-khomik-2010",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Dedicated post-2019 university textbook on morphemics and morphemic structure of Ukrainian words."
+      },
+      {
+        "area": "word formation",
+        "status": "partial",
+        "supported_depth": "definitions, theory, rules, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-lexicology-filon-khomik-2010",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Specialized university coursebook on Ukrainian word formation (дериватологія)."
+      },
+      {
+        "area": "lexicology",
+        "status": "sufficient",
+        "supported_depth": "definitions, theory, rules, exceptions, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-lexicology-filon-khomik-2010",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "None; comprehensive coverage by Filon & Khomik (2010)."
+      },
+      {
+        "area": "semantics",
+        "status": "partial",
+        "supported_depth": "definitions, theory, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-lexicology-filon-khomik-2010"
+        ],
+        "qualified_source_needed": "Advanced university textbook on lexical and structural semantics."
+      },
+      {
+        "area": "phraseology",
+        "status": "partial",
+        "supported_depth": "definitions, classification theory, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-lexicology-filon-khomik-2010",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Dedicated university phraseology manual (e.g. Uzhchenko Phraseology of Modern Ukrainian)."
+      },
+      {
+        "area": "morphology",
+        "status": "partial",
+        "supported_depth": "definitions, theory, paradigms, examples, exercises; current curriculum scope corroboration",
+        "supporting_source_ids": [
+          "uni-ukrmova-morphology-volkova-maslo-2012",
+          "uni-ukrmova-morphology-kobchenko-2025"
+        ],
+        "qualified_source_needed": "Post-2019 reusable native-university morphology source with claim-level modern paradigms and rules."
+      },
+      {
+        "area": "syntax",
+        "status": "sufficient",
+        "supported_depth": "definitions, theory, rules, exceptions, paradigms, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-punctuation-marynenko-2021",
+          "uni-ukrmova-syntax-herman-2021",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "None; simple and complex syntax covered by Marynenko (2021) and Herman (2021)."
+      },
+      {
+        "area": "punctuation",
+        "status": "sufficient",
+        "supported_depth": "definitions, rules, exceptions, examples, exercises, answer keys",
+        "supporting_source_ids": [
+          "uni-ukrmova-punctuation-marynenko-2021",
+          "uni-ukrmova-orthography-strokal-2021"
+        ],
+        "qualified_source_needed": "None; comprehensive punctuation rules covered under post-2019 norms by Marynenko (2021)."
+      },
+      {
+        "area": "government/valency",
+        "status": "partial",
+        "supported_depth": "rules, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-punctuation-marynenko-2021",
+          "uni-ukrmova-syntax-herman-2021",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Dedicated university reference manual on Ukrainian verb valency and prepositional-case government."
+      },
+      {
+        "area": "text linguistics",
+        "status": "sufficient",
+        "supported_depth": "complete qualified 2024 textbook with definitions, theory, examples, and exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+        ],
+        "qualified_source_needed": "None; the Shevel and Bilyk (2024) source passed final Ukrainian source review, is live database-resident, and supplies the complete qualified textbook identified by the matrix."
+      },
+      {
+        "area": "discourse/pragmatics",
+        "status": "partial",
+        "supported_depth": "definitions, theory, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-sociolinguistics-masenko-2010",
+          "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+          "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+        ],
+        "qualified_source_needed": "University textbook on linguistic pragmatics and communicative discourse analysis in Ukrainian."
+      },
+      {
+        "area": "stylistics",
+        "status": "partial",
+        "supported_depth": "definitions, theory, rules, exceptions, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+          "uni-ukrmova-prof-haluzynska-2006"
+        ],
+        "qualified_source_needed": "Full native-Ukrainian university philology textbook family with definitions, theory, rules, exceptions, examples, exercises, and answer-key evidence."
+      },
+      {
+        "area": "culture of language",
+        "status": "partial",
+        "supported_depth": "definitions, rules, exceptions, error analysis, examples, exercises",
+        "supporting_source_ids": [
+          "uni-ukrmova-error-typology-minchak-2023",
+          "uni-ukrmova-prof-haluzynska-2006",
+          "uni-ukrmova-stylistics-sharapa-tytarenko-2025"
+        ],
+        "qualified_source_needed": "Full native-Ukrainian university philology textbook family with definitions, theory, rules, exceptions, examples, exercises, and answer-key evidence."
+      },
+      {
+        "area": "dialectology",
+        "status": "partial",
+        "supported_depth": "definitions, dialect maps, phonetic and grammatical features, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-dialectology-torchynska-2017"
+        ],
+        "qualified_source_needed": "Comprehensive Ukrainian Dialect Atlas / Dialectology manual for complete regional coverage across Southwestern, Southeastern, and Northern dialects."
+      },
+      {
+        "area": "sociolinguistics",
+        "status": "partial",
+        "supported_depth": "definitions, historical sociolinguistic analysis, language policy, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-sociolinguistics-masenko-2010"
+        ],
+        "qualified_source_needed": "Contemporary post-2022 sociolinguistics handbook covering wartime language shift, decolonization, and modern language policy."
+      },
+      {
+        "area": "language contact",
+        "status": "partial",
+        "supported_depth": "definitions, theory, loanword analysis, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-sociolinguistics-masenko-2010",
+          "uni-ukrmova-lexicology-filon-khomik-2010"
+        ],
+        "qualified_source_needed": "Dedicated monograph or textbook on Ukrainian language contacts, loanwords, and interlingual interference."
+      },
+      {
+        "area": "historical grammar",
+        "status": "partial",
+        "supported_depth": "definitions, diachronic paradigms, historical sound changes, examples",
+        "supporting_source_ids": [
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024"
+        ],
+        "qualified_source_needed": "Complete multi-volume historical grammar of Ukrainian (phonology, morphology, syntax evolution)."
+      },
+      {
+        "area": "history of the literary language",
+        "status": "partial",
+        "supported_depth": "historical periods, literary monuments, language development stages",
+        "supporting_source_ids": [
+          "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+          "uni-ukrlit-dvulychanska-2017"
+        ],
+        "qualified_source_needed": "Standard university textbook on the History of the Ukrainian Literary Language (e.g. Shevelov / Nimchuk)."
+      },
+      {
+        "area": "corpus linguistics",
+        "status": "partial",
+        "supported_depth": "laboratory instruction for corpus creation, annotation, AntConc, CLAWS, USAS, CQPweb, and clusters",
+        "supporting_source_ids": [
+          "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+          "uni-ukrmova-corpus-linguistics-khpi-2021-part-2"
+        ],
+        "qualified_source_needed": "Current Ukrainian-specific corpus-linguistics textbook covering modern Ukrainian corpora, annotation standards, and reproducible query systems."
+      },
+      {
+        "area": "Ukrainian-specific computational linguistics/tokenization",
+        "status": "partial",
+        "supported_depth": "general computational-linguistics curriculum locator plus Ukrainian-specific tokenization, stemming, word spans, apostrophes, stress marks, and morphological-tagging evidence",
+        "supporting_source_ids": [
+          "uni-ukrmova-computational-linguistics-vakhovska-2023",
+          "naukma-ukrainian-tokenization-stemming-hlybovets-tochytskyi-2017",
+          "khpi-ukrainian-morphological-tagging-petrasova-et-al-2017",
+          "lang-uk-tokenize-uk"
+        ],
+        "qualified_source_needed": "Current comprehensive reusable Ukrainian NLP textbook covering Unicode tokenization, clitics, apostrophes, hyphens, morphology, lemmatization, analyzer architectures, and model-subword separation."
+      }
+    ],
+    "post_review_reconciliations": [
+      {
+        "area": "text linguistics",
+        "prior_status": "partial",
+        "final_status": "sufficient",
+        "reason": "The final Ukrainian source review admitted Shevel and Bilyk (2024) with no missing evidence, and the exact 282-row source is now live database-resident and Drive-backed."
+      }
+    ]
+  },
+  "authority_controls": {
+    "database_set_equals_policy_corpus_ingest_set": true,
+    "l2_sources_excluded_from_native_normative_target": true,
+    "contextual_sources_cannot_authorize_rules": true,
+    "quarantined_sources_have_no_lanes": true,
+    "source_text_committed": false,
+    "superseded_denominator_path": "data/university_corpus_denominator.yaml",
+    "superseded_denominator_sha256": "c677220bea2ba5b3449f528b53a93cf2e55f4b8f5b654d6af3c55910c6fd299f",
+    "supersession_reason": "The legacy 12-source denominator mixes L2, stale custody, and pre-reconciliation database identities; the reviewed 30-source policy and exact 20-source corpus subset now govern Phase 3."
+  },
+  "gates": {
+    "university_content_audit_complete": true,
+    "university_database_reconciled": true,
+    "university_source_freeze_ready": true,
+    "source_coverage_ready": false,
+    "overall_phase3_source_freeze_ready": false,
+    "phase3_complete": false,
+    "phase4_blocked": true
+  },
+  "remaining_residuals": [
+    "Twenty-one of twenty-six required university topic areas remain partial; each exact qualified-source need is frozen in topic_coverage.topics.",
+    "The original two-part 1997/1998 Nimchuk periodization article remains bibliographically located but not locally acquired and byte-hashed.",
+    "Historical document-level language variety, rights, attribution, and mandatory conversion-family freezes remain incomplete.",
+    "The unchanged foreign-key failure baseline is preserved as known technical debt and was not introduced by the university ingest."
+  ],
+  "receipt_sha256": "a82f98121343680735f77675501494b41d82f4bb775d8042070e545c80220ea4"
+}

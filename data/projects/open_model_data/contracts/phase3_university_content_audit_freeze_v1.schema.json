@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_university_content_audit_freeze_v1.schema.json",
+  "title": "Phase 3 post-live university content-audit freeze v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "bindings",
+    "database",
+    "source_universe",
+    "topic_coverage",
+    "authority_controls",
+    "gates",
+    "remaining_residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_university_content_audit_freeze_v1"},
+    "text_free": {"const": true},
+    "status": {"const": "UNIVERSITY_CONTENT_AUDIT_FROZEN_PARTIAL_COVERAGE"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "complete_source_policy_v4_sha256",
+        "university_source_matrix_v3_sha256",
+        "university_source_matrix_canonical_payload_sha256",
+        "final_source_admission_review_sha256",
+        "live_ingest_gate_v1_sha256",
+        "live_ingest_receipt_sha256",
+        "post_live_backup_receipt_sha256",
+        "pr6633_drive_backup_receipt_sha256",
+        "historical_periodization_freeze_v1_sha256"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"},
+        "complete_source_policy_v4_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_matrix_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "university_source_matrix_canonical_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "final_source_admission_review_sha256": {"$ref": "#/$defs/sha256"},
+        "live_ingest_gate_v1_sha256": {"$ref": "#/$defs/sha256"},
+        "live_ingest_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "post_live_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6633_drive_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_freeze_v1_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "textbook_rows",
+        "fts_rows",
+        "section_rows",
+        "total_sources",
+        "university_rows",
+        "university_sources",
+        "integrity_check",
+        "foreign_key_failure_count",
+        "foreign_key_failure_sha256"
+      ],
+      "properties": {
+        "sha256": {"const": "de9a46838be3a4a6a2eb979ebdaf64b4d3d9984134b0074281d01b9cfd384876"},
+        "textbook_rows": {"const": 50153},
+        "fts_rows": {"const": 50153},
+        "section_rows": {"const": 36322},
+        "total_sources": {"const": 187},
+        "university_rows": {"const": 4078},
+        "university_sources": {"const": 20},
+        "integrity_check": {"const": "ok"},
+        "foreign_key_failure_count": {"const": 134836},
+        "foreign_key_failure_sha256": {"const": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"}
+      }
+    },
+    "source_universe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_source_count",
+        "candidate_source_ids",
+        "database_resident_source_count",
+        "database_resident_source_ids",
+        "reference_only_source_count",
+        "reference_only_source_ids",
+        "quarantine_source_count",
+        "quarantine_source_ids",
+        "mandatory_conversion_source_count",
+        "mandatory_conversion_source_ids",
+        "disposition_counts",
+        "live_ingested_source_ids",
+        "live_ingested_rows"
+      ],
+      "properties": {
+        "candidate_source_count": {"const": 30},
+        "candidate_source_ids": {"$ref": "#/$defs/sourceIds30"},
+        "database_resident_source_count": {"const": 20},
+        "database_resident_source_ids": {"$ref": "#/$defs/sourceIds20"},
+        "reference_only_source_count": {"const": 6},
+        "reference_only_source_ids": {"$ref": "#/$defs/sourceIds6"},
+        "quarantine_source_count": {"const": 4},
+        "quarantine_source_ids": {"$ref": "#/$defs/sourceIds4"},
+        "mandatory_conversion_source_count": {"const": 11},
+        "mandatory_conversion_source_ids": {"$ref": "#/$defs/sourceIds11"},
+        "disposition_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["admit_scoped", "contextual_only", "quarantine", "total"],
+          "properties": {
+            "admit_scoped": {"const": 11},
+            "contextual_only": {"const": 15},
+            "quarantine": {"const": 4},
+            "total": {"const": 30}
+          }
+        },
+        "live_ingested_source_ids": {"$ref": "#/$defs/sourceIds4"},
+        "live_ingested_rows": {"const": 585}
+      }
+    },
+    "topic_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["counts", "topics", "post_review_reconciliations"],
+      "properties": {
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["areas_required", "missing", "partial", "sufficient"],
+          "properties": {
+            "areas_required": {"const": 26},
+            "missing": {"const": 0},
+            "partial": {"const": 21},
+            "sufficient": {"const": 5}
+          }
+        },
+        "topics": {
+          "type": "array",
+          "minItems": 26,
+          "maxItems": 26,
+          "items": {"$ref": "#/$defs/topic"}
+        },
+        "post_review_reconciliations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {"$ref": "#/$defs/topicReconciliation"}
+        }
+      }
+    },
+    "authority_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "database_set_equals_policy_corpus_ingest_set",
+        "l2_sources_excluded_from_native_normative_target",
+        "contextual_sources_cannot_authorize_rules",
+        "quarantined_sources_have_no_lanes",
+        "source_text_committed",
+        "superseded_denominator_path",
+        "superseded_denominator_sha256",
+        "supersession_reason"
+      ],
+      "properties": {
+        "database_set_equals_policy_corpus_ingest_set": {"const": true},
+        "l2_sources_excluded_from_native_normative_target": {"const": true},
+        "contextual_sources_cannot_authorize_rules": {"const": true},
+        "quarantined_sources_have_no_lanes": {"const": true},
+        "source_text_committed": {"const": false},
+        "superseded_denominator_path": {"const": "data/university_corpus_denominator.yaml"},
+        "superseded_denominator_sha256": {"$ref": "#/$defs/sha256"},
+        "supersession_reason": {"type": "string", "minLength": 80, "maxLength": 500}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "university_content_audit_complete",
+        "university_database_reconciled",
+        "university_source_freeze_ready",
+        "source_coverage_ready",
+        "overall_phase3_source_freeze_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "university_content_audit_complete": {"const": true},
+        "university_database_reconciled": {"const": true},
+        "university_source_freeze_ready": {"const": true},
+        "source_coverage_ready": {"const": false},
+        "overall_phase3_source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "remaining_residuals": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 40, "maxLength": 500}
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sourceId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "minLength": 3, "maxLength": 128},
+    "sourceIds4": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "sourceIds6": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "sourceIds11": {"type": "array", "minItems": 11, "maxItems": 11, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "sourceIds20": {"type": "array", "minItems": 20, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "sourceIds30": {"type": "array", "minItems": 30, "maxItems": 30, "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+    "topic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "status", "supported_depth", "supporting_source_ids", "qualified_source_needed"],
+      "properties": {
+        "area": {"type": "string", "minLength": 3, "maxLength": 80},
+        "status": {"enum": ["missing", "partial", "sufficient"]},
+        "supported_depth": {"type": "string", "minLength": 3, "maxLength": 500},
+        "supporting_source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/sourceId"}},
+        "qualified_source_needed": {"type": "string", "minLength": 3, "maxLength": 500}
+      }
+    },
+    "topicReconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "prior_status", "final_status", "reason"],
+      "properties": {
+        "area": {"const": "text linguistics"},
+        "prior_status": {"const": "partial"},
+        "final_status": {"const": "sufficient"},
+        "reason": {"type": "string", "minLength": 80, "maxLength": 500}
+      }
+    }
+  }
+}
