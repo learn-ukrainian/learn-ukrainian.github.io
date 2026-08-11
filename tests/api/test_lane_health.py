@@ -255,6 +255,29 @@ gemini:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", budget_path)
     monkeypatch.setattr(state_router, "TASKS_DIR", tmp_path)
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    # These tests exercise ledger burn plus task-file health. Keep process-global
+    # CodexBar cache entries and host agent-runtime JSONL from changing that
+    # deliberately narrow fixture when the module runs inside a full CI shard.
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
+    monkeypatch.setattr(
+        state_router,
+        "summarize_lane_runtime",
+        lambda _provider: {
+            "source": "agent_runtime_jsonl",
+            "window_s": 300,
+            "ok": 0,
+            "error": 0,
+            "rate_limited": 0,
+            "timeout": 0,
+            "other": 0,
+            "total": 0,
+            "last_outcome_at": None,
+            "last_rate_limited_at": None,
+            "models_rate_limited": [],
+            "headroom_blocked": False,
+            "headroom_reason": "",
+        },
+    )
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",
@@ -364,4 +387,3 @@ def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_
     assert rec["primary_agent_for_code"] != "inline_orchestrator"
     assert not any("all agents near cap" in w for w in rec["warnings"])
     assert "All agents are hot or near cap" not in rec["rationale"]
-
