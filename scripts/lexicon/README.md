@@ -251,7 +251,8 @@ and carry `source_provenance` through promotion.
 `admit_teacher_table.py` keeps the current teacher table private and local by
 default while making its vocabulary available to the local Atlas/Practice
 pipeline. It reads the supplied current extract and manifest snapshot, performs
-an exact table-key remeasurement, VESUM-attests each missing single-token row,
+an exact table-key remeasurement, resolves each missing single-token row to one
+VESUM canonical lemma,
 and keeps missing multiword rows as `expression` entries. It prefers local
 Dmklinger/Kaikki/Balla English cards when they are unambiguous, with the table
 English as a learner-usable fallback.

@@ -94,6 +94,14 @@ class TableRow:
         return " " in self.lemma
 
 
+@dataclass(frozen=True)
+class SingleTokenResolution:
+    """A VESUM-proved canonical Atlas headword for one table surface."""
+
+    lemma: str
+    pos: str
+
+
 def _atomic_write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     content = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
@@ -187,6 +195,12 @@ def _manifest_index(manifest: Mapping[str, Any]) -> tuple[dict[str, dict[str, An
         lemma = _clean_lemma(raw.get("lemma"))
         if lemma:
             by_key.setdefault(_lemma_key(lemma), raw)
+        teacher_table_keys = raw.get("teacher_table_keys")
+        if isinstance(teacher_table_keys, list):
+            for table_key in teacher_table_keys:
+                normalized = _clean_lemma(table_key)
+                if normalized:
+                    by_key.setdefault(_lemma_key(normalized), raw)
         slug = str(raw.get("url_slug") or "").strip()
         if slug:
             slugs.add(slug)
@@ -235,14 +249,29 @@ def _queue_alignment(queue_path: Path | None, before: Mapping[str, Sequence[Tabl
     }
 
 
-def _single_token_pos(analyses: Sequence[Mapping[str, Any]]) -> str | None:
+def _single_token_resolution(analyses: Sequence[Mapping[str, Any]]) -> SingleTokenResolution | None:
+    """Resolve a surface only when VESUM supplies one citation-form lemma/POS.
+
+    ``verify_words`` looks up ``forms.word_form``.  A valid surface form alone
+    cannot be promoted as a Word Atlas lemma, because it may be inflected.  The
+    table surface is retained separately for local membership remeasurement;
+    the new Atlas article always uses VESUM's one unambiguous base lemma.
+    """
+    lemmas = {
+        _clean_lemma(analysis.get("lemma"))
+        for analysis in analyses
+        if isinstance(analysis, Mapping) and _clean_lemma(analysis.get("lemma"))
+    }
+    if len(lemmas) != 1:
+        return None
+    lemma = next(iter(lemmas))
     mapped = {
         _POS_MAP.get(str(analysis.get("pos") or "").casefold())
         for analysis in analyses
-        if isinstance(analysis, Mapping)
+        if isinstance(analysis, Mapping) and _clean_lemma(analysis.get("lemma")) == lemma
     }
     mapped.discard(None)
-    return next(iter(mapped)) if len(mapped) == 1 else None
+    return SingleTokenResolution(lemma=lemma, pos=next(iter(mapped))) if len(mapped) == 1 else None
 
 
 def _seed_translation(english: str) -> dict[str, Any]:
@@ -273,10 +302,12 @@ def _apply_translation(entry: dict[str, Any], translation: Mapping[str, Any]) ->
         enrichment["sources"] = sorted(sources)
 
 
-def _new_entry(row: TableRow, *, pos: str, translation: Mapping[str, Any]) -> dict[str, Any]:
+def _new_entry(
+    row: TableRow, *, atlas_lemma: str, pos: str, translation: Mapping[str, Any]
+) -> dict[str, Any]:
     return {
-        "lemma": row.lemma,
-        "url_slug": _slug_for_url(row.lemma),
+        "lemma": atlas_lemma,
+        "url_slug": _slug_for_url(atlas_lemma),
         "gloss": row.english,
         "pos": pos,
         "entry_type": "expression" if row.is_expression else "lemma",
@@ -284,6 +315,7 @@ def _new_entry(row: TableRow, *, pos: str, translation: Mapping[str, Any]) -> di
         "primary_source": "teacher_table",
         "source_provenance": [copy.deepcopy(TABLE_PROVENANCE)],
         "surface_admission": {"practice": True},
+        "teacher_table_keys": [row.lemma],
         "heritage_status": {
             "classification": "unknown",
             "attestations": [],
@@ -298,6 +330,17 @@ def _new_entry(row: TableRow, *, pos: str, translation: Mapping[str, Any]) -> di
             "sources": [str(translation["source"])],
         },
     }
+
+
+def _link_teacher_table_key(entry: dict[str, Any], row: TableRow) -> bool:
+    """Record a table surface that resolves to an existing canonical article."""
+    raw_keys = entry.get("teacher_table_keys")
+    keys = [str(value) for value in raw_keys if str(value).strip()] if isinstance(raw_keys, list) else []
+    if row.lemma in keys:
+        return False
+    keys.append(row.lemma)
+    entry["teacher_table_keys"] = keys
+    return True
 
 
 def _unique_teacher_table_slug(base_slug: str, occupied: set[str]) -> str:
@@ -394,6 +437,7 @@ def admit_and_enrich(
 
     residuals: list[dict[str, Any]] = []
     admitted: list[dict[str, Any]] = []
+    canonical_links: list[dict[str, Any]] = []
     translation_delta: list[dict[str, Any]] = []
     source_counts: Counter[str] = Counter()
     re_enriched = 0
@@ -411,6 +455,7 @@ def admit_and_enrich(
             continue
         if row.is_expression:
             pos = "phrase"
+            atlas_lemma = row.lemma
         else:
             analyses = analyses_by_word.get(row.lemma, [])
             if not analyses:
@@ -423,22 +468,62 @@ def admit_and_enrich(
                     )
                 )
                 continue
-            pos = _single_token_pos(analyses)
-            if pos is None:
+            resolution = _single_token_resolution(analyses)
+            if resolution is None:
+                candidate_lemmas = {
+                    _clean_lemma(analysis.get("lemma"))
+                    for analysis in analyses
+                    if isinstance(analysis, Mapping) and _clean_lemma(analysis.get("lemma"))
+                }
                 residuals.append(
                     _residual(
                         row,
                         stage="admit",
-                        reason="vesum_ambiguous_pos",
-                        proof={"vesum_db": vesum_db.name, "analysis_count": len(analyses)},
+                        reason="vesum_ambiguous_lemma_or_pos",
+                        proof={
+                            "vesum_db": vesum_db.name,
+                            "analysis_count": len(analyses),
+                            "canonical_lemma_count": len(candidate_lemmas),
+                        },
                     )
                 )
                 continue
+            atlas_lemma = resolution.lemma
+            pos = resolution.pos
+
+        canonical_entry = by_key.get(_lemma_key(atlas_lemma))
+        if canonical_entry is not None:
+            linked = _link_teacher_table_key(canonical_entry, row)
+            if linked:
+                canonical_links.append(
+                    {
+                        "uk": row.lemma,
+                        "canonical_lemma": canonical_entry.get("lemma"),
+                        "url_slug": canonical_entry.get("url_slug"),
+                    }
+                )
+            if not _has_translation(canonical_entry):
+                translation = _translation_for(
+                    TableRow(lemma=atlas_lemma, english=row.english), pos, dictionary_lookup, source_counts
+                )
+                _apply_translation(canonical_entry, translation)
+                re_enriched += 1
+                translation_delta.append(
+                    {
+                        "uk": row.lemma,
+                        "url_slug": canonical_entry.get("url_slug"),
+                        "translation": canonical_entry["enrichment"]["translation"],
+                    }
+                )
+            continue
 
         candidate = _new_entry(
             row,
+            atlas_lemma=atlas_lemma,
             pos=pos,
-            translation=_translation_for(row, pos, dictionary_lookup, source_counts),
+            translation=_translation_for(
+                TableRow(lemma=atlas_lemma, english=row.english), pos, dictionary_lookup, source_counts
+            ),
         )
         base_slug = candidate["url_slug"]
         if not base_slug:
@@ -498,6 +583,7 @@ def admit_and_enrich(
         "admission_delta": {
             "schema": "teacher-table-atlas-admission-delta.v1",
             "entries": admitted,
+            "canonical_links": canonical_links,
         },
         "translation_delta": {
             "schema": "teacher-table-atlas-translation-delta.v1",
@@ -507,6 +593,7 @@ def admit_and_enrich(
             "before_missing_atlas": len(before["missing"]),
             "before_present_without_en": len(before["thin"]),
             "admitted": len(admitted),
+            "canonical_links": len(canonical_links),
             "re_enriched": re_enriched,
             "after_missing_atlas": len(after["missing"]),
             "after_present_without_en": len(after["thin"]),
