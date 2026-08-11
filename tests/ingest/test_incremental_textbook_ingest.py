@@ -147,6 +147,92 @@ def test_normal_ingest_writes_integrity_receipt(fixture_env, tmp_path):
     assert receipt["per_source"][0]["fts"]["parity"] is True
 
 
+def test_live_gate_wiring_records_authorized_cutover_scope(fixture_env, tmp_path, monkeypatch):
+    db, slug = fixture_env
+    receipt_path = tmp_path / "live-cutover-receipt.json"
+    gate_path = tmp_path / "live-ingest-gate.json"
+    gate_sha256 = "a" * 64
+    captured: dict = {}
+
+    monkeypatch.setattr(
+        iti,
+        "load_policy",
+        lambda _path: (
+            {
+                "schema_version": "phase3_complete_source_policy_v4",
+                "database_ingest": {"live_ingest_authorized": False},
+            },
+            "b" * 64,
+        ),
+    )
+
+    def validate_gate(**kwargs):
+        captured.update(kwargs)
+        return gate_sha256
+
+    monkeypatch.setattr(iti, "validate_live_ingest_preconditions", validate_gate)
+    monkeypatch.setattr(iti, "EXPECTED_LIVE_DB_SHA256", iti.sha256_file(db))
+    monkeypatch.setattr(
+        iti,
+        "LIVE_INGEST_COUNTS_BEFORE",
+        {"textbook_rows": 0, "fts_rows": 0, "section_rows": 0},
+    )
+
+    counts = iti.ingest(
+        [slug],
+        db_path=db,
+        dry_run=False,
+        receipt_path=receipt_path,
+        live_ingest_gate_path=gate_path,
+    )
+
+    assert counts == {slug: 3}
+    assert captured["gate_path"] == gate_path
+    assert captured["db_path"] == db
+    assert captured["source_ids"] == [slug]
+    assert captured["source_policy_sha256"] == "b" * 64
+    assert captured["receipt_path"] == receipt_path
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["execution_scope"] == "live_database_authorized_cutover"
+    assert receipt["live_ingest_gate_sha256"] == gate_sha256
+
+
+def test_live_gate_rechecks_preimage_after_acquiring_write_lock(fixture_env, tmp_path, monkeypatch):
+    db, slug = fixture_env
+    monkeypatch.setattr(
+        iti,
+        "load_policy",
+        lambda _path: (
+            {
+                "schema_version": "phase3_complete_source_policy_v4",
+                "database_ingest": {"live_ingest_authorized": False},
+            },
+            "b" * 64,
+        ),
+    )
+    monkeypatch.setattr(
+        iti,
+        "validate_live_ingest_preconditions",
+        lambda **_kwargs: "a" * 64,
+    )
+    monkeypatch.setattr(iti, "sha256_file", lambda _path: "0" * 64)
+
+    with pytest.raises(iti.IngestError, match="changed after gate validation"):
+        iti.ingest(
+            [slug],
+            db_path=db,
+            dry_run=False,
+            receipt_path=tmp_path / "receipt.json",
+            live_ingest_gate_path=tmp_path / "gate.json",
+        )
+
+    conn = sqlite3.connect(db)
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 0
+    finally:
+        conn.close()
+
+
 def test_dry_run_receipt_proves_database_hash_is_unchanged(fixture_env, tmp_path):
     db, slug = fixture_env
     receipt_path = tmp_path / "dry-run-receipt.json"

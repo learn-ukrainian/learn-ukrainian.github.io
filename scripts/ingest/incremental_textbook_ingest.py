@@ -34,6 +34,15 @@ PROJECT_ROOT = SCRIPT_PATH.parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from guardrails.worktree_containment import resolve_main_root
+from projects.open_model_data.phase3_live_ingest_gate import (
+    COUNTS_BEFORE as LIVE_INGEST_COUNTS_BEFORE,
+)
+from projects.open_model_data.phase3_live_ingest_gate import (
+    EXPECTED_LIVE_DB_SHA256,
+    LiveIngestGateError,
+    validate_live_ingest_preconditions,
+)
 from projects.open_model_data.textbook_native_exactness import (
     SCHEMA_VERSION as NATIVE_EXACTNESS_SCHEMA_VERSION,
 )
@@ -71,7 +80,8 @@ from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 # constant patchable for local fixtures, but do not assume the absent
 # repo-local data/textbook_chunks directory is the production source.
 CHUNKS_DIR = TEXTBOOK_CHUNKS_DIR
-DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
+PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
+DEFAULT_DB = PRIMARY_ROOT / "data" / "sources.db"
 
 # Author map: single source of truth in wiki.textbook_subjects (PR #4650).
 AUTHOR_UK = AUTHOR_UK_BY_TRANSLIT
@@ -383,6 +393,7 @@ def ingest(
     receipt_path: Path | None = None,
     university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
     copied_database_rehearsal: bool = False,
+    live_ingest_gate_path: Path | None = None,
 ) -> dict[str, int]:
     """Run one atomic replace/quarantine/FTS-resync cycle.
 
@@ -399,10 +410,29 @@ def ingest(
         slug.startswith("uni-") for slug in [*slugs, *quarantine_slugs]
     )
     policy_document: dict[str, Any] | None = None
-    if university_requested:
+    policy_sha256: str | None = None
+    if university_requested or live_ingest_gate_path is not None:
         try:
-            policy_document, _policy_sha256 = load_policy(university_policy_path)
+            policy_document, policy_sha256 = load_policy(university_policy_path)
         except UniversitySourcePolicyError as exc:
+            raise IngestError(str(exc)) from exc
+    live_ingest_gate_sha256: str | None = None
+    if live_ingest_gate_path is not None:
+        if policy_document is None or policy_document["schema_version"] != "phase3_complete_source_policy_v4":
+            raise IngestError("live ingest gate requires the complete v4 source policy")
+        try:
+            live_ingest_gate_sha256 = validate_live_ingest_preconditions(
+                gate_path=Path(live_ingest_gate_path),
+                db_path=db_path,
+                expected_live_db_path=DEFAULT_DB,
+                source_ids=slugs,
+                quarantine_source_ids=quarantine_slugs,
+                source_policy_sha256=str(policy_sha256),
+                dry_run=dry_run,
+                copied_database_rehearsal=copied_database_rehearsal,
+                receipt_path=receipt_path,
+            )
+        except LiveIngestGateError as exc:
             raise IngestError(str(exc)) from exc
     if copied_database_rehearsal:
         if dry_run:
@@ -422,6 +452,7 @@ def ingest(
         and not dry_run
         and policy_document["database_ingest"]["live_ingest_authorized"] is False
         and not copied_database_rehearsal
+        and live_ingest_gate_path is None
     ):
         raise IngestError(
             "complete v4 source policy does not authorize live ingest; run an explicit copied-database rehearsal"
@@ -473,11 +504,19 @@ def ingest(
             preflight_checkpoint = list(conn.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone())
             if preflight_checkpoint != [0, 0, 0]:
                 raise IngestError(f"WAL was not settled before ingest: {preflight_checkpoint}")
-        db_sha256_before = sha256_file(db_path)
         conn.execute("BEGIN IMMEDIATE")
+        db_sha256_before = sha256_file(db_path)
+        if live_ingest_gate_sha256 is not None and db_sha256_before != EXPECTED_LIVE_DB_SHA256:
+            raise IngestError("live database preimage changed after gate validation")
         ensure_schema(conn)
         foreign_key_failures_before, foreign_key_hash_before = _foreign_key_evidence(conn)
         before = _database_counts(conn)
+        expected_live_table_counts = {
+            key: LIVE_INGEST_COUNTS_BEFORE[key]
+            for key in ("textbook_rows", "fts_rows", "section_rows")
+        }
+        if live_ingest_gate_sha256 is not None and before != expected_live_table_counts:
+            raise IngestError("live database counts changed after gate validation")
         for slug in quarantine_slugs:
             deleted = conn.execute("DELETE FROM textbooks WHERE source_file = ?", (slug,)).rowcount
             deleted_sections = conn.execute("DELETE FROM textbook_sections WHERE source_file = ?", (slug,)).rowcount
@@ -553,6 +592,8 @@ def ingest(
         "execution_scope": (
             "copied_database_rehearsal"
             if copied_database_rehearsal
+            else "live_database_authorized_cutover"
+            if live_ingest_gate_sha256 is not None
             else "dry_run"
             if dry_run
             else "live_database"
@@ -567,6 +608,7 @@ def ingest(
             if university_admissions or university_quarantines
             else None
         ),
+        "live_ingest_gate_sha256": live_ingest_gate_sha256,
         "before": before,
         "after_transaction": after,
         "integrity_check": integrity,
@@ -830,6 +872,15 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Commit only to an existing disposable DB copy under the complete v4 policy",
     )
+    parser.add_argument(
+        "--live-ingest-gate",
+        type=Path,
+        default=None,
+        help=(
+            "Exact one-time gate for the primary sources database; requires the complete v4 policy, "
+            "exact four-source set, committed receipt, and frozen preimage"
+        ),
+    )
     parser.add_argument("--quarantine-dir", type=Path)
     parser.add_argument(
         "--quarantine-slugs",
@@ -879,6 +930,7 @@ def main(argv: list[str] | None = None) -> int:
             quarantine_slugs=args.quarantine_slugs,
             university_policy_path=args.university_policy,
             copied_database_rehearsal=args.copied_db_rehearsal,
+            live_ingest_gate_path=args.live_ingest_gate,
         )
     except (IngestError, ValueError) as exc:
         # ValueError: _build_textbook_row's strictness gates (author_uk,

@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_live_ingest_gate_v1.schema.json",
+  "title": "Phase 3 one-time live ingest gate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "bindings",
+    "requested_sources",
+    "database",
+    "copied_database_rehearsal",
+    "pre_ingest_backup",
+    "execution",
+    "source_freeze_ready",
+    "phase3_complete",
+    "phase4_blocked",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_live_ingest_gate_v1"},
+    "text_free": {"const": true},
+    "status": {"const": "AUTHORIZED_ONCE_FOR_EXACT_PREIMAGE"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "complete_source_policy_v4_sha256",
+        "copied_database_rehearsal_receipt_sha256",
+        "pr6631_drive_backup_receipt_sha256",
+        "pr6631_drive_provider_verification_sha256",
+        "pre_ingest_backup_receipt_sha256",
+        "pre_ingest_backup_provider_verification_sha256",
+        "compressed_pre_ingest_database_sha256",
+        "independent_cross_family_review_sha256",
+        "pr6631_package_manifest_sha256",
+        "pr6631_merge_commit"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "complete_source_policy_v4_sha256": {"$ref": "#/$defs/sha256"},
+        "copied_database_rehearsal_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6631_drive_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6631_drive_provider_verification_sha256": {"$ref": "#/$defs/sha256"},
+        "pre_ingest_backup_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pre_ingest_backup_provider_verification_sha256": {"$ref": "#/$defs/sha256"},
+        "compressed_pre_ingest_database_sha256": {"$ref": "#/$defs/sha256"},
+        "independent_cross_family_review_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6631_package_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "pr6631_merge_commit": {"$ref": "#/$defs/sha1"}
+      }
+    },
+    "requested_sources": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"const": "uni-ukrmova-corpus-linguistics-khpi-2021-part-1"},
+        {"const": "uni-ukrmova-corpus-linguistics-khpi-2021-part-2"},
+        {"const": "uni-ukrmova-morphology-volkova-maslo-2012"},
+        {"const": "uni-ukrmova-text-linguistics-shevel-bilyk-2024"}
+      ],
+      "items": false
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_locator",
+        "sha256_before",
+        "counts_before",
+        "counts_after_expected",
+        "foreign_key_failure_count",
+        "foreign_key_failure_hash",
+        "integrity_check",
+        "journal_mode",
+        "requested_sources_absent_before"
+      ],
+      "properties": {
+        "target_locator": {"const": "primary_checkout:data/sources.db"},
+        "sha256_before": {"const": "c7068a4e4b9e0e7fac3b4f918857bcd36c2f56e524f81e686d222e7155a78739"},
+        "counts_before": {"$ref": "#/$defs/counts_before"},
+        "counts_after_expected": {"$ref": "#/$defs/counts_after"},
+        "foreign_key_failure_count": {"const": 134836},
+        "foreign_key_failure_hash": {"$ref": "#/$defs/sha256"},
+        "integrity_check": {"const": "ok"},
+        "journal_mode": {"const": "wal"},
+        "requested_sources_absent_before": {"const": true}
+      }
+    },
+    "copied_database_rehearsal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_scope",
+        "status",
+        "database_sha256_before",
+        "database_sha256_after",
+        "counts_before",
+        "counts_after",
+        "inserted_rows",
+        "source_count",
+        "integrity_check",
+        "foreign_key_failures_unchanged",
+        "per_source_fts_and_linkage_passed"
+      ],
+      "properties": {
+        "execution_scope": {"const": "copied_database_rehearsal"},
+        "status": {"const": "committed"},
+        "database_sha256_before": {"const": "4b7b6aa7913b415114f270b497141fc706a0c9f1dabf2fdbae7cd4db8110a391"},
+        "database_sha256_after": {"const": "e3c7d01dec04c6b7c6c8ea8dbe8fab11e0b3cdb9fea9c1280a927167a236f70b"},
+        "counts_before": {"$ref": "#/$defs/table_counts_before"},
+        "counts_after": {"$ref": "#/$defs/table_counts_after"},
+        "inserted_rows": {"const": 585},
+        "source_count": {"const": 4},
+        "integrity_check": {"const": "ok"},
+        "foreign_key_failures_unchanged": {"const": true},
+        "per_source_fts_and_linkage_passed": {"const": true}
+      }
+    },
+    "pre_ingest_backup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "google_drive_relative_path",
+        "compressed_database_filename",
+        "compressed_database_sha256",
+        "restored_database_sha256",
+        "gzip_test_passed",
+        "provider_uploaded",
+        "provider_uploading",
+        "drive_item_id_present"
+      ],
+      "properties": {
+        "google_drive_relative_path": {
+          "const": "Projects/learn-ukrainian-data/backups/phase3-6375/20260811T090325Z"
+        },
+        "compressed_database_filename": {"const": "sources-c7068a4e4b9e.db.gz"},
+        "compressed_database_sha256": {"const": "c89d8d2898b7aa7470e8f3888245fb0d85fe74c075d27a9483da262ad3147a5f"},
+        "restored_database_sha256": {"const": "c7068a4e4b9e0e7fac3b4f918857bcd36c2f56e524f81e686d222e7155a78739"},
+        "gzip_test_passed": {"const": true},
+        "provider_uploaded": {"const": true},
+        "provider_uploading": {"const": false},
+        "drive_item_id_present": {"const": true}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "live_ingest_authorized",
+        "single_use",
+        "exact_preimage_required",
+        "exact_source_set_required",
+        "receipt_required",
+        "post_ingest_backup_required",
+        "provider_work_authorized"
+      ],
+      "properties": {
+        "live_ingest_authorized": {"const": true},
+        "single_use": {"const": true},
+        "exact_preimage_required": {"const": true},
+        "exact_source_set_required": {"const": true},
+        "receipt_required": {"const": true},
+        "post_ingest_backup_required": {"const": true},
+        "provider_work_authorized": {"const": false}
+      }
+    },
+    "source_freeze_ready": {"const": false},
+    "phase3_complete": {"const": false},
+    "phase4_blocked": {"const": true},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "table_counts_before": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textbook_rows", "fts_rows", "section_rows"],
+      "properties": {
+        "textbook_rows": {"const": 49568},
+        "fts_rows": {"const": 49568},
+        "section_rows": {"const": 35777}
+      }
+    },
+    "table_counts_after": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textbook_rows", "fts_rows", "section_rows"],
+      "properties": {
+        "textbook_rows": {"const": 50153},
+        "fts_rows": {"const": 50153},
+        "section_rows": {"const": 36322}
+      }
+    },
+    "counts_before": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "textbook_rows",
+        "fts_rows",
+        "section_rows",
+        "source_count",
+        "university_rows",
+        "university_source_count"
+      ],
+      "properties": {
+        "textbook_rows": {"const": 49568},
+        "fts_rows": {"const": 49568},
+        "section_rows": {"const": 35777},
+        "source_count": {"const": 183},
+        "university_rows": {"const": 3493},
+        "university_source_count": {"const": 16}
+      }
+    },
+    "counts_after": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "textbook_rows",
+        "fts_rows",
+        "section_rows",
+        "source_count",
+        "university_rows",
+        "university_source_count"
+      ],
+      "properties": {
+        "textbook_rows": {"const": 50153},
+        "fts_rows": {"const": 50153},
+        "section_rows": {"const": 36322},
+        "source_count": {"const": 187},
+        "university_rows": {"const": 4078},
+        "university_source_count": {"const": 20}
+      }
+    }
+  }
+}
