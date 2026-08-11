@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# AUDIT TRIPWIRE ONLY — bypassable (hooksPath=/dev/null etc.); see #5808
+#
+# This hook deliberately records only committed ref updates in the primary
+# checkout. It must never affect the outcome of a Git reference transaction.
+
+set +e
+
+hook_argv="$0 ${1-}"
+
+json_quote() {
+  local value="${1-}"
+
+  value=${value//\\/\\\\}
+  value=${value//\"/\\\"}
+  value=${value//$'\b'/\\b}
+  value=${value//$'\f'/\\f}
+  value=${value//$'\n'/\\n}
+  value=${value//$'\r'/\\r}
+  value=${value//$'\t'/\\t}
+  printf '"%s"' "$value"
+}
+
+agent_environment_json() {
+  local name value separator=""
+
+  printf '{'
+  while IFS='=' read -r name value; do
+    case "$name" in
+      TASK_ID|X_AGENT|DISPATCH_*|AGENT_*)
+        printf '%s' "$separator"
+        json_quote "$name"
+        printf ':'
+        json_quote "$value"
+        separator=','
+        ;;
+    esac
+  done < <(env)
+  printf '}'
+}
+
+record_update() {
+  local old_sha="$1" new_sha="$2" ref_name="$3"
+  local timestamp cwd cmdline argv agent_environment
+
+  case "$ref_name" in
+    HEAD|refs/heads/*) ;;
+    *) return 0 ;;
+  esac
+
+  timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)"
+  cwd="$(pwd -P 2>/dev/null)"
+  cmdline="$(ps -o command= -p "$PPID" 2>/dev/null | head -n 1)"
+  argv="$hook_argv"
+  agent_environment="$(agent_environment_json)"
+
+  printf '{"ts":%s,"ref":%s,"old":%s,"new":%s,"pid":%s,"ppid":%s,"argv":%s,"cmdline":%s,"cwd":%s,"agent_env":%s}\n' \
+    "$(json_quote "$timestamp")" \
+    "$(json_quote "$ref_name")" \
+    "$(json_quote "$old_sha")" \
+    "$(json_quote "$new_sha")" \
+    "$(json_quote "$$")" \
+    "$(json_quote "$PPID")" \
+    "$(json_quote "$argv")" \
+    "$(json_quote "$cmdline")" \
+    "$(json_quote "$cwd")" \
+    "$agent_environment" >> "$audit_file" 2>/dev/null || true
+}
+
+record_payload() {
+  local record old_sha new_sha ref_name extra
+
+  # Current Git documents LF-delimited records. Accept NUL-delimited records
+  # too, so this audit hook safely consumes either representation.
+  local saw_nul=0
+  while IFS= read -r -d '' record; do
+    saw_nul=1
+    IFS=' ' read -r old_sha new_sha ref_name extra <<< "$record"
+    [[ -n "$old_sha" && -n "$new_sha" && -n "$ref_name" && -z "$extra" ]] || continue
+    record_update "$old_sha" "$new_sha" "$ref_name"
+  done
+
+  if [[ "$saw_nul" -eq 0 && -n "$record" ]]; then
+    while IFS= read -r record || [[ -n "$record" ]]; do
+      IFS=' ' read -r old_sha new_sha ref_name extra <<< "$record"
+      [[ -n "$old_sha" && -n "$new_sha" && -n "$ref_name" && -z "$extra" ]] || continue
+      record_update "$old_sha" "$new_sha" "$ref_name"
+    done <<< "$record"
+  fi
+}
+
+[[ "${1-}" == "committed" ]] || exit 0
+
+git_dir="$(git rev-parse --path-format=absolute --git-dir 2>/dev/null)"
+common_dir="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"
+[[ -n "$git_dir" && "$git_dir" == "$common_dir" ]] || exit 0
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+[[ -n "$repo_root" ]] || exit 0
+
+audit_dir="$repo_root/.agent"
+audit_file="$audit_dir/primary-ref-audit.jsonl"
+mkdir -p "$audit_dir" 2>/dev/null || exit 0
+
+record_payload
+exit 0
