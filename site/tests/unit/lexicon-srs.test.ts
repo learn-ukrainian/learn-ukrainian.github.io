@@ -14,7 +14,6 @@ import {
   cardKey,
   countDailyPracticeDone,
   deriveDailyPracticeRows,
-  detectClockJump,
   getDueQueue,
   isPracticeMode,
   loadState,
@@ -803,14 +802,6 @@ describe('lexicon SRS facade', () => {
     expect(state.flags.corrupt).toBe(true);
     expect(result.ok).toBe(false);
     expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe('{not json');
-  });
-
-  test('detects clock jumps beyond seven days', () => {
-    expect(detectClockJump(NOW, new Date('2026-07-02T12:00:00.000Z'))).toEqual({
-      direction: 'forward',
-      deltaDays: 9,
-    });
-    expect(detectClockJump(NOW, new Date('2026-06-25T12:00:00.000Z'))).toBeNull();
   });
 
   test('due queue includes new cards and excludes future reviews per mode', () => {

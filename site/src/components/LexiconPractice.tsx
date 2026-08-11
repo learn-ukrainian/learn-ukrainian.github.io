@@ -494,12 +494,6 @@ function translateStorageWarning(warning: string | null): { uk: string; en: stri
       en: 'Progress suspended until browser storage becomes available.',
     };
   }
-  if (warning.includes('годинник пристрою')) {
-    return {
-      uk: 'Час повторення може бути неточним: змінився годинник пристрою.',
-      en: 'Review schedule may be inaccurate: device clock changed.',
-    };
-  }
   return { uk: warning, en: warning };
 }
 
@@ -1814,8 +1808,6 @@ function LexiconPracticeIsland({
       setStorageWarning(SRS_STORAGE_FULL_WARNING);
     } else if (state.flags.storageWriteFailed || state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
-    } else if (state.flags.clockJump) {
-      setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
     }
 
     if (typeof window !== 'undefined') {

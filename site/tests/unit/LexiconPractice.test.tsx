@@ -877,6 +877,31 @@ describe('LexiconPractice', () => {
     expect(getTeacherLessonVirtualDeck()).toBe(getTeacherLessonVirtualDeck());
   });
 
+  test('does not warn about the review schedule after a long inactivity gap', async () => {
+    localStorage.setItem(
+      SRS_STORAGE_KEY,
+      JSON.stringify({
+        version: 4,
+        cards: {},
+        reviews: [],
+        reviewAggregates: {},
+        lastSavedAt: NOW.getTime() - 9 * 24 * 60 * 60 * 1000,
+      }),
+    );
+    const { fn } = mockShardFetch({ A1: 4 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    await screen.findByTestId('practice-daily-deck');
+    expect(
+      screen.queryByText('Час повторення може бути неточним: змінився годинник пристрою.'),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Review schedule may be inaccurate: device clock changed.'),
+    ).not.toBeInTheDocument();
+  });
+
   test('filters excluded and private-name teacher cloze cards before they reach the practice deck', () => {
     expect(
       filterTeacherClozeItems([
