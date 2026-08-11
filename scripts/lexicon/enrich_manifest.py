@@ -60,11 +60,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+import requests
 
-def _requests():
-    """Lazy import so audit helpers can load without network deps in slim CI venvs."""
-    import requests as _requests_mod
-    return _requests_mod
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -1469,8 +1466,8 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
         _polite_slovnyk_delay()
         try:
-            response = _requests().get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT})
-        except _requests().RequestException as exc:
+            response = requests.get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT})
+        except requests.RequestException as exc:
             if attempt < _SLOVNYK_MAX_RETRIES:
                 _slovnyk_backoff_sleep(attempt, None)
                 continue
@@ -1485,7 +1482,7 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
             raise _SlovnykTransientError(f"transient slovnyk.me status {response.status_code} for {url}")
         try:
             response.raise_for_status()
-        except _requests().HTTPError as exc:
+        except requests.HTTPError as exc:
             raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
         return _parse_slovnyk_entry(
             response.text,
@@ -5450,7 +5447,7 @@ def _fetch_grac_frequency_batch(words: list[str]) -> dict[str, dict[str, Any] | 
 
     pattern = "^(?:" + "|".join(re.escape(candidate) for candidate in candidate_to_words) + ")$"
     try:
-        response = _requests().get(
+        response = requests.get(
             _GRAC_WORDLIST_URL,
             params={
                 "corpname": _GRAC_CORPUS,
@@ -5465,7 +5462,7 @@ def _fetch_grac_frequency_batch(words: list[str]) -> dict[str, dict[str, Any] | 
         )
         response.raise_for_status()
         items = response.json().get("Items", [])
-    except (_requests().RequestException, ValueError):
+    except (requests.RequestException, ValueError):
         return {word: None for word in words}
 
     best_by_word: dict[str, dict[str, Any] | None] = {word: None for word in words}

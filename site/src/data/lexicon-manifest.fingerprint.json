@@ -89,7 +89,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "03d8bb14785f111642752602417fc39a1d12912c91c05bb71da1992fdb35f69b"
+        "sha256": "10ba2e5dc72049bb7c7b327ee76a0834af876af25c9973f0a7899322966d942f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
