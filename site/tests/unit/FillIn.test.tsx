@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
@@ -18,7 +18,7 @@ function chipsIn(container: HTMLElement) {
 }
 
 function chipByText(container: HTMLElement, text: string) {
-  const btn = chipsIn(container).find(b => b.textContent?.trim() === text);
+  const btn = chipsIn(container).find((b) => b.textContent?.trim() === text);
   if (!btn) throw new Error(`chip "${text}" not found`);
   return btn;
 }
@@ -33,13 +33,13 @@ function feedback(container: HTMLElement) {
 
 function tryAgainBtn(container: HTMLElement) {
   return [...container.querySelectorAll<HTMLButtonElement>('button')].find(
-    b => b.textContent?.trim() === 'Try Again' || b.textContent?.trim() === 'Спробувати знову'
+    (b) => b.textContent?.trim() === 'Try Again' || b.textContent?.trim() === 'Спробувати знову',
   );
 }
 
 function checkButton(container: HTMLElement) {
   return [...container.querySelectorAll<HTMLButtonElement>('button')].find(
-    b => b.textContent?.trim() === 'Check Answers' || b.textContent?.trim() === 'Перевірити'
+    (b) => b.textContent?.trim() === 'Check Answers' || b.textContent?.trim() === 'Перевірити',
   );
 }
 
@@ -64,7 +64,7 @@ describe('FillInQuestion', () => {
 
   test('renders all option texts regardless of shuffle order', () => {
     const { container } = render(<FillInQuestion {...baseProps} />);
-    const texts = chipsIn(container).map(b => b.textContent?.trim());
+    const texts = chipsIn(container).map((b) => b.textContent?.trim());
     expect(new Set(texts)).toEqual(new Set(['Kyiv', 'Moscow', 'Warsaw']));
   });
 
@@ -138,19 +138,45 @@ describe('FillInQuestion', () => {
 
   test('handles sentences with an underscore-style blank marker', () => {
     const { container } = render(
-      <FillInQuestion sentence="I ___ pizza." answer="love" options={['love']} />
+      <FillInQuestion sentence="I ___ pizza." answer="love" options={['love']} />,
     );
     expect(container.textContent).toContain('I');
     expect(container.textContent).toContain('pizza');
   });
 
   test('renders without options (no chip bank)', () => {
-    const { container } = render(
-      <FillInQuestion sentence="The answer is ___." answer="42" />
-    );
+    const { container } = render(<FillInQuestion sentence="The answer is ___." answer="42" />);
     expect(chipsIn(container)).toHaveLength(0);
     // Sentence + blank zone still present
     expect(blankZone(container)).toBeInTheDocument();
+  });
+
+  test('accepts a typed answer when no reviewed choice bank is supplied', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    render(<FillInQuestion sentence="The answer is ___." answer="42" onComplete={onComplete} />);
+
+    await user.type(screen.getByRole('textbox', { name: 'Your answer' }), '42{Enter}');
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith(true);
+    expect(feedback(document.body)).toHaveAttribute('data-correct', 'true');
+  });
+
+  test('reports chip correctness once and obeys a host answer lock', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    const { container, rerender } = render(
+      <FillInQuestion {...baseProps} onComplete={onComplete} />,
+    );
+
+    await user.click(chipByText(container, 'Moscow'));
+    expect(onComplete).toHaveBeenCalledWith(false);
+
+    rerender(<FillInQuestion {...baseProps} onComplete={onComplete} disabled />);
+    expect(tryAgainBtn(container)).toBeDisabled();
+    await user.click(tryAgainBtn(container)!);
+    expect(onComplete).toHaveBeenCalledTimes(1);
   });
 });
 

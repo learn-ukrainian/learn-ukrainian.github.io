@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 6851ff3cd0464e4a3e770744326a2162fff8dc21c2595770f12008f3890753fa
+  components_sha256: 38f175aef9b33a50abdcbef1c23c213b3750957410fc7c34f5400a5ede5c49a4
   config_tables_sha256: c9621b1f9b95e7fe7d7400989839ef3a1ecf338f8cec8989ae9c53bde8c9b287
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1213,12 +1213,16 @@ components:
         description: Optional practice-only pair-coding mode.
         ukrainian_text: 'false'
       - name: onComplete
-        type: () => void
+        type: '(correct: boolean) => void'
         description: onComplete prop.
         ukrainian_text: 'false'
       - name: onMatch
         type: '(pairIndex: number, rating: ''again'' | ''hard'' | ''good'') => void'
         description: onMatch prop.
+        ukrainian_text: 'false'
+      - name: disabled
+        type: boolean
+        description: disabled prop.
         ukrainian_text: 'false'
     nested_types:
       MatchPair:
