@@ -26,6 +26,8 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.projects.open_model_data import phase3_historical_materialization as base
+from scripts.projects.open_model_data import phase3_historical_representation as historical
+from scripts.projects.open_model_data import phase3_linguistic_representation as linguistic
 from scripts.projects.open_model_data.phase3_linguistic_representation import (
     canonical_json,
     sha256_value,
@@ -47,13 +49,22 @@ HISTORICAL_REPRESENTATION_SCHEMA_PATH = (
 
 GATE_SCHEMA_VERSION = "phase3_historical_full_materialization_gate_v1"
 RECEIPT_SCHEMA_VERSION = "phase3_historical_full_materialization_receipt_v1"
-EXPECTED_GATE_FILE_SHA256 = "456531f248c2fd8bedbd6cd2b0f72b5c0133056b43d7c7912903c063a43e57a6"
+EXPECTED_GATE_FILE_SHA256 = "a2bad8d9e0374ac5cfffa9a8c0303bca536ffffd4915d58c74f34ad984ca657c"
 
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
 PERIODIZATION_FREEZE_SHA256 = "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"
 HISTORICAL_REPRESENTATION_SCHEMA_SHA256 = (
     "37db223de63aaa3ce05dc154193b86ae4db8022c6f14f49a9035ebb5d37d4441"
+)
+HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256 = (
+    "7783583b7422f77b8ddfb53d984ea748e8a998b2d4a76cef7a8a326416f6d9f4"
+)
+LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256 = (
+    "0609635b31b2af469ff8427751bc3a5161b160d84d1d9e6065d85e0afffc58b5"
+)
+LINGUISTIC_REPRESENTATION_SCHEMA_SHA256 = (
+    "07dffdbc6220adfd088a1e3a19d369093d6331c67fa648880c59ca10d56b2489"
 )
 CANARY_MATERIALIZER_SHA256 = "c513800757bf8c421a1163398932c68e4ad390e0b2774c1d6dd24049692ce829"
 CANARY_RECEIPT_FILE_SHA256 = "ef4bb2e499b6338fbcef90930052eef2de06a9176f4f1143fa74b2e2f3517071"
@@ -63,6 +74,8 @@ CANARY_PLUG2_OUTPUT_SHA256 = "4903747b4a8f079b75732aa7c983958e64c9b6ddf8f598afa7
 OUTPUT_CEILING_BYTES = int(base.OUTPUT_CEILING_GIB * 1024**3)
 MINIMUM_FREE_DISK_GIB = 8.0
 PROJECTED_COMPRESSED_GIB = 1.8481288392973172
+OUTPUT_DIRECTORY_NAME = "phase3-v3-full-ud-orv-uk-plug2-uk-v1"
+RECEIPT_FILENAME = "historical-full-materialization-receipt-v1.json"
 
 
 class HistoricalFullMaterializationError(ValueError):
@@ -123,13 +136,22 @@ def build_gate(
     body: dict[str, Any] = {
         "schema_version": GATE_SCHEMA_VERSION,
         "text_free": True,
-        "status": "AUTHORIZED_ONCE_FOR_EXACT_FULL_MATERIALIZATION",
+        "status": "AUTHORIZED_FOR_EXACT_FULL_MATERIALIZATION",
         "bindings": {
             "phase3_recovery_prompt_v2_sha256": V2_PROMPT_SHA256,
             "phase3_reboot_prompt_v3_sha256": V3_PROMPT_SHA256,
             "historical_periodization_freeze_sha256": PERIODIZATION_FREEZE_SHA256,
             "historical_representation_schema_sha256": (
                 HISTORICAL_REPRESENTATION_SCHEMA_SHA256
+            ),
+            "historical_representation_implementation_sha256": (
+                HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256
+            ),
+            "linguistic_representation_implementation_sha256": (
+                LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256
+            ),
+            "linguistic_representation_schema_sha256": (
+                LINGUISTIC_REPRESENTATION_SCHEMA_SHA256
             ),
             "historical_materializer_sha256": CANARY_MATERIALIZER_SHA256,
             "canary_receipt_file_sha256": CANARY_RECEIPT_FILE_SHA256,
@@ -163,10 +185,10 @@ def build_gate(
         },
         "execution": {
             "full_materialization_authorized": True,
-            "single_use": True,
             "selection_algorithm": "all_eligible_units_sorted_by_immutable_identity",
             "immutable_output": True,
             "output_outside_git_required": True,
+            "canonical_output_directory": OUTPUT_DIRECTORY_NAME,
             "output_ceiling_gib": base.OUTPUT_CEILING_GIB,
             "minimum_free_disk_gib": MINIMUM_FREE_DISK_GIB,
             "projected_compressed_gib": PROJECTED_COMPRESSED_GIB,
@@ -214,6 +236,21 @@ def validate_gate_document(gate: Mapping[str, Any]) -> dict[str, Any]:
         "historical representation binding drift",
     )
     require(
+        bindings["historical_representation_implementation_sha256"]
+        == HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
+        "historical representation implementation binding drift",
+    )
+    require(
+        bindings["linguistic_representation_implementation_sha256"]
+        == LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
+        "linguistic representation implementation binding drift",
+    )
+    require(
+        bindings["linguistic_representation_schema_sha256"]
+        == LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
+        "linguistic representation schema binding drift",
+    )
+    require(
         bindings["historical_materializer_sha256"] == CANARY_MATERIALIZER_SHA256,
         "reviewed canary materializer binding drift",
     )
@@ -226,7 +263,10 @@ def validate_gate_document(gate: Mapping[str, Any]) -> dict[str, Any]:
     execution = gate["execution"]
     require(execution["provider_calls_authorized"] is False, "gate authorizes provider calls")
     require(execution["full_materialization_authorized"] is True, "full run is not authorized")
-    require(execution["single_use"] is True, "full run must be single-use")
+    require(
+        execution["canonical_output_directory"] == OUTPUT_DIRECTORY_NAME,
+        "canonical output directory drift",
+    )
     require(gate["phase_boundaries"]["phase4_blocked"] is True, "Phase 4 boundary drift")
     return dict(gate)
 
@@ -235,8 +275,11 @@ def verify_runtime_bindings() -> None:
     """Fail closed if an imported reviewed implementation or schema drifted."""
     runtime_bindings = {
         Path(base.__file__).resolve(): CANARY_MATERIALIZER_SHA256,
+        Path(historical.__file__).resolve(): HISTORICAL_REPRESENTATION_IMPLEMENTATION_SHA256,
+        Path(linguistic.__file__).resolve(): LINGUISTIC_REPRESENTATION_IMPLEMENTATION_SHA256,
         PERIODIZATION_FREEZE_PATH: PERIODIZATION_FREEZE_SHA256,
         HISTORICAL_REPRESENTATION_SCHEMA_PATH: HISTORICAL_REPRESENTATION_SCHEMA_SHA256,
+        linguistic.SCHEMA_PATH: LINGUISTIC_REPRESENTATION_SCHEMA_SHA256,
     }
     for path, expected_sha256 in runtime_bindings.items():
         require(path.is_file(), f"missing bound runtime file: {path}")
@@ -300,7 +343,9 @@ def materialize_full(
     expected_plug2_metadata_sha256 = source_denominators["plug2"]["metadata_sha256"]
 
     require(not base._inside_git_checkout(private_output_dir.resolve()), "private text output cannot be inside a Git checkout")
+    require(private_output_dir.name == OUTPUT_DIRECTORY_NAME, "output directory name is not the frozen value")
     require(receipt_output.parent.resolve() == private_output_dir.resolve(), "receipt must be inside immutable output")
+    require(receipt_output.name == RECEIPT_FILENAME, "receipt filename is not the frozen value")
     require(not private_output_dir.exists(), "immutable full output directory already exists")
     free_gib = shutil.disk_usage(private_output_dir.parent).free / (1024**3)
     require(
@@ -308,10 +353,13 @@ def materialize_full(
         "minimum free disk is not available for full materialization",
     )
 
-    for filename, expected_hash in expected_ud_sha256.items():
-        base._verify_hash(ud_dir / filename, expected_hash)
-    base._verify_hash(plug2_archive, expected_plug2_archive_sha256)
-    base._verify_hash(plug2_metadata, expected_plug2_metadata_sha256)
+    def verify_source_hashes() -> None:
+        for filename, expected_hash in expected_ud_sha256.items():
+            base._verify_hash(ud_dir / filename, expected_hash)
+        base._verify_hash(plug2_archive, expected_plug2_archive_sha256)
+        base._verify_hash(plug2_metadata, expected_plug2_metadata_sha256)
+
+    verify_source_hashes()
 
     all_ud: list[base.UdSentence] = []
     for filename in sorted(expected_ud_sha256):
@@ -408,6 +456,7 @@ def materialize_full(
         require(plug2_record_count == plug2_record_counter, "PluG2 record counter drift")
         total_bytes = ud_output_bytes + plug2_output_bytes
         require(total_bytes <= OUTPUT_CEILING_BYTES, "compressed output ceiling exceeded")
+        verify_source_hashes()
 
         body: dict[str, Any] = {
             "schema_version": RECEIPT_SCHEMA_VERSION,

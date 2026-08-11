@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_full_materialization as full
 from scripts.projects.open_model_data import phase3_historical_materialization as base
+from scripts.projects.open_model_data import phase3_historical_representation as historical
 
 ROOT = Path(__file__).resolve().parents[1]
 GATE_PATH = (
@@ -135,7 +136,9 @@ def _fixture_gate(ud_dir: Path, archive: Path, metadata: Path) -> dict[str, obje
 
 def _run(tmp_path: Path, output_name: str) -> tuple[dict[str, object], Path]:
     ud_dir, archive, metadata = _source_inputs(tmp_path)
-    output = tmp_path / output_name
+    output_parent = tmp_path / output_name
+    output_parent.mkdir()
+    output = output_parent / full.OUTPUT_DIRECTORY_NAME
     receipt = full.materialize_full(
         gate=_fixture_gate(ud_dir, archive, metadata),
         gate_file_sha256="a" * 64,
@@ -143,7 +146,7 @@ def _run(tmp_path: Path, output_name: str) -> tuple[dict[str, object], Path]:
         plug2_archive=archive,
         plug2_metadata=metadata,
         private_output_dir=output,
-        receipt_output=output / "receipt.json",
+        receipt_output=output / full.RECEIPT_FILENAME,
     )
     return receipt, output
 
@@ -187,7 +190,7 @@ def test_full_run_materializes_every_eligible_unit_and_excludes_other_languages(
     }
     assert receipt["safeguards"]["historical_forms_protected"] is True
     assert receipt["safeguards"]["modern_correction_eligible"] is False
-    assert (output / "receipt.json").is_file()
+    assert (output / full.RECEIPT_FILENAME).is_file()
 
 
 def test_full_run_is_byte_deterministic(tmp_path: Path) -> None:
@@ -196,7 +199,9 @@ def test_full_run_is_byte_deterministic(tmp_path: Path) -> None:
     receipts = []
     hashes = []
     for ordinal in (1, 2):
-        output = tmp_path / f"full-{ordinal}"
+        output_parent = tmp_path / f"full-{ordinal}"
+        output_parent.mkdir()
+        output = output_parent / full.OUTPUT_DIRECTORY_NAME
         receipts.append(
             full.materialize_full(
                 gate=gate,
@@ -205,7 +210,7 @@ def test_full_run_is_byte_deterministic(tmp_path: Path) -> None:
                 plug2_archive=archive,
                 plug2_metadata=metadata,
                 private_output_dir=output,
-                receipt_output=output / "receipt.json",
+                receipt_output=output / full.RECEIPT_FILENAME,
             )
         )
         hashes.append(
@@ -225,7 +230,7 @@ def test_full_run_rejects_denominator_drift_before_output(tmp_path: Path) -> Non
     gate["source_denominators"]["plug2"]["uk_documents"] = 2
     body = {key: value for key, value in gate.items() if key != "receipt_sha256"}
     gate["receipt_sha256"] = base.sha256_value(body)
-    output = tmp_path / "full"
+    output = tmp_path / full.OUTPUT_DIRECTORY_NAME
     with pytest.raises(full.HistoricalFullMaterializationError, match="denominator drift"):
         full.materialize_full(
             gate=gate,
@@ -234,7 +239,7 @@ def test_full_run_rejects_denominator_drift_before_output(tmp_path: Path) -> Non
             plug2_archive=archive,
             plug2_metadata=metadata,
             private_output_dir=output,
-            receipt_output=output / "receipt.json",
+            receipt_output=output / full.RECEIPT_FILENAME,
         )
     assert not output.exists()
 
@@ -243,7 +248,7 @@ def test_full_run_rejects_output_inside_git_checkout(tmp_path: Path) -> None:
     ud_dir, archive, metadata = _source_inputs(tmp_path)
     checkout = tmp_path / "checkout"
     (checkout / ".git").mkdir(parents=True)
-    output = checkout / "private"
+    output = checkout / full.OUTPUT_DIRECTORY_NAME
     with pytest.raises(full.HistoricalFullMaterializationError, match="inside a Git checkout"):
         full.materialize_full(
             gate=_fixture_gate(ud_dir, archive, metadata),
@@ -252,8 +257,29 @@ def test_full_run_rejects_output_inside_git_checkout(tmp_path: Path) -> None:
             plug2_archive=archive,
             plug2_metadata=metadata,
             private_output_dir=output,
-            receipt_output=output / "receipt.json",
+            receipt_output=output / full.RECEIPT_FILENAME,
         )
+
+
+def test_full_run_rejects_receipt_collision(tmp_path: Path) -> None:
+    ud_dir, archive, metadata = _source_inputs(tmp_path)
+    output = tmp_path / full.OUTPUT_DIRECTORY_NAME
+    with pytest.raises(full.HistoricalFullMaterializationError, match="receipt filename"):
+        full.materialize_full(
+            gate=_fixture_gate(ud_dir, archive, metadata),
+            gate_file_sha256="e" * 64,
+            ud_dir=ud_dir,
+            plug2_archive=archive,
+            plug2_metadata=metadata,
+            private_output_dir=output,
+            receipt_output=output / "ud-orv-uk-full.jsonl.gz",
+        )
+    assert not output.exists()
+
+
+def test_historical_schema_validator_is_cached() -> None:
+    historical._schema_validator.cache_clear()
+    assert historical._schema_validator() is historical._schema_validator()
 
 
 def test_new_schemas_are_closed_and_text_free() -> None:

@@ -24,7 +24,7 @@
       "const": true
     },
     "status": {
-      "const": "AUTHORIZED_ONCE_FOR_EXACT_FULL_MATERIALIZATION"
+      "const": "AUTHORIZED_FOR_EXACT_FULL_MATERIALIZATION"
     },
     "bindings": {
       "type": "object",
@@ -34,6 +34,9 @@
         "phase3_reboot_prompt_v3_sha256",
         "historical_periodization_freeze_sha256",
         "historical_representation_schema_sha256",
+        "historical_representation_implementation_sha256",
+        "linguistic_representation_implementation_sha256",
+        "linguistic_representation_schema_sha256",
         "historical_materializer_sha256",
         "canary_receipt_file_sha256",
         "canary_ud_output_sha256",
@@ -50,6 +53,15 @@
           "$ref": "#/$defs/sha256"
         },
         "historical_representation_schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "historical_representation_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "linguistic_representation_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "linguistic_representation_schema_sha256": {
           "$ref": "#/$defs/sha256"
         },
         "historical_materializer_sha256": {
@@ -205,10 +217,10 @@
       "additionalProperties": false,
       "required": [
         "full_materialization_authorized",
-        "single_use",
         "selection_algorithm",
         "immutable_output",
         "output_outside_git_required",
+        "canonical_output_directory",
         "output_ceiling_gib",
         "minimum_free_disk_gib",
         "projected_compressed_gib",
@@ -219,9 +231,6 @@
         "full_materialization_authorized": {
           "const": true
         },
-        "single_use": {
-          "const": true
-        },
         "selection_algorithm": {
           "const": "all_eligible_units_sorted_by_immutable_identity"
         },
@@ -230,6 +239,9 @@
         },
         "output_outside_git_required": {
           "const": true
+        },
+        "canonical_output_directory": {
+          "const": "phase3-v3-full-ud-orv-uk-plug2-uk-v1"
         },
         "output_ceiling_gib": {
           "const": 5.0

@@ -5,11 +5,15 @@
     "canary_ud_output_sha256": "5c2ea7d88aa44adb300b7765a6854569afa4651738bd3ec554b1a501931cc710",
     "historical_materializer_sha256": "c513800757bf8c421a1163398932c68e4ad390e0b2774c1d6dd24049692ce829",
     "historical_periodization_freeze_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198",
+    "historical_representation_implementation_sha256": "7783583b7422f77b8ddfb53d984ea748e8a998b2d4a76cef7a8a326416f6d9f4",
     "historical_representation_schema_sha256": "37db223de63aaa3ce05dc154193b86ae4db8022c6f14f49a9035ebb5d37d4441",
+    "linguistic_representation_implementation_sha256": "0609635b31b2af469ff8427751bc3a5161b160d84d1d9e6065d85e0afffc58b5",
+    "linguistic_representation_schema_sha256": "07dffdbc6220adfd088a1e3a19d369093d6331c67fa648880c59ca10d56b2489",
     "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
     "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
   },
   "execution": {
+    "canonical_output_directory": "phase3-v3-full-ud-orv-uk-plug2-uk-v1",
     "full_materialization_authorized": true,
     "immutable_output": true,
     "minimum_free_disk_gib": 8.0,
@@ -18,7 +22,6 @@
     "projected_compressed_gib": 1.8481288392973172,
     "provider_calls_authorized": false,
     "selection_algorithm": "all_eligible_units_sorted_by_immutable_identity",
-    "single_use": true,
     "stop_conditions": [
       "input_hash_drift",
       "denominator_drift",
@@ -35,7 +38,7 @@
     "source_coverage_ready": false,
     "source_freeze_ready": false
   },
-  "receipt_sha256": "fad9a0325a715005c43d2361149074011f9b3b52698b7e9858a0e1bf6e85b35d",
+  "receipt_sha256": "7bc99ba18e795c352d435fbc9341efa0a7b62759258db53fc689aad6a5c34f1b",
   "residuals": {
     "nimchuk_primary_full_text_pending": true,
     "periodization_assignment_pending_qualified_review": true,
@@ -76,6 +79,6 @@
       "token_rows": 35081
     }
   },
-  "status": "AUTHORIZED_ONCE_FOR_EXACT_FULL_MATERIALIZATION",
+  "status": "AUTHORIZED_FOR_EXACT_FULL_MATERIALIZATION",
   "text_free": true
 }
