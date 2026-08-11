@@ -147,6 +147,7 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
     monkeypatch.setattr(scheduled_worktree_cleanup, "find_orphaned_worktree_directories", lambda r: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "_git_maintenance", lambda r, apply: {"ok": True})
     monkeypatch.setattr(scheduled_worktree_cleanup, "sweep_review_temp_orphans", lambda: {"roots_reaped": 0})
+    monkeypatch.setattr(scheduled_worktree_cleanup, "sweep_tmp_leaks", lambda apply=False: {"roots_reaped": 0, "bytes_freed": 0, "errors": 0, "candidates": 0, "skipped_live": 0})
 
     res = scheduled_worktree_cleanup._repo_result_unlocked(repo, apply=False)
     assert any("fetch failed" in err for err in res["errors"])

@@ -209,3 +209,22 @@ worktrees appear as `skipped`, not `removed`.
 ```
 
 Uninstalling preserves receipts and logs for audit and recovery.
+
+## Ad-hoc `/tmp` leak sweep
+
+Agents sometimes leave full clones under `/tmp` outside the formal review isolation
+prefixes (`review-6621`, `pr6591-exact-*`, `lu-*`, local CI fixtures). Those trees do
+not match `sweep_review_temp_orphans` and will refill the disk within hours.
+
+```bash
+# dry-run
+.venv/bin/python -m scripts.orchestration.tmp_leak_sweep
+
+# apply
+.venv/bin/python -m scripts.orchestration.tmp_leak_sweep --apply
+```
+
+The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
+sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
+under 15 GiB. Live process paths are skipped.
+
