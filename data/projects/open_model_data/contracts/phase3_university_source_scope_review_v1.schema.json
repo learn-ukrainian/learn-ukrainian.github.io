@@ -63,14 +63,14 @@
         "quarantines_preserved"
       ],
       "properties": {
-        "total_unique_sources": {"const": 30},
-        "admit_scoped_count": {"const": 11},
-        "contextual_only_count": {"const": 15},
-        "quarantine_count": {"const": 4},
-        "no_extras": {"const": true},
-        "no_omissions": {"const": true},
-        "no_duplicate_credit": {"const": true},
-        "quarantines_preserved": {"const": true}
+        "total_unique_sources": {"type": "integer", "minimum": 0},
+        "admit_scoped_count": {"type": "integer", "minimum": 0},
+        "contextual_only_count": {"type": "integer", "minimum": 0},
+        "quarantine_count": {"type": "integer", "minimum": 0},
+        "no_extras": {"type": "boolean"},
+        "no_omissions": {"type": "boolean"},
+        "no_duplicate_credit": {"type": "boolean"},
+        "quarantines_preserved": {"type": "boolean"}
       }
     },
     "source_disposition_corrections": {

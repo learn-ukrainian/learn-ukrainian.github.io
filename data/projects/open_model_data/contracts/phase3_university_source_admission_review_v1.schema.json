@@ -156,11 +156,15 @@
         },
         "supported_uses": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1}
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/textFreeToken"}
         },
         "prohibited_uses": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1}
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/textFreeToken"}
         },
         "exactness_status": {
           "enum": ["verified_for_scoped_use", "context_only", "failed", "insufficient"]
@@ -173,11 +177,14 @@
         },
         "missing_evidence": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1}
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/textFreeToken"}
         },
         "reason": {"type": "string", "minLength": 1}
       }
     },
+    "textFreeToken": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_]{0,95}$"},
     "finding": {
       "type": "object",
       "additionalProperties": false,

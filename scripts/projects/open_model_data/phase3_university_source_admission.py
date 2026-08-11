@@ -152,6 +152,14 @@ CLAIM_TYPES = frozenset(
         "unresolved",
     }
 )
+POST_2019_AUTHORITY_RESTRICTIONS = frozenset(
+    {
+        "post_2019_orthography_rules",
+        "post_2019_orthography_spelling_rules",
+        "post_2019_orthography_spelling_rules_without_current_corroboration",
+    }
+)
+NONCOMMERCIAL_RESTRICTION = "unrestricted_commercial_training"
 
 
 class SourceAdmissionError(ValueError):
@@ -223,7 +231,6 @@ def read_review_result(path: Path) -> tuple[dict[str, Any], str, str, str]:
     except json.JSONDecodeError:
         start = raw_text.find("{")
         require(start > 0, f"review result has no recoverable JSON object: {path}")
-        require("{" not in raw_text[:start], f"review result prefix contains an ambiguous JSON opener: {path}")
         try:
             value, consumed = json.JSONDecoder().raw_decode(raw_text[start:])
         except json.JSONDecodeError as exc:
@@ -247,11 +254,6 @@ def _validate_schema(value: Mapping[str, Any], schema_path: Path, label: str) ->
         key=lambda error: tuple(str(part) for part in error.absolute_path),
     )
     require(not errors, f"{label} schema violation: {errors[0].message if errors else ''}")
-
-
-def _contains_marker(values: list[str], *markers: str) -> bool:
-    lowered = [value.casefold() for value in values]
-    return any(all(marker in value for marker in markers) for value in lowered)
 
 
 def validate_review(review: Mapping[str, Any]) -> dict[str, Any]:
@@ -307,12 +309,12 @@ def validate_review(review: Mapping[str, Any]) -> dict[str, Any]:
             )
         if decision["orthography_regime"] == "pre_2019" and disposition == "admit_scoped":
             require(
-                _contains_marker(decision["prohibited_uses"], "post_2019"),
+                bool(set(decision["prohibited_uses"]) & POST_2019_AUTHORITY_RESTRICTIONS),
                 f"{source_id}: pre-2019 admission lacks a post-2019 authority restriction",
             )
         if decision["rights_capability"] == "cc_by_nc_4_0_noncommercial_only":
             require(
-                _contains_marker(decision["prohibited_uses"], "commercial"),
+                NONCOMMERCIAL_RESTRICTION in decision["prohibited_uses"],
                 f"{source_id}: non-commercial rights restriction is not preserved",
             )
 
@@ -376,13 +378,65 @@ def validate_dispatch_transport(
     }
 
 
-def validate_scope_review(review: Mapping[str, Any]) -> dict[str, Any]:
+def derive_source_set_check(source_matrix: Mapping[str, Any]) -> dict[str, Any]:
+    """Derive the scope critic's source-set facts from matrix rows."""
+    require(
+        source_matrix.get("schema_version") == "phase3-university-source-matrix-consolidated.v3",
+        "university source matrix schema-version drift",
+    )
+    require(source_matrix.get("text_free") is True, "university source matrix is not text-free")
+    rows = source_matrix.get("source_dispositions")
+    require(isinstance(rows, list), "university source matrix has no source-disposition rows")
+    source_ids: list[str] = []
+    by_disposition: dict[str, set[str]] = {
+        "admit_candidate": set(),
+        "contextual_only": set(),
+        "quarantine": set(),
+    }
+    for row in rows:
+        require(isinstance(row, Mapping), "university source matrix row is not an object")
+        source_id = row.get("source_id")
+        disposition = row.get("disposition")
+        require(isinstance(source_id, str) and source_id, "university source matrix row has no source ID")
+        require(disposition in by_disposition, f"{source_id}: unsupported matrix disposition")
+        source_ids.append(source_id)
+        by_disposition[disposition].add(source_id)
+
+    unique_source_ids = set(source_ids)
+    derived_counts = {
+        "admit_candidate": len(by_disposition["admit_candidate"]),
+        "contextual_only": len(by_disposition["contextual_only"]),
+        "quarantine": len(by_disposition["quarantine"]),
+        "total_unique_sources": len(unique_source_ids),
+    }
+    require(
+        source_matrix.get("source_disposition_counts") == derived_counts,
+        "university source matrix disposition counts do not match its rows",
+    )
+    return {
+        "total_unique_sources": len(unique_source_ids),
+        "admit_scoped_count": len(by_disposition["admit_candidate"]),
+        "contextual_only_count": len(by_disposition["contextual_only"]),
+        "quarantine_count": len(by_disposition["quarantine"]),
+        "no_extras": unique_source_ids <= FULL_SOURCE_IDS,
+        "no_omissions": unique_source_ids >= FULL_SOURCE_IDS,
+        "no_duplicate_credit": len(source_ids) == len(unique_source_ids),
+        "quarantines_preserved": by_disposition["quarantine"] == QUARANTINE_IDS,
+    }
+
+
+def validate_scope_review(review: Mapping[str, Any], source_matrix: Mapping[str, Any]) -> dict[str, Any]:
     """Validate the independent complete-matrix scope review."""
     scope_schema_path = DATA / "contracts/phase3_university_source_scope_review_v1.schema.json"
     _validate_schema(review, scope_schema_path, "source scope review")
     require(
         review["verified_inputs"] == EXPECTED_SCOPE_INPUT_HASHES,
         "scope-review input hashes do not match the frozen audit inputs",
+    )
+    derived_source_set_check = derive_source_set_check(source_matrix)
+    require(
+        review["source_set_check"] == derived_source_set_check,
+        "scope-review source-set facts do not match the matrix rows",
     )
     topic_matrix = review["topic_matrix"]
     require(
@@ -411,6 +465,25 @@ def validate_scope_review(review: Mapping[str, Any]) -> dict[str, Any]:
     approved = review["matrix_disposition"] == "APPROVE_ADMISSION_MATRIX"
     require(review["source_admission_matrix_ready"] is approved, "scope disposition and readiness disagree")
     if approved:
+        require(
+            all(
+                derived_source_set_check[key]
+                for key in ("no_extras", "no_omissions", "no_duplicate_credit", "quarantines_preserved")
+            ),
+            "approved scope review has an incomplete, duplicated, or misclassified source set",
+        )
+        rows_by_disposition = {
+            disposition: {
+                row["source_id"] for row in source_matrix["source_dispositions"] if row["disposition"] == disposition
+            }
+            for disposition in ("admit_candidate", "contextual_only", "quarantine")
+        }
+        require(
+            rows_by_disposition["admit_candidate"] == set(SOURCE_IDS)
+            and rows_by_disposition["contextual_only"] == CONTEXTUAL_ONLY_IDS
+            and rows_by_disposition["quarantine"] == QUARANTINE_IDS,
+            "approved scope review has a source in the wrong disposition group",
+        )
         require(not review["source_disposition_corrections"], "approved matrix still changes source dispositions")
     return dict(review)
 
@@ -418,6 +491,7 @@ def validate_scope_review(review: Mapping[str, Any]) -> dict[str, Any]:
 def build_gate(
     review: Mapping[str, Any],
     scope_review: Mapping[str, Any],
+    source_matrix: Mapping[str, Any],
     *,
     review_sha256: str,
     scope_review_sha256: str,
@@ -430,7 +504,7 @@ def build_gate(
         review_sha256 == EXPECTED_SCOPE_INPUT_HASHES["university_source_admission_review_sha256"],
         "review bytes differ from the review checked by the scope critic",
     )
-    validated_scope = validate_scope_review(scope_review)
+    validated_scope = validate_scope_review(scope_review, source_matrix)
     require(validated_scope["source_admission_matrix_ready"] is True, "scope review does not approve the matrix")
     require(set(transport) == {"ukrainian_review", "scope_review"}, "review transport receipt set is incomplete")
     require(
@@ -550,6 +624,7 @@ def main() -> int:
     gate = build_gate(
         review,
         scope_review,
+        read_json(args.university_source_matrix_v3),
         review_sha256=review_sha256,
         scope_review_sha256=scope_review_sha256,
         transport=transport,

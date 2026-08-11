@@ -158,8 +158,18 @@
             "uniqueItems": true,
             "items": {"type": "string", "minLength": 1}
           },
-          "supported_uses": {"type": "array", "items": {"type": "string", "minLength": 1}},
-          "prohibited_uses": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "supported_uses": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/textFreeToken"}
+          },
+          "prohibited_uses": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/textFreeToken"}
+          },
           "exactness_status": {
             "enum": ["verified_for_scoped_use", "context_only", "failed", "insufficient"]
           },
@@ -169,7 +179,12 @@
             "uniqueItems": true,
             "items": {"$ref": "#/$defs/sha256"}
           },
-          "missing_evidence": {"type": "array", "items": {"type": "string", "minLength": 1}}
+          "missing_evidence": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/textFreeToken"}
+          }
         }
       }
     },
@@ -183,6 +198,7 @@
   },
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "textFreeToken": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_]{0,95}$"},
     "transportReceipt": {
       "type": "object",
       "additionalProperties": false,

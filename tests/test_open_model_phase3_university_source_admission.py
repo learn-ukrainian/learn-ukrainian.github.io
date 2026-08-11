@@ -21,10 +21,10 @@ def _decision(source_id: str) -> dict[str, object]:
         "primary_source_roles": ["explicit_rule"],
         "claim_types": ["unresolved"],
         "supported_uses": [],
-        "prohibited_uses": ["all production use before exact evidence"],
+        "prohibited_uses": ["all_production_use_before_exact_evidence"],
         "exactness_status": "insufficient",
         "evidence_hashes": ["a" * 64],
-        "missing_evidence": ["exact source-level admission evidence"],
+        "missing_evidence": ["exact_source_level_admission_evidence"],
         "reason": "The source remains default-deny until the named evidence exists.",
     }
 
@@ -90,6 +90,28 @@ def _scope_review() -> dict[str, object]:
     }
 
 
+def _source_matrix() -> dict[str, object]:
+    rows = [
+        *({"source_id": source_id, "disposition": "admit_candidate"} for source_id in admission.SOURCE_IDS),
+        *(
+            {"source_id": source_id, "disposition": "contextual_only"}
+            for source_id in sorted(admission.CONTEXTUAL_ONLY_IDS)
+        ),
+        *({"source_id": source_id, "disposition": "quarantine"} for source_id in sorted(admission.QUARANTINE_IDS)),
+    ]
+    return {
+        "schema_version": "phase3-university-source-matrix-consolidated.v3",
+        "text_free": True,
+        "source_disposition_counts": {
+            "admit_candidate": 11,
+            "contextual_only": 15,
+            "quarantine": 4,
+            "total_unique_sources": 30,
+        },
+        "source_dispositions": rows,
+    }
+
+
 def _transport() -> dict[str, object]:
     return {
         "ukrainian_review": {
@@ -121,6 +143,7 @@ def test_valid_exact_denominator_builds_deterministic_text_free_gate() -> None:
     first = admission.build_gate(
         review,
         scope_review,
+        _source_matrix(),
         review_sha256=admission.EXPECTED_SCOPE_INPUT_HASHES["university_source_admission_review_sha256"],
         scope_review_sha256="c" * 64,
         transport=_transport(),
@@ -128,6 +151,7 @@ def test_valid_exact_denominator_builds_deterministic_text_free_gate() -> None:
     second = admission.build_gate(
         copy.deepcopy(review),
         copy.deepcopy(scope_review),
+        copy.deepcopy(_source_matrix()),
         review_sha256=admission.EXPECTED_SCOPE_INPUT_HASHES["university_source_admission_review_sha256"],
         scope_review_sha256="c" * 64,
         transport=copy.deepcopy(_transport()),
@@ -198,7 +222,24 @@ def test_pre_2019_admission_requires_current_orthography_restriction() -> None:
             "orthography_regime": "pre_2019",
             "exactness_status": "verified_for_scoped_use",
             "missing_evidence": [],
-            "prohibited_uses": ["unrelated restriction"],
+            "prohibited_uses": ["unrelated_restriction"],
+        }
+    )
+    with pytest.raises(admission.SourceAdmissionError, match="post-2019 authority restriction"):
+        admission.validate_review(review)
+
+
+def test_pre_2019_restriction_rejects_descriptive_marker_sentence() -> None:
+    review = _review()
+    decision = review["decisions"][2]
+    decision.update(
+        {
+            "final_disposition": "admit_scoped",
+            "allowed_lanes": ["contextual_retrieval", "corpus_ingest", "linguistic_rule_evidence"],
+            "orthography_regime": "pre_2019",
+            "exactness_status": "verified_for_scoped_use",
+            "missing_evidence": [],
+            "prohibited_uses": ["discusses_commercial_trends_after_post_2019"],
         }
     )
     with pytest.raises(admission.SourceAdmissionError, match="post-2019 authority restriction"):
@@ -209,8 +250,24 @@ def test_noncommercial_rights_cannot_lose_commercial_restriction() -> None:
     review = _review()
     decision = review["decisions"][0]
     decision["rights_capability"] = "cc_by_nc_4_0_noncommercial_only"
-    decision["prohibited_uses"] = ["automatic admission"]
+    decision["prohibited_uses"] = ["automatic_admission"]
     with pytest.raises(admission.SourceAdmissionError, match="non-commercial rights restriction"):
+        admission.validate_review(review)
+
+
+def test_noncommercial_restriction_rejects_uncontrolled_commercial_marker() -> None:
+    review = _review()
+    decision = review["decisions"][0]
+    decision["rights_capability"] = "cc_by_nc_4_0_noncommercial_only"
+    decision["prohibited_uses"] = ["commercial_topic_context"]
+    with pytest.raises(admission.SourceAdmissionError, match="non-commercial rights restriction"):
+        admission.validate_review(review)
+
+
+def test_gate_metadata_fields_reject_free_form_source_text() -> None:
+    review = _review()
+    review["decisions"][0]["supported_uses"] = ["verbatim source passage"]
+    with pytest.raises(admission.SourceAdmissionError, match="schema violation"):
         admission.validate_review(review)
 
 
@@ -232,14 +289,41 @@ def test_scope_review_rejects_quarantine_coverage_credit() -> None:
     review = _scope_review()
     review["topic_matrix"][0]["supporting_source_ids"] = [next(iter(admission.QUARANTINE_IDS))]
     with pytest.raises(admission.SourceAdmissionError, match="quarantined source"):
-        admission.validate_scope_review(review)
+        admission.validate_scope_review(review, _source_matrix())
 
 
 def test_scope_review_requires_exact_26_area_order() -> None:
     review = _scope_review()
     review["topic_matrix"][0], review["topic_matrix"][1] = review["topic_matrix"][1], review["topic_matrix"][0]
     with pytest.raises(admission.SourceAdmissionError, match="exact ordered 26-area"):
-        admission.validate_scope_review(review)
+        admission.validate_scope_review(review, _source_matrix())
+
+
+def test_scope_review_source_set_facts_are_derived_from_matrix_rows() -> None:
+    review = _scope_review()
+    review["source_set_check"]["no_extras"] = False
+    with pytest.raises(admission.SourceAdmissionError, match="source-set facts"):
+        admission.validate_scope_review(review, _source_matrix())
+
+
+def test_negative_scope_review_can_encode_a_matrix_extra() -> None:
+    matrix = _source_matrix()
+    matrix["source_dispositions"].append({"source_id": "unexpected-source", "disposition": "contextual_only"})
+    matrix["source_disposition_counts"].update({"contextual_only": 16, "total_unique_sources": 31})
+    review = _scope_review()
+    review["source_set_check"].update({"total_unique_sources": 31, "contextual_only_count": 16, "no_extras": False})
+    review["matrix_disposition"] = "CHANGES_REQUIRED"
+    review["source_admission_matrix_ready"] = False
+    assert admission.validate_scope_review(review, matrix)["source_set_check"]["no_extras"] is False
+
+
+def test_approved_scope_review_rejects_swapped_disposition_groups() -> None:
+    matrix = _source_matrix()
+    candidate = next(row for row in matrix["source_dispositions"] if row["disposition"] == "admit_candidate")
+    contextual = next(row for row in matrix["source_dispositions"] if row["disposition"] == "contextual_only")
+    candidate["disposition"], contextual["disposition"] = contextual["disposition"], candidate["disposition"]
+    with pytest.raises(admission.SourceAdmissionError, match="wrong disposition group"):
+        admission.validate_scope_review(_scope_review(), matrix)
 
 
 def test_approved_scope_review_can_report_findings_applied_to_final_matrix() -> None:
@@ -251,7 +335,7 @@ def test_approved_scope_review_can_report_findings_applied_to_final_matrix() -> 
             "required_action": "Correct the matrix.",
         }
     ]
-    assert admission.validate_scope_review(review)["findings"] == review["findings"]
+    assert admission.validate_scope_review(review, _source_matrix())["findings"] == review["findings"]
 
 
 def test_dispatch_transport_accepts_only_known_ignored_metadata_leak(tmp_path) -> None:
@@ -311,6 +395,13 @@ def test_review_result_rejects_trailing_commentary(tmp_path) -> None:
     result = tmp_path / "review.result"
     result.write_text('{"ok":true}\ntrailing note', encoding="utf-8")
     with pytest.raises(admission.SourceAdmissionError, match="no recoverable JSON"):
+        admission.read_review_result(result)
+
+
+def test_review_result_rejects_prefix_with_earlier_json_opener(tmp_path) -> None:
+    result = tmp_path / "review.result"
+    result.write_text('progress {not json}\n{"ok":true}', encoding="utf-8")
+    with pytest.raises(admission.SourceAdmissionError, match="payload is malformed"):
         admission.read_review_result(result)
 
 
