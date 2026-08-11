@@ -45,7 +45,6 @@ TASK_ID = "phase3-v2-1-heldout-stewardship"
 ACTION_KIND = "freeze_label_blind_all_family_evaluation_partition"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
-PUBLIC_FILE_MODE = 0o640  # group-readable; no world bits (CodeQL #352)
 PARTITION_FILENAME = "partition_manifest_v1.jsonl"
 CLEARANCE_FILENAME = "author_clearance_v1.jsonl"
 QUARANTINE_FILENAME = "quarantine_v1.jsonl"
@@ -535,12 +534,7 @@ def _jsonl(rows: Sequence[Mapping[str, Any]]) -> bytes:
 
 
 def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
-    """Atomically write *payload* with private-by-default permissions.
-
-    Private evaluation artifacts must not be group/world readable. Public
-    receipts use :func:`_atomic_write_public` instead so CodeQL can see the
-    intentional world-read bit only on the non-secret path.
-    """
+    """Atomically write *payload* with owner-only permissions (no group/other bits)."""
     if mode & 0o077:
         raise ValueError(f"private write refuses group/other bits: {mode:04o}")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -554,24 +548,6 @@ def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
             os.fsync(handle.fileno())
         os.replace(temporary, path)
         os.chmod(path, mode)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
-
-
-def _atomic_write_public(path: Path, payload: bytes) -> None:
-    """Write a non-secret public receipt (world-readable by design)."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), PUBLIC_FILE_MODE)
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-        os.chmod(path, PUBLIC_FILE_MODE)
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
@@ -750,7 +726,7 @@ def build(
     _atomic_write(private_dir / PARTITION_FILENAME, partition_payload, PRIVATE_FILE_MODE)
     _atomic_write(private_dir / CLEARANCE_FILENAME, clearance_payload, PRIVATE_FILE_MODE)
     _atomic_write(private_dir / QUARANTINE_FILENAME, quarantine_payload, PRIVATE_FILE_MODE)
-    _atomic_write_public(public_receipt_path, canonical_bytes(receipt))
+    _atomic_write(public_receipt_path, canonical_bytes(receipt), PRIVATE_FILE_MODE)
     return receipt
 
 
@@ -970,7 +946,7 @@ def emit_sealed_interface(
     )
     receipt["action_receipt"]["action_kind"] = SEALED_INTERFACE_ACTION_KIND
     receipt["receipt_sha256"] = sha256_value(receipt)
-    _atomic_write_public(public_receipt_path, canonical_bytes(receipt))
+    _atomic_write(public_receipt_path, canonical_bytes(receipt), PRIVATE_FILE_MODE)
     return {"interface": interface, "evaluation_input": evaluation_input, "receipt": receipt}
 
 
