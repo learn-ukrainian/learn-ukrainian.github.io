@@ -16,6 +16,7 @@ DEFAULT_POLICY_PATH = (
 
 SCHEMA_VERSION = "phase3_university_source_policy_v1"
 V3_SCHEMA_VERSION = "phase3_university_source_policy_v3"
+V4_SCHEMA_VERSION = "phase3_complete_source_policy_v4"
 STATUS = "ACTIVE_DEFAULT_DENY"
 DEFAULT_DISPOSITION = "QUARANTINE_UNTIL_AUDIENCE_PROVEN"
 V3_DEFAULT_DISPOSITION = "QUARANTINE_UNTIL_AUDIENCE_AND_CONTENT_CLASSIFIED"
@@ -147,6 +148,19 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
     except (OSError, json.JSONDecodeError) as exc:
         raise UniversitySourcePolicyError(f"cannot load university source policy: {path}") from exc
     _require(isinstance(document, dict), "university source policy must be an object")
+    schema_version = document.get("schema_version")
+    if schema_version == V4_SCHEMA_VERSION:
+        from scripts.projects.open_model_data.phase3_source_policy_v4 import (
+            CompleteSourcePolicyError,
+        )
+        from scripts.projects.open_model_data.phase3_source_policy_v4 import (
+            load_policy as load_complete_policy,
+        )
+
+        try:
+            return load_complete_policy(path)
+        except CompleteSourcePolicyError as exc:
+            raise UniversitySourcePolicyError(str(exc)) from exc
     _require(set(document) == TOP_LEVEL_KEYS, "university source policy has an open or incomplete shape")
     schema_version = document["schema_version"]
     _require(
@@ -263,6 +277,38 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> tuple[dict[str, Any], str]:
     return document, sha256_file(path)
 
 
+def _entry_source_id(entry: dict[str, Any]) -> str:
+    return str(entry.get("source_file") or entry.get("source_id") or "")
+
+
+def _entry_jsonl_evidence(
+    document: dict[str, Any], entry: dict[str, Any]
+) -> tuple[dict[str, Any], str, str, str]:
+    if document["schema_version"] == V4_SCHEMA_VERSION:
+        _require(
+            entry["source_kind"] == "university_jsonl",
+            f"{entry['source_id']}: external reference has no university JSONL identity",
+        )
+        evidence = entry["jsonl_evidence"]
+        content_disposition = (
+            "admitted"
+            if entry["final_disposition"] == "admit_scoped"
+            else entry["final_disposition"]
+        )
+        return (
+            evidence,
+            evidence["audience_class"],
+            evidence["subject_role"],
+            content_disposition,
+        )
+    return (
+        entry["evidence"],
+        entry["audience_class"],
+        entry["subject_role"],
+        entry.get("content_disposition", "legacy_audience_only"),
+    )
+
+
 def require_source_admission(
     *,
     source_file: str,
@@ -274,7 +320,7 @@ def require_source_admission(
     _require(lane in ALLOWED_LANES, f"unsupported university source lane: {lane}")
     document, policy_sha256 = load_policy(policy_path)
     entry = next(
-        (item for item in document["sources"] if item["source_file"] == source_file),
+        (item for item in document["sources"] if _entry_source_id(item) == source_file),
         None,
     )
     _require(
@@ -285,7 +331,9 @@ def require_source_admission(
         lane in entry["allowed_lanes"],
         f"{source_file}: university source policy denies lane {lane}",
     )
-    evidence = entry["evidence"]
+    evidence, audience_class, subject_role, content_disposition = _entry_jsonl_evidence(
+        document, entry
+    )
     actual_jsonl_sha256 = sha256_file(jsonl_path)
     _require(
         actual_jsonl_sha256 == evidence["jsonl_sha256"],
@@ -302,10 +350,17 @@ def require_source_admission(
         f"{source_file}: front-matter audience evidence changed",
     )
     return {
-        "audience_class": entry["audience_class"],
-        "subject_role": entry["subject_role"],
-        "content_disposition": entry.get("content_disposition", "legacy_audience_only"),
+        "audience_class": audience_class,
+        "subject_role": subject_role,
+        "content_disposition": content_disposition,
+        "final_disposition": entry.get("final_disposition", content_disposition),
         "allowed_lanes": entry["allowed_lanes"],
+        "source_policy_schema_version": document["schema_version"],
+        "live_ingest_authorized": (
+            document["database_ingest"]["live_ingest_authorized"]
+            if document["schema_version"] == V4_SCHEMA_VERSION
+            else True
+        ),
         "policy_sha256": policy_sha256,
         "policy_entry_sha256": sha256_value(entry),
         "evidence_rows_sha256": actual_rows_sha256,
@@ -321,22 +376,25 @@ def require_source_quarantine(
     """Return hash-bound v3 quarantine metadata or refuse source removal."""
     document, policy_sha256 = load_policy(policy_path)
     _require(
-        document["schema_version"] == V3_SCHEMA_VERSION,
-        f"{source_file}: source-level content quarantine requires a v3 policy",
+        document["schema_version"] in {V3_SCHEMA_VERSION, V4_SCHEMA_VERSION},
+        f"{source_file}: source-level content quarantine requires a v3 or v4 policy",
     )
     entry = next(
-        (item for item in document["sources"] if item["source_file"] == source_file),
+        (item for item in document["sources"] if _entry_source_id(item) == source_file),
         None,
     )
     _require(
         entry is not None,
         f"{source_file}: no verified university source policy entry; removal refused",
     )
+    content_disposition = entry.get("content_disposition") or entry.get("final_disposition")
     _require(
-        entry["content_disposition"] == "quarantine" and not entry["allowed_lanes"],
+        content_disposition == "quarantine" and not entry["allowed_lanes"],
         f"{source_file}: university source policy does not authorize quarantine",
     )
-    evidence = entry["evidence"]
+    evidence, audience_class, subject_role, normalized_disposition = _entry_jsonl_evidence(
+        document, entry
+    )
     actual_jsonl_sha256 = sha256_file(jsonl_path)
     _require(
         actual_jsonl_sha256 == evidence["jsonl_sha256"],
@@ -353,10 +411,12 @@ def require_source_quarantine(
         f"{source_file}: front-matter quarantine evidence changed",
     )
     return {
-        "audience_class": entry["audience_class"],
-        "subject_role": entry["subject_role"],
-        "content_disposition": entry["content_disposition"],
+        "audience_class": audience_class,
+        "subject_role": subject_role,
+        "content_disposition": normalized_disposition,
+        "final_disposition": entry.get("final_disposition", normalized_disposition),
         "allowed_lanes": entry["allowed_lanes"],
+        "source_policy_schema_version": document["schema_version"],
         "policy_sha256": policy_sha256,
         "policy_entry_sha256": sha256_value(entry),
         "evidence_rows_sha256": actual_rows_sha256,

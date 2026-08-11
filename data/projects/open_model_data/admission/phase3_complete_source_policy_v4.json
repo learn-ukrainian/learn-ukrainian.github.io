@@ -1,0 +1,1263 @@
+{
+  "bindings": {
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+    "pr6630_drive_backup_receipt_sha256": "f577ab1cec2b2dee99e033284f1801f723a3d741e9e7c050d32cec0494b52d81",
+    "pr6630_merge_commit": "d117a9c5bab7f309e78607b540ac8931a6bc3b4c",
+    "university_corpus_reconciliation_v3_sha256": "3a4abb3883ad06db3fea1f994a5b51bc22cbdd6ab3e8d3adaf72c180bc42dd65",
+    "university_source_admission_gate_v1_sha256": "423275e09192e593cdcc3b31b5074c860ada9e735d94a0857fc802d5dc9ef755",
+    "university_source_matrix_v3_sha256": "e2e82934ec26b7d98002cdf87f5326b84fb2d3d7900fe675920ba99e84d190de",
+    "university_source_policy_v3_sha256": "2cb3643cec48acc52e9163e8ad1a21360de3380584a62a1a08ad07800b1c731d"
+  },
+  "database_ingest": {
+    "copied_database_rehearsal_required": true,
+    "eligible_source_ids": [
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-lexicology-filon-khomik-2010",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-orthography-strokal-2021",
+      "uni-ukrmova-phonetics-komarova-2015",
+      "uni-ukrmova-prof-haluzynska-2006",
+      "uni-ukrmova-punctuation-marynenko-2021",
+      "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "uni-ukrmova-syntax-herman-2021",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+    ],
+    "live_ingest_authorized": false,
+    "staged_expected_row_count": 585,
+    "staged_expected_rows": {
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1": 47,
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2": 51,
+      "uni-ukrmova-morphology-volkova-maslo-2012": 205,
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024": 282
+    },
+    "staged_not_ingested_source_ids": [
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "uni-ukrmova-morphology-volkova-maslo-2012",
+      "uni-ukrmova-text-linguistics-shevel-bilyk-2024"
+    ]
+  },
+  "default_disposition": "QUARANTINE_UNTIL_REVIEWED",
+  "disposition_counts": {
+    "admit_scoped": 11,
+    "contextual_only": 15,
+    "quarantine": 4,
+    "total": 30
+  },
+  "phase3_complete": false,
+  "phase4_blocked": true,
+  "receipt_sha256": "20429ad1ac695f3c7ab661d14206a91eab4954c5fb58a54cb9ef3911394c073d",
+  "schema_version": "phase3_complete_source_policy_v4",
+  "source_count": 30,
+  "source_freeze_ready": false,
+  "sources": [
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "reference_drive_backed",
+      "evidence_hashes": [
+        "43c2c4975b29bc131c7f73499e6bbf443778f36647bf4cc085fe76dbc1c51fc5"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "unrestricted_commercial_training",
+        "automatic_admission",
+        "correction_gold"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "khpi-ukrainian-morphological-tagging-petrasova-et-al-2017",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "ukrainian_morphological_tagging",
+        "tagset_and_analyzer_context"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "reference_drive_backed",
+      "evidence_hashes": [
+        "43c2c4975b29bc131c7f73499e6bbf443778f36647bf4cc085fe76dbc1c51fc5"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "current_implementation",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "adjudication_gold",
+        "correction_gold",
+        "model_subword_authority"
+      ],
+      "rights_capability": "mit",
+      "source_id": "lang-uk-tokenize-uk",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "ukrainian_word_and_sentence_tokenization_corroboration",
+        "unicode_apostrophe_stress_and_offset_diagnostics"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "reference_drive_backed",
+      "evidence_hashes": [
+        "43c2c4975b29bc131c7f73499e6bbf443778f36647bf4cc085fe76dbc1c51fc5"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "retained_extracted_text",
+        "training_or_publication",
+        "automatic_admission",
+        "correction_gold"
+      ],
+      "rights_capability": "private_inspection_and_locator_evidence_only",
+      "source_id": "naukma-ukrainian-tokenization-stemming-hlybovets-tochytskyi-2017",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "ukrainian_specific_tokenization_and_stemming_locator"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "dd3e7b45abdde9acebea684b323582f73f2b2189401a193ac9bc88a3e6845d10"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "9aefd42ef5e6a9691314df7a8870902775a4d44823f36706cd23e80524157694",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "6de0b6f8ae2a9ed1a29161dad76ed003098b315698630b61effdf23bb053df4c",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-istoriya-kalynichenko-olianych-2025.jsonl",
+        "subject_role": "history"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_linguistic_rules",
+        "grammatical_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-istoriya-kalynichenko-olianych-2025",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "contemporary_history_prose",
+        "decolonial_historical_framing"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "afc4685f627f1b555f88e94c20f8c7280c7d695f382b3cf0d8ea36424f02188a"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "f111c27c136d8099359487fe1ae707b66431bf8420f156b0b1e7321660260710",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "6233f862eee3afe045b706f84fb7df9e6a07c898d1a938a3b47f29adb0f51ee1",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-istoriya-levytska-2015.jsonl",
+        "subject_role": "history"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_language_rules",
+        "grammar_paradigm_extraction"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-istoriya-levytska-2015",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "historical_prose_retrieval",
+        "historical_context_embedding"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "564fa01a1fb4474f523aff19a5f0eb727ef0f17ff68f617c84dc488bc2ba7896"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "9020a9fa155a2cda8e5ed6bf48f612c7264342c6cd29ec7a9791a3b3c746ba75",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "3a9252d79ed1684e9b9bb567a1e0e0fc8b0cf3d908d15ab5a258a30122f10e4e",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-mystetstvo-levytska-2015.jsonl",
+        "subject_role": "arts_and_culture"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_grammar_rules",
+        "public_dataset_distribution_without_publisher_confirmation"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-mystetstvo-levytska-2015",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "arts_prose_retrieval",
+        "cultural_context"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "8093c3694d53a67f05a4f7b9dbec373ee7a53d03da91956adb7be846a3744a3d"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "2e784c89b65d7fee9ea3a4e46845f1cecb7bc6eee194b9deceead62f775f98bc",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "d87e9f7c62bb9a2ef1bc6efd983d7fe56ef3097c977799a8c1dc592b564cca4c",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-mystetstvo-petutina-2012.jsonl",
+        "subject_role": "arts_and_culture"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_grammar_rules",
+        "linguistic_rule_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-mystetstvo-petutina-2012",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "arts_and_culture_prose_retrieval",
+        "cultural_history_context"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "88801aa8d9b92fe38e99bcc8b0c7e8a4a33f0d1ce73a09f61ea83f0a164111a9"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "aa30b5deb9287fddba6b8dc3775ca0f353758b91c285e8516b07b7e75048d1f2",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "85ba06bcb90ce6988100647faf953fc1a171b7da1718d55a541677f58d72cda9",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrlit-dvulychanska-2017.jsonl",
+        "subject_role": "ukrainian_literature"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_grammar_rules",
+        "public_dataset_release_without_license_clearance"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrlit-dvulychanska-2017",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "historical_literary_context",
+        "literary_history_retrieval"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "7c1141d4e2fc2e71dac2ef641a19d87ef9f91db11463d61ea379c59aad79b6aa"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "f8355bff61c181c4e8e9551886cc286e041a4b87aa8b1ae9ed2548ea6f4c7c2d",
+        "page_end": 2,
+        "page_start": 1,
+        "rows_sha256": "4e974624dc7a8a73a8c763322ff5be177ec85ffd31169d2aee0f7697944c05af",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrlit-kalinichenko-2024.jsonl",
+        "subject_role": "ukrainian_literature"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "normative_grammar_rule_generation",
+        "orthography_rule_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrlit-kalinichenko-2024",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "advanced_literary_prose_retrieval",
+        "literary_criticism_context",
+        "modern_poetics_analysis"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "reference_drive_backed",
+      "evidence_hashes": [
+        "da3753c6223f08059fc6e03492f4919ec283060c0fb73aecc7307425ce339ad1"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "retained_extracted_text",
+        "training_or_publication",
+        "ukrainian_specific_tokenization_authority"
+      ],
+      "rights_capability": "private_inspection_and_locator_evidence_only",
+      "source_id": "uni-ukrmova-computational-linguistics-vakhovska-2023",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "content_gap_assessment",
+        "qualified_locator_evidence"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "attestation_only"
+      ],
+      "custody_state": "staged_drive_backed",
+      "evidence_hashes": [
+        "2647aff01ecc20eebeb1ce196767a7ba4bffac36fd231a4ecee5af7678c0e99b",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a",
+        "2cb3643cec48acc52e9163e8ad1a21360de3380584a62a1a08ad07800b1c731d"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "00cfd4f8d6185b9116992311891a883753218e6a27b52f6e9f291f37e66366af",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "e46aee2f63238a73a050374a02aeea9a673b10e7e3fbec9678a9e0e55f9e22f9",
+        "source_locator": "university_corpus/staging/phase3-6375-waves-b-e/wave-b/uni-ukrmova-corpus-linguistics-khpi-2021-part-1.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "unrestricted_commercial_training",
+        "ukrainian_specific_tokenization_authority",
+        "pre_2019_spelling_enforcement"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-corpus-linguistics-khpi-2021-part-1",
+      "source_kind": "university_jsonl",
+      "source_state": "staged_not_ingested",
+      "supported_uses": [
+        "corpus_creation",
+        "corpus_annotation",
+        "corpus_query_systems_and_software_tutorials",
+        "applied_linguistics_theory"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "attestation_only"
+      ],
+      "custody_state": "staged_drive_backed",
+      "evidence_hashes": [
+        "2647aff01ecc20eebeb1ce196767a7ba4bffac36fd231a4ecee5af7678c0e99b",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a",
+        "2cb3643cec48acc52e9163e8ad1a21360de3380584a62a1a08ad07800b1c731d"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "5ac5d5495aee21ff756156fda362f4e2340de9021380917c0bf9c74b9440e84b",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "c50d686392788437858fd699b0c75e1e50384e447b92a30cdeeaf68623e9013a",
+        "source_locator": "university_corpus/staging/phase3-6375-waves-b-e/wave-b/uni-ukrmova-corpus-linguistics-khpi-2021-part-2.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "unrestricted_commercial_training",
+        "ukrainian_specific_tokenization_authority",
+        "pre_2019_spelling_enforcement"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-corpus-linguistics-khpi-2021-part-2",
+      "source_kind": "university_jsonl",
+      "source_state": "staged_not_ingested",
+      "supported_uses": [
+        "semantic_annotation",
+        "corpus_clusters_and_collocation_analysis",
+        "applied_linguistics_theory"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "01f8f7598cb729d1174d4bef7b0ed1fb9575bf9166c0665a4d44323fe78dda73"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "b8d349c725f0964817111c05bdb6c8dcdba6ac35139b91ea65ccdafe042fc89c",
+        "page_end": 6,
+        "page_start": 2,
+        "rows_sha256": "2f24ce001b5ecb222bfa84e5065607403de26edcc3c9b5ec87b4a368329ed7fa",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-dialectology-torchynska-2017.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "modern_standard_normative_grammar_authority",
+        "normative_orthography_or_spellcheck_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-dialectology-torchynska-2017",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "regional_dialect_variation_context",
+        "comparative_dialect_phonetics_and_vocabulary",
+        "sociolinguistic_geography_reference"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "reference_drive_backed",
+      "evidence_hashes": [
+        "da3753c6223f08059fc6e03492f4919ec283060c0fb73aecc7307425ce339ad1"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "retained_extracted_text",
+        "training_or_publication",
+        "automatic_correction_gold"
+      ],
+      "rights_capability": "private_inspection_and_locator_evidence_only",
+      "source_id": "uni-ukrmova-error-typology-minchak-2023",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "content_gap_assessment",
+        "qualified_locator_evidence"
+      ]
+    },
+    {
+      "allowed_lanes": [],
+      "claim_types": [],
+      "custody_state": "quarantined_not_database_resident",
+      "evidence_hashes": [
+        "35f65ac91c72e58d7cc7b54fa5765d29e92d2a525f2bfb982ff17c8abc03e2d4"
+      ],
+      "exactness_status": "failed",
+      "final_disposition": "quarantine",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "8c4b7a81dc668f734a69c2608fea42c6cc8767cd8672bbee3e6b1ebdb0145cd4",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "0790c0f078045fd0934d354b704f43c8a5b0902fc6c5e2a8fe51ad45e47f4540",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-glukhovtseva-2021.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "admit_candidate",
+        "contextual_only",
+        "direct_curriculum_ingestion",
+        "core_grammar_rule_extraction",
+        "synthetic_training_data_generation"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-glukhovtseva-2021",
+      "source_kind": "university_jsonl",
+      "source_state": "quarantined",
+      "supported_uses": []
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "d9ca7b23bc77d196f837678e4b3187ab92d2a36adfeb8b0766a79d74fc35506c"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "77713275fe6d1b903fef8ddfc5a171595798d547f87c898b6b0f0d696b6f5a37",
+        "page_end": 3,
+        "page_start": 1,
+        "rows_sha256": "e9b7d4bd56c4f0733c118e244e463184cb9d6385ec42df579acd59952b3fa7d0",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "modern_normative_grammar_authority",
+        "modern_orthography_enforcement"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-historical-grammar-kupchynska-piletskyi-2024",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "historical_diachronic_grammar_context",
+        "diachronic_sound_change_and_morphological_evolution"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant",
+        "attestation_only"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "47d0448e69994e9ed6a0bff7928d58cea147b7a01e778d43f80bbd7c50b6beee",
+        "d9a04be0225bdbc911d0fc906f4f8283331cf7400ceb3165e77aa54da3576a8f",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "e250f16c5fc1cb0cc3f38f184f03d4b18d98894de050c65510847565f7766666",
+        "page_end": 2,
+        "page_start": 1,
+        "rows_sha256": "d776afe1cbd58fe220129017a8ee38ed3fdeecc8095246f919e9c837e245fbdb",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-lexicology-filon-khomik-2010.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "post_2019_orthography_spelling_rules",
+        "L2_elementary_drills",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-lexicology-filon-khomik-2010",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "lexicology_theory",
+        "semantics_classification",
+        "phraseology_examples",
+        "morphemics_theory",
+        "word_formation_theory"
+      ]
+    },
+    {
+      "allowed_lanes": [],
+      "claim_types": [],
+      "custody_state": "quarantined_not_database_resident",
+      "evidence_hashes": [
+        "b938efbbc26758e41a96400a4f1d294e33886cbcd1b6d20f3a1d899f47a99c15"
+      ],
+      "exactness_status": "failed",
+      "final_disposition": "quarantine",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter_and_official_course",
+        "jsonl_sha256": "55f727f53a2c188fce3638609d2210c84069c7afa443ef07ece1be44d5995cb0",
+        "page_end": 6,
+        "page_start": 1,
+        "rows_sha256": "866ff30853865ba708d5fcdd7c483573e38a0c9460a8c256677be539312fcfa7",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-morphology-aleksiienko-2014.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "admit_candidate",
+        "contextual_only",
+        "direct_curriculum_ingestion",
+        "core_grammar_rule_extraction",
+        "synthetic_training_data_generation"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-morphology-aleksiienko-2014",
+      "source_kind": "university_jsonl",
+      "source_state": "quarantined",
+      "supported_uses": []
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval"
+      ],
+      "claim_types": [],
+      "custody_state": "locator_only",
+      "evidence_hashes": [
+        "1184b165eb3a8c1abf5ffa0cb3ddcae0613a0f15b2fe2575483ed90725447a73"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "rule_or_correction_authority",
+        "training",
+        "publication"
+      ],
+      "rights_capability": "metadata_locator_only_no_reuse_license",
+      "source_id": "uni-ukrmova-morphology-kobchenko-2025",
+      "source_kind": "external_reference",
+      "source_state": "reference_only",
+      "supported_uses": [
+        "current_curriculum_scope_corroboration"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant",
+        "attestation_only"
+      ],
+      "custody_state": "staged_drive_backed",
+      "evidence_hashes": [
+        "662547c533758a634eafc4edf79cf153549d291cc19d28e875959a95606badda",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a",
+        "2cb3643cec48acc52e9163e8ad1a21360de3380584a62a1a08ad07800b1c731d"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "0229ba6526f863b1500533693032d31e29b9e3f9456dd15aa7a1704f14dec54e",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "96fe0d5f52828c9529f7e2b05f5f2050f63667ad087a70117a015c6244608db9",
+        "source_locator": "university_corpus/staging/phase3-6375-waves-b-e/wave-d/uni-ukrmova-morphology-volkova-maslo-2012.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "post_2019_orthography_spelling_rules_without_current_corroboration",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-morphology-volkova-maslo-2012",
+      "source_kind": "university_jsonl",
+      "source_state": "staged_not_ingested",
+      "supported_uses": [
+        "morphology_theory",
+        "parts_of_speech_classification",
+        "inflectional_paradigms",
+        "morphological_analysis_exercises"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "human_correction_pair",
+        "style_preference",
+        "acceptable_variant"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "a53ffc44a9db4c36fc7435df31ede4685ad972933f273eb0ae687f02379ed76f",
+        "d9a04be0225bdbc911d0fc906f4f8283331cf7400ceb3165e77aa54da3576a8f",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "076735b3a80f7417158701ca219a56d36d212f1f9d8f2a9d694eed5cbdb5a5c9",
+        "page_end": 5,
+        "page_start": 2,
+        "rows_sha256": "cf17e55e314dc5535c81b39bb0dcb7fb10c920fd41d3b5a7820552cac603be58",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-orthography-strokal-2021.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "incorrect_example",
+        "corrected_example",
+        "editing_exercise",
+        "answer_key"
+      ],
+      "prohibited_uses": [
+        "pre_2019_spelling_enforcement",
+        "dialectal_norm_generation"
+      ],
+      "rights_capability": "cc_by_4_0",
+      "source_id": "uni-ukrmova-orthography-strokal-2021",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "orthography_rules",
+        "graphics_rules",
+        "phonetics_theory",
+        "accentology_examples",
+        "punctuation_examples",
+        "normative_spelling_exercise_generation"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant",
+        "attestation_only"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "ce07172263def57c1563ea515e797614f5bcff67053ac572b4d7b0ae6fbf96e7",
+        "0dbdf3dc7b0d1c402298248ac6921865baa36444ca479926b142364dfb5c8ff6",
+        "d9dda3526d929c7fe154530ad4e5af37fd0ad278feccd88ea18c112835a314ee"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "4a14321ebb452dd2cf2d1b78aafd4395fdd8e0af394a31cea9bfee7b883b5757",
+        "page_end": 2,
+        "page_start": 1,
+        "rows_sha256": "73c1ac4d2df3a6f043b3a3a88e23dddaed4b92b1eb2e14b08c5ef3237a815dc8",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-phonetics-komarova-2015.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "post_2019_orthography_spelling_rules_without_current_corroboration",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-phonetics-komarova-2015",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "phonetics_theory",
+        "phonology_theory",
+        "orthoepy_theory",
+        "graphics_theory",
+        "alternation_rules"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant",
+        "human_correction_pair"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "c3106974b919e74b27c681dac6514b63d3364845c41761705dd2f7b1dafb7c2b",
+        "d9a04be0225bdbc911d0fc906f4f8283331cf7400ceb3165e77aa54da3576a8f",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "aa84f98a8779c9d4323b52dddad095f0c0a218d1d56619992946dde1fdd04424",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "e0ed8c525c872d91cc8016581e73393da7603cfa824fa9b7cb551ed8b0c874d3",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-prof-haluzynska-2006.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "incorrect_example",
+        "corrected_example",
+        "editing_exercise"
+      ],
+      "prohibited_uses": [
+        "post_2019_orthography_rules",
+        "deep_historical_linguistics",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-prof-haluzynska-2006",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "professional_language_culture",
+        "stylistics_editing",
+        "document_style",
+        "business_communication_norms"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "a799f492c62558bf0ad100ddd8205a96f3b9ca2bcda49d10b631053a926028b3",
+        "d9a04be0225bdbc911d0fc906f4f8283331cf7400ceb3165e77aa54da3576a8f",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "49271a38d4156e3c76373bf0e4b7b97bc5125c9afd70b279a0f49c2101193973",
+        "page_end": 2,
+        "page_start": 2,
+        "rows_sha256": "5dcb417a72870d14d3c705c065c8dd85b6b803b74c7ece782b147b4374e8d125",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-punctuation-marynenko-2021.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "morphological_paradigm_authority",
+        "pre_2019_orthography_rules",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-punctuation-marynenko-2021",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "syntax_rules",
+        "punctuation_rules",
+        "clause_boundary_analysis",
+        "direct_speech_formatting",
+        "normative_sentence_structure"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "claim_types": [],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "a7be6c39c55eaec041c3048d2f8ed62759520979b0bdcdcadba4592559a8acf2"
+      ],
+      "exactness_status": "context_only",
+      "final_disposition": "contextual_only",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter_and_official_course",
+        "jsonl_sha256": "a8f0ff3d73a2e5726f660cba56bf629b303ae80634cd9fc94567d1080de18d3b",
+        "page_end": 6,
+        "page_start": 1,
+        "rows_sha256": "69ef6b61c9cd0eb59feda0070702b4e1e6c278e8f45a3d1d996f933c7bc3e8b4",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-sociolinguistics-masenko-2010.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "pre_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "modern_standard_normative_grammar_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-sociolinguistics-masenko-2010",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident_contextual",
+      "supported_uses": [
+        "sociolinguistic_and_language_policy_context",
+        "surzhyk_and_language_contact_analysis"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "human_correction_pair",
+        "acceptable_variant"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "9da01b7fb6e5afc8b8d7439c9618626d5da176309ffb59ae8668c0d656c6c7e1",
+        "ead17b29f762f77900ad46e5fb5160dd1a1adaf27d3ab837fb5f6e5d458e0ec1",
+        "d9dda3526d929c7fe154530ad4e5af37fd0ad278feccd88ea18c112835a314ee"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "0ecaf0dcc1f4f8d32dc3efec22993ee9826d52c69ac9d707b36d2149827dcddd",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "5d5a2d36e70f62ad4729e7c849de0493031434feb324013e419d536ca498c4a3",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-stylistics-sharapa-tytarenko-2025.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "incorrect_example",
+        "corrected_example",
+        "editing_exercise"
+      ],
+      "prohibited_uses": [
+        "pre_2019_spelling_rules",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-stylistics-sharapa-tytarenko-2025",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "stylistics_rules",
+        "culture_of_language_rules",
+        "functional_style_analysis",
+        "modern_normative_usage"
+      ]
+    },
+    {
+      "allowed_lanes": [],
+      "claim_types": [],
+      "custody_state": "quarantined_not_database_resident",
+      "evidence_hashes": [
+        "d08bd6e99f8456ab8f937af76767c515c7bd1ea2cd33b292dbc8a7909a6d2e45"
+      ],
+      "exactness_status": "failed",
+      "final_disposition": "quarantine",
+      "jsonl_evidence": {
+        "audience_class": "B_foreign_or_second_language",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "3456eb48a47a0c48769c6b3c05c103558bed7e706662621c462513a167aa2e44",
+        "page_end": 5,
+        "page_start": 1,
+        "rows_sha256": "ece7d3061fa4301fc129849dabc79bd28a366d91b250d3dfd194458293811b2c",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-syntax-didkivska-shvets-2020.jsonl",
+        "subject_role": "ukrainian_L2_pedagogy"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "native_fluency_data",
+        "normative_syntax_authority"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-syntax-didkivska-shvets-2020",
+      "source_kind": "university_jsonl",
+      "source_state": "quarantined",
+      "supported_uses": []
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant"
+      ],
+      "custody_state": "database_resident_and_drive_backed",
+      "evidence_hashes": [
+        "2504eaa3ba5532fdffb085ce49d1f299a3c5f5d3dba77723714078c5060acd73",
+        "db8d14635ba786ed333d68f21d1625f3de065b588ac5efe97a8bcd2c32bd33a1",
+        "d9dda3526d929c7fe154530ad4e5af37fd0ad278feccd88ea18c112835a314ee"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "190b142ad0ba501791a58f4694b5839fb02bfeba0a12bf6a8c4c877f9a803c90",
+        "page_end": 3,
+        "page_start": 1,
+        "rows_sha256": "92f4e5781c684b6501327f04b2dfc67a452926044e1460faecc704c504afec9f",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-syntax-herman-2021.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "morphological_paradigm_authority",
+        "unrestricted_commercial_training"
+      ],
+      "rights_capability": "cc_by_nc_4_0_noncommercial_only",
+      "source_id": "uni-ukrmova-syntax-herman-2021",
+      "source_kind": "university_jsonl",
+      "source_state": "db_resident",
+      "supported_uses": [
+        "complex_sentence_syntax_rules",
+        "composite_clause_analysis",
+        "syntactic_coordination_subordination_theory"
+      ]
+    },
+    {
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence"
+      ],
+      "claim_types": [
+        "prescriptive_rule",
+        "style_preference",
+        "acceptable_variant",
+        "attestation_only"
+      ],
+      "custody_state": "staged_drive_backed",
+      "evidence_hashes": [
+        "b5ec25e29d8524a90506effea1e18a4c170d698937b3fc4206a516b09bd5a0f9",
+        "0ecc5553395cdf32788f8bce1d5b071c0a90bd409f371eb44e6fded534d86a7a",
+        "2cb3643cec48acc52e9163e8ad1a21360de3380584a62a1a08ad07800b1c731d"
+      ],
+      "exactness_status": "verified_for_scoped_use",
+      "final_disposition": "admit_scoped",
+      "jsonl_evidence": {
+        "audience_class": "A_ukrainian_university_audience",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "26848855c02a8ac6c02b7320d2b4a1986397a897c0a6d9df9ade720c20339920",
+        "page_end": 4,
+        "page_start": 1,
+        "rows_sha256": "10b5f59f1852b7a7f7337b52ccb855ce7d04345466f670c5161106c928646273",
+        "source_locator": "university_corpus/staging/phase3-6375-wave-a/grade-00/uni-ukrmova-text-linguistics-shevel-bilyk-2024.jsonl",
+        "subject_role": "ukrainian_linguistics"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [
+        "explicit_rule",
+        "correct_example",
+        "editing_exercise",
+        "ordinary_narration"
+      ],
+      "prohibited_uses": [
+        "unrestricted_commercial_training",
+        "pre_2019_spelling_enforcement"
+      ],
+      "rights_capability": "cc_by_4_0",
+      "source_id": "uni-ukrmova-text-linguistics-shevel-bilyk-2024",
+      "source_kind": "university_jsonl",
+      "source_state": "staged_not_ingested",
+      "supported_uses": [
+        "text_linguistics_theory",
+        "text_cohesion_and_coherence",
+        "text_category_and_structure_analysis",
+        "discourse_and_pragmatics_context"
+      ]
+    },
+    {
+      "allowed_lanes": [],
+      "claim_types": [],
+      "custody_state": "quarantined_not_database_resident",
+      "evidence_hashes": [
+        "41e01c69a6a6cb7b4ef316c5b349f6747b8bc969da2865b8bb63888b1806542f"
+      ],
+      "exactness_status": "failed",
+      "final_disposition": "quarantine",
+      "jsonl_evidence": {
+        "audience_class": "B_foreign_or_second_language",
+        "evidence_kind": "jsonl_front_matter",
+        "jsonl_sha256": "fded6a45bf8914585d0178129b926a986722fd023b6ef6f7da529ea32ea60725",
+        "page_end": 3,
+        "page_start": 2,
+        "rows_sha256": "a9e3e55a14d84886d8f87fc09d1a0e33494a81542a87a12a2dd4ad370d7016d0",
+        "source_locator": "university_corpus/jsonl/grade-00/uni-ukrmova-vlasova-2023.jsonl",
+        "subject_role": "ukrainian_L2_pedagogy"
+      },
+      "orthography_regime": "post_2019",
+      "primary_source_roles": [],
+      "prohibited_uses": [
+        "native_fluency_data",
+        "normative_rule_authority",
+        "grammatical_paradigm_extraction"
+      ],
+      "rights_capability": "rights_bound_by_v3_policy",
+      "source_id": "uni-ukrmova-vlasova-2023",
+      "source_kind": "university_jsonl",
+      "source_state": "quarantined",
+      "supported_uses": []
+    }
+  ],
+  "status": "ACTIVE_DEFAULT_DENY",
+  "text_free": true
+}

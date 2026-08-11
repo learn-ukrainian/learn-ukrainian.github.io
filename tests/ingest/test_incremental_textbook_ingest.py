@@ -524,6 +524,15 @@ def test_university_source_uses_grade_zero_storage_and_university_db_label(tmp_p
     assert grouping_row.grade == "grade-00"
 
 
+def test_title_verified_bilyk_author_mapping_enriches_staged_source() -> None:
+    entry = iti.enrich_author_uk(
+        {"author": "bilyk", "author_uk": None},
+        slug="uni-ukrmova-text-linguistics-shevel-bilyk-2024",
+    )
+
+    assert entry["author_uk"] == "Катерина Білик"
+
+
 def test_university_source_without_audience_policy_is_quarantined(tmp_path):
     root = tmp_path / "university_corpus" / "jsonl"
     slug = "uni-ukrmova-unknown-2026"
