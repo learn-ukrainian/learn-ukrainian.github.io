@@ -13,6 +13,7 @@ processes.  It is not a blanket ``rm -rf /tmp/*``.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 import stat
@@ -31,7 +32,7 @@ DEFAULT_MIN_FREE_GB = 15.0
 # Basename-only patterns for LU-owned ad-hoc temp residue.
 _LEAK_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^review-\d+"),
-    re.compile(r"^pr\d+"),
+    re.compile(r"^pr\d+"),  # pr + digits only (not pr* / process_ / protocol_)
     re.compile(r"^lu-"),
     re.compile(r"^atlas6507-"),
     re.compile(r"^data_test_"),
@@ -95,6 +96,15 @@ def free_space_gb(path: Path) -> float | None:
     except OSError:
         return None
     return usage.free / (1024**3)
+
+
+
+def path_owned_by_self(path: Path) -> bool:
+    """Return True when the entry is owned by the current effective UID."""
+    try:
+        return path.lstat().st_uid == os.geteuid()
+    except OSError:
+        return False
 
 
 def path_has_live_process(path: Path) -> bool:
@@ -170,6 +180,8 @@ def discover_candidates(
                 continue
             age = _entry_age_s(child, now=current)
             if age is None or age < min_age_s:
+                continue
+            if not path_owned_by_self(child):
                 continue
             found.append(
                 LeakCandidate(
