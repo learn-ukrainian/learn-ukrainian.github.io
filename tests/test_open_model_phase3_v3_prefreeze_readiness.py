@@ -157,6 +157,154 @@ def test_validator_preserves_historical_v1_receipts_without_adapter_binding(
     assert readiness.validate_readiness(receipt) == receipt
 
 
+def test_optional_saint_sophia_receipt_binds_without_opening_other_gates(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_external_receipts(monkeypatch)
+    saint_receipt = {"receipt_sha256": SHA_A}
+    captured: dict[str, str] = {}
+
+    def validate_saint(path: Path, *, university_database_sha256: str, current_database_sha256: str) -> tuple[dict, str]:
+        captured.update({"path": str(path), "pre": university_database_sha256, "post": current_database_sha256})
+        return saint_receipt, SHA_B
+
+    monkeypatch.setattr(readiness, "_validate_saint_sophia_reconciliation_receipt", validate_saint)
+    receipt = readiness.build_readiness(
+        phase3_reboot_prompt_path=Path("unused"), sources_database_path=Path("unused"),
+        ua_gec_root=Path("unused"), ua_gec_context_receipt_path=Path("unused"),
+        historical_full_receipt_path=Path("unused"),
+        saint_sophia_reconciliation_receipt_path=Path("saint-sophia.json"),
+    )
+    assert captured == {
+        "path": "saint-sophia.json", "pre": readiness.university.EXPECTED_DATABASE["sha256"],
+        "post": readiness.university.EXPECTED_DATABASE["sha256"],
+    }
+    assert receipt["readiness"]["saint_sophia_db_reconciliation_ready"] is True
+    assert receipt["gates"]["phase4_blocked"] is True
+    assert receipt["gates"]["source_authoring_authorized"] is False
+    assert receipt["bindings"]["saint_sophia_reconciliation_receipt_sha256"] == SHA_A
+
+
+def test_optional_saint_sophia_receipt_allows_distinct_pre_and_post_database_hashes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_external_receipts(monkeypatch)
+    pre_sha, post_sha = "c" * 64, "d" * 64
+    monkeypatch.setattr(readiness, "_validate_sources_database", lambda _path: post_sha)
+    university_freeze, university_file_sha256 = readiness._validate_university_freeze()
+    university_freeze = copy.deepcopy(university_freeze)
+    university_freeze["database"]["sha256"] = pre_sha
+    monkeypatch.setattr(readiness, "_validate_university_freeze", lambda: (university_freeze, university_file_sha256))
+    captured: dict[str, str] = {}
+
+    def validate_saint(_path: Path, *, university_database_sha256: str, current_database_sha256: str) -> tuple[dict, str]:
+        captured.update({"pre": university_database_sha256, "post": current_database_sha256})
+        return {"receipt_sha256": SHA_A}, SHA_B
+
+    monkeypatch.setattr(readiness, "_validate_saint_sophia_reconciliation_receipt", validate_saint)
+    receipt = readiness.build_readiness(
+        phase3_reboot_prompt_path=Path("unused"), sources_database_path=Path("unused"),
+        ua_gec_root=Path("unused"), ua_gec_context_receipt_path=Path("unused"),
+        historical_full_receipt_path=Path("unused"), saint_sophia_reconciliation_receipt_path=Path("sophia.json"),
+    )
+    assert captured == {"pre": pre_sha, "post": post_sha}
+    assert receipt["bindings"]["sources_database_sha256"] == post_sha
+
+
+def test_validator_rejects_saint_sophia_readiness_without_matching_bindings(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    receipt = _build(monkeypatch)
+    receipt["readiness"]["saint_sophia_db_reconciliation_ready"] = True
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+    with pytest.raises(readiness.PrefreezeReadinessError, match="Saint Sophia readiness"):
+        readiness.validate_readiness(receipt)
+
+
+def test_saint_sophia_receipt_requires_current_implementation_and_database_bindings(
+    tmp_path: Path,
+) -> None:
+    sophia = readiness.sophia_reconciliation
+    database_sha = readiness.university.EXPECTED_DATABASE["sha256"]
+    body = {
+        "schema_version": "phase3_saint_sophia_db_reconciliation_v1", "text_free": True,
+        "provider_calls": False, "mode": "candidate_atomic_replace",
+        "bindings": {
+            "implementation_sha256": readiness.sha256_file(Path(sophia.__file__).resolve()),
+            "schema_sha256": readiness.sha256_file(sophia.SCHEMA_PATH),
+            "denominator_sha256": readiness.sha256_file(sophia.DENOMINATOR_PATH),
+            "expected_pre_database_sha256": database_sha,
+            "saint_sophia_jsonl_sha256": sophia.EXPECTED_JSONL_SHA256,
+            "saint_sophia_coverage_sha256": sophia.EXPECTED_COVERAGE_SHA256,
+            "coverage_receipt_sha256": sophia.EXPECTED_COVERAGE_SHA256,
+        },
+        "database": {
+            "pre_sha256": database_sha, "post_sha256": database_sha, "historical_rows_before": 0,
+            "historical_rows_after": 4157, "historical_fts_rows_after": 4157,
+            "foreign_key_failures_before": 0, "foreign_key_failures_after": 0,
+            "foreign_key_failure_sha256_before": SHA_B, "foreign_key_failure_sha256_after": SHA_B,
+        },
+        "invariants": {
+            "saint_sophia_id_set_sha256": sophia.EXPECTED_ID_SET_SHA256,
+            "non_historical_table_fingerprint_before": SHA_A,
+            "non_historical_table_fingerprint_after": SHA_A, "integrity_check": "ok",
+        },
+        "safeguards": {"exact_expected_rows": True, "exact_fts_parity": True,
+                       "foreign_key_failures_unchanged": True, "non_historical_invariants_unchanged": True,
+                       "output_private_0600": True},
+        "phase_boundaries": {"historical_modern_correction_eligible": False, "phase4_blocked": True},
+    }
+    receipt = {**body, "receipt_sha256": sophia.receipt_sha256(body)}
+    path = tmp_path / "saint-sophia-receipt.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    path.chmod(0o600)
+    assert readiness._validate_saint_sophia_reconciliation_receipt(
+        path, university_database_sha256=database_sha, current_database_sha256=database_sha
+    )[0] == receipt
+    receipt["bindings"]["implementation_sha256"] = SHA_A
+    receipt["receipt_sha256"] = sophia.receipt_sha256(receipt)
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(readiness.PrefreezeReadinessError, match="implementation drift"):
+        readiness._validate_saint_sophia_reconciliation_receipt(
+            path, university_database_sha256=database_sha, current_database_sha256=database_sha
+        )
+
+
+def test_saint_sophia_receipt_rejects_nonprivate_mode(tmp_path: Path) -> None:
+    sophia = readiness.sophia_reconciliation
+    database_sha = readiness.university.EXPECTED_DATABASE["sha256"]
+    body = {
+        "schema_version": "phase3_saint_sophia_db_reconciliation_v1", "text_free": True,
+        "provider_calls": False, "mode": "candidate_atomic_replace",
+        "bindings": {"implementation_sha256": readiness.sha256_file(Path(sophia.__file__).resolve()),
+                     "schema_sha256": readiness.sha256_file(sophia.SCHEMA_PATH),
+                     "denominator_sha256": readiness.sha256_file(sophia.DENOMINATOR_PATH),
+                     "expected_pre_database_sha256": database_sha,
+                     "saint_sophia_jsonl_sha256": sophia.EXPECTED_JSONL_SHA256,
+                     "saint_sophia_coverage_sha256": sophia.EXPECTED_COVERAGE_SHA256,
+                     "coverage_receipt_sha256": sophia.EXPECTED_COVERAGE_SHA256},
+        "database": {"pre_sha256": database_sha, "post_sha256": database_sha, "historical_rows_before": 0,
+                     "historical_rows_after": 4157, "historical_fts_rows_after": 4157,
+                     "foreign_key_failures_before": 0, "foreign_key_failures_after": 0,
+                     "foreign_key_failure_sha256_before": SHA_B, "foreign_key_failure_sha256_after": SHA_B},
+        "invariants": {"saint_sophia_id_set_sha256": sophia.EXPECTED_ID_SET_SHA256,
+                       "non_historical_table_fingerprint_before": SHA_A,
+                       "non_historical_table_fingerprint_after": SHA_A, "integrity_check": "ok"},
+        "safeguards": {"exact_expected_rows": True, "exact_fts_parity": True,
+                       "foreign_key_failures_unchanged": True, "non_historical_invariants_unchanged": True,
+                       "output_private_0600": True},
+        "phase_boundaries": {"historical_modern_correction_eligible": False, "phase4_blocked": True},
+    }
+    receipt = {**body, "receipt_sha256": sophia.receipt_sha256(body)}
+    path = tmp_path / "public-mode.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    path.chmod(0o644)
+    with pytest.raises(readiness.PrefreezeReadinessError, match="mode 0600"):
+        readiness._validate_saint_sophia_reconciliation_receipt(
+            path, university_database_sha256=database_sha, current_database_sha256=database_sha
+        )
+
+
 def test_build_rejects_incomplete_canary(monkeypatch: pytest.MonkeyPatch) -> None:
     _stub_external_receipts(monkeypatch)
     monkeypatch.setattr(

@@ -67,6 +67,10 @@
         "historical_full_gate_receipt_sha256": {"$ref": "#/$defs/sha256"},
         "historical_full_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
         "historical_full_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "saint_sophia_reconciliation_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "saint_sophia_reconciliation_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "saint_sophia_reconciliation_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "saint_sophia_reconciliation_schema_sha256": {"$ref": "#/$defs/sha256"},
         "sources_database_sha256": {"$ref": "#/$defs/sha256"},
         "prefreeze_implementation_sha256": {"$ref": "#/$defs/sha256"},
         "prefreeze_schema_sha256": {"$ref": "#/$defs/sha256"}
@@ -208,6 +212,7 @@
         "university_content_audit_ready": {"const": true},
         "university_source_freeze_ready": {"const": true},
         "historical_full_materialization_ready": {"const": true},
+        "saint_sophia_db_reconciliation_ready": {"type": "boolean"},
         "linguistic_representation_ready": {"const": true},
         "semantic_canary_ready": {"const": true},
         "functional_role_contract_ready": {"const": true},
