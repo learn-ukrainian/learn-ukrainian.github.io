@@ -1,0 +1,31 @@
+{
+  "schema": "zno-markup-overlay",
+  "schemaVersion": 1,
+  "sourceNote": "Letter marks recovered from УЦОЯО booklet wording + osvita.ua explanations (NMT 2024 sesiya-2 №1). Expand per batch_state/practice/zno-markup-integrity-audit.json.",
+  "items": {
+    "zno:457": {
+      "optionMarks": [
+        [
+          {"start": 2, "end": 3, "style": "underline"},
+          {"start": 11, "end": 12, "style": "underline"},
+          {"start": 17, "end": 18, "style": "underline"}
+        ],
+        [
+          {"start": 4, "end": 5, "style": "underline"},
+          {"start": 9, "end": 10, "style": "underline"},
+          {"start": 16, "end": 17, "style": "underline"}
+        ],
+        [
+          {"start": 2, "end": 3, "style": "underline"},
+          {"start": 9, "end": 10, "style": "underline"},
+          {"start": 16, "end": 17, "style": "underline"}
+        ],
+        [
+          {"start": 3, "end": 4, "style": "underline"},
+          {"start": 8, "end": 9, "style": "underline"},
+          {"start": 17, "end": 18, "style": "underline"}
+        ]
+      ]
+    }
+  }
+}

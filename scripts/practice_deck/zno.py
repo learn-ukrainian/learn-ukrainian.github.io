@@ -12,14 +12,26 @@ from __future__ import annotations
 import argparse
 import json
 import sqlite3
+import sys
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.practice_deck.markup_integrity import (
+    apply_markup_overlay,
+    assert_emit_integrity,
+    load_markup_overlay,
+    stem_requires_markup,
+)
+
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_OUT_DIR = ROOT / "site" / "src" / "data"
+DEFAULT_MARKUP_OVERLAY = ROOT / "data" / "practice" / "zno-markup-overlay.json"
 LETTER_TO_INDEX = {"А": 0, "Б": 1, "В": 2, "Г": 3, "Д": 4}
 
 # This is deliberately an exact, reviewable predicate rather than an attempt to
@@ -249,14 +261,20 @@ def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
     }
 
 
-def build_zno_shards(db_path: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+def build_zno_shards(
+    db_path: Path,
+    *,
+    markup_overlay_path: Path = DEFAULT_MARKUP_OVERLAY,
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     """Build deterministic deck payloads and their fail-closed receipt."""
+    overlay_by_id = load_markup_overlay(markup_overlay_path)
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         shards: dict[str, dict[str, Any]] = {}
         deck_receipts: dict[str, Any] = {}
         emitted_total = 0
+        quarantined_markup = 0
         for definition in DECKS:
             rows = conn.execute(definition.predicate_sql).fetchall()
             dropped: Counter[str] = Counter()
@@ -265,6 +283,13 @@ def build_zno_shards(db_path: Path) -> tuple[dict[str, dict[str, Any]], dict[str
                 item, reason = _item_from_row(row)
                 if item is None:
                     dropped[reason or "invalid_item"] += 1
+                    continue
+                task_id = str(item["znoTaskId"])
+                item, markup_reason = apply_markup_overlay(item, overlay_by_id.get(task_id))
+                if item is None:
+                    dropped[markup_reason or "broken_missing_markup"] += 1
+                    if stem_requires_markup(str(row["stem"])):
+                        quarantined_markup += 1
                     continue
                 items.append(item)
             emitted_total += len(items)
@@ -288,7 +313,14 @@ def build_zno_shards(db_path: Path) -> tuple[dict[str, dict[str, Any]], dict[str
             "schemaVersion": 1,
             "decks": deck_receipts,
             "namedResidual": _residual_counts(conn, emitted_total),
+            "markupIntegrity": {
+                "quarantinedMissingMarkup": quarantined_markup,
+                "overlayPath": str(markup_overlay_path.relative_to(ROOT))
+                if markup_overlay_path.is_relative_to(ROOT)
+                else str(markup_overlay_path),
+            },
         }
+        assert_emit_integrity(shards)
         return shards, residual
     finally:
         conn.close()
@@ -305,13 +337,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    parser.add_argument("--markup-overlay", type=Path, default=DEFAULT_MARKUP_OVERLAY)
     args = parser.parse_args(argv)
-    shards, residual = build_zno_shards(args.db)
+    shards, residual = build_zno_shards(args.db, markup_overlay_path=args.markup_overlay)
     write_zno_shards(shards, residual, args.out_dir)
     for key in (definition.key for definition in DECKS):
         receipt = residual["decks"][key]
         print(f"{key}: candidates={receipt['candidates']} emitted={receipt['emitted']} dropped={sum(receipt['dropped'].values())}")
     print(f"named residual: {residual['namedResidual']}")
+    print(f"markup quarantined: {residual['markupIntegrity']['quarantinedMissingMarkup']}")
     return 0
 
 
