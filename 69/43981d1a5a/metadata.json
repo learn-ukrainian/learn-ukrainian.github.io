@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6943981d1a5a",
+  "strategy": "manual-commit",
+  "branch": "cursor/zno-markup-recovery-system",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/practice/zno-markup-overlay.json",
+    "scripts/practice_deck/__init__.py",
+    "scripts/practice_deck/recover_markup_osvita.py",
+    "tests/practice_deck/test_recover_markup_osvita.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/69/43981d1a5a/0/metadata.json",
+      "transcript": "/69/43981d1a5a/0/full.jsonl",
+      "compact_transcript": "/69/43981d1a5a/0/transcript.jsonl",
+      "content_hash": "/69/43981d1a5a/0/content_hash.txt",
+      "prompt": "/69/43981d1a5a/0/prompt.txt"
+    }
+  ]
+}

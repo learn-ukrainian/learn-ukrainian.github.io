@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "6943981d1a5a",
+  "session_id": "fleet-40d1286b92664626b4b2505981ed89e8",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T12:21:10.755508Z",
+  "branch": "cursor/zno-markup-recovery-system",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/practice/zno-markup-overlay.json",
+    "scripts/practice_deck/__init__.py",
+    "scripts/practice_deck/recover_markup_osvita.py",
+    "tests/practice_deck/test_recover_markup_osvita.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "532b807ab765",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T12:21:10.750948Z",
+    "agent_lines": 1699,
+    "agent_removed": 14,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1699,
+    "total_lines_changed": 1713,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
