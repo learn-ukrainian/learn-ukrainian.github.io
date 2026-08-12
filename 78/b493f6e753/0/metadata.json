@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "78b493f6e753",
+  "session_id": "fleet-801d116b39b94469ada42739f14788ad",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:17:45.371326Z",
+  "branch": "fix-6607",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/plugins/astro-raw-atlas-preview.mjs",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "0cecb9beac2b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:17:45.362112Z",
+    "agent_lines": 242,
+    "agent_removed": 222,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 242,
+    "total_lines_changed": 464,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

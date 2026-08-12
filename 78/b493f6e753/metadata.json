@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "78b493f6e753",
+  "strategy": "manual-commit",
+  "branch": "fix-6607",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/plugins/astro-raw-atlas-preview.mjs",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/78/b493f6e753/0/metadata.json",
+      "transcript": "/78/b493f6e753/0/full.jsonl",
+      "compact_transcript": "/78/b493f6e753/0/transcript.jsonl",
+      "content_hash": "/78/b493f6e753/0/content_hash.txt",
+      "prompt": "/78/b493f6e753/0/prompt.txt"
+    }
+  ]
+}
