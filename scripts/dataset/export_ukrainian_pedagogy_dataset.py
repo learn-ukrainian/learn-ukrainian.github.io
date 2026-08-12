@@ -6,10 +6,14 @@ open-weights LLM alignment (Gemma, Llama, Mistral).
 """
 
 import json
+import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PRIVATE_ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian-infra-private")
+# Private infra repo is external; resolve via env var, not a hardcoded path
+# (#6571). When unset, the .exists() guards below degrade gracefully (empty
+# export) rather than crashing at import.
+PRIVATE_ROOT = Path(os.environ.get("LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT", ""))
 DATASET_DIR = REPO_ROOT / "data" / "datasets" / "hramatka_uk_pedagogy_v1"
 DATASET_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import typing
+from pathlib import Path
 from urllib.parse import urlparse
 
 import pytest
@@ -4818,3 +4819,29 @@ def test_etymology_rejects_mid_cut_esum_stubs() -> None:
 
     assert not _etymology_text_is_displayable("свіжий, свіжаік «новачок; свіжа во-")
     assert _etymology_text_is_displayable("From Proto-Slavic *svěžь.")
+
+
+def test_resolve_primary_checkout_matches_git_common_dir() -> None:
+    """enrich_manifest's primary-checkout fallback is portable, not hardcoded (#6571).
+
+    _resolve_primary_checkout must agree with resolve_main_root and, when set,
+    point at a directory owning the shared ``.git`` store. The source must not
+    embed a /Users/... operator path (the runtime value legitimately reflects
+    wherever this checkout lives)."""
+    from scripts.guardrails.worktree_containment import (
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
+
+    resolved = enrich_manifest_module._resolve_primary_checkout()
+    try:
+        expected = resolve_main_root(enrich_manifest_module.ROOT)
+    except NotAGitRepositoryError:
+        assert resolved is None
+        return
+    assert resolved == expected
+    assert (resolved / ".git").is_dir()
+    # Portability is a source-code property: the module must resolve the
+    # primary checkout dynamically rather than embed an operator's absolute path.
+    src = Path(enrich_manifest_module.__file__).read_text(encoding="utf-8")
+    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
