@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_spas_catalog_materialization_receipt_v1.schema.json",
+  "title": "Phase 3 Spas na Berestovi raw catalogue materialization text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "mode",
+    "text_free",
+    "inputs",
+    "denominator",
+    "private_use_audit",
+    "output",
+    "rights_and_scope",
+    "safeguards",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_spas_catalog_materialization_receipt_v1"},
+    "implementation_version": {"const": "phase3_spas_catalog_materialization_v1"},
+    "mode": {"const": "full_catalogue_boundary_materialization"},
+    "text_free": {"const": true},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_author",
+        "source_title",
+        "source_year",
+        "source_record_url",
+        "source_pdf_sha256",
+        "pdf_pages",
+        "catalog_pdf_page_start",
+        "catalog_pdf_page_end",
+        "extraction_backend",
+        "extraction_backend_version"
+      ],
+      "properties": {
+        "collection_id": {"const": "korniienko-spas-na-berestovi-2013"},
+        "source_author": {"const": "В. В. Корнієнко"},
+        "source_title": {
+          "const": "Корпус графіті церкви Спаса на Берестові (остання третина XI – перша третина XVIII ст.)"
+        },
+        "source_year": {"const": 2013},
+        "source_record_url": {"const": "https://resource.history.org.ua/item/0015198"},
+        "source_pdf_sha256": {"$ref": "#/$defs/sha256"},
+        "pdf_pages": {"type": "integer", "minimum": 1},
+        "catalog_pdf_page_start": {"type": "integer", "minimum": 1},
+        "catalog_pdf_page_end": {"type": "integer", "minimum": 1},
+        "extraction_backend": {"const": "pypdf.page.extract_text"},
+        "extraction_backend_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog_pages",
+        "nonempty_native_text_pages",
+        "native_text_characters",
+        "expected_records",
+        "materialized_records",
+        "unique_record_numbers",
+        "sequential_record_numbers"
+      ],
+      "properties": {
+        "catalog_pages": {"type": "integer", "minimum": 1},
+        "nonempty_native_text_pages": {"type": "integer", "minimum": 1},
+        "native_text_characters": {"type": "integer", "minimum": 1},
+        "expected_records": {"type": "integer", "minimum": 1},
+        "materialized_records": {"type": "integer", "minimum": 1},
+        "unique_record_numbers": {"type": "integer", "minimum": 1},
+        "sequential_record_numbers": {"const": true}
+      }
+    },
+    "private_use_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_occurrences",
+        "pages_with_private_use_glyphs",
+        "codepoint_counts",
+        "glyph_font_observed_during_visual_canary",
+        "mapping_status"
+      ],
+      "properties": {
+        "total_occurrences": {"type": "integer", "minimum": 0},
+        "pages_with_private_use_glyphs": {"type": "integer", "minimum": 0},
+        "codepoint_counts": {
+          "type": "object",
+          "propertyNames": {"pattern": "^U\\+[0-9A-F]{4,6}$"},
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        },
+        "glyph_font_observed_during_visual_canary": {"const": "Bukyvede"},
+        "mapping_status": {"const": "pending_visual_source_verified_adapter"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "record_identity_manifest_sha256"],
+      "properties": {
+        "filename": {"const": "spas-na-berestovi-raw-catalog.jsonl.gz"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "record_identity_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rights_and_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_institutional_full_text",
+        "standardized_dataset_license_expression_found",
+        "bounded_text_first_use_decision",
+        "attribution_and_field_level_removal_preserved",
+        "binary_media_reuse_authorized",
+        "full_publication_training_export_authorized",
+        "adapt_on_substantiated_rights_notice"
+      ],
+      "properties": {
+        "public_institutional_full_text": {"const": true},
+        "standardized_dataset_license_expression_found": {"const": false},
+        "bounded_text_first_use_decision": {"const": "accepted_operational_risk"},
+        "attribution_and_field_level_removal_preserved": {"const": true},
+        "binary_media_reuse_authorized": {"const": false},
+        "full_publication_training_export_authorized": {"const": false},
+        "adapt_on_substantiated_rights_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_source_preserved",
+        "historical_forms_protected",
+        "normalized_historical_text_emitted",
+        "commentary_and_inscription_layers_separated",
+        "page_header_footer_cleanup_applied",
+        "modern_correction_eligible",
+        "training_eligible",
+        "ocr_used",
+        "inferred_character_repairs",
+        "images_included",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "raw_source_preserved": {"const": true},
+        "historical_forms_protected": {"const": true},
+        "normalized_historical_text_emitted": {"const": false},
+        "commentary_and_inscription_layers_separated": {"const": false},
+        "page_header_footer_cleanup_applied": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "training_eligible": {"const": false},
+        "ocr_used": {"const": false},
+        "inferred_character_repairs": {"const": false},
+        "images_included": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spas_na_berestovi_is_lavra_associated",
+        "spas_na_berestovi_is_not_lavra_cave_corpus",
+        "lavra_cave_corpus_gap_closed",
+        "glyph_mapping_pending",
+        "commentary_transcription_separation_pending"
+      ],
+      "properties": {
+        "spas_na_berestovi_is_lavra_associated": {"const": true},
+        "spas_na_berestovi_is_not_lavra_cave_corpus": {"const": true},
+        "lavra_cave_corpus_gap_closed": {"const": false},
+        "glyph_mapping_pending": {"const": true},
+        "commentary_transcription_separation_pending": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
