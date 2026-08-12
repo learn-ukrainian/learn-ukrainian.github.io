@@ -20,9 +20,15 @@ from pathlib import Path
 from typing import Any
 
 from scripts.fleet_comms.efficiency_metrics import (
+    _AUTHORITY_BACKLOG_STATES,
+    _column_names,
+    _table_exists,
     collect_dead_letters,
+    collect_dead_letters_authority,
     collect_delivery_backlog,
+    collect_delivery_backlog_authority,
     collect_stream_bottleneck_metrics,
+    resolve_metrics_source,
 )
 from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
 
@@ -145,19 +151,41 @@ def _resolve_broker_db_ro(root: Path | None, repo_root: Path | None) -> Path:
 def _probe_backlog_and_dead_letters(
     root: Path | None, repo_root: Path | None
 ) -> dict[str, Any]:
-    db_path = _resolve_broker_db_ro(root, repo_root)
+    """Backlog + dead-letters; prefer authority tables when plane mode is authority."""
+    source = resolve_metrics_source()
+    plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
 
-    if not db_path.is_file():
-        return {
-            "db_missing": True,
-            "db_path": str(db_path),
-            "backlog_total": 0,
-            "dead_letters_total": 0,
-        }
+    if source == "authority":
+        db_path = plane_root / "comms.sqlite3"
+        if not db_path.is_file():
+            return {
+                "source": source,
+                "db_missing": True,
+                "db_path": str(db_path),
+                "backlog_total": 0,
+                "dead_letters_total": 0,
+            }
+        backlog = collect_delivery_backlog_authority(
+            db_path, limit=5, exclude_retired=True
+        )
+        dead_letters = collect_dead_letters_authority(db_path, limit=5)
+        label = "authority"
+    else:
+        db_path = _resolve_broker_db_ro(root, repo_root)
+        if not db_path.is_file():
+            return {
+                "source": "legacy",
+                "db_missing": True,
+                "db_path": str(db_path),
+                "backlog_total": 0,
+                "dead_letters_total": 0,
+            }
+        backlog = collect_delivery_backlog(db_path, limit=5, exclude_retired=True)
+        dead_letters = collect_dead_letters(db_path, limit=5)
+        label = "legacy"
 
-    backlog = collect_delivery_backlog(db_path, limit=5, exclude_retired=True)
-    dead_letters = collect_dead_letters(db_path, limit=5)
     return {
+        "source": label,
         "db_path": str(db_path),
         "db_exists": True,
         "backlog_total": backlog.get("total", 0),
@@ -335,6 +363,248 @@ def _probe_session_streams_and_handoff(
         )
 
 
+def _inbox_agent_candidates(agent: str) -> list[str]:
+    """Exact agent first; cheap slash/hyphen base aliases as fallbacks."""
+    candidates = [agent]
+    if "/" in agent:
+        base = agent.split("/", 1)[0].strip()
+        if base and base not in candidates:
+            candidates.append(base)
+    if "-" in agent:
+        base = agent.split("-", 1)[0].strip()
+        if base and base not in candidates:
+            candidates.append(base)
+    return candidates
+
+
+def _probe_inbox_authority(
+    plane_db: Path,
+    agent: str,
+) -> dict[str, Any]:
+    """Body-free pending inbox rows from authority_deliveries (queued/running)."""
+    import sqlite3
+
+    if not plane_db.is_file():
+        return {
+            "source": "authority",
+            "agent": agent,
+            "inbox_pending_count": 0,
+            "db_missing": True,
+            "db_path": str(plane_db),
+            "recent_deliveries": [],
+        }
+
+    placeholders = ",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)
+    matched_agent = agent
+    deliveries: list[dict[str, Any]] = []
+    total = 0
+
+    conn = sqlite3.connect(f"file:{plane_db.resolve().as_posix()}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        if not _table_exists(conn, "authority_deliveries"):
+            return {
+                "source": "authority",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(plane_db),
+                "table_missing": True,
+                "recent_deliveries": [],
+            }
+        for candidate in _inbox_agent_candidates(agent):
+            count_row = conn.execute(
+                f"""
+                SELECT COUNT(*) AS cnt FROM authority_deliveries
+                WHERE recipient = ? AND state IN ({placeholders})
+                """,
+                (candidate, *_AUTHORITY_BACKLOG_STATES),
+            ).fetchone()
+            candidate_total = int(count_row["cnt"] if count_row else 0)
+            if candidate_total == 0:
+                continue
+            rows = conn.execute(
+                f"""
+                SELECT delivery_id, message_id, recipient, state,
+                       attempt_count, created_at, updated_at
+                FROM authority_deliveries
+                WHERE recipient = ? AND state IN ({placeholders})
+                ORDER BY COALESCE(updated_at, created_at, '') DESC
+                LIMIT 5
+                """,
+                (candidate, *_AUTHORITY_BACKLOG_STATES),
+            ).fetchall()
+            matched_agent = candidate
+            total = candidate_total
+            deliveries = [
+                {
+                    "delivery_id": r["delivery_id"],
+                    "message_id": r["message_id"],
+                    "recipient": r["recipient"],
+                    "to_agent": r["recipient"],
+                    "state": r["state"],
+                    "status": r["state"],
+                    "attempt_count": int(r["attempt_count"] or 0),
+                    "created_at": r["created_at"],
+                    "updated_at": r["updated_at"],
+                }
+                for r in rows
+            ]
+            break
+    finally:
+        conn.close()
+
+    return {
+        "source": "authority",
+        "agent": agent,
+        "matched_agent": matched_agent,
+        "inbox_pending_count": total,
+        "db_path": str(plane_db),
+        "recent_deliveries": deliveries,
+    }
+
+
+def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
+    """Body-free pending inbox from legacy broker deliveries (schema-tolerant)."""
+    import sqlite3
+
+    if not db_path.is_file():
+        return {
+            "source": "legacy",
+            "agent": agent,
+            "inbox_pending_count": 0,
+            "db_missing": True,
+            "db_path": str(db_path),
+            "recent_deliveries": [],
+        }
+
+    status_filter = ("pending", "dispatched", "processing")
+    status_placeholders = ",".join("?" for _ in status_filter)
+    matched_agent = agent
+    deliveries: list[dict[str, Any]] = []
+    total = 0
+
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        if not _table_exists(conn, "deliveries"):
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "table_missing": True,
+                "recent_deliveries": [],
+            }
+        cols = _column_names(conn, "deliveries")
+        agent_col = "to_agent" if "to_agent" in cols else (
+            "recipient" if "recipient" in cols else None
+        )
+        if agent_col is None:
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "schema_unsupported": True,
+                "recent_deliveries": [],
+            }
+        if "status" not in cols:
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "schema_unsupported": True,
+                "recent_deliveries": [],
+            }
+
+        select_parts = [
+            c
+            for c in (
+                "delivery_id",
+                "message_id",
+                agent_col,
+                "status",
+                "attempt_count",
+                "dispatched_at",
+                "created_at",
+            )
+            if c in cols
+        ]
+        order_col = (
+            "dispatched_at"
+            if "dispatched_at" in cols
+            else ("created_at" if "created_at" in cols else select_parts[0])
+        )
+
+        join_sql = ""
+        extra_select: list[str] = []
+        if _table_exists(conn, "channel_messages") and "message_id" in cols:
+            cm_cols = _column_names(conn, "channel_messages")
+            join_sql = " LEFT JOIN channel_messages cm ON cm.message_id = d.message_id"
+            for alias, expr in (
+                ("channel", "cm.channel" if "channel" in cm_cols else None),
+                ("sender", "cm.from_agent" if "from_agent" in cm_cols else None),
+                ("kind", "cm.kind" if "kind" in cm_cols else None),
+                (
+                    "created_at",
+                    "cm.created_at"
+                    if "created_at" in cm_cols and "created_at" not in cols
+                    else None,
+                ),
+            ):
+                if expr is not None:
+                    extra_select.append(f"{expr} AS {alias}")
+
+        select_sql = ", ".join([f"d.{c}" for c in select_parts] + extra_select)
+
+        for candidate in _inbox_agent_candidates(agent):
+            count_row = conn.execute(
+                f"""
+                SELECT COUNT(*) AS cnt FROM deliveries
+                WHERE {agent_col} = ? AND status IN ({status_placeholders})
+                """,
+                (candidate, *status_filter),
+            ).fetchone()
+            candidate_total = int(count_row["cnt"] if count_row else 0)
+            if candidate_total == 0:
+                continue
+            rows = conn.execute(
+                f"""
+                SELECT {select_sql}
+                FROM deliveries d
+                {join_sql}
+                WHERE d.{agent_col} = ? AND d.status IN ({status_placeholders})
+                ORDER BY COALESCE(d.{order_col}, '') DESC
+                LIMIT 5
+                """,
+                (candidate, *status_filter),
+            ).fetchall()
+            matched_agent = candidate
+            total = candidate_total
+            deliveries = []
+            for r in rows:
+                row = dict(r)
+                # Normalize recipient alias without inventing bodies.
+                if "to_agent" not in row and agent_col in row:
+                    row["to_agent"] = row[agent_col]
+                if "recipient" not in row and agent_col in row:
+                    row["recipient"] = row[agent_col]
+                deliveries.append(row)
+            break
+    finally:
+        conn.close()
+
+    return {
+        "source": "legacy",
+        "agent": agent,
+        "matched_agent": matched_agent,
+        "inbox_pending_count": total,
+        "db_path": str(db_path),
+        "recent_deliveries": deliveries,
+    }
+
+
 def _probe_inbox(
     root: Path | None,
     repo_root: Path | None,
@@ -349,47 +619,22 @@ def _probe_inbox(
             data={"reason": "no_agent_specified"},
         )
 
-    db_path = _resolve_broker_db_ro(root, repo_root)
-    if not db_path.is_file():
-        elapsed = (time.perf_counter() - start) * 1000.0
-        return ProbeResult(
-            status="ok",
-            elapsed_ms=elapsed,
-            data={"agent": agent, "inbox_pending_count": 0, "db_missing": True},
-        )
-
     try:
-        import sqlite3
-
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
-        conn.row_factory = sqlite3.Row
-        try:
-            rows = conn.execute(
-                """SELECT message_id, channel, sender, kind, created_at
-                   FROM deliveries
-                   WHERE recipient = ? AND status IN ('pending', 'dispatched')
-                   ORDER BY created_at DESC LIMIT 5""",
-                (agent,),
-            ).fetchall()
-            deliveries = [dict(r) for r in rows]
-            count_row = conn.execute(
-                "SELECT COUNT(*) as cnt FROM deliveries WHERE recipient = ? AND status IN ('pending', 'dispatched')",
-                (agent,),
-            ).fetchone()
-            total = count_row["cnt"] if count_row else len(deliveries)
-        finally:
-            conn.close()
+        source = resolve_metrics_source()
+        plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
+        if source == "authority":
+            plane_db = plane_root / "comms.sqlite3"
+            if plane_db.is_file():
+                data = _probe_inbox_authority(plane_db, agent)
+            else:
+                # Authority preferred but plane DB missing → legacy fallback.
+                data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
+                data["authority_db_missing"] = True
+        else:
+            data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
 
         elapsed = (time.perf_counter() - start) * 1000.0
-        return ProbeResult(
-            status="ok",
-            elapsed_ms=elapsed,
-            data={
-                "agent": agent,
-                "inbox_pending_count": total,
-                "recent_deliveries": deliveries,
-            },
-        )
+        return ProbeResult(status="ok", elapsed_ms=elapsed, data=data)
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
