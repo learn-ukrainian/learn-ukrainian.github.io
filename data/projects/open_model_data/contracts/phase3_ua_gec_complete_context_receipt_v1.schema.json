@@ -145,7 +145,8 @@
         "target_sentence_not_exactly_aligned": {"type": "integer", "minimum": 1},
         "source_target_sentence_boundary_mismatch": {"type": "integer", "minimum": 1},
         "corrected_context_not_exactly_retrievable": {"type": "integer", "minimum": 1},
-        "no_larger_construction_context": {"type": "integer", "minimum": 1}
+        "no_larger_construction_context": {"type": "integer", "minimum": 1},
+        "no_effective_correction": {"type": "integer", "minimum": 1}
       }
     }
   }

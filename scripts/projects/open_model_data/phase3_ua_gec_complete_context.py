@@ -69,6 +69,14 @@ class UaGecCompleteContextError(ValueError):
     """The frozen UA-GEC denominator cannot be reconstructed safely."""
 
 
+class ContextExclusion(UaGecCompleteContextError):
+    """One frozen unit cannot form an exact complete-context representation."""
+
+    def __init__(self, reason_code: str, message: str) -> None:
+        super().__init__(message)
+        self.reason_code = reason_code
+
+
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise UaGecCompleteContextError(message)
@@ -425,7 +433,11 @@ def _edits(source: str, target: str) -> list[dict[str, Any]]:
                 "replacement": target[target_start:target_end],
             }
         )
-    require(edits, "qualified-human context has no effective correction")
+    if not edits:
+        raise ContextExclusion(
+            "no_effective_correction",
+            "qualified-human context has no effective correction",
+        )
     return edits
 
 
@@ -589,15 +601,17 @@ def _record_for_window(
         source_document[window.source_document_start : window.source_document_end] == source_text,
         "source sentence is not exact in source corpus document",
     )
-    require(
-        target_document[window.target_document_start : window.target_document_end] == corrected_text,
-        "corrected sentence is not exact in target corpus document",
-    )
+    if target_document[window.target_document_start : window.target_document_end] != corrected_text:
+        raise ContextExclusion(
+            "corrected_context_not_exactly_retrievable",
+            "corrected sentence is not exact in target corpus document",
+        )
     edits = _edits(source_text, corrected_text)
-    require(
-        all(not (item["start"] == 0 and item["end"] == len(source_text)) for item in edits),
-        "complete-sentence replacement has no strictly larger construction span",
-    )
+    if not all(not (item["start"] == 0 and item["end"] == len(source_text)) for item in edits):
+        raise ContextExclusion(
+            "no_larger_construction_context",
+            "complete-sentence replacement has no strictly larger construction span",
+        )
     annotation_relative = annotation_path.relative_to(checkout).as_posix()
     target_relative = target_path.relative_to(checkout).as_posix()
     source_hash = sha256_file(annotation_path)
@@ -758,16 +772,8 @@ def reconstruct(
                     source_document=source_document,
                     target_document=target_document,
                 )
-            except (UaGecCompleteContextError, representation.LinguisticRepresentationError) as exc:
-                reason = str(exc)
-                if "not exact in target corpus" in reason:
-                    code = "corrected_context_not_exactly_retrievable"
-                elif "strictly larger construction" in reason:
-                    code = "no_larger_construction_context"
-                else:
-                    raise UaGecCompleteContextError(
-                        f"unexpected complete-context reconstruction failure: {annotation_path}"
-                    ) from exc
+            except ContextExclusion as exc:
+                code = exc.reason_code
                 exclusions[code] += 1
                 excluded_units[code] += len(unit_ids)
                 excluded_unit_records.extend({"unit_id": unit_id, "reason": code} for unit_id in unit_ids)

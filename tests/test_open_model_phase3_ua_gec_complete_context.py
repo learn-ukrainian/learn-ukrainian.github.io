@@ -219,6 +219,101 @@ def test_source_target_sentence_boundary_mismatch_is_excluded(tmp_path: Path, mo
     ]
 
 
+@pytest.mark.parametrize(
+    ("annotated_text", "source_text", "target_text", "error", "correct", "reason"),
+    [
+        (
+            "Слово {брата=>брата:::error_type=G/Case}.",
+            "Слово брата.\n",
+            "Слово брата.\n",
+            "брата",
+            "брата",
+            "no_effective_correction",
+        ),
+        (
+            "{а=>б:::error_type=G/Case}",
+            "а\n",
+            "б\n",
+            "а",
+            "б",
+            "no_larger_construction_context",
+        ),
+    ],
+)
+def test_per_unit_data_conditions_use_typed_exclusions(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    annotated_text: str,
+    source_text: str,
+    target_text: str,
+    error: str,
+    correct: str,
+    reason: str,
+) -> None:
+    checkout = _fixture_checkout(tmp_path)
+    (checkout / "data/gec-only/train/annotated/0001.a1.ann").write_text(annotated_text, encoding="utf-8")
+    (checkout / "data/gec-only/train/source-sentences/0001.src.txt").write_text(source_text, encoding="utf-8")
+    (checkout / "data/gec-only/train/target-sentences/0001.a1.txt").write_text(target_text, encoding="utf-8")
+    monkeypatch.setattr(context, "EXPECTED_TAG_COUNTS", {"G/Case": 1})
+    monkeypatch.setattr(context, "EXPECTED_UNIT_COUNT", 1)
+    monkeypatch.setattr(context, "_checkout_commit", lambda _checkout: context.UA_GEC_COMMIT)
+    monkeypatch.setattr(
+        context,
+        "_load_v2_units",
+        lambda _source_universe, _database: [
+            {
+                "unit_id": "ua-gec:test:excluded",
+                "source_record": {
+                    "partition": "gec-only/train",
+                    "doc_id": "0001",
+                    "annotator_id": "1",
+                    "error_type": "G/Case",
+                    "error": error,
+                    "correct": correct,
+                },
+            }
+        ],
+    )
+
+    records, accounting = context.reconstruct(
+        checkout=checkout,
+        database=tmp_path / "unused.db",
+        source_universe=tmp_path / "unused-universe",
+    )
+
+    assert records == []
+    assert accounting["excluded_v2_unit_count_by_reason"] == {reason: 1}
+    assert accounting["excluded_v2_units"] == [{"unit_id": "ua-gec:test:excluded", "reason": reason}]
+
+
+def test_corrected_context_exactness_failure_has_typed_reason(tmp_path: Path) -> None:
+    checkout = _fixture_checkout(tmp_path)
+    annotation_path = checkout / "data/gec-only/train/annotated/0001.a1.ann"
+    source_path = checkout / "data/gec-only/train/source-sentences/0001.src.txt"
+    target_path = checkout / "data/gec-only/train/target-sentences/0001.a1.txt"
+    parsed = context.parse_annotated_document(ANNOTATED_TEXT)
+    target_sentence = context._target_sentences(parsed, TARGET_TEXT)[0]
+    source_sentences = context._source_sentences(parsed, source_path.read_text(encoding="utf-8"))
+    window = context._context_window(parsed, target_sentence, source_sentences)
+    assert window is not None
+
+    with pytest.raises(context.ContextExclusion) as failure:
+        context._record_for_window(
+            checkout=checkout,
+            annotation_path=annotation_path,
+            source_sentence_path=source_path,
+            target_path=target_path,
+            parsed=parsed,
+            window=window,
+            annotations=[parsed.annotations[0]],
+            unit_ids=["ua-gec:test:exactness"],
+            source_document=source_path.read_text(encoding="utf-8"),
+            target_document="X" * len(TARGET_TEXT),
+        )
+
+    assert failure.value.reason_code == "corrected_context_not_exactly_retrievable"
+
+
 def test_missing_pinned_annotation_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     checkout = _fixture_checkout(tmp_path)
     annotated = checkout / "data/gec-only/train/annotated/0001.a1.ann"
