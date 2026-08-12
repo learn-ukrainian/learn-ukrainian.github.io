@@ -276,9 +276,12 @@ Field notes:
   `...`/`…` without this tag is what LINT-001 flags. `draft` marks thin /
   incomplete learner text (including AI-minimum glosses). Helpers
   `truncate_with_honesty` + `apply_sense_honesty_tags` in
-  `scripts/lexicon/enrich_manifest.py` exist for that stamping, but they are
-  **not yet wired into enrich emit paths** in this PR — call-site integration
-  lands in #6437 PR3.
+  `scripts/lexicon/enrich_manifest.py` are wired into the enrich emit path via
+  `apply_manifest_sense_honesty`, called at the end of `enrich_entry` (#6437
+  PR3): it hard-caps an oversized `en_disambiguation`/`grammar_notes`
+  annotation (never `uk_source_def` — immutable ingestion text — and never
+  the `learner_uk`/`learner_en` drill content itself) and labels a sense with
+  no recorded dictionary `source` as `ai_minimum`.
 
 ### Lint gate (PR1 + PR2 scope)
 

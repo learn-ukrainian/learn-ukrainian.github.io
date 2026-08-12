@@ -186,6 +186,35 @@ def test_practice_deck_mode_flags_cards_without_sense_id(tmp_path: Path) -> None
     assert findings[0].entry_slug == "автобус"
 
 
+def test_practice_deck_lexemes_shard_flags_lexeme_without_sense_id(tmp_path: Path) -> None:
+    """#6437 PR3: the atlas-practice-lexemes shard body key is scanned too."""
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
+    deck_path = tmp_path / "practice-lexemes.A1.json"
+    deck_path.write_text(
+        json.dumps(
+            {
+                "lexemes": [
+                    {"lemmaId": "автобус"},
+                    {"lemmaId": "брак", "senseId": "brak_defect"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = lint_word_atlas.main(
+        ["--manifest", str(manifest_path), "--practice-deck", str(deck_path)]
+    )
+    assert exit_code == 0
+    findings = lint_word_atlas.lint_practice_items(
+        lint_word_atlas._practice_cards_from_deck(json.loads(deck_path.read_text(encoding="utf-8")))
+    )
+    assert len(findings) == 1
+    assert findings[0].rule_id == "LINT-003"
+    assert findings[0].entry_slug == "автобус"
+
+
 def test_report_mode_writes_json_and_stays_advisory(tmp_path: Path) -> None:
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(
