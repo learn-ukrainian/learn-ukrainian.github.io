@@ -97,8 +97,22 @@
           },
           "license_evidence": {
             "explicit_data_license_at_pinned_sources": null,
+            "korniienko_media_assets": {
+              "asset_count_at_snapshot": 6477,
+              "included_in_text_training": false,
+              "license_label": "CC BY-NC",
+              "license_version_declared": false
+            },
             "official_docs_describe_api_as_open_and_reusable": true,
-            "official_docs_describe_dataset_as_open": true
+            "official_docs_describe_dataset_as_open": true,
+            "operator_use_decision": {
+              "binary_media_in_scope": false,
+              "decision": "proceed_without_pre_use_permission_wait",
+              "decision_date": "2026-08-12",
+              "full_publications_in_scope": false,
+              "response_policy": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice",
+              "scope": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance"
+            }
           },
           "official_bulk_download": {
             "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
@@ -181,7 +195,7 @@
       "modern_correction_eligible": false,
       "record_count": 4157,
       "rights": {
-        "reuse_scope": "private_research_and_internal_analysis_only_until_an_explicit_data_license_is_verified",
+        "reuse_scope": "phase3_textual_dataset_training_and_derived_data_release_with_attribution_field_provenance_and_takedown_readiness",
         "source_text_committed": false,
         "status": "publicly_downloadable_license_not_declared"
       },
@@ -327,14 +341,14 @@
       "state": "open"
     },
     {
-      "blocking_for": ["public_training_release", "redistributable_historical_corpus"],
-      "do_not_claim": "Do not treat public downloadability, an open API, or public source-code repositories as an explicit license for corpus redistribution or training-data release.",
-      "evidence": "The pinned official documentation calls the Korniienko-derived dataset open and the REST API open and reusable, but no explicit data-license expression was found in the pinned project documentation or repositories.",
+      "blocking_for": ["claim_of_explicit_standardized_data_license", "license_warranty_or_indemnity"],
+      "do_not_claim": "Do not claim that the textual dataset has a standardized license expression or warranty, and do not extend the per-asset CC BY-NC label to unlabelled fields or full publications.",
+      "evidence": "The pinned official documentation calls the Korniienko-derived dataset open and the REST API open and reusable. No standardized data-license expression was found, while the stored 4,157-record snapshot contains 6,477 attached Korniienko photographs and drawings, all labelled CC BY-NC without a declared version.",
       "gap_id": "saint_sophia_license_expression_missing",
       "kind": "public_access_without_explicit_data_license",
-      "next_action": "Obtain or locate an explicit data-license statement from the Saint Sophia project or rights holders and bind its exact version before public training-data release.",
-      "nonblocking_for": ["private_research", "internal_text_free_audit", "complete_current_public_api_claim"],
-      "state": "open"
+      "next_action": "Do not wait for pre-use permission: preserve attribution and field-level provenance, monitor upstream rights statements, and adapt, remove, or reclassify affected material on a substantiated rights notice; bind an exact license version if one is later published.",
+      "nonblocking_for": ["private_research", "internal_text_free_audit", "complete_current_public_api_claim", "phase3_textual_dataset_use", "model_training", "derived_training_data_release"],
+      "state": "accepted_operational_risk"
     },
     {
       "blocking_for": ["graffito_108_semantic_gold", "graffito_108_dating_gold"],
@@ -444,7 +458,7 @@
     }
   ],
   "provider_calls": false,
-  "receipt_sha256": "08d3e6546a6c8e320743fa1a3d2e40fed1aed4e6c629bc9e352952bcdc7adb8b",
+  "receipt_sha256": "cc19bc1189b6c31714434027ce46c340c9f00a8ef6574e22005a2a5c44a2ae71",
   "schema_version": "phase3_historical_evidence_spine_v1",
   "status": "EVIDENCE_FIRST_SPINE_DEFINED_SOURCE_GAPS_OPEN",
   "text_free": true

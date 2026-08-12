@@ -123,7 +123,25 @@ def test_saint_sophia_provenance_binds_official_download_part_ix_and_ai_disclosu
     assert provenance["gippius_2023"]["portal_bibliography_present"] is False
     assert provenance["ai_assistance"]["human_gold_eligible_without_review"] is False
     assert provenance["license_evidence"]["explicit_data_license_at_pinned_sources"] is None
+    assert provenance["license_evidence"]["korniienko_media_assets"] == {
+        "asset_count_at_snapshot": 6477,
+        "included_in_text_training": False,
+        "license_label": "CC BY-NC",
+        "license_version_declared": False,
+    }
+    assert provenance["license_evidence"]["operator_use_decision"] == {
+        "binary_media_in_scope": False,
+        "decision": "proceed_without_pre_use_permission_wait",
+        "decision_date": "2026-08-12",
+        "full_publications_in_scope": False,
+        "response_policy": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice",
+        "scope": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance",
+    }
     assert sophia["rights"]["status"] == "publicly_downloadable_license_not_declared"
+    assert sophia["rights"]["reuse_scope"] == (
+        "phase3_textual_dataset_training_and_derived_data_release_with_attribution_"
+        "field_provenance_and_takedown_readiness"
+    )
 
     locators = {(item["locator_role"], item["url"]) for item in sophia["locators"]}
     assert (
@@ -170,7 +188,12 @@ def test_phase_boundaries_remain_fail_closed():
         "phase4_blocked": True,
         "private_corpus_audit_reproducible": True,
     }
-    assert {item["state"] for item in value["gaps"]} == {"open"}
+    gap_states = {item["gap_id"]: item["state"] for item in value["gaps"]}
+    assert gap_states["saint_sophia_license_expression_missing"] == "accepted_operational_risk"
+    assert {
+        state for gap_id, state in gap_states.items()
+        if gap_id != "saint_sophia_license_expression_missing"
+    } == {"open"}
 
 
 def test_validator_rejects_framework_collapse_even_when_resealed():
@@ -208,6 +231,29 @@ def test_validator_rejects_rights_overclaim_even_when_resealed():
     sophia["rights"]["reuse_scope"] = "public_training_with_attribution"
 
     with pytest.raises(spine.HistoricalEvidenceSpineError, match="rights posture drift"):
+        spine.validate_spine(_reseal(value))
+
+
+def test_validator_rejects_erased_operator_use_decision_even_when_resealed():
+    value = copy.deepcopy(_tracked())
+    sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")
+    sophia["facts"]["source_provenance"]["license_evidence"]["operator_use_decision"]["decision"] = (
+        "wait_for_pre_use_permission"
+    )
+
+    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
+        spine.validate_spine(_reseal(value))
+
+
+def test_validator_rejects_reblocking_accepted_rights_risk_even_when_resealed():
+    value = copy.deepcopy(_tracked())
+    license_gap = next(
+        item for item in value["gaps"]
+        if item["gap_id"] == "saint_sophia_license_expression_missing"
+    )
+    license_gap["state"] = "open"
+
+    with pytest.raises(spine.HistoricalEvidenceSpineError, match="gap disposition drift"):
         spine.validate_spine(_reseal(value))
 
 
@@ -251,11 +297,63 @@ def test_validator_rejects_receipt_drift():
 def test_saint_sophia_private_audit_excludes_missing_reversed_and_out_of_bounds_dates(tmp_path):
     source = tmp_path / "sophia.jsonl"
     rows = [
-        {"disposition": "text_bearing", "source_language_label": "Ukrainian", "source_writing_system_label": "Cyrillic", "min_year": 1100, "max_year": 1100, "metadata": {"source_record": {"bibliography": [{"id": 11, "title": "Part IX", "authors": "Korniienko"}]}}},
-        {"disposition": "text_bearing", "source_language_label": "Church Slavonic", "source_writing_system_label": "Cyrillic", "min_year": 1450, "max_year": 1600, "metadata": {"source_record": {"bibliography": [{"id": 11, "title": "Part IX", "authors": "Korniienko"}, {"id": 99, "title": "Reanalysis", "authors": "Gippius"}]}}},
-        {"disposition": "quarantined_metadata", "source_language_label": None, "source_writing_system_label": None, "min_year": 1600, "max_year": 1597},
-        {"disposition": "quarantined_metadata", "source_language_label": None, "source_writing_system_label": None, "min_year": 1025, "max_year": 13015},
-        {"disposition": "non_textual_or_no_text", "source_language_label": None, "source_writing_system_label": None, "min_year": None, "max_year": None},
+        {
+            "disposition": "text_bearing",
+            "source_language_label": "Ukrainian",
+            "source_writing_system_label": "Cyrillic",
+            "min_year": 1100,
+            "max_year": 1100,
+            "metadata": {
+                "source_record": {
+                    "bibliography": [{"id": 11, "title": "Part IX", "authors": "Korniienko"}],
+                    "korniienko_image": [
+                        {"type_of_license": "CC BY-NC", "type_of_image": "Photograph"}
+                    ],
+                }
+            },
+        },
+        {
+            "disposition": "text_bearing",
+            "source_language_label": "Church Slavonic",
+            "source_writing_system_label": "Cyrillic",
+            "min_year": 1450,
+            "max_year": 1600,
+            "metadata": {
+                "source_record": {
+                    "bibliography": [
+                        {"id": 11, "title": "Part IX", "authors": "Korniienko"},
+                        {"id": 99, "title": "Reanalysis", "authors": "Gippius"},
+                    ],
+                    "korniienko_image": [
+                        {"type_of_license": "CC BY-NC", "type_of_image": "Drawing"}
+                    ],
+                }
+            },
+        },
+        {
+            "disposition": "quarantined_metadata",
+            "source_language_label": None,
+            "source_writing_system_label": None,
+            "min_year": 1600,
+            "max_year": 1597,
+            "metadata": {"source_record": {"bibliography": [], "korniienko_image": []}},
+        },
+        {
+            "disposition": "quarantined_metadata",
+            "source_language_label": None,
+            "source_writing_system_label": None,
+            "min_year": 1025,
+            "max_year": 13015,
+            "metadata": {"source_record": {"bibliography": [], "korniienko_image": []}},
+        },
+        {
+            "disposition": "non_textual_or_no_text",
+            "source_language_label": None,
+            "source_writing_system_label": None,
+            "min_year": None,
+            "max_year": None,
+            "metadata": {"source_record": {"bibliography": [], "korniienko_image": []}},
+        },
     ]
     _write_jsonl(source, rows)
 
@@ -276,6 +374,11 @@ def test_saint_sophia_private_audit_excludes_missing_reversed_and_out_of_bounds_
         "gippius_2023_portal_bibliography_matches": 1,
         "part_ix_bibliography_id": 11,
         "part_ix_linked_records": 2,
+    }
+    assert result["media_assets"] == {
+        "asset_count": 2,
+        "license_counts": {"CC BY-NC": 2},
+        "type_counts": {"Drawing": 1, "Photograph": 1},
     }
 
 

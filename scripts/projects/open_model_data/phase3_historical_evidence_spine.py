@@ -30,7 +30,7 @@ DENOMINATOR_PATH = ROOT / "data/historical_language_corpus_denominator.yaml"
 FULL_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_full_materialization_gate_v1.json"
 
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v1"
-EXPECTED_SPINE_SHA256 = "2c8907fc5c04dd2e73de425ac7627002028dc6056513802a19f199191b6ea55b"
+EXPECTED_SPINE_SHA256 = "61a937f150a4cbecf6b12774ef812d67289705d9523c4e766c95e721b7451076"
 EXPECTED_BINDINGS = {
     "historical_denominator_sha256": "4d89bfdb7e935008ad1332426ff9c40dca97efdf72053f35cdb1dad05117e6aa",
     "historical_full_materialization_gate_sha256": "3a4f409be28560dbc6a9c2c5defa043414dc659870be11a03f8e7297e8249e21",
@@ -83,6 +83,20 @@ EXPECTED_SOPHIA_PROVENANCE = {
         "official_docs_describe_dataset_as_open": True,
         "official_docs_describe_api_as_open_and_reusable": True,
         "explicit_data_license_at_pinned_sources": None,
+        "korniienko_media_assets": {
+            "asset_count_at_snapshot": 6477,
+            "included_in_text_training": False,
+            "license_label": "CC BY-NC",
+            "license_version_declared": False,
+        },
+        "operator_use_decision": {
+            "binary_media_in_scope": False,
+            "decision": "proceed_without_pre_use_permission_wait",
+            "decision_date": "2026-08-12",
+            "full_publications_in_scope": False,
+            "response_policy": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice",
+            "scope": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance",
+        },
     },
     "official_bulk_download": {
         "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
@@ -163,6 +177,10 @@ EXPECTED_GAPS = {
     "middle_ukrainian_genre_and_region_depth",
     "nimchuk_primary_periodization_text",
 }
+EXPECTED_GAP_STATES = {
+    gap_id: ("accepted_operational_risk" if gap_id == "saint_sophia_license_expression_missing" else "open")
+    for gap_id in EXPECTED_GAPS
+}
 EXPECTED_SEQUENCE_CONTRACT = [
     {
         "sequence_id": "kyiv_medieval_epigraphy",
@@ -202,7 +220,7 @@ EXPECTED_SEQUENCE_CONTRACT = [
 ]
 EXPECTED_RIGHTS = {
     "saint-sophia-inscriptions": {
-        "reuse_scope": "private_research_and_internal_analysis_only_until_an_explicit_data_license_is_verified",
+        "reuse_scope": "phase3_textual_dataset_training_and_derived_data_release_with_attribution_field_provenance_and_takedown_readiness",
         "source_text_committed": False,
         "status": "publicly_downloadable_license_not_declared",
     },
@@ -243,6 +261,11 @@ EXPECTED_SOPHIA_PRIVATE_AUDIT = {
         "gippius_2023_portal_bibliography_matches": 0,
         "part_ix_bibliography_id": 11,
         "part_ix_linked_records": 306,
+    },
+    "media_assets": {
+        "asset_count": 6477,
+        "license_counts": {"CC BY-NC": 6477},
+        "type_counts": {"Drawing": 3248, "Photograph": 3229},
     },
     "coarse_date_observations": {
         "old_1000_1399": {
@@ -426,7 +449,10 @@ def validate_spine(value: Mapping[str, Any]) -> dict[str, Any]:
 
     gaps = _by_id(spine["gaps"], "gap_id", "gap")
     require(gaps.keys() == EXPECTED_GAPS, "historical coverage gap denominator drift")
-    require(all(item["state"] == "open" for item in gaps.values()), "open source gaps cannot be silently closed")
+    require(
+        {gap_id: item["state"] for gap_id, item in gaps.items()} == EXPECTED_GAP_STATES,
+        "historical coverage gap disposition drift",
+    )
 
     gates = spine["gates"]
     require(gates["evidence_first_spine_defined"] is True, "evidence spine definition is incomplete")
@@ -472,6 +498,8 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
     old_definite = old_possible = old_ukrainian_definite = 0
     middle_definite = middle_possible = middle_ukrainian_definite = 0
     bibliography_ids: set[int] = set()
+    media_licenses: Counter[str] = Counter()
+    media_types: Counter[str] = Counter()
     part_ix_linked_records = 0
     gippius_2023_matches = 0
     for line_number, raw_line in enumerate(path.open(encoding="utf-8"), start=1):
@@ -484,8 +512,11 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
         dispositions[str(row.get("disposition"))] += 1
         languages[str(row.get("source_language_label") or "unlabelled")] += 1
         writing_systems[str(row.get("source_writing_system_label") or "unlabelled")] += 1
-        source_record = row.get("metadata", {}).get("source_record", {})
-        bibliography = source_record.get("bibliography", []) if isinstance(source_record, dict) else []
+        metadata = row.get("metadata")
+        require(isinstance(metadata, dict), f"Saint Sophia line {line_number} metadata is not an object")
+        source_record = metadata.get("source_record", {})
+        require(isinstance(source_record, dict), f"Saint Sophia line {line_number} source record is not an object")
+        bibliography = source_record.get("bibliography", [])
         require(isinstance(bibliography, list), f"Saint Sophia line {line_number} bibliography is not a list")
         has_part_ix = False
         has_gippius = False
@@ -501,6 +532,12 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
             has_gippius = has_gippius or any(name in bibliography_text for name in ("gippius", "гиппиус", "гіппіус"))
         part_ix_linked_records += has_part_ix
         gippius_2023_matches += has_gippius
+        media_assets = source_record.get("korniienko_image", [])
+        require(isinstance(media_assets, list), f"Saint Sophia line {line_number} media assets are not a list")
+        for asset in media_assets:
+            require(isinstance(asset, dict), f"Saint Sophia line {line_number} media asset is not an object")
+            media_licenses[str(asset.get("type_of_license") or "unlabelled")] += 1
+            media_types[str(asset.get("type_of_image") or "unlabelled")] += 1
         minimum, maximum = row.get("min_year"), row.get("max_year")
         if minimum is None or maximum is None:
             missing_dates += 1
@@ -539,6 +576,11 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
             "gippius_2023_portal_bibliography_matches": gippius_2023_matches,
             "part_ix_bibliography_id": 11,
             "part_ix_linked_records": part_ix_linked_records,
+        },
+        "media_assets": {
+            "asset_count": sum(media_licenses.values()),
+            "license_counts": dict(sorted(media_licenses.items())),
+            "type_counts": dict(sorted(media_types.items())),
         },
         "coarse_date_observations": {
             "old_1000_1399": {
@@ -766,7 +808,10 @@ def main() -> int:
         "schema_version": spine["schema_version"],
         "status": spine["status"],
         "receipt_sha256": spine["receipt_sha256"],
-        "open_gap_count": len(spine["gaps"]),
+        "open_gap_count": sum(item["state"] == "open" for item in spine["gaps"]),
+        "accepted_operational_risk_count": sum(
+            item["state"] == "accepted_operational_risk" for item in spine["gaps"]
+        ),
         "phase3_complete": spine["gates"]["phase3_complete"],
         "phase4_blocked": spine["gates"]["phase4_blocked"],
         "provider_calls": False,

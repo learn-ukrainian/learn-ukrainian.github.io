@@ -305,11 +305,35 @@
         "license_evidence": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["official_docs_describe_dataset_as_open", "official_docs_describe_api_as_open_and_reusable", "explicit_data_license_at_pinned_sources"],
+          "required": ["official_docs_describe_dataset_as_open", "official_docs_describe_api_as_open_and_reusable", "explicit_data_license_at_pinned_sources", "korniienko_media_assets", "operator_use_decision"],
           "properties": {
             "official_docs_describe_dataset_as_open": {"const": true},
             "official_docs_describe_api_as_open_and_reusable": {"const": true},
-            "explicit_data_license_at_pinned_sources": {"type": "null"}
+            "explicit_data_license_at_pinned_sources": {"type": "null"},
+            "korniienko_media_assets": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["asset_count_at_snapshot", "license_label", "license_version_declared", "included_in_text_training"],
+              "properties": {
+                "asset_count_at_snapshot": {"const": 6477},
+                "license_label": {"const": "CC BY-NC"},
+                "license_version_declared": {"const": false},
+                "included_in_text_training": {"const": false}
+              }
+            },
+            "operator_use_decision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["decision_date", "decision", "scope", "full_publications_in_scope", "binary_media_in_scope", "response_policy"],
+              "properties": {
+                "decision_date": {"const": "2026-08-12"},
+                "decision": {"const": "proceed_without_pre_use_permission_wait"},
+                "scope": {"const": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance"},
+                "full_publications_in_scope": {"const": false},
+                "binary_media_in_scope": {"const": false},
+                "response_policy": {"const": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice"}
+              }
+            }
           }
         }
       }
@@ -475,7 +499,7 @@
       "properties": {
         "gap_id": {"type": "string", "minLength": 1},
         "kind": {"type": "string", "minLength": 1},
-        "state": {"const": "open"},
+        "state": {"enum": ["open", "accepted_operational_risk"]},
         "blocking_for": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "nonblocking_for": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "evidence": {"type": "string", "minLength": 1},
