@@ -105,6 +105,34 @@ def test_saint_sophia_and_lavra_are_separate_and_only_one_is_materialized():
     assert lavra["facts"]["separate_from_saint_sophia"] is True
 
 
+def test_saint_sophia_provenance_binds_official_download_part_ix_and_ai_disclosure():
+    sophia = next(
+        item for item in spine.load_spine()["collections"]
+        if item["collection_id"] == "saint-sophia-inscriptions"
+    )
+    provenance = sophia["facts"]["source_provenance"]
+
+    assert provenance["official_bulk_download"] == {
+        "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
+        "download_label": "Download all inscription data",
+        "record_count_at_snapshot": 4157,
+        "same_public_api_stream": True,
+    }
+    assert provenance["part_ix"]["bibliography_id"] == 11
+    assert provenance["part_ix"]["linked_public_records"] == 306
+    assert provenance["gippius_2023"]["portal_bibliography_present"] is False
+    assert provenance["ai_assistance"]["human_gold_eligible_without_review"] is False
+    assert provenance["license_evidence"]["explicit_data_license_at_pinned_sources"] is None
+    assert sophia["rights"]["status"] == "publicly_downloadable_license_not_declared"
+
+    locators = {(item["locator_role"], item["url"]) for item in sophia["locators"]}
+    assert (
+        "official_bulk_download_implementation",
+        "https://github.com/gu-gridh/multimodal-map/blob/574914b6a740b639eb8e90f143664aae9a86cac7/projects/sophia/Footer.vue",
+    ) in locators
+    assert ("scholarly_reanalysis_doi", "https://doi.org/10.4324/9781003256236-14") in locators
+
+
 def test_current_materialized_coverage_does_not_fake_old_or_middle_depth():
     collections = {item["collection_id"]: item for item in spine.load_spine()["collections"]}
     sophia = collections["saint-sophia-inscriptions"]["facts"]
@@ -183,6 +211,15 @@ def test_validator_rejects_rights_overclaim_even_when_resealed():
         spine.validate_spine(_reseal(value))
 
 
+def test_validator_rejects_ai_assisted_portal_fields_as_unreviewed_human_gold():
+    value = copy.deepcopy(_tracked())
+    sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")
+    sophia["facts"]["source_provenance"]["ai_assistance"]["human_gold_eligible_without_review"] = True
+
+    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
+        spine.validate_spine(_reseal(value))
+
+
 def test_validator_rejects_instructional_collection_reshuffle_even_when_resealed():
     value = copy.deepcopy(_tracked())
     old = next(
@@ -214,8 +251,8 @@ def test_validator_rejects_receipt_drift():
 def test_saint_sophia_private_audit_excludes_missing_reversed_and_out_of_bounds_dates(tmp_path):
     source = tmp_path / "sophia.jsonl"
     rows = [
-        {"disposition": "text_bearing", "source_language_label": "Ukrainian", "source_writing_system_label": "Cyrillic", "min_year": 1100, "max_year": 1100},
-        {"disposition": "text_bearing", "source_language_label": "Church Slavonic", "source_writing_system_label": "Cyrillic", "min_year": 1450, "max_year": 1600},
+        {"disposition": "text_bearing", "source_language_label": "Ukrainian", "source_writing_system_label": "Cyrillic", "min_year": 1100, "max_year": 1100, "metadata": {"source_record": {"bibliography": [{"id": 11, "title": "Part IX", "authors": "Korniienko"}]}}},
+        {"disposition": "text_bearing", "source_language_label": "Church Slavonic", "source_writing_system_label": "Cyrillic", "min_year": 1450, "max_year": 1600, "metadata": {"source_record": {"bibliography": [{"id": 11, "title": "Part IX", "authors": "Korniienko"}, {"id": 99, "title": "Reanalysis", "authors": "Gippius"}]}}},
         {"disposition": "quarantined_metadata", "source_language_label": None, "source_writing_system_label": None, "min_year": 1600, "max_year": 1597},
         {"disposition": "quarantined_metadata", "source_language_label": None, "source_writing_system_label": None, "min_year": 1025, "max_year": 13015},
         {"disposition": "non_textual_or_no_text", "source_language_label": None, "source_writing_system_label": None, "min_year": None, "max_year": None},
@@ -234,6 +271,12 @@ def test_saint_sophia_private_audit_excludes_missing_reversed_and_out_of_bounds_
     }
     assert result["coarse_date_observations"]["old_1000_1399"]["interval_wholly_inside"] == 1
     assert result["coarse_date_observations"]["middle_1400_1799"]["interval_wholly_inside"] == 1
+    assert result["bibliography"] == {
+        "distinct_items": 2,
+        "gippius_2023_portal_bibliography_matches": 1,
+        "part_ix_bibliography_id": 11,
+        "part_ix_linked_records": 2,
+    }
 
 
 def test_plug2_private_audit_uses_original_language_and_exact_dates(tmp_path):

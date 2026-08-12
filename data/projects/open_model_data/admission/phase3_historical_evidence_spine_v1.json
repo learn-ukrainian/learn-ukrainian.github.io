@@ -73,6 +73,47 @@
         },
         "quarantined_metadata": 2,
         "retrieval_scope": "complete_current_public_api",
+        "source_provenance": {
+          "ai_assistance": {
+            "affected_field_classes": [
+              "english_translation_and_commentary",
+              "romanisation"
+            ],
+            "affected_record_membership_known": false,
+            "disclosed_by_official_documentation": true,
+            "human_gold_eligible_without_review": false
+          },
+          "foundational_dataset": {
+            "edition_title": "Корпус Графіті Софії Київської",
+            "publication_year_end": 2020,
+            "publication_year_start": 2009,
+            "volume_count": 12
+          },
+          "gippius_2023": {
+            "doi": "10.4324/9781003256236-14",
+            "portal_bibliography_present": false,
+            "role": "qualified_secondary_reanalysis_candidate",
+            "target": "Kyiv graffito No. 108"
+          },
+          "license_evidence": {
+            "explicit_data_license_at_pinned_sources": null,
+            "official_docs_describe_api_as_open_and_reusable": true,
+            "official_docs_describe_dataset_as_open": true
+          },
+          "official_bulk_download": {
+            "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
+            "download_label": "Download all inscription data",
+            "record_count_at_snapshot": 4157,
+            "same_public_api_stream": true
+          },
+          "part_ix": {
+            "bibliography_id": 11,
+            "linked_public_records": 306,
+            "publication_year": 2019,
+            "scope": "північні внутрішня та зовнішня галереї"
+          },
+          "portal_version": "v1.6"
+        },
         "stage_labels_assigned": 0,
         "text_bearing": 4144,
         "valid_date_intervals": 4145,
@@ -99,14 +140,50 @@
           "local_bytes_acquired": false,
           "locator_role": "api_root",
           "url": "https://saintsophia.dh.gu.se/api/"
+        },
+        {
+          "label": "Official bulk inscription download API",
+          "local_bytes_acquired": true,
+          "locator_role": "official_bulk_download_api",
+          "url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2"
+        },
+        {
+          "label": "Pinned official Saint Sophia dataset and API documentation",
+          "local_bytes_acquired": false,
+          "locator_role": "dataset_documentation",
+          "url": "https://github.com/gu-gridh/documentation/blob/eee39a2f5b009efed451e083a9654a48785b896c/gridh-projects/saintsophia.md"
+        },
+        {
+          "label": "Pinned official Saint Sophia backend repository",
+          "local_bytes_acquired": false,
+          "locator_role": "dataset_repository",
+          "url": "https://github.com/gu-gridh/Saint_Sophia/tree/4eca1b8ad9293759ce3f39a139ff9daf027882ef"
+        },
+        {
+          "label": "Pinned official bulk-download implementation",
+          "local_bytes_acquired": false,
+          "locator_role": "official_bulk_download_implementation",
+          "url": "https://github.com/gu-gridh/multimodal-map/blob/574914b6a740b639eb8e90f143664aae9a86cac7/projects/sophia/Footer.vue"
+        },
+        {
+          "label": "Official bibliography record for Korniienko Part IX",
+          "local_bytes_acquired": true,
+          "locator_role": "foundational_bibliography_record",
+          "url": "https://saintsophia.dh.gu.se/api/inscriptions/bibliography-item/11/"
+        },
+        {
+          "label": "Gippius 2023 reanalysis of Kyiv graffito No. 108",
+          "local_bytes_acquired": false,
+          "locator_role": "scholarly_reanalysis_doi",
+          "url": "https://doi.org/10.4324/9781003256236-14"
         }
       ],
       "modern_correction_eligible": false,
       "record_count": 4157,
       "rights": {
-        "reuse_scope": "private_research_only_until_explicit_clearance",
+        "reuse_scope": "private_research_and_internal_analysis_only_until_an_explicit_data_license_is_verified",
         "source_text_committed": false,
-        "status": "restricted_pending_explicit_clearance"
+        "status": "publicly_downloadable_license_not_declared"
       },
       "source_kind": "epigraphy",
       "source_sha256": "6199f2a92bd948dfe63d12e9da68637b02a4d16ff58b0ddba3d5e252bb3ec4fe"
@@ -250,6 +327,26 @@
       "state": "open"
     },
     {
+      "blocking_for": ["public_training_release", "redistributable_historical_corpus"],
+      "do_not_claim": "Do not treat public downloadability, an open API, or public source-code repositories as an explicit license for corpus redistribution or training-data release.",
+      "evidence": "The pinned official documentation calls the Korniienko-derived dataset open and the REST API open and reusable, but no explicit data-license expression was found in the pinned project documentation or repositories.",
+      "gap_id": "saint_sophia_license_expression_missing",
+      "kind": "public_access_without_explicit_data_license",
+      "next_action": "Obtain or locate an explicit data-license statement from the Saint Sophia project or rights holders and bind its exact version before public training-data release.",
+      "nonblocking_for": ["private_research", "internal_text_free_audit", "complete_current_public_api_claim"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["graffito_108_semantic_gold", "graffito_108_dating_gold"],
+      "do_not_claim": "Do not merge the portal transcription, Korniienko edition, Vysotsky number, and Gippius reanalysis into one unquestioned gold record without an exact identifier crosswalk and qualified adjudication.",
+      "evidence": "The official portal bibliography contains the twelve Korniienko volumes and links Part IX to 306 public records, but it does not contain Gippius 2023 and the current public record titles do not expose an exact 108 or 108a identifier.",
+      "gap_id": "kyiv_graffito_108_scholarly_crosswalk",
+      "kind": "edition_identifier_and_reanalysis_crosswalk_unresolved",
+      "next_action": "Map Vysotsky No. 108, Korniienko's identifier, the current portal record, and DOI 10.4324/9781003256236-14; retain each reading and date as attributed evidence until qualified Ukrainian historical-linguistic adjudication.",
+      "nonblocking_for": ["part_ix_collection_level_coverage", "other_saint_sophia_records"],
+      "state": "open"
+    },
+    {
       "blocking_for": ["old_ukrainian_direct_text_depth", "historical_source_coverage_ready"],
       "do_not_claim": "Do not relabel Church Slavonic, unlabelled, Greek, or mixed inscriptions as Ukrainian solely from their date or location.",
       "evidence": "Saint Sophia has 1,225 valid intervals wholly inside 1000-1399, but only seven are both text-bearing and source-labelled Ukrainian; no additional Old-Ukrainian documentary corpus is currently materialized.",
@@ -347,7 +444,7 @@
     }
   ],
   "provider_calls": false,
-  "receipt_sha256": "eb075580b05fa494300ffe8fb815a969208de3be2176c817482b634070678c86",
+  "receipt_sha256": "08d3e6546a6c8e320743fa1a3d2e40fed1aed4e6c629bc9e352952bcdc7adb8b",
   "schema_version": "phase3_historical_evidence_spine_v1",
   "status": "EVIDENCE_FIRST_SPINE_DEFINED_SOURCE_GAPS_OPEN",
   "text_free": true

@@ -30,7 +30,7 @@ DENOMINATOR_PATH = ROOT / "data/historical_language_corpus_denominator.yaml"
 FULL_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_full_materialization_gate_v1.json"
 
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v1"
-EXPECTED_SPINE_SHA256 = "4c775a9c2170e7aa521d6188cac2dba29b7f1e808cc8963d210363f78faef5c9"
+EXPECTED_SPINE_SHA256 = "2c8907fc5c04dd2e73de425ac7627002028dc6056513802a19f199191b6ea55b"
 EXPECTED_BINDINGS = {
     "historical_denominator_sha256": "4d89bfdb7e935008ad1332426ff9c40dca97efdf72053f35cdb1dad05117e6aa",
     "historical_full_materialization_gate_sha256": "3a4f409be28560dbc6a9c2c5defa043414dc659870be11a03f8e7297e8249e21",
@@ -60,6 +60,44 @@ EXPECTED_INSTRUCTIONAL_ORDER = [
     "new_and_modern_ukrainian",
     "comparative_reconstruction_backlink",
 ]
+EXPECTED_SOPHIA_PROVENANCE = {
+    "ai_assistance": {
+        "affected_field_classes": ["english_translation_and_commentary", "romanisation"],
+        "affected_record_membership_known": False,
+        "disclosed_by_official_documentation": True,
+        "human_gold_eligible_without_review": False,
+    },
+    "foundational_dataset": {
+        "edition_title": "Корпус Графіті Софії Київської",
+        "publication_year_end": 2020,
+        "publication_year_start": 2009,
+        "volume_count": 12,
+    },
+    "gippius_2023": {
+        "doi": "10.4324/9781003256236-14",
+        "portal_bibliography_present": False,
+        "role": "qualified_secondary_reanalysis_candidate",
+        "target": "Kyiv graffito No. 108",
+    },
+    "license_evidence": {
+        "official_docs_describe_dataset_as_open": True,
+        "official_docs_describe_api_as_open_and_reusable": True,
+        "explicit_data_license_at_pinned_sources": None,
+    },
+    "official_bulk_download": {
+        "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
+        "download_label": "Download all inscription data",
+        "record_count_at_snapshot": 4157,
+        "same_public_api_stream": True,
+    },
+    "part_ix": {
+        "bibliography_id": 11,
+        "linked_public_records": 306,
+        "publication_year": 2019,
+        "scope": "північні внутрішня та зовнішня галереї",
+    },
+    "portal_version": "v1.6",
+}
 EXPECTED_SOPHIA_FACTS = {
     "century_or_wider_intervals": 3550,
     "exact_year_intervals": 168,
@@ -99,6 +137,7 @@ EXPECTED_SOPHIA_FACTS = {
         "year_start": 1000,
     },
     "quarantined_metadata": 2,
+    "source_provenance": EXPECTED_SOPHIA_PROVENANCE,
     "retrieval_scope": "complete_current_public_api",
     "stage_labels_assigned": 0,
     "text_bearing": 4144,
@@ -115,8 +154,10 @@ EXPECTED_SOPHIA_FACTS = {
     },
 }
 EXPECTED_GAPS = {
+    "kyiv_graffito_108_scholarly_crosswalk",
     "lavra_epigraphy_not_materialized",
     "saint_sophia_public_residual",
+    "saint_sophia_license_expression_missing",
     "old_ukrainian_direct_text_depth",
     "ud_document_date_and_provenance_review",
     "middle_ukrainian_genre_and_region_depth",
@@ -161,9 +202,9 @@ EXPECTED_SEQUENCE_CONTRACT = [
 ]
 EXPECTED_RIGHTS = {
     "saint-sophia-inscriptions": {
-        "reuse_scope": "private_research_only_until_explicit_clearance",
+        "reuse_scope": "private_research_and_internal_analysis_only_until_an_explicit_data_license_is_verified",
         "source_text_committed": False,
-        "status": "restricted_pending_explicit_clearance",
+        "status": "publicly_downloadable_license_not_declared",
     },
     "kyiv-pechersk-lavra-graffiti": {
         "reuse_scope": "no_corpus_use_until_source_and_rights_are_verified",
@@ -196,6 +237,12 @@ EXPECTED_SOPHIA_PRIVATE_AUDIT = {
         "century_or_wider_intervals": EXPECTED_SOPHIA_FACTS["century_or_wider_intervals"],
         "missing_intervals": EXPECTED_SOPHIA_FACTS["missing_date_intervals"],
         "invalid_intervals": EXPECTED_SOPHIA_FACTS["invalid_date_intervals"],
+    },
+    "bibliography": {
+        "distinct_items": 12,
+        "gippius_2023_portal_bibliography_matches": 0,
+        "part_ix_bibliography_id": 11,
+        "part_ix_linked_records": 306,
     },
     "coarse_date_observations": {
         "old_1000_1399": {
@@ -322,6 +369,27 @@ def validate_spine(value: Mapping[str, Any]) -> dict[str, Any]:
         == {
             ("source_portal", "https://saintsophia.dh.gu.se/"),
             ("api_root", "https://saintsophia.dh.gu.se/api/"),
+            (
+                "official_bulk_download_api",
+                "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
+            ),
+            (
+                "dataset_documentation",
+                "https://github.com/gu-gridh/documentation/blob/eee39a2f5b009efed451e083a9654a48785b896c/gridh-projects/saintsophia.md",
+            ),
+            (
+                "dataset_repository",
+                "https://github.com/gu-gridh/Saint_Sophia/tree/4eca1b8ad9293759ce3f39a139ff9daf027882ef",
+            ),
+            (
+                "official_bulk_download_implementation",
+                "https://github.com/gu-gridh/multimodal-map/blob/574914b6a740b639eb8e90f143664aae9a86cac7/projects/sophia/Footer.vue",
+            ),
+            (
+                "foundational_bibliography_record",
+                "https://saintsophia.dh.gu.se/api/inscriptions/bibliography-item/11/",
+            ),
+            ("scholarly_reanalysis_doi", "https://doi.org/10.4324/9781003256236-14"),
         },
         "Saint Sophia locator set drift",
     )
@@ -403,6 +471,9 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
     invalid_dates = 0
     old_definite = old_possible = old_ukrainian_definite = 0
     middle_definite = middle_possible = middle_ukrainian_definite = 0
+    bibliography_ids: set[int] = set()
+    part_ix_linked_records = 0
+    gippius_2023_matches = 0
     for line_number, raw_line in enumerate(path.open(encoding="utf-8"), start=1):
         try:
             row = json.loads(raw_line)
@@ -413,6 +484,23 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
         dispositions[str(row.get("disposition"))] += 1
         languages[str(row.get("source_language_label") or "unlabelled")] += 1
         writing_systems[str(row.get("source_writing_system_label") or "unlabelled")] += 1
+        source_record = row.get("metadata", {}).get("source_record", {})
+        bibliography = source_record.get("bibliography", []) if isinstance(source_record, dict) else []
+        require(isinstance(bibliography, list), f"Saint Sophia line {line_number} bibliography is not a list")
+        has_part_ix = False
+        has_gippius = False
+        for item in bibliography:
+            require(isinstance(item, dict), f"Saint Sophia line {line_number} bibliography item is not an object")
+            bibliography_id = item.get("id")
+            if isinstance(bibliography_id, int):
+                bibliography_ids.add(bibliography_id)
+                has_part_ix = has_part_ix or bibliography_id == 11
+            bibliography_text = " ".join(
+                str(item.get(key) or "") for key in ("title", "authors", "body_of_publication")
+            ).casefold()
+            has_gippius = has_gippius or any(name in bibliography_text for name in ("gippius", "гиппиус", "гіппіус"))
+        part_ix_linked_records += has_part_ix
+        gippius_2023_matches += has_gippius
         minimum, maximum = row.get("min_year"), row.get("max_year")
         if minimum is None or maximum is None:
             missing_dates += 1
@@ -445,6 +533,12 @@ def audit_saint_sophia(path: Path, *, expected_sha256: str | None = None) -> dic
             "century_or_wider_intervals": broad_dates,
             "missing_intervals": missing_dates,
             "invalid_intervals": invalid_dates,
+        },
+        "bibliography": {
+            "distinct_items": len(bibliography_ids),
+            "gippius_2023_portal_bibliography_matches": gippius_2023_matches,
+            "part_ix_bibliography_id": 11,
+            "part_ix_linked_records": part_ix_linked_records,
         },
         "coarse_date_observations": {
             "old_1000_1399": {
