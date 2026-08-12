@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/practice-wp2-zno-inventory-fill
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# TASK practice-wp2-zno-inventory-fill
+
+You are Cursor Auto implementing Practice WP2 slice 1 (ZNO/NMT content fill inventory + first densify PR).
+
+## CAPACITY_CARD
+pick=cursor Auto | avoid=kimi 7d empty | parallel with practice-wp1-paradigm-pairs (disjoint paths)
+
+## Outcome
+1. Inventory local ZNO/NMT sources (`zno_tasks` DB / scripts under `scripts/practice_deck/`, residual JSON).
+2. For each deck in `site/src/data/practice-zno.*.json` measure items vs available corpus candidates.
+3. Expand thin decks (esp. paronym=6, stress=27, norms) by emitting every available single-choice task that meets existing quality predicates — no arbitrary thin forever.
+4. Keep **UA-only** on task stems/options (no English).
+5. Write residual file for blocked/unparsed tasks with IDs + reason: `batch_state/practice/zno-fill-residual.json` (ok gitignored) AND if committing a residual for product, put under an allowed tracked path only if project already tracks residual (e.g. update `site/src/data/practice-zno.residual.json` if that is the contract).
+6. Open PR. Do not self-merge. X-Agent trailer.
+
+## Owned paths ONLY (do not touch WP1 claims)
+- `site/src/data/practice-zno.*`
+- `scripts/practice_deck/`
+- `tests/practice_deck/` / related ZNO tests
+- `batch_state/practice/` local residual dumps
+
+## Forbidden
+- `site/public/lexicon/**` (WP1 owns)
+- `data/lexicon/*pairs*` (WP1 owns)
+- Advanced exam UI gate (later WP2b) unless trivial residual copy in existing ZNO chrome
+- Linter config / .python-version / sys.executable
+- Fabricating “thin is fine”
+
+## Verify
+```bash
+.venv/bin/python -m scripts.practice.coverage_report || true
+# per-deck counts before/after
+.venv/bin/pytest tests/practice_deck -q 2>/dev/null || .venv/bin/pytest -k zno -q
+```
+
+## Success
+PR with higher ZNO item counts and named residual for anything not ingestible.

@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "72be9da1c371",
+  "session_id": "fleet-ad2161afc37e45359de3e4c644660c9a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:42:41.427847Z",
+  "branch": "cursor/practice-wp2-zno-inventory-fill",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/practice_deck/zno.py",
+    "site/src/data/practice-zno.lexical-norm.json",
+    "site/src/data/practice-zno.morphology.json",
+    "site/src/data/practice-zno.paronym.json",
+    "site/src/data/practice-zno.residual.json",
+    "tests/practice_deck/test_zno.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "949b4d476b3c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:42:41.422401Z",
+    "agent_lines": 131,
+    "agent_removed": 17,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 131,
+    "total_lines_changed": 148,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
