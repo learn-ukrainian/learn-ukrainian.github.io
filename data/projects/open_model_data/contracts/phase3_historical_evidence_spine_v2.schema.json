@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_historical_evidence_spine_v2.schema.json",
+  "title": "Phase 3 historical evidence spine update v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "supersedes",
+    "bindings",
+    "framework_policy",
+    "collections",
+    "coverage_matrix",
+    "gap_dispositions",
+    "gates",
+    "text_free",
+    "provider_calls",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_evidence_spine_v2"},
+    "status": {"const": "HISTORICAL_EVIDENCE_SPINE_UPDATED_SOURCE_GAPS_OPEN"},
+    "supersedes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v1_file_sha256", "v1_receipt_sha256", "reason"],
+      "properties": {
+        "v1_file_sha256": {"$ref": "#/$defs/sha256"},
+        "v1_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "historical_periodization_freeze_sha256",
+        "historical_evidence_spine_v1_sha256",
+        "historical_evidence_spine_v1_schema_sha256",
+        "code_bindings",
+        "private_receipts"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_freeze_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v1_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v1_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "code_bindings": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/code_binding"}
+        },
+        "private_receipts": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/private_receipt"}
+        }
+      }
+    },
+    "framework_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bound_framework_ids",
+        "canonical_framework_id",
+        "frameworks_preserved_without_collapse",
+        "chronology_is_not_linguistic_stage_gold",
+        "record_assignment_requires_qualified_review"
+      ],
+      "properties": {
+        "bound_framework_ids": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "canonical_framework_id": {"type": "null"},
+        "frameworks_preserved_without_collapse": {"const": true},
+        "chronology_is_not_linguistic_stage_gold": {"const": true},
+        "record_assignment_requires_qualified_review": {"const": true}
+      }
+    },
+    "collections": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/collection"}
+    },
+    "coverage_matrix": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/coverage_cell"}
+    },
+    "gap_dispositions": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {"$ref": "#/$defs/gap"}
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_content_gap_matrix_current",
+        "incremental_private_receipt_and_output_hashes_verified",
+        "qualified_historical_semantic_review_complete",
+        "historical_source_coverage_ready",
+        "historical_source_freeze_ready",
+        "phase3_complete",
+        "phase4_authorized",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "historical_content_gap_matrix_current": {"const": true},
+        "incremental_private_receipt_and_output_hashes_verified": {"const": true},
+        "qualified_historical_semantic_review_complete": {"const": false},
+        "historical_source_coverage_ready": {"const": false},
+        "historical_source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "code_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_path", "sha256"],
+      "properties": {
+        "logical_path": {
+          "type": "string",
+          "pattern": "^(scripts/projects/open_model_data/phase3_.+\\.py|data/projects/open_model_data/contracts/phase3_.+\\.schema\\.json)$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "private_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "drive_relative_path",
+        "schema_version",
+        "file_sha256",
+        "receipt_sha256",
+        "output_records",
+        "output_sha256"
+      ],
+      "properties": {
+        "receipt_id": {"type": "string", "minLength": 1},
+        "drive_relative_path": {"type": "string", "pattern": "^processed/[^/]+/[^/]+\\.json$"},
+        "schema_version": {"type": "string", "minLength": 1},
+        "file_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "output_records": {"type": "integer", "minimum": 1},
+        "output_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_kind",
+        "custody_state",
+        "counts",
+        "date_evidence_state",
+        "source_attribution_state",
+        "rights",
+        "phase3_historical_training_eligible",
+        "semantic_gold",
+        "modern_correction_eligible",
+        "residual_gap_ids"
+      ],
+      "properties": {
+        "collection_id": {"type": "string", "minLength": 1},
+        "source_kind": {"type": "string", "minLength": 1},
+        "custody_state": {
+          "enum": ["materialized", "materialized_private_raw", "materialized_bounded_source"]
+        },
+        "counts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "date_evidence_state": {
+          "enum": [
+            "source_intervals_preserved",
+            "source_dates_complete",
+            "source_date_bounded_single_witness",
+            "mixed_or_pending_review"
+          ]
+        },
+        "source_attribution_state": {
+          "enum": [
+            "source_metadata_attributed",
+            "published_reconstruction_partially_attributed",
+            "source_attributed_single_witness",
+            "source_labels_preserved_semantic_review_pending"
+          ]
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reuse_scope",
+            "source_text_committed",
+            "binary_media_in_scope",
+            "adapt_on_substantiated_notice"
+          ],
+          "properties": {
+            "status": {"type": "string", "minLength": 1},
+            "reuse_scope": {"type": "string", "minLength": 1},
+            "source_text_committed": {"const": false},
+            "binary_media_in_scope": {"const": false},
+            "adapt_on_substantiated_notice": {"type": "boolean"}
+          }
+        },
+        "phase3_historical_training_eligible": {"const": false},
+        "semantic_gold": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "residual_gap_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "coverage_cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence_id",
+        "position",
+        "label_uk",
+        "evidence_mode",
+        "collection_ids",
+        "coverage_state",
+        "residual_gap_ids"
+      ],
+      "properties": {
+        "sequence_id": {"type": "string", "minLength": 1},
+        "position": {"type": "integer", "minimum": 1, "maximum": 5},
+        "label_uk": {"type": "string", "minLength": 1},
+        "evidence_mode": {"enum": ["direct_attestation", "direct_text", "comparative_reconstruction"]},
+        "collection_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "coverage_state": {
+          "enum": [
+            "materialized_with_open_semantic_gaps",
+            "expanded_but_insufficient",
+            "large_dated_corpus_semantic_review_pending",
+            "comparative_only_not_attested"
+          ]
+        },
+        "residual_gap_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "prior_state",
+        "current_state",
+        "evidence",
+        "residual",
+        "blocking_for",
+        "do_not_claim"
+      ],
+      "properties": {
+        "gap_id": {"type": "string", "minLength": 1},
+        "prior_state": {"enum": ["open", "accepted_operational_risk", "new_in_v2"]},
+        "current_state": {"enum": ["open", "narrowed_open", "accepted_operational_risk"]},
+        "evidence": {"type": "string", "minLength": 1},
+        "residual": {"type": "string", "minLength": 1},
+        "blocking_for": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "do_not_claim": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

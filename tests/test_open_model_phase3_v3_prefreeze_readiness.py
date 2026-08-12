@@ -98,6 +98,13 @@ def test_build_is_deterministic_text_free_and_fail_closed(monkeypatch: pytest.Mo
     assert first["semantic_canary"]["packet_count"] == 6
     assert first["semantic_canary"]["operator_display_confirmed"] is True
     assert first["readiness"]["complete_evaluation_package_ready"] is False
+    assert first["readiness"]["historical_evidence_gap_matrix_current"] is True
+    assert first["bindings"]["historical_evidence_spine_v2_file_sha256"] == readiness.sha256_file(
+        readiness.historical_evidence.SPINE_PATH
+    )
+    assert first["bindings"]["historical_evidence_spine_v2_implementation_sha256"] == readiness.sha256_file(
+        Path(readiness.historical_evidence.__file__).resolve()
+    )
     assert first["gates"] == {
         "new_train_development_extraction_authorized": False,
         "broad_provider_run_authorized": False,
@@ -147,6 +154,15 @@ def test_validator_rejects_body_hash_drift(monkeypatch: pytest.MonkeyPatch) -> N
         readiness.validate_readiness(receipt)
 
 
+def test_validator_rejects_historical_evidence_spine_binding_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = _build(monkeypatch)
+    receipt["bindings"]["historical_evidence_spine_v2_file_sha256"] = SHA_A
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+
+    with pytest.raises(readiness.PrefreezeReadinessError, match="historical evidence spine v2 file binding drift"):
+        readiness.validate_readiness(receipt)
+
+
 def test_validator_preserves_historical_v1_receipts_without_adapter_binding(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -164,19 +180,24 @@ def test_optional_saint_sophia_receipt_binds_without_opening_other_gates(
     saint_receipt = {"receipt_sha256": SHA_A}
     captured: dict[str, str] = {}
 
-    def validate_saint(path: Path, *, university_database_sha256: str, current_database_sha256: str) -> tuple[dict, str]:
+    def validate_saint(
+        path: Path, *, university_database_sha256: str, current_database_sha256: str
+    ) -> tuple[dict, str]:
         captured.update({"path": str(path), "pre": university_database_sha256, "post": current_database_sha256})
         return saint_receipt, SHA_B
 
     monkeypatch.setattr(readiness, "_validate_saint_sophia_reconciliation_receipt", validate_saint)
     receipt = readiness.build_readiness(
-        phase3_reboot_prompt_path=Path("unused"), sources_database_path=Path("unused"),
-        ua_gec_root=Path("unused"), ua_gec_context_receipt_path=Path("unused"),
+        phase3_reboot_prompt_path=Path("unused"),
+        sources_database_path=Path("unused"),
+        ua_gec_root=Path("unused"),
+        ua_gec_context_receipt_path=Path("unused"),
         historical_full_receipt_path=Path("unused"),
         saint_sophia_reconciliation_receipt_path=Path("saint-sophia.json"),
     )
     assert captured == {
-        "path": "saint-sophia.json", "pre": readiness.university.EXPECTED_DATABASE["sha256"],
+        "path": "saint-sophia.json",
+        "pre": readiness.university.EXPECTED_DATABASE["sha256"],
         "post": readiness.university.EXPECTED_DATABASE["sha256"],
     }
     assert receipt["readiness"]["saint_sophia_db_reconciliation_ready"] is True
@@ -197,15 +218,20 @@ def test_optional_saint_sophia_receipt_allows_distinct_pre_and_post_database_has
     monkeypatch.setattr(readiness, "_validate_university_freeze", lambda: (university_freeze, university_file_sha256))
     captured: dict[str, str] = {}
 
-    def validate_saint(_path: Path, *, university_database_sha256: str, current_database_sha256: str) -> tuple[dict, str]:
+    def validate_saint(
+        _path: Path, *, university_database_sha256: str, current_database_sha256: str
+    ) -> tuple[dict, str]:
         captured.update({"pre": university_database_sha256, "post": current_database_sha256})
         return {"receipt_sha256": SHA_A}, SHA_B
 
     monkeypatch.setattr(readiness, "_validate_saint_sophia_reconciliation_receipt", validate_saint)
     receipt = readiness.build_readiness(
-        phase3_reboot_prompt_path=Path("unused"), sources_database_path=Path("unused"),
-        ua_gec_root=Path("unused"), ua_gec_context_receipt_path=Path("unused"),
-        historical_full_receipt_path=Path("unused"), saint_sophia_reconciliation_receipt_path=Path("sophia.json"),
+        phase3_reboot_prompt_path=Path("unused"),
+        sources_database_path=Path("unused"),
+        ua_gec_root=Path("unused"),
+        ua_gec_context_receipt_path=Path("unused"),
+        historical_full_receipt_path=Path("unused"),
+        saint_sophia_reconciliation_receipt_path=Path("sophia.json"),
     )
     assert captured == {"pre": pre_sha, "post": post_sha}
     assert receipt["bindings"]["sources_database_sha256"] == post_sha
@@ -227,8 +253,10 @@ def test_saint_sophia_receipt_requires_current_implementation_and_database_bindi
     sophia = readiness.sophia_reconciliation
     database_sha = readiness.university.EXPECTED_DATABASE["sha256"]
     body = {
-        "schema_version": "phase3_saint_sophia_db_reconciliation_v1", "text_free": True,
-        "provider_calls": False, "mode": "candidate_atomic_replace",
+        "schema_version": "phase3_saint_sophia_db_reconciliation_v1",
+        "text_free": True,
+        "provider_calls": False,
+        "mode": "candidate_atomic_replace",
         "bindings": {
             "implementation_sha256": readiness.sha256_file(Path(sophia.__file__).resolve()),
             "schema_sha256": readiness.sha256_file(sophia.SCHEMA_PATH),
@@ -239,28 +267,41 @@ def test_saint_sophia_receipt_requires_current_implementation_and_database_bindi
             "coverage_receipt_sha256": sophia.EXPECTED_COVERAGE_SHA256,
         },
         "database": {
-            "pre_sha256": database_sha, "post_sha256": database_sha, "historical_rows_before": 0,
-            "historical_rows_after": 4157, "historical_fts_rows_after": 4157,
-            "foreign_key_failures_before": 0, "foreign_key_failures_after": 0,
-            "foreign_key_failure_sha256_before": SHA_B, "foreign_key_failure_sha256_after": SHA_B,
+            "pre_sha256": database_sha,
+            "post_sha256": database_sha,
+            "historical_rows_before": 0,
+            "historical_rows_after": 4157,
+            "historical_fts_rows_after": 4157,
+            "foreign_key_failures_before": 0,
+            "foreign_key_failures_after": 0,
+            "foreign_key_failure_sha256_before": SHA_B,
+            "foreign_key_failure_sha256_after": SHA_B,
         },
         "invariants": {
             "saint_sophia_id_set_sha256": sophia.EXPECTED_ID_SET_SHA256,
             "non_historical_table_fingerprint_before": SHA_A,
-            "non_historical_table_fingerprint_after": SHA_A, "integrity_check": "ok",
+            "non_historical_table_fingerprint_after": SHA_A,
+            "integrity_check": "ok",
         },
-        "safeguards": {"exact_expected_rows": True, "exact_fts_parity": True,
-                       "foreign_key_failures_unchanged": True, "non_historical_invariants_unchanged": True,
-                       "output_private_0600": True},
+        "safeguards": {
+            "exact_expected_rows": True,
+            "exact_fts_parity": True,
+            "foreign_key_failures_unchanged": True,
+            "non_historical_invariants_unchanged": True,
+            "output_private_0600": True,
+        },
         "phase_boundaries": {"historical_modern_correction_eligible": False, "phase4_blocked": True},
     }
     receipt = {**body, "receipt_sha256": sophia.receipt_sha256(body)}
     path = tmp_path / "saint-sophia-receipt.json"
     path.write_text(json.dumps(receipt), encoding="utf-8")
     path.chmod(0o600)
-    assert readiness._validate_saint_sophia_reconciliation_receipt(
-        path, university_database_sha256=database_sha, current_database_sha256=database_sha
-    )[0] == receipt
+    assert (
+        readiness._validate_saint_sophia_reconciliation_receipt(
+            path, university_database_sha256=database_sha, current_database_sha256=database_sha
+        )[0]
+        == receipt
+    )
     receipt["bindings"]["implementation_sha256"] = SHA_A
     receipt["receipt_sha256"] = sophia.receipt_sha256(receipt)
     path.write_text(json.dumps(receipt), encoding="utf-8")
@@ -274,25 +315,43 @@ def test_saint_sophia_receipt_rejects_nonprivate_mode(tmp_path: Path) -> None:
     sophia = readiness.sophia_reconciliation
     database_sha = readiness.university.EXPECTED_DATABASE["sha256"]
     body = {
-        "schema_version": "phase3_saint_sophia_db_reconciliation_v1", "text_free": True,
-        "provider_calls": False, "mode": "candidate_atomic_replace",
-        "bindings": {"implementation_sha256": readiness.sha256_file(Path(sophia.__file__).resolve()),
-                     "schema_sha256": readiness.sha256_file(sophia.SCHEMA_PATH),
-                     "denominator_sha256": readiness.sha256_file(sophia.DENOMINATOR_PATH),
-                     "expected_pre_database_sha256": database_sha,
-                     "saint_sophia_jsonl_sha256": sophia.EXPECTED_JSONL_SHA256,
-                     "saint_sophia_coverage_sha256": sophia.EXPECTED_COVERAGE_SHA256,
-                     "coverage_receipt_sha256": sophia.EXPECTED_COVERAGE_SHA256},
-        "database": {"pre_sha256": database_sha, "post_sha256": database_sha, "historical_rows_before": 0,
-                     "historical_rows_after": 4157, "historical_fts_rows_after": 4157,
-                     "foreign_key_failures_before": 0, "foreign_key_failures_after": 0,
-                     "foreign_key_failure_sha256_before": SHA_B, "foreign_key_failure_sha256_after": SHA_B},
-        "invariants": {"saint_sophia_id_set_sha256": sophia.EXPECTED_ID_SET_SHA256,
-                       "non_historical_table_fingerprint_before": SHA_A,
-                       "non_historical_table_fingerprint_after": SHA_A, "integrity_check": "ok"},
-        "safeguards": {"exact_expected_rows": True, "exact_fts_parity": True,
-                       "foreign_key_failures_unchanged": True, "non_historical_invariants_unchanged": True,
-                       "output_private_0600": True},
+        "schema_version": "phase3_saint_sophia_db_reconciliation_v1",
+        "text_free": True,
+        "provider_calls": False,
+        "mode": "candidate_atomic_replace",
+        "bindings": {
+            "implementation_sha256": readiness.sha256_file(Path(sophia.__file__).resolve()),
+            "schema_sha256": readiness.sha256_file(sophia.SCHEMA_PATH),
+            "denominator_sha256": readiness.sha256_file(sophia.DENOMINATOR_PATH),
+            "expected_pre_database_sha256": database_sha,
+            "saint_sophia_jsonl_sha256": sophia.EXPECTED_JSONL_SHA256,
+            "saint_sophia_coverage_sha256": sophia.EXPECTED_COVERAGE_SHA256,
+            "coverage_receipt_sha256": sophia.EXPECTED_COVERAGE_SHA256,
+        },
+        "database": {
+            "pre_sha256": database_sha,
+            "post_sha256": database_sha,
+            "historical_rows_before": 0,
+            "historical_rows_after": 4157,
+            "historical_fts_rows_after": 4157,
+            "foreign_key_failures_before": 0,
+            "foreign_key_failures_after": 0,
+            "foreign_key_failure_sha256_before": SHA_B,
+            "foreign_key_failure_sha256_after": SHA_B,
+        },
+        "invariants": {
+            "saint_sophia_id_set_sha256": sophia.EXPECTED_ID_SET_SHA256,
+            "non_historical_table_fingerprint_before": SHA_A,
+            "non_historical_table_fingerprint_after": SHA_A,
+            "integrity_check": "ok",
+        },
+        "safeguards": {
+            "exact_expected_rows": True,
+            "exact_fts_parity": True,
+            "foreign_key_failures_unchanged": True,
+            "non_historical_invariants_unchanged": True,
+            "output_private_0600": True,
+        },
         "phase_boundaries": {"historical_modern_correction_eligible": False, "phase4_blocked": True},
     }
     receipt = {**body, "receipt_sha256": sophia.receipt_sha256(body)}

@@ -1,0 +1,466 @@
+{
+  "schema_version": "phase3_historical_evidence_spine_v2",
+  "status": "HISTORICAL_EVIDENCE_SPINE_UPDATED_SOURCE_GAPS_OPEN",
+  "supersedes": {
+    "v1_file_sha256": "61a937f150a4cbecf6b12774ef812d67289705d9523c4e766c95e721b7451076",
+    "v1_receipt_sha256": "cc19bc1189b6c31714434027ce46c340c9f00a8ef6574e22005a2a5c44a2ae71",
+    "reason": "The v1 spine predates the bounded Lavra intake, Spas catalogue pipeline, and source-derived chronology for all 56,162 UD and PluG2 documents."
+  },
+  "bindings": {
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b",
+    "historical_periodization_freeze_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198",
+    "historical_evidence_spine_v1_sha256": "61a937f150a4cbecf6b12774ef812d67289705d9523c4e766c95e721b7451076",
+    "historical_evidence_spine_v1_schema_sha256": "6fe120add7739962f8ee2727e0aeef3db0f34af5a14949b638ed65948645da10",
+    "code_bindings": [
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json",
+        "sha256": "b0e19c906b1c487b8ad390987c1c3ba6afc6171afe584170e45ec0497d03e9f6"
+      },
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json",
+        "sha256": "b516cf879c07ea7267f1c1a481f454bc7c4765c5b8e5b94042632436166b25be"
+      },
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json",
+        "sha256": "63605b8825627701dd696f97a9e29b9ed6a67ad6b4dea0613af7b7af2b99daae"
+      },
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json",
+        "sha256": "50931ae2ecb7eecad58fa88a902b54838e22ec64f9b23f43832d610f1832f081"
+      },
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json",
+        "sha256": "26ad006a4e654f94e18779f8ae21900630660611490ef638ff76f8e490cfc140"
+      },
+      {
+        "logical_path": "data/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json",
+        "sha256": "d8be596ce5ce0cf17e2d133f7b1a863388cdcb1e54f8aefd156d831e94a161a6"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_historical_document_chronology_source_dates.py",
+        "sha256": "d2c1433e0df574de067f560ff9ec09bfef2470a090df31fe5de16925ce7f56e1"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_lavra_near_caves_intake.py",
+        "sha256": "83a5d310aa85697c4d04e29c95b9b199bd227fb044f3a860411bffd224a314d9"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_spas_catalog_materialization.py",
+        "sha256": "5f48b921aec53faa62b742fc3c433dfb6b92efc9be429e2e1731c5ce9a38a26d"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_spas_glyph_adapter.py",
+        "sha256": "7686f499550f0c3e29896f7f40d41d1b8f1711ae2d32a690f7bd4130570d80f4"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_spas_layout_candidates.py",
+        "sha256": "2bc7a49dfea7a7cb9118321f4a8010d54b34f1aded3031a400ae84e5a0c4a034"
+      },
+      {
+        "logical_path": "scripts/projects/open_model_data/phase3_spas_source_attribution.py",
+        "sha256": "b2d1aedc003a202b613a1c7cecab596ad0826b488eff05c496f8a470e7ce00d0"
+      }
+    ],
+    "private_receipts": [
+      {
+        "receipt_id": "historical-document-chronology-source-dates-v2",
+        "drive_relative_path": "processed/phase3-v3-historical-document-chronology-source-dates-v2/historical-document-chronology-receipt-v2.json",
+        "schema_version": "phase3_historical_document_chronology_receipt_v2",
+        "file_sha256": "11a047c5c830799b5b311c18b8f883198f5d3e72edb14881c4fd4e3a8a291647",
+        "receipt_sha256": "c7cdae56c4e0f46c353c4bb52e957942a708d31fec212c3f1681929cf2ac33b3",
+        "output_records": 56162,
+        "output_sha256": "dc0ecd7df0c8daa9f46f758d25464c1bb9882db345845ec82ffa87fd3f4a0829"
+      },
+      {
+        "receipt_id": "lavra-near-caves-intake-v1",
+        "drive_relative_path": "processed/phase3-v3-lavra-near-caves-dipinto-raw-v1/near-caves-intake-receipt-v1.json",
+        "schema_version": "phase3_lavra_near_caves_intake_receipt_v1",
+        "file_sha256": "994bec4ca662d3e8f856daba69b437108cb74c370ba31e0755f9cc7975344adc",
+        "receipt_sha256": "8921ee7e5c5de2943de83ef7a450d6827e85a0332a64b3d7694cae6995ec0455",
+        "output_records": 19,
+        "output_sha256": "9766e85751c64a52ee402e517ae7e5bfa6ea4c94eee8f8668e4aaf384c60eed7"
+      },
+      {
+        "receipt_id": "spas-catalog-materialization-v1",
+        "drive_relative_path": "processed/phase3-v3-spas-na-berestovi-raw-v1/materialization-receipt-v1.json",
+        "schema_version": "phase3_spas_catalog_materialization_receipt_v1",
+        "file_sha256": "fe14a7c0dfb7fcb1304cf5ad360cba11135bcc42bb4cd78ef314773e948a492b",
+        "receipt_sha256": "a2521b1026878520e9180a04a11f68a683845cf214b44d3794c8c761c309b7d3",
+        "output_records": 477,
+        "output_sha256": "974f05399d69faadc2fd7ffe96a06e0e2d1d409464a1eb1de9962bf772fabd05"
+      },
+      {
+        "receipt_id": "spas-glyph-adapter-v1",
+        "drive_relative_path": "processed/phase3-v3-spas-bukyvede-unicode-v2/glyph-adapter-receipt-v1.json",
+        "schema_version": "phase3_spas_glyph_adapter_receipt_v1",
+        "file_sha256": "8278b133026ded0b197e8518167730189963a9a781d91e1ac7751eb73b3ca372",
+        "receipt_sha256": "e494cd3030b74d40574a03498ca6089d23a6827e9e8283b5df0d34965c02adf8",
+        "output_records": 477,
+        "output_sha256": "3a828f0a4ca57e5f44a4bf72536ed6de8597f6633e2987bab663cacc55dbf6d4"
+      },
+      {
+        "receipt_id": "spas-layout-candidates-v1",
+        "drive_relative_path": "processed/phase3-v3-spas-layout-candidates-v2/layout-candidate-receipt-v1.json",
+        "schema_version": "phase3_spas_layout_candidate_receipt_v1",
+        "file_sha256": "aa8a67b32c478a309826a08c94679a45d31e5cfa558fa4e977bf2959a034c3d4",
+        "receipt_sha256": "5d2ff83247101de7d7de26f61d17a1d34fcd20c24ead14e5f7b0a515de2482d1",
+        "output_records": 477,
+        "output_sha256": "661a8f247ecb5f0a6413c53346e72a8255a63e51fbe7b47ef1d2d10b89bd90d6"
+      },
+      {
+        "receipt_id": "spas-source-attribution-v1",
+        "drive_relative_path": "processed/phase3-v3-spas-source-attribution-v3/source-attribution-receipt-v1.json",
+        "schema_version": "phase3_spas_source_attribution_receipt_v1",
+        "file_sha256": "3962bf91c7c78f844cf5f58689dfa0177ef1065f1891c0b31095eb632c7b80cd",
+        "receipt_sha256": "37b04a45a389de127d5b172055d75e56a3b752010ef3cb2cb9a3b94fe6d12875",
+        "output_records": 90,
+        "output_sha256": "2e6a1e0ea3ca43240ca59e141b3d61c372fc4604c70d69e0df86601d66902858"
+      }
+    ]
+  },
+  "framework_policy": {
+    "bound_framework_ids": [
+      "university_five_stage_synthesis",
+      "shevelov_detailed_six_period",
+      "nimchuk_five_stage_with_middle_subperiods"
+    ],
+    "canonical_framework_id": null,
+    "frameworks_preserved_without_collapse": true,
+    "chronology_is_not_linguistic_stage_gold": true,
+    "record_assignment_requires_qualified_review": true
+  },
+  "collections": [
+    {
+      "collection_id": "saint-sophia-inscriptions",
+      "source_kind": "epigraphy",
+      "custody_state": "materialized",
+      "counts": {
+        "public_api_records": 4157,
+        "text_bearing_records": 4144,
+        "source_labelled_ukrainian_records": 588
+      },
+      "date_evidence_state": "source_intervals_preserved",
+      "source_attribution_state": "source_labels_preserved_semantic_review_pending",
+      "rights": {
+        "status": "publicly_downloadable_license_not_declared",
+        "reuse_scope": "phase3_textual_dataset_training_and_derived_data_release_with_attribution_field_provenance_and_takedown_readiness",
+        "source_text_committed": false,
+        "binary_media_in_scope": false,
+        "adapt_on_substantiated_notice": true
+      },
+      "phase3_historical_training_eligible": false,
+      "semantic_gold": false,
+      "modern_correction_eligible": false,
+      "residual_gap_ids": [
+        "kyiv_graffito_108_scholarly_crosswalk",
+        "old_ukrainian_direct_text_depth",
+        "qualified_historical_semantic_review",
+        "saint_sophia_license_expression_missing",
+        "saint_sophia_public_residual"
+      ]
+    },
+    {
+      "collection_id": "korniienko-spas-na-berestovi-2013",
+      "source_kind": "epigraphic_catalogue",
+      "custody_state": "materialized_private_raw",
+      "counts": {
+        "catalog_records": 477,
+        "candidate_records": 90,
+        "source_attributed_records": 81,
+        "unresolved_candidate_records": 12
+      },
+      "date_evidence_state": "mixed_or_pending_review",
+      "source_attribution_state": "published_reconstruction_partially_attributed",
+      "rights": {
+        "status": "private_research_artifact_only",
+        "reuse_scope": "private_research_only",
+        "source_text_committed": false,
+        "binary_media_in_scope": false,
+        "adapt_on_substantiated_notice": true
+      },
+      "phase3_historical_training_eligible": false,
+      "semantic_gold": false,
+      "modern_correction_eligible": false,
+      "residual_gap_ids": [
+        "middle_ukrainian_genre_and_region_depth",
+        "old_ukrainian_direct_text_depth",
+        "qualified_historical_semantic_review",
+        "spas_catalog_layer_separation"
+      ]
+    },
+    {
+      "collection_id": "bobrovskyy-near-caves-dipinto-2010",
+      "source_kind": "bounded_epigraphic_study",
+      "custody_state": "materialized_bounded_source",
+      "counts": {
+        "article_pages": 19,
+        "inscription_witnesses": 1,
+        "legacy_font_spans": 559
+      },
+      "date_evidence_state": "source_date_bounded_single_witness",
+      "source_attribution_state": "source_attributed_single_witness",
+      "rights": {
+        "status": "private_research_and_source_evidence_only",
+        "reuse_scope": "private_research_only",
+        "source_text_committed": false,
+        "binary_media_in_scope": false,
+        "adapt_on_substantiated_notice": true
+      },
+      "phase3_historical_training_eligible": false,
+      "semantic_gold": false,
+      "modern_correction_eligible": false,
+      "residual_gap_ids": [
+        "lavra_epigraphy_not_materialized",
+        "lavra_legacy_font_and_layer_separation",
+        "old_ukrainian_direct_text_depth",
+        "qualified_historical_semantic_review"
+      ]
+    },
+    {
+      "collection_id": "ud-old-east-slavic-ruthenian-05a029e00ccf",
+      "source_kind": "documentary_treebank",
+      "custody_state": "materialized",
+      "counts": {
+        "documents": 82,
+        "exact_year_documents": 80,
+        "bounded_interval_documents": 2,
+        "sentences": 1311,
+        "token_rows": 35081
+      },
+      "date_evidence_state": "source_dates_complete",
+      "source_attribution_state": "source_metadata_attributed",
+      "rights": {
+        "status": "admitted",
+        "reuse_scope": "public_training_with_share_alike_and_attribution",
+        "source_text_committed": false,
+        "binary_media_in_scope": false,
+        "adapt_on_substantiated_notice": false
+      },
+      "phase3_historical_training_eligible": false,
+      "semantic_gold": false,
+      "modern_correction_eligible": false,
+      "residual_gap_ids": [
+        "middle_ukrainian_genre_and_region_depth",
+        "qualified_historical_semantic_review",
+        "ud_document_date_and_provenance_review"
+      ]
+    },
+    {
+      "collection_id": "plug2-zenodo-19482961",
+      "source_kind": "historical_text_corpus",
+      "custody_state": "materialized",
+      "counts": {
+        "documents": 56080,
+        "exact_year_documents": 56080,
+        "token_sum": 71802066
+      },
+      "date_evidence_state": "source_dates_complete",
+      "source_attribution_state": "source_metadata_attributed",
+      "rights": {
+        "status": "admitted",
+        "reuse_scope": "public_training_with_attribution",
+        "source_text_committed": false,
+        "binary_media_in_scope": false,
+        "adapt_on_substantiated_notice": false
+      },
+      "phase3_historical_training_eligible": false,
+      "semantic_gold": false,
+      "modern_correction_eligible": false,
+      "residual_gap_ids": [
+        "qualified_historical_semantic_review"
+      ]
+    }
+  ],
+  "coverage_matrix": [
+    {
+      "sequence_id": "kyiv_medieval_epigraphy",
+      "position": 1,
+      "label_uk": "Середньовічна київська епіграфіка",
+      "evidence_mode": "direct_attestation",
+      "collection_ids": [
+        "saint-sophia-inscriptions",
+        "korniienko-spas-na-berestovi-2013",
+        "bobrovskyy-near-caves-dipinto-2010"
+      ],
+      "coverage_state": "materialized_with_open_semantic_gaps",
+      "residual_gap_ids": [
+        "lavra_epigraphy_not_materialized",
+        "qualified_historical_semantic_review",
+        "spas_catalog_layer_separation"
+      ]
+    },
+    {
+      "sequence_id": "old_ukrainian_documentary_and_literary",
+      "position": 2,
+      "label_uk": "Староукраїнські документальні й книжні пам’ятки",
+      "evidence_mode": "direct_text",
+      "collection_ids": [
+        "saint-sophia-inscriptions",
+        "korniienko-spas-na-berestovi-2013",
+        "bobrovskyy-near-caves-dipinto-2010"
+      ],
+      "coverage_state": "expanded_but_insufficient",
+      "residual_gap_ids": [
+        "old_ukrainian_direct_text_depth",
+        "qualified_historical_semantic_review"
+      ]
+    },
+    {
+      "sequence_id": "middle_ukrainian_documentary_and_print",
+      "position": 3,
+      "label_uk": "Середньоукраїнські документи й друки",
+      "evidence_mode": "direct_text",
+      "collection_ids": [
+        "saint-sophia-inscriptions",
+        "korniienko-spas-na-berestovi-2013",
+        "ud-old-east-slavic-ruthenian-05a029e00ccf"
+      ],
+      "coverage_state": "expanded_but_insufficient",
+      "residual_gap_ids": [
+        "middle_ukrainian_genre_and_region_depth",
+        "qualified_historical_semantic_review",
+        "ud_document_date_and_provenance_review"
+      ]
+    },
+    {
+      "sequence_id": "new_and_modern_ukrainian",
+      "position": 4,
+      "label_uk": "Нова й сучасна українська мова",
+      "evidence_mode": "direct_text",
+      "collection_ids": [
+        "plug2-zenodo-19482961"
+      ],
+      "coverage_state": "large_dated_corpus_semantic_review_pending",
+      "residual_gap_ids": [
+        "qualified_historical_semantic_review"
+      ]
+    },
+    {
+      "sequence_id": "comparative_reconstruction_backlink",
+      "position": 5,
+      "label_uk": "Порівняльна реконструкція передписемних розвитку й діалектів",
+      "evidence_mode": "comparative_reconstruction",
+      "collection_ids": [],
+      "coverage_state": "comparative_only_not_attested",
+      "residual_gap_ids": [
+        "nimchuk_primary_periodization_text",
+        "qualified_historical_semantic_review"
+      ]
+    }
+  ],
+  "gap_dispositions": [
+    {
+      "gap_id": "lavra_epigraphy_not_materialized",
+      "prior_state": "open",
+      "current_state": "narrowed_open",
+      "evidence": "One complete 19-page institutional article about one late-twelfth-century Near Caves dipinto is privately materialized with exact bytes and source offsets.",
+      "residual": "This is one witness, not a complete Near, Far, or Varangian Caves corpus; the broader Lavra denominator remains unknown.",
+      "blocking_for": ["historical_source_coverage_ready", "lavra_cave_corpus_coverage"],
+      "do_not_claim": "Do not relabel the bounded article intake as a complete Lavra graffiti corpus."
+    },
+    {
+      "gap_id": "saint_sophia_public_residual",
+      "prior_state": "open",
+      "current_state": "open",
+      "evidence": "The held snapshot remains the complete 4,157-record current public API response.",
+      "residual": "The portal reports more than 7,000 known inscriptions, so non-public or not-yet-exposed records remain outside the denominator.",
+      "blocking_for": ["complete_saint_sophia_collection_claim"],
+      "do_not_claim": "Do not call the public API snapshot the complete known Saint Sophia corpus."
+    },
+    {
+      "gap_id": "saint_sophia_license_expression_missing",
+      "prior_state": "accepted_operational_risk",
+      "current_state": "accepted_operational_risk",
+      "evidence": "The official sources describe the dataset and API as open and reusable; the operator authorized text-only use with attribution and takedown readiness.",
+      "residual": "No standardized dataset-license expression has been located, and binary media remains excluded.",
+      "blocking_for": ["claim_of_explicit_standardized_data_license", "license_warranty_or_indemnity"],
+      "do_not_claim": "Do not extend the media CC BY-NC label to the complete textual dataset or claim a warranty."
+    },
+    {
+      "gap_id": "kyiv_graffito_108_scholarly_crosswalk",
+      "prior_state": "open",
+      "current_state": "open",
+      "evidence": "The portal, Korniienko bibliography, Vysotsky numbering, and Gippius 2023 reanalysis remain separately attributed locators.",
+      "residual": "No exact identifier crosswalk and qualified adjudication binds all readings and dates.",
+      "blocking_for": ["graffito_108_dating_gold", "graffito_108_semantic_gold"],
+      "do_not_claim": "Do not merge distinct scholarly readings into one unquestioned gold record."
+    },
+    {
+      "gap_id": "old_ukrainian_direct_text_depth",
+      "prior_state": "open",
+      "current_state": "narrowed_open",
+      "evidence": "Spas contributes 477 private catalogue records and Lavra contributes one bounded direct witness alongside Saint Sophia.",
+      "residual": "Layer separation, language attribution, genre breadth, and qualified feature-level review remain incomplete.",
+      "blocking_for": ["historical_source_coverage_ready", "old_ukrainian_direct_text_depth"],
+      "do_not_claim": "Do not infer Ukrainian language identity solely from date, place, script, or monument."
+    },
+    {
+      "gap_id": "ud_document_date_and_provenance_review",
+      "prior_state": "open",
+      "current_state": "narrowed_open",
+      "evidence": "Explicit source date comments now provide 80 exact years and two bounded intervals for all 82 Ukrainian-labelled UD documents, with the Ratushna edition corroborated separately.",
+      "residual": "Chronology remains metadata, not qualified linguistic-stage or language-layer gold.",
+      "blocking_for": ["historical_source_freeze_ready", "qualified_document_level_semantic_assignment"],
+      "do_not_claim": "Do not convert a source date or framework match into semantic stage gold."
+    },
+    {
+      "gap_id": "middle_ukrainian_genre_and_region_depth",
+      "prior_state": "open",
+      "current_state": "narrowed_open",
+      "evidence": "All 82 UD document dates are source-derived and the Spas catalogue adds a separate Kyiv epigraphic monument.",
+      "residual": "The material remains unbalanced across chancery, municipal, print, private-writing, region, genre, and register cells.",
+      "blocking_for": ["historical_source_coverage_ready", "middle_ukrainian_genre_region_coverage"],
+      "do_not_claim": "Do not treat the current source clusters as representative of every Middle-Ukrainian variety."
+    },
+    {
+      "gap_id": "nimchuk_primary_periodization_text",
+      "prior_state": "open",
+      "current_state": "open",
+      "evidence": "Qualified Ukrainian secondary reproduction and peer-reviewed discussion remain locally bound.",
+      "residual": "The exact two-part 1997/1998 primary article is still bibliographic-only.",
+      "blocking_for": ["historical_source_freeze_ready", "primary_source_grade_for_nimchuk_framework"],
+      "do_not_claim": "Do not make Nimchuk the sole canon or upgrade secondary reproduction to primary-source authority."
+    },
+    {
+      "gap_id": "spas_catalog_layer_separation",
+      "prior_state": "new_in_v2",
+      "current_state": "open",
+      "evidence": "The 90-record candidate denominator is fully dispositioned and 81 records contain qualified source-attributed reconstruction lines.",
+      "residual": "Full-catalog commentary/inscription separation and 19 unresolved candidate lines remain incomplete.",
+      "blocking_for": ["spas_training_eligibility", "qualified_historical_semantic_review"],
+      "do_not_claim": "Do not treat source-attributed reconstruction lines as direct diplomatic inscription text or semantic gold."
+    },
+    {
+      "gap_id": "lavra_legacy_font_and_layer_separation",
+      "prior_state": "new_in_v2",
+      "current_state": "open",
+      "evidence": "The bounded intake preserves 559 source-derived legacy-font spans and complete article context.",
+      "residual": "Legacy glyph mapping and inscription/commentary separation have not been completed.",
+      "blocking_for": ["lavra_training_eligibility", "qualified_historical_semantic_review"],
+      "do_not_claim": "Do not infer or silently repair unresolved CyrillicaBEM characters."
+    },
+    {
+      "gap_id": "qualified_historical_semantic_review",
+      "prior_state": "new_in_v2",
+      "current_state": "open",
+      "evidence": "Chronology, provenance, source attribution, and competing Ukrainian periodization frameworks are mechanically preserved for review.",
+      "residual": "No qualified historical-Ukrainian reviewer has approved document-level language layers, diagnostic features, or stage assignments across the complete source denominator.",
+      "blocking_for": ["historical_source_freeze_ready", "phase3_historical_training_eligibility", "phase3_complete"],
+      "do_not_claim": "Do not use model agreement, dates, titles, or corpus labels as semantic gold."
+    }
+  ],
+  "gates": {
+    "historical_content_gap_matrix_current": true,
+    "incremental_private_receipt_and_output_hashes_verified": true,
+    "qualified_historical_semantic_review_complete": false,
+    "historical_source_coverage_ready": false,
+    "historical_source_freeze_ready": false,
+    "phase3_complete": false,
+    "phase4_authorized": false,
+    "phase4_blocked": true
+  },
+  "text_free": true,
+  "provider_calls": false,
+  "receipt_sha256": "def735d7cac031c501d748ee073260dc4b2ee455ccfaa8aca3d3be979a4367fa"
+}
