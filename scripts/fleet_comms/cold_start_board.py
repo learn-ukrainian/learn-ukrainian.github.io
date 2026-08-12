@@ -30,10 +30,17 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_stream_bottleneck_metrics,
     resolve_metrics_source,
 )
-from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
+from scripts.fleet_comms.message_plane import (
+    default_plane_root,
+    read_plane_status,
+    resolve_plane_mode,
+)
 
 try:
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.db import (
+        SessionStreamDatabase,
+        default_database_path,
+    )
     from agents_extensions.shared.session_streams.handoff import diagnose_handoff
     from agents_extensions.shared.session_streams.model import entry_as_dict
     from agents_extensions.shared.session_streams.store import SessionStreamStore
@@ -41,10 +48,22 @@ try:
     HAS_SESSION_STREAMS = True
 except ImportError:
     HAS_SESSION_STREAMS = False
+    default_database_path = None  # type: ignore[assignment]
 
 MAX_STRING_LEN = 200
 MAX_LIST_LEN = 5
 MAX_BOARD_BYTES = 16384  # 16KiB
+
+# Probes that may flip board_status to degraded. Optional/best-effort probes
+# (orient_lean, gh_pr_list, needle_search, bottleneck_slice, …) must not.
+LOAD_BEARING_PROBES = frozenset(
+    {
+        "plane_status",
+        "inbox_check",
+        "backlog_and_dead_letters",
+    }
+)
+SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
 
 
 @dataclass
@@ -118,11 +137,16 @@ def _probe_capsule_session_env(
         or os.environ.get("AGENT")
         or os.environ.get("X_AGENT")
     )
+    try:
+        plane_mode: str = resolve_plane_mode(None)
+    except Exception:
+        # Fail-open: never crash the board on a bad env/config value.
+        plane_mode = "off"
     return {
         "stream_id": resolved_stream,
         "agent": resolved_agent,
         "transport": os.environ.get("LU_AGENT_COMM_TRANSPORT", "acp"),
-        "plane_mode": os.environ.get("FLEET_COMMS_PLANE_MODE", "off"),
+        "plane_mode": plane_mode,
         "capsule_id": os.environ.get("CAPSULE_ID"),
         "session_id": os.environ.get("SESSION_ID"),
         "task_id": os.environ.get("TASK_ID"),
@@ -253,7 +277,8 @@ def _probe_orient_lean(
     timeout_s: float = 0.5,
 ) -> ProbeResult:
     start = time.perf_counter()
-    url = f"{base_url}/api/orient"
+    # drive-epic contract: lean orient (do not pull the full briefing).
+    url = f"{base_url}/api/orient?lean=true"
     try:
         req = urllib.request.Request(
             url, headers={"User-Agent": "fleet-comms-cold-start/1.0"}
@@ -269,11 +294,16 @@ def _probe_orient_lean(
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
         git_info = _get_local_git_info()
+        # Optional Monitor probe: skip (do not poison board_status).
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             error=f"monitor_api_unreachable: {type(exc).__name__}",
-            data={"api_reachable": False, "git_fallback": git_info},
+            data={
+                "api_reachable": False,
+                "reason": "monitor_unreachable",
+                "git_fallback": git_info,
+            },
         )
 
 
@@ -296,6 +326,34 @@ def _probe_issues_streams_membership(orient_result: ProbeResult) -> dict[str, An
     }
 
 
+def _resolve_session_streams_db(repo_root: Path | None) -> Path:
+    """Resolve primary-checkout session-streams DB (not worktree-local Path.cwd())."""
+    if HAS_SESSION_STREAMS and default_database_path is not None:
+        try:
+            return default_database_path(repo_root)
+        except Exception:
+            pass
+
+    active = (repo_root or Path.cwd()).resolve()
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=active,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=2.0,
+        )
+        common_dir_text = result.stdout.strip()
+        if result.returncode == 0 and common_dir_text:
+            common_dir = Path(common_dir_text)
+            if common_dir.is_absolute() and common_dir.name == ".git":
+                return common_dir.parent.resolve() / SESSION_STREAMS_REL
+    except Exception:
+        pass
+    return active / SESSION_STREAMS_REL
+
+
 def _probe_session_streams_and_handoff(
     repo_root: Path | None,
     stream_id: str | None,
@@ -312,23 +370,23 @@ def _probe_session_streams_and_handoff(
     if not HAS_SESSION_STREAMS:
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             error="session_streams_module_unavailable",
-            data={"stream_id": stream_id},
+            data={"stream_id": stream_id, "reason": "module_unavailable"},
         )
 
-    r_root = repo_root or Path.cwd()
-    db_path = r_root / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db_path = _resolve_session_streams_db(repo_root)
     if not db_path.is_file():
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             data={
                 "stream_id": stream_id,
                 "db_exists": False,
                 "db_path": str(db_path),
+                "reason": "session_streams_db_missing",
             },
         )
 
@@ -349,6 +407,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": True,
+                "db_path": str(db_path),
                 "handoff": handoff_data,
                 "digest": digest_data,
             },
@@ -359,7 +418,7 @@ def _probe_session_streams_and_handoff(
             status="degraded",
             elapsed_ms=elapsed,
             error=str(exc),
-            data={"stream_id": stream_id, "db_exists": True},
+            data={"stream_id": stream_id, "db_exists": True, "db_path": str(db_path)},
         )
 
 
@@ -740,6 +799,26 @@ def _probe_needle_search(
     )
 
 
+def compute_board_status(probes: dict[str, Any]) -> str:
+    """Headline status from load-bearing probes only.
+
+    Optional probes (orient_lean, gh_pr_list, needle_search, …) never flip the
+    headline. session_streams_and_handoff is load-bearing only when the DB exists
+    and the probe degraded/errored (missing DB / no stream_id stay skipped).
+    """
+    for name in LOAD_BEARING_PROBES:
+        status = (probes.get(name) or {}).get("status")
+        if status in {"degraded", "error"}:
+            return "degraded"
+
+    ss = probes.get("session_streams_and_handoff") or {}
+    if ss.get("status") in {"degraded", "error"}:
+        data = ss.get("data") or {}
+        if data.get("db_exists"):
+            return "degraded"
+    return "ok"
+
+
 def build_cold_start_board(
     stream_id: str | None = None,
     agent: str | None = None,
@@ -813,10 +892,7 @@ def build_cold_start_board(
     )
     probes["needle_search"] = needle_probe.to_dict()
 
-    statuses = [p["status"] for p in probes.values()]
-    board_status = (
-        "degraded" if ("error" in statuses or "degraded" in statuses) else "ok"
-    )
+    board_status = compute_board_status(probes)
 
     capped_probes = cap_data(probes, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN)
 
@@ -838,19 +914,57 @@ def build_cold_start_board(
     return board
 
 
+def _summary_fields(board_data: dict[str, Any]) -> dict[str, str]:
+    """Extract the six lead Summary fields drivers see first."""
+    probes = board_data.get("probes") or {}
+    plane_data = (probes.get("plane_status") or {}).get("data") or {}
+    env_data = (probes.get("capsule_session_env") or {}).get("data") or {}
+    inbox_data = (probes.get("inbox_check") or {}).get("data") or {}
+
+    plane_mode = plane_data.get("mode") or env_data.get("plane_mode") or "unknown"
+    schema = plane_data.get("schema") or {}
+    schema_version: Any
+    if isinstance(schema, dict):
+        schema_version = schema.get("applied_version")
+        if schema_version is None:
+            schema_version = schema.get("known_version")
+        if schema_version is None:
+            schema_version = schema.get("version")
+    else:
+        schema_version = schema
+    if schema_version is None:
+        schema_version = "unknown"
+
+    inbox_pending = inbox_data.get("inbox_pending_count")
+    if inbox_pending is None:
+        inbox_pending = "n/a"
+
+    return {
+        "plane_mode": str(plane_mode),
+        "schema_version": str(schema_version),
+        "inbox_pending": str(inbox_pending),
+        "board_status": str(board_data.get("board_status", "unknown")),
+        "stream_id": str(board_data.get("stream_id") or "N/A"),
+        "agent": str(board_data.get("agent") or "N/A"),
+    }
+
+
 def render_markdown_board(board_data: dict[str, Any]) -> str:
     """Render board data dictionary as a readable Markdown briefing."""
     lines: list[str] = []
-    status = str(board_data.get("board_status", "unknown")).upper()
-    stream_id = board_data.get("stream_id") or "N/A"
-    agent = board_data.get("agent") or "N/A"
+    summary = _summary_fields(board_data)
     ts = board_data.get("timestamp") or "N/A"
 
     lines.append("# Driver Cold Start Board\n")
-    lines.append(f"- **Status:** `{status}`")
+    lines.append("## Summary\n")
+    lines.append(f"- **plane_mode:** `{summary['plane_mode']}`")
+    lines.append(f"- **schema_version:** `{summary['schema_version']}`")
+    lines.append(f"- **inbox_pending:** `{summary['inbox_pending']}`")
+    lines.append(f"- **board_status:** `{summary['board_status']}`")
+    lines.append(f"- **stream_id:** `{summary['stream_id']}`")
+    lines.append(f"- **agent:** `{summary['agent']}`")
+    lines.append("")
     lines.append(f"- **Timestamp:** `{ts}`")
-    lines.append(f"- **Stream ID:** `{stream_id}`")
-    lines.append(f"- **Agent:** `{agent}`")
 
     needle = board_data.get("needle")
     if needle:
