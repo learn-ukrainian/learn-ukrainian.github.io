@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_historical_document_chronology_record_v2.schema.json",
+  "title": "Phase 3 historical document chronology record v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "collection_id",
+    "document_identity",
+    "locator",
+    "date_evidence",
+    "projection",
+    "safeguards",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_historical_document_chronology_record_v2"
+    },
+    "record_id": {"type": "string", "minLength": 1},
+    "collection_id": {
+      "enum": [
+        "ud-old-east-slavic-ruthenian-05a029e00ccf",
+        "plug2-zenodo-19482961"
+      ]
+    },
+    "document_identity": {"type": "string", "minLength": 1},
+    "locator": {
+      "type": "object",
+      "minProperties": 3,
+      "additionalProperties": {"type": ["string", "integer"]},
+      "required": ["dataset_id"]
+    },
+    "date_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_field",
+        "raw_date",
+        "source_field_values",
+        "source_comment_line",
+        "source_file_sha256",
+        "metadata_row_sha256",
+        "authority",
+        "corroborating_edition"
+      ],
+      "properties": {
+        "selected_field": {"enum": ["created", "date", "doc.date"]},
+        "raw_date": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(?:-[0-9]{4})?$"
+        },
+        "source_field_values": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["created", "date", "doc.date"],
+          "properties": {
+            "created": {"type": ["string", "null"]},
+            "date": {"type": ["string", "null"]},
+            "doc.date": {"type": ["string", "null"]}
+          }
+        },
+        "source_comment_line": {"type": ["integer", "null"], "minimum": 1},
+        "source_file_sha256": {"$ref": "#/$defs/sha256"},
+        "metadata_row_sha256": {"$ref": "#/$defs/sha256"},
+        "authority": {
+          "enum": ["source_document_comment", "source_metadata_row"]
+        },
+        "corroborating_edition": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "edition_identity",
+                "official_catalogue_url",
+                "official_pdf_url",
+                "official_catalogue_sha256",
+                "official_pdf_sha256",
+                "scope"
+              ],
+              "properties": {
+                "edition_identity": {"const": "Lohvytska-ratushna-knyha-1986"},
+                "official_catalogue_url": {"type": "string", "format": "uri"},
+                "official_pdf_url": {"type": "string", "format": "uri"},
+                "official_catalogue_sha256": {"$ref": "#/$defs/sha256"},
+                "official_pdf_sha256": {"$ref": "#/$defs/sha256"},
+                "scope": {"const": "edition_level_corroboration_not_date_inference"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "status",
+        "chronological_start_year",
+        "chronological_end_year",
+        "date_precision",
+        "canonical_framework_id",
+        "framework_projections"
+      ],
+      "properties": {
+        "role": {"const": "chronological_context_only"},
+        "status": {
+          "enum": ["exact_date_projected", "bounded_interval_projected"]
+        },
+        "chronological_start_year": {"type": "integer"},
+        "chronological_end_year": {"type": "integer"},
+        "date_precision": {"enum": ["exact_year", "bounded_interval"]},
+        "canonical_framework_id": {"type": "null"},
+        "framework_projections": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/frameworkProjection"}
+        }
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "linguistic_stage_gold",
+        "semantic_label_created",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "linguistic_stage_gold": {"const": false},
+        "semantic_label_created": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "record_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "projection": {
+            "properties": {"status": {"const": "exact_date_projected"}},
+            "required": ["status"]
+          }
+        },
+        "required": ["projection"]
+      },
+      "then": {
+        "properties": {
+          "projection": {
+            "properties": {"date_precision": {"const": "exact_year"}}
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "projection": {
+            "properties": {"date_precision": {"const": "bounded_interval"}}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stageMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage_id", "match_status"],
+      "properties": {
+        "stage_id": {"type": "string", "minLength": 1},
+        "match_status": {
+          "enum": ["definite", "possible_boundary_overlap"]
+        }
+      }
+    },
+    "frameworkProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "framework_id",
+        "interval_stability",
+        "matches",
+        "candidate_stage_ids"
+      ],
+      "properties": {
+        "framework_id": {
+          "enum": [
+            "university_five_stage_synthesis",
+            "shevelov_detailed_six_period",
+            "nimchuk_five_stage_with_middle_subperiods"
+          ]
+        },
+        "interval_stability": {
+          "enum": ["exact_year", "stable_across_interval", "boundary_sensitive_interval"]
+        },
+        "matches": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/stageMatch"}
+        },
+        "candidate_stage_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
