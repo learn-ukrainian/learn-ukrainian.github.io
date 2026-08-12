@@ -1,0 +1,14 @@
+{
+  "schema": "zno-practice-deck",
+  "schemaVersion": 1,
+  "deckId": "zno-paronym",
+  "thinDeck": true,
+  "title": "Paronym fixture",
+  "items": [
+    {
+      "exam": "zno",
+      "znoTaskId": "zno:10",
+      "stem": "Паронім"
+    }
+  ]
+}
