@@ -1,0 +1,64 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/practice-thin-mode-densify
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Practice thin-mode densify — measure + first bounded lift (synonym/antonym/paradigm)
+
+**Driver:** grok-atlas · epic:4387 · practice hub  
+**X-Agent trailer required**
+
+## CAPACITY_CARD
+pick=cursor status=cool (if free after 6370) OR agy if cursor busy
+source=codexbar; avoid codex deficit
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor (or agy)
+- why: practice inventory densify; coverage reporter already shipped (#6650)
+- owned_paths: scripts/practice/**, site/src/data/practice*, site/public/lexicon (read), tests/**, batch_state/practice/**
+- acceptance: updated coverage report + PR with measurable unique-lemma lift toward bar≥1000 for at least one thin mode, or named residual proving source exhaustion
+- alternatives: [claude after #6437 lands]
+- parallel: claude on #6437 (avoid editing enrich_manifest honesty paths)
+
+## Tool-backed baseline (2026-08-12 `coverage_report.py --table --no-write`)
+Modes below bar (1000 unique lemmas):
+| mode | unique |
+| --- | ---: |
+| paradigm | 798 |
+| synonym | 251 |
+| antonym | 209 |
+| heritage | 107 |
+| paronym | 32 |
+| homonym | 22 |
+ZNO: `paronym` thinDeck=True items=6
+
+## Scope (bounded — one PR)
+1. Run coverage report; save `batch_state/practice/coverage-report-2026-08-12.json`.
+2. Inspect how synonym/antonym/paradigm decks are generated from Atlas (existing scripts only — no new LLM authoring).
+3. Choose the **largest honest lift** possible from existing atlas data for **one** mode (prefer paradigm OR synonym):
+   - Prefer deterministic extraction from published/live atlas relations already in manifest.
+   - No fabricated pairs; no LLM pair invention.
+4. Implement generator/script fix or data refresh; tests; re-run coverage; quote before/after unique counts.
+5. If source exhausted before bar: name residual lemmas/pairs count + reason; do not invent bar-lowering.
+
+## Non-goals
+- #4696 audio (user-gated)
+- Backend #4384
+- Atlas promote (#6370 is separate seat)
+- Changing LINT-003/senseId (#6437 parallel)
+
+## Work
+1. Worktree; primary read-only
+2. Investigate → implement → pytest/ruff → commit → PR → no auto-merge
+3. Comment counts on #4387 and #4700
+
+## #M-4
+Quote coverage_report before/after tables.
