@@ -344,10 +344,16 @@ def reconcile(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: P
     candidate_ingest_receipt: Path | None = None
     rollback: Path | None = None
     cutover_started = False
+    rollback_retained = False
     try:
         _reject_nonempty_wal(target)
+        require(
+            sha256_file(target) == before["sha256"],
+            "pre-database bytes drifted before reconciliation",
+        )
         rollback = _candidate_path(target)
         shutil.copy2(target, rollback)
+        os.chmod(rollback, PRIVATE_FILE_MODE)
         candidate = _candidate_path(target)
         _sqlite_backup(target, candidate)
         candidate_ingest_receipt = candidate.with_suffix(".ingest-receipt.json")
@@ -384,9 +390,16 @@ def reconcile(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: P
         receipt = validate_receipt(_receipt(mode=mode, collection=collection, denominator_hash=denominator_hash, jsonl_path=Path(jsonl_path), coverage_path=Path(coverage_receipt_path), before=before, after=after, post_sha256=post_sha256))
         _atomic_write_private(Path(output_receipt_path), receipt)
         return receipt
-    except BaseException:
+    except BaseException as reconciliation_error:
         if cutover_started and rollback is not None:
-            _restore_exact_prestate(rollback, target, before["sha256"])
+            try:
+                _restore_exact_prestate(rollback, target, before["sha256"])
+            except BaseException as restore_error:
+                rollback_retained = True
+                raise SaintSophiaReconciliationError(
+                    "reconciliation and automatic rollback both failed; "
+                    f"exact predecessor copy retained at {rollback}: {restore_error}"
+                ) from reconciliation_error
         raise
     finally:
         if candidate is not None:
@@ -394,7 +407,7 @@ def reconcile(*, database_path: Path, expected_pre_db_sha256: str, jsonl_path: P
             _cleanup_sidecars(candidate)
         if candidate_ingest_receipt is not None:
             candidate_ingest_receipt.unlink(missing_ok=True)
-        if rollback is not None:
+        if rollback is not None and not rollback_retained:
             rollback.unlink(missing_ok=True)
             _cleanup_sidecars(rollback)
 

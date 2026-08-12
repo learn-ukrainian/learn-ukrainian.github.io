@@ -212,6 +212,74 @@ def test_live_backup_failure_after_copy_restores_exact_prestate(tmp_path: Path, 
     assert not list(tmp_path.glob(".sources.db.saint-sophia-*"))
 
 
+def test_restore_failure_retains_private_exact_predecessor_copy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, jsonl, coverage, expected = _fixture(tmp_path, monkeypatch)
+    original_backup = reconciliation._sqlite_backup
+    interrupted = False
+
+    def copy_then_fail(source: Path, target: Path) -> None:
+        nonlocal interrupted
+        original_backup(source, target)
+        if target == database and not interrupted:
+            interrupted = True
+            raise reconciliation.SaintSophiaReconciliationError("cutover failure")
+
+    def fail_restore(*_args: object, **_kwargs: object) -> None:
+        raise reconciliation.SaintSophiaReconciliationError("restore failure")
+
+    monkeypatch.setattr(reconciliation, "_sqlite_backup", copy_then_fail)
+    monkeypatch.setattr(reconciliation, "_restore_exact_prestate", fail_restore)
+    with pytest.raises(
+        reconciliation.SaintSophiaReconciliationError,
+        match="exact predecessor copy retained",
+    ) as caught:
+        reconciliation.reconcile(
+            database_path=database,
+            expected_pre_db_sha256=expected,
+            jsonl_path=jsonl,
+            coverage_receipt_path=coverage,
+            output_receipt_path=tmp_path / "never.json",
+            apply_in_place=True,
+        )
+    retained = list(tmp_path.glob(".sources.db.saint-sophia-*.candidate"))
+    assert len(retained) == 1
+    assert str(retained[0]) in str(caught.value)
+    assert reconciliation.sha256_file(retained[0]) == expected
+    assert stat.S_IMODE(retained[0].stat().st_mode) == 0o600
+    assert not (tmp_path / "never.json").exists()
+
+
+def test_predecessor_drift_is_rechecked_immediately_before_copy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, jsonl, coverage, expected = _fixture(tmp_path, monkeypatch)
+    original_evidence = reconciliation._database_evidence
+
+    def mutate_after_evidence(path: Path) -> dict[str, object]:
+        evidence = original_evidence(path)
+        with sqlite3.connect(path) as connection:
+            connection.execute("UPDATE stable_records SET value='drifted' WHERE id=1")
+        return evidence
+
+    monkeypatch.setattr(reconciliation, "_database_evidence", mutate_after_evidence)
+    with pytest.raises(
+        reconciliation.SaintSophiaReconciliationError,
+        match="pre-database bytes drifted",
+    ):
+        reconciliation.reconcile(
+            database_path=database,
+            expected_pre_db_sha256=expected,
+            jsonl_path=jsonl,
+            coverage_receipt_path=coverage,
+            output_receipt_path=tmp_path / "never.json",
+            apply_in_place=True,
+        )
+    assert not list(tmp_path.glob(".sources.db.saint-sophia-*.candidate"))
+    assert not (tmp_path / "never.json").exists()
+
+
 def test_receipt_rejects_authority_or_boundary_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     database, jsonl, coverage, expected = _fixture(tmp_path, monkeypatch)
     receipt = reconciliation.reconcile(database_path=database, expected_pre_db_sha256=expected, jsonl_path=jsonl, coverage_receipt_path=coverage, output_receipt_path=tmp_path / "receipt.json", apply=True)
