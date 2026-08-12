@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_spas_source_attribution_receipt_v1.schema.json",
+  "title": "Phase 3 Spas source-attributed reconstruction text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "mode",
+    "text_free",
+    "inputs",
+    "source_authority",
+    "attribution_contract",
+    "denominator",
+    "output",
+    "rights_and_scope",
+    "safeguards",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_spas_source_attribution_receipt_v1"},
+    "implementation_version": {"const": "phase3_spas_source_attribution_v1"},
+    "mode": {"const": "qualified_source_attribution_not_semantic_gold"},
+    "text_free": {"const": true},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_pdf_sha256",
+        "layout_output_sha256",
+        "layout_receipt_file_sha256",
+        "layout_receipt_sha256",
+        "layout_implementation_sha256",
+        "layout_receipt_schema_sha256",
+        "implementation_sha256",
+        "receipt_schema_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "korniienko-spas-na-berestovi-2013"},
+        "source_pdf_sha256": {"$ref": "#/$defs/sha256"},
+        "layout_output_sha256": {"$ref": "#/$defs/sha256"},
+        "layout_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "layout_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "layout_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "layout_receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "title", "year", "source_record_url", "authority_scope"],
+      "properties": {
+        "author": {"const": "В. В. Корнієнко"},
+        "title": {
+          "const": "Корпус графіті церкви Спаса на Берестові (остання третина XI – перша третина XVIII ст.)"
+        },
+        "year": {"const": 2013},
+        "source_record_url": {"const": "https://resource.history.org.ua/item/0015198"},
+        "authority_scope": {"const": "published_author_reconstruction_only"}
+      }
+    },
+    "attribution_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_trigger_classification",
+        "attributed_disposition",
+        "fallback_classification",
+        "fallback_disposition",
+        "requires_whole_word_text_cue",
+        "requires_shape_cue",
+        "source_attribution_is_semantic_gold"
+      ],
+      "properties": {
+        "input_trigger_classification": {"const": "author_reconstruction_trigger_candidate"},
+        "attributed_disposition": {"const": "qualified_source_attributed"},
+        "fallback_classification": {"const": "dominant_historic_script_unresolved"},
+        "fallback_disposition": {"const": "unresolved"},
+        "requires_whole_word_text_cue": {"const": true},
+        "requires_shape_cue": {"const": true},
+        "source_attribution_is_semantic_gold": {"const": false}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_records",
+        "candidate_records",
+        "candidate_lines",
+        "source_attributed_lines",
+        "source_attributed_records",
+        "unresolved_lines",
+        "unresolved_records",
+        "attributed_unresolved_record_overlap"
+      ],
+      "properties": {
+        "input_records": {"type": "integer", "minimum": 1},
+        "candidate_records": {"type": "integer", "minimum": 1},
+        "candidate_lines": {"type": "integer", "minimum": 1},
+        "source_attributed_lines": {"type": "integer", "minimum": 0},
+        "source_attributed_records": {"type": "integer", "minimum": 0},
+        "unresolved_lines": {"type": "integer", "minimum": 0},
+        "unresolved_records": {"type": "integer", "minimum": 0},
+        "attributed_unresolved_record_overlap": {"type": "integer", "minimum": 0}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "record_identity_manifest_sha256"],
+      "properties": {
+        "filename": {"const": "spas-na-berestovi-source-attribution-v1.jsonl.gz"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "record_identity_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rights_and_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inherits_upstream_accepted_operational_risk",
+        "private_research_artifact_only",
+        "attribution_and_field_level_removal_preserved",
+        "binary_media_reuse_authorized",
+        "full_publication_training_export_authorized",
+        "adapt_on_substantiated_rights_notice"
+      ],
+      "properties": {
+        "inherits_upstream_accepted_operational_risk": {"const": true},
+        "private_research_artifact_only": {"const": true},
+        "attribution_and_field_level_removal_preserved": {"const": true},
+        "binary_media_reuse_authorized": {"const": false},
+        "full_publication_training_export_authorized": {"const": false},
+        "adapt_on_substantiated_rights_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete_record_context_preserved",
+        "source_offsets_preserved",
+        "candidate_denominator_fully_dispositioned",
+        "explicit_source_attribution_pass_complete",
+        "qualified_historical_semantic_review_complete",
+        "full_catalog_commentary_inscription_separation_complete",
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "complete_record_context_preserved": {"const": true},
+        "source_offsets_preserved": {"const": true},
+        "candidate_denominator_fully_dispositioned": {"const": true},
+        "explicit_source_attribution_pass_complete": {"const": true},
+        "qualified_historical_semantic_review_complete": {"const": false},
+        "full_catalog_commentary_inscription_separation_complete": {"const": false},
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unresolved_candidate_lines",
+        "inline_or_nondominant_font_spans_remain_context_only",
+        "semantic_labels_pending",
+        "full_catalog_layer_separation_pending",
+        "lavra_cave_corpus_gap_closed"
+      ],
+      "properties": {
+        "unresolved_candidate_lines": {"type": "integer", "minimum": 0},
+        "inline_or_nondominant_font_spans_remain_context_only": {"const": true},
+        "semantic_labels_pending": {"const": true},
+        "full_catalog_layer_separation_pending": {"const": true},
+        "lavra_cave_corpus_gap_closed": {"const": false}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
