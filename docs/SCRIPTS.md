@@ -679,6 +679,13 @@ work uses AGY; the legacy Gemini CLI route is unsupported.
 
 Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ai_agent_bridge` channel bridge, `ask-*`).
 
+**Capacity-first routing (operator 2026-08-12 / #4707):** before implement dispatch, run
+`.venv/bin/python -m scripts.fleet.capacity_pick` and pass `--check-budget` (or set
+`LU_DISPATCH_CHECK_BUDGET=1` in seat launchers). The guard hard-subs hot/near_cap/deficit
+lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallbacks` has a
+row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. Flag stays
+opt-in for hermetic tests; launchers should enable the env.
+
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 #### Project Research Registry — orchestrator dispatch duty

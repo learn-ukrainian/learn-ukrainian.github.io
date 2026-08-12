@@ -45,10 +45,26 @@ Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
 
 ---
 
-### 1b. Free-lane utilization (operator 2026-08-08 / #6468)
+### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
-`codexbar usage --json --provider <lane>` + `/api/delegate/active` + disk.
+`python -m scripts.fleet.capacity_pick` (preferred) + `codexbar usage --json --provider <lane>`
++ `/api/delegate/active` + disk.
+
+**Mandatory pre-dispatch (binding):** Before every implement `delegate.py dispatch`, run:
+
+```bash
+.venv/bin/python -m scripts.fleet.capacity_pick
+# then dispatch with budget guard (flag or LU_DISPATCH_CHECK_BUDGET=1):
+.venv/bin/python scripts/delegate.py dispatch --check-budget ...
+```
+
+**Refuse deficit when cooler seats exist.** Do **not** habit-route to Codex (or any
+subscription lane) while CodexBar/`routing-budget` shows hot / near_cap /
+`will_last_to_reset=False` **and** `capacity_pick` lists cool/idle free seats
+(Cursor, AGY, GLM, Kimi, …). `--check-budget` hard-subs when
+`dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
+unless `--force-agent` with a written NOTE.
 
 **Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
 worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
@@ -67,11 +83,11 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause:** shed mechanical CI to Cursor Auto / Flash / AGY /
-k3-256k / GLM. **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor Auto / Flash / AGY /
+k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
 to rotation. Novel/hard may stay on Terra/Luna among the 1–4 Codex drivers.
 
-Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468**.
+Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#4707**.
 
 ## 2. Default execution shape (binding)
 

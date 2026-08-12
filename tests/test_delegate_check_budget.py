@@ -283,7 +283,7 @@ def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
 
 
 def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tmp_path, capsys):
-    """Empty ledger plus authoritative CodexBar must show the live deficit."""
+    """Empty ledger plus authoritative CodexBar deficit → hard-sub when fallback exists."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(
@@ -295,7 +295,11 @@ def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tm
                 "rationale": "Codex has live headroom.",
                 "warnings": ["lane claude is in deficit (27% in deficit)"],
             },
-            "agents": {"claude": {"status": "hot", "burn_pct_7d": 74.0}},
+            "agents": {
+                "claude": {"status": "hot", "burn_pct_7d": 74.0},
+                "codex": {"status": "cool", "burn_pct_7d": 20.0},
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
             "diagnostics": {
                 "records_loaded": 0,
                 "stale": False,
@@ -310,7 +314,8 @@ def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tm
     err = capsys.readouterr().err
     assert "lane claude is in deficit (27% in deficit)" in err
     assert "budget UNKNOWN" not in err
-    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert "HARD AUTO-SUBSTITUTE" in err
+    assert "claude" in err and "codex" in err
 
 
 def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(monkeypatch, tmp_path, capsys):
@@ -340,8 +345,8 @@ def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(mon
     assert "HARD AUTO-SUBSTITUTE" not in err
 
 
-def test_check_budget_no_hard_sub_without_yaml_mapping(monkeypatch, tmp_path, capsys):
-    """Removed hardcode regression: yaml mapping absent → NO hard sub, even near_cap fresh."""
+def test_check_budget_refuse_without_yaml_mapping(monkeypatch, tmp_path, capsys):
+    """near_cap/hot without yaml mapping → refuse dispatch (exit non-zero)."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {})
@@ -357,12 +362,14 @@ def test_check_budget_no_hard_sub_without_yaml_mapping(monkeypatch, tmp_path, ca
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
 
-    assert rc == 0
-    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "ROUTING REFUSED" in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
 
 
 def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_path, capsys):
-    """A yaml typo must never dispatch a nonexistent adapter: unknown target → warn + no sub."""
+    """A yaml typo must never dispatch a nonexistent adapter: unknown target → refuse."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "gemeni"})
@@ -378,10 +385,167 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
 
-    assert rc == 0
+    assert rc == 2
     err = capsys.readouterr().err
     assert "not a known dispatch agent" in err
+    assert "ROUTING REFUSED" in err
     assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_check_budget_hard_sub_on_hot_status(monkeypatch, tmp_path, capsys):
+    """hot status with yaml fallback → hard auto-sub (same path as near_cap)."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {
+                "primary_agent_for_code": "cursor",
+                "rationale": "Codex hot; Cursor cool.",
+                "warnings": [],
+            },
+            "agents": {
+                "codex": {"status": "hot", "burn_pct_7d": 70.0, "resets_at": "2026-08-14T00:00:00Z"},
+                "cursor": {"status": "cool", "burn_pct_7d": 10.0},
+                "claude": {"status": "cool", "burn_pct_7d": 20.0},
+            },
+            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+        },
+    )
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "budget-check-hot",
+                "--prompt",
+                "no-op",
+                "--mode",
+                "read-only",
+                "--check-budget",
+            ]
+        )
+    )
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in err
+    assert "codex" in err and "cursor" in err
+    assert "status=hot" in err
+
+
+def test_check_budget_hard_sub_on_deficit_will_last(monkeypatch, tmp_path, capsys):
+    """will_last_to_reset=False (deficit) → hard auto-sub even if status is warm."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {
+                "primary_agent_for_code": "cursor",
+                "rationale": "Codex deficit.",
+                "warnings": [],
+            },
+            "agents": {
+                "codex": {
+                    "status": "warm",
+                    "burn_pct_7d": 55.0,
+                    "codexbar": {"will_last_to_reset": False, "pace_summary": "won't last"},
+                },
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            },
+            "diagnostics": {"records_loaded": 3, "stale": False, "codexbar_data_available": True},
+        },
+    )
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "budget-check-deficit",
+                "--prompt",
+                "no-op",
+                "--mode",
+                "read-only",
+                "--check-budget",
+            ]
+        )
+    )
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" in err
+    assert "will_last_to_reset=False" in err
+
+
+def test_check_budget_refuse_hot_without_fallback_lists_cooler(monkeypatch, tmp_path, capsys):
+    """hot lane with no yaml fallback → refuse and list cooler seats."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {})
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": "cursor", "rationale": "x", "warnings": []},
+            "agents": {
+                "codex": {"status": "hot", "burn_pct_7d": 80.0},
+                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+                "agy": {"status": "cool", "burn_pct_7d": 10.0},
+            },
+            "diagnostics": {"records_loaded": 4, "stale": False, "codexbar_data_available": True},
+        },
+    )
+
+    rc = delegate.cmd_dispatch(
+        delegate.build_parser().parse_args(
+            [
+                "dispatch",
+                "--agent",
+                "codex",
+                "--task-id",
+                "budget-refuse-hot",
+                "--prompt",
+                "no-op",
+                "--mode",
+                "read-only",
+                "--check-budget",
+            ]
+        )
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "ROUTING REFUSED" in err
+    assert "cursor" in err
+    assert "agy" in err
+
+
+def test_check_budget_env_lu_dispatch_forces_guard(monkeypatch, tmp_path, capsys):
+    """LU_DISPATCH_CHECK_BUDGET=1 enables the guard without --check-budget."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        _urlopen_routing(_FakeBudgetResponse("codex")),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args())
+
+    assert rc == 0
+    assert "ROUTING WARNING" in capsys.readouterr().err
 
 
 def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_path, capsys):
