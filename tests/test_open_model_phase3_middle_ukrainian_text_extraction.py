@@ -232,6 +232,59 @@ def test_runner_failure_removes_partial_jsonl(
     assert not output_path.exists()
 
 
+@pytest.mark.parametrize(
+    ("needle", "replacement"),
+    [
+        ('const text = number === 1 ? "тест" : "";', 'const text = number === 1 ? "\\uD800" : "";'),
+        ('text: "тест"', 'text: "\\uD800"'),
+    ],
+)
+def test_runner_rejects_unpaired_utf16_surrogates(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    needle: str,
+    replacement: str,
+) -> None:
+    source_path, decoder_path, _schema_path = _patch_fixture_contract(monkeypatch, tmp_path)
+    decoder_path.write_text(FAKE_DECODER.replace(needle, replacement), encoding="utf-8")
+    monkeypatch.setattr(extraction, "DECODER_BYTES", decoder_path.stat().st_size)
+    monkeypatch.setattr(extraction, "DECODER_SHA256", _sha256(decoder_path))
+    output_path = tmp_path / "invalid-unicode.jsonl"
+
+    with pytest.raises(MiddleUkrainianTextExtractionError, match="unpaired UTF-16 surrogate"):
+        extraction._invoke_extractor(
+            source_path=source_path,
+            decoder_path=decoder_path,
+            output_path=output_path,
+        )
+    assert not output_path.exists()
+
+
+def test_private_jsonl_rejects_unpaired_utf16_surrogate_with_typed_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source_path, decoder_path, _schema_path = _patch_fixture_contract(monkeypatch, tmp_path)
+    jsonl_path = tmp_path / "private-page-text.jsonl"
+    extraction._invoke_extractor(
+        source_path=source_path,
+        decoder_path=decoder_path,
+        output_path=jsonl_path,
+    )
+    rows = [json.loads(line) for line in jsonl_path.read_text(encoding="utf-8").splitlines()]
+    rows[0]["decoded_text"] = "\ud800"
+    payload = "".join(
+        f"{json.dumps(row, ensure_ascii=True, separators=(',', ':'))}\n"
+        for row in rows
+    )
+    jsonl_path.write_text(payload, encoding="ascii")
+    monkeypatch.setattr(extraction, "EXPECTED_PRIVATE_JSONL_BYTES", jsonl_path.stat().st_size)
+    monkeypatch.setattr(extraction, "EXPECTED_PRIVATE_JSONL_SHA256", _sha256(jsonl_path))
+
+    with pytest.raises(MiddleUkrainianTextExtractionError, match="unpaired UTF-16 surrogate"):
+        extraction.validate_private_jsonl(jsonl_path)
+
+
 def test_materialization_failure_cleans_staging_directory(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

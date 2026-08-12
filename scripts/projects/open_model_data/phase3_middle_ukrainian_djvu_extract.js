@@ -49,6 +49,22 @@ function sha256Buffer(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
 
+function requireUnicodeScalarText(value, label) {
+  if (typeof value !== "string") fail(`${label} is not a string`);
+  for (let index = 0; index < value.length; index += 1) {
+    const codeUnit = value.charCodeAt(index);
+    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+      const nextCodeUnit = value.charCodeAt(index + 1);
+      if (!(nextCodeUnit >= 0xdc00 && nextCodeUnit <= 0xdfff)) {
+        fail(`${label} contains an unpaired UTF-16 surrogate`);
+      }
+      index += 1;
+    } else if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff) {
+      fail(`${label} contains an unpaired UTF-16 surrogate`);
+    }
+  }
+}
+
 function exactRegularFile(filePath, label) {
   const metadata = fs.lstatSync(filePath);
   if (!metadata.isFile() || metadata.isSymbolicLink()) {
@@ -102,7 +118,7 @@ function normalizeZones(pageNumber, zones, width, height) {
     if (zone.x + zone.width > width || zone.y + zone.height > height) {
       fail(`page ${pageNumber} zone ${zoneIndex} exceeds page bounds`);
     }
-    if (typeof zone.text !== "string") fail(`page ${pageNumber} zone ${zoneIndex} text is not a string`);
+    requireUnicodeScalarText(zone.text, `page ${pageNumber} zone ${zoneIndex} text`);
     return {
       x: zone.x,
       y: zone.y,
@@ -165,7 +181,7 @@ function run() {
         validateGeometry(pageNumber, width, height, dpi, rotation);
 
         const decodedText = page.getText();
-        if (typeof decodedText !== "string") fail(`page ${pageNumber} decoded text is not a string`);
+        requireUnicodeScalarText(decodedText, `page ${pageNumber} decoded text`);
         const textZones = normalizeZones(
           pageNumber,
           page.getNormalizedTextZones(),

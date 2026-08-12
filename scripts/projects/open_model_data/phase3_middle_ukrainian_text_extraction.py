@@ -137,6 +137,15 @@ def _int_value(value: Any, *, label: str, minimum: int = 0) -> int:
     return value
 
 
+def _utf8_bytes(value: str, *, label: str) -> bytes:
+    try:
+        return value.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise MiddleUkrainianTextExtractionError(
+            f"{label} contains an unpaired UTF-16 surrogate"
+        ) from exc
+
+
 def _validate_zone(
     zone: Any,
     *,
@@ -151,6 +160,7 @@ def _validate_zone(
     width = _int_value(zone["width"], label=f"page {page_number} zone {zone_index} width")
     height = _int_value(zone["height"], label=f"page {page_number} zone {zone_index} height")
     require(isinstance(zone["text"], str), f"page {page_number} zone {zone_index} text must be a string")
+    _utf8_bytes(zone["text"], label=f"page {page_number} zone {zone_index} text")
     require(x + width <= page_width and y + height <= page_height, f"page {page_number} zone exceeds bounds")
 
 
@@ -211,14 +221,15 @@ def validate_private_jsonl(path: Path) -> dict[str, Any]:
             require(isinstance(row["text_layer_present"], bool), f"page {page_number} layer flag drift")
             decoded_text = row["decoded_text"]
             require(isinstance(decoded_text, str), f"page {page_number} decoded text must be a string")
-            decoded_hash = hashlib.sha256(decoded_text.encode("utf-8")).hexdigest()
+            decoded_text_bytes = _utf8_bytes(decoded_text, label=f"page {page_number} decoded text")
+            decoded_hash = hashlib.sha256(decoded_text_bytes).hexdigest()
             require(row["decoded_text_sha256"] == decoded_hash, f"page {page_number} text hash drift")
             code_points = _int_value(
                 row["decoded_text_code_points"], label=f"page {page_number} code-point count"
             )
             utf8_bytes = _int_value(row["decoded_text_utf8_bytes"], label=f"page {page_number} UTF-8 bytes")
             require(code_points == len(decoded_text), f"page {page_number} code-point denominator drift")
-            require(utf8_bytes == len(decoded_text.encode("utf-8")), f"page {page_number} byte denominator drift")
+            require(utf8_bytes == len(decoded_text_bytes), f"page {page_number} byte denominator drift")
 
             zones = row["text_zones"]
             if row["text_layer_present"]:
