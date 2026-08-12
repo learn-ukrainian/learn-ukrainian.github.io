@@ -5,16 +5,21 @@ import sqlite3
 from pathlib import Path
 
 from scripts.practice_deck.zno import (
+    LEXICAL_NORM_LIVE_CANDIDATE_COUNT,
     LEXICAL_NORM_SQL,
     MORPHOLOGICAL_NORM_SQL,
+    MORPHOLOGY_LIVE_CANDIDATE_COUNT,
     MORPHOLOGY_SQL,
     ORTHOGRAPHY_LIVE_CANDIDATE_COUNT,
     ORTHOGRAPHY_SQL,
+    PARONYM_LIVE_CANDIDATE_COUNT,
     PHONETICS_SQL,
     SYNTACTIC_NORM_SQL,
     SYNTAX_SQL,
+    build_zno_fill_residual,
     build_zno_shards,
     learner_attribution,
+    write_zno_fill_residual,
     write_zno_shards,
 )
 from scripts.practice_deck.markup_integrity import stem_requires_markup
@@ -70,7 +75,7 @@ def _database(path: Path) -> Path:
 
 
 def test_builder_keeps_ukrainian_item_text_maps_letter_and_reports_drops(tmp_path: Path) -> None:
-    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+    shards, residual, fill_residual = build_zno_shards(_database(tmp_path / "sources.db"))
 
     stress = shards["stress"]
     assert stress["items"][0]["stem"] == " Наголос?\n"
@@ -85,23 +90,29 @@ def test_builder_keeps_ukrainian_item_text_maps_letter_and_reports_drops(tmp_pat
     assert residual["decks"]["stress"]["dropped"] == {"invalid_options": 1}
     assert residual["namedResidual"]["emptyKeyOwnStatement"] == 1
     assert residual["namedResidual"]["documentsFetchNotOk"] == 1
+    assert fill_residual["schema"] == "zno-practice-fill-residual"
+    assert fill_residual["deckDrops"]["stress"][0]["reason"] == "invalid_options"
 
 
 def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Path) -> None:
     database = _database(tmp_path / "sources.db")
     assert "trim(t.topic_norm) = 'lexical_norm'" in LEXICAL_NORM_SQL
-    first, first_residual = build_zno_shards(database)
-    second, second_residual = build_zno_shards(database)
+    assert "trim(t.task_subtype) = 'lexical_error'" in LEXICAL_NORM_SQL
+    first, first_residual, first_fill = build_zno_shards(database)
+    second, second_residual, second_fill = build_zno_shards(database)
     assert first == second
     assert first_residual == second_residual
+    assert first_fill == second_fill
 
     output = tmp_path / "out"
     write_zno_shards(first, first_residual, output)
+    write_zno_fill_residual(first_fill, output / "zno-fill-residual.json")
     assert json.loads((output / "practice-zno.paronym.json").read_text(encoding="utf-8"))["thinDeck"] is True
+    assert json.loads((output / "zno-fill-residual.json").read_text(encoding="utf-8"))["inventory"]["stress"]["emitted"] == 1
 
 
 def test_orthography_membership_is_pinned_and_malformed_candidates_drop(tmp_path: Path) -> None:
-    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+    shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
 
     assert "instr(t.topic_tag, 'Орфограф') > 0" in ORTHOGRAPHY_SQL
     # This frozen live denominator makes an intentional source-corpus or predicate
@@ -115,7 +126,7 @@ def test_orthography_membership_is_pinned_and_malformed_candidates_drop(tmp_path
 
 
 def test_morphological_and_syntactic_norm_decks_use_exact_topic_norm_predicates(tmp_path: Path) -> None:
-    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+    shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
 
     assert "trim(t.topic_norm) = 'morphological_norm'" in MORPHOLOGICAL_NORM_SQL
     assert "trim(t.topic_norm) = 'syntactic_norm'" in SYNTACTIC_NORM_SQL
@@ -131,11 +142,15 @@ def test_wave_3_decks_emit_from_broad_topic_tag_families(tmp_path: Path) -> None
     """#6620: morphology/syntax/phonetics were untapped topic_tag families sitting
     behind the four thin/repetitive original decks; this pins their predicates and
     proves each emits real, letter-valid items when candidates exist."""
-    shards, residual = build_zno_shards(_database(tmp_path / "sources.db"))
+    shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
 
     assert "instr(t.topic_tag, 'Морфолог') > 0" in MORPHOLOGY_SQL
+    assert "instr(t.topic_tag, 'Словотвір') > 0" in MORPHOLOGY_SQL
     assert "instr(t.topic_tag, 'Синтаксис') > 0" in SYNTAX_SQL
     assert "instr(t.topic_tag, 'Фонетик') > 0" in PHONETICS_SQL
+    assert MORPHOLOGY_LIVE_CANDIDATE_COUNT == 195
+    assert LEXICAL_NORM_LIVE_CANDIDATE_COUNT == 40
+    assert PARONYM_LIVE_CANDIDATE_COUNT == 7
 
     assert shards["morphology"]["deckId"] == "zno-morphology"
     assert residual["decks"]["morphology"]["candidates"] == 2
@@ -163,7 +178,7 @@ def test_builder_quarantines_markup_dependent_items_without_overlay(tmp_path: Pa
     empty_overlay = tmp_path / "empty-overlay.json"
     empty_overlay.write_text('{"schema":"zno-markup-overlay","schemaVersion":1,"items":{}}', encoding="utf-8")
 
-    shards, residual = build_zno_shards(database, markup_overlay_path=empty_overlay)
+    shards, residual, _fill = build_zno_shards(database, markup_overlay_path=empty_overlay)
 
     assert residual["markupIntegrity"]["quarantinedMissingMarkup"] == 1
     assert residual["decks"]["phonetics"]["dropped"]["broken_missing_markup"] == 1

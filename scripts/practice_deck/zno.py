@@ -32,7 +32,13 @@ from scripts.practice_deck.markup_integrity import (
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_OUT_DIR = ROOT / "site" / "src" / "data"
 DEFAULT_MARKUP_OVERLAY = ROOT / "data" / "practice" / "zno-markup-overlay.json"
+DEFAULT_FILL_RESIDUAL = ROOT / "batch_state" / "practice" / "zno-fill-residual.json"
 LETTER_TO_INDEX = {"А": 0, "Б": 1, "В": 2, "Г": 3, "Д": 4}
+
+# Pinned live denominators for review visibility when predicates or corpus change.
+MORPHOLOGY_LIVE_CANDIDATE_COUNT = 195
+LEXICAL_NORM_LIVE_CANDIDATE_COUNT = 40
+PARONYM_LIVE_CANDIDATE_COUNT = 7
 
 # This is deliberately an exact, reviewable predicate rather than an attempt to
 # infer lexical suitability from stem wording.  Its live count is recorded with
@@ -43,7 +49,10 @@ SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
 FROM zno_tasks AS t
 WHERE t.task_format = 'single-choice'
   AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
-  AND trim(t.topic_norm) = 'lexical_norm'
+  AND (
+    trim(t.topic_norm) = 'lexical_norm'
+    OR trim(t.task_subtype) = 'lexical_error'
+  )
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip()
 
@@ -95,7 +104,11 @@ SELECT t.id, t.year, t.exam, t.session, t.task_no, t.stem, t.options_json,
 FROM zno_tasks AS t
 WHERE t.task_format = 'single-choice'
   AND trim(t.correct_json) IN ('А', 'Б', 'В', 'Г', 'Д')
-  AND instr(t.topic_tag, 'Морфолог') > 0
+  AND (
+    instr(t.topic_tag, 'Морфолог') > 0
+    OR instr(t.topic_tag, 'Словотвір') > 0
+    OR instr(t.topic_tag, 'Будова слова') > 0
+  )
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip()
 
@@ -155,6 +168,11 @@ WHERE t.task_format = 'single-choice'
     instr(t.topic_tag, 'Паронім') > 0
     OR trim(t.task_subtype) = 'paronym'
     OR trim(t.paronym_pair) <> ''
+    OR (
+      instr(t.stem, 'Обидва слова') > 0
+      AND instr(t.stem, 'дужках') > 0
+      AND instr(t.stem, 'можливі') > 0
+    )
   )
 ORDER BY t.year, t.exam, t.session, t.task_no, t.id
 """.strip(),
@@ -248,6 +266,10 @@ def _item_from_row(row: sqlite3.Row) -> tuple[dict[str, Any] | None, str | None]
     }, None
 
 
+def _task_id(task_id: int) -> str:
+    return f"zno:{task_id}"
+
+
 def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
     corpus = int(conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0])
     return {
@@ -265,33 +287,41 @@ def build_zno_shards(
     db_path: Path,
     *,
     markup_overlay_path: Path = DEFAULT_MARKUP_OVERLAY,
-) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
-    """Build deterministic deck payloads and their fail-closed receipt."""
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any], dict[str, Any]]:
+    """Build deterministic deck payloads, summary receipt, and per-task fill residual."""
     overlay_by_id = load_markup_overlay(markup_overlay_path)
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         shards: dict[str, dict[str, Any]] = {}
         deck_receipts: dict[str, Any] = {}
+        deck_drops: dict[str, list[dict[str, str]]] = {}
+        emitted_ids: set[int] = set()
         emitted_total = 0
         quarantined_markup = 0
         for definition in DECKS:
             rows = conn.execute(definition.predicate_sql).fetchall()
             dropped: Counter[str] = Counter()
+            dropped_tasks: list[dict[str, str]] = []
             items: list[dict[str, Any]] = []
             for row in rows:
                 item, reason = _item_from_row(row)
                 if item is None:
-                    dropped[reason or "invalid_item"] += 1
+                    drop_reason = reason or "invalid_item"
+                    dropped[drop_reason] += 1
+                    dropped_tasks.append({"znoTaskId": _task_id(int(row["id"])), "reason": drop_reason})
                     continue
                 task_id = str(item["znoTaskId"])
                 item, markup_reason = apply_markup_overlay(item, overlay_by_id.get(task_id))
                 if item is None:
-                    dropped[markup_reason or "broken_missing_markup"] += 1
+                    drop_reason = markup_reason or "broken_missing_markup"
+                    dropped[drop_reason] += 1
+                    dropped_tasks.append({"znoTaskId": _task_id(int(row["id"])), "reason": drop_reason})
                     if stem_requires_markup(str(row["stem"])):
                         quarantined_markup += 1
                     continue
                 items.append(item)
+                emitted_ids.add(int(row["id"]))
             emitted_total += len(items)
             shards[definition.key] = {
                 "schema": "zno-practice-deck",
@@ -308,6 +338,7 @@ def build_zno_shards(
                 "emitted": len(items),
                 "dropped": dict(sorted(dropped.items())),
             }
+            deck_drops[definition.key] = dropped_tasks
         residual = {
             "schema": "zno-practice-residual-report",
             "schemaVersion": 1,
@@ -321,9 +352,76 @@ def build_zno_shards(
             },
         }
         assert_emit_integrity(shards)
-        return shards, residual
+        fill_residual = build_zno_fill_residual(
+            conn,
+            deck_receipts=deck_receipts,
+            deck_drops=deck_drops,
+            emitted_ids=emitted_ids,
+        )
+        return shards, residual, fill_residual
     finally:
         conn.close()
+
+
+def build_zno_fill_residual(
+    conn: sqlite3.Connection,
+    *,
+    deck_receipts: dict[str, Any],
+    deck_drops: dict[str, list[dict[str, str]]],
+    emitted_ids: set[int],
+) -> dict[str, Any]:
+    """Per-deck inventory plus named blocked/unparsed single-choice task ids."""
+    inventory = {
+        key: {
+            "candidates": receipt["candidates"],
+            "emitted": receipt["emitted"],
+            "dropped": receipt["dropped"],
+            "fillRatio": round(receipt["emitted"] / receipt["candidates"], 4) if receipt["candidates"] else 1.0,
+        }
+        for key, receipt in deck_receipts.items()
+    }
+    blocked: list[dict[str, str]] = []
+    for deck_key, drops in deck_drops.items():
+        for entry in drops:
+            blocked.append({"deck": deck_key, **entry})
+
+    # Unparsed / blocked single-choice rows that never landed in any deck shard.
+    unparsed: list[dict[str, str]] = []
+    predicate_miss: Counter[str] = Counter()
+    rows = conn.execute(
+        """
+        SELECT id, topic_tag, topic_norm, task_format, correct_json
+        FROM zno_tasks
+        WHERE task_format = 'single-choice'
+        ORDER BY id
+        """
+    ).fetchall()
+    for row in rows:
+        task_id = int(row["id"])
+        if task_id in emitted_ids:
+            continue
+        full_row = conn.execute("SELECT * FROM zno_tasks WHERE id = ?", (task_id,)).fetchone()
+        item, reason = _item_from_row(full_row)
+        if reason is not None:
+            unparsed.append({"znoTaskId": _task_id(task_id), "reason": reason})
+            continue
+        topic_norm = str(row["topic_norm"] or "").strip() or "empty"
+        predicate_miss[topic_norm] += 1
+
+    return {
+        "schema": "zno-practice-fill-residual",
+        "schemaVersion": 1,
+        "inventory": inventory,
+        "deckDrops": deck_drops,
+        "blocked": blocked,
+        "unparsed": unparsed,
+        "predicateMissByTopicNorm": dict(sorted(predicate_miss.items())),
+    }
+
+
+def write_zno_fill_residual(fill_residual: dict[str, Any], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_compact_json(fill_residual))
 
 
 def write_zno_shards(shards: dict[str, dict[str, Any]], residual: dict[str, Any], out_dir: Path) -> None:
@@ -338,14 +436,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--markup-overlay", type=Path, default=DEFAULT_MARKUP_OVERLAY)
+    parser.add_argument(
+        "--fill-residual",
+        type=Path,
+        default=DEFAULT_FILL_RESIDUAL,
+        help="Write per-task fill residual inventory (default: batch_state/practice/zno-fill-residual.json)",
+    )
     args = parser.parse_args(argv)
-    shards, residual = build_zno_shards(args.db, markup_overlay_path=args.markup_overlay)
+    shards, residual, fill_residual = build_zno_shards(args.db, markup_overlay_path=args.markup_overlay)
     write_zno_shards(shards, residual, args.out_dir)
+    write_zno_fill_residual(fill_residual, args.fill_residual)
     for key in (definition.key for definition in DECKS):
         receipt = residual["decks"][key]
         print(f"{key}: candidates={receipt['candidates']} emitted={receipt['emitted']} dropped={sum(receipt['dropped'].values())}")
     print(f"named residual: {residual['namedResidual']}")
     print(f"markup quarantined: {residual['markupIntegrity']['quarantinedMissingMarkup']}")
+    print(f"fill residual: {args.fill_residual}")
     return 0
 
 
