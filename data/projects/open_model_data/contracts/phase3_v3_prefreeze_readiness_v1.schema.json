@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_v3_prefreeze_readiness_v1.schema.json",
+  "title": "Phase 3 v3 additive pre-freeze readiness receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "provider_calls",
+    "bindings",
+    "denominators",
+    "additive_sources",
+    "cycle002",
+    "semantic_canary",
+    "readiness",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_v3_prefreeze_readiness_v1"},
+    "status": {"const": "PREFREEZE_BLOCKED_PENDING_COMPLETE_EVALUATION_PACKAGE"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "v2_compatibility_matrix_sha256",
+        "v2_evaluation_contract_sha256",
+        "v2_functional_role_contract_sha256",
+        "near_duplicate_policy_sha256",
+        "linguistic_representation_implementation_sha256",
+        "linguistic_representation_schema_sha256",
+        "linguistic_canary_implementation_sha256",
+        "ua_gec_complete_context_receipt_file_sha256",
+        "ua_gec_complete_context_receipt_sha256",
+        "university_content_audit_freeze_file_sha256",
+        "university_content_audit_freeze_receipt_sha256",
+        "historical_full_gate_file_sha256",
+        "historical_full_gate_receipt_sha256",
+        "historical_full_receipt_file_sha256",
+        "historical_full_receipt_sha256",
+        "sources_database_sha256",
+        "prefreeze_implementation_sha256",
+        "prefreeze_schema_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "v2_compatibility_matrix_sha256": {"$ref": "#/$defs/sha256"},
+        "v2_evaluation_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "v2_functional_role_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "near_duplicate_policy_sha256": {"$ref": "#/$defs/sha256"},
+        "linguistic_representation_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "linguistic_representation_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "linguistic_canary_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_gec_complete_context_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_gec_complete_context_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "university_content_audit_freeze_file_sha256": {"$ref": "#/$defs/sha256"},
+        "university_content_audit_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_gate_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_gate_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "sources_database_sha256": {"$ref": "#/$defs/sha256"},
+        "prefreeze_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "prefreeze_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2", "ua_gec_complete_context", "university", "historical", "v3_evaluation"],
+      "properties": {
+        "v2": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_units", "evaluation_identities", "ua_gec_units"],
+          "properties": {
+            "source_units": {"const": 67041},
+            "evaluation_identities": {"const": 9392},
+            "ua_gec_units": {"const": 8937}
+          }
+        },
+        "ua_gec_complete_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["eligible_records", "represented_v2_units", "excluded_v2_units"],
+          "properties": {
+            "eligible_records": {"type": "integer", "minimum": 1},
+            "represented_v2_units": {"type": "integer", "minimum": 1, "maximum": 8937},
+            "excluded_v2_units": {"type": "integer", "minimum": 0, "maximum": 8937}
+          }
+        },
+        "university": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidate_sources", "database_sources", "mandatory_conversion_sources", "partial_topics", "sufficient_topics"],
+          "properties": {
+            "candidate_sources": {"const": 30},
+            "database_sources": {"const": 20},
+            "mandatory_conversion_sources": {"const": 11},
+            "partial_topics": {"const": 21},
+            "sufficient_topics": {"const": 5}
+          }
+        },
+        "historical": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ud_documents", "ud_sentences", "ud_token_rows", "plug2_uk_documents", "plug2_uk_metadata_tokens"],
+          "properties": {
+            "ud_documents": {"const": 82},
+            "ud_sentences": {"const": 1311},
+            "ud_token_rows": {"const": 35081},
+            "plug2_uk_documents": {"const": 56080},
+            "plug2_uk_metadata_tokens": {"const": 71802066}
+          }
+        },
+        "v3_evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_evidence_backed_labels", "frozen_evidence_backed_labels"],
+          "properties": {
+            "required_evidence_backed_labels": {"const": 9392},
+            "frozen_evidence_backed_labels": {"const": 0}
+          }
+        }
+      }
+    },
+    "additive_sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "university_and_historical_outside_v2_totals",
+        "v2_denominators_unchanged",
+        "historical_forms_protected",
+        "historical_modern_correction_eligible",
+        "conversion_started"
+      ],
+      "properties": {
+        "university_and_historical_outside_v2_totals": {"const": true},
+        "v2_denominators_unchanged": {"const": true},
+        "historical_forms_protected": {"const": true},
+        "historical_modern_correction_eligible": {"const": false},
+        "conversion_started": {"const": false}
+      }
+    },
+    "cycle002": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identities", "agreements", "disagreements", "rows_with_ua_gec_evidence",
+        "rows_without_authoritative_evidence", "provider_independent", "semantic_gold", "disposition"
+      ],
+      "properties": {
+        "identities": {"const": 9392},
+        "agreements": {"const": 6462},
+        "disagreements": {"const": 2930},
+        "rows_with_ua_gec_evidence": {"const": 906},
+        "rows_without_authoritative_evidence": {"const": 8486},
+        "provider_independent": {"const": false},
+        "semantic_gold": {"const": false},
+        "disposition": {"const": "diagnostic_only"}
+      }
+    },
+    "semantic_canary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_count", "edit_shapes", "ua_gec_commit", "battery_sha256",
+        "verification_sha256", "documents_verified", "retrievals_verified",
+        "complete_context", "provider_calls", "operator_display_required_before_provider",
+        "operator_display_confirmed"
+      ],
+      "properties": {
+        "packet_count": {"const": 6},
+        "edit_shapes": {
+          "const": ["substitution", "insertion", "deletion", "reordering", "punctuation_only", "multi_edit"]
+        },
+        "ua_gec_commit": {"const": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6"},
+        "battery_sha256": {"$ref": "#/$defs/sha256"},
+        "verification_sha256": {"$ref": "#/$defs/sha256"},
+        "documents_verified": {"const": 12},
+        "retrievals_verified": {"const": 12},
+        "complete_context": {"const": true},
+        "provider_calls": {"const": false},
+        "operator_display_required_before_provider": {"const": true},
+        "operator_display_confirmed": {"const": true}
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inventory_compatibility_ready", "university_content_audit_ready",
+        "university_source_freeze_ready", "historical_full_materialization_ready",
+        "linguistic_representation_ready", "semantic_canary_ready",
+        "functional_role_contract_ready", "complete_evaluation_package_ready",
+        "overall_source_freeze_ready", "missing_requirements"
+      ],
+      "properties": {
+        "inventory_compatibility_ready": {"const": true},
+        "university_content_audit_ready": {"const": true},
+        "university_source_freeze_ready": {"const": true},
+        "historical_full_materialization_ready": {"const": true},
+        "linguistic_representation_ready": {"const": true},
+        "semantic_canary_ready": {"const": true},
+        "functional_role_contract_ready": {"const": true},
+        "complete_evaluation_package_ready": {"const": false},
+        "overall_source_freeze_ready": {"const": false},
+        "missing_requirements": {
+          "const": [
+            "university_topic_coverage_21_partial",
+            "historical_periodization_and_document_level_review_pending",
+            "additive_source_role_membership_not_frozen",
+            "evidence_backed_v3_heldout_labels_and_sealed_evaluation_package_missing"
+          ]
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "new_train_development_extraction_authorized", "broad_provider_run_authorized",
+        "source_authoring_authorized", "evaluation_partition_frozen",
+        "source_coverage_ready", "source_freeze_ready", "phase3_complete", "phase4_blocked"
+      ],
+      "properties": {
+        "new_train_development_extraction_authorized": {"const": false},
+        "broad_provider_run_authorized": {"const": false},
+        "source_authoring_authorized": {"const": false},
+        "evaluation_partition_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
