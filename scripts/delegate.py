@@ -4197,8 +4197,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
 
-    if getattr(args, "check_budget", False) and not getattr(args, "force_agent", False):
-        dispatch_agent = _resolve_agent_with_budget_guard(args.agent)
+    if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+        try:
+            dispatch_agent = _resolve_agent_with_budget_guard(args.agent)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
     else:
         dispatch_agent = args.agent
 
@@ -4816,9 +4820,19 @@ class MonitorApiUnavailable(RuntimeError):
     """Raised when the local Monitor API cannot answer a task status query."""
 
 
+class BudgetGuardRefuseError(RuntimeError):
+    """Raised when --check-budget must refuse dispatch (hot/deficit/near_cap, no fallback)."""
+
+
 def _monitor_api_base_url() -> str:
     return os.environ.get("DELEGATE_MONITOR_API", _MONITOR_API_BASE_URL).rstrip("/")
 
+
+def _dispatch_check_budget_enabled(args: argparse.Namespace) -> bool:
+    """True when --check-budget is set or LU_DISPATCH_CHECK_BUDGET=1."""
+    if getattr(args, "check_budget", False):
+        return True
+    return os.environ.get("LU_DISPATCH_CHECK_BUDGET", "").strip() in {"1", "true", "yes", "on"}
 
 def _age_seconds_from_started_at(started_at: Any) -> int:
     try:
@@ -4866,10 +4880,67 @@ def _load_dispatch_fallbacks() -> dict[str, str]:
     return {}
 
 
+def _budget_lane_status(agent: str, agent_info: dict[str, Any]) -> str | None:
+    if agent == "claude":
+        return (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
+    return agent_info.get("status")
+
+
+def _budget_will_last_to_reset(agent_info: dict[str, Any]) -> bool | None:
+    cb = agent_info.get("codexbar")
+    if not isinstance(cb, dict) or "will_last_to_reset" not in cb:
+        return None
+    val = cb.get("will_last_to_reset")
+    if val is None:
+        return None
+    return bool(val)
+
+
+def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
+    cool: list[str] = []
+    for lane, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        lane_l = str(lane).strip().lower()
+        if lane_l == exclude:
+            continue
+        status = _budget_lane_status(lane_l, info)
+        will_last = _budget_will_last_to_reset(info)
+        if status in {"hot", "near_cap"} or will_last is False:
+            continue
+        if status in {"cool", "warm"}:
+            cool.append(lane_l)
+    return sorted(cool)
+
+
+def _budget_needs_hard_capacity_action(
+    *,
+    status: str | None,
+    will_last: bool | None,
+    is_stale: bool,
+    records_loaded: int,
+) -> tuple[bool, str]:
+    """Return (needs_action, reason) for near_cap / hot / CodexBar deficit."""
+    if is_stale:
+        return False, ""
+    # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
+    if status == "near_cap" and records_loaded > 0:
+        return True, "near_cap (>90% on FRESH snapshot)"
+    if status == "hot":
+        return True, "status=hot"
+    if will_last is False:
+        return True, "codexbar will_last_to_reset=False (deficit)"
+    return False, ""
+
+
 def _resolve_agent_with_budget_guard(agent: str) -> str:
-    """Return possibly-substituted agent. Hard sub only on fresh snapshot when chosen lane near_cap (>90%).
-    Stale/empty: advisory only, no sub (never-trip guard). --force wins before call.
-    Substitution is NOTED (operator contract).
+    """Return possibly-substituted agent.
+
+    Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
+    CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
+    has a known target. Without a usable fallback: refuse (raise
+    BudgetGuardRefuseError) unless caller used --force-agent before this call.
+    Stale/empty: advisory only, no sub (never-trip guard).
     """
     requested = (agent or "").strip().lower()
     try:
@@ -4907,7 +4978,7 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     if records_loaded == 0:
         for warning in rec.get("warnings") or []:
             if "is in deficit" in str(warning):
-                print(f"⚠ ROUTING CHECK: {warning}; no hard sub (ledger empty).", file=sys.stderr)
+                print(f"⚠ ROUTING CHECK: {warning}", file=sys.stderr)
 
     if is_stale:
         print(
@@ -4927,45 +4998,56 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
             if rec.get("rationale"):
                 print(f"Rationale: {rec['rationale']}", file=sys.stderr)
 
-    # HARD auto-sub only for subscription near_cap on FRESH non-empty
     agent_info = agents.get(requested, {}) or {}
-    # claude may be nested
-    if requested == "claude":
-        status = (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
-    else:
-        status = agent_info.get("status")
+    status = _budget_lane_status(requested, agent_info if isinstance(agent_info, dict) else {})
+    will_last = _budget_will_last_to_reset(agent_info if isinstance(agent_info, dict) else {})
     burn = (
         agent_info.get("burn_pct_7d")
         if requested != "claude"
         else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
     )
 
-    if status == "near_cap" and not is_stale and records_loaded > 0:
-        fallbacks = _load_dispatch_fallbacks()
-        sub = fallbacks.get(requested)
-        # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
-        # no inferred/hardcoded mappings (a deleted config entry must mean
-        # "no hard sub", not silently resurrect an old route).
-        if sub and sub not in _DISPATCH_AGENT_CHOICES:
-            print(
-                f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, "
-                "not a known dispatch agent — ignoring hard sub.",
-                file=sys.stderr,
-            )
-            sub = None
-        if sub and sub != requested:
-            note = (
-                f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
-                f"(lane window >90% used / status=near_cap on FRESH snapshot; "
-                f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks + documented cases). "
-                "Substitution noted for operator contract / review independence."
-            )
-            print(note, file=sys.stderr)
-            if burn is not None:
-                print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
-            return sub
+    needs_action, reason = _budget_needs_hard_capacity_action(
+        status=status,
+        will_last=will_last,
+        is_stale=is_stale,
+        records_loaded=records_loaded,
+    )
+    if not needs_action:
+        return requested
 
-    return requested
+    fallbacks = _load_dispatch_fallbacks()
+    sub = fallbacks.get(requested)
+    # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
+    # no inferred/hardcoded mappings (a deleted config entry must mean
+    # refuse or advisory, not silently resurrect an old route).
+    if sub and sub not in _DISPATCH_AGENT_CHOICES:
+        print(
+            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, "
+            "not a known dispatch agent — ignoring hard sub.",
+            file=sys.stderr,
+        )
+        sub = None
+    if sub and sub != requested:
+        note = (
+            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+            f"({reason}; "
+            f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks). "
+            "Substitution noted for operator contract / review independence."
+        )
+        print(note, file=sys.stderr)
+        if burn is not None:
+            print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
+        return sub
+
+    cooler = _budget_cooler_lanes(agents if isinstance(agents, dict) else {}, exclude=requested)
+    cooler_txt = ", ".join(cooler) if cooler else "(none marked cool/warm in snapshot)"
+    raise BudgetGuardRefuseError(
+        f"ROUTING REFUSED: --agent {requested} is {reason} and "
+        f"dispatch_fallbacks has no usable substitute. "
+        f"Cooler seats from budget snapshot: {cooler_txt}. "
+        "Re-route (see `python -m scripts.fleet.capacity_pick`) or pass --force-agent."
+    )
 
 
 def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
@@ -5475,14 +5557,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--check-budget",
         action="store_true",
         help=(
-            "Query /api/state/routing-budget before spawning and warn when "
-            "budget telemetry recommends a different agent."
+            "Query /api/state/routing-budget before spawning; hard-sub or refuse "
+            "when the requested lane is near_cap/hot/deficit. Also enabled when "
+            "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),
     )
     d.add_argument(
         "--force-agent",
         action="store_true",
-        help="Suppress --check-budget routing warnings and dispatch with the requested agent.",
+        help=(
+            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard "
+            "and dispatch with the requested agent."
+        ),
     )
     d.add_argument(
         "--dry-run",
