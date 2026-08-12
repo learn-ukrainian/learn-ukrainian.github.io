@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "756d6594df45",
+  "strategy": "manual-commit",
+  "branch": "cursor/cold-start-inbox-authority",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/cold_start_board.py",
+    "tests/fleet_comms/test_cold_start_board.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/75/6d6594df45/0/metadata.json",
+      "transcript": "/75/6d6594df45/0/full.jsonl",
+      "compact_transcript": "/75/6d6594df45/0/transcript.jsonl",
+      "content_hash": "/75/6d6594df45/0/content_hash.txt",
+      "prompt": "/75/6d6594df45/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/cold-start-inbox-authority
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Fix cold-start board inbox/backlog probes for authority mode
+
+## CAPACITY_CARD
+pick=cursor status=cool will_last=true free=cursor,claude avoid=codex(deficit) source=codexbar
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor Auto (mechanical infra schema fix)
+- why_this_tier: bounded RO probe SQL mismatch; no architecture; Cursor headroom + mechanical preference
+- advisor_packet: n/a (practical, not heap)
+- owned_paths:
+  - scripts/fleet_comms/cold_start_board.py
+  - tests/fleet_comms/test_cold_start_board.py
+- acceptance_cmd: `.venv/bin/python -m pytest tests/fleet_comms/test_cold_start_board.py -q` AND live board `inbox_check.status=ok` under plane authority
+- alternatives_considered:
+  1. codex — CodexBar weekly deficit, will_last false → refuse
+  2. agy — eligible but Cursor preferred for mechanical infra
+  3. claude — cool but reserve for judgment/CF
+- parallel_free_seats: cursor cool, claude cool, kimi 5h full (weekly empty)
+
+## Context (tool-backed)
+- Stream epic:4707 (infra-harness). Lease held by launcher; do not claim/renew.
+- #6159 CLOSED; plane mode is **authority** (`plane-status` → mode=authority, schema v7).
+- Live cold-start board is **degraded** because `_probe_inbox` errors:
+  `no such column: channel`
+- Root cause: `scripts/fleet_comms/cold_start_board.py` `_probe_inbox` runs:
+  ```sql
+  SELECT message_id, channel, sender, kind, created_at
+  FROM deliveries
+  WHERE recipient = ? AND status IN ('pending', 'dispatched')
+  ```
+  Actual legacy `deliveries` columns: `delivery_id, message_id, to_agent, to_model, status, dispatched_at, ...` (NO `channel`/`recipient`/`sender`/`kind`/`created_at`).
+  Channel metadata lives on `channel_messages` (join on `message_id`); recipient column is `to_agent`.
+- WP-C / efficiency_metrics: when plane mode is `authority`, backlog/dead-letters/metrics prefer authority tables. CLI already does this; cold-start board backlog probe still always hits legacy broker DB.
+
+## Required fix (root cause, not symptom)
+1. **`_probe_inbox`**
+   - When `resolve_plane_mode() == "authority"` (use existing helpers from `scripts.fleet_comms.efficiency_metrics` / `message_plane`), read the **authority plane DB** (`default_plane_root()/comms.sqlite3`) and count/list that agent's pending deliveries from `authority_deliveries` where `recipient = ?` and `state IN ('queued','running')` (same states as `_AUTHORITY_BACKLOG_STATES`).
+   - Return body-free metadata only: delivery_id, message_id, recipient/to_agent, state/status, attempt_count, created_at/updated_at. Never bodies.
+   - Agent matching: also accept common aliases if cheap (e.g. exact match on recipient). Prefer exact match first for `agent` arg.
+   - **Legacy fallback** (non-authority or authority DB missing): query `deliveries` with correct schema:
+     - filter `to_agent = ?` and `status IN ('pending','dispatched')` (and `processing` if useful)
+     - optional LEFT JOIN `channel_messages` for `channel`, `from_agent` as sender, `kind`, `created_at`
+     - never SELECT non-existent columns without PRAGMA existence checks (mirror `collect_delivery_backlog` schema-tolerant style)
+2. **`_probe_backlog_and_dead_letters`**
+   - Mirror CLI WP-C: if metrics source is authority, use `collect_delivery_backlog_authority` + `collect_dead_letters_authority` against plane `comms.sqlite3`; else legacy collectors against broker DB.
+   - Label data with `"source": "authority"|"legacy"` for diagnosis.
+   - Keep fail-open (never raise out of probes).
+3. **Tests** in `tests/fleet_comms/test_cold_start_board.py`:
+   - Unit-test `_probe_inbox` against a temp SQLite fixture with **real** legacy schema (no `channel` on deliveries) → status ok, not degraded.
+   - Unit-test authority path against temp plane DB with `authority_deliveries` → counts agent correctly.
+   - Keep existing board structure tests green.
+4. **Do not**: flip plane mode, touch retention, delete Broker Ops routes (#6106 still has usage — zero_use_candidate.eligible=false), claim leases, edit primary checkout, invent sealed formal CF.
+
+## Implementation constraints
+- Layout A: implement ONLY in the dispatch worktree.
+- Use project interpreter: `.venv/bin/python` (never bare python3).
+- Ruff: `.venv/bin/ruff check` on touched files.
+- Tests: `.venv/bin/python -m pytest tests/fleet_comms/test_cold_start_board.py -q`
+- Conventional commit with trailer: `X-Agent: cursor/cold-start-inbox-authority`
+- Push branch and open PR linked to residual post-#6159 cold-start board health (mention #6106 only as related residual context if needed; this is a cold-start-board correctness fix, not Broker Ops retirement).
+- Do **not** auto-merge. Driver will obtain independent cross-family review.
+
+## Acceptance (all required)
+1. `pytest tests/fleet_comms/test_cold_start_board.py -q` passes
+2. Live: `.venv/bin/python -m scripts.fleet_comms cold-start-board --agent grok-infra` → `probes.inbox_check.status` is `ok` (not degraded) under current authority plane; no `no such column` error
+3. Live: backlog probe data includes `"source": "authority"` when plane mode is authority
+4. PR opened with CI running; no merge by worker
+
+## Evidence preamble (#M-4)
+Every claim in PR body: command + quoted output.
