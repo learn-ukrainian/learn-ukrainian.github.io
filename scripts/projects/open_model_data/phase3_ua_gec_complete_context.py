@@ -132,6 +132,16 @@ def _checkout_commit(checkout: Path) -> str:
         raise UaGecCompleteContextError("cannot verify UA-GEC checkout commit") from exc
     commit = result.stdout.strip()
     require(commit == UA_GEC_COMMIT, "UA-GEC checkout is not at the pinned commit")
+    try:
+        status_result = subprocess.run(
+            ["git", "-C", str(checkout), "status", "--porcelain=v1", "--untracked-files=no"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise UaGecCompleteContextError("cannot verify UA-GEC checkout cleanliness") from exc
+    require(not status_result.stdout, "UA-GEC checkout has modified tracked files")
     return commit
 
 
@@ -194,6 +204,8 @@ class ContextWindow:
     source_end: int
     target_start: int
     target_end: int
+    source_document_start: int
+    source_document_end: int
     target_document_start: int
     target_document_end: int
 
@@ -206,6 +218,17 @@ class TargetSentence:
     target_end: int
     target_document_start: int
     target_document_end: int
+    line: int
+
+
+@dataclass(frozen=True, slots=True)
+class SourceSentence:
+    """One exact line from source-sentences aligned to parsed source text."""
+
+    source_start: int
+    source_end: int
+    source_document_start: int
+    source_document_end: int
     line: int
 
 
@@ -297,6 +320,37 @@ def _target_sentences(parsed: ParsedAnnotatedDocument, target_document: str) -> 
     return sentences
 
 
+def _source_sentences(parsed: ParsedAnnotatedDocument, source_document: str) -> list[SourceSentence]:
+    """Align authoritative source-sentences lines to the parsed source stream."""
+    sentences: list[SourceSentence] = []
+    parsed_cursor = 0
+    document_cursor = 0
+    for line_number, raw_line in enumerate(source_document.splitlines(keepends=True), start=1):
+        line_without_break = raw_line.rstrip("\r\n")
+        leading = len(line_without_break) - len(line_without_break.lstrip())
+        text = line_without_break.strip()
+        document_start = document_cursor + leading
+        document_end = document_start + len(text)
+        document_cursor += len(raw_line)
+        if not text:
+            continue
+        source_start = parsed.source_text.find(text, parsed_cursor)
+        if source_start < 0:
+            continue
+        source_end = source_start + len(text)
+        sentences.append(
+            SourceSentence(
+                source_start=source_start,
+                source_end=source_end,
+                source_document_start=document_start,
+                source_document_end=document_end,
+                line=line_number,
+            )
+        )
+        parsed_cursor = source_end
+    return sentences
+
+
 def _sentence_for_annotation(annotation: RawAnnotation, sentences: Sequence[TargetSentence]) -> TargetSentence | None:
     candidates = []
     for sentence in sentences:
@@ -332,15 +386,27 @@ def _target_boundary_to_source(parsed: ParsedAnnotatedDocument, position: int, *
     return source_cursor + (position - target_cursor)
 
 
-def _context_window(parsed: ParsedAnnotatedDocument, sentence: TargetSentence) -> ContextWindow:
+def _context_window(
+    parsed: ParsedAnnotatedDocument,
+    sentence: TargetSentence,
+    source_sentences: Sequence[SourceSentence],
+) -> ContextWindow | None:
     source_start = _target_boundary_to_source(parsed, sentence.target_start, right_bias=False)
     source_end = _target_boundary_to_source(parsed, sentence.target_end, right_bias=True)
     require(0 <= source_start <= source_end <= len(parsed.source_text), "aligned source sentence is invalid")
+    source_sentence = next(
+        (item for item in source_sentences if item.source_start == source_start and item.source_end == source_end),
+        None,
+    )
+    if source_sentence is None:
+        return None
     return ContextWindow(
         source_start=source_start,
         source_end=source_end,
         target_start=sentence.target_start,
         target_end=sentence.target_end,
+        source_document_start=source_sentence.source_document_start,
+        source_document_end=source_sentence.source_document_end,
         target_document_start=sentence.target_document_start,
         target_document_end=sentence.target_document_end,
     )
@@ -391,6 +457,21 @@ def _target_path(checkout: Path, annotation_path: Path) -> Path:
     require(len(relative.parts) == 4 and relative.parts[2] == "annotated", "unexpected UA-GEC annotation path")
     return (
         checkout / "data" / relative.parts[0] / relative.parts[1] / "target-sentences" / (annotation_path.stem + ".txt")
+    )
+
+
+def _source_sentence_path(checkout: Path, annotation_path: Path) -> Path:
+    relative = annotation_path.relative_to(checkout / "data")
+    require(len(relative.parts) == 4 and relative.parts[2] == "annotated", "unexpected UA-GEC annotation path")
+    match = re.fullmatch(r"(?P<doc_id>[^.]+)\.a\d+", annotation_path.stem)
+    require(match is not None, "unexpected UA-GEC document name")
+    return (
+        checkout
+        / "data"
+        / relative.parts[0]
+        / relative.parts[1]
+        / "source-sentences"
+        / (match.group("doc_id") + ".src.txt")
     )
 
 
@@ -491,17 +572,23 @@ def _record_for_window(
     *,
     checkout: Path,
     annotation_path: Path,
+    source_sentence_path: Path,
     target_path: Path,
     parsed: ParsedAnnotatedDocument,
     window: ContextWindow,
     annotations: Sequence[RawAnnotation],
     unit_ids: Sequence[str],
+    source_document: str,
     target_document: str,
 ) -> dict[str, Any]:
     partition, doc_id, annotator = _path_identity(checkout, annotation_path)
     source_text = parsed.source_text[window.source_start : window.source_end]
     corrected_text = parsed.corrected_text[window.target_start : window.target_end]
     require(source_text and corrected_text, "complete sentence context is empty")
+    require(
+        source_document[window.source_document_start : window.source_document_end] == source_text,
+        "source sentence is not exact in source corpus document",
+    )
     require(
         target_document[window.target_document_start : window.target_document_end] == corrected_text,
         "corrected sentence is not exact in target corpus document",
@@ -514,6 +601,7 @@ def _record_for_window(
     annotation_relative = annotation_path.relative_to(checkout).as_posix()
     target_relative = target_path.relative_to(checkout).as_posix()
     source_hash = sha256_file(annotation_path)
+    source_sentence_hash = sha256_file(source_sentence_path)
     target_hash = sha256_file(target_path)
     locator_base = {
         "repository": UA_GEC_REPOSITORY,
@@ -529,6 +617,10 @@ def _record_for_window(
         "source_end": window.source_end,
         "target_start": window.target_start,
         "target_end": window.target_end,
+        "source_sentence_path": source_sentence_path.relative_to(checkout).as_posix(),
+        "source_sentence_document_bytes_sha256": source_sentence_hash,
+        "source_sentence_document_start": window.source_document_start,
+        "source_sentence_document_end": window.source_document_end,
         "v2_unit_ids": list(unit_ids),
         "v2_unit_count": len(unit_ids),
     }
@@ -606,10 +698,14 @@ def reconstruct(
     for annotation_path in annotation_paths:
         _regular_file(annotation_path, "UA-GEC annotated document")
         target_path = _target_path(checkout, annotation_path)
+        source_sentence_path = _source_sentence_path(checkout, annotation_path)
         _regular_file(target_path, "UA-GEC target document")
+        _regular_file(source_sentence_path, "UA-GEC source-sentences document")
         partition, doc_id, annotator = _path_identity(checkout, annotation_path)
         parsed = parse_annotated_document(annotation_path.read_text(encoding="utf-8", errors="strict"))
+        source_document = source_sentence_path.read_text(encoding="utf-8", errors="strict")
         target_document = target_path.read_text(encoding="utf-8", errors="strict")
+        source_sentences = _source_sentences(parsed, source_document)
         target_sentences = _target_sentences(parsed, target_document)
         included: list[tuple[RawAnnotation, str]] = []
         for annotation in parsed.annotations:
@@ -631,7 +727,13 @@ def reconstruct(
                 excluded_units["target_sentence_not_exactly_aligned"] += 1
                 excluded_unit_records.append({"unit_id": unit_id, "reason": "target_sentence_not_exactly_aligned"})
                 continue
-            windows[_context_window(parsed, sentence)].append((annotation, unit_id))
+            window = _context_window(parsed, sentence, source_sentences)
+            if window is None:
+                exclusions["source_target_sentence_boundary_mismatch"] += 1
+                excluded_units["source_target_sentence_boundary_mismatch"] += 1
+                excluded_unit_records.append({"unit_id": unit_id, "reason": "source_target_sentence_boundary_mismatch"})
+                continue
+            windows[window].append((annotation, unit_id))
         for window in sorted(windows, key=lambda item: (item.source_start, item.source_end, item.target_start)):
             members = windows[window]
             context_annotations = [
@@ -647,11 +749,13 @@ def reconstruct(
                 record = _record_for_window(
                     checkout=checkout,
                     annotation_path=annotation_path,
+                    source_sentence_path=source_sentence_path,
                     target_path=target_path,
                     parsed=parsed,
                     window=window,
                     annotations=context_annotations,
                     unit_ids=unit_ids,
+                    source_document=source_document,
                     target_document=target_document,
                 )
             except (UaGecCompleteContextError, representation.LinguisticRepresentationError) as exc:
