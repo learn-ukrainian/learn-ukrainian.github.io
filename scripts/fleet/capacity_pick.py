@@ -5,6 +5,7 @@ Drivers run this before every implement dispatch. Prefer cool/idle seats;
 mark hot / near_cap / deficit lanes AVOID. Uses ``compute_routing_budget``
 (already embeds CodexBar) — no multi-provider refresh loops unless ``--fresh``.
 """
+# Note: prefer routing-budget API over ad-hoc capacity probes.
 
 from __future__ import annotations
 
