@@ -2595,6 +2595,24 @@ def _single_surface(value: Any) -> str | None:
     return text
 
 
+def _paradigm_slot_case_key(case_name: str) -> str | None:
+    """Normalize enrichment/VESUM case keys to Ukrainian slot labels.
+
+    Atlas enrichment may store Ukrainian short names (``називний``) while
+    ``_paradigm_from_vesum_lemma_search`` emits English internal keys
+    (``nominative``).  ``_build_paradigm_items`` labels slots from
+    ``CASE_SLOT_LABELS``, so accept either spelling.
+    """
+    key = case_name.strip()
+    if key in CASE_SLOT_LABELS:
+        return key
+    english = key.casefold()
+    for internal, ukrainian in CASE_LABELS_UA.items():
+        if internal.casefold() == english:
+            return ukrainian
+    return None
+
+
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -2607,8 +2625,8 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     for case_name, forms in cases.items():
         if not isinstance(case_name, str) or not isinstance(forms, dict):
             continue
-        case_key = case_name.strip()
-        if case_key not in CASE_SLOT_LABELS:
+        case_key = _paradigm_slot_case_key(case_name)
+        if case_key is None:
             continue
         for number in NUMBER_KEYS:
             form = _single_surface(forms.get(number))
