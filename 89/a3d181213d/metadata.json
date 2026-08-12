@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "89a3d181213d",
+  "strategy": "manual-commit",
+  "branch": "cursor/fix-6661-manifest",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/89/a3d181213d/0/metadata.json",
+      "transcript": "/89/a3d181213d/0/full.jsonl",
+      "compact_transcript": "/89/a3d181213d/0/transcript.jsonl",
+      "content_hash": "/89/a3d181213d/0/content_hash.txt",
+      "prompt": "/89/a3d181213d/0/prompt.txt"
+    }
+  ]
+}

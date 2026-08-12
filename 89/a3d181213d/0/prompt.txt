@@ -1,0 +1,48 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/fix-6659-6661
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Cursor — fix red CI on #6659 and #6661 (prefer Cursor always when free)
+
+CAPACITY_CARD: pick=cursor (79% free; codex deficit). Prefer Cursor for all mechanical infra/CI/deps.
+
+## PR #6659 — react-dom align (Frontend ALREADY PASSED)
+Root flake on pytest shard 1/4:
+- `tests/audit/test_post_build_review.py` bilash_packet setup:
+  `assert after_status == before_status` fails because something mutates
+  `site/src/data/lexicon-manifest.fingerprint.json` while `ci-artifacts/` appear.
+- Product fix for react mismatch is fine; Frontend job green.
+
+Do:
+1. Fetch latest main; rebase `cursor/dependabot-frontend-fix` onto origin/main if needed.
+2. Re-run failed checks if flake; if still red, make bilash_packet fixture ignore `ci-artifacts/**` and fingerprint churn OR ensure PR doesn't trigger fingerprint rewrites during pytest.
+3. Prefer minimal fix: re-run CI first. Only edit tests if re-run fails twice.
+4. Keep auto-merge armed when green. Close #6611 already done.
+
+## PR #6661 — hardcoded paths (#6571)
+Contracts failed:
+```
+Atlas manifest stale vs lexicon code; run `make atlas` locally and commit the updated manifest + fingerprint.
+```
+Because files in LEXICON_CODE_GLOB (e.g. enrich_manifest.py) changed.
+
+Do:
+1. Checkout glm/6571-hardcoded-paths or take over that branch.
+2. Run the **minimal** fingerprint/manifest refresh CI expects (prefer not full multi-hour atlas). Find how CI checks freshness (`scripts/lexicon/manifest_fingerprint` / `make atlas` targets) and update only required committed artifacts.
+3. Push fix; ensure contracts pass.
+
+## Also
+- Prefer Cursor for any follow-up dispatches this session's style.
+- Local: `cd site && npm ci && npm run build` only if needed for #6659.
+- X-Agent trailer; open/push on same PRs (no new PR spam).
+
+## Out of scope
+- Codex, weakening gates, full atlas corpus regen unless unavoidable
