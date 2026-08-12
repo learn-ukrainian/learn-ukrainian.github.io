@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0c071425d0c4",
+  "session_id": "ses_00b0874ccffe9zDloXNBPWusu6",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:15:48.61886Z",
+  "branch": "glm/6571-hardcoded-paths",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/heritage_classifier.py",
+    "scripts/lexicon/runner/launch_reenrich_class_b_remote.sh",
+    "scripts/rag/verify_module_1_v6_extra.py",
+    "scripts/dataset/export_ukrainian_pedagogy_dataset.py",
+    "scripts/run_otaman_serial_12_15.sh",
+    "tests/test_launch_reenrich_target_detection.py",
+    "tests/test_heritage_classifier.py",
+    "tests/test_lexicon_enrich_manifest.py",
+    "tests/test_export_ukrainian_pedagogy_dataset.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "da439d9dbfe6",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 87523,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3956416,
+    "output_tokens": 15464,
+    "api_call_count": 71
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:15:48.512566Z",
+    "agent_lines": 257,
+    "agent_removed": 19,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 257,
+    "total_lines_changed": 276,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
