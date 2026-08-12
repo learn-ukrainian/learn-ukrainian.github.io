@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "964bea9c93ce",
+  "session_id": "fleet-67f4270e9f3a4a1bb5607e2b5f5b247d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T07:58:00.70964Z",
+  "branch": "agy/6575-trufflehog-lob",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".trufflehogignore",
+    "docs/best-practices/ci-health.md",
+    "docs/runbooks/ci-gate.md"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "88ddb26d4c8a",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T07:58:00.693342Z",
+    "agent_lines": 29,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 29,
+    "total_lines_changed": 33,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "964bea9c93ce",
+  "strategy": "manual-commit",
+  "branch": "agy/6575-trufflehog-lob",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".trufflehogignore",
+    "docs/best-practices/ci-health.md",
+    "docs/runbooks/ci-gate.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/96/4bea9c93ce/0/metadata.json",
+      "transcript": "/96/4bea9c93ce/0/full.jsonl",
+      "compact_transcript": "/96/4bea9c93ce/0/transcript.jsonl",
+      "content_hash": "/96/4bea9c93ce/0/content_hash.txt",
+      "prompt": "/96/4bea9c93ce/0/prompt.txt"
+    }
+  ]
+}
