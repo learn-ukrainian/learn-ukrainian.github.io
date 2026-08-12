@@ -1,6 +1,4 @@
 {
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -93,7 +91,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "e8c463749405156394c5dbb31d8092cfc713fb8e0c52ba0e015fe36b2839cc1e"
+        "sha256": "1816257eccf5026f15f6aea24fbcbd52337c4b8b743dd9f4ebee5a910448682e"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -145,7 +143,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "e0aeebad823fb9938d91f09c047bc0952929a26f5b1930b788591a5ec30a53c3"
+        "sha256": "beb47e26a2bdffb1e65dac1e50f3dd7975a042425c12448eced60581f658d43c"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -252,5 +250,7 @@
         "sha256": "395d77478ebddaed38b6a94cc15227deec39e7aafa8735a7d8d434ccbdf6c79a"
       }
     ]
-  }
+  },
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 }
