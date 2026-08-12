@@ -102,8 +102,10 @@ as specified in that runbook; only `ALLOW` permits the new action.
 .venv/bin/python -m scripts.fleet_comms dead-letters   # stuck deliveries
 ```
 Fleet-comms externalizes topology + usage so you decide against fresh state, not a
-stale in-context snapshot. For per-lane budget health:
-`scripts/delegate.py --check-budget` (+ `/api/state/routing-budget` for subscription lanes).
+stale in-context snapshot. For per-lane budget health before dispatch:
+`.venv/bin/python -m scripts.fleet.capacity_pick` then
+`scripts/delegate.py dispatch --check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1`)
+(+ `/api/state/routing-budget` for subscription lanes).
 
 ### 2. Pick the next unblocked action
 
@@ -181,7 +183,20 @@ source's pedagogical or evidential role before consuming an occurrence.
 
 ### 4. Dispatch
 
-`scripts/delegate.py dispatch --agent <lane> --worktree ...` with a numbered brief
+**Capacity-first (binding — operator 2026-08-12 / #4707):** Before every implement
+dispatch, run `capacity_pick` and pass `--check-budget` (or export
+`LU_DISPATCH_CHECK_BUDGET=1` in the launcher):
+
+```bash
+.venv/bin/python -m scripts.fleet.capacity_pick
+.venv/bin/python scripts/delegate.py dispatch --check-budget --agent <lane> --worktree ...
+```
+
+Refuse habit-routing to hot / near_cap / CodexBar-deficit lanes when cooler seats
+are listed. `--check-budget` hard-subs via `dispatch_fallbacks` when mapped
+(e.g. `codex → cursor`); otherwise exits non-zero unless `--force-agent` + NOTE.
+
+Then dispatch with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags

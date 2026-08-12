@@ -2,18 +2,24 @@
 # Consumed by /api/state/routing-budget and delegate.py --check-budget hard auto-sub.
 # referenced by orchestrator routing decisions (MEMORY.md, this file).
 
-# Machine-readable for hard auto-sub (when lane >90% burn on fresh snapshot):
+# Machine-readable for hard auto-sub (when lane is near_cap, hot, or CodexBar
+# deficit / will_last_to_reset=False on a fresh snapshot):
 dispatch_fallbacks:
   claude: codex
-  # codex/gemini/grok/cursor: unaffected (separate quotas) or per context in prose below
+  # Mechanical shed when Codex is hot or in weekly deficit while free seats
+  # (Cursor) sit idle — operator 2026-08-12 / stream #4707.
+  codex: cursor
+  # gemini/grok/cursor/kimi/agy/glm: no automatic mapping without an explicit
+  # operator comment (refuse dispatch when hot/deficit and no row here).
 #
-# Trigger condition: when a budget bucket is at status `near_cap` or higher
-# (burn_pct > 90), the orchestrator MUST use the substitution path below
-# instead of the surface that would drain the depleted bucket.
+# Trigger condition: when a budget bucket is at status `near_cap` or `hot`,
+# or CodexBar reports will_last_to_reset=False (deficit), the orchestrator
+# MUST use the substitution path below instead of draining the depleted
+# bucket. Missing mapping → refuse unless --force-agent.
 #
 # Provenance: user direction 2026-05-13 — "you need to store this and add to
 # router" (paste of the substitution table built during the budget-economics
-# discussion that day).
+# discussion that day). Capacity-first codex→cursor shed: operator 2026-08-12.
 
 substitutions:
   - currently_uses: "delegate.py --agent claude (adversarial review)"
@@ -41,8 +47,11 @@ substitutions:
     budget_bucket: "Codex + interactive"
 
   - currently_uses: "delegate.py --agent codex"
-    fallback: "(unaffected — separate weekly quota)"
-    budget_bucket: "Codex weekly"
+    fallback: |
+      When Codex is hot / near_cap / weekly deficit: hard auto-sub to
+      `delegate.py --agent cursor` via dispatch_fallbacks (operator 2026-08-12).
+      Otherwise Codex weekly quota is independent of Claude interactive.
+    budget_bucket: "Codex weekly → Cursor when shed"
 
   - currently_uses: "delegate.py --agent gemini"
     fallback: "(unaffected — separate quota)"
