@@ -1281,6 +1281,42 @@ def test_paradigm_items_accept_vesum_english_case_keys() -> None:
     assert len(slot_cases) >= 3
 
 
+def test_paradigm_items_keep_syncretic_adjective_surfaces() -> None:
+    """Shared case surfaces must not wipe the paradigm (adj syncretism).
+
+    Dropping every duplicated surface left adjectives with only 1–2 unique
+    forms and zero cards; drills ask for a named slot, so syncretic answers
+    stay valid when four distinct surfaces remain for distractors.
+    """
+    items = _build_paradigm_items(
+        {
+            "lemmaId": "aktyvnyi",
+            "lemma": "активний",
+            "cefr": "A1",
+            "paradigm": {
+                "cases": {
+                    "nominative": {"singular": "активний", "plural": "активні"},
+                    "genitive": {"singular": "активного", "plural": "активних"},
+                    "dative": {"singular": "активному", "plural": "активним"},
+                    "accusative": {"singular": "активний", "plural": "активних"},
+                    "instrumental": {"singular": "активним", "plural": "активними"},
+                    "locative": {"singular": "активному", "plural": "активних"},
+                    "vocative": {"singular": "активний", "plural": "активні"},
+                }
+            },
+        }
+    )
+
+    assert items
+    assert {item["form"] for item in items} >= {"активний", "активного", "активними"}
+    assert any(item["slot"]["case"] == "називний" for item in items)
+    assert any(item["slot"]["case"] == "родовий" for item in items)
+    for item in items:
+        labels = [option["label"] for option in item["options"]]
+        assert len(labels) == 4
+        assert len({label.casefold() for label in labels}) == 4
+
+
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     shards = _build()
     a1 = shards["A1"]
