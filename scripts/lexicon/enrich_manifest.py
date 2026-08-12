@@ -108,14 +108,44 @@ from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-_PRIMARY_ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian")
+
+
+@lru_cache(maxsize=1)
+def _resolve_primary_checkout() -> Path | None:
+    """Primary checkout root via the shared ``.git`` common dir (#6571).
+
+    Dispatch worktrees sparse-exclude the large ``data/`` artifacts, so they
+    live only in the primary checkout. Resolve that root from git (works on any
+    operator's machine) instead of a hardcoded absolute path. Returns None
+    outside a git repo so callers fall back honestly.
+    """
+    try:
+        from scripts.guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    except ImportError:  # scripts/ stripped from sys.path
+        from guardrails.worktree_containment import (  # type: ignore[no-redef]
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    try:
+        return resolve_main_root(ROOT)
+    except NotAGitRepositoryError:
+        return None
+
+
 _SOURCES_DB_CANDIDATE = ROOT / "data" / "sources.db"
-if (not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size < 1_000_000) and (_PRIMARY_ROOT / "data" / "sources.db").is_file():
-    _SOURCES_DB_CANDIDATE = _PRIMARY_ROOT / "data" / "sources.db"
+if not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size < 1_000_000:
+    _primary = _resolve_primary_checkout()
+    if _primary is not None and (_primary / "data" / "sources.db").is_file():
+        _SOURCES_DB_CANDIDATE = _primary / "data" / "sources.db"
 SOURCES_DB = Path(os.environ.get("SOURCES_DB_PATH", str(_SOURCES_DB_CANDIDATE)))
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
-if not KAIKKI_LOOKUP.is_file() and (_PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
-    KAIKKI_LOOKUP = _PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
+if not KAIKKI_LOOKUP.is_file():
+    _primary = _resolve_primary_checkout()
+    if _primary is not None and (_primary / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
+        KAIKKI_LOOKUP = _primary / "data" / "lexicon" / "kaikki_uk_lookup.json"
 WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
 GRAC_FREQUENCY_CACHE = ROOT / "data" / "lexicon" / "cache" / "grac_frequency.json"
 
