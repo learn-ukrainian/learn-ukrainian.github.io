@@ -1,0 +1,23 @@
+{
+  "schema": "atlas-practice-index",
+  "schemaVersion": 1,
+  "deckVersion": "fixture-coverage-a1",
+  "level": "A1",
+  "items": [
+    {
+      "lemmaId": "дім",
+      "lemma": "дім",
+      "modes": ["flashcards", "stress", "matching", "choice", "cloze"]
+    },
+    {
+      "lemmaId": "кіт",
+      "lemma": "кіт",
+      "modes": ["flashcards", "stress", "paradigm"]
+    },
+    {
+      "lemmaId": "вода",
+      "lemma": "вода",
+      "modes": ["flashcards", "synonym"]
+    }
+  ]
+}

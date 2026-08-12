@@ -1,0 +1,18 @@
+{
+  "schema": "atlas-practice-index",
+  "schemaVersion": 1,
+  "deckVersion": "fixture-coverage-b2",
+  "level": "B2",
+  "items": [
+    {
+      "lemmaId": "дім",
+      "lemma": "дім",
+      "modes": ["flashcards", "stress", "cloze"]
+    },
+    {
+      "lemmaId": "свобода",
+      "lemma": "свобода",
+      "modes": ["flashcards", "paradigm", "synonym"]
+    }
+  ]
+}

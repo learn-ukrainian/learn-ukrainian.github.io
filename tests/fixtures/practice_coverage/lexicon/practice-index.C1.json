@@ -1,0 +1,18 @@
+{
+  "schema": "atlas-practice-index",
+  "schemaVersion": 1,
+  "deckVersion": "fixture-coverage-c1",
+  "level": "C1",
+  "items": [
+    {
+      "lemmaId": "свобода",
+      "lemma": "свобода",
+      "modes": ["flashcards", "heritage"]
+    },
+    {
+      "lemmaId": "ефемерний",
+      "lemma": "ефемерний",
+      "modes": ["flashcards", "synonym", "paronym"]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "zno-practice-deck",
+  "schemaVersion": 1,
+  "deckId": "zno-stress",
+  "thinDeck": true,
+  "title": "Stress fixture",
+  "items": [
+    {
+      "exam": "zno",
+      "znoTaskId": "zno:1",
+      "stem": "Наголос"
+    },
+    {
+      "exam": "nmt",
+      "znoTaskId": "zno:2",
+      "stem": "Наголос"
+    },
+    {
+      "exam": "zno",
+      "znoTaskId": "zno:3",
+      "stem": "Наголос"
+    }
+  ]
+}

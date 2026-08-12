@@ -1,0 +1,6 @@
+{
+  "schema": "lexicon-teacher-table-deck-v1",
+  "schemaVersion": 1,
+  "id": "virtual_teacher_table",
+  "lemma_keys": ["Справедливий", "Витирати", "Камера"]
+}
