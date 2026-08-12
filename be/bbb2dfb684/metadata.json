@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bebbb2dfb684",
+  "strategy": "manual-commit",
+  "branch": "cursor/dependabot-astro-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/plugins/astro-raw-atlas-preview.mjs",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/be/bbb2dfb684/0/metadata.json",
+      "transcript": "/be/bbb2dfb684/0/full.jsonl",
+      "compact_transcript": "/be/bbb2dfb684/0/transcript.jsonl",
+      "content_hash": "/be/bbb2dfb684/0/content_hash.txt",
+      "prompt": "/be/bbb2dfb684/0/prompt.txt"
+    }
+  ]
+}

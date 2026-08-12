@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bebbb2dfb684",
+  "session_id": "fleet-848c22f3ff084546abf2e7d3a325737b",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:34:26.110612Z",
+  "branch": "cursor/dependabot-astro-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/plugins/astro-raw-atlas-preview.mjs",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "a537d21f35a3",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:34:26.104779Z",
+    "agent_lines": 233,
+    "agent_removed": 215,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 233,
+    "total_lines_changed": 448,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/dependabot-frontend-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Finish Dependabot frontend green (#6607 + #6611) — Cursor takeover
+
+AGY timed out once and was cancelled after stall. You own finish.
+
+CAPACITY_CARD: pick=cursor (codex deficit; agy cancelled)
+
+## Known root causes (tool-backed)
+
+### #6611 react bump
+CI Frontend log (job 94029233876):
+```
+Incompatible React versions: The "react" and "react-dom" packages must have the exact same version.
+  - react:      19.2.8
+  - react-dom:  19.2.7
+```
+Dependabot only bumped react, not react-dom.
+
+AGY already committed a fix on branch **`cursor/dependabot-frontend-fix`** (push from worktree):
+- commit `29857166cf` — bump react-dom to 19.2.8 alongside react 19.2.8 + @types/react 19.2.18
+- also minor PYTHON env in npm scripts + tiny unit test tweaks
+
+### #6607 astro group
+CI Frontend log showed `ECONNREFUSED :3000` during Frontend (build+vitest) — separate from react mismatch. Fix or prove flake after #6611 is green.
+
+## Required work
+1. `git fetch origin` and work from **`cursor/dependabot-frontend-fix`** (or rebase onto latest origin/main).
+2. Local proof in worktree:
+   ```bash
+   cd site && npm ci
+   npm run build   # or the same script CI uses
+   npm test        # vitest unit
+   ```
+   Use primary `.venv` for any python hydrate steps.
+3. Open PR for the react fix with body:
+   - Fixes the version mismatch for #6611
+   - `Closes #6611` only if it fully supersedes dependabot PR; otherwise say "supersedes dependabot #6611" and close #6611 with `gh pr close 6611 --comment ...` after your PR merges, OR request dependabot merge after green if prefer stacking.
+   Prefer **one clean PR that replaces #6611** (close dependabot PR with pointer).
+4. Then #6607: either fix astro bump (recreate/rebase, fix real break) or document block with CI evidence. Open separate PR if needed.
+5. Arm auto-merge after green CI Gate (you may not merge yourself without CF if policy requires — at least open PR + local proof; orchestrator will CF).
+
+## Out of scope
+- Codex
+- Weakening tests
+- Unrelated refactors
+
+## Disk
+Do not leave a second giant node_modules forever; finish PR then clean.
+
+## Validation
+- CI Gate green on your PR(s)
+- #6611 either closed as superseded or green
+- #6607 green or evidenced residual
