@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f21dcbe0bc11",
+  "strategy": "manual-commit",
+  "branch": "cursor/practice-zno-markup-integrity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/practice/zno-markup-overlay.json",
+    "scripts/practice_deck/markup_integrity.py",
+    "scripts/practice_deck/zno.py",
+    "site/src/components/ZnoPractice.tsx",
+    "site/src/data/practice-zno.lexical-norm.json",
+    "site/src/data/practice-zno.morphology.json",
+    "site/src/data/practice-zno.orthography.json",
+    "site/src/data/practice-zno.paronym.json",
+    "site/src/data/practice-zno.phonetics.json",
+    "site/src/data/practice-zno.residual.json",
+    "site/src/data/practice-zno.stress.json",
+    "site/src/data/practice-zno.syntactic-norm.json",
+    "site/src/data/practice-zno.syntax.json",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/tests/unit/ZnoPractice.test.tsx",
+    "tests/practice_deck/test_zno.py",
+    "tests/practice_deck/test_zno_markup_integrity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f2/1dcbe0bc11/0/metadata.json",
+      "transcript": "/f2/1dcbe0bc11/0/full.jsonl",
+      "compact_transcript": "/f2/1dcbe0bc11/0/transcript.jsonl",
+      "content_hash": "/f2/1dcbe0bc11/0/content_hash.txt",
+      "prompt": "/f2/1dcbe0bc11/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f21dcbe0bc11",
+  "session_id": "fleet-df771a9a7a374e62810bc64054afc27c",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:04:54.225817Z",
+  "branch": "cursor/practice-zno-markup-integrity",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/practice/zno-markup-overlay.json",
+    "scripts/practice_deck/markup_integrity.py",
+    "scripts/practice_deck/zno.py",
+    "site/src/components/ZnoPractice.tsx",
+    "site/src/data/practice-zno.lexical-norm.json",
+    "site/src/data/practice-zno.morphology.json",
+    "site/src/data/practice-zno.orthography.json",
+    "site/src/data/practice-zno.paronym.json",
+    "site/src/data/practice-zno.phonetics.json",
+    "site/src/data/practice-zno.residual.json",
+    "site/src/data/practice-zno.stress.json",
+    "site/src/data/practice-zno.syntactic-norm.json",
+    "site/src/data/practice-zno.syntax.json",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/tests/unit/ZnoPractice.test.tsx",
+    "tests/practice_deck/test_zno.py",
+    "tests/practice_deck/test_zno_markup_integrity.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "ce6ce8667bd8",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:04:54.214918Z",
+    "agent_lines": 432,
+    "agent_removed": 15,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 432,
+    "total_lines_changed": 447,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

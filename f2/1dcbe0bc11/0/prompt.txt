@@ -1,0 +1,66 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/practice-zno-markup-integrity
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# TASK practice-zno-markup-integrity
+
+CRITICAL integrity fix (operator): we shipped ZNO items that REQUIRE letter/word highlights/underlines/bold as plain text — tasks are RUINED.
+
+## Do NOT
+- Add more plain-text volume without markup
+- Claim "emitted N/N" as success without integrity canary
+- Touch WP1 paths (site/public/lexicon, data/lexicon pairs) unless unavoidable
+
+## Outcome (this PR — minimum honest ship)
+
+### P0 Quarantine
+1. Detect markup-dependent stems (виділ/підкресл + letter/sound; "Правильно виділено букви на позначення наголошен"; "жирним шрифтом" gap; "Виділене слово…"; digit-marks-next-word stress).
+2. Items without structured marks MUST NOT appear as normal solvable ZNO practice.
+   - Prefer: `integrity: "broken_missing_markup"` + filter in ZnoPractice / deck emit, OR drop from decks into residual with reason.
+3. Add automated gate in `scripts/practice_deck/zno.py` (or sibling): fail or residual-count any emit where stem requires markup and marks empty.
+
+### P1 Schema + one real fix path
+4. Extend practice item schema to carry marks, e.g. per option:
+   - `marks: [{ start, end }]` char ranges OR inline safe markup that UI can render
+5. For the critical set (~26 same-sound marked-letter + stress-highlight EXCEPT + known residual in batch_state/practice/zno-markup-integrity-audit.json): either
+   - recover marks from booklet PDF text layer / existing mangled spacing where reliable, OR
+   - re-annotate in a tracked JSON overlay (preferred if PDF recovery unreliable)
+6. Render marks in `site/src/components/ZnoPractice.tsx` (underline/bold of marked spans).
+7. For fixed items, clear quarantine and show real task.
+
+### P2 Tests
+- Unit: detector flags zno:457-style stem without marks
+- Unit: render includes mark when present
+- Fixture for one fixed phonetics item with marks
+
+## Owned paths
+- scripts/practice_deck/
+- site/src/data/practice-zno.*
+- site/src/components/ZnoPractice.tsx
+- site/tests/** related
+- batch_state/practice/zno-markup* (residual ok)
+- data/ overlays if needed for marks
+
+## Verify
+```bash
+.venv/bin/pytest tests/practice_deck -q
+# or targeted zno tests
+# show before/after: count solvable vs quarantined markup-dependent
+```
+
+## Success
+- No markup-dependent item presented as solvable without marks
+- At least the operator example class (same-sound highlighted letters) has a fix path + UI
+- Integrity gate prevents re-regression
+- PR open, no self-merge, X-Agent trailer
+
+Refs: batch_state/atlas-driver/2026-08-12-zno-markup-integrity.md
+      batch_state/practice/zno-markup-integrity-audit.json
