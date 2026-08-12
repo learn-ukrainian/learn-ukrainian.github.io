@@ -138,6 +138,16 @@ If I'm about to write code inline and it doesn't match row 1, STOP and dispatch 
 
 **Use agy more (user 2026-06-24):** route content / wiki / pedagogy / factual **review** + bounded scripts / fixtures / migrations / docs-near-code to **agy** by default — its §7-fabrication fence is lifted (cleared 2026-06-13) and its pedagogy/CEFR review is strong (it led the 2026-06-24 practice-hub panel). It is **metered**, so be cost-aware, not absent — don't under-use it where it's strong. Keep cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical on codex/claude. Confirm its model via `ab check-model` / `--help` (changes often; the bridge labels it Gemini-3.5-Flash-High, panels route `--to-model gemini-3.1-pro-high`).
 
+**agy / gemini-flash worker briefs (#5737 — binding):** when AGY runs as a **worker**
+(default Flash pin `gemini-3.6-flash-high`, or Pro for deep single-shot), it receives a
+**complete task brief** — one shippable unit (typically one feature / one PR) with
+acceptance criteria stated up front. It does **not** self-decompose an open-ended objective
+into serial micro-PRs. The accountable orchestrator owns sequencing and fan-out; leaving Flash
+to invent its own merge cadence re-starves CI (2026-07-24 queue incident). Catalog membership
+in `orchestrator_seats` does not license Flash self-orchestration of implementation work —
+session cadence already notes AGY compaction loses orchestration state (not a daily driver).
+Brief shape: `workflow.md` § Dispatch brief unit.
+
 **Writer routing refinement (user-confirmed 2026-07-07):** general content writing runs on **codex + agy** (agy = the standout A1-A2 immersion teaching voice per the 2026-07-04 bakeoff — do not forget it exists); the Claude window is SAVED for judgment work (architecture, adversarial review, hard bugs — codex is the primary coder, not Claude). The **V7 PIPELINE writer seat is separate**: it stays `claude-tools` because that seat is in-harness TOOL-CALLING fit, not prose (codex-tools emitted `tool_calls=0`); after any Claude-model rotation, spot-check ONE module before the next batch.
 
 **CodexBar pace/reserve (width truth source):** the working command is the CodexBar CLI —
@@ -197,7 +207,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Sol at the Codex ACP provider default — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
   | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.5` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.5` = availability fallback, not quality escalate |
-  | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Flash loop; Pro deep single-shot |
+  | **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Pro deep single-shot |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -285,6 +295,12 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   `cursor`, `kimi`, `deepseek`, `pool` (**Laguna family exact IDs:** default **`laguna-s-2.1`** gen-2 S; light **`laguna-xs-2.1`** gen-2 XS; fallback only **`laguna-m.1`** gen-1 — never invent s2/m2 orthography),
   `gemma`, `glm` (LOCAL-ONLY), plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
+  **AGY/gemini-flash as worker (#5737):** always dispatch with a complete brief (one shippable
+  unit + acceptance criteria). Do not hand Flash an epic-sized objective and expect it to
+  sequence its own micro-PRs — that pattern starved the CI queue even after structural fan-out
+  cuts (#5735). Soft merge-cadence check for orchestrators: no lane should routinely land
+  **>5 PRs/day against one feature area**; prefer one shippable PR over a spray of intermediates
+  (expectation only — not an automated hard gate).
 
 This names who orchestrates vs advises vs works. The cross-family review gate, the per-task routing rows
 above, and the GPT-5.6 Sol/Terra/Luna row below are unchanged — this is the standing topology over them.
@@ -337,7 +353,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **cursor** (`--model auto` default) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment | not formal CF identity; not language seats; `concurrency_limit: 1` |
 | **deepseek** (`deepseek-v4-flash` only) | code/infra CF volume, tool-heavy implement (Hermes), PR diffs | **Pro DO NOT USE**; not language/folk; not critical authority |
 | **claude** (Sonnet routine; Fable summoned only) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
-| **agy** (Gemini 3.6 Flash default) | agentic scripts, content (language lanes), orchestrator seat | metered — cost-aware, not absent |
+| **agy** (Gemini 3.6 Flash default) | agentic scripts, content (language lanes); **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
 | **glm / Z.AI** (`glm-5.2`) | deep security + large-context coherence audits | **LOCAL-ONLY** China egress; never CI/sensitive; prefer 5h when weekly hot |
 | **grok-4.5** | daily driver / CF (not QG judge) | oversight may be native Grok; don't solo multi-file when free workers exist |

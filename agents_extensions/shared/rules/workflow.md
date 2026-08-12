@@ -44,7 +44,6 @@ curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
-
 ### Project Research Registry — orchestrator dispatch duty
 
 Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
@@ -87,6 +86,24 @@ unconsumed pointer must be explained, not silently counted as adopted.
 Classification is mandatory; delivery remains fail-open. A disabled or degraded
 registry must not block the delegated task, and it does not justify fabricating
 context or weakening the generic pointer-free contract.
+
+### Dispatch brief unit (binding — #5737)
+
+Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
+**one shippable unit** and its **acceptance criteria** — not an open-ended objective.
+
+- **Shippable unit:** typically one feature or one PR worth of work (owned paths +
+  out-of-scope stated). The worker implements that unit end-to-end; it does **not**
+  invent a serial micro-PR campaign from a vague goal.
+- **Acceptance criteria:** checklist or equivalent that can be verified before PR
+  open (commands, evidence types, stop conditions). Weak criteria ("improve X",
+  "clean up the area") are not a brief — the orchestrator must decompose first.
+- **agy / gemini-flash especially:** Flash is a fast cheap **worker**. Handing it an
+  epic-sized objective without a unit boundary caused the 2026-07-24 CI starvation
+  pattern (~30 micro-PRs through one afternoon). Complete briefs are mandatory for
+  that lane; the same unit rule applies to every worker lane.
+- Companion invocation notes: `docs/SCRIPTS.md` § Delegate to background workers;
+  worktree wording: `delegate-must-use-worktree.md`.
 
 ### Pre-dispatch outcome adequacy gate
 
@@ -165,6 +182,13 @@ stranding a green PR forever), this net MUST run as a **scheduled integration sw
 — it must not depend on any interactive session being live. (Until that scheduled sweep is wired, the
 role-holder runs it at session start/end — see follow-up.) Per-lane `--auto` merge already keeps
 in-stream PRs from sitting, so this net is a rare safety valve, not the primary path.
+
+**Merge-cadence soft check (#5737 — operator/orchestrator expectation, not a hard gate).**
+No lane should routinely land **>5 PRs/day against one feature area**. Prefer one shippable
+PR per dispatch brief over a spray of intermediate merges that each re-trigger full CI.
+When a feature naturally splits, the orchestrator sequences the units deliberately — workers
+do not self-decompose for merge cadence. Do not add a flaky automated enforcer for this;
+spot-check via `X-Agent` trailers + stream issue links when CI queues back up.
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
