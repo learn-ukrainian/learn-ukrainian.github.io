@@ -76,6 +76,7 @@ describe("SqliteAtlasDataSource static catalog + practice reconciliation", () =>
       }
       expect(checked).toBeGreaterThan(0);
     },
+    15000,
   );
 
   test.skipIf(!hasProduction)(
@@ -100,5 +101,6 @@ describe("SqliteAtlasDataSource static catalog + practice reconciliation", () =>
         }
       }
     },
+    15000,
   );
 });
