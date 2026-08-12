@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1970dcdd4131",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6370-paired-split",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_ohoiko_paired_headword_split.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/19/70dcdd4131/0/metadata.json",
+      "transcript": "/19/70dcdd4131/0/full.jsonl",
+      "compact_transcript": "/19/70dcdd4131/0/transcript.jsonl",
+      "content_hash": "/19/70dcdd4131/0/content_hash.txt",
+      "prompt": "/19/70dcdd4131/0/prompt.txt"
+    }
+  ]
+}

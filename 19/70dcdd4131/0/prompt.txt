@@ -1,0 +1,27 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/fix-6678-vesum-skip
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix PR #6678 — VESUM skip guard for CI
+
+**Driver:** grok-atlas · refs #6370 #6678  
+CF CHANGES_REQUESTED: `test_english_contaminated_second_leg_is_multiword` hits real VESUM without skip; CI has no `data/vesum.db`.
+
+## Work
+1. Worktree on branch `cursor/atlas-6370-paired-split` via `--branch cursor/atlas-6370-paired-split` (existing PR head) OR fresh from origin that branch.
+2. In `tests/test_ohoiko_paired_headword_split.py` (or wherever the failing test lives), add the same VESUM skip pattern used elsewhere:
+   - `requires_vesum_db` fixture OR `pytest.mark.skipif(not REAL_VESUM.is_file(), reason=...)`
+3. Do **not** weaken other tests. Do not re-run full promote.
+4. pytest the test file locally (should skip if no vesum, pass if present).
+5. ruff · commit · push to same PR branch. No auto-merge.
+
+## Acceptance
+CI Pytest fastlane green on #6678 after push.
