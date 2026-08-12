@@ -129,6 +129,46 @@
       "$ref": "#/$defs/sha256"
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "projection": {
+            "properties": {
+              "status": {"const": "exact_date_projected"}
+            },
+            "required": ["status"]
+          }
+        },
+        "required": ["projection"]
+      },
+      "then": {
+        "properties": {
+          "projection": {
+            "properties": {
+              "chronological_year": {"type": "integer"},
+              "date_precision": {"const": "exact_year"},
+              "framework_matches": {
+                "minItems": 3,
+                "maxItems": 3
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "projection": {
+            "properties": {
+              "chronological_year": {"type": "null"},
+              "date_precision": {"const": "unknown"},
+              "framework_matches": {"maxItems": 0}
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "sha256": {
       "type": "string",

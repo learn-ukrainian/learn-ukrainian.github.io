@@ -115,6 +115,14 @@ def test_validator_rejects_framework_collapse_even_when_record_is_resealed():
         chronology.validate_record(_reseal_record(record), freeze=periodization.load_freeze())
 
 
+def test_schema_rejects_exact_status_without_all_three_frameworks():
+    record = copy.deepcopy(_record())
+    record["projection"]["framework_matches"] = []
+
+    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="schema violation"):
+        chronology.validate_record(_reseal_record(record), freeze=periodization.load_freeze())
+
+
 def _conllu(*, document_id: str, language: str, created: str | None, sent_id: str) -> str:
     lines = [f"# newdoc id = {document_id}", f"# lang = {language}"]
     if created is not None:
@@ -214,6 +222,110 @@ def _fixture_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pa
         chronology.file_sha256(full_receipt),
     )
     return ud_dir, plug2_metadata, full_receipt
+
+
+def test_full_receipt_file_hash_guard_rejects_drift(tmp_path, monkeypatch):
+    ud_dir, plug2_metadata, full_receipt = _fixture_inputs(tmp_path, monkeypatch)
+    full_receipt.write_text(full_receipt.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+
+    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="receipt file drift"):
+        chronology.derive_records(
+            ud_dir=ud_dir,
+            plug2_metadata=plug2_metadata,
+            full_receipt_path=full_receipt,
+        )
+
+
+@pytest.mark.parametrize(
+    ("field_path", "value", "message"),
+    [
+        (("receipt_sha256",), "4" * 64, "full receipt seal drift"),
+        (("coverage", "full_materialization_complete"), False, "full corpus incomplete"),
+        (("phase_boundaries", "phase4_blocked"), False, "Phase 4 boundary drift"),
+        (("denominators", "ud_explicit_orv_uk", "documents"), 999, "UD denominator drift"),
+        (("inputs", "plug2_metadata_sha256"), "5" * 64, "PluG2 metadata binding drift"),
+    ],
+)
+def test_full_receipt_semantic_guards_fail_closed(tmp_path, monkeypatch, field_path, value, message):
+    ud_dir, plug2_metadata, full_receipt = _fixture_inputs(tmp_path, monkeypatch)
+    receipt = json.loads(full_receipt.read_text(encoding="utf-8"))
+    target = receipt
+    for key in field_path[:-1]:
+        target = target[key]
+    target[field_path[-1]] = value
+    full_receipt.write_text(json.dumps(receipt), encoding="utf-8")
+    monkeypatch.setattr(
+        chronology,
+        "EXPECTED_FULL_RECEIPT_FILE_SHA256",
+        chronology.file_sha256(full_receipt),
+    )
+
+    with pytest.raises(chronology.HistoricalDocumentChronologyError, match=message):
+        chronology.derive_records(
+            ud_dir=ud_dir,
+            plug2_metadata=plug2_metadata,
+            full_receipt_path=full_receipt,
+        )
+
+
+def test_private_output_guard_rejects_git_checkout_before_writing(tmp_path):
+    output_dir = chronology.ROOT / ".agent" / "chronology-test-output-never-created"
+    assert not output_dir.exists()
+
+    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="cannot be inside Git"):
+        chronology.materialize(
+            output_dir=output_dir,
+            ud_dir=tmp_path / "unused-ud",
+            plug2_metadata=tmp_path / "unused-metadata",
+            full_receipt_path=tmp_path / "unused-receipt",
+        )
+
+    assert not output_dir.exists()
+
+
+def test_date_denominator_guard_rejects_source_derived_mismatch(tmp_path, monkeypatch):
+    ud_dir, plug2_metadata, full_receipt_path = _fixture_inputs(tmp_path, monkeypatch)
+    records, _freeze, full_receipt = chronology.derive_records(
+        ud_dir=ud_dir,
+        plug2_metadata=plug2_metadata,
+        full_receipt_path=full_receipt_path,
+    )
+    expected = dict(chronology.EXPECTED_UD_DATE_DENOMINATOR)
+    expected["exact_date_documents"] += 1
+    monkeypatch.setattr(chronology, "EXPECTED_UD_DATE_DENOMINATOR", expected)
+
+    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="UD date denominator drift"):
+        chronology._build_receipt(
+            records=records,
+            full_receipt=full_receipt,
+            output_bytes=1,
+            output_sha256="6" * 64,
+        )
+
+
+def test_cli_converts_upstream_parse_failure_to_blocked_status(tmp_path, monkeypatch, capsys):
+    def fail_derive(**_kwargs):
+        raise materialization.HistoricalMaterializationError("malformed upstream metadata")
+
+    monkeypatch.setattr(chronology, "derive_records", fail_derive)
+    exit_code = chronology.main(
+        [
+            "--ud-dir",
+            str(tmp_path / "ud"),
+            "--plug2-metadata",
+            str(tmp_path / "metadata.psv"),
+            "--full-receipt",
+            str(tmp_path / "receipt.json"),
+            "--output-dir",
+            str(tmp_path / "output"),
+        ]
+    )
+
+    assert exit_code == 2
+    assert json.loads(capsys.readouterr().out) == {
+        "status": "blocked",
+        "error": "malformed upstream metadata",
+    }
 
 
 def test_private_bundle_is_rederived_end_to_end_and_refuses_overwrite(tmp_path, monkeypatch):

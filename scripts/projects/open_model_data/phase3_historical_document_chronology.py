@@ -634,7 +634,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 full_receipt_path=args.full_receipt,
             )
             status = "document_chronology_validated"
-    except (HistoricalDocumentChronologyError, periodization.HistoricalPeriodizationError) as exc:
+    except (
+        HistoricalDocumentChronologyError,
+        materialization.HistoricalMaterializationError,
+        periodization.HistoricalPeriodizationError,
+    ) as exc:
         print(canonical_json({"status": "blocked", "error": str(exc)}))
         return 2
     print(
