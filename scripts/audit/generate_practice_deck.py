@@ -2617,16 +2617,38 @@ def _paradigm_slot_case_key(case_name: str) -> str | None:
 
 
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    """Build case/number MC cards from a lexeme paradigm.
+
+    Ukrainian paradigms are heavily syncretic (shared surfaces across cases).
+    Cards ask for a *named slot* (``родовий, однина``), so a shared surface may
+    still be the answer for its representative slot. Keep one slot per distinct
+    surface (prefer nominative→vocative order) so distractors stay unique and
+    shard size stays within budget — excluding every duplicated surface starved
+    adjectives below the unique-lemma bar. Require four distinct surfaces for a
+    four-option MCQ.
+    """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
     cases = lexeme.get("paradigm", {}).get("cases")
     if not isinstance(cases, dict):
         return []
+    preferred_keys = list(CASE_LABELS_UA.keys()) + list(CASE_LABELS_UA.values())
+    ordered_case_names: list[str] = []
+    seen_case_names: set[str] = set()
+    for key in preferred_keys:
+        if key in cases and key not in seen_case_names:
+            ordered_case_names.append(key)
+            seen_case_names.add(key)
+    for key in cases:
+        if isinstance(key, str) and key not in seen_case_names:
+            ordered_case_names.append(key)
+            seen_case_names.add(key)
+
     slots: list[dict[str, str]] = []
     seen_forms: set[str] = set()
-    duplicate_forms: set[str] = set()
-    for case_name, forms in cases.items():
-        if not isinstance(case_name, str) or not isinstance(forms, dict):
+    for case_name in ordered_case_names:
+        forms = cases.get(case_name)
+        if not isinstance(forms, dict):
             continue
         case_key = _paradigm_slot_case_key(case_name)
         if case_key is None:
@@ -2637,21 +2659,19 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
                 continue
             normalized = _plain(form)
             if normalized in seen_forms:
-                duplicate_forms.add(normalized)
+                continue
             seen_forms.add(normalized)
             slots.append({"case": case_key, "number": number, "form": form})
-    usable = [slot for slot in slots if _plain(slot["form"]) not in duplicate_forms]
-    if len(usable) < 3:
+    if len(slots) < 4:
         return []
-    forms = [slot["form"] for slot in usable]
     items = []
-    for index, slot in enumerate(usable):
+    for index, slot in enumerate(slots):
         label_uk, label_en = CASE_SLOT_LABELS[slot["case"]]
         number_uk = "однина" if slot["number"] == "singular" else "множина"
         number_en = "sg" if slot["number"] == "singular" else "pl"
         options = [{"label": slot["form"], "kind": "answer"}]
-        for other in usable:
-            if other is slot or _plain(other["form"]) == _plain(slot["form"]):
+        for other in slots:
+            if other is slot:
                 continue
             options.append({"label": other["form"], "kind": "same-paradigm"})
             if len(options) == 4:
