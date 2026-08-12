@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5808a0c585f6",
+  "session_id": "fleet-e8f68aaa98fc4341b93583d945176b46",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T20:26:51.025812Z",
+  "branch": "cursor/cold-start-plane-truth",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/driver-cold-start-board.md",
+    "scripts/fleet_comms/cold_start_board.py",
+    "scripts/lib/fleet_comms_cold_start.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/test_fleet_comms_launcher_awareness.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "71e702861401",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T20:26:51.017917Z",
+    "agent_lines": 447,
+    "agent_removed": 46,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 447,
+    "total_lines_changed": 493,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5808a0c585f6",
+  "strategy": "manual-commit",
+  "branch": "cursor/cold-start-plane-truth",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/driver-cold-start-board.md",
+    "scripts/fleet_comms/cold_start_board.py",
+    "scripts/lib/fleet_comms_cold_start.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/fleet_comms/test_cold_start_board.py",
+    "tests/test_fleet_comms_launcher_awareness.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/58/08a0c585f6/0/metadata.json",
+      "transcript": "/58/08a0c585f6/0/full.jsonl",
+      "compact_transcript": "/58/08a0c585f6/0/transcript.jsonl",
+      "content_hash": "/58/08a0c585f6/0/content_hash.txt",
+      "prompt": "/58/08a0c585f6/0/prompt.txt"
+    }
+  ]
+}

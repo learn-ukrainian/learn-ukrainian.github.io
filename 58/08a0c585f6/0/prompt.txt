@@ -1,0 +1,71 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/cold-start-plane-truth
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: Make driver cold-start tell the truth about plane mode (and stop false "degraded")
+
+## CAPACITY_CARD
+pick=cursor status=cool will_last=true free=cursor,claude avoid=codex(deficit) source=codexbar
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor Auto
+- why_this_tier: bounded launcher + board correctness; mechanical; Cursor reserve
+- advisor_packet: n/a
+- owned_paths:
+  - scripts/lib/fleet_comms_cold_start.sh
+  - scripts/lib/launcher_core.sh
+  - scripts/fleet_comms/cold_start_board.py
+  - tests/test_fleet_comms_launcher_awareness.py
+  - tests/fleet_comms/test_cold_start_board.py
+  - docs/runbooks/driver-cold-start-board.md
+- acceptance_cmd: pytest tests/test_fleet_comms_launcher_awareness.py tests/fleet_comms/test_cold_start_board.py -q AND dry-run of fleet_comms_cold_clause contains live plane mode not a hardcoded off
+- alternatives_considered: [codex deficit refuse, agy eligible, claude reserved for CF]
+- parallel_free_seats: cursor, claude
+
+## Why (this session's failure)
+Grok-infra was launched with an injected drive-epic clause that said **current mode=off**. Live `plane-status` is **authority** (schema v7). The driver then treated the plane as off and spent the first cycle on a closed cutover (#6159) plus a degraded board.
+
+Root cause (tool-backed):
+- `scripts/lib/fleet_comms_cold_start.sh` `fleet_comms_cold_clause` uses `FLEET_COMMS_PLANE_MODE:-off` and never resolves live mode.
+- `launcher_bind_drive_epic` sources the helper and calls the clause but **does not export** `FLEET_COMMS_PLANE_MODE="$(fleet_comms_resolve_plane_mode)"` (the helper's own usage comment requires that export).
+- `cold_start_board._probe_capsule_session_env` repeats the lie: `os.environ.get("FLEET_COMMS_PLANE_MODE", "off")` instead of `resolve_plane_mode(None)`.
+- Board `board_status` becomes `degraded` if *any* probe is degraded, including optional Monitor `/api/orient` 0.5s timeout (Monitor currently >2s). Headline "DEGRADED" is then noise.
+
+Related already-in-flight: PR #6673 (inbox SQL / authority backlog) — do **not** duplicate that inbox fix. Rebase onto origin/main after #6673 merges if the same file conflicts; leave inbox/authority collectors alone unless you must resolve a merge.
+
+## Required changes
+1. **`fleet_comms_cold_clause`**: if `FLEET_COMMS_PLANE_MODE` unset/empty, call `fleet_comms_resolve_plane_mode` (same as banner). Never default the injected sentence to `off` when live mode is `authority`.
+2. **`launcher_bind_drive_epic`**: before calling the clause, `export FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"`.
+3. **capsule probe**: `plane_mode` = `resolve_plane_mode(None)` (env override still honored inside that helper). Keep fail-open.
+4. **`_probe_orient_lean`**: request `/api/orient?lean=true` (drive-epic contract). On timeout/unreachable: status **`skipped`** (not degraded) with `reason=monitor_unreachable` + git fallback. Do not poison `board_status`.
+5. **`board_status`**: `degraded` only when a *load-bearing* probe is degraded/error (`plane_status`, `inbox_check`, `backlog_and_dead_letters`, `session_streams_and_handoff` when db exists and raised). `skipped`/`orient_lean`/`needle_search`/`gh_pr_list` must not flip the headline.
+6. **session-streams db path**: resolve via repo_root / git common dir (primary `.agent/session-streams/v1/session-streams.sqlite3`), not only `Path.cwd()`, so a dispatch worktree does not false-degrade.
+7. **Markdown**: add a 6-line lead **Summary** before the probe dump: live plane mode, schema version, inbox pending, board_status, stream_id, agent. Drivers must see the truth in the first screen.
+8. **Tests**:
+   - clause/banner: with unset env, resolved mode is not forced `"off"` when `resolve_plane_mode(None)` would be authority (mock or invoke helper).
+   - capsule probe reports live mode, not hardcoded off.
+   - orient timeout → skipped; board_status stays `ok` if load-bearing probes ok.
+   - existing launcher awareness tests stay green.
+9. Update `docs/runbooks/driver-cold-start-board.md` to match (lean=true, board_status rules, first command is markdown board).
+
+## Constraints
+- Layout A worktree only. `.venv/bin/python`. Never flip plane. Never claim leases.
+- Do not retire Broker Ops (#6106). Do not edit primary checkout.
+- Conventional commit + `X-Agent: cursor/cold-start-plane-truth`
+- Open PR. No auto-merge. Mention this is follow-up to live grok-infra cold-start (injected mode=off lie).
+- If #6673 still open, do not force-push that branch; new branch from origin/main.
+
+## Acceptance
+1. Unset `FLEET_COMMS_PLANE_MODE`; `fleet_comms_cold_clause` text contains `mode=authority` on this host (live default).
+2. `cold-start-board --agent grok-infra --format markdown` Summary shows live plane=authority; `inbox_check` not required to be the 6673 fix if that PR is not merged yet.
+3. Pytest listed files pass; ruff clean.
+4. PR opened.
