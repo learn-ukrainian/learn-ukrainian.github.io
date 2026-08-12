@@ -1254,6 +1254,33 @@ def test_paradigm_answer_position_is_deterministically_shuffled() -> None:
     assert any(item["options"][0]["kind"] != "answer" for item in items)
 
 
+def test_paradigm_items_accept_vesum_english_case_keys() -> None:
+    """VESUM lemma search stores internal English case names, not Ukrainian labels."""
+    items = _build_paradigm_items(
+        {
+            "lemmaId": "borshch",
+            "lemma": "борщ",
+            "cefr": "A1",
+            "paradigm": {
+                "cases": {
+                    "nominative": {"singular": "борщ"},
+                    "genitive": {"singular": "борщу"},
+                    "dative": {"singular": "борщеві"},
+                    "accusative": {"singular": "борщ"},
+                    "instrumental": {"singular": "борщем"},
+                    "locative": {"singular": "борщі"},
+                }
+            },
+        }
+    )
+
+    assert items
+    slot_cases = {item["slot"]["case"] for item in items}
+    assert "родовий" in slot_cases
+    assert "давальний" in slot_cases
+    assert len(slot_cases) >= 3
+
+
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     shards = _build()
     a1 = shards["A1"]
