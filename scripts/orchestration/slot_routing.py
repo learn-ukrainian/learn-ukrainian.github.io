@@ -4,6 +4,30 @@ Resolves a slot (e.g. claude-atlas, grok-infra, claude-folk) -> area -> live lea
 in .agent/session-streams/v1/session-streams.sqlite3.
 
 READ-ONLY: Never writes or mutates the session-streams database.
+
+## Lane NAME vs AREA resolution — the load-bearing mismatch (r2 ruling, #5889)
+
+A slot's NAME carries a lane/track hint, but resolution is **area-centric**,
+not lane-centric. The slot name is an addressing convenience only; it does
+NOT scope which lease the delivery binds to.
+
+    slot name        area_assignments.yaml      fleet_taxonomy.yaml        lease matched
+    -----------      ----------------------      ------------------        -------------
+    claude-folk   -> seminars area            -> epics {2836,4431,4215, -> ANY active lease
+                    (slots: folk AND bio)         3120,3079}              on ANY of those
+                                                                         epics — folk OR bio
+
+So ``claude-folk`` and ``claude-bio`` both resolve through the SAME
+``seminars`` area epic union. A delivery addressed to ``claude-folk`` is
+pickable by whichever driver holds an active ``seminars`` lease — including
+a bio-track driver, because the area unions folk + bio + cross epics. The
+``folk``/``bio`` suffix in the slot name is a naming hint, not a resolution
+filter.
+
+This is intentional per the r2 ruling and is NOT to be changed without an
+operator/advisor GO. Per-lane epic scoping (resolving ``claude-folk`` ONLY
+to the folk epic 2836) is a documented design decision, out of scope here;
+see ``resolve_slot_holder`` below for the current algorithm.
 """
 
 from __future__ import annotations
@@ -102,10 +126,20 @@ def resolve_slot_holder(
     Steps:
     1. Look up slot in area_assignments.yaml, or parse slot into provider prefix & area part.
     2. Resolve area via resolve_area() (canonical ID or alias).
-    3. Query session-streams DB for active leases matching the area's epics.
+    3. Query session-streams DB for active leases matching **the area's full
+       epic union** — not a single lane epic.
     4. Return holder facts if an active, non-expired lease exists; else no-holder.
 
     For multi-epic areas with several live leases, the farthest-expiry lease wins.
+
+    **Area-union resolution (r2 ruling, #5889):** the query matches the whole
+    area's epic set, so a lane-named slot resolves to ANY active lease in its
+    area. Concretely, ``claude-folk`` and ``claude-bio`` both resolve through
+    the ``seminars`` area (epics 2836 folk + 4431/4215 bio + 3120/3079 cross):
+    a delivery to ``claude-folk`` is pickable by a bio-track lease holder. The
+    lane suffix in the name is an addressing hint, not a per-lane filter.
+    Per-lane epic scoping is a future design decision — do not narrow this
+    here without an operator/advisor GO.
 
     READ-ONLY — never writes that DB from this path.
     """

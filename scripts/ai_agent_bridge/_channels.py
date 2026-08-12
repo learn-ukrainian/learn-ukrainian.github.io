@@ -308,7 +308,19 @@ def _resolve_delivery_agent(
     warnings: list[str],
     warn_if_unheld: bool,
 ) -> str:
-    """Resolve a slot to its live holder, retaining unheld slots unchanged."""
+    """Resolve a slot to its live holder, retaining unheld slots unchanged.
+
+    Two distinct failure categories, both surfaced (#5889):
+
+    - **Resolver/import failure** (``resolve_slot_holder`` raises, or the
+      module cannot be imported): an infrastructure problem, NOT a "no live
+      holder" state. Always appended to ``warnings`` — never silent-dropped
+      — and the slot identity is returned so the post still queues.
+    - **No live holder** (resolver returned ``has_holder=False``): the
+      normal bounce. Appended to ``warnings`` only when ``warn_if_unheld``
+      is set (recipient side); the ``from_agent`` side stays quiet because
+      an unheld sender is not a delivery concern.
+    """
     if "-" not in agent or agent in STATIC_VALID_AGENTS:
         return agent
 
@@ -316,7 +328,19 @@ def _resolve_delivery_agent(
         from scripts.orchestration.slot_routing import resolve_slot_holder
 
         res = resolve_slot_holder(agent)
-    except Exception:
+    except Exception as exc:
+        # Never silent-drop a resolver/import failure (#5889 item 2). It is
+        # a distinct category from "no live holder": the resolver itself
+        # broke or could not be imported. Surface it as a warning and keep
+        # the slot identity so the post can still queue at identity.
+        msg = (
+            f"⚠️ channel-bridge: slot resolver failed for '{agent}' "
+            f"({type(exc).__name__}: {exc}) — queued at identity"
+        )
+        warnings.append(msg)
+        import sys as _sys
+
+        print(msg, file=_sys.stderr)
         return agent
 
     if res.has_holder:
@@ -977,7 +1001,18 @@ def post(
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
-    Returns ``{"message_id": ..., "thread_id": ..., "delivery_ids": [...]}``.
+    Returns a dict::
+
+        {
+            "message_id": ...,
+            "thread_id": ...,
+            "delivery_ids": [...],
+            "warnings": [...],   # bounce/resolver warnings (#5889); may be empty
+        }
+
+    ``warnings`` (always present, possibly empty) collects no-live-holder
+    bounces and resolver/import failures surfaced during recipient
+    resolution, so callers can react without scraping stderr (#5889).
 
     Atomicity is enforced by ``BEGIN IMMEDIATE`` — under concurrent posts,
     the second caller queues on the 5-second ``busy_timeout`` rather than
@@ -1225,6 +1260,12 @@ def post(
             "round_index": round_index,
             "delivery_ids": delivery_ids,
             "created_at": created_at,
+            # Bounce/resolver warnings collected during recipient resolution
+            # (#5889 item 1): no-live-holder bounces AND resolver/import
+            # failures. Surfaced in the return dict so CLI/callers can react
+            # instead of scraping stderr. Extra key — callers that ignore it
+            # are unaffected.
+            "warnings": warnings,
         }
     except Exception:
         # Catches both sqlite3.Error (insert failure) AND ValueError
