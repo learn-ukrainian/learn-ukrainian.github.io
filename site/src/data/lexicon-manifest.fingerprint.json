@@ -194,6 +194,10 @@
         "sha256": "328d114f3445890458c43ba0238b48669a2383ba7a54a4f4bdfe49b2dadc6b5d"
       },
       {
+        "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
+        "sha256": "d96cbc90e0304d3718527946e57f2c03f491ee92329c324d70a592f794443ace"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },
@@ -207,7 +211,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "f22cb1acc7d7d1fb23ac082301fbcf0c3de0e8e178f1eddfc74d072bf73aa6a6"
+        "sha256": "c7ab61b6c661dda8ba019049ec26ea46340b115a1dff0f2f0f81a8ce8fe6c08d"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
