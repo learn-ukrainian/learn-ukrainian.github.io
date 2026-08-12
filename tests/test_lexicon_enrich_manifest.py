@@ -4751,6 +4751,66 @@ def test_apply_sense_honesty_tags_preserves_dictionary_backed_source() -> None:
     assert unset_source["completeness"] == SENSE_COMPLETENESS_DRAFT
 
 
+def test_apply_manifest_sense_honesty_caps_annotation_and_stamps_truncated() -> None:
+    """#6437 PR3: enrich emit path hard-caps an oversized annotation honestly."""
+    from scripts.lexicon.enrich_manifest import (
+        _SENSE_HONESTY_CAP,
+        SENSE_COMPLETENESS_TRUNCATED,
+        apply_manifest_sense_honesty,
+    )
+
+    long_note = "a" * (_SENSE_HONESTY_CAP + 50)
+    entry = {
+        "lemma": "брак",
+        "senses": [
+            {
+                "id": "brak_defect",
+                "learner_uk": "недолік",
+                "learner_en": ["defect"],
+                "grammar_notes": long_note,
+                "source": "sum20_vetted",
+            }
+        ],
+    }
+    apply_manifest_sense_honesty(entry)
+    sense = entry["senses"][0]
+    assert len(sense["grammar_notes"]) <= _SENSE_HONESTY_CAP
+    assert sense["grammar_notes"].endswith("…")
+    assert sense["completeness"] == SENSE_COMPLETENESS_TRUNCATED
+    # A dictionary-backed source survives truncation honesty (#6506 guard).
+    assert sense["source"] == "sum20_vetted"
+    # uk_source_def and the drill content itself are never touched.
+    assert sense["learner_uk"] == "недолік"
+    assert sense["learner_en"] == ["defect"]
+
+
+def test_apply_manifest_sense_honesty_labels_unsourced_sense_ai_minimum() -> None:
+    """#6437 PR3: a sense with no recorded provenance is honestly ai_minimum."""
+    from scripts.lexicon.enrich_manifest import (
+        SENSE_COMPLETENESS_DRAFT,
+        SENSE_SOURCE_AI_MINIMUM,
+        apply_manifest_sense_honesty,
+    )
+
+    entry = {
+        "lemma": "брак",
+        "senses": [{"id": "brak_defect", "learner_en": ["defect"]}],
+    }
+    apply_manifest_sense_honesty(entry)
+    sense = entry["senses"][0]
+    assert sense["source"] == SENSE_SOURCE_AI_MINIMUM
+    assert sense["completeness"] == SENSE_COMPLETENESS_DRAFT
+
+
+def test_apply_manifest_sense_honesty_skips_entries_without_senses() -> None:
+    """#6437 PR3: most of the manifest predates the schema — leave it untouched."""
+    from scripts.lexicon.enrich_manifest import apply_manifest_sense_honesty
+
+    entry = {"lemma": "брак", "gloss": "вада"}
+    apply_manifest_sense_honesty(entry)
+    assert "senses" not in entry
+
+
 def test_definition_body_keeps_full_dictionary_article_by_default() -> None:
     """#6437: multi-sense dictionary articles must not hard-cap mid-definition."""
     from scripts.lexicon.enrich_manifest import _definition_body, _truncate_text

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -13,10 +13,12 @@ from scripts.fleet_comms.cli import EXIT_OK
 from scripts.fleet_comms.cli import main as cli_main
 from scripts.fleet_comms.cold_start_board import (
     MAX_BOARD_BYTES,
+    ProbeResult,
     _probe_backlog_and_dead_letters,
     _probe_inbox,
     build_cold_start_board,
     cap_data,
+    compute_board_status,
     render_markdown_board,
     run_fail_open_probe,
 )
@@ -208,8 +210,139 @@ def test_no_claim_or_write_calls(monkeypatch):
     assert board["board_status"] in {"ok", "degraded"}
 
 
+def test_capsule_reports_live_plane_mode(monkeypatch):
+    """capsule_session_env uses resolve_plane_mode(None), not a hardcoded off default."""
+    monkeypatch.delenv("FLEET_COMMS_PLANE_MODE", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.resolve_plane_mode",
+        return_value="authority",
+    ) as resolve:
+        board = build_cold_start_board(agent="grok-infra")
+        resolve.assert_called()
+        assert board["probes"]["capsule_session_env"]["data"]["plane_mode"] == "authority"
+
+
+def test_orient_timeout_skipped_does_not_degrade_board():
+    """Monitor timeout → orient_lean skipped; board_status stays ok if load-bearing ok."""
+    ok_payload = {"mode": "authority", "schema": {"applied_version": 7}}
+
+    with (
+        patch(
+            "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+            side_effect=TimeoutError("monitor slow"),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_plane_status",
+            return_value=ok_payload,
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+            return_value={"backlog_total": 0, "dead_letters_total": 0},
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_inbox",
+            return_value=ProbeResult(
+                status="ok",
+                elapsed_ms=1.0,
+                data={"agent": "grok-infra", "inbox_pending_count": 0},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+            return_value=ProbeResult(
+                status="degraded",
+                elapsed_ms=1.0,
+                error="gh flaky",
+                data={"gh_available": True, "prs": []},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_session_streams_and_handoff",
+            return_value=ProbeResult(
+                status="skipped",
+                elapsed_ms=1.0,
+                data={"reason": "no_stream_id_provided"},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_bottleneck_slice",
+            return_value={"total_streams": 0, "slice": {}},
+        ),
+    ):
+        board = build_cold_start_board(agent="grok-infra")
+
+    orient = board["probes"]["orient_lean"]
+    assert orient["status"] == "skipped"
+    assert orient["data"]["reason"] == "monitor_unreachable"
+    assert "git_fallback" in orient["data"]
+    assert board["board_status"] == "ok"
+    assert board["probes"]["gh_pr_list"]["status"] == "degraded"
+
+
+def test_compute_board_status_load_bearing_only():
+    probes = {
+        "plane_status": {"status": "ok"},
+        "inbox_check": {"status": "ok"},
+        "backlog_and_dead_letters": {"status": "ok"},
+        "session_streams_and_handoff": {
+            "status": "skipped",
+            "data": {"db_exists": False},
+        },
+        "orient_lean": {"status": "skipped"},
+        "gh_pr_list": {"status": "degraded"},
+        "needle_search": {"status": "error"},
+    }
+    assert compute_board_status(probes) == "ok"
+
+    probes["session_streams_and_handoff"] = {
+        "status": "degraded",
+        "data": {"db_exists": True},
+    }
+    assert compute_board_status(probes) == "degraded"
+
+    probes["session_streams_and_handoff"] = {
+        "status": "degraded",
+        "data": {"db_exists": False},
+    }
+    probes["inbox_check"] = {"status": "ok"}
+    assert compute_board_status(probes) == "ok"
+
+    probes["inbox_check"] = {"status": "degraded"}
+    assert compute_board_status(probes) == "degraded"
+
+
+def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
+    """Dispatch worktree cwd must not make session-streams look missing."""
+    from scripts.fleet_comms import cold_start_board as board_mod
+
+    primary = tmp_path / "primary"
+    worktree = tmp_path / "worktree"
+    primary.mkdir()
+    worktree.mkdir()
+    db = primary / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db.parent.mkdir(parents=True)
+    db.write_bytes(b"")
+
+    git_common = primary / ".git"
+    completed = MagicMock()
+    completed.returncode = 0
+    completed.stdout = str(git_common) + "\n"
+    completed.stderr = ""
+
+    with (
+        patch.object(board_mod, "HAS_SESSION_STREAMS", False),
+        patch.object(board_mod, "default_database_path", None),
+        patch("scripts.fleet_comms.cold_start_board.subprocess.run", return_value=completed),
+    ):
+        resolved = board_mod._resolve_session_streams_db(worktree)
+    assert resolved == db
+    assert resolved.is_file()
+
+
 def test_markdown_path():
-    """Verify markdown output path renders structured briefing."""
+    """Verify markdown output path renders Summary then probe dump."""
     board = build_cold_start_board(
         stream_id="epic:4707",
         agent="agy/cold-start-pr2-board",
@@ -218,10 +351,16 @@ def test_markdown_path():
     md = render_markdown_board(board)
 
     assert "# Driver Cold Start Board" in md
-    assert "- **Stream ID:** `epic:4707`" in md
-    assert "- **Agent:** `agy/cold-start-pr2-board`" in md
+    assert "## Summary" in md
+    assert "- **plane_mode:**" in md
+    assert "- **schema_version:**" in md
+    assert "- **inbox_pending:**" in md
+    assert "- **board_status:**" in md
+    assert "- **stream_id:** `epic:4707`" in md
+    assert "- **agent:** `agy/cold-start-pr2-board`" in md
     assert "## Diagnostic Probes" in md
     assert "### `capsule_session_env`" in md
+    assert md.index("## Summary") < md.index("## Diagnostic Probes")
     assert len(md.encode("utf-8")) <= MAX_BOARD_BYTES
 
 
@@ -254,6 +393,7 @@ def test_cli_cold_start_board_markdown(capsys):
 
     captured = capsys.readouterr()
     assert "# Driver Cold Start Board" in captured.out
+    assert "## Summary" in captured.out
     assert "epic:4707" in captured.out
 
 
@@ -332,3 +472,22 @@ def test_probe_backlog_labels_legacy_source(tmp_path: Path, monkeypatch) -> None
     assert data["source"] == "legacy"
     assert data["backlog_total"] == 2
     assert data["backlog_by_agent"].get("claude") == 2
+
+
+def test_orient_lean_requests_lean_true():
+    """orient probe must hit /api/orient?lean=true (drive-epic contract)."""
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = b'{"ok": true}'
+    mock_resp.__enter__.return_value = mock_resp
+    mock_resp.__exit__.return_value = False
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=mock_resp,
+    ) as urlopen:
+        from scripts.fleet_comms.cold_start_board import _probe_orient_lean
+
+        result = _probe_orient_lean()
+        assert result.status == "ok"
+        req = urlopen.call_args[0][0]
+        assert req.full_url.endswith("/api/orient?lean=true")
