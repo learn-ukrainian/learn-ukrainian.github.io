@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_historical_document_chronology_record_v1.schema.json",
+  "title": "Phase 3 historical document chronology record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "collection_id",
+    "document_identity",
+    "locator",
+    "date_evidence",
+    "projection",
+    "safeguards",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_historical_document_chronology_record_v1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "collection_id": {
+      "enum": [
+        "ud-old-east-slavic-ruthenian-05a029e00ccf",
+        "plug2-zenodo-19482961"
+      ]
+    },
+    "document_identity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locator": {
+      "type": "object",
+      "minProperties": 3,
+      "additionalProperties": {
+        "type": ["string", "integer"]
+      },
+      "required": ["dataset_id"]
+    },
+    "date_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "date_field",
+        "raw_date",
+        "source_file_sha256",
+        "metadata_row_sha256",
+        "authority"
+      ],
+      "properties": {
+        "date_field": {
+          "enum": ["created", "doc.date"]
+        },
+        "raw_date": {
+          "type": ["string", "null"]
+        },
+        "source_file_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "metadata_row_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "authority": {
+          "enum": ["source_document_comment", "source_metadata_row"]
+        }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "status",
+        "chronological_year",
+        "date_precision",
+        "canonical_framework_id",
+        "framework_matches"
+      ],
+      "properties": {
+        "role": {
+          "const": "chronological_context_only"
+        },
+        "status": {
+          "enum": ["exact_date_projected", "unresolved_no_exact_document_date"]
+        },
+        "chronological_year": {
+          "type": ["integer", "null"]
+        },
+        "date_precision": {
+          "enum": ["exact_year", "unknown"]
+        },
+        "canonical_framework_id": {
+          "type": "null"
+        },
+        "framework_matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/frameworkMatch"
+          },
+          "maxItems": 3
+        }
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "linguistic_stage_gold",
+        "semantic_label_created",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "linguistic_stage_gold": {"const": false},
+        "semantic_label_created": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "record_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "frameworkMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["framework_id", "matches"],
+      "properties": {
+        "framework_id": {
+          "enum": [
+            "university_five_stage_synthesis",
+            "shevelov_detailed_six_period",
+            "nimchuk_five_stage_with_middle_subperiods"
+          ]
+        },
+        "matches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage_id",
+              "match_status"
+            ],
+            "properties": {
+              "stage_id": {"type": "string", "minLength": 1},
+              "match_status": {
+                "enum": ["definite", "possible_boundary_overlap"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
