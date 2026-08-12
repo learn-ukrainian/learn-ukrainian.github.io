@@ -492,6 +492,10 @@ launcher_bind_drive_epic() {
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
     source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
   fi
+  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+    # shellcheck disable=SC2155  # export of resolved plane mode is intentional
+    export FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"
+  fi
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
