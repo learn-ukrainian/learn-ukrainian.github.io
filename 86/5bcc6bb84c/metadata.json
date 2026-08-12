@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "865bcc6bb84c",
+  "strategy": "manual-commit",
+  "branch": "cursor/5737-agy-worker-briefs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "agents_extensions/shared/rules/workflow.md",
+    "docs/SCRIPTS.md",
+    "docs/best-practices/agent-activity-matrix.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/86/5bcc6bb84c/0/metadata.json",
+      "transcript": "/86/5bcc6bb84c/0/full.jsonl",
+      "compact_transcript": "/86/5bcc6bb84c/0/transcript.jsonl",
+      "content_hash": "/86/5bcc6bb84c/0/content_hash.txt",
+      "prompt": "/86/5bcc6bb84c/0/prompt.txt"
+    }
+  ]
+}
