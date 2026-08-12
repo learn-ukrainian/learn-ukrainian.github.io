@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "57c8acf426fb",
+  "strategy": "manual-commit",
+  "branch": "cursor/practice-wp1-paradigm-pairs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/generate_practice_deck.py",
+    "tests/test_generate_practice_deck.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/57/c8acf426fb/0/metadata.json",
+      "transcript": "/57/c8acf426fb/0/full.jsonl",
+      "compact_transcript": "/57/c8acf426fb/0/transcript.jsonl",
+      "content_hash": "/57/c8acf426fb/0/content_hash.txt",
+      "prompt": "/57/c8acf426fb/0/prompt.txt"
+    }
+  ]
+}
