@@ -401,7 +401,7 @@ def build_zno_fill_residual(
         if task_id in emitted_ids:
             continue
         full_row = conn.execute("SELECT * FROM zno_tasks WHERE id = ?", (task_id,)).fetchone()
-        item, reason = _item_from_row(full_row)
+        _item, reason = _item_from_row(full_row)
         if reason is not None:
             unparsed.append({"znoTaskId": _task_id(task_id), "reason": reason})
             continue
