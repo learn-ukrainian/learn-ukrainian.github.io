@@ -58,6 +58,7 @@
         "linguistic_representation_implementation_sha256": {"$ref": "#/$defs/sha256"},
         "linguistic_representation_schema_sha256": {"$ref": "#/$defs/sha256"},
         "linguistic_canary_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_gec_representation_adapter_implementation_sha256": {"$ref": "#/$defs/sha256"},
         "ua_gec_complete_context_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
         "ua_gec_complete_context_receipt_sha256": {"$ref": "#/$defs/sha256"},
         "university_content_audit_freeze_file_sha256": {"$ref": "#/$defs/sha256"},

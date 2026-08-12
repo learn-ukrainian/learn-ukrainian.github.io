@@ -36,9 +36,9 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 from scripts.audit import ingest_ua_gec_gold as ua_gold
-from scripts.projects.open_model_data import phase3_linguistic_representation as representation
 from scripts.projects.open_model_data import phase3_source_unit_materialization as v2_materializer
 from scripts.projects.open_model_data import phase3_source_universe as v2_source
+from scripts.projects.open_model_data import phase3_ua_gec_linguistic_representation as representation
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
@@ -206,7 +206,7 @@ class ParsedAnnotatedDocument:
 
 @dataclass(frozen=True, slots=True)
 class ContextWindow:
-    """Absolute complete-sentence bounds in source and corrected documents."""
+    """Absolute complete-context bounds in parsed and sentence documents."""
 
     source_start: int
     source_end: int
@@ -216,6 +216,10 @@ class ContextWindow:
     source_document_end: int
     target_document_start: int
     target_document_end: int
+    focal_source_start: int
+    focal_source_end: int
+    source_alignment: str
+    target_alignment: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -237,6 +241,19 @@ class SourceSentence:
     source_end: int
     source_document_start: int
     source_document_end: int
+    line: int
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectedSentence:
+    """One sentence-file line projected through Unicode-whitespace boundaries."""
+
+    parsed_start: int
+    parsed_end: int
+    document_start: int
+    document_end: int
+    content_start: int
+    content_end: int
     line: int
 
 
@@ -359,6 +376,86 @@ def _source_sentences(parsed: ParsedAnnotatedDocument, source_document: str) -> 
     return sentences
 
 
+def _non_whitespace_text(value: str) -> str:
+    """Return a lossless content projection that ignores only Unicode whitespace."""
+    return "".join(character for character in value if not character.isspace())
+
+
+def _content_rank(value: str, position: int) -> int:
+    require(0 <= position <= len(value), "content boundary is outside text")
+    return sum(not character.isspace() for character in value[:position])
+
+
+def _content_left_boundary(value: str, rank: int) -> int:
+    total = _content_rank(value, len(value))
+    require(0 <= rank <= total, "content rank is outside text")
+    if rank == total:
+        return len(value)
+    seen = 0
+    for index, character in enumerate(value):
+        if character.isspace():
+            continue
+        if seen == rank:
+            return index
+        seen += 1
+    raise UaGecCompleteContextError("cannot project left content boundary")
+
+
+def _content_right_boundary(value: str, rank: int) -> int:
+    total = _content_rank(value, len(value))
+    require(0 <= rank <= total, "content rank is outside text")
+    if rank == 0:
+        return 0
+    seen = 0
+    for index, character in enumerate(value):
+        if character.isspace():
+            continue
+        seen += 1
+        if seen == rank:
+            return index + 1
+    raise UaGecCompleteContextError("cannot project right content boundary")
+
+
+def _projected_sentences(parsed_text: str, sentence_document: str) -> list[ProjectedSentence] | None:
+    """Project every sentence-file line when only Unicode whitespace differs.
+
+    The immutable sentence document remains the boundary and retrieval
+    authority.  Parsed offsets remain the representation authority.  No
+    character other than Unicode whitespace is normalized or rewritten.
+    """
+    if _non_whitespace_text(sentence_document) != _non_whitespace_text(parsed_text):
+        return None
+    sentences: list[ProjectedSentence] = []
+    document_cursor = 0
+    content_cursor = 0
+    for line_number, raw_line in enumerate(sentence_document.splitlines(keepends=True), start=1):
+        line_without_break = raw_line.rstrip("\r\n")
+        leading = len(line_without_break) - len(line_without_break.lstrip())
+        text = line_without_break.strip()
+        document_start = document_cursor + leading
+        document_end = document_start + len(text)
+        document_cursor += len(raw_line)
+        if not text:
+            continue
+        content_length = len(_non_whitespace_text(text))
+        content_start = content_cursor
+        content_end = content_start + content_length
+        sentences.append(
+            ProjectedSentence(
+                parsed_start=_content_left_boundary(parsed_text, content_start),
+                parsed_end=_content_right_boundary(parsed_text, content_end),
+                document_start=document_start,
+                document_end=document_end,
+                content_start=content_start,
+                content_end=content_end,
+                line=line_number,
+            )
+        )
+        content_cursor = content_end
+    require(content_cursor == _content_rank(parsed_text, len(parsed_text)), "sentence projection accounting drift")
+    return sentences
+
+
 def _sentence_for_annotation(annotation: RawAnnotation, sentences: Sequence[TargetSentence]) -> TargetSentence | None:
     candidates = []
     for sentence in sentences:
@@ -394,6 +491,27 @@ def _target_boundary_to_source(parsed: ParsedAnnotatedDocument, position: int, *
     return source_cursor + (position - target_cursor)
 
 
+def _source_boundary_to_target(parsed: ParsedAnnotatedDocument, position: int, *, right_bias: bool) -> int:
+    """Map a parsed-source boundary to corrected coordinates using inline edits."""
+    require(0 <= position <= len(parsed.source_text), "source boundary is outside parsed source")
+    source_cursor = 0
+    target_cursor = 0
+    for annotation in parsed.annotations:
+        if position < annotation.raw_source_start:
+            return target_cursor + (position - source_cursor)
+        if position == annotation.raw_source_start:
+            if annotation.raw_source_start == annotation.raw_source_end and right_bias:
+                return annotation.raw_target_end
+            return annotation.raw_target_start
+        if position < annotation.raw_source_end:
+            return annotation.raw_target_end if right_bias else annotation.raw_target_start
+        if position == annotation.raw_source_end:
+            return annotation.raw_target_end
+        source_cursor = annotation.raw_source_end
+        target_cursor = annotation.raw_target_end
+    return target_cursor + (position - source_cursor)
+
+
 def _context_window(
     parsed: ParsedAnnotatedDocument,
     sentence: TargetSentence,
@@ -417,6 +535,151 @@ def _context_window(
         source_document_end=source_sentence.source_document_end,
         target_document_start=sentence.target_document_start,
         target_document_end=sentence.target_document_end,
+        focal_source_start=source_start,
+        focal_source_end=source_end,
+        source_alignment="exact",
+        target_alignment="exact",
+    )
+
+
+def _overlapping_sentence_indices(
+    sentences: Sequence[ProjectedSentence],
+    content_start: int,
+    content_end: int,
+) -> set[int]:
+    indices: set[int] = set()
+    for index, sentence in enumerate(sentences):
+        if content_start == content_end:
+            overlaps = sentence.content_start <= content_start <= sentence.content_end
+        else:
+            overlaps = sentence.content_start < content_end and content_start < sentence.content_end
+        if overlaps:
+            indices.add(index)
+    return indices
+
+
+def _projected_sentence_for_annotation(
+    annotation: RawAnnotation,
+    sentences: Sequence[ProjectedSentence],
+    parsed_target: str,
+) -> int | None:
+    content_start = _content_rank(parsed_target, annotation.target_start)
+    content_end = _content_rank(parsed_target, annotation.target_end)
+    candidates = _overlapping_sentence_indices(sentences, content_start, content_end)
+    if not candidates:
+        return None
+    return min(
+        candidates,
+        key=lambda index: (
+            sentences[index].content_end - sentences[index].content_start,
+            sentences[index].content_start,
+        ),
+    )
+
+
+def _projected_context_window(
+    parsed: ParsedAnnotatedDocument,
+    annotation: RawAnnotation,
+    target_sentence_index: int,
+    source_sentences: Sequence[ProjectedSentence],
+    target_sentences: Sequence[ProjectedSentence],
+    source_document: str,
+    target_document: str,
+) -> ContextWindow | None:
+    """Close a minimal source/target sentence block under edit-boundary mapping."""
+    annotation_source_start = _content_rank(parsed.source_text, annotation.source_start)
+    annotation_source_end = _content_rank(parsed.source_text, annotation.source_end)
+    source_indices = _overlapping_sentence_indices(
+        source_sentences,
+        annotation_source_start,
+        annotation_source_end,
+    )
+    if not source_indices:
+        return None
+    target_indices = {target_sentence_index}
+    for _iteration in range(len(source_sentences) + len(target_sentences) + 1):
+        before = (frozenset(source_indices), frozenset(target_indices))
+        target_content_start = min(target_sentences[index].content_start for index in target_indices)
+        target_content_end = max(target_sentences[index].content_end for index in target_indices)
+        target_start = _content_left_boundary(parsed.corrected_text, target_content_start)
+        target_end = _content_right_boundary(parsed.corrected_text, target_content_end)
+        mapped_source_start = _target_boundary_to_source(parsed, target_start, right_bias=False)
+        mapped_source_end = _target_boundary_to_source(parsed, target_end, right_bias=True)
+        source_content_start = _content_rank(parsed.source_text, mapped_source_start)
+        source_content_end = _content_rank(parsed.source_text, mapped_source_end)
+        source_indices.update(
+            _overlapping_sentence_indices(source_sentences, source_content_start, source_content_end)
+        )
+        if not source_indices:
+            return None
+
+        source_content_start = min(source_sentences[index].content_start for index in source_indices)
+        source_content_end = max(source_sentences[index].content_end for index in source_indices)
+        source_start = _content_left_boundary(parsed.source_text, source_content_start)
+        source_end = _content_right_boundary(parsed.source_text, source_content_end)
+        mapped_target_start = _source_boundary_to_target(parsed, source_start, right_bias=False)
+        mapped_target_end = _source_boundary_to_target(parsed, source_end, right_bias=True)
+        target_content_start = _content_rank(parsed.corrected_text, mapped_target_start)
+        target_content_end = _content_rank(parsed.corrected_text, mapped_target_end)
+        target_indices.update(
+            _overlapping_sentence_indices(target_sentences, target_content_start, target_content_end)
+        )
+        if not target_indices:
+            return None
+        if before == (frozenset(source_indices), frozenset(target_indices)):
+            break
+    else:
+        raise UaGecCompleteContextError("projected sentence closure did not converge")
+
+    first_source = source_sentences[min(source_indices)]
+    last_source = source_sentences[max(source_indices)]
+    first_target = target_sentences[min(target_indices)]
+    last_target = target_sentences[max(target_indices)]
+    if source_indices != set(range(min(source_indices), max(source_indices) + 1)):
+        return None
+    if target_indices != set(range(min(target_indices), max(target_indices) + 1)):
+        return None
+    source_start = first_source.parsed_start
+    source_end = last_source.parsed_end
+    target_start = first_target.parsed_start
+    target_end = last_target.parsed_end
+    source_retrieval = source_document[first_source.document_start : last_source.document_end]
+    target_retrieval = target_document[first_target.document_start : last_target.document_end]
+    source_context = parsed.source_text[source_start:source_end]
+    target_context = parsed.corrected_text[target_start:target_end]
+    if _non_whitespace_text(source_retrieval) != _non_whitespace_text(source_context):
+        return None
+    if _non_whitespace_text(target_retrieval) != _non_whitespace_text(target_context):
+        return None
+
+    focal_candidates = _overlapping_sentence_indices(
+        source_sentences,
+        annotation_source_start,
+        annotation_source_end,
+    ) & source_indices
+    if not focal_candidates:
+        return None
+    focal_index = min(
+        focal_candidates,
+        key=lambda index: (
+            source_sentences[index].content_end - source_sentences[index].content_start,
+            source_sentences[index].content_start,
+        ),
+    )
+    focal = source_sentences[focal_index]
+    return ContextWindow(
+        source_start=source_start,
+        source_end=source_end,
+        target_start=target_start,
+        target_end=target_end,
+        source_document_start=first_source.document_start,
+        source_document_end=last_source.document_end,
+        target_document_start=first_target.document_start,
+        target_document_end=last_target.document_end,
+        focal_source_start=focal.parsed_start,
+        focal_source_end=focal.parsed_end,
+        source_alignment=("exact" if source_retrieval == source_context else "unicode_whitespace_projection"),
+        target_alignment=("exact" if target_retrieval == target_context else "unicode_whitespace_projection"),
     )
 
 
@@ -565,7 +828,7 @@ def _corroborating_evidence(
     *,
     locator: Mapping[str, Any],
     document_sha256: str,
-    corrected_text: str,
+    retrieved_text: str,
 ) -> list[dict[str, Any]]:
     return [
         {
@@ -573,8 +836,8 @@ def _corroborating_evidence(
             "locator": dict(locator),
             "locator_sha256": representation.sha256_value(locator),
             "source_document_bytes_sha256": document_sha256,
-            "retrieved_text": corrected_text,
-            "retrieved_text_sha256": representation.sha256_text(corrected_text),
+            "retrieved_text": retrieved_text,
+            "retrieved_text_sha256": representation.sha256_text(retrieved_text),
             "retrieval_status": "exact",
         }
     ]
@@ -596,15 +859,22 @@ def _record_for_window(
     partition, doc_id, annotator = _path_identity(checkout, annotation_path)
     source_text = parsed.source_text[window.source_start : window.source_end]
     corrected_text = parsed.corrected_text[window.target_start : window.target_end]
-    require(source_text and corrected_text, "complete sentence context is empty")
-    require(
-        source_document[window.source_document_start : window.source_document_end] == source_text,
-        "source sentence is not exact in source corpus document",
+    require(source_text and corrected_text, "complete context is empty")
+    source_retrieval = source_document[window.source_document_start : window.source_document_end]
+    target_retrieval = target_document[window.target_document_start : window.target_document_end]
+    source_supported = source_retrieval == source_text or (
+        window.source_alignment == "unicode_whitespace_projection"
+        and _non_whitespace_text(source_retrieval) == _non_whitespace_text(source_text)
     )
-    if target_document[window.target_document_start : window.target_document_end] != corrected_text:
+    require(source_supported, "source context is not supported by the source-sentences document")
+    target_supported = target_retrieval == corrected_text or (
+        window.target_alignment == "unicode_whitespace_projection"
+        and _non_whitespace_text(target_retrieval) == _non_whitespace_text(corrected_text)
+    )
+    if not target_supported:
         raise ContextExclusion(
             "corrected_context_not_exactly_retrievable",
-            "corrected sentence is not exact in target corpus document",
+            "corrected context is not supported by exact target corpus retrieval",
         )
     edits = _edits(source_text, corrected_text)
     if not all(not (item["start"] == 0 and item["end"] == len(source_text)) for item in edits):
@@ -635,6 +905,8 @@ def _record_for_window(
         "source_sentence_document_bytes_sha256": source_sentence_hash,
         "source_sentence_document_start": window.source_document_start,
         "source_sentence_document_end": window.source_document_end,
+        "source_sentence_alignment": window.source_alignment,
+        "source_sentence_retrieval_sha256": representation.sha256_text(source_retrieval),
         "v2_unit_ids": list(unit_ids),
         "v2_unit_count": len(unit_ids),
     }
@@ -647,7 +919,11 @@ def _record_for_window(
         "annotator": annotator,
         "target_document_start": window.target_document_start,
         "target_document_end": window.target_document_end,
-        "selection": "exact complete corrected sentence",
+        "context_alignment": window.target_alignment,
+        "corrected_context_non_whitespace_sha256": representation.sha256_text(
+            _non_whitespace_text(corrected_text)
+        ),
+        "selection": "exact retrieved complete corrected sentence block",
     }
     secondary = sorted({"qualified_human_correction", *[item.tag for item in annotations]})
     return representation.build_representation(
@@ -656,7 +932,10 @@ def _record_for_window(
         source_document_bytes_sha256=source_hash,
         source_text=source_text,
         paragraph_span={"start": 0, "end": len(source_text)},
-        sentence_span={"start": 0, "end": len(source_text)},
+        sentence_span={
+            "start": window.focal_source_start - window.source_start,
+            "end": window.focal_source_end - window.source_start,
+        },
         edit_shape=_edit_shape(source_text, edits),
         edits=edits,
         minimal_edit_spans=[{"start": item["start"], "end": item["end"]} for item in edits],
@@ -673,11 +952,11 @@ def _record_for_window(
         corroborating_corpus_evidence=_corroborating_evidence(
             locator=target_locator,
             document_sha256=target_hash,
-            corrected_text=corrected_text,
+            retrieved_text=target_retrieval,
         ),
         rights={"status": "public_qualified_human_corpus", "license": UA_GEC_LICENSE},
         secondary_attributes=secondary,
-        scope="complete UA-GEC sentence; semantic phenomenon pending qualified review",
+        scope="complete UA-GEC sentence block; semantic phenomenon pending qualified review",
         exceptions=["annotation tag is evidence metadata, not a frozen semantic phenomenon label"],
         register="mixed_public_corpus",
         period="contemporary",
@@ -721,6 +1000,8 @@ def reconstruct(
         target_document = target_path.read_text(encoding="utf-8", errors="strict")
         source_sentences = _source_sentences(parsed, source_document)
         target_sentences = _target_sentences(parsed, target_document)
+        projected_source_sentences = _projected_sentences(parsed.source_text, source_document)
+        projected_target_sentences = _projected_sentences(parsed.corrected_text, target_document)
         included: list[tuple[RawAnnotation, str]] = []
         for annotation in parsed.annotations:
             if annotation.tag not in EXPECTED_TAG_COUNTS:
@@ -736,27 +1017,47 @@ def reconstruct(
         windows: dict[ContextWindow, list[tuple[RawAnnotation, str]]] = defaultdict(list)
         for annotation, unit_id in included:
             sentence = _sentence_for_annotation(annotation, target_sentences)
-            if sentence is None:
-                exclusions["target_sentence_not_exactly_aligned"] += 1
-                excluded_units["target_sentence_not_exactly_aligned"] += 1
-                excluded_unit_records.append({"unit_id": unit_id, "reason": "target_sentence_not_exactly_aligned"})
-                continue
-            window = _context_window(parsed, sentence, source_sentences)
+            window = _context_window(parsed, sentence, source_sentences) if sentence is not None else None
+            if window is None and projected_source_sentences is not None and projected_target_sentences is not None:
+                projected_index = _projected_sentence_for_annotation(
+                    annotation,
+                    projected_target_sentences,
+                    parsed.corrected_text,
+                )
+                if projected_index is not None:
+                    window = _projected_context_window(
+                        parsed,
+                        annotation,
+                        projected_index,
+                        projected_source_sentences,
+                        projected_target_sentences,
+                        source_document,
+                        target_document,
+                    )
             if window is None:
-                exclusions["source_target_sentence_boundary_mismatch"] += 1
-                excluded_units["source_target_sentence_boundary_mismatch"] += 1
-                excluded_unit_records.append({"unit_id": unit_id, "reason": "source_target_sentence_boundary_mismatch"})
+                code = (
+                    "target_sentence_not_exactly_aligned"
+                    if sentence is None
+                    else "source_target_sentence_boundary_mismatch"
+                )
+                exclusions[code] += 1
+                excluded_units[code] += 1
+                excluded_unit_records.append({"unit_id": unit_id, "reason": code})
                 continue
             windows[window].append((annotation, unit_id))
         for window in sorted(windows, key=lambda item: (item.source_start, item.source_end, item.target_start)):
             members = windows[window]
+            member_annotations = {annotation for annotation, _unit_id in members}
             context_annotations = [
                 item
                 for item in parsed.annotations
-                if window.source_start <= item.source_start <= item.source_end
-                and item.source_end <= window.source_end
-                and window.target_start <= item.target_start <= window.target_end
-                and item.target_end <= window.target_end
+                if item in member_annotations
+                or (
+                    window.source_start <= item.source_start <= item.source_end
+                    and item.source_end <= window.source_end
+                    and window.target_start <= item.target_start <= window.target_end
+                    and item.target_end <= window.target_end
+                )
             ]
             unit_ids = [unit_id for _annotation, unit_id in members]
             try:

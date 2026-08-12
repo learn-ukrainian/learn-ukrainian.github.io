@@ -17,12 +17,9 @@ def _stub_external_receipts(monkeypatch: pytest.MonkeyPatch) -> None:
     ua_receipt = {
         "receipt_sha256": SHA_A,
         "complete_context": {
-            "eligible_context_record_count": 6_575,
-            "eligible_v2_unit_count": 8_771,
-            "excluded_v2_unit_count_by_reason": {
-                "source_target_sentence_boundary_mismatch": 132,
-                "target_sentence_not_exactly_aligned": 34,
-            },
+            "eligible_context_record_count": 6_698,
+            "eligible_v2_unit_count": 8_934,
+            "excluded_v2_unit_count_by_reason": {"target_sentence_not_exactly_aligned": 3},
         },
     }
     historical_receipt = {
@@ -87,10 +84,13 @@ def test_build_is_deterministic_text_free_and_fail_closed(monkeypatch: pytest.Mo
         "ua_gec_units": 8_937,
     }
     assert first["denominators"]["ua_gec_complete_context"] == {
-        "eligible_records": 6_575,
-        "represented_v2_units": 8_771,
-        "excluded_v2_units": 166,
+        "eligible_records": 6_698,
+        "represented_v2_units": 8_934,
+        "excluded_v2_units": 3,
     }
+    assert first["bindings"]["ua_gec_representation_adapter_implementation_sha256"] == readiness.sha256_file(
+        Path(readiness.ua_context.representation.__file__).resolve()
+    )
     assert first["denominators"]["v3_evaluation"]["frozen_evidence_backed_labels"] == 0
     assert first["cycle002"]["disposition"] == "diagnostic_only"
     assert first["cycle002"]["semantic_gold"] is False
@@ -145,6 +145,16 @@ def test_validator_rejects_body_hash_drift(monkeypatch: pytest.MonkeyPatch) -> N
 
     with pytest.raises(readiness.PrefreezeReadinessError, match="body hash drift"):
         readiness.validate_readiness(receipt)
+
+
+def test_validator_preserves_historical_v1_receipts_without_adapter_binding(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    receipt = _build(monkeypatch)
+    del receipt["bindings"]["ua_gec_representation_adapter_implementation_sha256"]
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+
+    assert readiness.validate_readiness(receipt) == receipt
 
 
 def test_build_rejects_incomplete_canary(monkeypatch: pytest.MonkeyPatch) -> None:

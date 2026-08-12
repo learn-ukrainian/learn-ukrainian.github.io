@@ -130,8 +130,8 @@ def _validate_ua_context_receipt(path: Path, sources_database_sha256: str) -> tu
     expected_bindings = {
         "implementation_sha256": sha256_file(Path(ua_context.__file__).resolve()),
         "receipt_schema_sha256": sha256_file(ua_context.SCHEMA_PATH),
-        "representation_implementation_sha256": sha256_file(Path(representation.__file__).resolve()),
-        "representation_schema_sha256": sha256_file(representation.SCHEMA_PATH),
+        "representation_implementation_sha256": sha256_file(Path(ua_context.representation.__file__).resolve()),
+        "representation_schema_sha256": sha256_file(ua_context.representation.SCHEMA_PATH),
         "sources_database_sha256": sources_database_sha256,
     }
     for key, expected in expected_bindings.items():
@@ -247,6 +247,9 @@ def build_readiness(
             "linguistic_representation_implementation_sha256": sha256_file(Path(representation.__file__).resolve()),
             "linguistic_representation_schema_sha256": sha256_file(representation.SCHEMA_PATH),
             "linguistic_canary_implementation_sha256": sha256_file(Path(canary.__file__).resolve()),
+            "ua_gec_representation_adapter_implementation_sha256": sha256_file(
+                Path(ua_context.representation.__file__).resolve()
+            ),
             "ua_gec_complete_context_receipt_file_sha256": ua_receipt_file_sha256,
             "ua_gec_complete_context_receipt_sha256": ua_receipt["receipt_sha256"],
             "university_content_audit_freeze_file_sha256": university_file_sha256,
