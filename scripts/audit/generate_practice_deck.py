@@ -2023,6 +2023,8 @@ def _build_cloze_items(
             item["clozeEn"] = cloze_en
         if attribution is not None:
             item["attribution"] = attribution
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(item)
     return items
 
@@ -2566,15 +2568,16 @@ def _build_classify_items(
             sets.append(pos_set)
     if not sets:
         return []
-    return [
-        {
-            "classifyId": f"{lexeme['lemmaId']}:classify",
-            "lemmaId": lexeme["lemmaId"],
-            "lemma": lexeme["lemma"],
-            "sets": sets,
-            "source": "VESUM",
-        }
-    ]
+    item: dict[str, Any] = {
+        "classifyId": f"{lexeme['lemmaId']}:classify",
+        "lemmaId": lexeme["lemmaId"],
+        "lemma": lexeme["lemma"],
+        "sets": sets,
+        "source": "VESUM",
+    }
+    if lexeme.get("senseId"):
+        item["senseId"] = lexeme["senseId"]
+    return [item]
 
 
 CASE_SLOT_LABELS: dict[str, tuple[str, str]] = {
@@ -2673,6 +2676,8 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
         }
         if CEFR_RANK[lexeme["cefr"]] <= CEFR_RANK["A1"]:
             item["slot"]["labelEn"] = f"{label_en} {number_en}"
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(item)
     return items
 
@@ -3000,20 +3005,21 @@ def _build_synonym_items(
             answer_index = int(hashlib.sha1(synonym_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
             answer = options.pop(0)
             options.insert(answer_index, answer)
-            items.append(
-                {
-                    "synonymId": synonym_id,
-                    "lemmaId": prompt["lemmaId"],
-                    "targetLemmaId": target["lemmaId"],
-                    "polarity": polarity,
-                    "prompt": prompt["lemma"],
-                    "answer": target["lemma"],
-                    "level": level,
-                    "promptLevel": prompt["cefr"],
-                    "options": options,
-                    "source": "ukrajinet-auto-translation",
-                }
-            )
+            synonym_item: dict[str, Any] = {
+                "synonymId": synonym_id,
+                "lemmaId": prompt["lemmaId"],
+                "targetLemmaId": target["lemmaId"],
+                "polarity": polarity,
+                "prompt": prompt["lemma"],
+                "answer": target["lemma"],
+                "level": level,
+                "promptLevel": prompt["cefr"],
+                "options": options,
+                "source": "ukrajinet-auto-translation",
+            }
+            if prompt.get("senseId"):
+                synonym_item["senseId"] = prompt["senseId"]
+            items.append(synonym_item)
     return items
 
 
@@ -3304,6 +3310,8 @@ def _build_heritage_items(
         if item["kind"] == "sense_restricted":
             item["calqueSense"] = _clean_text(pair.get("calqueSense")) or ""
             item["authenticSense"] = _clean_text(pair.get("authenticSense")) or ""
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(_strip_heritage_option_metadata(item) if public_options else item)
     return items
 
@@ -3401,6 +3409,8 @@ def _build_paronym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         # simple shuffle using deck seed if possible; fall back to list as-is
         # (real shuffle happens via rng in caller path for determinism; here keep order stable)
         items.append(_strip_paronym_option_metadata(item) if public_options else item)
@@ -3759,6 +3769,8 @@ def _build_antonym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         items.append(_strip_antonym_option_metadata(item) if public_options else item)
     return items
 
@@ -3911,6 +3923,8 @@ def _build_homonym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         items.append(_strip_homonym_option_metadata(item) if public_options else item)
     return items
 
@@ -4303,14 +4317,15 @@ def build_practice_shards(
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
         stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
         if stress:
-            mode_by_level[lexeme["cefr"]]["stress"].append(
-                {
-                    "stressId": f"{lexeme['lemmaId']}:stress",
-                    "lemmaId": lexeme["lemmaId"],
-                    "lemma": lexeme["lemma"],
-                    **stress,
-                }
-            )
+            stress_item = {
+                "stressId": f"{lexeme['lemmaId']}:stress",
+                "lemmaId": lexeme["lemmaId"],
+                "lemma": lexeme["lemma"],
+                **stress,
+            }
+            if lexeme.get("senseId"):
+                stress_item["senseId"] = lexeme["senseId"]
+            mode_by_level[lexeme["cefr"]]["stress"].append(stress_item)
 
         classify_items = _build_classify_items(
             _entry,
