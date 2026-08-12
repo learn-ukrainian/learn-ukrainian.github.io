@@ -82,6 +82,31 @@ describe('ZnoPractice', () => {
     expect(passage).toHaveClass('zno-practice-passage');
   });
 
+  test('renders underlined letter marks when optionMarks are present', async () => {
+    const phoneticsDeck: ZnoPracticeDeck[] = [{
+      deckId: 'zno-phonetics', title: 'Фонетика', thinDeck: false,
+      items: [{
+        znoTaskId: 'zno:457', znoMode: 'choice', taskFormat: 'single-choice',
+        stem: 'Однаковий звук позначають букви, виділені в кожному слові рядка',
+        options: ['бігти, поріг, злегка', 'повість, сяйво, свічка', 'лічба, почасти, чітко', 'кістці, тім\'я, житній'],
+        optionMarks: [
+          [{ start: 2, end: 3, style: 'underline' }],
+          [{ start: 4, end: 5, style: 'underline' }],
+          [{ start: 2, end: 3, style: 'underline' }],
+          [{ start: 3, end: 4, style: 'underline' }],
+        ],
+        correctLetter: 'Б', correctIndex: 1,
+        year: 2024, exam: 'nmt', session: 'sesiya-2', taskNo: 1, topicTag: 'Фонетика',
+        attribution: 'Джерело: УЦОЯО · НМТ 2024, сесія 2 · завдання №1',
+      }],
+    }];
+    const user = userEvent.setup();
+    render(<ZnoPractice decks={phoneticsDeck} />);
+    await user.click(screen.getByTestId('zno-deck-zno-phonetics'));
+    expect(document.querySelector('.zno-practice-mark-underline')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /повість, сяйво, свічка/ })).toBeInTheDocument();
+  });
+
   test('renders a hub-controlled deck without the standalone picker and returns through its callback', async () => {
     const user = userEvent.setup();
     const onBackToDecks = vi.fn();

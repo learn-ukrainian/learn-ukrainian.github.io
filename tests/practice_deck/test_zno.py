@@ -17,6 +17,7 @@ from scripts.practice_deck.zno import (
     learner_attribution,
     write_zno_shards,
 )
+from scripts.practice_deck.markup_integrity import stem_requires_markup
 
 
 def _database(path: Path) -> Path:
@@ -45,6 +46,22 @@ def _database(path: Path) -> Path:
         (10, 1, 2021, "zno", "osnovna", 11, "single-choice", "Морфологія без норми?", '["а", "б", "в", "г", "ґ"]', "А", "ТЕМА: Морфологія. Іменник", "", "", ""),
         (11, 1, 2021, "zno", "osnovna", 12, "single-choice", "Синтаксис. Розділові знаки?", '["а", "б", "в", "г", "ґ"]', "Б", "ТЕМА: Синтаксис. Розділові знаки в реченні", "", "", ""),
         (12, 1, 2021, "zno", "osnovna", 13, "single-choice", "Фонетика?", '["а", "б", "в", "г", "ґ"]', "В", "ТЕМА: Фонетика", "", "", ""),
+        (
+            13,
+            1,
+            2024,
+            "nmt",
+            "sesiya-2",
+            1,
+            "single-choice",
+            "Однаковий звук позначають букви, виділені в кожному слові рядка",
+            '["бігти, поріг, злегка", "повість, сяйво, свічка", "лічба, почасти, чітко", "кістці, тім\'я, житній"]',
+            "Б",
+            "ТЕМА: Фонетика. Зміни звуків",
+            "",
+            "",
+            "",
+        ),
     ]
     connection.executemany("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
@@ -129,12 +146,28 @@ def test_wave_3_decks_emit_from_broad_topic_tag_families(tmp_path: Path) -> None
     assert residual["decks"]["syntax"]["emitted"] == 2
 
     assert shards["phonetics"]["deckId"] == "zno-phonetics"
-    assert residual["decks"]["phonetics"]["candidates"] == 1
+    assert residual["decks"]["phonetics"]["candidates"] == 2
     assert residual["decks"]["phonetics"]["emitted"] == 1
+    assert residual["decks"]["phonetics"]["dropped"] == {"broken_missing_markup": 1}
     assert shards["phonetics"]["items"][0]["stem"] == "Фонетика?"
 
 
 def test_attribution_uses_ucyoo_and_never_a_mirror() -> None:
     assert learner_attribution(year=2024, exam="nmt", session="sesiya-2", task_no=7) == (
         "Джерело: УЦОЯО · НМТ 2024, сесія 2 · завдання №7"
+    )
+
+
+def test_builder_quarantines_markup_dependent_items_without_overlay(tmp_path: Path) -> None:
+    database = _database(tmp_path / "sources.db")
+    empty_overlay = tmp_path / "empty-overlay.json"
+    empty_overlay.write_text('{"schema":"zno-markup-overlay","schemaVersion":1,"items":{}}', encoding="utf-8")
+
+    shards, residual = build_zno_shards(database, markup_overlay_path=empty_overlay)
+
+    assert residual["markupIntegrity"]["quarantinedMissingMarkup"] == 1
+    assert residual["decks"]["phonetics"]["dropped"]["broken_missing_markup"] == 1
+    assert all(item["znoTaskId"] != "zno:13" for item in shards["phonetics"]["items"])
+    assert stem_requires_markup(
+        "Однаковий звук позначають букви, виділені в кожному слові рядка",
     )

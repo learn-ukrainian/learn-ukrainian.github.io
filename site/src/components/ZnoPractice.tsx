@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { cardKey, loadState, rateCard, type PracticeRating } from '../lib/lexicon/srs';
 import stressDeck from '../data/practice-zno.stress.json';
 import paronymDeck from '../data/practice-zno.paronym.json';
@@ -10,12 +10,20 @@ import morphologyDeck from '../data/practice-zno.morphology.json';
 import syntaxDeck from '../data/practice-zno.syntax.json';
 import phoneticsDeck from '../data/practice-zno.phonetics.json';
 
+export interface ZnoCharMark {
+  start: number;
+  end: number;
+  style?: 'underline' | 'bold';
+}
+
 export interface ZnoPracticeItem {
   znoTaskId: string;
   znoMode: 'choice';
   taskFormat: 'single-choice';
   stem: string;
   options: string[];
+  optionMarks?: ZnoCharMark[][];
+  stemMarks?: ZnoCharMark[];
   correctLetter: string;
   correctIndex: number;
   year: number;
@@ -89,6 +97,26 @@ export function splitStem(stem: string): { instruction: string; passage: string 
   const instruction = stem.slice(0, newlineIndex).trim();
   const passage = stem.slice(newlineIndex + 1).trim();
   return { instruction, passage: passage.length > 0 ? passage : null };
+}
+
+/** Render plain text with optional char-range highlights (official booklet marks). */
+export function renderMarkedText(text: string, marks: readonly ZnoCharMark[] | undefined): ReactNode {
+  if (!marks?.length) return text;
+  const sorted = [...marks].sort((left, right) => left.start - right.start);
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+  sorted.forEach((mark, index) => {
+    if (mark.start > cursor) parts.push(text.slice(cursor, mark.start));
+    const marked = text.slice(mark.start, mark.end);
+    if (mark.style === 'bold') {
+      parts.push(<strong key={`mark-${index}`} className="zno-practice-mark zno-practice-mark-bold">{marked}</strong>);
+    } else {
+      parts.push(<span key={`mark-${index}`} className="zno-practice-mark zno-practice-mark-underline">{marked}</span>);
+    }
+    cursor = mark.end;
+  });
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return parts;
 }
 
 export function nextDueItem(items: readonly ZnoPracticeItem[], currentId: string | null): ZnoPracticeItem | null {
@@ -203,7 +231,9 @@ export default function ZnoPractice({
               {activeDeck.thinDeck ? <p role="status" className="zno-practice-thin">Невелика добірка: {taskCountLabel(activeDeck.items.length)}.</p> : null}
               <p className="zno-practice-instruction" lang="uk">{instruction}</p>
               {passage ? (
-                <p className="zno-practice-passage" lang="uk" style={{ whiteSpace: 'pre-wrap' }}>{passage}</p>
+                <p className="zno-practice-passage" lang="uk" style={{ whiteSpace: 'pre-wrap' }}>
+                  {renderMarkedText(passage, currentItem.stemMarks)}
+                </p>
               ) : null}
               <ul className="zno-practice-options">
                 {currentItem.options.map((option, index) => (
@@ -215,7 +245,9 @@ export default function ZnoPractice({
                       {...znoOptionAttrs(index, currentItem.correctIndex, selectedIndex, rated)}
                     >
                       <span className="zno-practice-option-key">{'АБВГД'[index]}</span>{' '}
-                      <span className="zno-practice-option-text" lang="uk">{option}</span>
+                      <span className="zno-practice-option-text" lang="uk">
+                        {renderMarkedText(option, currentItem.optionMarks?.[index])}
+                      </span>
                     </button>
                   </li>
                 ))}
