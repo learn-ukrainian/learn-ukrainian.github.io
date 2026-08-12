@@ -39,7 +39,7 @@ def _monitor_base() -> str:
 
 
 def lane_status(agent_info: dict[str, Any] | None) -> str:
-    """Resolve display status for a routing-budget agent blob."""
+    """Resolve display status for a routing-budget agent record."""
     info = agent_info or {}
     status = info.get("status")
     if not status and isinstance(info.get("interactive"), dict):
