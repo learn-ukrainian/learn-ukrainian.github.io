@@ -282,7 +282,11 @@ def _select_ud_date(metadata: UdDocumentMetadata) -> tuple[str, str, int]:
         created_bounds = parse_source_date(present[0][1])
         date_bounds = parse_source_date(present[1][1])
         require(created_bounds == date_bounds, f"conflicting UD source date fields: {metadata.document_identity}")
-    selected_field, raw_date = present[0]
+    selected_field, raw_date = (
+        ("date", metadata.date)
+        if metadata.document_identity.startswith(RATUSHNA_PREFIX) and metadata.date not in (None, "")
+        else present[0]
+    )
     return selected_field, raw_date, metadata.comment_lines[selected_field]
 
 

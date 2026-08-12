@@ -174,6 +174,19 @@ def test_ratushna_record_requires_official_edition_binding_but_uses_source_comme
     assert record["date_evidence"]["raw_date"] == "1653"
 
 
+def test_ratushna_agreeing_created_and_date_fields_prefer_date_comment():
+    record = _record(
+        document_identity="RatushnaKniga_1986__ratush02",
+        created="1653",
+        date="1653",
+    )
+
+    assert record["date_evidence"]["selected_field"] == "date"
+    assert record["date_evidence"]["source_comment_line"] == 5
+    assert record["date_evidence"]["source_field_values"]["created"] == "1653"
+    assert record["date_evidence"]["source_field_values"]["date"] == "1653"
+
+
 def test_validator_rejects_date_projection_tamper_after_reseal():
     record = copy.deepcopy(_record(date="1580-1600"))
     record["projection"]["chronological_end_year"] = 1599
