@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json",
+  "title": "Phase 3 Kyiv-Pechersk Lavra Near Caves source intake receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "inputs",
+    "denominator",
+    "output",
+    "source_scope",
+    "rights_and_scope",
+    "safeguards",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_lavra_near_caves_intake_receipt_v1"},
+    "implementation_version": {"const": "phase3_lavra_near_caves_intake_v1"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_title",
+        "source_author",
+        "source_year",
+        "institutional_source_url",
+        "source_pdf_sha256",
+        "retrieval_receipt_sha256",
+        "pdf_pages",
+        "article_pdf_page_start",
+        "article_pdf_page_end",
+        "extraction_backend",
+        "extraction_backend_version",
+        "implementation_sha256",
+        "receipt_schema_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "bobrovskyy-near-caves-dipinto-2010"},
+        "source_title": {"const": "Древнерусская надпись-дипинто из Ближних пещер Киево-Печерской лавры"},
+        "source_author": {"const": "Тимур Бобровский"},
+        "source_year": {"const": 2010},
+        "institutional_source_url": {"const": "https://history.org.ua/JournALL/ruthenica/ruthenica_2010_9/ruthenica_2010_9.pdf"},
+        "source_pdf_sha256": {"const": "434b8654e6f2515c3db5d39b6499e29232b715947e356a5c2d364855d99c01e6"},
+        "retrieval_receipt_sha256": {"const": "773770c35459ce10220f6f8e4bff0d86f2f5532e0c845a505c4b3237f87ca148"},
+        "pdf_pages": {"const": 234},
+        "article_pdf_page_start": {"const": 166},
+        "article_pdf_page_end": {"const": 184},
+        "extraction_backend": {"const": "pypdf"},
+        "extraction_backend_version": {"type": "string", "minLength": 1},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "article_pages",
+        "nonempty_native_text_pages",
+        "native_text_characters",
+        "pages_with_legacy_cyrillica",
+        "legacy_cyrillica_spans",
+        "legacy_cyrillica_characters",
+        "legacy_cyrillica_nonspace_characters",
+        "legacy_font_base_name_counts"
+      ],
+      "properties": {
+        "article_pages": {"const": 19},
+        "nonempty_native_text_pages": {"const": 19},
+        "native_text_characters": {"const": 38394},
+        "pages_with_legacy_cyrillica": {"const": 17},
+        "legacy_cyrillica_spans": {"const": 559},
+        "legacy_cyrillica_characters": {"const": 2141},
+        "legacy_cyrillica_nonspace_characters": {"const": 1804},
+        "legacy_font_base_name_counts": {
+          "const": {
+            "/BCKIFG+CyrillicaBEM-Normal": 23,
+            "/BCNADJ+CyrillicaBEM-Normal": 2118
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "page_identity_manifest_sha256"],
+      "properties": {
+        "filename": {"const": "near-caves-dipinto-raw-pages-v1.jsonl.gz"},
+        "records": {"const": 19},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "page_identity_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direct_lavra_near_caves_epigraphic_study",
+        "article_subject",
+        "historical_period",
+        "institutional_retrieval",
+        "source_attributed_reading_only",
+        "full_lavra_cave_corpus"
+      ],
+      "properties": {
+        "direct_lavra_near_caves_epigraphic_study": {"const": true},
+        "article_subject": {"const": "one_multiline_dipinto_in_the_near_caves"},
+        "historical_period": {"const": "late_twelfth_century"},
+        "institutional_retrieval": {"const": true},
+        "source_attributed_reading_only": {"const": true},
+        "full_lavra_cave_corpus": {"const": false}
+      }
+    },
+    "rights_and_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_accepted_bounded_operational_risk",
+        "private_research_and_source_evidence_only",
+        "source_attribution_and_locator_preserved",
+        "full_pdf_public_redistribution_authorized",
+        "full_publication_training_export_authorized",
+        "adapt_or_remove_on_substantiated_notice"
+      ],
+      "properties": {
+        "operator_accepted_bounded_operational_risk": {"const": true},
+        "private_research_and_source_evidence_only": {"const": true},
+        "source_attribution_and_locator_preserved": {"const": true},
+        "full_pdf_public_redistribution_authorized": {"const": false},
+        "full_publication_training_export_authorized": {"const": false},
+        "adapt_or_remove_on_substantiated_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete_article_context_preserved_privately",
+        "native_text_offsets_preserved",
+        "legacy_font_spans_source_derived",
+        "legacy_encoding_resolved",
+        "inferred_character_repairs",
+        "qualified_historical_review_complete",
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "public_repo_contains_source_text",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "complete_article_context_preserved_privately": {"const": true},
+        "native_text_offsets_preserved": {"const": true},
+        "legacy_font_spans_source_derived": {"const": true},
+        "legacy_encoding_resolved": {"const": false},
+        "inferred_character_repairs": {"const": false},
+        "qualified_historical_review_complete": {"const": false},
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "public_repo_contains_source_text": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legacy_font_mapping_required",
+        "inscription_and_commentary_separation_required",
+        "qualified_historical_review_required",
+        "additional_near_far_and_varangian_cave_sources_required",
+        "lavra_cave_corpus_gap_closed"
+      ],
+      "properties": {
+        "legacy_font_mapping_required": {"const": true},
+        "inscription_and_commentary_separation_required": {"const": true},
+        "qualified_historical_review_required": {"const": true},
+        "additional_near_far_and_varangian_cave_sources_required": {"const": true},
+        "lavra_cave_corpus_gap_closed": {"const": false}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
