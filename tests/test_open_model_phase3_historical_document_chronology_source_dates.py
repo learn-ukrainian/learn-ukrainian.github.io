@@ -187,6 +187,17 @@ def test_ratushna_agreeing_created_and_date_fields_prefer_date_comment():
     assert record["date_evidence"]["source_field_values"]["date"] == "1653"
 
 
+def test_ratushna_created_without_date_fails_closed():
+    with pytest.raises(
+        source_dates.HistoricalSourceDateError, match="Ratushna date must come from source date comment"
+    ):
+        _record(
+            document_identity="RatushnaKniga_1986__ratush02",
+            created="1653",
+            date=None,
+        )
+
+
 def test_validator_rejects_date_projection_tamper_after_reseal():
     record = copy.deepcopy(_record(date="1580-1600"))
     record["projection"]["chronological_end_year"] = 1599
