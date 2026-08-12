@@ -177,7 +177,10 @@ def test_unaligned_target_sentence_is_excluded_not_repaired(tmp_path: Path, monk
     assert accounting["all_v2_units_mapped"] is True
 
 
-def test_source_target_sentence_boundary_mismatch_is_excluded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_source_target_sentence_boundary_mismatch_expands_to_complete_block(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     checkout = _fixture_checkout(tmp_path)
     annotated = checkout / "data/gec-only/train/annotated/0001.a1.ann"
     source = checkout / "data/gec-only/train/source-sentences/0001.src.txt"
@@ -212,11 +215,136 @@ def test_source_target_sentence_boundary_mismatch_is_excluded(tmp_path: Path, mo
         source_universe=tmp_path / "unused-universe",
     )
 
-    assert records == []
-    assert accounting["excluded_v2_unit_count_by_reason"] == {"source_target_sentence_boundary_mismatch": 1}
+    assert len(records) == 1
+    assert accounting["eligible_v2_unit_count"] == 1
+    assert accounting["excluded_v2_unit_count_by_reason"] == {}
+    assert records[0]["source"]["complete_text"] == "Перше. Друге."
+    assert records[0]["corrected"]["complete_text"] == "Перше Друге."
+    assert records[0]["context"]["sentences"] == [{"start": 0, "end": 6, "text": "Перше."}]
+
+
+def test_unicode_whitespace_projection_preserves_parsed_offsets_and_exact_retrieval(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checkout = _fixture_checkout(tmp_path)
+    annotated = checkout / "data/gec-only/train/annotated/0001.a1.ann"
+    source = checkout / "data/gec-only/train/source-sentences/0001.src.txt"
+    target = checkout / "data/gec-only/train/target-sentences/0001.a1.txt"
+    annotated.write_text("Перше  {брата=>братові:::error_type=G/Case}.", encoding="utf-8")
+    source.write_text("Перше брата.\n", encoding="utf-8")
+    target.write_text("Перше братові.\n", encoding="utf-8")
+    monkeypatch.setattr(context, "EXPECTED_TAG_COUNTS", {"G/Case": 1})
+    monkeypatch.setattr(context, "EXPECTED_UNIT_COUNT", 1)
+    monkeypatch.setattr(context, "_checkout_commit", lambda _checkout: context.UA_GEC_COMMIT)
+    monkeypatch.setattr(
+        context,
+        "_load_v2_units",
+        lambda _source_universe, _database: [
+            {
+                "unit_id": "ua-gec:test:whitespace",
+                "source_record": {
+                    "partition": "gec-only/train",
+                    "doc_id": "0001",
+                    "annotator_id": "1",
+                    "error_type": "G/Case",
+                    "error": "брата",
+                    "correct": "братові",
+                },
+            }
+        ],
+    )
+
+    records, accounting = context.reconstruct(
+        checkout=checkout,
+        database=tmp_path / "unused.db",
+        source_universe=tmp_path / "unused-universe",
+    )
+
+    assert accounting["eligible_v2_unit_count"] == 1
+    assert records[0]["source"]["complete_text"] == "Перше  брата."
+    locator = records[0]["document"]["frozen_locator"]
+    assert locator["source_sentence_alignment"] == "unicode_whitespace_projection"
+    corroboration = records[0]["evidence"]["corroborating_corpus_evidence"][0]
+    assert corroboration["retrieved_text"] == "Перше братові."
+    assert corroboration["locator"]["context_alignment"] == "unicode_whitespace_projection"
+
+    tampered = json.loads(json.dumps(records[0]))
+    tampered_retrieval = tampered["evidence"]["corroborating_corpus_evidence"][0]
+    tampered_retrieval["retrieved_text"] = "Перше братові!"
+    tampered_retrieval["retrieved_text_sha256"] = context.representation.sha256_text("Перше братові!")
+    with pytest.raises(
+        context.representation.UaGecLinguisticRepresentationError,
+        match="changes a non-whitespace code point",
+    ):
+        context.representation.validate_representation(tampered)
+
+
+def test_non_whitespace_target_difference_remains_excluded(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checkout = _fixture_checkout(tmp_path)
+    target = checkout / "data/gec-only/train/target-sentences/0001.a1.txt"
+    target.write_text("Св. Петро дякував братові!\nВін допоміг сестрі.\n", encoding="utf-8")
+    _patch_fixture_denominator(monkeypatch)
+
+    records, accounting = context.reconstruct(
+        checkout=checkout,
+        database=tmp_path / "unused.db",
+        source_universe=tmp_path / "unused-universe",
+    )
+
+    assert len(records) == 1
+    assert accounting["excluded_v2_unit_count_by_reason"] == {"target_sentence_not_exactly_aligned": 1}
     assert accounting["excluded_v2_units"] == [
-        {"unit_id": "ua-gec:test:boundary", "reason": "source_target_sentence_boundary_mismatch"}
+        {"unit_id": "ua-gec:test:1", "reason": "target_sentence_not_exactly_aligned"}
     ]
+
+
+def test_complete_sentence_deletion_seeds_source_and_target_closure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checkout = _fixture_checkout(tmp_path)
+    annotated = checkout / "data/gec-only/train/annotated/0001.a1.ann"
+    source = checkout / "data/gec-only/train/source-sentences/0001.src.txt"
+    target = checkout / "data/gec-only/train/target-sentences/0001.a1.txt"
+    annotated.write_text("Перше. {Зайве. =>:::error_type=G/Case}Друге.", encoding="utf-8")
+    source.write_text("Перше.\nЗайве.\nДруге.\n", encoding="utf-8")
+    target.write_text("Перше.\nДруге.\n", encoding="utf-8")
+    monkeypatch.setattr(context, "EXPECTED_TAG_COUNTS", {"G/Case": 1})
+    monkeypatch.setattr(context, "EXPECTED_UNIT_COUNT", 1)
+    monkeypatch.setattr(context, "_checkout_commit", lambda _checkout: context.UA_GEC_COMMIT)
+    monkeypatch.setattr(
+        context,
+        "_load_v2_units",
+        lambda _source_universe, _database: [
+            {
+                "unit_id": "ua-gec:test:sentence-deletion",
+                "source_record": {
+                    "partition": "gec-only/train",
+                    "doc_id": "0001",
+                    "annotator_id": "1",
+                    "error_type": "G/Case",
+                    "error": "Зайве. ",
+                    "correct": "",
+                },
+            }
+        ],
+    )
+
+    records, accounting = context.reconstruct(
+        checkout=checkout,
+        database=tmp_path / "unused.db",
+        source_universe=tmp_path / "unused-universe",
+    )
+
+    assert accounting["eligible_v2_unit_count"] == 1
+    assert accounting["excluded_v2_unit_count_by_reason"] == {}
+    assert len(records) == 1
+    assert "Зайве." in records[0]["source"]["complete_text"]
+    assert "Зайве." not in records[0]["corrected"]["complete_text"]
 
 
 @pytest.mark.parametrize(
