@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ed0703a02774",
+  "strategy": "manual-commit",
+  "branch": "cursor/capacity-routing-permanent",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "docs/SCRIPTS.md",
+    "scripts/config/agent_fallback_substitutions.yaml",
+    "scripts/delegate.py",
+    "scripts/fleet/capacity_pick.py",
+    "tests/test_capacity_pick.py",
+    "tests/test_delegate_check_budget.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ed/0703a02774/0/metadata.json",
+      "transcript": "/ed/0703a02774/0/full.jsonl",
+      "compact_transcript": "/ed/0703a02774/0/transcript.jsonl",
+      "content_hash": "/ed/0703a02774/0/content_hash.txt",
+      "prompt": "/ed/0703a02774/0/prompt.txt"
+    }
+  ]
+}

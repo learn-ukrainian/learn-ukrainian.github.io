@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ed0703a02774",
+  "session_id": "fleet-aa01456d832e416faec7c67ccc1675d5",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T05:32:05.269709Z",
+  "branch": "cursor/capacity-routing-permanent",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "docs/SCRIPTS.md",
+    "scripts/config/agent_fallback_substitutions.yaml",
+    "scripts/delegate.py",
+    "scripts/fleet/capacity_pick.py",
+    "tests/test_capacity_pick.py",
+    "tests/test_delegate_check_budget.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "c02a2be71f30",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T05:32:05.259994Z",
+    "agent_lines": 810,
+    "agent_removed": 65,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 810,
+    "total_lines_changed": 875,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
