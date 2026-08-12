@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "60c4cc858f0b",
+  "session_id": "fleet-9eeda087312c40e3952b42e4dc890c55",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T05:18:39.079561Z",
+  "branch": "cursor/practice-coverage-wp0",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/practice/__init__.py",
+    "scripts/practice/coverage_report.py",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.A1.json",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.B2.json",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.C1.json",
+    "tests/fixtures/practice_coverage/teacher/lexicon-teacher-table-deck.json",
+    "tests/fixtures/practice_coverage/zno/practice-zno.paronym.json",
+    "tests/fixtures/practice_coverage/zno/practice-zno.stress.json",
+    "tests/test_practice_coverage_report.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "6901f6814da6",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T05:18:39.069667Z",
+    "agent_lines": 538,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 538,
+    "total_lines_changed": 538,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

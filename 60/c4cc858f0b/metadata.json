@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "60c4cc858f0b",
+  "strategy": "manual-commit",
+  "branch": "cursor/practice-coverage-wp0",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/practice/__init__.py",
+    "scripts/practice/coverage_report.py",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.A1.json",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.B2.json",
+    "tests/fixtures/practice_coverage/lexicon/practice-index.C1.json",
+    "tests/fixtures/practice_coverage/teacher/lexicon-teacher-table-deck.json",
+    "tests/fixtures/practice_coverage/zno/practice-zno.paronym.json",
+    "tests/fixtures/practice_coverage/zno/practice-zno.stress.json",
+    "tests/test_practice_coverage_report.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/60/c4cc858f0b/0/metadata.json",
+      "transcript": "/60/c4cc858f0b/0/full.jsonl",
+      "compact_transcript": "/60/c4cc858f0b/0/transcript.jsonl",
+      "content_hash": "/60/c4cc858f0b/0/content_hash.txt",
+      "prompt": "/60/c4cc858f0b/0/prompt.txt"
+    }
+  ]
+}
