@@ -236,10 +236,10 @@ def test_missing_pinned_annotation_fails_closed(tmp_path: Path, monkeypatch: pyt
 def test_checkout_commit_rejects_modified_tracked_bytes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     checkout = tmp_path / "ua-gec"
     checkout.mkdir()
-    subprocess.run(["git", "init", "-q", str(checkout)], check=True)
+    subprocess.run(["git", "init", "-q", str(checkout)], check=True, timeout=30)
     tracked = checkout / "tracked.txt"
     tracked.write_text("pinned\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(checkout), "add", "tracked.txt"], check=True)
+    subprocess.run(["git", "-C", str(checkout), "add", "tracked.txt"], check=True, timeout=30)
     subprocess.run(
         [
             "git",
@@ -254,12 +254,14 @@ def test_checkout_commit_rejects_modified_tracked_bytes(tmp_path: Path, monkeypa
             "fixture",
         ],
         check=True,
+        timeout=30,
     )
     commit = subprocess.run(
         ["git", "-C", str(checkout), "rev-parse", "HEAD"],
         check=True,
         capture_output=True,
         text=True,
+        timeout=30,
     ).stdout.strip()
     monkeypatch.setattr(context, "UA_GEC_COMMIT", commit)
 
