@@ -45,6 +45,13 @@ assignments:
     slots: []
   seminars:
     driver_agent_type: curriculum-orchestrator
+    # NAME vs RESOLUTION (r2 ruling, #5889): these lane-named slots resolve
+    # through the AREA's full epic union (see fleet_taxonomy.yaml → seminars:
+    # epics 2836 folk + 4431/4215 bio + 3120/3079 cross), NOT a single lane.
+    # So claude-folk and claude-bio both match ANY active seminars lease — a
+    # delivery to claude-folk is pickable by a bio-track driver. The lane
+    # suffix is an addressing hint only; do not narrow it without an
+    # operator/advisor GO.
     slots:
       - claude-folk
       - codex-folk

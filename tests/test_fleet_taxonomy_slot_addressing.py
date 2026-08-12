@@ -335,7 +335,12 @@ def test_resolve_slot_holder_alias_slot(session_db_fixture: Path) -> None:
 
 
 def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.CaptureFixture[str]) -> None:
-    """Verify post to a valid slot with no live holder prints a stderr warning while still queuing delivery."""
+    """Verify post to a valid slot with no live holder prints a stderr warning while still queuing delivery.
+
+    Also asserts the bounce warning is surfaced in the post() return dict
+    (#5889 item 1) — not only on stderr — so callers can react without
+    scraping stderr.
+    """
     with contextlib.suppress(Exception):
         _channels.init_db()
 
@@ -347,4 +352,154 @@ def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.Captur
 
     assert "⚠️ channel-bridge: recipient slot 'grok-infra' has no live holder" in captured.err
     assert "channels DB delivery queue for 'grok-infra'" in captured.err
+    assert len(result["delivery_ids"]) == 1
+    # #5889 item 1: bounce warning also reachable via the return dict.
+    assert "warnings" in result
+    assert isinstance(result["warnings"], list)
+    assert any("recipient slot 'grok-infra' has no live holder" in w for w in result["warnings"])
+
+
+# ---------------------------------------------------------------------------
+# 4b. Bounce/resolver warnings in post() return dict (#5889)
+# ---------------------------------------------------------------------------
+
+
+def test_post_bounce_warning_in_return_dict_hermetic(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """No-live-holder bounce warning appears in post() return dict (#5889 item 1).
+
+    Hermetic (step-3 r2 pattern): ``resolve_slot_holder`` is stubbed to a
+    deterministic no-holder result, so this does not depend on real
+    session-streams state.
+
+    MUTATION-CHECK (revert→fail): if the ``warnings`` key is removed from
+    post()'s return dict, the ``in result`` and content assertions fail —
+    the warning would only reach stderr and be unreachable to callers.
+    """
+    from scripts.orchestration import slot_routing
+    from scripts.orchestration.slot_routing import SlotHolderResult
+
+    def _no_holder(slot: str, **kwargs: object) -> SlotHolderResult:
+        return SlotHolderResult(
+            has_holder=False,
+            slot=slot,
+            area_id="infra",
+            queue_location=f"channels DB delivery queue for '{slot}'",
+            reason="no-live-holder",
+        )
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _no_holder)
+
+    with contextlib.suppress(Exception):
+        _channels.init_db()
+    with contextlib.suppress(ValueError):
+        _channels.create_channel("test-bounce-ret", description="test channel")
+
+    result = _channels.post(
+        "test-bounce-ret",
+        "user",
+        "Hello bounce",
+        to_agents=["grok-infra"],
+        auto_snapshot=False,
+    )
+
+    # Item 1: warnings present in the return dict as list[str] (not just stderr).
+    assert "warnings" in result
+    assert isinstance(result["warnings"], list)
+    assert len(result["warnings"]) == 1
+    assert "recipient slot 'grok-infra' has no live holder" in result["warnings"][0]
+    assert "channels DB delivery queue for 'grok-infra'" in result["warnings"][0]
+    # Delivery still queued at the slot identity.
+    assert len(result["delivery_ids"]) == 1
+
+
+def test_post_resolver_failure_surfaces_warning_not_silent(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Resolver/import failure surfaces a warning instead of silent-dropping (#5889 item 2).
+
+    Hermetic: ``resolve_slot_holder`` is stubbed to raise, exercising the
+    exception path directly without depending on real infrastructure.
+
+    MUTATION-CHECK (revert→fail): if the bare ``except Exception: return
+    agent`` swallow is restored, ``result['warnings']`` stays empty (the
+    failure is silent-dropped) and every warning assertion below fails.
+    """
+    from scripts.orchestration import slot_routing
+
+    def _boom(slot: str, **kwargs: object) -> None:
+        raise RuntimeError("simulated resolver/import failure")
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _boom)
+
+    with contextlib.suppress(Exception):
+        _channels.init_db()
+    with contextlib.suppress(ValueError):
+        _channels.create_channel("test-resolver-fail", description="test channel")
+
+    result = _channels.post(
+        "test-resolver-fail",
+        "user",
+        "Hello resolver-fail",
+        to_agents=["grok-infra"],
+        auto_snapshot=False,
+    )
+
+    # Item 2: resolver failure surfaced as a warning in the return dict...
+    assert "warnings" in result
+    assert any("slot resolver failed for 'grok-infra'" in w for w in result["warnings"])
+    assert any("RuntimeError" in w for w in result["warnings"])
+    assert any("simulated resolver/import failure" in w for w in result["warnings"])
+    # ...and on stderr (visible handling, not silent).
+    captured = capsys.readouterr()
+    assert "slot resolver failed for 'grok-infra'" in captured.err
+    # Delivery still queued at the slot identity (fail-open on delivery).
+    assert len(result["delivery_ids"]) == 1
+
+
+def test_post_no_warnings_key_is_empty_list_when_all_held(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """post() return dict always carries a warnings key (empty when nothing bounces).
+
+    MUTATION-CHECK (revert→fail): if the ``warnings`` key is dropped from the
+    return dict, ``result['warnings']`` raises KeyError / ``in`` is False.
+    """
+    from scripts.orchestration import slot_routing
+    from scripts.orchestration.slot_routing import SlotHolderResult
+
+    def _held(slot: str, **kwargs: object) -> SlotHolderResult:
+        return SlotHolderResult(
+            has_holder=True,
+            slot=slot,
+            area_id="infra",
+            stream_id="epic:4707",
+            session_id="sess-1",
+            holder_agent="grok-infra",
+            holder_harness="grok",
+            generation=1,
+            expires_at=(datetime.now(UTC) + timedelta(hours=1)).isoformat(),
+            queue_location=f"channels DB delivery queue for '{slot}'",
+        )
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _held)
+
+    with contextlib.suppress(Exception):
+        _channels.init_db()
+    with contextlib.suppress(ValueError):
+        _channels.create_channel("test-held", description="test channel")
+
+    # Recipient resolves to a live holder; from_agent 'user' never resolves.
+    result = _channels.post(
+        "test-held",
+        "user",
+        "Hello held",
+        to_agents=["grok-infra"],
+        auto_snapshot=False,
+    )
+
+    assert "warnings" in result
+    assert result["warnings"] == []
     assert len(result["delivery_ids"]) == 1
