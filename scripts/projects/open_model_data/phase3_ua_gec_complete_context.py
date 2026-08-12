@@ -949,7 +949,9 @@ def materialize(
     _atomic_write(private_output, payload, PRIVATE_FILE_MODE)
     _atomic_write(private_exclusions_output, exclusion_payload, PRIVATE_FILE_MODE)
     _atomic_write(
-        public_receipt, json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n", 0o644
+        public_receipt,
+        json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n",
+        PRIVATE_FILE_MODE,
     )
     return receipt
 

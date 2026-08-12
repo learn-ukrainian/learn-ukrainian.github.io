@@ -306,3 +306,10 @@ def test_private_output_uses_restricted_permissions(tmp_path: Path) -> None:
 
     assert stat.S_IMODE(output.parent.stat().st_mode) == 0o700
     assert stat.S_IMODE(output.stat().st_mode) == 0o600
+
+
+def test_receipt_output_is_not_world_readable(tmp_path: Path) -> None:
+    receipt = tmp_path / "receipt.json"
+    context._atomic_write(receipt, b"{}\n", context.PRIVATE_FILE_MODE)
+
+    assert stat.S_IMODE(receipt.stat().st_mode) == 0o600
