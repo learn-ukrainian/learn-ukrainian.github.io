@@ -102,10 +102,18 @@ export function splitStem(stem: string): { instruction: string; passage: string 
 /** Render plain text with optional char-range highlights (official booklet marks). */
 export function renderMarkedText(text: string, marks: readonly ZnoCharMark[] | undefined): ReactNode {
   if (!marks?.length) return text;
-  const sorted = [...marks].sort((left, right) => left.start - right.start);
+  const sorted = [...marks]
+    .map((mark) => ({
+      ...mark,
+      start: Math.max(0, Math.min(mark.start, text.length)),
+      end: Math.max(0, Math.min(mark.end, text.length)),
+    }))
+    .filter((mark) => mark.end > mark.start)
+    .sort((left, right) => left.start - right.start);
   const parts: ReactNode[] = [];
   let cursor = 0;
   sorted.forEach((mark, index) => {
+    if (mark.start < cursor) return;
     if (mark.start > cursor) parts.push(text.slice(cursor, mark.start));
     const marked = text.slice(mark.start, mark.end);
     if (mark.style === 'bold') {
@@ -242,6 +250,7 @@ export default function ZnoPractice({
                       type="button"
                       disabled={rated}
                       onClick={() => answer(index)}
+                      aria-label={`${'АБВГД'[index]} ${option}`}
                       {...znoOptionAttrs(index, currentItem.correctIndex, selectedIndex, rated)}
                     >
                       <span className="zno-practice-option-key">{'АБВГД'[index]}</span>{' '}
