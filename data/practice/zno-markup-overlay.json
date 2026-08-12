@@ -1,29 +1,611 @@
 {
   "schema": "zno-markup-overlay",
   "schemaVersion": 1,
-  "sourceNote": "Letter marks recovered from УЦОЯО booklet wording + osvita.ua explanations (NMT 2024 sesiya-2 №1). Expand per batch_state/practice/zno-markup-integrity-audit.json.",
+  "sourceNote": "Letter marks from УЦОЯО booklet explanations + zno.osvita.ua HTML <u> tags. zno:457 NMT2024; zno:145/203/261/319/578/757 Підкреслені літери series.",
   "items": {
     "zno:457": {
       "optionMarks": [
         [
-          {"start": 2, "end": 3, "style": "underline"},
-          {"start": 11, "end": 12, "style": "underline"},
-          {"start": 17, "end": 18, "style": "underline"}
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 11,
+            "end": 12,
+            "style": "underline"
+          },
+          {
+            "start": 17,
+            "end": 18,
+            "style": "underline"
+          }
         ],
         [
-          {"start": 4, "end": 5, "style": "underline"},
-          {"start": 9, "end": 10, "style": "underline"},
-          {"start": 16, "end": 17, "style": "underline"}
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 9,
+            "end": 10,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
         ],
         [
-          {"start": 2, "end": 3, "style": "underline"},
-          {"start": 9, "end": 10, "style": "underline"},
-          {"start": 16, "end": 17, "style": "underline"}
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 9,
+            "end": 10,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
         ],
         [
-          {"start": 3, "end": 4, "style": "underline"},
-          {"start": 8, "end": 9, "style": "underline"},
-          {"start": 17, "end": 18, "style": "underline"}
+          {
+            "start": 3,
+            "end": 4,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 17,
+            "end": 18,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:757": {
+      "optionMarks": [
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 7,
+            "end": 8,
+            "style": "underline"
+          },
+          {
+            "start": 17,
+            "end": 18,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 12,
+            "end": 13,
+            "style": "underline"
+          },
+          {
+            "start": 19,
+            "end": 20,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 7,
+            "end": 8,
+            "style": "underline"
+          },
+          {
+            "start": 13,
+            "end": 14,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 12,
+            "end": 13,
+            "style": "underline"
+          },
+          {
+            "start": 21,
+            "end": 22,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 9,
+            "end": 10,
+            "style": "underline"
+          },
+          {
+            "start": 17,
+            "end": 18,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:578": {
+      "optionMarks": [
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 14,
+            "end": 15,
+            "style": "underline"
+          },
+          {
+            "start": 20,
+            "end": 21,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 13,
+            "end": 14,
+            "style": "underline"
+          },
+          {
+            "start": 23,
+            "end": 24,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 19,
+            "end": 20,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 24,
+            "end": 25,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:261": {
+      "optionMarks": [
+        [
+          {
+            "start": 5,
+            "end": 6,
+            "style": "underline"
+          },
+          {
+            "start": 11,
+            "end": 12,
+            "style": "underline"
+          },
+          {
+            "start": 20,
+            "end": 21,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 12,
+            "end": 13,
+            "style": "underline"
+          },
+          {
+            "start": 21,
+            "end": 22,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 23,
+            "end": 24,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 12,
+            "end": 13,
+            "style": "underline"
+          },
+          {
+            "start": 22,
+            "end": 23,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:319": {
+      "optionMarks": [
+        [
+          {
+            "start": 3,
+            "end": 4,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 19,
+            "end": 20,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 4,
+            "end": 5,
+            "style": "underline"
+          },
+          {
+            "start": 14,
+            "end": 15,
+            "style": "underline"
+          },
+          {
+            "start": 22,
+            "end": 23,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 5,
+            "end": 6,
+            "style": "underline"
+          },
+          {
+            "start": 12,
+            "end": 13,
+            "style": "underline"
+          },
+          {
+            "start": 19,
+            "end": 20,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 13,
+            "end": 14,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 21,
+            "end": 22,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:145": {
+      "optionMarks": [
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 9,
+            "end": 10,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 11,
+            "end": 12,
+            "style": "underline"
+          },
+          {
+            "start": 17,
+            "end": 18,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 20,
+            "end": 21,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 6,
+            "end": 7,
+            "style": "underline"
+          },
+          {
+            "start": 11,
+            "end": 12,
+            "style": "underline"
+          },
+          {
+            "start": 16,
+            "end": 17,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 24,
+            "end": 25,
+            "style": "underline"
+          }
+        ]
+      ]
+    },
+    "zno:203": {
+      "optionMarks": [
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 15,
+            "end": 16,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 0,
+            "end": 1,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 18,
+            "end": 19,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "style": "underline"
+          },
+          {
+            "start": 19,
+            "end": 20,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 15,
+            "end": 16,
+            "style": "underline"
+          }
+        ],
+        [
+          {
+            "start": 2,
+            "end": 3,
+            "style": "underline"
+          },
+          {
+            "start": 8,
+            "end": 9,
+            "style": "underline"
+          },
+          {
+            "start": 14,
+            "end": 15,
+            "style": "underline"
+          }
         ]
       ]
     }
