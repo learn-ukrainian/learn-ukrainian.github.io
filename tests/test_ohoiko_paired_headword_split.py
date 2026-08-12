@@ -41,7 +41,7 @@ def test_multiword_legs_detected() -> None:
     assert all(classify_split_leg(leg) == "multiword_after_split" for leg in legs)
 
 
-def test_english_contaminated_second_leg_is_multiword() -> None:
+def test_english_contaminated_second_leg_is_multiword(requires_vesum_db) -> None:
     legs = split_paired_headword("убивати, to kill (imperfective, perfective)")
     assert legs[0] == "убивати"
     assert classify_split_leg(legs[0]) != "multiword_after_split"
