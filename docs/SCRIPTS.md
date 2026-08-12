@@ -679,6 +679,12 @@ work uses AGY; the legacy Gemini CLI route is unsupported.
 
 Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ai_agent_bridge` channel bridge, `ask-*`).
 
+**Brief unit (required — #5737):** `--prompt-file` must name **one shippable unit** and its
+**acceptance criteria**, not an open-ended objective. Workers (especially **agy /
+gemini-flash**) must not self-decompose into serial micro-PRs — the orchestrator owns
+sequencing. Canonical wording: `agents_extensions/shared/rules/workflow.md` § Dispatch brief
+unit; routing: `model-assignment.md` § agy/gemini-flash worker briefs.
+
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 #### Project Research Registry — orchestrator dispatch duty
