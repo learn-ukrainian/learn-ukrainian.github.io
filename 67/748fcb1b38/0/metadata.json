@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "67748fcb1b38",
+  "session_id": "fleet-801d116b39b94469ada42739f14788ad",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T08:18:33.255992Z",
+  "branch": "fix-6611",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "0cecb9beac2b",
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T08:18:33.247218Z",
+    "agent_lines": 212,
+    "agent_removed": 230,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 212,
+    "total_lines_changed": 442,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}

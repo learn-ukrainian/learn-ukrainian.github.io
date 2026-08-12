@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "67748fcb1b38",
+  "strategy": "manual-commit",
+  "branch": "fix-6611",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/tests/unit/ActivityKit.contract.test.tsx",
+    "site/tests/unit/atlas-static-catalog.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/67/748fcb1b38/0/metadata.json",
+      "transcript": "/67/748fcb1b38/0/full.jsonl",
+      "compact_transcript": "/67/748fcb1b38/0/transcript.jsonl",
+      "content_hash": "/67/748fcb1b38/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
