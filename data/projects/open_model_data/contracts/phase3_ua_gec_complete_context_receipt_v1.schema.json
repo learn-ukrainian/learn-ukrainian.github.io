@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_ua_gec_complete_context_receipt_v1.schema.json",
+  "title": "Phase 3 UA-GEC complete-context materialization receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "text_free",
+    "provider_calls",
+    "started_at",
+    "completed_at",
+    "bindings",
+    "denominator",
+    "complete_context",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_ua_gec_complete_context_receipt_v1"},
+    "implementation_version": {"const": "phase3_ua_gec_complete_context_v1"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "implementation_sha256",
+        "receipt_schema_sha256",
+        "representation_implementation_sha256",
+        "representation_schema_sha256",
+        "v2_source_universe_receipt_sha256",
+        "v2_ua_gec_ledger_sha256",
+        "sources_database_sha256",
+        "ua_gec_repository",
+        "ua_gec_commit",
+        "ua_gec_license"
+      ],
+      "properties": {
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "representation_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "representation_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "v2_source_universe_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "v2_ua_gec_ledger_sha256": {"$ref": "#/$defs/sha256"},
+        "sources_database_sha256": {"$ref": "#/$defs/sha256"},
+        "ua_gec_repository": {"const": "https://github.com/grammarly/ua-gec"},
+        "ua_gec_commit": {"const": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6"},
+        "ua_gec_license": {"const": "CC BY 4.0"}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2_ua_gec_unit_count", "v2_tag_counts", "all_v2_units_mapped"],
+      "properties": {
+        "v2_ua_gec_unit_count": {"const": 8937},
+        "v2_tag_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["F/Calque", "F/Collocation", "G/Case", "G/Gender"],
+          "properties": {
+            "F/Calque": {"const": 2397},
+            "F/Collocation": {"const": 459},
+            "G/Case": {"const": 5024},
+            "G/Gender": {"const": 1057}
+          }
+        },
+        "all_v2_units_mapped": {"const": true}
+      }
+    },
+    "complete_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "annotated_document_count",
+        "source_document_count_with_eligible_context",
+        "target_document_count_with_eligible_context",
+        "eligible_context_record_count",
+        "eligible_v2_unit_count",
+        "excluded_context_candidate_count_by_reason",
+        "excluded_v2_unit_count_by_reason",
+        "all_eligible_records_validate",
+        "private_jsonl_sha256",
+        "private_jsonl_bytes",
+        "private_exclusions_jsonl_sha256",
+        "private_exclusions_jsonl_bytes",
+        "private_exclusions_jsonl_rows"
+      ],
+      "properties": {
+        "annotated_document_count": {"const": 4162},
+        "source_document_count_with_eligible_context": {"type": "integer", "minimum": 0, "maximum": 4162},
+        "target_document_count_with_eligible_context": {"type": "integer", "minimum": 0, "maximum": 4162},
+        "eligible_context_record_count": {"type": "integer", "minimum": 1},
+        "eligible_v2_unit_count": {"type": "integer", "minimum": 1, "maximum": 8937},
+        "excluded_context_candidate_count_by_reason": {"$ref": "#/$defs/exclusionCounts"},
+        "excluded_v2_unit_count_by_reason": {"$ref": "#/$defs/exclusionCounts"},
+        "all_eligible_records_validate": {"const": true},
+        "private_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "private_jsonl_bytes": {"type": "integer", "minimum": 1},
+        "private_exclusions_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "private_exclusions_jsonl_bytes": {"type": "integer", "minimum": 1},
+        "private_exclusions_jsonl_rows": {"type": "integer", "minimum": 1, "maximum": 8937}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete_context_materialization_ready",
+        "semantic_labels_present",
+        "cycle002_labels_diagnostic_only",
+        "source_authoring_blocked",
+        "evaluation_partition_frozen",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "complete_context_materialization_ready": {"const": true},
+        "semantic_labels_present": {"const": false},
+        "cycle002_labels_diagnostic_only": {"const": true},
+        "source_authoring_blocked": {"const": true},
+        "evaluation_partition_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "exclusionCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target_sentence_not_exactly_aligned": {"type": "integer", "minimum": 1},
+        "source_target_sentence_boundary_mismatch": {"type": "integer", "minimum": 1},
+        "corrected_context_not_exactly_retrievable": {"type": "integer", "minimum": 1},
+        "no_larger_construction_context": {"type": "integer", "minimum": 1},
+        "no_effective_correction": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}
