@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "75a1e36102f9",
+  "session_id": "ses_00b9408b0ffemFQUtxkdSnbyRL",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-12T05:32:42.025049Z",
+  "branch": "glm/5889-slot-addressing-v2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels.py",
+    "scripts/orchestration/slot_routing.py",
+    "scripts/config/area_assignments.yaml",
+    "tests/test_fleet_taxonomy_slot_addressing.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "45182932e90c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 93891,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2715136,
+    "output_tokens": 8794,
+    "api_call_count": 38
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-12T05:32:41.993958Z",
+    "agent_lines": 242,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 242,
+    "total_lines_changed": 247,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

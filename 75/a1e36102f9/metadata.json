@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "75a1e36102f9",
+  "strategy": "manual-commit",
+  "branch": "glm/5889-slot-addressing-v2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_channels.py",
+    "scripts/config/area_assignments.yaml",
+    "scripts/orchestration/slot_routing.py",
+    "tests/test_fleet_taxonomy_slot_addressing.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/75/a1e36102f9/0/metadata.json",
+      "transcript": "/75/a1e36102f9/0/full.jsonl",
+      "compact_transcript": "/75/a1e36102f9/0/transcript.jsonl",
+      "content_hash": "/75/a1e36102f9/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 93891,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2715136,
+    "output_tokens": 8794,
+    "api_call_count": 38
+  }
+}
