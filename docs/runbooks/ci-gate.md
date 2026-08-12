@@ -95,3 +95,24 @@ exit_condition: measurable condition, expiry date, or tracking issue
 Every entry needs all three fields. The `exit_condition` must provide a
 concrete removal path, not an open-ended intention. For incident context, see
 the CI-gate autopsy at `docs/bug-autopsies/2026-07-25-invisible-ci-gate.md`.
+
+## Secret Scanning & TruffleHog Lob detector (#6575)
+
+Secret scanning in CI runs via `trufflesecurity/trufflehog` in the `contracts` job with `--exclude-detectors=Lob`.
+
+### Lob detector false-positive repro recipe
+
+TruffleHog's built-in `Lob` detector attempts online verification on patterns matching well-shaped `test_<string>` identifiers (e.g., long pytest function names like `test_check_budget_hard_sub_on_hot_status`). When the external API verification endpoint returns a false positive, TruffleHog flags them as verified secret leaks.
+
+Local reproduction:
+```bash
+trufflehog git file://$PWD --results=verified,unknown --exclude-paths=.trufflehogignore
+```
+
+To exclude `Lob` detector false-positives locally or in CI:
+```bash
+trufflehog git file://$PWD --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+```
+
+Because the repository does not use Lob credentials, excluding the `Lob` detector in `.github/workflows/ci.yml` via `--exclude-detectors=Lob` permanently eliminates these false-positives.
+
