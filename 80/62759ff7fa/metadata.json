@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8062759ff7fa",
+  "strategy": "manual-commit",
+  "branch": "agy/6714-wiktionary-full-scan",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/antonym_pairs.yaml",
+    "tests/test_generate_practice_deck.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/80/62759ff7fa/0/metadata.json",
+      "transcript": "/80/62759ff7fa/0/full.jsonl",
+      "compact_transcript": "/80/62759ff7fa/0/transcript.jsonl",
+      "content_hash": "/80/62759ff7fa/0/content_hash.txt",
+      "prompt": "/80/62759ff7fa/0/prompt.txt"
+    }
+  ]
+}
