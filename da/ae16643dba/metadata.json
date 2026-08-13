@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "daae16643dba",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-evaluation-context-manifest-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_open_model_phase3_evaluation_context_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/da/ae16643dba/0/metadata.json",
+      "transcript": "/da/ae16643dba/0/full.jsonl",
+      "compact_transcript": "/da/ae16643dba/0/transcript.jsonl",
+      "content_hash": "/da/ae16643dba/0/content_hash.txt",
+      "prompt": "/da/ae16643dba/0/prompt.txt"
+    }
+  ]
+}

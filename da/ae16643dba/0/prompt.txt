@@ -1,0 +1,19 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-evaluation-context-manifest-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Own only tests/test_open_model_phase3_evaluation_context_manifest.py and any required receipt hash rebind if implementation changes, on existing PR #6758 branch. Do not alter configs or suppress CodeQL.
+
+At exact head 3e618a41baa716f926e69a25b85e4b5f3254c19d, GitHub CodeQL aggregate check 94620344436 reports high-severity overly permissive chmod at test line 369 because test_text_free_receipt_rejects_world_readable_permissions itself calls chmod 0644.
+
+Fix the test so it proves the same mode-rejection behavior without ever setting real group/other-readable permissions and without a chmod/open mode literal that CodeQL flags. Recommended: keep the real fixture owner-only and monkeypatch the lstat/stat metadata for only the target path to report group/other bits, preserving regular-file mode, then assert the production validator rejects it. Make the mutation proof direct and deterministic. Production must remain owner-only 0600 and directories 0700.
+
+Do not weaken the assertion, remove the security test, modify CodeQL/linter config, or add a suppression. Run focused strict-marker tests, Ruff check/format-check, diff-check, v2 compatibility + prefreeze, and full Phase 3 suite. Commit/push with X-Agent: cursor/phase3-6375-eval-context-codeql-test-fix. Do not merge. Report exact head and proof.
