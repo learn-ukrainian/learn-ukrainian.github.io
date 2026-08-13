@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d7d1aa874f60",
+  "strategy": "manual-commit",
+  "branch": "cursor/6013-path-guard-2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/codex_rollout_reconcile.py",
+    "scripts/hygiene/inventory_home_sessions.py",
+    "scripts/hygiene/lint_raw_rm_rf.py",
+    "scripts/hygiene/retention_engine.py",
+    "scripts/orchestration/tmp_leak_sweep.py",
+    "tests/test_inventory_home_sessions.py",
+    "tests/test_path_safety.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d7/d1aa874f60/0/metadata.json",
+      "transcript": "/d7/d1aa874f60/0/full.jsonl",
+      "compact_transcript": "/d7/d1aa874f60/0/transcript.jsonl",
+      "content_hash": "/d7/d1aa874f60/0/content_hash.txt",
+      "prompt": "/d7/d1aa874f60/0/prompt.txt"
+    }
+  ]
+}

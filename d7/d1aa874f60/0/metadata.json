@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d7d1aa874f60",
+  "session_id": "fleet-9fc73ef9d7f94365a3621c76e7a8ce43",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T11:12:16.055273Z",
+  "branch": "cursor/6013-path-guard-2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/codex_rollout_reconcile.py",
+    "scripts/hygiene/inventory_home_sessions.py",
+    "scripts/hygiene/lint_raw_rm_rf.py",
+    "scripts/hygiene/retention_engine.py",
+    "scripts/orchestration/tmp_leak_sweep.py",
+    "tests/test_inventory_home_sessions.py",
+    "tests/test_path_safety.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "7ca59153c62e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T11:12:16.045221Z",
+    "agent_lines": 260,
+    "agent_removed": 10,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 260,
+    "total_lines_changed": 270,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6013-path-guard-2
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6013 residual — path_guard remaining deleters (finish; previous GLM timed out)
+
+## CAPACITY_CARD
+pick=cursor status=cool remaining=75% why=held last wave; GLM 6013 hard_timeout 7200s with no PR
+## ROUTING_CARD_V1
+task_id: 6013-path-guard-2
+tier: practical
+model_x_harness: cursor/auto
+why_this_tier: bounded hygiene; Cursor unused this implement wave
+owned_paths: scripts/path_safety.py scripts/hygiene/ scripts/fleet/post_task_reap.py tests/test_path_safety.py
+acceptance_cmd: .venv/bin/pytest tests/test_path_safety.py tests/test_fleet_post_task_reap.py -q --tb=short
+
+## Prior attempt
+`glm/6013-path-guard` hit hard_timeout=7200s. Uncommitted incomplete edit to `scripts/hygiene/inventory_home_sessions.py` (sys.path hack + unused `repo_root` param). **Start from current origin/main. Do not reuse that dirty tree. Do not keep the sys.path hack.**
+
+## Scope (narrow)
+Issue #6013 residual item 2 only: path_guard for script deleters + lint raw `rm -rf`.
+
+Already shipped: PR #6564 `assert_delete_target` on destructive worktree removal + RECOVERY.md. PR #6095 backup.
+
+**Out of scope:** APFS snapshots, nightly backup rotation, launchd inventory. Do not close #6013.
+
+## Do
+1. Find remaining Python deleters under `scripts/` that call `shutil.rmtree` / `Path.unlink` / `os.remove` on worktrees, home sessions, or repo-adjacent paths **without** `assert_delete_target` (`scripts/path_safety.py`).
+2. Route those through `assert_delete_target` (same contract as `post_task_reap.py`).
+3. Tests: path outside allowed delete roots is refused.
+4. Optional PR note for already-scoped shell `rm -rf` (lockdirs/caches). Do not rewrite `services.sh` lock cleanup.
+5. Conventional commit `fix(hygiene): path-guard remaining script deleters (#6013)` trailer `X-Agent: cursor/6013-path-guard-2`. Push PR linking #6013. **Do not merge. Do not close #6013.**
