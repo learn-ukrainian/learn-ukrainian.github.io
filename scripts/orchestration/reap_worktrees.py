@@ -283,6 +283,54 @@ def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
     return prs[0] if prs else None
 
 
+def _query_prs_by_head_sha(
+    repo_root: Path,
+    head_sha: str | None,
+) -> list[PullRequestState]:
+    """Find PRs that introduced ``head_sha`` by GitHub commit-SHA search.
+
+    Follow-up CI branches carry a different branch name than the MERGED PR head
+    they fix, so ``gh pr list --head <branch>`` misses them.  A search hit means
+    ``head_sha`` is a commit added by that PR, i.e. it equals the PR head or is
+    an ancestor of it.  Failures are swallowed: this lookup is supplementary to
+    the authoritative ``gh pr list --head`` guard and must never fabricate a
+    PR-guard error on its own.
+    """
+    if not head_sha:
+        return []
+    try:
+        proc = _run(
+            ["gh", "search", "prs", head_sha, "--json", "number,state"],
+            cwd=repo_root,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.SubprocessError):
+        return []
+    if proc.returncode != 0:
+        return []
+    try:
+        raw_items = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError:
+        return []
+
+    states: list[PullRequestState] = []
+    for item in raw_items:
+        if not isinstance(item, dict):
+            continue
+        state = str(item.get("state") or "").upper()
+        if not state:
+            continue
+        number = item.get("number")
+        states.append(
+            PullRequestState(
+                number=number if isinstance(number, int) else None,
+                state=state,
+                head_sha=head_sha,
+            )
+        )
+    return states
+
+
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
     if pr_state is None:
         return None
@@ -1096,18 +1144,27 @@ def reap_worktrees(
             candidates = _candidate_branches_for_worktree(repo_root, info)
             pr_state = None
             pr_error = None
+            all_pr_states: list[PullRequestState] = []
+            errors: list[str] = []
             if candidates:
-                all_pr_states: list[PullRequestState] = []
-                errors: list[str] = []
                 for cand_branch in candidates:
                     st, err = _query_pr_states(repo_root, cand_branch)
                     if err:
                         errors.append(err)
                     all_pr_states.extend(st)
-                if errors and not all_pr_states:
-                    pr_error = "; ".join(errors)
-                else:
-                    pr_state = _best_pr(all_pr_states)
+
+            # Follow-up CI branches carry a different branch name than the PR
+            # head they fix.  Find the MERGED PR that introduced the worktree
+            # HEAD by SHA, but only when that commit is not already on
+            # origin/main — otherwise a fresh branch sitting on a merged main
+            # tip would be mistaken for a squash-merged follow-up commit.
+            if info.head and not _is_ancestor_of_origin_main(info.path):
+                all_pr_states.extend(_query_prs_by_head_sha(repo_root, info.head))
+
+            if errors and not all_pr_states:
+                pr_error = "; ".join(errors)
+            else:
+                pr_state = _best_pr(all_pr_states)
 
             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:
                 results.append(
