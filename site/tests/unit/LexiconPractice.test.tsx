@@ -33,7 +33,8 @@ import {
   type PracticeRating,
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
-import { LEARNER_LEVEL_STORAGE_KEY, prioritizeByLearnerLevel, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
+import { pickDailyForLevel } from '@site/src/lib/lexicon/daily-card';
 import {
   CUSTOM_SETS_STORAGE_KEY,
   filterTeacherClozeItems,
@@ -41,7 +42,7 @@ import {
   getTeacherLessonVirtualDeck,
   type CustomSet,
 } from '@site/src/lib/lexicon/custom-decks';
-import { dateSeed, pickDaily, type DailyWord } from '@site/src/lib/lexicon/daily';
+import { dateSeed, type DailyWord } from '@site/src/lib/lexicon/daily';
 import { selectHeritagePracticePresentation } from '@site/src/lib/lexicon/practice-activity-adapters';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
@@ -1407,9 +1408,9 @@ describe('LexiconPractice', () => {
       });
 
       const dayOnePool = dailyPoolFixture({ A1: 24 });
-      const eligiblePool = prioritizeByLearnerLevel(dayOnePool, 'A1');
-      const expectedDayTwoDefaultIds = pickDaily(
-        eligiblePool,
+      const expectedDayTwoDefaultIds = pickDailyForLevel(
+        dayOnePool,
+        'A1',
         dateSeed(new Date(2026, 5, 24)),
         DAILY_PRACTICE_DECK_SIZE,
       )
@@ -1876,6 +1877,37 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(true);
+  });
+
+  test('#6727: level tabs filter the daily zone to the selected CEFR (B2 is only B2)', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B2');
+    // Mirror post-#6749 pool shape: plenty of A1–C1, including a B2 band large enough for 12.
+    const { fn } = mockShardFetch({ A1: 24, A2: 24, B1: 24, B2: 40, C1: 24 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice />);
+
+    await screen.findByTestId('practice-daily-deck');
+    const summary = screen.getByTestId('practice-daily-summary');
+    if (summary.getAttribute('aria-expanded') !== 'true') {
+      await user.click(summary);
+    }
+
+    const featuredIds = Array.from(document.querySelectorAll('.daily-deck-row'))
+      .map((row) => row.querySelector('[data-testid^="practice-daily-why-"]')?.getAttribute('data-testid'))
+      .filter((id): id is string => Boolean(id))
+      .map((id) => id.replace('practice-daily-why-', ''));
+
+    expect(featuredIds).toHaveLength(DAILY_PRACTICE_DECK_SIZE);
+    expect(featuredIds.every((id) => id.startsWith('B2-'))).toBe(true);
+
+    const expected = pickDailyForLevel(
+      dailyPoolFixture({ A1: 24, A2: 24, B1: 24, B2: 40, C1: 24 }),
+      'B2',
+      dateSeed(new Date()),
+      DAILY_PRACTICE_DECK_SIZE,
+    ).map((word) => word.slug);
+    expect(featuredIds.sort()).toEqual([...expected].sort());
   });
 
   test('flashcard rating persists mode-specific SRS progress', async () => {

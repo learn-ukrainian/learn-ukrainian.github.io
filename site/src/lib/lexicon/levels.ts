@@ -127,14 +127,23 @@ export function prioritizeByLearnerLevel<T extends DailyLevelRow>(
 }
 
 /**
- * Backward-compatible name for callers outside practice. Practice itself uses
- * `prioritizeByLearnerLevel`; this function no longer applies a hard cap.
+ * Narrow daily-pool rows to the exact selected CEFR (#6727).
+ *
+ * WotD level tabs and the practice Words-of-the-Day zone must *filter*, not
+ * re-rank: selecting B2 shows only B2 rows from the pool. Soft CEFR preference
+ * (`prioritizeByLearnerLevel`) still applies to practice *session* scheduling;
+ * this helper is the hard tab/status filter. Unknown CEFR rows are excluded.
+ * Invalid selections normalize to A1 via `normalizeCefrLevel`.
+ *
+ * Historical name: once meant ≤ selected level; WotD status copy (`B2 · N слів`)
+ * requires exact match so the count is not a lie.
  */
 export function filterByCumulativeLevel<T extends DailyLevelRow>(
   rows: readonly T[],
   selectedLevel: unknown,
 ): T[] {
-  return prioritizeByLearnerLevel(rows, selectedLevel);
+  const level = normalizeCefrLevel(selectedLevel);
+  return rows.filter((row) => parseCefrLevel(row.cefr) === level);
 }
 
 export function filterRowsByLevel<T extends { c?: string }>(

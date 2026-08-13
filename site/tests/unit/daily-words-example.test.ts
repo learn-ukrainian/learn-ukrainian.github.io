@@ -9,6 +9,7 @@ import {
   bindDailyCardInteractions,
   dailyCardAtlasHref,
   isDailyCardAtlasLinkTarget,
+  pickDailyForLevel,
   renderDailyCardHtml,
   toggleDailyCardFlip,
 } from "@site/src/lib/lexicon/daily-card";
@@ -141,5 +142,11 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(dailyWordsSource).toContain('from "../lib/lexicon/daily-card"');
     expect(dailyWordsSource).toContain("bindDailyCardInteractions");
     expect(dailyWordsSource).toContain("renderDailyCardHtml");
+  });
+
+  test("DailyWords filters by level via pickDailyForLevel (#6727)", () => {
+    expect(dailyWordsSource).toContain("pickDailyForLevel");
+    expect(dailyWordsSource).not.toContain("filterByCumulativeLevel");
+    expect(dailyWordsSource).not.toContain("prioritizeByLearnerLevel");
   });
 });

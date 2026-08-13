@@ -56,10 +56,10 @@ const dailyCount = Math.max(1, Math.floor(count));
   import { dateSeed, pickDaily, type DailyWord } from "../lib/lexicon/daily";
   import {
     bindDailyCardInteractions,
+    pickDailyForLevel,
     renderDailyCardHtml,
   } from "../lib/lexicon/daily-card";
   import {
-    filterByCumulativeLevel,
     LEARNER_LEVEL_STORAGE_KEY,
     normalizeCefrLevel,
     type CefrLevel,
@@ -114,8 +114,12 @@ const dailyCount = Math.max(1, Math.floor(count));
 
     const renderDailyWords = () => {
       if (!dailyList) return;
-      const eligiblePool = useLevelSelector ? filterByCumulativeLevel(pool, activeLevel) : pool;
-      const picks = pickDaily(eligiblePool, dateSeed(new Date()), count);
+      // #6727: level tabs filter the pool to the selected CEFR, then shuffle
+      // only that subset — never re-rank-and-reshuffle the full 300.
+      const seed = dateSeed(new Date());
+      const picks = useLevelSelector
+        ? pickDailyForLevel(pool, activeLevel, seed, count)
+        : pickDaily(pool, seed, count);
 
       if (picks.length === 0) {
         dailyList.innerHTML = "";

@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { dateSeed, deckSeed, pickDaily, reRollSeed } from '@site/src/lib/lexicon/daily';
+import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '@site/src/lib/lexicon/daily';
+import { pickDailyForLevel } from '@site/src/lib/lexicon/daily-card';
+import { prioritizeByLearnerLevel } from '@site/src/lib/lexicon/levels';
 
 describe('dateSeed', () => {
   test('uses the local calendar date', () => {
@@ -27,6 +29,50 @@ describe('pickDaily', () => {
     const pool = [{ slug: 'a' }, { slug: 'b' }];
 
     expect(pickDaily(pool, 20260623, 24)).toHaveLength(pool.length);
+  });
+});
+
+describe('pickDailyForLevel (#6727 filter-not-reshuffle)', () => {
+  const pool: DailyWord[] = (
+    [
+      ['A1', 73],
+      ['A2', 75],
+      ['B1', 72],
+      ['B2', 40],
+      ['C1', 40],
+    ] as const
+  ).flatMap(([level, n]) =>
+    Array.from({ length: n }, (_, i) => ({
+      lemma: `слово-${level}-${i}`,
+      slug: `${level}-${i}`,
+      gloss: `gloss ${level} ${i}`,
+      cefr: level,
+    })),
+  );
+
+  test('B2 draws only B2 rows — does not reshuffle the whole 300', () => {
+    const seed = dateSeed(new Date(2026, 7, 13));
+    const picks = pickDailyForLevel(pool, 'B2', seed, 12);
+
+    expect(picks).toHaveLength(12);
+    expect(picks.every((word) => word.cefr === 'B2')).toBe(true);
+
+    // Contrast: soft re-rank + full-pool shuffle admits other levels (the #6727 bug).
+    const reshuffledWholePool = pickDaily(prioritizeByLearnerLevel(pool, 'B2'), seed, 12);
+    expect(reshuffledWholePool.some((word) => word.cefr !== 'B2')).toBe(true);
+  });
+
+  test('A1/A2/B1/C1 each stay within their own CEFR band', () => {
+    const seed = dateSeed(new Date(2026, 7, 13));
+    for (const level of ['A1', 'A2', 'B1', 'C1'] as const) {
+      const picks = pickDailyForLevel(pool, level, seed, 12);
+      expect(picks).toHaveLength(12);
+      expect(picks.every((word) => word.cefr === level)).toBe(true);
+    }
+  });
+
+  test('C2 with an empty band returns no cards (honest empty — #6728 residual)', () => {
+    expect(pickDailyForLevel(pool, 'C2', dateSeed(new Date(2026, 7, 13)), 12)).toEqual([]);
   });
 });
 
