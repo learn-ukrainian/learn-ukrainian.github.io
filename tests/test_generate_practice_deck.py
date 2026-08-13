@@ -1281,6 +1281,42 @@ def test_paradigm_items_accept_vesum_english_case_keys() -> None:
     assert len(slot_cases) >= 3
 
 
+def test_paradigm_items_keep_syncretic_adjective_surfaces() -> None:
+    """Shared case surfaces must not wipe the paradigm (adj syncretism).
+
+    Dropping every duplicated surface left adjectives with only 1–2 unique
+    forms and zero cards; drills ask for a named slot, so syncretic answers
+    stay valid when four distinct surfaces remain for distractors.
+    """
+    items = _build_paradigm_items(
+        {
+            "lemmaId": "aktyvnyi",
+            "lemma": "активний",
+            "cefr": "A1",
+            "paradigm": {
+                "cases": {
+                    "nominative": {"singular": "активний", "plural": "активні"},
+                    "genitive": {"singular": "активного", "plural": "активних"},
+                    "dative": {"singular": "активному", "plural": "активним"},
+                    "accusative": {"singular": "активний", "plural": "активних"},
+                    "instrumental": {"singular": "активним", "plural": "активними"},
+                    "locative": {"singular": "активному", "plural": "активних"},
+                    "vocative": {"singular": "активний", "plural": "активні"},
+                }
+            },
+        }
+    )
+
+    assert items
+    assert {item["form"] for item in items} >= {"активний", "активного", "активними"}
+    assert any(item["slot"]["case"] == "називний" for item in items)
+    assert any(item["slot"]["case"] == "родовий" for item in items)
+    for item in items:
+        labels = [option["label"] for option in item["options"]]
+        assert len(labels) == 4
+        assert len({label.casefold() for label in labels}) == 4
+
+
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     shards = _build()
     a1 = shards["A1"]
@@ -1370,6 +1406,92 @@ def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
     assert lexeme["senseId"] == "brak_defect"
     assert lexeme["glossClean"] == "defect"
     assert "second" not in lexeme["gloss"].casefold()
+
+
+def test_build_lexeme_empty_learner_en_falls_back_to_uk_not_invented_en() -> None:
+    """#6437 PR3: an empty sense learner_en[] must never invent an EN gloss.
+
+    A bound sense with no learner_en content must not silently borrow the
+    legacy ``enrichment.translation.en[0]`` (also true when that legacy EN
+    list is itself present and populated) — it must fall back to the
+    Ukrainian gloss, honestly reflecting that no vetted EN drill target
+    exists for this sense.
+    """
+    verifier = JsonVesumVerifier({})
+    entry = {
+        "lemma": "брак",
+        "url_slug": "брак",
+        "gloss": "вада",
+        "pos": "noun",
+        "primary_source": "atlas",
+        "cefr": "A1",
+        "enrichment": {
+            # Legacy translation list is present and non-empty; a bound sense
+            # must never fall through to it (#6437 LINT-003 no-en[0] rule).
+            "translation": {
+                "en": ["second", "defect"],
+                "source": "dmklinger",
+            }
+        },
+        "senses": [
+            {
+                "id": "brak_defect",
+                "learner_en": [],
+                "source": "sum20_vetted",
+                "completeness": "draft",
+            }
+        ],
+    }
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None
+    assert lexeme["senseId"] == "brak_defect"
+    assert lexeme["gloss"] == "вада"
+    assert lexeme["glossClean"] == "вада"
+    assert "second" not in lexeme["gloss"].casefold()
+    assert "defect" not in lexeme["gloss"].casefold()
+
+
+def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
+    """#6437 PR3: senseId must reach mode cards, not just the lexeme record.
+
+    ``_build_lexeme`` already stamps ``senseId`` on a sense-first lexeme
+    (see above); this was previously dropped when each mode-card builder
+    emitted its own card dict, which left LINT-003 unable to see the sense
+    binding on drills built from that lexeme.
+    """
+    lexeme = {
+        "lemmaId": "test-lemma",
+        "lemma": "тест",
+        "lemmaPlain": "тест",
+        "cefr": "A1",
+        "pos": "noun",
+        "senseId": "test-lemma_sense1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "тест"},
+                "родовий": {"singular": "тесту"},
+                "давальний": {"singular": "тестові"},
+                "орудний": {"singular": "тестом"},
+                "місцевий": {"singular": "тесті"},
+            }
+        },
+    }
+    entry = {
+        "lemma": "тест",
+        "pos": "noun",
+        "enrichment": {"morphology": {"pos": "noun", "forms": [{"label": "ім. чол."}]}},
+    }
+
+    classify = _build_classify_items(entry, lexeme)
+    assert classify and classify[0]["senseId"] == "test-lemma_sense1"
+
+    paradigm = _build_paradigm_items(lexeme)
+    assert paradigm and all(item["senseId"] == "test-lemma_sense1" for item in paradigm)
+
+    # A lexeme with no senseId (legacy, not sense-first) must not gain one.
+    legacy_lexeme = {k: v for k, v in lexeme.items() if k != "senseId"}
+    legacy_classify = _build_classify_items(entry, legacy_lexeme)
+    assert legacy_classify and "senseId" not in legacy_classify[0]
 
 
 def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:

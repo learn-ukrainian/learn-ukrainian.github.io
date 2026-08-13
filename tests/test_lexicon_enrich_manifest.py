@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import typing
+from pathlib import Path
 from urllib.parse import urlparse
 
 import pytest
@@ -4750,6 +4751,66 @@ def test_apply_sense_honesty_tags_preserves_dictionary_backed_source() -> None:
     assert unset_source["completeness"] == SENSE_COMPLETENESS_DRAFT
 
 
+def test_apply_manifest_sense_honesty_caps_annotation_and_stamps_truncated() -> None:
+    """#6437 PR3: enrich emit path hard-caps an oversized annotation honestly."""
+    from scripts.lexicon.enrich_manifest import (
+        _SENSE_HONESTY_CAP,
+        SENSE_COMPLETENESS_TRUNCATED,
+        apply_manifest_sense_honesty,
+    )
+
+    long_note = "a" * (_SENSE_HONESTY_CAP + 50)
+    entry = {
+        "lemma": "брак",
+        "senses": [
+            {
+                "id": "brak_defect",
+                "learner_uk": "недолік",
+                "learner_en": ["defect"],
+                "grammar_notes": long_note,
+                "source": "sum20_vetted",
+            }
+        ],
+    }
+    apply_manifest_sense_honesty(entry)
+    sense = entry["senses"][0]
+    assert len(sense["grammar_notes"]) <= _SENSE_HONESTY_CAP
+    assert sense["grammar_notes"].endswith("…")
+    assert sense["completeness"] == SENSE_COMPLETENESS_TRUNCATED
+    # A dictionary-backed source survives truncation honesty (#6506 guard).
+    assert sense["source"] == "sum20_vetted"
+    # uk_source_def and the drill content itself are never touched.
+    assert sense["learner_uk"] == "недолік"
+    assert sense["learner_en"] == ["defect"]
+
+
+def test_apply_manifest_sense_honesty_labels_unsourced_sense_ai_minimum() -> None:
+    """#6437 PR3: a sense with no recorded provenance is honestly ai_minimum."""
+    from scripts.lexicon.enrich_manifest import (
+        SENSE_COMPLETENESS_DRAFT,
+        SENSE_SOURCE_AI_MINIMUM,
+        apply_manifest_sense_honesty,
+    )
+
+    entry = {
+        "lemma": "брак",
+        "senses": [{"id": "brak_defect", "learner_en": ["defect"]}],
+    }
+    apply_manifest_sense_honesty(entry)
+    sense = entry["senses"][0]
+    assert sense["source"] == SENSE_SOURCE_AI_MINIMUM
+    assert sense["completeness"] == SENSE_COMPLETENESS_DRAFT
+
+
+def test_apply_manifest_sense_honesty_skips_entries_without_senses() -> None:
+    """#6437 PR3: most of the manifest predates the schema — leave it untouched."""
+    from scripts.lexicon.enrich_manifest import apply_manifest_sense_honesty
+
+    entry = {"lemma": "брак", "gloss": "вада"}
+    apply_manifest_sense_honesty(entry)
+    assert "senses" not in entry
+
+
 def test_definition_body_keeps_full_dictionary_article_by_default() -> None:
     """#6437: multi-sense dictionary articles must not hard-cap mid-definition."""
     from scripts.lexicon.enrich_manifest import _definition_body, _truncate_text
@@ -4818,3 +4879,29 @@ def test_etymology_rejects_mid_cut_esum_stubs() -> None:
 
     assert not _etymology_text_is_displayable("свіжий, свіжаік «новачок; свіжа во-")
     assert _etymology_text_is_displayable("From Proto-Slavic *svěžь.")
+
+
+def test_resolve_primary_checkout_matches_git_common_dir() -> None:
+    """enrich_manifest's primary-checkout fallback is portable, not hardcoded (#6571).
+
+    _resolve_primary_checkout must agree with resolve_main_root and, when set,
+    point at a directory owning the shared ``.git`` store. The source must not
+    embed a /Users/... operator path (the runtime value legitimately reflects
+    wherever this checkout lives)."""
+    from scripts.guardrails.worktree_containment import (
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
+
+    resolved = enrich_manifest_module._resolve_primary_checkout()
+    try:
+        expected = resolve_main_root(enrich_manifest_module.ROOT)
+    except NotAGitRepositoryError:
+        assert resolved is None
+        return
+    assert resolved == expected
+    assert (resolved / ".git").is_dir()
+    # Portability is a source-code property: the module must resolve the
+    # primary checkout dynamically rather than embed an operator's absolute path.
+    src = Path(enrich_manifest_module.__file__).read_text(encoding="utf-8")
+    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src

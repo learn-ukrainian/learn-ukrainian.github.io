@@ -1,36 +1,27 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-814db81c2199.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-236fb399f9c8.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "ef210ef802db7190e03e61c4903c2e1b02a7608fe351397c5be811d70f8e59e1",
+  "manifest_fingerprint": "6c3aeee132d3f19340e93f794198eaee94b5b51072fa4fdd2278af9418d07aac",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-09T04:22:02+00:00",
-  "gz_sha256": "cbe9bb1b04d62fadd4bfd857e53f945418b1f61db617911a0fc6fc25bd237bea",
-  "json_sha256": "814db81c219960c5039ac8b94d1510416bce8bc7c56a320c2b51da8cbdb6a7e9",
-  "gz_bytes": 16441438,
-  "json_bytes": 118456553,
+  "generated_at": "2026-08-12T21:13:24+00:00",
+  "gz_sha256": "4193c0681ad404a7aedb85e6ad076574ff51a736d4b2481d8d3ce10b3acb053d",
+  "json_sha256": "236fb399f9c83f034305dee05807d28ddd4f9d0b12f518079d8eea536f044f3c",
+  "gz_bytes": 25086621,
+  "json_bytes": 186974363,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 7924,
+      "poc_thin_pages": 8902,
       "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 48
+      "old_gate_no_english_anchor": 2295
     },
     "candidate": {
-      "poc_thin_pages": 8240,
+      "poc_thin_pages": 8902,
       "search_no_visible_gloss": 43,
-      "old_gate_no_english_anchor": 118
+      "old_gate_no_english_anchor": 2295
     },
-    "regressions": {
-      "poc_thin_pages": {
-        "baseline": 7924,
-        "candidate": 8240
-      },
-      "old_gate_no_english_anchor": {
-        "baseline": 48,
-        "candidate": 118
-      }
-    },
-    "override_reason": "Additive #6370 Ohoiko/ULP promote: +850 VESUM-attested single-word lemmas (19203→20053). Richness: poc_thin_pages 7924→8240 and old_gate_no_english_anchor 48→118 (+70 ULP SUM11-UA gloss rows without deterministic EN translation). Paired/multiword/heritage/OCR residual stays open.",
+    "regressions": {},
+    "override_reason": "Additive #6370 paired-headword split: +58 VESUM-ok missing legs from 218 paired Ohoiko/ULP strings (20053→20111). Split policy encoded in scripts/lexicon/ohoiko_paired_headword_split.py. Leftover paired-leg residual: multiword_after_split + heritage + vesum_absent legs; inventory paired strings remain structural residual until inventory rewrite. Multiword(12)/heritage(3)/OCR(1) stay OPEN.",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
