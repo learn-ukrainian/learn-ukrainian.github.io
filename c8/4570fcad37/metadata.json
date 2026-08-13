@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c84570fcad37",
+  "strategy": "manual-commit",
+  "branch": "agy/reaper-squash-head",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/reap_worktrees.py",
+    "tests/orchestration/test_reap_worktrees.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c8/4570fcad37/0/metadata.json",
+      "transcript": "/c8/4570fcad37/0/full.jsonl",
+      "compact_transcript": "/c8/4570fcad37/0/transcript.jsonl",
+      "content_hash": "/c8/4570fcad37/0/content_hash.txt",
+      "prompt": "/c8/4570fcad37/0/prompt.txt"
+    }
+  ]
+}
