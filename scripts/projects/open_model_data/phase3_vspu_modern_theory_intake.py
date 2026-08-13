@@ -451,7 +451,6 @@ def write_public_receipt(path: Path, value: Mapping[str, Any]) -> None:
         handle.write(payload)
         handle.flush()
         os.fsync(handle.fileno())
-    os.chmod(temporary, 0o644)
     os.replace(temporary, path)
 
 
