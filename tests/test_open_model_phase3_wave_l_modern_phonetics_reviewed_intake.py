@@ -342,14 +342,26 @@ def test_verify_pdf_pages_parses_verified_bytes_without_second_path_read(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     paths = _fixture(tmp_path, monkeypatch)
+    expected_payload = paths["k_pdf"].read_bytes()
     read_calls: list[Path] = []
+    pdf_reader_calls: list[object] = []
     original_read_bytes = Path.read_bytes
 
     def counting_read_bytes(self: Path) -> bytes:
         read_calls.append(self)
         return original_read_bytes(self)
 
+    def strict_bytes_io_pdf_reader(source: object) -> _FakeReader:
+        pdf_reader_calls.append(source)
+        if not isinstance(source, io.BytesIO):
+            raise TypeError(f"PdfReader must receive verified in-memory bytes, got {type(source).__name__}")
+        payload = source.getvalue()
+        if payload != expected_payload:
+            raise ValueError("PdfReader received byte payload that does not match verified file bytes")
+        return _FakeReader(intake.KOVALENKO_PAGES)
+
     monkeypatch.setattr(Path, "read_bytes", counting_read_bytes)
+    monkeypatch.setattr(intake, "PdfReader", strict_bytes_io_pdf_reader)
     read_calls.clear()
     intake._verify_pdf_pages(
         paths["k_pdf"],
@@ -359,6 +371,9 @@ def test_verify_pdf_pages_parses_verified_bytes_without_second_path_read(
         intake.KOVALENKO_PDF_SHA256,
     )
     assert read_calls == [paths["k_pdf"]]
+    assert len(pdf_reader_calls) == 1
+    assert isinstance(pdf_reader_calls[0], io.BytesIO)
+    assert pdf_reader_calls[0].getvalue() == expected_payload
 
 
 def test_review_drive_custody_is_written(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
