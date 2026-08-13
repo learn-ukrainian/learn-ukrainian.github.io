@@ -30,13 +30,17 @@ const TRACK_LABELS: Record<string, string> = {
 
 <CourseLayout
   title="Reading reference"
+  titleKey="nav.readings"
   description="The full original primary-source texts the seminars teach from — for reading and close study."
   eyebrowKey="readings.eyebrow"
-  subtitle="The full original texts the seminars teach from. Lessons study excerpts and link here for the complete work."
+  subtitleKey="readings.subtitle"
   currentPath="/readings/"
   heroVariant="readings"
   wide
-  navItems={[{ href: '/', label: 'Home' }, { href: '/readings/', label: 'Reading reference' }]}
+  navItems={[
+    { href: '/', label: 'Home', labelKey: 'nav.home' },
+    { href: '/readings/', label: 'Reading reference', labelKey: 'nav.readings' },
+  ]}
 >
   <section class="readings-home">
     <p class="readings-intro">
@@ -45,7 +49,16 @@ const TRACK_LABELS: Record<string, string> = {
 
     <div class="readings-search">
       <label for="readings-q" class="sr-only"><ChromeText k="readings.searchLabel" /></label>
-      <input id="readings-q" type="search" placeholder={CHROME_STRINGS.en['readings.searchPlaceholder']} autocomplete="off" />
+      <input
+        id="readings-q"
+        type="search"
+        placeholder={CHROME_STRINGS.en['readings.searchPlaceholder']}
+        data-i18n-placeholder={JSON.stringify({
+          en: CHROME_STRINGS.en['readings.searchPlaceholder'],
+          uk: CHROME_STRINGS.uk['readings.searchPlaceholder'],
+        })}
+        autocomplete="off"
+      />
       <p class="readings-count" data-readings-count role="status" aria-live="polite" aria-atomic="true">
         <span class="lu-i18n">
           <span data-loc="en">{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</span>
