@@ -1,0 +1,36 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6734-a1-synonym-empty
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: A1 Синоніми session is 0/0 then dies after one antonym (#6734)
+
+**Driver:** grok-atlas · mechanical / site
+**X-Agent:** `cursor/6734-a1-synonym-empty`
+
+## CAPACITY_CARD
+pick=cursor Auto (not Gemini pin)
+source=operator-cursor-auto
+
+## Bug
+Live A1 **Синоніми** (combined synonym+antonym card) shows counter **0/0**. After one antonym answer, «Далі» ends the session (`1/1`). Пароніми is fine (`0/9`).
+
+Live index `atlas-practice-v1-db19639ed55b0c79`: `modeCounts.synonym: 0`, `antonym: 138`. Combined card still served an antonym, then treated the round as empty.
+
+Related: #6720.
+
+## Frozen outcome
+- If A1 has 0 synonym items, do not present a Синоніми session that is 0/0, or do not mix in antonyms under a synonym label without a real denominator.
+- Counter matches actual remaining items.
+- Tests cover the empty-synonym + non-empty-antonym case.
+- Worktree only. PR. Leaves #6734 #4387 open. No merge.
+
+## #M-4
+Quote before/after counter and the new test.
