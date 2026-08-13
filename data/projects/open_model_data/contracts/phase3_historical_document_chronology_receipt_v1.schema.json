@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_historical_document_chronology_receipt_v1.schema.json",
+  "title": "Phase 3 historical document chronology receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "bindings",
+    "denominators",
+    "projection_summary",
+    "output",
+    "coverage",
+    "safeguards",
+    "phase_boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_historical_document_chronology_receipt_v1"
+    },
+    "text_free": {"const": true},
+    "status": {"const": "DOCUMENT_CHRONOLOGY_PROJECTED_WITH_RESIDUALS"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_full_receipt_file_sha256",
+        "historical_full_receipt_sha256",
+        "historical_periodization_freeze_file_sha256",
+        "historical_periodization_freeze_receipt_sha256",
+        "historical_periodization_implementation_sha256",
+        "historical_materialization_implementation_sha256",
+        "ud_file_sha256",
+        "plug2_metadata_sha256"
+      ],
+      "properties": {
+        "historical_full_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_freeze_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_freeze_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_materialization_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "ud_file_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "orv_ruthenian-ud-dev.conllu",
+            "orv_ruthenian-ud-test.conllu",
+            "orv_ruthenian-ud-train.conllu"
+          ],
+          "properties": {
+            "orv_ruthenian-ud-dev.conllu": {"$ref": "#/$defs/sha256"},
+            "orv_ruthenian-ud-test.conllu": {"$ref": "#/$defs/sha256"},
+            "orv_ruthenian-ud-train.conllu": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "plug2_metadata_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ud", "plug2", "total_documents"],
+      "properties": {
+        "ud": {"$ref": "#/$defs/denominator"},
+        "plug2": {"$ref": "#/$defs/denominator"},
+        "total_documents": {"type": "integer", "minimum": 1}
+      }
+    },
+    "projection_summary": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["framework_id", "projected_documents", "stage_counts"],
+        "properties": {
+          "framework_id": {
+            "enum": [
+              "university_five_stage_synthesis",
+              "shevelov_detailed_six_period",
+              "nimchuk_five_stage_with_middle_subperiods"
+            ]
+          },
+          "projected_documents": {"type": "integer", "minimum": 1},
+          "stage_counts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["stage_id", "definite", "possible_boundary_overlap"],
+              "properties": {
+                "stage_id": {"type": "string", "minLength": 1},
+                "definite": {"type": "integer", "minimum": 0},
+                "possible_boundary_overlap": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "record_identity_sha256"],
+      "properties": {
+        "filename": {"const": "historical-document-chronology-v1.jsonl.gz"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "record_identity_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_document_denominator_equal",
+        "exact_date_projection_complete",
+        "undated_documents_preserved_unresolved",
+        "qualified_historical_semantic_review_complete"
+      ],
+      "properties": {
+        "source_document_denominator_equal": {"const": true},
+        "exact_date_projection_complete": {"const": true},
+        "undated_documents_preserved_unresolved": {"const": true},
+        "qualified_historical_semantic_review_complete": {"const": false}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chronology_is_not_linguistic_stage_gold",
+        "frameworks_preserved_without_collapse",
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "provider_calls"
+      ],
+      "properties": {
+        "chronology_is_not_linguistic_stage_gold": {"const": true},
+        "frameworks_preserved_without_collapse": {"const": true},
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "provider_calls": {"const": false}
+      }
+    },
+    "phase_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_freeze_ready", "source_coverage_ready", "phase3_complete", "phase4_blocked"],
+      "properties": {
+        "source_freeze_ready": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eligible_documents",
+        "exact_date_documents",
+        "unresolved_date_documents",
+        "min_exact_year",
+        "max_exact_year"
+      ],
+      "properties": {
+        "eligible_documents": {"type": "integer", "minimum": 1},
+        "exact_date_documents": {"type": "integer", "minimum": 0},
+        "unresolved_date_documents": {"type": "integer", "minimum": 0},
+        "min_exact_year": {"type": ["integer", "null"]},
+        "max_exact_year": {"type": ["integer", "null"]}
+      }
+    }
+  }
+}
