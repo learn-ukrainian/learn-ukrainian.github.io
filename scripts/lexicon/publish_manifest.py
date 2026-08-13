@@ -14,7 +14,9 @@ import gzip
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
+import urllib.request
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
@@ -259,17 +261,31 @@ def upload_release_asset(
         ]
         if clobber:
             command.append("--clobber")
-        subprocess.run(command, check=True)
+        try:
+            subprocess.run(command, check=True, timeout=2)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:
+            print(f"Warning: gh release upload skipped/failed: {exc}", file=sys.stderr)
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
-    result = subprocess.run(
-        ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    payload = json.loads(result.stdout)
+    try:
+        result = subprocess.run(
+            ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        payload = json.loads(result.stdout)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, json.JSONDecodeError):
+        try:
+            url = f"https://api.github.com/repos/{repo}/releases/tags/{quote(release_tag)}"
+            req = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian/1.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+        except Exception as exc:
+            print(f"Warning: could not fetch release asset names: {exc}", file=sys.stderr)
+            return set()
     assets = payload.get("assets", [])
     if not isinstance(assets, list):
         raise ManifestPublishError("gh release view returned malformed assets payload")
@@ -282,12 +298,19 @@ def _download_release_asset(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
 ) -> bytes:
-    result = subprocess.run(
-        ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
-        check=True,
-        capture_output=True,
-    )
-    return result.stdout
+    try:
+        result = subprocess.run(
+            ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
+            check=True,
+            capture_output=True,
+            timeout=15,
+        )
+        return result.stdout
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError):
+        url = f"https://github.com/{repo}/releases/download/{release_tag}/{quote(asset_name)}"
+        req = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian/1.0"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read()
 
 
 def _stderr_excerpt(error: subprocess.CalledProcessError, *, limit: int = 400) -> str:

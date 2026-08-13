@@ -5,6 +5,8 @@ from __future__ import annotations
 from scripts.lexicon.ohoiko_paired_headword_split import (
     classify_split_leg,
     is_single_orthographic_word,
+    recover_latin_lookalike,
+    resolve_leg_lemma,
     split_paired_headword,
     strip_trailing_parentheticals,
 )
@@ -54,3 +56,17 @@ def test_split_does_not_invent_lemmas() -> None:
     assert legs == ["науковець", "науковиця"]
     # No synthetic feminine/masculine forms beyond the split legs.
     assert "науковецька" not in legs
+
+
+def test_recover_latin_lookalike_twarina_and_zhinka() -> None:
+    assert recover_latin_lookalike("тваринa") == "тварина"
+    assert recover_latin_lookalike("жiнка") == "жінка"
+    assert recover_latin_lookalike("футболiст") == "футболіст"
+    assert recover_latin_lookalike("чистий") == "чистий"
+
+
+def test_resolve_leg_lemma_recovers_ocr_lookalikes() -> None:
+    assert resolve_leg_lemma("тваринa") == "тварина"
+    assert resolve_leg_lemma("жiнка") == "жінка"
+    assert resolve_leg_lemma("футболiст") == "футболіст"
+

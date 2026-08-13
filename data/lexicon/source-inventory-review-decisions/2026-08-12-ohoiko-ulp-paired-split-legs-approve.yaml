@@ -6,9 +6,9 @@ reviewer: operator-curated-source-trust
 reviewed_at: '2026-08-12'
 source_queue:
   workflow: source_inventory_publish_review_queue.v1
-  total_queue_rows: 58
-  approved_in_queue: 58
-  promotion_batch_size: 58
+  total_queue_rows: 59
+  approved_in_queue: 59
+  promotion_batch_size: 59
 production_outputs_updated: []
 decisions:
 - lemma: боки
@@ -821,6 +821,22 @@ decisions:
     key: 4f62d15d998f2820
     path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
     locator: 'ohoiko-1000-words entry 903 :: paired-split::учні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: футболіст
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: football player (male, female)
+  sense_note: paired-headword split auto-approve from 'футболiст, футболістка'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: 10620892365964f6
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболіст'
     source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
     source_family: ohoiko
   evidence_refs:
