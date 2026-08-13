@@ -33,7 +33,7 @@ def test_auto_remains_semantic_until_the_deterministic_scheduler_runs():
 def test_formal_cf_pins_are_practical_seats_at_high():
     assert formal_cf_pin("codex") == ("gpt-5.6-terra", "high")
     assert formal_cf_pin("claude") == ("claude-sonnet-5", "high")
-    assert formal_cf_pin("agy") == ("gemini-3.6-flash-high", "high")
+    assert formal_cf_pin("agy") == ("gemini-3.7-flash-high", "high")
     assert formal_cf_pin("glm") == ("glm-5.2", "high")
     assert FORMAL_CF_MODEL["codex"] == "gpt-5.6-terra"
     assert FORMAL_CF_EFFORT["claude"] == "high"
@@ -89,7 +89,7 @@ def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
     with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
         resolve_requested_review_candidate("claude", "gpt-5.6-sol", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
-        resolve_requested_review_candidate("agy", "gemini-3.6-flash-high", REVIEW_CANDIDATES)
+        resolve_requested_review_candidate("agy", "gemini-3.7-flash-high", REVIEW_CANDIDATES)
 
 
 def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice():

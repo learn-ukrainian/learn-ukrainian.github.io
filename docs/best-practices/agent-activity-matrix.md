@@ -28,7 +28,7 @@ Each cell carries:
 | --- | --- | --- | --- | --- |
 | **Claude** ⭐ | Opus 4.8 (frontier authority), Fable 5 (native Claude first; pinned Cursor fallback only), Sonnet 5 (strong practical) | Native Claude CLI first for Fable; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | **TOP-PRIORITY judgment lane.** Architecture, hard-bug reasoning, and adversarial review. Route Fable through native Claude first and use Cursor only when native Claude does not expose Fable; use Sonnet for routine work. |
 | **Codex** ⭐ | GPT-5.6 Terra (default), Sol (frontier authority), Luna (bounded fast work) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
-| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | **Worker-first for implementation** (#5737): Flash (`gemini-3.6-flash-high`) receives **complete task briefs** (one shippable unit + ACs) and does **not** self-decompose into serial micro-PRs — the orchestrator owns sequencing. Catalog `orchestrator_seats` membership remains for fleet-comms, but AGY is **not** a self-orchestrating implementer (compaction loses drive state). Support fit: scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. Sealed formal CF still #5555. |
+| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | **Worker-first for implementation** (#5737): Flash (`gemini-3.7-flash-high`) receives **complete task briefs** (one shippable unit + ACs) and does **not** self-decompose into serial micro-PRs — the orchestrator owns sequencing. Catalog `orchestrator_seats` membership remains for fleet-comms, but AGY is **not** a self-orchestrating implementer (compaction loses drive state). Support fit: scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. Sealed formal CF still #5555. |
 | **DeepSeek** | **`deepseek-v4-flash`** @ high = everyday (frontier-practical code/infra). **`deepseek-v4-pro`** @ high = **hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) | Review/research: `opencode run --model deepseek-direct/deepseek-v4-flash --variant high` (native Entire capture). Tool-heavy: `delegate.py --agent deepseek --model deepseek-v4-flash` (default; `--model deepseek-v4-pro` for hard tasks). Pro never default. | Cheap / often idle paid balance | **CODE + infra CF volume.** Prefer when Codex/Claude hot. Not language/folk/authority. First-party only (`openrouter/deepseek/*` refused). |
 | **Grok** | **Grok 4.5** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | **Kimi** (**keep** — operator 2026-08-08) | **`kimi-code/k3-256k`** everyday fast; **`kimi-code/k3`** @ high/max advisory/complex only | Native Kimi Code CLI OAuth: `delegate.py dispatch --agent kimi` | Subscription; CodexBar 5h + weekly | **First-class.** Split tiers so full k3 is not burned on routine. CF outside Moonshot lineage; not a language seat. |
@@ -169,7 +169,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary** | AGY Gemini 3.6 Flash (High) | metered; routine pattern-application across multiple files | 2026-05-13 | MEMORY #M-0 reframe | "default for routine: running existing scripts, ingestion runs, tests/migrations/fixtures, docs-near-code" |
+| **Primary** | AGY Gemini 3.7 Flash (High) | metered; routine pattern-application across multiple files | 2026-05-13 | MEMORY #M-0 reframe | "default for routine: running existing scripts, ingestion runs, tests/migrations/fixtures, docs-near-code" |
 | Runner-up | Codex | tighter on edge-cases; better for high-uncertainty refactors | 2026-05-12 | various recent merges (#2121, #2123) | Costs Codex quota; reserve for cases where Gemini's pattern-match might miss. |
 
 **Known weakness (Gemini for mechanical):** ambiguous cross-file architectural rewrites; security/concurrency bugs; GH/rebase/auth-heavy work; mass mechanical pattern-application that requires nuanced judgment. For those → Codex.
@@ -214,7 +214,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary (routine)** | AGY Gemini 3.6 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.6-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
+| **Primary (routine)** | AGY Gemini 3.7 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.7-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
 | **Primary (deep)** | AGY Gemini 3.1 Pro (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.1-pro-high` | qualitative | ongoing | same | When deep single-shot reasoning needed (prefer Pro over Flash); Codex/Claude/Sol for higher stakes. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
@@ -252,7 +252,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Adversarial review (post-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --effort xhigh --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
 | Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** agy / codex / claude / grok-4.5 — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
-| Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.6-flash-high` |
+| Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.7-flash-high` |
 | Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.1-pro-high` |
 | Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
 | Search / locate | `Agent(subagent_type="Explore", model="haiku", description="...", prompt="...")` |
@@ -383,7 +383,7 @@ Listed by priority for next-session fill:
 
 | Rank routine | Model | Cost |
 | --- | --- | --- |
-| 1 ✅ | AGY Gemini 3.6 Flash (High) | metered |
+| 1 ✅ | AGY Gemini 3.7 Flash (High) | metered |
 | 1 deep ✅ | AGY Gemini 3.1 Pro (High) | metered |
 | 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
 | ❓ | Qwen-3.6-plus | $ |

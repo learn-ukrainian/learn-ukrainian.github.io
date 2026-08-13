@@ -302,6 +302,8 @@ def test_usage_attribution_is_explicit_and_privacy_safe(monkeypatch):
 
 def test_usage_attribution_detects_codex_desktop(monkeypatch):
     monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
+    monkeypatch.delenv("LU_RUNTIME_INITIATOR", raising=False)
+    monkeypatch.delenv("LU_RUNTIME_INITIATOR_SOURCE", raising=False)
     monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
 
     attribution = resolve_invocation_attribution(task_id="routing-6159")
@@ -334,7 +336,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
         (
             "acpx-agy-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
-            "gemini-3.6-flash-high",
+            "gemini-3.7-flash-high",
         ),
         (
             "acpx-glm-shadow",
@@ -374,7 +376,7 @@ def test_cursor_entry_is_well_formed():
 def test_agy_entry_is_well_formed():
     entry = get_agent_entry("agy")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.agy:AgyAdapter"
-    assert entry["default_model"] == "gemini-3.6-flash-high"
+    assert entry["default_model"] == "gemini-3.7-flash-high"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
     assert {"content_writing", "content_review"} <= entry["capabilities"]

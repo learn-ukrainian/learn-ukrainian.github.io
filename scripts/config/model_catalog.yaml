@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-08-02
+reviewed_on: 2026-08-13
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -104,7 +104,7 @@ review_scheduler:
     agy:
       formal_review_eligible: false
       formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
-      models: [gemini-3.6-flash-high]
+      models: [gemini-3.7-flash-high]
       participant: agy
       adapter_transport: acp
       catalog_transport: agy
@@ -323,6 +323,17 @@ models:
     weaknesses: [less_final_authority_than_opus, tokenizer_uses_more_tokens]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
+  gemini-3.7-flash-high:
+    family: google
+    tier: frontier_practical
+    lifecycle: active
+    aliases: [gemini-3.7-flash, gemini-3.7-flash-medium, gemini-3.7-flash-low]
+    roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
+    transports: [agy]
+    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
+    weaknesses: [not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
+    sources:
+      - https://ai.google.dev/gemini-api/docs/models
   gemini-3.6-flash-high:
     family: google
     tier: frontier_practical
@@ -331,7 +342,7 @@ models:
     roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
-    weaknesses: [not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
+    weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     sources:
       - https://ai.google.dev/gemini-api/docs/models
   gemini-3.1-pro-high:
@@ -342,7 +353,7 @@ models:
     roles: [deep_review, architecture_support, factual_review, multimodal_analysis]
     transports: [agy]
     strengths: [complex_reasoning, deep_single_shot, multimodal_long_context]
-    weaknesses: [higher_latency_and_cost_than_3_6_flash, not_default_agentic_workhorse]
+    weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
   gemini-3.5-flash-high:
@@ -353,7 +364,7 @@ models:
     roles: [implementation, subagent_work, routine_review, multimodal_analysis]
     transports: [agy]
     strengths: [speed, low_cost, back_compat]
-    weaknesses: [superseded_as_default_by_3_6_flash, not_default_critical_authority]
+    weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
   grok-4.5:
@@ -654,6 +665,14 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
     review_profiles: [code, infra]
     capabilities: [code_review]
+  gemini-3.7-flash:
+    model_id: gemini-3.7-flash-high
+    route: agy
+    transport: agy
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.7-flash-high
+    health_keys: [gemini]
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   gemini-3.6-flash:
     model_id: gemini-3.6-flash-high
     route: agy
@@ -823,7 +842,7 @@ orchestrator_seats:
     fallback_model_id: grok-4.5
     note: native grok-4.5; Cursor explicit grok-4.5 if native dark (not a quality escalate)
   agy:
-    model_id: gemini-3.6-flash-high
+    model_id: gemini-3.7-flash-high
     effort: high
     escalate_model_id: gemini-3.1-pro-high
     escalate_effort: high
@@ -876,8 +895,8 @@ formal_cf_defaults:
   agy:
     # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
     # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
-    # selects gemini-3.6-flash-high via the practical ladder.
-    model_id: gemini-3.6-flash-high
+    # selects gemini-3.7-flash-high via the practical ladder.
+    model_id: gemini-3.7-flash-high
     effort: high
     formal_review_eligible: false
     isolation_issue: 5555
@@ -896,7 +915,7 @@ review_ladders:
     - [claude-fable-5-cursor-fallback]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
-    - [gemini-3.6-flash]
+    - [gemini-3.7-flash]
     - [grok-4.5]
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
@@ -914,7 +933,7 @@ review_ladders:
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [glm-5.2]
-    - [gemini-3.6-flash]
+    - [gemini-3.7-flash]
     - [grok-4.5]
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]

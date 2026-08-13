@@ -2102,7 +2102,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
         "agy": {
             "seat": "acpx-agy-shadow",
             "agent": "agy",
-            "model": "gemini-3.6-flash-high",
+            "model": "gemini-3.7-flash-high",
         },
         "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.2"},
         "deepseek": {
@@ -2116,7 +2116,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
 @pytest.mark.parametrize(
     ("adapter_class", "participant", "provider_binary", "version", "model"),
     [
-        (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.6-flash-high"),
+        (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.7-flash-high"),
         (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.2"),
         (AcpxDeepSeekShadowAdapter, "deepseek", "hermes", "0.18.2", "deepseek-v4-pro"),
     ],
@@ -2218,7 +2218,7 @@ def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, 
             prompt="ping",
             mode="read-only",
             cwd=tmp_path,
-            model="gemini-3.6-flash-high",
+            model="gemini-3.7-flash-high",
             task_id="t-1",
             session_id=None,
             tool_config={
@@ -2258,7 +2258,7 @@ def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path,
             prompt="ping",
             mode="read-only",
             cwd=tmp_path,
-            model="gemini-3.6-flash-high",
+            model="gemini-3.7-flash-high",
             task_id="t-1",
             session_id=None,
             tool_config={

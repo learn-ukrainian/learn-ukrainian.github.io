@@ -33,7 +33,9 @@ def _resolve_test_python() -> str:
             timeout=30,
         ).strip()
         if common_dir:
-            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
+            # Absolute-join only — do not Path.resolve() the python symlink itself
+            # (it often points at Homebrew Cellar and loses the venv site-packages).
+            main_venv = Path(common_dir).resolve().parent / ".venv" / "bin" / "python"
             if main_venv.exists():
                 return str(main_venv)
     except (subprocess.CalledProcessError, FileNotFoundError, OSError):
