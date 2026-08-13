@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "86bb425e0e4c",
+  "strategy": "manual-commit",
+  "branch": "cursor/6749-cefr-asset-gate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/check_static_practice_assets.py",
+    "scripts/audit/daily_cefr.py",
+    "scripts/audit/generate_daily_pool.py",
+    "tests/test_check_static_practice_assets.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/86/bb425e0e4c/0/metadata.json",
+      "transcript": "/86/bb425e0e4c/0/full.jsonl",
+      "compact_transcript": "/86/bb425e0e4c/0/transcript.jsonl",
+      "content_hash": "/86/bb425e0e4c/0/content_hash.txt",
+      "prompt": "/86/bb425e0e4c/0/prompt.txt"
+    }
+  ]
+}
