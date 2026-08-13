@@ -49,6 +49,7 @@ def _patch_orient_sources(monkeypatch) -> None:
             monkeypatch.delenv(key, raising=False)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main", "head": "abc123"})
     monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": [{"number": 1186}]})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
 
     async def fake_pipeline():
         return {"summary": {"totals": {"total": 1}}}
@@ -144,6 +145,7 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
         "generated_at",
         "git",
         "issues",
+        "idle_prs",
         "pipeline",
         "runtime",
         "delegate",
