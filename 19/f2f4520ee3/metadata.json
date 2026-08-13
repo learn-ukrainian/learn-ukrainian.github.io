@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "19f2f4520ee3",
+  "strategy": "manual-commit",
+  "branch": "cursor/6738-services-macos",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/19/f2f4520ee3/0/metadata.json",
+      "transcript": "/19/f2f4520ee3/0/full.jsonl",
+      "compact_transcript": "/19/f2f4520ee3/0/transcript.jsonl",
+      "content_hash": "/19/f2f4520ee3/0/content_hash.txt",
+      "prompt": "/19/f2f4520ee3/0/prompt.txt"
+    }
+  ]
+}

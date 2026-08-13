@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "19f2f4520ee3",
+  "session_id": "fleet-b32380de9d084fa8b60da481dd717638",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T20:38:15.555663Z",
+  "branch": "cursor/6738-services-macos",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/hygiene/lint_raw_rm_rf.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "1bcd382349e4",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T20:38:15.527205Z",
+    "agent_lines": 5,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 5,
+    "total_lines_changed": 10,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
