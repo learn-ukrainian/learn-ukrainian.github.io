@@ -87,6 +87,31 @@ def test_auto_deploy_accepts_only_site_code_since_last_successful_deployment(tmp
     )
 
 
+def test_auto_deploy_allows_release_pointer_bumps_not_bulk_data() -> None:
+    """#6733: practice-deck / manifest pointers are site-code; other data is drift."""
+    practice_pointer = "site/src/data/lexicon-practice-deck.pointer.json"
+    manifest_pointer = "site/src/data/lexicon-manifest.pointer.json"
+
+    practice_only = decide_auto_deploy([practice_pointer])
+    assert practice_only.deploy is True
+    assert practice_only.reason == "site_code_only"
+
+    manifest_only = decide_auto_deploy([manifest_pointer])
+    assert manifest_only.deploy is True
+    assert manifest_only.reason == "site_code_only"
+
+    mixed = decide_auto_deploy([practice_pointer, "site/src/components/Practice.tsx"])
+    assert mixed.deploy is True
+    assert mixed.reason == "site_code_only"
+
+    with_scripts = decide_auto_deploy([practice_pointer, "scripts/practice_deck/publish.py"])
+    assert with_scripts.deploy is False
+    assert with_scripts.reason == "unknown_path"
+
+    assert decide_auto_deploy(["site/src/data/lexicon-manifest.json"]).reason == "content_drift"
+    assert decide_auto_deploy(["site/src/data/lexicon-search-index.json"]).reason == "content_drift"
+
+
 def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     """The manual certification route remains available beside the push preflight."""
     workflow_text = WORKFLOW.read_text(encoding="utf-8")
