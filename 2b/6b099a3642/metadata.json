@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2b6b099a3642",
+  "strategy": "manual-commit",
+  "branch": "cursor/ultra-month",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-shared-doctrine.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/2b/6b099a3642/0/metadata.json",
+      "transcript": "/2b/6b099a3642/0/full.jsonl",
+      "compact_transcript": "/2b/6b099a3642/0/transcript.jsonl",
+      "content_hash": "/2b/6b099a3642/0/content_hash.txt",
+      "prompt": "/2b/6b099a3642/0/prompt.txt"
+    }
+  ]
+}
