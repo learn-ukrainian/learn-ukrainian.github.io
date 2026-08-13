@@ -1,0 +1,38 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/6714-drop-codex-fakes
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: drop two more unverified Wiktionary antonyms on #6714
+
+**Driver:** grok-atlas · language
+**X-Agent:** `agy/6714-drop-codex-fakes`
+
+## CAPACITY_CARD
+pick=agy+gemini-3.6-flash-high (5h reset)
+avoid=habit-codex
+source=codex-r2-cf
+
+## Codex r2 at `d193348891`
+Spot-check found two more unsupported `wiktionary-explicit-antonym` pairs:
+- `бунтар` ↔ `пиво` — uk.wiktionary/бунтар has no such antonym
+- `край` ↔ `далеко` — page gives центр / no antonym, not далеко
+
+Six other sampled pairs passed.
+
+## Frozen outcome
+- Those two are gone unless you quote the exact raw Антоніми wikitext that lists the other leg.
+- Update `len(pairs) == N` in `tests/test_generate_practice_deck.py`.
+- Optional: if a cheap in-repo/live scan finds more empty/mismatch Wiktionary-explicit **new** pairs, drop those too (list them). Do not invent replacements.
+- Push to PR #6714 `cursor/practice-antonym-attested-grow`.
+- Leaves #4387 #4700 open. No merge.
+
+## #M-4
+Quote: the two pairs present? new pair/unique counts; pytest.
