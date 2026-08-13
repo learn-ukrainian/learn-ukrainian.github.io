@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cdd2b335888c",
+  "strategy": "manual-commit",
+  "branch": "deepseek/canary-ds-flash-post-reap",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_reap_worktrees.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/cd/d2b335888c/0/metadata.json",
+      "transcript": "/cd/d2b335888c/0/full.jsonl",
+      "compact_transcript": "/cd/d2b335888c/0/transcript.jsonl",
+      "content_hash": "/cd/d2b335888c/0/content_hash.txt",
+      "prompt": "/cd/d2b335888c/0/prompt.txt"
+    }
+  ]
+}
