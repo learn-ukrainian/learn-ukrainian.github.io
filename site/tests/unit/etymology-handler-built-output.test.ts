@@ -32,6 +32,9 @@ const ETY_HANDLER_MARKERS = [
   "dataset.etyNote",
 ] as const;
 
+const distLexicon = resolve(process.cwd(), "dist/lexicon");
+const hasDist = existsSync(distLexicon);
+
 const stubRecord = articleProps({
   lemma: "прапор",
   url_slug: "прапор",
@@ -70,13 +73,7 @@ describe("etymology inline handler on prerendered lexicon pages", () => {
     }
   });
 
-  test("built dist lexicon HTML keeps the etymology handler when dist/ is present", () => {
-    const distLexicon = resolve(process.cwd(), "dist/lexicon");
-    if (!existsSync(distLexicon)) {
-      // Hermetic unit runs without a prior build still cover the shell render above.
-      expect(true).toBe(true);
-      return;
-    }
+  test.skipIf(!hasDist)("built dist lexicon HTML keeps the etymology handler when dist/ is present", () => {
     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
