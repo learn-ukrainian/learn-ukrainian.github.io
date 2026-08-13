@@ -113,6 +113,18 @@
   background: var(--sl-color-bg, white);
   transition: all 0.2s;
   cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Linked module cards: real <a.moduleItem> — pointer + focus ring for keyboard (#6712) */
+.moduleLink {
+  cursor: pointer;
+}
+
+.moduleLink:focus-visible {
+  outline: 2px solid var(--sl-color-accent-high, #0057B8);
+  outline-offset: 2px;
 }
 
 .moduleItem:hover {
