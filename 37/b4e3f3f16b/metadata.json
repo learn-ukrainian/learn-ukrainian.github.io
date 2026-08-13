@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "37b4e3f3f16b",
+  "strategy": "manual-commit",
+  "branch": "glm/6751-lesson-schema-drift",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/lesson-schema.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/37/b4e3f3f16b/0/metadata.json",
+      "transcript": "/37/b4e3f3f16b/0/full.jsonl",
+      "compact_transcript": "/37/b4e3f3f16b/0/transcript.jsonl",
+      "content_hash": "/37/b4e3f3f16b/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 37285,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 218944,
+    "output_tokens": 1653,
+    "api_call_count": 9
+  }
+}
