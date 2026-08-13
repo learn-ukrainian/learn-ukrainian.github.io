@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "76e84b6eb078",
+  "strategy": "manual-commit",
+  "branch": "cursor/6733-pointer-auto-deploy",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/deploy/auto_deploy_eligibility.py",
+    "tests/test_deploy_pages_workflow.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/76/e84b6eb078/0/metadata.json",
+      "transcript": "/76/e84b6eb078/0/full.jsonl",
+      "compact_transcript": "/76/e84b6eb078/0/transcript.jsonl",
+      "content_hash": "/76/e84b6eb078/0/content_hash.txt",
+      "prompt": "/76/e84b6eb078/0/prompt.txt"
+    }
+  ]
+}
