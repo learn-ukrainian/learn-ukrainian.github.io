@@ -4598,6 +4598,9 @@ describe('LexiconPractice', () => {
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveAttribute('href', '/lexicon/mama/');
     expect(links[1]).toHaveAttribute('href', '/lexicon/znyshchyty/');
+    // Same openInAtlasTab aria-label as in-session Atlas links (new tab).
+    expect(links[0]).toHaveAttribute('aria-label', 'Відкрити в Атласі (нова вкладка)');
+    expect(links[1]).toHaveAttribute('aria-label', 'Відкрити в Атласі (нова вкладка)');
 
     // Dead-end fix: onward navigation is present, not just "another session"/"done".
     const continueLinks = screen.getByTestId('practice-session-continue-links');

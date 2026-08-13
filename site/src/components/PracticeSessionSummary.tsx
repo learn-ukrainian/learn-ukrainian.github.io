@@ -1,5 +1,5 @@
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
-import type { ChromeLocale } from '../lib/i18n/chrome';
+import { CHROME_STRINGS, type ChromeLocale } from '../lib/i18n/chrome';
 import type { PracticeLexeme } from '../lib/lexicon/srs';
 
 /**
@@ -51,11 +51,10 @@ export default function PracticeSessionSummary({
   onAnotherSession,
   onDone,
 }: PracticeSessionSummaryProps) {
-  // chromeLocale is the caller's pure-locale contract; ChromeText/ChromeDual
-  // render both locales and CSS on html[data-chrome-locale] shows one.
-  void chromeLocale;
   // Score against the frozen round size, not raw rating counts: re-served lapsed
   // cards earn a second correct rating, so `correct` can exceed the round size.
+  // chromeLocale drives miss-list Atlas aria-labels (same openInAtlasTab pattern
+  // as in-session links); ChromeText/ChromeDual still dual-render for CSS locale.
   const scoreCorrect = Math.min(stats.correct, stats.roundSize);
   return (
     <div className="lexicon-session-summary" data-testid="practice-session-summary">
@@ -123,6 +122,7 @@ export default function PracticeSessionSummary({
                   href={`/lexicon/${encodeURIComponent(miss.lemmaId)}/`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
                 >
                   <ChromeText k="practice.openInAtlasArrow" />
                 </a>
