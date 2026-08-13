@@ -61,14 +61,14 @@ describe('getTeacherLessonVirtualDeck membership sources (#6544)', () => {
 });
 
 describe('getTeacherTableVirtualDeck weekly source boundary (#4387)', () => {
-  test('uses the committed public, lemma-only From the lessons payload', () => {
+  test("uses the committed public, lemma-only Dev's example deck payload", () => {
     const deck = getTeacherTableVirtualDeck();
 
     expect(deck).toMatchObject({
       id: 'virtual_teacher_table',
-      title: 'From the lessons',
-      titleUk: 'З уроків',
-      description: 'Words from live classroom lessons.',
+      title: "Dev's example deck",
+      titleUk: 'Приклад розробника',
+      description: "Shared example from the developer's classroom list.",
     });
     expect(deck.cloze_items).toBeUndefined();
 

@@ -119,8 +119,8 @@ def test_site_data_shrink_guard_preserves_the_previous_public_set(tmp_path: Path
     assert written == {
         "schema": SCHEMA,
         "id": DECK_ID,
-        "title": "From the lessons",
-        "titleUk": "З уроків",
+        "title": "Dev's example deck",
+        "titleUk": "Приклад розробника",
         "description": DESCRIPTION,
         "lemma_keys": ["перше"],
     }

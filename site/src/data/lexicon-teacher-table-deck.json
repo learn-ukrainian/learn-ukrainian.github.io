@@ -1,9 +1,9 @@
 {
   "schema": "lexicon-teacher-table-deck-v1",
   "id": "virtual_teacher_table",
-  "title": "From the lessons",
-  "titleUk": "З уроків",
-  "description": "Words from live classroom lessons.",
+  "title": "Dev's example deck",
+  "titleUk": "Приклад розробника",
+  "description": "Shared example from the developer's classroom list.",
   "lemma_keys": [
     "Справедливий",
     "Справедливість",
