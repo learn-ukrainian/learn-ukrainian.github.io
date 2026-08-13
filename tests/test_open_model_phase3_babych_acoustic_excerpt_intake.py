@@ -203,6 +203,12 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
     )
 
 
+def _rehash(receipt: dict[str, object]) -> dict[str, object]:
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = intake.sha256_bytes(intake.canonical_bytes(body))
+    return receipt
+
+
 def test_contract_schema_is_valid_and_text_free() -> None:
     schema_text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
     Draft202012Validator.check_schema(json.loads(schema_text))
@@ -248,10 +254,90 @@ def test_metadata_title_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.Mo
         _build(paths)
 
 
-def _rehash(receipt: dict[str, object]) -> dict[str, object]:
-    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
-    receipt["receipt_sha256"] = intake.sha256_bytes(intake.canonical_bytes(body))
-    return receipt
+def test_mets_objid_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    payload = (
+        paths["mets"]
+        .read_text(encoding="utf-8")
+        .replace(
+            f'OBJID="{intake.SOURCE_METS_OBJID}"',
+            'OBJID="eprint_99999"',
+        )
+    )
+    _write_private(paths["mets"], payload.encode())
+    monkeypatch.setattr(intake, "METS_SHA256", intake.sha256_file(paths["mets"]))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="object identity drift"):
+        _build(paths)
+
+
+def test_mets_title_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    payload = (
+        paths["mets"]
+        .read_text(encoding="utf-8")
+        .replace(
+            intake.SOURCE_METS_TITLE_CORRUPT,
+            "ARRAY(0xdeadbeef)",
+        )
+    )
+    _write_private(paths["mets"], payload.encode())
+    monkeypatch.setattr(intake, "METS_SHA256", intake.sha256_file(paths["mets"]))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="corrupt-title provenance drift"):
+        _build(paths)
+
+
+def test_mets_bitstream_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    drifted_url = intake.SOURCE_BITSTREAM_URL.replace("N_Babych", "N_Other")
+    payload = paths["mets"].read_text(encoding="utf-8").replace(intake.SOURCE_BITSTREAM_URL, drifted_url)
+    _write_private(paths["mets"], payload.encode())
+    monkeypatch.setattr(intake, "METS_SHA256", intake.sha256_file(paths["mets"]))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="bitstream OWNERID drift"):
+        _build(paths)
+
+
+def test_html_identifier_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    drifted_url = intake.SOURCE_BITSTREAM_URL.replace("N_Babych", "N_Other")
+    payload = paths["item"].read_text(encoding="utf-8").replace(intake.SOURCE_BITSTREAM_URL, drifted_url)
+    _write_private(paths["item"], payload.encode())
+    monkeypatch.setattr(intake, "ITEM_RECORD_SHA256", intake.sha256_file(paths["item"]))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="bitstream locator drift"):
+        _build(paths)
+
+
+def test_html_bitstream_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    drifted_url = intake.SOURCE_BITSTREAM_URL.replace("N_Babych", "N_Other")
+    payload = (
+        paths["item"]
+        .read_text(encoding="utf-8")
+        .replace(
+            f'<meta name="eprints.document_url" content="{intake.SOURCE_BITSTREAM_URL}" />',
+            f'<meta name="eprints.document_url" content="{drifted_url}" />',
+        )
+    )
+    _write_private(paths["item"], payload.encode())
+    monkeypatch.setattr(intake, "ITEM_RECORD_SHA256", intake.sha256_file(paths["item"]))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="eprints bitstream locator drift"):
+        _build(paths)
+
+
+def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="legal reuse authorization"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_missing_acoustic_marker_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    texts = _page_texts()
+    texts[10] = "22\nModule body without required acoustic markers"
+    monkeypatch.setattr(intake, "PdfReader", lambda path: _FakeReader(path, texts))
+    with pytest.raises(intake.BabychAcousticExcerptIntakeError, match="acoustic marker missing"):
+        _build(paths)
 
 
 def test_prompt_binding_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -373,8 +459,7 @@ def test_receipt_self_hash_and_schema_overclaims_are_rejected(tmp_path: Path, mo
 
 
 def test_tracked_receipt_validates_and_excludes_private_source_text() -> None:
-    if not intake.DEFAULT_PUBLIC_RECEIPT_PATH.exists():
-        pytest.skip("tracked receipt is generated after the implementation stabilizes")
+    assert intake.DEFAULT_PUBLIC_RECEIPT_PATH.is_file(), "tracked receipt must exist in Git"
     receipt = json.loads(intake.DEFAULT_PUBLIC_RECEIPT_PATH.read_text(encoding="utf-8"))
     validated = intake.validate_receipt(receipt)
     assert validated["status"] == intake.STATUS
@@ -383,3 +468,6 @@ def test_tracked_receipt_validates_and_excludes_private_source_text() -> None:
     assert "@gmail.com" not in serialized
     assert "децибел" not in serialized
     assert "ФОНЕТИКА ТА ФОНОЛОГІЯ" not in serialized
+    assert "інтенсивність" not in serialized
+    assert validated["rights"]["legal_reuse_authorization_established"] is False
+    assert validated["rights"]["operator_private_attributed_research_use_directed"] is True

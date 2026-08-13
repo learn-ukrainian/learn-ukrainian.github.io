@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import os
 import re
@@ -131,6 +132,9 @@ def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+ACOUSTIC_MARKERS_SET_SHA256 = sha256_bytes(canonical_bytes(sorted(ACOUSTIC_MARKERS)))
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     try:
@@ -235,7 +239,7 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
     require(len(payload) == PDF_BYTES, "Babych source PDF byte denominator drift")
     require(hashlib.md5(payload, usedforsecurity=False).hexdigest() == PDF_MD5, "Babych source PDF MD5 drift")
     try:
-        reader = PdfReader(path)
+        reader = PdfReader(io.BytesIO(payload))
     except Exception as exc:
         raise BabychAcousticExcerptIntakeError("cannot parse Babych source PDF") from exc
     require(not reader.is_encrypted, "Babych source PDF is unexpectedly encrypted")
@@ -305,9 +309,8 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
         "form_field_count": len(reader.get_fields() or {}),
         "javascript_present": bool("/Names" in root and "/JavaScript" in root["/Names"]),
         "source_isbn_text_verified": True,
-        "catalog_print_collation_text_verified": True,
+        "catalog_page_count_in_excerpt_text_verified": True,
         "observed_print_pages": observed_print_pages,
-        "acoustic_markers_verified": list(ACOUSTIC_MARKERS),
     }
     require(
         facts
@@ -322,9 +325,8 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
             "form_field_count": 0,
             "javascript_present": False,
             "source_isbn_text_verified": True,
-            "catalog_print_collation_text_verified": True,
+            "catalog_page_count_in_excerpt_text_verified": True,
             "observed_print_pages": {str(page): print_page for page, print_page in PRINT_PAGE_BY_PDF_PAGE.items()},
-            "acoustic_markers_verified": list(ACOUSTIC_MARKERS),
         },
         "Babych excerpt text-layer facts drift",
     )
@@ -469,7 +471,7 @@ def build_receipt(
             "form_field_count": text_facts["form_field_count"],
             "javascript_present": text_facts["javascript_present"],
             "source_isbn_text_verified": text_facts["source_isbn_text_verified"],
-            "catalog_print_collation_text_verified": text_facts["catalog_print_collation_text_verified"],
+            "catalog_page_count_in_excerpt_text_verified": text_facts["catalog_page_count_in_excerpt_text_verified"],
             "normalization_applied": False,
             "ocr_used": False,
             "source_text_retained_in_public_receipt": False,
@@ -484,7 +486,8 @@ def build_receipt(
             "colophon_pdf_page": COLOPHON_PDF_PAGE,
             "observed_print_pages": observed_print_pages,
             "discontinuities": list(DISCONTINUITIES),
-            "acoustic_markers_verified": list(ACOUSTIC_MARKERS),
+            "acoustic_markers_present_verified": True,
+            "acoustic_markers_set_sha256": ACOUSTIC_MARKERS_SET_SHA256,
         },
         "review_scope": {
             "content_disposition": "contextual_only",
@@ -497,7 +500,8 @@ def build_receipt(
         },
         "rights": {
             "standardized_license_present": False,
-            "operator_private_attributed_research_use_authorized": True,
+            "operator_private_attributed_research_use_directed": True,
+            "legal_reuse_authorization_established": False,
             "attribution_required": True,
             "takedown_ready": True,
             "adapt_or_remove_on_substantiated_complaint": True,
@@ -565,6 +569,10 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["training_conversion_complete"] is False, "receipt overclaims training conversion")
     require(receipt["gates"]["database_ingest_authorized"] is False, "receipt overclaims database ingest")
     require(receipt["rights"]["public_redistribution_authorized"] is False, "receipt overclaims redistribution")
+    require(
+        receipt["rights"]["legal_reuse_authorization_established"] is False,
+        "receipt overclaims legal reuse authorization",
+    )
     require(receipt["excerpt_structure"]["absent_pages_not_synthesized"] is True, "absent-page synthesis drift")
     serialized = canonical_json(receipt)
     require("GoogleDrive-" not in serialized, "receipt leaks private Drive identity")

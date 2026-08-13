@@ -108,7 +108,7 @@
         "form_field_count",
         "javascript_present",
         "source_isbn_text_verified",
-        "catalog_print_collation_text_verified",
+        "catalog_page_count_in_excerpt_text_verified",
         "normalization_applied",
         "ocr_used",
         "source_text_retained_in_public_receipt"
@@ -124,7 +124,7 @@
         "form_field_count": {"const": 0},
         "javascript_present": {"const": false},
         "source_isbn_text_verified": {"const": true},
-        "catalog_print_collation_text_verified": {"const": true},
+        "catalog_page_count_in_excerpt_text_verified": {"const": true},
         "normalization_applied": {"const": false},
         "ocr_used": {"const": false},
         "source_text_retained_in_public_receipt": {"const": false}
@@ -143,7 +143,8 @@
         "colophon_pdf_page",
         "observed_print_pages",
         "discontinuities",
-        "acoustic_markers_verified"
+        "acoustic_markers_present_verified",
+        "acoustic_markers_set_sha256"
       ],
       "properties": {
         "pdf_pages": {"const": 13},
@@ -181,9 +182,8 @@
             }
           ]
         },
-        "acoustic_markers_verified": {
-          "const": ["інтенсивність", "частота", "спектр", "тривалість", "фаза"]
-        }
+        "acoustic_markers_present_verified": {"const": true},
+        "acoustic_markers_set_sha256": {"const": "ba2a52380a7c851ae0987be46182014bbee4fb2db2026c80d3716ebc9e627fec"}
       }
     },
     "review_scope": {
@@ -200,7 +200,8 @@
     "rights": {
       "const": {
         "standardized_license_present": false,
-        "operator_private_attributed_research_use_authorized": true,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
         "attribution_required": true,
         "takedown_ready": true,
         "adapt_or_remove_on_substantiated_complaint": true,
