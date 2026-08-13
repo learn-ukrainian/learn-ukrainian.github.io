@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "90217b134adf",
+  "strategy": "manual-commit",
+  "branch": "glm/6728-c-level-daily-pool",
+  "checkpoints_count": 1,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/90/217b134adf/0/metadata.json",
+      "transcript": "/90/217b134adf/0/full.jsonl",
+      "compact_transcript": "/90/217b134adf/0/transcript.jsonl",
+      "content_hash": "/90/217b134adf/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1808,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 360768,
+    "output_tokens": 923,
+    "api_call_count": 4
+  }
+}
