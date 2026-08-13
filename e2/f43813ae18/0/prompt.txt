@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/5938-kimicc-polish
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6695 CodeQL blocker — reword warning, do not log a secret
+
+## CAPACITY_CARD
+pick=kimi (author of #6695; same branch) status=cool remaining_weekly=96%
+## ROUTING_CARD_V1
+task_id: 5938-codeql-reword
+tier: heap
+model_x_harness: kimi/k3-256k
+why_this_tier: one-string CodeQL false positive on the PR you just opened
+advisor_packet: none-AC-frozen
+owned_paths: scripts/delegate.py tests/test_delegate.py
+acceptance_cmd: rg -n "access-token|OAuth access" scripts/delegate.py; test $? -ne 0
+
+## Blocker
+PR #6695 CodeQL `py/clear-text-logging-sensitive-data` on `scripts/delegate.py:200`:
+"This expression logs sensitive data (password) as clear text."
+
+The print is a static warning. It interpolates only `hard_timeout` and `_KIMICC_OAUTH_TOKEN_LIFE_S` (ints). CodeQL is matching the words "OAuth access-token" in the string.
+
+## Do
+1. Work on existing branch `kimi/5938-kimicc-polish` (already checked out in this worktree). Do not open a second PR.
+2. Reword `_warn_kimicc_oauth_token_life` so the printed text does not contain `token`, `password`, or `secret`. Example: "Kimi OAuth session lifetime (~840s); refresh happens only at spawn."
+3. Keep the constant name if tests import it; only the user-facing string must change. Update any test that asserts the old wording.
+4. Do not add `# nosec` / CodeQL suppressions unless the reword is impossible.
+5. Commit `fix(kimi): reword kimicc timeout warning for CodeQL (#5938)` trailer `X-Agent: kimi/5938-codeql-reword` and push to the same branch. No merge.
+
+## Non-goals
+Do not revert F1–F4. Do not touch other adapters.
