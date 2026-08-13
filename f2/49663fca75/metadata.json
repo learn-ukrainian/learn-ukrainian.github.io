@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f249663fca75",
+  "strategy": "manual-commit",
+  "branch": "deepseek/6687-two-tests",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/utils/claude_version.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_agent_runtime_effort.py",
+    "tests/test_claude_version.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f2/49663fca75/0/metadata.json",
+      "transcript": "/f2/49663fca75/0/full.jsonl",
+      "compact_transcript": "/f2/49663fca75/0/transcript.jsonl",
+      "content_hash": "/f2/49663fca75/0/content_hash.txt",
+      "prompt": "/f2/49663fca75/0/prompt.txt"
+    }
+  ]
+}

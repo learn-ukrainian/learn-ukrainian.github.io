@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f249663fca75",
+  "session_id": "fleet-89f0aaef463441629930a1154c561637",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T06:55:59.673516Z",
+  "branch": "deepseek/6687-two-tests",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/utils/claude_version.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_agent_runtime_effort.py",
+    "tests/test_claude_version.py"
+  ],
+  "agent": "Project Runner",
+  "model": "deepseek-v4-flash",
+  "turn_id": "337d7b23504c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T06:55:59.669602Z",
+    "agent_lines": 135,
+    "agent_removed": 30,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 135,
+    "total_lines_changed": 165,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
