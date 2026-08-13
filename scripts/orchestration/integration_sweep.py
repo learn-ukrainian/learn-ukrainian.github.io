@@ -59,10 +59,7 @@ def _is_github_http_403(message: str) -> bool:
 def _is_schedule_event() -> bool:
     """True for Actions ``schedule`` runs (workflow sets EVENT_NAME / GITHUB_EVENT_NAME)."""
 
-    for key in ("EVENT_NAME", "GITHUB_EVENT_NAME"):
-        if os.environ.get(key) == "schedule":
-            return True
-    return False
+    return any(os.environ.get(key) == "schedule" for key in ("EVENT_NAME", "GITHUB_EVENT_NAME"))
 
 
 def _parse_timestamp(value: object) -> datetime | None:
