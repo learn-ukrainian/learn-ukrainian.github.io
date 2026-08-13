@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "df499700959c",
+  "strategy": "manual-commit",
+  "branch": "deepseek/canary-ds-pro-reaper",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/reap_worktrees.py",
+    "tests/orchestration/test_reap_worktrees.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/df/499700959c/0/metadata.json",
+      "transcript": "/df/499700959c/0/full.jsonl",
+      "compact_transcript": "/df/499700959c/0/transcript.jsonl",
+      "content_hash": "/df/499700959c/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 80449,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5425920,
+    "output_tokens": 12428,
+    "api_call_count": 52
+  }
+}
