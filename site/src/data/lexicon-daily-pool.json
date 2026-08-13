@@ -21,27 +21,6 @@
     }
   },
   {
-    "lemma": "США",
-    "slug": "сша",
-    "gloss": "USA",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "proper noun",
-    "example": "США надають політичну підтримку та матеріально-технічну допомогу Україні у протистоянні російській агресії.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "10-klas-geografija-bojko-2018_s0367",
-      "title": "Сторінка 200"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
     "lemma": "Хрещатик",
     "slug": "хрещатик",
     "gloss": "Khreshchatyk",
@@ -71,28 +50,6 @@
     "lessonTag": "a1",
     "cefr": "A1",
     "pos": "phrase"
-  },
-  {
-    "lemma": "адміністратор",
-    "slug": "адміністратор",
-    "gloss": "administrator, front desk manager",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Адміністратор веб-сайту повинен знати про можливі атаки ботів і шкідливих програм і мати необхідні для боротьби інструменти.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-informatyka-rudenko-2019_s0231",
-      "title": "Сторінка 153"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Cognate with Russian администра́тор."
   },
   {
     "lemma": "аналогічно",
@@ -138,20 +95,53 @@
     }
   },
   {
-    "lemma": "аудиторія",
-    "slug": "аудиторія",
-    "gloss": "classroom, lecture hall",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
+    "lemma": "архаїка",
+    "slug": "архаїка",
+    "gloss": "Старовина, старовинні речі, а також усе те, що характеризується рисами старовини",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
     "pos": "noun",
-    "example": "Аудиторія придивляється: як він стоїть, який у нього вираз обличчя, як він рухається.",
+    "etymology": "From архаїчний + -їка. See the etymology of the corresponding lemma form."
+  },
+  {
+    "lemma": "аудіювання",
+    "slug": "аудіювання",
+    "gloss": "listening comprehension",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Види мовленнєвої діяльності Аудіювання Читання Говоріння Письмо Зверніть увагу!",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "10-klas-ukrmova-glazova-2018_s0087",
-      "title": "Сторінка 60"
+      "locator": "5-klas-ukrmova-zabolotnyi-2023_s0215",
+      "title": "Сторінка 217"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From аудіювати + -ання."
+  },
+  {
+    "lemma": "афіша",
+    "slug": "афіша",
+    "gloss": "poster, event announcement",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Афіша — це коротке повідомлення про подію.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0131",
+      "title": "Сторінка 133"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
@@ -267,6 +257,27 @@
     "etymology": "From без- + ко́шт + -овний."
   },
   {
+    "lemma": "безсполучниковий",
+    "slug": "безсполучниковий",
+    "gloss": "asyndetic",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "adj",
+    "example": "Різні види зв’язку В одному реченні можемо поєднувати сурядний, підрядний і безсполучниковий зв’язок.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0233",
+      "title": "Сторінка 166"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
     "lemma": "бланк",
     "slug": "бланк",
     "gloss": "form",
@@ -288,36 +299,46 @@
     }
   },
   {
-    "lemma": "ближчий",
-    "slug": "ближчий",
-    "gloss": "closer",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "adjective",
-    "example": "Рум’янець на українських іконах додавав образам теплішого, більш людяного вигляду, що відбивало ближчий зв’язок між святими й вірянами.",
+    "lemma": "бурмотіти",
+    "slug": "бурмотіти",
+    "gloss": "to mumble, to murmur, to mutter",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "verb",
+    "example": "Бурмотіти під носа.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "8-klas-mystetstvo-komarovska-2025_s0136",
-      "title": "Сторінка 138"
+      "locator": "4-klas-ukrmova-zaharijchuk_s0170",
+      "title": "Сторінка 171"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Proto-Slavic *blizъkъ. Cognate with Polish bliższy."
+    }
   },
   {
-    "lemma": "варити / зварити",
-    "slug": "варити-зварити",
-    "gloss": "to cook, to boil",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A2",
-    "pos": "verb pair"
+    "lemma": "біб",
+    "slug": "біб",
+    "gloss": "однорічна городня рослина, що має в стручках поживні плоди",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "C1",
+    "pos": "noun",
+    "example": "Одночасно уповноважений архонт виймав зі скриньок біб і табличку з іменем кандидата.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "6-klas-istoriia-shchupak-2023_s0147",
+      "title": "Сторінка 145"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
   },
   {
     "lemma": "варта",
@@ -386,25 +407,15 @@
     "etymology": "From the вед- stem of вести́ + -ення."
   },
   {
-    "lemma": "великий",
-    "slug": "великий",
-    "gloss": "big, masculine",
+    "lemma": "вередливий",
+    "slug": "вередливий",
+    "gloss": "capricious",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
     "pos": "adjective",
-    "example": "Іван Франко — Великий Каменяр Іван Якович Франко народився 27 серпня 1856 року на Галичині, в селі Нагуєвичі.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-4-00-lesson-notes_l0158_w002",
-      "title": "Lesson 158: Іван Франко — Великий Каменяр (part 2/16)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "etymology": "From веред + -ли́вий"
   },
   {
     "lemma": "виглядати",
@@ -483,28 +494,6 @@
     "etymology": "Borrowed from Polish wykorzystywać."
   },
   {
-    "lemma": "вилетіти",
-    "slug": "вилетіти",
-    "gloss": "to fly out, depart from an airport; perfective",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Серед молекул поверхневого шару рідини завжди є такі, що «намагаються» вилетіти з рідини.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-fizyka-bariakhtar-2025_s0143",
-      "title": "Сторінка 130"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From ви́- + леті́ти."
-  },
-  {
     "lemma": "вимикати",
     "slug": "вимикати",
     "gloss": "to turn off",
@@ -569,6 +558,27 @@
     "etymology": "From ви́- + рости́. See the etymology of the corresponding lemma form."
   },
   {
+    "lemma": "висип",
+    "slug": "висип",
+    "gloss": "rash",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:m",
+    "example": "Тому, якщо на обличчі є висип, треба йти до лікаря.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-biolohiya-anderson-2025_s0199",
+      "title": "Сторінка 161"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
     "lemma": "витратити",
     "slug": "витратити",
     "gloss": "to spend, to expend",
@@ -589,6 +599,16 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Ви́- + тра́тити"
+  },
+  {
+    "lemma": "вицвілий",
+    "slug": "вицвілий",
+    "gloss": "faded",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "adj"
   },
   {
     "lemma": "вишитий",
@@ -632,6 +652,17 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "See the etymology of the corresponding lemma form. Inherited from Proto-Slavic *vyšьjь, with -е"
+  },
+  {
+    "lemma": "вищезазначений",
+    "slug": "вищезазначений",
+    "gloss": "above-mentioned",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "adjective",
+    "etymology": "Ви́ще + зазна́чений"
   },
   {
     "lemma": "волонтер / волонтерка",
@@ -688,28 +719,6 @@
     }
   },
   {
-    "lemma": "відділ",
-    "slug": "відділ",
-    "gloss": "department",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun:m",
-    "example": "Позначений цифрою 1 відділ учень назвав стовбуром мозку.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-biolohiya-anderson-2025_s0292",
-      "title": "Сторінка 240"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Deverbal from відділи́ти."
-  },
-  {
     "lemma": "відкривати",
     "slug": "відкривати",
     "gloss": "to open (file/app/book)",
@@ -752,28 +761,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Deverbal from відлічи́ти."
-  },
-  {
-    "lemma": "відомо",
-    "slug": "відомо",
-    "gloss": "known, well known",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "adv",
-    "example": "Далі, на початку своєї розповіді, я казала, що, як відомо, у багатьох країнах світу в лютому відбуваються карнавали.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-4-00-lesson-notes_l0146_w008",
-      "title": "Lesson 146: Масниця в Україні (part 8/15)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From відо́мий + -о."
   },
   {
     "lemma": "відповідно до",
@@ -960,6 +947,27 @@
     "etymology": "Inherited from Old Ruthenian осмъна́дцать, from earlier осмъна́десѧть."
   },
   {
+    "lemma": "гаївки",
+    "slug": "гаївки",
+    "gloss": "spring ritual songs and dances",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:pl",
+    "example": "Існує чимало різновидів веснянок, але найбільш поширеними є веснянки і гаївки.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "5-klas-mystetstvo-rublia-2022_s0170",
+      "title": "Сторінка 170"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
     "lemma": "геть",
     "slug": "геть",
     "gloss": "far away",
@@ -1023,6 +1031,28 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Голосува́ти + -а́ння."
+  },
+  {
+    "lemma": "гончар",
+    "slug": "гончар",
+    "gloss": "potter",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:m",
+    "example": "Помер Олесь Гончар 14 липня 1995 року.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "11-klas-ukrlit-borzenko-2019-prof_s0275",
+      "title": "Сторінка 142"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From Old East Slavic горньчаръ, from гърньчаръ, from гърньць, /r/ preserved in горня́. Compare черне́ць - ченця́. Cognate with Bulgarian грънча́р. From гончар."
   },
   {
     "lemma": "грамів",
@@ -1132,28 +1162,6 @@
     "etymology": "Inherited from Proto-Slavic *daľьši. Cognate with Russian да́льше, Polish dalszy."
   },
   {
-    "lemma": "дані",
-    "slug": "дані",
-    "gloss": "інформація, представлена ​​в бінарному вигляді і передається у вигляді електромагнітних імпульсів",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Як вам відомо, запити не містять даних, лише формують потрібні дані з таблиць.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-informatyka-rudenko-2019_s0046",
-      "title": "Сторінка 31"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Calque of Latin data. Nominalization of да́ні. By surface analysis, да́ти + -ні. Doublet of да́та. See the etymology of the corresponding lemma form."
-  },
-  {
     "lemma": "дарувати",
     "slug": "дарувати",
     "gloss": "to give as a gift",
@@ -1176,27 +1184,6 @@
     "etymology": "Inherited from Proto-Slavic *darovati. By surface analysis, дар + -ува́ти."
   },
   {
-    "lemma": "дата",
-    "slug": "дата",
-    "gloss": "date",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Дата вашого народження — теж історичний факт, який належить до минулого.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-istoriya-schupak-2022_s0010",
-      "title": "Сторінка 12"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
     "lemma": "два",
     "slug": "два",
     "gloss": "two, masculine/neuter",
@@ -1217,6 +1204,28 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Inherited from Proto-Slavic *dъva."
+  },
+  {
+    "lemma": "двигун",
+    "slug": "двигун",
+    "gloss": "енергосилова машина, що перетворює яку-небудь енергію в механічну роботу, найповажніші за віком, справно служать на гідроелектростанціях",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Тепловий двигун — це машина, яка працює циклічно й перетворює енергію палива на механічну енергію.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-fizyka-bariakhtar-2025_s0166",
+      "title": "Сторінка 151"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Дви́гати + -у́н"
   },
   {
     "lemma": "дедалі",
@@ -1262,90 +1271,68 @@
     }
   },
   {
-    "lemma": "деякий",
-    "slug": "деякий",
-    "gloss": "some, certain",
+    "lemma": "дзвінкість",
+    "slug": "дзвінкість",
+    "gloss": "voicing",
     "k": "vyv",
-    "weight": 5,
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun",
+    "example": "Струни дає тобі кожна весна, Дзвінкість дарує їм осінь ясна.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "9-klas-mystetstvo-masol-2017_s0242",
+      "title": "Сторінка 217"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
+    "lemma": "добродійко",
+    "slug": "добродійко",
+    "gloss": "madam (very formal vocative)",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "vocative",
+    "example": "І ви зробили помилку, добродійко!",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "7-klas-zarlit-voloschuk-2024_s0206",
+      "title": "Сторінка 146"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
+    "lemma": "додавання",
+    "slug": "додавання",
+    "gloss": "addition",
+    "k": "vyv",
+    "weight": 3,
     "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "pronoun",
-    "example": "Через деякий час це потепління зміниться похолоданням.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-geografija-pestushko-2019_s0052",
-      "title": "Сторінка 31"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "джерело",
-    "slug": "джерело",
-    "gloss": "source / spring",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "B1",
+    "cefr": "B2",
     "pos": "noun",
-    "example": "Вибрати джерело відеозапису.",
+    "example": "Які властивості дії додавання ти знаєш та в чому вони полягають?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "7-klas-informatyka-ryvkind-2024_s0172",
-      "title": "Сторінка 149"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "дивувати",
-    "slug": "дивувати",
-    "gloss": "to surprise, to amaze, to astonish, to astound",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Але вона може дивувати звуками, які нагадують крик котів, що б’ються.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "4-klas-ukrayinska-mova-kravtsova-2021-1_s0036",
-      "title": "Сторінка 38"
+      "locator": "5-klas-matematyka-ister-2022_s0028",
+      "title": "Сторінка 30"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "Inherited from Proto-Slavic *divovati. By surface analysis, ди́во + -ува́ти."
-  },
-  {
-    "lemma": "довкілля",
-    "slug": "довкілля",
-    "gloss": "environment",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Як дбають про довкілля у вашому місті, селищі, селі?",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-zdorovia-vasylenko-2025_s0042",
-      "title": "Сторінка 38"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From довкола + -я."
+    "etymology": "From додава́ти + -а́ння."
   },
   {
     "lemma": "дозволяти",
@@ -1392,6 +1379,26 @@
     "etymology": "From дозвіл + -я."
   },
   {
+    "lemma": "домофон",
+    "slug": "домофон",
+    "gloss": "intercom",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
+  },
+  {
+    "lemma": "доречність",
+    "slug": "доречність",
+    "gloss": "appropriateness",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "noun"
+  },
+  {
     "lemma": "доїхати",
     "slug": "доїхати",
     "gloss": "to arrive by vehicle",
@@ -1434,28 +1441,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From Old East Slavic думати, from Proto-Slavic *dumati. Derived from Gothic 𐌳𐍉𐌼𐌾𐌰𐌽 or Proto-Slavic *dъmǫ."
-  },
-  {
-    "lemma": "діаспора",
-    "slug": "діаспора",
-    "gloss": "diaspora",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Українська діаспора представляла інтереси України перед урядами своїх країн.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-istoriya-ukr-galimov-2024_s0275",
-      "title": "Сторінка 153"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Ancient Greek διασπορά, from διασπείρω, from δια- + σπείρω."
   },
   {
     "lemma": "дівчина",
@@ -1521,6 +1506,17 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "евфемізм",
+    "slug": "евфемізм",
+    "gloss": "euphemism",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "noun",
+    "etymology": "From Ancient Greek εὐφημισμός, from εὐφημίζω, from εὔφημος."
   },
   {
     "lemma": "забирати",
@@ -1589,39 +1585,6 @@
     "etymology": "From за́гадка + -о́вий."
   },
   {
-    "lemma": "заздрість",
-    "slug": "заздрість",
-    "gloss": "envy",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Людина, яка відчуває незлобну заздрість, прагне мати те, що має інший, досягти такого самого успіху.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-ukrlit-zabolotnyi-2022_s0051",
-      "title": "Сторінка 45"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From за́здрий + -ість."
-  },
-  {
-    "lemma": "закривати / закрити",
-    "slug": "закривати-закрити",
-    "gloss": "to close",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A2",
-    "pos": "verb pair",
-    "etymology": "From закри́ти + -ва́ти."
-  },
-  {
     "lemma": "запис",
     "slug": "запис",
     "gloss": "record; note",
@@ -1644,26 +1607,69 @@
     "etymology": "Deverbal from записа́ти."
   },
   {
-    "lemma": "затримка",
-    "slug": "затримка",
-    "gloss": "delay",
+    "lemma": "заради",
+    "slug": "заради",
+    "gloss": "for the sake of",
     "k": "vyv",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "noun:f",
-    "example": "Якщо затримка не усунулася, то необхідно з’ясувати причину її виникнення й усунути затримку.",
+    "cefr": "B2",
+    "pos": "preposition",
+    "example": "Заради дружби люди йдуть на тортури, сідають у тюрму, навіть життя віддають...",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "10-klas-zakhyst-fuka-2023_s0319",
-      "title": "Сторінка 173"
+      "locator": "6-klas-ukrlit-avramenko-2023_s0135",
+      "title": "Сторінка 113"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
+    "lemma": "затока",
+    "slug": "затока",
+    "gloss": "bay",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:f",
+    "example": "Затока — частина океану, моря, що глибоко заходить у суходіл.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "6-klas-heohrafiya-zapotockyi-2023_s0177",
+      "title": "Сторінка 179"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "From затри́м(ати) + -ка."
+    "etymology": "Possibly borrowed from Polish zatoka."
+  },
+  {
+    "lemma": "захисниця",
+    "slug": "захисниця",
+    "gloss": "female defender",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "«Які ж вони нестерпні!» — кинула з презирством захисниця тварин.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "9-klas-ukrajinska-mova-voron-2017_s0195",
+      "title": "Сторінка 149"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Захист + -ни́ця"
   },
   {
     "lemma": "захист",
@@ -1687,20 +1693,20 @@
     }
   },
   {
-    "lemma": "заява",
-    "slug": "заява",
-    "gloss": "application, formal request",
+    "lemma": "зачісуватися",
+    "slug": "зачісуватися",
+    "gloss": "to comb one's hair",
     "k": "vyv",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Заява може містити перелік документів, що додають до неї.",
+    "cefr": "C1",
+    "pos": "verb:impf",
+    "example": "Сіла панночка зачісуватися...",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-avramenko-2017_s0101",
-      "title": "Сторінка 70"
+      "locator": "9-klas-ukrajinska-literatura-avramenko-2017_s0397",
+      "title": "Сторінка 298"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
@@ -1708,25 +1714,26 @@
     }
   },
   {
-    "lemma": "зберігається",
-    "slug": "зберігається",
-    "gloss": "is stored; is being saved",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "form",
-    "example": "Ескіз до картини «Карусель» зберігається в Національному художньому музеї України.",
+    "lemma": "збити",
+    "slug": "збити",
+    "gloss": "to knock down",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "Збити з пантелику — це чудовий фразеологізм, який означає «заплутати, дезорієнтувати, зробити так, що людина не може нічого зрозуміти».",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-avramenko-2017_s0189",
-      "title": "Сторінка 123"
+      "locator": "ulp-4-00-lesson-notes_l0134_w012",
+      "title": "Lesson 134: Сленг в українській мові (part 12/20)"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "etymology": "From з- + би́ти."
   },
   {
     "lemma": "звичайно",
@@ -1751,27 +1758,6 @@
     "etymology": "Adverbial form of звича́йний."
   },
   {
-    "lemma": "звідки",
-    "slug": "звідки",
-    "gloss": "where from",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "question word",
-    "example": "У складнопідрядних реченнях з підрядними місця сполучні слова де, куди, звідки є прислівниками й виконують синтаксичну роль обставини.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0135",
-      "title": "Сторінка 98"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
     "lemma": "згідно з",
     "slug": "згідно-з",
     "gloss": "according to",
@@ -1780,28 +1766,6 @@
     "lessonTag": "b1",
     "cefr": "B1",
     "pos": "preposition"
-  },
-  {
-    "lemma": "здебільшого",
-    "slug": "здебільшого",
-    "gloss": "переважно, в більшій частині",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "adv",
-    "example": "Тому великі міста країни мають, здебільшого, погану якість повітря.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0253",
-      "title": "Сторінка 150"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "З + де + бі́льшого"
   },
   {
     "lemma": "здоровий",
@@ -1890,6 +1854,39 @@
     "etymology": "From з- + міни́ти impf."
   },
   {
+    "lemma": "знеболювальний",
+    "slug": "знеболювальний",
+    "gloss": "pain-relieving",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "adj",
+    "example": "Ввести антибіотик і знеболювальний засіб.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "11-klas-zakhist-vitchizni-gudima-2019-med_s0252",
+      "title": "Сторінка 137"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From знебо́лювати + -льний."
+  },
+  {
+    "lemma": "зневоднити",
+    "slug": "зневоднити",
+    "gloss": "to dehydrate; to remove water",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "verb",
+    "etymology": "From зне- + во́дний + -ити."
+  },
+  {
     "lemma": "знищити",
     "slug": "знищити",
     "gloss": "to destroy, to annihilate, to obliterate",
@@ -1910,6 +1907,28 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "З- + ни́щити"
+  },
+  {
+    "lemma": "зіставити",
+    "slug": "зіставити",
+    "gloss": "to compare, to juxtapose",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "Працю вчителя ні з чим не можна ні порівняти, ні зіставити.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "9-klas-ukrajinska-mova-voron-2017_s0165",
+      "title": "Сторінка 125"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From зі- + ста́вити"
   },
   {
     "lemma": "кадр",
@@ -1933,47 +1952,46 @@
     }
   },
   {
-    "lemma": "календарний",
-    "slug": "календарний",
-    "gloss": "calendar-related",
+    "lemma": "канадка",
+    "slug": "канадка",
+    "gloss": "Canadian woman",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "adj",
-    "example": "Чому важливо відрізняти історичний і календарний час?",
+    "weight": 3,
+    "lessonTag": "a1",
+    "cefr": "C1",
+    "pos": "noun",
+    "example": "Мене звати Шона, я канадка.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "5-klas-istoriya-schupak-2022_s0052",
-      "title": "Сторінка 54"
+      "locator": "ulp-5-00-lesson-notes_l0200_w013",
+      "title": "Lesson 200: Повідомлення слухачів подкасту та плани Ukrainian Lessons (part 13/31)"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "From календа́р + -ний."
+    "etymology": "From кана́д(ець) + -ка. From Кана́да + -ка."
   },
   {
-    "lemma": "камін",
-    "slug": "камін",
-    "gloss": "fireplace",
+    "lemma": "канцелярит",
+    "slug": "канцелярит",
+    "gloss": "bureaucratese",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Коефіцієнт корисної дії нагрівника Багато людей вважають, що в приватному будинку обов’язково має бути камін.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-fizyka-bariakhtar-2025_s0160",
-      "title": "Сторінка 146"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "noun"
+  },
+  {
+    "lemma": "катафора",
+    "slug": "катафора",
+    "gloss": "cataphora",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
   },
   {
     "lemma": "квасоля",
@@ -1995,28 +2013,6 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "керівний",
-    "slug": "керівний",
-    "gloss": "governing, leading",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "adjective",
-    "example": "Квіти щасливі, — сказав керівний робот корабля.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "7-klas-ukrlit-avramenko-2024_s0317",
-      "title": "Сторінка 223"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From кер(ува́ти) + -івни́й."
   },
   {
     "lemma": "кислий",
@@ -2148,6 +2144,17 @@
     }
   },
   {
+    "lemma": "конектор",
+    "slug": "конектор",
+    "gloss": "connector",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun",
+    "etymology": "Probably borrowed from English connector, from Latin cōnectō."
+  },
+  {
     "lemma": "контекст",
     "slug": "контекст",
     "gloss": "context",
@@ -2167,6 +2174,16 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "контекстуальний",
+    "slug": "контекстуальний",
+    "gloss": "contextual",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "adjective"
   },
   {
     "lemma": "контролювати",
@@ -2189,17 +2206,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From контро́ль + -ювати."
-  },
-  {
-    "lemma": "кориця",
-    "slug": "кориця",
-    "gloss": "висушена кора коричного дерева, що її вживають як прянощі для кондитерських виробів, а також у медицині й парфумерії",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun",
-    "etymology": "From Old East Slavic корица, diminutive of кора. Cognates include Russian кори́ца, Belarusian кары́ца."
   },
   {
     "lemma": "космос",
@@ -2244,49 +2250,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Cognate to Belarusian кошык, Polish koszyk. Equivalent to кіш + -ик."
-  },
-  {
-    "lemma": "крайній",
-    "slug": "крайній",
-    "gloss": "extreme, utmost",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "adj",
-    "example": "Основною ідеологією фашизму став крайній шовінізм, який переходив в ідею расової винятковості, мілітаризм і вождизм.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "10-klas-vsesvitnia-istoriia-gisem-2018-stand_s0007",
-      "title": "Сторінка 6"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Proto-Slavic *krajьnъ. From nominalization of крайній. Parsable as край + -ній. See the etymology of the corresponding lemma form."
-  },
-  {
-    "lemma": "культура",
-    "slug": "культура",
-    "gloss": "culture",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Чим, на вашу думку, художня культура людства відрізняється від матеріальної культури?",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-istoriya-schupak-2022_s0198",
-      "title": "Сторінка 197"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
   },
   {
     "lemma": "культурний",
@@ -2417,28 +2380,6 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "листок",
-    "slug": "листок",
-    "gloss": "leaf",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Маргарита вирвала з блокнота листок, написала: «ЩО ВСЕ?» – склала його і кинула Флоріанові.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "9-klas-zarubizhna-literatura-kovbasenko-2026_s0136",
-      "title": "Сторінка 76"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From лист + -ок."
   },
   {
     "lemma": "листя",
@@ -2621,28 +2562,6 @@
     }
   },
   {
-    "lemma": "мандрівник",
-    "slug": "мандрівник",
-    "gloss": "той, хто мандрує; подорожній, подорожанин",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Великий мандрівник помер, забутий усіма, всього за півтора року після закінчення своєї експедиції.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-istoria-vsesvitnia-ladychenko-2025_s0019",
-      "title": "Сторінка 16"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From мандрі́в(ний) + -ник or мандри + -івник. Compare ма́ндри."
-  },
-  {
     "lemma": "маршрут",
     "slug": "маршрут",
     "gloss": "route",
@@ -2683,50 +2602,6 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "методологія",
-    "slug": "методологія",
-    "gloss": "methodology",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Методологія — принципи, сукупність ідей, методів і засобів, які визначають підхід до розробки програмного забезпечення.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-informatyka-rudenko-2019_s0394",
-      "title": "Сторінка 252"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Derived via Western European languages from Ancient Greek μέθοδος + -λογία. By surface analysis, ме́тод + -о- + -ло́гія."
-  },
-  {
-    "lemma": "мешканець",
-    "slug": "мешканець",
-    "gloss": "resident",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Мешканець — це особа, що займає якесь приміщення як житло; жилець.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-voron-2017_s0272",
-      "title": "Сторінка 210"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Ме́шкання + -ець."
   },
   {
     "lemma": "мило",
@@ -2772,26 +2647,46 @@
     "etymology": "From мири́ти + -ся."
   },
   {
-    "lemma": "мислити",
-    "slug": "мислити",
-    "gloss": "to think",
+    "lemma": "мовлення",
+    "slug": "мовлення",
+    "gloss": "speech; speaking",
     "k": "vyv",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "verb",
-    "example": "Це здатність мислити вільно, знаходити свіжі ідеї та оригінальні рішення, швидко пристосовуватися до змін і нових обставин.",
+    "cefr": "B2",
+    "pos": "noun:n",
+    "example": "Чи стосуються ці характеристики мовлення?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "6-klas-zdorovia-vorontsova-2023_s0178",
-      "title": "Сторінка 183"
+      "locator": "10-klas-ukrmova-karaman-2018_s0014",
+      "title": "Сторінка 10"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Proto-Slavic *mysliti. Also analyzable as мисль + -ити."
+    }
+  },
+  {
+    "lemma": "мор",
+    "slug": "мор",
+    "gloss": "pestilence, plague, epidemic",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun"
+  },
+  {
+    "lemma": "мотиваційний",
+    "slug": "мотиваційний",
+    "gloss": "motivation (attributive), motivational",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "adj",
+    "etymology": "From мотива́ція + -ний."
   },
   {
     "lemma": "мох",
@@ -2922,25 +2817,14 @@
     }
   },
   {
-    "lemma": "наведено",
-    "slug": "наведено",
-    "gloss": "it is presented, provided",
+    "lemma": "навислий",
+    "slug": "навислий",
+    "gloss": "overhanging",
     "k": "vyv",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "b2",
-    "cefr": "A2",
-    "pos": "impersonal verb",
-    "example": "Перший варіант програми обчислення чисел Фібоначчі Ще один варіант програми обчислення чисел Фібоначчі наведено на рис.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-informatyka-rudenko-2019_s0172",
-      "title": "Сторінка 115"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "cefr": "C1",
+    "pos": "adj"
   },
   {
     "lemma": "нагода",
@@ -3005,28 +2889,6 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "найвищий",
-    "slug": "найвищий",
-    "gloss": "highest, tallest",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "adjective",
-    "example": "Інколи найвищий ступінь виражають додаванням до вищого ступеня сполучень від усіх, над усе, за всіх.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "6-klas-ukrmova-zabolotnyi-2020_s0139",
-      "title": "Сторінка 137"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From най- + ви́щий. Cognate with Polish najwyższy."
   },
   {
     "lemma": "найняти",
@@ -3116,26 +2978,14 @@
     "etymology": "From напру́жити + -ення."
   },
   {
-    "lemma": "народити",
-    "slug": "народити",
-    "gloss": "to give birth to, to bear, to beget",
-    "k": "other",
-    "weight": 5,
+    "lemma": "народнопоетичний",
+    "slug": "народнопоетичний",
+    "gloss": "folk-poetic",
+    "k": "vyv",
+    "weight": 3,
     "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Тривале вживання наркотичних речовин 1 Здатність зачати й народити здорову дитину.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0391",
-      "title": "Сторінка 231"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "На- + роди́ти"
+    "cefr": "C1",
+    "pos": "adjective"
   },
   {
     "lemma": "наскільки",
@@ -3158,27 +3008,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "Univerbation of на + скі́льки."
-  },
-  {
-    "lemma": "наступний",
-    "slug": "наступний",
-    "gloss": "next",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "adjective",
-    "example": "Яким словом ми можемо замінити слово наступний?",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "2-klas-ukrmova-kravcova-2019-1_s0077",
-      "title": "Сторінка 78"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
   },
   {
     "lemma": "натуральний",
@@ -3223,6 +3052,38 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From недоста́тній + -ьо."
+  },
+  {
+    "lemma": "незгода",
+    "slug": "незгода",
+    "gloss": "disagreement",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Згода дім будує, а незгода руйнує Зверніть увагу!",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "10-klas-ukrajinska-mova-zabolotnij-2018_s0188",
+      "title": "Сторінка 138"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From не- + зго́да."
+  },
+  {
+    "lemma": "неперехідність",
+    "slug": "неперехідність",
+    "gloss": "intransitivity",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
   },
   {
     "lemma": "неістота",
@@ -3278,28 +3139,6 @@
     }
   },
   {
-    "lemma": "ніби",
-    "slug": "ніби",
-    "gloss": "as if, as though, as, like",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "conj",
-    "example": "Все залежить не чує, живи так, ніби на Землі рай...",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-3-00-lesson-notes_l0106_w012",
-      "title": "Lesson 106: Події на вихідних Weekend events Negative adverbs and pronouns in Ukrainian (part 12/17)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From ні + би. Cognate with Belarusian ні́бы, Polish niby."
-  },
-  {
     "lemma": "ніхто",
     "slug": "ніхто",
     "gloss": "nobody",
@@ -3320,28 +3159,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From Proto-Slavic *nikъto. By surface analysis, univerbation of ні + хто. Cognates include Belarusian ніхто́, Russian никто́ and Polish nikt. Parsable as ні- +…"
-  },
-  {
-    "lemma": "обманювати",
-    "slug": "обманювати",
-    "gloss": "to deceive",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Водити один одного за ніс – дурити, обманювати один одного.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-zarubizhna-literatura-voloshchuk-2022_s0083",
-      "title": "Сторінка 84"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From обману́ти + -ювати."
   },
   {
     "lemma": "обов'язковий",
@@ -3366,28 +3183,6 @@
     "etymology": "Обо́в'язок + -о́вий."
   },
   {
-    "lemma": "оболонка",
-    "slug": "оболонка",
-    "gloss": "те, що покриває або окутує, оповиває що-небудь зовні, з поверхні",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Під склерою розташована судинна оболонка, де проходять кровоносні судини.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-biolohiya-anderson-2025_s0208",
-      "title": "Сторінка 168"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Ultimately from Proto-Slavic *bòlna."
-  },
-  {
     "lemma": "овес",
     "slug": "овес",
     "gloss": "яра злакова культура з суцвіттям волоть і вкритим лускою (рідше голим) зерном",
@@ -3408,6 +3203,28 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From Proto-Slavic *ovьsъ."
+  },
+  {
+    "lemma": "однорідний",
+    "slug": "однорідний",
+    "gloss": "homogeneous, syntactically parallel",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "adjective",
+    "example": "Який однорідний член речення вжито недоречно?",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-ukrmova-avramenko-2025_s0170",
+      "title": "Сторінка 127"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From одно- + рід + -ний."
   },
   {
     "lemma": "одягатися",
@@ -3451,6 +3268,49 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "ом",
+    "slug": "ом",
+    "gloss": "міжнародна одиниця електричного опору (Ом)",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Загальний опір двох ламп і реостата, з’єднаних послідовно, дорівнює 65 Ом.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-fizyka-bariakhtar-2025_s0266",
+      "title": "Сторінка 243"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
+    "lemma": "омонім",
+    "slug": "омонім",
+    "gloss": "homonym",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun",
+    "example": "Щоб Спрогнозуйте, у якому значенні використав омонім грамота полковник Лиховій.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-ukrlit-zabolotnyi-2025_s0378",
+      "title": "Сторінка 250"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Borrowed from French homonyme, German Homonym, and English homonym, derived from Latin homōnymus."
   },
   {
     "lemma": "опонент",
@@ -3562,28 +3422,6 @@
     "etymology": "Borrowed from English office."
   },
   {
-    "lemma": "п'ятдесят",
-    "slug": "п-ятдесят",
-    "gloss": "fifty",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "numeral",
-    "example": "П’ять, сім, тринадцять, п’ятдесят три, шістдесят один, дві тисячі, двадцять п’ять мільйонів.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "6-klas-ukrmova-golub-2023_s0167",
-      "title": "Сторінка 164"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Inherited from Proto-Slavic *pętь desęti."
-  },
-  {
     "lemma": "пакувати",
     "slug": "пакувати",
     "gloss": "to pack, to package, to pack up (make a pack out of or place into e.g. a trunk, a suitcase)",
@@ -3617,6 +3455,28 @@
     "etymology": "From Proto-Slavic *palati, frequentative of *polěti."
   },
   {
+    "lemma": "пасіка",
+    "slug": "пасіка",
+    "gloss": "apiary",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Сад, пасіка й ліки – се була його робота.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "7-klas-ukrlit-zabolotnyi-2024_s0032",
+      "title": "Сторінка 29"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Inherited from Old Ruthenian па́сѣка, from Proto-Slavic *pasěka. By surface analysis, па- + сікти́ + -а."
+  },
+  {
     "lemma": "перевантаження",
     "slug": "перевантаження",
     "gloss": "overload",
@@ -3639,26 +3499,101 @@
     "etymology": "Переванта́жити + -ення"
   },
   {
-    "lemma": "переглянути",
-    "slug": "переглянути",
-    "gloss": "to review",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
+    "lemma": "перетворити",
+    "slug": "перетворити",
+    "gloss": "to transform, to convert, to transmute, to transfigure, to turn (:something into something else)",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "B2",
     "pos": "verb",
-    "example": "Переглянути відео та встановити значення властивостей майбутньої анімації.",
+    "example": "Петлюри було здійснено низку заходів, покликаних викорінити в Армії УНР отаманщину та перетворити її на регулярне військо.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "7-klas-informatyka-ryvkind-2024_s0253",
-      "title": "Сторінка 223"
+      "locator": "10-klas-istorija-ukrajiny-gisem-2018_s0125",
+      "title": "Сторінка 68"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "From пере- + гля́нути."
+    "etymology": "From пере- + твори́ти impf."
+  },
+  {
+    "lemma": "пестливий",
+    "slug": "пестливий",
+    "gloss": "affectionate, diminutive",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "C1",
+    "pos": "adjective",
+    "example": "Дорога, пестливий, говорити.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "7-klas-ukrmova-zabolotnyi-2024_s0012",
+      "title": "Сторінка 14"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From пе́сти́ти + -ли́вий."
+  },
+  {
+    "lemma": "пилососити",
+    "slug": "пилососити",
+    "gloss": "to vacuum",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "verb",
+    "example": "Улітку я часто ходив із нею на роботу й допомагав поливати квіти й пилососити цілі  Володимир Штанко.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "6-klas-ukrlit-zabolotnyi-2023_s0202",
+      "title": "Сторінка 201"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Пилосо́с + -ити ). Possibly related to сса́ти."
+  },
+  {
+    "lemma": "писатимеш",
+    "slug": "писатимеш",
+    "gloss": "you will be writing, you will write habitually",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "verb:impf"
+  },
+  {
+    "lemma": "повнозначний",
+    "slug": "повнозначний",
+    "gloss": "lexical, full-meaning",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "adjective",
+    "example": "Проте водночас ця повнота і цілісність життєтворчості автора сама переростає в повнозначний символ.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "10-klas-zarubizhna-literatura-voloshhuk-2018_s0298",
+      "title": "Сторінка 172"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
   },
   {
     "lemma": "повідомлення",
@@ -3703,6 +3638,17 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From покра́щити + -ення."
+  },
+  {
+    "lemma": "полонина",
+    "slug": "полонина",
+    "gloss": "high mountain meadow",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun",
+    "etymology": "Inherited from Proto-Slavic *polninà."
   },
   {
     "lemma": "полуничний",
@@ -3759,6 +3705,17 @@
     "etymology": "Порівня́ти + -ювати."
   },
   {
+    "lemma": "поставмо",
+    "slug": "поставмо",
+    "gloss": "let's put, let us place",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "verb",
+    "etymology": "From Proto-Slavic *postaviti."
+  },
+  {
     "lemma": "постійно",
     "slug": "постійно",
     "gloss": "permanently",
@@ -3781,50 +3738,6 @@
     "etymology": "From пості́йний + -о."
   },
   {
-    "lemma": "початися",
-    "slug": "початися",
-    "gloss": "to begin, to start, to commence",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "verb",
-    "example": "Причин ритмічності кілька: по-перше, процес не може початися знову, доки не завершено попередній.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-biologiia-i-ekologia-shalamov-2019_s0118",
-      "title": "Сторінка 72"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From поча́ти + -ся."
-  },
-  {
-    "lemma": "починати",
-    "slug": "починати",
-    "gloss": "to begin",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "verb:impf",
-    "example": "У якому віці можна починати фарбувати волосся?",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "7-klas-zdorovia-guschyna-2024_s0120",
-      "title": "Сторінка 112"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Proto-Slavic *počinati."
-  },
-  {
     "lemma": "поширити",
     "slug": "поширити",
     "gloss": "to distribute, complete",
@@ -3845,6 +3758,28 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From по- + ши́рити."
+  },
+  {
+    "lemma": "пошкодити",
+    "slug": "пошкодити",
+    "gloss": "to damage",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "Щоб не пошкодити пам’яток давнини, археологи не квапляться, застосовують легкі лопати, ножі, пензлі.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "5-klas-istoriya-schupak-2022_s0031",
+      "title": "Сторінка 33"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From по- + шко́дити."
   },
   {
     "lemma": "поїду",
@@ -3890,6 +3825,16 @@
     "etymology": "Пра́ви́й + -о- + писа́ти, a calque of German Rechtschreibung and French orthographe."
   },
   {
+    "lemma": "прагматика",
+    "slug": "прагматика",
+    "gloss": "pragmatics; context-shaped meaning",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "noun:f"
+  },
+  {
     "lemma": "працюємо",
     "slug": "працюємо",
     "gloss": "we work; are working",
@@ -3911,20 +3856,41 @@
     }
   },
   {
-    "lemma": "препарат",
-    "slug": "препарат",
-    "gloss": "medication, drug",
+    "lemma": "працюється",
+    "slug": "працюється",
+    "gloss": "work goes; it is working for someone",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Зокрема, він перевірив на собі відкритий ним препарат проти холери.",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "І останнє речення про музичний подкаст «Радіо Скорбота»: Мені дуже добре працюється під цей подкаст.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-istorija-ukrajini-gisem-2017_s0470",
-      "title": "Сторінка 260"
+      "locator": "ulp-5-00-lesson-notes_l0172_w016",
+      "title": "Lesson 172: Українськомовні подкасти (part 16/20)"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
+    "lemma": "префікс",
+    "slug": "префікс",
+    "gloss": "prefix",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Який префікс в утворених словах можна замінити словом дуже?",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "4-klas-ukrayinska-mova-kravtsova-2021-1_s0027",
+      "title": "Сторінка 29"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
@@ -3976,26 +3942,25 @@
     "etymology": "From привіта́ти + -а́ння."
   },
   {
-    "lemma": "прийняти",
-    "slug": "прийняти",
-    "gloss": "to accept (a gift, an excuse, etc.)",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A2",
-    "pos": "verb",
-    "example": "Для цього їй довелося прийняти іслам.",
+    "lemma": "приземкуватий",
+    "slug": "приземкуватий",
+    "gloss": "squat, short and stocky",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "adjective",
+    "example": "Гарно йдуть, — схвально промовив тлустий, приземкуватий татарин у круглій шапці.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "ulp-4-00-lesson-notes_l0152_w009",
-      "title": "Lesson 152: Роксолана — La Sultana Rossa (part 9/15)"
+      "locator": "6-klas-ukrlit-avramenko-2023_s0095",
+      "title": "Сторінка 84"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "При- + йня́ти."
+    }
   },
   {
     "lemma": "прикраса",
@@ -4039,6 +4004,38 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "пристосовувати",
+    "slug": "пристосовувати",
+    "gloss": "to adapt, to adjust, to accommodate, to conform, to fit",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "Однак тогочасні умови життя також змусили пристосовувати ці церкви до оборони.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-istoriya-ukr-gisem-2021_s0070",
+      "title": "Сторінка 37"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From пристосува́ти + -увати."
+  },
+  {
+    "lemma": "присудковий",
+    "slug": "присудковий",
+    "gloss": "predicative",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "adjective"
   },
   {
     "lemma": "приховати",
@@ -4105,27 +4102,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From приєдна́ти + -ся."
-  },
-  {
-    "lemma": "про",
-    "slug": "про",
-    "gloss": "Указує на конкретну особу, предмет або абстрактне поняття, що виступають об'єктом розмови, думки і т. ін",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "prep",
-    "example": "Тобто шукатимеш джерела необхідної інформації про природу.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0009",
-      "title": "Сторінка 10"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
   },
   {
     "lemma": "провідник",
@@ -4225,6 +4201,49 @@
     "etymology": "Derived via Western European languages from Latin prōsa."
   },
   {
+    "lemma": "пропорційний",
+    "slug": "пропорційний",
+    "gloss": "proportional",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
+    "pos": "adj",
+    "example": "Дохід від вкладень завжди прямо пропорційний ризику, на який готовий йти інвестор заради одержання доходу.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "11-klas-ekonomika-homiak-2019_s0149",
+      "title": "Сторінка 98"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From пропо́рція + -ний."
+  },
+  {
+    "lemma": "просите",
+    "slug": "просите",
+    "gloss": "you ask for (plural/formal)",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "a1",
+    "cefr": "B2",
+    "pos": "verb form",
+    "example": "Ви просите перехожого сказати, де є найближчий банкомат.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0320",
+      "title": "Сторінка 220"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
     "lemma": "простір",
     "slug": "простір",
     "gloss": "одна з основних об'єктивних форм існування матерії, яка характеризується протяжністю та обсягом",
@@ -4247,25 +4266,14 @@
     "etymology": "From Proto-Slavic *prostorъ."
   },
   {
-    "lemma": "професія",
-    "slug": "професія",
-    "gloss": "profession",
+    "lemma": "протиставний",
+    "slug": "протиставний",
+    "gloss": "adversative, contrastive",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Можна стати по-справжньому щасливим, коли характер і професія перебувають у гармонії.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-zabolotnij-2017_s0272",
-      "title": "Сторінка 190"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "adjective"
   },
   {
     "lemma": "психологічний",
@@ -4290,26 +4298,25 @@
     "etymology": "From психоло́гія + -і́чний."
   },
   {
-    "lemma": "птаха",
-    "slug": "птаха",
-    "gloss": "bird",
-    "k": "other",
-    "weight": 5,
+    "lemma": "публікуватися",
+    "slug": "публікуватися",
+    "gloss": "to be published; to publish oneself",
+    "k": "vyv",
+    "weight": 3,
     "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Персонаж «Синього птаха», якого в українському перекладі названо Душею Світла, в оригіналі – просто Світло.",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "На іміджевих сайтах можуть публікуватися різні новини, інформація про акції, знижки — все те, що характеризує компанію перед клієнтом.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "10-klas-zarubizhna-literatura-voloshhuk-2018_s0342",
-      "title": "Сторінка 198"
+      "locator": "11-klas-informatyka-rudenko-2019_s0212",
+      "title": "Сторінка 141"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Proto-Slavic *pъtakъ."
+    }
   },
   {
     "lemma": "півострів",
@@ -4332,28 +4339,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From пів- + о́стрів."
-  },
-  {
-    "lemma": "підліток",
-    "slug": "підліток",
-    "gloss": "хлопчик або дівчинка 12–16 років – перехідного віку від дитинства до юнацтва",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "В Підліток може висловити свої скарги вчителю, шкільному адміністратору чи батькам.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "7-klas-zdorovia-guschyna-2024_s0077",
-      "title": "Сторінка 72"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From під- + літо + -ок. Cognate with Belarusian падле́так From підліта́ти + -ок."
   },
   {
     "lemma": "підряд",
@@ -4399,50 +4384,6 @@
     "etymology": "Під- + си́ла + -ити"
   },
   {
-    "lemma": "підтвердження",
-    "slug": "підтвердження",
-    "gloss": "confirmation",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "noun:n",
-    "example": "Що могла б сказати на підтвердження своєї думки Соломія?",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-ukrmova-zabolotnyi-2025_s0312",
-      "title": "Сторінка 253"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From the підтве́рдж- stem of підтве́рдити + -ення."
-  },
-  {
-    "lemma": "підтримати",
-    "slug": "підтримати",
-    "gloss": "to support",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A1",
-    "pos": "verb",
-    "example": "Хмельницького до української спільноти із закликом підтримати розпочату козацтвом боротьбу Полковник реєстрового лівобережного полку.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-istoria-ukr-galimov-2025_s0206",
-      "title": "Сторінка 127"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From під- + трима́ти impf."
-  },
-  {
     "lemma": "пізно",
     "slug": "пізно",
     "gloss": "late",
@@ -4486,27 +4427,6 @@
     }
   },
   {
-    "lemma": "рекорд",
-    "slug": "рекорд",
-    "gloss": "record (most extreme known value of some achievement)",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Номер 5 ― побити світовий рекорд.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-4-00-lesson-notes_l0141_w012",
-      "title": "Lesson 141: Україна в 2019: головні новини (part 12/20)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
     "lemma": "референт",
     "slug": "референт",
     "gloss": "referent",
@@ -4539,68 +4459,26 @@
     "etymology": "From реєструва́ти + -ся."
   },
   {
-    "lemma": "риса",
-    "slug": "риса",
-    "gloss": "stroke, line (often metaphorically as the fundamental way something is constructed)",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Усі ці приклади об’єднує одна риса — моральність.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "6-klas-etyka-martyniuk-2023_s0072",
-      "title": "Сторінка 73"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "родич",
-    "slug": "родич",
-    "gloss": "relative",
+    "lemma": "розбивати",
+    "slug": "розбивати",
+    "gloss": "to break, smash",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Однак сталося непоправне: родич помер і кредитор стає спадкоємцем майна боржника.",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "verb:impf",
+    "example": "Аерозольні упаковки не можна розбирати чи розбивати, адже вони пожежота вибухонебезпечні.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "11-klas-pravoznavstvo-narovlianskyi-2019_s0298",
-      "title": "Сторінка 155"
+      "locator": "7-klas-zdorovia-guschyna-2024_s0051",
+      "title": "Сторінка 48"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "From родити + -ич."
-  },
-  {
-    "lemma": "розмова",
-    "slug": "розмова",
-    "gloss": "conversation",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A2",
-    "pos": "noun",
-    "example": "Тому сподіваюсь, вам сподобається наша розмова, і ви зрозумієте щось.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-5-00-lesson-notes_l0197_w001",
-      "title": "Lesson 197: Українці в Новій Зеландії: розмова з Ольгою Вязенко (part 1/26)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "etymology": "From розби́ти pf + -ва́ти."
   },
   {
     "lemma": "розповісти",
@@ -4645,27 +4523,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From the розпорядж- stem of розпоряди́тися + -ення."
-  },
-  {
-    "lemma": "розум",
-    "slug": "розум",
-    "gloss": "здатність людини мислити, відображати і пізнавати об'єктивну дійсність",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Маруся не знайшла в собі сили пережити цю зраду і тому вона зовсім втратила розум.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-4-00-lesson-notes_l0153_w011",
-      "title": "Lesson 153: Маруся Чурай — дівчина з легенди (part 11/17)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
   },
   {
     "lemma": "розширювати",
@@ -4754,28 +4611,6 @@
     "etymology": "Inherited from Old Ruthenian рꙋчникъ. By surface analysis, рука́ + -ни́к."
   },
   {
-    "lemma": "рідко",
-    "slug": "рідко",
-    "gloss": "rarely",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A2",
-    "pos": "adverb",
-    "example": "У формі називного відмінка іменник, яким виражено звертання, уживають рідко — зазвичай у поетичних творах.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-ukrajinska-mova-glazova-2019_s0149",
-      "title": "Сторінка 104"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From рідки́й + -о."
-  },
-  {
     "lemma": "різдвяний",
     "slug": "різдвяний",
     "gloss": "Christmas (attributive) (of or relating to Christmas)",
@@ -4820,28 +4655,6 @@
     "etymology": "From Proto-Slavic *saditi."
   },
   {
-    "lemma": "садівництво",
-    "slug": "садівництво",
-    "gloss": "gardening",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "Крім землеробства, розвивалися скотарство, городництво, садівництво, бджільництво, рибальство й мисливство.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-istoria-ukr-galimov-2025_s0027",
-      "title": "Сторінка 20"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From сад + -івни́цтво."
-  },
-  {
     "lemma": "салат",
     "slug": "салат",
     "gloss": "salad",
@@ -4863,47 +4676,45 @@
     }
   },
   {
-    "lemma": "самостійно",
-    "slug": "самостійно",
-    "gloss": "independently",
+    "lemma": "саморедагування",
+    "slug": "саморедагування",
+    "gloss": "self-editing",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "adverb",
-    "example": "У вільний час самостійно прослухайте твори композитора в інших жанрах.",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "noun:n"
+  },
+  {
+    "lemma": "санвузол",
+    "slug": "санвузол",
+    "gloss": "bathroom/toilet unit",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:m"
+  },
+  {
+    "lemma": "свистіти",
+    "slug": "свистіти",
+    "gloss": "to whistle",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "verb",
+    "example": "Виявляється, я так перейнявся думками синьомордого чужинця, що почав свистіти, кумкати й клацати язиком.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-mystetstvo-masol-2017_s0101",
-      "title": "Сторінка 94"
+      "locator": "6-klas-ukrlit-avramenko-2023_s0235",
+      "title": "Сторінка 180"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "свята",
-    "slug": "свята",
-    "gloss": "a saint.",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Речення номер один: Деякі свята потрохи відходять в історію.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-5-00-lesson-notes_l0173_w013",
-      "title": "Lesson 173: Зимовий цикл свят (part 13/22)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "See the etymology of the corresponding lemma form. Nominalization of свята́"
   },
   {
     "lemma": "свідомість",
@@ -4992,28 +4803,6 @@
     "etymology": "Adverbial form of символі́чний."
   },
   {
-    "lemma": "систематизувати",
-    "slug": "систематизувати",
-    "gloss": "to systematize",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Скласти план і відповідно до нього систематизувати матеріал.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-ukrmova-zabolotnyi-2019_s0314",
-      "title": "Сторінка 202"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From систематиз(а́ція) + -ува́ти."
-  },
-  {
     "lemma": "скарб",
     "slug": "скарб",
     "gloss": "a collection of valuable things (money, jewels etc.)",
@@ -5033,6 +4822,28 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "словотвір",
+    "slug": "словотвір",
+    "gloss": "word formation",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "C1",
+    "pos": "noun",
+    "example": "Висловте припущення, яку роль відіграє словотвір у мовній системі.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "6-klas-ukrmova-golub-2023_s0028",
+      "title": "Сторінка 29"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "Сло́во + -о- + тві́р"
   },
   {
     "lemma": "слюсар",
@@ -5096,28 +4907,6 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
-  },
-  {
-    "lemma": "сорок",
-    "slug": "сорок",
-    "gloss": "forty",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "numeral",
-    "example": "От засмажили дванадцять биків, напекли сорок печей хліба.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "5-klas-ukrlit-zabolotnyi-2022_s0071",
-      "title": "Сторінка 58"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From Old East Slavic сорокъ, cognates include Russian со́рок and Belarusian со́рак ; further origin is unknown."
   },
   {
     "lemma": "спитати",
@@ -5208,26 +4997,26 @@
     "etymology": "From спостерегти́ + -ення."
   },
   {
-    "lemma": "стадіон",
-    "slug": "стадіон",
-    "gloss": "stadium",
+    "lemma": "спізнитися",
+    "slug": "спізнитися",
+    "gloss": "to be late",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "На стадіон прийшли хлопці, бажаючі грати у футбол.",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "verb",
+    "example": "Щоб не спізнитися, треба рухатися швидше.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "7-klas-ukrmova-zabolotnyi-2024_s0233",
-      "title": "Сторінка 233"
+      "locator": "7-klas-fizyka-bariakhtar-2024_s0063",
+      "title": "Сторінка 62"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "Borrowed from Ancient Greek στάδιον."
+    "etymology": "From с- + пі́зній + -и́ти + -ся."
   },
   {
     "lemma": "стажування",
@@ -5251,6 +5040,38 @@
     }
   },
   {
+    "lemma": "старшокурсниця",
+    "slug": "старшокурсниця",
+    "gloss": "senior-year female student",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "C1",
+    "pos": "noun"
+  },
+  {
+    "lemma": "стилістичний",
+    "slug": "стилістичний",
+    "gloss": "stylistic",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "adjective",
+    "example": "Як називається такий стилістичний прийом і для чого він використовується в художній літературі?",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "10-klas-ukrmova-karaman-2018_s0168",
+      "title": "Сторінка 94"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From стилі́стика + -и́чний."
+  },
+  {
     "lemma": "стілець",
     "slug": "стілець",
     "gloss": "chair",
@@ -5270,6 +5091,26 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "субординація",
+    "slug": "субординація",
+    "gloss": "hierarchy, subordination",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
+  },
+  {
+    "lemma": "судома",
+    "slug": "судома",
+    "gloss": "мимовільне скорочення м'язів усього тіла чи його частин, обличчя від болю, холоду, при деяких захворюваннях і т. ін",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "B2",
+    "pos": "noun"
   },
   {
     "lemma": "сума",
@@ -5333,6 +5174,28 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     }
+  },
+  {
+    "lemma": "суміш",
+    "slug": "суміш",
+    "gloss": "mixture",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b1",
+    "cefr": "B2",
+    "pos": "noun:f",
+    "example": "Нумо, дізнаємося про способи розділення сумішей і розділимо суміш на складники!",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "7-klas-khimiya-hryhorovych-2024_s0142",
+      "title": "Сторінка 139"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    },
+    "etymology": "From су- + -міш, combining form of міша́ти."
   },
   {
     "lemma": "суспільство",
@@ -5400,28 +5263,6 @@
     "etymology": "From с- + хвали́ти impf."
   },
   {
-    "lemma": "схильний",
-    "slug": "схильний",
-    "gloss": "inclined, disposed, prone, liable, apt (+ до (do) / infinitive) (having a propensity towards something)",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b2",
-    "cefr": "A2",
-    "pos": "adj",
-    "example": "Схильний, охочий що-небудь робити; готовий до певних учинків; згоден на певну дію, стан.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-ukrmova-avramenko-2025_s0253",
-      "title": "Сторінка 180"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Схил + -ний."
-  },
-  {
     "lemma": "сцена",
     "slug": "сцена",
     "gloss": "scene",
@@ -5464,26 +5305,26 @@
     }
   },
   {
-    "lemma": "телебачення",
-    "slug": "телебачення",
-    "gloss": "television (medium)",
+    "lemma": "січовий",
+    "slug": "січовий",
+    "gloss": "Sich (somebody or something related to Sich, usually the Zaporozhian Sich)",
     "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun",
-    "example": "До яких жанрів телебачення вони належать?",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "B2",
+    "pos": "adj",
+    "example": "До нього дібрав музику мій брат, Левко Лепкий, січовий стрілець, і ця композиція стала улюбленою стрілецькою піснею...».",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-mystetstvo-masol-2017_s0184",
-      "title": "Сторінка 163"
+      "locator": "8-klas-ukrlit-zabolotnyi-2025_s0072",
+      "title": "Сторінка 51"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "Теле- + ба́чення, possibly calque of Russian телеви́дение. Cognate with Belarusian тэлеба́чанне."
+    "etymology": "Січ + -ови́й."
   },
   {
     "lemma": "телефонувати",
@@ -5518,100 +5359,14 @@
     "pos": "noun"
   },
   {
-    "lemma": "тест",
-    "slug": "тест",
-    "gloss": "test",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A1",
-    "pos": "noun"
-  },
-  {
-    "lemma": "тестувати",
-    "slug": "тестувати",
-    "gloss": "to test",
+    "lemma": "темно-зелений",
+    "slug": "темно-зелений",
+    "gloss": "dark green",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "verb",
-    "example": "Також хочу нагадати, що ви можете використовувати наші преміум-матеріали для того, щоб відтворювати, тестувати себе і практикуватися.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "ulp-5-00-lesson-notes_l0178_w022",
-      "title": "Lesson 178: Як ефективніше вчитися? (part 22/26)"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From тест + -ува́ти."
-  },
-  {
-    "lemma": "тисяча",
-    "slug": "тисяча",
-    "gloss": "one thousand",
-    "k": "vyv",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Числівник тисяча відмінюємо як іменник І відміни мішаної групи.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "6-klas-ukrmova-golub-2023_s0165",
-      "title": "Сторінка 162"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "тихо",
-    "slug": "тихо",
-    "gloss": "quietly",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A2",
-    "pos": "adv",
-    "example": "Ярослав Грицак зазначав: «Можу сказати, що комунізм упав напрочуд тихо.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-istoriya-ukr-gisem-2024_s0310",
-      "title": "Сторінка 173"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "тканина",
-    "slug": "тканина",
-    "gloss": "fabric",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "noun:f",
-    "example": "Скелетна м’язова тканина утворює скелетні м’язи, язик тощо.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-biolohiya-anderson-2025_s0014",
-      "title": "Сторінка 13"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From ткань + -и́на."
+    "cefr": "C1",
+    "pos": "adj"
   },
   {
     "lemma": "товариський",
@@ -5700,25 +5455,14 @@
     }
   },
   {
-    "lemma": "тричі",
-    "slug": "тричі",
-    "gloss": "three times, thrice, on three occasions",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "B1",
-    "pos": "adv",
-    "example": "Українські співаки, ставати переможцями, тричі ставати переможцем, пісенний конкурс, конкурс «Євробачення».",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "8-klas-ukrmova-avramenko-2025_s0041",
-      "title": "Сторінка 39"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
+    "lemma": "трикрапка",
+    "slug": "трикрапка",
+    "gloss": "ellipsis mark",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
   },
   {
     "lemma": "тротуар",
@@ -5827,25 +5571,36 @@
     }
   },
   {
-    "lemma": "узимку",
-    "slug": "узимку",
-    "gloss": "in winter, in the winter",
+    "lemma": "умовний",
+    "slug": "умовний",
+    "gloss": "встановлений або визначений за домовленістю між ким-небудь; зрозумілий, відомий тільки тим, хто домовився",
     "k": "other",
-    "weight": 5,
+    "weight": 3,
     "lessonTag": "a2",
-    "cefr": "B1",
-    "pos": "adv",
-    "example": "Узимку – пом’якшує морози, приносить снігопади, відлиги.",
+    "cefr": "B2",
+    "pos": "adj",
+    "example": "Тому вчені здійснили умовний поділ історії на періоди — періодизацію історії.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "8-klas-heohrafiya-hilberh-2025_s0114",
-      "title": "Сторінка 82"
+      "locator": "6-klas-istoriia-shchupak-2023_s0016",
+      "title": "Сторінка 16"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "etymology": "From умо́ва + -ний."
+  },
+  {
+    "lemma": "фамільярність",
+    "slug": "фамільярність",
+    "gloss": "overfamiliarity",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
   },
   {
     "lemma": "фінал",
@@ -5934,48 +5689,26 @@
     "etymology": "Inherited from Proto-Slavic *kvisti."
   },
   {
-    "lemma": "часовий",
-    "slug": "часовий",
-    "gloss": "temporal, related to time",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "B1",
-    "pos": "adjective",
-    "example": "Позаду був часовий стрибок у ранок сьогоднішнього дня.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "6-klas-ukrlit-avramenko-2023_s0243",
-      "title": "Сторінка 185"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From час + -ови́й."
-  },
-  {
-    "lemma": "червень",
-    "slug": "червень",
-    "gloss": "June",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
+    "lemma": "цунамі",
+    "slug": "цунамі",
+    "gloss": "гігантські хвилі, які виникають в океані внаслідок підводних землетрусів, виверження підводних або острівних вулканів і спричиняють руйнівні спустошення на низьких берегах",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "B2",
     "pos": "noun",
-    "example": "Червень — від червець, з якого виготовляли червону фарбу.",
+    "example": "Цунамі охоплюють усю товщу водних мас і рухаються Мал.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
-      "locator": "9-klas-ukrajinska-mova-voron-2017_s0074",
-      "title": "Сторінка 60"
+      "locator": "6-klas-heohrafiya-zapotockyi-2023_s0188",
+      "title": "Сторінка 190"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
-    "etymology": "From Old East Slavic червьнъ, with -ень. Cognates include Belarusian чэрвень, Czech červen, Polish czerwiec, and Bulgarian червен. Related to a carmine-based…"
+    "etymology": "Borrowed from Japanese 津(つ)波(なみ)."
   },
   {
     "lemma": "чомусь",
@@ -6063,48 +5796,14 @@
     }
   },
   {
-    "lemma": "швидкий",
-    "slug": "швидкий",
-    "gloss": "fast, quick",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "A1",
-    "pos": "adj",
-    "example": "Згодом розпочався «промисловий» бум – швидкий розвиток вторинного сектору економіки: металургії, машинобудування, хімічної промисловості.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "9-klas-geografiia-boiko-2026_s0548",
-      "title": "Сторінка 289"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "Inherited from Old Ruthenian швыдкїй, borrowed from dialectal Polish szwytki, świtki, from Middle Low German swît, from Old Saxon swīth, from Proto-West…"
-  },
-  {
-    "lemma": "швидко",
-    "slug": "швидко",
-    "gloss": "quickly",
+    "lemma": "шиплячий",
+    "slug": "шиплячий",
+    "gloss": "hushing consonant",
     "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "adverb",
-    "example": "Б Троянці, в човни посідавши, і швидко їх поодпихавши, по вітру гарно попливли.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "11-klas-ukrajinska-mova-avramenko-2019_s0179",
-      "title": "Сторінка 127"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From швидки́й."
+    "weight": 3,
+    "lessonTag": "a2",
+    "cefr": "C1",
+    "pos": "adjective"
   },
   {
     "lemma": "шум",
@@ -6173,6 +5872,27 @@
     "etymology": "From як(о) + -сь."
   },
   {
+    "lemma": "ясир",
+    "slug": "ясир",
+    "gloss": "captives taken in raids; forced captivity",
+    "k": "vyv",
+    "weight": 3,
+    "lessonTag": "folk",
+    "cefr": "B2",
+    "pos": "noun",
+    "example": "Влада Речі Посполитої як плату за допомогу дозволила татарським воїнам забрати в ясир місцевих жителів.",
+    "exampleProvenance": {
+      "source": "textbook",
+      "label": "Ukrainian school textbook",
+      "locator": "8-klas-istoria-ukr-galimov-2025_s0236",
+      "title": "Сторінка 143"
+    },
+    "exampleLicense": {
+      "status": "not_openly_licensed",
+      "useBasis": "short educational quotation with attribution"
+    }
+  },
+  {
     "lemma": "інвалідність",
     "slug": "інвалідність",
     "gloss": "disability, disablement, invalidism (state of being disabled)",
@@ -6193,28 +5913,6 @@
       "useBasis": "short educational quotation with attribution"
     },
     "etymology": "From інвалі́дний + -ість."
-  },
-  {
-    "lemma": "індивідуально",
-    "slug": "індивідуально",
-    "gloss": "individually",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "b1",
-    "cefr": "A2",
-    "pos": "adv",
-    "example": "Узагалі одяг добирають індивідуально, охопити всі нюанси і тонкощі тих чи інших видів одягу неможливо.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "10-klas-zakhyst-fuka-2023_s0482",
-      "title": "Сторінка 264"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    },
-    "etymology": "From індивідуа́льний."
   },
   {
     "lemma": "інтенсивний",
@@ -6253,27 +5951,6 @@
       "label": "Ukrainian school textbook",
       "locator": "8-klas-informatyka-ryvkind-2025_s0352",
       "title": "Сторінка 253"
-    },
-    "exampleLicense": {
-      "status": "not_openly_licensed",
-      "useBasis": "short educational quotation with attribution"
-    }
-  },
-  {
-    "lemma": "інформація",
-    "slug": "інформація",
-    "gloss": "інформування",
-    "k": "other",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1",
-    "pos": "noun",
-    "example": "Інформація є базовим поняттям науки інформатики, проте чіткого та універсального її означення не існує.",
-    "exampleProvenance": {
-      "source": "textbook",
-      "label": "Ukrainian school textbook",
-      "locator": "10-klas-informatika-rudenko-2018-stand_s0002",
-      "title": "Сторінка 4"
     },
     "exampleLicense": {
       "status": "not_openly_licensed",

@@ -91,6 +91,9 @@ def test_build_pool_schema_sorting_and_filters() -> None:
         "k": "other",
         "weight": 3,
         "lessonTag": "a1",
+        # #6728: the pool emits a row's TRUE CEFR level, not just A1/A2/B1 — so the
+        # B2 enrichment on this fixture now reaches the served artifact.
+        "cefr": "B2",
     }
     assert by_lemma["дім"] == {
         "lemma": "дім",
@@ -458,3 +461,57 @@ def test_build_pool_carries_cleaned_etymology_for_kaikki_origin() -> None:
     pool = {item["lemma"]: item for item in build_pool(entries, size=10)}
     assert pool["монета"]["etymology"] == "From Latin monēta."
     assert "etymology" not in pool["вода"]
+
+
+def _level_entry(lemma: str, slug: str, level: str) -> dict[str, object]:
+    return {
+        "lemma": lemma,
+        "url_slug": slug,
+        "gloss": f"gloss for {lemma}",
+        "primary_source": "course",
+        "course_usage": [],
+        "enrichment": {"cefr": {"level": level, "source": "fixture", "text": level}},
+    }
+
+
+def test_build_pool_emits_true_cefr_level_above_b1() -> None:
+    """#6728: a B2/C1/C2 enrichment must reach the served row. The old `_early_cefr`
+    cap hid every level above B1, so the WotD C-level tabs could never match a card."""
+    for level in ("B2", "C1", "C2"):
+        pool = build_pool([_level_entry("слово", "slovo", level)], size=10)
+        assert pool[0]["cefr"] == level, f"level {level} was dropped from the pool row"
+
+
+def test_build_pool_reserves_slots_for_every_present_cefr_level() -> None:
+    """#6728: the pool must actually CONTAIN C1/B2 lemmas, not merely emit a CEFR
+    field. Selection is level-stratified so a flood of A1/A2/B1 words can no longer
+    crowd every C1 word out of the top-N — each present level gets its quota first."""
+    entries = [_level_entry(f"а{i}", f"a{i}", "A1") for i in range(200)]
+    entries += [_level_entry(f"б{i}", f"b{i}", "C1") for i in range(60)]
+    entries += [_level_entry(f"в{i}", f"v{i}", "B2") for i in range(60)]
+
+    # size=120, min_per_level=40 → 40 C1 + 40 B2 reserved before the A1 fill.
+    pool = build_pool(entries, size=120, min_per_level=40)
+    by_level: dict[str | None, int] = {}
+    for item in pool:
+        by_level[item.get("cefr")] = by_level.get(item.get("cefr"), 0) + 1
+
+    assert by_level.get("C1", 0) == 40
+    assert by_level.get("B2", 0) == 40
+    # The remaining 40 slots fill from the weighted pool (A1 dominates by count).
+    assert by_level.get("A1", 0) == 40
+    assert len(pool) == 120
+
+
+def test_build_pool_includes_c1_words_alongside_a_lower_level_majority() -> None:
+    """#6728 integration shape: with default quotas, a large beginner majority must
+    not erase C1 representation. Mirrors the real manifest where ~4400 A1/A2/B1
+    eligible words used to squeeze out all 596 C1 candidates."""
+    entries = [_level_entry(f"а{i:03d}", f"a{i:03d}", "A1") for i in range(300)]
+    entries += [_level_entry(f"с{i:03d}", f"s{i:03d}", "C1") for i in range(50)]
+
+    pool = build_pool(entries, size=300)
+    c1 = [item for item in pool if item.get("cefr") == "C1"]
+    assert len(c1) == 40  # default MIN_PER_LEVEL
+    # Every C1 card carries its true level so the WotD C1 tab can match it.
+    assert all(item["cefr"] == "C1" for item in c1)
