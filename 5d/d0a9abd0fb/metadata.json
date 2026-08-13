@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5dd0a9abd0fb",
+  "strategy": "manual-commit",
+  "branch": "deepseek/6748-sweep-pr-number",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/README.md",
+    ".github/workflows/integration-sweep.yml",
+    "scripts/orchestration/integration_sweep.py",
+    "tests/orchestration/test_integration_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/5d/d0a9abd0fb/0/metadata.json",
+      "transcript": "/5d/d0a9abd0fb/0/full.jsonl",
+      "compact_transcript": "/5d/d0a9abd0fb/0/transcript.jsonl",
+      "content_hash": "/5d/d0a9abd0fb/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 76827,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6024704,
+    "output_tokens": 16569,
+    "api_call_count": 73
+  }
+}
