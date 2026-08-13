@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "211f0bf1775b",
+  "session_id": "session_618de4a6-e461-4d8a-b663-a041009a7206",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T15:33:17.032237Z",
+  "branch": "kimi/6715-practice-hydrate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lexicon/LexiconPracticeMount.astro",
+    "site/tests/unit/practice-first-paint.test.ts"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "645e5192629b",
+  "token_usage": {
+    "input_tokens": 40887,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1655296,
+    "output_tokens": 8948,
+    "api_call_count": 37
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T15:33:17.007239Z",
+    "agent_lines": 140,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 140,
+    "total_lines_changed": 140,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

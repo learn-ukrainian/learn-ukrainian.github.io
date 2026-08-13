@@ -1,0 +1,32 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/6715-practice-hydrate
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6715 Practice first paint must not be a blank main
+
+## CAPACITY_CARD
+pick=kimi k3-256k — Cursor already on 6712; use idle weekly
+## ROUTING_CARD_V1
+task_id: 6715-practice-hydrate
+tier: practical
+model_x_harness: kimi/k3-256k
+owned_paths: site/ (practice page / words-of-the-day/practice only)
+
+## Bug
+`/words-of-the-day/practice/` first paint: header+footer, empty `<main>`, then hydrate. Slow networks look blank.
+
+Live: https://learn-ukrainian.github.io/words-of-the-day/practice/?lemmaId=%D0%BC%D0%B0%D0%BC%D0%B0
+
+## Do
+1. SSR or a visible first-paint shell (prompt/skeleton) so `<main>` is not empty before hydrate.
+2. Do not block on client-only data forever; keep existing session behavior after hydrate.
+3. Small test if one exists.
+4. Commit `fix(site): practice first paint is not a blank main (#6715)` trailer `X-Agent: kimi/6715-practice-hydrate`. PR. No merge.
