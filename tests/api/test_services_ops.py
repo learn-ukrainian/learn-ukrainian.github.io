@@ -492,7 +492,10 @@ def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lso
         combined = f"{res.stdout}\n{res.stderr}"
         assert "/proc/" not in combined, combined
         assert "No such file or directory" not in combined, combined
-        assert "running" in res.stdout
+        # Dummy listener has no health endpoint → Linux CI reports degraded
+        # (PID resolved). Either degraded or running is fine; require the PID.
+        assert str(proc.pid) in res.stdout, res.stdout
+        assert "degraded" in res.stdout or "running" in res.stdout, res.stdout
     finally:
         if proc.poll() is None:
             proc.terminate()
