@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 37285,
-      "output": 1653,
-      "reasoning": 4946,
+      "input": 39779,
+      "output": 2699,
+      "reasoning": 5658,
       "cache": {
-        "read": 218944,
+        "read": 409600,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786655740964,
-      "updated": 1786655910009
+      "updated": 1786655973754
     }
   },
   "messages": [
@@ -1228,19 +1228,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 37940,
+          "input": 530,
+          "output": 199,
+          "reasoning": 91,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 37120
           }
         },
         "modelID": "glm-5.2",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1786655909999
+          "created": 1786655909999,
+          "completed": 1786655931275
         },
+        "finish": "tool-calls",
         "id": "msg_ffcfda86f001g6M8A0gSS3TX4y",
         "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu"
       },
@@ -1279,21 +1282,470 @@
           "tool": "bash",
           "callID": "call_5e1cf77185984253a2bb4373",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add docs/lesson-schema.yaml && git commit -m \"docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n\nRegenerate docs/lesson-schema.yaml via scripts/build/generate_lesson_schema.py\nso components_sha256 reflects the roundSize prop added to LexiconPractice.tsx\nin this branch. Practice product code unchanged; schema-only drift fix.\n\nX-Agent: glm/6751-lesson-schema-drift\" && echo \"=== commit done ===\" && git log --oneline -3",
               "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
             },
+            "output": "[glm/6751-lesson-schema-drift e7dbff1614] docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n 1 file changed, 5 insertions(+), 1 deletion(-)\n=== commit done ===\ne7dbff1614 docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n1c741408f2 fix(practice): one round denominator, matching miss feedback, live stats tiles (#6720, #6721, #6723)\neb7d0240c9 fix(practice): A1 empty synonym no longer opens 0/0 antonym sessions (#6734) (#6741)\n",
+            "metadata": {
+              "output": "[glm/6751-lesson-schema-drift e7dbff1614] docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n 1 file changed, 5 insertions(+), 1 deletion(-)\n=== commit done ===\ne7dbff1614 docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n1c741408f2 fix(practice): one round denominator, matching miss feedback, live stats tiles (#6720, #6721, #6723)\neb7d0240c9 fix(practice): A1 empty synonym no longer opens 0/0 antonym sessions (#6734) (#6741)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add docs/lesson-schema.yaml && git commit -m \"docs(schema): regenerate lesson-schema.yaml for LexiconPractice drift (#6751)\n\nRegenerate docs/lesson-schema.yaml via scripts/build/generate_lesson_schema.py\nso components_sha256 reflects the roundSize prop added to LexiconPractice.tsx\nin this branch. Practice product code unchanged; schema-only drift fix.\n\nX-Agent: glm/6751-lesson-schema-drift\" && echo \"=== commit done ===\" && git log --oneline -3",
             "time": {
-              "start": 1786655919606
+              "start": 1786655930360,
+              "end": 1786655930374
             }
           },
           "id": "prt_ffcfdcdce001GYlkcwldnKsWlN",
           "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
           "messageID": "msg_ffcfda86f001g6M8A0gSS3TX4y"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-finish",
+          "tokens": {
+            "total": 37940,
+            "input": 530,
+            "output": 199,
+            "reasoning": 91,
+            "cache": {
+              "write": 0,
+              "read": 37120
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcfdf9ac001DXQnGmaP00Ta6P",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfda86f001g6M8A0gSS3TX4y"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcfb1453001jrelG0Bs77lvoK",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 38716,
+          "input": 465,
+          "output": 239,
+          "reasoning": 380,
+          "cache": {
+            "write": 0,
+            "read": 37632
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786655931287,
+          "completed": 1786655948275
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcfdfb97001z48Cr2k8hIm6nl",
+        "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu"
+      },
+      "parts": [
+        {
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-start",
+          "id": "prt_ffcfe17a5001zzFu6tTidQg6hw",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed. Now I need to:\n1. Verify `git diff --exit-code docs/lesson-schema.yaml` is clean (the task asks me to \"quote\" this). Since the file is committed and the working tree matches, this should exit 0.\n2. Push to `origin/kimi/6720-21-23-practice-ux`.\n\nLet me run the git diff --exit-code check and quote its output, then push.\n\nActually, let me reconsider what \"Quote git diff --exit-code docs/lesson-schema.yaml after\" means. It means after committing, run `git diff --exit-code docs/lesson-schema.yaml` to prove there's no remaining drift between the committed schema and... well, the working tree. Since I committed exactly what the generator produced, the working tree == committed, so `git diff --exit-code` returns 0 (no diff).\n\nBut wait — does \"git diff --exit-code docs/lesson-schema.yaml\" prove no drift? `git diff` compares working tree to index (or HEAD). Since I committed the regenerated file, working tree == HEAD for that file, so exit code 0. This proves the committed schema matches the working tree (which was just generated). Good.\n\nActually, a stronger proof of \"no drift\" would be to re-run the generator and confirm it produces no further changes. But the task specifically asks to quote `git diff --exit-code docs/lesson-schema.yaml`. Let me do both: run the diff --exit-code (required) and also re-run the generator to confirm idempotency (stronger proof). Actually, let me be careful — the task says \"Quote git diff --exit-code docs/lesson-schema.yaml after.\" Let me just do exactly that, and optionally re-run generator to prove idempotency.\n\nLet me run the diff --exit-code first.",
+          "time": {
+            "start": 1786655938480,
+            "end": 1786655942981
+          },
+          "id": "prt_ffcfe17b0001fUBf3Rop1AQoB7",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        },
+        {
+          "type": "text",
+          "text": "Committed as `e7dbff1614`. Now let me run the required `git diff --exit-code docs/lesson-schema.yaml` to prove no remaining drift, and re-run the generator to confirm idempotency (no further changes).",
+          "time": {
+            "start": 1786655943004,
+            "end": 1786655944403
+          },
+          "id": "prt_ffcfe295c001BVZJcBJdth20V1",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_e66179f2c29a4deeae93d1fc",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "echo \"=== git diff --exit-code docs/lesson-schema.yaml ===\" && git diff --exit-code docs/lesson-schema.yaml; echo \"exit_code=$?\"",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+            },
+            "output": "=== git diff --exit-code docs/lesson-schema.yaml ===\nexit_code=0\n",
+            "metadata": {
+              "output": "=== git diff --exit-code docs/lesson-schema.yaml ===\nexit_code=0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "echo \"=== git diff --exit-code docs/lesson-schema.yaml ===\" && git diff --exit-code docs/lesson-schema.yaml; echo \"exit_code=$?\"",
+            "time": {
+              "start": 1786655944619,
+              "end": 1786655944647
+            }
+          },
+          "id": "prt_ffcfe2e80001kD35qTAgRJTqOO",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_92603db5bb2a4f38a7130e16",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "echo \"=== idempotency: re-run generator, expect no further diff ===\" && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/build/generate_lesson_schema.py && git diff --exit-code docs/lesson-schema.yaml; echo \"exit_code=$?\"",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+            },
+            "output": "=== idempotency: re-run generator, expect no further diff ===\nexit_code=0\n",
+            "metadata": {
+              "output": "=== idempotency: re-run generator, expect no further diff ===\nexit_code=0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "echo \"=== idempotency: re-run generator, expect no further diff ===\" && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/build/generate_lesson_schema.py && git diff --exit-code docs/lesson-schema.yaml; echo \"exit_code=$?\"",
+            "time": {
+              "start": 1786655946388,
+              "end": 1786655946402
+            }
+          },
+          "id": "prt_ffcfe2ec6001fIVkDvgGrnufIn",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-finish",
+          "tokens": {
+            "total": 38716,
+            "input": 465,
+            "output": 239,
+            "reasoning": 380,
+            "cache": {
+              "write": 0,
+              "read": 37632
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcfe390f001wwwHoaYxuZ1ejq",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfdfb97001z48Cr2k8hIm6nl"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcfb1453001jrelG0Bs77lvoK",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 39034,
+          "input": 681,
+          "output": 145,
+          "reasoning": 128,
+          "cache": {
+            "write": 0,
+            "read": 38080
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786655948362,
+          "completed": 1786655963356
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5",
+        "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu"
+      },
+      "parts": [
+        {
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-start",
+          "id": "prt_ffcfe5b7f001KoM1GAfbgZ80Q5",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5"
+        },
+        {
+          "type": "reasoning",
+          "text": "Both checks pass:\n- `git diff --exit-code docs/lesson-schema.yaml` → exit_code=0 (no drift between committed and working tree)\n- Re-running the generator produces no further changes → exit_code=0 (idempotent, schema is now in sync)\n\nNow let me push to `origin/kimi/6720-21-23-practice-ux`. Since origin's branch is at `1c741408f2` and my HEAD is `1c741408f2` + `e7dbff1614`, this is a fast-forward push.\n\nLet me push.",
+          "time": {
+            "start": 1786655955872,
+            "end": 1786655956149
+          },
+          "id": "prt_ffcfe5ba0001CEaWO0kcyeQWZn",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5"
+        },
+        {
+          "type": "text",
+          "text": "Both clean: `git diff --exit-code docs/lesson-schema.yaml` → **exit_code=0**, and re-running the generator is idempotent (no further changes). Now I'll push the commit to the PR branch `origin/kimi/6720-21-23-practice-ux` (fast-forward over `1c741408f2`).",
+          "time": {
+            "start": 1786655956155,
+            "end": 1786655956791
+          },
+          "id": "prt_ffcfe5cbb0018owR3zn4gNN6AP",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_e28d571cd2a14502ba094955",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push origin HEAD:kimi/6720-21-23-practice-ux 2>&1",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+            },
+            "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote..... done\nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   1c741408f2..e7dbff1614  HEAD -> kimi/6720-21-23-practice-ux\n",
+            "metadata": {
+              "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote..... done\nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   1c741408f2..e7dbff1614  HEAD -> kimi/6720-21-23-practice-ux\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push origin HEAD:kimi/6720-21-23-practice-ux 2>&1",
+            "time": {
+              "start": 1786655962761,
+              "end": 1786655962772
+            }
+          },
+          "id": "prt_ffcfe5f1b001fxtAL5fNhShGkp",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-finish",
+          "tokens": {
+            "total": 39034,
+            "input": 681,
+            "output": 145,
+            "reasoning": 128,
+            "cache": {
+              "write": 0,
+              "read": 38080
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcfe780f001jiE50vWrEFKTt9",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe3e4a001BUZ3Wvqa0fO1S5"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcfb1453001jrelG0Bs77lvoK",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 39417,
+          "input": 391,
+          "output": 193,
+          "reasoning": 113,
+          "cache": {
+            "write": 0,
+            "read": 38720
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786655963400,
+          "completed": 1786655973692
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcfe7908001ovaKTO4wZjP5YE",
+        "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu"
+      },
+      "parts": [
+        {
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-start",
+          "id": "prt_ffcfe93f7001YRfz3F1LEKPrj3",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe7908001ovaKTO4wZjP5YE"
+        },
+        {
+          "type": "reasoning",
+          "text": "Push succeeded: `1c741408f2..e7dbff1614 HEAD -> kimi/6720-21-23-practice-ux` (fast-forward).\n\nLet me do a final verification:\n1. Confirm the remote branch is now at my commit\n2. Confirm the PR product code (LexiconPractice.tsx) was NOT changed by my commit (only docs/lesson-schema.yaml)\n3. Final status\n\nLet me verify my commit only touched docs/lesson-schema.yaml and didn't touch any Practice product code.",
+          "time": {
+            "start": 1786655970320,
+            "end": 1786655972217
+          },
+          "id": "prt_ffcfe9410001SE2aJ2H0ws0hCj",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe7908001ovaKTO4wZjP5YE"
+        },
+        {
+          "type": "text",
+          "text": "Push succeeded (fast-forward `1c741408f2..e7dbff1614`). Final verification: confirm my commit touched only `docs/lesson-schema.yaml` and no Practice product code.",
+          "time": {
+            "start": 1786655972220,
+            "end": 1786655972256
+          },
+          "id": "prt_ffcfe9b7c001F7y5L9QyZ6B1iJ",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe7908001ovaKTO4wZjP5YE"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_fd7816bb01014a7e979fd170",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "echo \"=== files changed in my commit e7dbff1614 ===\" && git show --stat --oneline e7dbff1614 | tail -n +2 && echo \"=== confirm LexiconPractice.tsx NOT touched by my commit ===\" && git diff --name-only 1c741408f2..e7dbff1614 && echo \"=== remote branch head ===\" && git ls-remote origin kimi/6720-21-23-practice-ux",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+            },
+            "output": "=== files changed in my commit e7dbff1614 ===\n docs/lesson-schema.yaml | 6 +++++-\n 1 file changed, 5 insertions(+), 1 deletion(-)\n=== confirm LexiconPractice.tsx NOT touched by my commit ===\ndocs/lesson-schema.yaml\n=== remote branch head ===\ne7dbff161457a147e78ee58dc8e1791a8dd07333\trefs/heads/kimi/6720-21-23-practice-ux\n",
+            "metadata": {
+              "output": "=== files changed in my commit e7dbff1614 ===\n docs/lesson-schema.yaml | 6 +++++-\n 1 file changed, 5 insertions(+), 1 deletion(-)\n=== confirm LexiconPractice.tsx NOT touched by my commit ===\ndocs/lesson-schema.yaml\n=== remote branch head ===\ne7dbff161457a147e78ee58dc8e1791a8dd07333\trefs/heads/kimi/6720-21-23-practice-ux\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "echo \"=== files changed in my commit e7dbff1614 ===\" && git show --stat --oneline e7dbff1614 | tail -n +2 && echo \"=== confirm LexiconPractice.tsx NOT touched by my commit ===\" && git diff --name-only 1c741408f2..e7dbff1614 && echo \"=== remote branch head ===\" && git ls-remote origin kimi/6720-21-23-practice-ux",
+            "time": {
+              "start": 1786655973047,
+              "end": 1786655973054
+            }
+          },
+          "id": "prt_ffcfe9b88001oUk2bCot3DhEEp",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe7908001ovaKTO4wZjP5YE"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-finish",
+          "tokens": {
+            "total": 39417,
+            "input": 391,
+            "output": 193,
+            "reasoning": 113,
+            "cache": {
+              "write": 0,
+              "read": 38720
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcfea00f001jpR84uJqe8ryg9",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfe7908001ovaKTO4wZjP5YE"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcfb1453001jrelG0Bs77lvoK",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6751-lesson-schema-drift"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 39801,
+          "input": 427,
+          "output": 270,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 39104
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786655973751,
+          "completed": 1786655984130
+        },
+        "finish": "stop",
+        "id": "msg_ffcfea177001RfOk9eEccE71xB",
+        "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu"
+      },
+      "parts": [
+        {
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-start",
+          "id": "prt_ffcfec0e00017Elawl6SEso719",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfea177001RfOk9eEccE71xB"
+        },
+        {
+          "type": "text",
+          "text": "Done. The lesson-schema drift on PR #6751 is fixed and pushed.\n\n**What happened:** The PR's `LexiconPractice.tsx` added a `roundSize` prop, but `docs/lesson-schema.yaml` wasn't regenerated, so `components_sha256` had drifted and the contract failed.\n\n**Deliverable:** Committed `e7dbff1614` (pushed fast-forward to `kimi/6720-21-23-practice-ux`, now at `e7dbff1614`):\n- Only `docs/lesson-schema.yaml` changed (5 insertions, 1 deletion) — the `components_sha256` (`e72adab9…` → `c4a6d01b…`) plus the new `roundSize` prop entry.\n- No Practice product code touched (`git diff --name-only 1c741408f2..e7dbff1614` → `docs/lesson-schema.yaml` only).\n\n**Required proof — `git diff --exit-code docs/lesson-schema.yaml`:**\n```\nexit_code=0\n```\nGenerator re-run is also idempotent (no further diff). No merge performed; #4387 #6720 #6721 #6723 remain open.",
+          "time": {
+            "start": 1786655981813,
+            "end": 1786655983664
+          },
+          "id": "prt_ffcfec0f50013blo2WE0ZrBTnh",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfea177001RfOk9eEccE71xB"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "9d957e05d5d725a5e57e44e94291c3234c93c245",
+          "type": "step-finish",
+          "tokens": {
+            "total": 39801,
+            "input": 427,
+            "output": 270,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 39104
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcfec92f00120DY9xiysnb1xU",
+          "sessionID": "ses_00304ebdbffe38NFt24R5MN6iu",
+          "messageID": "msg_ffcfea177001RfOk9eEccE71xB"
         }
       ]
     }
