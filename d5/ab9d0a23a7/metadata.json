@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5ab9d0a23a7",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6437-lint004",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/word-atlas-entry-model.md",
+    "scripts/audit/lint_word_atlas.py",
+    "tests/fixtures/atlas/sense_lint_sample.json",
+    "tests/test_lint_word_atlas.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d5/ab9d0a23a7/0/metadata.json",
+      "transcript": "/d5/ab9d0a23a7/0/full.jsonl",
+      "compact_transcript": "/d5/ab9d0a23a7/0/transcript.jsonl",
+      "content_hash": "/d5/ab9d0a23a7/0/content_hash.txt",
+      "prompt": "/d5/ab9d0a23a7/0/prompt.txt"
+    }
+  ]
+}
