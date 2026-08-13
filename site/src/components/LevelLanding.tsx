@@ -55,6 +55,7 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
   const moduleStatus = shouldHideLink && (mod.status === 'done' || mod.status === 'active')
     ? 'locked'
     : mod.status;
+  const isLinked = (moduleStatus === 'done' || moduleStatus === 'active') && !shouldHideLink;
   const statusIcons: Record<string, string> = {
     done: '\u2705',
     active: '\u25B6\uFE0F',
@@ -71,6 +72,7 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
 
   const itemClass = [
     styles.moduleItem,
+    isLinked ? styles.moduleLink : '',
     moduleStatus === 'locked' ? styles.moduleLocked : '',
   ].filter(Boolean).join(' ');
 
@@ -80,8 +82,18 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
     ? {}
     : {};
 
-  const inner = (
-    <div className={itemClass}>
+  // Status icons are visual only when the card is a real link — otherwise
+  // LiveStatus's role="img" aria-label can steal the accessible name (#6712).
+  const status = (
+    <div className={styles.moduleStatus} aria-hidden={isLinked || undefined}>
+      {levelKey === 'a1' && (moduleStatus === 'done' || moduleStatus === 'active')
+        ? <LiveStatus track={levelKey} num={mod.num} fallback={moduleStatus} />
+        : statusIcons[moduleStatus]}
+    </div>
+  );
+
+  const body = (
+    <>
       <div className={numClass} style={numStyle}>
         {String(mod.num).padStart(2, '0')}
       </div>
@@ -93,18 +105,20 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
         {mod.sub && <div className={styles.moduleSub}>{mod.sub}</div>}
         {mod.subEn && <div className={styles.moduleSubEn}>{mod.subEn}</div>}
       </div>
-      <div className={styles.moduleStatus}>
-        {levelKey === 'a1' && (moduleStatus === 'done' || moduleStatus === 'active')
-          ? <LiveStatus track={levelKey} num={mod.num} fallback={moduleStatus} />
-          : statusIcons[moduleStatus]}
-      </div>
-    </div>
+      {status}
+    </>
   );
 
-  if ((moduleStatus === 'done' || moduleStatus === 'active') && !shouldHideLink) {
-    return <a href={`/${levelKey}/${mod.slug}/`} style={{ textDecoration: 'none', color: 'inherit' }}>{inner}</a>;
+  // The card itself must be the <a> (not a nested div) so keyboard focus,
+  // Enter activation, and SR "link" role all land on the module row (#6712).
+  if (isLinked) {
+    return (
+      <a className={itemClass} href={`/${levelKey}/${mod.slug}/`}>
+        {body}
+      </a>
+    );
   }
-  return inner;
+  return <div className={itemClass}>{body}</div>;
 }
 
 export default function LevelLanding(props: LevelLandingProps): ReactNode {
