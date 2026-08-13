@@ -73,6 +73,23 @@ function exactRegularFile(filePath, label) {
   return metadata;
 }
 
+function openExclusiveOutput(filePath) {
+  try {
+    return fs.openSync(filePath, "wx", 0o600);
+  } catch (error) {
+    if (error && error.code === "EEXIST") fail("private JSONL output already exists");
+    throw error;
+  }
+}
+
+function unlinkIfPresent(filePath) {
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    if (!error || error.code !== "ENOENT") throw error;
+  }
+}
+
 function loadPinnedDecoder(decoderPath, expectedSha256, expectedVersion) {
   exactRegularFile(decoderPath, "decoder");
   const bytes = fs.readFileSync(decoderPath);
@@ -156,7 +173,6 @@ function run() {
   );
   const document = new decoder.Document(arrayBuffer);
   if (document.getPagesQuantity() !== expectedPages) fail("decoder page denominator drift");
-  if (fs.existsSync(outputPath)) fail("private JSONL output already exists");
 
   let outputHandle = null;
   const outputDigest = crypto.createHash("sha256");
@@ -169,8 +185,8 @@ function run() {
   let totalCodePoints = 0;
   let totalUtf8Bytes = 0;
   let totalZones = 0;
+  outputHandle = openExclusiveOutput(outputPath);
   try {
-    outputHandle = fs.openSync(outputPath, "wx", 0o600);
     for (let pageNumber = 1; pageNumber <= expectedPages; pageNumber += 1) {
       const page = document.getPageUnsafe(pageNumber);
       try {
@@ -235,7 +251,7 @@ function run() {
     outputHandle = null;
   } catch (error) {
     if (outputHandle !== null) fs.closeSync(outputHandle);
-    if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+    unlinkIfPresent(outputPath);
     throw error;
   }
 
