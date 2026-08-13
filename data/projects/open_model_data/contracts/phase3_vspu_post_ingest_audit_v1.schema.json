@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_vspu_post_ingest_audit_v1.schema.json",
+  "title": "Phase 3 VSPU post-ingest audit receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "provider_calls",
+    "bindings",
+    "database",
+    "custody",
+    "authority",
+    "phase_boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_vspu_post_ingest_audit_v1"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "database": {"$ref": "#/$defs/database"},
+    "custody": {"$ref": "#/$defs/custody"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "phase_boundaries": {"$ref": "#/$defs/phaseBoundaries"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "textbook_rows",
+        "fts_rows",
+        "section_rows",
+        "source_count",
+        "university_rows",
+        "university_source_count"
+      ],
+      "properties": {
+        "textbook_rows": {"const": 50311},
+        "fts_rows": {"const": 50311},
+        "section_rows": {"const": 36480},
+        "source_count": {"const": 188},
+        "university_rows": {"const": 4236},
+        "university_source_count": {"const": 21}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_sha256",
+        "schema_sha256",
+        "cutover_implementation_sha256",
+        "cutover_schema_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "cutover_receipt_file_sha256",
+        "cutover_receipt_body_sha256",
+        "backup_receipt_file_sha256",
+        "compressed_backup_sha256"
+      ],
+      "properties": {
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "cutover_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "cutover_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "cutover_receipt_file_sha256": {"const": "265099931f1aa8a2c60a000e80313980093af8790b58aa91e0b55caca71eba4f"},
+        "cutover_receipt_body_sha256": {"const": "a4542d7d1771738fba50fef12aa55548787ce238e9f2f3ca3776a24429e1ef24"},
+        "backup_receipt_file_sha256": {"const": "d78d51073db46b8cd9202e2b30be93d691a8feb6f1cebb432e23000ec581e317"},
+        "compressed_backup_sha256": {"const": "c07318782a8ad924902ee7f89592cfd03ec17d47c3be183ea186b851edec92f2"}
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pre_sha256",
+        "post_sha256",
+        "counts",
+        "target_rows",
+        "target_fts_rows",
+        "target_section_rows",
+        "target_linked_rows",
+        "foreign_key_failure_count",
+        "foreign_key_failure_sha256",
+        "existing_corpus_fingerprint_unchanged",
+        "integrity_check",
+        "journal_mode",
+        "live_inode_preserved"
+      ],
+      "properties": {
+        "pre_sha256": {"const": "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"},
+        "post_sha256": {"const": "de9e448896341cb33b0d73b3729ec966919f7aff2669183bcfc7295e7d5353b7"},
+        "counts": {"$ref": "#/$defs/counts"},
+        "target_rows": {"const": 158},
+        "target_fts_rows": {"const": 158},
+        "target_section_rows": {"const": 158},
+        "target_linked_rows": {"const": 158},
+        "foreign_key_failure_count": {"const": 134836},
+        "foreign_key_failure_sha256": {"const": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"},
+        "existing_corpus_fingerprint_unchanged": {"const": true},
+        "integrity_check": {"const": "ok"},
+        "journal_mode": {"const": "wal"},
+        "live_inode_preserved": {"const": true}
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "successor_backup_uploaded",
+        "successor_backup_uploading",
+        "successor_backup_provider_identity_present",
+        "successor_backup_gzip_integrity",
+        "successor_backup_streamed_restore_sha256",
+        "private_receipts_mode_0600",
+        "predecessor_backup_preserved"
+      ],
+      "properties": {
+        "successor_backup_uploaded": {"const": true},
+        "successor_backup_uploading": {"const": false},
+        "successor_backup_provider_identity_present": {"const": true},
+        "successor_backup_gzip_integrity": {"const": true},
+        "successor_backup_streamed_restore_sha256": {"const": "de9e448896341cb33b0d73b3729ec966919f7aff2669183bcfc7295e7d5353b7"},
+        "private_receipts_mode_0600": {"const": true},
+        "predecessor_backup_preserved": {"const": true}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "content_disposition",
+        "allowed_lanes",
+        "normative_rule_authority",
+        "semantic_gold",
+        "public_redistribution_authorized"
+      ],
+      "properties": {
+        "source_id": {"const": "uni-ukrmova-sulm-attestation-vspu-2021"},
+        "content_disposition": {"const": "contextual_only"},
+        "allowed_lanes": {"const": ["contextual_retrieval", "corpus_ingest"]},
+        "normative_rule_authority": {"const": false},
+        "semantic_gold": {"const": false},
+        "public_redistribution_authorized": {"const": false}
+      }
+    },
+    "phaseBoundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "database_ingest_complete",
+        "post_ingest_backup_complete",
+        "source_universe_frozen",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "database_ingest_complete": {"const": true},
+        "post_ingest_backup_complete": {"const": true},
+        "source_universe_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    }
+  }
+}
