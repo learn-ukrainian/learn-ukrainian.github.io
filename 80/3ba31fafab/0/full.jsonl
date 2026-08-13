@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 17804,
-      "output": 1364,
-      "reasoning": 494,
+      "input": 22206,
+      "output": 2209,
+      "reasoning": 860,
       "cache": {
-        "read": 194816,
+        "read": 379136,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786609874022,
-      "updated": 1786610036558
+      "updated": 1786610062061
     }
   },
   "messages": [
@@ -1403,19 +1403,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 21645,
+          "input": 559,
+          "output": 94,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 20992
           }
         },
         "modelID": "deepseek-v4-flash",
         "providerID": "deepseek-direct",
         "time": {
-          "created": 1786610036557
+          "created": 1786610036557,
+          "completed": 1786610043133
         },
+        "finish": "tool-calls",
         "id": "msg_ffa41af4d001xpSozd2fPgEkTw",
         "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
       },
@@ -1432,20 +1435,718 @@
           "tool": "bash",
           "callID": "call_00_ET_Ycgt0YWpYOktTPn5oFQi2493",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/orchestration/reap_worktrees.py && git commit -m \"fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\n\nX-Agent: deepseek/6696-ruff-sim102\""
             },
+            "output": "[deepseek/6696-ruff-sim102 3da015914f] fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\n 1 file changed, 11 insertions(+), 13 deletions(-)\n",
+            "metadata": {
+              "output": "[deepseek/6696-ruff-sim102 3da015914f] fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\n 1 file changed, 11 insertions(+), 13 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/orchestration/reap_worktrees.py && git commit -m \"fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\n\nX-Agent: deepseek/6696-ruff-sim102\"",
             "time": {
-              "start": 1786610038066
+              "start": 1786610042753,
+              "end": 1786610042757
             }
           },
           "id": "prt_ffa41b3e0001pUqmP8t4afQqhB",
           "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
           "messageID": "msg_ffa41af4d001xpSozd2fPgEkTw"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21645,
+            "input": 559,
+            "output": 94,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 20992
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41c83d001NcOld5BCfI4VXY",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41af4d001xpSozd2fPgEkTw"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 21798,
+          "input": 76,
+          "output": 67,
+          "reasoning": 23,
+          "cache": {
+            "write": 0,
+            "read": 21632
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610043139,
+          "completed": 1786610045303
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41c9030010H2jOd5M5VxJ26",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa41cc5d001SrX6M1RW2l259F",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41c9030010H2jOd5M5VxJ26"
+        },
+        {
+          "type": "reasoning",
+          "text": "The trailer needs to be on its own line, which it is. Let me verify the trailer was parsed correctly.",
+          "time": {
+            "start": 1786610044445,
+            "end": 1786610044710
+          },
+          "id": "prt_ffa41ce1d001kdzwM10Zox5olT",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41c9030010H2jOd5M5VxJ26"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_VTNQ8HRog7gtyo5NKBzT9362",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git log -1 --format=\"%s%n%b\" && git show -1 --format=\"%(trailers)\""
+            },
+            "output": "fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\nX-Agent: deepseek/6696-ruff-sim102\nEntire-Checkpoint: 803ba31fafab\n\nX-Agent: deepseek/6696-ruff-sim102\nEntire-Checkpoint: 803ba31fafab\n\n\ndiff --git a/scripts/orchestration/reap_worktrees.py b/scripts/orchestration/reap_worktrees.py\nindex f03a787fe7..71dc1b9565 100644\n--- a/scripts/orchestration/reap_worktrees.py\n+++ b/scripts/orchestration/reap_worktrees.py\n@@ -566,20 +566,18 @@ def _qualifying_reason(\n         ):\n             return f\"{pr_label} CLOSED\"\n \n-    if info.branch is not None:\n+    if info.branch is not None and not safe_only:\n+        if info.branch.startswith(\"build/\"):\n+            age_hours = _worktree_age_hours(info.path, now=now)\n+            if age_hours is not None and age_hours > build_age_hours:\n+                return f\"build branch age {age_hours:.1f}h > {build_age_hours:g}h\"\n \n-        if not safe_only:\n-            if info.branch.startswith(\"build/\"):\n-                age_hours = _worktree_age_hours(info.path, now=now)\n-                if age_hours is not None and age_hours > build_age_hours:\n-                    return f\"build branch age {age_hours:.1f}h > {build_age_hours:g}h\"\n-\n-            # Never treat \"matches remote tip\" as reaped-while-OPEN: open PR\n-            # worktrees commonly match origin/<branch> and must stay mounted.\n-            if (pr_state is None or pr_state.state != \"OPEN\") and _origin_matches_head(\n-                info.path, info.branch\n-            ):\n-                return f\"HEAD matches origin/{info.branch}\"\n+        # Never treat \"matches remote tip\" as reaped-while-OPEN: open PR\n+        # worktrees commonly match origin/<branch> and must stay mounted.\n+        if (pr_state is None or pr_state.state != \"OPEN\") and _origin_matches_head(\n+            info.path, info.branch\n+        ):\n+            return f\"HEAD matches origin/{info.branch}\"\n \n     if merged_pr_only and not include_terminal_dispatches:\n         return None\n",
+            "metadata": {
+              "output": "fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)\nX-Agent: deepseek/6696-ruff-sim102\nEntire-Checkpoint: 803ba31fafab\n\nX-Agent: deepseek/6696-ruff-sim102\nEntire-Checkpoint: 803ba31fafab\n\n\ndiff --git a/scripts/orchestration/reap_worktrees.py b/scripts/orchestration/reap_worktrees.py\nindex f03a787fe7..71dc1b9565 100644\n--- a/scripts/orchestration/reap_worktrees.py\n+++ b/scripts/orchestration/reap_worktrees.py\n@@ -566,20 +566,18 @@ def _qualifying_reason(\n         ):\n             return f\"{pr_label} CLOSED\"\n \n-    if info.branch is not None:\n+    if info.branch is not None and not safe_only:\n+        if info.branch.startswith(\"build/\"):\n+            age_hours = _worktree_age_hours(info.path, now=now)\n+            if age_hours is not None and age_hours > build_age_hours:\n+                return f\"build branch age {age_hours:.1f}h > {build_age_hours:g}h\"\n \n-        if not safe_only:\n-            if info.branch.startswith(\"build/\"):\n-                age_hours = _worktree_age_hours(info.path, now=now)\n-                if age_hours is not None and age_hours > build_age_hours:\n-                    return f\"build branch age {age_hours:.1f}h > {build_age_hours:g}h\"\n-\n-            # Never treat \"matches remote tip\" as reaped-while-OPEN: open PR\n-            # worktrees commonly match origin/<branch> and must stay mounted.\n-            if (pr_state is None or pr_state.state != \"OPEN\") and _origin_matches_head(\n-                info.path, info.branch\n-            ):\n-                return f\"HEAD matches origin/{info.branch}\"\n+        # Never treat \"matches remote tip\" as reaped-while-OPEN: open PR\n+        # worktrees commonly match origin/<branch> and must stay mounted.\n+        if (pr_state is None or pr_state.state != \"OPEN\") and _origin_matches_head(\n+            info.path, info.branch\n+        ):\n+            return f\"HEAD matches origin/{info.branch}\"\n \n     if merged_pr_only and not include_terminal_dispatches:\n         return None\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git log -1 --format=\"%s%n%b\" && git show -1 --format=\"%(trailers)\"",
+            "time": {
+              "start": 1786610044997,
+              "end": 1786610045000
+            }
+          },
+          "id": "prt_ffa41cf29001ACD4SXjNv1LX4A",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41c9030010H2jOd5M5VxJ26"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21798,
+            "input": 76,
+            "output": 67,
+            "reasoning": 23,
+            "cache": {
+              "write": 0,
+              "read": 21632
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41d0e2001Mu4mlGfXP5wDUx",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41c9030010H2jOd5M5VxJ26"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 22685,
+          "input": 612,
+          "output": 139,
+          "reasoning": 174,
+          "cache": {
+            "write": 0,
+            "read": 21760
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610045307,
+          "completed": 1786610048903
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41d17b0011911yNwnc28wv3",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa41d491001Z6mLNJWXC5tEbY",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41d17b0011911yNwnc28wv3"
+        },
+        {
+          "type": "reasoning",
+          "text": "There's an `Entire-Checkpoint` trailer that got added. That seems to be an automatic trailer added by some hook or config. The task specified trailer `X-Agent: deepseek/6696-ruff-sim102`, which is present. The Entire-Checkpoint appears to be added automatically. Let me check the git hooks to understand this. Actually, it may be a configurable commit trailer. Let me check if this is a pre-existing repo convention or if my commit message had extra content.\n\nActually, looking at the output, the commit body contains both `X-Agent: deepseek/6696-ruff-sim102` and `Entire-Checkpoint: 803ba31fafab`. The Entire-Checkpoint trailer may have been added by a prepare-commit-msg hook. Let me check the hooks.",
+          "time": {
+            "start": 1786610046485,
+            "end": 1786610047791
+          },
+          "id": "prt_ffa41d615001XqAeRRgQMEMq4n",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41d17b0011911yNwnc28wv3"
+        },
+        {
+          "type": "text",
+          "text": "The `Entire-Checkpoint` trailer was appended by a local hook. Let me check whether that's repo convention.",
+          "time": {
+            "start": 1786610047793,
+            "end": 1786610048513
+          },
+          "id": "prt_ffa41db31001PxbCcml4BO2VEi",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41d17b0011911yNwnc28wv3"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_M1ZMDTNFQmvLGz7Fj5cl8981",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git config --get core.hooksPath; ls .githooks 2>/dev/null; git log origin/agy/reaper-squash-head -1 --format=\"%B\" | grep -c \"Entire-Checkpoint\"; git log origin/main -1 --format=\"%B\" | grep -c \"Entire-Checkpoint\""
+            },
+            "output": "_lib.sh\ncheck-pytest-stamp.py\ncommit-msg\npost-checkout\npost-commit\npost-merge\npre-commit\npre-push\npytest_stamp.py\nreference-transaction\n1\n0\n",
+            "metadata": {
+              "output": "_lib.sh\ncheck-pytest-stamp.py\ncommit-msg\npost-checkout\npost-commit\npost-merge\npre-commit\npre-push\npytest_stamp.py\nreference-transaction\n1\n0\n",
+              "exit": 1,
+              "truncated": false
+            },
+            "title": "git config --get core.hooksPath; ls .githooks 2>/dev/null; git log origin/agy/reaper-squash-head -1 --format=\"%B\" | grep -c \"Entire-Checkpoint\"; git log origin/main -1 --format=\"%B\" | grep -c \"Entire-Checkpoint\"",
+            "time": {
+              "start": 1786610048573,
+              "end": 1786610048576
+            }
+          },
+          "id": "prt_ffa41dbef001VrncW3KDKmiWqK",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41d17b0011911yNwnc28wv3"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 22685,
+            "input": 612,
+            "output": 139,
+            "reasoning": 174,
+            "cache": {
+              "write": 0,
+              "read": 21760
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41dee800185GjtNOGkZwCer",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41d17b0011911yNwnc28wv3"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 22905,
+          "input": 90,
+          "output": 83,
+          "reasoning": 76,
+          "cache": {
+            "write": 0,
+            "read": 22656
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610048924,
+          "completed": 1786610051394
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41df9c001pdzwUsI6WSoIbZ",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa41e2ae0019m5V5naEX7mvLE",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41df9c001pdzwUsI6WSoIbZ"
+        },
+        {
+          "type": "reasoning",
+          "text": "There's a `commit-msg` hook. Let me look at it to understand why Entire-Checkpoint was added. It may be a pre-existing convention. The `origin/agy/reaper-squash-head` commit also has `Entire-Checkpoint`. So this is the repo convention. Let me verify the commit-msg hook and the referenced checkpoint commit.",
+          "time": {
+            "start": 1786610050151,
+            "end": 1786610050753
+          },
+          "id": "prt_ffa41e467001tJcOhQqEq7C057",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41df9c001pdzwUsI6WSoIbZ"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_2TF2eYGh8YKfGSsPdENV9398",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102/.githooks/commit-msg"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102/.githooks/commit-msg</path>\n<type>file</type>\n<content>\n1: #!/usr/bin/env bash\n2: set -euo pipefail\n3: \n4: source \"$(dirname \"$0\")/_lib.sh\"\n5: run_pre_commit commit-msg \"$@\"\n\n(End of file - total 5 lines)\n</content>",
+            "metadata": {
+              "preview": "#!/usr/bin/env bash\nset -euo pipefail\n\nsource \"$(dirname \"$0\")/_lib.sh\"\nrun_pre_commit commit-msg \"$@\"",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102/.githooks/commit-msg",
+                "text": "#!/usr/bin/env bash\nset -euo pipefail\n\nsource \"$(dirname \"$0\")/_lib.sh\"\nrun_pre_commit commit-msg \"$@\"",
+                "lineStart": 1,
+                "lineEnd": 5,
+                "totalLines": 5,
+                "truncated": false
+              }
+            },
+            "title": ".githooks/commit-msg",
+            "time": {
+              "start": 1786610051027,
+              "end": 1786610051034
+            }
+          },
+          "id": "prt_ffa41e6c4001mAe5uZxYeUrzHM",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41df9c001pdzwUsI6WSoIbZ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 22905,
+            "input": 90,
+            "output": 83,
+            "reasoning": 76,
+            "cache": {
+              "write": 0,
+              "read": 22656
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41e8ac001gZ1vbIkM4g2UJr",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41df9c001pdzwUsI6WSoIbZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 23090,
+          "input": 245,
+          "output": 61,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 22784
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610051401,
+          "completed": 1786610053482
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41e949001O4V1VJW4kfoyeK",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa41ec2b001h609QoYr5q7d65",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41e949001O4V1VJW4kfoyeK"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_BPb4hlbNs2mTTxzuoN0W6534",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git show origin/agy/reaper-squash-head -1 --format=\"%B\""
+            },
+            "output": "fix(reaper): reap clean worktrees whose PR is MERGED after squash or on detached HEAD\n\nEntire-Checkpoint: c84570fcad37\n\n\ndiff --git a/scripts/orchestration/reap_worktrees.py b/scripts/orchestration/reap_worktrees.py\nindex a4b74f766f..f03a787fe7 100644\n--- a/scripts/orchestration/reap_worktrees.py\n+++ b/scripts/orchestration/reap_worktrees.py\n@@ -293,16 +293,48 @@ def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:\n     }\n \n \n+def _candidate_branches_for_worktree(repo_root: Path, info: WorktreeInfo) -> list[str]:\n+    if info.branch is not None:\n+        return [info.branch]\n+\n+    candidates: list[str] = []\n+    dispatch_root = (repo_root / \".worktrees\" / \"dispatch\").resolve()\n+    try:\n+        rel = info.path.resolve().relative_to(dispatch_root)\n+        if len(rel.parts) == 2:\n+            candidates.append(f\"{rel.parts[0]}/{rel.parts[1]}\")\n+    except ValueError:\n+        pass\n+\n+    wt_root = _worktrees_root(repo_root)\n+    try:\n+        rel_wt = info.path.resolve().relative_to(wt_root)\n+        rel_str = str(rel_wt)\n+        if rel_str and rel_str not in candidates:\n+            candidates.append(rel_str)\n+        if \"-\" in rel_str and \"/\" not in rel_str:\n+            slash_conv = rel_str.replace(\"-\", \"/\", 1)\n+            if slash_conv not in candidates:\n+                candidates.append(slash_conv)\n+    except ValueError:\n+        pass\n+\n+    return candidates\n+\n+\n def _pr_matches_worktree_head(\n     info: WorktreeInfo,\n     pr_state: PullRequestState | None,\n ) -> bool:\n-    return bool(\n-        pr_state is not None\n-        and pr_state.head_sha\n-        and info.head\n-        and pr_state.head_sha == info.head\n+    if pr_state is None or not pr_state.head_sha or not info.head:\n+        return False\n+    if pr_state.head_sha == info.head:\n+        return True\n+    proc = _run(\n+        [\"git\", \"merge-base\", \"--is-ancestor\", info.head, pr_state.head_sha],\n+        cwd=info.path,\n     )\n+    return proc.returncode == 0\n \n \n def _live_cwd_paths(repo_root: Path) -> set[Path] | None:\n@@ -522,17 +554,19 @@ def _qualifying_reason(\n     merged_pr_only: bool = False,\n     include_terminal_dispatches: bool = False,\n ) -> str | None:\n+    if pr_state is not None:\n+        pr_label = f\"PR #{pr_state.number}\" if pr_state.number is not None else \"PR\"\n+        if pr_state.state == \"MERGED\" and _pr_matches_worktree_head(info, pr_state):\n+            return f\"{pr_label} MERGED\"\n+        if (\n+            not merged_pr_only\n+            and pr_state.state == \"CLOSED\"\n+            and info.branch is not None\n+            and _pr_matches_worktree_head(info, pr_state)\n+        ):\n+            return f\"{pr_label} CLOSED\"\n+\n     if info.branch is not None:\n-        if pr_state is not None:\n-            pr_label = f\"PR #{pr_state.number}\" if pr_state.number is not None else \"PR\"\n-            if pr_state.state == \"MERGED\" and _pr_matches_worktree_head(info, pr_state):\n-                return f\"{pr_label} MERGED\"\n-            if (\n-                not merged_pr_only\n-                and pr_state.state == \"CLOSED\"\n-                and _pr_matches_worktree_head(info, pr_state)\n-            ):\n-                return f\"{pr_label} CLOSED\"\n \n         if not safe_only:\n             if info.branch.startswith(\"build/\"):\n@@ -932,9 +966,10 @@ def _reap_qualified_worktree(\n         branch_pruned = False\n         if (\n             prune_merged_branches\n+            and info.branch is not None\n             and pr_state is not None\n             and pr_state.state == \"MERGED\"\n-            and pr_state.head_sha == current_head\n+            and _pr_matches_worktree_head(info, pr_state)\n         ):\n             branch_prune_error = _prune_branch(\n                 repo_root,\n@@ -1060,11 +1095,21 @@ def reap_worktrees(\n             dirty_state = _worktree_clean(info.path)\n             dirty = None if dirty_state is None else not dirty_state\n \n+            candidates = _candidate_branches_for_worktree(repo_root, info)\n             pr_state = None\n             pr_error = None\n-            if info.branch is not None:\n-                pr_states, pr_error = _query_pr_states(repo_root, info.branch)\n-                pr_state = _best_pr(pr_states)\n+            if candidates:\n+                all_pr_states: list[PullRequestState] = []\n+                errors: list[str] = []\n+                for cand_branch in candidates:\n+                    st, err = _query_pr_states(repo_root, cand_branch)\n+                    if err:\n+                        errors.append(err)\n+                    all_pr_states.extend(st)\n+                if errors and not all_pr_states:\n+                    pr_error = \"; \".join(errors)\n+                else:\n+                    pr_state = _best_pr(all_pr_states)\n \n             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:\n                 results.append(\ndiff --git a/tests/orchestration/test_reap_worktrees.py b/tests/orchestration/test_reap_worktrees.py\nindex c0bb2560a0..3e3c998232 100644\n--- a/tests/orchestration/test_reap_worktrees.py\n+++ b/tests/orchestration/test_reap_worktrees.py\n@@ -1148,3 +1148,107 @@ def test_adoption_journals_existing_dispatch_worktree(tmp_path: Path) -> None:\n         }\n     ]\n     assert '\"event\": \"adopt\"' in reaper_lifecycle.journal_path(repo).read_text(encoding=\"utf-8\")\n+\n+\n+def test_merged_pr_ancestor_head_reaps_worktree(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Worktree whose local HEAD is an ancestor of the MERGED PR head is reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    worktree = add_worktree(repo, \"codex/ancestor-head\")\n+    ancestor_head = git(worktree, \"rev-parse\", \"HEAD\")\n+    # Add a follow-up commit to the branch so PR head is ahead of local worktree HEAD\n+    git(worktree, \"commit\", \"--allow-empty\", \"-m\", \"followup commit on PR branch\")\n+    pr_head = git(worktree, \"rev-parse\", \"HEAD\")\n+    # Reset worktree back to ancestor HEAD\n+    git(worktree, \"reset\", \"--hard\", ancestor_head)\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"codex/ancestor-head\": [\n+                {\"number\": 201, \"state\": \"MERGED\", \"headRefOid\": pr_head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),\n+        worktree,\n+    )\n+\n+    assert result.action == \"removed\"\n+    assert result.reason == \"PR #201 MERGED\"\n+    assert not worktree.exists()\n+\n+\n+def test_detached_worktree_matching_merged_pr_reaps(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Detached dispatch worktree whose HEAD matches a MERGED PR's head is reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    task_id = \"6690-ci-fix\"\n+    worktree = repo / \".worktrees\" / \"dispatch\" / \"kimi\" / task_id\n+    worktree.parent.mkdir(parents=True, exist_ok=True)\n+    git(repo, \"worktree\", \"add\", \"--detach\", str(worktree), \"main\")\n+    head = git(worktree, \"rev-parse\", \"HEAD\")\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"kimi/6690-ci-fix\": [\n+                {\"number\": 6690, \"state\": \"MERGED\", \"headRefOid\": head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(\n+            repo_root=repo,\n+            apply=True,\n+            live_cwds=set(),\n+            merged_pr_only=True,\n+        ),\n+        worktree,\n+    )\n+\n+    assert result.action == \"removed\"\n+    assert result.reason == \"PR #6690 MERGED\"\n+    assert not worktree.exists()\n+\n+\n+def test_detached_worktree_with_open_pr_is_preserved(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Detached dispatch worktree with an OPEN PR is not reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    task_id = \"open-detached\"\n+    worktree = repo / \".worktrees\" / \"dispatch\" / \"codex\" / task_id\n+    worktree.parent.mkdir(parents=True, exist_ok=True)\n+    git(repo, \"worktree\", \"add\", \"--detach\", str(worktree), \"main\")\n+    head = git(worktree, \"rev-parse\", \"HEAD\")\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"codex/open-detached\": [\n+                {\"number\": 301, \"state\": \"OPEN\", \"headRefOid\": head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(\n+            repo_root=repo,\n+            apply=True,\n+            live_cwds=set(),\n+            merged_pr_only=True,\n+        ),\n+        worktree,\n+    )\n+\n+    assert result.action == \"skipped\"\n+    assert worktree.exists()\n",
+            "metadata": {
+              "output": "fix(reaper): reap clean worktrees whose PR is MERGED after squash or on detached HEAD\n\nEntire-Checkpoint: c84570fcad37\n\n\ndiff --git a/scripts/orchestration/reap_worktrees.py b/scripts/orchestration/reap_worktrees.py\nindex a4b74f766f..f03a787fe7 100644\n--- a/scripts/orchestration/reap_worktrees.py\n+++ b/scripts/orchestration/reap_worktrees.py\n@@ -293,16 +293,48 @@ def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:\n     }\n \n \n+def _candidate_branches_for_worktree(repo_root: Path, info: WorktreeInfo) -> list[str]:\n+    if info.branch is not None:\n+        return [info.branch]\n+\n+    candidates: list[str] = []\n+    dispatch_root = (repo_root / \".worktrees\" / \"dispatch\").resolve()\n+    try:\n+        rel = info.path.resolve().relative_to(dispatch_root)\n+        if len(rel.parts) == 2:\n+            candidates.append(f\"{rel.parts[0]}/{rel.parts[1]}\")\n+    except ValueError:\n+        pass\n+\n+    wt_root = _worktrees_root(repo_root)\n+    try:\n+        rel_wt = info.path.resolve().relative_to(wt_root)\n+        rel_str = str(rel_wt)\n+        if rel_str and rel_str not in candidates:\n+            candidates.append(rel_str)\n+        if \"-\" in rel_str and \"/\" not in rel_str:\n+            slash_conv = rel_str.replace(\"-\", \"/\", 1)\n+            if slash_conv not in candidates:\n+                candidates.append(slash_conv)\n+    except ValueError:\n+        pass\n+\n+    return candidates\n+\n+\n def _pr_matches_worktree_head(\n     info: WorktreeInfo,\n     pr_state: PullRequestState | None,\n ) -> bool:\n-    return bool(\n-        pr_state is not None\n-        and pr_state.head_sha\n-        and info.head\n-        and pr_state.head_sha == info.head\n+    if pr_state is None or not pr_state.head_sha or not info.head:\n+        return False\n+    if pr_state.head_sha == info.head:\n+        return True\n+    proc = _run(\n+        [\"git\", \"merge-base\", \"--is-ancestor\", info.head, pr_state.head_sha],\n+        cwd=info.path,\n     )\n+    return proc.returncode == 0\n \n \n def _live_cwd_paths(repo_root: Path) -> set[Path] | None:\n@@ -522,17 +554,19 @@ def _qualifying_reason(\n     merged_pr_only: bool = False,\n     include_terminal_dispatches: bool = False,\n ) -> str | None:\n+    if pr_state is not None:\n+        pr_label = f\"PR #{pr_state.number}\" if pr_state.number is not None else \"PR\"\n+        if pr_state.state == \"MERGED\" and _pr_matches_worktree_head(info, pr_state):\n+            return f\"{pr_label} MERGED\"\n+        if (\n+            not merged_pr_only\n+            and pr_state.state == \"CLOSED\"\n+            and info.branch is not None\n+            and _pr_matches_worktree_head(info, pr_state)\n+        ):\n+            return f\"{pr_label} CLOSED\"\n+\n     if info.branch is not None:\n-        if pr_state is not None:\n-            pr_label = f\"PR #{pr_state.number}\" if pr_state.number is not None else \"PR\"\n-            if pr_state.state == \"MERGED\" and _pr_matches_worktree_head(info, pr_state):\n-                return f\"{pr_label} MERGED\"\n-            if (\n-                not merged_pr_only\n-                and pr_state.state == \"CLOSED\"\n-                and _pr_matches_worktree_head(info, pr_state)\n-            ):\n-                return f\"{pr_label} CLOSED\"\n \n         if not safe_only:\n             if info.branch.startswith(\"build/\"):\n@@ -932,9 +966,10 @@ def _reap_qualified_worktree(\n         branch_pruned = False\n         if (\n             prune_merged_branches\n+            and info.branch is not None\n             and pr_state is not None\n             and pr_state.state == \"MERGED\"\n-            and pr_state.head_sha == current_head\n+            and _pr_matches_worktree_head(info, pr_state)\n         ):\n             branch_prune_error = _prune_branch(\n                 repo_root,\n@@ -1060,11 +1095,21 @@ def reap_worktrees(\n             dirty_state = _worktree_clean(info.path)\n             dirty = None if dirty_state is None else not dirty_state\n \n+            candidates = _candidate_branches_for_worktree(repo_root, info)\n             pr_state = None\n             pr_error = None\n-            if info.branch is not None:\n-                pr_states, pr_error = _query_pr_states(repo_root, info.branch)\n-                pr_state = _best_pr(pr_states)\n+            if candidates:\n+                all_pr_states: list[PullRequestState] = []\n+                errors: list[str] = []\n+                for cand_branch in candidates:\n+                    st, err = _query_pr_states(repo_root, cand_branch)\n+                    if err:\n+                        errors.append(err)\n+                    all_pr_states.extend(st)\n+                if errors and not all_pr_states:\n+                    pr_error = \"; \".join(errors)\n+                else:\n+                    pr_state = _best_pr(all_pr_states)\n \n             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:\n                 results.append(\ndiff --git a/tests/orchestration/test_reap_worktrees.py b/tests/orchestration/test_reap_worktrees.py\nindex c0bb2560a0..3e3c998232 100644\n--- a/tests/orchestration/test_reap_worktrees.py\n+++ b/tests/orchestration/test_reap_worktrees.py\n@@ -1148,3 +1148,107 @@ def test_adoption_journals_existing_dispatch_worktree(tmp_path: Path) -> None:\n         }\n     ]\n     assert '\"event\": \"adopt\"' in reaper_lifecycle.journal_path(repo).read_text(encoding=\"utf-8\")\n+\n+\n+def test_merged_pr_ancestor_head_reaps_worktree(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Worktree whose local HEAD is an ancestor of the MERGED PR head is reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    worktree = add_worktree(repo, \"codex/ancestor-head\")\n+    ancestor_head = git(worktree, \"rev-parse\", \"HEAD\")\n+    # Add a follow-up commit to the branch so PR head is ahead of local worktree HEAD\n+    git(worktree, \"commit\", \"--allow-empty\", \"-m\", \"followup commit on PR branch\")\n+    pr_head = git(worktree, \"rev-parse\", \"HEAD\")\n+    # Reset worktree back to ancestor HEAD\n+    git(worktree, \"reset\", \"--hard\", ancestor_head)\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"codex/ancestor-head\": [\n+                {\"number\": 201, \"state\": \"MERGED\", \"headRefOid\": pr_head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),\n+        worktree,\n+    )\n+\n+    assert result.action == \"removed\"\n+    assert result.reason == \"PR #201 MERGED\"\n+    assert not worktree.exists()\n+\n+\n+def test_detached_worktree_matching_merged_pr_reaps(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Detached dispatch worktree whose HEAD matches a MERGED PR's head is reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    task_id = \"6690-ci-fix\"\n+    worktree = repo / \".worktrees\" / \"dispatch\" / \"kimi\" / task_id\n+    worktree.parent.mkdir(parents=True, exist_ok=True)\n+    git(repo, \"worktree\", \"add\", \"--detach\", str(worktree), \"main\")\n+    head = git(worktree, \"rev-parse\", \"HEAD\")\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"kimi/6690-ci-fix\": [\n+                {\"number\": 6690, \"state\": \"MERGED\", \"headRefOid\": head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(\n+            repo_root=repo,\n+            apply=True,\n+            live_cwds=set(),\n+            merged_pr_only=True,\n+        ),\n+        worktree,\n+    )\n+\n+    assert result.action == \"removed\"\n+    assert result.reason == \"PR #6690 MERGED\"\n+    assert not worktree.exists()\n+\n+\n+def test_detached_worktree_with_open_pr_is_preserved(\n+    tmp_path: Path,\n+    monkeypatch: pytest.MonkeyPatch,\n+) -> None:\n+    \"\"\"Detached dispatch worktree with an OPEN PR is not reaped.\"\"\"\n+    repo = init_repo(tmp_path)\n+    task_id = \"open-detached\"\n+    worktree = repo / \".worktrees\" / \"dispatch\" / \"codex\" / task_id\n+    worktree.parent.mkdir(parents=True, exist_ok=True)\n+    git(repo, \"worktree\", \"add\", \"--detach\", str(worktree), \"main\")\n+    head = git(worktree, \"rev-parse\", \"HEAD\")\n+\n+    patch_gh(\n+        monkeypatch,\n+        {\n+            \"codex/open-detached\": [\n+                {\"number\": 301, \"state\": \"OPEN\", \"headRefOid\": head}\n+            ]\n+        },\n+    )\n+\n+    result = result_for(\n+        rw.reap_worktrees(\n+            repo_root=repo,\n+            apply=True,\n+            live_cwds=set(),\n+            merged_pr_only=True,\n+        ),\n+        worktree,\n+    )\n+\n+    assert result.action == \"skipped\"\n+    assert worktree.exists()\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git show origin/agy/reaper-squash-head -1 --format=\"%B\"",
+            "time": {
+              "start": 1786610053141,
+              "end": 1786610053162
+            }
+          },
+          "id": "prt_ffa41eeff0017CcFulrCt5v9jE",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41e949001O4V1VJW4kfoyeK"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 23090,
+            "input": 245,
+            "output": 61,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 22784
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41f0c9001wy76VUy2AuVx1x",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41e949001O4V1VJW4kfoyeK"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 25768,
+          "input": 2486,
+          "output": 162,
+          "reasoning": 80,
+          "cache": {
+            "write": 0,
+            "read": 23040
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610053487,
+          "completed": 1786610056668
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41f16f001uLHUGz0Ec9ynpW",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa41f48c001Lfw1s4uX3kpuS5",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41f16f001uLHUGz0Ec9ynpW"
+        },
+        {
+          "type": "reasoning",
+          "text": "The `Entire-Checkpoint` trailer is added by the repo's commit-msg hook (pre-commit script). This is repo convention — the existing `origin/agy/reaper-squash-head` commit also has it. So it's fine. My `X-Agent` trailer is present and correct.\n\nNow let me run a full ruff check to be safe, and push.",
+          "time": {
+            "start": 1786610054838,
+            "end": 1786610055498
+          },
+          "id": "prt_ffa41f6b6001CUVDN1B77pLi7v",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41f16f001uLHUGz0Ec9ynpW"
+        },
+        {
+          "type": "text",
+          "text": "The `Entire-Checkpoint` trailer is added automatically by the repo's commit-msg hook (same as the ancestor commit), so that's expected convention. Now let me run a broader ruff check and push.",
+          "time": {
+            "start": 1786610055500,
+            "end": 1786610056292
+          },
+          "id": "prt_ffa41f94c001Ky00NoebQ8WCj8",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41f16f001uLHUGz0Ec9ynpW"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_JXsk30NcuTnmrafCJIng6118",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/orchestration/reap_worktrees.py && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check --select SIM102 scripts/orchestration/reap_worktrees.py; echo \"exit=$?\""
+            },
+            "output": "All checks passed!\nAll checks passed!\nexit=0\n",
+            "metadata": {
+              "output": "All checks passed!\nAll checks passed!\nexit=0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/orchestration/reap_worktrees.py && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check --select SIM102 scripts/orchestration/reap_worktrees.py; echo \"exit=$?\"",
+            "time": {
+              "start": 1786610056363,
+              "end": 1786610056365
+            }
+          },
+          "id": "prt_ffa41faa9001UwrXt6p7ARArp1",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41f16f001uLHUGz0Ec9ynpW"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 25768,
+            "input": 2486,
+            "output": 162,
+            "reasoning": 80,
+            "cache": {
+              "write": 0,
+              "read": 23040
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa41fd48001u3Wve3rQmjeiDO",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41f16f001uLHUGz0Ec9ynpW"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 25854,
+          "input": 64,
+          "output": 62,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 25728
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610056674,
+          "completed": 1786610062048
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffa41fde200139MqpJQSAcuREO",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa4201430014O9ruPvdpeWK9v",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41fde200139MqpJQSAcuREO"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_K1InJ4imYHjQftqMlxmF4907",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push origin HEAD:agy/reaper-squash-head 2>&1 | tail -10"
+            },
+            "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote... already up-to-date\nremote: \nremote: GitHub found 1 vulnerability on learn-ukrainian/learn-ukrainian.github.io's default branch (1 high). To find out more, visit:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/security/dependabot/265        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   264ddb2f87..3da015914f  HEAD -> agy/reaper-squash-head\n",
+            "metadata": {
+              "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote... already up-to-date\nremote: \nremote: GitHub found 1 vulnerability on learn-ukrainian/learn-ukrainian.github.io's default branch (1 high). To find out more, visit:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/security/dependabot/265        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   264ddb2f87..3da015914f  HEAD -> agy/reaper-squash-head\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push origin HEAD:agy/reaper-squash-head 2>&1 | tail -10",
+            "time": {
+              "start": 1786610061731,
+              "end": 1786610061736
+            }
+          },
+          "id": "prt_ffa420404001RefSAWb3aBYwPF",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41fde200139MqpJQSAcuREO"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 25854,
+            "input": 64,
+            "output": 62,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 25728
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa421248001Bsegvd8v9lIPsL",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa41fde200139MqpJQSAcuREO"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffa3f349a001GJPSngqW6SwwN4",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6696-ruff-sim102"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 26188,
+          "input": 270,
+          "output": 177,
+          "reasoning": 13,
+          "cache": {
+            "write": 0,
+            "read": 25728
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786610062058,
+          "completed": 1786610064718
+        },
+        "finish": "stop",
+        "id": "msg_ffa4212ea001MaV4h8reAHWucu",
+        "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o"
+      },
+      "parts": [
+        {
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-start",
+          "id": "prt_ffa42161f0011F7zM4JInYybbE",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa4212ea001MaV4h8reAHWucu"
+        },
+        {
+          "type": "reasoning",
+          "text": "Pushed. Let me verify the push and confirm final state.",
+          "time": {
+            "start": 1786610063206,
+            "end": 1786610063412
+          },
+          "id": "prt_ffa421766001v8XnWplZQnWbhE",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa4212ea001MaV4h8reAHWucu"
+        },
+        {
+          "type": "text",
+          "text": "Done. Pushed `3da015914f` to `agy/reaper-squash-head`, updating PR #6696.\n\n- Collapsed the nested ifs at `scripts/orchestration/reap_worktrees.py:569` to `if info.branch is not None and not safe_only:` with inner block dedented; reap semantics unchanged.\n- `ruff check scripts/orchestration/reap_worktrees.py` → all checks passed (incl. SIM102).\n- `tests/orchestration/test_reap_worktrees.py` → 45 passed.\n- Committed `fix(reaper): collapse nested branch/safe_only if for SIM102 (#6696)` with `X-Agent: deepseek/6696-ruff-sim102` trailer (plus hook-added `Entire-Checkpoint`, same as repo convention).",
+          "time": {
+            "start": 1786610063414,
+            "end": 1786610064380
+          },
+          "id": "prt_ffa421836001lhzjroQlkn54x5",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa4212ea001MaV4h8reAHWucu"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "3fda03d0d595c48c69c0d1385726906b48215f56",
+          "type": "step-finish",
+          "tokens": {
+            "total": 26188,
+            "input": 270,
+            "output": 177,
+            "reasoning": 13,
+            "cache": {
+              "write": 0,
+              "read": 25728
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffa421cb0001t3bo3TDmn78H4N",
+          "sessionID": "ses_005c0cb99ffe9jVfaSYs8QPj5o",
+          "messageID": "msg_ffa4212ea001MaV4h8reAHWucu"
         }
       ]
     }
