@@ -47,6 +47,8 @@ def hermetic_reap(monkeypatch, tmp_path):
     # Tests control process liveness so we stay independent of lsof availability.
     monkeypatch.setattr(post_task_reap, "_probe_path_liveness", lambda _path: False)
     monkeypatch.setattr(post_task_reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    # Deterministic empty active-task probe; individual tests override it.
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: set())
 
     def merged_pr(_repo: Path, branch: str | None):
         if branch is None:
@@ -208,6 +210,106 @@ def test_clean_terminal_reap_apply(hermetic_reap):
     assert report["main_worktree"]["action"] == "removed"
     assert report["main_worktree"]["error"] is None
     assert not worktree.exists()
+
+
+def _no_pr_states(_repo: Path, _branch: str | None):
+    return [], None
+
+
+def test_no_pr_terminal_reap_dry_run(hermetic_reap, monkeypatch):
+    """A terminal task with no PR and a clean tree reaps even without GitHub."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "no-pr-task")
+    _write_task_state(tasks_dir, "no-pr-task", "done", worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+    # Simulate the delegate active-task API being unavailable: the canonical
+    # Class-A settled-dispatch path fails closed on it, so the no-PR fallback
+    # must carry the reap after post_task_reap's own guards pass.
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: None)
+
+    report = post_task_reap.post_task_reap("no-pr-task", tasks_dir=tasks_dir, repo_root=repo_root)
+
+    assert report["main_worktree"]["action"] == "would_remove"
+    assert "settled dispatch" in report["main_worktree"]["reason"]
+    assert worktree.exists()
+
+
+def test_no_pr_terminal_reap_apply(hermetic_reap, monkeypatch):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "no-pr-task")
+    _write_task_state(tasks_dir, "no-pr-task", "done", worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: None)
+
+    report = post_task_reap.post_task_reap("no-pr-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "removed"
+    assert report["main_worktree"]["error"] is None
+    assert not worktree.exists()
+
+
+def test_no_pr_timeout_terminal_reap_apply(hermetic_reap, monkeypatch):
+    """timeout is terminal for post_task_reap but outside the canonical Class-A
+    set; the no-PR fallback must reap it when the tree is clean and PID dead."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "timeout-task")
+    _write_task_state(tasks_dir, "timeout-task", "timeout", worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+
+    report = post_task_reap.post_task_reap("timeout-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "removed"
+    assert report["main_worktree"]["error"] is None
+    assert not worktree.exists()
+
+
+def test_no_pr_needs_finalize_terminal_reap_apply(hermetic_reap, monkeypatch):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "finalize-task")
+    _write_task_state(tasks_dir, "finalize-task", "needs_finalize", worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+
+    report = post_task_reap.post_task_reap("finalize-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "removed"
+    assert report["main_worktree"]["error"] is None
+    assert not worktree.exists()
+
+
+def test_no_pr_open_pr_retain(hermetic_reap, monkeypatch):
+    """An open PR must block the no-PR terminal reap even when everything else
+    (terminal, clean, dead PID) passes."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "open-pr-task")
+    _write_task_state(tasks_dir, "open-pr-task", "done", worktree)
+
+    def open_pr(_repo: Path, _branch: str | None):
+        return [post_task_reap.reap_worktrees.PullRequestState(9, "OPEN", "deadbeef")], None
+
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", open_pr)
+
+    report = post_task_reap.post_task_reap("open-pr-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert "open PR" in report["main_worktree"]["reason"]
+    assert worktree.exists()
+
+
+def test_no_pr_pr_probe_error_retain(hermetic_reap, monkeypatch):
+    """A PR probe error is fail-closed: the no-PR fallback must retain."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "pr-error-task")
+    _write_task_state(tasks_dir, "pr-error-task", "done", worktree)
+    monkeypatch.setattr(
+        post_task_reap.reap_worktrees, "_query_pr_states",
+        lambda _repo, _branch: ([], "gh unavailable"),
+    )
+
+    report = post_task_reap.post_task_reap("pr-error-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "skipped"
+    assert "PR guard unavailable" in report["main_worktree"]["reason"]
+    assert worktree.exists()
 
 
 def test_terminal_failed_reap_apply(hermetic_reap):
