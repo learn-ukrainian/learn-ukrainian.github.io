@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_babych_acoustic_excerpt_candidate_v1.schema.json",
+  "title": "Phase 3 Babych 2022 acoustic-phonetics official excerpt candidate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "provider_calls",
+    "source",
+    "bindings",
+    "text_layer",
+    "excerpt_structure",
+    "review_scope",
+    "rights",
+    "gates",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_babych_acoustic_excerpt_candidate_v1"},
+    "status": {"const": "CONTEXTUAL_EXCERPT_PENDING_UKRAINIAN_SOURCE_REVIEW_AND_SCOPE_CRITIC"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title",
+        "author_display",
+        "author_metadata_raw",
+        "author_metadata_spelling_defect_preserved",
+        "institution",
+        "publisher",
+        "audience",
+        "year",
+        "isbn",
+        "catalog_print_collation_pages",
+        "exact_bitstream_pages",
+        "bitstream_is_complete_publication",
+        "bitstream_characterization",
+        "item_url",
+        "bitstream_url",
+        "private_input_locator"
+      ],
+      "properties": {
+        "source_id": {"const": "uni-ukrmova-phonetics-audiology-babych-2022"},
+        "title": {"const": "Фонетика та фонологія з основами аудіології"},
+        "author_display": {"const": "Наталія Миколаївна Бабич"},
+        "author_metadata_raw": {"const": "Бабич, Наталія Миколаїівна"},
+        "author_metadata_spelling_defect_preserved": {"const": true},
+        "institution": {"const": "Київський університет імені Бориса Грінченка"},
+        "publisher": {"const": "ТОВ \"Альянс\", Україна"},
+        "audience": {"const": "native_ukrainian_bachelor_programme_016_01_logopedia"},
+        "year": {"const": 2022},
+        "isbn": {"const": "978-617-7819-30-0"},
+        "catalog_print_collation_pages": {"const": 294},
+        "exact_bitstream_pages": {"const": 13},
+        "bitstream_is_complete_publication": {"const": false},
+        "bitstream_characterization": {"const": "curated_official_excerpt"},
+        "item_url": {"const": "https://elibrary.kubg.edu.ua/id/eprint/43529/"},
+        "bitstream_url": {"const": "https://elibrary.kubg.edu.ua/id/eprint/43529/1/N_Babych_FTFZOA_FPSRSO.pdf"},
+        "private_input_locator": {"const": "university_corpus/staging/phase3-6375-wave-k-acoustic-phonetics"}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "source_pdf_sha256",
+        "source_pdf_md5",
+        "source_pdf_bytes",
+        "mets_sha256",
+        "item_record_sha256",
+        "export_json_sha256",
+        "implementation_sha256",
+        "schema_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "source_pdf_sha256": {"const": "7adee0a1f2f77af95a3c76474ec8a7df4208039d64d3420d3008466f1f66e537"},
+        "source_pdf_md5": {"const": "f93ec105f9e4b4a369fab521ca9e70ec"},
+        "source_pdf_bytes": {"const": 357368},
+        "mets_sha256": {"const": "36b11282b95bc74a58490e82ad8d6680749c9ae52114130073e3137fafbdadd6"},
+        "item_record_sha256": {"const": "4e21fbd647816675750702b05c6d57b2ee2fa56b741721b9e26b3e1e2cf190b7"},
+        "export_json_sha256": {"const": "860c6b7bc59ab3c2d4816defa2c06fd0c8d26ba8362d68f868545dac5731c942"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "text_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pages",
+        "text_bearing_pages",
+        "unicode_code_points",
+        "utf8_bytes",
+        "page_manifest_sha256",
+        "extracted_text_sha256",
+        "acroform_present",
+        "form_field_count",
+        "javascript_present",
+        "source_isbn_text_verified",
+        "catalog_page_count_in_excerpt_text_verified",
+        "normalization_applied",
+        "ocr_used",
+        "source_text_retained_in_public_receipt"
+      ],
+      "properties": {
+        "pages": {"const": 13},
+        "text_bearing_pages": {"const": 13},
+        "unicode_code_points": {"const": 17490},
+        "utf8_bytes": {"const": 29668},
+        "page_manifest_sha256": {"const": "dc58cc622724864d6236743b026bbbd6b371dac1c35eadf544025861ee58f7f8"},
+        "extracted_text_sha256": {"const": "d75ab3d661dc9ff560887cd58be805585685c6cc17668689000f99a0f303675f"},
+        "acroform_present": {"const": false},
+        "form_field_count": {"const": 0},
+        "javascript_present": {"const": false},
+        "source_isbn_text_verified": {"const": true},
+        "catalog_page_count_in_excerpt_text_verified": {"const": true},
+        "normalization_applied": {"const": false},
+        "ocr_used": {"const": false},
+        "source_text_retained_in_public_receipt": {"const": false}
+      }
+    },
+    "excerpt_structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pdf_pages",
+        "catalogued_publication_pages",
+        "absent_pages_not_synthesized",
+        "front_matter_pdf_pages",
+        "symbols_pdf_page",
+        "module_i_acoustic_begin_pdf_pages",
+        "colophon_pdf_page",
+        "observed_print_pages",
+        "discontinuities",
+        "acoustic_markers_present_verified",
+        "acoustic_markers_set_sha256"
+      ],
+      "properties": {
+        "pdf_pages": {"const": 13},
+        "catalogued_publication_pages": {"const": 294},
+        "absent_pages_not_synthesized": {"const": true},
+        "front_matter_pdf_pages": {"const": [1, 2, 3, 4, 5, 6, 7, 8]},
+        "symbols_pdf_page": {"const": 9},
+        "module_i_acoustic_begin_pdf_pages": {"const": [10, 11, 12]},
+        "colophon_pdf_page": {"const": 13},
+        "observed_print_pages": {
+          "const": {
+            "5": 5,
+            "6": 6,
+            "7": 7,
+            "8": 8,
+            "9": 20,
+            "10": 21,
+            "11": 22,
+            "12": 23
+          }
+        },
+        "discontinuities": {
+          "const": [
+            {
+              "after_pdf_page": 8,
+              "from_print_page": 8,
+              "to_print_page": 20,
+              "evidence": "print_page_jump_8_to_20"
+            },
+            {
+              "after_pdf_page": 12,
+              "from_print_page": 23,
+              "to_role": "colophon",
+              "evidence": "print_page_23_followed_by_colophon"
+            }
+          ]
+        },
+        "acoustic_markers_present_verified": {"const": true},
+        "acoustic_markers_set_sha256": {"const": "ba2a52380a7c851ae0987be46182014bbee4fb2db2026c80d3716ebc9e627fec"}
+      }
+    },
+    "review_scope": {
+      "const": {
+        "content_disposition": "contextual_only",
+        "ukrainian_source_review_complete": false,
+        "scope_critic_complete": false,
+        "topic_gaps_closed": [],
+        "topic_gaps_narrowed": [],
+        "coverage_effect": "pending_ukrainian_source_review",
+        "closure_candidates_pending_matrix_critic": []
+      }
+    },
+    "rights": {
+      "const": {
+        "standardized_license_present": false,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
+        "attribution_required": true,
+        "takedown_ready": true,
+        "adapt_or_remove_on_substantiated_complaint": true,
+        "public_redistribution_authorized": false,
+        "unrestricted_reuse_authorized": false
+      }
+    },
+    "gates": {
+      "const": {
+        "database_ingest_authorized": false,
+        "retained_extracted_text_authorized": false,
+        "private_training_conversion_candidate": false,
+        "training_conversion_complete": false,
+        "normative_rule_authority": false,
+        "semantic_gold": false,
+        "source_universe_frozen": false,
+        "source_coverage_ready": false,
+        "phase3_complete": false,
+        "phase4_blocked": true
+      }
+    },
+    "residuals": {
+      "const": [
+        "The downloadable official bitstream is a 13-page curated excerpt, not the catalogued 294-page publication.",
+        "Print-page discontinuities 8→20 and 23→colophon prove absent pages; those 281 pages must not be inferred.",
+        "Engineering records mechanical excerpt structure only; no university topic is narrowed or closed.",
+        "Ukrainian source-fitness review and scope criticism remain outstanding before any admission upgrade.",
+        "Training conversion, database ingest, normative authority, semantic gold, and Phase 4 remain unauthorized."
+      ]
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
