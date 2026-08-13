@@ -1,0 +1,41 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/4926-sys-executable
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #4926 reconcile sys.executable rule text
+
+## CAPACITY_CARD
+pick=cursor status=cool avoid=deficit-codex
+## ROUTING_CARD_V1
+tier=practical model_x_harness=cursor Auto
+why=docs-only rule text; adjudicated 2026-07-10; mechanical
+owned_paths:
+  - AGENTS.md
+  - agents_extensions/shared/rules/operator-expectations.md
+  - any offline digest that copies the same sentence (search first; edit agents_extensions source, never deployed .claude copies by hand)
+acceptance: rule forbids bare python/python3/sys.executable for **project/shell/production** commands; **tests** that spawn a Python subprocess MUST use sys.executable (it is the venv under `.venv/bin/python -m pytest`).
+
+## Why this is useful
+Agents keep "fixing" tests away from sys.executable and then worktree pytest breaks (no .venv). The ban was never meant for test subprocesses. Issue already adjudicated no-code-change 2026-07-10 — only the **rule text** is wrong.
+
+## Do
+1. Search all rule sources for `sys.executable` (AGENTS.md, operator-expectations.md, workflow.md if duplicated, GEMINI.md only if it is a served digest that must stay in sync — prefer agents_extensions + AGENTS compact digest).
+2. Rewrite the one-liner so:
+   - Production, scripts, agent shell, docs copy-paste: project interpreter from the worktree/task contract (primary `.venv/bin/python` via git common-dir). Never bare `python`/`python3`.
+   - Tests spawning a Python child: `sys.executable` is required (it IS the interpreter running pytest).
+3. Do not change test files. Do not weaken the production ban.
+4. If a deploy check is required for agents_extensions, run it.
+5. PR linked to #4926. Conventional commit. X-Agent: cursor/4926-sys-executable. No merge.
+
+## Tests
+If there is an existing test that asserts the old wording, update the assertion to the new wording. Add a small unit/doc test only if the repo already tests AGENTS.md wording that way.
+
+Quote pytest/ruff if you touch Python.
