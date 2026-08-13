@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7906a6b3955c",
+  "strategy": "manual-commit",
+  "branch": "cursor/6707-inventory-cf-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/practice/thin_mode_source_inventory.py",
+    "tests/test_thin_mode_source_inventory.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/79/06a6b3955c/0/metadata.json",
+      "transcript": "/79/06a6b3955c/0/full.jsonl",
+      "compact_transcript": "/79/06a6b3955c/0/transcript.jsonl",
+      "content_hash": "/79/06a6b3955c/0/content_hash.txt",
+      "prompt": "/79/06a6b3955c/0/prompt.txt"
+    }
+  ]
+}

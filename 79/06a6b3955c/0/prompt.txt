@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6707-inventory-cf-fix
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix Codex CHANGES_REQUESTED on PR #6707
+
+**Driver:** grok-atlas · mechanical inventory CLI
+**X-Agent:** `cursor/6707-inventory-cf-fix`
+
+## CAPACITY_CARD
+pick=cursor status=cool Ultra 100% ~30d will_last=true free=cursor Ultra avoid=agy-5h-empty,habit-codex source=codexbar
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor Auto (mechanical ruff + pair-key + argparse help)
+- why: Codex CF on #6707 requested three mechanical fixes; not UK pair authoring
+- owned_paths: scripts/practice/thin_mode_source_inventory.py, tests/test_thin_mode_source_inventory.py
+- acceptance_cmd: ruff check those two files; pytest tests/test_thin_mode_source_inventory.py; pair-identity match no longer gloss-only
+- alternatives_considered: [agy 5h empty; claude on language grow]
+- parallel: do not touch heritage yaml, synonym/antonym verdicts, or generate_practice_deck.py
+
+## Frozen outcome
+- User-visible: inventory CLI still reports unused attested pairs vs live shards; matching is pair-safe (legs + gloss), not gloss-only.
+- Non-goals: no new pairs, no factory lock change, no heritage edit, no merge.
+- Held-out: Codex finding #2 synthetic collision must now keep unused>0 / used correct; Ruff I001 gone; argparse help= on every flag + usage/output/exit-code epilog.
+- Stop: if you cannot fix matching without a schema change, say so — do not invent pair fields.
+- Completion: push to the existing PR branch `cursor/practice-thin-source-inventory` (PR #6707) or open a follow-up if that worktree is gone. Quote new HEAD SHA. Leaves #4387 #4700 open.
+
+## Codex findings to fix (exact head reviewed `7623f45335a2996d2841254cf6c9e217d078ceae`)
+1. `tests/test_thin_mode_source_inventory.py` Ruff `I001` import ordering.
+2. `scripts/practice/thin_mode_source_inventory.py:264` matches curated pairs only by `distinction_gloss_uk`. Source identity is legs + gloss. A synthetic collision marked two distinct pairs used (`used=2`, `unused=0`). Use pair-safe matching or fail closed on gloss collisions.
+3. CLI omits `help=` for five arguments and has no required usage/output/exit-code `epilog`.
+
+## Work
+1. Worktree only. Prefer `--pr 6707` checkout of `cursor/practice-thin-source-inventory`.
+2. Fix the three findings. Add a regression test for the gloss-collision case.
+3. Run ruff + the inventory tests. Commit with `X-Agent: cursor/6707-inventory-cf-fix`.
+4. Push to PR #6707. Do not merge.
+
+## #M-4
+Quote ruff output, pytest output, and before/after matching behavior for the collision fixture.
