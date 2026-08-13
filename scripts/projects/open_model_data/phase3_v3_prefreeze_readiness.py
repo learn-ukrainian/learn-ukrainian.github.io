@@ -25,6 +25,7 @@ if __package__ in {None, ""}:
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import phase3_historical_evidence_spine_v2 as historical_evidence
 from scripts.projects.open_model_data import phase3_historical_full_materialization as historical
 from scripts.projects.open_model_data import phase3_linguistic_canary as canary
 from scripts.projects.open_model_data import phase3_linguistic_representation as representation
@@ -169,14 +170,26 @@ def _validate_saint_sophia_reconciliation_receipt(
     except sophia_reconciliation.SaintSophiaReconciliationError as exc:
         raise PrefreezeReadinessError(str(exc)) from exc
     bindings = receipt["bindings"]
-    require(bindings["implementation_sha256"] == sha256_file(Path(sophia_reconciliation.__file__).resolve()), "Saint Sophia reconciliation implementation drift")
-    require(bindings["schema_sha256"] == sha256_file(sophia_reconciliation.SCHEMA_PATH), "Saint Sophia reconciliation schema drift")
+    require(
+        bindings["implementation_sha256"] == sha256_file(Path(sophia_reconciliation.__file__).resolve()),
+        "Saint Sophia reconciliation implementation drift",
+    )
+    require(
+        bindings["schema_sha256"] == sha256_file(sophia_reconciliation.SCHEMA_PATH),
+        "Saint Sophia reconciliation schema drift",
+    )
     require(
         bindings["denominator_sha256"] == sha256_file(sophia_reconciliation.DENOMINATOR_PATH),
         "Saint Sophia reconciliation denominator drift",
     )
-    require(receipt["database"]["pre_sha256"] == university_database_sha256, "Saint Sophia pre-database hash does not equal university freeze")
-    require(receipt["database"]["post_sha256"] == current_database_sha256, "Saint Sophia post-database hash does not equal current sources database")
+    require(
+        receipt["database"]["pre_sha256"] == university_database_sha256,
+        "Saint Sophia pre-database hash does not equal university freeze",
+    )
+    require(
+        receipt["database"]["post_sha256"] == current_database_sha256,
+        "Saint Sophia post-database hash does not equal current sources database",
+    )
     return receipt, sha256_file(path)
 
 
@@ -258,6 +271,7 @@ def build_readiness(
             "university freeze and sources database hash disagree",
         )
     battery, canary_verification = _validate_canary(Path(ua_gec_root))
+    historical_evidence_spine = historical_evidence.load_spine()
 
     ua_complete = ua_receipt["complete_context"]
     university_sources = university_freeze["source_universe"]
@@ -293,14 +307,23 @@ def build_readiness(
             "historical_full_gate_receipt_sha256": historical_gate["receipt_sha256"],
             "historical_full_receipt_file_sha256": historical_receipt_file_sha256,
             "historical_full_receipt_sha256": historical_receipt["receipt_sha256"],
+            "historical_evidence_spine_v2_file_sha256": sha256_file(historical_evidence.SPINE_PATH),
+            "historical_evidence_spine_v2_receipt_sha256": historical_evidence_spine["receipt_sha256"],
+            "historical_evidence_spine_v2_implementation_sha256": sha256_file(
+                Path(historical_evidence.__file__).resolve()
+            ),
+            "historical_evidence_spine_v2_schema_sha256": sha256_file(historical_evidence.SCHEMA_PATH),
             **(
                 {
                     "saint_sophia_reconciliation_receipt_file_sha256": sophia_receipt_file_sha256,
                     "saint_sophia_reconciliation_receipt_sha256": sophia_receipt["receipt_sha256"],
-                    "saint_sophia_reconciliation_implementation_sha256": sha256_file(Path(sophia_reconciliation.__file__).resolve()),
+                    "saint_sophia_reconciliation_implementation_sha256": sha256_file(
+                        Path(sophia_reconciliation.__file__).resolve()
+                    ),
                     "saint_sophia_reconciliation_schema_sha256": sha256_file(sophia_reconciliation.SCHEMA_PATH),
                 }
-                if sophia_receipt is not None else {}
+                if sophia_receipt is not None
+                else {}
             ),
             "sources_database_sha256": sources_database_sha256,
             "prefreeze_implementation_sha256": sha256_file(SCRIPT_PATH),
@@ -364,6 +387,7 @@ def build_readiness(
             "university_content_audit_ready": True,
             "university_source_freeze_ready": True,
             "historical_full_materialization_ready": True,
+            "historical_evidence_gap_matrix_current": True,
             "saint_sophia_db_reconciliation_ready": sophia_receipt is not None,
             "linguistic_representation_ready": True,
             "semantic_canary_ready": True,
@@ -402,13 +426,34 @@ def validate_readiness(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["source_authoring_authorized"] is False, "source authoring opened before freeze")
     require(receipt["gates"]["phase4_blocked"] is True, "Phase 4 opened before Phase 3 completion")
     bindings = receipt["bindings"]
+    current_historical_evidence = historical_evidence.load_spine()
+    require(
+        bindings["historical_evidence_spine_v2_file_sha256"] == sha256_file(historical_evidence.SPINE_PATH),
+        "historical evidence spine v2 file binding drift",
+    )
+    require(
+        bindings["historical_evidence_spine_v2_receipt_sha256"] == current_historical_evidence["receipt_sha256"],
+        "historical evidence spine v2 receipt binding drift",
+    )
+    require(
+        bindings["historical_evidence_spine_v2_implementation_sha256"]
+        == sha256_file(Path(historical_evidence.__file__).resolve()),
+        "historical evidence spine v2 implementation binding drift",
+    )
+    require(
+        bindings["historical_evidence_spine_v2_schema_sha256"] == sha256_file(historical_evidence.SCHEMA_PATH),
+        "historical evidence spine v2 schema binding drift",
+    )
     sophia_keys = {
         "saint_sophia_reconciliation_receipt_file_sha256",
         "saint_sophia_reconciliation_receipt_sha256",
         "saint_sophia_reconciliation_implementation_sha256",
         "saint_sophia_reconciliation_schema_sha256",
     }
-    require(sophia_keys.issubset(bindings) or not sophia_keys.intersection(bindings), "partial Saint Sophia reconciliation binding")
+    require(
+        sophia_keys.issubset(bindings) or not sophia_keys.intersection(bindings),
+        "partial Saint Sophia reconciliation binding",
+    )
     readiness_value = receipt["readiness"].get("saint_sophia_db_reconciliation_ready")
     if readiness_value is not None:
         require(

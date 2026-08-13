@@ -44,6 +44,10 @@
         "historical_full_gate_receipt_sha256",
         "historical_full_receipt_file_sha256",
         "historical_full_receipt_sha256",
+        "historical_evidence_spine_v2_file_sha256",
+        "historical_evidence_spine_v2_receipt_sha256",
+        "historical_evidence_spine_v2_implementation_sha256",
+        "historical_evidence_spine_v2_schema_sha256",
         "sources_database_sha256",
         "prefreeze_implementation_sha256",
         "prefreeze_schema_sha256"
@@ -67,6 +71,10 @@
         "historical_full_gate_receipt_sha256": {"$ref": "#/$defs/sha256"},
         "historical_full_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
         "historical_full_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v2_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v2_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v2_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_evidence_spine_v2_schema_sha256": {"$ref": "#/$defs/sha256"},
         "saint_sophia_reconciliation_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
         "saint_sophia_reconciliation_receipt_sha256": {"$ref": "#/$defs/sha256"},
         "saint_sophia_reconciliation_implementation_sha256": {"$ref": "#/$defs/sha256"},
@@ -203,6 +211,7 @@
       "required": [
         "inventory_compatibility_ready", "university_content_audit_ready",
         "university_source_freeze_ready", "historical_full_materialization_ready",
+        "historical_evidence_gap_matrix_current",
         "linguistic_representation_ready", "semantic_canary_ready",
         "functional_role_contract_ready", "complete_evaluation_package_ready",
         "overall_source_freeze_ready", "missing_requirements"
@@ -212,6 +221,7 @@
         "university_content_audit_ready": {"const": true},
         "university_source_freeze_ready": {"const": true},
         "historical_full_materialization_ready": {"const": true},
+        "historical_evidence_gap_matrix_current": {"const": true},
         "saint_sophia_db_reconciliation_ready": {"type": "boolean"},
         "linguistic_representation_ready": {"const": true},
         "semantic_canary_ready": {"const": true},
