@@ -73,7 +73,7 @@ stampede one hot lane.
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
 | **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
-| **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` **only** — **Pro DO NOT USE** |
+| **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |

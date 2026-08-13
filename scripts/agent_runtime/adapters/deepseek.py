@@ -3,9 +3,11 @@
 Operator 2026-08-13: DeepSeek dispatch routes through OpenCode to first-party
 ``api.deepseek.com`` (``deepseek-direct/<model>``) with ``--variant high`` by
 default, replacing the Hermes dispatch default so runs get native Entire
-capture. ``deepseek-v4-flash`` is the default; ``deepseek-v4-pro`` remains
-DO NOT USE for dispatch. The Hermes adapter (``hermes_deepseek.py``) stays
-available for ``ask-hermes`` only.
+capture. ``deepseek-v4-flash`` is the default; ``deepseek-v4-pro`` is reachable
+via an explicit ``--model deepseek-v4-pro`` for hard implement tasks (complex
+multi-file, hard lookup) per the 2026-08-13 operator GO (canary #6703) — Pro is
+not the default and stays off the routine review ladder. The Hermes adapter
+(``hermes_deepseek.py``) stays available for ``ask-hermes`` only.
 
 LOCAL-ONLY: prompt data egresses to China — forbidden in CI (same guard as
 the Hermes route, via ``scripts.agent_runtime.routes``).

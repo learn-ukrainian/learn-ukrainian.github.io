@@ -481,13 +481,15 @@ models:
   deepseek-v4-pro:
     family: deepseek
     tier: frontier_practical
-    # Still catalogued, but operator 2026-08-06 until further notice: DO NOT USE.
-    # Flash is the only DeepSeek seat on review ladders / dispatches until lifted.
+    # Operator GO 2026-08-13: Pro hold lifted for hard tasks (canary #6703 merged
+    # 9c44e63f63 @ high; supersedes the 2026-08-06 DO NOT USE hold). Pro @ high =
+    # hard implement only (complex multi-file, hard lookup) — NOT the default and
+    # NOT on the routine review ladder (Flash stays the volume rung).
     lifecycle: active
-    roles: [strong_review, coding, long_context_reasoning]
+    roles: [hard_implement, complex_coding, long_context_reasoning]
     transports: [hermes, opencode]
     strengths: [quality_per_dollar, one_million_context, tool_calling]
-    weaknesses: [silent_stall_history, not_for_folk_content, temporary_operator_hold_prefer_flash]
+    weaknesses: [silent_stall_history, not_for_folk_content, not_default_seat, not_on_routine_review_ladder]
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
@@ -718,8 +720,10 @@ review_candidates:
   deepseek-v4-pro:
     model_id: deepseek-v4-pro
     route: deepseek
-    transport: hermes
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-pro
+    transport: opencode
+    # Hard implement only (complex multi-file, hard lookup) — not default, not a
+    # routine review-ladder rung (operator GO 2026-08-13, canary #6703).
+    invocation: opencode run --model deepseek-direct/deepseek-v4-pro --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
@@ -897,7 +901,8 @@ review_ladders:
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
     - [glm-5.2]
-    # Operator 2026-08-06 until further notice: DeepSeek Flash only (Pro on hold).
+    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
+    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]
@@ -913,7 +918,8 @@ review_ladders:
     - [grok-4.5]
     - [grok-4.5-cursor-fallback]
     - [kimi-k3]
-    # Operator 2026-08-06 until further notice: DeepSeek Flash only (Pro on hold).
+    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
+    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]

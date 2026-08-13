@@ -174,8 +174,10 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "deepseek": {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
-        # dispatch default (operator 2026-08-13): Flash only, --variant high,
-        # native Entire capture. Pro stays DO NOT USE; the Hermes adapter
+        # dispatch default (operator 2026-08-13): Flash default, --variant high,
+        # native Entire capture. Pro is reachable via --model deepseek-v4-pro
+        # for hard implement tasks only (complex multi-file, hard lookup —
+        # operator GO 2026-08-13, canary #6703); the Hermes adapter
         # (hermes_deepseek.py) remains for ask-hermes only via the
         # hermes-deepseek seat below. First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
