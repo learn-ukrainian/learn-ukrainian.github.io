@@ -436,7 +436,6 @@ def test_live_database_path_is_rejected(tmp_path: Path) -> None:
     assert exit_code == 2
 
 
-@pytest.mark.production
 def test_production_manifest_against_drive_custody() -> None:
     drive = (
         Path.home() / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
