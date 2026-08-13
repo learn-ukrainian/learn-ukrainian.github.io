@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3369be9af936",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6370-ocr-recover",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json",
+    "data/lexicon/source-inventory-review-decisions/2026-08-12-ohoiko-ulp-paired-split-legs-approve.yaml",
+    "data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml",
+    "scripts/lexicon/ohoiko_paired_headword_split.py",
+    "scripts/lexicon/publish_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "site/src/data/lexicon-manifest.pointer.json",
+    "tests/test_ohoiko_paired_headword_split.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/33/69be9af936/0/metadata.json",
+      "transcript": "/33/69be9af936/0/full.jsonl",
+      "compact_transcript": "/33/69be9af936/0/transcript.jsonl",
+      "content_hash": "/33/69be9af936/0/content_hash.txt",
+      "prompt": "/33/69be9af936/0/prompt.txt"
+    }
+  ]
+}

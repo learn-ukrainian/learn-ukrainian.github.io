@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3369be9af936",
+  "session_id": "fleet-54a2278de06342dfa703075919e9bb76",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T05:49:29.767434Z",
+  "branch": "agy/atlas-6370-ocr-recover",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json",
+    "data/lexicon/source-inventory-review-decisions/2026-08-12-ohoiko-ulp-paired-split-legs-approve.yaml",
+    "data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml",
+    "scripts/lexicon/ohoiko_paired_headword_split.py",
+    "scripts/lexicon/publish_manifest.py",
+    "site/src/data/lexicon-manifest.fingerprint.json",
+    "site/src/data/lexicon-manifest.pointer.json",
+    "tests/test_ohoiko_paired_headword_split.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "8bdf51a03897",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T05:49:29.753085Z",
+    "agent_lines": 900,
+    "agent_removed": 41,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 900,
+    "total_lines_changed": 941,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6370-ocr-recover
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6370 — recover Latin-confusable OCR inventory lemmas, then re-measure
+
+**Driver:** grok-atlas · epic:4387 · parent #4220/#6370
+**X-Agent trailer required** (`X-Agent: agy/atlas-6370-ocr-recover`)
+
+## CAPACITY_CARD
+pick=agy status=unknown-budget-api-timeout claude=cool cursor=cool avoid=codex(credits=0) source=codexbar
+language-lane: **agy** (VESUM word validity). Cursor is excluded from language seats.
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy / gemini-3.6-flash-high
+- why_this_tier: bounded VESUM-backed OCR recover + existing promote path; no new architecture
+- advisor_packet: n/a
+- owned_paths: scripts/lexicon/ohoiko_paired_headword_split.py, scripts/lexicon/curated_ohoiko_ulp_repromote.py, data/lexicon/source-inventory/oneshot/, tests/**, site/src/data/lexicon-manifest.pointer.json, site/src/data/lexicon-manifest.fingerprint.json
+- acceptance_cmd: re-measure residual JSON + pytest on touched tests + ruff; PR open or named zero-delta proof
+- alternatives_considered: [claude-sonnet, cursor-excluded-language]
+- parallel_free_seats: cursor on #6437 LINT-004
+
+## Frozen outcome
+- User-visible: any **named OCR Latin-confusable** leftover that becomes a real VESUM lemma after 1:1 lookalike substitution is promoted via the **existing** #6528/#6678 path (no hand-injected EN).
+- Denominator: leftover named on #6378/#6678 comment: inventory `single_word_vesum_absent` **1** (`тваринa` Latin a) + split-leg `vesum_absent` **4** (`жiнка`, `футболiст`, `поліцейський`, `perfective)`).
+- Non-goals: collapsing internal spaces (`боя тися` → `боятися`) — that is a **new split policy**, do not invent. No heritage promote (`кримчанин`, `переключити`, `просвітитель`, `заболіти`). No multiword 12. No closing #6370.
+- Held-out: VESUM `verify_word` on the **normalized** lemma must hit; promote only if missing from live Atlas.
+- Stop: if recovered set is 0 after VESUM, write residual JSON + issue comment and do **not** fake a PR of empty catalog churn.
+- Completion: PR (if delta>0) or issue comment with tool-backed residual; remaining categories named.
+
+## Binding recover policy (this PR only)
+Allowed substitution on a mixed Cyrillic+Latin token (already detected: `LATIN_A` hold in `classify_single_word_leg`):
+- Map only lookalike Latin → Cyrillic: `a→а i→і I→І e→е o→о p→р c→с y→у x→х`
+- Apply once; then `verify_word` + heritage classifier (same as #6528).
+- Promote only `single_word_vesum_ok` and missing from Atlas.
+- Leave `perfective)` and other garbage as named `vesum_absent`.
+- Do **not** delete spaces or invent lemmas not present in the inventory string after that substitution.
+
+## Work
+1. Worktree only. Primary is read-only.
+   `PRIMARY=/Users/krisztiankoos/projects/learn-ukrainian`
+   Live manifest (may be gitignored/local-richer): `$PRIMARY/site/src/data/lexicon-manifest.json` — do not hydrate over a richer local.
+2. Re-derive residual with `scripts/lexicon/ohoiko_paired_headword_split.py` (or existing classify helpers). Write `batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json`.
+3. Implement lookalike recover + tests (fixture-level; include `тваринa` and `жiнка`).
+4. Promote recovered VESUM-ok missing lemmas via `apply_source_inventory_promotion` → `enrich_entry` → verify hazards CLEAN. Never hand-inject EN.
+5. `publish_manifest` only if this promote requires the pointer (same as #6678). If richness regresses, `--allow-richness-regression` with written reason citing #6370 OCR recover + counts.
+6. Re-measure; quote residual. Structural `paired_headwords_comma` keys remaining because Atlas stores legs is **accounting**, not missing VESUM-ok legs — say so.
+7. pytest + ruff on touched Python.
+8. Conventional commit + PR linking #6370 / #4387. **No auto-merge.** If delta=0, skip empty PR and comment on #6370.
+9. Comment tool-backed counts on #6370.
+
+## #M-4
+Quote VESUM hits and before/after residual JSON. OPSEC: public label **teacher** only.
+
+## Hard
+No fabricated done. Residual stays queue.
