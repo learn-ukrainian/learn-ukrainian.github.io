@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "54aa69468a60",
+  "session_id": "fleet-10449af3854d4a7d87d0adf17d531f4a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T06:44:15.986667Z",
+  "branch": "cursor/atlas-6437-lint101",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/SCRIPTS.md"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "a7a7fb3c3978",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T06:44:15.979756Z",
+    "agent_lines": 2,
+    "agent_removed": 2,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2,
+    "total_lines_changed": 4,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

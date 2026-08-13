@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "54aa69468a60",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6437-lint101",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/SCRIPTS.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/54/aa69468a60/0/metadata.json",
+      "transcript": "/54/aa69468a60/0/full.jsonl",
+      "compact_transcript": "/54/aa69468a60/0/transcript.jsonl",
+      "content_hash": "/54/aa69468a60/0/content_hash.txt",
+      "prompt": "/54/aa69468a60/0/prompt.txt"
+    }
+  ]
+}
