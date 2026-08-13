@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6710-drop-self-pairs
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: drop two self-pairs on PR #6710
+
+**Driver:** grok-atlas · mechanical (not new UK pair authoring)
+**X-Agent:** `cursor/6710-drop-self-pairs`
+
+## CAPACITY_CARD
+pick=cursor Auto status=Ultra 100% mechanical yaml+test
+avoid=agy (busy on #6714 drop),habit-codex
+source=codex-cf
+
+## Codex finding at `432b2dfc5859724c72909ac20ba385a559774191`
+Self-pairs in `data/lexicon/synonym_pair_verdicts.yaml`:
+- `виміряти / виміряти` (~lines 1297–1301)
+- `звичай / звичай` (~lines 4260–4264)
+
+Not synonym pairs. Deck builder would emit identical cards.
+
+## Frozen outcome
+- Those two approved entries are gone.
+- Add an explicit test that every approved/rejected pair has `a != b` (casefold).
+- Update floor tests if they hard-code 1186 / 1531 (new approved should be 1184 unless recount differs).
+- No new pairs. No antonym/heritage/factory edits.
+- Push to PR #6710 branch `claude/practice-synonym-attested-grow`.
+- Leaves #4387 #4700 open. No merge.
+
+## #M-4
+Quote: self-pairs remaining? 0; new approved/unique counts; pytest.
