@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -64,6 +66,10 @@ def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     assert "fleet_comms_cold_clause" in text or "plane-status" in text
     assert "fleet-comms" in text
     assert 'source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"' in text
+    assert (
+        'FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"'
+        in text
+    )
 
 
 def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
@@ -121,3 +127,64 @@ def test_driver_wrappers_use_the_shared_core() -> None:
         assert "launcher_core.sh" in text
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert "drive-epic" in core
+
+
+def test_cold_clause_resolves_live_mode_when_env_unset() -> None:
+    """Unset FLEET_COMMS_PLANE_MODE must not hardcode mode=off when live is authority."""
+    env = os.environ.copy()
+    env.pop("FLEET_COMMS_PLANE_MODE", None)
+    env.pop("FLEET_COMMS_MESSAGE_PLANE", None)
+    env["PROJECT_DIR"] = str(REPO)
+    env["LC_ROOT"] = str(REPO)
+
+    script = f"""
+set -euo pipefail
+source "{HELPER}"
+resolved="$(fleet_comms_resolve_plane_mode)"
+clause="$(fleet_comms_cold_clause)"
+printf 'resolved=%s\\n' "$resolved"
+printf 'clause=%s\\n' "$clause"
+"""
+    proc = subprocess.run(
+        ["bash", "-c", script],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    out = proc.stdout
+    assert "resolved=authority" in out or "resolved=dual_write" in out or "resolved=shadow" in out
+    # When resolve returns authority, clause must carry it (not a hardcoded off).
+    if "resolved=authority" in out:
+        assert "mode=authority" in out
+        assert "current mode=off" not in out
+
+
+def test_cold_clause_does_not_force_off_when_resolve_returns_authority() -> None:
+    """Helper must call resolve when env empty; mock authority must appear in clause."""
+    env = os.environ.copy()
+    env.pop("FLEET_COMMS_PLANE_MODE", None)
+    env["PROJECT_DIR"] = str(REPO)
+
+    script = f"""
+set -euo pipefail
+source "{HELPER}"
+fleet_comms_resolve_plane_mode() {{ printf '%s' 'authority'; }}
+clause="$(fleet_comms_cold_clause)"
+printf '%s\\n' "$clause"
+"""
+    proc = subprocess.run(
+        ["bash", "-c", script],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "mode=authority" in proc.stdout
+    assert "current mode=off" not in proc.stdout

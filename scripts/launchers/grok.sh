@@ -7,7 +7,15 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
-  local cmd=(grok --model "$LC_MODEL")
+  local cmd=(grok)
+  # Only pin --model / --reasoning-effort when the caller asked for them;
+  # otherwise the Grok TUI keeps whatever was selected last in the session.
+  if [ -n "${LC_MODEL:-}" ]; then
+    cmd+=(--model "$LC_MODEL")
+  fi
+  if [ -n "${LC_EFFORT:-}" ]; then
+    cmd+=(--reasoning-effort "$LC_EFFORT")
+  fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
   launcher_exec_command "${cmd[@]}"

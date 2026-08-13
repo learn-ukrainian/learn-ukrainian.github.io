@@ -345,3 +345,19 @@ def test_ask_glm_and_pool_invoke_on_message_created_callback(monkeypatch):
         ):
             fn("hi", task_id="t", on_message_created=seen.append)
         assert seen == [41], f"{name}: on_message_created not invoked with the message id"
+
+
+def test_ask_glm_omitted_effort_defaults_to_variant_high(monkeypatch):
+    """Operator 2026-08-13: ask-glm without --effort invokes opencode with
+    variant=high; an explicit --effort max still wins (maps to variant max)."""
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    for effort, expected_variant in ((None, "high"), ("max", "max")):
+        with (
+            patch("scripts.ai_agent_bridge._opencode.send_message", return_value=41),
+            patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+            patch("scripts.ai_agent_bridge._opencode.record_ask_reply"),
+            patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
+        ):
+            ask_glm("hi", task_id="t", effort=effort)
+        assert inv.call_args.kwargs["variant"] == expected_variant

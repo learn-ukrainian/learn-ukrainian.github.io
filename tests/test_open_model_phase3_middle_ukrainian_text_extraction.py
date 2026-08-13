@@ -273,10 +273,7 @@ def test_private_jsonl_rejects_unpaired_utf16_surrogate_with_typed_error(
     )
     rows = [json.loads(line) for line in jsonl_path.read_text(encoding="utf-8").splitlines()]
     rows[0]["decoded_text"] = "\ud800"
-    payload = "".join(
-        f"{json.dumps(row, ensure_ascii=True, separators=(',', ':'))}\n"
-        for row in rows
-    )
+    payload = "".join(f"{json.dumps(row, ensure_ascii=True, separators=(',', ':'))}\n" for row in rows)
     jsonl_path.write_text(payload, encoding="ascii")
     monkeypatch.setattr(extraction, "EXPECTED_PRIVATE_JSONL_BYTES", jsonl_path.stat().st_size)
     monkeypatch.setattr(extraction, "EXPECTED_PRIVATE_JSONL_SHA256", _sha256(jsonl_path))
@@ -313,9 +310,7 @@ def test_receipt_schema_is_text_free_and_fail_closed() -> None:
 
     assert '"decoded_text"' not in serialized
     assert '"text_zones"' not in serialized
-    assert schema["properties"]["extraction_scope"]["properties"]["embedded_text_quality_verified"] == {
-        "const": False
-    }
+    assert schema["properties"]["extraction_scope"]["properties"]["embedded_text_quality_verified"] == {"const": False}
     assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
     assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
     assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}

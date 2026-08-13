@@ -1,6 +1,4 @@
 {
-  "schema_version": 1,
-  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "inputs": {
     "lexicon_code": [
       {
@@ -93,7 +91,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "e8c463749405156394c5dbb31d8092cfc713fb8e0c52ba0e015fe36b2839cc1e"
+        "sha256": "487ffd0bd677eb287b41945bda85f3fdf623758db0386b92fe5b3700ac17c779"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -145,7 +143,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "e0aeebad823fb9938d91f09c047bc0952929a26f5b1930b788591a5ec30a53c3"
+        "sha256": "beb47e26a2bdffb1e65dac1e50f3dd7975a042425c12448eced60581f658d43c"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -196,6 +194,10 @@
         "sha256": "328d114f3445890458c43ba0238b48669a2383ba7a54a4f4bdfe49b2dadc6b5d"
       },
       {
+        "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
+        "sha256": "c7c90e42c9af22824357a205a48e6e2a385217eee39f53cedee462588923c6cb"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },
@@ -209,7 +211,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "f22cb1acc7d7d1fb23ac082301fbcf0c3de0e8e178f1eddfc74d072bf73aa6a6"
+        "sha256": "c7ab61b6c661dda8ba019049ec26ea46340b115a1dff0f2f0f81a8ce8fe6c08d"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
@@ -233,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
-        "sha256": "2e971c0e77ad3f76df3d9a95971e79e31d342e7f97e36b8bd56d704523a3239a"
+        "sha256": "0756a2a5c50b58955d1678b7cdf9bdf198d876b0e542a2d3903edee47e3111f6"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
@@ -252,5 +254,7 @@
         "sha256": "395d77478ebddaed38b6a94cc15227deec39e7aafa8735a7d8d434ccbdf6c79a"
       }
     ]
-  }
+  },
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state"
 }

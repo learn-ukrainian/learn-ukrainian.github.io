@@ -93,3 +93,86 @@ def test_retention_boundary_uses_unrounded_file_age(tmp_path: Path) -> None:
     _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
 
     assert str(almost_old) not in {candidate.path for candidate in candidates}
+
+
+def _tree_snapshot(root: Path) -> dict[str, bytes]:
+    """Map every regular file under ``root`` (relative path -> bytes)."""
+    return {
+        str(path.relative_to(root)): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and not path.is_symlink()
+    }
+
+
+def test_inventory_is_read_only_and_never_deletes(tmp_path: Path) -> None:
+    stale = _old_file(tmp_path / ".codex" / "sessions" / "2026" / "old.jsonl")
+    config = _old_file(tmp_path / ".codex" / "config.toml")
+    recent = _old_file(tmp_path / ".claude" / "projects" / "recent.jsonl", age_days=2)
+
+    before = _tree_snapshot(tmp_path)
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+
+    # The stale file is reported as a candidate but must survive the scan.
+    assert str(stale) in {candidate.path for candidate in candidates}
+    assert candidates
+    assert _tree_snapshot(tmp_path) == before
+    assert stale.exists()
+    assert config.exists()
+    assert recent.exists()
+    # No archive directory or any other side effect was created.
+    assert sorted(path.name for path in tmp_path.iterdir()) == [".claude", ".codex"]
+
+
+def test_apply_delete_refused_without_environment_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    old = _old_file(tmp_path / ".grok" / "sessions" / "old.jsonl")
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
+
+    with pytest.raises(PermissionError, match="LU_HOME_SESSION_APPLY=1"):
+        inventory.apply_retention(
+            candidates=candidates,
+            home=tmp_path,
+            archive_root=tmp_path / "archive",
+            action="delete",
+            retention_days=14,
+        )
+
+    assert old.exists()
+
+
+def test_apply_delete_removes_only_stale_allowlisted_session_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    old = _old_file(tmp_path / ".codex" / "sessions" / "old.jsonl")
+    config = _old_file(tmp_path / ".codex" / "config.toml")
+    recent = _old_file(tmp_path / ".claude" / "projects" / "recent.jsonl", age_days=2)
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+    monkeypatch.setenv(inventory.APPLY_ENV, "1")
+
+    results = inventory.apply_retention(
+        candidates=candidates,
+        home=tmp_path,
+        archive_root=tmp_path / "archive",
+        action="delete",
+        retention_days=14,
+    )
+
+    assert results == [{"path": str(old), "action": "deleted"}]
+    assert not old.exists()
+    assert config.exists()
+    assert recent.exists()
+    assert not (tmp_path / "archive").exists()
+
+
+def test_main_apply_refused_without_environment_gate(
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
+
+    assert inventory.main(["--apply"]) == 2
+    assert "LU_HOME_SESSION_APPLY=1" in capsys.readouterr().err

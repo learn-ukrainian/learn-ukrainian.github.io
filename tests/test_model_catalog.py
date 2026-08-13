@@ -17,6 +17,7 @@ from scripts.review.model_catalog import (
     glm_model_aliases,
     kimi_model_aliases,
     load_model_catalog,
+    model_aliases,
     resolve_glm_model,
     resolve_kimi_model,
     validate_catalog,
@@ -140,6 +141,16 @@ def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
         "context_profile": "kimicc_k3",
     }
     validate_kimi_alias_consumers()
+
+
+def test_generic_model_aliases_resolve_k3_256k_and_kimicc_endpoint_lists_it() -> None:
+    """The transport-agnostic alias map must resolve every Kimi alias, including 256k."""
+    aliases = model_aliases()
+    assert aliases["kimi-code/k3-256k"] == "kimi-code/k3-256k"
+    assert aliases["k3-256k"] == "kimi-code/k3-256k"
+    assert aliases["kimi-k3-256k"] == "kimi-code/k3-256k"
+    endpoints = load_model_catalog()["review_scheduler"]["endpoints"]
+    assert "kimi-code/k3-256k" in endpoints["kimicc"]["models"]
 
 
 def test_glm_model_aliases_and_consumer_lint() -> None:

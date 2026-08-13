@@ -1,0 +1,365 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+  source_family: ohoiko
+  extraction_mode: paired_headword_split
+  title: ohoiko paired-headword split legs ohoiko-ulp-paired-split-legs-2026-08-12
+  locator: private Ohoiko/ULP extracts — lemmas only committed
+  notes: Split legs only from inventory paired comma headwords. Derived headword metadata only; raw private
+    copyrighted material is local-only and not committed.
+  headwords:
+  - lemma: боки
+    pos: noun
+    gloss: side, sides
+    locator: 'ohoiko-1000-words entry 35 :: paired-split::боки'
+    context: 'Paired-headword split from ''бік, боки''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: вибач
+    pos: verb
+    gloss: 1) excuse me; 2) (I am) sorry
+    locator: 'ohoiko-1000-words entry 89 :: paired-split::вибач'
+    context: 'Paired-headword split from ''вибачте, вибач''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: вибачте
+    pos: verb
+    gloss: 1) excuse me; 2) (I am) sorry
+    locator: 'ohoiko-1000-words entry 89 :: paired-split::вибачте'
+    context: 'Paired-headword split from ''вибачте, вибач''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: водійка
+    pos: noun
+    gloss: driver (male, female)
+    locator: 'ohoiko-1000-words entry 121 :: paired-split::водійка'
+    context: 'Paired-headword split from ''водій, водійка''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: встигти
+    pos: verb
+    gloss: to be in time (to make it); to manage (in time); to
+    locator: 'ohoiko-500-verbs entry 92 :: paired-split::встигти'
+    context: 'Paired-headword split from ''встигти,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: відкритися
+    pos: verb
+    gloss: to (become) open
+    locator: 'ohoiko-1000-words entry 104 :: paired-split::відкритися'
+    context: 'Paired-headword split from ''відкриватися, відкритися''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: дерева
+    pos: noun
+    gloss: tree, trees
+    locator: 'ohoiko-1000-words entry 209 :: paired-split::дерева'
+    context: 'Paired-headword split from ''дерево, дерева''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: дні
+    pos: noun
+    gloss: day, days
+    locator: 'ohoiko-1000-words entry 207 :: paired-split::дні'
+    context: 'Paired-headword split from ''день, дні''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: дієслова
+    pos: noun
+    gloss: verb, verbs
+    locator: 'ohoiko-1000-words entry 218 :: paired-split::дієслова'
+    context: 'Paired-headword split from ''дієслово, дієслова''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: з'їздити
+    pos: verb
+    gloss: to go by transport (multidirectional); to travel
+    locator: 'ohoiko-500-verbs entry 212 :: paired-split::з''їздити'
+    context: 'Paired-headword split from "з''їздити,"; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: забракувати
+    pos: verb
+    gloss: to lack, to be short of, to be missing Impersonal Verb
+    locator: 'ohoiko-500-verbs entry 13 :: paired-split::забракувати'
+    context: 'Paired-headword split from ''забракувати,''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: завагатися
+    pos: verb
+    gloss: 'to hesitate Conjugation: 1st (-ють)'
+    locator: 'ohoiko-500-verbs entry 20 :: paired-split::завагатися'
+    context: 'Paired-headword split from ''завагатися,''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: замки
+    pos: noun
+    gloss: castle, castles
+    locator: 'ohoiko-1000-words entry 277 :: paired-split::замки'
+    context: 'Paired-headword split from ''замок, замки''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: засумувати
+    pos: verb
+    gloss: 'to feel sad; to miss sb; to grieve Conjugation: 1st (-ють)'
+    locator: 'ohoiko-500-verbs entry 460 :: paired-split::засумувати'
+    context: 'Paired-headword split from ''засумувати,''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: змерзнути
+    pos: verb
+    gloss: to be cold, to get cold
+    locator: 'ohoiko-500-verbs entry 246 :: paired-split::змерзнути'
+    context: 'Paired-headword split from ''змерзнути,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: зірки
+    pos: noun
+    gloss: star, stars
+    locator: 'ohoiko-1000-words entry 310 :: paired-split::зірки'
+    context: 'Paired-headword split from ''зірка, зірки''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: коні
+    pos: noun
+    gloss: horse, horses
+    locator: 'ohoiko-1000-words entry 350 :: paired-split::коні'
+    context: 'Paired-headword split from ''кінь, коні''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: купляти
+    pos: verb
+    gloss: to buy (imperfective, perfective)
+    locator: 'ohoiko-1000-words entry 386 :: paired-split::купляти'
+    context: 'Paired-headword split from ''купляти,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: мости
+    pos: noun
+    gloss: bridge, bridges
+    locator: 'ohoiko-1000-words entry 458 :: paired-split::мости'
+    context: 'Paired-headword split from ''міст, мости''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: міста
+    pos: noun
+    gloss: city, cities / town, towns
+    locator: 'ohoiko-1000-words entry 473 :: paired-split::міста'
+    context: 'Paired-headword split from ''місто, міста''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: назватися
+    pos: verb
+    gloss: to be called/named
+    locator: 'ohoiko-1000-words entry 488 :: paired-split::назватися'
+    context: 'Paired-headword split from ''називатися, назватися''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: напої
+    pos: noun
+    gloss: drink (noun), drinks
+    locator: 'ohoiko-1000-words entry 490 :: paired-split::напої'
+    context: 'Paired-headword split from ''напій, напої''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: наснитися
+    pos: verb
+    gloss: 'to have dreams, to appear in dreams (while sleeping) Conjugation: 2nd (-ять)'
+    locator: 'ohoiko-500-verbs entry 436 :: paired-split::наснитися'
+    context: 'Paired-headword split from ''наснитися,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: науковиця
+    pos: noun
+    gloss: scientist (male, female, plural)
+    locator: 'ohoiko-1000-words entry 497 :: paired-split::науковиця'
+    context: 'Paired-headword split from ''науковець, науковиця,''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: новини
+    pos: noun
+    gloss: news (singular, plural)
+    locator: 'ohoiko-1000-words entry 522 :: paired-split::новини'
+    context: 'Paired-headword split from ''новина, новини''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: ноги
+    pos: noun
+    gloss: 1) foot, feet; 2) leg, legs
+    locator: 'ohoiko-1000-words entry 523 :: paired-split::ноги'
+    context: 'Paired-headword split from ''нога, ноги''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: носи
+    pos: noun
+    gloss: nose, noses
+    locator: 'ohoiko-1000-words entry 517 :: paired-split::носи'
+    context: 'Paired-headword split from ''ніс, носи''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: одружуватися
+    pos: verb
+    gloss: 1) to get married;
+    locator: 'ohoiko-1000-words entry 543 :: paired-split::одружуватися'
+    context: 'Paired-headword split from ''одружуватися,''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: одягнутися
+    pos: verb
+    gloss: to get dressed
+    locator: 'ohoiko-1000-words entry 545 :: paired-split::одягнутися'
+    context: 'Paired-headword split from ''одягатися, одягнутися''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: озера
+    pos: noun
+    gloss: lake, lakes
+    locator: 'ohoiko-1000-words entry 547 :: paired-split::озера'
+    context: 'Paired-headword split from ''озеро, озера''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: олівці
+    pos: noun
+    gloss: pencil, pencils
+    locator: 'ohoiko-1000-words entry 552 :: paired-split::олівці'
+    context: 'Paired-headword split from ''олівець, олівці''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: острови
+    pos: noun
+    gloss: island, islands
+    locator: 'ohoiko-1000-words entry 563 :: paired-split::острови'
+    context: 'Paired-headword split from ''острів, острови''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: папери
+    pos: noun
+    gloss: paper, papers
+    locator: 'ohoiko-1000-words entry 582 :: paired-split::папери'
+    context: 'Paired-headword split from ''папір, папери''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: плечі
+    pos: noun
+    gloss: shoulder, shoulders
+    locator: 'ohoiko-1000-words entry 609 :: paired-split::плечі'
+    context: 'Paired-headword split from ''плече, плечі''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: поспівати
+    pos: verb
+    gloss: to sing
+    locator: 'ohoiko-1000-words entry 799 :: paired-split::поспівати'
+    context: 'Paired-headword split from ''співати, поспівати''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: потривати
+    pos: verb
+    gloss: 'to last, to continue, to go on Conjugation: 1st (-ють)'
+    locator: 'ohoiko-500-verbs entry 472 :: paired-split::потривати'
+    context: 'Paired-headword split from ''потривати,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: поцілунки
+    pos: noun
+    gloss: kiss, kisses
+    locator: 'ohoiko-1000-words entry 647 :: paired-split::поцілунки'
+    context: 'Paired-headword split from ''поцілунок, поцілунки''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: поцілунок
+    pos: noun
+    gloss: kiss, kisses
+    locator: 'ohoiko-1000-words entry 647 :: paired-split::поцілунок'
+    context: 'Paired-headword split from ''поцілунок, поцілунки''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: почитати
+    pos: verb
+    gloss: to read (почита́ти ― for some time, прочита́ти ― until the end)
+    locator: 'ohoiko-500-verbs entry 497 :: paired-split::почитати'
+    context: 'Paired-headword split from ''почитати,''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: проспівати
+    pos: verb
+    gloss: 'to sing Conjugation: 1st (-ють)'
+    locator: 'ohoiko-500-verbs entry 439 :: paired-split::проспівати'
+    context: 'Paired-headword split from ''проспівати,''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: професорка
+    pos: noun
+    gloss: professor (male, female)
+    locator: 'ohoiko-1000-words entry 690 :: paired-split::професорка'
+    context: 'Paired-headword split from ''професор, професорка''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: пісні
+    pos: adjective
+    gloss: song, songs
+    locator: 'ohoiko-1000-words entry 603 :: paired-split::пісні'
+    context: 'Paired-headword split from ''пісня, пісні''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: розкритикувати
+    pos: verb
+    gloss: to criticize
+    locator: 'ohoiko-500-verbs entry 225 :: paired-split::розкритикувати'
+    context: 'Paired-headword split from ''розкритикувати,''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: руки
+    pos: noun
+    gloss: 1) arm, arms; 2) hand, hands
+    locator: 'ohoiko-1000-words entry 729 :: paired-split::руки'
+    context: 'Paired-headword split from ''рука, руки''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: села
+    pos: noun
+    gloss: village, villages
+    locator: 'ohoiko-1000-words entry 743 :: paired-split::села'
+    context: 'Paired-headword split from ''село, села''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: сестри
+    pos: noun
+    gloss: sister, sisters
+    locator: 'ohoiko-1000-words entry 751 :: paired-split::сестри'
+    context: 'Paired-headword split from ''сестра, сестри''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: сльози
+    pos: noun
+    gloss: tear, tears
+    locator: 'ohoiko-1000-words entry 780 :: paired-split::сльози'
+    context: 'Paired-headword split from ''сльоза, сльози''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: соки
+    pos: noun
+    gloss: juice, juices
+    locator: 'ohoiko-1000-words entry 760 :: paired-split::соки'
+    context: 'Paired-headword split from ''сік, соки''; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'
+  - lemma: танці
+    pos: noun
+    gloss: dance, dances (dancing)
+    locator: 'ohoiko-1000-words entry 846 :: paired-split::танці'
+    context: 'Paired-headword split from ''танець, танці''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: тижні
+    pos: noun
+    gloss: week, weeks
+    locator: 'ohoiko-1000-words entry 864 :: paired-split::тижні'
+    context: 'Paired-headword split from ''тиждень, тижні''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: учні
+    pos: noun
+    gloss: student, students
+    locator: 'ohoiko-1000-words entry 903 :: paired-split::учні'
+    context: 'Paired-headword split from ''учень, учениця, учні''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: футболіст
+    pos: noun
+    gloss: football player (male, female)
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболіст'
+    context: 'Paired-headword split from ''футболiст, футболістка''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: футболістка
+    pos: noun
+    gloss: football player (male, female)
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболістка'
+    context: 'Paired-headword split from ''футболiст, футболістка''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
+  - lemma: хлопці
+    pos: noun
+    gloss: 1) boy, boys;
+    locator: 'ohoiko-1000-words entry 925 :: paired-split::хлопці'
+    context: 'Paired-headword split from ''хлопець, хлопці''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: числа
+    pos: noun
+    gloss: 1) number, digit; 2) date
+    locator: 'ohoiko-1000-words entry 956 :: paired-split::числа'
+    context: 'Paired-headword split from ''число, числа''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: човни
+    pos: noun
+    gloss: boat, boats
+    locator: 'ohoiko-1000-words entry 959 :: paired-split::човни'
+    context: 'Paired-headword split from ''човен, човни''; curated ohoiko auto-approve; #6370 policy —
+      no invented lemmas.'
+  - lemma: чоловіки
+    pos: noun
+    gloss: 1) husband, husbands;
+    locator: 'ohoiko-1000-words entry 960 :: paired-split::чоловіки'
+    context: 'Paired-headword split from ''чоловік, чоловіки''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: юристка
+    pos: noun
+    gloss: lawyer (male, female)
+    locator: 'ohoiko-1000-words entry 993 :: paired-split::юристка'
+    context: 'Paired-headword split from ''юрист, юристка''; curated ohoiko auto-approve; #6370 policy
+      — no invented lemmas.'
+  - lemma: імена
+    pos: noun
+    gloss: name, names
+    locator: 'ohoiko-1000-words entry 314 :: paired-split::імена'
+    context: 'Paired-headword split from "ім''я, імена"; curated ohoiko auto-approve; #6370 policy — no
+      invented lemmas.'

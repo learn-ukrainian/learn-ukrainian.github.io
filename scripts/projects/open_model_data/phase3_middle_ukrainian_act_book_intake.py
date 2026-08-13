@@ -26,8 +26,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import ca
 
 ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_SCHEMA_PATH = (
-    ROOT
-    / "data/projects/open_model_data/contracts/phase3_middle_ukrainian_act_book_intake_receipt_v1.schema.json"
+    ROOT / "data/projects/open_model_data/contracts/phase3_middle_ukrainian_act_book_intake_receipt_v1.schema.json"
 )
 
 SCHEMA_VERSION = "phase3_middle_ukrainian_act_book_intake_receipt_v1"
@@ -40,8 +39,7 @@ DOCUMENT_YEAR_START = 1582
 DOCUMENT_YEAR_END = 1588
 INSTITUTIONAL_CATALOGUE_URL = "https://irbis-nbuv.gov.ua/ulib/item/ukr0000028423"
 MIRROR_DOWNLOAD_URL = (
-    "https://file.lib.in.ua/djvu/"
-    "boichuk-mk-aktova-knyha-zhytomyrskoho-miskoho-uriadu-kintsia-xvi-st-1582-1588-rr.djvu"
+    "https://file.lib.in.ua/djvu/boichuk-mk-aktova-knyha-zhytomyrskoho-miskoho-uriadu-kintsia-xvi-st-1582-1588-rr.djvu"
 )
 SOURCE_FILENAME = "boichuk-aktova-knyha-zhytomyr-1582-1588-1965.djvu"
 SOURCE_SHA256 = "3f274c60e4411b8df925008c318a92db00dec5cc211d05172e0896fce7802f9e"
@@ -143,7 +141,9 @@ def _parse_component(data: bytes, *, index: int, offset: int, next_offset: int) 
     chunk_ids = [chunk["chunk_id"] for chunk in chunks]
     if form_type == "DJVU":
         require(chunk_ids.count("INFO") == 1, f"page component {index} must contain one INFO chunk")
-        require(sum(chunk_id in {"TXTa", "TXTz"} for chunk_id in chunk_ids) <= 1, f"page {index} has multiple text chunks")
+        require(
+            sum(chunk_id in {"TXTa", "TXTz"} for chunk_id in chunk_ids) <= 1, f"page {index} has multiple text chunks"
+        )
     else:
         require("INFO" not in chunk_ids, f"shared component {index} cannot contain a page INFO chunk")
 

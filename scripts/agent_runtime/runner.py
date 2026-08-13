@@ -2995,7 +2995,7 @@ def _validate_catalog_model(
 ) -> None:
     """Require a current active catalog model on the adapter's real route."""
     try:
-        from scripts.review.model_catalog import load_model_catalog
+        from scripts.review.model_catalog import load_model_catalog, model_aliases
 
         catalog = load_model_catalog()
     except (ImportError, OSError, ValueError) as exc:
@@ -3004,7 +3004,7 @@ def _validate_catalog_model(
         ) from exc
 
     try:
-        model_entry = catalog["models"][model]
+        model_entry = catalog["models"][model_aliases(catalog)[model]]
         catalog_transport = ACPX_PARTICIPANT_CATALOG_TRANSPORTS[participant]
     except (KeyError, TypeError) as exc:
         raise InterAgentTransportError(
