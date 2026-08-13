@@ -378,8 +378,7 @@ def validate_review(path: Path, text_facts: Mapping[str, Any]) -> dict[str, Any]
     require(review.get("recommended_disposition") == "admit_scoped_candidate", "review disposition drift")
     require(review.get("topic_gaps_closed") == [], "review overclaims a closed topic gap")
     require(
-        [row.get("area") for row in review.get("closure_candidates_pending_matrix_critic", [])]
-        == CLOSURE_CANDIDATES,
+        [row.get("area") for row in review.get("closure_candidates_pending_matrix_critic", [])] == CLOSURE_CANDIDATES,
         "review closure-candidate drift",
     )
     topic_effect = review.get("topic_gate_effect")
