@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "12caf83ae89a",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-babych-review-fixes-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_babych_acoustic_excerpt_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py",
+    "tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/12/caf83ae89a/0/metadata.json",
+      "transcript": "/12/caf83ae89a/0/full.jsonl",
+      "compact_transcript": "/12/caf83ae89a/0/transcript.jsonl",
+      "content_hash": "/12/caf83ae89a/0/content_hash.txt",
+      "prompt": "/12/caf83ae89a/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "12caf83ae89a",
+  "session_id": "fleet-ab20921811e64955a73d5f6ad70724d1",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T20:38:17.535307Z",
+  "branch": "cursor/phase3-6375-babych-review-fixes-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_babych_acoustic_excerpt_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py",
+    "tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "252fc1f63676",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T20:38:17.520074Z",
+    "agent_lines": 119,
+    "agent_removed": 22,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 119,
+    "total_lines_changed": 141,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
