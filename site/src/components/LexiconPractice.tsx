@@ -1344,13 +1344,22 @@ function sessionScopeIndexForMode(
  * selected level first. Counting higher-level synonym lemmas on an A1 home made
  * Синоніми look stocked (live: 287) while the A1 plan was 0/0 and then briefly
  * served a bled-in antonym-polarity item. Mode-card honesty follows the selected
- * learner level's CEFR — empty stays empty even when antonym (or higher-level
- * synonym) inventory exists elsewhere.
+ * learner level's CEFR when the index mixes levels — empty stays empty even when
+ * antonym (or higher-level synonym) inventory exists elsewhere.
+ *
+ * Single-CEFR indexes (a level shard, or an `initialDeck` fixture) are left intact
+ * so a learnerLevel/deckLevel mismatch cannot zero out a real mode card.
  */
 function indexForModeCounts(
   index: PracticeIndexItem[],
   learnerLevel: CefrLevel,
 ): PracticeIndexItem[] {
+  const levels = new Set<CefrLevel>();
+  for (const item of index) {
+    const level = parseCefrLevel(item.cefr);
+    if (level) levels.add(level);
+  }
+  if (levels.size <= 1) return index;
   return index.filter((item) => parseCefrLevel(item.cefr) === learnerLevel);
 }
 
@@ -1901,11 +1910,19 @@ function LexiconPracticeIsland({
       }
     }
 
-    const plan = computeSessionScope(
-      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, deckLemmaKeySet), mode),
-      sessionBudget,
-      { dailyNewCount },
+    const scopedIndex = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(deck.index, deckLemmaKeySet),
+      mode,
     );
+    // #6734: autoStart must not open an empty-mode session that later bleeds
+    // antonym-polarity synonym rows (beginSession already refuses this path).
+    if (scopedIndex.length === 0) {
+      setPlannedTotal(0);
+      setExtensionUsed(0);
+      setSessionCompleted(0);
+      return;
+    }
+    const plan = computeSessionScope(scopedIndex, sessionBudget, { dailyNewCount });
     resetSessionTracking(plan, sessionBudget);
 
     // Persist an initial snapshot for this newly started session so it is resumable.
@@ -2316,9 +2333,15 @@ function LexiconPracticeIsland({
 
   const selection = useMemo(() => {
     if (!selectionDeck || sessionPhase !== 'active') return null;
-    // #6734: a session that planned zero work must not serve cross-level bleed
-    // (empty A1 synonym plan + later A2 antonym-polarity synonym item → 0/0 then 1/1).
-    if (plannedTotal + extensionUsed <= 0) return null;
+    // #6734: refuse selection only when this mode's scoped index is empty (e.g. A1
+    // synonym with antonym-only inventory). Keying off plannedTotal was too broad —
+    // autoStart remounts and borrowed-due picks can have plannedTotal 0 while real
+    // mode inventory still exists, which starved heritage / remount flows.
+    const scopedIndex = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(selectionDeck.index, deckLemmaKeySet),
+      mode,
+    );
+    if (scopedIndex.length === 0) return null;
     const fresh = selectNextPracticeItem(selectionDeck, {
       history,
       modeFilter: mode,
@@ -2343,10 +2366,9 @@ function LexiconPracticeIsland({
     }
     return fresh;
   }, [
-    extensionUsed,
+    deckLemmaKeySet,
     history,
     mode,
-    plannedTotal,
     poolFilter,
     revision,
     selectionDeck,
