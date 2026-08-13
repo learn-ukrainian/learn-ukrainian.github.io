@@ -3,6 +3,26 @@ import LexiconPractice from '../components/LexiconPractice';
 ---
 
 <div id="lexicon-practice-mount" data-lexicon-practice-island>
+  <!--
+    #6715: client:only renders nothing until the bundle downloads and hydrates,
+    so first paint used to be an empty <main>. This static shell is SSR'd with
+    the page and hidden by the inline script once React content appears (or the
+    fallback takes over), keeping session behavior after hydrate unchanged.
+  -->
+  <div
+    id="lexicon-practice-shell"
+    class="lexicon-practice-shell"
+    role="status"
+    aria-busy="true"
+  >
+    <div class="lexicon-practice-shell-skeleton" aria-hidden="true">
+      <div class="lexicon-practice-skel-line wide"></div>
+      <div class="lexicon-practice-skel-line"></div>
+      <div class="lexicon-practice-skel-block"></div>
+      <div class="lexicon-practice-skel-line mid"></div>
+    </div>
+    <p>Завантаження практики…</p>
+  </div>
   <LexiconPractice client:only="react" />
 </div>
 
@@ -20,16 +40,23 @@ import LexiconPractice from '../components/LexiconPractice';
 <script is:inline>
 (() => {
   const MOUNT_SEL = '#lexicon-practice-mount';
+  const SHELL_ID = 'lexicon-practice-shell';
   const FALLBACK_ID = 'lexicon-practice-fallback';
   const SUCCESS_SEL = '.lexicon-practice';
   const TIMEOUT_MS = 10000;
   let done = false;
+
+  function hideShell() {
+    const shell = document.getElementById(SHELL_ID);
+    if (shell) shell.setAttribute('hidden', '');
+  }
 
   function showFallback() {
     if (done) return;
     done = true;
     const mount = document.querySelector(MOUNT_SEL);
     const fb = document.getElementById(FALLBACK_ID);
+    hideShell();
     if (mount) mount.setAttribute('hidden', '');
     if (fb) {
       fb.removeAttribute('hidden');
@@ -39,6 +66,7 @@ import LexiconPractice from '../components/LexiconPractice';
   function markSuccess() {
     if (done) return;
     done = true;
+    hideShell();
   }
 
   function isOurIsland(target) {
@@ -113,6 +141,65 @@ import LexiconPractice from '../components/LexiconPractice';
 </script>
 
 <style is:global>
+.lexicon-practice-shell {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 760px;
+  padding: 1rem 0;
+}
+.lexicon-practice-shell[hidden] {
+  display: none;
+}
+.lexicon-practice-shell-skeleton {
+  display: grid;
+  gap: 0.65rem;
+}
+.lexicon-practice-skel-line,
+.lexicon-practice-skel-block {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lu-border, #ddd) 65%, transparent),
+    color-mix(in srgb, var(--lu-border, #ddd) 35%, transparent),
+    color-mix(in srgb, var(--lu-border, #ddd) 65%, transparent)
+  );
+  background-size: 200% 100%;
+  animation: lexicon-practice-shimmer 1.2s ease-in-out infinite;
+}
+.lexicon-practice-skel-line {
+  height: 0.9rem;
+  width: 70%;
+}
+.lexicon-practice-skel-line.wide {
+  width: 92%;
+}
+.lexicon-practice-skel-line.mid {
+  width: 55%;
+}
+.lexicon-practice-skel-block {
+  height: 9rem;
+  width: 100%;
+}
+@keyframes lexicon-practice-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lexicon-practice-skel-line,
+  .lexicon-practice-skel-block {
+    animation: none;
+  }
+}
+.lexicon-practice-shell p {
+  margin: 0;
+  color: var(--lu-text-muted);
+  font-weight: 700;
+  line-height: 1.5;
+}
 .lexicon-practice-fallback {
   display: grid;
   gap: 0.75rem;
