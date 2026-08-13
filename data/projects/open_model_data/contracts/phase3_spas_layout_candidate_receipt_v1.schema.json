@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_spas_layout_candidate_receipt_v1.schema.json",
+  "title": "Phase 3 Spas font-layout candidate routing text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "mode",
+    "text_free",
+    "inputs",
+    "routing_contract",
+    "denominator",
+    "output",
+    "rights_and_scope",
+    "safeguards",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_spas_layout_candidate_receipt_v1"},
+    "implementation_version": {"const": "phase3_spas_layout_candidates_v1"},
+    "mode": {"const": "source_font_layout_candidate_routing"},
+    "text_free": {"const": true},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_pdf_sha256",
+        "raw_catalog_sha256",
+        "raw_materialization_receipt_file_sha256",
+        "raw_materialization_receipt_sha256",
+        "mapping_evidence_sha256",
+        "adapter_output_sha256",
+        "adapter_receipt_file_sha256",
+        "adapter_receipt_sha256",
+        "pypdf_version",
+        "implementation_sha256",
+        "receipt_schema_sha256",
+        "page_layout_manifest_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "korniienko-spas-na-berestovi-2013"},
+        "source_pdf_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_catalog_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_materialization_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_materialization_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "mapping_evidence_sha256": {"$ref": "#/$defs/sha256"},
+        "adapter_output_sha256": {"$ref": "#/$defs/sha256"},
+        "adapter_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "adapter_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "pypdf_version": {"type": "string", "minLength": 1},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "page_layout_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "routing_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "font_base_name",
+        "dominance_rule",
+        "context_window_codepoints",
+        "required_text_cue",
+        "shape_cues",
+        "trigger_classification",
+        "fallback_classification",
+        "classifications_are_semantic_gold"
+      ],
+      "properties": {
+        "font_base_name": {"const": "/GATIPV+Bukyvede"},
+        "dominance_rule": {"const": "2 * bukyvede_nonspace_characters >= line_nonspace_characters"},
+        "context_window_codepoints": {"const": 220},
+        "required_text_cue": {"const": "whole_word:текст"},
+        "shape_cues": {
+          "const": ["таким чином", "вигляд", "реконструк", "віднов"]
+        },
+        "trigger_classification": {"const": "author_reconstruction_trigger_candidate"},
+        "fallback_classification": {"const": "dominant_historic_script_unresolved"},
+        "classifications_are_semantic_gold": {"const": false}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_records",
+        "output_records",
+        "records_with_bukyvede",
+        "records_without_bukyvede",
+        "bukyvede_font_spans",
+        "bukyvede_characters",
+        "bukyvede_nonspace_characters",
+        "lines_with_bukyvede",
+        "dominant_line_candidates",
+        "records_with_dominant_candidates",
+        "trigger_line_candidates",
+        "records_with_trigger_candidates",
+        "unresolved_dominant_line_candidates",
+        "records_with_unresolved_candidates",
+        "trigger_unresolved_record_overlap"
+      ],
+      "properties": {
+        "input_records": {"type": "integer", "minimum": 1},
+        "output_records": {"type": "integer", "minimum": 1},
+        "records_with_bukyvede": {"type": "integer", "minimum": 0},
+        "records_without_bukyvede": {"type": "integer", "minimum": 0},
+        "bukyvede_font_spans": {"type": "integer", "minimum": 0},
+        "bukyvede_characters": {"type": "integer", "minimum": 0},
+        "bukyvede_nonspace_characters": {"type": "integer", "minimum": 0},
+        "lines_with_bukyvede": {"type": "integer", "minimum": 0},
+        "dominant_line_candidates": {"type": "integer", "minimum": 0},
+        "records_with_dominant_candidates": {"type": "integer", "minimum": 0},
+        "trigger_line_candidates": {"type": "integer", "minimum": 0},
+        "records_with_trigger_candidates": {"type": "integer", "minimum": 0},
+        "unresolved_dominant_line_candidates": {"type": "integer", "minimum": 0},
+        "records_with_unresolved_candidates": {"type": "integer", "minimum": 0},
+        "trigger_unresolved_record_overlap": {"type": "integer", "minimum": 0}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "record_identity_manifest_sha256"],
+      "properties": {
+        "filename": {"const": "spas-na-berestovi-layout-candidates-v1.jsonl.gz"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "record_identity_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rights_and_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inherits_upstream_accepted_operational_risk",
+        "private_review_queue_only",
+        "attribution_and_field_level_removal_preserved",
+        "binary_media_reuse_authorized",
+        "full_publication_training_export_authorized",
+        "adapt_on_substantiated_rights_notice"
+      ],
+      "properties": {
+        "inherits_upstream_accepted_operational_risk": {"const": true},
+        "private_review_queue_only": {"const": true},
+        "attribution_and_field_level_removal_preserved": {"const": true},
+        "binary_media_reuse_authorized": {"const": false},
+        "full_publication_training_export_authorized": {"const": false},
+        "adapt_on_substantiated_rights_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete_record_context_preserved",
+        "raw_and_normalized_offsets_preserved",
+        "font_spans_source_derived",
+        "candidate_routing_only",
+        "commentary_and_inscription_layers_separated",
+        "qualified_historical_review_complete",
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "images_included",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "complete_record_context_preserved": {"const": true},
+        "raw_and_normalized_offsets_preserved": {"const": true},
+        "font_spans_source_derived": {"const": true},
+        "candidate_routing_only": {"const": true},
+        "commentary_and_inscription_layers_separated": {"const": false},
+        "qualified_historical_review_complete": {"const": false},
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "images_included": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_dominant_line_candidates_require_review",
+        "candidate_review_denominator",
+        "inline_or_nondominant_font_spans_remain_context_only",
+        "commentary_transcription_separation_pending",
+        "lavra_cave_corpus_gap_closed"
+      ],
+      "properties": {
+        "all_dominant_line_candidates_require_review": {"const": true},
+        "candidate_review_denominator": {"type": "integer", "minimum": 1},
+        "inline_or_nondominant_font_spans_remain_context_only": {"const": true},
+        "commentary_transcription_separation_pending": {"const": true},
+        "lavra_cave_corpus_gap_closed": {"const": false}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
