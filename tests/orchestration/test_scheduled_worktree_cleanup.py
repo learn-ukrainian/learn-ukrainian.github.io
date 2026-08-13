@@ -485,6 +485,40 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
     assert receipt["mode"] == "apply"
 
 
+def test_main_records_read_only_home_session_policy_and_prints_hard_warning(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    receipt = {"summary": {"errors": 0}}
+    home_report = {
+        "mode": "read_only",
+        "policy": {"retention_days": 14},
+        "lanes": [],
+        "violations": [
+            {
+                "provider": "codex",
+                "kind": "stale_sessions",
+                "stale_files": 1,
+                "stale_bytes": 2,
+            }
+        ],
+    }
+    monkeypatch.setattr(cleanup, "build_receipt", lambda *_args, **_kwargs: receipt)
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: home_report)
+    monkeypatch.setattr(
+        cleanup.home_session_retention_check,
+        "warning_lines",
+        lambda _report: ["HARD WARNING: stale home session"],
+    )
+    monkeypatch.setattr(cleanup, "write_receipt", lambda *_args: tmp_path / "receipt.json")
+
+    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path)]) == 0
+
+    assert receipt["home_session_retention"] is home_report
+    assert "HARD WARNING: stale home session" in capsys.readouterr().err
+
+
 def test_git_maintenance_failure_is_reported(
     tmp_path: Path,
     monkeypatch,

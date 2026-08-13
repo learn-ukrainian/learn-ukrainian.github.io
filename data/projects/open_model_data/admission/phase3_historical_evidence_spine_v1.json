@@ -1,0 +1,465 @@
+{
+  "authority_policy": {
+    "direct_attestation_definition": "A dated or date-bounded inscription, manuscript, document, or historical print witness with immutable provenance; a modern scholarly reconstruction is not a direct witness.",
+    "historical_forms_protected": true,
+    "learner_exposition": {
+      "historical_authority_eligible": false,
+      "preserve_for_instructional_evaluation": true,
+      "training_text_eligibility": "pending_separate_rights_and_quality_review"
+    },
+    "old_east_slavic_is_modern_russian": false,
+    "proto_reconstruction_is_direct_attestation": false,
+    "ranked_layers": [
+      "direct_attested_source",
+      "qualified_edition_or_translation",
+      "qualified_ukrainian_linguistic_analysis",
+      "comparative_reconstruction",
+      "learner_exposition"
+    ],
+    "scalar_language_age_claim_allowed": false
+  },
+  "bindings": {
+    "historical_denominator_sha256": "4d89bfdb7e935008ad1332426ff9c40dca97efdf72053f35cdb1dad05117e6aa",
+    "historical_full_materialization_gate_sha256": "3a4f409be28560dbc6a9c2c5defa043414dc659870be11a03f8e7297e8249e21",
+    "historical_full_materialization_receipt_file_sha256": "05322d450a8e90b103fff7521605395250e1da957fbf63e8ecf1df8d3d5f6307",
+    "historical_full_materialization_receipt_sha256": "8e3d33b4c5d5a5a4bd3c5da7788460d016e16b9058515b64a6683a725a14c2de",
+    "historical_periodization_freeze_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198",
+    "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
+    "phase3_recovery_prompt_v2_sha256": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+  },
+  "collections": [
+    {
+      "collection_id": "saint-sophia-inscriptions",
+      "corpus_role": "auxiliary_historical_evidence",
+      "custody_state": "materialized",
+      "evidence_layer": "direct_attested_source",
+      "facts": {
+        "century_or_wider_intervals": 3550,
+        "exact_year_intervals": 168,
+        "invalid_date_intervals": 2,
+        "known_identified_total_lower_bound": 7000,
+        "known_unexposed_residual": true,
+        "language_labels": {
+          "Ancient Greek": 150,
+          "Armenian": 32,
+          "Church Slavonic": 1306,
+          "Greek": 10,
+          "Latin": 34,
+          "Low German": 1,
+          "Mixed": 10,
+          "N/A": 12,
+          "Polish": 286,
+          "Russian": 10,
+          "Ukrainian": 588,
+          "unlabelled": 1718
+        },
+        "middle_date_band": {
+          "interval_overlaps": 2920,
+          "interval_wholly_inside": 1155,
+          "semantic_stage_assignment": "pending_qualified_review",
+          "text_bearing_ukrainian_label_wholly_inside": 549,
+          "year_end": 1799,
+          "year_start": 1400
+        },
+        "missing_date_intervals": 10,
+        "non_textual_or_no_text": 11,
+        "old_date_band": {
+          "interval_overlaps": 2989,
+          "interval_wholly_inside": 1225,
+          "semantic_stage_assignment": "pending_qualified_review",
+          "text_bearing_ukrainian_label_wholly_inside": 7,
+          "year_end": 1399,
+          "year_start": 1000
+        },
+        "quarantined_metadata": 2,
+        "retrieval_scope": "complete_current_public_api",
+        "source_provenance": {
+          "ai_assistance": {
+            "affected_field_classes": [
+              "english_translation_and_commentary",
+              "romanisation"
+            ],
+            "affected_record_membership_known": false,
+            "disclosed_by_official_documentation": true,
+            "human_gold_eligible_without_review": false
+          },
+          "foundational_dataset": {
+            "edition_title": "Корпус Графіті Софії Київської",
+            "publication_year_end": 2020,
+            "publication_year_start": 2009,
+            "volume_count": 12
+          },
+          "gippius_2023": {
+            "doi": "10.4324/9781003256236-14",
+            "portal_bibliography_present": false,
+            "role": "qualified_secondary_reanalysis_candidate",
+            "target": "Kyiv graffito No. 108"
+          },
+          "license_evidence": {
+            "explicit_data_license_at_pinned_sources": null,
+            "korniienko_media_assets": {
+              "asset_count_at_snapshot": 6477,
+              "included_in_text_training": false,
+              "license_label": "CC BY-NC",
+              "license_version_declared": false
+            },
+            "official_docs_describe_api_as_open_and_reusable": true,
+            "official_docs_describe_dataset_as_open": true,
+            "operator_use_decision": {
+              "binary_media_in_scope": false,
+              "decision": "proceed_without_pre_use_permission_wait",
+              "decision_date": "2026-08-12",
+              "full_publications_in_scope": false,
+              "response_policy": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice",
+              "scope": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance"
+            }
+          },
+          "official_bulk_download": {
+            "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
+            "download_label": "Download all inscription data",
+            "record_count_at_snapshot": 4157,
+            "same_public_api_stream": true
+          },
+          "part_ix": {
+            "bibliography_id": 11,
+            "linked_public_records": 306,
+            "publication_year": 2019,
+            "scope": "північні внутрішня та зовнішня галереї"
+          },
+          "portal_version": "v1.6"
+        },
+        "stage_labels_assigned": 0,
+        "text_bearing": 4144,
+        "valid_date_intervals": 4145,
+        "writing_system_labels": {
+          "Armenian": 31,
+          "Cyrillic": 1982,
+          "Glagolitic": 1,
+          "Greek": 157,
+          "Latin": 367,
+          "Mixed script": 7,
+          "N/A": 2,
+          "unlabelled": 1610
+        }
+      },
+      "locators": [
+        {
+          "label": "Saint Sophia's Inscriptions portal",
+          "local_bytes_acquired": false,
+          "locator_role": "source_portal",
+          "url": "https://saintsophia.dh.gu.se/"
+        },
+        {
+          "label": "Saint Sophia's Inscriptions API",
+          "local_bytes_acquired": false,
+          "locator_role": "api_root",
+          "url": "https://saintsophia.dh.gu.se/api/"
+        },
+        {
+          "label": "Official bulk inscription download API",
+          "local_bytes_acquired": true,
+          "locator_role": "official_bulk_download_api",
+          "url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2"
+        },
+        {
+          "label": "Pinned official Saint Sophia dataset and API documentation",
+          "local_bytes_acquired": false,
+          "locator_role": "dataset_documentation",
+          "url": "https://github.com/gu-gridh/documentation/blob/eee39a2f5b009efed451e083a9654a48785b896c/gridh-projects/saintsophia.md"
+        },
+        {
+          "label": "Pinned official Saint Sophia backend repository",
+          "local_bytes_acquired": false,
+          "locator_role": "dataset_repository",
+          "url": "https://github.com/gu-gridh/Saint_Sophia/tree/4eca1b8ad9293759ce3f39a139ff9daf027882ef"
+        },
+        {
+          "label": "Pinned official bulk-download implementation",
+          "local_bytes_acquired": false,
+          "locator_role": "official_bulk_download_implementation",
+          "url": "https://github.com/gu-gridh/multimodal-map/blob/574914b6a740b639eb8e90f143664aae9a86cac7/projects/sophia/Footer.vue"
+        },
+        {
+          "label": "Official bibliography record for Korniienko Part IX",
+          "local_bytes_acquired": true,
+          "locator_role": "foundational_bibliography_record",
+          "url": "https://saintsophia.dh.gu.se/api/inscriptions/bibliography-item/11/"
+        },
+        {
+          "label": "Gippius 2023 reanalysis of Kyiv graffito No. 108",
+          "local_bytes_acquired": false,
+          "locator_role": "scholarly_reanalysis_doi",
+          "url": "https://doi.org/10.4324/9781003256236-14"
+        }
+      ],
+      "modern_correction_eligible": false,
+      "record_count": 4157,
+      "rights": {
+        "reuse_scope": "phase3_textual_dataset_training_and_derived_data_release_with_attribution_field_provenance_and_takedown_readiness",
+        "source_text_committed": false,
+        "status": "publicly_downloadable_license_not_declared"
+      },
+      "source_kind": "epigraphy",
+      "source_sha256": "6199f2a92bd948dfe63d12e9da68637b02a4d16ff58b0ddba3d5e252bb3ec4fe"
+    },
+    {
+      "collection_id": "kyiv-pechersk-lavra-graffiti",
+      "corpus_role": "acquisition_candidate_direct_historical_evidence",
+      "custody_state": "not_materialized",
+      "evidence_layer": "direct_attested_source",
+      "facts": {
+        "corpus_count_known": false,
+        "rights_verified": false,
+        "separate_from_saint_sophia": true,
+        "source_bytes_acquired": false
+      },
+      "locators": [
+        {
+          "label": "Kyiv-Pechersk Lavra official evidence of cave graffiti",
+          "local_bytes_acquired": false,
+          "locator_role": "official_monument_evidence",
+          "url": "https://kplavra.kyiv.ua/ua/21-kvitnya-hrafiti-ukr"
+        },
+        {
+          "label": "NBUV catalogue: S. O. Vysotskyi, Kyiv graffiti XI-XVII centuries",
+          "local_bytes_acquired": false,
+          "locator_role": "bibliographic_catalog",
+          "url": "https://irbis-nbuv.gov.ua/ulib/item/UKR0004515"
+        }
+      ],
+      "modern_correction_eligible": false,
+      "record_count": null,
+      "rights": {
+        "reuse_scope": "no_corpus_use_until_source_and_rights_are_verified",
+        "source_text_committed": false,
+        "status": "unknown_pending_review"
+      },
+      "source_kind": "epigraphy",
+      "source_sha256": null
+    },
+    {
+      "collection_id": "ud-old-east-slavic-ruthenian-05a029e00ccf",
+      "corpus_role": "historical_recognition_and_analysis_candidate",
+      "custody_state": "materialized",
+      "evidence_layer": "qualified_edition_or_translation",
+      "facts": {
+        "exact_dated_documents": 4,
+        "exact_years": [1413, 1436, 1456, 1473],
+        "file_sha256": {
+          "orv_ruthenian-ud-dev.conllu": "a2047c4c734dab0a5b68f888979a3ca14670d217d7dcc11bb12b775f2dbbfd1d",
+          "orv_ruthenian-ud-test.conllu": "f34964cee7d6a38b3dd39ceb4dbde38a4fd9aacd8512272c19318027e044ea0d",
+          "orv_ruthenian-ud-train.conllu": "fc13f73dc71e5fac95938eba424b3d5236bfa8edd8ce7bd0e28db2d28a2f9680"
+        },
+        "periodization_assignment_state": "unresolved",
+        "sentences": 1311,
+        "token_rows": 35081,
+        "undated_documents": 78
+      },
+      "locators": [
+        {
+          "label": "Universal Dependencies Old East Slavic-Ruthenian repository",
+          "local_bytes_acquired": true,
+          "locator_role": "dataset_repository",
+          "url": "https://github.com/UniversalDependencies/UD_Old_East_Slavic-Ruthenian"
+        }
+      ],
+      "modern_correction_eligible": false,
+      "record_count": 82,
+      "rights": {
+        "reuse_scope": "public_training_with_share_alike_and_attribution",
+        "source_text_committed": false,
+        "status": "admitted"
+      },
+      "source_kind": "documentary_treebank",
+      "source_sha256": null
+    },
+    {
+      "collection_id": "plug2-zenodo-19482961",
+      "corpus_role": "new_ukrainian_historical_text_evidence",
+      "custody_state": "materialized",
+      "evidence_layer": "direct_attested_source",
+      "facts": {
+        "all_documents": 56245,
+        "archive_sha256": "ff1ff139049539fc7c9ab69b006c12444567989758738baa948cfa0837aabe23",
+        "date_max": 1954,
+        "date_min": 1816,
+        "exact_dated_documents": 56080,
+        "materialized_record_count": 1910748,
+        "pre_1800_documents": 0,
+        "uk_token_sum": 71802066
+      },
+      "locators": [
+        {
+          "label": "PluG2 Zenodo record",
+          "local_bytes_acquired": true,
+          "locator_role": "dataset_doi",
+          "url": "https://doi.org/10.5281/zenodo.19482961"
+        }
+      ],
+      "modern_correction_eligible": false,
+      "record_count": 56080,
+      "rights": {
+        "reuse_scope": "public_training_with_attribution",
+        "source_text_committed": false,
+        "status": "admitted"
+      },
+      "source_kind": "historical_text_corpus",
+      "source_sha256": "a9f79149606b570ebd6895020292eb06016d883e5c75dcb38a6e2cfd15378494"
+    }
+  ],
+  "framework_policy": {
+    "bound_framework_ids": [
+      "university_five_stage_synthesis",
+      "shevelov_detailed_six_period",
+      "nimchuk_five_stage_with_middle_subperiods"
+    ],
+    "canonical_framework_id": null,
+    "frameworks_preserved_without_collapse": true,
+    "instructional_navigation_framework_id": "university_five_stage_synthesis",
+    "instructional_navigation_scope": "coarse_navigation_only_not_semantic_gold",
+    "record_assignment_requires_attributed_evidence": true
+  },
+  "gaps": [
+    {
+      "blocking_for": ["medieval_kyiv_epigraphy_coverage", "historical_source_coverage_ready"],
+      "do_not_claim": "Do not infer Lavra coverage from the Saint Sophia portal or fabricate a Lavra inscription count.",
+      "evidence": "Official Lavra evidence and the national-library catalogue establish relevant graffiti, but no reusable corpus bytes, denominator, or rights receipt is held.",
+      "gap_id": "lavra_epigraphy_not_materialized",
+      "kind": "direct_epigraphic_collection_not_acquired",
+      "next_action": "Identify the exact scholarly edition or crawlable collection, verify rights and provenance, back up one copy to Drive, then run a bounded text-first canary.",
+      "nonblocking_for": ["saint_sophia_use_as_separate_auxiliary_evidence"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["complete_saint_sophia_collection_claim"],
+      "do_not_claim": "Do not call records absent from the public API crawled or materialized.",
+      "evidence": "The current public API yielded 4,157 records while the portal states that more than 7,000 inscriptions are known.",
+      "gap_id": "saint_sophia_public_residual",
+      "kind": "known_collection_residual_not_publicly_exposed",
+      "next_action": "Monitor the public API or request an authorized export; retain the current complete-public-API denominator until the source changes.",
+      "nonblocking_for": ["complete_current_public_api_claim"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["claim_of_explicit_standardized_data_license", "license_warranty_or_indemnity"],
+      "do_not_claim": "Do not claim that the textual dataset has a standardized license expression or warranty, and do not extend the per-asset CC BY-NC label to unlabelled fields or full publications.",
+      "evidence": "The pinned official documentation calls the Korniienko-derived dataset open and the REST API open and reusable. No standardized data-license expression was found, while the stored 4,157-record snapshot contains 6,477 attached Korniienko photographs and drawings, all labelled CC BY-NC without a declared version.",
+      "gap_id": "saint_sophia_license_expression_missing",
+      "kind": "public_access_without_explicit_data_license",
+      "next_action": "Do not wait for pre-use permission: preserve attribution and field-level provenance, monitor upstream rights statements, and adapt, remove, or reclassify affected material on a substantiated rights notice; bind an exact license version if one is later published.",
+      "nonblocking_for": ["private_research", "internal_text_free_audit", "complete_current_public_api_claim", "phase3_textual_dataset_use", "model_training", "derived_training_data_release"],
+      "state": "accepted_operational_risk"
+    },
+    {
+      "blocking_for": ["graffito_108_semantic_gold", "graffito_108_dating_gold"],
+      "do_not_claim": "Do not merge the portal transcription, Korniienko edition, Vysotsky number, and Gippius reanalysis into one unquestioned gold record without an exact identifier crosswalk and qualified adjudication.",
+      "evidence": "The official portal bibliography contains the twelve Korniienko volumes and links Part IX to 306 public records, but it does not contain Gippius 2023 and the current public record titles do not expose an exact 108 or 108a identifier.",
+      "gap_id": "kyiv_graffito_108_scholarly_crosswalk",
+      "kind": "edition_identifier_and_reanalysis_crosswalk_unresolved",
+      "next_action": "Map Vysotsky No. 108, Korniienko's identifier, the current portal record, and DOI 10.4324/9781003256236-14; retain each reading and date as attributed evidence until qualified Ukrainian historical-linguistic adjudication.",
+      "nonblocking_for": ["part_ix_collection_level_coverage", "other_saint_sophia_records"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["old_ukrainian_direct_text_depth", "historical_source_coverage_ready"],
+      "do_not_claim": "Do not relabel Church Slavonic, unlabelled, Greek, or mixed inscriptions as Ukrainian solely from their date or location.",
+      "evidence": "Saint Sophia has 1,225 valid intervals wholly inside 1000-1399, but only seven are both text-bearing and source-labelled Ukrainian; no additional Old-Ukrainian documentary corpus is currently materialized.",
+      "gap_id": "old_ukrainian_direct_text_depth",
+      "kind": "insufficient_language_qualified_old_period_primary_text",
+      "next_action": "Acquire rights-cleared diplomatic editions of Ukrainian-territory documents and manuscripts with qualified feature-level language attribution.",
+      "nonblocking_for": ["multilingual_medieval_epigraphy_recognition"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["document_level_historical_periodization", "historical_source_freeze_ready"],
+      "do_not_claim": "Do not derive dates from filenames, titles, publication dates, or model inference without qualified document evidence.",
+      "evidence": "Only four of 82 Ukrainian-labelled UD documents expose exact created years; 78 have no machine-readable created date.",
+      "gap_id": "ud_document_date_and_provenance_review",
+      "kind": "document_metadata_and_periodization_unresolved",
+      "next_action": "Bind each document to its edition and qualified date/provenance evidence, preserving unresolved and falsification labels.",
+      "nonblocking_for": ["historical_recognition", "dependency_analysis_with_original_ud_label"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["middle_ukrainian_genre_region_coverage", "historical_source_coverage_ready"],
+      "do_not_claim": "Do not treat one municipal-book cluster and four exact-dated charters as representative of every Middle-Ukrainian region, genre, or register.",
+      "evidence": "The materialized UD Ukrainian set is small and 78/82 documents are not machine-dated; Saint Sophia adds mixed-language epigraphy, not a balanced documentary and print corpus.",
+      "gap_id": "middle_ukrainian_genre_and_region_depth",
+      "kind": "unbalanced_middle_period_primary_text",
+      "next_action": "Add rights-cleared charters, municipal and chancery books, polemical and religious print, private writing, and regional witnesses through qualified editions.",
+      "nonblocking_for": ["bounded_attested_example_use"],
+      "state": "open"
+    },
+    {
+      "blocking_for": ["primary_source_grade_for_nimchuk_framework", "historical_source_freeze_ready"],
+      "do_not_claim": "Do not upgrade a secondary reproduction into the missing primary article.",
+      "evidence": "The existing periodization freeze binds qualified Ukrainian reproductions and a peer-reviewed discussion, while the 1997/1998 primary article remains bibliographic-only.",
+      "gap_id": "nimchuk_primary_periodization_text",
+      "kind": "primary_scholarly_text_not_locally_acquired",
+      "next_action": "Obtain the exact two-part article lawfully, hash it, and verify the reproduced boundaries without replacing the other attributed frameworks.",
+      "nonblocking_for": ["qualified_attributed_framework_comparison"],
+      "state": "open"
+    }
+  ],
+  "gates": {
+    "evidence_first_spine_defined": true,
+    "historical_source_coverage_ready": false,
+    "historical_source_freeze_ready": false,
+    "phase3_complete": false,
+    "phase4_authorized": false,
+    "phase4_blocked": true,
+    "private_corpus_audit_reproducible": true
+  },
+  "instructional_sequence": [
+    {
+      "collection_ids": ["saint-sophia-inscriptions", "kyiv-pechersk-lavra-graffiti"],
+      "coverage_state": "materialized_with_open_gaps",
+      "evidence_mode": "direct_attestation",
+      "label_uk": "Середньовічна київська епіграфіка",
+      "position": 1,
+      "purpose": "Begin with locally attested writing on Kyiv monuments; keep Saint Sophia and Lavra as separate provenances.",
+      "sequence_id": "kyiv_medieval_epigraphy"
+    },
+    {
+      "collection_ids": ["saint-sophia-inscriptions"],
+      "coverage_state": "insufficient",
+      "evidence_mode": "direct_text",
+      "label_uk": "Староукраїнські документальні й книжні пам’ятки",
+      "position": 2,
+      "purpose": "Expand from epigraphy to diplomatically edited primary witnesses with explicit language-layer attribution.",
+      "sequence_id": "old_ukrainian_documentary_and_literary"
+    },
+    {
+      "collection_ids": ["saint-sophia-inscriptions", "ud-old-east-slavic-ruthenian-05a029e00ccf"],
+      "coverage_state": "insufficient",
+      "evidence_mode": "direct_text",
+      "label_uk": "Середньоукраїнські документи й друки",
+      "position": 3,
+      "purpose": "Cover dated documents, chancery and municipal writing, print genres, regions, and language contact without flattening mixed layers.",
+      "sequence_id": "middle_ukrainian_documentary_and_print"
+    },
+    {
+      "collection_ids": ["plug2-zenodo-19482961"],
+      "coverage_state": "large_but_not_complete",
+      "evidence_mode": "direct_text",
+      "label_uk": "Нова й сучасна українська мова",
+      "position": 4,
+      "purpose": "Use the large 1816-1954 attested corpus alongside separately admitted modern Ukrainian sources.",
+      "sequence_id": "new_and_modern_ukrainian"
+    },
+    {
+      "collection_ids": [],
+      "coverage_state": "comparative_only",
+      "evidence_mode": "comparative_reconstruction",
+      "label_uk": "Порівняльна реконструкція передписемних розвитку й діалектів",
+      "position": 5,
+      "purpose": "Explain backward from attested changes; never generate reconstructed Proto-Slavic or Proto-Ukrainian forms as direct corpus witnesses.",
+      "sequence_id": "comparative_reconstruction_backlink"
+    }
+  ],
+  "provider_calls": false,
+  "receipt_sha256": "cc19bc1189b6c31714434027ce46c340c9f00a8ef6574e22005a2a5c44a2ae71",
+  "schema_version": "phase3_historical_evidence_spine_v1",
+  "status": "EVIDENCE_FIRST_SPINE_DEFINED_SOURCE_GAPS_OPEN",
+  "text_free": true
+}
