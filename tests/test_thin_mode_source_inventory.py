@@ -234,9 +234,73 @@ def test_index_fallback_for_lemma_counts(tmp_path: Path) -> None:
 
     assert report["modes"]["antonym"]["unique_lemmas_in_shards"] == 2
     assert report["modes"]["homonym"]["unique_lemmas_in_shards"] == 1
-    # Without mode shards, gloss matching finds no used pairs.
+    # Without mode shards, pair-safe matching finds no used pairs.
     assert report["modes"]["antonym"]["unused_attested_pairs"] == 2
     assert report["modes"]["antonym"]["lemma_source"] == "practice-index"
+
+
+def test_gloss_collision_requires_leg_match(tmp_path: Path) -> None:
+    """Shared distinction_gloss_uk must not mark distinct pairs as used."""
+    sources = _seed_sources(tmp_path / "sources")
+    shared_gloss = "Спільний глос для колізії."
+    _write_yaml(
+        sources["antonym"],
+        {
+            "schema_version": 1,
+            "pairs": [
+                {
+                    "slugA": "день",
+                    "slugB": "ніч",
+                    "distinction_gloss_uk": shared_gloss,
+                },
+                {
+                    "slugA": "тепло",
+                    "slugB": "холод",
+                    "distinction_gloss_uk": shared_gloss,
+                },
+            ],
+        },
+    )
+    practice_dir = tmp_path / "lexicon"
+    _write_json(
+        practice_dir / "practice-antonym.A1.json",
+        {
+            "level": "A1",
+            "antonym": [
+                {
+                    "lemmaId": "ніч",
+                    "lemma": "ніч",
+                    "distinction_gloss_uk": shared_gloss,
+                }
+            ],
+        },
+    )
+
+    report = build_inventory(
+        practice_dir=practice_dir,
+        synonym_verdicts=sources["synonym"],
+        antonym_pairs=sources["antonym"],
+        paronym_pairs=sources["paronym"],
+        homonym_pairs=sources["homonym"],
+    )
+    antonym = report["modes"]["antonym"]
+    # Gloss-only matching would report used=2 / unused=0.
+    assert antonym["attested_pair_count"] == 2
+    assert antonym["used_attested_pairs"] == 1
+    assert antonym["unused_attested_pairs"] == 1
+
+
+def test_cli_help_documents_usage_output_exit(capsys) -> None:
+    try:
+        main(["--help"])
+    except SystemExit as exc:
+        assert exc.code == 0
+    captured = capsys.readouterr()
+    assert "--practice-dir" in captured.out
+    assert "Directory with practice" in captured.out
+    assert "Usage:" in captured.out
+    assert "Output:" in captured.out
+    assert "Exit codes:" in captured.out
 
 
 def test_cli_prints_unused_table(tmp_path: Path, capsys) -> None:

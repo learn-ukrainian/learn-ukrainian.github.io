@@ -214,22 +214,25 @@ def collect_shard_state(
         shard_lemmas = index_lemmas
         source = "practice-index" if prefer_index or not items else source
     synonym_pairs: set[tuple[str, str, str]] = set()
-    glosses: set[str] = set()
+    # Curated thin modes emit one lemmaId per item + distinction_gloss_uk.
+    # Pair identity is (legs, gloss); match when gloss matches and lemma ∈ legs.
+    curated_hits: set[tuple[str, str]] = set()
     for item in items:
         gloss = _plain(item.get("distinction_gloss_uk"))
-        if gloss:
-            glosses.add(gloss)
+        lemma = _lemma_from_item(item)
+        if gloss and lemma:
+            curated_hits.add((lemma, gloss))
         if mode == "synonym":
-            lemma = item.get("lemmaId")
+            lemma_raw = item.get("lemmaId")
             target = item.get("targetLemmaId")
             polarity = item.get("polarity")
-            if lemma and target and polarity:
-                synonym_pairs.add(_synonym_pair_key(lemma, target, polarity))
+            if lemma_raw and target and polarity:
+                synonym_pairs.add(_synonym_pair_key(lemma_raw, target, polarity))
     return {
         "item_count": len(items),
         "unique_lemmas": shard_lemmas,
         "synonym_pairs": synonym_pairs,
-        "glosses": glosses,
+        "curated_hits": curated_hits,
         "lemma_source": source,
         "shard_files_present": bool(items) or bool(index_lemmas),
     }
@@ -250,6 +253,15 @@ def _unique_from_curated_pairs(pairs: list[tuple[frozenset[str], str]]) -> set[s
     return lemmas
 
 
+def _curated_pair_used(
+    legs: frozenset[str],
+    gloss: str,
+    curated_hits: set[tuple[str, str]],
+) -> bool:
+    """True when a shard item shares this gloss and a lemma from these legs."""
+    return any((lemma, gloss) in curated_hits for lemma in legs)
+
+
 def inventory_mode(
     mode: str,
     *,
@@ -265,7 +277,8 @@ def inventory_mode(
         pairs = list(attested_pairs)
         attested_count = len(pairs)
         source_lemmas = _unique_from_curated_pairs(pairs)
-        used = sum(1 for _legs, gloss in pairs if gloss in shard["glosses"])
+        hits = shard["curated_hits"]
+        used = sum(1 for legs, gloss in pairs if _curated_pair_used(legs, gloss, hits))
 
     unused = attested_count - used
     shard_unique = len(shard["unique_lemmas"])
@@ -340,13 +353,62 @@ def format_table(report: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+_CLI_EPILOG = """\
+Usage:
+  .venv/bin/python scripts/practice/thin_mode_source_inventory.py
+  .venv/bin/python scripts/practice/thin_mode_source_inventory.py --table
+  .venv/bin/python scripts/practice/thin_mode_source_inventory.py --stdout-json --no-table
+  .venv/bin/python scripts/practice/thin_mode_source_inventory.py --json-out /tmp/inventory.json
+
+Output:
+  Human-readable unused-pair table on stdout by default.
+  Optional JSON via --json-out and/or --stdout-json.
+  Curated modes match shards by pair identity (legs + distinction_gloss_uk),
+  not gloss alone.
+
+Exit codes:
+  0 on success
+  2 on argparse usage errors
+  non-zero if a required source file is missing or malformed
+"""
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR)
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
-    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS)
-    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
-    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=_CLI_EPILOG,
+    )
+    parser.add_argument(
+        "--practice-dir",
+        type=Path,
+        default=DEFAULT_PRACTICE_DIR,
+        help="Directory with practice-*.json shards (default: site/public/lexicon).",
+    )
+    parser.add_argument(
+        "--synonym-verdicts",
+        type=Path,
+        default=DEFAULT_SYNONYM_VERDICTS,
+        help="Path to synonym_pair_verdicts.yaml.",
+    )
+    parser.add_argument(
+        "--antonym-pairs",
+        type=Path,
+        default=DEFAULT_ANTONYM_PAIRS,
+        help="Path to antonym_pairs.yaml.",
+    )
+    parser.add_argument(
+        "--paronym-pairs",
+        type=Path,
+        default=DEFAULT_PARONYM_PAIRS,
+        help="Path to paronym_pairs.yaml.",
+    )
+    parser.add_argument(
+        "--homonym-pairs",
+        type=Path,
+        default=DEFAULT_HOMONYM_PAIRS,
+        help="Path to homonym_pairs.yaml.",
+    )
     parser.add_argument(
         "--prefer-index",
         action="store_true",
