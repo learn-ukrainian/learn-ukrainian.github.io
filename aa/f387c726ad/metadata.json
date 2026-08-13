@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "aaf387c726ad",
+  "strategy": "manual-commit",
+  "branch": "cursor/6691-pointer-revert",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.pointer.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/aa/f387c726ad/0/metadata.json",
+      "transcript": "/aa/f387c726ad/0/full.jsonl",
+      "compact_transcript": "/aa/f387c726ad/0/transcript.jsonl",
+      "content_hash": "/aa/f387c726ad/0/content_hash.txt",
+      "prompt": "/aa/f387c726ad/0/prompt.txt"
+    }
+  ]
+}
