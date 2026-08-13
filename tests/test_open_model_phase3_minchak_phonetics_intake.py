@@ -45,7 +45,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
     review_path = private / "review.json"
     schema_path = tmp_path / "schema.json"
     pdf_payload = b"fixture pdf bytes"
-    texts = ["Перша сторінка українського джерела.", "2"]
+    texts = [f"Перша сторінка. ISBN {intake.SOURCE_ISBN}. Київ, 2023. 131 с.", "2"]
     page_rows = []
     for page_number, text in enumerate(texts, start=1):
         encoded = text.encode("utf-8")
@@ -88,6 +88,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
     <dim:field element="identifier" qualifier="uri">{intake.SOURCE_ITEM_URL}</dim:field>
     <dim:field element="title">{intake.SOURCE_TITLE}</dim:field>
     <dim:field element="type">Book</dim:field>
+    <dim:field element="publisher">{intake.SOURCE_CATALOG_CITATION}</dim:field>
   </dim:dim></mets:xmlData></mets:mdWrap></mets:dmdSec>
   <mets:fileSec><mets:fileGrp><mets:file ID="file_{intake.SOURCE_METS_FILE_UUID}"
     SIZE="{len(pdf_payload)}" CHECKSUMTYPE="MD5" CHECKSUM="{intake.PDF_MD5}">
@@ -100,6 +101,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
 <meta name="DC.title" xml:lang="uk" content="{intake.SOURCE_TITLE}" />
 <meta content="{intake.SOURCE_ITEM_URL}" name="DC.identifier" />
 <meta content="2023" name="citation_date" />
+<meta content="{intake.SOURCE_CATALOG_CITATION}" name="DC.publisher" />
 </head></html>
 """.encode()
     publications = f"<a href=\"/{intake.SOURCE_HANDLE}\">{intake.SOURCE_TITLE}</a>\n".encode()
@@ -198,9 +200,17 @@ def test_pdf_byte_drift_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPa
         _build(paths)
 
 
+def test_unbound_pdf_catalog_claim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    monkeypatch.setattr(intake, "PdfReader", lambda path: _FakeReader(path, ["Перша сторінка.", "2"]))
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="ISBN drift"):
+        _build(paths)
+
+
 def test_unexpected_blank_page_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
-    monkeypatch.setattr(intake, "PdfReader", lambda path: _FakeReader(path, ["Перша", "Друга"]))
+    first_page = f"Перша сторінка. ISBN {intake.SOURCE_ISBN}. Київ, 2023. 131 с."
+    monkeypatch.setattr(intake, "PdfReader", lambda path: _FakeReader(path, [first_page, "Друга"]))
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="text-layer facts drift"):
         _build(paths)
 
@@ -261,6 +271,15 @@ def test_private_input_modes_and_symlinks_are_rejected(
         _build(paths)
 
 
+def test_parent_traversal_is_rejected_before_path_normalization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    paths["pdf"] = paths["pdf"].parent / ".." / paths["pdf"].parent.name / paths["pdf"].name
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="parent traversal"):
+        _build(paths)
+
+
 def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     receipt = _build(paths)
@@ -273,6 +292,28 @@ def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyP
     output.write_text("{}\n", encoding="utf-8")
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="refusing to overwrite"):
         intake.write_public_receipt(output, receipt)
+
+
+def test_concurrent_receipt_creation_cannot_clobber_winner(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    output = tmp_path / "public" / "receipt.json"
+    monkeypatch.setattr(
+        intake, "_inside_git_checkout", lambda path: output == Path(path) or output in Path(path).parents
+    )
+    original_link = os.link
+
+    def concurrent_link(source: Path, destination: Path, *, follow_symlinks: bool) -> None:
+        output.write_text("{}\n", encoding="utf-8")
+        raise FileExistsError
+
+    monkeypatch.setattr(os, "link", concurrent_link)
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="refusing to overwrite"):
+        intake.write_public_receipt(output, receipt)
+    assert output.read_text(encoding="utf-8") == "{}\n"
+    monkeypatch.setattr(os, "link", original_link)
 
 
 def test_receipt_self_hash_and_runtime_bindings_are_enforced(

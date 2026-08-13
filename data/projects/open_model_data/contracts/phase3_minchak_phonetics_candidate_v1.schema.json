@@ -100,6 +100,8 @@
         "acroform_present",
         "form_field_count",
         "javascript_present",
+        "source_isbn_text_verified",
+        "catalog_print_collation_text_verified",
         "normalization_applied",
         "ocr_used",
         "source_text_retained_in_public_receipt"
@@ -116,6 +118,8 @@
         "acroform_present": {"const": true},
         "form_field_count": {"const": 0},
         "javascript_present": {"const": false},
+        "source_isbn_text_verified": {"const": true},
+        "catalog_print_collation_text_verified": {"const": true},
         "normalization_applied": {"const": false},
         "ocr_used": {"const": false},
         "source_text_retained_in_public_receipt": {"const": false}

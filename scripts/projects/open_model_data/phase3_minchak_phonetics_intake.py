@@ -44,6 +44,10 @@ SOURCE_METADATA_AUTHOR = "Мінчак, Галина Богданівна"
 SOURCE_INSTITUTION = "Київський національний лінгвістичний університет"
 SOURCE_PUBLISHER = "Видавничий центр КНЛУ"
 SOURCE_ISBN = "978-966-638-406-8 (Online)"
+SOURCE_CATALOG_CITATION = (
+    "Мінчак Г. Б. Фонетика і фонологія сучасної української літературної мови в таблицях і "
+    "схемах : [навч. посібник] / Г. Б. Мінчак. - К.: Видав. центр КНЛУ, 2023. - 131 с."
+)
 SOURCE_HANDLE = "787878787/5318"
 SOURCE_ITEM_URL = f"http://rep.knlu.edu.ua/xmlui/handle/{SOURCE_HANDLE}"
 SOURCE_BITSTREAM_PATH = (
@@ -140,6 +144,8 @@ def _inside_git_checkout(path: Path) -> bool:
 
 
 def _reject_symlink_components(path: Path, label: str) -> None:
+    raw_path = Path(os.fspath(path))
+    require(".." not in raw_path.parts, f"{label} cannot contain parent traversal")
     candidate = Path(os.path.abspath(os.fspath(path)))
     current = Path(candidate.anchor)
     for component in candidate.parts[1:]:
@@ -228,7 +234,13 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
         )
         complete_text.append(text)
     manifest_payload = b"".join(canonical_bytes(row) for row in page_rows)
-    joined_text = "\n\f\n".join(complete_text).encode("utf-8")
+    complete_source_text = "\n\f\n".join(complete_text)
+    require(SOURCE_ISBN in complete_source_text, "Minchak source PDF ISBN drift")
+    require(
+        re.search(rf"2023\.\s+{CATALOG_PRINT_COLLATION_PAGES}\s+с\.", complete_source_text) is not None,
+        "Minchak source PDF catalog collation drift",
+    )
+    joined_text = complete_source_text.encode("utf-8")
     root = reader.trailer["/Root"]
     if hasattr(root, "get_object"):
         root = root.get_object()
@@ -244,6 +256,8 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
         "acroform_present": "/AcroForm" in root,
         "form_field_count": len(reader.get_fields() or {}),
         "javascript_present": bool("/Names" in root and "/JavaScript" in root["/Names"]),
+        "source_isbn_text_verified": True,
+        "catalog_print_collation_text_verified": True,
     }
     require(
         facts
@@ -259,6 +273,8 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
             "acroform_present": True,
             "form_field_count": 0,
             "javascript_present": False,
+            "source_isbn_text_verified": True,
+            "catalog_print_collation_text_verified": True,
         },
         "Minchak complete text-layer facts drift",
     )
@@ -282,6 +298,7 @@ def validate_mets(path: Path) -> None:
     require(fields.get(("identifier", "uri")) == SOURCE_ITEM_URL, "KNLU METS item locator drift")
     require(fields.get(("title", None)) == SOURCE_TITLE, "KNLU METS title drift")
     require(fields.get(("type", None)) == "Book", "KNLU METS type drift")
+    require(fields.get(("publisher", None)) == SOURCE_CATALOG_CITATION, "KNLU METS catalog citation drift")
     require(not any(element == "rights" for element, _qualifier in fields), "KNLU METS invents rights metadata")
     files = root.findall(".//{http://www.loc.gov/METS/}file")
     require(len(files) == 1, "KNLU METS file denominator drift")
@@ -312,6 +329,7 @@ def validate_html_metadata(item_record: Path, publications_page: Path) -> None:
     require(SOURCE_TITLE in meta.get("DC.title", []), "KNLU item title drift")
     require(SOURCE_ITEM_URL in meta.get("DC.identifier", []), "KNLU item locator drift")
     require("2023" in meta.get("citation_date", []), "KNLU item year drift")
+    require(SOURCE_CATALOG_CITATION in meta.get("DC.publisher", []), "KNLU item catalog citation drift")
     require("DC.rights" not in item, "KNLU item unexpectedly declares rights metadata")
     publications = _read_private_bytes(
         publications_page,
@@ -492,21 +510,43 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     return receipt
 
 
+def _read_public_receipt_no_follow(path: Path) -> bytes:
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    require(no_follow != 0, "platform cannot enforce no-follow public receipt reads")
+    try:
+        descriptor = os.open(path, os.O_RDONLY | no_follow)
+    except OSError as exc:
+        raise MinchakPhoneticsIntakeError("cannot safely read existing public receipt") from exc
+    try:
+        require(stat.S_ISREG(os.fstat(descriptor).st_mode), "public receipt must be a regular file")
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            return stream.read()
+    finally:
+        os.close(descriptor)
+
+
 def write_public_receipt(path: Path, value: Mapping[str, Any]) -> None:
     require(_inside_git_checkout(path), "public receipt must live inside Git")
     _reject_symlink_components(path.parent, "public receipt parent")
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = canonical_bytes(value)
-    if path.exists():
-        require(not path.is_symlink() and path.is_file(), "public receipt path is unsafe")
-        require(path.read_bytes() == payload, "refusing to overwrite an immutable public receipt")
+    if path.exists() or path.is_symlink():
+        require(_read_public_receipt_no_follow(path) == payload, "refusing to overwrite an immutable public receipt")
         return
+    temporary: Path | None = None
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
         temporary = Path(handle.name)
         handle.write(payload)
         handle.flush()
         os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    try:
+        os.link(temporary, path, follow_symlinks=False)
+    except FileExistsError:
+        require(_read_public_receipt_no_follow(path) == payload, "refusing to overwrite an immutable public receipt")
+    except OSError as exc:
+        raise MinchakPhoneticsIntakeError("cannot atomically publish public receipt") from exc
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
