@@ -2018,8 +2018,8 @@ reconciliation or maintenance.
 
 ### `GET /api/orient`
 
-One-call agent orientation: git, issues, pipeline, runtime, delegate, rollovers,
-wiki, health, and session hints.
+One-call agent orientation: git, issues, the cache-first idle PR feed, pipeline,
+runtime, delegate, rollovers, wiki, health, and session hints.
 
 Query params:
 
@@ -2028,8 +2028,8 @@ Query params:
   `pipeline`, `issues`, and `wiki` sections. An explicit `sections` list wins.
 - `sections=git,runtime` — comma-separated subset of section keys to
   collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
-  `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`, `health`,
-  `session_hints`. Unknown keys return `400`. Omitted = full payload
+  `idle_prs`, `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`,
+  `health`, `session_hints`. Unknown keys return `400`. Omitted = full payload
   (back-compat). Skipped sections are not collected and are omitted
   from both the top-level payload and `meta`.
 - `role=<role>` — **opt-in** ADR-011 P3 cold-start research (see
@@ -2054,6 +2054,7 @@ Query params:
     }
   },
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
+  "idle_prs": [{"number": 1234, "branch": "cursor/ready-for-sweep", "minutes_idle": 93}],
   "runtime": {"agents": ["claude", "gemini", "codex"]},
   "health": {"api": true, "mcp_rag": false},
   "meta": {
@@ -2079,6 +2080,7 @@ failure retries on the next call.
 |---|---:|---|---|
 | `git` | 30 | `git` | branch, head, ahead_of_origin, recent_commits |
 | `issues` | 120 | `gh` | top 10 open issues; slow API, rare updates |
+| `idle_prs` | 60 | `gh` | green, reviewed, open PRs idle for more than one hour; detached refresh |
 | `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
 | `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
 | `delegate` | 30 | `fs` | active delegate/codex tasks |
@@ -2158,6 +2160,16 @@ fallback (e.g. `git: {"error": "..."}`) while every other section
 still populates. A single wedged collector never takes down the
 whole response — this fixed the incident logged in the first entry
 of `docs/monitor-api/cold-start-baseline.md`.
+
+#### Idle PR feed (#4728)
+
+The full response includes `idle_prs`, a compact list of open PRs whose latest
+non-advisory checks are green, review-gate evidence is present, and GitHub
+activity has been idle for more than one hour. Each row contains `number`, the
+head `branch`, and `minutes_idle`. The `gh` refresh is cache-first and detached:
+the request serves the last successful value or an empty list immediately when
+GitHub is slow or unavailable. `?lean=true` omits this section; request
+`?sections=idle_prs` when it is needed explicitly.
 
 If the `issues` collector returns `issues_error` or the GitHub
 subsection times out, run
