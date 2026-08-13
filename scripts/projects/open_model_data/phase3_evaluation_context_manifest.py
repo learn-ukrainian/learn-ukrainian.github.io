@@ -38,7 +38,7 @@ ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json"
-DEFAULT_PUBLIC_RECEIPT = DATA / "evidence/phase3_evaluation_context_manifest_receipt_v1.json"
+DEFAULT_PUBLIC_RECEIPT = DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 PRIVATE_FILENAME = "evaluation_context_manifest_v1.jsonl"
 CUSTODY_RECEIPT_FILENAME = "phase3_evaluation_context_manifest_custody_receipt_v1.json"
 CHECKSUMS_FILENAME = "SHA256SUMS"
@@ -457,6 +457,30 @@ def _build_manifest_row(
     return row
 
 
+def _resolve_context_route(
+    partition_row: Mapping[str, Any],
+    *,
+    context_index: Mapping[str, dict[str, Any]],
+    exclusions: Mapping[str, str],
+) -> str:
+    unit_id = partition_row["unit_id"]
+    in_complete = unit_id in context_index
+    in_exclusion = unit_id in exclusions
+    if partition_row["family_id"] == "ua_gec":
+        require(
+            in_complete ^ in_exclusion,
+            f"UA-GEC identity must resolve to exactly one route (complete context or typed exclusion): {unit_id}",
+        )
+        if in_exclusion:
+            return "ua_gec_typed_exclusion"
+        return "ua_gec_complete_context"
+    require(
+        not in_complete and not in_exclusion,
+        f"non-UA-GEC identity collides with UA-only index: {unit_id}",
+    )
+    return "frozen_source_unit_text"
+
+
 def build_manifest(
     *,
     source_jsonl: Path,
@@ -492,7 +516,12 @@ def build_manifest(
             f"partition identity missing from source materialization: {partition_row['unit_id']}",
         )
         unit_id = partition_row["unit_id"]
-        if unit_id in exclusions:
+        route = _resolve_context_route(
+            partition_row,
+            context_index=context_index,
+            exclusions=exclusions,
+        )
+        if route == "ua_gec_typed_exclusion":
             row = _build_manifest_row(
                 partition_row,
                 source_row,
@@ -500,7 +529,7 @@ def build_manifest(
                 complete_sentence_context=False,
                 exclusion_reason_code=exclusions[unit_id],
             )
-        elif unit_id in context_index:
+        elif route == "ua_gec_complete_context":
             row = _build_manifest_row(
                 partition_row,
                 source_row,
@@ -509,11 +538,6 @@ def build_manifest(
                 ua_gec_record=context_index[unit_id],
             )
         else:
-            if partition_row["family_id"] == "ua_gec":
-                require(
-                    unit_id not in exclusions and unit_id not in context_index,
-                    f"UA-GEC identity must resolve to complete context or typed exclusion: {unit_id}",
-                )
             row = _build_manifest_row(
                 partition_row,
                 source_row,

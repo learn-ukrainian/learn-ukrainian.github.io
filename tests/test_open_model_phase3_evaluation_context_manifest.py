@@ -527,6 +527,125 @@ def test_live_database_path_is_rejected(tmp_path: Path) -> None:
     assert exit_code == 2
 
 
+def _invoke_build_manifest(paths: dict[str, Path]) -> None:
+    manifest.build_manifest(
+        source_jsonl=paths["source_jsonl"],
+        materialization_receipt_path=paths["materialization_receipt"],
+        partition_path=paths["partition"],
+        evaluation_freeze_receipt_path=paths["evaluation_freeze_receipt"],
+        ua_gec_context_path=paths["ua_gec_context"],
+        ua_gec_exclusions_path=paths["ua_gec_exclusions"],
+        ua_gec_receipt_path=paths["ua_gec_receipt"],
+    )
+
+
+def test_ua_gec_missing_route_fails_before_branch_selection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=4)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    orphan = _source_row("ua_gec", 2, "ua-gec:orphan:1")
+    all_source_rows = [json.loads(line) for line in paths["source_jsonl"].read_text(encoding="utf-8").splitlines()]
+    all_source_rows.append(orphan)
+    _write_jsonl(paths["source_jsonl"], all_source_rows)
+
+    partition_rows = [json.loads(line) for line in paths["partition"].read_text(encoding="utf-8").splitlines()]
+    partition_rows.append(_partition_row(orphan, lane="phenomenon_strata"))
+    _write_jsonl(paths["partition"], partition_rows)
+
+    materialization = json.loads(paths["materialization_receipt"].read_text(encoding="utf-8"))
+    materialization["private_record_count"] = len(all_source_rows)
+    materialization["family_counts"]["ua_gec"] = 3
+    materialization["private_jsonl_sha256"] = manifest.sha256_file(paths["source_jsonl"])
+    materialization["receipt_sha256"] = manifest.receipt_sha256(materialization)
+    _write_json(paths["materialization_receipt"], materialization)
+
+    evaluation = json.loads(paths["evaluation_freeze_receipt"].read_text(encoding="utf-8"))
+    evaluation["aggregates"]["sealed_evaluation_total"] = len(partition_rows)
+    evaluation["artifact_hashes"]["partition_manifest_sha256"] = manifest.sha256_file(paths["partition"])
+    evaluation["receipt_sha256"] = manifest.receipt_sha256(evaluation)
+    _write_json(paths["evaluation_freeze_receipt"], evaluation)
+
+    monkeypatch.setattr(manifest, "PINNED_SOURCE_UNITS_JSONL_SHA256", manifest.sha256_file(paths["source_jsonl"]))
+    monkeypatch.setattr(manifest, "PINNED_PARTITION_SHA256", manifest.sha256_file(paths["partition"]))
+    monkeypatch.setattr(
+        manifest,
+        "PINNED_MATERIALIZATION_RECEIPT_FILE_SHA256",
+        manifest.sha256_file(paths["materialization_receipt"]),
+    )
+    monkeypatch.setattr(
+        manifest,
+        "PINNED_MATERIALIZATION_RECEIPT_BODY_SHA256",
+        manifest.receipt_sha256(materialization),
+    )
+    monkeypatch.setattr(
+        manifest,
+        "PINNED_EVALUATION_FREEZE_FILE_SHA256",
+        manifest.sha256_file(paths["evaluation_freeze_receipt"]),
+    )
+    monkeypatch.setattr(
+        manifest,
+        "PINNED_EVALUATION_FREEZE_BODY_SHA256",
+        manifest.receipt_sha256(evaluation),
+    )
+    monkeypatch.setattr(manifest, "MATERIALIZATION_FAMILY_COUNTS", materialization["family_counts"])
+    monkeypatch.setattr(manifest, "SEALED_FAMILY_COUNTS", {**manifest.SEALED_FAMILY_COUNTS, "ua_gec": 3})
+    monkeypatch.setattr(manifest, "LANE_COUNTS", {"clean_modern": 1, "phenomenon_strata": 3})
+    monkeypatch.setattr(
+        manifest,
+        "CONTEXT_ACCOUNTING",
+        {
+            "ua_gec_complete_context": 1,
+            "ua_gec_typed_exclusion": 1,
+            "frozen_source_unit_text": 2,
+        },
+    )
+
+    with pytest.raises(manifest.EvaluationContextManifestError, match="exactly one route"):
+        _invoke_build_manifest(paths)
+
+
+def test_ua_gec_dual_route_fails_before_branch_selection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    exclusions = [{"unit_id": "ua-gec:complete:1", "reason": "target_sentence_not_exactly_aligned"}]
+    _write_jsonl(paths["ua_gec_exclusions"], exclusions)
+    monkeypatch.setattr(manifest, "PINNED_UA_GEC_EXCLUSIONS_SHA256", manifest.sha256_file(paths["ua_gec_exclusions"]))
+
+    with pytest.raises(manifest.EvaluationContextManifestError, match="exactly one route"):
+        _invoke_build_manifest(paths)
+
+
+def test_non_ua_collision_with_ua_only_index_fails_before_branch_selection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    all_source = [json.loads(line) for line in paths["source_jsonl"].read_text(encoding="utf-8").splitlines()]
+    school = all_source[-1]
+    ua_context_rows = [
+        _ua_gec_representation(
+            "ua-gec:complete:1",
+            str(all_source[0]["source_text"]),
+            "виправлений текст для повного контексту.",
+        ),
+        _ua_gec_representation(
+            str(school["unit_id"]),
+            str(school["source_text"]),
+            "виправлений текст для школи.",
+        ),
+    ]
+    _write_jsonl(paths["ua_gec_context"], ua_context_rows)
+    monkeypatch.setattr(manifest, "PINNED_UA_GEC_CONTEXT_SHA256", manifest.sha256_file(paths["ua_gec_context"]))
+
+    with pytest.raises(manifest.EvaluationContextManifestError, match="collides with UA-only index"):
+        _invoke_build_manifest(paths)
+
+
 def test_production_manifest_against_drive_custody() -> None:
     drive = (
         Path.home() / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
@@ -536,7 +655,7 @@ def test_production_manifest_against_drive_custody() -> None:
         drive / "backups/phase3-6375/20260811T090325Z/phase3-v3-prefreeze-20260812T024213Z/ua-gec-context-closure-v2"
     )
     backup_dir = drive / "backups/phase3-6375/20260813T220000Z/phase3-evaluation-context-manifest-v1"
-    public_receipt = ROOT / "data/projects/open_model_data/evidence/phase3_evaluation_context_manifest_receipt_v1.json"
+    public_receipt = ROOT / "data/projects/open_model_data/inventory/phase3_evaluation_context_manifest_receipt_v1.json"
     if not tarball.exists() or not closure.exists():
         pytest.skip("Drive custody artifacts unavailable")
     if backup_dir.exists() and (backup_dir / manifest.PRIVATE_FILENAME).exists():
