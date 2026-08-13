@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e36d1b8d3c7c",
+  "strategy": "manual-commit",
+  "branch": "agy/6714-drop-remaining-fakes",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/antonym_pairs.yaml",
+    "tests/test_generate_practice_deck.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e3/6d1b8d3c7c/0/metadata.json",
+      "transcript": "/e3/6d1b8d3c7c/0/full.jsonl",
+      "compact_transcript": "/e3/6d1b8d3c7c/0/transcript.jsonl",
+      "content_hash": "/e3/6d1b8d3c7c/0/content_hash.txt",
+      "prompt": "/e3/6d1b8d3c7c/0/prompt.txt"
+    }
+  ]
+}
