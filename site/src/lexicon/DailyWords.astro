@@ -55,17 +55,15 @@ const dailyCount = Math.max(1, Math.floor(count));
 <script>
   import { dateSeed, pickDaily, type DailyWord } from "../lib/lexicon/daily";
   import {
+    bindDailyCardInteractions,
+    renderDailyCardHtml,
+  } from "../lib/lexicon/daily-card";
+  import {
     filterByCumulativeLevel,
     LEARNER_LEVEL_STORAGE_KEY,
     normalizeCefrLevel,
     type CefrLevel,
   } from "../lib/lexicon/levels";
-
-  const dwEsc = (value: unknown): string =>
-    String(value ?? "").replace(
-      /[&<>"]/g,
-      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c,
-    );
 
   const readLearnerLevel = (): CefrLevel => {
     try {
@@ -83,38 +81,6 @@ const dailyCount = Math.max(1, Math.floor(count));
     }
   };
 
-  const renderChips = (word: DailyWord): string => {
-    const chips: string[] = [];
-    if (word.k === "avoid") {
-      chips.push('<span class="lexicon-daily-chip danger">остерігайтеся</span>');
-    }
-    if (word.cefr) {
-      chips.push(`<span class="lexicon-daily-chip">${dwEsc(word.cefr)}</span>`);
-    }
-    return chips.length > 0 ? `<span class="lexicon-daily-chips">${chips.join("")}</span>` : "";
-  };
-
-  const renderExample = (word: DailyWord): string => {
-    const example = word.example?.trim();
-    if (!example) return "";
-    const exampleEn = word.exampleEn?.trim();
-    return `<span class="lexicon-daily-example" data-testid="daily-example-${dwEsc(word.slug)}" lang="uk">
-      ${dwEsc(example)}${exampleEn ? `<span class="lexicon-daily-example-en" lang="en">${dwEsc(exampleEn)}</span>` : ""}
-    </span>`;
-  };
-
-  const renderCard = (word: DailyWord): string => {
-    const href = `/lexicon/${encodeURIComponent(String(word.slug))}/`;
-    return `<li class="lexicon-daily-item">
-      <a class="lexicon-daily-card" href="${href}">
-        <span class="lexicon-daily-lemma">${dwEsc(word.lemma)}</span>
-        ${word.gloss ? `<span class="lexicon-daily-gloss">${dwEsc(word.gloss)}</span>` : ""}
-        ${renderExample(word)}
-        ${renderChips(word)}
-      </a>
-    </li>`;
-  };
-
   const hydrateDailySection = (dailySection: HTMLElement) => {
     const dailyList = dailySection.querySelector<HTMLUListElement>("[data-daily-list]");
     const dailyStatus = dailySection.querySelector<HTMLElement>("[data-daily-status]");
@@ -126,6 +92,7 @@ const dailyCount = Math.max(1, Math.floor(count));
 
     let activeLevel = readLearnerLevel();
     let pool: DailyWord[] = [];
+    let interactionsBound = false;
 
     if (useLevelSelector) {
       storeLearnerLevel(activeLevel);
@@ -159,7 +126,11 @@ const dailyCount = Math.max(1, Math.floor(count));
         return;
       }
 
-      dailyList.innerHTML = picks.map(renderCard).join("");
+      dailyList.innerHTML = picks.map(renderDailyCardHtml).join("");
+      if (!interactionsBound) {
+        bindDailyCardInteractions(dailyList);
+        interactionsBound = true;
+      }
       if (dailyStatus) {
         dailyStatus.hidden = false;
         dailyStatus.textContent = useLevelSelector
@@ -308,6 +279,32 @@ const dailyCount = Math.max(1, Math.floor(count));
   }
 
   :global(.lexicon-daily-card) {
+    perspective: 900px;
+    min-height: 7.25rem;
+    height: 100%;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+
+  :global(.lexicon-daily-card-inner) {
+    display: grid;
+    min-height: 7.25rem;
+    height: 100%;
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  :global(.lexicon-daily-card[data-flipped="true"] .lexicon-daily-card-inner) {
+    transform: rotateY(180deg);
+  }
+
+  :global(.lexicon-daily-face) {
+    grid-area: 1 / 1;
     display: flex;
     min-height: 7.25rem;
     height: 100%;
@@ -318,32 +315,61 @@ const dailyCount = Math.max(1, Math.floor(count));
     border-radius: 8px;
     background: var(--lu-surface);
     color: var(--lu-text);
-    text-decoration: none;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
-  :global(.lexicon-daily-card:hover),
-  :global(.lexicon-daily-card:focus-visible) {
+  :global(.lexicon-daily-back) {
+    transform: rotateY(180deg);
+  }
+
+  :global(.lexicon-daily-card:hover .lexicon-daily-face),
+  :global(.lexicon-daily-card:focus-visible .lexicon-daily-face) {
     border-color: var(--lu-primary);
     outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
+  }
+
+  :global(.lexicon-daily-card:focus-visible) {
+    outline: none;
   }
 
   :global(.lexicon-daily-lemma) {
     color: var(--lu-blue);
     font-weight: 900;
     line-height: 1.25;
+    text-decoration: none;
+  }
+
+  :global(a.lexicon-daily-lemma:hover),
+  :global(a.lexicon-daily-lemma:focus-visible) {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    outline: none;
+  }
+
+  :global(.lexicon-daily-flip-hint) {
+    color: var(--lu-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.4;
   }
 
   :global(.lexicon-daily-gloss) {
-    color: var(--lu-text-muted);
-    font-size: 0.92rem;
+    color: var(--lu-text);
+    font-size: 0.98rem;
+    font-weight: 700;
     line-height: 1.45;
+  }
+
+  :global(.lexicon-daily-gloss-empty) {
+    color: var(--lu-text-muted);
+    font-weight: 600;
   }
 
   :global(.lexicon-daily-example) {
     display: block;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
     color: var(--lu-text);
     font-size: 0.95rem;
     font-style: italic;
@@ -383,6 +409,12 @@ const dailyCount = Math.max(1, Math.floor(count));
     background: var(--lu-state-wrong-bg);
     color: var(--lu-state-wrong-fg);
     text-transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.lexicon-daily-card-inner) {
+      transition: none;
+    }
   }
 
   @media (max-width: 680px) {
