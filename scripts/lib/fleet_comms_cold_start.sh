@@ -21,16 +21,39 @@ fleet_comms_rule_relpath() {
   printf '%s' "agents_extensions/shared/rules/fleet-comms-coordination.md"
 }
 
+# Resolve the project interpreter (checkout .venv, else primary via git common-dir).
+fleet_comms_resolve_python() {
+  local root="${1:-${PROJECT_DIR:-${LC_ROOT:-.}}}"
+  local git_common=""
+  if [ -x "$root/.venv/bin/python" ]; then
+    printf '%s' "$root/.venv/bin/python"
+    return 0
+  fi
+  git_common="$(
+    env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR \
+      git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true
+  )"
+  if [ -n "$git_common" ] && [ -x "$(dirname "$git_common")/.venv/bin/python" ]; then
+    printf '%s' "$(dirname "$git_common")/.venv/bin/python"
+    return 0
+  fi
+  return 1
+}
+
 # Resolve plane mode once (fail-open → off).
 fleet_comms_resolve_plane_mode() {
   local mode="off"
-  local root="${PROJECT_DIR:-.}"
-  if [ -x "$root/.venv/bin/python" ] \
-      && [ -f "$root/scripts/fleet_comms/message_plane.py" ]; then
+  local root="${PROJECT_DIR:-${LC_ROOT:-.}}"
+  local py=""
+  if [ -f "$root/scripts/fleet_comms/message_plane.py" ] \
+      && py="$(fleet_comms_resolve_python "$root")"; then
     mode="$(
-      "$root/.venv/bin/python" -c \
-        'from scripts.fleet_comms.message_plane import resolve_plane_mode; print(resolve_plane_mode(None))' \
-        2>/dev/null || true
+      (
+        cd "$root" || exit 0
+        "$py" -c \
+          'from scripts.fleet_comms.message_plane import resolve_plane_mode; print(resolve_plane_mode(None))' \
+          2>/dev/null || true
+      )
     )"
     case "${mode}" in
       off|shadow|dual_write|authority) ;;
@@ -42,7 +65,10 @@ fleet_comms_resolve_plane_mode() {
 
 # Compact authority-aware clause for injected cold-start prompts.
 fleet_comms_cold_clause() {
-  local plane_mode="${FLEET_COMMS_PLANE_MODE:-off}"
+  local plane_mode="${FLEET_COMMS_PLANE_MODE:-}"
+  if [ -z "$plane_mode" ]; then
+    plane_mode="$(fleet_comms_resolve_plane_mode)"
+  fi
   local rule
   rule="$(fleet_comms_rule_relpath)"
   printf '%s' \

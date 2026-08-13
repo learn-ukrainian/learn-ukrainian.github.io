@@ -2023,6 +2023,8 @@ def _build_cloze_items(
             item["clozeEn"] = cloze_en
         if attribution is not None:
             item["attribution"] = attribution
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(item)
     return items
 
@@ -2566,15 +2568,16 @@ def _build_classify_items(
             sets.append(pos_set)
     if not sets:
         return []
-    return [
-        {
-            "classifyId": f"{lexeme['lemmaId']}:classify",
-            "lemmaId": lexeme["lemmaId"],
-            "lemma": lexeme["lemma"],
-            "sets": sets,
-            "source": "VESUM",
-        }
-    ]
+    item: dict[str, Any] = {
+        "classifyId": f"{lexeme['lemmaId']}:classify",
+        "lemmaId": lexeme["lemmaId"],
+        "lemma": lexeme["lemma"],
+        "sets": sets,
+        "source": "VESUM",
+    }
+    if lexeme.get("senseId"):
+        item["senseId"] = lexeme["senseId"]
+    return [item]
 
 
 CASE_SLOT_LABELS: dict[str, tuple[str, str]] = {
@@ -2614,16 +2617,38 @@ def _paradigm_slot_case_key(case_name: str) -> str | None:
 
 
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    """Build case/number MC cards from a lexeme paradigm.
+
+    Ukrainian paradigms are heavily syncretic (shared surfaces across cases).
+    Cards ask for a *named slot* (``родовий, однина``), so a shared surface may
+    still be the answer for its representative slot. Keep one slot per distinct
+    surface (prefer nominative→vocative order) so distractors stay unique and
+    shard size stays within budget — excluding every duplicated surface starved
+    adjectives below the unique-lemma bar. Require four distinct surfaces for a
+    four-option MCQ.
+    """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
     cases = lexeme.get("paradigm", {}).get("cases")
     if not isinstance(cases, dict):
         return []
+    preferred_keys = list(CASE_LABELS_UA.keys()) + list(CASE_LABELS_UA.values())
+    ordered_case_names: list[str] = []
+    seen_case_names: set[str] = set()
+    for key in preferred_keys:
+        if key in cases and key not in seen_case_names:
+            ordered_case_names.append(key)
+            seen_case_names.add(key)
+    for key in cases:
+        if isinstance(key, str) and key not in seen_case_names:
+            ordered_case_names.append(key)
+            seen_case_names.add(key)
+
     slots: list[dict[str, str]] = []
     seen_forms: set[str] = set()
-    duplicate_forms: set[str] = set()
-    for case_name, forms in cases.items():
-        if not isinstance(case_name, str) or not isinstance(forms, dict):
+    for case_name in ordered_case_names:
+        forms = cases.get(case_name)
+        if not isinstance(forms, dict):
             continue
         case_key = _paradigm_slot_case_key(case_name)
         if case_key is None:
@@ -2634,21 +2659,19 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
                 continue
             normalized = _plain(form)
             if normalized in seen_forms:
-                duplicate_forms.add(normalized)
+                continue
             seen_forms.add(normalized)
             slots.append({"case": case_key, "number": number, "form": form})
-    usable = [slot for slot in slots if _plain(slot["form"]) not in duplicate_forms]
-    if len(usable) < 3:
+    if len(slots) < 4:
         return []
-    forms = [slot["form"] for slot in usable]
     items = []
-    for index, slot in enumerate(usable):
+    for index, slot in enumerate(slots):
         label_uk, label_en = CASE_SLOT_LABELS[slot["case"]]
         number_uk = "однина" if slot["number"] == "singular" else "множина"
         number_en = "sg" if slot["number"] == "singular" else "pl"
         options = [{"label": slot["form"], "kind": "answer"}]
-        for other in usable:
-            if other is slot or _plain(other["form"]) == _plain(slot["form"]):
+        for other in slots:
+            if other is slot:
                 continue
             options.append({"label": other["form"], "kind": "same-paradigm"})
             if len(options) == 4:
@@ -2673,6 +2696,8 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
         }
         if CEFR_RANK[lexeme["cefr"]] <= CEFR_RANK["A1"]:
             item["slot"]["labelEn"] = f"{label_en} {number_en}"
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(item)
     return items
 
@@ -3000,20 +3025,21 @@ def _build_synonym_items(
             answer_index = int(hashlib.sha1(synonym_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
             answer = options.pop(0)
             options.insert(answer_index, answer)
-            items.append(
-                {
-                    "synonymId": synonym_id,
-                    "lemmaId": prompt["lemmaId"],
-                    "targetLemmaId": target["lemmaId"],
-                    "polarity": polarity,
-                    "prompt": prompt["lemma"],
-                    "answer": target["lemma"],
-                    "level": level,
-                    "promptLevel": prompt["cefr"],
-                    "options": options,
-                    "source": "ukrajinet-auto-translation",
-                }
-            )
+            synonym_item: dict[str, Any] = {
+                "synonymId": synonym_id,
+                "lemmaId": prompt["lemmaId"],
+                "targetLemmaId": target["lemmaId"],
+                "polarity": polarity,
+                "prompt": prompt["lemma"],
+                "answer": target["lemma"],
+                "level": level,
+                "promptLevel": prompt["cefr"],
+                "options": options,
+                "source": "ukrajinet-auto-translation",
+            }
+            if prompt.get("senseId"):
+                synonym_item["senseId"] = prompt["senseId"]
+            items.append(synonym_item)
     return items
 
 
@@ -3304,6 +3330,8 @@ def _build_heritage_items(
         if item["kind"] == "sense_restricted":
             item["calqueSense"] = _clean_text(pair.get("calqueSense")) or ""
             item["authenticSense"] = _clean_text(pair.get("authenticSense")) or ""
+        if lexeme.get("senseId"):
+            item["senseId"] = lexeme["senseId"]
         items.append(_strip_heritage_option_metadata(item) if public_options else item)
     return items
 
@@ -3401,6 +3429,8 @@ def _build_paronym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         # simple shuffle using deck seed if possible; fall back to list as-is
         # (real shuffle happens via rng in caller path for determinism; here keep order stable)
         items.append(_strip_paronym_option_metadata(item) if public_options else item)
@@ -3759,6 +3789,8 @@ def _build_antonym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         items.append(_strip_antonym_option_metadata(item) if public_options else item)
     return items
 
@@ -3911,6 +3943,8 @@ def _build_homonym_items(
         }
         if prompt_en := _curated_prompt_en(frame):
             item["promptEn"] = prompt_en
+        if target_lex.get("senseId"):
+            item["senseId"] = target_lex["senseId"]
         items.append(_strip_homonym_option_metadata(item) if public_options else item)
     return items
 
@@ -4303,14 +4337,15 @@ def build_practice_shards(
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
         stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
         if stress:
-            mode_by_level[lexeme["cefr"]]["stress"].append(
-                {
-                    "stressId": f"{lexeme['lemmaId']}:stress",
-                    "lemmaId": lexeme["lemmaId"],
-                    "lemma": lexeme["lemma"],
-                    **stress,
-                }
-            )
+            stress_item = {
+                "stressId": f"{lexeme['lemmaId']}:stress",
+                "lemmaId": lexeme["lemmaId"],
+                "lemma": lexeme["lemma"],
+                **stress,
+            }
+            if lexeme.get("senseId"):
+                stress_item["senseId"] = lexeme["senseId"]
+            mode_by_level[lexeme["cefr"]]["stress"].append(stress_item)
 
         classify_items = _build_classify_items(
             _entry,

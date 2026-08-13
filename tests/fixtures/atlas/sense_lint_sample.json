@@ -131,6 +131,51 @@
       ]
     },
     {
+      "slug": "unvetted-en-entry-example",
+      "lemma": "гліф",
+      "entry_type": "lemma",
+      "senses": [
+        {
+          "id": "hlif_unvetted_en",
+          "pos": "noun",
+          "uk_source_def": "графічний знак у шрифті",
+          "learner_uk": "гліф",
+          "learner_en": ["glyph"],
+          "en_disambiguation": "typographic character shape",
+          "completeness": "draft"
+        },
+        {
+          "id": "hlif_invalid_source",
+          "pos": "noun",
+          "uk_source_def": "графічний знак з невідомим ярликом джерела",
+          "learner_uk": "гліф",
+          "learner_en": ["glyph mark"],
+          "en_disambiguation": "",
+          "source": "web_scrape",
+          "completeness": "draft"
+        },
+        {
+          "id": "hlif_empty_en_no_source",
+          "pos": "noun",
+          "uk_source_def": "сенс без опублікованого EN — LINT-004 не спрацьовує",
+          "learner_uk": "гліф",
+          "learner_en": [],
+          "en_disambiguation": "",
+          "completeness": "draft"
+        },
+        {
+          "id": "hlif_blank_en_only",
+          "pos": "noun",
+          "uk_source_def": "сенс з порожніми EN рядками — не опублікований EN",
+          "learner_uk": "гліф",
+          "learner_en": ["", "  "],
+          "en_disambiguation": "",
+          "source": "mystery",
+          "completeness": "draft"
+        }
+      ]
+    },
+    {
       "slug": "no-senses-entry-example",
       "lemma": "легасі",
       "entry_type": "lemma"
