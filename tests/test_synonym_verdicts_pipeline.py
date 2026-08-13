@@ -812,12 +812,26 @@ def test_real_synonym_verdicts_yaml_is_well_formed() -> None:
     assert not overlap, f"pairs adjudicated both ways: {overlap}"
 
 
+def test_real_synonym_verdicts_yaml_rejects_self_pairs() -> None:
+    """Approved and rejected pairs must be two distinct lemmas (casefold).
+
+    Self-pairs (a == b) are not synonyms; the deck builder would emit identical
+    cards. Codex finding on #6710: виміряти/виміряти and звичай/звичай.
+    """
+    data = _load_real_synonym_verdicts()
+    for section in ("approved", "rejected"):
+        for item in data[section]:
+            a = str(item["a"]).casefold()
+            b = str(item["b"]).casefold()
+            assert a != b, f"self-pair in {section}: {item['a']!r} / {item['b']!r}"
+
+
 def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
     """Guards the #4387/#4700 attested-growth floor (790 -> 1531 unique legs).
 
     Fails closed if the approved corpus regresses below the post-grow floor —
     e.g. a revert of the attested-pair addition, or a bad merge that drops
-    entries silently.
+    entries silently. Post-#6710 self-pair drop: approved floor is 1184.
     """
     data = _load_real_synonym_verdicts()
     approved = data["approved"]
@@ -827,5 +841,5 @@ def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
         lemmas.add(item["a"])
         lemmas.add(item["b"])
 
-    assert len(approved) >= 1186
+    assert len(approved) >= 1184
     assert len(lemmas) >= 1531

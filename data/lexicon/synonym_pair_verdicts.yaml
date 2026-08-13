@@ -1294,11 +1294,6 @@ approved:
   polarity: synonym
   sources:
   - synonyms
-- a: виміряти
-  b: виміряти
-  polarity: synonym
-  sources:
-  - synonyms
 - a: винаймати
   b: наймати
   polarity: synonym
@@ -4254,11 +4249,6 @@ approved:
   - synonyms
 - a: звикати
   b: звикнути
-  polarity: synonym
-  sources:
-  - synonyms
-- a: звичай
-  b: звичай
   polarity: synonym
   sources:
   - synonyms
