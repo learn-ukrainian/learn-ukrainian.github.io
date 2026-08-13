@@ -27,14 +27,31 @@ export interface VirtualSpecialSet extends CustomSet {
 export const CUSTOM_SETS_STORAGE_KEY = 'learn_ukrainian_custom_sets_v1';
 export const DEVICE_ID_KEY = 'learn_ukrainian_device_id';
 
+let inMemoryDeviceId: string | null = null;
+
+/**
+ * Returns one session-stable fallback id when localStorage is blocked
+ * (private browsing, SecurityError) so saves do not crash on the first write.
+ */
+function newDeviceId(): string {
+  if (!inMemoryDeviceId) {
+    inMemoryDeviceId = `dev_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
+  }
+  return inMemoryDeviceId;
+}
+
 export function getDeviceId(): string {
   if (typeof window === 'undefined') return 'server_ssr';
-  let deviceId = localStorage.getItem(DEVICE_ID_KEY);
-  if (!deviceId) {
-    deviceId = `dev_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
+  try {
+    const stored = localStorage.getItem(DEVICE_ID_KEY);
+    if (stored) return stored;
+    const deviceId = newDeviceId();
     localStorage.setItem(DEVICE_ID_KEY, deviceId);
+    return deviceId;
+  } catch (err) {
+    console.warn('localStorage unavailable; using in-memory device id', err);
+    return newDeviceId();
   }
-  return deviceId;
 }
 
 import teacherClozeData from '../../data/lexicon-teacher-cloze.json';
