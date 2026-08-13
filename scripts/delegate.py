@@ -193,11 +193,11 @@ def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
 
 
 def _warn_kimicc_oauth_token_life(harness: str | None, hard_timeout: int) -> None:
-    """Pre-flight note when a KimiCC dispatch can outlive its OAuth token (#5938 F4)."""
-    if harness != "kimicc" or hard_timeout <= _KIMICC_OAUTH_TOKEN_LIFE_S:
+    """Pre-flight note when a KimiCC dispatch can outlive its OAuth session (#5938 F4)."""
+    if harness != "kimicc" or hard_timeout <= _KIMICC_OAUTH_SESSION_LIFE_S:
         return
     print(
-        f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~{_KIMICC_OAUTH_TOKEN_LIFE_S}s "
+        f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~{_KIMICC_OAUTH_SESSION_LIFE_S}s "
         "Kimi OAuth session lifetime; the wrapper refreshes credentials only at spawn, "
         "so calls still running past ~15 minutes may fail auth. Prefer shorter dispatches "
         "and relaunch instead of one long call.",
@@ -296,7 +296,7 @@ DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
 # lifetime is roughly 15 minutes (~840s). The wrapper refreshes credentials
 # only at spawn, so a worker still running past that point can start failing
 # auth.
-_KIMICC_OAUTH_TOKEN_LIFE_S = 840
+_KIMICC_OAUTH_SESSION_LIFE_S = 840
 
 
 # ---------------------------------------------------------------------------
