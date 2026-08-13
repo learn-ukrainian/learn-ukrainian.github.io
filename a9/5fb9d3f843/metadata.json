@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a95fb9d3f843",
+  "strategy": "manual-commit",
+  "branch": "cursor/6741-schema-hash",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/lesson-schema.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a9/5fb9d3f843/0/metadata.json",
+      "transcript": "/a9/5fb9d3f843/0/full.jsonl",
+      "compact_transcript": "/a9/5fb9d3f843/0/transcript.jsonl",
+      "content_hash": "/a9/5fb9d3f843/0/content_hash.txt",
+      "prompt": "/a9/5fb9d3f843/0/prompt.txt"
+    }
+  ]
+}
