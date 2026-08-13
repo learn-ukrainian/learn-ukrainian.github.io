@@ -53,7 +53,7 @@
 | **Gemini 3.1 Pro** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane |
 | **K3** | Long-horizon coding; frontend/visual ideation | Maintainability ≠ demo; Moonshot route/egress | Moonshot | UI + long implement |
 | **GLM-5.2** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
-| **DeepSeek V4 Flash** | Economical coding + infra CF volume; Arena-practical frontend (operator preferred) | Not folk/UA/critical authority; **Pro DO NOT USE** | **First-party only** (`deepseek-direct` / Hermes); OpenRouter deepseek refused | Infra/code CF + worker |
+| **DeepSeek V4 Flash** | Economical coding + infra CF volume; Arena-practical frontend (operator preferred) | Not folk/UA/critical authority; Pro @ high = hard implement only (complex multi-file, hard lookup — 2026-08-13), never default | **First-party only** (`deepseek-direct` / Hermes); OpenRouter deepseek refused | Infra/code CF + worker |
 | **Cursor Auto** / Composer 2.5 | Mechanical code/infra when free; first-class worker (#6468) | Auto never formal CF identity; adapter gate #6469 | Cursor harness multi-model | Worker (impl) |
 
 ---

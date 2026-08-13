@@ -104,16 +104,25 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
     assert practical.index("glm-5.2") < practical.index("deepseek-v4-flash")
-    # Operator 2026-08-06 until further notice: Flash only on ladders; Pro held.
+    # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
+    # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
     assert "deepseek-v4-flash" in practical
     assert "deepseek-v4-pro" not in practical
 
     critical = [rung[0] for rung in catalog["review_ladders"]["critical"] if len(rung) == 1]
     assert "deepseek-v4-flash" in critical
     assert "deepseek-v4-pro" not in critical
-    # Pro remains catalogued (active) so the hold can be lifted without re-adding metadata.
-    assert catalog["models"]["deepseek-v4-pro"]["lifecycle"] == "active"
-    assert "temporary_operator_hold_prefer_flash" in catalog["models"]["deepseek-v4-pro"]["weaknesses"]
+    # Pro is an active hard-implement seat (complex multi-file, hard lookup) —
+    # not the default, not a routine review rung (operator GO 2026-08-13, canary #6703).
+    pro = catalog["models"]["deepseek-v4-pro"]
+    assert pro["lifecycle"] == "active"
+    assert "temporary_operator_hold_prefer_flash" not in pro["weaknesses"]
+    assert {"hard_implement", "complex_coding"} <= set(pro["roles"])
+    pro_candidate = catalog["review_candidates"]["deepseek-v4-pro"]
+    assert pro_candidate["transport"] == "opencode"
+    assert pro_candidate["invocation"].endswith(
+        "opencode run --model deepseek-direct/deepseek-v4-pro --variant high"
+    )
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
