@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7d854630b126",
+  "strategy": "manual-commit",
+  "branch": "kimi/6736-quote-truncation",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-full-reenrich-campaign.md",
+    "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/repair_truncated_definition_cards.py",
+    "tests/test_repair_truncated_definition_cards.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/7d/854630b126/0/metadata.json",
+      "transcript": "/7d/854630b126/0/full.jsonl",
+      "content_hash": "/7d/854630b126/0/content_hash.txt",
+      "prompt": "/7d/854630b126/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 113442,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8176640,
+    "output_tokens": 40370,
+    "api_call_count": 100
+  }
+}

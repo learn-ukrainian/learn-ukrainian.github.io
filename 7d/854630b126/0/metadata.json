@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7d854630b126",
+  "session_id": "session_152883a5-12c5-4f6a-92df-73f40fe0dca9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:54:26.258414Z",
+  "branch": "kimi/6736-quote-truncation",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/atlas-full-reenrich-campaign.md",
+    "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/repair_truncated_definition_cards.py",
+    "tests/test_repair_truncated_definition_cards.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "508230d1d82b",
+  "token_usage": {
+    "input_tokens": 113442,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8176640,
+    "output_tokens": 40370,
+    "api_call_count": 100
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:54:26.215961Z",
+    "agent_lines": 499,
+    "agent_removed": 1,
+    "human_added": 5,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 504,
+    "total_lines_changed": 506,
+    "agent_percentage": 98.81422924901186,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
