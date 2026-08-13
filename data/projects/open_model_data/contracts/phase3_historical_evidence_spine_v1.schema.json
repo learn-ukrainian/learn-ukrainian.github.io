@@ -1,0 +1,511 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_historical_evidence_spine_v1.schema.json",
+  "title": "Phase 3 evidence-first historical Ukrainian coverage spine v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "provider_calls",
+    "bindings",
+    "framework_policy",
+    "authority_policy",
+    "instructional_sequence",
+    "collections",
+    "gaps",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_evidence_spine_v1"},
+    "status": {"const": "EVIDENCE_FIRST_SPINE_DEFINED_SOURCE_GAPS_OPEN"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_denominator_sha256",
+        "historical_full_materialization_gate_sha256",
+        "historical_full_materialization_receipt_file_sha256",
+        "historical_full_materialization_receipt_sha256",
+        "historical_periodization_freeze_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256"
+      ],
+      "properties": {
+        "historical_denominator_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_materialization_gate_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_materialization_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_full_materialization_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "historical_periodization_freeze_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_reboot_prompt_v3_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_recovery_prompt_v2_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "framework_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_framework_id",
+        "instructional_navigation_framework_id",
+        "instructional_navigation_scope",
+        "bound_framework_ids",
+        "frameworks_preserved_without_collapse",
+        "record_assignment_requires_attributed_evidence"
+      ],
+      "properties": {
+        "canonical_framework_id": {"type": "null"},
+        "instructional_navigation_framework_id": {"const": "university_five_stage_synthesis"},
+        "instructional_navigation_scope": {"const": "coarse_navigation_only_not_semantic_gold"},
+        "bound_framework_ids": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "university_five_stage_synthesis",
+              "shevelov_detailed_six_period",
+              "nimchuk_five_stage_with_middle_subperiods"
+            ]
+          }
+        },
+        "frameworks_preserved_without_collapse": {"const": true},
+        "record_assignment_requires_attributed_evidence": {"const": true}
+      }
+    },
+    "authority_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ranked_layers",
+        "direct_attestation_definition",
+        "proto_reconstruction_is_direct_attestation",
+        "learner_exposition",
+        "historical_forms_protected",
+        "old_east_slavic_is_modern_russian",
+        "scalar_language_age_claim_allowed"
+      ],
+      "properties": {
+        "ranked_layers": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "prefixItems": [
+            {"const": "direct_attested_source"},
+            {"const": "qualified_edition_or_translation"},
+            {"const": "qualified_ukrainian_linguistic_analysis"},
+            {"const": "comparative_reconstruction"},
+            {"const": "learner_exposition"}
+          ],
+          "items": false
+        },
+        "direct_attestation_definition": {"type": "string", "minLength": 1},
+        "proto_reconstruction_is_direct_attestation": {"const": false},
+        "learner_exposition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "historical_authority_eligible",
+            "preserve_for_instructional_evaluation",
+            "training_text_eligibility"
+          ],
+          "properties": {
+            "historical_authority_eligible": {"const": false},
+            "preserve_for_instructional_evaluation": {"const": true},
+            "training_text_eligibility": {"const": "pending_separate_rights_and_quality_review"}
+          }
+        },
+        "historical_forms_protected": {"const": true},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "scalar_language_age_claim_allowed": {"const": false}
+      }
+    },
+    "instructional_sequence": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/sequence"}
+    },
+    "collections": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/saintSophia"},
+          {"$ref": "#/$defs/lavra"},
+          {"$ref": "#/$defs/ud"},
+          {"$ref": "#/$defs/plug2"}
+        ]
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/gap"}
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_first_spine_defined",
+        "private_corpus_audit_reproducible",
+        "historical_source_coverage_ready",
+        "historical_source_freeze_ready",
+        "phase3_complete",
+        "phase4_authorized",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "evidence_first_spine_defined": {"const": true},
+        "private_corpus_audit_reproducible": {"const": true},
+        "historical_source_coverage_ready": {"const": false},
+        "historical_source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nonnegative": {"type": "integer", "minimum": 0},
+    "stringCountMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/nonnegative"}
+    },
+    "sequence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence_id",
+        "position",
+        "label_uk",
+        "evidence_mode",
+        "collection_ids",
+        "coverage_state",
+        "purpose"
+      ],
+      "properties": {
+        "sequence_id": {
+          "enum": [
+            "kyiv_medieval_epigraphy",
+            "old_ukrainian_documentary_and_literary",
+            "middle_ukrainian_documentary_and_print",
+            "new_and_modern_ukrainian",
+            "comparative_reconstruction_backlink"
+          ]
+        },
+        "position": {"type": "integer", "minimum": 1, "maximum": 5},
+        "label_uk": {"type": "string", "minLength": 1},
+        "evidence_mode": {"enum": ["direct_attestation", "direct_text", "comparative_reconstruction"]},
+        "collection_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "coverage_state": {"enum": ["materialized_with_open_gaps", "insufficient", "large_but_not_complete", "comparative_only"]},
+        "purpose": {"type": "string", "minLength": 1}
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reuse_scope", "source_text_committed"],
+      "properties": {
+        "status": {"enum": ["admitted", "publicly_downloadable_license_not_declared", "restricted_pending_explicit_clearance", "unknown_pending_review"]},
+        "reuse_scope": {"type": "string", "minLength": 1},
+        "source_text_committed": {"const": false}
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url", "locator_role", "local_bytes_acquired"],
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "format": "uri", "pattern": "^https?://"},
+        "locator_role": {"enum": ["source_portal", "api_root", "official_bulk_download_api", "official_bulk_download_implementation", "dataset_documentation", "official_monument_evidence", "bibliographic_catalog", "foundational_bibliography_record", "scholarly_reanalysis_doi", "dataset_repository", "dataset_doi"]},
+        "local_bytes_acquired": {"type": "boolean"}
+      }
+    },
+    "sophiaProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["portal_version", "official_bulk_download", "foundational_dataset", "part_ix", "gippius_2023", "ai_assistance", "license_evidence"],
+      "properties": {
+        "portal_version": {"const": "v1.6"},
+        "official_bulk_download": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["download_label", "api_url", "same_public_api_stream", "record_count_at_snapshot"],
+          "properties": {
+            "download_label": {"const": "Download all inscription data"},
+            "api_url": {"const": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2"},
+            "same_public_api_stream": {"const": true},
+            "record_count_at_snapshot": {"const": 4157}
+          }
+        },
+        "foundational_dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["edition_title", "volume_count", "publication_year_start", "publication_year_end"],
+          "properties": {
+            "edition_title": {"const": "Корпус Графіті Софії Київської"},
+            "volume_count": {"const": 12},
+            "publication_year_start": {"const": 2009},
+            "publication_year_end": {"const": 2020}
+          }
+        },
+        "part_ix": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bibliography_id", "publication_year", "scope", "linked_public_records"],
+          "properties": {
+            "bibliography_id": {"const": 11},
+            "publication_year": {"const": 2019},
+            "scope": {"const": "північні внутрішня та зовнішня галереї"},
+            "linked_public_records": {"const": 306}
+          }
+        },
+        "gippius_2023": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["doi", "target", "role", "portal_bibliography_present"],
+          "properties": {
+            "doi": {"const": "10.4324/9781003256236-14"},
+            "target": {"const": "Kyiv graffito No. 108"},
+            "role": {"const": "qualified_secondary_reanalysis_candidate"},
+            "portal_bibliography_present": {"const": false}
+          }
+        },
+        "ai_assistance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["disclosed_by_official_documentation", "affected_field_classes", "affected_record_membership_known", "human_gold_eligible_without_review"],
+          "properties": {
+            "disclosed_by_official_documentation": {"const": true},
+            "affected_field_classes": {
+              "type": "array",
+              "prefixItems": [
+                {"const": "english_translation_and_commentary"},
+                {"const": "romanisation"}
+              ],
+              "items": false
+            },
+            "affected_record_membership_known": {"const": false},
+            "human_gold_eligible_without_review": {"const": false}
+          }
+        },
+        "license_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["official_docs_describe_dataset_as_open", "official_docs_describe_api_as_open_and_reusable", "explicit_data_license_at_pinned_sources", "korniienko_media_assets", "operator_use_decision"],
+          "properties": {
+            "official_docs_describe_dataset_as_open": {"const": true},
+            "official_docs_describe_api_as_open_and_reusable": {"const": true},
+            "explicit_data_license_at_pinned_sources": {"type": "null"},
+            "korniienko_media_assets": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["asset_count_at_snapshot", "license_label", "license_version_declared", "included_in_text_training"],
+              "properties": {
+                "asset_count_at_snapshot": {"const": 6477},
+                "license_label": {"const": "CC BY-NC"},
+                "license_version_declared": {"const": false},
+                "included_in_text_training": {"const": false}
+              }
+            },
+            "operator_use_decision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["decision_date", "decision", "scope", "full_publications_in_scope", "binary_media_in_scope", "response_policy"],
+              "properties": {
+                "decision_date": {"const": "2026-08-12"},
+                "decision": {"const": "proceed_without_pre_use_permission_wait"},
+                "scope": {"const": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance"},
+                "full_publications_in_scope": {"const": false},
+                "binary_media_in_scope": {"const": false},
+                "response_policy": {"const": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "saintSophia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection_id", "evidence_layer", "source_kind", "custody_state", "record_count", "source_sha256", "corpus_role", "modern_correction_eligible", "facts", "rights", "locators"],
+      "properties": {
+        "collection_id": {"const": "saint-sophia-inscriptions"},
+        "evidence_layer": {"const": "direct_attested_source"},
+        "source_kind": {"const": "epigraphy"},
+        "custody_state": {"const": "materialized"},
+        "record_count": {"const": 4157},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "corpus_role": {"const": "auxiliary_historical_evidence"},
+        "modern_correction_eligible": {"const": false},
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["retrieval_scope", "text_bearing", "non_textual_or_no_text", "quarantined_metadata", "known_identified_total_lower_bound", "known_unexposed_residual", "stage_labels_assigned", "valid_date_intervals", "exact_year_intervals", "century_or_wider_intervals", "missing_date_intervals", "invalid_date_intervals", "old_date_band", "middle_date_band", "language_labels", "writing_system_labels", "source_provenance"],
+          "properties": {
+            "retrieval_scope": {"const": "complete_current_public_api"},
+            "text_bearing": {"const": 4144},
+            "non_textual_or_no_text": {"const": 11},
+            "quarantined_metadata": {"const": 2},
+            "known_identified_total_lower_bound": {"type": "integer", "minimum": 7000},
+            "known_unexposed_residual": {"const": true},
+            "stage_labels_assigned": {"const": 0},
+            "valid_date_intervals": {"$ref": "#/$defs/nonnegative"},
+            "exact_year_intervals": {"$ref": "#/$defs/nonnegative"},
+            "century_or_wider_intervals": {"$ref": "#/$defs/nonnegative"},
+            "missing_date_intervals": {"$ref": "#/$defs/nonnegative"},
+            "invalid_date_intervals": {"$ref": "#/$defs/nonnegative"},
+            "old_date_band": {"$ref": "#/$defs/dateBand"},
+            "middle_date_band": {"$ref": "#/$defs/dateBand"},
+            "language_labels": {"$ref": "#/$defs/stringCountMap"},
+            "writing_system_labels": {"$ref": "#/$defs/stringCountMap"},
+            "source_provenance": {"$ref": "#/$defs/sophiaProvenance"}
+          }
+        },
+        "rights": {"$ref": "#/$defs/rights"},
+        "locators": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "dateBand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["year_start", "year_end", "interval_wholly_inside", "interval_overlaps", "text_bearing_ukrainian_label_wholly_inside", "semantic_stage_assignment"],
+      "properties": {
+        "year_start": {"type": "integer"},
+        "year_end": {"type": "integer"},
+        "interval_wholly_inside": {"$ref": "#/$defs/nonnegative"},
+        "interval_overlaps": {"$ref": "#/$defs/nonnegative"},
+        "text_bearing_ukrainian_label_wholly_inside": {"$ref": "#/$defs/nonnegative"},
+        "semantic_stage_assignment": {"const": "pending_qualified_review"}
+      }
+    },
+    "lavra": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection_id", "evidence_layer", "source_kind", "custody_state", "record_count", "source_sha256", "corpus_role", "modern_correction_eligible", "facts", "rights", "locators"],
+      "properties": {
+        "collection_id": {"const": "kyiv-pechersk-lavra-graffiti"},
+        "evidence_layer": {"const": "direct_attested_source"},
+        "source_kind": {"const": "epigraphy"},
+        "custody_state": {"const": "not_materialized"},
+        "record_count": {"type": "null"},
+        "source_sha256": {"type": "null"},
+        "corpus_role": {"const": "acquisition_candidate_direct_historical_evidence"},
+        "modern_correction_eligible": {"const": false},
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["corpus_count_known", "source_bytes_acquired", "rights_verified", "separate_from_saint_sophia"],
+          "properties": {
+            "corpus_count_known": {"const": false},
+            "source_bytes_acquired": {"const": false},
+            "rights_verified": {"const": false},
+            "separate_from_saint_sophia": {"const": true}
+          }
+        },
+        "rights": {"$ref": "#/$defs/rights"},
+        "locators": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "ud": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection_id", "evidence_layer", "source_kind", "custody_state", "record_count", "source_sha256", "corpus_role", "modern_correction_eligible", "facts", "rights", "locators"],
+      "properties": {
+        "collection_id": {"const": "ud-old-east-slavic-ruthenian-05a029e00ccf"},
+        "evidence_layer": {"const": "qualified_edition_or_translation"},
+        "source_kind": {"const": "documentary_treebank"},
+        "custody_state": {"const": "materialized"},
+        "record_count": {"const": 82},
+        "source_sha256": {"type": "null"},
+        "corpus_role": {"const": "historical_recognition_and_analysis_candidate"},
+        "modern_correction_eligible": {"const": false},
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sentences", "token_rows", "exact_dated_documents", "exact_years", "undated_documents", "periodization_assignment_state", "file_sha256"],
+          "properties": {
+            "sentences": {"const": 1311},
+            "token_rows": {"const": 35081},
+            "exact_dated_documents": {"const": 4},
+            "exact_years": {"type": "array", "prefixItems": [{"const": 1413}, {"const": 1436}, {"const": 1456}, {"const": 1473}], "items": false},
+            "undated_documents": {"const": 78},
+            "periodization_assignment_state": {"const": "unresolved"},
+            "file_sha256": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["orv_ruthenian-ud-dev.conllu", "orv_ruthenian-ud-test.conllu", "orv_ruthenian-ud-train.conllu"],
+              "properties": {
+                "orv_ruthenian-ud-dev.conllu": {"$ref": "#/$defs/sha256"},
+                "orv_ruthenian-ud-test.conllu": {"$ref": "#/$defs/sha256"},
+                "orv_ruthenian-ud-train.conllu": {"$ref": "#/$defs/sha256"}
+              }
+            }
+          }
+        },
+        "rights": {"$ref": "#/$defs/rights"},
+        "locators": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "plug2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection_id", "evidence_layer", "source_kind", "custody_state", "record_count", "source_sha256", "corpus_role", "modern_correction_eligible", "facts", "rights", "locators"],
+      "properties": {
+        "collection_id": {"const": "plug2-zenodo-19482961"},
+        "evidence_layer": {"const": "direct_attested_source"},
+        "source_kind": {"const": "historical_text_corpus"},
+        "custody_state": {"const": "materialized"},
+        "record_count": {"const": 56080},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "corpus_role": {"const": "new_ukrainian_historical_text_evidence"},
+        "modern_correction_eligible": {"const": false},
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["all_documents", "uk_token_sum", "date_min", "date_max", "exact_dated_documents", "pre_1800_documents", "archive_sha256", "materialized_record_count"],
+          "properties": {
+            "all_documents": {"const": 56245},
+            "uk_token_sum": {"const": 71802066},
+            "date_min": {"const": 1816},
+            "date_max": {"const": 1954},
+            "exact_dated_documents": {"const": 56080},
+            "pre_1800_documents": {"const": 0},
+            "archive_sha256": {"$ref": "#/$defs/sha256"},
+            "materialized_record_count": {"const": 1910748}
+          }
+        },
+        "rights": {"$ref": "#/$defs/rights"},
+        "locators": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gap_id", "kind", "state", "blocking_for", "nonblocking_for", "evidence", "next_action", "do_not_claim"],
+      "properties": {
+        "gap_id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "state": {"enum": ["open", "accepted_operational_risk"]},
+        "blocking_for": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "nonblocking_for": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "evidence": {"type": "string", "minLength": 1},
+        "next_action": {"type": "string", "minLength": 1},
+        "do_not_claim": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
