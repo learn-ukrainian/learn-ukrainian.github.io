@@ -48,6 +48,10 @@ UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freez
 VSPU_ADDITIVE_POLICY_PATH = DATA / "admission/phase3_vspu_additive_university_source_policy_v3.json"
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+SAINT_SOPHIA_RECONCILIATION_FILE_SHA256 = "3e5188580413261e67a3b94e884113dd932b7054bebeccd4fe9a21b8012e4997"
+SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256 = "50f35150acb9e4840e3474e1c6a889bd357eeeb246cb3498a46c7cbc00fec0d4"
+SAINT_SOPHIA_PRE_DATABASE_SHA256 = "de9a46838be3a4a6a2eb979ebdaf64b4d3d9984134b0074281d01b9cfd384876"
+SAINT_SOPHIA_POST_DATABASE_SHA256 = "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"
 PRIVATE_FILE_MODE = 0o600
 
 
@@ -570,13 +574,41 @@ def validate_readiness(value: Mapping[str, Any]) -> dict[str, Any]:
     vspu_denominator = receipt["denominators"].get("vspu_additive_university")
     require((vspu_denominator is not None) is vspu_bound, "VSPU denominator does not equal binding presence")
     if vspu_bound:
+        require(sophia_keys.issubset(bindings), "VSPU successor chain lacks Saint Sophia reconciliation binding")
         require(
             bindings["sources_database_sha256"] == _validate_sources_database(vspu_audit.cutover.DEFAULT_LIVE_DB),
             "live VSPU successor database binding drift",
         )
+        current_university, current_university_file_sha256 = _validate_university_freeze()
+        require(
+            bindings["university_content_audit_freeze_file_sha256"] == current_university_file_sha256,
+            "university freeze file binding drift",
+        )
+        require(
+            bindings["university_content_audit_freeze_receipt_sha256"] == current_university["receipt_sha256"],
+            "university freeze receipt binding drift",
+        )
+        require(
+            current_university["database"]["sha256"] == SAINT_SOPHIA_PRE_DATABASE_SHA256,
+            "university freeze does not equal Saint Sophia predecessor",
+        )
+        expected_sophia_bindings = {
+            "saint_sophia_reconciliation_receipt_file_sha256": SAINT_SOPHIA_RECONCILIATION_FILE_SHA256,
+            "saint_sophia_reconciliation_receipt_sha256": SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256,
+            "saint_sophia_reconciliation_implementation_sha256": sha256_file(
+                Path(sophia_reconciliation.__file__).resolve()
+            ),
+            "saint_sophia_reconciliation_schema_sha256": sha256_file(sophia_reconciliation.SCHEMA_PATH),
+        }
+        for key, expected in expected_sophia_bindings.items():
+            require(bindings[key] == expected, f"{key} drift")
         current_vspu, current_file_sha256, current_policy_sha256 = _validate_vspu_post_ingest_audit(
             vspu_audit.DEFAULT_RECEIPT_PATH,
             current_database_sha256=bindings["sources_database_sha256"],
+        )
+        require(
+            current_vspu["database"]["pre_sha256"] == SAINT_SOPHIA_POST_DATABASE_SHA256,
+            "VSPU predecessor does not equal Saint Sophia successor",
         )
         expected_vspu_bindings = {
             "vspu_post_ingest_audit_file_sha256": current_file_sha256,

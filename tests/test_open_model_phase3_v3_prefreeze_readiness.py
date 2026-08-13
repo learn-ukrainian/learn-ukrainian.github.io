@@ -246,7 +246,7 @@ def test_vspu_receipt_extends_sophia_and_ua_context_chain_without_opening_gates(
 ) -> None:
     _stub_external_receipts(monkeypatch)
     university_sha = readiness.university.EXPECTED_DATABASE["sha256"]
-    sophia_sha = "c" * 64
+    sophia_sha = readiness.SAINT_SOPHIA_POST_DATABASE_SHA256
     vspu_sha = "d" * 64
     policy_sha = "e" * 64
     monkeypatch.setattr(readiness, "_validate_sources_database", lambda _path: vspu_sha)
@@ -273,7 +273,10 @@ def test_vspu_receipt_extends_sophia_and_ua_context_chain_without_opening_gates(
         _path: Path, *, university_database_sha256: str, current_database_sha256: str
     ) -> tuple[dict, str]:
         sophia_calls.append((university_database_sha256, current_database_sha256))
-        return {"receipt_sha256": SHA_B}, SHA_A
+        return (
+            {"receipt_sha256": readiness.SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256},
+            readiness.SAINT_SOPHIA_RECONCILIATION_FILE_SHA256,
+        )
 
     def validate_ua(_path: Path, database_sha256: str) -> tuple[dict, str]:
         ua_database_bindings.append(database_sha256)
@@ -414,6 +417,52 @@ def test_vspu_validator_rejects_resealed_authority_escalation(tmp_path: Path) ->
             path,
             current_database_sha256=readiness.vspu_audit.EXPECTED_POST_DB_SHA256,
         )
+
+
+def test_validator_rejects_fabricated_saint_sophia_binding_in_vspu_chain(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_external_receipts(monkeypatch)
+    vspu_sha = "d" * 64
+    vspu_receipt = {
+        "receipt_sha256": SHA_A,
+        "database": {
+            "pre_sha256": readiness.SAINT_SOPHIA_POST_DATABASE_SHA256,
+            "post_sha256": vspu_sha,
+            "target_rows": 158,
+            "target_fts_rows": 158,
+            "target_section_rows": 158,
+            "target_linked_rows": 158,
+        },
+    }
+    monkeypatch.setattr(readiness, "_validate_sources_database", lambda _path: vspu_sha)
+    monkeypatch.setattr(
+        readiness,
+        "_validate_vspu_post_ingest_audit",
+        lambda _path, *, current_database_sha256: (vspu_receipt, SHA_B, SHA_A),
+    )
+    monkeypatch.setattr(
+        readiness,
+        "_validate_saint_sophia_reconciliation_receipt",
+        lambda _path, *, university_database_sha256, current_database_sha256: (
+            {"receipt_sha256": readiness.SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256},
+            readiness.SAINT_SOPHIA_RECONCILIATION_FILE_SHA256,
+        ),
+    )
+    receipt = readiness.build_readiness(
+        phase3_reboot_prompt_path=Path("unused"),
+        sources_database_path=Path("unused"),
+        ua_gec_root=Path("unused"),
+        ua_gec_context_receipt_path=Path("unused"),
+        historical_full_receipt_path=Path("unused"),
+        saint_sophia_reconciliation_receipt_path=Path("sophia.json"),
+        vspu_post_ingest_audit_path=Path("vspu.json"),
+    )
+    receipt["bindings"]["saint_sophia_reconciliation_receipt_sha256"] = SHA_A
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+
+    with pytest.raises(readiness.PrefreezeReadinessError, match="saint_sophia_reconciliation_receipt_sha256 drift"):
+        readiness.validate_readiness(receipt)
 
 
 def test_validator_rejects_saint_sophia_readiness_without_matching_bindings(
