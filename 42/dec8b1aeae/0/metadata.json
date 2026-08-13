@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "42dec8b1aeae",
+  "session_id": "fleet-17553d6682d64d67bc4feffc31716456",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T14:53:48.637255Z",
+  "branch": "cursor/practice-heritage-finalize",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/heritage_pairs.wave1-calque.yaml",
+    "data/lexicon/heritage_pairs.yaml"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "5bb6c6572b46",
+  "checkpoint_transcript_start": 2,
+  "transcript_lines_at_start": 2,
+  "compact_transcript_start": 1,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T14:53:48.616898Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
