@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "715175cdfff8",
+  "strategy": "manual-commit",
+  "branch": "kimi/ds-pro-hard-tasks",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-role-scorecard.md",
+    "docs/best-practices/fleet-shared-doctrine.md",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/config/model_catalog.yaml",
+    "tests/test_model_catalog.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/71/5175cdfff8/0/metadata.json",
+      "transcript": "/71/5175cdfff8/0/full.jsonl",
+      "content_hash": "/71/5175cdfff8/0/content_hash.txt",
+      "prompt": "/71/5175cdfff8/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 63288,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3656704,
+    "output_tokens": 19717,
+    "api_call_count": 68
+  }
+}

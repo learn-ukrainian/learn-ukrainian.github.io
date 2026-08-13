@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "715175cdfff8",
+  "session_id": "session_71e73dc0-bef3-438e-84c5-5630e6117eaf",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T13:30:38.503851Z",
+  "branch": "kimi/ds-pro-hard-tasks",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/fleet-driver-routing.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-role-scorecard.md",
+    "docs/best-practices/fleet-shared-doctrine.md",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/config/model_catalog.yaml",
+    "tests/test_model_catalog.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "1a0f80d11d18",
+  "token_usage": {
+    "input_tokens": 63288,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3656704,
+    "output_tokens": 19717,
+    "api_call_count": 68
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T13:30:38.463219Z",
+    "agent_lines": 59,
+    "agent_removed": 35,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 59,
+    "total_lines_changed": 94,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

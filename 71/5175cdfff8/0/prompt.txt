@@ -1,0 +1,42 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/ds-pro-hard-tasks
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: enable DeepSeek V4 Pro for hard tasks (operator GO 2026-08-13)
+
+## CAPACITY_CARD
+pick=kimi k3-256k — mechanical policy pin; Flash stays default
+## ROUTING_CARD_V1
+task_id: ds-pro-hard-tasks
+tier: heap
+model_x_harness: kimi/k3-256k
+why_this_tier: text + catalog pin, no architecture
+owned_paths: agents_extensions/shared/rules/ scripts/config/model_catalog.yaml scripts/agent_runtime/adapters/deepseek.py docs/best-practices/agent-activity-matrix.md docs/best-practices/fleet-role-scorecard.md docs/best-practices/fleet-shared-doctrine.md
+acceptance_cmd: rg -n "DO NOT USE" agents_extensions/shared/rules/model-assignment.md agents_extensions/shared/rules/fleet-driver-routing.md scripts/config/model_catalog.yaml docs/best-practices/agent-activity-matrix.md docs/best-practices/fleet-shared-doctrine.md docs/best-practices/fleet-role-scorecard.md scripts/agent_runtime/adapters/deepseek.py ; test $? -eq 0
+
+Wait — acceptance is: **zero remaining "Pro DO NOT USE" / "Never Pro" as live policy** in those files (historical bakeoff notes may stay if clearly dated 2026-08-08 and marked superseded). Positive pin must exist:
+
+`Flash @ high = everyday DeepSeek. Pro @ high = hard implement only (complex multi-file, hard lookup). Language/VESUM/folk still forbidden. First-party deepseek-direct only. Default --agent deepseek remains Flash.`
+
+## Operator GO (present tense, 2026-08-13)
+Enable DeepSeek V4 Pro for **hard tasks**. Canary: Pro #6703 merged `9c44e63f63` @ high; Flash #6702 canary also shipped. Do **not** make Pro the default.
+
+## Do
+1. Edit **source** `agents_extensions/shared/rules/model-assignment.md` and `fleet-driver-routing.md` first. Never hand-edit `.claude/` / `.codex/` / `.agent/` copies.
+2. Replace live "Pro DO NOT USE" / "Flash only" / "Never Pro" with the pin above. Date the new pin 2026-08-13. Keep language-lane exclusion.
+3. `scripts/config/model_catalog.yaml`: drop `temporary_operator_hold_prefer_flash` / "DO NOT USE" on `deepseek-v4-pro`. Roles: hard implement / complex coding. Flash stays default + review-ladder volume rung. Do **not** put Pro on the routine review ladder (volume).
+4. `scripts/agent_runtime/adapters/deepseek.py` header: Pro is reachable via `--model deepseek-v4-pro` for hard tasks; default remains Flash.
+5. Docs: `docs/best-practices/agent-activity-matrix.md`, `fleet-role-scorecard.md`, `fleet-shared-doctrine.md`.
+6. Run `npm run agents:deploy` if the repo requires it after `agents_extensions/` edits (do not skip; do not hand-edit deploy trees).
+7. Do not change Hermes `ask-hermes` defaults. Do not touch language lanes.
+8. Commit `docs(fleet): DeepSeek V4 Pro @ high for hard tasks (Flash remains default)` trailer `X-Agent: kimi/ds-pro-hard-tasks`. PR. **No merge.**
+
+Cite: operator GO 2026-08-13; canary PR #6703.
