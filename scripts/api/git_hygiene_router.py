@@ -247,19 +247,30 @@ def _disk_bytes(path: Path) -> int | None:
 def _active_task_ids(project_root: Path | None = None) -> set[str]:
     tasks_dir = (project_root or PROJECT_ROOT) / "batch_state" / "tasks"
     active: set[str] = set()
+    if not tasks_dir.exists():
+        return active
     try:
-        task_files = list(tasks_dir.glob("*.json"))
+        entries = list(os.scandir(str(tasks_dir)))
     except OSError:
         return active
 
-    for path in task_files:
+    for entry in entries:
+        if not entry.name.endswith(".json"):
+            continue
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
+            with open(entry.path, "rb") as f:
+                raw = f.read(4096)
+        except OSError:
+            continue
+        if b'"running"' not in raw:
+            continue
+        try:
+            payload = json.loads(raw.decode("utf-8", errors="replace"))
         except (OSError, json.JSONDecodeError):
             continue
-        if payload.get("status") != "running":
+        if not isinstance(payload, dict) or payload.get("status") != "running":
             continue
-        active.add(path.stem)
+        active.add(entry.name[:-5])
         task_id = payload.get("task_id")
         if isinstance(task_id, str) and task_id:
             active.add(task_id)
