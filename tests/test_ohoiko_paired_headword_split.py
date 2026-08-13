@@ -65,7 +65,7 @@ def test_recover_latin_lookalike_twarina_and_zhinka() -> None:
     assert recover_latin_lookalike("чистий") == "чистий"
 
 
-def test_resolve_leg_lemma_recovers_ocr_lookalikes() -> None:
+def test_resolve_leg_lemma_recovers_ocr_lookalikes(requires_vesum_db) -> None:
     assert resolve_leg_lemma("тваринa") == "тварина"
     assert resolve_leg_lemma("жiнка") == "жінка"
     assert resolve_leg_lemma("футболiст") == "футболіст"
