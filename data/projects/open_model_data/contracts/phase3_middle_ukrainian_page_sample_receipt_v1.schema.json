@@ -1,0 +1,377 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_middle_ukrainian_page_sample_receipt_v1.schema.json",
+  "title": "Phase 3 private Middle Ukrainian page-sample receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "source_binding",
+    "decoder_binding",
+    "implementation_binding",
+    "selection",
+    "rendering",
+    "private_packet",
+    "review_contract",
+    "rights_and_custody",
+    "safeguards",
+    "residuals",
+    "text_free",
+    "provider_calls",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_middle_ukrainian_page_sample_receipt_v1"},
+    "implementation_version": {"const": "phase3_middle_ukrainian_page_sample_v1"},
+    "source_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_filename",
+        "source_bytes",
+        "source_sha256",
+        "predecessor_extraction_receipt_file_sha256",
+        "predecessor_extraction_receipt_sha256",
+        "predecessor_private_jsonl_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "boichuk-zhytomyr-municipal-act-book-1582-1588-1965"},
+        "source_filename": {"const": "boichuk-aktova-knyha-zhytomyr-1582-1588-1965.djvu"},
+        "source_bytes": {"const": 14631551},
+        "source_sha256": {"const": "3f274c60e4411b8df925008c318a92db00dec5cc211d05172e0896fce7802f9e"},
+        "predecessor_extraction_receipt_file_sha256": {"const": "dba0513079203fafbba48faf88112fba533ad706217ef12b8d52bae090f37bdf"},
+        "predecessor_extraction_receipt_sha256": {"const": "defe03ac154e4184d29f60266dbcd9eeed217c189f7fd88832afa50b021f7496"},
+        "predecessor_private_jsonl_sha256": {"const": "6368ab7308dc579a324ba29c233d7218e1a0735d127812f8b34e16cca49f4f0a"}
+      }
+    },
+    "decoder_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project",
+        "release_tag",
+        "asset_url",
+        "version",
+        "bytes",
+        "sha256",
+        "decoder_binary_copied_to_output",
+        "decoder_license_expression_verified",
+        "execution_tool_only_not_source_authority"
+      ],
+      "properties": {
+        "project": {"const": "DjVu.js"},
+        "release_tag": {"const": "L.0.5.4_V.0.10.1"},
+        "asset_url": {"const": "https://github.com/RussCoder/djvujs/releases/download/L.0.5.4_V.0.10.1/djvu.js"},
+        "version": {"const": "0.5.4"},
+        "bytes": {"const": 556634},
+        "sha256": {"const": "10a831d62cc7ced39c30c7350a11410402d082a0f0a5b073a88d3d7ca662add3"},
+        "decoder_binary_copied_to_output": {"const": false},
+        "decoder_license_expression_verified": {"const": false},
+        "execution_tool_only_not_source_authority": {"const": true}
+      }
+    },
+    "implementation_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["controller_sha256", "renderer_sha256", "receipt_schema_sha256"],
+      "properties": {
+        "controller_sha256": {"$ref": "#/$defs/sha256"},
+        "renderer_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "complete_source_pages",
+        "complete_text_layer_pages",
+        "sample_pages",
+        "sample_text_layer_pages",
+        "sample_missing_text_layer_pages",
+        "selected_pages",
+        "samples",
+        "semantic_representativeness_claimed",
+        "random_sampling_used"
+      ],
+      "properties": {
+        "method": {"const": "content_blind_structural_interval_and_density_anchors"},
+        "complete_source_pages": {"const": 196},
+        "complete_text_layer_pages": {"const": 194},
+        "sample_pages": {"const": 16},
+        "sample_text_layer_pages": {"const": 14},
+        "sample_missing_text_layer_pages": {"const": 2},
+        "selected_pages": {"const": [1, 2, 3, 4, 20, 40, 60, 80, 100, 120, 140, 160, 163, 180, 195, 196]},
+        "samples": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/sample"}
+        },
+        "semantic_representativeness_claimed": {"const": false},
+        "random_sampling_used": {"const": false}
+      }
+    },
+    "rendering": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "full_resolution",
+        "lossless_png",
+        "rgba_bit_depth",
+        "png_color_type",
+        "png_filter",
+        "png_interlaced",
+        "zlib_level",
+        "node_version",
+        "zlib_version",
+        "ocr_used",
+        "normalization_applied",
+        "inferred_character_repairs"
+      ],
+      "properties": {
+        "method": {"const": "pinned_djvujs_getImageData_node_zlib_png"},
+        "full_resolution": {"const": true},
+        "lossless_png": {"const": true},
+        "rgba_bit_depth": {"const": 8},
+        "png_color_type": {"const": 6},
+        "png_filter": {"const": 0},
+        "png_interlaced": {"const": false},
+        "zlib_level": {"const": 9},
+        "node_version": {"type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "zlib_version": {"type": "string", "minLength": 1},
+        "ocr_used": {"const": false},
+        "normalization_applied": {"const": false},
+        "inferred_character_repairs": {"const": false}
+      }
+    },
+    "private_packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage",
+        "selected_text",
+        "review_html",
+        "review_response_template",
+        "image_directory",
+        "image_count",
+        "total_png_bytes",
+        "images"
+      ],
+      "properties": {
+        "storage": {"const": "private_google_drive"},
+        "selected_text": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["filename", "bytes", "sha256", "rows"],
+          "properties": {
+            "filename": {"const": "selected-page-text-private-v1.jsonl"},
+            "bytes": {"type": "integer", "minimum": 1},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "rows": {"const": 16}
+          }
+        },
+        "review_html": {
+          "allOf": [
+            {"$ref": "#/$defs/private_file"},
+            {"properties": {"filename": {"const": "page-text-review-private-v1.html"}}}
+          ]
+        },
+        "review_response_template": {
+          "allOf": [
+            {"$ref": "#/$defs/private_file"},
+            {"properties": {"filename": {"const": "page-text-review-response-template-private-v1.json"}}}
+          ]
+        },
+        "image_directory": {"const": "page-images"},
+        "image_count": {"const": 16},
+        "total_png_bytes": {"type": "integer", "minimum": 1},
+        "images": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/image"}
+        }
+      }
+    },
+    "review_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_ready_for_qualified_review",
+        "review_response_status",
+        "qualified_reviewer_identified",
+        "visual_text_image_alignment_quality_verified",
+        "embedded_text_quality_verified",
+        "historical_language_fidelity_verified",
+        "document_level_stage_assignment_verified"
+      ],
+      "properties": {
+        "packet_ready_for_qualified_review": {"const": true},
+        "review_response_status": {"const": "pending"},
+        "qualified_reviewer_identified": {"const": false},
+        "visual_text_image_alignment_quality_verified": {"const": false},
+        "embedded_text_quality_verified": {"const": false},
+        "historical_language_fidelity_verified": {"const": false},
+        "document_level_stage_assignment_verified": {"const": false}
+      }
+    },
+    "rights_and_custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_and_packet_storage",
+        "private_research_and_source_evidence_only",
+        "public_repo_contains_source_text_or_page_images",
+        "public_redistribution_authorized",
+        "training_export_authorized",
+        "adapt_or_remove_on_substantiated_notice"
+      ],
+      "properties": {
+        "source_and_packet_storage": {"const": "private_google_drive"},
+        "private_research_and_source_evidence_only": {"const": true},
+        "public_repo_contains_source_text_or_page_images": {"const": false},
+        "public_redistribution_authorized": {"const": false},
+        "training_export_authorized": {"const": false},
+        "adapt_or_remove_on_substantiated_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "provider_calls",
+        "source_freeze_ready",
+        "phase3_complete",
+        "phase4_authorized",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "provider_calls": {"const": false},
+        "source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qualified_page_sample_review_required",
+        "qualified_historical_language_review_required",
+        "review_response_must_be_separate_and_immutable",
+        "additional_middle_ukrainian_regions_and_genres_required",
+        "middle_ukrainian_coverage_gap_closed"
+      ],
+      "properties": {
+        "qualified_page_sample_review_required": {"const": true},
+        "qualified_historical_language_review_required": {"const": true},
+        "review_response_must_be_separate_and_immutable": {"const": true},
+        "additional_middle_ukrainian_regions_and_genres_required": {"const": true},
+        "middle_ukrainian_coverage_gap_closed": {"const": false}
+      }
+    },
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reason": {
+      "type": "string",
+      "enum": [
+        "front_matter_cover",
+        "front_matter_title",
+        "front_matter_anchor",
+        "low_density_anchor",
+        "missing_text_layer",
+        "systematic_interval_20",
+        "maximum_codepoint_density",
+        "late_low_density_anchor",
+        "alternate_geometry",
+        "terminal_page"
+      ]
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page_number",
+        "reasons",
+        "text_layer_present",
+        "decoded_text_code_points",
+        "decoded_text_utf8_bytes",
+        "text_zone_count",
+        "page_width",
+        "page_height",
+        "dpi",
+        "rotation",
+        "decoded_text_sha256",
+        "text_zones_sha256"
+      ],
+      "properties": {
+        "page_number": {"type": "integer", "minimum": 1, "maximum": 196},
+        "reasons": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/reason"}},
+        "text_layer_present": {"type": "boolean"},
+        "decoded_text_code_points": {"type": "integer", "minimum": 0},
+        "decoded_text_utf8_bytes": {"type": "integer", "minimum": 0},
+        "text_zone_count": {"type": "integer", "minimum": 0},
+        "page_width": {"type": "integer", "minimum": 1},
+        "page_height": {"type": "integer", "minimum": 1},
+        "dpi": {"type": "integer", "minimum": 1},
+        "rotation": {"enum": [0, 90, 180, 270]},
+        "decoded_text_sha256": {"$ref": "#/$defs/sha256"},
+        "text_zones_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "private_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "bytes", "sha256"],
+      "properties": {
+        "filename": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page_number",
+        "filename",
+        "width",
+        "height",
+        "rgba_bytes",
+        "rgba_sha256",
+        "png_bytes",
+        "png_sha256",
+        "dpi",
+        "rotation"
+      ],
+      "properties": {
+        "page_number": {"type": "integer", "minimum": 1, "maximum": 196},
+        "filename": {"type": "string", "pattern": "^page-[0-9]{3}\\.png$"},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "rgba_bytes": {"type": "integer", "minimum": 4},
+        "rgba_sha256": {"$ref": "#/$defs/sha256"},
+        "png_bytes": {"type": "integer", "minimum": 1},
+        "png_sha256": {"$ref": "#/$defs/sha256"},
+        "dpi": {"type": "integer", "minimum": 1},
+        "rotation": {"enum": [0, 90, 180, 270]}
+      }
+    }
+  }
+}
