@@ -4417,6 +4417,7 @@ describe('LexiconPractice', () => {
     const stats: SessionSummaryStats = {
       correct: 18,
       lapsed: 2,
+      roundSize: 20,
       advancedToReview: [],
       streak: 5,
       nextDueLabel: null,
@@ -4870,6 +4871,159 @@ describe('LexiconPractice', () => {
       await user.click(screen.getByRole('button', { name: 'До колод' }));
       expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
       expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length));
+    });
+  });
+
+  describe('#6720/#6721/#6723 practice UX regressions', () => {
+    function threeFlashcardDeck(): PracticeDeckData {
+      const lexemes = [
+        lexeme('knyha', 'книга', 'book', { nominative: 'книга', accusative: 'книгу', locative: 'книзі' }),
+        lexeme('robota', 'робота', 'work', { nominative: 'робота', accusative: 'роботу', locative: 'роботі' }),
+        lexeme('misto', 'місто', 'city', { nominative: 'місто', accusative: 'місто', locative: 'місті' }),
+      ];
+      return {
+        deckVersion: 'test-6720',
+        level: 'A1',
+        lexemes,
+        index: lexemes.map((entry, index) => ({
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: index,
+        })),
+        cloze: [],
+      };
+    }
+
+    test('#6720 session badge keeps one denominator for the whole round and the summary agrees', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice initialDeck={threeFlashcardDeck()} autoStart initialMode="flashcards" />,
+      );
+      expect(await screen.findByTestId('practice-session-progress')).toHaveTextContent('0/3');
+
+      const answerCurrent = async (rating: 'again' | 'good') => {
+        const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+        expect(flashcard).toBeInTheDocument();
+        await user.click(flashcard!);
+        await user.click(container.querySelector<HTMLButtonElement>(`[data-rate="${rating}"]`)!);
+        await user.click(await screen.findByTestId('practice-advance-button'));
+      };
+
+      await answerCurrent('again'); // lapsed — re-served later as a round extension
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/3');
+      await answerCurrent('good');
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('2/3');
+      await answerCurrent('good');
+      // The extension must not grow the denominator mid-round (was 3/4 → 4/5 …).
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('3/3');
+
+      // Answer whatever the extension re-serves until the round closes; the badge
+      // denominator must stay frozen the whole time.
+      for (let i = 0; i < 8; i += 1) {
+        if (screen.queryByTestId('practice-session-summary')) break;
+        await answerCurrent('good');
+        if (screen.queryByTestId('practice-session-summary')) break;
+        expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(/^\d+\/3$/);
+      }
+
+      const summary = await screen.findByTestId('practice-session-summary');
+      // Same denominator as the badge: the score is against the frozen round size.
+      expect(summary).toHaveTextContent('3/3');
+    });
+
+    test('#6721 matching wrong pair flashes red and shows «Спробуйте ще раз» instead of silently deselecting', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice initialDeck={matchingDeck()} autoStart initialMode="matching" />,
+      );
+      const leftCol = container.querySelector('[data-activity="match-left-column"]') as HTMLElement;
+      const rightCol = container.querySelector('[data-activity="match-right-column"]') as HTMLElement;
+      expect(leftCol).toBeInTheDocument();
+      expect(rightCol).toBeInTheDocument();
+
+      const firstLeft = within(leftCol).getAllByRole('button')[0]!;
+      const wrongRight = within(rightCol)
+        .getAllByRole('button')
+        .find((b) => b.getAttribute('data-original-index') !== '0')!;
+
+      await user.click(firstLeft);
+      await user.click(wrongRight);
+
+      // The mismatch is visible: both tiles marked wrong + a persistent notice.
+      expect(firstLeft.className).toContain('wrong');
+      expect(wrongRight.className).toContain('wrong');
+      expect(screen.getByTestId('practice-match-miss')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-match-miss')).toHaveTextContent('Спробуйте ще раз');
+
+      // After the flash, the pair can still be completed and the notice clears.
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      await user.click(within(leftCol).getAllByRole('button')[0]!);
+      expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
+      const correctRight = within(rightCol)
+        .getAllByRole('button')
+        .find((b) => b.getAttribute('data-original-index') === '0')!;
+      await user.click(correctRight);
+      expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
+      expect(within(leftCol).getAllByRole('button')[0]).toHaveAttribute('data-matched', 'true');
+    });
+
+    test('#6723 stats tiles reflect the just-played session on return home', async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const { fn } = mockShardFetch({ A1: 12 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice />);
+
+      const statValues = () =>
+        Array.from(
+          container.querySelectorAll('[data-testid="practice-dashboard-stats"] .k3-stat-value'),
+        ).map((el) => el.textContent);
+
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '12', '0']));
+
+      // Play one flashcard and rate it «Good».
+      await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+      const flashcard = await waitFor(() => {
+        const el = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+        expect(el).toBeInTheDocument();
+        return el!;
+      });
+      await user.click(flashcard);
+      await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+
+      // Back home: the done/new tiles must reflect the rating immediately.
+      await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '11', '1']));
+    });
+
+    test('#6723 deck chip follows the accepted level switch after going home', async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const { fn } = mockShardFetch({ A1: 15, B1: 15 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice />);
+
+      await user.click(await screen.findByTestId('practice-start-session'));
+      await screen.findByTestId('practice-session-progress');
+      // Abort home mid-session: the stored snapshot makes the next level tap an offer.
+      await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+      expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
+        'All Words (A1)',
+      );
+
+      await user.click(screen.getByRole('button', { name: 'B1' }));
+      await user.click(await screen.findByTestId('practice-switch-session-accept'));
+      await screen.findByTestId('practice-session-progress');
+      await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+      expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
+        'All Words (B1)',
+      );
     });
   });
 });

@@ -1,5 +1,6 @@
-import { type CSSProperties, type ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import MatchUp from './MatchUp';
+import { type CSSProperties, type ReactElement, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import MatchUp, { type MatchPair } from './MatchUp';
+import { parseMarkdown, shuffle } from '../../../packages/activity-kit/src/components/utils';
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
@@ -1484,6 +1485,242 @@ function casePhraseAccusative(caseLabel: string): string {
   return `у ${caseLabel} відмінок`;
 }
 
+/** Convert a 1-based match order to a circled digit string. Supports 1–50. */
+function circledNumber(n: number): string {
+  if (n >= 1 && n <= 20) return String.fromCodePoint(0x245f + n);
+  if (n >= 21 && n <= 35) return String.fromCodePoint(0x3250 + n);
+  if (n >= 36 && n <= 50) return String.fromCodePoint(0x32a0 + n);
+  return String(n);
+}
+
+const PRACTICE_MATCH_TOKENS = ['teal', 'orange', 'purple', 'yellow'] as const;
+const PRACTICE_MATCH_PAIR_CODING_CLASS = 'match-pair-coded';
+/**
+ * #6721: long enough for the red shake on a wrong pair to actually register —
+ * the shared activity-kit board clears it after 240ms, which read as "tiles just
+ * deselect" (silent swallowed error) in the production learner pass.
+ */
+const PRACTICE_MATCH_MISS_FLASH_MS = 700;
+
+/**
+ * #6721: practice-owned matching board. The shared activity-kit MatchUp swallows
+ * a wrong pair — a sub-visible flicker, no copy, no feedback — so a mismatch
+ * trained nothing. This board keeps the same DOM contract (match-up.css classes,
+ * data-activity/data-pair-coding attributes, semantic-four pair coding and miss
+ * → good/hard/again rating) but makes every mismatch explicit: a red shake on
+ * both tiles plus a «Спробуйте ще раз» notice that stays until the learner acts.
+ */
+function PracticeMatchBoard({
+  pairs,
+  instruction,
+  isUkrainian,
+  onComplete,
+  onMatch,
+}: {
+  pairs: MatchPair[];
+  instruction?: ReactNode;
+  isUkrainian: boolean;
+  onComplete(): void;
+  onMatch?: (pairIndex: number, rating: PracticeRating) => void;
+}) {
+  const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
+  const [matched, setMatched] = useState<ReadonlySet<number>>(() => new Set());
+  const [matchedOrder, setMatchedOrder] = useState<ReadonlyMap<number, number>>(() => new Map());
+  const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
+  const [misses, setMisses] = useState<Record<number, number>>({});
+  const [missNotice, setMissNotice] = useState(false);
+  const completedRef = useRef(false);
+  const missTimerRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (missTimerRef.current !== null) window.clearTimeout(missTimerRef.current);
+    },
+    [],
+  );
+
+  // Deterministic right-column order (content-seeded), stable across re-renders.
+  const shuffledRight = useMemo(() => shuffle(pairs.map((_, index) => index)), [pairs]);
+
+  const allMatched = pairs.length > 0 && matched.size === pairs.length;
+  useEffect(() => {
+    if (allMatched && !completedRef.current) {
+      completedRef.current = true;
+      onComplete();
+    }
+  }, [allMatched, onComplete]);
+
+  function handleLeftClick(index: number) {
+    if (matched.has(index) || wrongPair) return;
+    setSelectedLeft(index);
+    setMissNotice(false);
+  }
+
+  function handleRightClick(originalIndex: number) {
+    if (selectedLeft === null || matched.has(originalIndex) || wrongPair) return;
+    if (selectedLeft === originalIndex) {
+      const nextMatched = new Set(matched);
+      nextMatched.add(originalIndex);
+      const nextOrder = new Map(matchedOrder);
+      nextOrder.set(originalIndex, nextMatched.size);
+      const currentMisses = misses[selectedLeft] ?? 0;
+      const rating: PracticeRating =
+        currentMisses === 0 ? 'good' : currentMisses === 1 ? 'hard' : 'again';
+      setMatched(nextMatched);
+      setMatchedOrder(nextOrder);
+      setSelectedLeft(null);
+      setMissNotice(false);
+      onMatch?.(selectedLeft, rating);
+      return;
+    }
+    // Wrong pair: count the miss (feeds the eventual rating), flash red, and
+    // keep a visible «try again» notice — never silently deselect (#6721).
+    setMisses((prev) => ({ ...prev, [selectedLeft]: (prev[selectedLeft] ?? 0) + 1 }));
+    setWrongPair({ left: selectedLeft, right: originalIndex });
+    setMissNotice(true);
+    if (missTimerRef.current !== null) window.clearTimeout(missTimerRef.current);
+    missTimerRef.current = window.setTimeout(() => {
+      setWrongPair(null);
+      setSelectedLeft(null);
+    }, PRACTICE_MATCH_MISS_FLASH_MS);
+  }
+
+  const pairTag = (originalIndex: number): string | null => {
+    const order = matchedOrder.get(originalIndex);
+    return order === undefined ? null : circledNumber(order);
+  };
+
+  const pairAccessibleName = (
+    originalIndex: number,
+    side: 'left' | 'right',
+  ): string | undefined => {
+    if (!matched.has(originalIndex)) return undefined;
+    const pair = pairs[originalIndex];
+    if (!pair) return undefined;
+    const order = matchedOrder.get(originalIndex);
+    const tag = order ? circledNumber(order) : '';
+    const partner = side === 'left' ? pair.right : pair.left;
+    if (isUkrainian) {
+      return `${pair.left} — ${pair.right}, пара ${tag}, з’єднано з ${partner}`;
+    }
+    return `${pair.left} — ${pair.right}, pair ${tag}, matched with ${partner}`;
+  };
+
+  return (
+    <div data-activity="match-up">
+      {instruction ? (
+        <p aria-live="polite">
+          <strong>{instruction}</strong>
+        </p>
+      ) : null}
+      <div
+        aria-live="polite"
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: 0,
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      >
+        {isUkrainian
+          ? `З’єднано ${matched.size} з ${pairs.length}`
+          : `Matched ${matched.size} of ${pairs.length}`}
+      </div>
+      <div className="matchUpContainer" data-pair-coding="semantic-four">
+        <div className="matchColumn" data-activity="match-left-column">
+          {pairs.map((pair, index) => (
+            <button
+              key={`left-${index}`}
+              className={`matchItem ${matched.has(index) ? 'matched' : ''} ${
+                selectedLeft === index ? 'selected' : ''
+              } ${wrongPair?.left === index ? 'wrong' : ''} ${
+                matched.has(index) ? PRACTICE_MATCH_PAIR_CODING_CLASS : ''
+              }`}
+              data-activity="match-left-tile"
+              data-matched={matched.has(index) ? 'true' : 'false'}
+              data-pair-coding="semantic-four"
+              data-pair-token={index % PRACTICE_MATCH_TOKENS.length}
+              data-selected={selectedLeft === index ? 'true' : 'false'}
+              data-original-index={index}
+              aria-pressed={selectedLeft === index}
+              aria-label={pairAccessibleName(index, 'left')}
+              style={
+                {
+                  '--match-pair-token': PRACTICE_MATCH_TOKENS[index % PRACTICE_MATCH_TOKENS.length],
+                } as CSSProperties
+              }
+              onClick={() => handleLeftClick(index)}
+              disabled={matched.has(index)}
+            >
+              {parseMarkdown(pair.left)}
+              {pairTag(index) ? (
+                <span className="matchPairTag" aria-hidden="true">
+                  {pairTag(index)}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
+        <div className="matchColumn" data-activity="match-right-column">
+          {shuffledRight.map((originalIndex, displayIndex) => (
+            <button
+              key={`right-${displayIndex}`}
+              className={`matchItem ${matched.has(originalIndex) ? 'matched' : ''} ${
+                wrongPair?.right === originalIndex ? 'wrong' : ''
+              } ${matched.has(originalIndex) ? PRACTICE_MATCH_PAIR_CODING_CLASS : ''}`}
+              data-activity="match-right-tile"
+              data-matched={matched.has(originalIndex) ? 'true' : 'false'}
+              data-original-index={originalIndex}
+              data-pair-coding="semantic-four"
+              data-pair-token={originalIndex % PRACTICE_MATCH_TOKENS.length}
+              aria-label={pairAccessibleName(originalIndex, 'right')}
+              style={
+                {
+                  '--match-pair-token':
+                    PRACTICE_MATCH_TOKENS[originalIndex % PRACTICE_MATCH_TOKENS.length],
+                } as CSSProperties
+              }
+              onClick={() => handleRightClick(originalIndex)}
+              disabled={matched.has(originalIndex)}
+            >
+              {parseMarkdown(pairs[originalIndex]!.right)}
+              {pairTag(originalIndex) ? (
+                <span className="matchPairTag" aria-hidden="true">
+                  {pairTag(originalIndex)}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
+      </div>
+      {missNotice ? (
+        <p
+          className="lexicon-practice-warning practice-match-miss"
+          role="status"
+          data-testid="practice-match-miss"
+        >
+          <ChromeDual uk="✗ Спробуйте ще раз" en="✗ Try again" />
+        </p>
+      ) : null}
+      {allMatched ? (
+        <p
+          className="lexicon-practice-muted practice-match-success"
+          role="status"
+          data-activity="match-feedback"
+          data-correct="true"
+        >
+          <ChromeDual uk="✓ Все з’єднано правильно!" en="All matched correctly!" />
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 /** Digit 1–n shortcuts for multiple-choice option lists (drill/choice). */
 function DigitChoiceShortcuts({
   options,
@@ -1679,6 +1916,14 @@ function LexiconPracticeIsland({
 
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const [dailySnapshot, setDailySnapshot] = useState<DailyPracticeDeckSnapshot | null>(null);
+  // #6723: the daily snapshot is rebuilt every time the learner re-enters idle
+  // (after a session, a level switch, a re-roll). `deriveDailyPracticeRows` only
+  // counts reviews NEWER than `snapshot.createdAt`, so a fresh `createdAt` on every
+  // rebuild hid the just-finished session from the stats tiles (ВИВЧЕНО stayed 0,
+  // НОВІ stayed 12). Pin the day's baseline to the FIRST build so today's earlier
+  // reviews survive later rebuilds. Keyed by calendar day, not level/deck: a level
+  // switch must not erase this morning's progress from the tiles either.
+  const dailySnapshotBaselineRef = useRef<{ date: string; createdAt: number } | null>(null);
   const [dailyLexemes, setDailyLexemes] = useState<Map<string, PracticeLexeme>>(() => new Map());
   const [dailySnapshotLoading, setDailySnapshotLoading] = useState(false);
   const [dailyReRollCount, setDailyReRollCount] = useState(() => readDailyReRollCount(todayKey()));
@@ -2220,12 +2465,16 @@ function LexiconPracticeIsland({
             : pickDaily(fallbackPool, dateSeed(now) + reRollSeed(dailyReRollCount), DAILY_PRACTICE_DECK_SIZE);
         }
 
+        const baseline = dailySnapshotBaselineRef.current;
+        const createdAt = baseline && baseline.date === dateKey ? baseline.createdAt : now.getTime();
+        dailySnapshotBaselineRef.current = { date: dateKey, createdAt };
+
         const snapshot: DailyPracticeDeckSnapshot = {
           version: 2,
           date: dateKey,
           level: learnerLevel,
           deckVersion: deckLemmaKeys !== null ? selectedDeckFilter : 'daily-pool',
-          createdAt: now.getTime(),
+          createdAt,
           items: displayablePicks.map((word) => ({
             lemmaId: word.slug,
             origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
@@ -2866,8 +3115,15 @@ function LexiconPracticeIsland({
     setResumeSnapshots((snapshots) => ({ ...snapshots, [mode]: snapshot }));
   }
 
+  /**
+   * #6720: ONE denominator for the whole round. The target is frozen at session
+   * start (or restored from a resume snapshot). Lapsed-card re-serves still extend
+   * the round internally (`resolveSessionCompletion`/`extensionUsed`), but they
+   * must never move the badge denominator mid-round (live: 1/6 → 10/11 while the
+   * summary said 8/10).
+   */
   function effectiveSessionTarget(): number {
-    return plannedTotal + extensionUsed;
+    return plannedTotal;
   }
 
   function openSummary(deferred: PracticeLexeme[] = deferredLemmas) {
@@ -3465,7 +3721,9 @@ function LexiconPracticeIsland({
     mode === 'mixed' && selection && visibleStageMode !== 'mixed'
       ? `Mixed · ${MODE_META[visibleStageMode].en}`
       : MODE_META[visibleStageMode].en;
-  const progressLabel = `${sessionCompleted}/${effectiveSessionTarget()}`;
+  // #6720: re-served lapsed cards push `sessionCompleted` past the frozen target —
+  // clamp the numerator so the badge never overshoots its own denominator.
+  const progressLabel = `${Math.min(sessionCompleted, effectiveSessionTarget())}/${effectiveSessionTarget()}`;
   const dailySnapshotIds = useMemo(
     () => new Set(dailySnapshot?.items.map((item) => item.lemmaId) ?? []),
     [dailySnapshot],
@@ -3473,6 +3731,7 @@ function LexiconPracticeIsland({
   const summaryStats: SessionSummaryStats = {
     correct: sessionCorrect,
     lapsed: sessionLapsed,
+    roundSize: effectiveSessionTarget(),
     advancedToReview: advancedToReview.filter((lemma) =>
       dailySnapshotIds.size === 0
         ? true
@@ -4636,7 +4895,7 @@ function PracticeItem({
     const totalPairs = pairs.length;
     return (
       <div data-testid="practice-matching">
-        <MatchUp
+        <PracticeMatchBoard
           key={selection.cardKey}
           pairs={pairs}
           instruction={(
@@ -4646,7 +4905,6 @@ function PracticeItem({
             />
           )}
           isUkrainian={chromeLocale === 'uk'}
-          matchedPairCoding="semantic-four"
           onComplete={onMatchingComplete}
           onMatch={(pairIndex, rating) => {
             matchedPairIndexesRef.current.add(pairIndex);
