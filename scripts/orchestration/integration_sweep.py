@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
@@ -23,6 +24,10 @@ from typing import Any
 from scripts.orchestration import issue_stream_audit
 
 IDLE_THRESHOLD = timedelta(hours=1)
+# Documented sole required status check (.github/workflows/README.md). Never read
+# GET /repos/.../branches/.../protection — that endpoint needs administration,
+# which GITHUB_TOKEN cannot grant (#6717).
+DOCUMENTED_REQUIRED_CHECK_CONTEXTS = ("CI Gate",)
 _REFS_LINE = re.compile(r"(?im)^\s*(?:[-*]\s*)?refs?\s*:?\s*#([1-9][0-9]*)\b")
 _FORMAL_REVIEW_HEADING = re.compile(r"(?im)^#{1,6}\s+cross-family review\b")
 _FORMAL_REVIEW_HEAD = re.compile(r"(?im)^\s*\*{0,2}head:\*{0,2}\s*`?([0-9a-f]{40})`?\s*$")
@@ -43,6 +48,18 @@ class Decision:
 
 class SweepError(RuntimeError):
     """An unavailable authoritative GitHub input that must stop the sweep."""
+
+
+def _is_github_http_403(message: str) -> bool:
+    """True when gh/API refused with the classic integration permission hole."""
+
+    return "HTTP 403" in message or "Resource not accessible by integration" in message
+
+
+def _is_schedule_event() -> bool:
+    """True for Actions ``schedule`` runs (workflow sets EVENT_NAME / GITHUB_EVENT_NAME)."""
+
+    return any(os.environ.get(key) == "schedule" for key in ("EVENT_NAME", "GITHUB_EVENT_NAME"))
 
 
 def _parse_timestamp(value: object) -> datetime | None:
@@ -271,16 +288,101 @@ class GitHubAdapter:
         return payload
 
     def required_check_contexts(self, repository: str, branch: str = "main") -> list[str]:
-        payload = self._json(["gh", "api", f"repos/{repository}/branches/{branch}/protection"])
-        required = payload.get("required_status_checks") if isinstance(payload, Mapping) else None
-        contexts = required.get("contexts") if isinstance(required, Mapping) else None
-        if (
-            not isinstance(contexts, list)
-            or not contexts
-            or not all(isinstance(item, str) and item for item in contexts)
-        ):
-            raise SweepError("protected branch has no readable required status checks")
-        return contexts
+        """Return required check names without the admin-only protection API.
+
+        Prefer GraphQL / PR rollup ``isRequired`` when the token can read checks;
+        otherwise fail closed to the documented sole required context ``CI Gate``.
+        Never call ``GET /repos/.../branches/.../protection`` (#6717).
+        """
+
+        del branch  # retained for call-site compatibility
+        try:
+            discovered = self._required_contexts_from_pr_rollup(repository)
+        except SweepError as exc:
+            if _is_github_http_403(str(exc)):
+                # Token cannot read check metadata — documented default, not a crash.
+                return list(DOCUMENTED_REQUIRED_CHECK_CONTEXTS)
+            raise
+        if discovered:
+            return discovered
+        return list(DOCUMENTED_REQUIRED_CHECK_CONTEXTS)
+
+    def _required_contexts_from_pr_rollup(self, repository: str) -> list[str]:
+        """Collect ``isRequired`` check names from open PR status rollups via GraphQL."""
+
+        owner, _, name = repository.partition("/")
+        if not owner or not name:
+            raise SweepError(f"invalid repository slug: {repository!r}")
+        # Compact single-line query — same style as issue_stream_audit GraphQL calls.
+        query = (
+            "query($owner:String!,$name:String!){"
+            "repository(owner:$owner,name:$name){"
+            "pullRequests(first:20,states:OPEN){nodes{"
+            "commits(last:1){nodes{commit{statusCheckRollup{"
+            "contexts(first:100){nodes{"
+            "__typename "
+            "... on CheckRun{name isRequired} "
+            "... on StatusContext{context isRequired}"
+            "}}}}}}}}}}"
+        )
+        payload = self._json(
+            [
+                "gh",
+                "api",
+                "graphql",
+                "-f",
+                f"query={query}",
+                "-F",
+                f"owner={owner}",
+                "-F",
+                f"name={name}",
+            ]
+        )
+        if not isinstance(payload, Mapping):
+            return []
+        errors = payload.get("errors")
+        if isinstance(errors, list) and errors:
+            messages = "; ".join(
+                str(item.get("message") or item) for item in errors if isinstance(item, Mapping)
+            )
+            if _is_github_http_403(messages) or "Resource not accessible" in messages:
+                raise SweepError(messages[:1000] or "GraphQL required-check lookup HTTP 403")
+            # Non-permission GraphQL failures: fall through to documented default.
+            return []
+        data = payload.get("data")
+        repository_node = data.get("repository") if isinstance(data, Mapping) else None
+        if not isinstance(repository_node, Mapping):
+            return []
+        pull_requests = repository_node.get("pullRequests")
+        nodes = pull_requests.get("nodes") if isinstance(pull_requests, Mapping) else None
+        if not isinstance(nodes, list):
+            return []
+        required: list[str] = []
+        seen: set[str] = set()
+        for pr_node in nodes:
+            if not isinstance(pr_node, Mapping):
+                continue
+            commits = pr_node.get("commits")
+            commit_nodes = commits.get("nodes") if isinstance(commits, Mapping) else None
+            if not isinstance(commit_nodes, list):
+                continue
+            for commit_node in commit_nodes:
+                if not isinstance(commit_node, Mapping):
+                    continue
+                commit = commit_node.get("commit")
+                rollup = commit.get("statusCheckRollup") if isinstance(commit, Mapping) else None
+                contexts = rollup.get("contexts") if isinstance(rollup, Mapping) else None
+                context_nodes = contexts.get("nodes") if isinstance(contexts, Mapping) else None
+                if not isinstance(context_nodes, list):
+                    continue
+                for raw in context_nodes:
+                    if not isinstance(raw, Mapping) or raw.get("isRequired") is not True:
+                        continue
+                    label = raw.get("name") or raw.get("context")
+                    if isinstance(label, str) and label and label not in seen:
+                        seen.add(label)
+                        required.append(label)
+        return required
 
     def comments(self, repository: str, number: int) -> list[dict[str, Any]]:
         payload = self._json(["gh", "api", f"repos/{repository}/issues/{number}/comments", "--paginate"])
@@ -347,6 +449,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         decisions = run(GitHubAdapter(args.repo_root), args.repo, apply=args.apply)
     except SweepError as exc:
+        message = str(exc)
+        # Scheduled runs must not paint main red for GITHUB_TOKEN permission holes
+        # (e.g. residual required-context lookup 403). Logic bugs still exit 1.
+        if _is_github_http_403(message) and _is_schedule_event():
+            print(f"integration sweep skipped: {message}")
+            return 0
         print(f"integration sweep refused: {exc}")
         return 1
     print(json.dumps([decision.__dict__ for decision in decisions], sort_keys=True))
