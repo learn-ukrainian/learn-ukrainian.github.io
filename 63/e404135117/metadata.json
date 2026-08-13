@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "63e404135117",
+  "strategy": "manual-commit",
+  "branch": "kimi/6767-deviceid-crash",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/lexicon/custom-decks.ts",
+    "site/tests/unit/custom-decks-storage-failure.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/63/e404135117/0/metadata.json",
+      "transcript": "/63/e404135117/0/full.jsonl",
+      "content_hash": "/63/e404135117/0/content_hash.txt",
+      "prompt": "/63/e404135117/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 28670,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1115136,
+    "output_tokens": 7348,
+    "api_call_count": 31
+  }
+}

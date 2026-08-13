@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "63e404135117",
+  "session_id": "session_ef0c6bb2-0f66-4aba-ac60-1c6ec2ea2101",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T23:04:56.603128Z",
+  "branch": "kimi/6767-deviceid-crash",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/lexicon/custom-decks.ts",
+    "site/tests/unit/custom-decks-storage-failure.test.ts"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "f23d2ff2cecc",
+  "token_usage": {
+    "input_tokens": 28670,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1115136,
+    "output_tokens": 7348,
+    "api_call_count": 31
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T23:04:56.55603Z",
+    "agent_lines": 98,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 98,
+    "total_lines_changed": 102,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
