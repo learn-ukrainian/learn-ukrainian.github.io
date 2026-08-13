@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "963dc645418d",
+  "strategy": "manual-commit",
+  "branch": "cursor/6712-a1-hub-links",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LevelLanding.module.css",
+    "site/src/components/LevelLanding.tsx",
+    "site/tests/unit/LevelLanding.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/96/3dc645418d/0/metadata.json",
+      "transcript": "/96/3dc645418d/0/full.jsonl",
+      "compact_transcript": "/96/3dc645418d/0/transcript.jsonl",
+      "content_hash": "/96/3dc645418d/0/content_hash.txt",
+      "prompt": "/96/3dc645418d/0/prompt.txt"
+    }
+  ]
+}
