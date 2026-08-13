@@ -1,14 +1,14 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-ed7a9d5e1b5b.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-236fb399f9c8.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "2db97b6bf31c22ff7574ddeac9ddc60f5a393d0c22384f8848bd2432236c1839",
+  "manifest_fingerprint": "6c3aeee132d3f19340e93f794198eaee94b5b51072fa4fdd2278af9418d07aac",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-13T05:18:20+00:00",
-  "gz_sha256": "a6da0265a05e30b1c5dcd4e9e623b8af85ce19ec4003b7c0ed660b88dd69f4b4",
-  "json_sha256": "ed7a9d5e1b5b3b3c6cf9dc5fb44779f0bf1ad5f460926b2aede55088b3dc5ec5",
-  "gz_bytes": 24977829,
-  "json_bytes": 186278955,
+  "generated_at": "2026-08-12T21:13:24+00:00",
+  "gz_sha256": "4193c0681ad404a7aedb85e6ad076574ff51a736d4b2481d8d3ce10b3acb053d",
+  "json_sha256": "236fb399f9c83f034305dee05807d28ddd4f9d0b12f518079d8eea536f044f3c",
+  "gz_bytes": 25086621,
+  "json_bytes": 186974363,
   "richness_gate": {
     "baseline": {
       "poc_thin_pages": 8902,
@@ -16,12 +16,12 @@
       "old_gate_no_english_anchor": 2295
     },
     "candidate": {
-      "poc_thin_pages": 8869,
+      "poc_thin_pages": 8902,
       "search_no_visible_gloss": 43,
       "old_gate_no_english_anchor": 2295
     },
     "regressions": {},
-    "override_reason": "Issue #6370 OCR recover: promoted 1 missing VESUM-ok leg (футболіст), recovered Latin-confusable lemmas тварина and жінка",
+    "override_reason": "Additive #6370 paired-headword split: +58 VESUM-ok missing legs from 218 paired Ohoiko/ULP strings (20053→20111). Split policy encoded in scripts/lexicon/ohoiko_paired_headword_split.py. Leftover paired-leg residual: multiword_after_split + heritage + vesum_absent legs; inventory paired strings remain structural residual until inventory rewrite. Multiword(12)/heritage(3)/OCR(1) stay OPEN.",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
