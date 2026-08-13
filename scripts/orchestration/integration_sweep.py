@@ -74,9 +74,19 @@ def _parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+def _is_usable_pr_number(number: object) -> bool:
+    """True when ``number`` is a real, positive pull request number.
+
+    Every gh call that targets one PR (comments, arm) must receive a usable
+    number; a bare or zero number is never forwarded to gh (#6748).
+    """
+
+    return isinstance(number, int) and not isinstance(number, bool) and number > 0
+
+
 def _pr_number(pr: Mapping[str, Any]) -> int | None:
     number = pr.get("number")
-    return number if isinstance(number, int) and not isinstance(number, bool) and number > 0 else None
+    return number if _is_usable_pr_number(number) else None
 
 
 def referenced_issue_numbers(pr: Mapping[str, Any]) -> tuple[set[int] | None, str | None]:
@@ -288,101 +298,18 @@ class GitHubAdapter:
         return payload
 
     def required_check_contexts(self, repository: str, branch: str = "main") -> list[str]:
-        """Return required check names without the admin-only protection API.
+        """Return the documented required check names without any GitHub probe.
 
-        Prefer GraphQL / PR rollup ``isRequired`` when the token can read checks;
-        otherwise fail closed to the documented sole required context ``CI Gate``.
-        Never call ``GET /repos/.../branches/.../protection`` (#6717).
+        Branch-protection REST needs administration that GITHUB_TOKEN cannot
+        grant (#6717). The GraphQL status-check ``isRequired`` field was removed
+        by GitHub: every rollup lookup now fails with "A pull request ID or pull
+        request number is required." (#6748). The workflow README documents
+        ``CI Gate`` as the only required status check, so that documented set is
+        authoritative and no network probe is made.
         """
 
-        del branch  # retained for call-site compatibility
-        try:
-            discovered = self._required_contexts_from_pr_rollup(repository)
-        except SweepError as exc:
-            if _is_github_http_403(str(exc)):
-                # Token cannot read check metadata — documented default, not a crash.
-                return list(DOCUMENTED_REQUIRED_CHECK_CONTEXTS)
-            raise
-        if discovered:
-            return discovered
+        del repository, branch  # retained for call-site compatibility
         return list(DOCUMENTED_REQUIRED_CHECK_CONTEXTS)
-
-    def _required_contexts_from_pr_rollup(self, repository: str) -> list[str]:
-        """Collect ``isRequired`` check names from open PR status rollups via GraphQL."""
-
-        owner, _, name = repository.partition("/")
-        if not owner or not name:
-            raise SweepError(f"invalid repository slug: {repository!r}")
-        # Compact single-line query — same style as issue_stream_audit GraphQL calls.
-        query = (
-            "query($owner:String!,$name:String!){"
-            "repository(owner:$owner,name:$name){"
-            "pullRequests(first:20,states:OPEN){nodes{"
-            "commits(last:1){nodes{commit{statusCheckRollup{"
-            "contexts(first:100){nodes{"
-            "__typename "
-            "... on CheckRun{name isRequired} "
-            "... on StatusContext{context isRequired}"
-            "}}}}}}}}}}"
-        )
-        payload = self._json(
-            [
-                "gh",
-                "api",
-                "graphql",
-                "-f",
-                f"query={query}",
-                "-F",
-                f"owner={owner}",
-                "-F",
-                f"name={name}",
-            ]
-        )
-        if not isinstance(payload, Mapping):
-            return []
-        errors = payload.get("errors")
-        if isinstance(errors, list) and errors:
-            messages = "; ".join(
-                str(item.get("message") or item) for item in errors if isinstance(item, Mapping)
-            )
-            if _is_github_http_403(messages) or "Resource not accessible" in messages:
-                raise SweepError(messages[:1000] or "GraphQL required-check lookup HTTP 403")
-            # Non-permission GraphQL failures: fall through to documented default.
-            return []
-        data = payload.get("data")
-        repository_node = data.get("repository") if isinstance(data, Mapping) else None
-        if not isinstance(repository_node, Mapping):
-            return []
-        pull_requests = repository_node.get("pullRequests")
-        nodes = pull_requests.get("nodes") if isinstance(pull_requests, Mapping) else None
-        if not isinstance(nodes, list):
-            return []
-        required: list[str] = []
-        seen: set[str] = set()
-        for pr_node in nodes:
-            if not isinstance(pr_node, Mapping):
-                continue
-            commits = pr_node.get("commits")
-            commit_nodes = commits.get("nodes") if isinstance(commits, Mapping) else None
-            if not isinstance(commit_nodes, list):
-                continue
-            for commit_node in commit_nodes:
-                if not isinstance(commit_node, Mapping):
-                    continue
-                commit = commit_node.get("commit")
-                rollup = commit.get("statusCheckRollup") if isinstance(commit, Mapping) else None
-                contexts = rollup.get("contexts") if isinstance(rollup, Mapping) else None
-                context_nodes = contexts.get("nodes") if isinstance(contexts, Mapping) else None
-                if not isinstance(context_nodes, list):
-                    continue
-                for raw in context_nodes:
-                    if not isinstance(raw, Mapping) or raw.get("isRequired") is not True:
-                        continue
-                    label = raw.get("name") or raw.get("context")
-                    if isinstance(label, str) and label and label not in seen:
-                        seen.add(label)
-                        required.append(label)
-        return required
 
     def comments(self, repository: str, number: int) -> list[dict[str, Any]]:
         payload = self._json(["gh", "api", f"repos/{repository}/issues/{number}/comments", "--paginate"])
@@ -424,7 +351,10 @@ def run(
     decisions: list[Decision] = []
     for pr in adapter.list_open_prs(repository):
         decision = decide(pr, report, required_contexts, now=observation_time)
-        if decision.reason == "current_head_review_missing":
+        if decision.reason == "current_head_review_missing" and _is_usable_pr_number(decision.number):
+            # Consult issue comments only with a resolvable PR number. decide()
+            # only reaches this reason with a valid number, but a bare or zero
+            # number is never forwarded to gh (#6748).
             decision = decide(
                 pr,
                 report,
@@ -435,7 +365,7 @@ def run(
         decisions.append(decision)
     if apply:
         for decision in decisions:
-            if decision.eligible:
+            if decision.eligible and _is_usable_pr_number(decision.number):
                 adapter.arm_auto_merge(repository, decision.number)
     return decisions
 

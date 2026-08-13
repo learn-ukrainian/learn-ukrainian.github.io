@@ -23,8 +23,10 @@ permissions:
   contents: read
   issues: read
   pull-requests: write
-  # Required-context discovery via GraphQL rollup isRequired (#6717). Never
-  # request administration — branch-protection REST is off-limits to GITHUB_TOKEN.
+  # Read access to check/status metadata for the PR statusCheckRollup the sweep
+  # requires for the required-CI decision. Branch-protection REST is off-limits
+  # to GITHUB_TOKEN and rollup isRequired was removed by GitHub (#6748); the
+  # documented `CI Gate` is the sole required check.
   checks: read
   statuses: read
 
