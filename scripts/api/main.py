@@ -566,7 +566,7 @@ def _eligible_idle_pr(pr: dict[str, Any], *, now: datetime) -> dict[str, Any] | 
     if pr.get("state") is not None and str(pr.get("state")).upper() != "OPEN":
         return None
     merge_state = pr.get("mergeStateStatus")
-    if merge_state is not None and str(merge_state).upper() != "CLEAN":
+    if merge_state is not None and str(merge_state).upper() == "DIRTY":
         return None
     if pr.get("isDraft") is True or not _idle_pr_checks_green(pr):
         return None

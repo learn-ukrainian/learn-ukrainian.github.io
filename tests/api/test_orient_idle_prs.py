@@ -141,6 +141,35 @@ def test_latest_red_check_blocks_an_old_green_run():
     assert api_main._eligible_idle_pr(pr, now=NOW) is None
 
 
+def test_blocked_merge_state_with_green_cf_review_is_eligible():
+    pr = _pr(
+        107,
+        updated_at=NOW - timedelta(hours=2),
+        reviewDecision="",
+        mergeStateStatus="BLOCKED",
+        comments=[
+            {
+                "body": (
+                    "## Cross-family CF (Grok / xAI)\n"
+                    f"**VERDICT: APPROVE** at head `{107:040x}`."
+                )
+            }
+        ],
+    )
+
+    assert api_main._eligible_idle_pr(pr, now=NOW) == {
+        "number": 107,
+        "branch": "codex/pr-107",
+        "minutes_idle": 120,
+    }
+
+
+def test_dirty_merge_state_remains_ineligible():
+    pr = _pr(108, updated_at=NOW - timedelta(hours=2), mergeStateStatus="DIRTY")
+
+    assert api_main._eligible_idle_pr(pr, now=NOW) is None
+
+
 def test_timeout_refresh_degrades_to_absent_cache():
     def timed_out():
         raise subprocess.TimeoutExpired(cmd=["gh", "pr", "list"], timeout=api_main.IDLE_PR_FETCH_TIMEOUT_S)
