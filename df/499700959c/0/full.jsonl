@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 80449,
-      "output": 12428,
-      "reasoning": 68342,
+      "input": 81375,
+      "output": 13816,
+      "reasoning": 68495,
       "cache": {
-        "read": 5425920,
+        "read": 6206208,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786623921995,
-      "updated": 1786625593084
+      "updated": 1786625624439
     }
   },
   "messages": [
@@ -5530,19 +5530,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 155613,
+          "input": 89,
+          "output": 260,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 155264
           }
         },
         "modelID": "deepseek-v4-pro",
         "providerID": "deepseek-direct",
         "time": {
-          "created": 1786625593083
+          "created": 1786625593083,
+          "completed": 1786625600794
         },
+        "finish": "tool-calls",
         "id": "msg_ffb2f0efb001C13jbTIyEwKXHc",
         "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ"
       },
@@ -5559,20 +5562,396 @@
           "tool": "bash",
           "callID": "call_00_ET_pRkiIWLllJFZjJbZENnb9486",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit commit -m \"fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\" -m \"Follow-up CI branches (e.g. codex/6687-hermes-test) carry a different branch name than the MERGED PR head they fix, so gh pr list --head <branch> missed them and the reaper skipped with \\\"no reap condition matched\\\". Look up the MERGED PR that introduced the worktree HEAD by commit-SHA search, but only when that commit is not already on origin/main, so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs whose commit matches a merged PR under a different branch name.\" -m \"X-Agent: deepseek/canary-ds-pro-reaper\" 2>&1 | tail -10"
             },
+            "output": "[deepseek/canary-ds-pro-reaper 394c04d67d] fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\n 2 files changed, 201 insertions(+), 6 deletions(-)\n",
+            "metadata": {
+              "output": "[deepseek/canary-ds-pro-reaper 394c04d67d] fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\n 2 files changed, 201 insertions(+), 6 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit commit -m \"fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\" -m \"Follow-up CI branches (e.g. codex/6687-hermes-test) carry a different branch name than the MERGED PR head they fix, so gh pr list --head <branch> missed them and the reaper skipped with \\\"no reap condition matched\\\". Look up the MERGED PR that introduced the worktree HEAD by commit-SHA search, but only when that commit is not already on origin/main, so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs whose commit matches a merged PR under a different branch name.\" -m \"X-Agent: deepseek/canary-ds-pro-reaper\" 2>&1 | tail -10",
             "time": {
-              "start": 1786625597056
+              "start": 1786625600558,
+              "end": 1786625600561
             }
           },
           "id": "prt_ffb2f16b20017k6VEgEreCUCg8",
           "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
           "messageID": "msg_ffb2f0efb001C13jbTIyEwKXHc"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-finish",
+          "tokens": {
+            "total": 155613,
+            "input": 89,
+            "output": 260,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 155264
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffb2f2caf001lGtlCEGvu2SbVV",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f0efb001C13jbTIyEwKXHc"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffb158fb8001HcUeNCBNM3hIC2",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 155799,
+          "input": 159,
+          "output": 120,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 155520
+          }
+        },
+        "modelID": "deepseek-v4-pro",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786625600799,
+          "completed": 1786625608932
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffb2f2d1f001Ql9PXIpwtZDYro",
+        "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ"
+      },
+      "parts": [
+        {
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-start",
+          "id": "prt_ffb2f31b1001vga5SXk7p3Oe3k",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f2d1f001Ql9PXIpwtZDYro"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_mAGjnbNnVJ6XCXsSvrnD3592",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit log -1 --format='%H%n%B' && echo \"--- push ---\" && git push -u origin deepseek/canary-ds-pro-reaper 2>&1 | tail -15"
+            },
+            "output": "394c04d67d7c137a691eacf01692cdf75abbf52d\nfix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\n\nFollow-up CI branches (e.g. codex/6687-hermes-test) carry a different branch name than the MERGED PR head they fix, so gh pr list --head <branch> missed them and the reaper skipped with \"no reap condition matched\". Look up the MERGED PR that introduced the worktree HEAD by commit-SHA search, but only when that commit is not already on origin/main, so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs whose commit matches a merged PR under a different branch name.\n\nX-Agent: deepseek/canary-ds-pro-reaper\nEntire-Checkpoint: df499700959c\n\n--- push ---\n[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'deepseek/canary-ds-pro-reaper' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/canary-ds-pro-reaper        \nremote: \nremote: GitHub found 1 vulnerability on learn-ukrainian/learn-ukrainian.github.io's default branch (1 high). To find out more, visit:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/security/dependabot/265        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/canary-ds-pro-reaper -> deepseek/canary-ds-pro-reaper\nbranch 'deepseek/canary-ds-pro-reaper' set up to track 'origin/deepseek/canary-ds-pro-reaper'.\n",
+            "metadata": {
+              "output": "394c04d67d7c137a691eacf01692cdf75abbf52d\nfix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\n\nFollow-up CI branches (e.g. codex/6687-hermes-test) carry a different branch name than the MERGED PR head they fix, so gh pr list --head <branch> missed them and the reaper skipped with \"no reap condition matched\". Look up the MERGED PR that introduced the worktree HEAD by commit-SHA search, but only when that commit is not already on origin/main, so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs whose commit matches a merged PR under a different branch name.\n\nX-Agent: deepseek/canary-ds-pro-reaper\nEntire-Checkpoint: df499700959c\n\n--- push ---\n[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'deepseek/canary-ds-pro-reaper' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/canary-ds-pro-reaper        \nremote: \nremote: GitHub found 1 vulnerability on learn-ukrainian/learn-ukrainian.github.io's default branch (1 high). To find out more, visit:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/security/dependabot/265        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/canary-ds-pro-reaper -> deepseek/canary-ds-pro-reaper\nbranch 'deepseek/canary-ds-pro-reaper' set up to track 'origin/deepseek/canary-ds-pro-reaper'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit log -1 --format='%H%n%B' && echo \"--- push ---\" && git push -u origin deepseek/canary-ds-pro-reaper 2>&1 | tail -15",
+            "time": {
+              "start": 1786625608612,
+              "end": 1786625608615
+            }
+          },
+          "id": "prt_ffb2f35a7001NwlfljYpRNhOIB",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f2d1f001Ql9PXIpwtZDYro"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-finish",
+          "tokens": {
+            "total": 155799,
+            "input": 159,
+            "output": 120,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 155520
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffb2f4c41001GdDAda9eCpE6f7",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f2d1f001Ql9PXIpwtZDYro"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffb158fb8001HcUeNCBNM3hIC2",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 156809,
+          "input": 465,
+          "output": 486,
+          "reasoning": 82,
+          "cache": {
+            "write": 0,
+            "read": 155776
+          }
+        },
+        "modelID": "deepseek-v4-pro",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786625608944,
+          "completed": 1786625618992
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffb2f4cf0001JO09scHmo0qrvI",
+        "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ"
+      },
+      "parts": [
+        {
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-start",
+          "id": "prt_ffb2f51f6001IXNc8pBB3pqxCn",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f4cf0001JO09scHmo0qrvI"
+        },
+        {
+          "type": "reasoning",
+          "text": "The push succeeded. Note that a post-commit hook added an `Entire-Checkpoint: df499700959c` trailer automatically (that's the checkpoint system). That's fine — it's part of the repo's hooks.\n\nNow let me create the PR. Let me use `gh pr create`.\n\nThe PR should be against `main`. Let me create it with a descriptive title and body.",
+          "time": {
+            "start": 1786625611283,
+            "end": 1786625612643
+          },
+          "id": "prt_ffb2f5613001fD5mAwIfCq106m",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f4cf0001JO09scHmo0qrvI"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_IOsBGRnLeykriJEj3jGe6159",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngh pr create --base main --head deepseek/canary-ds-pro-reaper --title \"fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\" --body \"## Symptom\n\nAfter #6696 these still SKIP:\n\n- \\`codex/6687-hermes-test\\` \\`no reap condition matched\\` (follow-up branch; PR #6687 head was \\`kimi/routing-defaults-2026-08-13\\`)\n- \\`cursor/6687-ci-fix\\`, \\`deepseek/6687-two-tests\\`, \\`deepseek/6696-ruff-sim102\\` (same class: follow-up branch ≠ PR head)\n- \\`kimi/6690-ci-fix\\` \\`detached or missing branch\\`\n\n## Change\n\nA clean dispatch worktree now reaps when its HEAD is the head of a MERGED PR (or an ancestor of that head), even when the worktree branch name is not the PR head. We look up the MERGED PR that introduced the worktree HEAD via \\`gh search prs <sha>\\`, but only when that commit is not already on \\`origin/main\\` — so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs matching a merged PR under a different branch name.\n\nGuards (live-process, dirty, open-PR, first-class cap) are unchanged.\n\n## Tests\n\n- \\`test_followup_branch_ancestor_of_merged_pr_head_reaps\\`\n- \\`test_detached_worktree_with_different_pr_head_branch_reaps\\`\n- \\`test_fresh_branch_on_main_tip_is_not_sha_reaped\\`\n\nX-Agent: deepseek/canary-ds-pro-reaper\" 2>&1 | tail -10"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngh pr create --base main --head deepseek/canary-ds-pro-reaper --title \"fix(reaper): reap follow-up CI branches whose head differs from the merged PR (#6696)\" --body \"## Symptom\n\nAfter #6696 these still SKIP:\n\n- \\`codex/6687-hermes-test\\` \\`no reap condition matched\\` (follow-up branch; PR #6687 head was \\`kimi/routing-defaults-2026-08-13\\`)\n- \\`cursor/6687-ci-fix\\`, \\`deepseek/6687-two-tests\\`, \\`deepseek/6696-ruff-sim102\\` (same class: follow-up branch ≠ PR head)\n- \\`kimi/6690-ci-fix\\` \\`detached or missing branch\\`\n\n## Change\n\nA clean dispatch worktree now reaps when its HEAD is the head of a MERGED PR (or an ancestor of that head), even when the worktree branch name is not the PR head. We look up the MERGED PR that introduced the worktree HEAD via \\`gh search prs <sha>\\`, but only when that commit is not already on \\`origin/main\\` — so a fresh branch sitting on a merged main tip is never mistaken for a squash-merged follow-up commit. The same lookup reaps detached HEADs matching a merged PR under a different branch name.\n\nGuards (live-process, dirty, open-PR, first-class cap) are unchanged.\n\n## Tests\n\n- \\`test_followup_branch_ancestor_of_merged_pr_head_reaps\\`\n- \\`test_detached_worktree_with_different_pr_head_branch_reaps\\`\n- \\`test_fresh_branch_on_main_tip_is_not_sha_reaped\\`\n\nX-Agent: deepseek/canary-ds-pro-reaper\" 2>&1 | tail -10",
+            "time": {
+              "start": 1786625618778,
+              "end": 1786625618780
+            }
+          },
+          "id": "prt_ffb2f5b64001hceWIv2EWhjXmk",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f4cf0001JO09scHmo0qrvI"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-finish",
+          "tokens": {
+            "total": 156809,
+            "input": 465,
+            "output": 486,
+            "reasoning": 82,
+            "cache": {
+              "write": 0,
+              "read": 155776
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffb2f73ca001Zz1262TJEEY0e8",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f4cf0001JO09scHmo0qrvI"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffb158fb8001HcUeNCBNM3hIC2",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 157027,
+          "input": 43,
+          "output": 113,
+          "reasoning": 71,
+          "cache": {
+            "write": 0,
+            "read": 156800
+          }
+        },
+        "modelID": "deepseek-v4-pro",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786625619015,
+          "completed": 1786625624432
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffb2f7446001ICEZaHXybShGcH",
+        "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ"
+      },
+      "parts": [
+        {
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-start",
+          "id": "prt_ffb2f7a09001nYmotyYT9vgSnv",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f7446001ICEZaHXybShGcH"
+        },
+        {
+          "type": "reasoning",
+          "text": "The PR is created: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703\n\nLet me verify the PR state and that the branch is pushed correctly.\n\nActually, let me also do a final verification of the diff and that everything is committed. Let me confirm git status is clean and the PR exists.",
+          "time": {
+            "start": 1786625621435,
+            "end": 1786625622669
+          },
+          "id": "prt_ffb2f7dbb001YVPloAV9ngihhd",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f7446001ICEZaHXybShGcH"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_SJKUT5koC4P2YeqPvtkl6842",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit status --short && echo \"--- clean ---\" && gh pr view 6703 --json number,state,headRefName,baseRefName,url 2>&1"
+            },
+            "output": "--- clean ---\n{\"baseRefName\":\"main\",\"headRefName\":\"deepseek/canary-ds-pro-reaper\",\"number\":6703,\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703\"}\n",
+            "metadata": {
+              "output": "--- clean ---\n{\"baseRefName\":\"main\",\"headRefName\":\"deepseek/canary-ds-pro-reaper\",\"number\":6703,\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703\"}\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper\ngit status --short && echo \"--- clean ---\" && gh pr view 6703 --json number,state,headRefName,baseRefName,url 2>&1",
+            "time": {
+              "start": 1786625624146,
+              "end": 1786625624159
+            }
+          },
+          "id": "prt_ffb2f828f001u1eSrnOU8S2PyJ",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f7446001ICEZaHXybShGcH"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-finish",
+          "tokens": {
+            "total": 157027,
+            "input": 43,
+            "output": 113,
+            "reasoning": 71,
+            "cache": {
+              "write": 0,
+              "read": 156800
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffb2f88e2001wp46d44SL8wc06",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f7446001ICEZaHXybShGcH"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffb158fb8001HcUeNCBNM3hIC2",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/canary-ds-pro-reaper"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 157507,
+          "input": 170,
+          "output": 409,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 156928
+          }
+        },
+        "modelID": "deepseek-v4-pro",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786625624438,
+          "completed": 1786625631054
+        },
+        "finish": "stop",
+        "id": "msg_ffb2f89760017m77kqgMHU6msL",
+        "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ"
+      },
+      "parts": [
+        {
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-start",
+          "id": "prt_ffb2f8e6f001NUdZcJ7WjXosPW",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f89760017m77kqgMHU6msL"
+        },
+        {
+          "type": "text",
+          "text": "Done. Summary of the change and delivery:\n\n## What changed\n- `scripts/orchestration/reap_worktrees.py`: added `_query_prs_by_head_sha()` (commit-SHA PR lookup via `gh search prs`) and wired it into `reap_worktrees()` as a supplementary lookup, gated by `not _is_ancestor_of_origin_main()` so fresh branches on a merged main tip are never misreaped.\n- `tests/orchestration/test_reap_worktrees.py`: extended `patch_gh` to fake `gh search prs`, plus 3 new tests (follow-up branch, detached-with-different-PR-head, and the main-tip guard) and a hermetic `patch_gh({})` in `test_class_b_fail_safe_skips`.\n\n## Verification\n- `ruff check` on both files: **passed**\n- `pytest tests/orchestration/test_reap_worktrees.py`: **48 passed**\n- `pytest tests/orchestration/test_scheduled_worktree_cleanup.py tests/test_fleet_post_task_reap.py`: **43 passed** (no regression)\n- Dry-run against the real repo now reports all 5 symptom worktrees as `WOULD_REMOVE` (PR #6687 / #6696 / #6690 MERGED) instead of skipping.\n\n## Delivery\n- Branch `deepseek/canary-ds-pro-reaper` pushed (commit `394c04d67d`, `X-Agent: deepseek/canary-ds-pro-reaper` trailer).\n- PR opened: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6703 (OPEN, base `main`). No merge.\n\nCanary note for the driver: model=`deepseek-v4-pro`, effort=`high` (ran via opencode `--variant high`); fleet defaults unchanged.",
+          "time": {
+            "start": 1786625626381,
+            "end": 1786625630840
+          },
+          "id": "prt_ffb2f910d001zxh894UpxDTbXv",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f89760017m77kqgMHU6msL"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "acd8303c24dd75d8a104f377d1ed09e8a9e50974",
+          "type": "step-finish",
+          "tokens": {
+            "total": 157507,
+            "input": 170,
+            "output": 409,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 156928
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffb2fa2e70011ZH4NQsRFrgVmi",
+          "sessionID": "ses_004ea70b5ffecXaa1TH5wIEGBQ",
+          "messageID": "msg_ffb2f89760017m77kqgMHU6msL"
         }
       ]
     }
