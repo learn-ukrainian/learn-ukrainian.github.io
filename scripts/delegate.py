@@ -198,7 +198,7 @@ def _warn_kimicc_oauth_token_life(harness: str | None, hard_timeout: int) -> Non
         return
     print(
         f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~{_KIMICC_OAUTH_TOKEN_LIFE_S}s "
-        "Kimi OAuth access-token lifetime; the wrapper refreshes the token only at spawn, "
+        "Kimi OAuth session lifetime; the wrapper refreshes credentials only at spawn, "
         "so calls still running past ~15 minutes may fail auth. Prefer shorter dispatches "
         "and relaunch instead of one long call.",
         file=sys.stderr,
@@ -292,9 +292,10 @@ DEFAULT_SILENCE_TIMEOUT_S = 3600
 # before their first token; the old 180s killed healthy workers mid-thought
 # (observed: deepseek review dispatch reaped at 181s, 1s over the limit).
 DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
-# KimiCC headless calls authenticate with a Kimi OAuth access token whose
-# lifetime is roughly 15 minutes (~840s). The wrapper refreshes it only at
-# spawn, so a worker still running past that point can start failing auth.
+# KimiCC headless calls authenticate with a Kimi OAuth session whose
+# lifetime is roughly 15 minutes (~840s). The wrapper refreshes credentials
+# only at spawn, so a worker still running past that point can start failing
+# auth.
 _KIMICC_OAUTH_TOKEN_LIFE_S = 840
 
 
