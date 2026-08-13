@@ -1,0 +1,36 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5e05152a9ec1",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-rights-semantics-migration-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_minchak_phonetics_candidate_v1.json",
+    "data/projects/open_model_data/admission/phase3_vspu_modern_theory_candidate_v1.json",
+    "data/projects/open_model_data/admission/phase3_vspu_post_ingest_audit_v1.json",
+    "data/projects/open_model_data/admission/phase3_vspu_source_materialization_v1.json",
+    "data/projects/open_model_data/contracts/phase3_minchak_phonetics_candidate_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_db_cutover_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_modern_theory_candidate_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_post_ingest_audit_v1.schema.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_source_materialization_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_minchak_phonetics_intake.py",
+    "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+    "scripts/projects/open_model_data/phase3_vspu_modern_theory_intake.py",
+    "scripts/projects/open_model_data/phase3_vspu_post_ingest_audit.py",
+    "scripts/projects/open_model_data/phase3_vspu_source_materialization.py",
+    "tests/test_open_model_phase3_minchak_phonetics_intake.py",
+    "tests/test_open_model_phase3_vspu_db_cutover.py",
+    "tests/test_open_model_phase3_vspu_modern_theory_intake.py",
+    "tests/test_open_model_phase3_vspu_source_materialization.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/5e/05152a9ec1/0/metadata.json",
+      "transcript": "/5e/05152a9ec1/0/full.jsonl",
+      "compact_transcript": "/5e/05152a9ec1/0/transcript.jsonl",
+      "content_hash": "/5e/05152a9ec1/0/content_hash.txt",
+      "prompt": "/5e/05152a9ec1/0/prompt.txt"
+    }
+  ]
+}
