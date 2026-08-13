@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "93770964d315",
+  "strategy": "manual-commit",
+  "branch": "kimi/6013-docs-slice",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/launchd-inventory.md",
+    "docs/runbooks/recovery.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/93/770964d315/0/metadata.json",
+      "transcript": "/93/770964d315/0/full.jsonl",
+      "content_hash": "/93/770964d315/0/content_hash.txt",
+      "prompt": "/93/770964d315/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 31056,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 609024,
+    "output_tokens": 7311,
+    "api_call_count": 15
+  }
+}

@@ -1,0 +1,50 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/6013-docs-slice
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6013 docs slice only — RECOVERY.md + launchd inventory
+
+## CAPACITY_CARD
+pick=kimi status=cool will_last=true free=kimi,cursor avoid=codex-deficit source=codexbar
+Kimi 7d 92% / 5h 100%. Codex weekly pace deficit + 0 credits. Do not use Codex.
+
+## ROUTING_CARD_V1
+task_id: 6013-docs-slice
+tier: heap
+model_x_harness: kimi/k3-256k
+why_this_tier: docs-only residual of an incident issue; no architecture
+advisor_packet: none (docs-only; host APFS/backup stay operator)
+owned_paths: docs/RECOVERY.md docs/runbooks/
+acceptance_cmd: .venv/bin/ruff check /dev/null; markdownlint if configured on touched files
+alternatives_considered: cursor (already on 6738), claude (save for language)
+parallel_free_seats: cursor(busy 6738), kimi, deepseek, glm
+
+## Scope (exact)
+
+#6013 residual after #6699 (item 2 shipped):
+
+1. APFS localsnapshot cadence — **OUT OF SCOPE** (host/operator)
+3. nightly local-state backup rotation — **OUT OF SCOPE** (host/operator)
+4. Formalize `docs/RECOVERY.md` (or `docs/runbooks/recovery.md` if that matches existing runbook layout)
+5. launchd inventory doc (project LaunchAgents we own: monitor-api, backup, worktree-cleanup, codex-archived-thread-cleanup)
+
+Read existing: `docs/runbooks/data-backup.md`, `docs/runbooks/worktree-cleanup.md`, `docs/best-practices/local-api-server.md`, `~/Library/LaunchAgents/com.learn-ukrainian.*.plist` names only (no secrets, no IPs).
+
+## Do
+
+- One PR linked to #6013. Do not claim the incident closed. Subject must NOT be `fix(...)` (that auto-closed the issue). Use `docs(ops): recovery + launchd inventory (#6013)`.
+- Do not invent host procedures you cannot verify. Quote plist labels and existing runbooks.
+- No code changes. No deletion of LaunchAgents. No `data/` / Drive work.
+- Trailer `X-Agent: kimi/6013-docs-slice`. Push. No merge.
+
+## Non-goals
+
+APFS snapshots, backup rotation implementation, #6106 deletion, services.sh /proc (that is #6738).

@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "93770964d315",
+  "session_id": "session_019d60b7-0001-42ed-9531-6fe1bacb9b9d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T20:17:04.160961Z",
+  "branch": "kimi/6013-docs-slice",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/launchd-inventory.md",
+    "docs/runbooks/recovery.md"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "4640d832d8e5",
+  "token_usage": {
+    "input_tokens": 31056,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 609024,
+    "output_tokens": 7311,
+    "api_call_count": 15
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T20:17:04.105954Z",
+    "agent_lines": 245,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 245,
+    "total_lines_changed": 344,
+    "agent_percentage": 71.22093023255815,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
