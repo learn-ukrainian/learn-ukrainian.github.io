@@ -17,6 +17,28 @@ Because the remote VPS repo checkout (`/home/ops/atlas-runner/repo`) is delibera
 
 ---
 
+## Healing chopped dictionary cards (#6736)
+
+Cards chopped mid-entry by the retired 900-char cap (pre-#6437) are provably
+stuck: the additive delta-merge (invariant 2) never overwrites a non-empty
+`definition_cards` field, so a re-enrich campaign alone cannot heal them.
+Before publishing, run the fail-closed repair, which rebuilds ONLY
+signature-chopped `vts`/`sum20` cards from the attested local slovnyk cache
+(read-only; no network, no invented text):
+
+```bash
+.venv/bin/python scripts/lexicon/repair_truncated_definition_cards.py --local --write
+```
+
+Verification output checks:
+- `repaired` — cards restored to the full cached article.
+- `residual_no_cache` — entries whose slovnyk cache row is absent on this
+  machine; rerun where the full cache lives (e.g. the runner) or refetch.
+- `residual_guard_mismatch` — rebuilt text fails the prefix guard (e.g.
+  «див.» cross-reference cards); left untouched, investigate individually.
+
+---
+
 ## Step-by-Step Operator Recipe
 
 ### 1. Pre-flight Positive-Control Canary Check

@@ -1473,7 +1473,11 @@ def _parse_slovnyk_entry(
         "word": headword,
         "source_url": parser.canonical_url or url,
         "title": title,
-        "text": _truncate_text(article_text, 5000),
+        # Store the full attested article (#6736): the former 5000-char cap
+        # amputated the longest multi-sense VTS/СУМ-20 articles mid-text, and
+        # card builders can only quote what the cache kept. Display-length
+        # decisions belong to the consumers, not to raw ingestion.
+        "text": article_text,
         "query": lemma,
         "lookup_word": lookup_word,
     }

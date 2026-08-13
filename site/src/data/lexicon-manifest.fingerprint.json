@@ -91,7 +91,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "0176d05c390564c55220a660414b2babed85d802c61294b5c03d2441732985cd"
+        "sha256": "d8db8c533821f69abbacf6f7e679e81501c5de208257a2d60016c46a7b52ed7e"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -228,6 +228,10 @@
       {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",
         "sha256": "212d5d59061e2b3709e6f62b0861ccf0c98dfa4e1d63922efa8c5fce3d356416"
+      },
+      {
+        "path": "scripts/lexicon/repair_truncated_definition_cards.py",
+        "sha256": "45704ca1f8326c817d201a2068a7a312dfc61dfa3cc79eae4afb819d19afbde4"
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
