@@ -338,23 +338,21 @@ class ClaudeAdapter:
         # defaults to the headless lane default (high, operator 2026-08-13).
         effective_effort = effort if effort is not None else self.default_effort
         if not review_isolation:
-            # Prefer the already-probed cli_version from
-            # ``_ensure_supported_claude_cli_version`` above. Re-calling
-            # ``supports_effort`` would spawn a second ``claude --version``
-            # via subprocess.run→Popen; tests that patch runner Popen then
-            # capture the probe as argv[0] and miss the real agent command
-            # (writer-isolation CI failure after the 2026-08-13 default-effort
-            # change, which made the probe unconditional). When cli_version
-            # is unknown, fall back to the patchable supports_effort helper
-            # (root cause of test_claude_adapter_emits_effort_when_supported
-            # on PR #1474).
-            if cli_version is not None:
-                # Min supported CLI is 2.1.116; --effort landed at 2.1.98.
-                effort_supported = True
-            else:
-                from utils.claude_version import supports_effort
+            # ``supports_effort`` is the single patchable decision point for
+            # --effort: tests patch it to simulate an unsupported CLI, and the
+            # default-high lane default must ALSO omit the flag when the CLI
+            # lacks it. To avoid a second ``claude --version`` subprocess —
+            # which broke writer-isolation CI when tests patch runner Popen
+            # and capture the probe as argv[0] instead of the real agent
+            # command — seed the shared per-prefix cache from the
+            # already-probed cli_version so the ``supports_effort`` call is a
+            # cache hit in production. Min supported CLI is 2.1.116; --effort
+            # landed at 2.1.98 (_EFFORT_MIN_VERSION).
+            from utils.claude_version import remember_support, supports_effort
 
-                effort_supported = supports_effort(probe_prefix)
+            if cli_version is not None:
+                remember_support(probe_prefix, cli_version >= _EFFORT_MIN_VERSION)
+            effort_supported = supports_effort(probe_prefix)
             if effort_supported:
                 cmd.extend(["--effort", effective_effort])
             else:

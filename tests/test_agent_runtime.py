@@ -198,6 +198,7 @@ def test_registry_has_known_agents():
         "glm",
         "kimi",
         "deepseek",
+        "hermes-deepseek",
         "qwen",
         "agy",
         "cursor",

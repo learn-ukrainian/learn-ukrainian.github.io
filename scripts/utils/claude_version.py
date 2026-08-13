@@ -217,6 +217,32 @@ def supports_effort(cmd_prefix: Sequence[str] | str) -> bool:
     return supports_exclude_dynamic_system_prompt_sections(cmd_prefix)
 
 
+def remember_support(cmd_prefix: Sequence[str] | str, supported: bool) -> None:
+    """Record a definitive per-prefix support verdict WITHOUT probing.
+
+    Callers that already probed the CLI version by another path (e.g. the
+    ClaudeAdapter's ``_ensure_supported_claude_cli_version`` gate, which
+    caches ``claude --version`` per prefix) use this to seed the shared
+    cache so a later ``supports_*`` call is a cache hit instead of
+    spawning a second ``--version`` subprocess.
+
+    Args:
+        cmd_prefix: Same semantics as
+            :func:`supports_exclude_dynamic_system_prompt_sections`.
+        supported: The support verdict for that prefix. Overwrites any
+            cached entry (used by tests to simulate an old CLI).
+
+    This mirrors the caching contract of the probing functions: the
+    verdict is stored keyed by ``tuple(cmd_prefix)`` and is permanent for
+    the process (call ``_reset_cache_for_tests`` to clear).
+    """
+    if isinstance(cmd_prefix, str):
+        cmd_prefix = [cmd_prefix]
+    key = tuple(cmd_prefix)
+    with _CACHE_LOCK:
+        _CACHE[key] = bool(supported)
+
+
 def _reset_cache_for_tests() -> None:
     """Clear the cache. Tests only — do NOT call from production code."""
     with _CACHE_LOCK:
