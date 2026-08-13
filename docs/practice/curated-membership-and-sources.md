@@ -6,7 +6,7 @@
 
 This document is the durable memory for **what belongs in the Curated / teacher Practice pool**, **how we expand without discarding existing work**, and **where content for each activity mode may come from** (not cloze alone). Agents must not invent a narrower “done” bar.
 
-After each 2×2 teacher-lesson cycle, an operator drops the current master `.docx` locally and runs `.venv/bin/python -m scripts.lexicon.sync_teacher_table_deck --docx PATH --heading "Combined Master Vocabulary Table (#3)" --write-site-data --report PATH` before reviewing the reported count and committing the public lemma-only set.
+After each 2×2 teacher-lesson cycle, an operator runs the local teacher-table sync command with the approved exact heading, reviews the reported count, and commits the public lemma-only set. In the picker, that set is **📋 Приклад розробника / Dev's example deck**: a shared example from the developer's classroom list.
 
 ---
 
