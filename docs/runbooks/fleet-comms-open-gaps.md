@@ -75,12 +75,12 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.5` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
-| **agy** | `gemini-3.6-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
+| **agy** | `gemini-3.7-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
-| agy | gemini-3.6-flash-high | high | gemini-3.1-pro-high | high |
+| agy | gemini-3.7-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.5 | high | grok-4.5 | high |
@@ -90,7 +90,7 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 
 ```bash
 # AGY default / escalate
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high ...
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.7-flash-high ...
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
 # Claude escalate
 .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...
@@ -210,7 +210,7 @@ not erase routing evidence.
 
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
-- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.6 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
+- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.7 Flash (agy)** → Grok (native then Cursor explicit `grok-4.5`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
 - Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
