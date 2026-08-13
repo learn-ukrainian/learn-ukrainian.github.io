@@ -5,9 +5,18 @@ import subprocess
 from pathlib import Path
 
 from scripts.audit.check_static_practice_assets import check_assets
+from scripts.audit.daily_cefr import CEFR_LEVELS
+from scripts.audit.generate_daily_pool import CEFR_LEVELS as GENERATOR_CEFR_LEVELS
 from tests.project_python import project_python
 
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
+
+
+def test_daily_cefr_levels_match_generator_ssot() -> None:
+    from scripts.audit.check_static_practice_assets import DAILY_CEFR_LEVELS
+
+    assert DAILY_CEFR_LEVELS == CEFR_LEVELS == GENERATOR_CEFR_LEVELS
+    assert {"A1", "A2", "B1", "B2", "C1", "C2"} == DAILY_CEFR_LEVELS
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -349,7 +358,8 @@ def test_check_assets_reports_bad_daily_pool_rows(tmp_path: Path) -> None:
                 "slug": "дім",
                 "gloss": "house",
                 "k": "vyv",
-                "cefr": "B2",
+                # Not a CEFR band — B2/C1/C2 are valid after #6728 true-CEFR emission.
+                "cefr": "X9",
             },
             {
                 "lemma": "інший",
@@ -374,6 +384,60 @@ def test_check_assets_reports_bad_daily_pool_rows(tmp_path: Path) -> None:
     assert any("duplicate slug" in error for error in summary["errors"])
     assert any("missing learner gloss" in error for error in summary["errors"])
     assert any("missing CEFR for non-avoid" in error for error in summary["errors"])
+
+
+def test_check_assets_accepts_a1_through_c2_daily_cefr(tmp_path: Path) -> None:
+    """#6728: validator must admit the same A1–C2 set the generator emits."""
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _write_json(
+        daily_pool,
+        [
+            {
+                "lemma": "дім",
+                "slug": "дім",
+                "gloss": "house",
+                "k": "vyv",
+                "cefr": "A1",
+                "weight": 3,
+            },
+            {
+                "lemma": "абсурд",
+                "slug": "абсурд",
+                "gloss": "absurdity",
+                "k": "vyv",
+                "cefr": "B2",
+                "weight": 2,
+            },
+            {
+                "lemma": "абстракція",
+                "slug": "абстракція",
+                "gloss": "abstraction",
+                "k": "vyv",
+                "cefr": "C1",
+                "weight": 2,
+            },
+            {
+                "lemma": "апорія",
+                "slug": "апорія",
+                "gloss": "aporia",
+                "k": "vyv",
+                "cefr": "C2",
+                "weight": 1,
+            },
+        ],
+    )
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=4,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert not any("outside daily levels" in error for error in summary["errors"])
+    assert summary["daily"]["by_cefr"] == {"A1": 1, "B2": 1, "C1": 1, "C2": 1}
 
 
 def test_check_assets_reports_schema_and_index_inconsistencies(tmp_path: Path) -> None:

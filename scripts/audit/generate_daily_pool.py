@@ -25,6 +25,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from scripts.audit.daily_cefr import CEFR_LEVEL_ORDER, CEFR_LEVELS
 from scripts.audit.generate_search_index import _site_build_entry_model_gates
 from scripts.audit.lexeme_filter import (
     DERIVED_FORM_SOURCES,
@@ -38,11 +39,6 @@ DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
 EARLY_CEFR = {"A1", "A2", "B1"}
-# Every CEFR level the WotD level selector exposes. The pool emits a row's true level
-# (any of these) and reserves per-level slots, so C1/C2/B2 tabs point at real
-# level-matched cards instead of an A1/A2/B1-only pool (#6728).
-CEFR_LEVEL_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
-CEFR_LEVELS = frozenset(CEFR_LEVEL_ORDER)
 # Minimum slots reserved per known CEFR level that has enough eligible words. Keeps
 # the daily 12-card draw comfortably above zero for every tab while leaving the
 # majority of slots for the beginner-friendly weighted fill.
