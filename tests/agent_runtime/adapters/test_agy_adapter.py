@@ -388,10 +388,10 @@ def test_build_invocation_unknown_model_falls_back_to_default(tmp_path: Path) ->
     # A stale/unknown identifier degrades to the adapter default rather than
     # passing an invalid --model value.
     plan = _build(tmp_path, model="tui-controlled")
-    assert _model_after_flag(plan) == "gemini-3.6-flash-high"
+    assert _model_after_flag(plan) == "gemini-3.7-flash-high"
 
 
 def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> None:
     # No model -> resolves the adapter default slug.
     plan = _build(tmp_path, model=None)
-    assert _model_after_flag(plan) == "gemini-3.6-flash-high"
+    assert _model_after_flag(plan) == "gemini-3.7-flash-high"

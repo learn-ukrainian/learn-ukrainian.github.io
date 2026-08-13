@@ -97,7 +97,7 @@ def test_governor_prompt_preserves_language_glm_and_trail_boundaries() -> None:
 
     assert "Ukrainian pedagogy" in prompt
     assert "uses only `agy`, `codex`, `claude`, or `grok-4.5`" in prompt
-    assert "`gemini-3.6-flash-high` first" in prompt
+    assert "`gemini-3.7-flash-high` first" in prompt
     assert "Require `sources`/VESUM evidence" in prompt
     assert "GLM-5.2/z.ai" in prompt
     assert "sends prompt data to China" in prompt

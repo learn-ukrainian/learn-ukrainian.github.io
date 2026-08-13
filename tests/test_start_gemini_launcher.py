@@ -11,7 +11,7 @@ def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     interactive = run_launcher("start-gemini.sh")
     epic = run_launcher("start-gemini.sh", "--epic", "atlas")
     assert interactive.returncode == 0, interactive.stderr
-    assert "would exec agy --model gemini-3.6-flash-high" in interactive.stdout
+    assert "would exec agy --model gemini-3.7-flash-high" in interactive.stdout
     assert epic.returncode == 2
     assert "interactive launchers reject --epic" in epic.stderr
 

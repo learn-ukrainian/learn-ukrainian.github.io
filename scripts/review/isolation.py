@@ -3802,7 +3802,7 @@ def prepare_isolated_review_launch(
         raise ReviewIsolationError(
             "agy_isolated_review_unsupported: native project-instruction, MCP, "
             "hook, and nested-reviewer suppression is not proven. "
-            "AGY may orchestrate (gemini-3.6-flash-high) but must request formal CF via "
+            "AGY may orchestrate (gemini-3.7-flash-high) but must request formal CF via "
             "review-pr --reviewer claude|glm|codex. See #5555 / docs/runbooks/agy-formal-cf-isolation.md."
         )
     if engine_key == "grok":

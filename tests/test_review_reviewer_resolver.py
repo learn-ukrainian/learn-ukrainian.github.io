@@ -277,7 +277,7 @@ def test_low_risk_pool_author_gets_terra_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-08-02"
+    assert resolution.catalog_reviewed_on == "2026-08-13"
     assert resolution.resolved_risk == "high"
 
 
@@ -933,7 +933,7 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
             "gpt-5.6-terra",
             "claude-sonnet-5",
             "glm-5.2",
-            "gemini-3.6-flash",
+            "gemini-3.7-flash",
         ]
         assert ladder[4][0].name == "grok-4.5"
 

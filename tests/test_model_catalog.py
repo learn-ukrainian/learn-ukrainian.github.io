@@ -29,10 +29,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-08-02"
-    assert catalog_age_days(catalog, as_of=date(2026, 8, 2)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 8, 31))
-    assert catalog_is_stale(catalog, as_of=date(2026, 9, 2))
+    assert catalog["reviewed_on"] == "2026-08-13"
+    assert catalog_age_days(catalog, as_of=date(2026, 8, 13)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 9, 11))
+    assert catalog_is_stale(catalog, as_of=date(2026, 9, 13))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -45,6 +45,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "claude-opus-5",
         "claude-sonnet-5",
         "gemini-3.1-pro-high",
+        "gemini-3.7-flash-high",
         "gemini-3.6-flash-high",
         "gemini-3.5-flash-high",
         "grok-4.5",
@@ -305,12 +306,12 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
     assert defaults["grok"]["fallback_model_id"] == "grok-4.5"
-    assert defaults["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert defaults["agy"]["model_id"] == "gemini-3.7-flash-high"
     assert defaults["agy"]["effort"] == "high"
     assert defaults["agy"]["formal_review_eligible"] is False
 
 
-def test_orchestrator_seats_include_agy_flash_36_high():
+def test_orchestrator_seats_include_agy_flash_37_high():
     seats = load_model_catalog()["orchestrator_seats"]
     assert set(seats) >= {"claude", "grok", "agy", "codex"}
     # codex was dropped as a DRIVER 2026-07-22 (272K window not worth session rollover
@@ -320,7 +321,7 @@ def test_orchestrator_seats_include_agy_flash_36_high():
     assert seats["codex"]["model_id"] == "gpt-5.6-terra"
     assert seats["codex"]["effort"] == "high"
     assert seats["codex"]["escalate_model_id"] == "gpt-5.6-sol"
-    assert seats["agy"]["model_id"] == "gemini-3.6-flash-high"
+    assert seats["agy"]["model_id"] == "gemini-3.7-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["claude"]["model_id"] == "claude-fable-5"

@@ -185,7 +185,7 @@ def test_legacy_gemini_model_slugs_map_to_agy_slugs() -> None:
     )
     assert (
         _cli._map_legacy_gemini_model_to_agy("gemini-3.0-flash-preview")
-        == "gemini-3.6-flash-high"
+        == "gemini-3.7-flash-high"
     )
     assert (
         _cli._map_legacy_gemini_model_to_agy("Gemini 3.1 Pro (High)")

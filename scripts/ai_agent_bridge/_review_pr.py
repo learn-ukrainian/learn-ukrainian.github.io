@@ -45,7 +45,7 @@ REVIEWER_AUTO = "auto"
 EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
-    REVIEWER_AGY: "gemini-3.6-flash",
+    REVIEWER_AGY: "gemini-3.7-flash",
     REVIEWER_GLM: "glm-5.2",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-k3",
@@ -56,7 +56,7 @@ EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
 FORMAL_CF_MODEL: dict[str, str] = {
     REVIEWER_CODEX: "gpt-5.6-terra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
-    REVIEWER_AGY: "gemini-3.6-flash-high",
+    REVIEWER_AGY: "gemini-3.7-flash-high",
     REVIEWER_GLM: "glm-5.2",
     REVIEWER_GROK: "grok-4.5",
     REVIEWER_KIMI: "kimi-code/k3",

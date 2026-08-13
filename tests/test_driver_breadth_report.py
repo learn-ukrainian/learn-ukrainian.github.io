@@ -76,10 +76,11 @@ def test_note_file_requires_fleet_breadth_marker(tmp_path: Path) -> None:
 
 
 def test_tier_for_gemini_flash_high_is_practical() -> None:
-    """CF F1: bare 'flash' must not map gemini-3.6-flash-high to heap."""
+    """CF F1: bare 'flash' must not map gemini-*-flash-high to heap."""
+    assert _tier_for("agy", "gemini-3.7-flash-high") == "practical"
+    assert _tier_for("gemini", "gemini-3.7-flash-high") == "practical"
     assert _tier_for("agy", "gemini-3.6-flash-high") == "practical"
-    assert _tier_for("gemini", "gemini-3.6-flash-high") == "practical"
-    # Bare flash token still heap when not flash-high (live seats: 3.6-flash / 3.1-pro only).
+    # Bare flash token still heap when not flash-high.
     assert _tier_for("codex", "gpt-5.6-luna") == "heap"
     # 'mini' must not match inside 'gemini'
     assert _tier_for("agy", "gemini-3.1-pro-high") == "practical"

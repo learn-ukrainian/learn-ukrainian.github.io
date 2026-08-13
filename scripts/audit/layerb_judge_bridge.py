@@ -61,7 +61,7 @@ GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
 DEFAULT_MODELS = {
     "codex": "gpt-5.6-terra",
     "grok": "grok-4.5",
-    "gemini": "gemini-3.6-flash-high",
+    "gemini": "gemini-3.7-flash-high",
 }
 CODEX_DISABLED_FEATURES = (
     "shell_tool",
