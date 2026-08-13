@@ -274,6 +274,28 @@ def test_receipt_self_hash_and_runtime_bindings_are_enforced(tmp_path: Path, mon
         intake.validate_receipt(receipt)
 
 
+def _rehash(receipt: dict[str, object]) -> dict[str, object]:
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = intake.receipt_sha256(receipt)
+    return receipt
+
+
+def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
+    with pytest.raises(intake.VspuModernTheoryIntakeError, match="legal reuse authorization"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
+    with pytest.raises(intake.VspuModernTheoryIntakeError, match="legacy operator authorization field"):
+        intake.validate_receipt(_rehash(receipt))
+
+
 def test_tracked_receipt_validates_when_present() -> None:
     if not intake.DEFAULT_PUBLIC_RECEIPT_PATH.exists():
         pytest.skip("tracked receipt is generated after the implementation stabilizes")

@@ -48,7 +48,7 @@
         "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
         "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
         "complete_source_policy_v4_sha256": {"const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"},
-        "vspu_materialization_receipt_sha256": {"const": "f023fab75ebc82ecb84a88a487f2ef2d477722035a82c5c23c18431b11e8b45c"},
+        "vspu_materialization_receipt_sha256": {"const": "336310e049a1d0b065f766a9b220507726ca9bfb940bef3fa046b9e017a38542"},
         "vspu_additive_policy_sha256": {"const": "c2d2d094931751fefba0dd14143a83b344dc59f52b36414b165be920d29309f5"},
         "private_jsonl_sha256": {"const": "babb8a266a7d6720d68fb960f7848aace03f646f1ede5b30de2831f7cbb85dc8"},
         "preimage_backup_receipt_sha256": {"const": "e53355f2d6c221c7bfe9cbba63b4055982f286b26d72618e8b9a393231febb0a"},
@@ -185,7 +185,8 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "private_operator_authorized_use_only",
+        "operator_private_attributed_research_use_directed",
+        "legal_reuse_authorization_established",
         "public_redistribution_authorized",
         "unrestricted_reuse_authorized",
         "normative_rule_authority",
@@ -194,7 +195,8 @@
         "adapt_or_remove_on_substantiated_complaint"
       ],
       "properties": {
-        "private_operator_authorized_use_only": {"const": true},
+        "operator_private_attributed_research_use_directed": {"const": true},
+        "legal_reuse_authorization_established": {"const": false},
         "public_redistribution_authorized": {"const": false},
         "unrestricted_reuse_authorized": {"const": false},
         "normative_rule_authority": {"const": false},

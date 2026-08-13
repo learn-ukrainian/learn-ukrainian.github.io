@@ -68,9 +68,9 @@
         "cutover_implementation_sha256": {"$ref": "#/$defs/sha256"},
         "cutover_schema_sha256": {"$ref": "#/$defs/sha256"},
         "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
-        "cutover_receipt_file_sha256": {"const": "265099931f1aa8a2c60a000e80313980093af8790b58aa91e0b55caca71eba4f"},
-        "cutover_receipt_body_sha256": {"const": "a4542d7d1771738fba50fef12aa55548787ce238e9f2f3ca3776a24429e1ef24"},
-        "backup_receipt_file_sha256": {"const": "d78d51073db46b8cd9202e2b30be93d691a8feb6f1cebb432e23000ec581e317"},
+        "cutover_receipt_file_sha256": {"const": "0d76606e946d5bbb2e034df36f0715f6b72ff38b6556a81b5dcd197d8cc05e30"},
+        "cutover_receipt_body_sha256": {"const": "62b39bad723aeb830d5a7ea948a21ce41b7ac2c235ee0da7d6a9425516736821"},
+        "backup_receipt_file_sha256": {"const": "659e06dd9b2ffd9d65ebe6f991ba5bc4baf33f228fbf00e9b1c1f88aa0a59767"},
         "compressed_backup_sha256": {"const": "c07318782a8ad924902ee7f89592cfd03ec17d47c3be183ea186b851edec92f2"}
       }
     },

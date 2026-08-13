@@ -544,6 +544,44 @@ def test_receipt_rejects_semantic_authority_drift(
         cutover.validate_receipt(broken)
 
 
+def test_receipt_rejects_legal_reuse_overclaim(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database, jsonl, policy, _ = _fixture(tmp_path, monkeypatch)
+    receipt = _reconcile(
+        database=database,
+        jsonl=jsonl,
+        policy=policy,
+        output=tmp_path / "receipt.json",
+        apply=True,
+    )
+    broken = copy.deepcopy(receipt)
+    broken["rights_and_authority"]["legal_reuse_authorization_established"] = True
+    broken["receipt_sha256"] = cutover.receipt_sha256(broken)
+    with pytest.raises(cutover.VspuDatabaseCutoverError, match="legal reuse authorization"):
+        cutover.validate_receipt(broken)
+
+
+def test_receipt_rejects_legacy_operator_authorization_field(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database, jsonl, policy, _ = _fixture(tmp_path, monkeypatch)
+    receipt = _reconcile(
+        database=database,
+        jsonl=jsonl,
+        policy=policy,
+        output=tmp_path / "receipt.json",
+        apply=True,
+    )
+    broken = copy.deepcopy(receipt)
+    broken["rights_and_authority"]["private_operator_authorized_use_only"] = True
+    broken["receipt_sha256"] = cutover.receipt_sha256(broken)
+    with pytest.raises(cutover.VspuDatabaseCutoverError, match="legacy operator authorization field"):
+        cutover.validate_receipt(broken)
+
+
 def test_receipt_rejects_incomplete_database_ingest_boundary(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

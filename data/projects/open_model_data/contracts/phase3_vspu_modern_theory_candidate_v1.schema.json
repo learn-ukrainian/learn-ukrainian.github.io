@@ -139,7 +139,8 @@
     "rights": {
       "const": {
         "standardized_license_present": false,
-        "operator_private_text_only_phase3_use_authorized": true,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
         "attribution_required": true,
         "takedown_ready": true,
         "adapt_or_remove_on_substantiated_complaint": true,

@@ -390,7 +390,8 @@ def build_receipt(
         },
         "rights": {
             "standardized_license_present": False,
-            "operator_private_text_only_phase3_use_authorized": True,
+            "operator_private_attributed_research_use_directed": True,
+            "legal_reuse_authorization_established": False,
             "attribution_required": True,
             "takedown_ready": True,
             "adapt_or_remove_on_substantiated_complaint": True,
@@ -434,6 +435,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["source_coverage_ready"] is False, "receipt overclaims source coverage")
     require(receipt["gates"]["phase3_complete"] is False, "receipt overclaims Phase 3 completion")
     require(receipt["gates"]["phase4_blocked"] is True, "receipt opens Phase 4")
+    require(
+        receipt["rights"]["legal_reuse_authorization_established"] is False,
+        "receipt overclaims legal reuse authorization",
+    )
+    require(
+        "operator_private_text_only_phase3_use_authorized" not in receipt["rights"],
+        "receipt retains legacy operator authorization field",
+    )
     return receipt
 
 

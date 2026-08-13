@@ -78,9 +78,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
     text_facts = {
         "unicode_code_points": sum(len(text) for text in texts),
         "utf8_bytes": sum(len(text.encode("utf-8")) for text in texts),
-        "page_manifest_sha256": hashlib.sha256(
-            b"".join(intake.canonical_bytes(row) for row in page_rows)
-        ).hexdigest(),
+        "page_manifest_sha256": hashlib.sha256(b"".join(intake.canonical_bytes(row) for row in page_rows)).hexdigest(),
         "extracted_text_sha256": hashlib.sha256("\n\f\n".join(texts).encode("utf-8")).hexdigest(),
     }
     monkeypatch.setattr(intake, "PDF_SHA256", hashlib.sha256(pdf_payload).hexdigest())
@@ -110,7 +108,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
   </dim:dim></mets:xmlData></mets:mdWrap></mets:dmdSec>
   <mets:fileSec><mets:fileGrp><mets:file ID="file_{intake.SOURCE_METS_FILE_UUID}"
     SIZE="{len(pdf_payload)}" CHECKSUMTYPE="MD5" CHECKSUM="{intake.PDF_MD5}">
-    <mets:FLocat xmlns:xlink="http://www.w3.org/TR/xlink/" xlink:href="{intake.SOURCE_BITSTREAM_PATH.replace('&', '&amp;')}" />
+    <mets:FLocat xmlns:xlink="http://www.w3.org/TR/xlink/" xlink:href="{intake.SOURCE_BITSTREAM_PATH.replace("&", "&amp;")}" />
   </mets:file></mets:fileGrp></mets:fileSec>
 </mets:mets>
 """.encode()
@@ -122,7 +120,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
 <meta content="{intake.SOURCE_CATALOG_CITATION}" name="DC.publisher" />
 </head></html>
 """.encode()
-    publications = f"<a href=\"/{intake.SOURCE_HANDLE}\">{intake.SOURCE_TITLE}</a>\n".encode()
+    publications = f'<a href="/{intake.SOURCE_HANDLE}">{intake.SOURCE_TITLE}</a>\n'.encode()
     _write_private(mets_path, mets)
     _write_private(item_path, item)
     _write_private(publications_path, publications)
@@ -274,9 +272,7 @@ def test_review_overclaims_are_rejected(
         _build(paths)
 
 
-def test_private_input_modes_and_symlinks_are_rejected(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     _simulate_group_readable_mode(monkeypatch, paths["pdf"])
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="mode 0600"):
@@ -311,9 +307,7 @@ def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyP
         intake.write_public_receipt(output, receipt)
 
 
-def test_concurrent_receipt_creation_cannot_clobber_winner(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_concurrent_receipt_creation_cannot_clobber_winner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     receipt = _build(paths)
     output = tmp_path / "public" / "receipt.json"
@@ -333,14 +327,48 @@ def test_concurrent_receipt_creation_cannot_clobber_winner(
     monkeypatch.setattr(os, "link", original_link)
 
 
-def test_receipt_self_hash_and_runtime_bindings_are_enforced(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_receipt_self_hash_and_runtime_bindings_are_enforced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     receipt = _build(paths)
     receipt["receipt_sha256"] = "0" * 64
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="self-hash drift"):
         intake.validate_receipt(receipt)
+
+
+def _rehash(receipt: dict[str, object]) -> dict[str, object]:
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = intake.sha256_bytes(intake.canonical_bytes(body))
+    return receipt
+
+
+def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legal reuse authorization"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legacy operator authorization field"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_catalog_page_count_statement_does_not_imply_bitstream_completeness(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    assert receipt["text_layer"]["catalog_page_count_in_bitstream_text_verified"] is True  # type: ignore[index]
+    assert receipt["source"]["bitstream_is_complete_publication"] is False  # type: ignore[index]
+    assert receipt["source"]["exact_bitstream_pages"] == intake.PDF_PAGES  # type: ignore[index]
+    assert receipt["source"]["catalog_print_collation_pages"] == intake.CATALOG_PRINT_COLLATION_PAGES  # type: ignore[index]
+    receipt["source"]["bitstream_is_complete_publication"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="full-book overclaim"):
+        intake.validate_receipt(_rehash(receipt))
 
 
 def test_tracked_receipt_validates_when_present() -> None:
