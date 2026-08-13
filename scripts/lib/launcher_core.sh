@@ -49,9 +49,10 @@ $driver_mode
 
 Options:
   -h, --help                 Show this help and exit.
-  --model MODEL              Provider model. Claude: omit to keep last TUI/session model.
-  --effort LEVEL             Claude Code effort for this session (e.g. high, xhigh).
-                             Omit to keep last session effort. Other providers ignore.
+  --model MODEL              Provider model. Claude/Grok: omit to keep last TUI/session model.
+  --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
+                             --reasoning-effort). Omit to keep last session selection.
+                             Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
@@ -62,9 +63,9 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
-  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude =
+  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude/Grok =
                              last session).
-  LAUNCHER_EFFORT            Default Claude effort when --effort is omitted (empty =
+  LAUNCHER_EFFORT            Default effort when --effort is omitted (empty for Claude/Grok =
                              last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
@@ -154,7 +155,10 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     grok)
-      LC_MODEL="${LAUNCHER_MODEL:-grok-4.5}"
+      # Both interactive and driver leave model/effort alone unless the caller
+      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
+      # the Grok TUI keeps the last session selection.
+      LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     kimi)
@@ -354,8 +358,8 @@ launcher_validate_mode() {
 launcher_validate_driver_certification() {
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude may omit --model so the TUI keeps the last session selection.
-  if [ "$LC_PROVIDER" = "claude" ] && [ -z "${LC_MODEL:-}" ]; then
+  # Claude/Grok may omit --model so the TUI keeps the last session selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
