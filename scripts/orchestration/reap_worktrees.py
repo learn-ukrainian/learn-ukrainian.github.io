@@ -566,20 +566,18 @@ def _qualifying_reason(
         ):
             return f"{pr_label} CLOSED"
 
-    if info.branch is not None:
+    if info.branch is not None and not safe_only:
+        if info.branch.startswith("build/"):
+            age_hours = _worktree_age_hours(info.path, now=now)
+            if age_hours is not None and age_hours > build_age_hours:
+                return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
 
-        if not safe_only:
-            if info.branch.startswith("build/"):
-                age_hours = _worktree_age_hours(info.path, now=now)
-                if age_hours is not None and age_hours > build_age_hours:
-                    return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
-
-            # Never treat "matches remote tip" as reaped-while-OPEN: open PR
-            # worktrees commonly match origin/<branch> and must stay mounted.
-            if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
-                info.path, info.branch
-            ):
-                return f"HEAD matches origin/{info.branch}"
+        # Never treat "matches remote tip" as reaped-while-OPEN: open PR
+        # worktrees commonly match origin/<branch> and must stay mounted.
+        if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
+            info.path, info.branch
+        ):
+            return f"HEAD matches origin/{info.branch}"
 
     if merged_pr_only and not include_terminal_dispatches:
         return None
