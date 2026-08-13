@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bb54263f8ef6",
+  "session_id": "fleet-453bcd4a02ac4e21864433b9b5f69caa",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T23:10:47.049887Z",
+  "branch": "agy/6763-landing-dead",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/astro.config.mjs",
+    "site/src/components/LevelLanding.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.7-flash-high",
+  "turn_id": "9c347019e673",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T23:10:47.026474Z",
+    "agent_lines": 17,
+    "agent_removed": 63,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 17,
+    "total_lines_changed": 80,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
