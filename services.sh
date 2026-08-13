@@ -63,7 +63,9 @@ SVC_LOG[astro]="$LOGS_DIR/astro.log"
 SVC_DESC[astro]="Astro Course UI Dev Server"
 SVC_HEALTH[astro]="http://127.0.0.1:4321/"
 SVC_HEALTH_ALT[astro]="http://localhost:4321/"
-SVC_MATCH[astro]="astro.mjs dev"
+# Live ``npm run dev`` resolves to ``node …/.bin/astro dev``; older
+# installs still expose ``astro.mjs dev``. Match either argv form.
+SVC_MATCH[astro]=".bin/astro dev|astro.mjs dev"
 
 ALL_SERVICES="sources api astro"
 
@@ -158,19 +160,25 @@ _pid_on_port() {
 _cmdline_for_pid() {
     local pid="$1"
     local cmdline
+    local proc_cmdline="/proc/$pid/cmdline"
 
     # Linux exposes the argv vector directly.  Unlike ``ps -o args=``, this
     # does not depend on procps personality or command-width formatting, both
     # of which can alter the string used for our service identity match.
-    # macOS has no procfs equivalent, so it retains the established ps path.
-    if cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null) && [ -n "$cmdline" ]; then
+    # Only open /proc when the file is readable: a bare ``tr < /proc/...``
+    # redirect lets bash itself print "No such file or directory" on macOS
+    # (``2>/dev/null`` was on ``tr``, not the redirect). Fall back to ``ps``.
+    if [[ -r "$proc_cmdline" ]] \
+        && cmdline=$(tr '\0' ' ' < "$proc_cmdline" 2>/dev/null) \
+        && [ -n "$cmdline" ]; then
         # The kernel terminates every argv element with NUL, including argv[0].
         # Remove only the terminal separator introduced by ``tr``.
         printf '%s\n' "${cmdline% }"
         return 0
     fi
 
-    ps -p "$pid" -o args= 2>/dev/null
+    # ``command ps`` avoids a shell alias such as ``ps=procs`` breaking identity.
+    command ps -p "$pid" -o args= 2>/dev/null
 }
 
 _pid_matches_service() {
@@ -178,13 +186,21 @@ _pid_matches_service() {
     local pid="$2"
     local match="${SVC_MATCH[$name]-}"
     local cmdline
+    local needle
+    local IFS='|'
 
     if [[ -z "$match" ]]; then
         return 1
     fi
 
     cmdline="$(_cmdline_for_pid "$pid")"
-    [[ -n "$cmdline" && "$cmdline" == *"$match"* ]]
+    [[ -z "$cmdline" ]] && return 1
+
+    # SVC_MATCH may list '|' alternatives (astro: .bin/astro vs astro.mjs).
+    for needle in $match; do
+        [[ -n "$needle" && "$cmdline" == *"$needle"* ]] && return 0
+    done
+    return 1
 }
 
 _verified_port_pid() {

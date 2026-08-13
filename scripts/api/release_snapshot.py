@@ -235,6 +235,10 @@ def build_release(
     leave an orphaned, complete release directory. It is safe: ``current``
     still references the preceding release, and the next build for the same
     SHA verifies, reuses, and publishes that complete directory.
+
+    A dirty final directory that fails ``verify_release`` is removed and
+    rebuilt from ``git archive`` so launchd does not crash-loop on a
+    permanently corrupt snapshot. Staging failures still clean ``.staging-*``.
     """
     repo_root = repo_root.resolve()
     sha = _validate_sha(sha)
@@ -245,9 +249,14 @@ def build_release(
     if final_dir.exists():
         if not final_dir.is_dir() or final_dir.is_symlink():
             raise ReleaseSnapshotError(f"release path is not a directory: {final_dir}")
-        verify_release(final_dir, sha)
-        publish_current(releases_dir, sha)
-        return final_dir, True
+        try:
+            verify_release(final_dir, sha)
+        except ReleaseSnapshotError:
+            # Corrupt reuse would crash-loop launchd on every respawn.
+            shutil.rmtree(final_dir)
+        else:
+            publish_current(releases_dir, sha)
+            return final_dir, True
 
     staging_dir = releases_dir / f".staging-{os.getpid()}"
     if staging_dir.exists() or staging_dir.is_symlink():

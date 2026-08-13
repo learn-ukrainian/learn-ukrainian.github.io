@@ -13,15 +13,22 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.repo_root import main_checkout_root
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 PIDS_DIR = PROJECT_ROOT / ".pids"
 LOGS_DIR = PROJECT_ROOT / "logs"
 # Service commands use the repository virtual environment in normal CI.  The
 # explicit override lets a dispatch worktree use the shared project interpreter
-# without creating a worktree-local virtual environment.
-VENV_PYTHON = Path(os.environ.get("SERVICES_TEST_PYTHON", PROJECT_ROOT / ".venv" / "bin" / "python"))
-
+# without creating a worktree-local virtual environment. Default to the primary
+# checkout interpreter so sparse worktrees without a local .venv still run.
+VENV_PYTHON = Path(
+    os.environ.get(
+        "SERVICES_TEST_PYTHON",
+        main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python",
+    )
+)
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -382,6 +389,110 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env):
         assert proc.returncode is not None
         assert is_port_free(port)
 
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+            proc.wait(timeout=5)
+
+
+def _extract_bash_function(source: str, name: str) -> str:
+    """Return a top-level ``name() { ... }`` block from ``services.sh``."""
+    start = source.find(f"{name}() {{")
+    if start < 0:
+        raise AssertionError(f"function {name}() not found in services.sh")
+    depth = 0
+    for index in range(start, len(source)):
+        char = source[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return source[start : index + 1]
+    raise AssertionError(f"unclosed function {name}() in services.sh")
+
+
+def test_cmdline_for_pid_silent_when_procfs_missing() -> None:
+    """Missing /proc/$pid/cmdline must not print a bash redirect error."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    helper = _extract_bash_function(source, "_cmdline_for_pid")
+    # A pid that cannot exist: no /proc entry and no live process for ps.
+    dead_pid = 2_147_483_647
+    result = subprocess.run(
+        ["bash", "-c", f"{helper}\n_cmdline_for_pid {dead_pid}\n"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        timeout=30,
+    )
+    combined = f"{result.stdout}\n{result.stderr}"
+    assert "/proc/" not in combined, combined
+    assert "No such file or directory" not in combined, combined
+
+
+def test_astro_match_accepts_bin_astro_dev() -> None:
+    """Astro identity must match the live ``node …/.bin/astro dev`` argv."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    match_line = next(
+        line for line in source.splitlines() if line.startswith("SVC_MATCH[astro]=")
+    )
+    assert ".bin/astro dev" in match_line
+
+    helper = "\n".join(
+        [
+            "declare -A SVC_MATCH",
+            match_line,
+            _extract_bash_function(source, "_cmdline_for_pid"),
+            _extract_bash_function(source, "_pid_matches_service"),
+            # Inject the observed live listener argv; skip real /proc and ps.
+            '_cmdline_for_pid() { printf "%s\\n" "$FAKE_CMDLINE"; }',
+            'FAKE_CMDLINE="node /repo/site/node_modules/.bin/astro dev --host 127.0.0.1 --port 4321 --force"',
+            "if _pid_matches_service astro 1; then echo MATCH_BIN; else echo MISS_BIN; fi",
+            'FAKE_CMDLINE="node /repo/site/node_modules/astro/astro.mjs dev --host 127.0.0.1 --port 4321"',
+            "if _pid_matches_service astro 1; then echo MATCH_MJS; else echo MISS_MJS; fi",
+            'FAKE_CMDLINE="node /repo/site/node_modules/.bin/vite --port 4321"',
+            "if _pid_matches_service astro 1; then echo MATCH_FOREIGN; else echo MISS_FOREIGN; fi",
+        ]
+    )
+    result = subprocess.run(
+        ["bash", "-c", helper],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "MATCH_BIN" in result.stdout
+    assert "MATCH_MJS" in result.stdout
+    assert "MISS_FOREIGN" in result.stdout
+
+
+def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lsof_env) -> None:
+    """``status`` must stay quiet about /proc even when resolving a live PID."""
+    script_path, port = temp_services_sh
+    set_pids, _, env = mock_lsof_env
+    api_pid_file = PIDS_DIR / "api.pid"
+
+    proc = subprocess.Popen([
+        str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
+        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+    ])
+    reap_process_on_exit(proc)
+    try:
+        api_pid_file.write_text(f"{proc.pid}\n", encoding="utf-8")
+        set_pids([proc.pid])
+        res = subprocess.run(
+            [str(script_path), "status", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        combined = f"{res.stdout}\n{res.stderr}"
+        assert "/proc/" not in combined, combined
+        assert "No such file or directory" not in combined, combined
+        assert "running" in res.stdout
     finally:
         if proc.poll() is None:
             proc.terminate()
