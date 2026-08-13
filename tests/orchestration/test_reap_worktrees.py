@@ -175,10 +175,13 @@ def test_final_worktree_delete_hand_refuses_the_repository_root(tmp_path: Path) 
 
 def test_post_task_reap_routes_regular_dispatch_deletion_through_p0_reaper() -> None:
     """Regular dispatch worktrees have one automatic deletion hand: P0."""
-    source = inspect.getsource(post_task_reap._reap_main_worktree)
+    main_source = inspect.getsource(post_task_reap._reap_main_worktree)
+    canonical_source = inspect.getsource(post_task_reap._reap_via_canonical)
 
-    assert "reap_worktrees.reap_worktrees(" in source
-    assert "_remove_worktree(" not in source
+    assert "_reap_via_canonical(" in main_source
+    assert "_remove_worktree(" not in main_source
+    assert "reap_worktrees.reap_worktrees(" in canonical_source
+    assert "_remove_worktree(" not in canonical_source
 
 
 def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
