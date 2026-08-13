@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fcde2abd849d",
+  "strategy": "manual-commit",
+  "branch": "cursor/6717-sweep-403",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/orchestration/integration_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fc/de2abd849d/0/metadata.json",
+      "transcript": "/fc/de2abd849d/0/full.jsonl",
+      "compact_transcript": "/fc/de2abd849d/0/transcript.jsonl",
+      "content_hash": "/fc/de2abd849d/0/content_hash.txt",
+      "prompt": "/fc/de2abd849d/0/prompt.txt"
+    }
+  ]
+}
