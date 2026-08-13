@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "260ce2c9b52c",
+  "strategy": "manual-commit",
+  "branch": "agy/6735-russian-short-form",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/26/0ce2c9b52c/0/metadata.json",
+      "transcript": "/26/0ce2c9b52c/0/full.jsonl",
+      "compact_transcript": "/26/0ce2c9b52c/0/transcript.jsonl",
+      "content_hash": "/26/0ce2c9b52c/0/content_hash.txt",
+      "prompt": "/26/0ce2c9b52c/0/prompt.txt"
+    }
+  ]
+}

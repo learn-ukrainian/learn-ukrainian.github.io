@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "260ce2c9b52c",
+  "session_id": "fleet-3681a1b2c65d4af2b99bc7898ac79eae",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T19:44:46.046897Z",
+  "branch": "agy/6735-russian-short-form",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/enrich_manifest.py",
+    "tests/test_lexicon_enrich_manifest.py"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "59839d9dbe89",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T19:44:46.037174Z",
+    "agent_lines": 26,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 26,
+    "total_lines_changed": 26,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
