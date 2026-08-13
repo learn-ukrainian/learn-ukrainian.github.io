@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0f9358039a4f",
+  "strategy": "manual-commit",
+  "branch": "cursor/grok-launcher-unstick",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/launchers/grok.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/test_start_grok_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0f/9358039a4f/0/metadata.json",
+      "transcript": "/0f/9358039a4f/0/full.jsonl",
+      "compact_transcript": "/0f/9358039a4f/0/transcript.jsonl",
+      "content_hash": "/0f/9358039a4f/0/content_hash.txt",
+      "prompt": "/0f/9358039a4f/0/prompt.txt"
+    }
+  ]
+}
