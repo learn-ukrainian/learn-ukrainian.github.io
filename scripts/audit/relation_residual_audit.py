@@ -33,6 +33,7 @@ from scripts.audit.generate_practice_deck import (
     _strip_homonym_option_metadata,
     _valid_antonym_frames,
     _valid_homonym_frames,
+    admit_thin_mode_pair_leg_surfaces,
     read_antonym_pairs,
     read_atlas_db,
     read_homonym_pairs,
@@ -122,14 +123,15 @@ def classify_pairs(
         antonym_pairs=pairs if relation == "antonym" else None,
         homonym_pairs=pairs if relation == "homonym" else None,
     )
+    practice_entries = admit_thin_mode_pair_leg_surfaces(entries, priority_keys)
     _by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
-        entries, verifier, BuildConfig(), priority_keys
+        practice_entries, verifier, BuildConfig(), priority_keys
     )
     for lexeme in all_lexemes:
         slug = _clean_text(lexeme.get("url_slug")) or _clean_text(lexeme.get("slug"))
         if slug:
             lexemes_by_id.setdefault(slug, lexeme)
-    entry_by_key, entry_by_plain = _entry_lookup(entries)
+    entry_by_key, entry_by_plain = _entry_lookup(practice_entries)
 
     results: list[dict[str, Any]] = []
     for index, pair in enumerate(pairs):

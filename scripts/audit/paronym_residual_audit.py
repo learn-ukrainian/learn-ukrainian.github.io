@@ -26,6 +26,7 @@ from scripts.audit.generate_practice_deck import (
     _practice_priority_keys,
     _select_practice_lexemes,
     _valid_paronym_frames,
+    admit_thin_mode_pair_leg_surfaces,
     read_atlas_db,
     read_paronym_pairs,
     validate_paronym_pair,
@@ -74,8 +75,9 @@ def classify_pairs(
 ) -> list[dict[str, Any]]:
     config = BuildConfig()
     priority_keys = _practice_priority_keys([], None, pairs, None)
+    practice_entries = admit_thin_mode_pair_leg_surfaces(entries, priority_keys)
     _lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
-        entries, verifier, config, priority_keys
+        practice_entries, verifier, config, priority_keys
     )
     lexemes_by_slug: dict[str, dict[str, Any]] = {}
     for lexeme in all_lexemes:
@@ -84,7 +86,7 @@ def classify_pairs(
             lexemes_by_slug[slug] = lexeme
     lexemes_by_slug.update(lexemes_by_id)
 
-    entry_by_key = _entry_lookup(entries)
+    entry_by_key = _entry_lookup(practice_entries)
 
     results: list[dict[str, Any]] = []
     for index, pair in enumerate(pairs):

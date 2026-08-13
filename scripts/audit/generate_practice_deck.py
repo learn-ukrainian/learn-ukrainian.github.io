@@ -28,7 +28,14 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(AUDIT_DIR) not in sys.path:
     sys.path.insert(0, str(AUDIT_DIR))
 
-from lexeme_filter import SURFACE_CLOZE, SURFACE_PRACTICE, is_practice_eligible, is_surface_admitted
+from lexeme_filter import (
+    SOURCE_INVENTORY_SOURCE,
+    SURFACE_CLOZE,
+    SURFACE_PRACTICE,
+    is_practice_eligible,
+    is_surface_admitted,
+    practice_ineligibility_reason,
+)
 
 from scripts.lexicon.curated_membership import (
     apply_membership,
@@ -4217,6 +4224,97 @@ def _practice_priority_keys(
     return keys
 
 
+def _entry_matches_priority_keys(entry: dict[str, Any], priority_keys: set[str]) -> bool:
+    """True when an Atlas entry is one of the thin-mode / cloze priority legs."""
+    if not priority_keys:
+        return False
+    candidates = {
+        _stable_lemma_id(entry),
+        _clean_text(entry.get("url_slug")),
+        _clean_text(entry.get("lemma")),
+    }
+    lemma = _clean_text(entry.get("lemma"))
+    if lemma:
+        candidates.add(_plain(lemma))
+    slug = _clean_text(entry.get("url_slug"))
+    if slug:
+        candidates.add(_plain(slug))
+    candidates.discard(None)
+    candidates.discard("")
+    return bool(candidates & priority_keys)
+
+
+def admit_thin_mode_pair_leg_surfaces(
+    entries: list[dict[str, Any]],
+    priority_lemma_keys: set[str],
+) -> list[dict[str, Any]]:
+    """Stamp in-memory practice admission for curated thin-mode pair legs.
+
+    Source-inventory rows default to Atlas browse-only. Curated antonym /
+    paronym / homonym / approved-synonym YAML is an explicit curriculum
+    decision for those drills, so matching legs receive
+    ``surface_admission.practice=True`` for this build only.
+
+    Legs that still lack course usage / enrichment CEFR get an in-memory B1
+    placement for this build — the same fallback the antonym / homonym /
+    paronym emitters already use when ``lexeme.cefr`` is missing. Other
+    factory gates (missing Atlas row, gloss, surzhyk, form-of, frames,
+    VESUM) stay intact and continue to block emit when they apply.
+    """
+    if not priority_lemma_keys:
+        return entries
+
+    out: list[dict[str, Any]] = []
+    admitted = 0
+    cefr_fallback = 0
+    for entry in entries:
+        if not _entry_matches_priority_keys(entry, priority_lemma_keys):
+            out.append(entry)
+            continue
+
+        updated = entry
+        changed = False
+
+        # Browse-only source-inventory legs: curated pair YAML admits practice.
+        if (
+            entry.get("primary_source") == SOURCE_INVENTORY_SOURCE
+            and not is_surface_admitted(entry, SURFACE_PRACTICE)
+        ):
+            admission = entry.get("surface_admission")
+            if isinstance(admission, (list, tuple, set)):
+                merged_list = [str(item) for item in admission]
+                if SURFACE_PRACTICE not in merged_list:
+                    merged_list.append(SURFACE_PRACTICE)
+                updated = {**updated, "surface_admission": merged_list}
+            else:
+                merged = dict(admission) if isinstance(admission, dict) else {}
+                merged[SURFACE_PRACTICE] = True
+                updated = {**updated, "surface_admission": merged}
+            changed = True
+            admitted += 1
+
+        # Unanchored but otherwise practice-clean legs: B1 for this build only.
+        if practice_ineligibility_reason(updated) == "missing_curriculum_anchor":
+            updated = {
+                **updated,
+                "cefr": "B1",
+                "thin_mode_pair_leg_cefr_fallback": True,
+            }
+            changed = True
+            cefr_fallback += 1
+
+        out.append(updated if changed else entry)
+
+    if admitted or cefr_fallback:
+        print(
+            "thin-mode pair legs: "
+            f"admitted {admitted} source-inventory surfaces; "
+            f"B1 fallback for {cefr_fallback} unanchored legs",
+            file=sys.stderr,
+        )
+    return out
+
+
 def build_practice_shards(
     entries: list[dict[str, Any]],
     allowlist: ReviewedSourceAllowlist,
@@ -4280,8 +4378,17 @@ def build_practice_shards(
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
     )
+    thin_mode_leg_keys = _practice_priority_keys(
+        [],
+        None,
+        paronym_pairs,
+        synonym_verdicts,
+        antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
+    )
+    practice_entries = admit_thin_mode_pair_leg_surfaces(entries, thin_mode_leg_keys)
     lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
-        entries,
+        practice_entries,
         verifier,
         config,
         priority_lemma_keys,
