@@ -46,6 +46,7 @@ SCHEMA_VERSION = "phase3_evaluation_context_manifest_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_evaluation_context_manifest_v1"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+PUBLIC_FILE_MODE = 0o644
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 ROW_COUNT = 9_392
 V2_SOURCE_UNITS = 67_041
@@ -212,6 +213,16 @@ def _regular_private(path: Path, label: str) -> None:
     require(stat.S_IMODE(state.st_mode) == PRIVATE_FILE_MODE, f"{label} permissions must be 0600")
 
 
+def _regular_public(path: Path, label: str) -> None:
+    _reject_symlink_components(path, label)
+    try:
+        state = path.lstat()
+    except OSError as exc:
+        raise EvaluationContextManifestError(f"missing {label}: {path}") from exc
+    require(stat.S_ISREG(state.st_mode) and not path.is_symlink(), f"{label} must be a regular file")
+    require(stat.S_IMODE(state.st_mode) == PUBLIC_FILE_MODE, f"{label} permissions must be 0644")
+
+
 def _strict_json_bytes(raw: bytes, label: str, top: type[Any] = dict) -> Any:
     try:
         value = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
@@ -228,6 +239,29 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
+def _read_public_json(path: Path, label: str) -> dict[str, Any]:
+    _regular_public(path, label)
+    value = _strict_json_bytes(path.read_bytes(), label)
+    require(isinstance(value, dict), f"{label} must be an object")
+    return value
+
+
+def _verified_private_file_bytes(path: Path, label: str) -> tuple[bytes, str]:
+    _regular_private(path, label)
+    raw = path.read_bytes()
+    return raw, sha256_bytes(raw)
+
+
+def _parse_jsonl_bytes(raw: bytes, label: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for line_number, line in enumerate(raw.splitlines(keepends=True), start=1):
+        require(line.endswith(b"\n"), f"{label} row lacks LF: {line_number}")
+        row = _strict_json_bytes(line, f"{label}:{line_number}")
+        require(isinstance(row, dict), f"{label} row is not an object: {line_number}")
+        rows.append(row)
+    return rows
+
+
 def _read_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
     _regular_private(path, label)
     rows: list[dict[str, Any]] = []
@@ -240,7 +274,7 @@ def _read_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
     return rows
 
 
-def _validate_materialization_receipt(path: Path, source_jsonl: Path) -> dict[str, Any]:
+def _validate_materialization_receipt(path: Path, *, source_jsonl_hash: str) -> dict[str, Any]:
     receipt = _read_json(path, "materialization receipt")
     require(
         receipt.get("schema_version") == "phase3_source_unit_materialization_receipt_v1",
@@ -253,7 +287,7 @@ def _validate_materialization_receipt(path: Path, source_jsonl: Path) -> dict[st
     require(sha256_file(path) == PINNED_MATERIALIZATION_RECEIPT_FILE_SHA256, "materialization receipt file drift")
     require(receipt_sha256(receipt) == PINNED_MATERIALIZATION_RECEIPT_BODY_SHA256, "materialization receipt body drift")
     require(
-        receipt.get("private_jsonl_sha256") == sha256_file(source_jsonl) == PINNED_SOURCE_UNITS_JSONL_SHA256,
+        receipt.get("private_jsonl_sha256") == source_jsonl_hash == PINNED_SOURCE_UNITS_JSONL_SHA256,
         "source jsonl drift",
     )
     require(receipt.get("family_counts") == MATERIALIZATION_FAMILY_COUNTS, "family counts drift")
@@ -289,14 +323,11 @@ def _validate_ua_gec_context_receipt(path: Path) -> dict[str, Any]:
     return validated
 
 
-def _load_source_index(path: Path, receipt: Mapping[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
-    rows = _read_jsonl(path, "source materialization")
+def _load_source_index_from_bytes(raw: bytes, receipt: Mapping[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
+    file_hash = sha256_bytes(raw)
+    require(file_hash == receipt["private_jsonl_sha256"], "source materialization stream drift")
+    rows = _parse_jsonl_bytes(raw, "source materialization")
     require(len(rows) == V2_SOURCE_UNITS, "source materialization row count drift")
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    require(digest.hexdigest() == receipt["private_jsonl_sha256"], "source materialization stream drift")
     index: dict[tuple[str, str], dict[str, Any]] = {}
     for line_number, row in enumerate(rows, start=1):
         require(set(row) == SOURCE_FIELDS, f"source row shape drift: {line_number}")
@@ -416,10 +447,6 @@ def _build_manifest_row(
         row["source_text_sha256"] = source_row["source_text_sha256"]
         row["frozen_locator_sha256"] = source_row["frozen_locator_sha256"]
     else:
-        require(
-            partition_row["family_id"] != "ua_gec" or exclusion_reason_code is not None or ua_gec_record is None,
-            "UA-GEC fragment misuse",
-        )
         require(ua_gec_record is None, "frozen source-unit rows cannot embed UA-GEC complete context")
         require(exclusion_reason_code is None, "frozen source-unit rows cannot carry exclusion reasons")
         require(complete_sentence_context is False, "frozen source-unit text is never complete sentence context")
@@ -440,13 +467,17 @@ def build_manifest(
     ua_gec_exclusions_path: Path,
     ua_gec_receipt_path: Path,
 ) -> tuple[list[dict[str, Any]], dict[str, Counter[str]]]:
-    materialization_receipt = _validate_materialization_receipt(materialization_receipt_path, source_jsonl)
+    source_raw, source_hash = _verified_private_file_bytes(source_jsonl, "source materialization")
+    materialization_receipt = _validate_materialization_receipt(
+        materialization_receipt_path,
+        source_jsonl_hash=source_hash,
+    )
     _validate_evaluation_freeze_receipt(evaluation_freeze_receipt_path, partition_path)
     _validate_ua_gec_context_receipt(ua_gec_receipt_path)
     require(sha256_file(ua_gec_context_path) == PINNED_UA_GEC_CONTEXT_SHA256, "UA-GEC context path drift")
     require(sha256_file(ua_gec_exclusions_path) == PINNED_UA_GEC_EXCLUSIONS_SHA256, "UA-GEC exclusions path drift")
 
-    source_index = _load_source_index(source_jsonl, materialization_receipt)
+    source_index = _load_source_index_from_bytes(source_raw, materialization_receipt)
     partition_rows = _load_partition_rows(partition_path)
     context_index = _load_ua_gec_context_index(ua_gec_context_path)
     exclusions = _load_ua_gec_exclusions(ua_gec_exclusions_path)
@@ -478,6 +509,11 @@ def build_manifest(
                 ua_gec_record=context_index[unit_id],
             )
         else:
+            if partition_row["family_id"] == "ua_gec":
+                require(
+                    unit_id not in exclusions and unit_id not in context_index,
+                    f"UA-GEC identity must resolve to complete context or typed exclusion: {unit_id}",
+                )
             row = _build_manifest_row(
                 partition_row,
                 source_row,
@@ -541,6 +577,7 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _prepare_private_output(path: Path) -> None:
+    _reject_symlink_components(path, "private output")
     parent = path.parent
     if parent.exists():
         require(parent.is_dir() and not parent.is_symlink(), "private output parent must be a real directory")
@@ -579,7 +616,7 @@ def _write_public_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = canonical_bytes(receipt)
     if path.exists():
-        require(not path.is_symlink() and path.is_file(), "public receipt path is unsafe")
+        _regular_public(path, "public receipt")
         require(path.read_bytes() == payload, "refusing to overwrite an immutable public receipt")
         return
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
@@ -588,6 +625,7 @@ def _write_public_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+    os.chmod(path, PUBLIC_FILE_MODE)
 
 
 def _drive_item_id(path: Path) -> str:
@@ -613,8 +651,6 @@ def _drive_item_id(path: Path) -> str:
         raise DriveIdentityPendingError("artifact lacks Google Drive provider identity") from exc
     value = probe.stdout.strip()
     require(value, "artifact has an empty Google Drive provider identity")
-    return value
-
     return value
 
 
@@ -832,9 +868,10 @@ def finish_custody(
     drive_backup_dir: Path,
     public_receipt_path: Path,
 ) -> dict[str, Any]:
+    _reject_symlink_components(drive_backup_dir, "drive backup directory")
     private_output = drive_backup_dir / PRIVATE_FILENAME
     _regular_private(private_output, "private manifest")
-    receipt = _read_json(public_receipt_path, "public receipt")
+    receipt = _read_public_json(public_receipt_path, "public receipt")
     validated = validate_receipt(receipt)
     _verify_drive_readback(private_output, validated["manifest"]["private_jsonl_sha256"])
     checksums_path = _write_checksums(drive_backup_dir, {PRIVATE_FILENAME: private_output})
@@ -862,6 +899,7 @@ def production_run(
     completed_at: str | None = None,
 ) -> dict[str, Any]:
     require(drive_backup_dir.parent.is_dir(), "drive backup parent must exist")
+    _reject_symlink_components(drive_backup_dir, "drive backup directory")
     drive_backup_dir.mkdir(parents=True, exist_ok=True)
     os.chmod(drive_backup_dir, PRIVATE_DIR_MODE)
     temp_root = Path(tempfile.mkdtemp(prefix="phase3-eval-context-", dir=None))
@@ -926,7 +964,7 @@ def verify_existing(
     payload = b"".join(canonical_bytes(row) for row in rows)
     _regular_private(private_output, "private manifest")
     require(private_output.read_bytes() == payload, "private manifest drift")
-    receipt = _read_json(public_receipt_path, "public receipt")
+    receipt = _read_public_json(public_receipt_path, "public receipt")
     validated = validate_receipt(receipt)
     require(
         validated["manifest"]["private_jsonl_sha256"] == sha256_bytes(payload), "public receipt manifest hash drift"

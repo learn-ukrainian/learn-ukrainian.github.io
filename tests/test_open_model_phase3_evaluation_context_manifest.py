@@ -332,6 +332,8 @@ def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     assert paths["private_output"].exists()
     assert stat.S_IMODE(paths["private_output"].stat().st_mode) == manifest.PRIVATE_FILE_MODE
     assert stat.S_IMODE(paths["private_output"].parent.stat().st_mode) == manifest.PRIVATE_DIR_MODE
+    assert paths["public_receipt"].exists()
+    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == manifest.PUBLIC_FILE_MODE
     assert receipt["row_count"] == 3
     assert receipt["context_accounting"] == {
         "ua_gec_complete_context": 1,
@@ -402,6 +404,95 @@ def test_changed_private_output_is_not_overwritten(tmp_path: Path, monkeypatch: 
             public_receipt_path=paths["public_receipt"],
             started_at="2026-08-13T21:00:00Z",
             completed_at="2026-08-13T21:00:02Z",
+        )
+
+
+def test_private_output_rejects_ancestor_symlink(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    bundle_root = tmp_path / "bundle"
+    bundle_root.mkdir()
+    paths = _fixture_bundle(bundle_root)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    root = tmp_path / "roots"
+    real = root / "real"
+    real.mkdir(parents=True, mode=manifest.PRIVATE_DIR_MODE)
+    link = root / "link"
+    link.symlink_to(real)
+    nested = link / "nested"
+    nested.mkdir(mode=manifest.PRIVATE_DIR_MODE)
+    os.chmod(nested, manifest.PRIVATE_DIR_MODE)
+    private_output = nested / manifest.PRIVATE_FILENAME
+    public_receipt = tmp_path / "public-receipt.json"
+
+    with pytest.raises(manifest.EvaluationContextManifestError, match="symlink forbidden"):
+        manifest.materialize(
+            source_jsonl=paths["source_jsonl"],
+            materialization_receipt_path=paths["materialization_receipt"],
+            partition_path=paths["partition"],
+            evaluation_freeze_receipt_path=paths["evaluation_freeze_receipt"],
+            ua_gec_context_path=paths["ua_gec_context"],
+            ua_gec_exclusions_path=paths["ua_gec_exclusions"],
+            ua_gec_receipt_path=paths["ua_gec_receipt"],
+            private_output=private_output,
+            public_receipt_path=public_receipt,
+            started_at="2026-08-13T21:00:00Z",
+            completed_at="2026-08-13T21:00:01Z",
+        )
+
+
+def test_source_jsonl_uses_single_verified_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    source_path = paths["source_jsonl"]
+    verified_bytes = source_path.read_bytes()
+    read_calls = 0
+
+    original_read_bytes = Path.read_bytes
+
+    def tracked_read_bytes(self: Path) -> bytes:
+        nonlocal read_calls
+        if self == source_path:
+            read_calls += 1
+            if read_calls > 1:
+                raise AssertionError("source jsonl must be read once for verified-byte parsing")
+            return verified_bytes
+        return original_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", tracked_read_bytes)
+
+    manifest.build_manifest(
+        source_jsonl=paths["source_jsonl"],
+        materialization_receipt_path=paths["materialization_receipt"],
+        partition_path=paths["partition"],
+        evaluation_freeze_receipt_path=paths["evaluation_freeze_receipt"],
+        ua_gec_context_path=paths["ua_gec_context"],
+        ua_gec_exclusions_path=paths["ua_gec_exclusions"],
+        ua_gec_receipt_path=paths["ua_gec_receipt"],
+    )
+    assert read_calls == 1
+
+
+def test_source_jsonl_hash_is_verified_before_parse(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+
+    tampered = paths["source_jsonl"].read_bytes() + b"#"
+    paths["source_jsonl"].write_bytes(tampered)
+    monkeypatch.setattr(manifest, "PINNED_SOURCE_UNITS_JSONL_SHA256", manifest.sha256_bytes(tampered))
+
+    with pytest.raises(manifest.EvaluationContextManifestError, match="source jsonl drift"):
+        manifest.build_manifest(
+            source_jsonl=paths["source_jsonl"],
+            materialization_receipt_path=paths["materialization_receipt"],
+            partition_path=paths["partition"],
+            evaluation_freeze_receipt_path=paths["evaluation_freeze_receipt"],
+            ua_gec_context_path=paths["ua_gec_context"],
+            ua_gec_exclusions_path=paths["ua_gec_exclusions"],
+            ua_gec_receipt_path=paths["ua_gec_receipt"],
         )
 
 
