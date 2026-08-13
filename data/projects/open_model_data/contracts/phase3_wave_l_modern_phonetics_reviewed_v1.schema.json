@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_wave_l_modern_phonetics_reviewed_v1.schema.json",
+  "title": "Phase 3 Wave L modern phonetics qualified-review receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "issue",
+    "wave",
+    "text_free",
+    "producer_provider_calls",
+    "review_provider_call_recorded",
+    "private_input_locator",
+    "bindings",
+    "review",
+    "sources",
+    "rights",
+    "gates",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_wave_l_modern_phonetics_reviewed_v1"},
+    "status": {"const": "CONTEXTUAL_ONLY_QUALIFIED_UKRAINIAN_SOURCE_REVIEW_RECORDED"},
+    "issue": {"const": 6375},
+    "wave": {"const": "phase3-6375-wave-l-modern-phonetics"},
+    "text_free": {"const": true},
+    "producer_provider_calls": {"const": false},
+    "review_provider_call_recorded": {"const": true},
+    "private_input_locator": {
+      "const": "university_corpus/staging/phase3-6375-wave-l-modern-phonetics"
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "search_receipt_sha256",
+        "qualified_ukrainian_source_review_sha256",
+        "implementation_sha256",
+        "schema_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {
+          "const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+        },
+        "phase3_reboot_prompt_v3_sha256": {
+          "const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+        },
+        "search_receipt_sha256": {
+          "const": "04884a0c9ddd980b8a2724e0caacf554140830e2fb519bf084a12d8f5c336c56"
+        },
+        "qualified_ukrainian_source_review_sha256": {
+          "const": "a35de95c7b9e05a0a09717fa25a76c4db5a59a521e1466f063a1a35ed67cdfba"
+        },
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seat",
+        "model_x_harness",
+        "qualified_ukrainian_source_review_state",
+        "topic_gaps_closed",
+        "topic_gaps_narrowed",
+        "topic_matrix",
+        "topics_narrowed"
+      ],
+      "properties": {
+        "seat": {"const": "qualified_ukrainian_source_review"},
+        "model_x_harness": {"const": "claude/claude-fable-5"},
+        "qualified_ukrainian_source_review_state": {"const": "reviewed"},
+        "topic_gaps_closed": {"const": 0},
+        "topic_gaps_narrowed": {"const": true},
+        "topic_matrix": {
+          "const": {
+            "phonetics": "partial_narrowed",
+            "phonology": "partial_narrowed",
+            "orthoepy": "partial_narrowed",
+            "accentology": "partial_unchanged",
+            "graphics": "partial_narrowed",
+            "orthography": "sufficient_unchanged"
+          }
+        },
+        "topics_narrowed": {
+          "const": ["phonetics", "phonology", "orthoepy", "graphics"]
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_id",
+            "title",
+            "institution",
+            "year",
+            "exact_bitstream_pages",
+            "review_verdict",
+            "final_disposition",
+            "qualified_ukrainian_source_review_state",
+            "normative_rule_authority",
+            "scoped_rule_corroboration",
+            "normative_linguistic_rule_authority_rejected",
+            "risk_codes",
+            "bindings"
+          ],
+          "properties": {
+            "source_id": {"const": "uni-ukrmova-phonetics-orthoepy-kovalenko-2024"},
+            "title": {
+              "const": "Сучасна українська літературна мова: Фонетика. Фонологія. Орфоепія. Графіка. Орфографія"
+            },
+            "institution": {
+              "const": "Кам’янець-Подільський національний університет імені Івана Огієнка"
+            },
+            "year": {"const": 2024},
+            "exact_bitstream_pages": {"const": 172},
+            "review_verdict": {"const": "pass"},
+            "final_disposition": {"const": "contextual_only"},
+            "qualified_ukrainian_source_review_state": {"const": "reviewed"},
+            "normative_rule_authority": {"const": false},
+            "scoped_rule_corroboration": {"const": true},
+            "normative_linguistic_rule_authority_rejected": {"const": false},
+            "risk_codes": {
+              "const": [
+                "course_manual_not_monographic_textbook",
+                "acoustic_phonetics_survey_level_only",
+                "accentology_stress_typology_without_paradigm_system"
+              ]
+            },
+            "bindings": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_pdf_sha256",
+                "source_pdf_md5",
+                "source_pdf_bytes",
+                "acquisition_receipt_sha256",
+                "item_metadata_sha256"
+              ],
+              "properties": {
+                "source_pdf_sha256": {
+                  "const": "bc06ea99f5d3b32b975987851d48af0873442f52c24332d9503705ff822d6aaa"
+                },
+                "source_pdf_md5": {"const": "09af974006d2ee23b29cad1f8e971721"},
+                "source_pdf_bytes": {"const": 5837731},
+                "acquisition_receipt_sha256": {
+                  "const": "8f07223b5add2a97e03101b5406cc4a8f1582b77a90f169eab3b472f790c9d9e"
+                },
+                "item_metadata_sha256": {
+                  "const": "3e70f88da7f4cf4b27d10a7fd1009348944ce98b8bb872640f06f28cfcf1e8c3"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_id",
+            "title",
+            "institution",
+            "year",
+            "exact_bitstream_pages",
+            "review_verdict",
+            "final_disposition",
+            "qualified_ukrainian_source_review_state",
+            "normative_rule_authority",
+            "scoped_rule_corroboration",
+            "normative_linguistic_rule_authority_rejected",
+            "risk_codes",
+            "bindings"
+          ],
+          "properties": {
+            "source_id": {"const": "uni-ukrmova-acoustic-phonetics-yashnyk-2020"},
+            "title": {
+              "const": "Акустичні засади розробки україномовних артикуляційних таблиць"
+            },
+            "institution": {
+              "const": "Національний технічний університет України «Київський політехнічний інститут імені Ігоря Сікорського»"
+            },
+            "year": {"const": 2020},
+            "exact_bitstream_pages": {"const": 142},
+            "review_verdict": {"const": "pass_contextual_only"},
+            "final_disposition": {"const": "contextual_only"},
+            "qualified_ukrainian_source_review_state": {"const": "reviewed"},
+            "normative_rule_authority": {"const": false},
+            "scoped_rule_corroboration": {"const": false},
+            "normative_linguistic_rule_authority_rejected": {"const": true},
+            "risk_codes": {
+              "const": [
+                "letters_sounds_phonemes_category_conflation",
+                "nonstandard_balto_slavic_genealogical_label",
+                "yellow_prince_author_attribution_error",
+                "derivative_linguistics_russian_engineering_methods",
+                "marginal_dialectal_table_lexemes"
+              ]
+            },
+            "bindings": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_pdf_sha256",
+                "source_pdf_md5",
+                "source_pdf_bytes",
+                "acquisition_receipt_sha256",
+                "item_metadata_sha256",
+                "author_agreement_sha256"
+              ],
+              "properties": {
+                "source_pdf_sha256": {
+                  "const": "052e2c21578e7d24936923946f645edb0495a68373799b7a6508ff223e565169"
+                },
+                "source_pdf_md5": {"const": "c25391d609279325229ec77a46b3a70b"},
+                "source_pdf_bytes": {"const": 4045309},
+                "acquisition_receipt_sha256": {
+                  "const": "9a53cdd2cec53e6592860789a30cc9716d109c819e3bda86c4f1139c84aa9bad"
+                },
+                "item_metadata_sha256": {
+                  "const": "5d87cf35f8e26f265d36518d7dd2906d6189990e9059f9138ddebff6f3422658"
+                },
+                "author_agreement_sha256": {
+                  "const": "c61526195f43d10bd8c4622a1125ad4f96fee1232f2622910cfb53986db943b2"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "items": false
+    },
+    "rights": {
+      "const": {
+        "standardized_license_present": false,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
+        "attribution_required": true,
+        "takedown_ready": true,
+        "adapt_or_remove_on_substantiated_complaint": true,
+        "public_redistribution_authorized": false,
+        "unrestricted_reuse_authorized": false
+      }
+    },
+    "gates": {
+      "const": {
+        "frozen_audit_v1_mutated": false,
+        "v2_denominator_mutated": false,
+        "heldout_identity_mutated": false,
+        "database_ingest_authorized": false,
+        "retained_extracted_text_authorized": false,
+        "private_training_conversion_candidate": false,
+        "training_conversion_complete": false,
+        "normative_rule_authority": false,
+        "semantic_gold": false,
+        "source_universe_frozen": false,
+        "source_coverage_ready": false,
+        "phase3_complete": false,
+        "phase4_blocked": true
+      }
+    },
+    "residuals": {
+      "const": [
+        "Post-2019 dedicated theoretical phonetics and acoustic phonology textbook gap remains open.",
+        "Post-2019 dedicated orthoepy handbook and current accentology normative handbook remain open.",
+        "Applied instrumental acoustic data from Yashnyk does not substitute a non-applied theoretical monograph.",
+        "Neither source establishes legal reuse, training conversion, ingest, or redistribution authorization.",
+        "Frozen audit v1, the v2 denominator, and held-out identities were not modified by this lane."
+      ]
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
