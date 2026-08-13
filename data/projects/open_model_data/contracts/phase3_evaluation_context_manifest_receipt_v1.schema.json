@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json",
+  "title": "Phase 3 evaluation context manifest receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "text_free",
+    "provider_calls",
+    "started_at",
+    "completed_at",
+    "bindings",
+    "denominators",
+    "row_count",
+    "family_counts",
+    "lanes",
+    "context_accounting",
+    "manifest",
+    "frozen_evidence_backed_labels",
+    "labels_present",
+    "cycle002",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_evaluation_context_manifest_receipt_v1"},
+    "implementation_version": {"const": "phase3_evaluation_context_manifest_v1"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_sha256",
+        "receipt_schema_sha256",
+        "source_universe_receipt_sha256",
+        "source_units_jsonl_sha256",
+        "materialization_receipt_file_sha256",
+        "materialization_receipt_body_sha256",
+        "partition_manifest_sha256",
+        "evaluation_freeze_receipt_file_sha256",
+        "evaluation_freeze_receipt_body_sha256",
+        "ua_gec_complete_context_jsonl_sha256",
+        "ua_gec_complete_context_exclusions_jsonl_sha256",
+        "ua_gec_complete_context_receipt_file_sha256",
+        "ua_gec_complete_context_receipt_body_sha256",
+        "custody_tarball_sha256"
+      ],
+      "properties": {
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "source_universe_receipt_sha256": {"const": "39061cc9c76d3cc510497dfb1df19639c07f76eb933599a3930137bf60ee31a0"},
+        "source_units_jsonl_sha256": {"const": "e9d89b8fae5193a29a8c3dd055f464fc1290c18f507b669f3efb0720644f6d8c"},
+        "materialization_receipt_file_sha256": {"const": "45ee76edddb060f8719b0adf03afb954979f9af0c3c9290a0c822d138a75110f"},
+        "materialization_receipt_body_sha256": {"const": "c5f0a6ed23dbea8a3157862e476e79f1ca7af50db2dce91e38ac36a1c8ef3d1f"},
+        "partition_manifest_sha256": {"const": "3797e005d7c461f192dacb06e23a9028121bd73cb240f2c2851953a83955aa7d"},
+        "evaluation_freeze_receipt_file_sha256": {"const": "00005536c7783a5f88211cca7aa52246d3fc66fd81d6f3cca666e133ddcf1bba"},
+        "evaluation_freeze_receipt_body_sha256": {"const": "6c73258b3702070fde7667f6748fa4f63e0bae28484ffdf4712f5db1ce7721bf"},
+        "ua_gec_complete_context_jsonl_sha256": {"const": "d214ebfb1c16c0b4cee5ad1150eada58b8e415e0d8f47b4bb018edec39ff7940"},
+        "ua_gec_complete_context_exclusions_jsonl_sha256": {"const": "f4e02163a7e19cc0dd64f6fb5bfffc6d14bd82f49f2bcc088f15e6b845ae735d"},
+        "ua_gec_complete_context_receipt_file_sha256": {"const": "d377fb4de8b970adf9e21fedacdc631cc4c56d17e37407ceafea20fcfcbc7729"},
+        "ua_gec_complete_context_receipt_body_sha256": {"const": "b60077eae9fb50310dff04e08c1b1db6d53fa14b7556052d3c904088366b60a8"},
+        "custody_tarball_sha256": {"const": "364055091f44e1c7ff4df71da81d7a43460100fd8a25cd06e7c820e1b114bc08"}
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2_source_units", "v2_evaluation_identities", "v2_ua_gec_units"],
+      "properties": {
+        "v2_source_units": {"const": 67041},
+        "v2_evaluation_identities": {"const": 9392},
+        "v2_ua_gec_units": {"const": 8937}
+      }
+    },
+    "row_count": {"const": 9392},
+    "family_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "school_textbooks",
+        "ua_gec",
+        "pravopys_2026_complete",
+        "pravopys_2019_complete",
+        "antonenko_style_guide",
+        "calque_inventory",
+        "antonenko_textbook_representation",
+        "other_normative_style_inventory"
+      ],
+      "properties": {
+        "school_textbooks": {"const": 8005},
+        "ua_gec": {"const": 909},
+        "pravopys_2026_complete": {"const": 235},
+        "pravopys_2019_complete": {"const": 178},
+        "antonenko_style_guide": {"const": 58},
+        "calque_inventory": {"const": 7},
+        "antonenko_textbook_representation": {"const": 0},
+        "other_normative_style_inventory": {"const": 0}
+      }
+    },
+    "lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clean_modern", "phenomenon_strata"],
+      "properties": {
+        "clean_modern": {"const": 2000},
+        "phenomenon_strata": {"const": 7392}
+      }
+    },
+    "context_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ua_gec_complete_context", "ua_gec_typed_exclusion", "frozen_source_unit_text"],
+      "properties": {
+        "ua_gec_complete_context": {"const": 907},
+        "ua_gec_typed_exclusion": {"const": 2},
+        "frozen_source_unit_text": {"const": 8483}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["private_jsonl_sha256", "private_jsonl_bytes", "private_jsonl_rows"],
+      "properties": {
+        "private_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "private_jsonl_bytes": {"type": "integer", "minimum": 1},
+        "private_jsonl_rows": {"const": 9392}
+      }
+    },
+    "frozen_evidence_backed_labels": {"const": 0},
+    "labels_present": {"const": false},
+    "cycle002": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identities",
+        "agreements",
+        "disagreements",
+        "rows_with_ua_gec_evidence",
+        "rows_without_authoritative_evidence",
+        "semantic_gold",
+        "disposition"
+      ],
+      "properties": {
+        "identities": {"const": 9392},
+        "agreements": {"const": 6462},
+        "disagreements": {"const": 2930},
+        "rows_with_ua_gec_evidence": {"const": 906},
+        "rows_without_authoritative_evidence": {"const": 8486},
+        "semantic_gold": {"const": false},
+        "disposition": {"const": "diagnostic_only"}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluation_context_manifest_ready",
+        "semantic_labels_present",
+        "cycle002_labels_diagnostic_only",
+        "source_authoring_blocked",
+        "complete_evaluation_package_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "evaluation_context_manifest_ready": {"const": true},
+        "semantic_labels_present": {"const": false},
+        "cycle002_labels_diagnostic_only": {"const": true},
+        "source_authoring_blocked": {"const": true},
+        "complete_evaluation_package_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
