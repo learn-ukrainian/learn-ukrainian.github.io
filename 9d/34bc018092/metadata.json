@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9d34bc018092",
+  "strategy": "manual-commit",
+  "branch": "cursor/6738-services-macos",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/release_snapshot.py",
+    "services.sh",
+    "tests/api/test_release_snapshot.py",
+    "tests/api/test_services_ops.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/9d/34bc018092/0/metadata.json",
+      "transcript": "/9d/34bc018092/0/full.jsonl",
+      "compact_transcript": "/9d/34bc018092/0/transcript.jsonl",
+      "content_hash": "/9d/34bc018092/0/content_hash.txt",
+      "prompt": "/9d/34bc018092/0/prompt.txt"
+    }
+  ]
+}
