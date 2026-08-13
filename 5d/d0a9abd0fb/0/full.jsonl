@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 76827,
-      "output": 16569,
-      "reasoning": 34183,
+      "input": 78330,
+      "output": 18482,
+      "reasoning": 34595,
       "cache": {
-        "read": 6024704,
+        "read": 6783488,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786662441482,
-      "updated": 1786663671985
+      "updated": 1786663708195
     }
   },
   "messages": [
@@ -7731,19 +7731,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 125840,
+          "input": 236,
+          "output": 292,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 125312
           }
         },
         "modelID": "deepseek-v4-flash",
         "providerID": "deepseek-direct",
         "time": {
-          "created": 1786663671983
+          "created": 1786663671983,
+          "completed": 1786663680999
         },
+        "finish": "tool-calls",
         "id": "msg_ffd7418af001jDKzdVix5jZ17O",
         "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
       },
@@ -7760,21 +7763,512 @@
           "tool": "bash",
           "callID": "call_00_ET_ZZnxTpoDEJTvJRlR0zmm0797",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add .github/workflows/README.md .github/workflows/integration-sweep.yml scripts/orchestration/integration_sweep.py tests/orchestration/test_integration_sweep.py && git commit -m \"fix(ci): integration sweep no-ops without a PR number (#6748)\" -m \"GitHub removed the isRequired field from status-check rollup contexts, so the required-context GraphQL probe always failed with \\\"A pull request ID or pull request number is required.\\\" and the hourly scheduled sweep refused with exit 1. Drop the dead probe and rely on the documented sole required check \\`CI Gate\\` (branch-protection REST stays admin-only per #6717).\n\nGuard comments/auto-merge behind a usable PR number so gh is never invoked without one, and an empty sweep no-ops with exit 0.\n\nX-Agent: cursor/6748-sweep-pr-number\" 2>&1 | tail -8",
               "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
             },
+            "output": "[deepseek/6748-sweep-pr-number d1058c4055] fix(ci): integration sweep no-ops without a PR number (#6748)\n 4 files changed, 85 insertions(+), 170 deletions(-)\n",
+            "metadata": {
+              "output": "[deepseek/6748-sweep-pr-number d1058c4055] fix(ci): integration sweep no-ops without a PR number (#6748)\n 4 files changed, 85 insertions(+), 170 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add .github/workflows/README.md .github/workflows/integration-sweep.yml scripts/orchestration/integration_sweep.py tests/orchestration/test_integration_sweep.py && git commit -m \"fix(ci): integration sweep no-ops without a PR number (#6748)\" -m \"GitHub removed the isRequired field from status-check rollup contexts, so the required-context GraphQL probe always failed with \\\"A pull request ID or pull request number is required.\\\" and the hourly scheduled sweep refused with exit 1. Drop the dead probe and rely on the documented sole required check \\`CI Gate\\` (branch-protection REST stays admin-only per #6717).\n\nGuard comments/auto-merge behind a usable PR number so gh is never invoked without one, and an empty sweep no-ops with exit 0.\n\nX-Agent: cursor/6748-sweep-pr-number\" 2>&1 | tail -8",
             "time": {
-              "start": 1786663675796
+              "start": 1786663680649,
+              "end": 1786663680653
             }
           },
           "id": "prt_ffd7421c40013a12BjJBkwUYdv",
           "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
           "messageID": "msg_ffd7418af001jDKzdVix5jZ17O"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 125840,
+            "input": 236,
+            "output": 292,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 125312
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd743b34001NZWnE1hSzwwVy7",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7418af001jDKzdVix5jZ17O"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd6152f60017lKZs39VRooNoi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 126017,
+          "input": 78,
+          "output": 115,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 125824
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786663681008,
+          "completed": 1786663684112
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd743bf00018pbDzvxhwttj7r",
+        "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
+      },
+      "parts": [
+        {
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-start",
+          "id": "prt_ffd7440c2001Z7dVOle4R4KYiL",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd743bf00018pbDzvxhwttj7r"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_YOusAH0OT4INmILeV6qt1986",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git show --stat HEAD | tail -8 && echo \"---\" && git log -1 --format='%B'",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+            },
+            "output": "    X-Agent: cursor/6748-sweep-pr-number\n    Entire-Checkpoint: 5dd0a9abd0fb\n\n .github/workflows/README.md                   |   2 +-\n .github/workflows/integration-sweep.yml       |   6 +-\n scripts/orchestration/integration_sweep.py    | 120 +++++-------------------\n tests/orchestration/test_integration_sweep.py | 127 +++++++++++---------------\n 4 files changed, 85 insertions(+), 170 deletions(-)\n---\nfix(ci): integration sweep no-ops without a PR number (#6748)\n\nGitHub removed the isRequired field from status-check rollup contexts, so the required-context GraphQL probe always failed with \"A pull request ID or pull request number is required.\" and the hourly scheduled sweep refused with exit 1. Drop the dead probe and rely on the documented sole required check `CI Gate` (branch-protection REST stays admin-only per #6717).\n\nGuard comments/auto-merge behind a usable PR number so gh is never invoked without one, and an empty sweep no-ops with exit 0.\n\nX-Agent: cursor/6748-sweep-pr-number\nEntire-Checkpoint: 5dd0a9abd0fb\n\n",
+            "metadata": {
+              "output": "    X-Agent: cursor/6748-sweep-pr-number\n    Entire-Checkpoint: 5dd0a9abd0fb\n\n .github/workflows/README.md                   |   2 +-\n .github/workflows/integration-sweep.yml       |   6 +-\n scripts/orchestration/integration_sweep.py    | 120 +++++-------------------\n tests/orchestration/test_integration_sweep.py | 127 +++++++++++---------------\n 4 files changed, 85 insertions(+), 170 deletions(-)\n---\nfix(ci): integration sweep no-ops without a PR number (#6748)\n\nGitHub removed the isRequired field from status-check rollup contexts, so the required-context GraphQL probe always failed with \"A pull request ID or pull request number is required.\" and the hourly scheduled sweep refused with exit 1. Drop the dead probe and rely on the documented sole required check `CI Gate` (branch-protection REST stays admin-only per #6717).\n\nGuard comments/auto-merge behind a usable PR number so gh is never invoked without one, and an empty sweep no-ops with exit 0.\n\nX-Agent: cursor/6748-sweep-pr-number\nEntire-Checkpoint: 5dd0a9abd0fb\n\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git show --stat HEAD | tail -8 && echo \"---\" && git log -1 --format='%B'",
+            "time": {
+              "start": 1786663683761,
+              "end": 1786663683764
+            }
+          },
+          "id": "prt_ffd744450001Ck7rH7DiP7HoU8",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd743bf00018pbDzvxhwttj7r"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 126017,
+            "input": 78,
+            "output": 115,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 125824
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd744763001wV3AoySrVNWvvX",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd743bf00018pbDzvxhwttj7r"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd6152f60017lKZs39VRooNoi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 126593,
+          "input": 349,
+          "output": 158,
+          "reasoning": 134,
+          "cache": {
+            "write": 0,
+            "read": 125952
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786663684129,
+          "completed": 1786663692304
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd7448210011C3n0p3LQYggQb",
+        "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
+      },
+      "parts": [
+        {
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-start",
+          "id": "prt_ffd744cd0001FmPjmnqcnwA65O",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7448210011C3n0p3LQYggQb"
+        },
+        {
+          "type": "reasoning",
+          "text": "A commit hook appended `Entire-Checkpoint:` trailer automatically. That's the repo's hook behavior (consistent with prior commits like #6717's \"Entire-Checkpoint: fcde2abd849d\"). Fine.\n\nNow push the branch and create a PR. The task says \"PR. No merge.\" Let me push and open a PR with gh. I'll base it on main. Need to confirm the base branch — `git fetch origin main` first per the delegate instructions, then push.\n\nLet me check the remote default branch. The workflow README said `main` (head_branch: main). Let me push and create PR.",
+          "time": {
+            "start": 1786663685727,
+            "end": 1786663687098
+          },
+          "id": "prt_ffd744e5f001RO72OyH0PFNwLU",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7448210011C3n0p3LQYggQb"
+        },
+        {
+          "type": "text",
+          "text": "Commit hook added its standard `Entire-Checkpoint` trailer. Now push and open the PR.",
+          "time": {
+            "start": 1786663687100,
+            "end": 1786663687896
+          },
+          "id": "prt_ffd7453bc0017eV2XP2w4GOL5W",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7448210011C3n0p3LQYggQb"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_UQEemw9MF0iRCGLC5tPN4220",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git fetch origin main --quiet && git push -u origin deepseek/6748-sweep-pr-number 2>&1 | tail -5",
+              "timeout": 120000,
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+            },
+            "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/6748-sweep-pr-number        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/6748-sweep-pr-number -> deepseek/6748-sweep-pr-number\nbranch 'deepseek/6748-sweep-pr-number' set up to track 'origin/deepseek/6748-sweep-pr-number'.\n",
+            "metadata": {
+              "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/6748-sweep-pr-number        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/6748-sweep-pr-number -> deepseek/6748-sweep-pr-number\nbranch 'deepseek/6748-sweep-pr-number' set up to track 'origin/deepseek/6748-sweep-pr-number'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git fetch origin main --quiet && git push -u origin deepseek/6748-sweep-pr-number 2>&1 | tail -5",
+            "time": {
+              "start": 1786663692040,
+              "end": 1786663692046
+            }
+          },
+          "id": "prt_ffd745492001kOpEWTyJA46Z6g",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7448210011C3n0p3LQYggQb"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 126593,
+            "input": 349,
+            "output": 158,
+            "reasoning": 134,
+            "cache": {
+              "write": 0,
+              "read": 125952
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd746790001i4iM1803scNRv1",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd7448210011C3n0p3LQYggQb"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd6152f60017lKZs39VRooNoi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 127406,
+          "input": 128,
+          "output": 686,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 126592
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786663692359,
+          "completed": 1786663702293
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd746847001hcCk0Fkqq6CV3s",
+        "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
+      },
+      "parts": [
+        {
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-start",
+          "id": "prt_ffd746d2c001AUtwlZEjBWciYz",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd746847001hcCk0Fkqq6CV3s"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_rplNVQtvWPIpCRQnqhKK2205",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --repo learn-ukrainian/learn-ukrainian.github.io --base main --head deepseek/6748-sweep-pr-number --title \"fix(ci): integration sweep no-ops without a PR number (#6748)\" --body \"$(cat <<'EOF'\n## What & why\n\nThe hourly scheduled Abandoned PR liveness sweep was red on `main`:\n\n```\nintegration sweep refused: gh: A pull request ID or pull request number is required.\n```\n\n**Root cause (reproduced locally):** GitHub removed the `isRequired` field from\nstatus-check rollup contexts. The required-check discovery probe\n(`_required_contexts_from_pr_rollup`) requested `... on CheckRun{name isRequired}\n... on StatusContext{context isRequired}` — every node now returns `null` plus an\n`UNPROCESSABLE` errors array, so `gh api graphql` exits non-zero and the sweep\nhard-refused with exit 1, every 15 minutes.\n\n## Change\n\n- **Drop the dead GraphQL `isRequired` probe** in `scripts/orchestration/integration_sweep.py`.\n  Required contexts are now the documented sole required status check `CI Gate`\n  (`.github/workflows/README.md`); branch-protection REST remains admin-only and\n  unused (#6717). No weakening: `CI Gate` is documented as the only required check.\n- **Never call `gh` without a usable PR number:** comment fallback and\n  `gh pr merge` are guarded behind `_is_usable_pr_number`, so a bare/zero PR\n  number is never forwarded to gh.\n- **Empty sweep no-ops with exit 0** when there is nothing to comment on or apply.\n- README/workflow comments updated to reflect the removed `isRequired` mechanism.\n\n## Proof\n\n- `tests/orchestration/test_integration_sweep.py`: 14/14 pass; tests added for\n  no-gh-without-number and empty-sweep exit-0. `tests/test_issue_stream_audit.py`: 51/51 pass.\n- Live dry-run against the real repo: exit 0, decisions JSON only, and a gh\n  trace shows **no** `gh pr merge`, no comment fetch without an id, and no\n  `isRequired` probe.\n- The wider `tests/orchestration` failures (`curriculum_*`, `thread_*`,\n  `prompt_contracts`) are pre-existing sparse-checkout/environment failures\n  (absent `curriculum/` tree), identical on the untouched base commit.\n\nX-Agent: cursor/6748-sweep-pr-number\nEOF\n)\" 2>&1 | tail -3",
+              "timeout": 120000,
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --repo learn-ukrainian/learn-ukrainian.github.io --base main --head deepseek/6748-sweep-pr-number --title \"fix(ci): integration sweep no-ops without a PR number (#6748)\" --body \"$(cat <<'EOF'\n## What & why\n\nThe hourly scheduled Abandoned PR liveness sweep was red on `main`:\n\n```\nintegration sweep refused: gh: A pull request ID or pull request number is required.\n```\n\n**Root cause (reproduced locally):** GitHub removed the `isRequired` field from\nstatus-check rollup contexts. The required-check discovery probe\n(`_required_contexts_from_pr_rollup`) requested `... on CheckRun{name isRequired}\n... on StatusContext{context isRequired}` — every node now returns `null` plus an\n`UNPROCESSABLE` errors array, so `gh api graphql` exits non-zero and the sweep\nhard-refused with exit 1, every 15 minutes.\n\n## Change\n\n- **Drop the dead GraphQL `isRequired` probe** in `scripts/orchestration/integration_sweep.py`.\n  Required contexts are now the documented sole required status check `CI Gate`\n  (`.github/workflows/README.md`); branch-protection REST remains admin-only and\n  unused (#6717). No weakening: `CI Gate` is documented as the only required check.\n- **Never call `gh` without a usable PR number:** comment fallback and\n  `gh pr merge` are guarded behind `_is_usable_pr_number`, so a bare/zero PR\n  number is never forwarded to gh.\n- **Empty sweep no-ops with exit 0** when there is nothing to comment on or apply.\n- README/workflow comments updated to reflect the removed `isRequired` mechanism.\n\n## Proof\n\n- `tests/orchestration/test_integration_sweep.py`: 14/14 pass; tests added for\n  no-gh-without-number and empty-sweep exit-0. `tests/test_issue_stream_audit.py`: 51/51 pass.\n- Live dry-run against the real repo: exit 0, decisions JSON only, and a gh\n  trace shows **no** `gh pr merge`, no comment fetch without an id, and no\n  `isRequired` probe.\n- The wider `tests/orchestration` failures (`curriculum_*`, `thread_*`,\n  `prompt_contracts`) are pre-existing sparse-checkout/environment failures\n  (absent `curriculum/` tree), identical on the untouched base commit.\n\nX-Agent: cursor/6748-sweep-pr-number\nEOF\n)\" 2>&1 | tail -3",
+            "time": {
+              "start": 1786663701925,
+              "end": 1786663701929
+            }
+          },
+          "id": "prt_ffd747020001BXJvnarjrKHFsu",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd746847001hcCk0Fkqq6CV3s"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 127406,
+            "input": 128,
+            "output": 686,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 126592
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd748e680019Ly42HoWRHn92z",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd746847001hcCk0Fkqq6CV3s"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd6152f60017lKZs39VRooNoi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 127780,
+          "input": 80,
+          "output": 208,
+          "reasoning": 132,
+          "cache": {
+            "write": 0,
+            "read": 127360
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786663702325,
+          "completed": 1786663708157
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd748f350017k0uFFWoBLeN1n",
+        "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
+      },
+      "parts": [
+        {
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-start",
+          "id": "prt_ffd7493f70015qcyfjP3e96VR9",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd748f350017k0uFFWoBLeN1n"
+        },
+        {
+          "type": "reasoning",
+          "text": "PR created: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779\n\nLet me verify the PR state and check that CI kicks off. Also confirm the PR body doesn't accidentally include the \"X-Agent\" line causing the PR-body guard to fail — actually there's a \"PR-body guard\" in CI contracts that might check for X-Agent trailer format. Let me check whether the body is fine. The commit has the trailer; the body also has \"X-Agent: cursor/6748-sweep-pr-number\" line which should be fine.\n\nLet me check the PR status quickly.",
+          "time": {
+            "start": 1786663704219,
+            "end": 1786663705532
+          },
+          "id": "prt_ffd74969b0012qSJIewnD1oYpH",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd748f350017k0uFFWoBLeN1n"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_wAXpRTXNiCt7AFduw9vs7120",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr view 6779 --repo learn-ukrainian/learn-ukrainian.github.io --json number,state,mergeable,baseRefName,headRefName,url --jq '{number,state,mergeable,base:.baseRefName,head:.headRefName,url}' 2>&1; echo \"---checks---\"; gh pr checks 6779 --repo learn-ukrainian/learn-ukrainian.github.io 2>&1 | head -15",
+              "timeout": 120000,
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+            },
+            "output": "{\"base\":\"main\",\"head\":\"deepseek/6748-sweep-pr-number\",\"mergeable\":\"MERGEABLE\",\"number\":6779,\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779\"}\n---checks---\nAnalyze (actions)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559659\t\nAnalyze (go)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559759\t\nAnalyze (javascript-typescript)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559609\t\nAnalyze (python)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559636\t\nContracts (schema, MDX, atlas, BIO)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625560025\t\nFrontend (build + vitest)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625559957\t\nPytest fastlane (changed tests)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625560060\t\nPytest plan\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625559916\t\nRun zizmor 🌈\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936065/job/94625559740\t\nactionlint (workflow files)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936037/job/94625559520\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936097/job/94625559804\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936108/job/94625559961\t\n",
+            "metadata": {
+              "output": "{\"base\":\"main\",\"head\":\"deepseek/6748-sweep-pr-number\",\"mergeable\":\"MERGEABLE\",\"number\":6779,\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779\"}\n---checks---\nAnalyze (actions)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559659\t\nAnalyze (go)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559759\t\nAnalyze (javascript-typescript)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559609\t\nAnalyze (python)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753935015/job/94625559636\t\nContracts (schema, MDX, atlas, BIO)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625560025\t\nFrontend (build + vitest)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625559957\t\nPytest fastlane (changed tests)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625560060\t\nPytest plan\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936119/job/94625559916\t\nRun zizmor 🌈\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936065/job/94625559740\t\nactionlint (workflow files)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936037/job/94625559520\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936097/job/94625559804\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31753936108/job/94625559961\t\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr view 6779 --repo learn-ukrainian/learn-ukrainian.github.io --json number,state,mergeable,baseRefName,headRefName,url --jq '{number,state,mergeable,base:.baseRefName,head:.headRefName,url}' 2>&1; echo \"---checks---\"; gh pr checks 6779 --repo learn-ukrainian/learn-ukrainian.github.io 2>&1 | head -15",
+            "time": {
+              "start": 1786663708000,
+              "end": 1786663708002
+            }
+          },
+          "id": "prt_ffd749bbe001B0F52NiLvnSDx0",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd748f350017k0uFFWoBLeN1n"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 127780,
+            "input": 80,
+            "output": 208,
+            "reasoning": 132,
+            "cache": {
+              "write": 0,
+              "read": 127360
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd74a5b2001P2kPF5YU0eSMXF",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd748f350017k0uFFWoBLeN1n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd6152f60017lKZs39VRooNoi",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6748-sweep-pr-number"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 128976,
+          "input": 632,
+          "output": 454,
+          "reasoning": 146,
+          "cache": {
+            "write": 0,
+            "read": 127744
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786663708195,
+          "completed": 1786663715955
+        },
+        "finish": "stop",
+        "id": "msg_ffd74a623001JbTXpWhf87f287",
+        "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP"
+      },
+      "parts": [
+        {
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-start",
+          "id": "prt_ffd74aa56001juQwjP6wldEf4o",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd74a623001JbTXpWhf87f287"
+        },
+        {
+          "type": "reasoning",
+          "text": "PR #6779 is open, mergeable, CI checks pending. The task is complete: commit pushed, PR created, no merge (I won't merge).\n\nLet me write the final summary. Keep it concise per the completion rules: report changed files, verification, branch status, outcome, residual.\n\nNote: I should report residual: the wider orchestration suite has pre-existing failures in this sparse worktree (missing curriculum/wiki trees), unrelated to the change; CI (Pytest fastlane) will run the changed tests on the full checkout in PR CI.\n\nFinal branch status: deepseek/6748-sweep-pr-number @ d1058c4055, pushed, PR #6779 open, no merge.",
+          "time": {
+            "start": 1786663710632,
+            "end": 1786663712198
+          },
+          "id": "prt_ffd74afa8001IcfbjBaL36VHlq",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd74a623001JbTXpWhf87f287"
+        },
+        {
+          "type": "text",
+          "text": "Done. PR: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6779 (open, no merge).\n\n**Root cause** (reproduced): GitHub removed `isRequired` from status-check rollup contexts, so the required-check GraphQL probe in `_required_contexts_from_pr_rollup` always failed with `gh: A pull request ID or pull request number is required.` → `SweepError` → hourly `ci-failed` red. The \"missing PR id when applying comments\" framing was a misread of that GitHub error.\n\n**Changes** (commit `d1058c4055`, trailer `X-Agent: cursor/6748-sweep-pr-number`):\n- `scripts/orchestration/integration_sweep.py` — removed the dead `isRequired` GraphQL probe; required contexts now come from the documented sole required check `CI Gate` (branch-protection REST stays admin-only per #6717). Added `_is_usable_pr_number`; comment-fallback and `arm_auto_merge` are guarded so `gh` is never called without a usable PR number; empty sweep no-ops exit 0.\n- `tests/orchestration/test_integration_sweep.py` — replaced the dead discovery tests; added no-gh-without-number, pathological-decide, and empty-sweep-exit-0 tests.\n- `.github/workflows/integration-sweep.yml` + `README.md` — comment/docs updated to reflect the removed mechanism.\n\n**Proof**: `test_integration_sweep.py` 14/14 + `test_issue_stream_audit.py` 51/51 pass; ruff clean; live dry run exit 0 with gh-trace showing no `gh pr merge`, no id-less comment fetch, no `isRequired` probe. Wider `tests/orchestration` failures are pre-existing sparse-checkout gaps (absent `curriculum/` tree), identical on the untouched base.\n\n**Residual**: PR CI (Pytest fastlane + gate) is running on #6779; independent cross-family review still required before merge.",
+          "time": {
+            "start": 1786663712201,
+            "end": 1786663715560
+          },
+          "id": "prt_ffd74b5c9001aITUP9e2oqSHh2",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd74a623001JbTXpWhf87f287"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "7c8766be50bc0d016b34c2a15b1272efd0f28393",
+          "type": "step-finish",
+          "tokens": {
+            "total": 128976,
+            "input": 632,
+            "output": 454,
+            "reasoning": 146,
+            "cache": {
+              "write": 0,
+              "read": 127744
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd74c3be0019tEctzFsOjrD6R",
+          "sessionID": "ses_0029eadf5ffeNTMaznJ9z7exWP",
+          "messageID": "msg_ffd74a623001JbTXpWhf87f287"
         }
       ]
     }
