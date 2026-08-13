@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d7b335f14e90",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6370-publish-plus1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.pointer.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d7/b335f14e90/0/metadata.json",
+      "transcript": "/d7/b335f14e90/0/full.jsonl",
+      "compact_transcript": "/d7/b335f14e90/0/transcript.jsonl",
+      "content_hash": "/d7/b335f14e90/0/content_hash.txt",
+      "prompt": "/d7/b335f14e90/0/prompt.txt"
+    }
+  ]
+}
