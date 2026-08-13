@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "12b88170e037",
+  "session_id": "fleet-fa9ef44364724178ae67d86901046f9a",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T22:04:55.989501Z",
+  "branch": "cursor/phase3-6375-rights-semantics-migration-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_minchak_phonetics_candidate_v1.json"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "ad3238e8e75c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T22:04:55.963022Z",
+    "agent_lines": 1,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 2,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
