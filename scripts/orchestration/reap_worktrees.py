@@ -293,16 +293,48 @@ def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
     }
 
 
+def _candidate_branches_for_worktree(repo_root: Path, info: WorktreeInfo) -> list[str]:
+    if info.branch is not None:
+        return [info.branch]
+
+    candidates: list[str] = []
+    dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
+    try:
+        rel = info.path.resolve().relative_to(dispatch_root)
+        if len(rel.parts) == 2:
+            candidates.append(f"{rel.parts[0]}/{rel.parts[1]}")
+    except ValueError:
+        pass
+
+    wt_root = _worktrees_root(repo_root)
+    try:
+        rel_wt = info.path.resolve().relative_to(wt_root)
+        rel_str = str(rel_wt)
+        if rel_str and rel_str not in candidates:
+            candidates.append(rel_str)
+        if "-" in rel_str and "/" not in rel_str:
+            slash_conv = rel_str.replace("-", "/", 1)
+            if slash_conv not in candidates:
+                candidates.append(slash_conv)
+    except ValueError:
+        pass
+
+    return candidates
+
+
 def _pr_matches_worktree_head(
     info: WorktreeInfo,
     pr_state: PullRequestState | None,
 ) -> bool:
-    return bool(
-        pr_state is not None
-        and pr_state.head_sha
-        and info.head
-        and pr_state.head_sha == info.head
+    if pr_state is None or not pr_state.head_sha or not info.head:
+        return False
+    if pr_state.head_sha == info.head:
+        return True
+    proc = _run(
+        ["git", "merge-base", "--is-ancestor", info.head, pr_state.head_sha],
+        cwd=info.path,
     )
+    return proc.returncode == 0
 
 
 def _live_cwd_paths(repo_root: Path) -> set[Path] | None:
@@ -522,30 +554,30 @@ def _qualifying_reason(
     merged_pr_only: bool = False,
     include_terminal_dispatches: bool = False,
 ) -> str | None:
-    if info.branch is not None:
-        if pr_state is not None:
-            pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
-            if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
-                return f"{pr_label} MERGED"
-            if (
-                not merged_pr_only
-                and pr_state.state == "CLOSED"
-                and _pr_matches_worktree_head(info, pr_state)
-            ):
-                return f"{pr_label} CLOSED"
+    if pr_state is not None:
+        pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
+        if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
+            return f"{pr_label} MERGED"
+        if (
+            not merged_pr_only
+            and pr_state.state == "CLOSED"
+            and info.branch is not None
+            and _pr_matches_worktree_head(info, pr_state)
+        ):
+            return f"{pr_label} CLOSED"
 
-        if not safe_only:
-            if info.branch.startswith("build/"):
-                age_hours = _worktree_age_hours(info.path, now=now)
-                if age_hours is not None and age_hours > build_age_hours:
-                    return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
+    if info.branch is not None and not safe_only:
+        if info.branch.startswith("build/"):
+            age_hours = _worktree_age_hours(info.path, now=now)
+            if age_hours is not None and age_hours > build_age_hours:
+                return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
 
-            # Never treat "matches remote tip" as reaped-while-OPEN: open PR
-            # worktrees commonly match origin/<branch> and must stay mounted.
-            if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
-                info.path, info.branch
-            ):
-                return f"HEAD matches origin/{info.branch}"
+        # Never treat "matches remote tip" as reaped-while-OPEN: open PR
+        # worktrees commonly match origin/<branch> and must stay mounted.
+        if (pr_state is None or pr_state.state != "OPEN") and _origin_matches_head(
+            info.path, info.branch
+        ):
+            return f"HEAD matches origin/{info.branch}"
 
     if merged_pr_only and not include_terminal_dispatches:
         return None
@@ -932,9 +964,10 @@ def _reap_qualified_worktree(
         branch_pruned = False
         if (
             prune_merged_branches
+            and info.branch is not None
             and pr_state is not None
             and pr_state.state == "MERGED"
-            and pr_state.head_sha == current_head
+            and _pr_matches_worktree_head(info, pr_state)
         ):
             branch_prune_error = _prune_branch(
                 repo_root,
@@ -1060,11 +1093,21 @@ def reap_worktrees(
             dirty_state = _worktree_clean(info.path)
             dirty = None if dirty_state is None else not dirty_state
 
+            candidates = _candidate_branches_for_worktree(repo_root, info)
             pr_state = None
             pr_error = None
-            if info.branch is not None:
-                pr_states, pr_error = _query_pr_states(repo_root, info.branch)
-                pr_state = _best_pr(pr_states)
+            if candidates:
+                all_pr_states: list[PullRequestState] = []
+                errors: list[str] = []
+                for cand_branch in candidates:
+                    st, err = _query_pr_states(repo_root, cand_branch)
+                    if err:
+                        errors.append(err)
+                    all_pr_states.extend(st)
+                if errors and not all_pr_states:
+                    pr_error = "; ".join(errors)
+                else:
+                    pr_state = _best_pr(all_pr_states)
 
             if (merged_pr_only or include_terminal_dispatches) and pr_error is not None:
                 results.append(
