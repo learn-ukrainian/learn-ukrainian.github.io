@@ -76,8 +76,48 @@ def patch_gh(
 ) -> list[str]:
     calls: list[str] = []
 
+    def _resolve_head(cwd: Path, branch: str, item: dict[str, Any]) -> str | None:
+        head = item.get("headRefOid")
+        if head:
+            return head
+        proc = _REAL_RUN(
+            ["git", "rev-parse", f"refs/heads/{branch}"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=git_env(),
+        )
+        return proc.stdout.strip() if proc.returncode == 0 else None
+
+    def _ancestor(cwd: Path, sha: str, head: str) -> bool:
+        if sha == head:
+            return True
+        proc = _REAL_RUN(
+            ["git", "merge-base", "--is-ancestor", sha, head],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=git_env(),
+        )
+        return proc.returncode == 0
+
     def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
         if args and args[0] == "gh":
+            if args[1:3] == ["search", "prs"]:
+                sha = args[3]
+                calls.append(f"search:{sha}")
+                payload = []
+                for branch, items in states_by_branch.items():
+                    for item in items:
+                        head = _resolve_head(kwargs["cwd"], branch, item)
+                        if head is None or not _ancestor(kwargs["cwd"], sha, head):
+                            continue
+                        payload.append(
+                            {"number": item.get("number"), "state": item.get("state")}
+                        )
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
             branch = args[args.index("--head") + 1]
             calls.append(branch)
             payload = [dict(item) for item in states_by_branch.get(branch, [])]
@@ -713,6 +753,7 @@ def test_class_b_fail_safe_skips(
     old = now - 25 * 3600
     os.utime(worktree_path, (old, old))
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {})
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, now=now, merged_pr_only=False)
     assert result_for(results, worktree_path).action == "skipped"
@@ -1247,6 +1288,103 @@ def test_detached_worktree_with_open_pr_is_preserved(
             live_cwds=set(),
             merged_pr_only=True,
         ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_followup_branch_ancestor_of_merged_pr_head_reaps(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A follow-up CI branch whose name differs from the MERGED PR head reaps."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/6687-hermes-test")
+    git(worktree, "commit", "--allow-empty", "-m", "first follow-up fix")
+    ancestor_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "commit", "--allow-empty", "-m", "PR head follow-up fix")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "reset", "--hard", ancestor_head)
+
+    patch_gh(
+        monkeypatch,
+        {
+            "kimi/routing-defaults": [
+                {"number": 6687, "state": "MERGED", "headRefOid": pr_head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "PR #6687 MERGED"
+    assert not worktree.exists()
+
+
+def test_detached_worktree_with_different_pr_head_branch_reaps(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Detached dispatch worktree reaps when its HEAD matches a MERGED PR head
+    whose branch name differs from the path-derived candidate."""
+    repo = init_repo(tmp_path)
+    task_id = "6690-ci-fix"
+    worktree = repo / ".worktrees" / "dispatch" / "kimi" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    git(worktree, "commit", "--allow-empty", "-m", "ci fix")
+    head = git(worktree, "rev-parse", "HEAD")
+
+    patch_gh(
+        monkeypatch,
+        {
+            "agy/delegate-active-timeout": [
+                {"number": 6690, "state": "MERGED", "headRefOid": head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "PR #6690 MERGED"
+    assert not worktree.exists()
+
+
+def test_fresh_branch_on_main_tip_is_not_sha_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A branch sitting on a merged main tip is not reaped via SHA search."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/fresh-at-tip")
+    main_tip = git(worktree, "rev-parse", "HEAD")
+
+    patch_gh(
+        monkeypatch,
+        {
+            "agy/original": [
+                {"number": 1, "state": "MERGED", "headRefOid": main_tip}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
         worktree,
     )
 
