@@ -26,6 +26,9 @@ from scripts.audit.generate_practice_deck import (
 from scripts.lexicon.build_synonym_verdicts_yaml import main as run_converter
 from scripts.lexicon.verify_synonym_pairs import main as run_verify_script
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SYNONYM_VERDICTS_YAML = REPO_ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
+
 FIXTURES = Path("tests/fixtures")
 MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
 ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
@@ -772,3 +775,71 @@ def test_nominate_a2_cli_reports_without_state_mutation(
     assert "total\t1" in captured.out
     # Report-only: no shards written, no output directory created.
     assert not out_dir.exists()
+
+
+def _load_real_synonym_verdicts() -> dict[str, Any]:
+    return yaml.safe_load(SYNONYM_VERDICTS_YAML.read_text(encoding="utf-8"))
+
+
+def test_real_synonym_verdicts_yaml_is_well_formed() -> None:
+    """Structural guard over the live approved/rejected corpus.
+
+    Every approved pair must be plain-cased, carry at least one citation
+    source, and be unique regardless of which leg was stored first (readers
+    re-sort via `_synonym_pair_key` before lookup, so leg order itself isn't
+    load-bearing). An entry must never appear in both approved and rejected.
+    A hand-edit that introduces a duplicate or drops a citation should fail
+    here.
+    """
+    data = _load_real_synonym_verdicts()
+    approved = data["approved"]
+    rejected = data["rejected"]
+
+    approved_keys = set()
+    for item in approved:
+        sorted_a, sorted_b = sorted((item["a"], item["b"]))
+        key = (sorted_a, sorted_b, item["polarity"])
+        assert key not in approved_keys, f"duplicate approved pair: {key}"
+        approved_keys.add(key)
+        assert item["a"] == item["a"].casefold(), f"leg not plain-cased: {item['a']}"
+        assert item["b"] == item["b"].casefold(), f"leg not plain-cased: {item['b']}"
+        assert item.get("sources"), f"approved pair missing citation source(s): {key}"
+
+    rejected_keys = {
+        (*sorted((item["a"], item["b"])), item["polarity"]) for item in rejected
+    }
+    overlap = approved_keys & rejected_keys
+    assert not overlap, f"pairs adjudicated both ways: {overlap}"
+
+
+def test_real_synonym_verdicts_yaml_rejects_self_pairs() -> None:
+    """Approved and rejected pairs must be two distinct lemmas (casefold).
+
+    Self-pairs (a == b) are not synonyms; the deck builder would emit identical
+    cards. Codex finding on #6710: виміряти/виміряти and звичай/звичай.
+    """
+    data = _load_real_synonym_verdicts()
+    for section in ("approved", "rejected"):
+        for item in data[section]:
+            a = str(item["a"]).casefold()
+            b = str(item["b"]).casefold()
+            assert a != b, f"self-pair in {section}: {item['a']!r} / {item['b']!r}"
+
+
+def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
+    """Guards the #4387/#4700 attested-growth floor (790 -> 1531 unique legs).
+
+    Fails closed if the approved corpus regresses below the post-grow floor —
+    e.g. a revert of the attested-pair addition, or a bad merge that drops
+    entries silently. Post-#6710 self-pair drop: approved floor is 1184.
+    """
+    data = _load_real_synonym_verdicts()
+    approved = data["approved"]
+
+    lemmas = set()
+    for item in approved:
+        lemmas.add(item["a"])
+        lemmas.add(item["b"])
+
+    assert len(approved) >= 1184
+    assert len(lemmas) >= 1531
