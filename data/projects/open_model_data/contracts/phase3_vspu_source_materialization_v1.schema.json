@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_vspu_source_materialization_v1.schema.json",
+  "title": "Phase 3 VSPU private source-unit materialization receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "provider_calls",
+    "source_id",
+    "bindings",
+    "private_artifact",
+    "scope_review",
+    "rights",
+    "gates",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_vspu_source_materialization_v1"},
+    "status": {"const": "PRIVATE_SOURCE_UNITS_MATERIALIZED_PENDING_DB_INGEST_GATE"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "source_id": {"const": "uni-ukrmova-sulm-attestation-vspu-2021"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase3_recovery_prompt_v2_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "candidate_receipt_sha256",
+        "university_content_audit_freeze_v1_sha256",
+        "complete_source_policy_v4_sha256",
+        "historical_periodization_freeze_v1_sha256",
+        "source_pdf_sha256",
+        "scope_circularity_provider_result_sha256",
+        "scope_circularity_review_sha256",
+        "implementation_sha256",
+        "schema_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "candidate_receipt_sha256": {"const": "15dfdf2eb9d7476f4d846b3abf053530ec2b80d3a1cfa59287970080bfc362ac"},
+        "university_content_audit_freeze_v1_sha256": {"const": "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"},
+        "complete_source_policy_v4_sha256": {"const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"},
+        "historical_periodization_freeze_v1_sha256": {"const": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"},
+        "source_pdf_sha256": {"const": "3d9daeef725188a36489346517cb40f3fca6566f4878a0237407aecd2b974cb2"},
+        "scope_circularity_provider_result_sha256": {"const": "d2c92e39cbe476c271c79a44b2b1f5295de71f7e4e8d90cc362d97312df836d0"},
+        "scope_circularity_review_sha256": {"$ref": "#/$defs/sha256"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "private_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "jsonl_sha256",
+        "jsonl_bytes",
+        "file_mode",
+        "inside_git",
+        "google_drive_custody",
+        "google_drive_mount_containment_verified",
+        "google_drive_provider_identity_present",
+        "google_drive_provider_identity_sha256",
+        "source_unit_count",
+        "page_start",
+        "page_end",
+        "text_bearing_pages",
+        "native_text_pages",
+        "ocr_pages",
+        "normalized_pages",
+        "repaired_pages",
+        "anomaly_pages",
+        "unicode_code_points",
+        "utf8_bytes",
+        "page_text_manifest_sha256",
+        "complete_text_sha256",
+        "text_free_record_manifest_sha256"
+      ],
+      "properties": {
+        "filename": {"const": "uni-ukrmova-sulm-attestation-vspu-2021.jsonl"},
+        "jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "jsonl_bytes": {"type": "integer", "minimum": 1},
+        "file_mode": {"const": "0600"},
+        "inside_git": {"const": false},
+        "google_drive_custody": {"const": true},
+        "google_drive_mount_containment_verified": {"const": true},
+        "google_drive_provider_identity_present": {"const": true},
+        "google_drive_provider_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "source_unit_count": {"const": 158},
+        "page_start": {"const": 1},
+        "page_end": {"const": 158},
+        "text_bearing_pages": {"const": 158},
+        "native_text_pages": {"const": 158},
+        "ocr_pages": {"const": 0},
+        "normalized_pages": {"const": 0},
+        "repaired_pages": {"const": 0},
+        "anomaly_pages": {"const": 0},
+        "unicode_code_points": {"const": 279249},
+        "utf8_bytes": {"const": 500171},
+        "page_text_manifest_sha256": {"const": "96b9fca939ff64544bd11844b51249eb76ddf7ca45bbf88e3b61ffeb3f87b60e"},
+        "complete_text_sha256": {"const": "246f63d6a7849cb81d804bd64a0a6755d495dc3fa6666a8e1bd9018784b37e28"},
+        "text_free_record_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scope_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict",
+        "existing_candidate_sources",
+        "additive_candidate_sources",
+        "proposed_total_candidate_sources",
+        "topic_areas",
+        "topic_gaps_closed",
+        "topic_gaps_narrowed",
+        "topic_gaps_unchanged",
+        "source_disposition",
+        "material_findings"
+      ],
+      "properties": {
+        "verdict": {"const": "PASS"},
+        "existing_candidate_sources": {"const": 30},
+        "additive_candidate_sources": {"const": 1},
+        "proposed_total_candidate_sources": {"const": 31},
+        "topic_areas": {"const": 26},
+        "topic_gaps_closed": {"type": "array", "maxItems": 0},
+        "topic_gaps_narrowed": {"$ref": "#/$defs/topic_list"},
+        "topic_gaps_unchanged": {"$ref": "#/$defs/topic_list"},
+        "source_disposition": {"const": "admit_scoped_candidate"},
+        "material_findings": {"type": "array", "maxItems": 0}
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "standardized_license_present",
+        "operator_private_text_only_phase3_use_authorized",
+        "attribution_required",
+        "takedown_ready",
+        "adapt_or_remove_on_substantiated_complaint",
+        "public_redistribution_authorized",
+        "unrestricted_reuse_authorized"
+      ],
+      "properties": {
+        "standardized_license_present": {"const": false},
+        "operator_private_text_only_phase3_use_authorized": {"const": true},
+        "attribution_required": {"const": true},
+        "takedown_ready": {"const": true},
+        "adapt_or_remove_on_substantiated_complaint": {"const": true},
+        "public_redistribution_authorized": {"const": false},
+        "unrestricted_reuse_authorized": {"const": false}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_critic_complete",
+        "private_source_units_materialized",
+        "exactness_audit_complete",
+        "database_ingest_authorized",
+        "database_ingest_complete",
+        "role_layer_conversion_complete",
+        "training_conversion_complete",
+        "normative_rule_authority",
+        "semantic_gold",
+        "source_universe_frozen",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "scope_critic_complete": {"const": true},
+        "private_source_units_materialized": {"const": true},
+        "exactness_audit_complete": {"const": true},
+        "database_ingest_authorized": {"const": false},
+        "database_ingest_complete": {"const": false},
+        "role_layer_conversion_complete": {"const": false},
+        "training_conversion_complete": {"const": false},
+        "normative_rule_authority": {"const": false},
+        "semantic_gold": {"const": false},
+        "source_universe_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "residuals": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "topic_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
