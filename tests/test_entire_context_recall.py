@@ -1918,6 +1918,19 @@ def test_rollover_canaries_never_leak(tmp_path: Path) -> None:
     _assert_no_rollover_canaries(combined)
 
 
+def _write_cas_blob(blob_root: Path, payload: bytes) -> tuple[str, Path]:
+    """Write a content-addressed blob under ``blobs/sha256/<aa>/<digest>``.
+
+    Shard directories are shared across digests, so mkdir must tolerate an
+    already-existing ``<aa>`` prefix (hash luck in one test, or xdist races).
+    """
+    digest = hashlib.sha256(payload).hexdigest()
+    path = blob_root / digest[:2] / digest
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(payload)
+    return digest, path
+
+
 def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, Path, Path]:
     """Create canonical local-only cache/store fixtures with body canaries."""
     fleet_root = tmp_path / "fleet"
@@ -1962,10 +1975,7 @@ def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, P
             "private_payload_canary": "typed-secret-canary",
         }
         sealed_bytes = json.dumps(sealed).encode("utf-8")
-        sealed_digest = hashlib.sha256(sealed_bytes).hexdigest()
-        blob_path = blob_root / sealed_digest[:2] / sealed_digest
-        blob_path.parent.mkdir(parents=True)
-        blob_path.write_bytes(sealed_bytes)
+        sealed_digest, _blob_path = _write_cas_blob(blob_root, sealed_bytes)
         connection.execute(
             "INSERT INTO formal_review_jobs VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (
@@ -2344,10 +2354,7 @@ def test_typed_resolvers_refuse_unsafe_database_values_without_echo(
     sealed = json.loads(blob.read_text(encoding="utf-8"))
     sealed["model"] = "ghp_" + "x" * 20
     mutated = json.dumps(sealed).encode("utf-8")
-    mutated_digest = hashlib.sha256(mutated).hexdigest()
-    mutated_blob = fleet_root / "blobs" / "sha256" / mutated_digest[:2] / mutated_digest
-    mutated_blob.parent.mkdir(parents=True)
-    mutated_blob.write_bytes(mutated)
+    mutated_digest, _mutated_blob = _write_cas_blob(fleet_root / "blobs" / "sha256", mutated)
     connection = sqlite3.connect(fleet_root / "comms.sqlite3")
     try:
         connection.execute("UPDATE artifacts SET sha256 = ?", (mutated_digest,))
@@ -2372,10 +2379,10 @@ def test_typed_resolvers_refuse_unsafe_database_values_without_echo(
             "harness": "codex",
         }
     ).encode("utf-8")
-    mismatched_digest = hashlib.sha256(mismatched).hexdigest()
-    mismatched_blob = fleet_root / "blobs" / "sha256" / mismatched_digest[:2] / mismatched_digest
-    mismatched_blob.parent.mkdir(parents=True)
-    mismatched_blob.write_bytes(mismatched)
+    # Fixed payload always shards under ``7d/``; without exist_ok this flakes
+    # whenever an earlier blob in this test already owns that prefix.
+    mismatched_digest, _mismatched_blob = _write_cas_blob(fleet_root / "blobs" / "sha256", mismatched)
+    assert mismatched_digest.startswith("7d")
     connection = sqlite3.connect(fleet_root / "comms.sqlite3")
     try:
         connection.execute("UPDATE artifacts SET sha256 = ?", (mismatched_digest,))
@@ -2385,6 +2392,28 @@ def test_typed_resolvers_refuse_unsafe_database_values_without_echo(
     with pytest.raises(ResolutionError) as excinfo:
         resolve_formal_review(review_id, fleet_root=fleet_root)
     assert excinfo.value.reason == REASON_DIGEST_MISMATCH
+
+
+def test_cas_blob_write_tolerates_sha256_shard_prefix_collision(tmp_path: Path) -> None:
+    """Regression for FileExistsError when two digests share ``blobs/sha256/<aa>``."""
+    blob_root = tmp_path / "blobs" / "sha256"
+    # Occupy the known mismatched-fixture shard prefix before a second write.
+    first = blob_root / "7d" / ("7d" + "a" * 62)
+    first.parent.mkdir(parents=True, exist_ok=True)
+    first.write_bytes(b"first-cas-blob")
+    payload = b""
+    for nonce in range(10_000):
+        candidate = json.dumps({"force": "7d-prefix-collision", "n": nonce}).encode("utf-8")
+        if hashlib.sha256(candidate).hexdigest().startswith("7d"):
+            payload = candidate
+            break
+    else:
+        raise AssertionError("failed to mint a 7d-prefixed digest")
+    written_digest, written_path = _write_cas_blob(blob_root, payload)
+    assert written_digest.startswith("7d")
+    assert written_path.parent == first.parent
+    assert written_path.read_bytes() == payload
+    assert first.read_bytes() == b"first-cas-blob"
 
 
 def test_rollover_resolution_never_invokes_entire_or_writes_state_root(

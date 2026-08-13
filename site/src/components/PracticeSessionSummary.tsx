@@ -5,6 +5,12 @@ import type { PracticeLexeme } from '../lib/lexicon/srs';
 export interface SessionSummaryStats {
   correct: number;
   lapsed: number;
+  /**
+   * #6720: the frozen session target planned at round start. The score ratio uses
+   * this one denominator so the summary agrees with the in-session progress badge
+   * (lapsed-card re-serves extend the round but never move the denominator).
+   */
+  roundSize: number;
   advancedToReview: string[];
   streak: number;
   nextDueLabel: { uk: string; en: string } | null;
@@ -28,7 +34,9 @@ export default function PracticeSessionSummary({
   // chromeLocale is the caller's pure-locale contract; ChromeText/ChromeDual
   // render both locales and CSS on html[data-chrome-locale] shows one.
   void chromeLocale;
-  const total = stats.correct + stats.lapsed;
+  // Score against the frozen round size, not raw rating counts: re-served lapsed
+  // cards earn a second correct rating, so `correct` can exceed the round size.
+  const scoreCorrect = Math.min(stats.correct, stats.roundSize);
   return (
     <div className="lexicon-session-summary" data-testid="practice-session-summary">
       <h2 className="lexicon-session-summary-title">
@@ -58,7 +66,7 @@ export default function PracticeSessionSummary({
             <ChromeText k="practice.score" />
           </dt>
           <dd>
-            {stats.correct}/{total}
+            {scoreCorrect}/{stats.roundSize}
           </dd>
         </div>
       </dl>

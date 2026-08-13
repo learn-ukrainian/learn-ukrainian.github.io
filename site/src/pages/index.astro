@@ -35,8 +35,8 @@ const coreTracks: TrackRow[] = ([
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
   { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.released' },
-  { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
-  { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
+  { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.available' },
+  { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.available' },
 ] as TrackRow[]).map((track) => ({ ...track, href: trackHref(track.id) }));
 
 const seminarTracks: TrackRow[] = ([
@@ -61,7 +61,7 @@ const seminarTracks: TrackRow[] = ([
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="An English learner interface for released A1, A2, B1, and B2 Ukrainian courses, plus the Word Atlas reference tool."
+  description="An English learner interface for released A1, A2, B1, and B2 Ukrainian courses, live C1 and C2 course maps, plus the Word Atlas reference tool."
   eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
@@ -84,6 +84,8 @@ const seminarTracks: TrackRow[] = ([
       <div><strong>A2</strong><span><ChromeText k="home.roadmapA2" /></span></div>
       <div><strong>B1</strong><span><ChromeText k="home.roadmapB1" /></span></div>
       <div><strong>B2</strong><span><ChromeText k="home.roadmapB2" /></span></div>
+      <div><strong>C1</strong><span><ChromeText k="home.roadmapC1" /></span></div>
+      <div><strong>C2</strong><span><ChromeText k="home.roadmapC2" /></span></div>
       <div><strong><ChromeText k="nav.atlas" /></strong><span><ChromeText k="home.roadmapAtlasDesc" /></span></div>
       <div><strong><ChromeText k="home.roadmapSeminars" /></strong><span><ChromeText k="home.roadmapSeminarsNote" /></span></div>
     </aside>
