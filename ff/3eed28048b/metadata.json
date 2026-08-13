@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ff3eed28048b",
+  "strategy": "manual-commit",
+  "branch": "deepseek/6713-c12-nav",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/layouts/CourseLayout.astro",
+    "site/src/lib/i18n/chrome.ts",
+    "site/src/pages/[...slug].astro",
+    "site/src/pages/index.astro"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ff/3eed28048b/0/metadata.json",
+      "transcript": "/ff/3eed28048b/0/full.jsonl",
+      "compact_transcript": "/ff/3eed28048b/0/transcript.jsonl",
+      "content_hash": "/ff/3eed28048b/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 166967,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 29044736,
+    "output_tokens": 25149,
+    "api_call_count": 124
+  }
+}

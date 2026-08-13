@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ff3eed28048b",
+  "session_id": "ses_00337134bffe59iNpqaacMr5WP",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:04:55.24906Z",
+  "branch": "deepseek/6713-c12-nav",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/i18n/chrome.ts",
+    "site/src/layouts/CourseLayout.astro",
+    "site/src/pages/index.astro",
+    "site/src/pages/[...slug].astro"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "e3c08c288362",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 166967,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 29044736,
+    "output_tokens": 25149,
+    "api_call_count": 124
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:04:55.091925Z",
+    "agent_lines": 45,
+    "agent_removed": 29,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 45,
+    "total_lines_changed": 74,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
