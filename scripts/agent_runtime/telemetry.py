@@ -176,7 +176,6 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
     if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
         alias = plan.metadata.get("kimicc_alias")
         return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
-    del agent_name
     return _arg_after(plan.cmd, "-m", "--model")
 
 
@@ -207,6 +206,27 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
     return None
 
 
+def _kimicc_alias(requested_model: str | None) -> str | None:
+    """Resolve the KimiCC route alias the harness would run for a request.
+
+    KimiccHarness defaults an omitted model to its own ``default_model``
+    (k3-256k), so pre-spawn telemetry must resolve through the same catalog
+    rather than assuming full k3 (#5938 F1).
+    """
+    from scripts.review.model_catalog import ModelCatalogError, resolve_kimi_model
+
+    from .adapters.kimicc import KimiccHarness
+
+    candidate = (requested_model or KimiccHarness.default_model).strip()
+    try:
+        _, route = resolve_kimi_model(candidate)
+    except ModelCatalogError:
+        # An unresolvable request fails later at adapter build time; report
+        # the raw candidate here so telemetry never invents an alias.
+        return candidate
+    return route.get("kimicc_alias")
+
+
 def _resolve_model_from_defaults(
     agent_name: str,
     requested_model: str | None,
@@ -214,7 +234,9 @@ def _resolve_model_from_defaults(
     harness: str | None = None,
 ) -> str | None:
     if agent_name == "kimi" and harness == "kimicc":
-        return requested_model or "k3"
+        from .adapters.kimicc import KimiccHarness
+
+        return requested_model or KimiccHarness.default_model
     if requested_model:
         return requested_model
     if agent_name == "codex":
@@ -262,7 +284,11 @@ def _resolve_effort_from_defaults(
         if harness == "kimicc":
             if requested_effort:
                 return requested_effort
-            return "high" if (requested_model or "k3") == "k3" else _NOT_EXPOSED
+            # Gate the default on the requested model exactly like
+            # KimiccHarness.build_invocation does: only the full-k3 route
+            # gets an implicit --effort high; the k3-256k harness default
+            # and the k2.7 routes run with no effort flag (#5938 F1).
+            return "high" if _kimicc_alias(requested_model) == "k3" else _NOT_EXPOSED
         # Without a plan the resolved model is unknowable (K3 is always-max,
         # the k2.7 models expose no effort knob) — report the honest marker
         # rather than guessing.

@@ -164,6 +164,9 @@ _DISPATCH_AGENT_CHOICES = (
     "cursor",
     "glm",
 )
+# "native" is accepted for explicit task-state attribution but is
+# observability-only: KimiAdapter treats it identically to an omitted flag
+# (#5938 F2). Only "kimicc" changes the transport.
 _KIMI_HARNESSES = frozenset({"native", "kimicc"})
 # Dispatch agent → effort validator. Keep this mapping at the dispatch
 # boundary so an effort unsupported by a provider fails before a task state,
@@ -187,6 +190,19 @@ def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
     if harness not in _KIMI_HARNESSES:
         raise ValueError(f"unsupported Kimi harness {harness!r}; expected one of {sorted(_KIMI_HARNESSES)}")
     return harness
+
+
+def _warn_kimicc_oauth_token_life(harness: str | None, hard_timeout: int) -> None:
+    """Pre-flight note when a KimiCC dispatch can outlive its OAuth session (#5938 F4)."""
+    if harness != "kimicc" or hard_timeout <= _KIMICC_OAUTH_SESSION_LIFE_S:
+        return
+    print(
+        f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~{_KIMICC_OAUTH_SESSION_LIFE_S}s "
+        "Kimi OAuth session lifetime; the wrapper refreshes credentials only at spawn, "
+        "so calls still running past ~15 minutes may fail auth. Prefer shorter dispatches "
+        "and relaunch instead of one long call.",
+        file=sys.stderr,
+    )
 
 
 def _validate_dispatch_effort(agent: str, effort: str | None) -> None:
@@ -276,6 +292,11 @@ DEFAULT_SILENCE_TIMEOUT_S = 3600
 # before their first token; the old 180s killed healthy workers mid-thought
 # (observed: deepseek review dispatch reaped at 181s, 1s over the limit).
 DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
+# KimiCC headless calls authenticate with a Kimi OAuth session whose
+# lifetime is roughly 15 minutes (~840s). The wrapper refreshes credentials
+# only at spawn, so a worker still running past that point can start failing
+# auth.
+_KIMICC_OAUTH_SESSION_LIFE_S = 840
 
 
 # ---------------------------------------------------------------------------
@@ -4219,6 +4240,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 2
 
+    _warn_kimicc_oauth_token_life(requested_harness, args.hard_timeout)
+
     _check_capacity_hint(dispatch_agent, args=args)
 
     try:
@@ -5420,7 +5443,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Opt-in Kimi transport. Only valid with --agent kimi; use kimicc "
-            "for Kimi through headless Claude Code. Omit to keep native Kimi Code."
+            "for Kimi through headless Claude Code. Omit to keep native Kimi Code. "
+            "'native' is observability-only: it records harness=native in task "
+            "state and is functionally identical to omitting the flag (#5938)."
         ),
     )
     d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")

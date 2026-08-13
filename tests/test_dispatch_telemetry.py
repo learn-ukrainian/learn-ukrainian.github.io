@@ -348,7 +348,7 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
         at_dispatch = resolve_dispatch_start_telemetry(
             agent_name="kimi",
-            requested_model=None,
+            requested_model="k3",
             requested_effort=None,
             harness="kimicc",
         )
@@ -365,6 +365,34 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
         "high",
         "2.1.220",
     )
+
+
+def test_kimicc_telemetry_omitted_model_defaults_to_k3_256k_without_effort(tmp_path):
+    """An omitted --model runs the harness default k3-256k with no --effort
+    flag (adapters/kimicc.py only defaults full-k3 to high), so dispatch-time
+    telemetry must not label it "high" (#5938 F1)."""
+    plan = InvocationPlan(
+        cmd=["kimicc_headless.sh", "--model", "k3-256k"],
+        cwd=tmp_path,
+        metadata={"harness": "kimicc", "kimicc_alias": "k3-256k", "claude_bin": "claude"},
+    )
+
+    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+        at_dispatch = resolve_dispatch_start_telemetry(
+            agent_name="kimi",
+            requested_model=None,
+            requested_effort=None,
+            harness="kimicc",
+        )
+        after_spawn = resolve_invocation_telemetry(
+            agent_name="kimi",
+            plan=plan,
+            requested_model=None,
+            requested_effort=None,
+        )
+
+    assert (at_dispatch.model, at_dispatch.effort) == ("k3-256k", "not-exposed")
+    assert (after_spawn.model, after_spawn.effort) == ("k3-256k", "not-exposed")
 
 
 def test_kimicc_telemetry_prefers_explicit_effort_and_does_not_default_k2_7(tmp_path):
