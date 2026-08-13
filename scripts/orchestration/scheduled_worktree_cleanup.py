@@ -27,6 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.hygiene import home_session_retention_check
 from scripts.orchestration import reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
@@ -621,6 +622,10 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_roots = args.repo_root or args.default_repo_roots
     receipt = build_receipt(repo_roots, apply=bool(args.apply))
+    home_session_retention = home_session_retention_check.build_report()
+    receipt["home_session_retention"] = home_session_retention
+    for line in home_session_retention_check.warning_lines(home_session_retention):
+        sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())
     payload = {**receipt, "receipt_path": str(receipt_path)}
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
