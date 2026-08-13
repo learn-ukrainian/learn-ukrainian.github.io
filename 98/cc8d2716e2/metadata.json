@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "98cc8d2716e2",
+  "strategy": "manual-commit",
+  "branch": "cursor/6687-ci-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/agent_runtime/env_sanitize.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/agent_runtime/tool_config.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/98/cc8d2716e2/0/metadata.json",
+      "transcript": "/98/cc8d2716e2/0/full.jsonl",
+      "compact_transcript": "/98/cc8d2716e2/0/transcript.jsonl",
+      "content_hash": "/98/cc8d2716e2/0/content_hash.txt",
+      "prompt": "/98/cc8d2716e2/0/prompt.txt"
+    }
+  ]
+}

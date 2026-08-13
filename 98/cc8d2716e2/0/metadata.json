@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "98cc8d2716e2",
+  "session_id": "fleet-1e228d49e16c4c3682c44ed41897e798",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T06:21:23.494798Z",
+  "branch": "cursor/6687-ci-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/agent_runtime/env_sanitize.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/agent_runtime/tool_config.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "b7803f471802",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T06:21:23.489681Z",
+    "agent_lines": 97,
+    "agent_removed": 36,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 97,
+    "total_lines_changed": 133,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
