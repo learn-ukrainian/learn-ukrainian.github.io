@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import os
 import stat
@@ -237,11 +238,74 @@ def _verify_pdf_pages(path: Path, label: str, expected_pages: int, expected_byte
     payload = _read_private_bytes(path, label, expected_sha256)
     require(len(payload) == expected_bytes, f"{label} byte denominator drift")
     try:
-        reader = PdfReader(path)
+        reader = PdfReader(io.BytesIO(payload))
     except Exception as exc:
         raise WaveLModernPhoneticsReviewedIntakeError(f"cannot parse {label}") from exc
     require(not reader.is_encrypted, f"{label} is unexpectedly encrypted")
     require(len(reader.pages) == expected_pages, f"{label} page denominator drift")
+
+
+def _read_private_output_no_follow(path: Path, label: str) -> bytes:
+    _reject_symlink_components(path, label)
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    require(no_follow != 0, f"platform cannot enforce no-follow reads for {label}")
+    try:
+        descriptor = os.open(path, os.O_RDONLY | no_follow)
+    except OSError as exc:
+        raise WaveLModernPhoneticsReviewedIntakeError(f"cannot safely read {label}") from exc
+    try:
+        result = os.fstat(descriptor)
+        require(stat.S_ISREG(result.st_mode), f"{label} must be a regular file")
+        require(stat.S_IMODE(result.st_mode) == PRIVATE_FILE_MODE, f"{label} must be mode 0600")
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            return stream.read()
+    finally:
+        os.close(descriptor)
+
+
+def _prepare_private_directory(path: Path, label: str) -> None:
+    _reject_symlink_components(path, label)
+    if path.exists() or path.is_symlink():
+        try:
+            result = path.lstat()
+        except OSError as exc:
+            raise WaveLModernPhoneticsReviewedIntakeError(f"missing {label}: {path}") from exc
+        require(stat.S_ISDIR(result.st_mode) and not path.is_symlink(), f"{label} must be a directory")
+        require(stat.S_IMODE(result.st_mode) == PRIVATE_DIR_MODE, f"{label} must be mode 0700")
+    else:
+        path.mkdir(parents=True, mode=PRIVATE_DIR_MODE)
+        os.chmod(path, PRIVATE_DIR_MODE)
+
+
+def _atomic_write_private_bytes(path: Path, payload: bytes, label: str) -> None:
+    _reject_symlink_components(path, label)
+    require(not path.is_symlink(), f"{label} must not be a symlink")
+    if path.exists():
+        require(_read_private_output_no_follow(path, label) == payload, f"{label} byte drift")
+        return
+    parent = path.parent
+    _prepare_private_directory(parent, f"{label} parent")
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            dir=parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        temporary = None
+        os.chmod(path, PRIVATE_FILE_MODE)
+    except OSError as exc:
+        raise WaveLModernPhoneticsReviewedIntakeError(f"cannot atomically write {label}") from exc
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def validate_search_receipt(path: Path) -> dict[str, Any]:
@@ -362,33 +426,20 @@ def write_review_drive_custody(
 ) -> Path:
     _reject_symlink_components(wave_root, "wave root")
     custody_dir = wave_root / REVIEW_CUSTODY_SUBDIRECTORY
-    custody_dir.mkdir(parents=True, exist_ok=True)
-    os.chmod(custody_dir, PRIVATE_DIR_MODE)
+    _prepare_private_directory(custody_dir, "review custody directory")
     review_dest = custody_dir / REVIEW_RESULT_FILENAME
-    if review_dest.exists():
-        require(review_dest.read_bytes() == review_payload, "existing review custody byte drift")
-    else:
-        review_dest.write_bytes(review_payload)
-    os.chmod(review_dest, PRIVATE_FILE_MODE)
+    _atomic_write_private_bytes(review_dest, review_payload, "review custody result")
     custody_receipt = build_review_custody_receipt(len(review_payload))
     custody_receipt_path = custody_dir / REVIEW_CUSTODY_RECEIPT_FILENAME
     custody_payload = canonical_bytes(custody_receipt)
-    if custody_receipt_path.exists():
-        require(custody_receipt_path.read_bytes() == custody_payload, "review custody receipt drift")
-    else:
-        custody_receipt_path.write_bytes(custody_payload)
-    os.chmod(custody_receipt_path, PRIVATE_FILE_MODE)
+    _atomic_write_private_bytes(custody_receipt_path, custody_payload, "review custody receipt")
     sums_lines = [
         f"{REVIEW_RESULT_SHA256}  {REVIEW_RESULT_FILENAME}",
         f"{sha256_bytes(custody_payload)}  {REVIEW_CUSTODY_RECEIPT_FILENAME}",
     ]
     sums_payload = ("\n".join(sums_lines) + "\n").encode("utf-8")
     sums_path = custody_dir / "SHA256SUMS"
-    if sums_path.exists():
-        require(sums_path.read_bytes() == sums_payload, "review custody SHA256SUMS drift")
-    else:
-        sums_path.write_bytes(sums_payload)
-    os.chmod(sums_path, PRIVATE_FILE_MODE)
+    _atomic_write_private_bytes(sums_path, sums_payload, "review custody SHA256SUMS")
     return custody_dir
 
 

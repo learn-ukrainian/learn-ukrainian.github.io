@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import stat
@@ -24,6 +25,15 @@ class _FakeReader:
     def __init__(self, page_count: int) -> None:
         self.is_encrypted = False
         self.pages = [_FakePage(number) for number in range(1, page_count + 1)]
+
+
+def _fake_pdf_reader(source: object) -> _FakeReader:
+    if isinstance(source, io.BytesIO):
+        payload = source.getvalue()
+        pages = intake.KOVALENKO_PAGES if payload.startswith(b"kovalenko") else intake.YASHNYK_PAGES
+        return _FakeReader(pages)
+    pages = intake.KOVALENKO_PAGES if "kovalenko" in str(source) else intake.YASHNYK_PAGES
+    return _FakeReader(pages)
 
 
 def _write_private(path: Path, payload: bytes) -> None:
@@ -162,11 +172,7 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
             )
         ),
     )
-    monkeypatch.setattr(
-        intake,
-        "PdfReader",
-        lambda path: _FakeReader(intake.KOVALENKO_PAGES if "kovalenko" in str(path) else intake.YASHNYK_PAGES),
-    )
+    monkeypatch.setattr(intake, "PdfReader", _fake_pdf_reader)
 
     _write_private(search_path, intake.canonical_bytes(_search_receipt()))
     _write_private(k_pdf, k_payload)
@@ -332,6 +338,29 @@ def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypat
         _build(paths)
 
 
+def test_verify_pdf_pages_parses_verified_bytes_without_second_path_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    read_calls: list[Path] = []
+    original_read_bytes = Path.read_bytes
+
+    def counting_read_bytes(self: Path) -> bytes:
+        read_calls.append(self)
+        return original_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", counting_read_bytes)
+    read_calls.clear()
+    intake._verify_pdf_pages(
+        paths["k_pdf"],
+        "Kovalenko source PDF",
+        intake.KOVALENKO_PAGES,
+        intake.KOVALENKO_PDF_BYTES,
+        intake.KOVALENKO_PDF_SHA256,
+    )
+    assert read_calls == [paths["k_pdf"]]
+
+
 def test_review_drive_custody_is_written(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     custody_root = tmp_path / "wave-root"
@@ -344,7 +373,43 @@ def test_review_drive_custody_is_written(tmp_path: Path, monkeypatch: pytest.Mon
     assert receipt_path.is_file()
     assert sums_path.is_file()
     assert stat.S_IMODE(review_dest.stat().st_mode) == 0o600
+    assert stat.S_IMODE(custody_dir.stat().st_mode) == 0o700
     assert "acquisition_receipts_not_overwritten" in receipt_path.read_text(encoding="utf-8")
+
+
+def test_review_drive_custody_is_idempotent_and_rejects_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    custody_root = tmp_path / "wave-root"
+    payload = paths["review"].read_bytes()
+    intake.write_review_drive_custody(custody_root, paths["review"], payload)
+    intake.write_review_drive_custody(custody_root, paths["review"], payload)
+    with pytest.raises(intake.WaveLModernPhoneticsReviewedIntakeError, match="byte drift"):
+        intake.write_review_drive_custody(custody_root, paths["review"], b"changed")
+
+
+def test_review_drive_custody_rejects_symlinked_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    custody_root = tmp_path / "wave-root"
+    custody_root.mkdir()
+    evil = tmp_path / "evil"
+    evil.mkdir()
+    (custody_root / intake.REVIEW_CUSTODY_SUBDIRECTORY).symlink_to(evil)
+    with pytest.raises(intake.WaveLModernPhoneticsReviewedIntakeError, match="symbolic-link"):
+        intake.write_review_drive_custody(custody_root, paths["review"], paths["review"].read_bytes())
+
+
+def test_review_drive_custody_rejects_symlinked_destination(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    custody_root = tmp_path / "wave-root"
+    custody_dir = custody_root / intake.REVIEW_CUSTODY_SUBDIRECTORY
+    custody_dir.mkdir(parents=True)
+    os.chmod(custody_dir, 0o700)
+    target = tmp_path / "target.result"
+    target.write_bytes(b"outside")
+    os.chmod(target, 0o600)
+    (custody_dir / intake.REVIEW_RESULT_FILENAME).symlink_to(target)
+    with pytest.raises(intake.WaveLModernPhoneticsReviewedIntakeError, match="symbolic-link"):
+        intake.write_review_drive_custody(custody_root, paths["review"], paths["review"].read_bytes())
 
 
 def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
