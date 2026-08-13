@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d317751f31fb",
+  "session_id": "fleet-197a9b80a3de46dfb695cdf32b720fb3",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:49:30.590243Z",
+  "branch": "cursor/6727-tabs-filter",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/lexicon/DailyWords.astro",
+    "site/src/lib/lexicon/daily-card.ts",
+    "site/src/lib/lexicon/levels.ts",
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/daily-words-example.test.ts",
+    "site/tests/unit/lexicon-daily.test.ts",
+    "site/tests/unit/lexicon-levels.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "eb698a933779",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:49:30.580477Z",
+    "agent_lines": 160,
+    "agent_removed": 19,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 160,
+    "total_lines_changed": 179,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

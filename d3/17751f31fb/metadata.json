@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d317751f31fb",
+  "strategy": "manual-commit",
+  "branch": "cursor/6727-tabs-filter",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/lexicon/DailyWords.astro",
+    "site/src/lib/lexicon/daily-card.ts",
+    "site/src/lib/lexicon/levels.ts",
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/daily-words-example.test.ts",
+    "site/tests/unit/lexicon-daily.test.ts",
+    "site/tests/unit/lexicon-levels.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d3/17751f31fb/0/metadata.json",
+      "transcript": "/d3/17751f31fb/0/full.jsonl",
+      "compact_transcript": "/d3/17751f31fb/0/transcript.jsonl",
+      "content_hash": "/d3/17751f31fb/0/content_hash.txt",
+      "prompt": "/d3/17751f31fb/0/prompt.txt"
+    }
+  ]
+}
