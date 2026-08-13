@@ -396,6 +396,21 @@ def load_model_catalog(path: Path = CATALOG_PATH) -> dict[str, Any]:
     return validate_catalog(raw)
 
 
+def model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
+    """Return every supported model input alias mapped to its canonical catalog id.
+
+    Unlike the transport-specific alias helpers below, this covers *all* models
+    so that a transport-agnostic validator (e.g. the ACP catalog gate) can
+    resolve any caller-supplied alias before the catalog dict lookup.
+    """
+    models = (catalog or load_model_catalog())["models"]
+    aliases: dict[str, str] = {}
+    for model_id, model in models.items():
+        aliases[model_id] = model_id
+        aliases.update({alias: model_id for alias in model.get("aliases", [])})
+    return aliases
+
+
 def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
     """Return every supported Kimi input alias mapped to its native CLI model id."""
     models = (catalog or load_model_catalog())["models"]

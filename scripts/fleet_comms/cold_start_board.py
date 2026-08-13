@@ -20,14 +20,27 @@ from pathlib import Path
 from typing import Any
 
 from scripts.fleet_comms.efficiency_metrics import (
+    _AUTHORITY_BACKLOG_STATES,
+    _column_names,
+    _table_exists,
     collect_dead_letters,
+    collect_dead_letters_authority,
     collect_delivery_backlog,
+    collect_delivery_backlog_authority,
     collect_stream_bottleneck_metrics,
+    resolve_metrics_source,
 )
-from scripts.fleet_comms.message_plane import default_plane_root, read_plane_status
+from scripts.fleet_comms.message_plane import (
+    default_plane_root,
+    read_plane_status,
+    resolve_plane_mode,
+)
 
 try:
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.db import (
+        SessionStreamDatabase,
+        default_database_path,
+    )
     from agents_extensions.shared.session_streams.handoff import diagnose_handoff
     from agents_extensions.shared.session_streams.model import entry_as_dict
     from agents_extensions.shared.session_streams.store import SessionStreamStore
@@ -35,10 +48,22 @@ try:
     HAS_SESSION_STREAMS = True
 except ImportError:
     HAS_SESSION_STREAMS = False
+    default_database_path = None  # type: ignore[assignment]
 
 MAX_STRING_LEN = 200
 MAX_LIST_LEN = 5
 MAX_BOARD_BYTES = 16384  # 16KiB
+
+# Probes that may flip board_status to degraded. Optional/best-effort probes
+# (orient_lean, gh_pr_list, needle_search, bottleneck_slice, …) must not.
+LOAD_BEARING_PROBES = frozenset(
+    {
+        "plane_status",
+        "inbox_check",
+        "backlog_and_dead_letters",
+    }
+)
+SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
 
 
 @dataclass
@@ -112,11 +137,16 @@ def _probe_capsule_session_env(
         or os.environ.get("AGENT")
         or os.environ.get("X_AGENT")
     )
+    try:
+        plane_mode: str = resolve_plane_mode(None)
+    except Exception:
+        # Fail-open: never crash the board on a bad env/config value.
+        plane_mode = "off"
     return {
         "stream_id": resolved_stream,
         "agent": resolved_agent,
         "transport": os.environ.get("LU_AGENT_COMM_TRANSPORT", "acp"),
-        "plane_mode": os.environ.get("FLEET_COMMS_PLANE_MODE", "off"),
+        "plane_mode": plane_mode,
         "capsule_id": os.environ.get("CAPSULE_ID"),
         "session_id": os.environ.get("SESSION_ID"),
         "task_id": os.environ.get("TASK_ID"),
@@ -145,19 +175,41 @@ def _resolve_broker_db_ro(root: Path | None, repo_root: Path | None) -> Path:
 def _probe_backlog_and_dead_letters(
     root: Path | None, repo_root: Path | None
 ) -> dict[str, Any]:
-    db_path = _resolve_broker_db_ro(root, repo_root)
+    """Backlog + dead-letters; prefer authority tables when plane mode is authority."""
+    source = resolve_metrics_source()
+    plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
 
-    if not db_path.is_file():
-        return {
-            "db_missing": True,
-            "db_path": str(db_path),
-            "backlog_total": 0,
-            "dead_letters_total": 0,
-        }
+    if source == "authority":
+        db_path = plane_root / "comms.sqlite3"
+        if not db_path.is_file():
+            return {
+                "source": source,
+                "db_missing": True,
+                "db_path": str(db_path),
+                "backlog_total": 0,
+                "dead_letters_total": 0,
+            }
+        backlog = collect_delivery_backlog_authority(
+            db_path, limit=5, exclude_retired=True
+        )
+        dead_letters = collect_dead_letters_authority(db_path, limit=5)
+        label = "authority"
+    else:
+        db_path = _resolve_broker_db_ro(root, repo_root)
+        if not db_path.is_file():
+            return {
+                "source": "legacy",
+                "db_missing": True,
+                "db_path": str(db_path),
+                "backlog_total": 0,
+                "dead_letters_total": 0,
+            }
+        backlog = collect_delivery_backlog(db_path, limit=5, exclude_retired=True)
+        dead_letters = collect_dead_letters(db_path, limit=5)
+        label = "legacy"
 
-    backlog = collect_delivery_backlog(db_path, limit=5, exclude_retired=True)
-    dead_letters = collect_dead_letters(db_path, limit=5)
     return {
+        "source": label,
         "db_path": str(db_path),
         "db_exists": True,
         "backlog_total": backlog.get("total", 0),
@@ -225,7 +277,8 @@ def _probe_orient_lean(
     timeout_s: float = 0.5,
 ) -> ProbeResult:
     start = time.perf_counter()
-    url = f"{base_url}/api/orient"
+    # drive-epic contract: lean orient (do not pull the full briefing).
+    url = f"{base_url}/api/orient?lean=true"
     try:
         req = urllib.request.Request(
             url, headers={"User-Agent": "fleet-comms-cold-start/1.0"}
@@ -241,11 +294,16 @@ def _probe_orient_lean(
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
         git_info = _get_local_git_info()
+        # Optional Monitor probe: skip (do not poison board_status).
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             error=f"monitor_api_unreachable: {type(exc).__name__}",
-            data={"api_reachable": False, "git_fallback": git_info},
+            data={
+                "api_reachable": False,
+                "reason": "monitor_unreachable",
+                "git_fallback": git_info,
+            },
         )
 
 
@@ -268,6 +326,34 @@ def _probe_issues_streams_membership(orient_result: ProbeResult) -> dict[str, An
     }
 
 
+def _resolve_session_streams_db(repo_root: Path | None) -> Path:
+    """Resolve primary-checkout session-streams DB (not worktree-local Path.cwd())."""
+    if HAS_SESSION_STREAMS and default_database_path is not None:
+        try:
+            return default_database_path(repo_root)
+        except Exception:
+            pass
+
+    active = (repo_root or Path.cwd()).resolve()
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=active,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=2.0,
+        )
+        common_dir_text = result.stdout.strip()
+        if result.returncode == 0 and common_dir_text:
+            common_dir = Path(common_dir_text)
+            if common_dir.is_absolute() and common_dir.name == ".git":
+                return common_dir.parent.resolve() / SESSION_STREAMS_REL
+    except Exception:
+        pass
+    return active / SESSION_STREAMS_REL
+
+
 def _probe_session_streams_and_handoff(
     repo_root: Path | None,
     stream_id: str | None,
@@ -284,23 +370,23 @@ def _probe_session_streams_and_handoff(
     if not HAS_SESSION_STREAMS:
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             error="session_streams_module_unavailable",
-            data={"stream_id": stream_id},
+            data={"stream_id": stream_id, "reason": "module_unavailable"},
         )
 
-    r_root = repo_root or Path.cwd()
-    db_path = r_root / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db_path = _resolve_session_streams_db(repo_root)
     if not db_path.is_file():
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
-            status="degraded",
+            status="skipped",
             elapsed_ms=elapsed,
             data={
                 "stream_id": stream_id,
                 "db_exists": False,
                 "db_path": str(db_path),
+                "reason": "session_streams_db_missing",
             },
         )
 
@@ -321,6 +407,7 @@ def _probe_session_streams_and_handoff(
             data={
                 "stream_id": stream_id,
                 "db_exists": True,
+                "db_path": str(db_path),
                 "handoff": handoff_data,
                 "digest": digest_data,
             },
@@ -331,8 +418,250 @@ def _probe_session_streams_and_handoff(
             status="degraded",
             elapsed_ms=elapsed,
             error=str(exc),
-            data={"stream_id": stream_id, "db_exists": True},
+            data={"stream_id": stream_id, "db_exists": True, "db_path": str(db_path)},
         )
+
+
+def _inbox_agent_candidates(agent: str) -> list[str]:
+    """Exact agent first; cheap slash/hyphen base aliases as fallbacks."""
+    candidates = [agent]
+    if "/" in agent:
+        base = agent.split("/", 1)[0].strip()
+        if base and base not in candidates:
+            candidates.append(base)
+    if "-" in agent:
+        base = agent.split("-", 1)[0].strip()
+        if base and base not in candidates:
+            candidates.append(base)
+    return candidates
+
+
+def _probe_inbox_authority(
+    plane_db: Path,
+    agent: str,
+) -> dict[str, Any]:
+    """Body-free pending inbox rows from authority_deliveries (queued/running)."""
+    import sqlite3
+
+    if not plane_db.is_file():
+        return {
+            "source": "authority",
+            "agent": agent,
+            "inbox_pending_count": 0,
+            "db_missing": True,
+            "db_path": str(plane_db),
+            "recent_deliveries": [],
+        }
+
+    placeholders = ",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)
+    matched_agent = agent
+    deliveries: list[dict[str, Any]] = []
+    total = 0
+
+    conn = sqlite3.connect(f"file:{plane_db.resolve().as_posix()}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        if not _table_exists(conn, "authority_deliveries"):
+            return {
+                "source": "authority",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(plane_db),
+                "table_missing": True,
+                "recent_deliveries": [],
+            }
+        for candidate in _inbox_agent_candidates(agent):
+            count_row = conn.execute(
+                f"""
+                SELECT COUNT(*) AS cnt FROM authority_deliveries
+                WHERE recipient = ? AND state IN ({placeholders})
+                """,
+                (candidate, *_AUTHORITY_BACKLOG_STATES),
+            ).fetchone()
+            candidate_total = int(count_row["cnt"] if count_row else 0)
+            if candidate_total == 0:
+                continue
+            rows = conn.execute(
+                f"""
+                SELECT delivery_id, message_id, recipient, state,
+                       attempt_count, created_at, updated_at
+                FROM authority_deliveries
+                WHERE recipient = ? AND state IN ({placeholders})
+                ORDER BY COALESCE(updated_at, created_at, '') DESC
+                LIMIT 5
+                """,
+                (candidate, *_AUTHORITY_BACKLOG_STATES),
+            ).fetchall()
+            matched_agent = candidate
+            total = candidate_total
+            deliveries = [
+                {
+                    "delivery_id": r["delivery_id"],
+                    "message_id": r["message_id"],
+                    "recipient": r["recipient"],
+                    "to_agent": r["recipient"],
+                    "state": r["state"],
+                    "status": r["state"],
+                    "attempt_count": int(r["attempt_count"] or 0),
+                    "created_at": r["created_at"],
+                    "updated_at": r["updated_at"],
+                }
+                for r in rows
+            ]
+            break
+    finally:
+        conn.close()
+
+    return {
+        "source": "authority",
+        "agent": agent,
+        "matched_agent": matched_agent,
+        "inbox_pending_count": total,
+        "db_path": str(plane_db),
+        "recent_deliveries": deliveries,
+    }
+
+
+def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
+    """Body-free pending inbox from legacy broker deliveries (schema-tolerant)."""
+    import sqlite3
+
+    if not db_path.is_file():
+        return {
+            "source": "legacy",
+            "agent": agent,
+            "inbox_pending_count": 0,
+            "db_missing": True,
+            "db_path": str(db_path),
+            "recent_deliveries": [],
+        }
+
+    status_filter = ("pending", "dispatched", "processing")
+    status_placeholders = ",".join("?" for _ in status_filter)
+    matched_agent = agent
+    deliveries: list[dict[str, Any]] = []
+    total = 0
+
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        if not _table_exists(conn, "deliveries"):
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "table_missing": True,
+                "recent_deliveries": [],
+            }
+        cols = _column_names(conn, "deliveries")
+        agent_col = "to_agent" if "to_agent" in cols else (
+            "recipient" if "recipient" in cols else None
+        )
+        if agent_col is None:
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "schema_unsupported": True,
+                "recent_deliveries": [],
+            }
+        if "status" not in cols:
+            return {
+                "source": "legacy",
+                "agent": agent,
+                "inbox_pending_count": 0,
+                "db_path": str(db_path),
+                "schema_unsupported": True,
+                "recent_deliveries": [],
+            }
+
+        select_parts = [
+            c
+            for c in (
+                "delivery_id",
+                "message_id",
+                agent_col,
+                "status",
+                "attempt_count",
+                "dispatched_at",
+                "created_at",
+            )
+            if c in cols
+        ]
+        order_col = (
+            "dispatched_at"
+            if "dispatched_at" in cols
+            else ("created_at" if "created_at" in cols else select_parts[0])
+        )
+
+        join_sql = ""
+        extra_select: list[str] = []
+        if _table_exists(conn, "channel_messages") and "message_id" in cols:
+            cm_cols = _column_names(conn, "channel_messages")
+            join_sql = " LEFT JOIN channel_messages cm ON cm.message_id = d.message_id"
+            for alias, expr in (
+                ("channel", "cm.channel" if "channel" in cm_cols else None),
+                ("sender", "cm.from_agent" if "from_agent" in cm_cols else None),
+                ("kind", "cm.kind" if "kind" in cm_cols else None),
+                (
+                    "created_at",
+                    "cm.created_at"
+                    if "created_at" in cm_cols and "created_at" not in cols
+                    else None,
+                ),
+            ):
+                if expr is not None:
+                    extra_select.append(f"{expr} AS {alias}")
+
+        select_sql = ", ".join([f"d.{c}" for c in select_parts] + extra_select)
+
+        for candidate in _inbox_agent_candidates(agent):
+            count_row = conn.execute(
+                f"""
+                SELECT COUNT(*) AS cnt FROM deliveries
+                WHERE {agent_col} = ? AND status IN ({status_placeholders})
+                """,
+                (candidate, *status_filter),
+            ).fetchone()
+            candidate_total = int(count_row["cnt"] if count_row else 0)
+            if candidate_total == 0:
+                continue
+            rows = conn.execute(
+                f"""
+                SELECT {select_sql}
+                FROM deliveries d
+                {join_sql}
+                WHERE d.{agent_col} = ? AND d.status IN ({status_placeholders})
+                ORDER BY COALESCE(d.{order_col}, '') DESC
+                LIMIT 5
+                """,
+                (candidate, *status_filter),
+            ).fetchall()
+            matched_agent = candidate
+            total = candidate_total
+            deliveries = []
+            for r in rows:
+                row = dict(r)
+                # Normalize recipient alias without inventing bodies.
+                if "to_agent" not in row and agent_col in row:
+                    row["to_agent"] = row[agent_col]
+                if "recipient" not in row and agent_col in row:
+                    row["recipient"] = row[agent_col]
+                deliveries.append(row)
+            break
+    finally:
+        conn.close()
+
+    return {
+        "source": "legacy",
+        "agent": agent,
+        "matched_agent": matched_agent,
+        "inbox_pending_count": total,
+        "db_path": str(db_path),
+        "recent_deliveries": deliveries,
+    }
 
 
 def _probe_inbox(
@@ -349,47 +678,22 @@ def _probe_inbox(
             data={"reason": "no_agent_specified"},
         )
 
-    db_path = _resolve_broker_db_ro(root, repo_root)
-    if not db_path.is_file():
-        elapsed = (time.perf_counter() - start) * 1000.0
-        return ProbeResult(
-            status="ok",
-            elapsed_ms=elapsed,
-            data={"agent": agent, "inbox_pending_count": 0, "db_missing": True},
-        )
-
     try:
-        import sqlite3
-
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
-        conn.row_factory = sqlite3.Row
-        try:
-            rows = conn.execute(
-                """SELECT message_id, channel, sender, kind, created_at
-                   FROM deliveries
-                   WHERE recipient = ? AND status IN ('pending', 'dispatched')
-                   ORDER BY created_at DESC LIMIT 5""",
-                (agent,),
-            ).fetchall()
-            deliveries = [dict(r) for r in rows]
-            count_row = conn.execute(
-                "SELECT COUNT(*) as cnt FROM deliveries WHERE recipient = ? AND status IN ('pending', 'dispatched')",
-                (agent,),
-            ).fetchone()
-            total = count_row["cnt"] if count_row else len(deliveries)
-        finally:
-            conn.close()
+        source = resolve_metrics_source()
+        plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
+        if source == "authority":
+            plane_db = plane_root / "comms.sqlite3"
+            if plane_db.is_file():
+                data = _probe_inbox_authority(plane_db, agent)
+            else:
+                # Authority preferred but plane DB missing → legacy fallback.
+                data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
+                data["authority_db_missing"] = True
+        else:
+            data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
 
         elapsed = (time.perf_counter() - start) * 1000.0
-        return ProbeResult(
-            status="ok",
-            elapsed_ms=elapsed,
-            data={
-                "agent": agent,
-                "inbox_pending_count": total,
-                "recent_deliveries": deliveries,
-            },
-        )
+        return ProbeResult(status="ok", elapsed_ms=elapsed, data=data)
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
@@ -495,6 +799,26 @@ def _probe_needle_search(
     )
 
 
+def compute_board_status(probes: dict[str, Any]) -> str:
+    """Headline status from load-bearing probes only.
+
+    Optional probes (orient_lean, gh_pr_list, needle_search, …) never flip the
+    headline. session_streams_and_handoff is load-bearing only when the DB exists
+    and the probe degraded/errored (missing DB / no stream_id stay skipped).
+    """
+    for name in LOAD_BEARING_PROBES:
+        status = (probes.get(name) or {}).get("status")
+        if status in {"degraded", "error"}:
+            return "degraded"
+
+    ss = probes.get("session_streams_and_handoff") or {}
+    if ss.get("status") in {"degraded", "error"}:
+        data = ss.get("data") or {}
+        if data.get("db_exists"):
+            return "degraded"
+    return "ok"
+
+
 def build_cold_start_board(
     stream_id: str | None = None,
     agent: str | None = None,
@@ -568,10 +892,7 @@ def build_cold_start_board(
     )
     probes["needle_search"] = needle_probe.to_dict()
 
-    statuses = [p["status"] for p in probes.values()]
-    board_status = (
-        "degraded" if ("error" in statuses or "degraded" in statuses) else "ok"
-    )
+    board_status = compute_board_status(probes)
 
     capped_probes = cap_data(probes, max_str=MAX_STRING_LEN, max_list=MAX_LIST_LEN)
 
@@ -593,19 +914,57 @@ def build_cold_start_board(
     return board
 
 
+def _summary_fields(board_data: dict[str, Any]) -> dict[str, str]:
+    """Extract the six lead Summary fields drivers see first."""
+    probes = board_data.get("probes") or {}
+    plane_data = (probes.get("plane_status") or {}).get("data") or {}
+    env_data = (probes.get("capsule_session_env") or {}).get("data") or {}
+    inbox_data = (probes.get("inbox_check") or {}).get("data") or {}
+
+    plane_mode = plane_data.get("mode") or env_data.get("plane_mode") or "unknown"
+    schema = plane_data.get("schema") or {}
+    schema_version: Any
+    if isinstance(schema, dict):
+        schema_version = schema.get("applied_version")
+        if schema_version is None:
+            schema_version = schema.get("known_version")
+        if schema_version is None:
+            schema_version = schema.get("version")
+    else:
+        schema_version = schema
+    if schema_version is None:
+        schema_version = "unknown"
+
+    inbox_pending = inbox_data.get("inbox_pending_count")
+    if inbox_pending is None:
+        inbox_pending = "n/a"
+
+    return {
+        "plane_mode": str(plane_mode),
+        "schema_version": str(schema_version),
+        "inbox_pending": str(inbox_pending),
+        "board_status": str(board_data.get("board_status", "unknown")),
+        "stream_id": str(board_data.get("stream_id") or "N/A"),
+        "agent": str(board_data.get("agent") or "N/A"),
+    }
+
+
 def render_markdown_board(board_data: dict[str, Any]) -> str:
     """Render board data dictionary as a readable Markdown briefing."""
     lines: list[str] = []
-    status = str(board_data.get("board_status", "unknown")).upper()
-    stream_id = board_data.get("stream_id") or "N/A"
-    agent = board_data.get("agent") or "N/A"
+    summary = _summary_fields(board_data)
     ts = board_data.get("timestamp") or "N/A"
 
     lines.append("# Driver Cold Start Board\n")
-    lines.append(f"- **Status:** `{status}`")
+    lines.append("## Summary\n")
+    lines.append(f"- **plane_mode:** `{summary['plane_mode']}`")
+    lines.append(f"- **schema_version:** `{summary['schema_version']}`")
+    lines.append(f"- **inbox_pending:** `{summary['inbox_pending']}`")
+    lines.append(f"- **board_status:** `{summary['board_status']}`")
+    lines.append(f"- **stream_id:** `{summary['stream_id']}`")
+    lines.append(f"- **agent:** `{summary['agent']}`")
+    lines.append("")
     lines.append(f"- **Timestamp:** `{ts}`")
-    lines.append(f"- **Stream ID:** `{stream_id}`")
-    lines.append(f"- **Agent:** `{agent}`")
 
     needle = board_data.get("needle")
     if needle:

@@ -21,6 +21,7 @@
 #
 # Env overrides:
 #   ATLAS_RUNNER_HOST (default vps), ATLAS_RUN_ROOT, ATLAS_REPO,
+#   ATLAS_PRIMARY_ROOT (default: primary checkout from shared .git common dir),
 #   ATLAS_RE_ENRICH_WORK_DIR, ATLAS_RE_ENRICH_RESIDUAL (local slugs dump),
 #   ATLAS_LOCAL_VESUM_DB, ATLAS_LOCAL_SLOVNYK_CACHE
 #   (local enrichment data for the work-dir overlay),
@@ -31,7 +32,23 @@
 set -euo pipefail
 
 WORKTREE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python}"
+
+# Primary checkout root (shared .git common dir), portable across operators
+# instead of a hardcoded /Users/... path (#6571). In a worktree,
+# `git rev-parse --git-common-dir` returns <primary>/.git; its parent is the
+# primary checkout root. Explicit override wins (fixtures / other hosts).
+_primary_common_dir="$(git -C "$WORKTREE" rev-parse --git-common-dir 2>/dev/null || true)"
+if [[ -z "$_primary_common_dir" ]]; then
+  echo "cannot resolve primary checkout root (git rev-parse --git-common-dir failed)" >&2
+  exit 1
+fi
+# git rev-parse may emit a path relative to $WORKTREE; make it absolute.
+case "$_primary_common_dir" in
+  /*) : ;;
+  *)  _primary_common_dir="$WORKTREE/$_primary_common_dir" ;;
+esac
+PRIMARY_ROOT="${ATLAS_PRIMARY_ROOT:-$(cd "$_primary_common_dir/.." && pwd)}"
+PYTHON_BIN="${ATLAS_RE_ENRICH_PYTHON:-$PRIMARY_ROOT/.venv/bin/python}"
 
 HOST="${ATLAS_RUNNER_HOST:-vps}"
 RUN_ROOT="${ATLAS_RUN_ROOT:-/home/ops/atlas-runner}"
@@ -47,7 +64,7 @@ LOCAL_LAUNCHER="$WORKTREE/scripts/lexicon/runner/launch_reenrich_class_b.sh"
 # it contains the large catalog; sparse worktrees normally fall back to the
 # operator's primary checkout.
 LOCAL_LIVE_MANIFEST_CANDIDATE="$WORKTREE/site/src/data/lexicon-manifest.json"
-PRIMARY_LIVE_MANIFEST="/Users/krisztiankoos/projects/learn-ukrainian/site/src/data/lexicon-manifest.json"
+PRIMARY_LIVE_MANIFEST="$PRIMARY_ROOT/site/src/data/lexicon-manifest.json"
 MIN_LIVE_MANIFEST_BYTES=1048576
 # The driver imports ``scripts.lexicon.enrich_manifest`` and its supporting
 # modules. The VPS checkout is deliberately allowed to stay stale, so deploy
@@ -114,8 +131,8 @@ LOCAL_SOURCES_DB_CANDIDATE="${ATLAS_LOCAL_SOURCES_DB:-$WORKTREE/data/sources.db}
 REMOTE_SOURCES_DB="${ATLAS_SOURCES_DB:-$REMOTE_REPO/data/sources.db}"
 if [[ ! -e "$LOCAL_SOURCES_DB_CANDIDATE" ]]; then
   # Fall back to primary checkout data path (worktrees often sparse/omit data/)
-  if [[ -e "/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db" ]]; then
-    LOCAL_SOURCES_DB_CANDIDATE="/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db"
+  if [[ -e "$PRIMARY_ROOT/data/sources.db" ]]; then
+    LOCAL_SOURCES_DB_CANDIDATE="$PRIMARY_ROOT/data/sources.db"
   else
     echo "local sources.db not found (tried worktree + primary checkout)" >&2
     exit 1
@@ -133,8 +150,8 @@ fi
 # disposable work-dir overlay rather than changing that checkout.
 LOCAL_VESUM_DB_CANDIDATE="${ATLAS_LOCAL_VESUM_DB:-$WORKTREE/data/vesum.db}"
 if [[ ! -e "$LOCAL_VESUM_DB_CANDIDATE" ]]; then
-  if [[ -e "/Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db" ]]; then
-    LOCAL_VESUM_DB_CANDIDATE="/Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db"
+  if [[ -e "$PRIMARY_ROOT/data/vesum.db" ]]; then
+    LOCAL_VESUM_DB_CANDIDATE="$PRIMARY_ROOT/data/vesum.db"
   else
     echo "local vesum.db not found (tried worktree + primary checkout)" >&2
     exit 1
@@ -147,7 +164,7 @@ if [[ ! -f "$LOCAL_VESUM_DB" ]]; then
 fi
 LOCAL_SLOVNYK_CACHE="${ATLAS_LOCAL_SLOVNYK_CACHE:-$WORKTREE/data/lexicon/slovnyk_cache}"
 if [[ ! -d "$LOCAL_SLOVNYK_CACHE" ]]; then
-  LOCAL_SLOVNYK_CACHE="/Users/krisztiankoos/projects/learn-ukrainian/data/lexicon/slovnyk_cache"
+  LOCAL_SLOVNYK_CACHE="$PRIMARY_ROOT/data/lexicon/slovnyk_cache"
 fi
 if [[ ! -d "$LOCAL_SLOVNYK_CACHE" ]]; then
   echo "local slovnyk cache not found (tried worktree + primary checkout)" >&2

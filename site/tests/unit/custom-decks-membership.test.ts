@@ -61,18 +61,19 @@ describe('getTeacherLessonVirtualDeck membership sources (#6544)', () => {
 });
 
 describe('getTeacherTableVirtualDeck weekly source boundary (#4387)', () => {
-  test('uses the committed public, lemma-only Teacher table payload', () => {
+  test("uses the committed public, lemma-only Dev's example deck payload", () => {
     const deck = getTeacherTableVirtualDeck();
 
     expect(deck).toMatchObject({
       id: 'virtual_teacher_table',
-      title: 'Teacher table',
-      titleUk: 'Таблиця зі слів',
+      title: "Dev's example deck",
+      titleUk: 'Приклад розробника',
+      description: "Shared example from the developer's classroom list.",
     });
     expect(deck.cloze_items).toBeUndefined();
 
-    // Current Combined Master Vocabulary Table (#3): 1066 data rows → 1047 unique UK.
-    expect(deck.lemma_keys.length).toBe(1047);
+    // Current teacher table: 1095 data rows → 1077 unique UK.
+    expect(deck.lemma_keys.length).toBe(1077);
     expect(deck.lemma_keys.some((key) => /\s/.test(key))).toBe(true);
     expect(deck.lemma_keys[0]).toBe('Справедливий');
   });

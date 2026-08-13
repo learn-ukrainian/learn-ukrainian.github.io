@@ -24,6 +24,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SITE_DATA_PATH = PROJECT_ROOT / "site/src/data/lexicon-teacher-table-deck.json"
 SCHEMA = "lexicon-teacher-table-deck-v1"
 DECK_ID = "virtual_teacher_table"
+TITLE = "Dev's example deck"
+TITLE_UK = "Приклад розробника"
+DESCRIPTION = "Shared example from the developer's classroom list."
 
 
 class TeacherTableSyncError(ValueError):
@@ -176,8 +179,9 @@ def write_site_data(
     payload = {
         "schema": SCHEMA,
         "id": DECK_ID,
-        "title": "Teacher table",
-        "titleUk": "Таблиця зі слів",
+        "title": TITLE,
+        "titleUk": TITLE_UK,
+        "description": DESCRIPTION,
         "lemma_keys": lemma_keys,
     }
     site_data_path.parent.mkdir(parents=True, exist_ok=True)
