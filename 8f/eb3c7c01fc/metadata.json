@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8feb3c7c01fc",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-rights-semantics-migration-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_open_model_phase3_minchak_phonetics_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8f/eb3c7c01fc/0/metadata.json",
+      "transcript": "/8f/eb3c7c01fc/0/full.jsonl",
+      "compact_transcript": "/8f/eb3c7c01fc/0/transcript.jsonl",
+      "content_hash": "/8f/eb3c7c01fc/0/content_hash.txt",
+      "prompt": "/8f/eb3c7c01fc/0/prompt.txt"
+    }
+  ]
+}
