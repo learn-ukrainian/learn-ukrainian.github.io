@@ -177,6 +177,30 @@ def test_release_reuse_is_idempotent_and_links_live_data(tmp_path: Path) -> None
     ] == [sha]
 
 
+def test_corrupt_release_dir_is_rebuilt_not_reused(tmp_path: Path) -> None:
+    """A dirty final release that fails verify must be deleted and rebuilt."""
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    first_release, reused = release_snapshot.build_release(repo_root, sha)
+    assert not reused
+
+    manifest_path = first_release / MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["file_count"] = int(payload["file_count"]) + 1
+    manifest_path.write_text(
+        json.dumps(payload, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(release_snapshot.ReleaseSnapshotError, match="verification failed"):
+        release_snapshot.verify_release(first_release, sha)
+
+    rebuilt, reused_again = release_snapshot.build_release(repo_root, sha)
+
+    assert not reused_again
+    assert rebuilt == first_release
+    assert release_snapshot.verify_release(rebuilt, sha).sha == sha
+    assert (release_snapshot.releases_root(repo_root) / "current").resolve() == rebuilt
+
+
 def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp_path: Path) -> None:
     repo_root, sha = _create_snapshot_repo(tmp_path, api_app=True)
     release_dir, _ = release_snapshot.build_release(repo_root, sha)
