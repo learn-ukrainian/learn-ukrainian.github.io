@@ -25,6 +25,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from scripts.audit.daily_cefr import CEFR_LEVEL_ORDER, CEFR_LEVELS
 from scripts.audit.generate_search_index import _site_build_entry_model_gates
 from scripts.audit.lexeme_filter import (
     DERIVED_FORM_SOURCES,
@@ -38,6 +39,10 @@ DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
 EARLY_CEFR = {"A1", "A2", "B1"}
+# Minimum slots reserved per known CEFR level that has enough eligible words. Keeps
+# the daily 12-card draw comfortably above zero for every tab while leaving the
+# majority of slots for the beginner-friendly weighted fill.
+MIN_PER_LEVEL = 40
 # Derived-form + surzhyk source tags live in scripts.audit.lexeme_filter (single source
 # of truth, shared with the search index, word-page routes, and the practice deck).
 # Keep the underscore-prefixed aliases for the existing references in this module.
@@ -143,6 +148,22 @@ def _early_cefr(entry: dict[str, Any]) -> str | None:
     # tolerate a bare string too (defensive). Anything else → no early-CEFR signal.
     level = cefr.get("level") if isinstance(cefr, dict) else cefr
     return level if isinstance(level, str) and level in EARLY_CEFR else None
+
+
+def _cefr_level(entry: dict[str, Any]) -> str | None:
+    """Return the entry's true CEFR level (any of A1–C2), or None.
+
+    Unlike :func:`_early_cefr` (which gates the beginner-friendly weight boost to
+    A1/A2/B1), this is the level emitted on the pool row and used for level-balanced
+    selection. Capping the emitted level to ``EARLY_CEFR`` is what hid every B2/C1/C2
+    word and left the WotD C-level tabs pointing at an all-A1/A2/B1 pool (#6728).
+    """
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return None
+    cefr = enrichment.get("cefr")
+    level = cefr.get("level") if isinstance(cefr, dict) else cefr
+    return level if isinstance(level, str) and level in CEFR_LEVELS else None
 
 
 def compute_weight(entry: dict[str, Any]) -> int:
@@ -252,7 +273,7 @@ def _pool_item(
     lesson_tag = _first_course_track(entry)
     if lesson_tag is not None:
         item["lessonTag"] = lesson_tag
-    cefr = _early_cefr(entry)
+    cefr = _cefr_level(entry)
     if cefr is not None:
         item["cefr"] = cefr
     pos = entry.get("pos")
@@ -276,22 +297,68 @@ def _pool_item(
 
 
 def build_pool(
-    entries: list[dict[str, Any]], size: int = 300, sentence_inventory: dict[str, dict[str, Any]] | None = None
+    entries: list[dict[str, Any]],
+    size: int = 300,
+    sentence_inventory: dict[str, dict[str, Any]] | None = None,
+    min_per_level: int = MIN_PER_LEVEL,
 ) -> list[dict[str, Any]]:
     """Build the daily pool and return lemma-sorted JSON rows.
 
-    Selection is deterministic but *representative*: within a weight tier we order by a
-    stable lemma hash, not by lemma, so a dominant tier (course + early-CEFR words) does not
-    collapse the pool to an alphabetical prefix. Avoid-classified forms are excluded before
-    selection, so error-modeling lemmas cannot surface as neutral daily cards.
+    Selection is level-balanced: each CEFR level with enough eligible words is
+    reserved ``min_per_level`` slots so the WotD level selector's B2/C1/C2 tabs
+    point at real level-matched cards, not an A1/A2/B1-only pool (#6728). The
+    remaining slots are filled from the deterministic weight tier (course +
+    beginner-CEFR bias) with a stable per-lemma hash tiebreak, so a dominant tier
+    does not collapse the pool to an alphabetical prefix. Avoid-classified forms
+    are excluded before selection, so error-modeling lemmas cannot surface as
+    neutral daily cards.
     """
     if size < 0:
         raise ValueError("size must be non-negative")
+    if min_per_level < 0:
+        raise ValueError("min_per_level must be non-negative")
 
     eligible = [entry for entry in entries if _is_eligible(entry)]
-    eligible.sort(key=lambda e: (-compute_weight(e), _stable_hash(e["lemma"])))
-    selected = [item for entry in eligible[:size] if (item := _pool_item(entry, sentence_inventory)) is not None]
-    return sorted(selected, key=lambda item: item["lemma"])
+
+    def sort_key(entry: dict[str, Any]) -> tuple[int, str]:
+        return (-compute_weight(entry), _stable_hash(entry["lemma"]))
+
+    by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_LEVEL_ORDER}
+    unlevelled: list[dict[str, Any]] = []
+    for entry in eligible:
+        level = _cefr_level(entry)
+        if level is not None:
+            by_level[level].append(entry)
+        else:
+            unlevelled.append(entry)
+    for bucket in by_level.values():
+        bucket.sort(key=sort_key)
+    unlevelled.sort(key=sort_key)
+
+    selected: list[dict[str, Any]] = []
+    chosen: set[str] = set()
+
+    def take_from(bucket: list[dict[str, Any]], quota: int) -> None:
+        for entry in bucket:
+            if len(selected) >= size or quota <= 0:
+                return
+            lemma = entry["lemma"]
+            if lemma in chosen:
+                continue
+            chosen.add(lemma)
+            selected.append(entry)
+            quota -= 1
+
+    # 1) Reserve per-level quotas so every WotD tab has real level-matched words.
+    for level in CEFR_LEVEL_ORDER:
+        take_from(by_level[level], min_per_level)
+    # 2) Fill remaining slots from the full weighted pool (beginner-friendly character).
+    take_from(sorted(eligible, key=sort_key), size)
+    # 3) Last resort: top up from unlevelled entries if still short of `size`.
+    take_from(unlevelled, size)
+
+    rows = [item for entry in selected if (item := _pool_item(entry, sentence_inventory)) is not None]
+    return sorted(rows, key=lambda item: item["lemma"])
 
 
 def write_pool(pool: list[dict[str, Any]], out_path: Path) -> None:

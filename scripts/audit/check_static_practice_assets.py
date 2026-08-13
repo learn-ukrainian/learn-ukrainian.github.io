@@ -22,6 +22,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(AUDIT_DIR) not in sys.path:
     sys.path.insert(0, str(AUDIT_DIR))
 
+from daily_cefr import CEFR_LEVELS
 from generate_practice_deck import (
     THIN_WARN_THRESHOLDS,
     UNKNOWN_CEFR_TRANSPORT_LEVEL,
@@ -38,7 +39,9 @@ DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
 DEFAULT_REVIEWED_SOURCES = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_LEVELS = ("A1", "A2", "B1", "B2", "C1")
-DAILY_CEFR_LEVELS = {"A1", "A2", "B1"}
+# Shared SSOT with generate_daily_pool via daily_cefr (A1–C2). A sibling A1/A2/B1
+# copy rejected the true-CEFR B2/C1 rows that #6728 now emits into the daily pool.
+DAILY_CEFR_LEVELS = CEFR_LEVELS
 # Must mirror PRACTICE_MODES in site/src/lib/lexicon/srs.ts (spec v5 §9 union;
 # the check flags asset modes OUTSIDE this set, so listing not-yet-shipped
 # modes is safe — decks for them simply don't exist yet).
