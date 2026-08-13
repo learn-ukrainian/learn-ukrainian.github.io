@@ -53,7 +53,7 @@ CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 EXPECTED_BINDINGS = {
     "phase3_recovery_prompt_v2_sha256": intake.V2_PROMPT_SHA256,
     "phase3_reboot_prompt_v3_sha256": intake.V3_PROMPT_SHA256,
-    "candidate_receipt_sha256": "15dfdf2eb9d7476f4d846b3abf053530ec2b80d3a1cfa59287970080bfc362ac",
+    "candidate_receipt_sha256": "0d0563e33da30951e6b2d74beb05ee91039dfcd3523e2e58019463cbd65c3adb",
     "university_content_audit_freeze_v1_sha256": "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b",
     "complete_source_policy_v4_sha256": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559",
     "historical_periodization_freeze_v1_sha256": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198",
@@ -417,7 +417,8 @@ def build_receipt(
         },
         "rights": {
             "standardized_license_present": False,
-            "operator_private_text_only_phase3_use_authorized": True,
+            "operator_private_attributed_research_use_directed": True,
+            "legal_reuse_authorization_established": False,
             "attribution_required": True,
             "takedown_ready": True,
             "adapt_or_remove_on_substantiated_complaint": True,
@@ -471,6 +472,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["semantic_gold"] is False, "receipt grants semantic gold")
     require(receipt["gates"]["phase3_complete"] is False, "receipt overclaims Phase 3 completion")
     require(receipt["gates"]["phase4_blocked"] is True, "receipt opens Phase 4")
+    require(
+        receipt["rights"]["legal_reuse_authorization_established"] is False,
+        "receipt overclaims legal reuse authorization",
+    )
+    require(
+        "operator_private_text_only_phase3_use_authorized" not in receipt["rights"],
+        "receipt retains legacy operator authorization field",
+    )
     return receipt
 
 

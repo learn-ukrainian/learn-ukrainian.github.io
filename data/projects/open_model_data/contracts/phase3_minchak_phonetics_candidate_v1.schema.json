@@ -37,6 +37,7 @@
         "isbn",
         "catalog_print_collation_pages",
         "exact_bitstream_pages",
+        "bitstream_is_complete_publication",
         "item_url",
         "bitstream_url"
       ],
@@ -51,6 +52,7 @@
         "isbn": {"const": "978-966-638-406-8 (Online)"},
         "catalog_print_collation_pages": {"const": 131},
         "exact_bitstream_pages": {"const": 96},
+        "bitstream_is_complete_publication": {"const": false},
         "item_url": {"const": "http://rep.knlu.edu.ua/xmlui/handle/787878787/5318"},
         "bitstream_url": {"const": "http://rep.knlu.edu.ua/xmlui/bitstream/handle/787878787/5318/%d0%a4%d0%be%d0%bd%d0%b5%d1%82%d0%b8%d0%ba%d0%b0%20%d1%96%20%d1%84%d0%be%d0%bd%d0%be%d0%bb%d0%be%d0%b3%d1%96%d1%8f.%20%d0%97%d0%b1%d1%96%d1%80%d0%bd%d0%b8%d0%ba.pdf?sequence=3&isAllowed=y"}
       }
@@ -101,7 +103,7 @@
         "form_field_count",
         "javascript_present",
         "source_isbn_text_verified",
-        "catalog_print_collation_text_verified",
+        "catalog_page_count_in_bitstream_text_verified",
         "normalization_applied",
         "ocr_used",
         "source_text_retained_in_public_receipt"
@@ -119,7 +121,7 @@
         "form_field_count": {"const": 0},
         "javascript_present": {"const": false},
         "source_isbn_text_verified": {"const": true},
-        "catalog_print_collation_text_verified": {"const": true},
+        "catalog_page_count_in_bitstream_text_verified": {"const": true},
         "normalization_applied": {"const": false},
         "ocr_used": {"const": false},
         "source_text_retained_in_public_receipt": {"const": false}
@@ -161,7 +163,8 @@
     "rights": {
       "const": {
         "standardized_license_present": false,
-        "operator_private_text_only_phase3_use_authorized": true,
+        "operator_private_attributed_research_use_directed": true,
+        "legal_reuse_authorization_established": false,
         "attribution_required": true,
         "takedown_ready": true,
         "adapt_or_remove_on_substantiated_complaint": true,

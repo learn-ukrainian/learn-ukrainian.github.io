@@ -343,6 +343,42 @@ def test_receipt_self_hash_and_runtime_bindings_are_enforced(
         intake.validate_receipt(receipt)
 
 
+def _rehash(receipt: dict[str, object]) -> dict[str, object]:
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = intake.sha256_bytes(intake.canonical_bytes(body))
+    return receipt
+
+
+def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legal reuse authorization"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legacy operator authorization field"):
+        intake.validate_receipt(_rehash(receipt))
+
+
+def test_catalog_page_count_statement_does_not_imply_bitstream_completeness(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    assert receipt["text_layer"]["catalog_page_count_in_bitstream_text_verified"] is True  # type: ignore[index]
+    assert receipt["source"]["bitstream_is_complete_publication"] is False  # type: ignore[index]
+    assert receipt["source"]["exact_bitstream_pages"] == intake.PDF_PAGES  # type: ignore[index]
+    assert receipt["source"]["catalog_print_collation_pages"] == intake.CATALOG_PRINT_COLLATION_PAGES  # type: ignore[index]
+    receipt["source"]["bitstream_is_complete_publication"] = True  # type: ignore[index]
+    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="full-book overclaim"):
+        intake.validate_receipt(_rehash(receipt))
+
+
 def test_tracked_receipt_validates_when_present() -> None:
     if not intake.DEFAULT_PUBLIC_RECEIPT_PATH.exists():
         pytest.skip("tracked receipt is generated after the implementation stabilizes")

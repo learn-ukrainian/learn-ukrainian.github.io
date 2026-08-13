@@ -332,6 +332,28 @@ def test_check_cli_reports_receipt(
     assert json.loads(capsys.readouterr().out) == {"ok": True, "receipt_sha256": "fixture"}
 
 
+def _rehash(receipt: dict[str, object]) -> dict[str, object]:
+    body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
+    receipt["receipt_sha256"] = materialization.sha256_bytes(materialization.canonical_bytes(body))
+    return receipt
+
+
+def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
+    with pytest.raises(materialization.VspuSourceMaterializationError, match="legal reuse authorization"):
+        materialization.validate_receipt(_rehash(receipt))
+
+
+def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
+    with pytest.raises(materialization.VspuSourceMaterializationError, match="legacy operator authorization field"):
+        materialization.validate_receipt(_rehash(receipt))
+
+
 def test_output_inside_git_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     git_root = tmp_path / "checkout"

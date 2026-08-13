@@ -212,6 +212,10 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
         raise MinchakPhoneticsIntakeError("cannot parse Minchak source PDF") from exc
     require(not reader.is_encrypted, "Minchak source PDF is unexpectedly encrypted")
     require(len(reader.pages) == PDF_PAGES, "Minchak source PDF page denominator drift")
+    require(
+        len(reader.pages) != CATALOG_PRINT_COLLATION_PAGES,
+        "Minchak PDF overclaims the full 131-page book",
+    )
     page_rows: list[dict[str, Any]] = []
     complete_text: list[str] = []
     blank_pages: list[int] = []
@@ -257,7 +261,7 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
         "form_field_count": len(reader.get_fields() or {}),
         "javascript_present": bool("/Names" in root and "/JavaScript" in root["/Names"]),
         "source_isbn_text_verified": True,
-        "catalog_print_collation_text_verified": True,
+        "catalog_page_count_in_bitstream_text_verified": True,
     }
     require(
         facts
@@ -274,7 +278,7 @@ def inspect_pdf(path: Path) -> dict[str, Any]:
             "form_field_count": 0,
             "javascript_present": False,
             "source_isbn_text_verified": True,
-            "catalog_print_collation_text_verified": True,
+            "catalog_page_count_in_bitstream_text_verified": True,
         },
         "Minchak complete text-layer facts drift",
     )
@@ -426,6 +430,7 @@ def build_receipt(
             "isbn": SOURCE_ISBN,
             "catalog_print_collation_pages": CATALOG_PRINT_COLLATION_PAGES,
             "exact_bitstream_pages": PDF_PAGES,
+            "bitstream_is_complete_publication": False,
             "item_url": SOURCE_ITEM_URL,
             "bitstream_url": SOURCE_BITSTREAM_URL,
         },
@@ -459,7 +464,8 @@ def build_receipt(
         },
         "rights": {
             "standardized_license_present": False,
-            "operator_private_text_only_phase3_use_authorized": True,
+            "operator_private_attributed_research_use_directed": True,
+            "legal_reuse_authorization_established": False,
             "attribution_required": True,
             "takedown_ready": True,
             "adapt_or_remove_on_substantiated_complaint": True,
@@ -507,6 +513,27 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["source_coverage_ready"] is False, "receipt overclaims source coverage")
     require(receipt["gates"]["phase3_complete"] is False, "receipt overclaims Phase 3 completion")
     require(receipt["gates"]["phase4_blocked"] is True, "receipt opens Phase 4")
+    require(receipt["source"]["exact_bitstream_pages"] == PDF_PAGES, "receipt page-count overclaim")
+    require(
+        receipt["source"]["bitstream_is_complete_publication"] is False,
+        "receipt full-book overclaim",
+    )
+    require(
+        receipt["source"]["catalog_print_collation_pages"] == CATALOG_PRINT_COLLATION_PAGES,
+        "catalog extent drift",
+    )
+    require(
+        receipt["text_layer"]["catalog_page_count_in_bitstream_text_verified"] is True,
+        "catalog page-count statement drift",
+    )
+    require(
+        receipt["rights"]["legal_reuse_authorization_established"] is False,
+        "receipt overclaims legal reuse authorization",
+    )
+    require(
+        "operator_private_text_only_phase3_use_authorized" not in receipt["rights"],
+        "receipt retains legacy operator authorization field",
+    )
     return receipt
 
 

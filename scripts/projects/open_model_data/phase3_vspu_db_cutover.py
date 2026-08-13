@@ -51,7 +51,7 @@ EXPECTED_SOURCE_ROWS = 158
 EXPECTED_PRE_DB_SHA256 = "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"
 EXPECTED_FOREIGN_KEY_COUNT = 134_836
 EXPECTED_FOREIGN_KEY_SHA256 = "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"
-EXPECTED_MATERIALIZATION_FILE_SHA256 = "f023fab75ebc82ecb84a88a487f2ef2d477722035a82c5c23c18431b11e8b45c"
+EXPECTED_MATERIALIZATION_FILE_SHA256 = "336310e049a1d0b065f766a9b220507726ca9bfb940bef3fa046b9e017a38542"
 EXPECTED_ADDITIVE_POLICY_SHA256 = "c2d2d094931751fefba0dd14143a83b344dc59f52b36414b165be920d29309f5"
 EXPECTED_PRIVATE_JSONL_SHA256 = "babb8a266a7d6720d68fb960f7848aace03f646f1ede5b30de2831f7cbb85dc8"
 EXPECTED_PREIMAGE_BACKUP_RECEIPT_SHA256 = "e53355f2d6c221c7bfe9cbba63b4055982f286b26d72618e8b9a393231febb0a"
@@ -714,7 +714,8 @@ def _build_receipt(
             "private_receipt_0600": True,
         },
         "rights_and_authority": {
-            "private_operator_authorized_use_only": True,
+            "operator_private_attributed_research_use_directed": True,
+            "legal_reuse_authorization_established": False,
             "public_redistribution_authorized": False,
             "unrestricted_reuse_authorized": False,
             "normative_rule_authority": False,
@@ -768,6 +769,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
     )
     require(receipt["phase_boundaries"]["phase4_blocked"] is True, "receipt opens Phase 4")
     require(receipt["rights_and_authority"]["semantic_gold"] is False, "receipt grants semantic gold")
+    require(
+        receipt["rights_and_authority"]["legal_reuse_authorization_established"] is False,
+        "receipt overclaims legal reuse authorization",
+    )
+    require(
+        "private_operator_authorized_use_only" not in receipt["rights_and_authority"],
+        "receipt retains legacy operator authorization field",
+    )
     return receipt
 
 

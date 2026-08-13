@@ -43,7 +43,7 @@
       "properties": {
         "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
         "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
-        "candidate_receipt_sha256": {"const": "15dfdf2eb9d7476f4d846b3abf053530ec2b80d3a1cfa59287970080bfc362ac"},
+        "candidate_receipt_sha256": {"const": "0d0563e33da30951e6b2d74beb05ee91039dfcd3523e2e58019463cbd65c3adb"},
         "university_content_audit_freeze_v1_sha256": {"const": "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"},
         "complete_source_policy_v4_sha256": {"const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"},
         "historical_periodization_freeze_v1_sha256": {"const": "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"},
@@ -141,7 +141,8 @@
       "additionalProperties": false,
       "required": [
         "standardized_license_present",
-        "operator_private_text_only_phase3_use_authorized",
+        "operator_private_attributed_research_use_directed",
+        "legal_reuse_authorization_established",
         "attribution_required",
         "takedown_ready",
         "adapt_or_remove_on_substantiated_complaint",
@@ -150,7 +151,8 @@
       ],
       "properties": {
         "standardized_license_present": {"const": false},
-        "operator_private_text_only_phase3_use_authorized": {"const": true},
+        "operator_private_attributed_research_use_directed": {"const": true},
+        "legal_reuse_authorization_established": {"const": false},
         "attribution_required": {"const": true},
         "takedown_ready": {"const": true},
         "adapt_or_remove_on_substantiated_complaint": {"const": true},
