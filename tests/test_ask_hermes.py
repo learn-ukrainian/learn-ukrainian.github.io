@@ -895,7 +895,7 @@ def test_invoke_hermes_uses_shared_runtime():
     ) as invoke_mock:
         assert _invoke_hermes("hello", "deepseek-v4-flash", task_id="task-1") == "response body"
     args, kwargs = invoke_mock.call_args
-    assert args == ("deepseek", "hello")
+    assert args == ("hermes-deepseek", "hello")
     assert kwargs["model"] == "deepseek-v4-flash"
     assert kwargs["task_id"] == "task-1"
     assert kwargs["entrypoint"] == "bridge"

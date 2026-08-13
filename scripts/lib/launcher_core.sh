@@ -147,7 +147,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-5.6-terra}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-5.6-luna}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -162,7 +162,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     kimi)
-      LC_MODEL="${LAUNCHER_MODEL:-k3}"
+      LC_MODEL="${LAUNCHER_MODEL:-k3-256k}"
       LC_HARNESS="${LAUNCHER_HARNESS:-kimi-code}"
       ;;
     glm)
@@ -363,7 +363,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
       return 0
       ;;
     *)

@@ -52,7 +52,9 @@ def is_deepseek_first_party_forbidden_in_ci(provider: Any, model: Any) -> bool:
     if os.environ.get("PYTEST_CURRENT_TEST"):
         return False
     provider_text = normalize_route_part(provider).lower()
-    if provider_text == "deepseek":
+    # "deepseek-direct" is the first-party api.deepseek.com provider id used by
+    # the OpenCode dispatch route (operator 2026-08-13); same China-egress rule.
+    if provider_text in ("deepseek", "deepseek-direct"):
         return any(os.environ.get(v) for v in _CI_ENV_VARS)
     return False
 
@@ -65,7 +67,7 @@ def deepseek_first_party_error(
 ) -> str:
     """Build the explicit hard-fail text for first-party DeepSeek in CI."""
     return (
-        f"{DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER}: automated Hermes run refused "
+        f"{DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER}: automated run refused "
         f"China-hosted first-party DeepSeek (local-only, never CI) from {source}: "
         f"provider={normalize_route_part(provider)!r} "
         f"model={normalize_route_part(model)!r}"

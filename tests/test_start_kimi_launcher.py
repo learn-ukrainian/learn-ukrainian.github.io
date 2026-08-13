@@ -12,7 +12,8 @@ def test_kimi_native_is_default_and_interactive_rejects_epic() -> None:
     epic = run_launcher("start-kimi.sh", "--epic", "devops")
     assert interactive.returncode == 0, interactive.stderr
     # Catalog-resolved native id, never the bare alias (review finding, #5958 r3).
-    assert "would exec kimi --model kimi-code/k3" in interactive.stdout
+    # Operator 2026-08-13: the omitted-model default is k3-256k.
+    assert "would exec kimi --model kimi-code/k3-256k" in interactive.stdout
     assert epic.returncode == 2
     assert "interactive launchers reject --epic" in epic.stderr
 

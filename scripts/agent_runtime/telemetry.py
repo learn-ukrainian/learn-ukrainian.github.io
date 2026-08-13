@@ -189,7 +189,7 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
-    if agent_name in ("deepseek", "qwen") or is_hermes_grok_seat(agent_name):
+    if agent_name in ("deepseek", "hermes-deepseek", "qwen") or is_hermes_grok_seat(agent_name):
         # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
         # not surfaced on the command line. Adapter logs a warning when the
         # caller's request disagrees with the config — telemetry has nothing
@@ -235,7 +235,7 @@ def _resolve_model_from_defaults(
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name in ("grok-hermes", "deepseek", "qwen"):
+    if agent_name in ("grok-hermes", "deepseek", "hermes-deepseek", "qwen"):
         return _default_model_for(agent_name)
     if agent_name == "claude":
         return _default_model_for(agent_name)
@@ -256,7 +256,7 @@ def _resolve_effort_from_defaults(
 
     if agent_name in {"agy", "cursor", "gemini"}:
         return _NOT_EXPOSED
-    if agent_name in {"deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
+    if agent_name in {"deepseek", "hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
         if harness == "kimicc":
@@ -443,7 +443,7 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — NOT hermes-backed; probe it directly.
         return _probe_version_at(("grok",), probe_cwd)
-    if agent_name == "deepseek" or is_hermes_grok_seat(agent_name):
+    if agent_name in ("deepseek", "hermes-deepseek") or is_hermes_grok_seat(agent_name):
         # Hermes-backed seats share one version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
         return _probe_version_at(prefix, probe_cwd)

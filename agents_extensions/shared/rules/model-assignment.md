@@ -51,8 +51,9 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **Codex seat**: `gpt-5.6-terra` (standard practical review)
   * **GLM seat**: `glm-5.2` (local-only)
   * **Gemini seat**: `gemini-3.6-flash-high`
-  * **DeepSeek seat**: `deepseek-v4-flash` through first-party OpenCode at `high` effort for
-    review/research, preserving native Entire capture. Tool-heavy implementation stays on Hermes,
+  * **DeepSeek seat**: `deepseek-v4-flash` through first-party OpenCode (`deepseek-direct/*`) at
+    `high` effort for review/research AND dispatch, preserving native Entire capture (operator
+    2026-08-13: OpenCode is the dispatch default). Hermes remains for `ask-hermes` only,
     whose shared `agent.reasoning_effort` is also `high`. The current Arena evidence is preliminary
     and frontend-specific, so this promotion does not grant critical or advisory authority.
 * **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
@@ -94,8 +95,8 @@ or count as a formal review.
   the same utilization PR so Auto can execute. If a future adapter regression returns
   plan-only rc=0, substitute with NOTE to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.
 * **deepseek** (operator 2026-08-02; hold 2026-08-06; **reaffirmed 2026-08-08**): use
-  **`deepseek-v4-flash` only** (first-party OpenCode at `high` for review/research; Hermes for
-  tool-heavy implement). **`deepseek-v4-pro` is DO NOT USE** — older SKU; Flash currently
+  **`deepseek-v4-flash` only** (first-party OpenCode `deepseek-direct/*` at `high` — the dispatch
+  default since 2026-08-13, with native Entire capture; Hermes remains for `ask-hermes` only). **`deepseek-v4-pro` is DO NOT USE** — older SKU; Flash currently
   outperforms Pro on the workloads we run (operator: “fast is better than pro atm”). Do not
   dispatch, pin, ladder-select, or recommend Pro. Neither is a language, folk-content, or
   approval-authority seat. Prefer Flash for **code/infra CF volume** when Codex/Claude are hot.
@@ -123,7 +124,7 @@ or count as a formal review.
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
 | Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, wiki fixes, mechanical PR babysitting | **Sonnet 5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Reserve the frontier Claude tier (Opus 5 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
-| Code change >5 LOC, mechanical / pattern-applying / fixtures | Clearly bounded with exact owned paths + an objective scope ceiling → `delegate.py dispatch --agent codex --model gpt-5.6-luna --effort max --mode danger --worktree --base origin/main`. Missing ceiling, broader integration, or consequential ambiguity → omit `--model` and retain the Terra @ `high` default. |
+| Code change >5 LOC, mechanical / pattern-applying / fixtures | Clearly bounded with exact owned paths + an objective scope ceiling → `delegate.py dispatch --agent codex --mode danger --worktree --base origin/main` (omitted flags default to **Luna @ `max`**, operator 2026-08-13). Missing ceiling, broader integration, or consequential ambiguity → pass `--model gpt-5.6-terra` explicitly (Terra @ `high`). |
 | Code Review (PR diff) | Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile code --risk <low\|medium\|high\|critical>`. The resolver applies hard filters first, then the #5293 quality prior above for every formal review; risk remains recorded in the receipt but does not allow a lower tier to leapfrog an eligible higher one. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
 | Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (user 2026-07-17): agy / codex / claude / grok-4.5 only** — dispatch the reviewer on one of the four with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `delegate.py dispatch --agent agy` (write) or `ab ask-agy --to-model gemini-3.1-pro-high` (review). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
@@ -177,9 +178,10 @@ native OAuth subscription lane (`kimi-code/k3`, max effort, tool/image/video inp
 context-size claim until the native provider documents it). API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown
 headroom, not unavailability. Shed load only to models that meet the same task-risk quality floor.
 
-**Kimi lane:** native Kimi Code OAuth only. Use K3 (`kimi-code/k3`, always-thinking,
-max effort) for consequential coding, strong cross-family review, long-context debugging, and deep
-asks. Use `k2.7-coding` / `k2.7-coding-highspeed` for routine or bulk coding. Do not demote K3 merely
+**Kimi lane:** native Kimi Code OAuth only. Dispatch/native default is **`k3-256k`** (`kimi-code/k3-256k`,
+everyday coding/impl, no forced effort — operator 2026-08-13). Use K3 (`kimi-code/k3`, high/max
+effort) for consequential coding, strong cross-family review, long-context debugging, and deep
+asks. Use `k2.7-coding` / `k2.7-coding-highspeed` only as legacy routine/bulk pins. Do not demote K3 merely
 because the cheaper model exists; risk and fit establish the quality floor first. Kimi is Moonshot
 family. Composer 2.5 is Cursor-trained from a Kimi K2.5 checkpoint, so conservatively treat Composer
 and Kimi as the same Moonshot independence family. Neither is currently a Ukrainian factual/folk gate.
@@ -351,7 +353,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | Prefer when free / behind | Typical fit | Never / caveats |
 | --- | --- | --- |
 | **cursor** (`--model auto` default) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment | not formal CF identity; not language seats; `concurrency_limit: 1` |
-| **deepseek** (`deepseek-v4-flash` only) | code/infra CF volume, tool-heavy implement (Hermes), PR diffs | **Pro DO NOT USE**; not language/folk; not critical authority |
+| **deepseek** (`deepseek-v4-flash` only) | code/infra CF volume, tool-heavy implement (OpenCode first-party default), PR diffs | **Pro DO NOT USE**; not language/folk; not critical authority |
 | **claude** (Sonnet routine; Fable summoned only) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
 | **agy** (Gemini 3.6 Flash default) | agentic scripts, content (language lanes); **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
@@ -415,7 +417,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 **Advisor (on-demand, HARD calls only): `gpt-5.6-sol @ high` by default** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis, or a bounded advisory envelope. Raise effort only for an explicit escalation; never use Sol for routine work. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
-**Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi`; explicitly select `--model k3` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (max-only effort); `k2.7-coding` and its high-speed variant are routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
+**Kimi onboarding (native `kimi`):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi` — omitted flags default to **`k3-256k`** (everyday coding/impl; no forced effort, operator 2026-08-13). Explicitly select `--model k3 --effort high|max` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (high/max effort, 1M window); `k2.7-coding` and its high-speed variant remain available as legacy routine workers. Current quota affects selection only among models that clear the task's quality floor. Kimi is a clean cross-family reviewer for GPT/Google/Claude/xAI authors, but not for Composer 2.5 because both conservatively share Moonshot lineage.
 
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
@@ -424,7 +426,7 @@ Drive high-judgment work (design, architecture, in-the-loop review, brief author
 * **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.6 Flash default; Gemini 3.1 Pro for deep) · **GPT-5.6 Terra/Sol by risk** · **claude** · **grok-4.5**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
 * **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.6 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Auto** (impl default) / **Composer 2.5** (pinned when family independence matters) · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Flash @ high only** (OpenCode review/Entire continuity; Hermes tool-heavy; **Pro DO NOT USE**) · **Pool Laguna S 2.1** (free review volume) · **GLM-5.2 / Z.AI** (deep security/bug review + large-context coherence audits; LOCAL-ONLY) · **Gemma 4** (surface review only; often via OpenRouter). Pin Cursor's concrete model whenever family independence matters — never `auto` as CF identity.
 
-Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.6-flash-high` (orchestrator/routine default; `--to-model gemini-3.1-pro-high` only for deep) · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek --model deepseek-v4-flash` (first-party by default; OpenCode for review/research; **Pro DO NOT USE — reaffirmed 2026-08-08**). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
+Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.6-flash-high` (orchestrator/routine default; `--to-model gemini-3.1-pro-high` only for deep) · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek` (default = OpenCode first-party `deepseek-direct/deepseek-v4-flash` `--variant high`, with native Entire capture; Hermes only via `ask-hermes`; **Pro DO NOT USE — reaffirmed 2026-08-08**). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
 
 **opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode". **OpenRouter is mainly for Pool + Gemma access** (operator 2026-08-08); the catalog can reach more models through OpenRouter, but **we do not need to** — prefer native/first-party seats (DeepSeek first-party Flash, Cursor, Claude, AGY, Z.AI GLM, Codex, Kimi, Grok). Do not invent OpenRouter as a general multi-model fallback bus when a native lane exists (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — — **(b) wiki drafting RETIRED from gemma (LANGUAGE-LANES RULE 2026-07-17: wiki prose is language work → agy/codex/claude/grok-4.5 only; the 2026-07-05 source-citation probe evidence stands in `docs/projects/qg-quality-gate/model-evidence.md`). ** ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai **`laguna-s-2.1`** (default gen-2 S; also `laguna-xs-2.1` / fallback `laguna-m.1`), **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.2`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
@@ -518,7 +520,9 @@ There is NO `ask-deepseek`: one-shot review/research defaults to
 `opencode run --model deepseek-direct/<deepseek-model> --variant high` so the host gets native
 Entire capture (the legacy `ask-opencode` ACP route is not enabled); use
 `ask-hermes --model <deepseek-model>` when Hermes-specific skills/MCPs matter.
-Tool-heavy execution remains `delegate.py dispatch --agent deepseek`. `openrouter/deepseek/*` is **guard-REFUSED** (user order
+Tool-heavy execution is `delegate.py dispatch --agent deepseek` → OpenCode first-party
+`deepseek-direct/deepseek-v4-flash` `--variant high` by default (operator 2026-08-13); the Hermes
+adapter remains for `ask-hermes` only. `openrouter/deepseek/*` is **guard-REFUSED** (user order
 2026-07-07 — the OR account was drained by deepseek bakeoff cells; deepseek runs FIRST-PARTY only.
 The user's OR BYOK now bills deepseek underneath, so transport-comparison runs (#4321/#4358) are
 billing-safe behind `LU_ROUTING_GUARD_OVERRIDE=1` — deliberate, user-authorized only).
@@ -576,7 +580,7 @@ All three tiers expose **272K context (~258.4K effectively usable before the con
 | Terra | `gpt-5.6-terra` | Balanced default: normal implementation, scoped planning, investigations, standard reviews (≈5.5-level quality, cheaper) | default `high`; `xhigh` for the hardest cells |
 | Luna | `gpt-5.6-luna` | Default high-volume bounded worker: focused implementation/investigation, recon, test/log triage, mechanical checks, and draft summaries with exact owned paths + an objective scope ceiling. **NEVER sole authority** on consequential decisions or release approval | `max` for bounded work; add a Sol envelope when task boundaries need authority judgment |
 
-Policy: **prefer 5.6 for NEW work**; retain 5.5/5.4 only for pinned workflows (qg_bakeoff arms, the V7 pipeline reviewer seat until spot-checked post-reset), proven compatibility, or quota pressure. Codex dispatch + `ask-codex` defaults = `gpt-5.6-terra`.
+Policy: **prefer 5.6 for NEW work**; retain 5.5/5.4 only for pinned workflows (qg_bakeoff arms, the V7 pipeline reviewer seat until spot-checked post-reset), proven compatibility, or quota pressure. Codex dispatch (`delegate.py` / `start-codex*.sh`) defaults = **`gpt-5.6-luna` @ `max`** (operator 2026-08-13); pass `--model gpt-5.6-terra` / `--effort` explicitly to override. `ask-codex` keeps its own pinned `gpt-5.6-terra` default.
 
 **Luna economics refresh (operator directive 2026-08-01):** OpenAI currently
 positions Luna for cost-sensitive, high-volume workloads, and its published
