@@ -48,6 +48,43 @@ DEFAULT_BATCH_ID = "ohoiko-ulp-paired-split-legs-2026-08-12"
 TRAILING_PAREN_RE = re.compile(r"\s*\([^)]*\)\s*$")
 LATIN_A = "a"
 HERITAGE_HOLD = frozenset({"russianism", "calque", "surzhyk", "sovietism"})
+LOOKALIKE_LATIN_TO_CYRILLIC = str.maketrans(
+    {
+        "a": "а",
+        "i": "і",
+        "I": "І",
+        "e": "е",
+        "o": "о",
+        "p": "р",
+        "c": "с",
+        "y": "у",
+        "x": "х",
+        "A": "А",
+        "E": "Е",
+        "O": "О",
+        "P": "Р",
+        "C": "С",
+        "X": "Х",
+    }
+)
+
+
+def recover_latin_lookalike(text: str) -> str:
+    """Map lookalike Latin characters to Cyrillic (binding policy #6370)."""
+    return text.translate(LOOKALIKE_LATIN_TO_CYRILLIC)
+
+
+def resolve_leg_lemma(lemma: str) -> str:
+    """Return clean Cyrillic lemma after acute stress strip and 1:1 lookalike substitution if VESUM hits."""
+    raw = strip_acute_stress(lemma).strip()
+    if not raw:
+        return raw
+    recovered = recover_latin_lookalike(raw)
+    if recovered != raw and has_cyrillic(recovered):
+        hits = verify_word(recovered) or []
+        if hits:
+            return recovered
+    return raw
 
 
 def strip_trailing_parentheticals(text: str) -> str:
@@ -84,14 +121,22 @@ def classify_single_word_leg(lemma: str) -> str:
     raw = strip_acute_stress(lemma).strip()
     if not raw:
         return "single_word_vesum_absent"
-    if LATIN_A in raw and has_cyrillic(raw):
-        return "single_word_vesum_absent"
-    if " " in raw or "(" in raw:
+    if " " in raw or "(" in raw or ")" in raw:
         return "multiword_phrases_other"
-    hits = verify_word(raw) or []
+
+    effective = raw
+    hits = verify_word(effective) or []
+    if not hits:
+        recovered = recover_latin_lookalike(raw)
+        if recovered != raw and has_cyrillic(recovered):
+            hits = verify_word(recovered) or []
+            if hits:
+                effective = recovered
+
     if not hits:
         return "single_word_vesum_absent"
-    hs = classify_lemma(raw)
+
+    hs = classify_lemma(effective)
     cl = str(hs.get("classification") or "")
     if hs.get("is_russianism") or hs.get("russian_shadow") or cl in HERITAGE_HOLD:
         return "single_word_heritage_flag"
@@ -105,7 +150,7 @@ def classify_inventory_lemma(lemma: str) -> str:
         return "paired_headwords_comma"
     if "/" in raw:
         return "paired_headwords_slash"
-    if " " in raw or "(" in raw:
+    if " " in raw or "(" in raw or ")" in raw:
         return "multiword_phrases_other"
     return classify_single_word_leg(raw)
 
@@ -148,7 +193,9 @@ def atlas_lemma_keys(manifest_path: Path) -> tuple[int, set[str]]:
 def unique_by_lemma_key(records: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
     by_key: dict[str, dict[str, Any]] = {}
     for row in records:
-        by_key.setdefault(_lemma_key(str(row["lemma"])), dict(row))
+        lemma = str(row["lemma"])
+        eff_lemma = resolve_leg_lemma(lemma)
+        by_key.setdefault(_lemma_key(eff_lemma), {**dict(row), "lemma": eff_lemma})
     return by_key
 
 
@@ -212,23 +259,24 @@ def analyze_paired_splits(
         legs = split_paired_headword(paired)
         leg_rows: list[dict[str, Any]] = []
         for leg in legs:
-            cat = classify_split_leg(leg)
-            leg_cats.setdefault(cat, []).append(leg)
-            key = _lemma_key(leg)
+            eff_leg = resolve_leg_lemma(leg)
+            cat = classify_split_leg(eff_leg)
+            leg_cats.setdefault(cat, []).append(eff_leg)
+            key = _lemma_key(eff_leg)
             in_atlas = key in atlas_keys
             row: dict[str, Any] = {
-                "leg": leg,
+                "leg": eff_leg,
                 "category": cat,
                 "in_atlas": in_atlas,
             }
             if in_atlas:
-                already_present.append(leg)
+                already_present.append(eff_leg)
             elif cat == "single_word_vesum_ok" and key not in seen_promote:
                 seen_promote.add(key)
                 parent = (inventory_rows_by_lemma or {}).get(paired) or {}
                 promote_legs.append(
                     {
-                        "lemma": leg,
+                        "lemma": eff_leg,
                         "paired_source": paired,
                         "pos": parent.get("pos"),
                         "gloss": parent.get("gloss"),

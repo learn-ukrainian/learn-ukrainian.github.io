@@ -195,7 +195,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-        "sha256": "d96cbc90e0304d3718527946e57f2c03f491ee92329c324d70a592f794443ace"
+        "sha256": "c7c90e42c9af22824357a205a48e6e2a385217eee39f53cedee462588923c6cb"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",

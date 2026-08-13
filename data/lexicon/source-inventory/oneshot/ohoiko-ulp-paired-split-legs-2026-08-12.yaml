@@ -315,6 +315,12 @@ sources:
     locator: 'ohoiko-1000-words entry 903 :: paired-split::учні'
     context: 'Paired-headword split from ''учень, учениця, учні''; curated ohoiko auto-approve; #6370
       policy — no invented lemmas.'
+  - lemma: футболіст
+    pos: noun
+    gloss: football player (male, female)
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболіст'
+    context: 'Paired-headword split from ''футболiст, футболістка''; curated ohoiko auto-approve; #6370
+      policy — no invented lemmas.'
   - lemma: футболістка
     pos: noun
     gloss: football player (male, female)
