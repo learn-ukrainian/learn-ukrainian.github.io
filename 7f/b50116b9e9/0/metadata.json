@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "7fb50116b9e9",
+  "session_id": "fleet-e24e7d10acaf45c880f0784c4dc9c9dd",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T14:46:52.962705Z",
+  "branch": "cursor/6714-antonym-citation-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/antonym_pairs.yaml",
+    "tests/test_generate_practice_deck.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "5043f15d6a82",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T14:46:52.949371Z",
+    "agent_lines": 10376,
+    "agent_removed": 2112,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 10376,
+    "total_lines_changed": 12488,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
