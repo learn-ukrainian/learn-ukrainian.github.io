@@ -452,6 +452,147 @@ def _write_v3_university_policy(
     return path
 
 
+def test_copied_rehearsal_rejects_legacy_university_policy(tmp_path):
+    slug = "uni-ukrmova-legacy-policy-2026"
+    jsonl = tmp_path / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "text": "Перевірений титульний аркуш.",
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_university_policy(
+        tmp_path / "legacy-policy.json",
+        slug=slug,
+        jsonl=jsonl,
+    )
+    disposable_db = tmp_path / "copy.db"
+    disposable_db.touch()
+
+    with pytest.raises(
+        iti.IngestError,
+        match="requires the complete v4 policy or an exact caller-pinned v3 policy",
+    ):
+        iti.ingest(
+            [slug],
+            db_path=disposable_db,
+            dry_run=False,
+            chunks_root=tmp_path,
+            university_policy_path=policy,
+            copied_database_rehearsal=True,
+        )
+
+
+@pytest.mark.parametrize("provided_sha256", [None, "0" * 64])
+def test_copied_rehearsal_rejects_unpinned_or_mismatched_v3_policy(
+    tmp_path,
+    provided_sha256,
+):
+    slug = "uni-ukrmova-unpinned-v3-2026"
+    jsonl = tmp_path / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "text": "Перевірений титульний аркуш.",
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_v3_university_policy(
+        tmp_path / "v3-policy.json",
+        slug=slug,
+        jsonl=jsonl,
+        content_disposition="contextual_only",
+        allowed_lanes=["contextual_retrieval", "corpus_ingest"],
+    )
+    disposable_db = tmp_path / "copy.db"
+    disposable_db.touch()
+
+    with pytest.raises(
+        iti.IngestError,
+        match="requires the complete v4 policy or an exact caller-pinned v3 policy",
+    ):
+        iti.ingest(
+            [slug],
+            db_path=disposable_db,
+            dry_run=False,
+            chunks_root=tmp_path,
+            university_policy_path=policy,
+            copied_database_rehearsal=True,
+            additional_rehearsal_policy_sha256=provided_sha256,
+        )
+
+
+def test_copied_rehearsal_uses_one_loaded_policy_snapshot(tmp_path, monkeypatch):
+    from projects.open_model_data import university_source_policy as usp
+
+    slug = "uni-ukrmova-loaded-policy-snapshot-2026"
+    root = tmp_path / "chunks"
+    jsonl = root / "grade-00" / f"{slug}.jsonl"
+    jsonl.parent.mkdir(parents=True)
+    jsonl.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "section_title": "Сторінка 1",
+                "text": "Український університетський текст.",
+                "author": "haluzynska",
+                "author_uk": None,
+                "grade": 0,
+                "page_start": 1,
+                "page_end": 1,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    policy = _write_v3_university_policy(
+        tmp_path / "v3-policy.json",
+        slug=slug,
+        jsonl=jsonl,
+        content_disposition="contextual_only",
+        allowed_lanes=["contextual_retrieval", "corpus_ingest"],
+    )
+    _, expected_policy_sha256 = usp.load_policy(policy)
+    database = tmp_path / "copy.db"
+    with sqlite3.connect(database) as connection:
+        connection.executescript(SCHEMA)
+
+    real_load_policy = iti.load_policy
+
+    def load_then_replace_policy(path):
+        loaded = real_load_policy(path)
+        Path(path).write_text("{}\n", encoding="utf-8")
+        return loaded
+
+    monkeypatch.setattr(iti, "load_policy", load_then_replace_policy)
+
+    assert iti.ingest(
+        [slug],
+        db_path=database,
+        dry_run=False,
+        chunks_root=root,
+        university_policy_path=policy,
+        copied_database_rehearsal=True,
+        additional_rehearsal_policy_sha256=expected_policy_sha256,
+    ) == {slug: 1}
+
+
 def test_tracked_university_policy_is_closed_and_default_deny():
     from projects.open_model_data import university_source_policy as usp
 

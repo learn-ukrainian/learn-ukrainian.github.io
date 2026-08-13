@@ -1,0 +1,26 @@
+{
+  "schema_version": "phase3_university_source_policy_v3",
+  "status": "ACTIVE_DEFAULT_DENY",
+  "default_disposition": "QUARANTINE_UNTIL_AUDIENCE_AND_CONTENT_CLASSIFIED",
+  "source_count": 1,
+  "sources": [
+    {
+      "source_file": "uni-ukrmova-sulm-attestation-vspu-2021",
+      "audience_class": "A_ukrainian_university_audience",
+      "subject_role": "ukrainian_linguistics",
+      "content_disposition": "contextual_only",
+      "allowed_lanes": [
+        "contextual_retrieval",
+        "corpus_ingest"
+      ],
+      "evidence": {
+        "kind": "jsonl_front_matter",
+        "jsonl_sha256": "babb8a266a7d6720d68fb960f7848aace03f646f1ede5b30de2831f7cbb85dc8",
+        "page_start": 1,
+        "page_end": 4,
+        "rows_sha256": "5b5998a9dbdc636358f5e28a0c20aa7f604b1f571bc330fd53061b6f096f86e2",
+        "summary": "Vinnytsia State Pedagogical University front matter identifies a native-university attestation handbook for specialty 014 Secondary Education (Ukrainian Language and Literature); the additive policy permits private contextual retrieval and corpus ingest but grants no source-wide normative authority or semantic-gold role."
+      }
+    }
+  ]
+}

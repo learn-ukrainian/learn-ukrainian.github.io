@@ -57,6 +57,9 @@ from projects.open_model_data.university_source_policy import (
     DEFAULT_POLICY_PATH as DEFAULT_UNIVERSITY_POLICY,
 )
 from projects.open_model_data.university_source_policy import (
+    V3_SCHEMA_VERSION as UNIVERSITY_POLICY_V3_SCHEMA_VERSION,
+)
+from projects.open_model_data.university_source_policy import (
     UniversitySourcePolicyError,
     load_policy,
     require_source_admission,
@@ -82,6 +85,16 @@ from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 CHUNKS_DIR = TEXTBOOK_CHUNKS_DIR
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
 DEFAULT_DB = PRIMARY_ROOT / "data" / "sources.db"
+
+# These sources have a dedicated, fail-closed database cutover. The generic
+# ingest entry point may build a dry-run plan for them and may populate a
+# disposable rehearsal database only when the dedicated caller pins the exact
+# reviewed v3 policy bytes. It must never mutate a live database for them
+# directly, because that would bypass the dedicated preimage, rollback, and
+# receipt checks.
+DEDICATED_DATABASE_CUTOVER_SOURCES = frozenset(
+    {"uni-ukrmova-sulm-attestation-vspu-2021"}
+)
 
 # Author map: single source of truth in wiki.textbook_subjects (PR #4650).
 AUTHOR_UK = AUTHOR_UK_BY_TRANSLIT
@@ -170,6 +183,7 @@ def build_rows(
     *,
     chunks_root: Path | None = None,
     university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
+    loaded_university_policy: tuple[dict[str, Any], str] | None = None,
 ) -> list[tuple]:
     jsonl_path = find_jsonl(slug, chunks_root=chunks_root)
     university_source = slug.startswith("uni-")
@@ -180,6 +194,7 @@ def build_rows(
                 jsonl_path=jsonl_path,
                 policy_path=university_policy_path,
                 lane="corpus_ingest",
+                loaded_policy=loaded_university_policy,
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
@@ -397,6 +412,7 @@ def ingest(
     receipt_path: Path | None = None,
     university_policy_path: Path = DEFAULT_UNIVERSITY_POLICY,
     copied_database_rehearsal: bool = False,
+    additional_rehearsal_policy_sha256: str | None = None,
     live_ingest_gate_path: Path | None = None,
 ) -> dict[str, int]:
     """Run one atomic replace/quarantine/FTS-resync cycle.
@@ -420,6 +436,11 @@ def ingest(
             policy_document, policy_sha256 = load_policy(university_policy_path)
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
+    loaded_university_policy = (
+        (policy_document, policy_sha256)
+        if policy_document is not None and policy_sha256 is not None
+        else None
+    )
     live_ingest_gate_sha256: str | None = None
     if live_ingest_gate_path is not None:
         if policy_document is None or policy_document["schema_version"] != "phase3_complete_source_policy_v4":
@@ -438,11 +459,33 @@ def ingest(
             )
         except LiveIngestGateError as exc:
             raise IngestError(str(exc)) from exc
+    dedicated_replacements = set(slugs) & DEDICATED_DATABASE_CUTOVER_SOURCES
+    dedicated_quarantines = set(quarantine_slugs) & DEDICATED_DATABASE_CUTOVER_SOURCES
+    dedicated_cutover_sources = sorted(dedicated_replacements | dedicated_quarantines)
+    dedicated_rehearsal = copied_database_rehearsal and not dedicated_quarantines
+    if dedicated_cutover_sources and not dry_run and not dedicated_rehearsal:
+        raise IngestError(
+            "source requires its dedicated database cutover: "
+            f"{dedicated_cutover_sources}"
+        )
     if copied_database_rehearsal:
         if dry_run:
             raise IngestError("copied-database rehearsal must commit to the disposable database copy")
-        if policy_document is None or policy_document["schema_version"] != "phase3_complete_source_policy_v4":
-            raise IngestError("copied-database rehearsal requires the complete v4 source policy")
+        complete_v4_policy = (
+            policy_document is not None
+            and policy_document["schema_version"] == "phase3_complete_source_policy_v4"
+        )
+        exact_caller_pinned_v3_policy = (
+            policy_document is not None
+            and policy_document["schema_version"] == UNIVERSITY_POLICY_V3_SCHEMA_VERSION
+            and additional_rehearsal_policy_sha256 is not None
+            and policy_sha256 == additional_rehearsal_policy_sha256
+        )
+        if not (complete_v4_policy or exact_caller_pinned_v3_policy):
+            raise IngestError(
+                "copied-database rehearsal requires the complete v4 policy "
+                "or an exact caller-pinned v3 policy"
+            )
         if not db_path.is_file():
             raise IngestError("copied-database rehearsal target does not exist")
         same_as_live = db_path.resolve() == DEFAULT_DB.resolve()
@@ -468,6 +511,7 @@ def ingest(
             slug,
             chunks_root=chunks_root,
             university_policy_path=university_policy_path,
+            loaded_university_policy=loaded_university_policy,
         )
         for slug in slugs
     }  # fail fast, pre-tx
@@ -482,6 +526,7 @@ def ingest(
                 jsonl_path=jsonl_path,
                 policy_path=university_policy_path,
                 lane="corpus_ingest",
+                loaded_policy=loaded_university_policy,
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
@@ -495,6 +540,7 @@ def ingest(
                 source_file=slug,
                 jsonl_path=jsonl_path,
                 policy_path=university_policy_path,
+                loaded_policy=loaded_university_policy,
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
@@ -626,9 +672,7 @@ def ingest(
         "requested_replace_sources": sorted(slugs),
         "requested_quarantine_sources": sorted(quarantine_slugs),
         "university_source_policy_sha256": (
-            sha256_file(Path(university_policy_path))
-            if university_admissions or university_quarantines
-            else None
+            policy_sha256 if university_admissions or university_quarantines else None
         ),
         "live_ingest_gate_sha256": live_ingest_gate_sha256,
         "before": before,
