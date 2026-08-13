@@ -20,42 +20,23 @@ type UnitGroup = {
   items: ModuleItem[];
 };
 
-type OldModuleItem = {
-  num: number;
-  title: string;
-  slug: string;
-  status: 'ready' | 'qa' | 'wip' | 'planned';
-  isCheckpoint?: boolean;
-};
-
 type LevelLandingProps = {
   level: string;
   title?: string;
-  levelName?: string; // backwards compat
   subtitle?: string;
-  introduction?: string; // backwards compat
   moduleCount?: number;
   wordTarget?: number;
-  totalPlanned?: number; // backwards compat
   hours?: number;
   color?: string;
   progressTitle?: string;
   progressDescription?: string;
-  modules: UnitGroup[] | OldModuleItem[];
+  modules: UnitGroup[];
 };
-
-// Tracks whose module links are suppressed on the landing page (built modules
-// render as locked). Folk was un-hidden 2026-06-14 for the preview/seminar-test
-// launch (reverses orchestrator #3027); its 3 built modules are now clickable.
-const HIDDEN_MODULE_LINK_TRACKS = new Set<string>();
 
 function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; color: string }) {
   const levelKey = level.toLowerCase();
-  const shouldHideLink = HIDDEN_MODULE_LINK_TRACKS.has(levelKey);
-  const moduleStatus = shouldHideLink && (mod.status === 'done' || mod.status === 'active')
-    ? 'locked'
-    : mod.status;
-  const isLinked = (moduleStatus === 'done' || moduleStatus === 'active') && !shouldHideLink;
+  const moduleStatus = mod.status;
+  const isLinked = moduleStatus === 'done' || moduleStatus === 'active';
   const statusIcons: Record<string, string> = {
     done: '\u2705',
     active: '\u25B6\uFE0F',
@@ -124,15 +105,20 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
 export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const {
     level,
+    title,
     subtitle,
-    introduction,
+    moduleCount: propModuleCount,
+    wordTarget = 0,
     hours,
+    color: propColor,
+    progressTitle,
+    progressDescription,
+    modules: unitGroups,
   } = props;
 
-  const displayTitle = props.title || props.levelName || level;
-  const displaySub = subtitle || introduction;
-  const totalModules = props.moduleCount || props.totalPlanned || 0;
-  const wordTarget = props.wordTarget || 0;
+  const displayTitle = title || level;
+  const displaySub = subtitle;
+  const totalModules = propModuleCount || 0;
 
   // Color defaults per track. These are gradient/background tokens; the
   // solid accent map below is used where CSS requires an actual color.
@@ -148,29 +134,8 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
     'lit-hist-fic': 'var(--lu-id-lit-hist-fic)', 'lit-humor': 'var(--lu-id-lit-humor)',
     'lit-war': 'var(--lu-id-lit-war)', 'lit-youth': 'var(--lu-id-lit-youth)',
   };
-  const color = props.color || defaultColors[level.toLowerCase()] || 'var(--lu-id-core)';
+  const color = propColor || defaultColors[level.toLowerCase()] || 'var(--lu-id-core)';
   const accentColor = getAccentColor(level);
-
-  // Normalize modules: support both old flat array and new grouped format
-  let unitGroups: UnitGroup[];
-  if (props.modules.length > 0 && 'unit' in props.modules[0]) {
-    unitGroups = props.modules as UnitGroup[];
-  } else {
-    // Old format: flat array → single group
-    const oldMods = props.modules as OldModuleItem[];
-    const statusMap: Record<string, ModuleItem['status']> = {
-      ready: 'done', qa: 'active', wip: 'todo', planned: 'locked',
-    };
-    unitGroups = [{
-      unit: 'Modules',
-      items: oldMods.map(m => ({
-        num: m.num,
-        title: m.title,
-        slug: m.slug,
-        status: statusMap[m.status] || 'locked',
-      })),
-    }];
-  }
 
   const doneCount = unitGroups.reduce((acc, g) => acc + g.items.filter(m => m.status === 'done').length, 0);
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
@@ -197,9 +162,9 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
       {/* Progress */}
       <div className={styles.progressSection}>
         <div className={styles.progressHeader}>
-          <h3>{props.progressTitle ? props.progressTitle : <ChromeText k="progress.title" />}</h3>
+          <h3>{progressTitle ? progressTitle : <ChromeText k="progress.title" />}</h3>
           <span>
-            {props.progressDescription ? props.progressDescription : (
+            {progressDescription ? progressDescription : (
               <ChromeDual
                 en={`${doneCount} of ${moduleCount} completed (${pct}%)`}
                 uk={`${doneCount} з ${moduleCount} завершено (${pct}%)`}
