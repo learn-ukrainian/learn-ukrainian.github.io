@@ -2673,21 +2673,6 @@ pairs:
     answer_form: буквально
     confusable_form: фігурально
     origin: authored-antonym-frame
-- slugA: бунтар
-  slugB: пиво
-  distinction_gloss_uk: «Бунтар» — протилежність за значенням до «пиво».
-  citations:
-  - uk.wiktionary.org
-  curator: wiktionary-explicit-antonym
-  frames:
-  - sentence_with_slot: Слово «бунтар» є антонімом до слова ___ .
-    answer_form: пиво
-    confusable_form: бунтар
-    origin: authored-antonym-frame
-  - sentence_with_slot: Слово «пиво» є антонімом до слова ___ .
-    answer_form: бунтар
-    confusable_form: пиво
-    origin: authored-antonym-frame
 - slugA: домувати
   slugB: бурлакувати
   distinction_gloss_uk: «домувати» — протилежність за значенням до «бурлакувати».
@@ -5747,21 +5732,6 @@ pairs:
   - sentence_with_slot: Слово «ніяк» є антонімом до слова ___ .
     answer_form: далебі
     confusable_form: ніяк
-    origin: authored-antonym-frame
-- slugA: край
-  slugB: далеко
-  distinction_gloss_uk: «край» — протилежність за значенням до «далеко».
-  citations:
-  - uk.wiktionary.org
-  curator: wiktionary-explicit-antonym
-  frames:
-  - sentence_with_slot: Слово «край» є антонімом до слова ___ .
-    answer_form: далеко
-    confusable_form: край
-    origin: authored-antonym-frame
-  - sentence_with_slot: Слово «далеко» є антонімом до слова ___ .
-    answer_form: край
-    confusable_form: далеко
     origin: authored-antonym-frame
 - slugA: далекоглядний
   slugB: короткозорий
