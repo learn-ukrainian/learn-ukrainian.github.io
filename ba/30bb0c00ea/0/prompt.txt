@@ -1,0 +1,35 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6743-fastlane
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: fix #6743 CI — pytest fastlane
+
+## CAPACITY_CARD
+pick=cursor status=cool will_last=true avoid=codex-deficit source=codexbar
+Reuse branch `cursor/6738-services-macos` / PR #6743. No second PR.
+
+## Failure (quoted)
+
+`tests/api/test_services_ops.py::test_status_does_not_print_proc_on_missing_procfs`
+
+```
+AssertionError: assert 'running' in '... api          degraded 3570     34895 ...'
+1 failed, 22 passed, 1 skipped
+```
+
+The dummy listener has no health endpoint, so Linux CI correctly reports **degraded** (PID resolved). stderr is clean — the `/proc/` silence assertion already passed.
+
+## Do
+
+1. Same branch `cursor/6738-services-macos`. One commit on #6743.
+2. Stop requiring `"running"`. Assert no `/proc/` / `No such file or directory` (already there) and that the resolved API PID appears. `degraded` or `running` both OK.
+3. `.venv/bin/python -m pytest tests/api/test_services_ops.py::test_status_does_not_print_proc_on_missing_procfs tests/api/test_services_ops.py::test_cmdline_for_pid_silent_when_procfs_missing tests/api/test_services_ops.py::test_astro_match_accepts_bin_astro_dev -q --tb=short`
+4. Commit `test(api): status /proc silence does not require healthy dummy (#6738)` trailer `X-Agent: cursor/6743-fastlane`. Push. No merge.
