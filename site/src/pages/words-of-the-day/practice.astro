@@ -1972,6 +1972,10 @@ const frontmatter = {
   :global(.lexicon-stress) {
     display: grid;
     gap: 1rem;
+    /* #6716: keep rows content-sized instead of stretching to fill the stage's
+       420px min-height, which inflated the prompt box ~110px and pushed the
+       stressed-vowel tiles ~150px below the question. Same rhythm as choice. */
+    align-content: start;
   }
 
   :global(.practice-stress-word) {

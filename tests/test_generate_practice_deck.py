@@ -3255,7 +3255,7 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/antonym_pairs.yaml")
     assert live_path.exists()
     pairs = read_antonym_pairs(live_path)
-    assert len(pairs) == 392, f"Expected 392 reviewed antonym pairs, got {len(pairs)}"
+    assert len(pairs) == 915, f"Expected 915 reviewed antonym pairs, got {len(pairs)}"
     seen_pairs: set[tuple[str, str]] = set()
     for index, pair in enumerate(pairs):
         errors = validate_antonym_pair(pair)
