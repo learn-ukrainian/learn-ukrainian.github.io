@@ -65,6 +65,49 @@ def _build(monkeypatch: pytest.MonkeyPatch) -> dict:
     )
 
 
+def _with_current_vspu_chain(monkeypatch: pytest.MonkeyPatch) -> dict:
+    receipt = _build(monkeypatch)
+    tracked_vspu = json.loads(readiness.vspu_audit.DEFAULT_RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt["bindings"].update(
+        {
+            "saint_sophia_reconciliation_receipt_file_sha256": (readiness.SAINT_SOPHIA_RECONCILIATION_FILE_SHA256),
+            "saint_sophia_reconciliation_receipt_sha256": (readiness.SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256),
+            "saint_sophia_reconciliation_implementation_sha256": readiness.sha256_file(
+                Path(readiness.sophia_reconciliation.__file__).resolve()
+            ),
+            "saint_sophia_reconciliation_schema_sha256": readiness.sha256_file(
+                readiness.sophia_reconciliation.SCHEMA_PATH
+            ),
+            "vspu_post_ingest_audit_file_sha256": readiness.sha256_file(readiness.vspu_audit.DEFAULT_RECEIPT_PATH),
+            "vspu_post_ingest_audit_receipt_sha256": tracked_vspu["receipt_sha256"],
+            "vspu_post_ingest_audit_implementation_sha256": readiness.sha256_file(
+                Path(readiness.vspu_audit.__file__).resolve()
+            ),
+            "vspu_post_ingest_audit_schema_sha256": readiness.sha256_file(readiness.vspu_audit.SCHEMA_PATH),
+            "vspu_additive_policy_sha256": readiness.vspu_audit.cutover.EXPECTED_ADDITIVE_POLICY_SHA256,
+            "sources_database_sha256": readiness.vspu_audit.EXPECTED_POST_DB_SHA256,
+        }
+    )
+    receipt["denominators"]["vspu_additive_university"] = {
+        "policy_sources": 1,
+        "database_sources": 1,
+        "database_rows": 158,
+        "database_fts_rows": 158,
+        "database_section_rows": 158,
+        "database_linked_rows": 158,
+    }
+    receipt["additive_sources"]["vspu_contextual_source_ingested"] = True
+    receipt["readiness"]["saint_sophia_db_reconciliation_ready"] = True
+    receipt["readiness"]["vspu_post_ingest_audit_ready"] = True
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+    monkeypatch.setattr(
+        readiness,
+        "_validate_sources_database",
+        lambda _path: readiness.vspu_audit.EXPECTED_POST_DB_SHA256,
+    )
+    return receipt
+
+
 def test_build_is_deterministic_text_free_and_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
     first = _build(monkeypatch)
     second = readiness.build_readiness(
@@ -462,6 +505,46 @@ def test_validator_rejects_fabricated_saint_sophia_binding_in_vspu_chain(
     receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
 
     with pytest.raises(readiness.PrefreezeReadinessError, match="saint_sophia_reconciliation_receipt_sha256 drift"):
+        readiness.validate_readiness(receipt)
+
+
+def test_validator_rejects_university_to_saint_sophia_boundary_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    receipt = _with_current_vspu_chain(monkeypatch)
+    university_freeze, university_file_sha256 = readiness._validate_university_freeze()
+    drifted_university = copy.deepcopy(university_freeze)
+    drifted_university["database"]["sha256"] = "f" * 64
+    drifted_university["receipt_sha256"] = SHA_A
+    receipt["bindings"]["university_content_audit_freeze_receipt_sha256"] = SHA_A
+    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
+    monkeypatch.setattr(
+        readiness,
+        "_validate_university_freeze",
+        lambda: (drifted_university, university_file_sha256),
+    )
+
+    with pytest.raises(readiness.PrefreezeReadinessError, match="does not equal Saint Sophia predecessor"):
+        readiness.validate_readiness(receipt)
+
+
+def test_validator_rejects_saint_sophia_to_vspu_boundary_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    receipt = _with_current_vspu_chain(monkeypatch)
+    tracked_vspu, vspu_file_sha256, policy_sha256 = readiness._validate_vspu_post_ingest_audit(
+        readiness.vspu_audit.DEFAULT_RECEIPT_PATH,
+        current_database_sha256=readiness.vspu_audit.EXPECTED_POST_DB_SHA256,
+    )
+    drifted_vspu = copy.deepcopy(tracked_vspu)
+    drifted_vspu["database"]["pre_sha256"] = "f" * 64
+    monkeypatch.setattr(
+        readiness,
+        "_validate_vspu_post_ingest_audit",
+        lambda _path, *, current_database_sha256: (drifted_vspu, vspu_file_sha256, policy_sha256),
+    )
+
+    with pytest.raises(readiness.PrefreezeReadinessError, match="does not equal Saint Sophia successor"):
         readiness.validate_readiness(receipt)
 
 
