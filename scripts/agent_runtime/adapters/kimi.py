@@ -111,6 +111,9 @@ class KimiAdapter:
             )
         if harness not in (None, "native"):
             raise ValueError(f"KimiAdapter: unsupported harness {harness!r}; expected 'native' or 'kimicc'")
+        # harness="native" reaches the same code path as an omitted flag by
+        # design: it exists only so dispatch can record an explicit
+        # harness=native attribution in task state (#5938 F2).
         if mode not in self.supported_modes:
             raise ValueError(
                 f"KimiAdapter: unsupported mode {mode!r} "
