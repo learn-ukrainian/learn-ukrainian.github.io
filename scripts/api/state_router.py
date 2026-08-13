@@ -360,12 +360,10 @@ def _snapshot_is_stale(
 def _in_flight_by_agent() -> dict[str, int]:
     in_flight = {agent: 0 for agent in AGENT_NAMES}
     try:
-        tasks = delegate_api.list_delegate_tasks(status="all", limit=500)["tasks"]
+        tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
         return in_flight
     for task in tasks:
-        if task.get("status") not in {"running", "spawning"}:
-            continue
         agent = _agent_key(task.get("agent"))
         if agent:
             in_flight[agent] += 1

@@ -108,14 +108,44 @@ from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-_PRIMARY_ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian")
+
+
+@lru_cache(maxsize=1)
+def _resolve_primary_checkout() -> Path | None:
+    """Primary checkout root via the shared ``.git`` common dir (#6571).
+
+    Dispatch worktrees sparse-exclude the large ``data/`` artifacts, so they
+    live only in the primary checkout. Resolve that root from git (works on any
+    operator's machine) instead of a hardcoded absolute path. Returns None
+    outside a git repo so callers fall back honestly.
+    """
+    try:
+        from scripts.guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    except ImportError:  # scripts/ stripped from sys.path
+        from guardrails.worktree_containment import (  # type: ignore[no-redef]
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    try:
+        return resolve_main_root(ROOT)
+    except NotAGitRepositoryError:
+        return None
+
+
 _SOURCES_DB_CANDIDATE = ROOT / "data" / "sources.db"
-if (not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size < 1_000_000) and (_PRIMARY_ROOT / "data" / "sources.db").is_file():
-    _SOURCES_DB_CANDIDATE = _PRIMARY_ROOT / "data" / "sources.db"
+if not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size < 1_000_000:
+    _primary = _resolve_primary_checkout()
+    if _primary is not None and (_primary / "data" / "sources.db").is_file():
+        _SOURCES_DB_CANDIDATE = _primary / "data" / "sources.db"
 SOURCES_DB = Path(os.environ.get("SOURCES_DB_PATH", str(_SOURCES_DB_CANDIDATE)))
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
-if not KAIKKI_LOOKUP.is_file() and (_PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
-    KAIKKI_LOOKUP = _PRIMARY_ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
+if not KAIKKI_LOOKUP.is_file():
+    _primary = _resolve_primary_checkout()
+    if _primary is not None and (_primary / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
+        KAIKKI_LOOKUP = _primary / "data" / "lexicon" / "kaikki_uk_lookup.json"
 WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
 GRAC_FREQUENCY_CACHE = ROOT / "data" / "lexicon" / "cache" / "grac_frequency.json"
 
@@ -1341,6 +1371,48 @@ def truncate_with_honesty(text: str, limit: int) -> tuple[str, bool]:
     if len(cleaned) <= limit:
         return cleaned, False
     return _truncate_text(text, limit), True
+
+
+# Sense text fields enrich may safely hard-cap: short pedagogy annotations.
+# Never ``uk_source_def`` (immutable raw ingestion text, #6437 schema doc) and
+# never ``learner_uk``/``learner_en`` (the drill content itself) — those stay
+# author-controlled; enrich only guards against a runaway annotation.
+_SENSE_HONESTY_CAPPED_FIELDS = ("en_disambiguation", "grammar_notes")
+_SENSE_HONESTY_CAP = 300
+
+
+def apply_manifest_sense_honesty(entry: dict[str, Any]) -> None:
+    """Wire the #6437 honesty helpers into the enrich emit path (PR3).
+
+    ``enrich_entry`` is the last deterministic gate before a manifest write,
+    so it is the real call site for the PR2 helpers: hard-cap an oversized
+    pedagogy annotation with ``truncate_with_honesty`` (never the immutable
+    ``uk_source_def`` or the ``learner_uk``/``learner_en`` drill content
+    itself), then stamp ``apply_sense_honesty_tags`` so a sense with no
+    recorded dictionary provenance is honestly labelled ``ai_minimum``
+    instead of silently thin. Mutates ``entry["senses"]`` in place; entries
+    without a ``senses`` array (most of the production manifest) are left
+    untouched.
+    """
+    senses = entry.get("senses")
+    if not isinstance(senses, list):
+        return
+    for index, sense in enumerate(senses):
+        if not isinstance(sense, dict):
+            continue
+        truncated = False
+        tagged = dict(sense)
+        for field in _SENSE_HONESTY_CAPPED_FIELDS:
+            value = tagged.get(field)
+            if isinstance(value, str):
+                clipped, was_cut = truncate_with_honesty(value, _SENSE_HONESTY_CAP)
+                if was_cut:
+                    tagged[field] = clipped
+                    truncated = True
+        ai_minimum = not truncated and not tagged.get("source")
+        if truncated or ai_minimum:
+            tagged = apply_sense_honesty_tags(tagged, truncated=truncated, ai_minimum=ai_minimum)
+        senses[index] = tagged
 
 
 def _truncate_text(text: str, limit: int) -> str:
@@ -6922,6 +6994,8 @@ def enrich_entry(
         entry.pop("enrichment", None)
 
     filled_anchor = _fill_learner_english_anchor_from_slovnyk_cache(entry, lemma, slovnyk_cache)
+
+    apply_manifest_sense_honesty(entry)
 
     wiki_ref = _wiki_reference(lemma, block.get("literary_attestation"))
     if wiki_ref:

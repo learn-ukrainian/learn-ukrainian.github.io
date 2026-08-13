@@ -362,3 +362,16 @@ def test_discussion_uses_normal_transport_for_three_participants_with_pins(
     assert all(kwargs["model"] == "kimi-code/k3" for kwargs in kimicc_calls)
     assert all(kwargs["model"] == "glm-5.2" for kwargs in glm_calls)
     assert all(kwargs["effort"] == "high" for kwargs in glm_calls)
+
+
+@pytest.mark.parametrize("model", ["k3-256k", "kimi-k3-256k", "kimi-code/k3-256k"])
+def test_resolve_inter_agent_route_accepts_k3_256k_alias_for_kimi(model: str) -> None:
+    """ask-kimi --to-model k3-256k must validate through the catalog alias gate."""
+    route = runner.resolve_inter_agent_route("kimi", model=model)
+    assert route.participant == "kimi"
+    assert route.model == model
+
+
+def test_resolve_inter_agent_route_rejects_an_unknown_kimi_model() -> None:
+    with pytest.raises(runner.InterAgentTransportError, match="no enabled catalog route"):
+        runner.resolve_inter_agent_route("kimi", model="k3-nonexistent")

@@ -57,6 +57,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return NATIVE_GROK_SEAT
     if agent.startswith("glm"):
         return "glm"
+    if agent.startswith("hermes-deepseek"):
+        return "hermes-deepseek"
     if agent.startswith("deepseek"):
         return "deepseek"
     if agent.startswith("qwen"):
@@ -75,6 +77,7 @@ def _canonical_agent_name(agent: str) -> str | None:
         NATIVE_GROK_SEAT,
         HERMES_GROK_SEAT,
         "deepseek",
+        "hermes-deepseek",
         "glm",
         "qwen",
         "agy",
@@ -391,10 +394,10 @@ def build_mcp_tool_config(
             missing_server_names=mcp_servers,
         )
 
-    if canonical_agent in ("grok-hermes", "deepseek", "qwen"):
-        # Hermes-backed seats (grok-hermes / DeepSeek / Qwen): tool_config
-        # translation is identical (Hermes reads MCP servers from
-        # ~/.hermes/config.yaml, not from the per-call payload).
+    if canonical_agent in ("grok-hermes", "deepseek", "hermes-deepseek", "qwen"):
+        # Hermes-backed seats (grok-hermes / DeepSeek / ask-hermes /
+        # Qwen): tool_config translation is identical (Hermes reads MCP
+        # servers from ~/.hermes/config.yaml, not from the per-call payload).
         if not mcp_servers:
             return None, _basic_diagnostics(
                 mcp_config_path=Path.home() / ".hermes" / "config.yaml",

@@ -20,7 +20,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT
+from scripts.lexicon.manifest_fingerprint import (
+    DEFAULT_FINGERPRINT,
+    build_fingerprint,
+    sidecar_payload,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -72,13 +76,45 @@ def versioned_asset_name(json_sha256: str) -> str:
     return f"{VERSIONED_ASSET_PREFIX}{json_sha256[:12]}{VERSIONED_ASSET_SUFFIX}"
 
 
+def load_publish_fingerprint(
+    fingerprint_path: Path = DEFAULT_FINGERPRINT,
+    *,
+    root: Path = ROOT,
+) -> dict[str, Any]:
+    """Load the fingerprint sidecar, deriving the aggregate digest when needed.
+
+    Committed ``lexicon-manifest.fingerprint.json`` is merge-friendly and stores
+    only ``{schema_version, scope, inputs}`` (see ``sidecar_payload``). Publish
+    still needs the aggregate digest for pointer/embed checks, so derive it via
+    ``build_fingerprint`` and fail closed when the committed inputs map drifts.
+    Legacy sidecars that still embed ``fingerprint`` are accepted as-is.
+    """
+    committed = _read_json(fingerprint_path)
+    if committed.get("fingerprint"):
+        return committed
+
+    full = build_fingerprint(root)
+    expected = sidecar_payload(full)
+    committed_body = {
+        "schema_version": committed.get("schema_version"),
+        "scope": committed.get("scope"),
+        "inputs": committed.get("inputs"),
+    }
+    if committed_body != expected:
+        raise ManifestPublishError(
+            f"{fingerprint_path} does not match current lexicon code; "
+            "run write_fingerprint / make atlas fingerprint step and re-commit."
+        )
+    return full
+
+
 def validate_manifest_fingerprint(
     manifest: dict[str, Any],
     fingerprint: dict[str, Any],
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
 ) -> None:
-    """Require the built manifest to embed the sidecar fingerprint."""
+    """Require the built manifest to embed the sidecar fingerprint digest."""
     embedded = manifest.get("manifest_fingerprint")
     if not isinstance(embedded, dict):
         raise ManifestPublishError(
@@ -87,6 +123,11 @@ def validate_manifest_fingerprint(
 
     expected_schema = fingerprint.get("schema_version")
     expected_fingerprint = fingerprint.get("fingerprint")
+    if not expected_fingerprint:
+        raise ManifestPublishError(
+            "publish fingerprint payload lacks aggregate digest; "
+            "use load_publish_fingerprint() for merge-friendly sidecars"
+        )
     if embedded.get("schema_version") != expected_schema:
         raise ManifestPublishError(
             "manifest_fingerprint.schema_version does not match "
@@ -153,7 +194,7 @@ def build_pointer_payload(
     manifest = json.loads(manifest_bytes.decode("utf-8"))
     if not isinstance(manifest, dict):
         raise ManifestPublishError(f"{manifest_path} must contain a JSON object")
-    fingerprint = _read_json(fingerprint_path)
+    fingerprint = load_publish_fingerprint(fingerprint_path, root=ROOT)
     validate_manifest_fingerprint(manifest, fingerprint, manifest_path=manifest_path)
 
     manifest_version = manifest.get("version")

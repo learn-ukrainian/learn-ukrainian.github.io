@@ -143,6 +143,10 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "deepseek": {
         "HERMES_HOME",
     },
+    # ask-hermes seat (OpenCode owns the bare ``deepseek`` dispatch key).
+    "hermes-deepseek": {
+        "HERMES_HOME",
+    },
     # Demoted Hermes Grok path (was bare "grok" before the native-seat rename).
     "grok-hermes": {
         "HERMES_HOME",
