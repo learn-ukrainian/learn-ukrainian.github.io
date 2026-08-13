@@ -1,0 +1,23 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-rights-semantics-migration-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Fix the final Ruff formatting drift on PR #6755. Implement now; no plan.
+
+Modify only scripts/projects/open_model_data/phase3_minchak_phonetics_intake.py. Run Ruff formatter on exactly that file. Verify the diff is mechanical formatting only at the pre-existing closure_candidates_pending_matrix_critic expression and changes no behavior. Run:
+- focused Minchak test file
+- ruff check on the producer
+- ruff format --check on the producer
+- git diff --check
+
+Commit with trailer:
+X-Agent: cursor/phase3-6375-rights-producer-format-repair-cursor
+Push the same branch. Do not edit PR body, merge, or auto-merge. Report new exact head and results.
