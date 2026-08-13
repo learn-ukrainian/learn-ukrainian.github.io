@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4d6f8558273b",
+  "session_id": "fleet-e85652d668e74c3b9dda337db4085f9d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T20:24:38.567596Z",
+  "branch": "cursor/6726-wotd-card-flip",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lexicon/DailyWords.astro",
+    "site/src/lib/lexicon/daily-card.ts",
+    "site/src/pages/words-of-the-day.astro",
+    "site/tests/unit/daily-words-example.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "00922819db1b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T20:24:38.54069Z",
+    "agent_lines": 305,
+    "agent_removed": 57,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 305,
+    "total_lines_changed": 362,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
