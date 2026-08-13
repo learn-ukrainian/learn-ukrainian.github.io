@@ -21,6 +21,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -75,10 +76,16 @@ COUNTS_AFTER = {
     "university_source_count": 21,
 }
 PRIVATE_FILE_MODE = 0o600
+DRIVE_IDENTITY_TIMEOUT_SECONDS = 120.0
+DRIVE_IDENTITY_POLL_SECONDS = 1.0
 
 
 class VspuDatabaseCutoverError(ValueError):
     """The VSPU cutover inputs, rehearsal, or database state are unsafe."""
+
+
+class DriveIdentityPendingError(VspuDatabaseCutoverError):
+    """DriveFS has not assigned provider identity to an existing artifact yet."""
 
 
 def require(condition: bool, message: str) -> None:
@@ -160,11 +167,38 @@ def _drive_item_id(path: Path) -> str:
             capture_output=True,
             text=True,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
-        raise VspuDatabaseCutoverError("private artifact lacks Google Drive provider identity") from exc
+    except OSError as exc:
+        raise VspuDatabaseCutoverError("cannot inspect Google Drive provider identity") from exc
+    except subprocess.CalledProcessError as exc:
+        raise DriveIdentityPendingError("private artifact lacks Google Drive provider identity") from exc
     item_id = result.stdout.strip()
-    require(bool(item_id), "private artifact has an empty Google Drive provider identity")
+    if not item_id:
+        raise DriveIdentityPendingError("private artifact has an empty Google Drive provider identity")
     return item_id
+
+
+def _wait_for_drive_item_id(
+    path: Path,
+    *,
+    timeout_seconds: float = DRIVE_IDENTITY_TIMEOUT_SECONDS,
+    poll_seconds: float = DRIVE_IDENTITY_POLL_SECONDS,
+) -> str:
+    """Wait for DriveFS to assign identity to a newly created private receipt."""
+    require(timeout_seconds >= 0, "Google Drive identity timeout must be non-negative")
+    require(poll_seconds >= 0, "Google Drive identity poll interval must be non-negative")
+    deadline = time.monotonic() + timeout_seconds
+    last_error: DriveIdentityPendingError | None = None
+    while True:
+        try:
+            return _drive_item_id(path)
+        except DriveIdentityPendingError as exc:
+            last_error = exc
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise VspuDatabaseCutoverError(
+                f"private receipt did not acquire Google Drive provider identity within {timeout_seconds:g} seconds"
+            ) from last_error
+        time.sleep(min(poll_seconds, remaining))
 
 
 def _streamed_gzip_sha256(path: Path) -> str:
@@ -851,7 +885,7 @@ def reconcile(
         )
         _atomic_write_private(Path(output_receipt_path), receipt)
         if require_google_drive_output:
-            _drive_item_id(Path(output_receipt_path))
+            _wait_for_drive_item_id(Path(output_receipt_path))
         return receipt
     except BaseException as cutover_error:
         if cutover_started and rollback is not None:
