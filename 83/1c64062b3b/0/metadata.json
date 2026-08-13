@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "831c64062b3b",
+  "session_id": "fleet-7b5a6c592941456ca446c99742768524",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:36:25.147922Z",
+  "branch": "cursor/phase3-6375-wave-l-reviewed-intake-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_wave_l_modern_phonetics_reviewed_v1.json",
+    "data/projects/open_model_data/contracts/phase3_wave_l_modern_phonetics_reviewed_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_wave_l_modern_phonetics_reviewed_intake.py",
+    "tests/test_open_model_phase3_wave_l_modern_phonetics_reviewed_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "47c76e24f150",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:36:25.131407Z",
+    "agent_lines": 1383,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1383,
+    "total_lines_changed": 1383,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
