@@ -370,12 +370,12 @@ def test_vspu_receipt_extends_sophia_and_ua_context_chain_without_opening_gates(
     assert receipt["gates"]["phase4_blocked"] is True
 
 
-def test_vspu_chain_requires_sophia_when_university_hash_is_not_its_predecessor(
+def test_vspu_chain_requires_sophia_even_when_predecessor_hash_aligns(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _stub_external_receipts(monkeypatch)
     post_sha = "c" * 64
-    predecessor_sha = "d" * 64
+    predecessor_sha = readiness.university.EXPECTED_DATABASE["sha256"]
     monkeypatch.setattr(readiness, "_validate_sources_database", lambda _path: post_sha)
     monkeypatch.setattr(
         readiness,
@@ -397,7 +397,7 @@ def test_vspu_chain_requires_sophia_when_university_hash_is_not_its_predecessor(
         ),
     )
 
-    with pytest.raises(readiness.PrefreezeReadinessError, match="next database-chain state"):
+    with pytest.raises(readiness.PrefreezeReadinessError, match="requires the Saint Sophia predecessor receipt"):
         readiness.build_readiness(
             phase3_reboot_prompt_path=Path("unused"),
             sources_database_path=Path("unused"),

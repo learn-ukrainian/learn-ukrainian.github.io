@@ -310,6 +310,10 @@ def build_readiness(
     vspu_policy_sha256: str | None = None
     pre_vspu_database_sha256 = sources_database_sha256
     if vspu_post_ingest_audit_path is not None:
+        require(
+            saint_sophia_reconciliation_receipt_path is not None,
+            "VSPU successor evidence requires the Saint Sophia predecessor receipt",
+        )
         vspu_receipt, vspu_receipt_file_sha256, vspu_policy_sha256 = _validate_vspu_post_ingest_audit(
             Path(vspu_post_ingest_audit_path),
             current_database_sha256=sources_database_sha256,
