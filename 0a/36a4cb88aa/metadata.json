@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "0a36a4cb88aa",
+  "strategy": "manual-commit",
+  "branch": "deepseek/4956-hygiene-tests",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_inventory_home_sessions.py",
+    "tests/test_retention_engine.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0a/36a4cb88aa/0/metadata.json",
+      "transcript": "/0a/36a4cb88aa/0/full.jsonl",
+      "compact_transcript": "/0a/36a4cb88aa/0/transcript.jsonl",
+      "content_hash": "/0a/36a4cb88aa/0/content_hash.txt",
+      "prompt": "/0a/36a4cb88aa/0/prompt.txt"
+    }
+  ]
+}

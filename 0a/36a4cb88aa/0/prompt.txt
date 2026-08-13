@@ -1,0 +1,30 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/4956-hygiene-tests
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: tests only for scripts/hygiene/inventory_home_sessions.py + retention_engine.py
+
+## CAPACITY_CARD
+pick=deepseek flash
+## ROUTING_CARD_V1
+tier=practical model_x_harness=deepseek (current adapter; OpenCode default not landed)
+why=DeepSeek weekly unused; tests-only so no overlap with Codex #4956 implementation
+owned_paths: tests/ (new or existing hygiene test files ONLY)
+acceptance: pytest on the files you add/change is green; you do not edit scripts/hygiene (Codex owns that).
+
+## Do
+1. Read the hygiene modules on main (read-only).
+2. Add missing unit tests under tests/ for inventory_home_sessions and retention_engine:
+   - apply is refused without LU_HOME_SESSION_APPLY
+   - inventory is read-only (no deletes)
+   - threshold helpers if present
+3. If Codex later changes the modules, keep tests behavioral not brittle to wording.
+4. PR. X-Agent: deepseek/4956-hygiene-tests. No merge.
