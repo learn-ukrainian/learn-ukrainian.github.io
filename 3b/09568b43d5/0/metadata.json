@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3b09568b43d5",
+  "session_id": "session_9e029263-883c-4920-8df5-1cf41b1d79dc",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T08:34:06.34813Z",
+  "branch": "kimi/5938-kimicc-polish",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "c6e5ef75dd60",
+  "token_usage": {
+    "input_tokens": 10384,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 236800,
+    "output_tokens": 1673,
+    "api_call_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T08:34:06.329758Z",
+    "agent_lines": 6,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 6,
+    "total_lines_changed": 12,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

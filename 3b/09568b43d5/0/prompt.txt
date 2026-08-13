@@ -1,0 +1,28 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/5938-kimicc-polish
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6695 CodeQL still flags line 200 — stop interpolating TOKEN-named constant
+
+## Blocker
+Head `f283518d7d` still fails CodeQL `py/clear-text-logging-sensitive-data` at `scripts/delegate.py:200`.
+
+The user-facing words were already changed. The remaining source is the **identifier** `_KIMICC_OAUTH_TOKEN_LIFE_S` inside the f-string. CodeQL treats TOKEN as a password and thinks we log it.
+
+## Do
+Reuse branch `kimi/5938-kimicc-polish` / this worktree. Same PR #6695.
+
+1. In `_warn_kimicc_oauth_token_life`, do **not** interpolate `_KIMICC_OAUTH_TOKEN_LIFE_S` in the print. Use a literal `840` in the message, or a local int `session_life_s = 840` with no TOKEN/PASSWORD/SECRET in the name.
+2. The comparison can keep using the existing constant, or rename the constant to `_KIMICC_OAUTH_SESSION_LIFE_S` and update tests that import the old name.
+3. Re-run `tests/test_delegate.py` for the warn test.
+4. Commit `fix(kimi): stop interpolating TOKEN-named constant in kimicc warning (#5938)` trailer `X-Agent: kimi/5938-codeql-const` and push. No merge.
+
+Prove: the print/f-string on that warning does not mention TOKEN.
