@@ -40,7 +40,10 @@ class AgentEntry(TypedDict):
 AGENTS: dict[str, AgentEntry] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.6-terra",
+        # Operator 2026-08-13: dispatch default is Luna @ max; explicit
+        # --model gpt-5.6-terra|gpt-5.6-sol / --effort always win.
+        "default_model": "gpt-5.6-luna",
+        "default_effort": "max",
         "cost_tier": "medium",
         "capabilities": frozenset(
             {
@@ -170,8 +173,14 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "deepseek": {
-        "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
-        "default_model": "deepseek-v4-pro",
+        # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
+        # dispatch default (operator 2026-08-13): Flash only, --variant high,
+        # native Entire capture. Pro stays DO NOT USE; the Hermes adapter
+        # (hermes_deepseek.py) remains for ask-hermes only. First-party
+        # DeepSeek is China-hosted → CI runs are refused by the adapter.
+        "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
+        "default_model": "deepseek-v4-flash",
+        "default_effort": "high",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
@@ -224,6 +233,7 @@ AGENTS: dict[str, AgentEntry] = {
         # Catalog model id; the Z.AI Coding Plan provider pin is applied at
         # invocation time by the adapter (_OPENCODE_MODEL_ROUTES).
         "default_model": "glm-5.2",
+        "default_effort": "high",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
@@ -251,14 +261,12 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "kimi": {
         # Native Kimi Code OAuth subscription lane (no proxy-provider route).
-        # K3 is the max-effort consequential-coding/review seat. Its public
-        # provider docs do not currently substantiate a context-size claim,
-        # so keep that number out of routing policy. Dispatch defaults to the
-        # window-frugal coding model; callers select K3 when risk warrants it.
+        # Operator 2026-08-13: dispatch/native default is k3-256k (everyday
+        # coding) with no forced effort; full K3 (high/max, 1M window) is the
+        # advisor/complex seat selected via --model k3 --effort high|max.
         # Ukrainian content capabilities remain separately gated.
         "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
-        "default_model": "k2.7-coding",
-        "default_effort": "max",
+        "default_model": "k3-256k",
         "cost_tier": "medium",
         "capabilities": frozenset(
             {

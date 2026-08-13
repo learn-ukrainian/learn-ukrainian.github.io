@@ -170,6 +170,9 @@ class ClaudeAdapter:
 
     name: str = "claude"
     default_model: str = "claude-sonnet-5"
+    # Operator 2026-08-13: headless/print defaults to high when the caller
+    # omits effort; interactive start-claude.sh keeps empty (last session).
+    default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -199,7 +202,8 @@ class ClaudeAdapter:
             - ``max_budget_usd: float`` — optional Claude Code print-mode
               API spend cap, emitted as ``--max-budget-usd <amount>``
 
-        ``effort``: optional reasoning-level string. When non-None and the
+        ``effort``: optional reasoning-level string. When None, the headless
+        lane default ``high`` is applied (operator 2026-08-13). When the
         probed Claude binary supports ``--effort`` (CC 2.1.98+), the flag
         is appended as ``--effort <level>``. Otherwise we log a warning
         and proceed without the flag. Claude CLI versions below 2.1.116
@@ -330,8 +334,10 @@ class ClaudeAdapter:
             # adapter always uses -p, so the constraint is satisfied here.
             cmd.extend(["--max-budget-usd", f"{float(max_budget_usd):.2f}"])
 
-        # Effort (reasoning level) — version-gated. See #1396.
-        if effort is not None and not review_isolation:
+        # Effort (reasoning level) — version-gated. See #1396. Omitted effort
+        # defaults to the headless lane default (high, operator 2026-08-13).
+        effective_effort = effort if effort is not None else self.default_effort
+        if not review_isolation:
             # Use the `utils.claude_version.supports_effort` helper so tests
             # can patch the decision at a single point. Inline version
             # comparison bypassed the helper and left CI runs (no Claude CLI
@@ -343,12 +349,12 @@ class ClaudeAdapter:
 
             effort_supported = supports_effort(probe_prefix)
             if effort_supported:
-                cmd.extend(["--effort", effort])
+                cmd.extend(["--effort", effective_effort])
             else:
                 _logger.warning(
                     "Claude CLI at %s does not support --effort; ignoring effort=%r and using CLI default (#1396)",
                     probe_prefix,
-                    effort,
+                    effective_effort,
                 )
 
         # Output format
