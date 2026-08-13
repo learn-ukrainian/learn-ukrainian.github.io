@@ -212,6 +212,23 @@ def test_private_output_inside_git_checkout_is_rejected(tmp_path: Path) -> None:
         )
 
 
+def test_existing_jsonl_survives_exclusive_create_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source_path, decoder_path, _schema_path = _patch_fixture_contract(monkeypatch, tmp_path)
+    output_path = tmp_path / "existing.jsonl"
+    output_path.write_text("keep-me\n", encoding="utf-8")
+
+    with pytest.raises(MiddleUkrainianTextExtractionError, match="already exists"):
+        extraction._invoke_extractor(
+            source_path=source_path,
+            decoder_path=decoder_path,
+            output_path=output_path,
+        )
+    assert output_path.read_text(encoding="utf-8") == "keep-me\n"
+
+
 def test_runner_failure_removes_partial_jsonl(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

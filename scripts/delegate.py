@@ -197,8 +197,8 @@ def _warn_kimicc_oauth_token_life(harness: str | None, hard_timeout: int) -> Non
     if harness != "kimicc" or hard_timeout <= _KIMICC_OAUTH_SESSION_LIFE_S:
         return
     print(
-        f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~{_KIMICC_OAUTH_SESSION_LIFE_S}s "
-        "Kimi OAuth session lifetime; the wrapper refreshes credentials only at spawn, "
+        f"⚠️  --harness kimicc with --hard-timeout {hard_timeout}s exceeds the ~15-minute "
+        "Kimi OAuth session lifetime; the wrapper refreshes the session only at spawn, "
         "so calls still running past ~15 minutes may fail auth. Prefer shorter dispatches "
         "and relaunch instead of one long call.",
         file=sys.stderr,
