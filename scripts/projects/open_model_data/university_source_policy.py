@@ -315,10 +315,11 @@ def require_source_admission(
     jsonl_path: Path,
     policy_path: Path = DEFAULT_POLICY_PATH,
     lane: str = "corpus_ingest",
+    loaded_policy: tuple[dict[str, Any], str] | None = None,
 ) -> dict[str, Any]:
     """Return hash-bound admission metadata or fail before DB mutation."""
     _require(lane in ALLOWED_LANES, f"unsupported university source lane: {lane}")
-    document, policy_sha256 = load_policy(policy_path)
+    document, policy_sha256 = loaded_policy or load_policy(policy_path)
     entry = next(
         (item for item in document["sources"] if _entry_source_id(item) == source_file),
         None,
@@ -372,9 +373,10 @@ def require_source_quarantine(
     source_file: str,
     jsonl_path: Path,
     policy_path: Path,
+    loaded_policy: tuple[dict[str, Any], str] | None = None,
 ) -> dict[str, Any]:
     """Return hash-bound v3 quarantine metadata or refuse source removal."""
-    document, policy_sha256 = load_policy(policy_path)
+    document, policy_sha256 = loaded_policy or load_policy(policy_path)
     _require(
         document["schema_version"] in {V3_SCHEMA_VERSION, V4_SCHEMA_VERSION},
         f"{source_file}: source-level content quarantine requires a v3 or v4 policy",

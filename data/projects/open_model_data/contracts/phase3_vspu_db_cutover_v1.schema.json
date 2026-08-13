@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_vspu_db_cutover_v1.schema.json",
+  "title": "Phase 3 VSPU one-source database cutover receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "provider_calls",
+    "mode",
+    "source_id",
+    "bindings",
+    "preimage_backup",
+    "copied_database_rehearsal",
+    "database",
+    "safeguards",
+    "rights_and_authority",
+    "phase_boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_vspu_db_cutover_v1"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "mode": {"enum": ["dry_run", "in_place_sqlite_backup"]},
+    "source_id": {"const": "uni-ukrmova-sulm-attestation-vspu-2021"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_sha256",
+        "schema_sha256",
+        "incremental_ingest_implementation_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "complete_source_policy_v4_sha256",
+        "vspu_materialization_receipt_sha256",
+        "vspu_additive_policy_sha256",
+        "private_jsonl_sha256",
+        "preimage_backup_receipt_sha256",
+        "compressed_preimage_database_sha256"
+      ],
+      "properties": {
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "incremental_ingest_implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "phase3_reboot_prompt_v3_sha256": {"const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"},
+        "phase3_recovery_prompt_v2_sha256": {"const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"},
+        "complete_source_policy_v4_sha256": {"const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"},
+        "vspu_materialization_receipt_sha256": {"const": "f023fab75ebc82ecb84a88a487f2ef2d477722035a82c5c23c18431b11e8b45c"},
+        "vspu_additive_policy_sha256": {"const": "c2d2d094931751fefba0dd14143a83b344dc59f52b36414b165be920d29309f5"},
+        "private_jsonl_sha256": {"const": "babb8a266a7d6720d68fb960f7848aace03f646f1ede5b30de2831f7cbb85dc8"},
+        "preimage_backup_receipt_sha256": {"const": "e53355f2d6c221c7bfe9cbba63b4055982f286b26d72618e8b9a393231febb0a"},
+        "compressed_preimage_database_sha256": {"const": "ba41ce56eabb2d72856c906cd498ec168b3036bbe79b9264bb074dbc87831d81"}
+      }
+    },
+    "preimage_backup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "database_sha256",
+        "compressed_sha256",
+        "streamed_restore_sha256",
+        "gzip_integrity",
+        "google_drive_provider_identity_present",
+        "predecessor_backup_preserved"
+      ],
+      "properties": {
+        "status": {"const": "VERIFIED_UPLOADED_SUCCESSOR_DATABASE"},
+        "database_sha256": {"const": "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"},
+        "compressed_sha256": {"const": "ba41ce56eabb2d72856c906cd498ec168b3036bbe79b9264bb074dbc87831d81"},
+        "streamed_restore_sha256": {"const": "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"},
+        "gzip_integrity": {"const": true},
+        "google_drive_provider_identity_present": {"const": true},
+        "predecessor_backup_preserved": {"const": true}
+      }
+    },
+    "copied_database_rehearsal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_scope",
+        "status",
+        "database_sha256_before",
+        "database_sha256_after",
+        "ingest_receipt_sha256",
+        "inserted_rows",
+        "section_rows",
+        "linked_rows",
+        "fts_rows",
+        "integrity_check",
+        "foreign_key_failures_unchanged",
+        "existing_corpus_fingerprint_unchanged"
+      ],
+      "properties": {
+        "execution_scope": {"const": "copied_database_rehearsal"},
+        "status": {"const": "committed"},
+        "database_sha256_before": {"const": "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"},
+        "database_sha256_after": {"$ref": "#/$defs/sha256"},
+        "ingest_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "inserted_rows": {"const": 158},
+        "section_rows": {"const": 158},
+        "linked_rows": {"const": 158},
+        "fts_rows": {"const": 158},
+        "integrity_check": {"const": "ok"},
+        "foreign_key_failures_unchanged": {"const": true},
+        "existing_corpus_fingerprint_unchanged": {"const": true}
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_locator",
+        "pre_sha256",
+        "post_sha256",
+        "counts_before",
+        "counts_after",
+        "target_absent_before",
+        "target_rows_after",
+        "target_fts_rows_after",
+        "target_section_rows_after",
+        "target_linked_rows_after",
+        "foreign_key_failure_count_before",
+        "foreign_key_failure_count_after",
+        "foreign_key_failure_sha256_before",
+        "foreign_key_failure_sha256_after",
+        "existing_corpus_fingerprint_before",
+        "existing_corpus_fingerprint_after",
+        "integrity_check",
+        "journal_mode",
+        "live_inode_preserved"
+      ],
+      "properties": {
+        "target_locator": {"const": "primary_checkout:data/sources.db"},
+        "pre_sha256": {"const": "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"},
+        "post_sha256": {"$ref": "#/$defs/sha256"},
+        "counts_before": {"$ref": "#/$defs/counts_before"},
+        "counts_after": {"$ref": "#/$defs/counts_after"},
+        "target_absent_before": {"const": true},
+        "target_rows_after": {"const": 158},
+        "target_fts_rows_after": {"const": 158},
+        "target_section_rows_after": {"const": 158},
+        "target_linked_rows_after": {"const": 158},
+        "foreign_key_failure_count_before": {"const": 134836},
+        "foreign_key_failure_count_after": {"const": 134836},
+        "foreign_key_failure_sha256_before": {"const": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"},
+        "foreign_key_failure_sha256_after": {"const": "9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"},
+        "existing_corpus_fingerprint_before": {"$ref": "#/$defs/sha256"},
+        "existing_corpus_fingerprint_after": {"$ref": "#/$defs/sha256"},
+        "integrity_check": {"const": "ok"},
+        "journal_mode": {"const": "wal"},
+        "live_inode_preserved": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_preimage_required",
+        "exact_one_source_set_required",
+        "copied_database_rehearsal_passed",
+        "recoverable_google_drive_preimage_verified",
+        "rollback_copy_created_before_cutover",
+        "automatic_exact_prestate_restore_on_failure",
+        "existing_corpus_unchanged",
+        "global_textbook_fts_parity",
+        "private_receipt_0600"
+      ],
+      "properties": {
+        "exact_preimage_required": {"const": true},
+        "exact_one_source_set_required": {"const": true},
+        "copied_database_rehearsal_passed": {"const": true},
+        "recoverable_google_drive_preimage_verified": {"const": true},
+        "rollback_copy_created_before_cutover": {"const": true},
+        "automatic_exact_prestate_restore_on_failure": {"const": true},
+        "existing_corpus_unchanged": {"const": true},
+        "global_textbook_fts_parity": {"const": true},
+        "private_receipt_0600": {"const": true}
+      }
+    },
+    "rights_and_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_operator_authorized_use_only",
+        "public_redistribution_authorized",
+        "unrestricted_reuse_authorized",
+        "normative_rule_authority",
+        "semantic_gold",
+        "role_layer_conversion_complete",
+        "adapt_or_remove_on_substantiated_complaint"
+      ],
+      "properties": {
+        "private_operator_authorized_use_only": {"const": true},
+        "public_redistribution_authorized": {"const": false},
+        "unrestricted_reuse_authorized": {"const": false},
+        "normative_rule_authority": {"const": false},
+        "semantic_gold": {"const": false},
+        "role_layer_conversion_complete": {"const": false},
+        "adapt_or_remove_on_substantiated_complaint": {"const": true}
+      }
+    },
+    "phase_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "database_ingest_complete",
+        "source_universe_frozen",
+        "source_coverage_ready",
+        "phase3_complete",
+        "phase4_blocked",
+        "post_ingest_backup_required"
+      ],
+      "properties": {
+        "database_ingest_complete": {"const": true},
+        "source_universe_frozen": {"const": false},
+        "source_coverage_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true},
+        "post_ingest_backup_required": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "counts_before": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textbook_rows", "fts_rows", "section_rows", "source_count", "university_rows", "university_source_count"],
+      "properties": {
+        "textbook_rows": {"const": 50153},
+        "fts_rows": {"const": 50153},
+        "section_rows": {"const": 36322},
+        "source_count": {"const": 187},
+        "university_rows": {"const": 4078},
+        "university_source_count": {"const": 20}
+      }
+    },
+    "counts_after": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textbook_rows", "fts_rows", "section_rows", "source_count", "university_rows", "university_source_count"],
+      "properties": {
+        "textbook_rows": {"const": 50311},
+        "fts_rows": {"const": 50311},
+        "section_rows": {"const": 36480},
+        "source_count": {"const": 188},
+        "university_rows": {"const": 4236},
+        "university_source_count": {"const": 21}
+      }
+    }
+  }
+}
