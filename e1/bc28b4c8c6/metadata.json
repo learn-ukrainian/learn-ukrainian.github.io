@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e1bc28b4c8c6",
+  "strategy": "manual-commit",
+  "branch": "kimi/routing-defaults-2026-08-13",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/agent_runtime/adapters/codex.py",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/adapters/glm.py",
+    "scripts/agent_runtime/adapters/kimi.py",
+    "scripts/agent_runtime/adapters/kimicc.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/agent_runtime/routes.py",
+    "scripts/ai_agent_bridge/_opencode.py",
+    "scripts/launchers/glm.sh",
+    "scripts/launchers/kimi.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/agent_runtime/adapters/test_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_kimi_adapter.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_agent_runtime_effort.py",
+    "tests/test_agent_runtime_glm_adapter.py",
+    "tests/test_ask_pool.py",
+    "tests/test_runtime_api.py",
+    "tests/test_start_codex_claude_code.py",
+    "tests/test_start_kimi_claude_code.py",
+    "tests/test_start_kimi_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e1/bc28b4c8c6/0/metadata.json",
+      "transcript": "/e1/bc28b4c8c6/0/full.jsonl",
+      "content_hash": "/e1/bc28b4c8c6/0/content_hash.txt",
+      "prompt": "/e1/bc28b4c8c6/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 170326,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 17516297,
+    "output_tokens": 49369,
+    "api_call_count": 134
+  }
+}

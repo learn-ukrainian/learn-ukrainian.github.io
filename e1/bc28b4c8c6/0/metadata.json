@@ -1,0 +1,66 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e1bc28b4c8c6",
+  "session_id": "session_6e8b3771-ddb1-4a96-add8-d5c0ccff2f9d",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T05:44:31.875587Z",
+  "branch": "kimi/routing-defaults-2026-08-13",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/rules/model-assignment.md",
+    "scripts/agent_runtime/adapters/claude.py",
+    "scripts/agent_runtime/adapters/codex.py",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/adapters/glm.py",
+    "scripts/agent_runtime/adapters/kimi.py",
+    "scripts/agent_runtime/adapters/kimicc.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/agent_runtime/routes.py",
+    "scripts/ai_agent_bridge/_opencode.py",
+    "scripts/launchers/glm.sh",
+    "scripts/launchers/kimi.sh",
+    "scripts/lib/launcher_core.sh",
+    "tests/agent_runtime/adapters/test_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_kimi_adapter.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_agent_runtime_effort.py",
+    "tests/test_agent_runtime_glm_adapter.py",
+    "tests/test_ask_pool.py",
+    "tests/test_runtime_api.py",
+    "tests/test_start_codex_claude_code.py",
+    "tests/test_start_kimi_claude_code.py",
+    "tests/test_start_kimi_launcher.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "dd76adab01e3",
+  "token_usage": {
+    "input_tokens": 170326,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 17516297,
+    "output_tokens": 49369,
+    "api_call_count": 134
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T05:44:31.795434Z",
+    "agent_lines": 486,
+    "agent_removed": 86,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 486,
+    "total_lines_changed": 572,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

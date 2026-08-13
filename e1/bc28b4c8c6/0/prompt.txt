@@ -1,0 +1,75 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/routing-defaults-2026-08-13
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: operator GO — new fleet default models/efforts (overrides still work)
+
+## CAPACITY_CARD
+pick=kimi model=k3-256k status=cool 7d=100% 5h=100% avoid=codex-unless-needed source=codexbar
+## ROUTING_CARD_V1
+tier=practical model_x_harness=kimi native k3-256k
+why=operator 2026-08-13: k3-256k is everyday code; this is mechanical routing defaults
+owned_paths:
+  - scripts/agent_runtime/registry.py
+  - scripts/agent_runtime/adapters/kimi.py
+  - scripts/agent_runtime/adapters/kimicc.py
+  - scripts/agent_runtime/adapters/glm.py
+  - scripts/agent_runtime/adapters/codex.py
+  - scripts/agent_runtime/adapters/claude.py
+  - scripts/agent_runtime/adapters/ (new OpenCode DeepSeek adapter)
+  - scripts/lib/launcher_core.sh
+  - scripts/launchers/glm.sh (only if effort must be injected when LC_EFFORT set)
+  - agents_extensions/shared/rules/model-assignment.md (live defaults only, no roster invention)
+  - matching tests under tests/agent_runtime tests/test_start_* tests/test_agent_runtime.py
+acceptance: omitted --model/--effort uses new defaults; explicit --model/--effort always wins
+
+## Operator defaults (2026-08-13 GO)
+
+| Lane | Default when flags omitted | Override |
+|---|---|---|
+| **kimi** dispatch + `start-kimi.sh` native | model **`k3-256k`** (catalog alias `kimi-code/k3-256k`). Do **not** default effort to max (that is advisor k3). Omit effort unless `--effort` / `LAUNCHER_EFFORT` set. | `--model k3` / `--effort high\|max` |
+| **glm** dispatch + ask-glm | model **`glm-5.2`**, effort **`high`** (`opencode --variant high`) | `--model` / `--effort` |
+| **deepseek** dispatch | **OpenCode → first-party** `opencode run --model deepseek-direct/deepseek-v4-flash` (api.deepseek.com). Default variant **high**. **Pro still DO NOT USE.** Keep CI refuse for first-party. Hermes adapter may remain for `ask-hermes` only — not the dispatch default. | `--model` / `--effort` maps to `--variant` like GLM |
+| **codex** dispatch + `start-codex*.sh` | model **`gpt-5.6-luna`**, effort **`max`** | `--model gpt-5.6-terra\|gpt-5.6-sol` / `--effort` |
+| **claude headless** (`delegate --agent claude`, ClaudeAdapter) | model **`claude-sonnet-5`**, effort **`high`** | `--model claude-fable-5\|claude-opus-5` / `--effort` |
+
+**Do not stick interactive Grok** (already unstuck #6683). **Do not stick interactive Claude TUI** (`start-claude.sh` stays empty model/effort = last session). Headless only for Claude.
+
+**Do not** add GLM/Kimi/Cursor as drivers. **Do not** move Cursor off cursor-agent. **Do not** put DeepSeek on Hermes as default. **Do not** flip GLM LOCAL-ONLY rail.
+
+## Implementation notes (tool-backed current state)
+
+- `scripts/agent_runtime/adapters/kimi.py`: `KIMI_DEFAULT_MODEL = "k2.7-coding"`, `KIMI_DEFAULT_EFFORT = "max"` → model `k3-256k` (resolve via catalog aliases like existing k3); default effort **None**/omit unless caller passed effort.
+- `registry.py` kimi `default_model` `k2.7-coding` / `default_effort` max → `k3-256k`, drop default_effort or leave unset.
+- `kimicc.py` default `k3` → `k3-256k` for consistency when harness=kimicc without --model.
+- `launcher_core.sh` kimi `LC_MODEL="${LAUNCHER_MODEL:-k3}"` → `k3-256k`.
+- `glm.py`: if `effort` is None, use `high` → `--variant high`. Registry `default_effort: high`.
+- `ask-glm` / `_opencode.py`: default effort high when omitted (same mapping).
+- DeepSeek: registry currently `hermes_deepseek:HermesDeepSeekAdapter` + `deepseek-v4-pro`. Change to an OpenCode adapter (mirror `glm.py` routes): `{"deepseek-v4-flash": "deepseek-direct/deepseek-v4-flash", "deepseek-v4-pro": "deepseek-direct/deepseek-v4-pro"}` but **default flash**. Keep `assert` CI refuse (`is_deepseek_first_party_forbidden_in_ci` / same CI env vars). Update tests that assume Hermes argv (`hermes -z -m deepseek-v4-pro`).
+- `codex.py` `default_model` terra → luna; apply effort `max` when omitted (Codex `-c model_reasoning_effort=max` or whatever the adapter already uses for effort — do not invent a new flag). Registry + `launcher_core.sh` `LC_MODEL` terra → luna. Add `codex:gpt-5.6-luna` to `launcher_validate_driver_certification`.
+- `ClaudeAdapter`: already default_model sonnet-5. When `effort is None` in **headless/print** path, use `high`. Do not change `start-claude.sh` empty defaults.
+- `model-assignment.md`: update the sentences that say Codex dispatch default is terra @ high, Kimi dispatch defaults to k2.7 / k3 max-only as everyday, DeepSeek first-party Hermes default. Point DeepSeek dispatch at OpenCode `deepseek-direct/…` for Entire capture. Do not rewrite the whole rule.
+
+## Tests (must add/adjust, do not weaken)
+
+- Kimi dry-run / adapter: default argv contains k3-256k (resolved native id), no forced max unless --effort max.
+- `--model k3 --effort max` still wins.
+- GLM adapter: omitted effort → `--variant high`; `--effort max` → `--variant max`.
+- DeepSeek dispatch plan: `opencode run --model deepseek-direct/deepseek-v4-flash` and `--variant high`; Hermes not in default cmd.
+- Codex adapter/registry: default luna; effort max when omitted; `--model gpt-5.6-terra` wins.
+- Claude adapter: omitted effort emits `--effort high` when CLI supports it; `--effort xhigh` wins.
+- Existing launcher certification tests still pass (add luna to allowlist).
+- Run: pytest on touched test files + a focused adapter/registry set. Quote output.
+
+## Constraints
+Layout A worktree. `.venv/bin/python`. ruff on Python. Conventional commit `X-Agent: kimi/routing-defaults-2026-08-13`. PR, no merge.
+
+If `k3-256k` native resolve fails in catalog helper, fix the alias path — catalog already has `kimi-code/k3-256k` aliases `[k3-256k, kimi-k3-256k]`.
