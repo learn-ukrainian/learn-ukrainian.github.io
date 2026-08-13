@@ -179,6 +179,146 @@
       "slug": "no-senses-entry-example",
       "lemma": "легасі",
       "entry_type": "lemma"
+    },
+    {
+      "slug": "multi-sense-single-en-example",
+      "lemma": "ключ",
+      "entry_type": "lemma",
+      "pos": "noun",
+      "senses": [
+        {
+          "id": "kliuch_key_tool",
+          "pos": "noun",
+          "uk_source_def": "знаряддя для відмикання замка",
+          "learner_uk": "ключ (від замка)",
+          "learner_en": ["key"],
+          "en_disambiguation": "tool that opens a lock (not musical key / spring)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        },
+        {
+          "id": "kliuch_spring",
+          "pos": "noun",
+          "uk_source_def": "джерело, місце виходу підземних вод",
+          "learner_uk": "джерело",
+          "learner_en": [],
+          "en_disambiguation": "",
+          "source": "sum20_vetted",
+          "completeness": "draft"
+        }
+      ]
+    },
+    {
+      "slug": "multi-sense-both-en-example",
+      "lemma": "лук",
+      "entry_type": "lemma",
+      "pos": "noun",
+      "senses": [
+        {
+          "id": "luk_onion",
+          "pos": "noun",
+          "uk_source_def": "городня рослина з їстівною цибулиною",
+          "learner_uk": "цибуля",
+          "learner_en": ["onion"],
+          "en_disambiguation": "vegetable (not archery bow)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        },
+        {
+          "id": "luk_bow",
+          "pos": "noun",
+          "uk_source_def": "зброя для стрільби стрілами",
+          "learner_uk": "лук (зброя)",
+          "learner_en": ["bow"],
+          "en_disambiguation": "archery weapon (not onion)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "pos-mismatch-example",
+      "lemma": "біг",
+      "entry_type": "lemma",
+      "pos": "noun",
+      "senses": [
+        {
+          "id": "bih_run_as_verb_transform_error",
+          "pos": "verb",
+          "uk_source_def": "швидке пересування ногами",
+          "learner_uk": "біг",
+          "learner_en": ["run"],
+          "en_disambiguation": "noun sense of running (transform wrongly tagged verb)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "pos-match-example",
+      "lemma": "стіл",
+      "entry_type": "lemma",
+      "pos": "noun",
+      "senses": [
+        {
+          "id": "stil_table",
+          "pos": "noun",
+          "uk_source_def": "меблі з горизонтальною поверхнею",
+          "learner_uk": "стіл",
+          "learner_en": ["table"],
+          "en_disambiguation": "furniture (not data table)",
+          "source": "sum20_vetted",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "pos-multipos-documented-example",
+      "lemma": "добро",
+      "entry_type": "lemma",
+      "pos": "noun",
+      "multi_pos": true,
+      "senses": [
+        {
+          "id": "dobro_adverb_sense_allowed",
+          "pos": "adverb",
+          "uk_source_def": "добре (як прислівник у фіксованому слововжитку)",
+          "learner_uk": "добре",
+          "learner_en": ["well"],
+          "en_disambiguation": "documented multi-POS article — not a transform error",
+          "source": "manual_native",
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "slug": "fixed-expression-single-en-bypass",
+      "lemma": "будь ласка",
+      "entry_type": "expression",
+      "is_fixed_expression": true,
+      "pos": "expression",
+      "senses": [
+        {
+          "id": "bud_laska_please",
+          "pos": "expression",
+          "uk_source_def": "ввічливе прохання",
+          "learner_uk": "будь ласка",
+          "learner_en": ["please"],
+          "en_disambiguation": "",
+          "source": "manual_native",
+          "completeness": "complete"
+        },
+        {
+          "id": "bud_laska_youre_welcome",
+          "pos": "expression",
+          "uk_source_def": "відповідь на подяку",
+          "learner_uk": "будь ласка",
+          "learner_en": [],
+          "en_disambiguation": "",
+          "source": "manual_native",
+          "completeness": "draft"
+        }
+      ]
     }
   ]
 }

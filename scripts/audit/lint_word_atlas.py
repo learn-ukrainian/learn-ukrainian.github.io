@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sense-first Word Atlas entry lint (#6437): LINT-001 … LINT-004.
+"""Sense-first Word Atlas entry lint (#6437): LINT-001 … LINT-004 + LINT-101/102.
 
 Read-only, advisory lint over the `senses[]` array and practice bindings
 documented in ``docs/runbooks/word-atlas-entry-model.md`` (§ Sense-Level
@@ -22,14 +22,22 @@ Rules implemented
   ``learner_en`` while ``source`` is missing, blank, or outside the
   enrich vocabulary ``SENSE_SOURCE_SOURCED ∪ {ai_minimum}``. Honest
   ``ai_minimum`` does not fire (that tag is already the vetted-thin label).
-
-Rules NOT implemented here (tracked against issue #6437, later PRs):
-LINT-101 ``MULTI_SENSE_UK_SINGLE_EN``, LINT-102 ``POS_TRANSFORM_MISMATCH``.
+- **LINT-101** ``MULTI_SENSE_UK_SINGLE_EN`` — entry has ≥2 senses but only
+  one published ``learner_en``, or a single shared EN list without
+  per-sense ``en_disambiguation`` (entry-level EN, or identical sense EN
+  lists with incomplete disambiguation). Bypassed when
+  ``is_fixed_expression`` is true.
+- **LINT-102** ``POS_TRANSFORM_MISMATCH`` — sense ``pos`` disagrees with
+  entry/lexeme POS after coarse normalization, with a clear mismatch
+  signal. Documented multi-POS articles
+  (``multi_pos`` / slash-separated / multi-value ``pos``) are not flagged.
+  Does not infer EN-gloss POS (Gemini consult example deferred — high
+  false-positive risk without a vetted EN POS lexicon).
 
 Scope
 =====
-- LINT-001/002/004: entries without a ``senses`` array are silently skipped —
-  most of the production manifest predates this schema.
+- LINT-001/002/004/101/102: entries without a ``senses`` array are silently
+  skipped — most of the production manifest predates this schema.
 - LINT-003: inspects explicit practice bindings on the manifest
   (``practice_items`` / per-entry ``practice_bindings``) and optional
   ``--practice-deck`` shards. Legacy decks without sense-first migration
@@ -164,7 +172,48 @@ LINT_001 = "LINT-001"
 LINT_002 = "LINT-002"
 LINT_003 = "LINT-003"
 LINT_004 = "LINT-004"
-IMPLEMENTED_RULE_IDS = (LINT_001, LINT_002, LINT_003, LINT_004)
+LINT_101 = "LINT-101"
+LINT_102 = "LINT-102"
+IMPLEMENTED_RULE_IDS = (LINT_001, LINT_002, LINT_003, LINT_004, LINT_101, LINT_102)
+
+# Coarse POS families for LINT-102. Only labels that map into this set can
+# produce a "clear mismatch signal"; unknown tags are left alone.
+_POS_FAMILY_ALIASES: dict[str, str] = {
+    "noun": "noun",
+    "n": "noun",
+    "іменник": "noun",
+    "proper noun": "noun",
+    "proper name": "noun",
+    "verb": "verb",
+    "v": "verb",
+    "дієслово": "verb",
+    "adjective": "adjective",
+    "adj": "adjective",
+    "a": "adjective",
+    "прикметник": "adjective",
+    "adverb": "adverb",
+    "adv": "adverb",
+    "прислівник": "adverb",
+    "numeral": "numeral",
+    "numr": "numeral",
+    "num": "numeral",
+    "числівник": "numeral",
+    "preposition": "preposition",
+    "prep": "preposition",
+    "прийменник": "preposition",
+    "conjunction": "conjunction",
+    "conj": "conjunction",
+    "сполучник": "conjunction",
+    "particle": "particle",
+    "part": "particle",
+    "частка": "particle",
+    "pronoun": "pronoun",
+    "pron": "pronoun",
+    "займенник": "pronoun",
+    "interjection": "interjection",
+    "intj": "interjection",
+    "вигук": "interjection",
+}
 
 
 @dataclass(frozen=True)
@@ -331,6 +380,208 @@ def _check_unvetted_en_source(
     ]
 
 
+def _has_nonempty_disambiguation(sense: dict[str, Any]) -> bool:
+    disambiguation = sense.get("en_disambiguation")
+    return isinstance(disambiguation, str) and bool(disambiguation.strip())
+
+
+def _learner_en_key(sense: dict[str, Any]) -> tuple[str, ...] | None:
+    """Stable key for comparing published ``learner_en`` lists across senses."""
+    published = _published_learner_en(sense)
+    if published is None:
+        return None
+    return tuple(item.casefold() for item in published)
+
+
+def _entry_level_learner_en(entry: dict[str, Any]) -> list[str] | None:
+    """Return published entry-level ``learner_en`` when present (shared list)."""
+    return _published_learner_en(entry)
+
+
+def _check_multi_sense_uk_single_en(entry: dict[str, Any]) -> list[LintFinding]:
+    """LINT-101: multi-sense entry with incomplete / shared EN coverage.
+
+    Narrow reading (#6437 binding + Gemini consult):
+    - ≥2 senses required.
+    - Bypass when ``is_fixed_expression`` is true (A1/A2 chunk mitigation).
+    - Fire when exactly one sense publishes ``learner_en``.
+    - Fire when entry-level ``learner_en`` is published (shared list).
+    - Fire when ≥2 senses share an identical published ``learner_en`` list
+      and at least one of those senses lacks non-empty ``en_disambiguation``.
+    """
+    if entry.get("is_fixed_expression") is True:
+        return []
+
+    senses = _senses(entry)
+    if len(senses) < 2:
+        return []
+
+    slug = _entry_slug(entry)
+    findings: list[LintFinding] = []
+
+    senses_with_en = [
+        (sense, key)
+        for sense in senses
+        if (key := _learner_en_key(sense)) is not None
+    ]
+
+    if _entry_level_learner_en(entry) is not None:
+        findings.append(
+            LintFinding(
+                rule_id=LINT_101,
+                rule_name="MULTI_SENSE_UK_SINGLE_EN",
+                entry_slug=slug,
+                sense_id="<entry>",
+                field="learner_en",
+                detail=(
+                    f"entry has {len(senses)} senses but a shared entry-level "
+                    "learner_en list; prefer per-sense learner_en + en_disambiguation"
+                ),
+            )
+        )
+
+    if len(senses_with_en) == 1:
+        sense, _key = senses_with_en[0]
+        findings.append(
+            LintFinding(
+                rule_id=LINT_101,
+                rule_name="MULTI_SENSE_UK_SINGLE_EN",
+                entry_slug=slug,
+                sense_id=_sense_id(sense),
+                field="learner_en",
+                detail=(
+                    f"entry has {len(senses)} senses but only 1 publishes "
+                    "learner_en; remaining senses lack EN coverage"
+                ),
+            )
+        )
+    elif len(senses_with_en) >= 2:
+        keys = {key for _sense, key in senses_with_en}
+        if len(keys) == 1:
+            missing_disambiguation = [
+                sense
+                for sense, _key in senses_with_en
+                if not _has_nonempty_disambiguation(sense)
+            ]
+            if missing_disambiguation:
+                sense = missing_disambiguation[0]
+                findings.append(
+                    LintFinding(
+                        rule_id=LINT_101,
+                        rule_name="MULTI_SENSE_UK_SINGLE_EN",
+                        entry_slug=slug,
+                        sense_id=_sense_id(sense),
+                        field="learner_en",
+                        detail=(
+                            f"entry has {len(senses_with_en)} senses sharing one "
+                            "learner_en list without per-sense en_disambiguation "
+                            f"on {_sense_id(sense)}"
+                        ),
+                    )
+                )
+
+    return findings
+
+
+def _normalize_pos_token(raw: object) -> str | None:
+    """Normalize one POS token to a coarse family, or None when unknown."""
+    if not isinstance(raw, str):
+        return None
+    token = raw.strip().casefold().replace("_", " ")
+    if not token:
+        return None
+    # Strip morphology / style suffixes: ``noun:m``, ``proper noun:pl``.
+    token = token.split(":", 1)[0].strip()
+    return _POS_FAMILY_ALIASES.get(token)
+
+
+def _split_pos_raw(raw: object) -> list[str]:
+    """Split a POS field into candidate tokens (list or slash/semicolon string)."""
+    if isinstance(raw, list):
+        return [item for item in raw if isinstance(item, str) and item.strip()]
+    if isinstance(raw, str) and raw.strip():
+        text = raw.strip()
+        if "/" in text or ";" in text:
+            parts: list[str] = []
+            for chunk in text.replace(";", "/").split("/"):
+                chunk = chunk.strip()
+                if chunk:
+                    parts.append(chunk)
+            return parts
+        return [text]
+    return []
+
+
+def _entry_pos_raw(entry: dict[str, Any]) -> object | None:
+    """Resolve entry/lexeme POS for LINT-102 (entry first, then lexeme)."""
+    if entry.get("pos") is not None:
+        return entry.get("pos")
+    lexeme = entry.get("lexeme")
+    if isinstance(lexeme, dict) and lexeme.get("pos") is not None:
+        return lexeme.get("pos")
+    return None
+
+
+def _is_documented_multi_pos(entry: dict[str, Any]) -> bool:
+    """True when the article explicitly documents multi-POS (do not flag)."""
+    if entry.get("multi_pos") is True or entry.get("is_multi_pos") is True:
+        return True
+    allowed = entry.get("allowed_sense_pos")
+    if isinstance(allowed, list) and len(allowed) > 1:
+        return True
+    tokens = _split_pos_raw(_entry_pos_raw(entry))
+    return len(tokens) > 1
+
+
+def _entry_pos_families(entry: dict[str, Any]) -> set[str]:
+    families: set[str] = set()
+    for token in _split_pos_raw(_entry_pos_raw(entry)):
+        family = _normalize_pos_token(token)
+        if family is not None:
+            families.add(family)
+    return families
+
+
+def _check_pos_transform_mismatch(
+    entry: dict[str, Any], entry_slug: str, sense_id: str, sense: dict[str, Any]
+) -> list[LintFinding]:
+    """LINT-102: sense POS vs entry/lexeme POS clear transform mismatch.
+
+    Conservative: requires both sides to normalize to known coarse families,
+    skips documented multi-POS articles, and does not invent EN-gloss POS.
+    """
+    if _is_documented_multi_pos(entry):
+        return []
+
+    entry_families = _entry_pos_families(entry)
+    if len(entry_families) != 1:
+        # Missing/unknown entry POS, or multi-token without multi_pos flag —
+        # not a clear single-POS transform signal.
+        return []
+
+    sense_family = _normalize_pos_token(sense.get("pos"))
+    if sense_family is None:
+        return []
+
+    entry_family = next(iter(entry_families))
+    if sense_family == entry_family:
+        return []
+
+    return [
+        LintFinding(
+            rule_id=LINT_102,
+            rule_name="POS_TRANSFORM_MISMATCH",
+            entry_slug=entry_slug,
+            sense_id=sense_id,
+            field="pos",
+            detail=(
+                f"sense pos {sense.get('pos')!r} ({sense_family}) disagrees with "
+                f"entry/lexeme pos family {entry_family!r} without multi_pos documentation"
+            ),
+        )
+    ]
+
+
 def _binding_lemma(item: dict[str, Any]) -> str | None:
     for key in ("lemmaId", "lemma_id", "lemma", "entry_slug", "slug"):
         value = item.get(key)
@@ -406,21 +657,25 @@ def lint_practice_items(items: list[dict[str, Any]]) -> list[LintFinding]:
 
 
 def lint_manifest(manifest: dict[str, Any]) -> list[LintFinding]:
-    """Return LINT-001/002/003/004 findings for a manifest.
+    """Return LINT-001/002/003/004/101/102 findings for a manifest.
 
-    Entries without a ``senses`` array are skipped for LINT-001/002/004 (see
-    module docstring). LINT-003 reads explicit practice bindings even when
-    senses are absent, so residual legacy decks stay visible during the
-    advisory soak.
+    Entries without a ``senses`` array are skipped for sense-level rules
+    (LINT-001/002/004/101/102; see module docstring). LINT-003 reads explicit
+    practice bindings even when senses are absent, so residual legacy decks
+    stay visible during the advisory soak.
     """
     findings: list[LintFinding] = []
     for entry in _entries(manifest):
         slug = _entry_slug(entry)
-        for sense in _senses(entry):
+        senses = _senses(entry)
+        if senses:
+            findings.extend(_check_multi_sense_uk_single_en(entry))
+        for sense in senses:
             sense_id = _sense_id(sense)
             findings.extend(_check_truncated_text_cutoff(slug, sense_id, sense))
             findings.extend(_check_ambiguous_bare_en(slug, sense_id, sense))
             findings.extend(_check_unvetted_en_source(slug, sense_id, sense))
+            findings.extend(_check_pos_transform_mismatch(entry, slug, sense_id, sense))
     findings.extend(lint_practice_items(_practice_bindings_from_manifest(manifest)))
     return findings
 
@@ -444,7 +699,7 @@ def _load_manifest(path: Path) -> dict[str, Any]:
 def print_report(findings: list[LintFinding]) -> None:
     if not findings:
         print(
-            "No LINT-001/LINT-002/LINT-003/LINT-004 findings — "
+            "No LINT-001/LINT-002/LINT-003/LINT-004/LINT-101/LINT-102 findings — "
             "sense-first entries lint clean."
         )
         return
@@ -493,7 +748,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Advisory sense-first Word Atlas lint: LINT-001 TRUNCATED_TEXT_CUTOFF + "
             "LINT-002 AMBIGUOUS_BARE_EN + LINT-003 DRILL_SENSE_ID_MISSING + "
-            "LINT-004 UNVETTED_EN_SOURCE (issue #6437)."
+            "LINT-004 UNVETTED_EN_SOURCE + LINT-101 MULTI_SENSE_UK_SINGLE_EN + "
+            "LINT-102 POS_TRANSFORM_MISMATCH (issue #6437)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
