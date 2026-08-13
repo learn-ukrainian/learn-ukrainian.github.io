@@ -144,7 +144,10 @@ class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-5.6-terra"
+    default_model: str = "gpt-5.6-luna"
+    # Operator 2026-08-13: omitted effort defaults to max for the Codex lane;
+    # an explicit --effort always wins.
+    default_effort: str = "max"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
@@ -176,10 +179,9 @@ class CodexAdapter:
               → ``-c 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"'``
             - Unknown top-level keys are ignored (forward-compatible).
 
-        ``effort``: when non-None, appended as
-        ``-c model_reasoning_effort=<level>`` so it overrides
-        ``~/.codex/config.toml`` for this invocation only. When None,
-        Codex falls through to the config default (currently ``high``).
+        ``effort``: appended as ``-c model_reasoning_effort=<level>`` so it
+        overrides ``~/.codex/config.toml`` for this invocation only. When
+        None, the lane default ``max`` is applied (operator 2026-08-13).
         See #1396.
         """
         tc_early = tool_config or {}
@@ -278,9 +280,10 @@ class CodexAdapter:
         cmd: list[str] = [codex_bin, "exec"]
         if has_session_to_resume:
             cmd.append("resume")
-        if effort is not None:
-            # Per-invocation override of ~/.codex/config.toml (#1396).
-            cmd.extend(["-c", f"model_reasoning_effort={effort}"])
+        effective_effort = effort if effort is not None else self.default_effort
+        # Per-invocation override of ~/.codex/config.toml (#1396); the lane
+        # default is max when the caller omits effort (operator 2026-08-13).
+        cmd.extend(["-c", f"model_reasoning_effort={effective_effort}"])
         cmd.append("--skip-git-repo-check")
         if not has_session_to_resume:
             # ``codex exec resume`` does not accept -C or --color. It resumes

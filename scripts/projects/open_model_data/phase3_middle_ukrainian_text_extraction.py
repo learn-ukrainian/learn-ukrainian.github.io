@@ -29,8 +29,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import ca
 ROOT = Path(__file__).resolve().parents[3]
 RUNNER_PATH = ROOT / "scripts/projects/open_model_data/phase3_middle_ukrainian_djvu_extract.js"
 RECEIPT_SCHEMA_PATH = (
-    ROOT
-    / "data/projects/open_model_data/contracts/phase3_middle_ukrainian_text_extraction_receipt_v1.schema.json"
+    ROOT / "data/projects/open_model_data/contracts/phase3_middle_ukrainian_text_extraction_receipt_v1.schema.json"
 )
 
 SCHEMA_VERSION = "phase3_middle_ukrainian_text_extraction_receipt_v1"
@@ -141,9 +140,7 @@ def _utf8_bytes(value: str, *, label: str) -> bytes:
     try:
         return value.encode("utf-8")
     except UnicodeEncodeError as exc:
-        raise MiddleUkrainianTextExtractionError(
-            f"{label} contains an unpaired UTF-16 surrogate"
-        ) from exc
+        raise MiddleUkrainianTextExtractionError(f"{label} contains an unpaired UTF-16 surrogate") from exc
 
 
 def _validate_zone(
@@ -224,9 +221,7 @@ def validate_private_jsonl(path: Path) -> dict[str, Any]:
             decoded_text_bytes = _utf8_bytes(decoded_text, label=f"page {page_number} decoded text")
             decoded_hash = hashlib.sha256(decoded_text_bytes).hexdigest()
             require(row["decoded_text_sha256"] == decoded_hash, f"page {page_number} text hash drift")
-            code_points = _int_value(
-                row["decoded_text_code_points"], label=f"page {page_number} code-point count"
-            )
+            code_points = _int_value(row["decoded_text_code_points"], label=f"page {page_number} code-point count")
             utf8_bytes = _int_value(row["decoded_text_utf8_bytes"], label=f"page {page_number} UTF-8 bytes")
             require(code_points == len(decoded_text), f"page {page_number} code-point denominator drift")
             require(utf8_bytes == len(decoded_text_bytes), f"page {page_number} byte denominator drift")
@@ -247,7 +242,9 @@ def validate_private_jsonl(path: Path) -> dict[str, Any]:
                         page_height=page_height,
                     )
             zone_count = _int_value(row["text_zone_count"], label=f"page {page_number} zone count")
-            require(zone_count == (len(zones) if isinstance(zones, list) else 0), f"page {page_number} zone count drift")
+            require(
+                zone_count == (len(zones) if isinstance(zones, list) else 0), f"page {page_number} zone count drift"
+            )
             zone_hash = sha256_compact_json(zones)
             require(row["text_zones_sha256"] == zone_hash, f"page {page_number} zone hash drift")
             require(row["ocr_used"] is False, f"page {page_number} claims OCR")

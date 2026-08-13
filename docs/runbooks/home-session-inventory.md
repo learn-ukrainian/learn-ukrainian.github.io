@@ -19,6 +19,26 @@ The fixed provider allowlist is intentionally small:
 The default retention boundary is 14 days. Missing roots are reported; they are
 not created. Symlinked homes, session roots, and files are skipped.
 
+## Scheduled policy check
+
+The existing local Git-hygiene LaunchAgent runs every four hours and now invokes
+the inventory in read-only mode. Its receipt reports, for each provider lane,
+the total allowlisted session-file count and provider-root bytes plus stale
+file count and stale bytes. The #4956 policy threshold is **14 days** and the
+allowed stale budget is **0 files / 0 bytes**: any stale allowlisted session
+file prints a `HARD WARNING`. An existing but unmeasurable provider root also
+prints a hard warning rather than being treated as compliant.
+
+Run the same observation manually:
+
+```bash
+.venv/bin/python scripts/hygiene/home_session_retention_check.py --json
+```
+
+This check has no apply option, does not read `LU_HOME_SESSION_APPLY`, and never
+archives or deletes anything. Applying archive or deletion remains exclusively
+behind the inventory command's `--apply` plus `LU_HOME_SESSION_APPLY=1` gate.
+
 ## Apply
 
 Apply is deliberately double-gated. It requires both `--apply` and the exact

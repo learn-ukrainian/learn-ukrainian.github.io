@@ -417,7 +417,7 @@ def test_agents_endpoint_returns_known_adapters():
     assert not any(name.startswith("acpx-") for name in names)
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
-    assert codex["default_model"] == "gpt-5.6-terra"
+    assert codex["default_model"] == "gpt-5.6-luna"
 
 
 def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path, monkeypatch):

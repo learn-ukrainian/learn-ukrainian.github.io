@@ -13,7 +13,7 @@ launcher_adapter_preflight() {
     # resolve every alias to the configured native model id before exec.
     if ! LC_MODEL="$("$LC_ROOT/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
         --resolve-kimi-model "$LC_MODEL" --format native)"; then
-      launcher_error "unknown --model '$LC_MODEL' (use k3, k2.7, k2.7-highspeed)."
+      launcher_error "unknown --model '$LC_MODEL' (use k3-256k, k3, k2.7, k2.7-highspeed)."
       exit 2
     fi
     return

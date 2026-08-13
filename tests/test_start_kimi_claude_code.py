@@ -66,10 +66,14 @@ def test_kimi_catalog_aliases_use_the_endpoint_allowlist(endpoint: str, alias: s
 def test_kimicc_interactive_dry_run_reports_k3_high_and_explicit_override(tmp_path: Path) -> None:
     env = {**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")}
     default = run_launcher("start-kimicc.sh", env=env)
+    k3 = run_launcher("start-kimicc.sh", "--model", "k3", env=env)
     override = run_launcher("start-kimicc.sh", env={**env, "KIMICC_EFFORT_LEVEL": "max"})
 
-    assert default.returncode == override.returncode == 0
-    assert "KimiCC route: effort=high" in default.stdout
+    assert default.returncode == k3.returncode == override.returncode == 0
+    # Operator 2026-08-13: the default model is k3-256k with no forced effort;
+    # the k3-high default applies only when full k3 is explicitly selected.
+    assert "KimiCC route: effort=not-exposed" in default.stdout
+    assert "KimiCC route: effort=high" in k3.stdout
     assert "KimiCC route: effort=max" in override.stdout
 
 

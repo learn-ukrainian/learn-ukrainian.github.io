@@ -150,11 +150,13 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
 
     assert native.cmd[0] == str(tmp_path / "kimi")
     assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
-    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
-    assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
+    # Operator 2026-08-13: the kimicc default model is k3-256k; only full k3
+    # gets the default --effort high injection.
+    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3-256k"
+    assert "--effort" not in kimicc.cmd
     assert kimicc.metadata["harness"] == "kimicc"
     assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
-    assert kimicc.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
+    assert "KIMICC_EFFORT_LEVEL" not in kimicc.env_overrides
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
 
 
@@ -194,7 +196,9 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
         tool_config=None,
     )
 
-    assert KIMI_DEFAULT_EFFORT == "max"
+    # Operator 2026-08-13: native dispatch no longer forces max; effort is
+    # omitted unless the caller passes it explicitly.
+    assert KIMI_DEFAULT_EFFORT is None
     assert "--effort" not in native_k3.cmd
     assert default.cmd[default.cmd.index("--effort") + 1] == "high"
     assert default.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
@@ -251,6 +255,9 @@ def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path
         ("k3", "kimi-code/k3"),
         ("kimi-k3", "kimi-code/k3"),
         ("kimi-k3[1m]", "kimi-code/k3"),
+        ("k3-256k", "kimi-code/k3-256k"),
+        ("kimi-k3-256k", "kimi-code/k3-256k"),
+        ("kimi-code/k3-256k", "kimi-code/k3-256k"),
         ("k2.7-coding", "kimi-code/kimi-for-coding"),
         ("k2.7", "kimi-code/kimi-for-coding"),
         ("kimi-for-coding", "kimi-code/kimi-for-coding"),
@@ -271,7 +278,7 @@ def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path
 def test_effort_warning_fires_only_for_k3(tmp_path, monkeypatch, caplog):
     caplog.set_level(logging.WARNING)
     plan = _build(tmp_path, monkeypatch, model="k3", effort="high")
-    assert KIMI_DEFAULT_EFFORT == "max"
+    assert KIMI_DEFAULT_EFFORT is None
     assert "max effort only" in caplog.text
     assert "--effort" not in plan.cmd
 
@@ -416,7 +423,7 @@ def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_
     assert k3_telemetry.effort == "max"  # K3 is always-max; caller request never mislabeled
     assert k3_telemetry.cli_version == "0.26.0"
 
-    coding_plan = _build(tmp_path, monkeypatch, effort="medium")  # default: k2.7-coding
+    coding_plan = _build(tmp_path, monkeypatch, effort="medium")  # default: k3-256k
     with patch("scripts.agent_runtime.telemetry.kimi_cli_version", return_value="0.26.0"):
         coding_telemetry = resolve_invocation_telemetry(
             agent_name="kimi",
@@ -426,7 +433,18 @@ def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_
         )
 
     assert coding_telemetry.model == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
-    assert coding_telemetry.effort == "not-exposed"  # k2.7 models have no effort knob
+    assert coding_telemetry.effort == "not-exposed"  # k3-256k effort is not forced by the adapter
+
+
+def test_default_model_resolves_k3_256k_and_explicit_k3_max_wins(tmp_path, monkeypatch):
+    """Operator 2026-08-13: omitted --model/--effort → k3-256k, no forced max;
+    explicit --model k3 --effort max still wins."""
+    default = _build(tmp_path, monkeypatch)
+    assert default.cmd[default.cmd.index("-m") + 1] == "kimi-code/k3-256k"
+    assert "--effort" not in default.cmd
+
+    override = _build(tmp_path, monkeypatch, model="k3", effort="max")
+    assert override.cmd[override.cmd.index("-m") + 1] == "kimi-code/k3"
 
 
 def test_binary_resolution_prefers_hermes_over_legacy(tmp_path, monkeypatch):

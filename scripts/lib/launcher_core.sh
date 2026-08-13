@@ -49,9 +49,10 @@ $driver_mode
 
 Options:
   -h, --help                 Show this help and exit.
-  --model MODEL              Provider model. Claude: omit to keep last TUI/session model.
-  --effort LEVEL             Claude Code effort for this session (e.g. high, xhigh).
-                             Omit to keep last session effort. Other providers ignore.
+  --model MODEL              Provider model. Claude/Grok: omit to keep last TUI/session model.
+  --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
+                             --reasoning-effort). Omit to keep last session selection.
+                             Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
@@ -62,9 +63,9 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
-  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude =
+  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude/Grok =
                              last session).
-  LAUNCHER_EFFORT            Default Claude effort when --effort is omitted (empty =
+  LAUNCHER_EFFORT            Default effort when --effort is omitted (empty for Claude/Grok =
                              last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
@@ -146,7 +147,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-5.6-terra}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-5.6-luna}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -154,11 +155,14 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     grok)
-      LC_MODEL="${LAUNCHER_MODEL:-grok-4.5}"
+      # Both interactive and driver leave model/effort alone unless the caller
+      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
+      # the Grok TUI keeps the last session selection.
+      LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     kimi)
-      LC_MODEL="${LAUNCHER_MODEL:-k3}"
+      LC_MODEL="${LAUNCHER_MODEL:-k3-256k}"
       LC_HARNESS="${LAUNCHER_HARNESS:-kimi-code}"
       ;;
     glm)
@@ -354,12 +358,12 @@ launcher_validate_mode() {
 launcher_validate_driver_certification() {
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude may omit --model so the TUI keeps the last session selection.
-  if [ "$LC_PROVIDER" = "claude" ] && [ -z "${LC_MODEL:-}" ]; then
+  # Claude/Grok may omit --model so the TUI keeps the last session selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.5)
       return 0
       ;;
     *)
@@ -491,6 +495,10 @@ launcher_bind_drive_epic() {
   if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
     source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+  fi
+  if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
+    # shellcheck disable=SC2155  # export of resolved plane mode is intentional
+    export FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"
   fi
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"

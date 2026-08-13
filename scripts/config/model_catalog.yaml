@@ -142,7 +142,7 @@ review_scheduler:
     kimicc:
       formal_review_eligible: false
       formal_review_exclusion_reason: authenticated K3 sealed MCP canary has not completed
-      models: [kimi-code/k3]
+      models: [kimi-code/k3, kimi-code/k3-256k]
       participant: kimicc
       adapter_transport: acp
       catalog_transport: native_kimi

@@ -276,25 +276,32 @@ Field notes:
   `...`/`…` without this tag is what LINT-001 flags. `draft` marks thin /
   incomplete learner text (including AI-minimum glosses). Helpers
   `truncate_with_honesty` + `apply_sense_honesty_tags` in
-  `scripts/lexicon/enrich_manifest.py` exist for that stamping, but they are
-  **not yet wired into enrich emit paths** in this PR — call-site integration
-  lands in #6437 PR3.
+  `scripts/lexicon/enrich_manifest.py` are wired into the enrich emit path via
+  `apply_manifest_sense_honesty`, called at the end of `enrich_entry` (#6437
+  PR3): it hard-caps an oversized `en_disambiguation`/`grammar_notes`
+  annotation (never `uk_source_def` — immutable ingestion text — and never
+  the `learner_uk`/`learner_en` drill content itself) and labels a sense with
+  no recorded dictionary `source` as `ai_minimum`.
 
-### Lint gate (PR1 + PR2 scope)
+### Lint gate (PR1 + PR2 + PR3 + PR4 + PR5 scope)
 
-`scripts/audit/lint_word_atlas.py` implements three read-only, advisory rules:
+`scripts/audit/lint_word_atlas.py` implements six read-only, advisory rules:
 
 | ID | Name | Checks |
 | --- | --- | --- |
 | LINT-001 | `TRUNCATED_TEXT_CUTOFF` | A learner-facing sense field ends `...`/`…` while `completeness != "truncated"`. |
 | LINT-002 | `AMBIGUOUS_BARE_EN` | `learner_en` is a single-item list, the word is in a high-risk polysemy denylist, and `en_disambiguation` is empty. |
 | LINT-003 | `DRILL_SENSE_ID_MISSING` | A practice binding / deck item references a lemma without a non-empty `senseId` / `sense_id` (no `en[0]` fallback). |
+| LINT-004 | `UNVETTED_EN_SOURCE` | Published non-empty `learner_en` while `source` is missing, blank, or outside `SENSE_SOURCE_SOURCED ∪ {ai_minimum}` (`sum20_vetted`, `btc`, `dmklinger`, `manual_native`, `rag_verified`, `ai_minimum`). Honest `ai_minimum` does not fire. |
+| LINT-101 | `MULTI_SENSE_UK_SINGLE_EN` | Entry has ≥2 senses but only one publishes `learner_en`, or a single shared EN list (entry-level `learner_en`, or identical sense `learner_en` lists) without per-sense `en_disambiguation`. Bypassed when `is_fixed_expression` is true. |
+| LINT-102 | `POS_TRANSFORM_MISMATCH` | Sense `pos` disagrees with entry/lexeme POS after coarse family normalization, with a clear mismatch signal. Documented multi-POS (`multi_pos`, slash/semicolon/`pos` lists, multi-value `allowed_sense_pos`) is not flagged. Does not infer EN-gloss POS. |
 
-LINT-004 (`UNVETTED_EN_SOURCE`) and the P1 advisory rules
-(`MULTI_SENSE_UK_SINGLE_EN`, `POS_TRANSFORMATION_MISMATCH`) remain for later PRs
-against this same issue. No CI gate is wired to `lint_word_atlas.py` yet —
-it runs as a standalone advisory check until a residual-count policy is
-agreed (issue #6437 D6-7).
+No CI gate is wired to `lint_word_atlas.py` yet — it runs as a standalone
+advisory check until a residual-count policy is agreed (issue #6437 D6-7).
+Gemini consult also sketched EN-gloss POS conflict detection for LINT-102
+(e.g. noun *брак* → bare ordinal *"second"*); that reading is deferred here
+because it needs a vetted EN POS lexicon and would raise false positives on
+legitimate dual-POS words.
 
 ## Open Decisions
 

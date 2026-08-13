@@ -415,13 +415,42 @@ if hasattr(os, "register_at_fork"):
         os.register_at_fork(after_in_child=_clear_thread_local_cache_in_child)
 
 
+@lru_cache(maxsize=1)
+def _resolve_primary_checkout() -> Path | None:
+    """Primary checkout root via the shared ``.git`` common dir (#6571).
+
+    Returns None outside a git repo so callers fall back honestly.
+    """
+    try:
+        from guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    except ImportError:  # repo root on sys.path instead of scripts/
+        from scripts.guardrails.worktree_containment import (  # type: ignore[no-redef]
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    try:
+        return resolve_main_root(ROOT)
+    except NotAGitRepositoryError:
+        return None
+
+
 def _source_db_path(db_path: str | Path | None = None) -> Path:
     target = Path(db_path) if db_path is not None else SOURCES_DB
+    if target.is_file() and target.stat().st_size >= 1_000_000:
+        return target
+    # Sparse worktree fallback: the multi-GB sources.db lives only in the
+    # primary checkout. Try the worktree-local path first (often a symlink into
+    # it), then the primary checkout resolved from the shared .git common dir
+    # instead of a hardcoded absolute path (#6571).
     primary = ROOT / "data" / "sources.db"
-    abs_primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db")
-    if not target.is_file() or target.stat().st_size < 1_000_000:
-        if primary.is_file() and primary.stat().st_size >= 1_000_000:
-            return primary
+    if primary.is_file() and primary.stat().st_size >= 1_000_000:
+        return primary
+    primary_checkout = _resolve_primary_checkout()
+    if primary_checkout is not None:
+        abs_primary = primary_checkout / "data" / "sources.db"
         if abs_primary.is_file() and abs_primary.stat().st_size >= 1_000_000:
             return abs_primary
     return target
