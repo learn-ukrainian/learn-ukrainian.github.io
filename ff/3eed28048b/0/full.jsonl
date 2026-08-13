@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 166967,
-      "output": 25149,
-      "reasoning": 178438,
+      "input": 169062,
+      "output": 27370,
+      "reasoning": 178468,
       "cache": {
-        "read": 29044736,
+        "read": 31441792,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786652454068,
-      "updated": 1786655084715
+      "updated": 1786655133091
     }
   },
   "messages": [
@@ -13627,19 +13627,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 341575,
+          "input": 123,
+          "output": 332,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 341120
           }
         },
         "modelID": "deepseek-v4-flash",
         "providerID": "deepseek-direct",
         "time": {
-          "created": 1786655084706
+          "created": 1786655084706,
+          "completed": 1786655095554
         },
+        "finish": "tool-calls",
         "id": "msg_ffcf110a2001uovXI4CHDdMW46",
         "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
       },
@@ -13656,21 +13659,656 @@
           "tool": "bash",
           "callID": "call_00_ET_sFxAz8CVq6JjL8PEY5zn3254",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add site/src/layouts/CourseLayout.astro site/src/lib/i18n/chrome.ts 'site/src/pages/[...slug].astro' site/src/pages/index.astro && git commit -m \"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n\nC1 and C2 landing pages already render (HTTP 200) but were only reachable\nthrough the Words of the Day level filter. Promote them across the\nlearner chrome:\n\n- header nav + footer: add C1/C2 links after B2\n- homepage roadmap panel: add C1/C2 rows\n- Course Map ladder: C1/C2 now 'available' (were 'planned'/'long-range')\n- [...slug] track metadata: live course map wording + hero for search\n- en/uk chrome strings: nav.c1/nav.c2, roadmapC1/C2, intro/course-map copy\n\nLevelLanding already renders C1/C2 module maps (132/110 planned modules),\nso the pages themselves are untouched. LexiconPractice.tsx untouched.\n\nX-Agent: deepseek/6713-c12-nav\"",
               "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
             },
+            "output": "[deepseek/6713-c12-nav f601b0a0bd] fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n 4 files changed, 45 insertions(+), 29 deletions(-)\n",
+            "metadata": {
+              "output": "[deepseek/6713-c12-nav f601b0a0bd] fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n 4 files changed, 45 insertions(+), 29 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add site/src/layouts/CourseLayout.astro site/src/lib/i18n/chrome.ts 'site/src/pages/[...slug].astro' site/src/pages/index.astro && git commit -m \"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n\nC1 and C2 landing pages already render (HTTP 200) but were only reachable\nthrough the Words of the Day level filter. Promote them across the\nlearner chrome:\n\n- header nav + footer: add C1/C2 links after B2\n- homepage roadmap panel: add C1/C2 rows\n- Course Map ladder: C1/C2 now 'available' (were 'planned'/'long-range')\n- [...slug] track metadata: live course map wording + hero for search\n- en/uk chrome strings: nav.c1/nav.c2, roadmapC1/C2, intro/course-map copy\n\nLevelLanding already renders C1/C2 module maps (132/110 planned modules),\nso the pages themselves are untouched. LexiconPractice.tsx untouched.\n\nX-Agent: deepseek/6713-c12-nav\"",
             "time": {
-              "start": 1786655088923
+              "start": 1786655095279,
+              "end": 1786655095282
             }
           },
           "id": "prt_ffcf11b33001W6WKLHj0kwsUpq",
           "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
           "messageID": "msg_ffcf110a2001uovXI4CHDdMW46"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 341575,
+            "input": 123,
+            "output": 332,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 341120
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf13a88001epCF7DDXB5pkGk",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf110a2001uovXI4CHDdMW46"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 341757,
+          "input": 138,
+          "output": 115,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 341504
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655095564,
+          "completed": 1786655099220
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcf13b0c001mIRflGSvniXx4B",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf141b3001WmwGBxHViSbBzk",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf13b0c001mIRflGSvniXx4B"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_mY7IC5NgOUPg5YCDEbbo6222",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git log --format='%h %s' -2 | cat; echo \"===\"; git show --stat HEAD | cat",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+            },
+            "output": "f601b0a0bd fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\neb7d0240c9 fix(practice): A1 empty synonym no longer opens 0/0 antonym sessions (#6734) (#6741)\n===\ncommit f601b0a0bd5fba1ceb39bb9bc72efac3ea8de9c1\nAuthor: Krisztian oos <krisztian.koos@gmail.com>\nDate:   Thu Aug 13 23:04:49 2026 +0200\n\n    fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n    \n    C1 and C2 landing pages already render (HTTP 200) but were only reachable\n    through the Words of the Day level filter. Promote them across the\n    learner chrome:\n    \n    - header nav + footer: add C1/C2 links after B2\n    - homepage roadmap panel: add C1/C2 rows\n    - Course Map ladder: C1/C2 now 'available' (were 'planned'/'long-range')\n    - [...slug] track metadata: live course map wording + hero for search\n    - en/uk chrome strings: nav.c1/nav.c2, roadmapC1/C2, intro/course-map copy\n    \n    LevelLanding already renders C1/C2 module maps (132/110 planned modules),\n    so the pages themselves are untouched. LexiconPractice.tsx untouched.\n    \n    X-Agent: deepseek/6713-c12-nav\n    Entire-Checkpoint: ff3eed28048b\n\n site/src/layouts/CourseLayout.astro |  4 ++++\n site/src/lib/i18n/chrome.ts         | 20 ++++++++++++------\n site/src/pages/[...slug].astro      | 42 +++++++++++++++++++------------------\n site/src/pages/index.astro          |  8 ++++---\n 4 files changed, 45 insertions(+), 29 deletions(-)\n",
+            "metadata": {
+              "output": "f601b0a0bd fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\neb7d0240c9 fix(practice): A1 empty synonym no longer opens 0/0 antonym sessions (#6734) (#6741)\n===\ncommit f601b0a0bd5fba1ceb39bb9bc72efac3ea8de9c1\nAuthor: Krisztian oos <krisztian.koos@gmail.com>\nDate:   Thu Aug 13 23:04:49 2026 +0200\n\n    fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\n    \n    C1 and C2 landing pages already render (HTTP 200) but were only reachable\n    through the Words of the Day level filter. Promote them across the\n    learner chrome:\n    \n    - header nav + footer: add C1/C2 links after B2\n    - homepage roadmap panel: add C1/C2 rows\n    - Course Map ladder: C1/C2 now 'available' (were 'planned'/'long-range')\n    - [...slug] track metadata: live course map wording + hero for search\n    - en/uk chrome strings: nav.c1/nav.c2, roadmapC1/C2, intro/course-map copy\n    \n    LevelLanding already renders C1/C2 module maps (132/110 planned modules),\n    so the pages themselves are untouched. LexiconPractice.tsx untouched.\n    \n    X-Agent: deepseek/6713-c12-nav\n    Entire-Checkpoint: ff3eed28048b\n\n site/src/layouts/CourseLayout.astro |  4 ++++\n site/src/lib/i18n/chrome.ts         | 20 ++++++++++++------\n site/src/pages/[...slug].astro      | 42 +++++++++++++++++++------------------\n site/src/pages/index.astro          |  8 ++++---\n 4 files changed, 45 insertions(+), 29 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git log --format='%h %s' -2 | cat; echo \"===\"; git show --stat HEAD | cat",
+            "time": {
+              "start": 1786655098953,
+              "end": 1786655098956
+            }
+          },
+          "id": "prt_ffcf14668001CD9WdcLCmImGNi",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf13b0c001mIRflGSvniXx4B"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 341757,
+            "input": 138,
+            "output": 115,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 341504
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf148ef001A4IgWIHDErvD81",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf13b0c001mIRflGSvniXx4B"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 342357,
+          "input": 577,
+          "output": 118,
+          "reasoning": 30,
+          "cache": {
+            "write": 0,
+            "read": 341632
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655099256,
+          "completed": 1786655107968
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcf14978001V3sesKw8sOG10j",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf1502c001xLDoxCTTENCbQc",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf14978001V3sesKw8sOG10j"
+        },
+        {
+          "type": "reasoning",
+          "text": "The commit includes an `Entire-Checkpoint` trailer added by a hook, which is fine. Now let me push and create the PR.",
+          "time": {
+            "start": 1786655101498,
+            "end": 1786655101875
+          },
+          "id": "prt_ffcf1523a001f5URM8gYJbQ1eL",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf14978001V3sesKw8sOG10j"
+        },
+        {
+          "type": "text",
+          "text": "Committed. Now push and create the PR.",
+          "time": {
+            "start": 1786655101877,
+            "end": 1786655102473
+          },
+          "id": "prt_ffcf153b4001ADM61MmDyWKnAE",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf14978001V3sesKw8sOG10j"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_OLAdU8AaoNN0BhEyAKp33554",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin deepseek/6713-c12-nav 2>&1 | tail -5",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+            },
+            "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/6713-c12-nav        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/6713-c12-nav -> deepseek/6713-c12-nav\nbranch 'deepseek/6713-c12-nav' set up to track 'origin/deepseek/6713-c12-nav'.\n",
+            "metadata": {
+              "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/6713-c12-nav        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            deepseek/6713-c12-nav -> deepseek/6713-c12-nav\nbranch 'deepseek/6713-c12-nav' set up to track 'origin/deepseek/6713-c12-nav'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin deepseek/6713-c12-nav 2>&1 | tail -5",
+            "time": {
+              "start": 1786655107460,
+              "end": 1786655107479
+            }
+          },
+          "id": "prt_ffcf1542c001a2sBunogs82XzI",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf14978001V3sesKw8sOG10j"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 342357,
+            "input": 577,
+            "output": 118,
+            "reasoning": 30,
+            "cache": {
+              "write": 0,
+              "read": 341632
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf16a8c001B4CcyChtnHnkkn",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf14978001V3sesKw8sOG10j"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 343203,
+          "input": 202,
+          "output": 729,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 342272
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655108035,
+          "completed": 1786655119935
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcf16bc3001Sz1srYgiK0wQfF",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf1730a001VxESutVAEH6Ksr",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf16bc3001Sz1srYgiK0wQfF"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_eKJG72IakURWkt9dZD9H7821",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --title \"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\" --body \"$(cat <<'EOF'\n## Overview\n\nC1 and C2 landing pages already render on production (HTTP 200) — `https://learn-ukrainian.github.io/c1/` and `/c2/` — but they were only reachable through the Words of the Day level filter. This PR promotes them into the learner chrome so the course surface matches the practice surface.\n\nFixes #6713 (leaves #4387 open). No content-complete claim is made: the C1/C2 module maps (132 / 110 planned modules) are already live via `LevelLanding` and are untouched.\n\n## Changes\n\n- **Header nav + footer** (`CourseLayout.astro`): added `C1` / `C2` links after `B2` (desktop + mobile via `topNav`).\n- **Homepage Course Map** (`index.astro`): C1/C2 ladder rows promoted from `planned` / `long-range` → `available`; added `C1` / `C2` rows to the roadmap panel; updated page `<meta description>`.\n- **Track metadata + search** (`[...slug].astro`): C1/C2 track entries reworded from \"future / unavailable\" to \"live course map\" with `state: released` / `heroVariant: core` and `/c1/`/`/c2/` primary actions, so site-wide search and track landings describe the live pages honestly.\n- **i18n chrome strings** (`chrome.ts`, en + uk): new `nav.c1` / `nav.c2`, `home.roadmapC1` / `home.roadmapC2`, and refreshed homepage intro / course-map body copy mentioning the C1/C2 course maps.\n\n`LexiconPractice.tsx` (Words of the Day level filter) is untouched, per dispatch scope.\n\n## Verification\n\n- `npm run build:shell` → 431 pages, zero errors.\n- Full `npm run build` → 20,542 pages, zero errors.\n- `build-renders.test.ts` → 5/5 pass.\n- `practice-chrome-copy`, `k3-chrome-locale`, `LevelLanding` unit suites → pass.\n- Rendered `dist/index.html`, `dist/c1/`, `dist/c2/`, `dist/search/` confirmed: C1/C2 present in header nav, footer, Course Map ladder + roadmap panel, with correct active state on `/c1/` / `/c2/`.\n- Remaining unit-suite failures (`hydrate-manifest`, `atlas-db-read`, `raw-atlas-shard-transport`) are pre-existing on base `origin/main` (stale manifest pointer / data artifacts) and unrelated to this change.\n\nX-Agent: deepseek/6713-c12-nav\nEOF\n)\" 2>&1 | tail -5",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6752\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6752\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --title \"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\" --body \"$(cat <<'EOF'\n## Overview\n\nC1 and C2 landing pages already render on production (HTTP 200) — `https://learn-ukrainian.github.io/c1/` and `/c2/` — but they were only reachable through the Words of the Day level filter. This PR promotes them into the learner chrome so the course surface matches the practice surface.\n\nFixes #6713 (leaves #4387 open). No content-complete claim is made: the C1/C2 module maps (132 / 110 planned modules) are already live via `LevelLanding` and are untouched.\n\n## Changes\n\n- **Header nav + footer** (`CourseLayout.astro`): added `C1` / `C2` links after `B2` (desktop + mobile via `topNav`).\n- **Homepage Course Map** (`index.astro`): C1/C2 ladder rows promoted from `planned` / `long-range` → `available`; added `C1` / `C2` rows to the roadmap panel; updated page `<meta description>`.\n- **Track metadata + search** (`[...slug].astro`): C1/C2 track entries reworded from \"future / unavailable\" to \"live course map\" with `state: released` / `heroVariant: core` and `/c1/`/`/c2/` primary actions, so site-wide search and track landings describe the live pages honestly.\n- **i18n chrome strings** (`chrome.ts`, en + uk): new `nav.c1` / `nav.c2`, `home.roadmapC1` / `home.roadmapC2`, and refreshed homepage intro / course-map body copy mentioning the C1/C2 course maps.\n\n`LexiconPractice.tsx` (Words of the Day level filter) is untouched, per dispatch scope.\n\n## Verification\n\n- `npm run build:shell` → 431 pages, zero errors.\n- Full `npm run build` → 20,542 pages, zero errors.\n- `build-renders.test.ts` → 5/5 pass.\n- `practice-chrome-copy`, `k3-chrome-locale`, `LevelLanding` unit suites → pass.\n- Rendered `dist/index.html`, `dist/c1/`, `dist/c2/`, `dist/search/` confirmed: C1/C2 present in header nav, footer, Course Map ladder + roadmap panel, with correct active state on `/c1/` / `/c2/`.\n- Remaining unit-suite failures (`hydrate-manifest`, `atlas-db-read`, `raw-atlas-shard-transport`) are pre-existing on base `origin/main` (stale manifest pointer / data artifacts) and unrelated to this change.\n\nX-Agent: deepseek/6713-c12-nav\nEOF\n)\" 2>&1 | tail -5",
+            "time": {
+              "start": 1786655119377,
+              "end": 1786655119389
+            }
+          },
+          "id": "prt_ffcf17687001nw2JeDBMQDTa51",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf16bc3001Sz1srYgiK0wQfF"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 343203,
+            "input": 202,
+            "output": 729,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 342272
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf19953001nDCSKLSrajg7x9",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf16bc3001Sz1srYgiK0wQfF"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 343406,
+          "input": 69,
+          "output": 169,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 343168
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655120039,
+          "completed": 1786655125664
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcf19aa7001wjN7zxvzMLqDXr",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf1a25600157PywJaQLO67Jg",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf19aa7001wjN7zxvzMLqDXr"
+        },
+        {
+          "type": "text",
+          "text": "PR created. Let me verify it and its CI status.",
+          "time": {
+            "start": 1786655122486,
+            "end": 1786655123331
+          },
+          "id": "prt_ffcf1a436001qan10c8CREMl5f",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf19aa7001wjN7zxvzMLqDXr"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_tFwKfTnQcR1381uWTvNI5402",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr view 6752 --repo learn-ukrainian/learn-ukrainian.github.io --json state,headRefName,mergeable,title 2>&1 | head; echo \"===\"; gh pr checks 6752 --repo learn-ukrainian/learn-ukrainian.github.io 2>&1 | head -10",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+            },
+            "output": "{\"headRefName\":\"deepseek/6713-c12-nav\",\"mergeable\":\"MERGEABLE\",\"state\":\"OPEN\",\"title\":\"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\"}\n===\nAnalyze (actions)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096001\t\nAnalyze (go)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096113\t\nAnalyze (javascript-typescript)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096158\t\nAnalyze (python)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594095915\t\nContracts (schema, MDX, atlas, BIO)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100068\t\nFrontend (build + vitest)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100082\t\nPytest fastlane (changed tests)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100086\t\nPytest plan\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100246\t\nactionlint (workflow files)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029373/job/94594099205\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029367/job/94594099354\t\n",
+            "metadata": {
+              "output": "{\"headRefName\":\"deepseek/6713-c12-nav\",\"mergeable\":\"MERGEABLE\",\"state\":\"OPEN\",\"title\":\"fix(site): surface live C1/C2 pages in nav, footer, and Course Map (#6713)\"}\n===\nAnalyze (actions)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096001\t\nAnalyze (go)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096113\t\nAnalyze (javascript-typescript)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594096158\t\nAnalyze (python)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744027095/job/94594095915\t\nContracts (schema, MDX, atlas, BIO)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100068\t\nFrontend (build + vitest)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100082\t\nPytest fastlane (changed tests)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100086\t\nPytest plan\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029465/job/94594100246\t\nactionlint (workflow files)\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029373/job/94594099205\t\nchanges\tpending\t0\thttps://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31744029367/job/94594099354\t\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr view 6752 --repo learn-ukrainian/learn-ukrainian.github.io --json state,headRefName,mergeable,title 2>&1 | head; echo \"===\"; gh pr checks 6752 --repo learn-ukrainian/learn-ukrainian.github.io 2>&1 | head -10",
+            "time": {
+              "start": 1786655125012,
+              "end": 1786655125052
+            }
+          },
+          "id": "prt_ffcf1a4cb001RrIU7IQr0F68bC",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf19aa7001wjN7zxvzMLqDXr"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 343406,
+            "input": 69,
+            "output": 169,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 343168
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf1af86001JkdHD3GNljh0T4",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf19aa7001wjN7zxvzMLqDXr"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 344178,
+          "input": 615,
+          "output": 267,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 343296
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655125753,
+          "completed": 1786655133016
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffcf1b0f9001s0FbGaE18ySInj",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf1b87b001p8SuutpHGAjrd4",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1b0f9001s0FbGaE18ySInj"
+        },
+        {
+          "type": "text",
+          "text": "PR #6752 is open and CI is running. Let me update the todo list and summarize.",
+          "time": {
+            "start": 1786655131225,
+            "end": 1786655132524
+          },
+          "id": "prt_ffcf1c659001NYop2tqgTP6Jjk",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1b0f9001s0FbGaE18ySInj"
+        },
+        {
+          "type": "tool",
+          "tool": "todowrite",
+          "callID": "call_00_ET_T9gkEYm9gMsiLKpGWaBA3603",
+          "state": {
+            "status": "completed",
+            "input": {
+              "todos": [
+                {
+                  "content": "Add nav.c1/nav.c2 chrome keys + roadmap/courseMap copy (en + uk) in chrome.ts",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add C1/C2 to header topNav + footer in CourseLayout.astro",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Promote C1/C2 status + roadmap panel in index.astro Course Map",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Update c1/c2 TRACKS entries in [...slug].astro for search/landing honesty",
+                  "priority": "medium",
+                  "status": "completed"
+                },
+                {
+                  "content": "Verify: build site, run tests, check rendered nav/course map",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Commit with X-Agent trailer and open PR",
+                  "priority": "high",
+                  "status": "completed"
+                }
+              ]
+            },
+            "output": "[\n  {\n    \"content\": \"Add nav.c1/nav.c2 chrome keys + roadmap/courseMap copy (en + uk) in chrome.ts\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add C1/C2 to header topNav + footer in CourseLayout.astro\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Promote C1/C2 status + roadmap panel in index.astro Course Map\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Update c1/c2 TRACKS entries in [...slug].astro for search/landing honesty\",\n    \"status\": \"completed\",\n    \"priority\": \"medium\"\n  },\n  {\n    \"content\": \"Verify: build site, run tests, check rendered nav/course map\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Commit with X-Agent trailer and open PR\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  }\n]",
+            "metadata": {
+              "todos": [
+                {
+                  "content": "Add nav.c1/nav.c2 chrome keys + roadmap/courseMap copy (en + uk) in chrome.ts",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add C1/C2 to header topNav + footer in CourseLayout.astro",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Promote C1/C2 status + roadmap panel in index.astro Course Map",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Update c1/c2 TRACKS entries in [...slug].astro for search/landing honesty",
+                  "status": "completed",
+                  "priority": "medium"
+                },
+                {
+                  "content": "Verify: build site, run tests, check rendered nav/course map",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Commit with X-Agent trailer and open PR",
+                  "status": "completed",
+                  "priority": "high"
+                }
+              ],
+              "truncated": false
+            },
+            "title": "0 todos",
+            "time": {
+              "start": 1786655132501,
+              "end": 1786655132510
+            }
+          },
+          "id": "prt_ffcf1c732001j2uD0jpyoJ6Drl",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1b0f9001s0FbGaE18ySInj"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 344178,
+            "input": 615,
+            "output": 267,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 343296
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf1cc77001ejFRDw29yo4Q7x",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1b0f9001s0FbGaE18ySInj"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffcc8ecff001o2e54aQhIDfYnO",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6713-c12-nav"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 344926,
+          "input": 371,
+          "output": 491,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 344064
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786655133090,
+          "completed": 1786655139917
+        },
+        "finish": "stop",
+        "id": "msg_ffcf1cda2001dEyZ68vwRqsj2Z",
+        "sessionID": "ses_00337134bffe59iNpqaacMr5WP"
+      },
+      "parts": [
+        {
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-start",
+          "id": "prt_ffcf1d4e1001rsQmQZ7zg60aKM",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1cda2001dEyZ68vwRqsj2Z"
+        },
+        {
+          "type": "text",
+          "text": "Done. PR: **https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6752** (branch `deepseek/6713-c12-nav`, MERGEABLE, CI running).\n\n## What changed\n\nThe C1/C2 pages already return HTTP 200 and `LevelLanding` renders their 132/110-module maps — they were only reachable via the Words of the Day level filter. Promoted them across the learner chrome (4 files, no `LexiconPractice.tsx` touch):\n\n- **Nav/footer** (`CourseLayout.astro`): `C1`/`C2` links after `B2`, desktop + mobile.\n- **Course Map** (`index.astro`): C1/C2 ladder rows `planned`/`long-range` → `available`; added C1/C2 to the roadmap panel; updated meta description.\n- **Track/search metadata** (`[...slug].astro`): c1/c2 entries reworded from \"future/unavailable\" to \"live course map\" with `state: released`, `heroVariant: core`, primary actions `/c1/`/`/c2/`.\n- **i18n** (`chrome.ts`, en + uk): `nav.c1`/`nav.c2`, `home.roadmapC1`/`roadmapC2`, refreshed homepage intro + course-map copy.\n\n## Verification\n\n- Full `npm run build`: 20,542 pages, zero errors; `build-renders.test.ts` 5/5 pass.\n- `practice-chrome-copy`, `k3-chrome-locale`, `LevelLanding` suites pass; LexiconPractice 149/149 pass standalone.\n- Rendered output confirmed: C1/C2 in header nav, footer, Course Map ladder + roadmap, active state on `/c1/`, and honest \"live course map\" search entries.\n- Residual: `hydrate-manifest`/`atlas-db-read`/`raw-atlas-shard-transport` unit failures are pre-existing on base `origin/main` (stale manifest pointer / data artifacts), unrelated to this change.\n\nCommits carry the `X-Agent: deepseek/6713-c12-nav` trailer; no merge performed; #6713 and #4387 left open.",
+          "time": {
+            "start": 1786655136193,
+            "end": 1786655139441
+          },
+          "id": "prt_ffcf1d9c1001S3G1TbUFPt9mJ3",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1cda2001dEyZ68vwRqsj2Z"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "5672614fb40102f477607cf998c8eef5cafb615c",
+          "type": "step-finish",
+          "tokens": {
+            "total": 344926,
+            "input": 371,
+            "output": 491,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 344064
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffcf1e7930019BAbPQ4Xx95AsO",
+          "sessionID": "ses_00337134bffe59iNpqaacMr5WP",
+          "messageID": "msg_ffcf1cda2001dEyZ68vwRqsj2Z"
         }
       ]
     }
