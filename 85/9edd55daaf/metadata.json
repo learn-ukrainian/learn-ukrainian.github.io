@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "859edd55daaf",
+  "strategy": "manual-commit",
+  "branch": "cursor/6753-gemini-37-default",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/epic-orchestrator-roster.md",
+    "docs/runbooks/fleet-comms-open-gaps.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/85/9edd55daaf/0/metadata.json",
+      "transcript": "/85/9edd55daaf/0/full.jsonl",
+      "compact_transcript": "/85/9edd55daaf/0/transcript.jsonl",
+      "content_hash": "/85/9edd55daaf/0/content_hash.txt",
+      "prompt": "/85/9edd55daaf/0/prompt.txt"
+    }
+  ]
+}
