@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json",
+  "title": "Phase 3 Pravopys evaluation context receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "text_free",
+    "provider_calls",
+    "started_at",
+    "completed_at",
+    "bindings",
+    "row_count",
+    "family_counts",
+    "lanes",
+    "context_accounting",
+    "mapping_accounting",
+    "context",
+    "labels_present",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_pravopys_evaluation_context_receipt_v1"},
+    "implementation_version": {"const": "phase3_pravopys_evaluation_context_v1"},
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_sha256",
+        "receipt_schema_sha256",
+        "source_units_jsonl_sha256",
+        "partition_manifest_sha256",
+        "evaluation_context_manifest_jsonl_sha256",
+        "evaluation_context_manifest_receipt_body_sha256",
+        "evaluation_context_manifest_receipt_file_sha256",
+        "pravopys_2019_pdf_sha256",
+        "pravopys_2026_pdf_sha256",
+        "custody_tarball_sha256"
+      ],
+      "properties": {
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "source_units_jsonl_sha256": {"const": "e9d89b8fae5193a29a8c3dd055f464fc1290c18f507b669f3efb0720644f6d8c"},
+        "partition_manifest_sha256": {"const": "3797e005d7c461f192dacb06e23a9028121bd73cb240f2c2851953a83955aa7d"},
+        "evaluation_context_manifest_jsonl_sha256": {
+          "const": "62e9dd450f18257ad841e0b3141bd267353a30e8d7cffe1d1bc874671ac9b8e6"
+        },
+        "evaluation_context_manifest_receipt_body_sha256": {
+          "const": "f01d8efd0a1279d7cf4b742ad6909de4a7d2a3866195b7f7e1b56d8e1e2598d1"
+        },
+        "evaluation_context_manifest_receipt_file_sha256": {
+          "const": "292a42ee85a3413859d2eb6063484ff55756ad026fbcd6fab8d83bde4d9345fb"
+        },
+        "pravopys_2019_pdf_sha256": {"const": "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"},
+        "pravopys_2026_pdf_sha256": {"const": "e593956bfba6737d991a76fa86970db9c10a5cd7fd8895bae67f2b9a950c3a92"},
+        "custody_tarball_sha256": {"const": "364055091f44e1c7ff4df71da81d7a43460100fd8a25cd06e7c820e1b114bc08"}
+      }
+    },
+    "row_count": {"const": 413},
+    "family_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pravopys_2019_complete", "pravopys_2026_complete"],
+      "properties": {
+        "pravopys_2019_complete": {"const": 178},
+        "pravopys_2026_complete": {"const": 235}
+      }
+    },
+    "lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phenomenon_strata"],
+      "properties": {
+        "phenomenon_strata": {"const": 413}
+      }
+    },
+    "context_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pravopys_parent_rule_context", "pravopys_typed_exclusion"],
+      "properties": {
+        "pravopys_parent_rule_context": {"const": 413},
+        "pravopys_typed_exclusion": {"const": 0}
+      }
+    },
+    "mapping_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["self_parent_rule", "child_parent_rule"],
+      "properties": {
+        "self_parent_rule": {"const": 59},
+        "child_parent_rule": {"const": 354}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["private_jsonl_sha256", "private_jsonl_bytes", "private_jsonl_rows"],
+      "properties": {
+        "private_jsonl_sha256": {"$ref": "#/$defs/sha256"},
+        "private_jsonl_bytes": {"type": "integer", "minimum": 1},
+        "private_jsonl_rows": {"const": 413}
+      }
+    },
+    "labels_present": {"const": false},
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pravopys_evaluation_context_ready",
+        "semantic_labels_present",
+        "source_authoring_blocked",
+        "complete_evaluation_package_ready",
+        "phase3_complete",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "pravopys_evaluation_context_ready": {"const": true},
+        "semantic_labels_present": {"const": false},
+        "source_authoring_blocked": {"const": true},
+        "complete_evaluation_package_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
