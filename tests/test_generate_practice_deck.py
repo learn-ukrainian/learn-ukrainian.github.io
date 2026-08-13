@@ -31,6 +31,7 @@ from scripts.audit.generate_practice_deck import (
     _select_practice_lexemes,
     _stress_position,
     _vesum_aspect_by_lemma,
+    admit_thin_mode_pair_leg_surfaces,
     apply_size_budgets,
     build_practice_shards,
     compact_cloze_emit_fields,
@@ -2093,6 +2094,119 @@ def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
     )
 
     assert shards == {}
+
+
+def test_admit_thin_mode_pair_leg_surfaces_stamps_practice_only() -> None:
+    entries = [
+        {
+            "url_slug": "день",
+            "lemma": "день",
+            "gloss": "day",
+            "primary_source": "source_inventory_grow",
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        {
+            "url_slug": "ніч",
+            "lemma": "ніч",
+            "gloss": "night",
+            "primary_source": "source_inventory_grow",
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        {
+            "url_slug": "інший",
+            "lemma": "інший",
+            "gloss": "other",
+            "primary_source": "source_inventory_grow",
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        {
+            "url_slug": "курс",
+            "lemma": "курс",
+            "gloss": "course",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a1"}],
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        {
+            "url_slug": "якір",
+            "lemma": "якір",
+            "gloss": "anchor",
+            "primary_source": "source_inventory_grow",
+        },
+    ]
+    admitted = admit_thin_mode_pair_leg_surfaces(entries, {"день", "ніч", "якір"})
+    by_slug = {entry["url_slug"]: entry for entry in admitted}
+    assert by_slug["день"]["surface_admission"]["practice"] is True
+    assert by_slug["ніч"]["surface_admission"]["practice"] is True
+    assert "surface_admission" not in by_slug["інший"]
+    assert "surface_admission" not in by_slug["курс"]
+    assert by_slug["якір"]["surface_admission"]["practice"] is True
+    assert by_slug["якір"]["cefr"] == "B1"
+    assert by_slug["якір"]["thin_mode_pair_leg_cefr_fallback"] is True
+
+
+def test_source_inventory_antonym_legs_emit_via_curated_pair_admission() -> None:
+    """Curated antonym YAML is practice admission for source-inventory legs."""
+    entries = [
+        {
+            "lemma": "день",
+            "url_slug": "день",
+            "gloss": "day",
+            "pos": "noun",
+            "primary_source": "source_inventory_grow",
+        },
+        {
+            "lemma": "ніч",
+            "url_slug": "ніч",
+            "gloss": "night",
+            "pos": "noun",
+            "primary_source": "source_inventory_grow",
+        },
+    ]
+    pair = {
+        "slugA": "день",
+        "slugB": "ніч",
+        "distinction_gloss_uk": "День протилежний ночі.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {
+                "sentence_with_slot": "Настав ___.",
+                "answer_form": "день",
+                "confusable_form": "ніч",
+                "origin": "t",
+            },
+            {
+                "sentence_with_slot": "Прийшла ___.",
+                "answer_form": "ніч",
+                "confusable_form": "день",
+                "origin": "t2",
+            },
+        ],
+    }
+    # Without curated pairs, browse-only source-inventory rows stay out.
+    empty = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier({}),
+        [],
+        BuildConfig(target=10),
+        antonym_pairs=[],
+    )
+    assert empty == {}
+
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier({}),
+        [],
+        BuildConfig(target=10),
+        antonym_pairs=[pair],
+    )
+    # Unanchored curated legs fall back to B1 (same as emit-time CEFR fallback).
+    b1_items = shards.get("B1", {}).get("antonym", {}).get("antonym", [])
+    assert len(b1_items) >= 1
+    for item in b1_items:
+        assert validate_antonym_item(item) == []
 
 
 def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
