@@ -33,18 +33,25 @@ from scripts.projects.open_model_data import phase3_saint_sophia_db_reconciliati
 from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ua_context
 from scripts.projects.open_model_data import phase3_university_content_audit_freeze as university
 from scripts.projects.open_model_data import phase3_v2_compatibility as compatibility
+from scripts.projects.open_model_data import phase3_vspu_post_ingest_audit as vspu_audit
+from scripts.projects.open_model_data import university_source_policy
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 SCRIPT_PATH = Path(__file__).resolve()
-SCHEMA_PATH = DATA / "contracts/phase3_v3_prefreeze_readiness_v1.schema.json"
+SCHEMA_PATH = DATA / "contracts/phase3_v3_prefreeze_readiness_v2.schema.json"
 V2_COMPATIBILITY_MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"
 V2_EVALUATION_CONTRACT_PATH = DATA / "evidence/correction_protection_evaluation_contract_v1.json"
 V2_FUNCTIONAL_ROLE_CONTRACT_PATH = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 NEAR_DUPLICATE_POLICY_PATH = DATA / "evidence/correction_protection_near_duplicate_policy_v1.json"
 UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
+VSPU_ADDITIVE_POLICY_PATH = DATA / "admission/phase3_vspu_additive_university_source_policy_v3.json"
 V2_PROMPT_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V3_PROMPT_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+SAINT_SOPHIA_RECONCILIATION_FILE_SHA256 = "3e5188580413261e67a3b94e884113dd932b7054bebeccd4fe9a21b8012e4997"
+SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256 = "50f35150acb9e4840e3474e1c6a889bd357eeeb246cb3498a46c7cbc00fec0d4"
+SAINT_SOPHIA_PRE_DATABASE_SHA256 = "de9a46838be3a4a6a2eb979ebdaf64b4d3d9984134b0074281d01b9cfd384876"
+SAINT_SOPHIA_POST_DATABASE_SHA256 = "9fc3bd9e8b5692b5a4f4f0974268ba8031e2ba46099670b1461130be39d61a29"
 PRIVATE_FILE_MODE = 0o600
 
 
@@ -193,6 +200,49 @@ def _validate_saint_sophia_reconciliation_receipt(
     return receipt, sha256_file(path)
 
 
+def _validate_vspu_post_ingest_audit(path: Path, *, current_database_sha256: str) -> tuple[dict[str, Any], str, str]:
+    value = _read_json(path, "VSPU post-ingest audit receipt")
+    try:
+        receipt = vspu_audit.validate_receipt(value)
+    except vspu_audit.VspuPostIngestAuditError as exc:
+        raise PrefreezeReadinessError(str(exc)) from exc
+    database = receipt["database"]
+    require(
+        database["post_sha256"] == current_database_sha256,
+        "VSPU post-database hash does not equal current sources database",
+    )
+    require(database["pre_sha256"] != database["post_sha256"], "VSPU database chain did not advance")
+    require(database["target_rows"] == 158, "VSPU row denominator drift")
+    require(database["target_fts_rows"] == 158, "VSPU FTS denominator drift")
+    require(database["target_section_rows"] == 158, "VSPU section denominator drift")
+    require(database["target_linked_rows"] == 158, "VSPU linkage denominator drift")
+    require(
+        receipt["phase_boundaries"]["source_universe_frozen"] is False,
+        "VSPU audit overclaims source-universe freeze",
+    )
+    require(receipt["phase_boundaries"]["source_coverage_ready"] is False, "VSPU audit overclaims coverage")
+    require(receipt["phase_boundaries"]["phase3_complete"] is False, "VSPU audit overclaims Phase 3")
+    require(receipt["phase_boundaries"]["phase4_blocked"] is True, "VSPU audit opens Phase 4")
+    try:
+        policy, policy_sha256 = university_source_policy.load_policy(VSPU_ADDITIVE_POLICY_PATH)
+    except university_source_policy.UniversitySourcePolicyError as exc:
+        raise PrefreezeReadinessError(str(exc)) from exc
+    require(
+        policy_sha256 == vspu_audit.cutover.EXPECTED_ADDITIVE_POLICY_SHA256,
+        "VSPU additive policy byte drift",
+    )
+    require(policy["source_count"] == 1 and len(policy["sources"]) == 1, "VSPU additive policy denominator drift")
+    source = policy["sources"][0]
+    authority = receipt["authority"]
+    require(source["source_file"] == authority["source_id"], "VSPU policy/audit source identity drift")
+    require(source["content_disposition"] == authority["content_disposition"], "VSPU disposition drift")
+    require(source["allowed_lanes"] == authority["allowed_lanes"], "VSPU allowed-lane drift")
+    require(authority["normative_rule_authority"] is False, "VSPU gained normative rule authority")
+    require(authority["semantic_gold"] is False, "VSPU gained semantic-gold authority")
+    require(authority["public_redistribution_authorized"] is False, "VSPU gained redistribution authority")
+    return receipt, sha256_file(path), policy_sha256
+
+
 def _validate_university_freeze() -> tuple[dict[str, Any], str]:
     value = _read_json(UNIVERSITY_FREEZE_PATH, "university content-audit freeze")
     try:
@@ -234,6 +284,7 @@ def build_readiness(
     ua_gec_context_receipt_path: Path,
     historical_full_receipt_path: Path,
     saint_sophia_reconciliation_receipt_path: Path | None = None,
+    vspu_post_ingest_audit_path: Path | None = None,
 ) -> dict[str, Any]:
     """Build and validate the deterministic, explicitly incomplete receipt."""
     _validate_reboot_prompt(Path(phase3_reboot_prompt_path))
@@ -250,26 +301,40 @@ def build_readiness(
     require(compatibility_result["source_authoring_blocked"] is True, "v2 compatibility opens source authoring")
     require(compatibility_result["phase4_blocked"] is True, "v2 compatibility opens Phase 4")
 
-    ua_receipt, ua_receipt_file_sha256 = _validate_ua_context_receipt(
-        Path(ua_gec_context_receipt_path), sources_database_sha256
-    )
     university_freeze, university_file_sha256 = _validate_university_freeze()
     historical_receipt, historical_receipt_file_sha256 = _validate_historical_receipt(
         Path(historical_full_receipt_path), historical_gate_file_sha256
     )
+    vspu_receipt: dict[str, Any] | None = None
+    vspu_receipt_file_sha256: str | None = None
+    vspu_policy_sha256: str | None = None
+    pre_vspu_database_sha256 = sources_database_sha256
+    if vspu_post_ingest_audit_path is not None:
+        require(
+            saint_sophia_reconciliation_receipt_path is not None,
+            "VSPU successor evidence requires the Saint Sophia predecessor receipt",
+        )
+        vspu_receipt, vspu_receipt_file_sha256, vspu_policy_sha256 = _validate_vspu_post_ingest_audit(
+            Path(vspu_post_ingest_audit_path),
+            current_database_sha256=sources_database_sha256,
+        )
+        pre_vspu_database_sha256 = vspu_receipt["database"]["pre_sha256"]
     sophia_receipt: dict[str, Any] | None = None
     sophia_receipt_file_sha256: str | None = None
     if saint_sophia_reconciliation_receipt_path is not None:
         sophia_receipt, sophia_receipt_file_sha256 = _validate_saint_sophia_reconciliation_receipt(
             Path(saint_sophia_reconciliation_receipt_path),
             university_database_sha256=university_freeze["database"]["sha256"],
-            current_database_sha256=sources_database_sha256,
+            current_database_sha256=pre_vspu_database_sha256,
         )
     else:
         require(
-            university_freeze["database"]["sha256"] == sources_database_sha256,
-            "university freeze and sources database hash disagree",
+            university_freeze["database"]["sha256"] == pre_vspu_database_sha256,
+            "university freeze and next database-chain state disagree",
         )
+    ua_receipt, ua_receipt_file_sha256 = _validate_ua_context_receipt(
+        Path(ua_gec_context_receipt_path), pre_vspu_database_sha256
+    )
     battery, canary_verification = _validate_canary(Path(ua_gec_root))
     historical_evidence_spine = historical_evidence.load_spine()
 
@@ -282,7 +347,7 @@ def build_readiness(
     require(6_462 + 2_930 == 9_392 and 906 + 8_486 == 9_392, "Cycle 002 diagnostic accounting drift")
 
     body: dict[str, Any] = {
-        "schema_version": "phase3_v3_prefreeze_readiness_v1",
+        "schema_version": "phase3_v3_prefreeze_readiness_v2",
         "status": "PREFREEZE_BLOCKED_PENDING_COMPLETE_EVALUATION_PACKAGE",
         "text_free": True,
         "provider_calls": False,
@@ -325,6 +390,17 @@ def build_readiness(
                 if sophia_receipt is not None
                 else {}
             ),
+            **(
+                {
+                    "vspu_post_ingest_audit_file_sha256": vspu_receipt_file_sha256,
+                    "vspu_post_ingest_audit_receipt_sha256": vspu_receipt["receipt_sha256"],
+                    "vspu_post_ingest_audit_implementation_sha256": sha256_file(Path(vspu_audit.__file__).resolve()),
+                    "vspu_post_ingest_audit_schema_sha256": sha256_file(vspu_audit.SCHEMA_PATH),
+                    "vspu_additive_policy_sha256": vspu_policy_sha256,
+                }
+                if vspu_receipt is not None
+                else {}
+            ),
             "sources_database_sha256": sources_database_sha256,
             "prefreeze_implementation_sha256": sha256_file(SCRIPT_PATH),
             "prefreeze_schema_sha256": sha256_file(SCHEMA_PATH),
@@ -343,6 +419,20 @@ def build_readiness(
                 "partial_topics": university_topics["partial"],
                 "sufficient_topics": university_topics["sufficient"],
             },
+            **(
+                {
+                    "vspu_additive_university": {
+                        "policy_sources": 1,
+                        "database_sources": 1,
+                        "database_rows": vspu_receipt["database"]["target_rows"],
+                        "database_fts_rows": vspu_receipt["database"]["target_fts_rows"],
+                        "database_section_rows": vspu_receipt["database"]["target_section_rows"],
+                        "database_linked_rows": vspu_receipt["database"]["target_linked_rows"],
+                    }
+                }
+                if vspu_receipt is not None
+                else {}
+            ),
             "historical": {
                 "ud_documents": historical_denominators["ud_explicit_orv_uk"]["documents"],
                 "ud_sentences": historical_denominators["ud_explicit_orv_uk"]["sentences"],
@@ -358,6 +448,10 @@ def build_readiness(
             "historical_forms_protected": True,
             "historical_modern_correction_eligible": False,
             "conversion_started": False,
+            "vspu_contextual_source_ingested": vspu_receipt is not None,
+            "vspu_normative_rule_authority": False,
+            "vspu_semantic_gold": False,
+            "vspu_public_redistribution_authorized": False,
         },
         "cycle002": {
             "identities": 9_392,
@@ -389,6 +483,7 @@ def build_readiness(
             "historical_full_materialization_ready": True,
             "historical_evidence_gap_matrix_current": True,
             "saint_sophia_db_reconciliation_ready": sophia_receipt is not None,
+            "vspu_post_ingest_audit_ready": vspu_receipt is not None,
             "linguistic_representation_ready": True,
             "semantic_canary_ready": True,
             "functional_role_contract_ready": True,
@@ -460,6 +555,90 @@ def validate_readiness(value: Mapping[str, Any]) -> dict[str, Any]:
             readiness_value is sophia_keys.issubset(bindings),
             "Saint Sophia readiness does not equal reconciliation binding presence",
         )
+    vspu_keys = {
+        "vspu_post_ingest_audit_file_sha256",
+        "vspu_post_ingest_audit_receipt_sha256",
+        "vspu_post_ingest_audit_implementation_sha256",
+        "vspu_post_ingest_audit_schema_sha256",
+        "vspu_additive_policy_sha256",
+    }
+    require(
+        vspu_keys.issubset(bindings) or not vspu_keys.intersection(bindings),
+        "partial VSPU post-ingest binding",
+    )
+    vspu_bound = vspu_keys.issubset(bindings)
+    require(
+        receipt["readiness"]["vspu_post_ingest_audit_ready"] is vspu_bound,
+        "VSPU readiness does not equal post-ingest binding presence",
+    )
+    require(
+        receipt["additive_sources"]["vspu_contextual_source_ingested"] is vspu_bound,
+        "VSPU ingest state does not equal post-ingest binding presence",
+    )
+    vspu_denominator = receipt["denominators"].get("vspu_additive_university")
+    require((vspu_denominator is not None) is vspu_bound, "VSPU denominator does not equal binding presence")
+    if vspu_bound:
+        require(sophia_keys.issubset(bindings), "VSPU successor chain lacks Saint Sophia reconciliation binding")
+        require(
+            bindings["sources_database_sha256"] == _validate_sources_database(vspu_audit.cutover.DEFAULT_LIVE_DB),
+            "live VSPU successor database binding drift",
+        )
+        current_university, current_university_file_sha256 = _validate_university_freeze()
+        require(
+            bindings["university_content_audit_freeze_file_sha256"] == current_university_file_sha256,
+            "university freeze file binding drift",
+        )
+        require(
+            bindings["university_content_audit_freeze_receipt_sha256"] == current_university["receipt_sha256"],
+            "university freeze receipt binding drift",
+        )
+        require(
+            current_university["database"]["sha256"] == SAINT_SOPHIA_PRE_DATABASE_SHA256,
+            "university freeze does not equal Saint Sophia predecessor",
+        )
+        expected_sophia_bindings = {
+            "saint_sophia_reconciliation_receipt_file_sha256": SAINT_SOPHIA_RECONCILIATION_FILE_SHA256,
+            "saint_sophia_reconciliation_receipt_sha256": SAINT_SOPHIA_RECONCILIATION_RECEIPT_SHA256,
+            "saint_sophia_reconciliation_implementation_sha256": sha256_file(
+                Path(sophia_reconciliation.__file__).resolve()
+            ),
+            "saint_sophia_reconciliation_schema_sha256": sha256_file(sophia_reconciliation.SCHEMA_PATH),
+        }
+        for key, expected in expected_sophia_bindings.items():
+            require(bindings[key] == expected, f"{key} drift")
+        current_vspu, current_file_sha256, current_policy_sha256 = _validate_vspu_post_ingest_audit(
+            vspu_audit.DEFAULT_RECEIPT_PATH,
+            current_database_sha256=bindings["sources_database_sha256"],
+        )
+        require(
+            current_vspu["database"]["pre_sha256"] == SAINT_SOPHIA_POST_DATABASE_SHA256,
+            "VSPU predecessor does not equal Saint Sophia successor",
+        )
+        expected_vspu_bindings = {
+            "vspu_post_ingest_audit_file_sha256": current_file_sha256,
+            "vspu_post_ingest_audit_receipt_sha256": current_vspu["receipt_sha256"],
+            "vspu_post_ingest_audit_implementation_sha256": sha256_file(Path(vspu_audit.__file__).resolve()),
+            "vspu_post_ingest_audit_schema_sha256": sha256_file(vspu_audit.SCHEMA_PATH),
+            "vspu_additive_policy_sha256": current_policy_sha256,
+        }
+        for key, expected in expected_vspu_bindings.items():
+            require(bindings[key] == expected, f"{key} drift")
+        require(
+            current_vspu["database"]["post_sha256"] == bindings["sources_database_sha256"],
+            "VSPU successor/database binding drift",
+        )
+        require(
+            vspu_denominator
+            == {
+                "policy_sources": 1,
+                "database_sources": 1,
+                "database_rows": current_vspu["database"]["target_rows"],
+                "database_fts_rows": current_vspu["database"]["target_fts_rows"],
+                "database_section_rows": current_vspu["database"]["target_section_rows"],
+                "database_linked_rows": current_vspu["database"]["target_linked_rows"],
+            },
+            "VSPU additive denominator drift",
+        )
     return receipt
 
 
@@ -485,6 +664,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--ua-gec-context-receipt", type=Path, required=True)
     parser.add_argument("--historical-full-receipt", type=Path, required=True)
     parser.add_argument("--saint-sophia-reconciliation-receipt", type=Path)
+    parser.add_argument("--vspu-post-ingest-audit", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args(argv)
 
@@ -499,6 +679,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             ua_gec_context_receipt_path=args.ua_gec_context_receipt,
             historical_full_receipt_path=args.historical_full_receipt,
             saint_sophia_reconciliation_receipt_path=args.saint_sophia_reconciliation_receipt,
+            vspu_post_ingest_audit_path=args.vspu_post_ingest_audit,
         )
         _atomic_write(args.output, canonical_bytes(receipt))
         print(canonical_json({"ok": True, "output": str(args.output), "receipt_sha256": receipt["receipt_sha256"]}))
