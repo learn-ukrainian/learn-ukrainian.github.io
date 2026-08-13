@@ -24,6 +24,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.path_safety import assert_delete_target
+
 # 2h normal; 30m under disk pressure.
 DEFAULT_MIN_AGE_S = 2 * 60 * 60
 DEFAULT_PRESSURE_MIN_AGE_S = 30 * 60
@@ -193,11 +195,16 @@ def discover_candidates(
     return found
 
 
-def _remove_path(path: Path) -> None:
-    if path.is_symlink() or path.is_file():
-        path.unlink(missing_ok=True)
+def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path, ...]) -> None:
+    target = assert_delete_target(
+        path,
+        repo_root=repo_root,
+        approved_temp_roots=approved_temp_roots,
+    )
+    if target.is_symlink() or target.is_file():
+        target.unlink(missing_ok=True)
         return
-    shutil.rmtree(path, ignore_errors=True)
+    shutil.rmtree(target, ignore_errors=True)
 
 
 def sweep_tmp_leaks(
@@ -208,6 +215,7 @@ def sweep_tmp_leaks(
     min_age_s: float = DEFAULT_MIN_AGE_S,
     pressure_min_age_s: float = DEFAULT_PRESSURE_MIN_AGE_S,
     min_free_gb: float = DEFAULT_MIN_FREE_GB,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Discover and optionally delete age-gated LU temp leaks.
 
@@ -215,6 +223,8 @@ def sweep_tmp_leaks(
     """
     current = time.time() if now is None else now
     roots = list(tmp_roots) if tmp_roots is not None else default_tmp_roots()
+    resolved_repo = (repo_root or Path(__file__).resolve().parents[2]).resolve()
+    approved_roots = tuple(roots)
     free_gb: float | None = None
     for root in roots:
         free_gb = free_space_gb(root)
@@ -258,7 +268,11 @@ def sweep_tmp_leaks(
             continue
         try:
             size = candidate.size_bytes or _entry_size_bytes(candidate.path)
-            _remove_path(candidate.path)
+            _remove_path(
+                candidate.path,
+                repo_root=resolved_repo,
+                approved_temp_roots=approved_roots,
+            )
             # Confirm gone; if still present count as error.
             if candidate.path.exists():
                 result["errors"] += 1
@@ -275,6 +289,11 @@ def sweep_tmp_leaks(
                     "age_s": int(candidate.age_s),
                     "action": "reaped",
                 }
+            )
+        except ValueError:
+            result["errors"] += 1
+            result["skipped"].append(
+                {"path": str(candidate.path), "reason": "delete_guard_refused"}
             )
         except OSError:
             result["errors"] += 1

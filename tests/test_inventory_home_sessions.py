@@ -159,6 +159,7 @@ def test_apply_delete_removes_only_stale_allowlisted_session_file(
         archive_root=tmp_path / "archive",
         action="delete",
         retention_days=14,
+        repo_root=tmp_path / "repo",
     )
 
     assert results == [{"path": str(old), "action": "deleted"}]
@@ -166,6 +167,39 @@ def test_apply_delete_removes_only_stale_allowlisted_session_file(
     assert config.exists()
     assert recent.exists()
     assert not (tmp_path / "archive").exists()
+
+
+def test_apply_delete_skips_when_delete_guard_refuses(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """assert_delete_target refusal must leave the session file untouched."""
+    old = _old_file(tmp_path / ".codex" / "sessions" / "old.jsonl")
+    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
+    monkeypatch.setenv(inventory.APPLY_ENV, "1")
+
+    def _refuse(*_args, **_kwargs):
+        raise ValueError("outside approved deletion roots")
+
+    monkeypatch.setattr(inventory, "assert_delete_target", _refuse)
+
+    results = inventory.apply_retention(
+        candidates=candidates,
+        home=tmp_path,
+        archive_root=tmp_path / "archive",
+        action="delete",
+        retention_days=14,
+        repo_root=tmp_path / "repo",
+    )
+
+    assert results == [
+        {
+            "path": str(old),
+            "action": "skipped",
+            "reason": "delete guard refused: outside approved deletion roots",
+        }
+    ]
+    assert old.exists()
 
 
 def test_main_apply_refused_without_environment_gate(

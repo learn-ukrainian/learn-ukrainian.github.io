@@ -19,6 +19,16 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
 
+# Dual-flavor import: pytest / package loads use ``scripts.*``; direct file
+# invocation of this CLI has only ``scripts/hygiene/`` on ``sys.path[0]``.
+try:
+    from scripts.path_safety import assert_delete_target
+except ImportError:  # pragma: no cover - direct ``scripts/hygiene/*.py`` invocation
+    _SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+    if str(_SCRIPTS_DIR) not in sys.path:
+        sys.path.insert(0, str(_SCRIPTS_DIR))
+    from path_safety import assert_delete_target  # type: ignore[no-redef]
+
 DEFAULT_RETENTION_DAYS = 14.0
 DEFAULT_ARCHIVE_ROOT = (
     Path.home()
@@ -28,6 +38,7 @@ DEFAULT_ARCHIVE_ROOT = (
     / "home-session-archives"
 )
 APPLY_ENV = "LU_HOME_SESSION_APPLY"
+_DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @dataclass(frozen=True)
@@ -201,11 +212,13 @@ def apply_retention(
     archive_root: Path,
     action: Literal["archive", "delete"],
     retention_days: float,
+    repo_root: Path | None = None,
 ) -> list[dict[str, object]]:
     """Archive or delete freshly revalidated allowlisted session files."""
     if os.environ.get(APPLY_ENV) != "1":
         raise PermissionError(f"--apply requires {APPLY_ENV}=1")
 
+    resolved_repo = (repo_root or _DEFAULT_REPO_ROOT).resolve()
     store_by_provider = {store.provider: store for store in SESSION_STORES}
     results: list[dict[str, object]] = []
     for candidate in candidates:
@@ -235,8 +248,25 @@ def apply_retention(
                 {"path": candidate.path, "action": "skipped", "reason": "file is no longer stale"}
             )
             continue
+        try:
+            # Session trees live under $HOME, not ``.worktrees/`` — approve only
+            # the already-validated session subdirectory, never the home root.
+            target = assert_delete_target(
+                path,
+                repo_root=resolved_repo,
+                approved_temp_roots=(allowed_root,),
+            )
+        except ValueError as exc:
+            results.append(
+                {
+                    "path": candidate.path,
+                    "action": "skipped",
+                    "reason": f"delete guard refused: {exc}",
+                }
+            )
+            continue
         if action == "delete":
-            path.unlink()
+            target.unlink()
             results.append({"path": candidate.path, "action": "deleted"})
             continue
 
@@ -247,7 +277,7 @@ def apply_retention(
                 {"path": candidate.path, "action": "skipped", "reason": "archive destination exists"}
             )
             continue
-        shutil.move(str(path), str(destination))
+        shutil.move(str(target), str(destination))
         results.append({"path": candidate.path, "action": "archived", "archive_path": str(destination)})
     return results
 

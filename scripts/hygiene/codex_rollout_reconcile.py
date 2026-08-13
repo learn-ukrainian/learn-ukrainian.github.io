@@ -23,7 +23,16 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+try:
+    from scripts.path_safety import assert_delete_target
+except ImportError:  # pragma: no cover - direct file invocation
+    _SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+    if str(_SCRIPTS_DIR) not in sys.path:
+        sys.path.insert(0, str(_SCRIPTS_DIR))
+    from path_safety import assert_delete_target  # type: ignore[no-redef]
+
 SCHEMA = "codex.rollout-reconcile.v1"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 STATE_PATTERN = re.compile(r"state_[A-Za-z0-9][A-Za-z0-9._-]*\.sqlite\Z")
 ROLLOUT_PATTERN = re.compile(r"rollout-[^/]+\.jsonl\Z")
 REQUIRED_COLUMNS = frozenset({"id", "rollout_path", "created_at", "updated_at", "archived"})
@@ -348,7 +357,15 @@ def _create_backup(database: Path, backup_dir: Path) -> Path:
                 raise ReconcileError(f"backup integrity check failed: {integrity}")
         os.chmod(path, 0o600)
     except Exception:
-        path.unlink(missing_ok=True)
+        try:
+            guarded = assert_delete_target(
+                path,
+                repo_root=_REPO_ROOT,
+                approved_temp_roots=(backup_dir,),
+            )
+            guarded.unlink(missing_ok=True)
+        except ValueError:
+            pass
         raise
     return path
 
