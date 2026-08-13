@@ -50,6 +50,7 @@ from scripts.orchestration.reap_worktrees import (
     reap_worktrees,
     resolve_repo_root,
 )
+from scripts.path_safety import assert_delete_target
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -284,8 +285,15 @@ def record_gate5_observation(
             os.replace(tmp_path, log_path)
         finally:
             if tmp_path.exists():
-                with contextlib.suppress(OSError):
-                    tmp_path.unlink()
+                with contextlib.suppress(OSError, ValueError):
+                    # Observation log lives under batch_state/fleet-comms/, not
+                    # batch_state/tmp/ — approve only the log's parent directory.
+                    guarded = assert_delete_target(
+                        tmp_path,
+                        repo_root=REPO_ROOT,
+                        approved_temp_roots=(log_path.parent,),
+                    )
+                    guarded.unlink()
         try:
             import fcntl
 
