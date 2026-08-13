@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "023ec6b8e238",
+  "strategy": "manual-commit",
+  "branch": "cursor/6707-entire-mkdir-flake",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_entire_context_recall.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/02/3ec6b8e238/0/metadata.json",
+      "transcript": "/02/3ec6b8e238/0/full.jsonl",
+      "compact_transcript": "/02/3ec6b8e238/0/transcript.jsonl",
+      "content_hash": "/02/3ec6b8e238/0/content_hash.txt",
+      "prompt": "/02/3ec6b8e238/0/prompt.txt"
+    }
+  ]
+}

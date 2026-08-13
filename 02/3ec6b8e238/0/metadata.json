@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "023ec6b8e238",
+  "session_id": "fleet-fa161ccf54034edfb028417cf7c71311",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T14:14:24.62417Z",
+  "branch": "cursor/6707-entire-mkdir-flake",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_entire_context_recall.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "7ca8ad65ce2f",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T14:14:24.614602Z",
+    "agent_lines": 41,
+    "agent_removed": 12,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 41,
+    "total_lines_changed": 53,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
