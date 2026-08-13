@@ -4905,3 +4905,26 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     # primary checkout dynamically rather than embed an operator's absolute path.
     src = Path(enrich_manifest_module.__file__).read_text(encoding="utf-8")
     assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
+
+
+def test_morphology_filters_russian_infinitive_tsya_form() -> None:
+    """Fix #6735: Atlas entry подаватися must not list Russian infinitive подаваться as a short form.
+
+    Ukrainian short infinitive is подаватись (one с).
+    VESUM-verifies that подаватись has tag verb:rev:imperf:inf and подаваться has
+    tag verb:rev:imperf:inf:short, and that _morphology excludes the Russian -ться form
+    from marked_forms while preserving the Ukrainian short infinitive in the paradigm.
+    """
+    morphology = _morphology("подаватися")
+    assert morphology is not None
+
+    # Paradigm infinitive must include Ukrainian full (подаватися) and short (подаватись) forms
+    paradigm = morphology.get("paradigm", {})
+    assert paradigm.get("kind") == "verb"
+    assert paradigm.get("infinitive") == "подаватися / подаватись"
+
+    # Marked forms must not list Russian подаваться as a short form
+    marked_forms = morphology.get("marked_forms", [])
+    marked_form_words = {row["form"] for row in marked_forms}
+    assert "подаваться" not in marked_form_words
+

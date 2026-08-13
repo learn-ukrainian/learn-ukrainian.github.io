@@ -3186,6 +3186,9 @@ def _morphology(
         if not form:
             continue
         raw_tag = row.get("tags") or ""
+        tag_tokens = set(raw_tag.split(":"))
+        if "inf" in tag_tokens and form.endswith("ться"):
+            continue
         label = _decode_tag(raw_tag)
         markers = _style_markers_in_tag(raw_tag)
         if markers:
