@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/practice-heritage-finalize
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: finalize AGY heritage densify (quota-killed, uncommitted)
+
+**Cursor Ultra.** AGY left **90 → 260** pairs in
+`.worktrees/dispatch/agy/practice-heritage-densify` (dirty yaml only). No commit, no PR. Worker dead (quota).
+
+## CAPACITY_CARD
+pick=cursor Ultra · do **not** invent new calques · only ship what AGY already wrote
+
+## Work
+1. New worktree from origin/main. Copy these **already-written** files from the dead AGY tree (do not invent pairs):
+   - `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/practice-heritage-densify/data/lexicon/heritage_pairs.yaml`
+   - `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/practice-heritage-densify/data/lexicon/heritage_pairs.wave1-calque.yaml`
+   AGY measured 90→260 pairs. Validate, then ship.
+2. Validate `heritage_pairs.yaml` against factory schema. Drop any pair that fails existing validators (name them).
+3. Regen heritage practice shards + publish if that is the live path.
+4. pytest heritage/generate_practice_deck tests; ruff.
+5. Commit + PR #4387 #4700. **No auto-merge.**
+6. Quote pair count 90→N and `coverage_report` heritage unique before/after.
+
+Do not edit synonym/antonym emit (other Cursor). Do not invent pairs.
+
+X-Agent: `cursor/practice-heritage-finalize`

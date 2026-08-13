@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a44d62c39f5e",
+  "strategy": "manual-commit",
+  "branch": "cursor/practice-heritage-finalize",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/heritage_pairs.wave1-calque.yaml",
+    "data/lexicon/heritage_pairs.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a4/4d62c39f5e/0/metadata.json",
+      "transcript": "/a4/4d62c39f5e/0/full.jsonl",
+      "compact_transcript": "/a4/4d62c39f5e/0/transcript.jsonl",
+      "content_hash": "/a4/4d62c39f5e/0/content_hash.txt",
+      "prompt": "/a4/4d62c39f5e/0/prompt.txt"
+    }
+  ]
+}
