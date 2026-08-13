@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d9cf6e43a024",
+  "strategy": "manual-commit",
+  "branch": "glm/kimi-acp-256k",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/runner.py",
+    "scripts/config/model_catalog.yaml",
+    "scripts/review/model_catalog.py",
+    "tests/test_agent_runtime_acp_transport_cutover.py",
+    "tests/test_model_catalog.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d9/cf6e43a024/0/metadata.json",
+      "transcript": "/d9/cf6e43a024/0/full.jsonl",
+      "compact_transcript": "/d9/cf6e43a024/0/transcript.jsonl",
+      "content_hash": "/d9/cf6e43a024/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 103246,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3325568,
+    "output_tokens": 6099,
+    "api_call_count": 48
+  }
+}

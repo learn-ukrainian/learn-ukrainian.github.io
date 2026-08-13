@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d9cf6e43a024",
+  "session_id": "ses_006472573ffetb0sCQy1gmjQKe",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T06:17:26.093136Z",
+  "branch": "glm/kimi-acp-256k",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/review/model_catalog.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/config/model_catalog.yaml",
+    "tests/test_model_catalog.py",
+    "tests/test_agent_runtime_acp_transport_cutover.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "c5b47894d3fb",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 103246,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3325568,
+    "output_tokens": 6099,
+    "api_call_count": 48
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T06:17:26.060454Z",
+    "agent_lines": 42,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 42,
+    "total_lines_changed": 45,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
