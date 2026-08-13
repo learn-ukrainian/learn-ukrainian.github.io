@@ -11,6 +11,7 @@ import pytest
 
 from scripts.lexicon.sync_teacher_table_deck import (
     DECK_ID,
+    DESCRIPTION,
     SCHEMA,
     TeacherTableSyncError,
     extract_teacher_table,
@@ -118,8 +119,9 @@ def test_site_data_shrink_guard_preserves_the_previous_public_set(tmp_path: Path
     assert written == {
         "schema": SCHEMA,
         "id": DECK_ID,
-        "title": "Teacher table",
-        "titleUk": "Таблиця зі слів",
+        "title": "From the lessons",
+        "titleUk": "З уроків",
+        "description": DESCRIPTION,
         "lemma_keys": ["перше"],
     }
 

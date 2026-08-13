@@ -4477,9 +4477,9 @@ describe('LexiconPractice', () => {
     });
 
     test.each([
-      ['en', 'Teacher table', 'Таблиця зі слів'],
-      ['uk', 'Таблиця зі слів', 'Таблиця зі слів'],
-    ] as const)('selects and scopes the %s Teacher table special set', async (locale, label, ukrainianTitle) => {
+      ['en', 'From the lessons', 'З уроків'],
+      ['uk', 'З уроків', 'З уроків'],
+    ] as const)('selects and scopes the %s From the lessons special set', async (locale, label, ukrainianTitle) => {
       document.documentElement.dataset.chromeLocale = locale;
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
