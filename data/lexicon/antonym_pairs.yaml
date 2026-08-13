@@ -1158,21 +1158,6 @@ pairs:
     answer_form: соціальний
     confusable_form: асоціальний
     origin: authored-antonym-frame
-- slugA: захист
-  slugB: атака
-  distinction_gloss_uk: «захист» — протилежність за значенням до «атака».
-  citations:
-  - uk.wiktionary.org
-  curator: wiktionary-explicit-antonym
-  frames:
-  - sentence_with_slot: Слово «захист» є антонімом до слова ___ .
-    answer_form: атака
-    confusable_form: захист
-    origin: authored-antonym-frame
-  - sentence_with_slot: Слово «атака» є антонімом до слова ___ .
-    answer_form: захист
-    confusable_form: атака
-    origin: authored-antonym-frame
 - slugA: атакований
   slugB: контратакований
   distinction_gloss_uk: «Атакований» — протилежність за значенням до «контратакований».
@@ -2072,21 +2057,6 @@ pairs:
   - sentence_with_slot: Слово «молочний» є антонімом до слова ___ .
     answer_form: безлактозний
     confusable_form: молочний
-    origin: authored-antonym-frame
-- slugA: заселений
-  slugB: безлюдний
-  distinction_gloss_uk: «заселений» — протилежність за значенням до «безлюдний».
-  citations:
-  - uk.wiktionary.org
-  curator: wiktionary-explicit-antonym
-  frames:
-  - sentence_with_slot: Слово «заселений» є антонімом до слова ___ .
-    answer_form: безлюдний
-    confusable_form: заселений
-    origin: authored-antonym-frame
-  - sentence_with_slot: Слово «безлюдний» є антонімом до слова ___ .
-    answer_form: заселений
-    confusable_form: безлюдний
     origin: authored-antonym-frame
 - slugA: населений
   slugB: безлюдний
