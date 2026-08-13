@@ -4907,14 +4907,26 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
 
 
-def test_morphology_filters_russian_infinitive_tsya_form() -> None:
+def test_morphology_filters_russian_infinitive_tsya_form(monkeypatch) -> None:
     """Fix #6735: Atlas entry подаватися must not list Russian infinitive подаваться as a short form.
 
-    Ukrainian short infinitive is подаватись (one с).
-    VESUM-verifies that подаватись has tag verb:rev:imperf:inf and подаваться has
-    tag verb:rev:imperf:inf:short, and that _morphology excludes the Russian -ться form
-    from marked_forms while preserving the Ukrainian short infinitive in the paradigm.
+    Ukrainian short infinitive is подаватись (one с). Fixture mirrors VESUM tags:
+    подаватись → verb:rev:imperf:inf; подаваться → verb:rev:imperf:inf:short.
+    Monkeypatch verify_lemma like sibling _morphology tests — data/vesum.db is
+    gitignored and absent in CI.
     """
+    rows = [
+        {"word_form": "подаватися", "tags": "verb:rev:imperf:inf", "pos": "verb"},
+        {"word_form": "подаватись", "tags": "verb:rev:imperf:inf", "pos": "verb"},
+        {"word_form": "подаваться", "tags": "verb:rev:imperf:inf:short", "pos": "verb"},
+        {"word_form": "подавався", "tags": "verb:rev:imperf:past:m", "pos": "verb"},
+        {"word_form": "подавалась", "tags": "verb:rev:imperf:past:f", "pos": "verb"},
+        {"word_form": "подавалось", "tags": "verb:rev:imperf:past:n", "pos": "verb"},
+        {"word_form": "подавались", "tags": "verb:rev:imperf:past:p", "pos": "verb"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
     morphology = _morphology("подаватися")
     assert morphology is not None
 
@@ -4922,6 +4934,11 @@ def test_morphology_filters_russian_infinitive_tsya_form() -> None:
     paradigm = morphology.get("paradigm", {})
     assert paradigm.get("kind") == "verb"
     assert paradigm.get("infinitive") == "подаватися / подаватись"
+
+    modern_forms = {row["form"] for row in morphology["forms"]}
+    assert "подаватися" in modern_forms
+    assert "подаватись" in modern_forms
+    assert "подаваться" not in modern_forms
 
     # Marked forms must not list Russian подаваться as a short form
     marked_forms = morphology.get("marked_forms", [])
