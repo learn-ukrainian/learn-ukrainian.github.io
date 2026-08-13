@@ -240,8 +240,8 @@ def test_registry_lists_deepseek_with_opencode_adapter():
     """Registry dispatch default: OpenCode first-party adapter, Flash @ high.
 
     Operator 2026-08-13: dispatch routes through ``DeepSeekAdapter``
-    (opencode → deepseek-direct); the Hermes adapter below remains
-    importable for ``ask-hermes`` only.
+    (opencode → deepseek-direct); the Hermes adapter remains reachable
+    only via the ``hermes-deepseek`` seat used by ``ask-hermes``.
     """
     from agent_runtime.registry import get_agent_entry
 
@@ -251,6 +251,12 @@ def test_registry_lists_deepseek_with_opencode_adapter():
     assert entry["default_effort"] == "high"
     assert entry["adapter"].endswith(":DeepSeekAdapter")
     assert entry["resume_policy"] == "never"
+
+    hermes_entry = get_agent_entry("hermes-deepseek")
+    assert hermes_entry["cli_available"] is True
+    assert hermes_entry["default_model"] == "deepseek-v4-flash"
+    assert hermes_entry["adapter"].endswith(":HermesDeepSeekAdapter")
+    assert hermes_entry["resume_policy"] == "never"
 
 
 def test_deepseek_adapter_inband_http_error_is_not_ok():

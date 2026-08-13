@@ -176,8 +176,9 @@ AGENTS: dict[str, AgentEntry] = {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
         # dispatch default (operator 2026-08-13): Flash only, --variant high,
         # native Entire capture. Pro stays DO NOT USE; the Hermes adapter
-        # (hermes_deepseek.py) remains for ask-hermes only. First-party
-        # DeepSeek is China-hosted → CI runs are refused by the adapter.
+        # (hermes_deepseek.py) remains for ask-hermes only via the
+        # hermes-deepseek seat below. First-party DeepSeek is China-hosted →
+        # CI runs are refused by the adapter.
         "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
         "default_model": "deepseek-v4-flash",
         "default_effort": "high",
@@ -186,6 +187,23 @@ AGENTS: dict[str, AgentEntry] = {
             {
                 "code_writing",
                 "code_review",
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
+    "hermes-deepseek": {
+        # Bridge-only Hermes seat for ask-hermes. Must not be the dispatch
+        # default (that is OpenCode DeepSeekAdapter on ``deepseek`` above).
+        # Kept as its own registry key so ask-hermes never spawns opencode.
+        "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
+        "default_model": "deepseek-v4-flash",
+        "cost_tier": "low",
+        "capabilities": frozenset(
+            {
                 "content_writing",
                 "content_review",
                 "adversarial_review",

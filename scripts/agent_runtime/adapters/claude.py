@@ -338,16 +338,23 @@ class ClaudeAdapter:
         # defaults to the headless lane default (high, operator 2026-08-13).
         effective_effort = effort if effort is not None else self.default_effort
         if not review_isolation:
-            # Use the `utils.claude_version.supports_effort` helper so tests
-            # can patch the decision at a single point. Inline version
-            # comparison bypassed the helper and left CI runs (no Claude CLI
-            # installed → cli_version=None) silently dropping --effort even
-            # though the test patched supports_effort=True. Root cause of the
-            # test_claude_adapter_emits_effort_when_supported CI failure on
-            # PR #1474.
-            from utils.claude_version import supports_effort
+            # Prefer the already-probed cli_version from
+            # ``_ensure_supported_claude_cli_version`` above. Re-calling
+            # ``supports_effort`` would spawn a second ``claude --version``
+            # via subprocess.run→Popen; tests that patch runner Popen then
+            # capture the probe as argv[0] and miss the real agent command
+            # (writer-isolation CI failure after the 2026-08-13 default-effort
+            # change, which made the probe unconditional). When cli_version
+            # is unknown, fall back to the patchable supports_effort helper
+            # (root cause of test_claude_adapter_emits_effort_when_supported
+            # on PR #1474).
+            if cli_version is not None:
+                # Min supported CLI is 2.1.116; --effort landed at 2.1.98.
+                effort_supported = True
+            else:
+                from utils.claude_version import supports_effort
 
-            effort_supported = supports_effort(probe_prefix)
+                effort_supported = supports_effort(probe_prefix)
             if effort_supported:
                 cmd.extend(["--effort", effective_effort])
             else:
