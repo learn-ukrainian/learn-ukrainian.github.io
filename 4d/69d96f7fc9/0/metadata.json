@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "4d69d96f7fc9",
+  "session_id": "session_37a9d3ed-5ae2-425b-9b76-1b1189e796fd",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:03:03.737296Z",
+  "branch": "kimi/6720-21-23-practice-ux",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/components/PracticeSessionSummary.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "444cd6259532",
+  "token_usage": {
+    "input_tokens": 198023,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 14399744,
+    "output_tokens": 74422,
+    "api_call_count": 110
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:03:03.664699Z",
+    "agent_lines": 429,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 429,
+    "total_lines_changed": 438,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
