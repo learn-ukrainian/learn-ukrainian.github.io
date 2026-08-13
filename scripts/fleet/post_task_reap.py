@@ -7,6 +7,11 @@ runtime paths are reaped only when they are explicitly listed in the task state
 (``acp_runtime_paths``), the task is terminal, the path is clean, and no live
 process holds it.
 
+A terminal dispatch worktree is reaped even when its task never opened a GitHub
+PR (measure-only, timeout, cancelled, …) as long as ownership, cleanliness, and
+dead-PID guards all hold and no open PR is present.  The deletion itself always
+goes through the canonical P0 reaper boundary.
+
 Default mode is dry-run; pass --apply to delete anything.
 """
 
@@ -413,6 +418,49 @@ def _reap_main_worktree(
                 "error": None,
             }
 
+    row = _reap_via_canonical(
+        repo_root=repo_root,
+        bound_path=bound_path,
+        apply=apply,
+        include_terminal_dispatches=True,
+    )
+    if row is None:
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "canonical P0 reaper did not evaluate bound path",
+            "error": None,
+        }
+
+    # The canonical reaper only reaps a settled dispatch without a PR when its
+    # active-task API probe succeeds and the status is in its narrow terminal
+    # set (done/failed/no_deliverable).  post_task_reap has already proven the
+    # broader terminal contract itself: status is terminal, the bound tree is
+    # clean, and the recorded PID is dead.  When the canonical reaper declines
+    # solely because no GitHub PR qualifies, drive the same guarded deletion
+    # through its public success-worktree boundary, after re-proving that no
+    # open PR appeared and (on apply) that no live process holds the tree.
+    if row["action"] == "skipped" and row["reason"] == "no reap condition matched":
+        return _reap_terminal_without_pr(
+            task_id=task_id,
+            status_str=status_str,
+            bound_path=bound_path,
+            row=row,
+            repo_root=repo_root,
+            apply=apply,
+            branch=row.get("branch") or f"{expected_agent}/{task_id}",
+        )
+    return row
+
+
+def _reap_via_canonical(
+    *,
+    repo_root: Path,
+    bound_path: Path,
+    apply: bool,
+    include_terminal_dispatches: bool,
+) -> dict[str, Any] | None:
+    """Delegate to the canonical P0 reaper for one bound dispatch worktree."""
     try:
         rows = reap_worktrees.reap_worktrees(
             repo_root=repo_root,
@@ -421,6 +469,7 @@ def _reap_main_worktree(
             prune_merged_branches=True,
             target_paths=[bound_path],
             merged_pr_only=True,
+            include_terminal_dispatches=include_terminal_dispatches,
             require_activity_probe=apply,
         )
     except RuntimeError as exc:
@@ -431,12 +480,7 @@ def _reap_main_worktree(
             "error": str(exc),
         }
     if not rows:
-        return {
-            "path": str(bound_path),
-            "action": "retained",
-            "reason": "canonical P0 reaper did not evaluate bound path",
-            "error": None,
-        }
+        return None
     row = rows[0]
     return {
         "path": row.path,
@@ -445,7 +489,106 @@ def _reap_main_worktree(
         "error": row.error,
         "pr": row.pr,
         "recovery_ref": row.recovery_ref,
+        "branch": row.branch,
     }
+
+
+def _no_open_pr_for_branch(
+    *,
+    repo_root: Path,
+    branch: str | None,
+) -> tuple[bool, str | None]:
+    """Return (no_open_pr, failure) for the branch that owns the bound tree.
+
+    Reuses the canonical reaper's candidate derivation so detached and
+    dispatch-layout worktrees are checked under the same branch names that the
+    canonical path would have probed.  A probe error is fail-closed.
+    """
+    if not branch:
+        return False, "no branch identity to probe for an open PR"
+    prs, error = reap_worktrees._query_pr_states(repo_root, branch)
+    if error is not None:
+        return False, f"PR guard unavailable; {error}"
+    return all(pr.state != "OPEN" for pr in prs), None
+
+
+def _reap_terminal_without_pr(
+    *,
+    task_id: str,
+    status_str: str,
+    bound_path: Path,
+    row: dict[str, Any],
+    repo_root: Path,
+    apply: bool,
+    branch: str | None,
+) -> dict[str, Any]:
+    """Reap a clean, dead-PID, dispatch-layout worktree that never had a PR."""
+    reason = f"settled dispatch task-id={task_id} status={status_str}"
+
+    no_open_pr, guard_error = _no_open_pr_for_branch(repo_root=repo_root, branch=branch)
+    if guard_error is not None:
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": guard_error,
+            "error": None,
+        }
+    if not no_open_pr:
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "open PR present for bound worktree branch",
+            "error": None,
+        }
+
+    if apply:
+        live_cwds = reap_worktrees._live_cwd_paths(repo_root)
+        if live_cwds is None:
+            return {
+                "path": str(bound_path),
+                "action": "retained",
+                "reason": "process-CWD activity probe unavailable",
+                "error": None,
+            }
+        resolved = bound_path.resolve()
+        if any(_cwd_within(Path(cwd), resolved) for cwd in live_cwds):
+            return {
+                "path": str(bound_path),
+                "action": "retained",
+                "reason": "live process holds worktree",
+                "error": None,
+            }
+
+    try:
+        result = reap_worktrees.reap_success_worktree(
+            repo_root=repo_root,
+            worktree_path=bound_path,
+            reason=reason,
+            apply=apply,
+        )
+    except RuntimeError as exc:
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "canonical P0 reaper guard failed",
+            "error": str(exc),
+        }
+    return {
+        "path": result.path,
+        "action": result.action,
+        "reason": result.reason,
+        "error": result.error,
+        "pr": result.pr,
+        "recovery_ref": result.recovery_ref,
+    }
+
+
+def _cwd_within(cwd: Path, worktree: Path) -> bool:
+    try:
+        cwd.resolve().relative_to(worktree)
+    except ValueError:
+        return False
+    return True
 
 
 def _reap_acp_runtime_worktrees(
