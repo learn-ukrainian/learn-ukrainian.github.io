@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "222d3c5055ad",
+  "strategy": "manual-commit",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/git_hygiene_router.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/22/2d3c5055ad/0/metadata.json",
+      "transcript": "/22/2d3c5055ad/0/full.jsonl",
+      "content_hash": "/22/2d3c5055ad/0/content_hash.txt",
+      "prompt": "/22/2d3c5055ad/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 29774,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 929792,
+    "output_tokens": 5974,
+    "api_call_count": 25
+  }
+}

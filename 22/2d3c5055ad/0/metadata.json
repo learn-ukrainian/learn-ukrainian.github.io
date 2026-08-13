@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "222d3c5055ad",
+  "session_id": "session_62e1b16b-0bd6-4237-b5c2-3260af3f78b8",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T06:39:25.955369Z",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/api/git_hygiene_router.py"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "9f1d4019e2c6",
+  "token_usage": {
+    "input_tokens": 29774,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 929792,
+    "output_tokens": 5974,
+    "api_call_count": 25
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T06:39:25.911482Z",
+    "agent_lines": 17,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 17,
+    "total_lines_changed": 22,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
