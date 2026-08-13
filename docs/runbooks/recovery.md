@@ -1,9 +1,22 @@
 # Recovery after a local checkout or data loss
 
-This runbook records the 2026-07-29 recovery order. It restores a fresh
-checkout and its locally held data without overwriting an active repository,
-inventing missing data, or reactivating stale agent state. It does not install
-an APFS snapshot LaunchAgent.
+This runbook formalizes the 2026-07-29 incident recovery order
+([#6013](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6013),
+primary checkout deleted by an unknown actor). It restores a fresh checkout and
+its locally held data without overwriting an active repository, inventing
+missing data, or reactivating stale agent state. It does not install an APFS
+snapshot LaunchAgent; host-level snapshot and backup-rotation policy is an
+operator decision tracked outside this runbook.
+
+Related runbooks:
+
+- [Data backup and recovery](data-backup.md) — restic snapshots of
+  `batch_state/`, `.agent/`, `.claude/*-epic/`, and `data/`, with the restore
+  drill used when a release asset is not the right recovery source.
+- [launchd inventory](launchd-inventory.md) — the scheduled jobs to reinstall
+  and verify after a full machine-local loss.
+- [Worktree cleanup](worktree-cleanup.md) — reaper rescue refs for recovering
+  a wrongly reaped dispatch worktree.
 
 ## Safety boundary
 
@@ -97,3 +110,31 @@ git status --short --branch
 Finally run the smallest relevant test or application health check for the
 recovered component. Keep the release stage and the damaged copy until that
 check passes; only then resume writers.
+
+## 5. Restore services and scheduled jobs
+
+Reinstall the project's LaunchAgents only from the merged primary checkout on
+`main`; each plist persists absolute checkout paths, so never install from a
+dispatch worktree. The [launchd inventory](launchd-inventory.md) lists every
+job, its installer, and its log locations.
+
+```bash
+./services.sh status api
+./services.sh supervise api install
+.venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py install
+.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py install \
+  --repo-root "$PWD"
+```
+
+The backup job (`com.learn-ukrainian.backup`) is host-managed: its plist runs
+the private wrapper `~/.local/bin/learn-ukrainian-backup`, which sources the
+environment file under `~/.secrets/` before invoking
+`scripts/backup-data.sh backup --execute`. Recreate that wrapper and
+environment on the host and confirm them with
+`./scripts/backup-data.sh doctor` per
+[Data backup and recovery](data-backup.md); never commit the environment file
+or wrapper.
+
+After reinstalling, verify each service with its installer `status` command
+and confirm the first receipts appear at the log and receipt paths listed in
+the inventory.
