@@ -1,0 +1,42 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/5938-kimicc-polish
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #5938 kimicc headless post-merge polish
+
+## CAPACITY_CARD
+pick=kimi status=cool will_last=true remaining_weekly=96% remaining_5h=78% free=codex,glm,deepseek,cursor avoid=none source=codexbar
+## ROUTING_CARD_V1
+task_id: 5938-kimicc-polish
+tier: practical
+model_x_harness: kimi/k3-256k
+why_this_tier: bounded adapter polish, no architecture; Kimi weekly 96% unused and this is the kimicc lane's own debt
+advisor_packet: none
+owned_paths: scripts/agent_runtime/telemetry.py scripts/agent_runtime/adapters/kimi.py scripts/agent_runtime/adapters/kimicc.py scripts/delegate.py tests/
+acceptance_cmd: .venv/bin/pytest tests/agent_runtime tests/test_delegate.py -q --tb=short -k "kimi or kimicc or telemetry or harness"
+alternatives_considered:
+  - cursor/auto — free — already used heavily this workday; not the adapter owner
+  - glm/glm-5.2 — free — local-only; this is Kimi harness semantics
+parallel_free_seats: agy(busy-reaper), cursor, glm, deepseek, codex
+
+## Do (issue #5938 findings from PR #5937)
+1. F3 (required): remove stale `del agent_name` in `scripts/agent_runtime/telemetry.py` `_resolve_model_from_plan` after the kimicc branch. The `del` is still on main at ~L179.
+2. F1 (required): dispatch-time telemetry must not label kimicc / k3-256k effort as `"max"` unless that effort was actually requested. Gate the default on the requested model or document the real value.
+3. F2 (required): `--harness native` is accepted but is a no-op vs omitting the flag. Either drop it from choices or document it as observability-only in `--help` and the adapter.
+4. F4 (optional if cheap): warn when a dispatch timeout exceeds ~15 min OAuth token life (~840s).
+5. Do not invent extra refactors. Do not touch GLM/DeepSeek/Codex adapters.
+
+## Git
+- Work only in this dispatch worktree.
+- Tests + ruff on touched files.
+- Conventional commit: `fix(kimi): kimicc telemetry and harness polish (#5938)`
+- Trailer: `X-Agent: kimi/5938-kimicc-polish`
+- Push branch, open PR, link #5938. **Do not merge. Do not arm auto-merge.**
