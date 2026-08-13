@@ -57,7 +57,7 @@ class KimiccHarness:
     """Build a stateless Claude Code invocation routed through KimiCC."""
 
     name = "kimicc"
-    default_model = "k3"
+    default_model = "k3-256k"
     supported_modes = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(

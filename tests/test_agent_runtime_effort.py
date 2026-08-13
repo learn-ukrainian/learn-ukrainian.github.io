@@ -336,8 +336,41 @@ def test_claude_adapter_skips_effort_when_unsupported(tmp_path, caplog):
     )
 
 
-def test_claude_adapter_no_effort_arg_means_no_flag(tmp_path):
-    """Default (effort=None) must NOT emit --effort regardless of version."""
+def test_claude_adapter_default_high_skips_when_unsupported(tmp_path, caplog):
+    """Default (effort=None → headless lane default ``high``) must STILL
+    omit ``--effort`` when the CLI does not support it (operator 2026-08-13
+    default-high must not force the flag on old CLIs)."""
+    adapter = ClaudeAdapter()
+    with patch(
+        "utils.claude_version.supports_effort", return_value=False,
+    ), patch(
+        "utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
+        return_value=False,
+    ), caplog.at_level(logging.WARNING, logger="agent_runtime.adapters.claude"):
+        plan = adapter.build_invocation(
+            prompt="hi",
+            mode="read-only",
+            cwd=tmp_path,
+            model="claude-opus-4-7",
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+    assert "--effort" not in plan.cmd, (
+        f"default-high must be omitted when the CLI does not support --effort; "
+        f"plan.cmd={plan.cmd}"
+    )
+    assert any(
+        "does not support --effort" in rec.message for rec in caplog.records
+    ), (
+        f"expected a WARNING log about effort being unsupported; "
+        f"records={[r.message for r in caplog.records]}"
+    )
+
+
+def test_claude_adapter_no_effort_arg_means_default_high(tmp_path):
+    """Default (effort=None) emits the headless lane default --effort high
+    when the CLI supports it (operator 2026-08-13)."""
     adapter = ClaudeAdapter()
     with patch(
         "utils.claude_version.supports_effort", return_value=True,
@@ -351,7 +384,9 @@ def test_claude_adapter_no_effort_arg_means_no_flag(tmp_path):
             session_id=None,
             tool_config=None,
         )
-    assert "--effort" not in plan.cmd
+    assert "--effort" in plan.cmd
+    i = plan.cmd.index("--effort")
+    assert plan.cmd[i + 1] == "high"
 
 
 # ---------------------------------------------------------------------------
@@ -383,9 +418,10 @@ def test_codex_adapter_emits_effort_as_config_override(tmp_path):
     )
 
 
-def test_codex_adapter_no_effort_means_no_config_override(tmp_path):
-    """effort=None (default) must fall through to ~/.codex/config.toml —
-    no -c model_reasoning_effort=... override in the argv."""
+def test_codex_adapter_no_effort_means_default_max_override(tmp_path):
+    """effort=None (default) applies the lane default
+    ``-c model_reasoning_effort=max`` (operator 2026-08-13); an explicit
+    --effort still wins over the default."""
     adapter = CodexAdapter()
     plan = adapter.build_invocation(
         prompt="hi",
@@ -396,10 +432,14 @@ def test_codex_adapter_no_effort_means_no_config_override(tmp_path):
         session_id=None,
         tool_config=None,
     )
-    joined = " ".join(plan.cmd)
-    assert "model_reasoning_effort" not in joined, (
-        f"plan.cmd must not contain a model_reasoning_effort override when "
-        f"effort is unset; plan.cmd={plan.cmd}"
+    flag_pairs = [
+        (plan.cmd[i], plan.cmd[i + 1])
+        for i in range(len(plan.cmd) - 1)
+        if plan.cmd[i] == "-c"
+    ]
+    assert ("-c", "model_reasoning_effort=max") in flag_pairs, (
+        f"expected ('-c', 'model_reasoning_effort=max') in flag pairs; "
+        f"plan.cmd={plan.cmd}"
     )
 
 

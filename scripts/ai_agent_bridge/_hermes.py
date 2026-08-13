@@ -303,8 +303,11 @@ def _run_hermes_subprocess(
 
     hard_timeout = timeout or 86_400
     try:
+        # Route through the Hermes seat, not the OpenCode ``deepseek``
+        # dispatch default — ask-hermes must keep HermesDeepSeekAdapter
+        # (hermes CLI) and must not require an opencode binary.
         result = agent_runner.invoke(
-            "deepseek",
+            "hermes-deepseek",
             prompt,
             mode="read-only",
             cwd=cwd,

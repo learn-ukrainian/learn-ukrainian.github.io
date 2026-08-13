@@ -108,9 +108,12 @@ def test_djvu_parser_rejects_page_without_exactly_one_info_chunk() -> None:
     dirm_size = 1 + 2 + 4 * len(components) + 1
     first_offset = 4 + 8 + 4 + 8 + dirm_size + (dirm_size & 1)
     offsets = [first_offset, first_offset + len(shared)]
-    payload = bytes([129]) + len(components).to_bytes(2, "big") + b"".join(
-        offset.to_bytes(4, "big") for offset in offsets
-    ) + b"x"
+    payload = (
+        bytes([129])
+        + len(components).to_bytes(2, "big")
+        + b"".join(offset.to_bytes(4, "big") for offset in offsets)
+        + b"x"
+    )
     content = b"DJVM" + _chunk("DIRM", payload) + b"".join(components)
     malformed = b"AT&T" + b"FORM" + len(content).to_bytes(4, "big") + content
 

@@ -30,7 +30,7 @@ def test_codex_claude_code_harness_dry_run_uses_local_proxy_contract() -> None:
     result = run_launcher("start-codex.sh", "--harness", "claude-code")
     assert result.returncode == 0, result.stderr
     assert "credential_source=local-proxy-placeholder" in result.stdout
-    assert "would exec claude --model gpt-5.6-terra" in result.stdout
+    assert "would exec claude --model gpt-5.6-luna" in result.stdout
 
 
 @pytest.mark.parametrize("base", ("http://127.0.0.1:8317", "http://localhost:8317"))
