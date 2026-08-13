@@ -358,7 +358,27 @@ def test_public_schema_is_closed_and_text_free() -> None:
     assert schema["additionalProperties"] is False
 
 
-def test_text_free_receipt_rejects_world_readable_permissions(tmp_path: Path) -> None:
+def _simulate_world_readable_lstat(
+    monkeypatch: pytest.MonkeyPatch,
+    target: Path,
+) -> None:
+    original_lstat = Path.lstat
+
+    def patched_lstat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = original_lstat(path, *args, **kwargs)
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP | stat.S_IROTH
+        return os.stat_result(values)
+
+    monkeypatch.setattr(Path, "lstat", patched_lstat)
+
+
+def test_text_free_receipt_rejects_world_readable_permissions(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     receipt_path = tmp_path / "receipt.json"
     receipt = {
         "schema_version": manifest.SCHEMA_VERSION,
@@ -366,7 +386,8 @@ def test_text_free_receipt_rejects_world_readable_permissions(tmp_path: Path) ->
         "receipt_sha256": "a" * 64,
     }
     receipt_path.write_bytes(manifest.canonical_bytes(receipt))
-    os.chmod(receipt_path, 0o644)
+    os.chmod(receipt_path, manifest.PRIVATE_FILE_MODE)
+    _simulate_world_readable_lstat(monkeypatch, receipt_path)
     with pytest.raises(manifest.EvaluationContextManifestError, match="0600"):
         manifest._regular_text_free_receipt(receipt_path, "text-free receipt")
 
