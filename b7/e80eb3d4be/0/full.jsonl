@@ -1,0 +1,2105 @@
+{
+  "info": {
+    "id": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+    "slug": "tidy-mountain",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+    "path": "",
+    "title": "Etymology dist test skip when missing",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-v4-flash",
+      "providerID": "deepseek-direct",
+      "variant": "high"
+    },
+    "version": "1.17.13",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 31078,
+      "output": 2532,
+      "reasoning": 1149,
+      "cache": {
+        "read": 558976,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1786662093476,
+      "updated": 1786662254628
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1786662093683
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek-direct",
+          "modelID": "deepseek-v4-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "site/tests/unit/etymology-handler-built-output.test.ts",
+              "patch": "Index: site/tests/unit/etymology-handler-built-output.test.ts\n===================================================================\n--- site/tests/unit/etymology-handler-built-output.test.ts\t\n+++ site/tests/unit/etymology-handler-built-output.test.ts\t\n@@ -1,97 +1,94 @@\n // @vitest-environment node\n \n /**\n  * Built-output / shell-render assertion: prerendered lexicon pages must keep\n  * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n  * strips scripts, so this gate covers them explicitly).\n  */\n \n import { existsSync, readdirSync, readFileSync } from \"node:fs\";\n import { join, resolve } from \"node:path\";\n import reactRenderer from \"@astrojs/react/server.js\";\n import { experimental_AstroContainer as AstroContainer } from \"astro/container\";\n import { beforeAll, describe, expect, test } from \"vitest\";\n import type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\n import { articleProps } from \"../helpers/word-atlas-record\";\n \n type AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n \n const ETY_HANDLER_MARKERS = [\n   // The inline script must exist and be wired to click on etymology stages.\n   \"<script\",\n   \"addEventListener('click'\",\n   // Root scope + selector contract.\n   \"[data-word-atlas]\",\n   \"[data-ety-note]\",\n   \"[data-ety-note-output]\",\n   // Output-target traversal contract.\n   \"closest('.atlas-section')\",\n   // Active-state + content swap contract.\n   \"classList.remove('active')\",\n   \"classList.add('active')\",\n   \"dataset.etyNote\",\n ] as const;\n \n+const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n+const hasDist = existsSync(distLexicon);\n+\n const stubRecord = articleProps({\n   lemma: \"прапор\",\n   url_slug: \"прапор\",\n   gloss: \"flag\",\n   entry_type: \"lemma\",\n   pos: \"noun\",\n   ipa: null,\n   primary_source: \"fixture\",\n   course_usage: [],\n }).record as EntryRecord;\n \n describe(\"etymology inline handler on prerendered lexicon pages\", () => {\n   let container: AstroContainer;\n   let WordAtlasPageShell: AstroComponent;\n \n   beforeAll(async () => {\n     const mod = await import(\"@site/src/lexicon/WordAtlasPageShell.astro\");\n     WordAtlasPageShell = mod.default as AstroComponent;\n     container = await AstroContainer.create();\n     container.addServerRenderer({ renderer: reactRenderer });\n   });\n \n   test(\"WordAtlasPageShell ready state embeds the etymology click handler script\", async () => {\n     const html = await container.renderToString(WordAtlasPageShell, {\n       props: {\n         state: {\n           status: \"ready\",\n           record: stubRecord,\n           generatedAt: \"test\",\n           manifestVersion: \"0.1\",\n         },\n       },\n     });\n     for (const marker of ETY_HANDLER_MARKERS) {\n       expect(html, `missing marker ${marker}`).toContain(marker);\n     }\n   });\n \n-  test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n-    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n-    if (!existsSync(distLexicon)) {\n-      // Hermetic unit runs without a prior build still cover the shell render above.\n-      expect(true).toBe(true);\n-      return;\n-    }\n+  test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n       .filter((d) => d.isDirectory())\n       .map((d) => d.name)\n       .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n     expect(articleDirs.length).toBeGreaterThan(0);\n     let checked = 0;\n     for (const name of articleDirs.slice(0, 5)) {\n       const indexPath = join(distLexicon, name, \"index.html\");\n       if (!existsSync(indexPath)) continue;\n       const html = readFileSync(indexPath, \"utf8\");\n       for (const marker of ETY_HANDLER_MARKERS) {\n         expect(html, `${name} missing ${marker}`).toContain(marker);\n       }\n       checked += 1;\n     }\n     expect(checked).toBeGreaterThan(0);\n   });\n });\n",
+              "additions": 4,
+              "deletions": 7,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"[delegate worktree]\nRun all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology\nDo not switch branches in the main checkout.\nIf you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n\n[shared project interpreter]\nNever create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.\nSparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).\n\n[optional delivery signal]\nCommits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {\\\"outcome\\\":\\\"no_change\\\",\\\"reason\\\":\\\"why no changes are required\\\"}`. This line is optional — its absence never fails the dispatch.\n\n# Task: #6766 — etymology dist-HTML test must not assert true when dist missing\n\n## CAPACITY_CARD\npick=deepseek Flash idle\n\n## Do\n`site/tests/unit/etymology-handler-built-output.test.ts`: replace `if (!existsSync(distLexicon)) { expect(true).toBe(true); return }` with `it.skipIf(!existsSync(distLexicon))` or `describe.skipIf` so the missing-dist path is an explicit skip, not a passing tautology. Keep the real asserts when dist exists. Do not weaken CI `test:built-output`.\n\nProve: `cd site && npx vitest run tests/unit/etymology-handler-built-output.test.ts` (expect skip locally if no dist).\nCommit `test(site): skip etymology dist-HTML gate when dist missing (#6766)` trailer `X-Agent: deepseek/6766-etymology-tautology`. PR. No merge.\n\"",
+          "id": "prt_ffd5c03ac001QzMR97oPDph0hh",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c0373001wcZh9mEI2YHXTV"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 25380,
+          "input": 23357,
+          "output": 92,
+          "reasoning": 11,
+          "cache": {
+            "write": 0,
+            "read": 1920
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662100462,
+          "completed": 1786662129145
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5c1ded001kEWRIfilw4xZH7",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-start",
+          "id": "prt_ffd5c8662001of2wulr4flJbNp",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c1ded001kEWRIfilw4xZH7"
+        },
+        {
+          "type": "reasoning",
+          "text": "Let me start by reading the test file in question.",
+          "time": {
+            "start": 1786662128032,
+            "end": 1786662128259
+          },
+          "id": "prt_ffd5c89a0001gSD0VsP4sKONIE",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c1ded001kEWRIfilw4xZH7"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_YVP6fkG53e9yS17PMAaG3897",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts</path>\n<type>file</type>\n<content>\n1: // @vitest-environment node\n2: \n3: /**\n4:  * Built-output / shell-render assertion: prerendered lexicon pages must keep\n5:  * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n6:  * strips scripts, so this gate covers them explicitly).\n7:  */\n8: \n9: import { existsSync, readdirSync, readFileSync } from \"node:fs\";\n10: import { join, resolve } from \"node:path\";\n11: import reactRenderer from \"@astrojs/react/server.js\";\n12: import { experimental_AstroContainer as AstroContainer } from \"astro/container\";\n13: import { beforeAll, describe, expect, test } from \"vitest\";\n14: import type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\n15: import { articleProps } from \"../helpers/word-atlas-record\";\n16: \n17: type AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n18: \n19: const ETY_HANDLER_MARKERS = [\n20:   // The inline script must exist and be wired to click on etymology stages.\n21:   \"<script\",\n22:   \"addEventListener('click'\",\n23:   // Root scope + selector contract.\n24:   \"[data-word-atlas]\",\n25:   \"[data-ety-note]\",\n26:   \"[data-ety-note-output]\",\n27:   // Output-target traversal contract.\n28:   \"closest('.atlas-section')\",\n29:   // Active-state + content swap contract.\n30:   \"classList.remove('active')\",\n31:   \"classList.add('active')\",\n32:   \"dataset.etyNote\",\n33: ] as const;\n34: \n35: const stubRecord = articleProps({\n36:   lemma: \"прапор\",\n37:   url_slug: \"прапор\",\n38:   gloss: \"flag\",\n39:   entry_type: \"lemma\",\n40:   pos: \"noun\",\n41:   ipa: null,\n42:   primary_source: \"fixture\",\n43:   course_usage: [],\n44: }).record as EntryRecord;\n45: \n46: describe(\"etymology inline handler on prerendered lexicon pages\", () => {\n47:   let container: AstroContainer;\n48:   let WordAtlasPageShell: AstroComponent;\n49: \n50:   beforeAll(async () => {\n51:     const mod = await import(\"@site/src/lexicon/WordAtlasPageShell.astro\");\n52:     WordAtlasPageShell = mod.default as AstroComponent;\n53:     container = await AstroContainer.create();\n54:     container.addServerRenderer({ renderer: reactRenderer });\n55:   });\n56: \n57:   test(\"WordAtlasPageShell ready state embeds the etymology click handler script\", async () => {\n58:     const html = await container.renderToString(WordAtlasPageShell, {\n59:       props: {\n60:         state: {\n61:           status: \"ready\",\n62:           record: stubRecord,\n63:           generatedAt: \"test\",\n64:           manifestVersion: \"0.1\",\n65:         },\n66:       },\n67:     });\n68:     for (const marker of ETY_HANDLER_MARKERS) {\n69:       expect(html, `missing marker ${marker}`).toContain(marker);\n70:     }\n71:   });\n72: \n73:   test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n74:     const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n75:     if (!existsSync(distLexicon)) {\n76:       // Hermetic unit runs without a prior build still cover the shell render above.\n77:       expect(true).toBe(true);\n78:       return;\n79:     }\n80:     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n81:       .filter((d) => d.isDirectory())\n82:       .map((d) => d.name)\n83:       .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n84:     expect(articleDirs.length).toBeGreaterThan(0);\n85:     let checked = 0;\n86:     for (const name of articleDirs.slice(0, 5)) {\n87:       const indexPath = join(distLexicon, name, \"index.html\");\n88:       if (!existsSync(indexPath)) continue;\n89:       const html = readFileSync(indexPath, \"utf8\");\n90:       for (const marker of ETY_HANDLER_MARKERS) {\n91:         expect(html, `${name} missing ${marker}`).toContain(marker);\n92:       }\n93:       checked += 1;\n94:     }\n95:     expect(checked).toBeGreaterThan(0);\n96:   });\n97: });\n\n(End of file - total 97 lines)\n</content>",
+            "metadata": {
+              "preview": "// @vitest-environment node\n\n/**\n * Built-output / shell-render assertion: prerendered lexicon pages must keep\n * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n * strips scripts, so this gate covers them explicitly).\n */\n\nimport { existsSync, readdirSync, readFileSync } from \"node:fs\";\nimport { join, resolve } from \"node:path\";\nimport reactRenderer from \"@astrojs/react/server.js\";\nimport { experimental_AstroContainer as AstroContainer } from \"astro/container\";\nimport { beforeAll, describe, expect, test } from \"vitest\";\nimport type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\nimport { articleProps } from \"../helpers/word-atlas-record\";\n\ntype AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n\nconst ETY_HANDLER_MARKERS = [\n  // The inline script must exist and be wired to click on etymology stages.",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+                "text": "// @vitest-environment node\n\n/**\n * Built-output / shell-render assertion: prerendered lexicon pages must keep\n * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n * strips scripts, so this gate covers them explicitly).\n */\n\nimport { existsSync, readdirSync, readFileSync } from \"node:fs\";\nimport { join, resolve } from \"node:path\";\nimport reactRenderer from \"@astrojs/react/server.js\";\nimport { experimental_AstroContainer as AstroContainer } from \"astro/container\";\nimport { beforeAll, describe, expect, test } from \"vitest\";\nimport type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\nimport { articleProps } from \"../helpers/word-atlas-record\";\n\ntype AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n\nconst ETY_HANDLER_MARKERS = [\n  // The inline script must exist and be wired to click on etymology stages.\n  \"<script\",\n  \"addEventListener('click'\",\n  // Root scope + selector contract.\n  \"[data-word-atlas]\",\n  \"[data-ety-note]\",\n  \"[data-ety-note-output]\",\n  // Output-target traversal contract.\n  \"closest('.atlas-section')\",\n  // Active-state + content swap contract.\n  \"classList.remove('active')\",\n  \"classList.add('active')\",\n  \"dataset.etyNote\",\n] as const;\n\nconst stubRecord = articleProps({\n  lemma: \"прапор\",\n  url_slug: \"прапор\",\n  gloss: \"flag\",\n  entry_type: \"lemma\",\n  pos: \"noun\",\n  ipa: null,\n  primary_source: \"fixture\",\n  course_usage: [],\n}).record as EntryRecord;\n\ndescribe(\"etymology inline handler on prerendered lexicon pages\", () => {\n  let container: AstroContainer;\n  let WordAtlasPageShell: AstroComponent;\n\n  beforeAll(async () => {\n    const mod = await import(\"@site/src/lexicon/WordAtlasPageShell.astro\");\n    WordAtlasPageShell = mod.default as AstroComponent;\n    container = await AstroContainer.create();\n    container.addServerRenderer({ renderer: reactRenderer });\n  });\n\n  test(\"WordAtlasPageShell ready state embeds the etymology click handler script\", async () => {\n    const html = await container.renderToString(WordAtlasPageShell, {\n      props: {\n        state: {\n          status: \"ready\",\n          record: stubRecord,\n          generatedAt: \"test\",\n          manifestVersion: \"0.1\",\n        },\n      },\n    });\n    for (const marker of ETY_HANDLER_MARKERS) {\n      expect(html, `missing marker ${marker}`).toContain(marker);\n    }\n  });\n\n  test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n    if (!existsSync(distLexicon)) {\n      // Hermetic unit runs without a prior build still cover the shell render above.\n      expect(true).toBe(true);\n      return;\n    }\n    const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n      .filter((d) => d.isDirectory())\n      .map((d) => d.name)\n      .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n    expect(articleDirs.length).toBeGreaterThan(0);\n    let checked = 0;\n    for (const name of articleDirs.slice(0, 5)) {\n      const indexPath = join(distLexicon, name, \"index.html\");\n      if (!existsSync(indexPath)) continue;\n      const html = readFileSync(indexPath, \"utf8\");\n      for (const marker of ETY_HANDLER_MARKERS) {\n        expect(html, `${name} missing ${marker}`).toContain(marker);\n      }\n      checked += 1;\n    }\n    expect(checked).toBeGreaterThan(0);\n  });\n});",
+                "lineStart": 1,
+                "lineEnd": 97,
+                "totalLines": 97,
+                "truncated": false
+              }
+            },
+            "title": "site/tests/unit/etymology-handler-built-output.test.ts",
+            "time": {
+              "start": 1786662128592,
+              "end": 1786662128654
+            }
+          },
+          "id": "prt_ffd5c8a86001aSIESIMHL6rVya",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c1ded001kEWRIfilw4xZH7"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 25380,
+            "input": 23357,
+            "output": 92,
+            "reasoning": 11,
+            "cache": {
+              "write": 0,
+              "read": 1920
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5c8cfb001u6e1rIH3dFrqy4",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c1ded001kEWRIfilw4xZH7"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 27065,
+          "input": 1212,
+          "output": 131,
+          "reasoning": 378,
+          "cache": {
+            "write": 0,
+            "read": 25344
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662129150,
+          "completed": 1786662134520
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5c8dfe001OkZjONiZCyCaaQ",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-start",
+          "id": "prt_ffd5c919b001AtwSGH5C6fm6xM",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c8dfe001OkZjONiZCyCaaQ"
+        },
+        {
+          "type": "reasoning",
+          "text": "Let me understand the task. The current test at lines 73-96 does:\n\n```ts\ntest(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n    if (!existsSync(distLexicon)) {\n      expect(true).toBe(true);\n      return;\n    }\n    ...\n});\n```\n\nThe task wants me to replace `if (!existsSync(distLexicon)) { expect(true).toBe(true); return }` with `it.skipIf(!existsSync(distLexicon))` or `describe.skipIf`. \n\nHowever, there's a subtlety: `existsSync` check is currently done inside the test body. With `it.skipIf`, the condition is evaluated at definition time (top-level), not inside the test. So I need to compute the dist existence before defining the test.\n\nLet me check the vitest version and whether `it.skipIf` is supported. `test.skipIf` / `it.skipIf` is available in Vitest 0.23+. Let me check the site's package.json.\n\nAlso, `distLexicon` depends on `process.cwd()`. In the test, `process.cwd()` would be the site dir when running `cd site && npx vitest run`. But wait — `resolve(process.cwd(), \"dist/lexicon\")` — when running from site dir, this resolves to `site/dist/lexicon`. That's fine.\n\nLet me check how `it.skipIf` works: `it.skipIf(condition)(name, fn)`. So the check must be evaluated at module definition time.\n\nLet me check the vitest config and other test files to see if `skipIf` is already used in the codebase, to follow conventions.\n\nLet me search.",
+          "time": {
+            "start": 1786662130420,
+            "end": 1786662133380
+          },
+          "id": "prt_ffd5c92f4001Kdkp1EZw5Co07K",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c8dfe001OkZjONiZCyCaaQ"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_chyhmlXiMEIZ7nBy9Dm42850",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "rg -n \"skipIf\" site/tests site/vitest.config.* 2>/dev/null | head -50"
+            },
+            "output": "site/tests/unit/atlas-runtime-shards.test.ts:193:  test(\"committed runtime-tree is present (no skipIf)\", () => {\nsite/tests/unit/atlas-runtime-shards.test.ts:376:  test.skipIf(!hasAtlasDb || !hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:396:  test.skipIf(!hasAtlasDb || !hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:444:  test.skipIf(!hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:488:  test.skipIf(!hasExportRoot)(\"deck parts share one deckVersion (real export)\", async () => {\nsite/tests/unit/atlas-runtime-shards.test.ts:501:      // Not a skipIf: this test documents the gate and no-ops outside it so\nsite/tests/unit/atlas-static-catalog.test.ts:25:  test.skipIf(!hasFixture)(\"fixture DB covers every ATLAS_ENTRY_TYPES value plus form_route\", () => {\nsite/tests/unit/atlas-static-catalog.test.ts:55:  test.skipIf(!hasProduction)(\nsite/tests/unit/atlas-static-catalog.test.ts:82:  test.skipIf(!hasProduction)(\n",
+            "metadata": {
+              "output": "site/tests/unit/atlas-runtime-shards.test.ts:193:  test(\"committed runtime-tree is present (no skipIf)\", () => {\nsite/tests/unit/atlas-runtime-shards.test.ts:376:  test.skipIf(!hasAtlasDb || !hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:396:  test.skipIf(!hasAtlasDb || !hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:444:  test.skipIf(!hasExportRoot)(\nsite/tests/unit/atlas-runtime-shards.test.ts:488:  test.skipIf(!hasExportRoot)(\"deck parts share one deckVersion (real export)\", async () => {\nsite/tests/unit/atlas-runtime-shards.test.ts:501:      // Not a skipIf: this test documents the gate and no-ops outside it so\nsite/tests/unit/atlas-static-catalog.test.ts:25:  test.skipIf(!hasFixture)(\"fixture DB covers every ATLAS_ENTRY_TYPES value plus form_route\", () => {\nsite/tests/unit/atlas-static-catalog.test.ts:55:  test.skipIf(!hasProduction)(\nsite/tests/unit/atlas-static-catalog.test.ts:82:  test.skipIf(!hasProduction)(\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "rg -n \"skipIf\" site/tests site/vitest.config.* 2>/dev/null | head -50",
+            "time": {
+              "start": 1786662133820,
+              "end": 1786662133827
+            }
+          },
+          "id": "prt_ffd5c9e8c001S6kZ0oFhsxILxO",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c8dfe001OkZjONiZCyCaaQ"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_01_m2eNGkhSfjdahAZLHooq9108",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "rg -n '\"vitest\"' site/package.json && ls site/dist 2>/dev/null && echo \"---dist exists---\" || echo \"---dist missing---\""
+            },
+            "output": "62:    \"vitest\": \"^4.1.10\"\n---dist missing---\n",
+            "metadata": {
+              "output": "62:    \"vitest\": \"^4.1.10\"\n---dist missing---\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "rg -n '\"vitest\"' site/package.json && ls site/dist 2>/dev/null && echo \"---dist exists---\" || echo \"---dist missing---\"",
+            "time": {
+              "start": 1786662134012,
+              "end": 1786662134017
+            }
+          },
+          "id": "prt_ffd5c9fb7001tIg97j2pZ0zDn1",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c8dfe001OkZjONiZCyCaaQ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 27065,
+            "input": 1212,
+            "output": 131,
+            "reasoning": 378,
+            "cache": {
+              "write": 0,
+              "read": 25344
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5ca20b0010Nu3HAfmN2lW6h",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5c8dfe001OkZjONiZCyCaaQ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 27572,
+          "input": 396,
+          "output": 122,
+          "reasoning": 46,
+          "cache": {
+            "write": 0,
+            "read": 27008
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662134526,
+          "completed": 1786662137616
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5ca2fe001Q4csiltUeyUHG3",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-start",
+          "id": "prt_ffd5ca68c001jkoLmLPRWNCKSg",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ca2fe001Q4csiltUeyUHG3"
+        },
+        {
+          "type": "reasoning",
+          "text": "The dist folder is missing, so the test would skip locally. Let me look at the existing skipIf patterns to match conventions. Let me look at atlas-runtime-shards.test.ts and atlas-static-catalog.test.ts briefly.",
+          "time": {
+            "start": 1786662135956,
+            "end": 1786662136455
+          },
+          "id": "prt_ffd5ca894001G6mk4byAxrlm7N",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ca2fe001Q4csiltUeyUHG3"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_zXBpzFvfSbhZyuclwFam2891",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/atlas-static-catalog.test.ts",
+              "offset": 1,
+              "limit": 90
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/atlas-static-catalog.test.ts</path>\n<type>file</type>\n<content>\n1: // @vitest-environment node\n2: \n3: import { existsSync } from \"node:fs\";\n4: import { resolve } from \"node:path\";\n5: import { describe, expect, test } from \"vitest\";\n6: import {\n7:   ATLAS_ENTRY_TYPES,\n8:   getAtlasPayloadCache,\n9:   getPracticeLemmas,\n10:   resetAtlasPayloadCacheForTests,\n11: } from \"@site/src/lib/lexicon/atlasDb\";\n12: import {\n13:   resetSqliteAtlasDataSourceCachesForTests,\n14:   SqliteAtlasDataSource,\n15: } from \"@site/src/lib/lexicon/sqlite-atlas-data-source\";\n16: \n17: const fixtureDb = resolve(process.cwd(), \"../tests/fixtures/atlas/runtime_shards_fixture.db\");\n18: const productionDb = resolve(process.cwd(), \"../data/atlas.db\");\n19: const hasFixture = existsSync(fixtureDb);\n20: const hasProduction = existsSync(productionDb);\n21: \n22: const REQUIRED_TYPES = [...ATLAS_ENTRY_TYPES, \"form_route\"] as const;\n23: \n24: describe(\"SqliteAtlasDataSource static catalog + practice reconciliation\", () => {\n25:   test.skipIf(!hasFixture)(\"fixture DB covers every ATLAS_ENTRY_TYPES value plus form_route\", () => {\n26:     const previous = process.env.ATLAS_DB_PATH;\n27:     process.env.ATLAS_DB_PATH = fixtureDb;\n28:     try {\n29:       resetAtlasPayloadCacheForTests();\n30:       resetSqliteAtlasDataSourceCachesForTests();\n31:       const source = new SqliteAtlasDataSource();\n32:       const catalog = source.getStaticCatalog();\n33:       const present = new Set<string>();\n34:       const cache = getAtlasPayloadCache();\n35:       for (const entry of cache.entries) {\n36:         present.add(entry.entry_type ?? \"form_route\");\n37:       }\n38:       expect([...present].sort()).toEqual([...REQUIRED_TYPES].sort());\n39:       expect(catalog.routeSlugs).toEqual(cache.entries.map((entry) => entry.url_slug));\n40:       expect(catalog.manifestVersion).toBe(cache.manifestVersion);\n41:       expect(catalog.generatedAt).toBe(cache.generatedAt);\n42:       expect(catalog.sourceVersion).toBe(`sqlite-${cache.manifestVersion}`);\n43:       expect(catalog.routeSlugs).not.toContain(\"fixture-missing-sentinel\");\n44:       process.stdout.write(\n45:         `fixture type-set coverage: ${REQUIRED_TYPES.join(\" \")} (exact)\\n`,\n46:       );\n47:     } finally {\n48:       if (previous === undefined) delete process.env.ATLAS_DB_PATH;\n49:       else process.env.ATLAS_DB_PATH = previous;\n50:       resetAtlasPayloadCacheForTests();\n51:       resetSqliteAtlasDataSourceCachesForTests();\n52:     }\n53:   });\n54: \n55:   test.skipIf(!hasProduction)(\n56:     \"practiceLevels length mirrors legacy getPracticeLemmas visibility\",\n57:     async () => {\n58:       resetAtlasPayloadCacheForTests();\n59:       resetSqliteAtlasDataSourceCachesForTests();\n60:       const legacy = getPracticeLemmas();\n61:       const source = new SqliteAtlasDataSource();\n62:       const catalog = source.getStaticCatalog();\n63: \n64:       let checked = 0;\n65:       for (const slug of catalog.routeSlugs.slice(0, 200)) {\n66:         const result = await source.getEntry(slug, {\n67:           expectedVersion: catalog.sourceVersion,\n68:         });\n69:         expect(result.kind).toBe(\"entry\");\n70:         if (result.kind !== \"entry\") continue;\n71:         const legacyHas =\n72:           legacy.has(result.record.entry.url_slug) || legacy.has(result.record.entry.lemma);\n73:         const nextHas = result.record.renderContext.practiceLevels.length > 0;\n74:         expect(nextHas, slug).toBe(legacyHas);\n75:         checked += 1;\n76:       }\n77:       expect(checked).toBeGreaterThan(0);\n78:     },\n79:     15000,\n80:   );\n81: \n82:   test.skipIf(!hasProduction)(\n83:     \"componentLinks on EntryRecord match legacy chip href targets for multiword fixtures\",\n84:     async () => {\n85:       resetAtlasPayloadCacheForTests();\n86:       resetSqliteAtlasDataSourceCachesForTests();\n87:       const cache = getAtlasPayloadCache();\n88:       const source = new SqliteAtlasDataSource();\n89:       for (const slug of [\"будь-ласка\", \"доконаний-вид\"]) {\n90:         const result = await source.getEntry(slug);\n\n(Showing lines 1-90 of 106. Use offset=91 to continue.)\n</content>",
+            "metadata": {
+              "preview": "// @vitest-environment node\n\nimport { existsSync } from \"node:fs\";\nimport { resolve } from \"node:path\";\nimport { describe, expect, test } from \"vitest\";\nimport {\n  ATLAS_ENTRY_TYPES,\n  getAtlasPayloadCache,\n  getPracticeLemmas,\n  resetAtlasPayloadCacheForTests,\n} from \"@site/src/lib/lexicon/atlasDb\";\nimport {\n  resetSqliteAtlasDataSourceCachesForTests,\n  SqliteAtlasDataSource,\n} from \"@site/src/lib/lexicon/sqlite-atlas-data-source\";\n\nconst fixtureDb = resolve(process.cwd(), \"../tests/fixtures/atlas/runtime_shards_fixture.db\");\nconst productionDb = resolve(process.cwd(), \"../data/atlas.db\");\nconst hasFixture = existsSync(fixtureDb);\nconst hasProduction = existsSync(productionDb);",
+              "truncated": true,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/atlas-static-catalog.test.ts",
+                "text": "// @vitest-environment node\n\nimport { existsSync } from \"node:fs\";\nimport { resolve } from \"node:path\";\nimport { describe, expect, test } from \"vitest\";\nimport {\n  ATLAS_ENTRY_TYPES,\n  getAtlasPayloadCache,\n  getPracticeLemmas,\n  resetAtlasPayloadCacheForTests,\n} from \"@site/src/lib/lexicon/atlasDb\";\nimport {\n  resetSqliteAtlasDataSourceCachesForTests,\n  SqliteAtlasDataSource,\n} from \"@site/src/lib/lexicon/sqlite-atlas-data-source\";\n\nconst fixtureDb = resolve(process.cwd(), \"../tests/fixtures/atlas/runtime_shards_fixture.db\");\nconst productionDb = resolve(process.cwd(), \"../data/atlas.db\");\nconst hasFixture = existsSync(fixtureDb);\nconst hasProduction = existsSync(productionDb);\n\nconst REQUIRED_TYPES = [...ATLAS_ENTRY_TYPES, \"form_route\"] as const;\n\ndescribe(\"SqliteAtlasDataSource static catalog + practice reconciliation\", () => {\n  test.skipIf(!hasFixture)(\"fixture DB covers every ATLAS_ENTRY_TYPES value plus form_route\", () => {\n    const previous = process.env.ATLAS_DB_PATH;\n    process.env.ATLAS_DB_PATH = fixtureDb;\n    try {\n      resetAtlasPayloadCacheForTests();\n      resetSqliteAtlasDataSourceCachesForTests();\n      const source = new SqliteAtlasDataSource();\n      const catalog = source.getStaticCatalog();\n      const present = new Set<string>();\n      const cache = getAtlasPayloadCache();\n      for (const entry of cache.entries) {\n        present.add(entry.entry_type ?? \"form_route\");\n      }\n      expect([...present].sort()).toEqual([...REQUIRED_TYPES].sort());\n      expect(catalog.routeSlugs).toEqual(cache.entries.map((entry) => entry.url_slug));\n      expect(catalog.manifestVersion).toBe(cache.manifestVersion);\n      expect(catalog.generatedAt).toBe(cache.generatedAt);\n      expect(catalog.sourceVersion).toBe(`sqlite-${cache.manifestVersion}`);\n      expect(catalog.routeSlugs).not.toContain(\"fixture-missing-sentinel\");\n      process.stdout.write(\n        `fixture type-set coverage: ${REQUIRED_TYPES.join(\" \")} (exact)\\n`,\n      );\n    } finally {\n      if (previous === undefined) delete process.env.ATLAS_DB_PATH;\n      else process.env.ATLAS_DB_PATH = previous;\n      resetAtlasPayloadCacheForTests();\n      resetSqliteAtlasDataSourceCachesForTests();\n    }\n  });\n\n  test.skipIf(!hasProduction)(\n    \"practiceLevels length mirrors legacy getPracticeLemmas visibility\",\n    async () => {\n      resetAtlasPayloadCacheForTests();\n      resetSqliteAtlasDataSourceCachesForTests();\n      const legacy = getPracticeLemmas();\n      const source = new SqliteAtlasDataSource();\n      const catalog = source.getStaticCatalog();\n\n      let checked = 0;\n      for (const slug of catalog.routeSlugs.slice(0, 200)) {\n        const result = await source.getEntry(slug, {\n          expectedVersion: catalog.sourceVersion,\n        });\n        expect(result.kind).toBe(\"entry\");\n        if (result.kind !== \"entry\") continue;\n        const legacyHas =\n          legacy.has(result.record.entry.url_slug) || legacy.has(result.record.entry.lemma);\n        const nextHas = result.record.renderContext.practiceLevels.length > 0;\n        expect(nextHas, slug).toBe(legacyHas);\n        checked += 1;\n      }\n      expect(checked).toBeGreaterThan(0);\n    },\n    15000,\n  );\n\n  test.skipIf(!hasProduction)(\n    \"componentLinks on EntryRecord match legacy chip href targets for multiword fixtures\",\n    async () => {\n      resetAtlasPayloadCacheForTests();\n      resetSqliteAtlasDataSourceCachesForTests();\n      const cache = getAtlasPayloadCache();\n      const source = new SqliteAtlasDataSource();\n      for (const slug of [\"будь-ласка\", \"доконаний-вид\"]) {\n        const result = await source.getEntry(slug);",
+                "lineStart": 1,
+                "lineEnd": 90,
+                "totalLines": 106,
+                "truncated": true
+              }
+            },
+            "title": "site/tests/unit/atlas-static-catalog.test.ts",
+            "time": {
+              "start": 1786662136895,
+              "end": 1786662136917
+            }
+          },
+          "id": "prt_ffd5caa8c001nr8HvqAwOKKWrC",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ca2fe001Q4csiltUeyUHG3"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-finish",
+          "tokens": {
+            "total": 27572,
+            "input": 396,
+            "output": 122,
+            "reasoning": 46,
+            "cache": {
+              "write": 0,
+              "read": 27008
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5cadff0013wFkOI2n0tfmmK",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ca2fe001Q4csiltUeyUHG3"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 29053,
+          "input": 1248,
+          "output": 189,
+          "reasoning": 96,
+          "cache": {
+            "write": 0,
+            "read": 27520
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662137622,
+          "completed": 1786662141918
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5caf160015t2o5sAiOB7kqE",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "type": "step-start",
+          "id": "prt_ffd5cb3ca001n5aPTnFmoraPMx",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        },
+        {
+          "type": "reasoning",
+          "text": "Good. The codebase pattern is: `const hasDist = existsSync(...)` at module level, then `test.skipIf(!hasDist)(...)`. I'll follow that convention.\n\nNow I need to modify the test file. The current `test(...)` at line 73 uses `resolve(process.cwd(), \"dist/lexicon\")`. I'll hoist the dist path check to module scope and use `test.skipIf`.\n\nLet me make the edit.",
+          "time": {
+            "start": 1786662139159,
+            "end": 1786662140039
+          },
+          "id": "prt_ffd5cb5170012t6jInjNBh9i5s",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        },
+        {
+          "type": "text",
+          "text": "The codebase convention is `test.skipIf(...)` with the fs check hoisted to module scope. Applying that here:",
+          "time": {
+            "start": 1786662140042,
+            "end": 1786662141158
+          },
+          "id": "prt_ffd5cb88a001p4m3uTIL0SBruY",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_00_NrhHZ0ZW1uT43G5tEmKH6032",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+              "oldString": "const stubRecord = articleProps({",
+              "newString": "const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\nconst hasDist = existsSync(distLexicon);\n\nconst stubRecord = articleProps({"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -31,8 +31,11 @@\n   \"classList.add('active')\",\n   \"dataset.etyNote\",\n ] as const;\n \n+const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n+const hasDist = existsSync(distLexicon);\n+\n const stubRecord = articleProps({\n   lemma: \"прапор\",\n   url_slug: \"прапор\",\n   gloss: \"flag\",\n",
+              "filediff": {
+                "file": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+                "patch": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -31,8 +31,11 @@\n   \"classList.add('active')\",\n   \"dataset.etyNote\",\n ] as const;\n \n+const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n+const hasDist = existsSync(distLexicon);\n+\n const stubRecord = articleProps({\n   lemma: \"прапор\",\n   url_slug: \"прапор\",\n   gloss: \"flag\",\n",
+                "additions": 3,
+                "deletions": 0
+              },
+              "truncated": false
+            },
+            "title": "site/tests/unit/etymology-handler-built-output.test.ts",
+            "time": {
+              "start": 1786662141135,
+              "end": 1786662141143
+            }
+          },
+          "id": "prt_ffd5cb9fb0011o7vPgd6at1aI7",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "7364e98670e62c157b16a896c67877b97f465342",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29053,
+            "input": 1248,
+            "output": 189,
+            "reasoning": 96,
+            "cache": {
+              "write": 0,
+              "read": 27520
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5cbe6f0014wzhPKrw3clvWv",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        },
+        {
+          "type": "patch",
+          "hash": "ef5f0e49a5e9648f2ea74aa7d61482d0b58b805f",
+          "files": [
+            "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts"
+          ],
+          "id": "prt_ffd5cbfd9001JbTlZbRaXUq4G7",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5caf160015t2o5sAiOB7kqE"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 29335,
+          "input": 140,
+          "output": 267,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 28928
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662141925,
+          "completed": 1786662145280
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5cbfe5001qoRS8CU5iSqJri",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "7364e98670e62c157b16a896c67877b97f465342",
+          "type": "step-start",
+          "id": "prt_ffd5cc32c001qY54IfOfwS2JND",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cbfe5001qoRS8CU5iSqJri"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_00_ET_kyVhWhy1B8ynOreKWR8M6568",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+              "oldString": "  test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n    if (!existsSync(distLexicon)) {\n      // Hermetic unit runs without a prior build still cover the shell render above.\n      expect(true).toBe(true);\n      return;\n    }\n    const articleDirs = readdirSync(distLexicon, { withFileTypes: true })",
+              "newString": "  test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n    const articleDirs = readdirSync(distLexicon, { withFileTypes: true })"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -72,15 +72,9 @@\n     expect(html, `missing marker ${marker}`).toContain(marker);\n   }\n });\n \n-test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n-  const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n-  if (!existsSync(distLexicon)) {\n-    // Hermetic unit runs without a prior build still cover the shell render above.\n-    expect(true).toBe(true);\n-    return;\n-  }\n+test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n   const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n     .filter((d) => d.isDirectory())\n     .map((d) => d.name)\n     .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n",
+              "filediff": {
+                "file": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+                "patch": "Index: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n===================================================================\n--- /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n+++ /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -72,15 +72,9 @@\n     expect(html, `missing marker ${marker}`).toContain(marker);\n   }\n });\n \n-test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n-  const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n-  if (!existsSync(distLexicon)) {\n-    // Hermetic unit runs without a prior build still cover the shell render above.\n-    expect(true).toBe(true);\n-    return;\n-  }\n+test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n   const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n     .filter((d) => d.isDirectory())\n     .map((d) => d.name)\n     .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n",
+                "additions": 1,
+                "deletions": 7
+              },
+              "truncated": false
+            },
+            "title": "site/tests/unit/etymology-handler-built-output.test.ts",
+            "time": {
+              "start": 1786662144529,
+              "end": 1786662144533
+            }
+          },
+          "id": "prt_ffd5cc5d2001O8S3WUciDtoF2V",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cbfe5001qoRS8CU5iSqJri"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29335,
+            "input": 140,
+            "output": 267,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 28928
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5ccc03001981jD9sXtlcp7y",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cbfe5001qoRS8CU5iSqJri"
+        },
+        {
+          "type": "patch",
+          "hash": "7364e98670e62c157b16a896c67877b97f465342",
+          "files": [
+            "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts"
+          ],
+          "id": "prt_ffd5cccfe0017bT91J2sRqr70b",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cbfe5001qoRS8CU5iSqJri"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 29442,
+          "input": 38,
+          "output": 92,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 29312
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662145284,
+          "completed": 1786662148017
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5ccd04001VhEh2Tliy2XP6Y",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5cd185001TuE4hKVYcd2RVT",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ccd04001VhEh2Tliy2XP6Y"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_ET_rqGNNdU6yJLoTloeYlo96440",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts</path>\n<type>file</type>\n<content>\n1: // @vitest-environment node\n2: \n3: /**\n4:  * Built-output / shell-render assertion: prerendered lexicon pages must keep\n5:  * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n6:  * strips scripts, so this gate covers them explicitly).\n7:  */\n8: \n9: import { existsSync, readdirSync, readFileSync } from \"node:fs\";\n10: import { join, resolve } from \"node:path\";\n11: import reactRenderer from \"@astrojs/react/server.js\";\n12: import { experimental_AstroContainer as AstroContainer } from \"astro/container\";\n13: import { beforeAll, describe, expect, test } from \"vitest\";\n14: import type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\n15: import { articleProps } from \"../helpers/word-atlas-record\";\n16: \n17: type AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n18: \n19: const ETY_HANDLER_MARKERS = [\n20:   // The inline script must exist and be wired to click on etymology stages.\n21:   \"<script\",\n22:   \"addEventListener('click'\",\n23:   // Root scope + selector contract.\n24:   \"[data-word-atlas]\",\n25:   \"[data-ety-note]\",\n26:   \"[data-ety-note-output]\",\n27:   // Output-target traversal contract.\n28:   \"closest('.atlas-section')\",\n29:   // Active-state + content swap contract.\n30:   \"classList.remove('active')\",\n31:   \"classList.add('active')\",\n32:   \"dataset.etyNote\",\n33: ] as const;\n34: \n35: const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n36: const hasDist = existsSync(distLexicon);\n37: \n38: const stubRecord = articleProps({\n39:   lemma: \"прапор\",\n40:   url_slug: \"прапор\",\n41:   gloss: \"flag\",\n42:   entry_type: \"lemma\",\n43:   pos: \"noun\",\n44:   ipa: null,\n45:   primary_source: \"fixture\",\n46:   course_usage: [],\n47: }).record as EntryRecord;\n48: \n49: describe(\"etymology inline handler on prerendered lexicon pages\", () => {\n50:   let container: AstroContainer;\n51:   let WordAtlasPageShell: AstroComponent;\n52: \n53:   beforeAll(async () => {\n54:     const mod = await import(\"@site/src/lexicon/WordAtlasPageShell.astro\");\n55:     WordAtlasPageShell = mod.default as AstroComponent;\n56:     container = await AstroContainer.create();\n57:     container.addServerRenderer({ renderer: reactRenderer });\n58:   });\n59: \n60:   test(\"WordAtlasPageShell ready state embeds the etymology click handler script\", async () => {\n61:     const html = await container.renderToString(WordAtlasPageShell, {\n62:       props: {\n63:         state: {\n64:           status: \"ready\",\n65:           record: stubRecord,\n66:           generatedAt: \"test\",\n67:           manifestVersion: \"0.1\",\n68:         },\n69:       },\n70:     });\n71:     for (const marker of ETY_HANDLER_MARKERS) {\n72:       expect(html, `missing marker ${marker}`).toContain(marker);\n73:     }\n74:   });\n75: \n76:   test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n77:     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n78:       .filter((d) => d.isDirectory())\n79:       .map((d) => d.name)\n80:       .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n81:     expect(articleDirs.length).toBeGreaterThan(0);\n82:     let checked = 0;\n83:     for (const name of articleDirs.slice(0, 5)) {\n84:       const indexPath = join(distLexicon, name, \"index.html\");\n85:       if (!existsSync(indexPath)) continue;\n86:       const html = readFileSync(indexPath, \"utf8\");\n87:       for (const marker of ETY_HANDLER_MARKERS) {\n88:         expect(html, `${name} missing ${marker}`).toContain(marker);\n89:       }\n90:       checked += 1;\n91:     }\n92:     expect(checked).toBeGreaterThan(0);\n93:   });\n94: });\n\n(End of file - total 94 lines)\n</content>",
+            "metadata": {
+              "preview": "// @vitest-environment node\n\n/**\n * Built-output / shell-render assertion: prerendered lexicon pages must keep\n * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n * strips scripts, so this gate covers them explicitly).\n */\n\nimport { existsSync, readdirSync, readFileSync } from \"node:fs\";\nimport { join, resolve } from \"node:path\";\nimport reactRenderer from \"@astrojs/react/server.js\";\nimport { experimental_AstroContainer as AstroContainer } from \"astro/container\";\nimport { beforeAll, describe, expect, test } from \"vitest\";\nimport type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\nimport { articleProps } from \"../helpers/word-atlas-record\";\n\ntype AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n\nconst ETY_HANDLER_MARKERS = [\n  // The inline script must exist and be wired to click on etymology stages.",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/tests/unit/etymology-handler-built-output.test.ts",
+                "text": "// @vitest-environment node\n\n/**\n * Built-output / shell-render assertion: prerendered lexicon pages must keep\n * the inline etymology-anchor click handler (follow-up from #5329 — route-parity\n * strips scripts, so this gate covers them explicitly).\n */\n\nimport { existsSync, readdirSync, readFileSync } from \"node:fs\";\nimport { join, resolve } from \"node:path\";\nimport reactRenderer from \"@astrojs/react/server.js\";\nimport { experimental_AstroContainer as AstroContainer } from \"astro/container\";\nimport { beforeAll, describe, expect, test } from \"vitest\";\nimport type { EntryRecord } from \"@site/src/lib/lexicon/atlas-data-source\";\nimport { articleProps } from \"../helpers/word-atlas-record\";\n\ntype AstroComponent = Parameters<AstroContainer[\"renderToString\"]>[0];\n\nconst ETY_HANDLER_MARKERS = [\n  // The inline script must exist and be wired to click on etymology stages.\n  \"<script\",\n  \"addEventListener('click'\",\n  // Root scope + selector contract.\n  \"[data-word-atlas]\",\n  \"[data-ety-note]\",\n  \"[data-ety-note-output]\",\n  // Output-target traversal contract.\n  \"closest('.atlas-section')\",\n  // Active-state + content swap contract.\n  \"classList.remove('active')\",\n  \"classList.add('active')\",\n  \"dataset.etyNote\",\n] as const;\n\nconst distLexicon = resolve(process.cwd(), \"dist/lexicon\");\nconst hasDist = existsSync(distLexicon);\n\nconst stubRecord = articleProps({\n  lemma: \"прапор\",\n  url_slug: \"прапор\",\n  gloss: \"flag\",\n  entry_type: \"lemma\",\n  pos: \"noun\",\n  ipa: null,\n  primary_source: \"fixture\",\n  course_usage: [],\n}).record as EntryRecord;\n\ndescribe(\"etymology inline handler on prerendered lexicon pages\", () => {\n  let container: AstroContainer;\n  let WordAtlasPageShell: AstroComponent;\n\n  beforeAll(async () => {\n    const mod = await import(\"@site/src/lexicon/WordAtlasPageShell.astro\");\n    WordAtlasPageShell = mod.default as AstroComponent;\n    container = await AstroContainer.create();\n    container.addServerRenderer({ renderer: reactRenderer });\n  });\n\n  test(\"WordAtlasPageShell ready state embeds the etymology click handler script\", async () => {\n    const html = await container.renderToString(WordAtlasPageShell, {\n      props: {\n        state: {\n          status: \"ready\",\n          record: stubRecord,\n          generatedAt: \"test\",\n          manifestVersion: \"0.1\",\n        },\n      },\n    });\n    for (const marker of ETY_HANDLER_MARKERS) {\n      expect(html, `missing marker ${marker}`).toContain(marker);\n    }\n  });\n\n  test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n    const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n      .filter((d) => d.isDirectory())\n      .map((d) => d.name)\n      .filter((name) => ![\"browse\", \"practice\"].includes(name) && !name.startsWith(\".\"));\n    expect(articleDirs.length).toBeGreaterThan(0);\n    let checked = 0;\n    for (const name of articleDirs.slice(0, 5)) {\n      const indexPath = join(distLexicon, name, \"index.html\");\n      if (!existsSync(indexPath)) continue;\n      const html = readFileSync(indexPath, \"utf8\");\n      for (const marker of ETY_HANDLER_MARKERS) {\n        expect(html, `${name} missing ${marker}`).toContain(marker);\n      }\n      checked += 1;\n    }\n    expect(checked).toBeGreaterThan(0);\n  });\n});",
+                "lineStart": 1,
+                "lineEnd": 94,
+                "totalLines": 94,
+                "truncated": false
+              }
+            },
+            "title": "site/tests/unit/etymology-handler-built-output.test.ts",
+            "time": {
+              "start": 1786662147350,
+              "end": 1786662147414
+            }
+          },
+          "id": "prt_ffd5cd3cc001P7iuqINJUyE4zv",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ccd04001VhEh2Tliy2XP6Y"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29442,
+            "input": 38,
+            "output": 92,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 29312
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5cd685001ABW9lPIEYNKXIA",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ccd04001VhEh2Tliy2XP6Y"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 30755,
+          "input": 1149,
+          "output": 149,
+          "reasoning": 17,
+          "cache": {
+            "write": 0,
+            "read": 29440
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662148031,
+          "completed": 1786662155294
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5cd7bf001uTXZum7uRHkqnV",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5cdb21001bWur31p2I717lM",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cd7bf001uTXZum7uRHkqnV"
+        },
+        {
+          "type": "reasoning",
+          "text": "Now let me run the test. Dist is missing locally, so it should skip.",
+          "time": {
+            "start": 1786662149379,
+            "end": 1786662149619
+          },
+          "id": "prt_ffd5cdd03001dWYL3ppubq0TAI",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cd7bf001uTXZum7uRHkqnV"
+        },
+        {
+          "type": "text",
+          "text": "Now run the test — expecting a skip locally since `dist/` is absent:",
+          "time": {
+            "start": 1786662149621,
+            "end": 1786662150404
+          },
+          "id": "prt_ffd5cddf5001o4nSB1Z4E8vuSm",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cd7bf001uTXZum7uRHkqnV"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_xFdVx0gE4DUNc1GmEQcx6945",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site",
+              "timeout": 180000
+            },
+            "output": "npm warn exec The following package was not found and will be installed: vitest@4.1.10\nnpm error code ESTRICTALLOWSCRIPTS\nnpm error --strict-allow-scripts: 1 package(s) have install scripts not covered by allowScripts:\nnpm error   fsevents@2.3.3 (install: node-gyp rebuild)\nnpm error Pass --allow-scripts=<pkg> for one-off approval, or bypass this check with --dangerously-allow-all-scripts.\nnpm error A complete log of this run can be found in: /Users/krisztiankoos/.npm/_logs/2026-08-13T23_02_30_607Z-debug-0.log\n",
+            "metadata": {
+              "output": "npm warn exec The following package was not found and will be installed: vitest@4.1.10\nnpm error code ESTRICTALLOWSCRIPTS\nnpm error --strict-allow-scripts: 1 package(s) have install scripts not covered by allowScripts:\nnpm error   fsevents@2.3.3 (install: node-gyp rebuild)\nnpm error Pass --allow-scripts=<pkg> for one-off approval, or bypass this check with --dangerously-allow-all-scripts.\nnpm error A complete log of this run can be found in: /Users/krisztiankoos/.npm/_logs/2026-08-13T23_02_30_607Z-debug-0.log\n",
+              "exit": 1,
+              "truncated": false
+            },
+            "title": "npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1",
+            "time": {
+              "start": 1786662154568,
+              "end": 1786662154821
+            }
+          },
+          "id": "prt_ffd5cdec2001XCwayv9P2U6GL2",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cd7bf001uTXZum7uRHkqnV"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 30755,
+            "input": 1149,
+            "output": 149,
+            "reasoning": 17,
+            "cache": {
+              "write": 0,
+              "read": 29440
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5cf3320015394d7Mtu81hLJ",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cd7bf001uTXZum7uRHkqnV"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 31050,
+          "input": 203,
+          "output": 96,
+          "reasoning": 31,
+          "cache": {
+            "write": 0,
+            "read": 30720
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662155301,
+          "completed": 1786662158107
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5cf425001BFdChprNlHtb3d",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5cf7d7001gxKwGc5FifeIWk",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cf425001BFdChprNlHtb3d"
+        },
+        {
+          "type": "reasoning",
+          "text": "npx tried to install vitest because it's not in the local node_modules. Let me check if there's a node_modules in the site dir.",
+          "time": {
+            "start": 1786662156609,
+            "end": 1786662157005
+          },
+          "id": "prt_ffd5cf941001AbPA4mKxExssR0",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cf425001BFdChprNlHtb3d"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_vNDoyA3UFHjkzTHBJVKN2728",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls site/node_modules/.bin/vitest 2>/dev/null; ls node_modules/.bin/vitest 2>/dev/null; echo \"---\"; ls site/node_modules 2>/dev/null | head -3 || echo \"no site node_modules\""
+            },
+            "output": "---\n",
+            "metadata": {
+              "output": "---\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "ls site/node_modules/.bin/vitest 2>/dev/null; ls node_modules/.bin/vitest 2>/dev/null; echo \"---\"; ls site/node_modules 2>/dev/null | head -3 || echo \"no site node_modules\"",
+            "time": {
+              "start": 1786662157463,
+              "end": 1786662157478
+            }
+          },
+          "id": "prt_ffd5cfad0001HDQiJ630Bz0V3p",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cf425001BFdChprNlHtb3d"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31050,
+            "input": 203,
+            "output": 96,
+            "reasoning": 31,
+            "cache": {
+              "write": 0,
+              "read": 30720
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5cfe3a001pQmlUj4m7To2D7",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cf425001BFdChprNlHtb3d"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 31177,
+          "input": 87,
+          "output": 95,
+          "reasoning": 19,
+          "cache": {
+            "write": 0,
+            "read": 30976
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662158128,
+          "completed": 1786662160775
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5cff30001i8hGmoErwh2pfz",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d02b7001IhCxf4tO6eFr50",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cff30001i8hGmoErwh2pfz"
+        },
+        {
+          "type": "reasoning",
+          "text": "No node_modules. The repo may use pnpm or npm workspaces. Let me check.",
+          "time": {
+            "start": 1786662159508,
+            "end": 1786662159802
+          },
+          "id": "prt_ffd5d0494001l3c7efTawqLH5r",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cff30001i8hGmoErwh2pfz"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_5JjNBaP6hHTyaX4mnUgW0998",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls -d node_modules 2>/dev/null; ls site/pnpm-lock.yaml site/package-lock.json site/yarn.lock 2>/dev/null; ls pnpm-lock.yaml package-lock.json yarn.lock 2>/dev/null"
+            },
+            "output": "node_modules\nsite/package-lock.json\npackage-lock.json\n",
+            "metadata": {
+              "output": "node_modules\nsite/package-lock.json\npackage-lock.json\n",
+              "exit": 2,
+              "truncated": false
+            },
+            "title": "ls -d node_modules 2>/dev/null; ls site/pnpm-lock.yaml site/package-lock.json site/yarn.lock 2>/dev/null; ls pnpm-lock.yaml package-lock.json yarn.lock 2>/dev/null",
+            "time": {
+              "start": 1786662160260,
+              "end": 1786662160265
+            }
+          },
+          "id": "prt_ffd5d05c1001W1T4O4ZHKYjrlf",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cff30001i8hGmoErwh2pfz"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31177,
+            "input": 87,
+            "output": 95,
+            "reasoning": 19,
+            "cache": {
+              "write": 0,
+              "read": 30976
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d08930010cj0BIKknlq88A",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5cff30001i8hGmoErwh2pfz"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 31325,
+          "input": 100,
+          "output": 76,
+          "reasoning": 45,
+          "cache": {
+            "write": 0,
+            "read": 31104
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662160837,
+          "completed": 1786662164042
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d09c5001P5S9Knx2QBZPzg",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d0f27001f9k8hezbCHcOEX",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d09c5001P5S9Knx2QBZPzg"
+        },
+        {
+          "type": "reasoning",
+          "text": "There's a `node_modules` at repo root, and package-lock at both root and site. Let me check if vitest is installed in root node_modules and check the site package.json scripts for the test command.",
+          "time": {
+            "start": 1786662162478,
+            "end": 1786662163027
+          },
+          "id": "prt_ffd5d102e00196VMdLnFO719fX",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d09c5001P5S9Knx2QBZPzg"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_uh1cNQWaLfJFv4M4aAlg6250",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls node_modules/.bin/ | rg vitest; echo \"---\"; cat site/package.json | rg -n 'test|vitest' | head -30"
+            },
+            "output": "---\n22:    \"test\": \"npm run test:unit && npm run test:built-output\",\n23:    \"test:unit\": \"npm run hydrate && vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts\",\n24:    \"test:built-output\": \"vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts\",\n25:    \"test:watch\": \"npm run hydrate && vitest --watch\",\n26:    \"test:coverage\": \"npm run hydrate && vitest run --coverage\",\n27:    \"test:atlas-route-parity\": \"node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs\",\n28:    \"test:atlas-release-gate\": \"ATLAS_RELEASE_GATE=1 vitest run tests/unit/atlas-runtime-shards.test.ts -t \\\"full-catalog Sqlite\\\"\",\n29:    \"test:atlas-client-shell-e2e\": \"node ./scripts/e2e-atlas-client-shell.mjs\",\n55:    \"@playwright/test\": \"^1.62.1\",\n56:    \"@testing-library/jest-dom\": \"^7.0.0\",\n57:    \"@testing-library/react\": \"^16.3.2\",\n58:    \"@testing-library/user-event\": \"^14.6.1\",\n60:    \"@vitest/coverage-v8\": \"^4.1.10\",\n62:    \"vitest\": \"^4.1.10\"\n",
+            "metadata": {
+              "output": "---\n22:    \"test\": \"npm run test:unit && npm run test:built-output\",\n23:    \"test:unit\": \"npm run hydrate && vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts\",\n24:    \"test:built-output\": \"vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts\",\n25:    \"test:watch\": \"npm run hydrate && vitest --watch\",\n26:    \"test:coverage\": \"npm run hydrate && vitest run --coverage\",\n27:    \"test:atlas-route-parity\": \"node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs\",\n28:    \"test:atlas-release-gate\": \"ATLAS_RELEASE_GATE=1 vitest run tests/unit/atlas-runtime-shards.test.ts -t \\\"full-catalog Sqlite\\\"\",\n29:    \"test:atlas-client-shell-e2e\": \"node ./scripts/e2e-atlas-client-shell.mjs\",\n55:    \"@playwright/test\": \"^1.62.1\",\n56:    \"@testing-library/jest-dom\": \"^7.0.0\",\n57:    \"@testing-library/react\": \"^16.3.2\",\n58:    \"@testing-library/user-event\": \"^14.6.1\",\n60:    \"@vitest/coverage-v8\": \"^4.1.10\",\n62:    \"vitest\": \"^4.1.10\"\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "ls node_modules/.bin/ | rg vitest; echo \"---\"; cat site/package.json | rg -n 'test|vitest' | head -30",
+            "time": {
+              "start": 1786662163430,
+              "end": 1786662163436
+            }
+          },
+          "id": "prt_ffd5d1259001sid9d4zW7J2Nwb",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d09c5001P5S9Knx2QBZPzg"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31325,
+            "input": 100,
+            "output": 76,
+            "reasoning": 45,
+            "cache": {
+              "write": 0,
+              "read": 31104
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d153c001nS1daDVWsjF5Yb",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d09c5001P5S9Knx2QBZPzg"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 31801,
+          "input": 452,
+          "output": 82,
+          "reasoning": 35,
+          "cache": {
+            "write": 0,
+            "read": 31232
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662164049,
+          "completed": 1786662166950
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d1651001VQgSMGTSs5zYzi",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d19ba0016ZXl6ist8Cn4O3",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d1651001VQgSMGTSs5zYzi"
+        },
+        {
+          "type": "reasoning",
+          "text": "There's no vitest in root node_modules either. node_modules exists at root. Let me check what's in root node_modules/.bin and whether vitest is present.",
+          "time": {
+            "start": 1786662165242,
+            "end": 1786662165693
+          },
+          "id": "prt_ffd5d1afa001nUUfVMdGdQkrBo",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d1651001VQgSMGTSs5zYzi"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_4rDvVEb6slL3F9eQCHQl6700",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls node_modules/.bin/ 2>/dev/null | head -40; echo \"---\"; ls -d node_modules/vitest 2>/dev/null || echo \"no vitest\""
+            },
+            "output": "acorn\nacpx\nanthropic-ai-sdk\nbaseline-browser-mapping\nbrowsers\nbrowserslist\nc8\nclaude-agent-acp\nesbuild\nescodegen\nesgenerate\neslint\neslint-config-prettier\nesparse\nesvalidate\nextract-zip\nglob\nhandlebars\nhexer\nimport-local-fixture\ninstallServerIntoExtension\njest\njs-yaml\njsesc\njson5\nkatex\nmarkdown-it\nmarkdownlint-cli2\nnapi-postinstall\nnode-which\nparser\nprebuild-install\nprettier\nproto-loader-gen-types\npuppeteer\nrc\nsemver\nshowdown\nskill-install\nskillflag\n---\nno vitest\n",
+            "metadata": {
+              "output": "acorn\nacpx\nanthropic-ai-sdk\nbaseline-browser-mapping\nbrowsers\nbrowserslist\nc8\nclaude-agent-acp\nesbuild\nescodegen\nesgenerate\neslint\neslint-config-prettier\nesparse\nesvalidate\nextract-zip\nglob\nhandlebars\nhexer\nimport-local-fixture\ninstallServerIntoExtension\njest\njs-yaml\njsesc\njson5\nkatex\nmarkdown-it\nmarkdownlint-cli2\nnapi-postinstall\nnode-which\nparser\nprebuild-install\nprettier\nproto-loader-gen-types\npuppeteer\nrc\nsemver\nshowdown\nskill-install\nskillflag\n---\nno vitest\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "ls node_modules/.bin/ 2>/dev/null | head -40; echo \"---\"; ls -d node_modules/vitest 2>/dev/null || echo \"no vitest\"",
+            "time": {
+              "start": 1786662165998,
+              "end": 1786662166011
+            }
+          },
+          "id": "prt_ffd5d1cc0001SnyrxG8Pt4953P",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d1651001VQgSMGTSs5zYzi"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31801,
+            "input": 452,
+            "output": 82,
+            "reasoning": 35,
+            "cache": {
+              "write": 0,
+              "read": 31232
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d1fad001S2rPGRIwSdlieE",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d1651001VQgSMGTSs5zYzi"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 32158,
+          "input": 234,
+          "output": 76,
+          "reasoning": 104,
+          "cache": {
+            "write": 0,
+            "read": 31744
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662166962,
+          "completed": 1786662171321
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d21b2001zM8SrDR8p3rwVh",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d25a6001dmmPMSU7PgtabZ",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d21b2001zM8SrDR8p3rwVh"
+        },
+        {
+          "type": "reasoning",
+          "text": "The dependencies aren't installed. I need to install them. The `site` has its own package-lock.json. Let me check if there's a `npm ci` option. The task says run the test with `cd site && npx vitest run ...`. Since dependencies aren't installed, I need to install them first.\n\nLet me check site/package-lock.json and whether npm ci works. This could take a while. Let me check node version first and whether site/node_modules exists at all.",
+          "time": {
+            "start": 1786662168400,
+            "end": 1786662169260
+          },
+          "id": "prt_ffd5d27500012H3JEMHWz76BEB",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d21b2001zM8SrDR8p3rwVh"
+        },
+        {
+          "type": "text",
+          "text": "Dependencies aren't installed. Installing them in the site workspace:",
+          "time": {
+            "start": 1786662169262,
+            "end": 1786662169596
+          },
+          "id": "prt_ffd5d2aae001sUlmOGp62P5N8G",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d21b2001zM8SrDR8p3rwVh"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ba7SzyMxO9RKyk5Q73gM9320",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "node --version; npm --version; ls site/node_modules 2>/dev/null | wc -l"
+            },
+            "output": "v26.5.0\n11.17.0\n0\n",
+            "metadata": {
+              "output": "v26.5.0\n11.17.0\n0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "node --version; npm --version; ls site/node_modules 2>/dev/null | wc -l",
+            "time": {
+              "start": 1786662170266,
+              "end": 1786662170295
+            }
+          },
+          "id": "prt_ffd5d2b380018ZhtlYlzsSW5bt",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d21b2001zM8SrDR8p3rwVh"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 32158,
+            "input": 234,
+            "output": 76,
+            "reasoning": 104,
+            "cache": {
+              "write": 0,
+              "read": 31744
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d30cb001g7d6c6pzBZsZ2w",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d21b2001zM8SrDR8p3rwVh"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 32313,
+          "input": 57,
+          "output": 128,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 32128
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662171331,
+          "completed": 1786662175203
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d32c30017NriA1dBv36vRR",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d37180015UByWc7c26XQnS",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d32c30017NriA1dBv36vRR"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_tzuVCrhUewzhmk3Ompxz1409",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "npm ci --allow-scripts=fsevents 2>&1 | tail -20",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site",
+              "timeout": 600000
+            },
+            "output": "npm error code EALLOWSCRIPTS\nnpm error --allow-scripts is not allowed in project-scoped installs. Add the entries to the \"allowScripts\" field in package.json, or to .npmrc, instead.\nnpm error A complete log of this run can be found in: /Users/krisztiankoos/.npm/_logs/2026-08-13T23_02_53_893Z-debug-0.log\n",
+            "metadata": {
+              "output": "npm error code EALLOWSCRIPTS\nnpm error --allow-scripts is not allowed in project-scoped installs. Add the entries to the \"allowScripts\" field in package.json, or to .npmrc, instead.\nnpm error A complete log of this run can be found in: /Users/krisztiankoos/.npm/_logs/2026-08-13T23_02_53_893Z-debug-0.log\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "npm ci --allow-scripts=fsevents 2>&1 | tail -20",
+            "time": {
+              "start": 1786662174637,
+              "end": 1786662174644
+            }
+          },
+          "id": "prt_ffd5d3955001Okb203ZoCUBIwi",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d32c30017NriA1dBv36vRR"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 32313,
+            "input": 57,
+            "output": 128,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 32128
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d40ce001iPqApLZaMoqrRt",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d32c30017NriA1dBv36vRR"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 32571,
+          "input": 165,
+          "output": 150,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 32256
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662175224,
+          "completed": 1786662178643
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d41f80014RRkd7SipxBTgm",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d45bb0016Hdkgdxis26OwG",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d41f80014RRkd7SipxBTgm"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_HJ255DDW7wpamu9dxEEy7037",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cat .npmrc 2>/dev/null; echo \"---root---\"; cat ../.npmrc 2>/dev/null; echo \"---\"; rg -n \"allowScripts|dangerouslyAllow|strict-allow\" package.json ../package.json 2>/dev/null",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site"
+            },
+            "output": "---root---\n---\npackage.json:73:  \"allowScripts\": {\n",
+            "metadata": {
+              "output": "---root---\n---\npackage.json:73:  \"allowScripts\": {\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cat .npmrc 2>/dev/null; echo \"---root---\"; cat ../.npmrc 2>/dev/null; echo \"---\"; rg -n \"allowScripts|dangerouslyAllow|strict-allow\" package.json ../package.json 2>/dev/null",
+            "time": {
+              "start": 1786662178014,
+              "end": 1786662178016
+            }
+          },
+          "id": "prt_ffd5d49ab001mpun7MQgPLPZpQ",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d41f80014RRkd7SipxBTgm"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 32571,
+            "input": 165,
+            "output": 150,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 32256
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d4e300016fMJKJoSg2Wc40",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d41f80014RRkd7SipxBTgm"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 32680,
+          "input": 87,
+          "output": 81,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 32512
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662178649,
+          "completed": 1786662181195
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d4f59001Q41gIIW2sOgkaW",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d52ae001Ak4YMrtodh133T",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d4f59001Q41gIIW2sOgkaW"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_ET_N0pVpgf5paMIFhGwR61K0514",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/package.json"
+            },
+            "output": "<path>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/package.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"name\": \"starlight\",\n3:   \"type\": \"module\",\n4:   \"version\": \"0.0.1\",\n5:   \"scripts\": {\n6:     \"atlas:build-db\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db\",\n7:     \"atlas:build-search\": \"cd .. && ${PYTHON:-.venv/bin/python} scripts/audit/generate_search_index.py --db data/atlas.db\",\n8:     \"atlas:build-daily\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.audit.generate_daily_pool --db data/atlas.db\",\n9:     \"atlas:perf\": \"node ./scripts/benchmark-atlas-db.mjs\",\n10:     \"atlas:validate-aliases\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only\",\n11:     \"hydrate\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && npm run atlas:build-daily && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts\",\n12:     \"hydrate:manifest\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db\",\n13:     \"hydrate:practice\": \"node ./scripts/hydrate-practice-deck.mjs\",\n14:     \"verify:artifacts\": \"node ./scripts/verify-consumed-artifacts.mjs\",\n15:     \"dev\": \"npm run verify:artifacts && astro dev\",\n16:     \"start\": \"npm run dev\",\n17:     \"build\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build\",\n18:     \"build:shell\": \"npm run verify:artifacts && astro build\",\n19:     \"build:full\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 BUILD_ETYMOLOGY_ROUTES=1 astro build\",\n20:     \"preview\": \"astro preview\",\n21:     \"astro\": \"astro\",\n22:     \"test\": \"npm run test:unit && npm run test:built-output\",\n23:     \"test:unit\": \"npm run hydrate && vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts\",\n24:     \"test:built-output\": \"vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts\",\n25:     \"test:watch\": \"npm run hydrate && vitest --watch\",\n26:     \"test:coverage\": \"npm run hydrate && vitest run --coverage\",\n27:     \"test:atlas-route-parity\": \"node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs\",\n28:     \"test:atlas-release-gate\": \"ATLAS_RELEASE_GATE=1 vitest run tests/unit/atlas-runtime-shards.test.ts -t \\\"full-catalog Sqlite\\\"\",\n29:     \"test:atlas-client-shell-e2e\": \"node ./scripts/e2e-atlas-client-shell.mjs\",\n30:     \"serve:gh-pages-404\": \"node ./scripts/serve-gh-pages-404.mjs --root dist --port 4177\",\n31:     \"check:atlas-browser-bundle\": \"esbuild src/lib/lexicon/http-atlas-data-source.ts --bundle --platform=browser --external:astro* --outfile=/dev/null\"\n32:   },\n33:   \"dependencies\": {\n34:     \"@astrojs/check\": \"^0.9.10\",\n35:     \"@astrojs/markdown-remark\": \"^7.2.2\",\n36:     \"@astrojs/mdx\": \"^7.0.5\",\n37:     \"@astrojs/react\": \"^6.0.2\",\n38:     \"@astrojs/sitemap\": \"^3.7.3\",\n39:     \"@mdx-js/mdx\": \"^3.1.1\",\n40:     \"@types/react\": \"^19.2.18\",\n41:     \"@types/react-dom\": \"^19.2.3\",\n42:     \"astro\": \"^7.1.6\",\n43:     \"better-sqlite3\": \"^13.0.2\",\n44:     \"playwright\": \"^1.62.0\",\n45:     \"react\": \"^19.2.8\",\n46:     \"react-dom\": \"^19.2.8\",\n47:     \"rehype-mermaid\": \"^3.0.0\",\n48:     \"remark-directive\": \"^4.0.0\",\n49:     \"remark-gfm\": \"^4.0.1\",\n50:     \"sharp\": \"^0.35.3\",\n51:     \"ts-fsrs\": \"^5.4.1\",\n52:     \"typescript\": \"^6.0.3\"\n53:   },\n54:   \"devDependencies\": {\n55:     \"@playwright/test\": \"^1.62.1\",\n56:     \"@testing-library/jest-dom\": \"^7.0.0\",\n57:     \"@testing-library/react\": \"^16.3.2\",\n58:     \"@testing-library/user-event\": \"^14.6.1\",\n59:     \"@types/better-sqlite3\": \"^7.6.13\",\n60:     \"@vitest/coverage-v8\": \"^4.1.10\",\n61:     \"happy-dom\": \"^20.11.1\",\n62:     \"vitest\": \"^4.1.10\"\n63:   },\n64:   \"overrides\": {\n65:     \"yaml-language-server\": \"1.23.0\",\n66:     \"esbuild\": \">=0.28.1\",\n67:     \"vite\": \">=8.0.13\",\n68:     \"js-yaml\": \"^4.3.1\",\n69:     \"nanoid\": \"^3.3.17\",\n70:     \"markdown-it\": \">=14.2.0\",\n71:     \"postcss\": \"8.5.23\"\n72:   },\n73:   \"allowScripts\": {\n74:     \"esbuild@0.28.1\": true,\n75:     \"fsevents@2.3.2\": true,\n76:     \"fsevents@2.3.3\": true,\n77:     \"better-sqlite3@13.0.2\": true\n78:   }\n79: }\n\n(End of file - total 79 lines)\n</content>",
+            "metadata": {
+              "preview": "{\n  \"name\": \"starlight\",\n  \"type\": \"module\",\n  \"version\": \"0.0.1\",\n  \"scripts\": {\n    \"atlas:build-db\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db\",\n    \"atlas:build-search\": \"cd .. && ${PYTHON:-.venv/bin/python} scripts/audit/generate_search_index.py --db data/atlas.db\",\n    \"atlas:build-daily\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.audit.generate_daily_pool --db data/atlas.db\",\n    \"atlas:perf\": \"node ./scripts/benchmark-atlas-db.mjs\",\n    \"atlas:validate-aliases\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only\",\n    \"hydrate\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && npm run atlas:build-daily && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts\",\n    \"hydrate:manifest\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db\",\n    \"hydrate:practice\": \"node ./scripts/hydrate-practice-deck.mjs\",\n    \"verify:artifacts\": \"node ./scripts/verify-consumed-artifacts.mjs\",\n    \"dev\": \"npm run verify:artifacts && astro dev\",\n    \"start\": \"npm run dev\",\n    \"build\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build\",\n    \"build:shell\": \"npm run verify:artifacts && astro build\",\n    \"build:full\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 BUILD_ETYMOLOGY_ROUTES=1 astro build\",\n    \"preview\": \"astro preview\",",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site/package.json",
+                "text": "{\n  \"name\": \"starlight\",\n  \"type\": \"module\",\n  \"version\": \"0.0.1\",\n  \"scripts\": {\n    \"atlas:build-db\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db\",\n    \"atlas:build-search\": \"cd .. && ${PYTHON:-.venv/bin/python} scripts/audit/generate_search_index.py --db data/atlas.db\",\n    \"atlas:build-daily\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.audit.generate_daily_pool --db data/atlas.db\",\n    \"atlas:perf\": \"node ./scripts/benchmark-atlas-db.mjs\",\n    \"atlas:validate-aliases\": \"cd .. && ${PYTHON:-.venv/bin/python} -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only\",\n    \"hydrate\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && npm run atlas:build-daily && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts\",\n    \"hydrate:manifest\": \"node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db\",\n    \"hydrate:practice\": \"node ./scripts/hydrate-practice-deck.mjs\",\n    \"verify:artifacts\": \"node ./scripts/verify-consumed-artifacts.mjs\",\n    \"dev\": \"npm run verify:artifacts && astro dev\",\n    \"start\": \"npm run dev\",\n    \"build\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build\",\n    \"build:shell\": \"npm run verify:artifacts && astro build\",\n    \"build:full\": \"npm run hydrate && ATLAS_STATIC_ROUTES=1 BUILD_ETYMOLOGY_ROUTES=1 astro build\",\n    \"preview\": \"astro preview\",\n    \"astro\": \"astro\",\n    \"test\": \"npm run test:unit && npm run test:built-output\",\n    \"test:unit\": \"npm run hydrate && vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts\",\n    \"test:built-output\": \"vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts\",\n    \"test:watch\": \"npm run hydrate && vitest --watch\",\n    \"test:coverage\": \"npm run hydrate && vitest run --coverage\",\n    \"test:atlas-route-parity\": \"node --experimental-strip-types ./scripts/atlas-lexicon-route-parity.mjs\",\n    \"test:atlas-release-gate\": \"ATLAS_RELEASE_GATE=1 vitest run tests/unit/atlas-runtime-shards.test.ts -t \\\"full-catalog Sqlite\\\"\",\n    \"test:atlas-client-shell-e2e\": \"node ./scripts/e2e-atlas-client-shell.mjs\",\n    \"serve:gh-pages-404\": \"node ./scripts/serve-gh-pages-404.mjs --root dist --port 4177\",\n    \"check:atlas-browser-bundle\": \"esbuild src/lib/lexicon/http-atlas-data-source.ts --bundle --platform=browser --external:astro* --outfile=/dev/null\"\n  },\n  \"dependencies\": {\n    \"@astrojs/check\": \"^0.9.10\",\n    \"@astrojs/markdown-remark\": \"^7.2.2\",\n    \"@astrojs/mdx\": \"^7.0.5\",\n    \"@astrojs/react\": \"^6.0.2\",\n    \"@astrojs/sitemap\": \"^3.7.3\",\n    \"@mdx-js/mdx\": \"^3.1.1\",\n    \"@types/react\": \"^19.2.18\",\n    \"@types/react-dom\": \"^19.2.3\",\n    \"astro\": \"^7.1.6\",\n    \"better-sqlite3\": \"^13.0.2\",\n    \"playwright\": \"^1.62.0\",\n    \"react\": \"^19.2.8\",\n    \"react-dom\": \"^19.2.8\",\n    \"rehype-mermaid\": \"^3.0.0\",\n    \"remark-directive\": \"^4.0.0\",\n    \"remark-gfm\": \"^4.0.1\",\n    \"sharp\": \"^0.35.3\",\n    \"ts-fsrs\": \"^5.4.1\",\n    \"typescript\": \"^6.0.3\"\n  },\n  \"devDependencies\": {\n    \"@playwright/test\": \"^1.62.1\",\n    \"@testing-library/jest-dom\": \"^7.0.0\",\n    \"@testing-library/react\": \"^16.3.2\",\n    \"@testing-library/user-event\": \"^14.6.1\",\n    \"@types/better-sqlite3\": \"^7.6.13\",\n    \"@vitest/coverage-v8\": \"^4.1.10\",\n    \"happy-dom\": \"^20.11.1\",\n    \"vitest\": \"^4.1.10\"\n  },\n  \"overrides\": {\n    \"yaml-language-server\": \"1.23.0\",\n    \"esbuild\": \">=0.28.1\",\n    \"vite\": \">=8.0.13\",\n    \"js-yaml\": \"^4.3.1\",\n    \"nanoid\": \"^3.3.17\",\n    \"markdown-it\": \">=14.2.0\",\n    \"postcss\": \"8.5.23\"\n  },\n  \"allowScripts\": {\n    \"esbuild@0.28.1\": true,\n    \"fsevents@2.3.2\": true,\n    \"fsevents@2.3.3\": true,\n    \"better-sqlite3@13.0.2\": true\n  }\n}",
+                "lineStart": 1,
+                "lineEnd": 79,
+                "totalLines": 79,
+                "truncated": false
+              }
+            },
+            "title": "site/package.json",
+            "time": {
+              "start": 1786662180541,
+              "end": 1786662180639
+            }
+          },
+          "id": "prt_ffd5d55d0001Nsj0f2vGXtk8SK",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d4f59001Q41gIIW2sOgkaW"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 32680,
+            "input": 87,
+            "output": 81,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 32512
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5d584f001oPBMVlm4r2lbwA",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d4f59001Q41gIIW2sOgkaW"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 34452,
+          "input": 1618,
+          "output": 138,
+          "reasoning": 56,
+          "cache": {
+            "write": 0,
+            "read": 32640
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662181201,
+          "completed": 1786662219138
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5d5951001GAa7x1Hmrqravi",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5d5ceb001cg2jJES9I2Y1TR",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d5951001GAa7x1Hmrqravi"
+        },
+        {
+          "type": "reasoning",
+          "text": "The allowScripts field already includes `fsevents@2.3.3` and `better-sqlite3@13.0.2`. So `npm ci` should work without the `--allow-scripts` flag. Let me run `npm ci`.",
+          "time": {
+            "start": 1786662182886,
+            "end": 1786662183307
+          },
+          "id": "prt_ffd5d5fe6001wNAKGEVX4xMLgq",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d5951001GAa7x1Hmrqravi"
+        },
+        {
+          "type": "text",
+          "text": "`allowScripts` already covers needed packages — plain `npm ci` should work:",
+          "time": {
+            "start": 1786662183312,
+            "end": 1786662183920
+          },
+          "id": "prt_ffd5d6190001DP13klIVR0FJhy",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d5951001GAa7x1Hmrqravi"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_8s37dmhHxgLOCVunzIPg5220",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "npm ci 2>&1 | tail -15",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site",
+              "timeout": 600000
+            },
+            "output": "npm warn allow-scripts .npmrc allow-scripts setting is being ignored because package.json declares its own allowScripts field\n\nadded 624 packages, and audited 625 packages in 34s\n\nfound 0 vulnerabilities\n",
+            "metadata": {
+              "output": "npm warn allow-scripts .npmrc allow-scripts setting is being ignored because package.json declares its own allowScripts field\n\nadded 624 packages, and audited 625 packages in 34s\n\nfound 0 vulnerabilities\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "npm ci 2>&1 | tail -15",
+            "time": {
+              "start": 1786662218654,
+              "end": 1786662218673
+            }
+          },
+          "id": "prt_ffd5d6220001WBB7NfuxXOBQUc",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d5951001GAa7x1Hmrqravi"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 34452,
+            "input": 1618,
+            "output": 138,
+            "reasoning": 56,
+            "cache": {
+              "write": 0,
+              "read": 32640
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5decaf001S5E5nxdFMh6fKt",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5d5951001GAa7x1Hmrqravi"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 34648,
+          "input": 79,
+          "output": 137,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 34432
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662219151,
+          "completed": 1786662233769
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5ded8f001q8gUpWLPu3cNzY",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5df124001747ukPWkV0CMk9",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ded8f001q8gUpWLPu3cNzY"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_ZQO04wYUPcU2A9R2uShh3419",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1 | tail -40",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site",
+              "timeout": 180000
+            },
+            "output": "\n RUN  v4.1.10 /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site\n\n(node:72091) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.\n(Use `node --trace-warnings ...` to show where the warning was created)\n\n Test Files  1 passed (1)\n      Tests  1 passed | 1 skipped (2)\n   Start at  01:03:49\n   Duration  3.94s (transform 2.44s, setup 525ms, import 2.51s, tests 612ms, environment 0ms)\n\n",
+            "metadata": {
+              "output": "\n RUN  v4.1.10 /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site\n\n(node:72091) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.\n(Use `node --trace-warnings ...` to show where the warning was created)\n\n Test Files  1 passed (1)\n      Tests  1 passed | 1 skipped (2)\n   Start at  01:03:49\n   Duration  3.94s (transform 2.44s, setup 525ms, import 2.51s, tests 612ms, environment 0ms)\n\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1 | tail -40",
+            "time": {
+              "start": 1786662233129,
+              "end": 1786662233149
+            }
+          },
+          "id": "prt_ffd5df3f4001JyAffm7TzvTOpb",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ded8f001q8gUpWLPu3cNzY"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 34648,
+            "input": 79,
+            "output": 137,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 34432
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5e2548001uQ3O69eut4pavu",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5ded8f001q8gUpWLPu3cNzY"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 35244,
+          "input": 250,
+          "output": 280,
+          "reasoning": 154,
+          "cache": {
+            "write": 0,
+            "read": 34560
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662233796,
+          "completed": 1786662249203
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5e26c2001dZvsk7XnPYXMgF",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5e2b54001WYupt2j2sLTDgW",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e26c2001dZvsk7XnPYXMgF"
+        },
+        {
+          "type": "reasoning",
+          "text": "1 passed, 1 skipped. The skip worked correctly.\n\nNow, I should also verify that the real asserts work when dist exists. The task says \"Keep the real asserts when dist exists.\" I can't easily test that path without building the whole site (which is a huge build). But let me verify the test would run correctly with a dist present by creating a minimal dist/lexicon structure and running. Actually, that's reasonable to verify the real assert path works.\n\nLet me create a minimal fake dist/lexicon directory with an index.html containing the markers, run the test, confirm it passes, then remove the fake dist.\n\nActually — careful: creating a fake dist could confuse other tests, but I'll clean up afterwards. Let me do it.",
+          "time": {
+            "start": 1786662235371,
+            "end": 1786662236857
+          },
+          "id": "prt_ffd5e2cea001JohzdPTaCHmmyU",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e26c2001dZvsk7XnPYXMgF"
+        },
+        {
+          "type": "text",
+          "text": "Skip works. Now verify the real assert path still passes by building a minimal throwaway `dist/lexicon`:",
+          "time": {
+            "start": 1786662236860,
+            "end": 1786662238414
+          },
+          "id": "prt_ffd5e32bc001ZtdE4wNgGdmoHa",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e26c2001dZvsk7XnPYXMgF"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_3hD9CtFV1WNvAht6ZgJZ0880",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "mkdir -p dist/lexicon/прапор && printf '%s' \"<html><script>addEventListener('click', function(){ var el = document.querySelector('[data-word-atlas]'); var n = el.querySelector('[data-ety-note]'); n.closest('.atlas-section'); n.classList.remove('active'); n.classList.add('active'); document.querySelector('[data-ety-note-output]').dataset.etyNote; });</script></html>\" > dist/lexicon/прапор/index.html && npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1 | tail -12; echo \"=== cleanup ===\"; rm -rf dist",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site",
+              "timeout": 180000
+            },
+            "output": "\n RUN  v4.1.10 /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site\n\n(node:73978) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.\n(Use `node --trace-warnings ...` to show where the warning was created)\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  01:04:03\n   Duration  4.72s (transform 3.32s, setup 368ms, import 3.36s, tests 700ms, environment 0ms)\n\n=== cleanup ===\n",
+            "metadata": {
+              "output": "\n RUN  v4.1.10 /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology/site\n\n(node:73978) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.\n(Use `node --trace-warnings ...` to show where the warning was created)\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  01:04:03\n   Duration  4.72s (transform 3.32s, setup 368ms, import 3.36s, tests 700ms, environment 0ms)\n\n=== cleanup ===\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "mkdir -p dist/lexicon/прапор && printf '%s' \"<html><script>addEventListener('click', function(){ var el = document.querySelector('[data-word-atlas]'); var n = el.querySelector('[data-ety-note]'); n.closest('.atlas-section'); n.classList.remove('active'); n.classList.add('active'); document.querySelector('[data-ety-note-output]').dataset.etyNote; });</script></html>\" > dist/lexicon/прапор/index.html && npx vitest run tests/unit/etymology-handler-built-output.test.ts 2>&1 | tail -12; echo \"=== cleanup ===\"; rm -rf dist",
+            "time": {
+              "start": 1786662247887,
+              "end": 1786662247924
+            }
+          },
+          "id": "prt_ffd5e33990014Qj6CZVeGVV8PK",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e26c2001dZvsk7XnPYXMgF"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 35244,
+            "input": 250,
+            "output": 280,
+            "reasoning": 154,
+            "cache": {
+              "write": 0,
+              "read": 34560
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5e5f70001LjspnIX4V7dwGT",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e26c2001dZvsk7XnPYXMgF"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 35714,
+          "input": 206,
+          "output": 151,
+          "reasoning": 157,
+          "cache": {
+            "write": 0,
+            "read": 35200
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662249238,
+          "completed": 1786662254608
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffd5e63160011jjSell9qEgUKp",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5e67d5001EO3AQefPLy6Wtq",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e63160011jjSell9qEgUKp"
+        },
+        {
+          "type": "reasoning",
+          "text": "Both paths verified:\n1. dist missing → 1 passed + 1 skipped (explicit skip, no tautology)\n2. dist present → 2 passed (real asserts run)\n\nAlso verify the `test:built-output` CI script still covers this file (task says \"Do not weaken CI test:built-output\"). Looking at package.json line 24: `test:built-output` runs `vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts`. The file is still included in the built-output script — skipIf doesn't change that. Good, CI is not weakened.\n\nNow let me check git status and commit. The worktree is on a dispatch branch. Let me check git status.",
+          "time": {
+            "start": 1786662250743,
+            "end": 1786662252041
+          },
+          "id": "prt_ffd5e68f70012oBpSMmd8xTtFj",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e63160011jjSell9qEgUKp"
+        },
+        {
+          "type": "text",
+          "text": "Both paths verified: skip when dist missing, real asserts when dist present. `test:built-output` still runs this file (site/package.json:24). Now commit:",
+          "time": {
+            "start": 1786662252050,
+            "end": 1786662253001
+          },
+          "id": "prt_ffd5e6e12001rwDMkhPz3zFaa6",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e63160011jjSell9qEgUKp"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_w6GprjxobAQMb3kAy3nx0032",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git status --short && echo \"---\" && git log --oneline -5 && echo \"---\" && git diff",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+            },
+            "output": " M site/tests/unit/etymology-handler-built-output.test.ts\n---\nb14f9e5547 fix(atlas): republish manifest without Russian -ться short forms (#6769)\nc72b77e904 Phase 3 #6375: Wave L modern-phonetics qualified review intake (#6756)\nb8bfb16293 fix(phase3): migrate Minchak/VSPU rights semantics to Babych precedent (#6375) (#6755)\n40351f2dbb fix(wotd): filter daily set by CEFR level instead of re-ranking (#6727) (#6757)\n56f099195d feat(fleet): default AGY/Gemini to gemini-3.7-flash-high (#6753) (#6754)\n---\ndiff --git a/site/tests/unit/etymology-handler-built-output.test.ts b/site/tests/unit/etymology-handler-built-output.test.ts\nindex fbf34c217b..a2c800a6de 100644\n--- a/site/tests/unit/etymology-handler-built-output.test.ts\n+++ b/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -32,6 +32,9 @@ const ETY_HANDLER_MARKERS = [\n   \"dataset.etyNote\",\n ] as const;\n \n+const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n+const hasDist = existsSync(distLexicon);\n+\n const stubRecord = articleProps({\n   lemma: \"прапор\",\n   url_slug: \"прапор\",\n@@ -70,13 +73,7 @@ describe(\"etymology inline handler on prerendered lexicon pages\", () => {\n     }\n   });\n \n-  test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n-    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n-    if (!existsSync(distLexicon)) {\n-      // Hermetic unit runs without a prior build still cover the shell render above.\n-      expect(true).toBe(true);\n-      return;\n-    }\n+  test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n       .filter((d) => d.isDirectory())\n       .map((d) => d.name)\n",
+            "metadata": {
+              "output": " M site/tests/unit/etymology-handler-built-output.test.ts\n---\nb14f9e5547 fix(atlas): republish manifest without Russian -ться short forms (#6769)\nc72b77e904 Phase 3 #6375: Wave L modern-phonetics qualified review intake (#6756)\nb8bfb16293 fix(phase3): migrate Minchak/VSPU rights semantics to Babych precedent (#6375) (#6755)\n40351f2dbb fix(wotd): filter daily set by CEFR level instead of re-ranking (#6727) (#6757)\n56f099195d feat(fleet): default AGY/Gemini to gemini-3.7-flash-high (#6753) (#6754)\n---\ndiff --git a/site/tests/unit/etymology-handler-built-output.test.ts b/site/tests/unit/etymology-handler-built-output.test.ts\nindex fbf34c217b..a2c800a6de 100644\n--- a/site/tests/unit/etymology-handler-built-output.test.ts\n+++ b/site/tests/unit/etymology-handler-built-output.test.ts\n@@ -32,6 +32,9 @@ const ETY_HANDLER_MARKERS = [\n   \"dataset.etyNote\",\n ] as const;\n \n+const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n+const hasDist = existsSync(distLexicon);\n+\n const stubRecord = articleProps({\n   lemma: \"прапор\",\n   url_slug: \"прапор\",\n@@ -70,13 +73,7 @@ describe(\"etymology inline handler on prerendered lexicon pages\", () => {\n     }\n   });\n \n-  test(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n-    const distLexicon = resolve(process.cwd(), \"dist/lexicon\");\n-    if (!existsSync(distLexicon)) {\n-      // Hermetic unit runs without a prior build still cover the shell render above.\n-      expect(true).toBe(true);\n-      return;\n-    }\n+  test.skipIf(!hasDist)(\"built dist lexicon HTML keeps the etymology handler when dist/ is present\", () => {\n     const articleDirs = readdirSync(distLexicon, { withFileTypes: true })\n       .filter((d) => d.isDirectory())\n       .map((d) => d.name)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git status --short && echo \"---\" && git log --oneline -5 && echo \"---\" && git diff",
+            "time": {
+              "start": 1786662253942,
+              "end": 1786662253960
+            }
+          },
+          "id": "prt_ffd5e6f64001JZb0rbRQru58Mb",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e63160011jjSell9qEgUKp"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-finish",
+          "tokens": {
+            "total": 35714,
+            "input": 206,
+            "output": 151,
+            "reasoning": 157,
+            "cache": {
+              "write": 0,
+              "read": 35200
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffd5e7702001AeoTkihpmbPWQr",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e63160011jjSell9qEgUKp"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffd5c0373001wcZh9mEI2YHXTV",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "deepseek-v4-flash",
+        "providerID": "deepseek-direct",
+        "time": {
+          "created": 1786662254624
+        },
+        "id": "msg_ffd5e7820001OcZLeKMZp7HA6Q",
+        "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp"
+      },
+      "parts": [
+        {
+          "snapshot": "4f708eb3a91c6a486bdca3a54bfa59e1a15b0a36",
+          "type": "step-start",
+          "id": "prt_ffd5e7c69001MH6sSikNnnkMZS",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e7820001OcZLeKMZp7HA6Q"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_eh2XOiapjUr2poqyiFFr3647",
+          "state": {
+            "metadata": {
+              "output": ""
+            },
+            "status": "running",
+            "input": {
+              "command": "git add site/tests/unit/etymology-handler-built-output.test.ts && git commit -m \"test(site): skip etymology dist-HTML gate when dist missing (#6766)\n\nX-Agent: deepseek/6766-etymology-tautology\" && git log --oneline -1",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/deepseek/6766-etymology-tautology"
+            },
+            "time": {
+              "start": 1786662257033
+            }
+          },
+          "id": "prt_ffd5e7f06001OylonrwPg2d97g",
+          "sessionID": "ses_002a3fd5bffe4BSoOMqEl9MDDp",
+          "messageID": "msg_ffd5e7820001OcZLeKMZp7HA6Q"
+        }
+      ]
+    }
+  ]
+}

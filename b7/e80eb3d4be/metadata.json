@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b7e80eb3d4be",
+  "strategy": "manual-commit",
+  "branch": "deepseek/6766-etymology-tautology",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/tests/unit/etymology-handler-built-output.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b7/e80eb3d4be/0/metadata.json",
+      "transcript": "/b7/e80eb3d4be/0/full.jsonl",
+      "compact_transcript": "/b7/e80eb3d4be/0/transcript.jsonl",
+      "content_hash": "/b7/e80eb3d4be/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 31078,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 558976,
+    "output_tokens": 2532,
+    "api_call_count": 20
+  }
+}
