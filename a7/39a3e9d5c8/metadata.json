@@ -1,0 +1,52 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a739a3e9d5c8",
+  "strategy": "manual-commit",
+  "branch": "cursor/6753-gemini-37-default",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md",
+    "agents_extensions/shared/rules/model-assignment.md",
+    "agents_extensions/shared/skills/drive-epic/SKILL.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/agy.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/ai_agent_bridge/_agy.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_review_pr.py",
+    "scripts/ai_llm/fallback.py",
+    "scripts/api/hramatka_generator.py",
+    "scripts/audit/layerb_judge_bridge.py",
+    "scripts/config/fleet_communications.yaml",
+    "scripts/config/model_catalog.yaml",
+    "scripts/lib/launcher_core.sh",
+    "scripts/pipeline/dispatch.py",
+    "scripts/review/isolation.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/agent_runtime/adapters/test_agy_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/ai_agent_bridge/test_ab_discuss_bugs.py",
+    "tests/ai_agent_bridge/test_openai_proxy.py",
+    "tests/ai_agent_bridge/test_review_pr_pins.py",
+    "tests/orchestration/test_dynamic_fleet_governor_prompt.py",
+    "tests/test_agent_fleet_tooling_guardrails.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_agy_integration.py",
+    "tests/test_dispatch.py",
+    "tests/test_driver_breadth_report.py",
+    "tests/test_layerb_judge_bridge.py",
+    "tests/test_model_catalog.py",
+    "tests/test_review_reviewer_resolver.py",
+    "tests/test_start_gemini_launcher.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a7/39a3e9d5c8/0/metadata.json",
+      "transcript": "/a7/39a3e9d5c8/0/full.jsonl",
+      "compact_transcript": "/a7/39a3e9d5c8/0/transcript.jsonl",
+      "content_hash": "/a7/39a3e9d5c8/0/content_hash.txt",
+      "prompt": "/a7/39a3e9d5c8/0/prompt.txt"
+    }
+  ]
+}

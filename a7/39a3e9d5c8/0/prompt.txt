@@ -1,0 +1,68 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6753-gemini-37-default
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: #6753 — default Gemini/AGY is gemini-3.7-flash-high
+
+## CAPACITY_CARD
+pick=cursor status=cool will_last=true avoid=codex-deficit source=codexbar
+Operator GO 2026-08-13: default Gemini is 3.7 Flash High.
+
+## ROUTING_CARD_V1
+task_id: 6753-gemini-37-default
+tier: practical
+model_x_harness: cursor/auto
+owned_paths: scripts/agent_runtime/ scripts/ai_agent_bridge/ scripts/config/model_catalog.yaml scripts/config/fleet_communications.yaml agents_extensions/shared/rules/model-assignment.md tests/
+acceptance_cmd: .venv/bin/python -m pytest tests/test_agent_runtime.py tests/test_agy_integration.py tests/ai_agent_bridge/test_review_pr_pins.py tests/test_dispatch.py tests/test_gemini_bridge.py -q --tb=short
+
+## Live proof (quoted)
+
+```
+agy models
+gemini-3.7-flash-high   Gemini 3.7 Flash (High)
+gemini-3.7-flash-medium
+gemini-3.7-flash-low
+gemini-3.6-flash-high   …
+```
+
+## Do
+
+1. **Live defaults** → `gemini-3.7-flash-high`:
+   - `scripts/agent_runtime/adapters/agy.py`: add 3.7 high/medium/low slugs + legacy labels; `LEARN_UK_AGY_MODEL` default; keep 3.6 slugs.
+   - `scripts/agent_runtime/adapters/acpx.py` `AGY_ACP_MODEL`
+   - `scripts/agent_runtime/registry.py` `agy` and `acpx-agy-shadow` `default_model`
+   - `scripts/ai_agent_bridge/_agy.py` `_DEFAULT_AGY_MODEL`
+   - `scripts/ai_agent_bridge/_cli.py` ask-agy help/default; add legacy alias `gemini-3.7-flash` → high. Do **not** rewrite `gemini-3.6-flash-high` to 3.7.
+   - `scripts/pipeline/dispatch.py` if it maps old flash names to the current default.
+   - `scripts/config/model_catalog.yaml`: add `gemini-3.7-flash-high` (active, default ladder / reviewer seat). Keep 3.6 as active previous. Update `gemini-3.6-flash` reviewer `model_id` / invocation if that seat is the default Gemini reviewer.
+   - `scripts/config/fleet_communications.yaml` comments/pins for agy default.
+   - **Edit `agents_extensions/` first**, never deployed `.claude/` / `.agent/` copies:
+     - `agents_extensions/shared/rules/model-assignment.md` Gemini seat + tables
+     - `agents_extensions/shared/skills/drive-epic/SKILL.md` Gemini/AGY row
+   - `docs/best-practices/agent-activity-matrix.md` Flash default mentions
+   - Live runners that use current AGY default: `scripts/api/hramatka_generator.py` `PRIMARY_MODEL`, `scripts/projects/open_model_data/phase3_rule_author_runner.py` `CANONICAL_AGY_MODEL`, `phase3_functional_roles.py` / `phase3_source_production_transport.py` **only if they are live defaults**, not frozen receipts.
+
+2. **Do not change** historical phase3 JSON schema `const: gemini-3.6-flash-high` on already-recorded receipts. Do not invent 3.7 medium/low as new defaults.
+
+3. Update tests that assert the **current default** (registry, ask-agy, review pins, gemini bridge). Tests that pass an explicit 3.6 slug as a fixture can stay.
+
+4. Run:
+   ```
+   .venv/bin/python -m pytest tests/test_agent_runtime.py tests/test_agy_integration.py tests/ai_agent_bridge/test_review_pr_pins.py tests/test_dispatch.py tests/test_gemini_bridge.py tests/ai_agent_bridge/test_ask_contract.py tests/test_driver_breadth_report.py -q --tb=short
+   .venv/bin/ruff check scripts/agent_runtime/adapters/agy.py scripts/agent_runtime/registry.py scripts/ai_agent_bridge/_agy.py scripts/ai_agent_bridge/_cli.py
+   ```
+   If the repo has a rules-deploy check for `agents_extensions/`, run the one the rules file names.
+
+5. Commit `feat(fleet): default AGY/Gemini to gemini-3.7-flash-high (#6753)` trailer `X-Agent: cursor/6753-gemini-37-default`. Push. PR. No merge.
+
+## Non-goals
+
+Plane flip. Remapping explicit 3.6. Changing Pro deep-single-shot. UK content.
