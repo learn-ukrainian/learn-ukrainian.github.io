@@ -20,18 +20,7 @@ const markdownProcessor = unified({
 });
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
-// Folk un-hidden 2026-06-14 for the preview/seminar-test launch (reverses
-// orchestrator #3027). Empty = nothing suppressed from public routing.
-/** @type {string[]} */
-const hiddenPublicPaths = [];
 
-/** @param {string} page */
-const isHiddenPublicPage = (page) => {
-  const pathname = page.startsWith('http') ? new URL(page).pathname : page;
-  return hiddenPublicPaths.some(
-    (hiddenPath) => pathname === hiddenPath || pathname.startsWith(`${hiddenPath}/`),
-  );
-};
 
 // Re-homed routes. The practice surface moved from the Word Atlas (`/lexicon/`) to
 // Words of the Day (its real home). Astro emits a meta-refresh stub at the old path for
@@ -130,7 +119,7 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      filter: (page) => !isHiddenPublicPage(page) && !isRedirectSource(page),
+      filter: (page) => !isRedirectSource(page),
     }),
   ],
 });
