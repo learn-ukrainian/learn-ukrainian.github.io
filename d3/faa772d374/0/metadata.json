@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d3faa772d374",
+  "session_id": "ses_004e9c024ffeKlMq6vECwgP6VX",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T12:51:20.502529Z",
+  "branch": "deepseek/canary-ds-flash-post-reap",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet/post_task_reap.py",
+    "tests/test_fleet_post_task_reap.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "45bc6c5b7efd",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 94391,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6485888,
+    "output_tokens": 14251,
+    "api_call_count": 46
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T12:51:20.425582Z",
+    "agent_lines": 251,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 251,
+    "total_lines_changed": 257,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
