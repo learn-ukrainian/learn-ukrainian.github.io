@@ -1,0 +1,28 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-wave-l-reviewed-intake-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Fix both material findings from the independent exact-head review of PR #6756. Implement now on the existing branch; do not stop at a plan. You are not alone in the repository. Modify only the producer, its tracked generated receipt as required by implementation hash drift, and its focused test. Do not touch source PDFs, original acquisition receipts, frozen audits, v2 denominators, unrelated files, or existing private custody bytes except byte-identical validation.
+
+Review evidence:
+https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6756#issuecomment-5286809412
+Exact reviewed head: c6fff654a49a927c4e868cb9edc169c5991bc5c4
+
+Required repairs:
+1. _verify_pdf_pages must parse the exact already hash-verified payload with PdfReader(io.BytesIO(payload)), never reopen the path after verification. Add a regression test proving no second path read/TOCTOU window.
+2. write_review_drive_custody must reject symlinks/races on every exact derived component it reads or writes: custody directory, review destination, custody receipt, SHA256SUMS and all ancestors. Private writes must be same-directory atomic temp+rename with safe creation, modes 0700/0600, and fail closed on divergent existing output. Byte-identical existing outputs may be accepted idempotently. Add negative tests for a symlinked custody directory and symlinked/unsafe destination plus atomic/idempotent behavior.
+3. Regenerate the tracked public receipt through the producer so implementation hash/self-hash bind the repaired code. Preserve all semantic dispositions, hashes and restrictive gates.
+4. Recheck the existing Drive custody read-only; do not overwrite it if byte-identical.
+
+Run focused tests, Ruff check/format, diff-check and full tests/test_open_model_phase3*.py if practical. Inspect final diff/status.
+Commit trailer:
+ X-Agent: cursor/phase3-6375-wave-l-review-fixes-cursor
+Push the same branch so PR #6756 advances. Do not merge or enable auto-merge. Report new exact head and tests.

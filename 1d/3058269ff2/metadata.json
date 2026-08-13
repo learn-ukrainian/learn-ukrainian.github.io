@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1d3058269ff2",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-wave-l-reviewed-intake-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_wave_l_modern_phonetics_reviewed_v1.json",
+    "scripts/projects/open_model_data/phase3_wave_l_modern_phonetics_reviewed_intake.py",
+    "tests/test_open_model_phase3_wave_l_modern_phonetics_reviewed_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/1d/3058269ff2/0/metadata.json",
+      "transcript": "/1d/3058269ff2/0/full.jsonl",
+      "compact_transcript": "/1d/3058269ff2/0/transcript.jsonl",
+      "content_hash": "/1d/3058269ff2/0/content_hash.txt",
+      "prompt": "/1d/3058269ff2/0/prompt.txt"
+    }
+  ]
+}
