@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,23 @@ def _write_private(path: Path, payload: bytes) -> None:
     os.chmod(path.parent, 0o700)
     path.write_bytes(payload)
     os.chmod(path, 0o600)
+
+
+def _simulate_group_readable_mode(
+    monkeypatch: pytest.MonkeyPatch,
+    target: Path,
+) -> None:
+    original_lstat = Path.lstat
+
+    def patched_lstat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = original_lstat(path, *args, **kwargs)
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP
+        return os.stat_result(values)
+
+    monkeypatch.setattr(Path, "lstat", patched_lstat)
 
 
 def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]:
@@ -260,10 +278,9 @@ def test_private_input_modes_and_symlinks_are_rejected(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     paths = _fixture(tmp_path, monkeypatch)
-    os.chmod(paths["pdf"], 0o640)
+    _simulate_group_readable_mode(monkeypatch, paths["pdf"])
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="mode 0600"):
         _build(paths)
-    os.chmod(paths["pdf"], 0o600)
     link = tmp_path / "source-link.pdf"
     link.symlink_to(paths["pdf"])
     paths["pdf"] = link
