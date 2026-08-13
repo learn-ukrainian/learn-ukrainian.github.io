@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "62da45a15dbd",
+  "session_id": "fleet-9d1765b23a0047bca90fd581c220aa43",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T15:38:41.408133Z",
+  "branch": "cursor/practice-emit-unused-thin",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/generate_practice_deck.py",
+    "scripts/audit/paronym_residual_audit.py",
+    "scripts/audit/relation_residual_audit.py",
+    "scripts/practice/thin_mode_source_inventory.py",
+    "scripts/practice_deck/io.py",
+    "site/src/data/lexicon-practice-deck.pointer.json",
+    "tests/test_generate_practice_deck.py",
+    "tests/test_thin_mode_source_inventory.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "7322de77a7d0",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T15:38:41.39715Z",
+    "agent_lines": 1030,
+    "agent_removed": 131,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1030,
+    "total_lines_changed": 1161,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

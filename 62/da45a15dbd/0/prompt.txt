@@ -1,0 +1,49 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/practice-emit-unused-thin
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: emit unused attested thin-mode pairs (no invented pairs)
+
+**Driver:** grok-atlas · **use Cursor Ultra 20x**
+**X-Agent:** `cursor/practice-emit-unused-thin`
+
+## CAPACITY_CARD
+pick=cursor Ultra 100% · avoid=codex deficit · language: do not invent pairs
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor Auto Ultra
+- why: factory emit of pairs already in YAML
+- owned_paths: scripts/audit/generate_practice_deck.py, scripts/practice_deck/**, site/public/lexicon/practice-{synonym,antonym,paronym,homonym}*, site/src/data/lexicon-practice-deck.pointer.json, tests/**
+- acceptance_cmd: thin_mode_source_inventory unused→0 (or named factory-blocked leftovers) + coverage_report unique up + pytest
+- alternatives_considered: [agy on heritage yaml]
+- parallel: agy/practice-heritage-densify owns **only** `heritage_pairs.yaml` + wave1 yaml. Do **not** edit those. If you must touch `generate_practice_deck.py`, keep heritage functions byte-stable unless a one-line hook is required (NOTE it).
+
+## Frozen outcome
+- User-visible: unused attested pairs enter Practice shards:
+  - antonym unused **275**
+  - synonym unused **94**
+  - paronym unused **84**
+  - homonym unused **53**
+- Bar ≥1000 is **not** reachable from these files (source unique 790/640/192/75). Drain unused anyway — that is debt.
+- Non-goals: no new invented pairs; no heritage; no #6370.
+- Held-out: `python -m scripts.practice.thin_mode_source_inventory` unused counts after vs before.
+- Stop: if a pair is unused because of a **correct** factory gate (no VESUM, rights, frame), name it. Do not delete the gate.
+- Completion: PR, no auto-merge. Quote before/after unique + unused.
+
+## Work
+1. Worktree from origin/main. Primary read-only.
+2. Find why unused pairs do not emit (filter in generate_practice_deck / publish).
+3. Fix emit of attested unused; regen those four modes; publish if pointer required.
+4. Tests + ruff + PR #4387 #4700.
+
+## #M-4
+Quote inventory unused table before/after.

@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "62da45a15dbd",
+  "strategy": "manual-commit",
+  "branch": "cursor/practice-emit-unused-thin",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/audit/generate_practice_deck.py",
+    "scripts/audit/paronym_residual_audit.py",
+    "scripts/audit/relation_residual_audit.py",
+    "scripts/practice/thin_mode_source_inventory.py",
+    "scripts/practice_deck/io.py",
+    "site/src/data/lexicon-practice-deck.pointer.json",
+    "tests/test_generate_practice_deck.py",
+    "tests/test_thin_mode_source_inventory.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/62/da45a15dbd/0/metadata.json",
+      "transcript": "/62/da45a15dbd/0/full.jsonl",
+      "compact_transcript": "/62/da45a15dbd/0/transcript.jsonl",
+      "content_hash": "/62/da45a15dbd/0/content_hash.txt",
+      "prompt": "/62/da45a15dbd/0/prompt.txt"
+    }
+  ]
+}
