@@ -164,3 +164,57 @@ def test_local_launcher_prefers_synced_package_on_systemd_import_path() -> None:
     assert 'WORK_MANIFEST="$WORK_DIR/manifest.json"' in source
     assert '"$CODE_ROOT/scripts/lexicon/enrich_manifest.py"' in source
     assert 'PYTHONPATH=$(printf \'%q\' "$CODE_ROOT"):\\$PYTHONPATH:$(printf \'%q\' "$REPO")' in source
+
+
+def _primary_root_block(source: str) -> str:
+    """Extract the portable PRIMARY_ROOT resolution block verbatim."""
+    start = source.index('_primary_common_dir=')
+    end = source.index("\n\n", start)
+    return source[start:end]
+
+
+def test_remote_wrapper_resolves_primary_root_portably() -> None:
+    """The remote wrapper must not hardcode /Users/... primary paths (#6571).
+
+    PRIMARY_ROOT is resolved from the shared .git common dir so the script
+    works on any operator's machine. Run the resolution block against this
+    worktree and confirm the result points at a real primary checkout.
+    """
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+
+    # Ban the hardcoded absolute path in live source.
+    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in source
+    assert "ATLAS_PRIMARY_ROOT" in source
+    assert 'git -C "$WORKTREE" rev-parse --git-common-dir' in source
+
+    worktree = str(ROOT)
+    block = _primary_root_block(source)
+    proc = subprocess.run(
+        ["bash", "-c", f'WORKTREE={worktree!r}\n{block}\nprintf "%s" "$PRIMARY_ROOT"'],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    resolved = Path(proc.stdout)
+    # The resolved primary root owns the shared .git store (a real checkout,
+    # not a worktree gitdir).
+    assert resolved.is_dir()
+    assert (resolved / ".git").is_dir()
+
+
+def test_remote_wrapper_primary_root_override_wins() -> None:
+    """ATLAS_PRIMARY_ROOT explicit override is honored (#6571)."""
+    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
+    block = _primary_root_block(source)
+    proc = subprocess.run(
+        ["bash", "-c", f'WORKTREE={str(ROOT)!r}\n{block}\nprintf "%s" "$PRIMARY_ROOT"'],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+        env={"PATH": "/usr/bin:/bin", "ATLAS_PRIMARY_ROOT": "/tmp/custom-primary"},
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "/tmp/custom-primary"

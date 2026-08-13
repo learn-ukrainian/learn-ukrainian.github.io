@@ -59,8 +59,10 @@ non-skippable:
   run the repository deployment check or command required by the full rules;
   never hand-edit deployed `.claude/`, `.codex/`, `.agent/`, or `.gemini/`
   copies.
-- Use the project interpreter prescribed by the task/worktree contract; never use bare `python`,
-  `python3`, or `sys.executable` for project commands.
+- Use the project interpreter prescribed by the task/worktree contract for project, shell, and
+  production commands; never use bare `python`, `python3`, or `sys.executable` there. Tests that
+  spawn a Python subprocess MUST use `sys.executable` (it is the interpreter running under
+  `.venv/bin/python -m pytest`).
 - Never modify `.python-version`, `.yamllint`, or `.markdownlint.json` to make
   work pass. Fix source instead. Do not commit generated status, audit, review,
   or telemetry artifacts; keep one PR to one concern and under the file cap.

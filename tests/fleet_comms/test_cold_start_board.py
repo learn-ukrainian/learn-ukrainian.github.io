@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
-from unittest.mock import patch
+import sqlite3
+from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -11,11 +13,98 @@ from scripts.fleet_comms.cli import EXIT_OK
 from scripts.fleet_comms.cli import main as cli_main
 from scripts.fleet_comms.cold_start_board import (
     MAX_BOARD_BYTES,
+    ProbeResult,
+    _probe_backlog_and_dead_letters,
+    _probe_inbox,
     build_cold_start_board,
     cap_data,
+    compute_board_status,
     render_markdown_board,
     run_fail_open_probe,
 )
+
+
+def _seed_legacy_broker(db: Path) -> None:
+    """Real legacy broker schema: deliveries has no channel/recipient/sender/kind."""
+    conn = sqlite3.connect(db)
+    conn.executescript(
+        """
+        CREATE TABLE channel_messages (
+          message_id TEXT PRIMARY KEY,
+          channel TEXT,
+          from_agent TEXT,
+          kind TEXT,
+          body TEXT,
+          created_at TEXT
+        );
+        CREATE TABLE deliveries (
+          delivery_id TEXT PRIMARY KEY,
+          message_id TEXT,
+          to_agent TEXT,
+          to_model TEXT,
+          status TEXT,
+          dispatched_at TEXT,
+          delivered_at TEXT,
+          attempt_count INTEGER DEFAULT 0
+        );
+        INSERT INTO channel_messages VALUES
+          ('m1','fleet','codex','task','SECRET_BODY_SHOULD_NOT_LEAK','2026-08-01T10:00:00Z'),
+          ('m2','fleet','claude','notice','also-secret','2026-08-01T11:00:00Z');
+        INSERT INTO deliveries VALUES
+          ('d1','m1','claude',NULL,'pending',NULL,NULL,0),
+          ('d2','m2','claude',NULL,'dispatched','2026-08-01T11:01:00Z',NULL,1),
+          ('d3','m2','codex',NULL,'delivered','2026-08-01T11:02:00Z','2026-08-01T11:03:00Z',1);
+        """
+    )
+    conn.commit()
+    conn.close()
+
+
+def _seed_authority_plane(root: Path) -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    plane_db = root / "comms.sqlite3"
+    conn = sqlite3.connect(plane_db)
+    conn.executescript(
+        """
+        CREATE TABLE authority_deliveries (
+          delivery_id TEXT PRIMARY KEY,
+          message_id TEXT NOT NULL,
+          recipient TEXT NOT NULL,
+          state TEXT NOT NULL,
+          deadline_at TEXT,
+          lease_owner TEXT,
+          lease_expires_at TEXT,
+          fence_token INTEGER NOT NULL DEFAULT 0,
+          attempt_count INTEGER NOT NULL DEFAULT 0,
+          acknowledgment_artifact_id TEXT,
+          terminal_sha256 TEXT,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          completed_at TEXT
+        );
+        CREATE TABLE authority_dead_letters (
+          dead_letter_id TEXT PRIMARY KEY,
+          delivery_id TEXT UNIQUE,
+          job_id TEXT UNIQUE,
+          reason_code TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        );
+        INSERT INTO authority_deliveries VALUES
+          ('auth-d1','auth-m1','claude','queued',NULL,NULL,NULL,0,0,NULL,NULL,
+           '2026-08-01T12:00:00Z','2026-08-01T12:00:00Z',NULL),
+          ('auth-d2','auth-m2','claude','running',NULL,'worker',NULL,1,2,NULL,NULL,
+           '2026-08-01T12:01:00Z','2026-08-01T12:02:00Z',NULL),
+          ('auth-d3','auth-m3','codex','queued',NULL,NULL,NULL,0,0,NULL,NULL,
+           '2026-08-01T12:03:00Z','2026-08-01T12:03:00Z',NULL),
+          ('auth-d4','auth-m4','claude','acknowledged',NULL,NULL,NULL,0,1,NULL,'sha',
+           '2026-08-01T11:00:00Z','2026-08-01T11:05:00Z','2026-08-01T11:05:00Z');
+        INSERT INTO authority_dead_letters VALUES
+          ('auth-dl1','auth-d4',NULL,'attempts_exhausted','2026-08-01T11:06:00Z');
+        """
+    )
+    conn.commit()
+    conn.close()
+    return plane_db
 
 
 def test_all_probes_board_structure():
@@ -121,8 +210,139 @@ def test_no_claim_or_write_calls(monkeypatch):
     assert board["board_status"] in {"ok", "degraded"}
 
 
+def test_capsule_reports_live_plane_mode(monkeypatch):
+    """capsule_session_env uses resolve_plane_mode(None), not a hardcoded off default."""
+    monkeypatch.delenv("FLEET_COMMS_PLANE_MODE", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.resolve_plane_mode",
+        return_value="authority",
+    ) as resolve:
+        board = build_cold_start_board(agent="grok-infra")
+        resolve.assert_called()
+        assert board["probes"]["capsule_session_env"]["data"]["plane_mode"] == "authority"
+
+
+def test_orient_timeout_skipped_does_not_degrade_board():
+    """Monitor timeout → orient_lean skipped; board_status stays ok if load-bearing ok."""
+    ok_payload = {"mode": "authority", "schema": {"applied_version": 7}}
+
+    with (
+        patch(
+            "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+            side_effect=TimeoutError("monitor slow"),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_plane_status",
+            return_value=ok_payload,
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+            return_value={"backlog_total": 0, "dead_letters_total": 0},
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_inbox",
+            return_value=ProbeResult(
+                status="ok",
+                elapsed_ms=1.0,
+                data={"agent": "grok-infra", "inbox_pending_count": 0},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+            return_value=ProbeResult(
+                status="degraded",
+                elapsed_ms=1.0,
+                error="gh flaky",
+                data={"gh_available": True, "prs": []},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_session_streams_and_handoff",
+            return_value=ProbeResult(
+                status="skipped",
+                elapsed_ms=1.0,
+                data={"reason": "no_stream_id_provided"},
+            ),
+        ),
+        patch(
+            "scripts.fleet_comms.cold_start_board._probe_bottleneck_slice",
+            return_value={"total_streams": 0, "slice": {}},
+        ),
+    ):
+        board = build_cold_start_board(agent="grok-infra")
+
+    orient = board["probes"]["orient_lean"]
+    assert orient["status"] == "skipped"
+    assert orient["data"]["reason"] == "monitor_unreachable"
+    assert "git_fallback" in orient["data"]
+    assert board["board_status"] == "ok"
+    assert board["probes"]["gh_pr_list"]["status"] == "degraded"
+
+
+def test_compute_board_status_load_bearing_only():
+    probes = {
+        "plane_status": {"status": "ok"},
+        "inbox_check": {"status": "ok"},
+        "backlog_and_dead_letters": {"status": "ok"},
+        "session_streams_and_handoff": {
+            "status": "skipped",
+            "data": {"db_exists": False},
+        },
+        "orient_lean": {"status": "skipped"},
+        "gh_pr_list": {"status": "degraded"},
+        "needle_search": {"status": "error"},
+    }
+    assert compute_board_status(probes) == "ok"
+
+    probes["session_streams_and_handoff"] = {
+        "status": "degraded",
+        "data": {"db_exists": True},
+    }
+    assert compute_board_status(probes) == "degraded"
+
+    probes["session_streams_and_handoff"] = {
+        "status": "degraded",
+        "data": {"db_exists": False},
+    }
+    probes["inbox_check"] = {"status": "ok"}
+    assert compute_board_status(probes) == "ok"
+
+    probes["inbox_check"] = {"status": "degraded"}
+    assert compute_board_status(probes) == "degraded"
+
+
+def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
+    """Dispatch worktree cwd must not make session-streams look missing."""
+    from scripts.fleet_comms import cold_start_board as board_mod
+
+    primary = tmp_path / "primary"
+    worktree = tmp_path / "worktree"
+    primary.mkdir()
+    worktree.mkdir()
+    db = primary / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
+    db.parent.mkdir(parents=True)
+    db.write_bytes(b"")
+
+    git_common = primary / ".git"
+    completed = MagicMock()
+    completed.returncode = 0
+    completed.stdout = str(git_common) + "\n"
+    completed.stderr = ""
+
+    with (
+        patch.object(board_mod, "HAS_SESSION_STREAMS", False),
+        patch.object(board_mod, "default_database_path", None),
+        patch("scripts.fleet_comms.cold_start_board.subprocess.run", return_value=completed),
+    ):
+        resolved = board_mod._resolve_session_streams_db(worktree)
+    assert resolved == db
+    assert resolved.is_file()
+
+
 def test_markdown_path():
-    """Verify markdown output path renders structured briefing."""
+    """Verify markdown output path renders Summary then probe dump."""
     board = build_cold_start_board(
         stream_id="epic:4707",
         agent="agy/cold-start-pr2-board",
@@ -131,10 +351,16 @@ def test_markdown_path():
     md = render_markdown_board(board)
 
     assert "# Driver Cold Start Board" in md
-    assert "- **Stream ID:** `epic:4707`" in md
-    assert "- **Agent:** `agy/cold-start-pr2-board`" in md
+    assert "## Summary" in md
+    assert "- **plane_mode:**" in md
+    assert "- **schema_version:**" in md
+    assert "- **inbox_pending:**" in md
+    assert "- **board_status:**" in md
+    assert "- **stream_id:** `epic:4707`" in md
+    assert "- **agent:** `agy/cold-start-pr2-board`" in md
     assert "## Diagnostic Probes" in md
     assert "### `capsule_session_env`" in md
+    assert md.index("## Summary") < md.index("## Diagnostic Probes")
     assert len(md.encode("utf-8")) <= MAX_BOARD_BYTES
 
 
@@ -167,4 +393,101 @@ def test_cli_cold_start_board_markdown(capsys):
 
     captured = capsys.readouterr()
     assert "# Driver Cold Start Board" in captured.out
+    assert "## Summary" in captured.out
     assert "epic:4707" in captured.out
+
+
+def test_probe_inbox_legacy_schema_ok(tmp_path: Path, monkeypatch) -> None:
+    """Legacy deliveries without channel/recipient columns must not degrade."""
+    broker = tmp_path / "messages.db"
+    _seed_legacy_broker(broker)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    monkeypatch.setenv("AB_DB_PATH", str(broker))
+
+    result = _probe_inbox(root=None, repo_root=tmp_path, agent="claude")
+    assert result.status == "ok"
+    assert result.error is None
+    assert result.data["source"] == "legacy"
+    assert result.data["inbox_pending_count"] == 2
+    assert result.data["matched_agent"] == "claude"
+    recent = result.data["recent_deliveries"]
+    assert len(recent) == 2
+    assert {r["delivery_id"] for r in recent} == {"d1", "d2"}
+    blob = json.dumps(result.data)
+    assert "SECRET_BODY" not in blob
+    assert "also-secret" not in blob
+
+
+def test_probe_inbox_authority_counts_agent(tmp_path: Path, monkeypatch) -> None:
+    """Authority path counts queued/running rows for the exact recipient."""
+    plane_root = tmp_path / "plane"
+    _seed_authority_plane(plane_root)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+
+    result = _probe_inbox(root=plane_root, repo_root=tmp_path, agent="claude")
+    assert result.status == "ok"
+    assert result.error is None
+    assert result.data["source"] == "authority"
+    assert result.data["inbox_pending_count"] == 2
+    assert result.data["matched_agent"] == "claude"
+    states = {r["state"] for r in result.data["recent_deliveries"]}
+    assert states == {"queued", "running"}
+    assert all("body" not in r for r in result.data["recent_deliveries"])
+
+
+def test_probe_inbox_authority_hyphen_alias(tmp_path: Path, monkeypatch) -> None:
+    """Cheap hyphen base alias matches when exact recipient is absent."""
+    plane_root = tmp_path / "plane"
+    _seed_authority_plane(plane_root)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+
+    result = _probe_inbox(root=plane_root, repo_root=tmp_path, agent="claude-infra")
+    assert result.status == "ok"
+    assert result.data["inbox_pending_count"] == 2
+    assert result.data["matched_agent"] == "claude"
+
+
+def test_probe_backlog_labels_authority_source(tmp_path: Path, monkeypatch) -> None:
+    """Backlog probe uses authority collectors and labels source under authority mode."""
+    plane_root = tmp_path / "plane"
+    _seed_authority_plane(plane_root)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+
+    data = _probe_backlog_and_dead_letters(root=plane_root, repo_root=tmp_path)
+    assert data["source"] == "authority"
+    # exclude_retired keeps non-gemini; fixture has claude×2 + codex×1 = 3
+    assert data["backlog_total"] == 3
+    assert data["dead_letters_total"] == 1
+    assert "claude" in data["backlog_by_agent"]
+
+
+def test_probe_backlog_labels_legacy_source(tmp_path: Path, monkeypatch) -> None:
+    """Backlog probe falls back to broker DB and labels source=legacy when plane is off."""
+    broker = tmp_path / "messages.db"
+    _seed_legacy_broker(broker)
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    monkeypatch.setenv("AB_DB_PATH", str(broker))
+
+    data = _probe_backlog_and_dead_letters(root=tmp_path / "missing-plane", repo_root=tmp_path)
+    assert data["source"] == "legacy"
+    assert data["backlog_total"] == 2
+    assert data["backlog_by_agent"].get("claude") == 2
+
+
+def test_orient_lean_requests_lean_true():
+    """orient probe must hit /api/orient?lean=true (drive-epic contract)."""
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = b'{"ok": true}'
+    mock_resp.__enter__.return_value = mock_resp
+    mock_resp.__exit__.return_value = False
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=mock_resp,
+    ) as urlopen:
+        from scripts.fleet_comms.cold_start_board import _probe_orient_lean
+
+        result = _probe_orient_lean()
+        assert result.status == "ok"
+        req = urlopen.call_args[0][0]
+        assert req.full_url.endswith("/api/orient?lean=true")
