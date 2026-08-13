@@ -1,14 +1,14 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-236fb399f9c8.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-20877d568158.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "6c3aeee132d3f19340e93f794198eaee94b5b51072fa4fdd2278af9418d07aac",
+  "manifest_fingerprint": "7f00728a91186845a2de64ae11dd0120bb84c4fb3f86ca57bc4c5ac476bf1293",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-12T21:13:24+00:00",
-  "gz_sha256": "4193c0681ad404a7aedb85e6ad076574ff51a736d4b2481d8d3ce10b3acb053d",
-  "json_sha256": "236fb399f9c83f034305dee05807d28ddd4f9d0b12f518079d8eea536f044f3c",
-  "gz_bytes": 25086621,
-  "json_bytes": 186974363,
+  "generated_at": "2026-08-13T12:37:15+00:00",
+  "gz_sha256": "1e24ec5517a79f395cc9700d043b80a1d51d4d0b37f80be5594da50763c9d28e",
+  "json_sha256": "20877d568158cb4c5c5416a66ad075153955d3e06f7dd87176e6c67b2fea464b",
+  "gz_bytes": 25087831,
+  "json_bytes": 186987614,
   "richness_gate": {
     "baseline": {
       "poc_thin_pages": 8902,
@@ -21,7 +21,7 @@
       "old_gate_no_english_anchor": 2295
     },
     "regressions": {},
-    "override_reason": "Additive #6370 paired-headword split: +58 VESUM-ok missing legs from 218 paired Ohoiko/ULP strings (20053→20111). Split policy encoded in scripts/lexicon/ohoiko_paired_headword_split.py. Leftover paired-leg residual: multiword_after_split + heritage + vesum_absent legs; inventory paired strings remain structural residual until inventory rewrite. Multiword(12)/heritage(3)/OCR(1) stay OPEN.",
+    "override_reason": null,
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
