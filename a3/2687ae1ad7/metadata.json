@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a32687ae1ad7",
+  "strategy": "manual-commit",
+  "branch": "cursor/6691-fingerprint",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/data/lexicon-manifest.fingerprint.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a3/2687ae1ad7/0/metadata.json",
+      "transcript": "/a3/2687ae1ad7/0/full.jsonl",
+      "compact_transcript": "/a3/2687ae1ad7/0/transcript.jsonl",
+      "content_hash": "/a3/2687ae1ad7/0/content_hash.txt",
+      "prompt": "/a3/2687ae1ad7/0/prompt.txt"
+    }
+  ]
+}
