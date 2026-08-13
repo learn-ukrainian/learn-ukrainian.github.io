@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "453f37f79d6c",
+  "session_id": "fleet-adc558b94fba49b097683d408b9705a9",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T20:21:28.142935Z",
+  "branch": "cursor/phase3-6375-babych-excerpt-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_babych_acoustic_excerpt_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py",
+    "tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "17013b09c10c",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T20:21:28.118241Z",
+    "agent_lines": 1286,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1286,
+    "total_lines_changed": 1286,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

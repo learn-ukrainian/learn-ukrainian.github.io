@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "453f37f79d6c",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-babych-excerpt-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_babych_acoustic_excerpt_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py",
+    "tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/45/3f37f79d6c/0/metadata.json",
+      "transcript": "/45/3f37f79d6c/0/full.jsonl",
+      "compact_transcript": "/45/3f37f79d6c/0/transcript.jsonl",
+      "content_hash": "/45/3f37f79d6c/0/content_hash.txt",
+      "prompt": "/45/3f37f79d6c/0/prompt.txt"
+    }
+  ]
+}

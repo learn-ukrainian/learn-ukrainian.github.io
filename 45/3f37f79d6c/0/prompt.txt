@@ -1,0 +1,124 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-babych-excerpt-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Phase 3 #6375 — Babych 2022 official excerpt intake
+
+## Functional role and authority
+
+- Role: bounded implementation/data worker.
+- Task family: `open-model-data-correction-factory`.
+- Track: `open-model-data`.
+- Mode: workspace-write in a fresh Cursor dispatch worktree based on `origin/main`.
+- You are not alone in the repository. Do not revert, absorb, or edit work owned by other tasks.
+- Do not merge or arm auto-merge. Push the branch and open one PR linked to #6375.
+- This is engineering of an already-decided source-intake contract. Do not make Ukrainian linguistic judgments, select semantic gold, or expand the Phase 3 architecture.
+
+## User-visible outcome
+
+Produce one deterministic, fail-closed, text-free public intake contract for the exact official KUBG Babych 2022 PDF that is actually downloadable. The artifact must state truthfully that the PDF is a 13-page curated excerpt from a catalogued 294-page publication, not the complete book. Engineering may record its mechanical page/content structure but must not claim that it narrows or closes a university topic before a language-qualified source-fitness review. It authorizes no training conversion or database ingest and cannot be normative authority or semantic gold.
+
+## Exact private input denominator
+
+Drive directory (private; never copy source bytes into Git):
+
+`/Users/krisztiankoos/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data/university_corpus/staging/phase3-6375-wave-k-acoustic-phonetics`
+
+Files:
+
+1. `uni-ukrmova-phonetics-audiology-babych-2022.pdf`
+   - bytes: `357368`
+   - SHA-256: `7adee0a1f2f77af95a3c76474ec8a7df4208039d64d3420d3008466f1f66e537`
+   - PDF 1.7; 13 pages; all 13 pages text-bearing.
+2. `kubg-item-record.html`
+   - SHA-256: `4e21fbd647816675750702b05c6d57b2ee2fa56b741721b9e26b3e1e2cf190b7`
+3. `kubg-mets.xml`
+   - SHA-256: `36b11282b95bc74a58490e82ad8d6680749c9ae52114130073e3137fafbdadd6`
+4. `kubg-export.json`
+   - SHA-256: `860c6b7bc59ab3c2d4816defa2c06fd0c8d26ba8362d68f868545dac5731c942`
+
+Official item: `https://elibrary.kubg.edu.ua/id/eprint/43529/`
+
+Official direct PDF: `https://elibrary.kubg.edu.ua/id/eprint/43529/1/N_Babych_FTFZOA_FPSRSO.pdf`
+
+Catalog metadata:
+
+- Author: Наталія Миколаївна Бабич. Preserve the official metadata spelling defect as provenance where encountered; do not silently rewrite source bytes.
+- Title: `Фонетика та фонологія з основами аудіології`.
+- Year: 2022.
+- ISBN: `978-617-7819-30-0`.
+- Catalogued publication extent: 294 pages.
+- Audience: native-Ukrainian bachelor programme for speciality 016 Special Education, specialization 016.01 Logopedia; not a foreign-student/L2 textbook.
+
+Observed exact-PDF page structure, which code must verify rather than merely restate:
+
+- PDF pages 1–8: title/copyright/TOC/preface corresponding to print pages 1–8.
+- PDF page 9: printed page 20, symbols.
+- PDF pages 10–12: printed pages 21–23, beginning of Module I with sound generation and acoustic characteristics including intensity, frequency, spectrum, duration, and phase.
+- PDF page 13: publication colophon.
+- The discontinuities 8→20 and 23→colophon are evidence that this is an excerpt. Never infer or synthesize the absent 281 pages.
+
+## Controlling contracts and precedent
+
+- `batch_state/phase3-reboot-prompt-v3-draft.md`, SHA-256 `5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d`.
+- The preserved Phase 3 recovery v2 contract SHA-256 is `298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b`; bind both v2 and v3 prompt hashes in the receipt.
+- `scripts/projects/open_model_data/phase3_minchak_phonetics_intake.py` and its schema/tests/receipt are the nearest implementation precedent. Reuse its secure private-input, hash, schema, receipt, no-clobber, and overclaim guards instead of inventing a second pattern.
+- `data/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json` is the frozen topic baseline. This slice must not rewrite it or claim closure.
+
+## Owned paths
+
+Only create or modify:
+
+- `scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py`
+- `data/projects/open_model_data/contracts/phase3_babych_acoustic_excerpt_candidate_v1.schema.json`
+- `data/projects/open_model_data/admission/phase3_babych_acoustic_excerpt_candidate_v1.json`
+- `tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py`
+
+Do not modify generated status/audit/review artifacts, existing freeze receipts, linter configuration, `.python-version`, or any source database. Do not commit private text, PDF bytes, renders, or Drive paths that expose user identity; the public receipt may use a logical private locator and official public URLs.
+
+## Required behavior
+
+1. Re-open and hash every exact private input. Require regular non-symlink files, mode `0600`, safe path components, and safe/no-clobber public receipt publication. Require every private input to be outside the Git working tree. Use the hardened Minchak pattern, including lexical `..` rejection and no-follow reads.
+2. Parse and cross-bind official HTML/METS/JSON/PDF metadata. Reject title/year/ISBN/catalog extent/bitstream URL drift. Preserve the official typo as attributed raw metadata if needed while emitting the verified human display name separately.
+3. Inspect the exact PDF deterministically with the project dependency runtime. Verify 13 pages, all text-bearing, page-text hashes/aggregate hash, the observed print-page discontinuities, and the substantive excerpt boundaries. Do not claim 294 file pages.
+4. Emit a strict `additionalProperties: false` text-free receipt with source identity, exact byte/page denominators, metadata bindings, excerpt structure, rights posture, review-scope disposition, and immutable implementation/schema/receipt hashes.
+5. Hard-pin these boundaries in both schema and runtime validation:
+   - `status = CONTEXTUAL_EXCERPT_PENDING_UKRAINIAN_SOURCE_REVIEW_AND_SCOPE_CRITIC`
+   - `content_disposition = contextual_only`
+   - no affirmative `coverage_effect` or `topic_gaps_narrowed` claim; if such fields exist, they must be explicitly pending/empty until a separately bound language-qualified review exists
+   - `topic_gaps_closed = []`
+   - `normative_rule_authority = false`
+   - `semantic_gold = false`
+   - `training_conversion_complete = false`
+   - `retained_extracted_text_authorized = false`
+   - `database_ingest_authorized = false`
+   - `source_universe_frozen = false`
+   - `source_coverage_ready = false`
+   - `phase3_complete = false`
+   - `phase4_blocked = true`
+   - `public_redistribution_authorized = false`
+   - standardized license not established; private attributed research use with takedown/adaptation readiness only.
+6. Tests must cover exact replay plus negative cases: byte/hash drift, metadata drift, v2/v3 prompt-binding drift, page-count/full-book overclaim, page discontinuity drift, missing text page, private input inside Git, unsafe permissions, symlink and `..` traversal, stale/tampered receipt, schema overclaims, concurrent/no-clobber publication, and absence of private source text from the tracked receipt.
+7. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` for project Python commands. Run focused tests, Ruff check/format-check, and `git diff --check`.
+8. Commit with conventional subject and trailer `X-Agent: cursor/6375`, push, and open a non-draft PR linking #6375. Do not merge.
+
+## Acceptance evidence
+
+At minimum:
+
+```bash
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest -q tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m ruff check scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py
+/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m ruff format --check scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py tests/test_open_model_phase3_babych_acoustic_excerpt_intake.py
+git diff --check origin/main...HEAD
+```
+
+Return exact changed paths, receipt SHA, test output, branch/head, and PR URL. If any observed source fact contradicts this packet, fail closed and report the contradiction rather than adjusting the denominator silently.
