@@ -23,6 +23,10 @@ permissions:
   contents: read
   issues: read
   pull-requests: write
+  # Required-context discovery via GraphQL rollup isRequired (#6717). Never
+  # request administration — branch-protection REST is off-limits to GITHUB_TOKEN.
+  checks: read
+  statuses: read
 
 jobs:
   sweep:

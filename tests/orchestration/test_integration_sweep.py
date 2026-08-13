@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -158,3 +159,130 @@ def test_run_is_read_only_without_apply(monkeypatch) -> None:
     decisions = integration_sweep.run(FakeAdapter(), "org/repo", apply=False, now=NOW)
 
     assert decisions == [integration_sweep.Decision(99, True, "stream_epic_4707")]
+
+
+def test_required_check_contexts_never_calls_branch_protection() -> None:
+    """GITHUB_TOKEN cannot call branches/.../protection (administration / HTTP 403)."""
+
+    def runner(args: list[str]) -> str:
+        joined = " ".join(args)
+        assert "/branches/" not in joined and "/protection" not in joined, joined
+        assert "graphql" in args
+        return json.dumps(
+            {
+                "data": {
+                    "repository": {
+                        "pullRequests": {
+                            "nodes": [
+                                {
+                                    "commits": {
+                                        "nodes": [
+                                            {
+                                                "commit": {
+                                                    "statusCheckRollup": {
+                                                        "contexts": {
+                                                            "nodes": [
+                                                                {
+                                                                    "__typename": "CheckRun",
+                                                                    "name": "CI Gate",
+                                                                    "isRequired": True,
+                                                                },
+                                                                {
+                                                                    "__typename": "CheckRun",
+                                                                    "name": "advisory",
+                                                                    "isRequired": False,
+                                                                },
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        )
+
+    adapter = integration_sweep.GitHubAdapter(Path("."), runner=runner)
+
+    assert adapter.required_check_contexts("org/repo") == ["CI Gate"]
+
+
+def test_required_check_contexts_falls_back_to_ci_gate_on_graphql_403() -> None:
+    """Adapter 403 on required-context lookup must not crash; CI Gate remains."""
+
+    def runner(args: list[str]) -> str:
+        joined = " ".join(args)
+        assert "/branches/" not in joined and "/protection" not in joined, joined
+        raise integration_sweep.SweepError(
+            "gh: Resource not accessible by integration (HTTP 403)"
+        )
+
+    adapter = integration_sweep.GitHubAdapter(Path("."), runner=runner)
+
+    assert adapter.required_check_contexts("org/repo") == ["CI Gate"]
+
+
+def test_run_survives_required_context_403_via_documented_default(monkeypatch) -> None:
+    class SoftAdapter:
+        repo_root = Path(".")
+
+        def required_check_contexts(self, repository: str) -> list[str]:
+            # Simulate the real adapter falling back after a 403.
+            return integration_sweep.GitHubAdapter(
+                Path("."),
+                runner=lambda _args: (_ for _ in ()).throw(
+                    integration_sweep.SweepError(
+                        "gh: Resource not accessible by integration (HTTP 403)"
+                    )
+                ),
+            ).required_check_contexts(repository)
+
+        def list_open_prs(self, _repository: str) -> list[dict]:
+            return [_pr()]
+
+        def arm_auto_merge(self, _repository: str, _number: int) -> None:
+            raise AssertionError("dry run must not mutate GitHub")
+
+    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
+
+    decisions = integration_sweep.run(SoftAdapter(), "org/repo", apply=False, now=NOW)
+
+    assert decisions == [integration_sweep.Decision(99, True, "stream_epic_4707")]
+
+
+def test_main_schedule_soft_skips_http_403(monkeypatch, capsys) -> None:
+    monkeypatch.setenv("EVENT_NAME", "schedule")
+
+    def boom(*_args, **_kwargs):
+        raise integration_sweep.SweepError(
+            "gh: Resource not accessible by integration (HTTP 403)"
+        )
+
+    monkeypatch.setattr(integration_sweep, "run", boom)
+
+    assert integration_sweep.main(["--repo", "org/repo", "--apply"]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("integration sweep skipped:")
+    assert "HTTP 403" in out
+
+
+def test_main_non_schedule_still_refuses_http_403(monkeypatch, capsys) -> None:
+    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
+    monkeypatch.delenv("GITHUB_EVENT_NAME", raising=False)
+
+    def boom(*_args, **_kwargs):
+        raise integration_sweep.SweepError(
+            "gh: Resource not accessible by integration (HTTP 403)"
+        )
+
+    monkeypatch.setattr(integration_sweep, "run", boom)
+
+    assert integration_sweep.main(["--repo", "org/repo"]) == 1
+    out = capsys.readouterr().out
+    assert out.startswith("integration sweep refused:")
+    assert "HTTP 403" in out

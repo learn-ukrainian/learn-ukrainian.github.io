@@ -10,7 +10,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 | `ci-gate-queue-recovery.yml` | Re-run cancelled CI Gate once when upstream jobs succeeded (runner-queue starvation) | Every 15 min / manual | Stopgap for #4811; scans recent CI runs via `gh api` (no `workflow_run` — zizmor); never re-runs genuine failures; default-branch logic only. |
 | `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". |
 | `hygiene.yml` | Advisory radon / prompt lint / postmortem / agent-config / scripts-root checks | PR | Composite `hygiene-checks` job (#4811 slot cut); not in CI Gate. |
-| `integration-sweep.yml` | Arms auto-merge for abandoned reviewed PRs | Every 15 min / manual | Fail-closed membership, current-head approval, required-CI, and idle-owner checks; manual runs default to dry-run. |
+| `integration-sweep.yml` | Arms auto-merge for abandoned reviewed PRs | Every 15 min / manual | Fail-closed membership, current-head approval, required-CI (`CI Gate` via rollup/`isRequired`, not admin protection API), and idle-owner checks; manual runs default to dry-run; schedule soft-skips HTTP 403. |
 | `security-audit.yml` | Advisory dependency-vuln report (`pip-audit` + `npm audit`) | PR / weekly | Report-only; visibility layer over the dependabot backlog. Does not block. |
 | `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |
 | `validate-yaml.yml` | YAML syntax / schema validation | PR / push | |
