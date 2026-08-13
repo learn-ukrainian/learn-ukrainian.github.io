@@ -23,7 +23,8 @@ export async function getStaticPaths() {
 const { entry, readings, docs } = Astro.props;
 const { Content } = await render(entry);
 
-const pluralTexts = (n: number) => (n === 1 ? 'text' : 'texts');
+const pluralTextsEn = (n: number) => (n === 1 ? 'text' : 'texts');
+const pluralTextsUk = (n: number) => (n === 1 ? 'текст' : 'тексти');
 
 const sorted = [...readings].sort(
   (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title, 'uk'),
@@ -51,9 +52,12 @@ const taughtInLinks = (entry.data.taught_in ?? [])
 const sidebar = {
   backHref: '/readings/',
   backLabel: 'Reading reference',
+  backLabelKey: 'nav.readings' as const,
   titleLabel: 'Reading reference',
+  titleLabelKey: 'nav.readings' as const,
   navLabel: 'Primary sources',
-  positionLabel: `${links.length} ${pluralTexts(links.length)}`,
+  positionLabel: `${links.length} ${pluralTextsUk(links.length)}`,
+  positionLabelEn: `${links.length} ${pluralTextsEn(links.length)}`,
   progressDone: 0,
   progressTotal: links.length,
   links,
@@ -64,12 +68,13 @@ const sidebar = {
   title={entry.data.title}
   description={entry.data.excerpt}
   eyebrow="Reading reference"
+  eyebrowKey="nav.readings"
   subtitle={entry.data.excerpt}
   currentPath={`/readings/${entry.id}/`}
   heroVariant="readings"
   navItems={[
-    { href: '/', label: 'Home' },
-    { href: '/readings/', label: 'Reading reference' },
+    { href: '/', label: 'Home', labelKey: 'nav.home' },
+    { href: '/readings/', label: 'Reading reference', labelKey: 'nav.readings' },
     { href: `/readings/${entry.id}/`, label: entry.data.title },
   ]}
   sidebar={sidebar}

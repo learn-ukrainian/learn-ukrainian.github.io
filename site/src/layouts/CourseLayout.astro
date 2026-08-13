@@ -6,6 +6,7 @@ import type { ChromeKey } from '../lib/i18n/chrome';
 type NavItem = {
   href: string;
   label: string;
+  labelKey?: ChromeKey;
 };
 
 type SidebarLink = {
@@ -18,9 +19,11 @@ type SidebarLink = {
 type Sidebar = {
   backHref: string;
   backLabel: string;
+  backLabelKey?: ChromeKey;
   positionLabel: string;
   positionLabelEn?: string;
   titleLabel?: string;
+  titleLabelKey?: ChromeKey;
   navLabel?: string;
   progressDone: number;
   progressTotal: number;
@@ -29,10 +32,12 @@ type Sidebar = {
 
 type Props = {
   title: string;
+  titleKey?: ChromeKey;
   description?: string;
   eyebrow?: string;
   eyebrowKey?: ChromeKey;
   subtitle?: string;
+  subtitleKey?: ChromeKey;
   currentPath?: string;
   heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'readings' | 'unavailable';
   wide?: boolean;
@@ -43,10 +48,12 @@ type Props = {
 
 const {
   title,
+  titleKey,
   description,
   eyebrow = 'Learn Ukrainian',
   eyebrowKey,
   subtitle = description,
+  subtitleKey,
   currentPath = '/',
   heroVariant = 'core',
   wide = false,
@@ -155,13 +162,31 @@ const isActive = (href: string) => {
           const primary = String(langs[0] || '').toLowerCase().split('-')[0];
           return primary === 'uk' ? 'uk' : 'en';
         };
+        // Attribute values (e.g. <input placeholder>) can't be dual-rendered
+        // via the .lu-i18n CSS trick — sync them from JS instead. Any element
+        // tagged data-i18n-placeholder='{"en":"…","uk":"…"}' gets its
+        // placeholder swapped on load and on every toggle click.
+        const applyPlaceholders = (locale) => {
+          document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+            try {
+              const variants = JSON.parse(el.dataset.i18nPlaceholder);
+              el.placeholder = variants[locale] ?? variants.en ?? el.placeholder;
+            } catch {
+              // Malformed variants JSON — leave the static placeholder attribute as-is.
+            }
+          });
+        };
         document.documentElement.dataset.chromeLocale = detect();
+        document.addEventListener('DOMContentLoaded', () => {
+          applyPlaceholders(document.documentElement.dataset.chromeLocale);
+        });
         // Delegated toggle — works regardless of when the button mounts.
         document.addEventListener('click', (event) => {
           const toggle = event.target.closest?.('#lu-locale-toggle');
           if (!toggle) return;
           const next = document.documentElement.dataset.chromeLocale === 'uk' ? 'en' : 'uk';
           document.documentElement.dataset.chromeLocale = next;
+          applyPlaceholders(next);
           try {
             window.localStorage.setItem(KEY, next);
           } catch {
@@ -291,8 +316,8 @@ const isActive = (href: string) => {
           ]}>
             <div class="lu-hero-inner">
               <span class="lu-badge">{eyebrowKey ? <ChromeText k={eyebrowKey} /> : eyebrow}</span>
-              <h1>{title}</h1>
-              {subtitle && <p>{subtitle}</p>}
+              <h1>{titleKey ? <ChromeText k={titleKey} /> : title}</h1>
+              {(subtitleKey || subtitle) && <p>{subtitleKey ? <ChromeText k={subtitleKey} /> : subtitle}</p>}
             </div>
           </section>
         )}
@@ -302,7 +327,15 @@ const isActive = (href: string) => {
             {navItems.map((item, index) => (
               <>
                 {index > 0 && <span>/</span>}
-                <a href={item.href}>{item.label === 'Home' ? <ChromeText k="nav.home" /> : item.label}</a>
+                <a href={item.href}>
+                  {item.labelKey ? (
+                    <ChromeText k={item.labelKey} />
+                  ) : item.label === 'Home' ? (
+                    <ChromeText k="nav.home" />
+                  ) : (
+                    item.label
+                  )}
+                </a>
               </>
             ))}
           </nav>
@@ -312,10 +345,16 @@ const isActive = (href: string) => {
           {sidebar && (
             <details class="lu-sidebar" open>
               <summary class="lu-sidebar-toggle">
-                {sidebar.titleLabel ? sidebar.titleLabel : <ChromeText k="sidebar.lessons" />} · <span class="lu-i18n"><span data-loc="en">{sidebar.positionLabelEn ?? sidebar.positionLabel}</span><span data-loc="uk">{sidebar.positionLabel}</span></span>
+                {sidebar.titleLabelKey ? (
+                  <ChromeText k={sidebar.titleLabelKey} />
+                ) : sidebar.titleLabel ? (
+                  sidebar.titleLabel
+                ) : (
+                  <ChromeText k="sidebar.lessons" />
+                )} · <span class="lu-i18n"><span data-loc="en">{sidebar.positionLabelEn ?? sidebar.positionLabel}</span><span data-loc="uk">{sidebar.positionLabel}</span></span>
               </summary>
               <div class="lu-sidebar-body">
-                <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabel}</a>
+                <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabelKey ? <ChromeText k={sidebar.backLabelKey} /> : sidebar.backLabel}</a>
                 <div class="lu-sidebar-progress">
                   <div><span class="lu-i18n"><span data-loc="en">{sidebar.positionLabelEn ?? sidebar.positionLabel}</span><span data-loc="uk">{sidebar.positionLabel}</span></span></div>
                   <div class="lu-mini-bar">
