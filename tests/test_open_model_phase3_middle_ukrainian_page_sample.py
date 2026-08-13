@@ -61,11 +61,7 @@ def _row(
     text_layer_present: bool,
 ) -> dict[str, Any]:
     text_bytes = text.encode("utf-8")
-    zones = (
-        [{"x": 0, "y": 0, "width": width, "height": height, "text": text}]
-        if text_layer_present
-        else None
-    )
+    zones = [{"x": 0, "y": 0, "width": width, "height": height, "text": text}] if text_layer_present else None
     return {
         "schema_version": extraction.ROW_SCHEMA_VERSION,
         "source_sha256": extraction.intake.SOURCE_SHA256,
@@ -153,8 +149,7 @@ def _patch_fixture_contract(
         _row(2, text="", width=3, height=1, text_layer_present=False),
     ]
     predecessor_payload = b"".join(
-        (json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
-        for row in rows
+        (json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8") for row in rows
     )
     predecessor_path = extraction_dir / extraction.PRIVATE_JSONL_FILENAME
     predecessor_path.write_bytes(predecessor_payload)
@@ -179,9 +174,7 @@ def _materialize_fixture(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> tuple[Path, Path, Path, Path, bytes, dict[str, Any]]:
-    source_path, decoder_path, extraction_dir, predecessor_payload = _patch_fixture_contract(
-        monkeypatch, tmp_path
-    )
+    source_path, decoder_path, extraction_dir, predecessor_payload = _patch_fixture_contract(monkeypatch, tmp_path)
     output_dir = tmp_path / "private-output"
     result = sample.materialize_page_sample(
         source_path=source_path,
@@ -197,8 +190,8 @@ def test_materialize_and_replay_private_page_sample(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    source_path, _decoder_path, extraction_dir, output_dir, predecessor_payload, result = (
-        _materialize_fixture(tmp_path, monkeypatch)
+    source_path, _decoder_path, extraction_dir, output_dir, predecessor_payload, result = _materialize_fixture(
+        tmp_path, monkeypatch
     )
     replay = sample.validate_existing_page_sample(
         source_path=source_path,
@@ -485,9 +478,7 @@ def test_receipt_schema_is_text_free_source_bound_and_fail_closed() -> None:
     assert source["predecessor_extraction_receipt_file_sha256"]["const"] == sample.EXTRACTION_RECEIPT_FILE_SHA256
     assert source["predecessor_extraction_receipt_sha256"]["const"] == sample.EXTRACTION_RECEIPT_SHA256
     assert source["predecessor_private_jsonl_sha256"]["const"] == sample.EXTRACTION_PRIVATE_JSONL_SHA256
-    assert schema["properties"]["review_contract"]["properties"]["review_response_status"] == {
-        "const": "pending"
-    }
+    assert schema["properties"]["review_contract"]["properties"]["review_response_status"] == {"const": "pending"}
     assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
     assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
     assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}

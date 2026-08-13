@@ -40,6 +40,41 @@ def _richness_gate_record(*, bootstrap: bool = False) -> dict:
     }
 
 
+def test_build_pointer_payload_derives_digest_from_merge_friendly_sidecar(tmp_path: Path) -> None:
+    """Merge-friendly sidecars omit aggregate digest; publish must derive it."""
+    from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload
+    from scripts.lexicon.publish_manifest import ROOT as PUBLISH_ROOT
+
+    full = build_fingerprint(PUBLISH_ROOT)
+    fingerprint_body = sidecar_payload(full)
+    derived = full["fingerprint"]
+    manifest = {
+        "version": "0.1",
+        "generated_at": "2026-06-23T00:00:00+00:00",
+        "manifest_fingerprint": {
+            "schema_version": full["schema_version"],
+            "fingerprint": derived,
+        },
+        "entries": [],
+    }
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    fingerprint_path = tmp_path / "lexicon-manifest.fingerprint.json"
+    gzip_path = tmp_path / "lexicon-manifest.json.gz"
+    _write_json(manifest_path, manifest)
+    _write_json(fingerprint_path, fingerprint_body)
+
+    gzip_manifest(manifest_path, gzip_path)
+    payload = build_pointer_payload(
+        manifest_path=manifest_path,
+        gzip_path=gzip_path,
+        fingerprint_path=fingerprint_path,
+        repo="learn-ukrainian/example",
+        richness_gate=_richness_gate_record(),
+    )
+    assert payload["manifest_fingerprint"] == derived
+    assert payload["fingerprint_schema_version"] == full["schema_version"]
+
+
 def test_build_pointer_payload_records_manifest_version_and_fingerprint(tmp_path: Path) -> None:
     fingerprint = {"schema_version": 1, "fingerprint": "abc123"}
     manifest = {

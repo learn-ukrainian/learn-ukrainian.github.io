@@ -2887,6 +2887,16 @@ def test_kimicc_harness_rejects_other_agent_seats():
         delegate._resolve_dispatch_harness("codex", "kimicc")
 
 
+def test_warn_kimicc_oauth_token_life_only_when_timeout_exceeds_token(capsys):
+    delegate._warn_kimicc_oauth_token_life("kimicc", delegate._KIMICC_OAUTH_SESSION_LIFE_S + 1)
+    assert "OAuth session lifetime" in capsys.readouterr().err
+
+    delegate._warn_kimicc_oauth_token_life("kimicc", delegate._KIMICC_OAUTH_SESSION_LIFE_S)
+    delegate._warn_kimicc_oauth_token_life("native", 7200)
+    delegate._warn_kimicc_oauth_token_life(None, 7200)
+    assert capsys.readouterr().err == ""
+
+
 def test_run_worker_forwards_output_schema_to_runtime(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-schema")
     delegate._write_state_atomic(state_path, {"task_id": "worker-schema"})

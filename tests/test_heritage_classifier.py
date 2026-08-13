@@ -393,3 +393,33 @@ def test_connection_pooling_query_only_mode() -> None:
         except sqlite3.OperationalError:
             pass
     close_cached_connections()
+
+
+def test_resolve_primary_checkout_matches_git_common_dir() -> None:
+    """_source_db_path's primary-checkout fallback is portable, not hardcoded (#6571).
+
+    _resolve_primary_checkout must agree with resolve_main_root and, when set,
+    point at a directory owning the shared ``.git`` store (a primary checkout,
+    not a worktree gitdir)."""
+    from scripts.guardrails.worktree_containment import (
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
+    from scripts.lexicon import heritage_classifier
+
+    resolved = heritage_classifier._resolve_primary_checkout()
+    try:
+        expected = resolve_main_root(heritage_classifier.ROOT)
+    except NotAGitRepositoryError:
+        assert resolved is None
+        return
+    assert resolved == expected
+    assert (resolved / ".git").is_dir()
+
+
+def test_source_db_path_has_no_hardcoded_absolute_path() -> None:
+    """The heritage classifier must not carry a hardcoded operator path (#6571)."""
+    from scripts.lexicon import heritage_classifier as hc
+
+    src = Path(hc.__file__).read_text(encoding="utf-8")
+    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src

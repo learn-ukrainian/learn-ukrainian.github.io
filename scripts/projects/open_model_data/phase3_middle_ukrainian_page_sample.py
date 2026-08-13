@@ -158,7 +158,10 @@ def _validate_selection(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any
     require(len(rows) == extraction.EXPECTED_PAGES, "source row denominator drift")
     require(tuple(sorted(set(SELECTED_PAGES))) == SELECTED_PAGES, "page selection is not unique and ordered")
     require(SELECTED_PAGES[:4] == (1, 2, 3, 4), "front-matter selection drift")
-    require(tuple(range(20, 181, 20)) == tuple(page for page in SELECTED_PAGES if page % 20 == 0), "interval selection drift")
+    require(
+        tuple(range(20, 181, 20)) == tuple(page for page in SELECTED_PAGES if page % 20 == 0),
+        "interval selection drift",
+    )
     max_density = max(rows, key=lambda row: int(row["decoded_text_code_points"]))
     require(max_density["page_number"] == 163, "maximum-density source fact drift")
     require(not rows[2]["text_layer_present"] and not rows[195]["text_layer_present"], "missing-layer anchors drift")
@@ -262,12 +265,18 @@ def _validate_png(path: Path, *, expected_width: int, expected_height: int) -> d
         chunks.append((chunk_type, data))
         offset = end
     require(offset == len(payload), f"page image {path.name} trailing bytes drift")
-    require([chunk_type for chunk_type, _data in chunks] == [b"IHDR", b"IDAT", b"IEND"], f"page image {path.name} chunk structure drift")
+    require(
+        [chunk_type for chunk_type, _data in chunks] == [b"IHDR", b"IDAT", b"IEND"],
+        f"page image {path.name} chunk structure drift",
+    )
     header = chunks[0][1]
     require(len(header) == 13, f"page image {path.name} IHDR drift")
     width, height, bit_depth, color_type, compression, filter_method, interlace = struct.unpack(">IIBBBBB", header)
     require((width, height) == (expected_width, expected_height), f"page image {path.name} geometry drift")
-    require((bit_depth, color_type, compression, filter_method, interlace) == (8, 6, 0, 0, 0), f"page image {path.name} encoding drift")
+    require(
+        (bit_depth, color_type, compression, filter_method, interlace) == (8, 6, 0, 0, 0),
+        f"page image {path.name} encoding drift",
+    )
     try:
         scanlines = zlib.decompress(chunks[1][1])
     except zlib.error as exc:
@@ -317,7 +326,9 @@ def _validate_images(
     return images
 
 
-def _review_template(selected_metadata: Sequence[Mapping[str, Any]], images: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def _review_template(
+    selected_metadata: Sequence[Mapping[str, Any]], images: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
     image_by_page = {int(item["page_number"]): item for item in images}
     return {
         "schema_version": "phase3_middle_ukrainian_page_sample_review_response_template_v1",
@@ -381,7 +392,7 @@ def _review_html(rows: Sequence[Mapping[str, Any]], selected_metadata: Sequence[
                     f'<section id="page-{page_number:03d}">',
                     f"<h2>Source page {page_number}</h2>",
                     (
-                        "<p class=\"meta\">Selection: "
+                        '<p class="meta">Selection: '
                         + html.escape(", ".join(item["reasons"]))
                         + f" · text layer: {str(item['text_layer_present']).lower()}"
                         + f" · code points: {item['decoded_text_code_points']}"
@@ -391,7 +402,7 @@ def _review_html(rows: Sequence[Mapping[str, Any]], selected_metadata: Sequence[
                     f'<img src="{IMAGE_DIRECTORY_NAME}/page-{page_number:03d}.png" alt="Rendered source page {page_number}">',
                     '<div class="text-panel">',
                     "<h3>Exact embedded text</h3>",
-                    f"<pre lang=\"uk\">{html.escape(str(row['decoded_text']))}</pre>",
+                    f'<pre lang="uk">{html.escape(str(row["decoded_text"]))}</pre>',
                     "</div>",
                     "</div>",
                     "</section>",
@@ -403,7 +414,7 @@ def _review_html(rows: Sequence[Mapping[str, Any]], selected_metadata: Sequence[
             "<!doctype html>",
             '<html lang="en"><head><meta charset="utf-8">',
             '<meta name="viewport" content="width=device-width,initial-scale=1">',
-            '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src \'self\'; style-src \'unsafe-inline\'">',
+            "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'\">",
             "<title>Private Middle Ukrainian page-text review packet</title>",
             "<style>body{font:16px/1.45 system-ui,sans-serif;margin:2rem;background:#f7f5ef;color:#171717}"
             "h1{max-width:70rem}section{margin:3rem 0;padding-top:1rem;border-top:2px solid #999}"
@@ -578,7 +589,9 @@ def _validate_renderer_summary(summary: Mapping[str, Any], images: Sequence[Mapp
     require(summary.get("page_selection") == list(SELECTED_PAGES), "renderer page selection drift")
     require(summary.get("provider_calls") is False, "renderer provider-call drift")
     require(summary.get("image_count") == len(images), "renderer image count drift")
-    require(summary.get("total_png_bytes") == sum(int(image["png_bytes"]) for image in images), "renderer byte total drift")
+    require(
+        summary.get("total_png_bytes") == sum(int(image["png_bytes"]) for image in images), "renderer byte total drift"
+    )
     require(summary.get("images") == list(images), "renderer image manifest does not replay")
     require(isinstance(summary.get("node_version"), str) and summary["node_version"], "renderer Node version missing")
     require(isinstance(summary.get("zlib_version"), str) and summary["zlib_version"], "renderer zlib version missing")
@@ -695,13 +708,16 @@ def validate_existing_page_sample(
     images = _validate_images(output_dir / IMAGE_DIRECTORY_NAME, selected_metadata=selected_metadata)
     review_template_path = output_dir / REVIEW_TEMPLATE_FILENAME
     _exact_regular_file(review_template_path, label="private review response template")
-    expected_template = json.dumps(
-        _review_template(selected_metadata, images), ensure_ascii=False, indent=2, sort_keys=True
-    ) + "\n"
+    expected_template = (
+        json.dumps(_review_template(selected_metadata, images), ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    )
     require(review_template_path.read_text(encoding="utf-8") == expected_template, "review response template drift")
     review_html_path = output_dir / REVIEW_HTML_FILENAME
     _exact_regular_file(review_html_path, label="private review HTML")
-    require(review_html_path.read_text(encoding="utf-8") == _review_html(selected_rows, selected_metadata), "review HTML drift")
+    require(
+        review_html_path.read_text(encoding="utf-8") == _review_html(selected_rows, selected_metadata),
+        "review HTML drift",
+    )
 
     receipt_path = output_dir / RECEIPT_FILENAME
     _exact_regular_file(receipt_path, label="page-sample receipt")

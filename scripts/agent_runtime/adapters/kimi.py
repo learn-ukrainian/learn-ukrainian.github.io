@@ -31,14 +31,16 @@ from .kimicc import KimiccHarness
 
 _logger = logging.getLogger(__name__)
 
-KIMI_DEFAULT_MODEL = "k2.7-coding"
+KIMI_DEFAULT_MODEL = "k3-256k"
 KIMI_BRIDGE_DEFAULT_MODEL = "k3"
-KIMI_DEFAULT_EFFORT = "max"
+# Operator 2026-08-13: dispatch/native default is k3-256k (everyday coding)
+# with NO forced effort — max is the full-K3 advisor behavior, so effort is
+# omitted unless the caller passes --effort / LAUNCHER_EFFORT.
+KIMI_DEFAULT_EFFORT: str | None = None
 KIMI_PROJECT_SKILLS_RELATIVE = Path("agents_extensions") / "shared" / "skills"
 # Catalog-backed aliases keep dispatch, the native launcher, and KimiCC in
-# lockstep. The managed seat's usage window depletes fast (operator,
-# 2026-07-16), so dispatch defaults to the coding model; K3 (always-max
-# reasoning) is reserved for deep asks.
+# lockstep. Dispatch defaults to the window-frugal k3-256k; full K3
+# (high/max reasoning, 1M window) is reserved for consequential work.
 KIMI_MODEL_ALIASES: dict[str, str] = kimi_model_aliases()
 KIMI_ALLOWED_MODELS: frozenset[str] = frozenset(KIMI_MODEL_ALIASES)
 
@@ -75,7 +77,7 @@ class KimiAdapter:
 
     name: str = "kimi"
     default_model: str = KIMI_DEFAULT_MODEL
-    default_effort: str = KIMI_DEFAULT_EFFORT
+    default_effort: str | None = KIMI_DEFAULT_EFFORT
     supported_modes: frozenset[str] = frozenset(_MODE_FLAGS)
 
     def build_invocation(
@@ -109,6 +111,9 @@ class KimiAdapter:
             )
         if harness not in (None, "native"):
             raise ValueError(f"KimiAdapter: unsupported harness {harness!r}; expected 'native' or 'kimicc'")
+        # harness="native" reaches the same code path as an omitted flag by
+        # design: it exists only so dispatch can record an explicit
+        # harness=native attribution in task state (#5938 F2).
         if mode not in self.supported_modes:
             raise ValueError(
                 f"KimiAdapter: unsupported mode {mode!r} "
@@ -119,7 +124,7 @@ class KimiAdapter:
 
         requested_model = resolve_kimi_model(model)
 
-        if effort and requested_model == KIMI_MODEL_ALIASES["k3"] and effort != self.default_effort:
+        if effort and requested_model == KIMI_MODEL_ALIASES["k3"] and effort != "max":
             _logger.warning(
                 "Kimi K3 exposes max effort only; ignoring requested effort=%s",
                 effort,

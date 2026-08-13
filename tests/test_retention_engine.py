@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 from scripts.hygiene.retention_engine import (
     apply_plan,
@@ -178,3 +181,50 @@ def test_apply_runs_reaper_only_when_digest_matches(tmp_path: Path) -> None:
         # build_plan called reap once (False), apply once (True)
         assert False in calls
         assert True in calls
+
+
+def test_plan_digest_ignores_volatile_envelope_fields() -> None:
+    body = {
+        "schema": "fleet-comms.retention.plan.v1",
+        "mode": "dry-run",
+        "repo_root": "/tmp/repo",
+        "archive_root": "/tmp/archives",
+        "policy": {"stale_hours": 72.0},
+        "candidates": {"worktree_reap": [], "home_sessions": []},
+        "counts": {"would_reap": 0},
+        "mutations": 0,
+    }
+    first = dict(body, created_at="2026-07-24T12:00:00Z", digest="aaa", plan_path="/tmp/plan-aaa.json")
+    second = dict(
+        body,
+        created_at="2026-08-01T00:00:00Z",
+        digest="bbb",
+        plan_path="/tmp/plan-bbb.json",
+        receipt={"ok": True, "mutations": 0},
+    )
+    assert plan_digest(first) == plan_digest(second)
+
+
+def test_load_plan_rejects_wrong_schema_and_missing_digest(tmp_path: Path) -> None:
+    from scripts.hygiene.retention_engine import load_plan
+
+    not_object = tmp_path / "not-object.json"
+    not_object.write_text("[]", encoding="utf-8")
+    with pytest.raises(ValueError, match="JSON object"):
+        load_plan(not_object)
+
+    wrong_schema = tmp_path / "wrong-schema.json"
+    wrong_schema.write_text(
+        json.dumps({"schema": "other.v1", "digest": "x"}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="unsupported plan schema"):
+        load_plan(wrong_schema)
+
+    missing_digest = tmp_path / "missing-digest.json"
+    missing_digest.write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1"}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="missing digest"):
+        load_plan(missing_digest)

@@ -1,0 +1,957 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-ohoiko-ulp-paired-split-legs-2026-08-12
+batch_label: ohoiko-ulp-paired-split-legs-2026-08-12
+reviewer: operator-curated-source-trust
+reviewed_at: '2026-08-12'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 59
+  approved_in_queue: 59
+  promotion_batch_size: 59
+production_outputs_updated: []
+decisions:
+- lemma: боки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: side, sides
+  sense_note: paired-headword split auto-approve from 'бік, боки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 424f0b234ceec898
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 35 :: paired-split::боки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: вибач
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 1) excuse me; 2) (I am) sorry
+  sense_note: paired-headword split auto-approve from 'вибачте, вибач'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 42b19df0ae01b7ef
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 89 :: paired-split::вибач'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: вибачте
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 1) excuse me; 2) (I am) sorry
+  sense_note: paired-headword split auto-approve from 'вибачте, вибач'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: ae9031eebbb61177
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 89 :: paired-split::вибачте'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: водійка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: driver (male, female)
+  sense_note: paired-headword split auto-approve from 'водій, водійка'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 958bacba95d8b3c0
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 121 :: paired-split::водійка'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: встигти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be in time (to make it); to manage (in time); to
+  sense_note: paired-headword split auto-approve from 'встигти,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 542665f8bfbf6075
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 92 :: paired-split::встигти'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: відкритися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to (become) open
+  sense_note: paired-headword split auto-approve from 'відкриватися, відкритися'; no invented lemmas;
+    no hand-injected EN
+  source_inventory:
+    key: 45f0b9b142f194b6
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 104 :: paired-split::відкритися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: дерева
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tree, trees
+  sense_note: paired-headword split auto-approve from 'дерево, дерева'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 95511cb2e1018212
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 209 :: paired-split::дерева'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: дні
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: day, days
+  sense_note: paired-headword split auto-approve from 'день, дні'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: e39c254bc31a8616
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 207 :: paired-split::дні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: дієслова
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: verb, verbs
+  sense_note: paired-headword split auto-approve from 'дієслово, дієслова'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 76607d35f1096f3b
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 218 :: paired-split::дієслова'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: з'їздити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to go by transport (multidirectional); to travel
+  sense_note: paired-headword split auto-approve from "з'їздити,"; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 078607112f0b116e
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 212 :: paired-split::з''їздити'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: забракувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to lack, to be short of, to be missing Impersonal Verb
+  sense_note: paired-headword split auto-approve from 'забракувати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: df5079ceb5f9ddcd
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 13 :: paired-split::забракувати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: завагатися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'to hesitate Conjugation: 1st (-ють)'
+  sense_note: paired-headword split auto-approve from 'завагатися,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 4f4cf4fad461adc4
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 20 :: paired-split::завагатися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: замки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: castle, castles
+  sense_note: paired-headword split auto-approve from 'замок, замки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: cbb778b1fd79dc78
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 277 :: paired-split::замки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: засумувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'to feel sad; to miss sb; to grieve Conjugation: 1st (-ють)'
+  sense_note: paired-headword split auto-approve from 'засумувати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 6fa9b05a5f0c8fb5
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 460 :: paired-split::засумувати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: змерзнути
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be cold, to get cold
+  sense_note: paired-headword split auto-approve from 'змерзнути,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: aaba4b75d76a616d
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 246 :: paired-split::змерзнути'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: зірки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: star, stars
+  sense_note: paired-headword split auto-approve from 'зірка, зірки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 6caec054197ca467
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 310 :: paired-split::зірки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: коні
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: horse, horses
+  sense_note: paired-headword split auto-approve from 'кінь, коні'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: da3e91536ed20b6a
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 350 :: paired-split::коні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: купляти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to buy (imperfective, perfective)
+  sense_note: paired-headword split auto-approve from 'купляти,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 3a97008555708f27
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 386 :: paired-split::купляти'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: мости
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bridge, bridges
+  sense_note: paired-headword split auto-approve from 'міст, мости'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 4d9044eb5af6e569
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 458 :: paired-split::мости'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: міста
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: city, cities / town, towns
+  sense_note: paired-headword split auto-approve from 'місто, міста'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 30fe13556fcc0c03
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 473 :: paired-split::міста'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: назватися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be called/named
+  sense_note: paired-headword split auto-approve from 'називатися, назватися'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: bedaaf6a580e4281
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 488 :: paired-split::назватися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: напої
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: drink (noun), drinks
+  sense_note: paired-headword split auto-approve from 'напій, напої'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 9f45aa2d48592ec4
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 490 :: paired-split::напої'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: наснитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'to have dreams, to appear in dreams (while sleeping) Conjugation: 2nd (-ять)'
+  sense_note: paired-headword split auto-approve from 'наснитися,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 497bcd412f116a0a
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 436 :: paired-split::наснитися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: науковиця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: scientist (male, female, plural)
+  sense_note: paired-headword split auto-approve from 'науковець, науковиця,'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: d0462d25202c9422
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 497 :: paired-split::науковиця'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: новини
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: news (singular, plural)
+  sense_note: paired-headword split auto-approve from 'новина, новини'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: d94d425dc6dcf46b
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 522 :: paired-split::новини'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: ноги
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: 1) foot, feet; 2) leg, legs
+  sense_note: paired-headword split auto-approve from 'нога, ноги'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: ec980bbf419bc730
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 523 :: paired-split::ноги'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: носи
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: nose, noses
+  sense_note: paired-headword split auto-approve from 'ніс, носи'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: d093875ebba1cef2
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 517 :: paired-split::носи'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: одружуватися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 1) to get married;
+  sense_note: paired-headword split auto-approve from 'одружуватися,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 532169dabf4243ec
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 543 :: paired-split::одружуватися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: одягнутися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to get dressed
+  sense_note: paired-headword split auto-approve from 'одягатися, одягнутися'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: b559d40af9696e67
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 545 :: paired-split::одягнутися'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: озера
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lake, lakes
+  sense_note: paired-headword split auto-approve from 'озеро, озера'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 6a8cae31955299d5
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 547 :: paired-split::озера'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: олівці
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pencil, pencils
+  sense_note: paired-headword split auto-approve from 'олівець, олівці'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 1dcc27afe20c5b4b
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 552 :: paired-split::олівці'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: острови
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: island, islands
+  sense_note: paired-headword split auto-approve from 'острів, острови'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 88446897db6ec52f
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 563 :: paired-split::острови'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: папери
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: paper, papers
+  sense_note: paired-headword split auto-approve from 'папір, папери'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 9eb0b8613f103050
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 582 :: paired-split::папери'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: плечі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shoulder, shoulders
+  sense_note: paired-headword split auto-approve from 'плече, плечі'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 81ce92e724367c5d
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 609 :: paired-split::плечі'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: поспівати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to sing
+  sense_note: paired-headword split auto-approve from 'співати, поспівати'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 69bd1d5cf08f54c3
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 799 :: paired-split::поспівати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: потривати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'to last, to continue, to go on Conjugation: 1st (-ють)'
+  sense_note: paired-headword split auto-approve from 'потривати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 50df21ddc7fee5f2
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 472 :: paired-split::потривати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: поцілунки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: kiss, kisses
+  sense_note: paired-headword split auto-approve from 'поцілунок, поцілунки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 2cd73ad7e30c8475
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 647 :: paired-split::поцілунки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: поцілунок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: kiss, kisses
+  sense_note: paired-headword split auto-approve from 'поцілунок, поцілунки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: e50dc9ec97cbfd65
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 647 :: paired-split::поцілунок'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: почитати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to read (почита́ти ― for some time, прочита́ти ― until the end)
+  sense_note: paired-headword split auto-approve from 'почитати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 3750a7612ccee72e
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 497 :: paired-split::почитати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: проспівати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: 'to sing Conjugation: 1st (-ють)'
+  sense_note: paired-headword split auto-approve from 'проспівати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 25a02cc89681bb65
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 439 :: paired-split::проспівати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: професорка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: professor (male, female)
+  sense_note: paired-headword split auto-approve from 'професор, професорка'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 6b769063371a4295
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 690 :: paired-split::професорка'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: пісні
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: song, songs
+  sense_note: paired-headword split auto-approve from 'пісня, пісні'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: ae818784a6e42826
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 603 :: paired-split::пісні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: розкритикувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to criticize
+  sense_note: paired-headword split auto-approve from 'розкритикувати,'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 85f75b82d863909f
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-500-verbs entry 225 :: paired-split::розкритикувати'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: руки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: 1) arm, arms; 2) hand, hands
+  sense_note: paired-headword split auto-approve from 'рука, руки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: b07b0895ebef6a6d
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 729 :: paired-split::руки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: села
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: village, villages
+  sense_note: paired-headword split auto-approve from 'село, села'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 1f288d661ea40e53
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 743 :: paired-split::села'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: сестри
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sister, sisters
+  sense_note: paired-headword split auto-approve from 'сестра, сестри'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 99a57705d36dda7e
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 751 :: paired-split::сестри'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: сльози
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tear, tears
+  sense_note: paired-headword split auto-approve from 'сльоза, сльози'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 93ab5d5c10840eb4
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 780 :: paired-split::сльози'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: соки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: juice, juices
+  sense_note: paired-headword split auto-approve from 'сік, соки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 0d85cfd19509a3f3
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 760 :: paired-split::соки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: танці
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dance, dances (dancing)
+  sense_note: paired-headword split auto-approve from 'танець, танці'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: c24ccf3897dd2e44
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 846 :: paired-split::танці'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: тижні
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: week, weeks
+  sense_note: paired-headword split auto-approve from 'тиждень, тижні'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 67f76fbdcd73b2c7
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 864 :: paired-split::тижні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: учні
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: student, students
+  sense_note: paired-headword split auto-approve from 'учень, учениця, учні'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 4f62d15d998f2820
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 903 :: paired-split::учні'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: футболіст
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: football player (male, female)
+  sense_note: paired-headword split auto-approve from 'футболiст, футболістка'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: 10620892365964f6
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболіст'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: футболістка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: football player (male, female)
+  sense_note: paired-headword split auto-approve from 'футболiст, футболістка'; no invented lemmas; no
+    hand-injected EN
+  source_inventory:
+    key: 3dfe95dbe8b1dec1
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 918 :: paired-split::футболістка'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: хлопці
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: 1) boy, boys;
+  sense_note: paired-headword split auto-approve from 'хлопець, хлопці'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: bd28ea0ac29b6928
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 925 :: paired-split::хлопці'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: числа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: 1) number, digit; 2) date
+  sense_note: paired-headword split auto-approve from 'число, числа'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 513adfc3214753c7
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 956 :: paired-split::числа'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: човни
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: boat, boats
+  sense_note: paired-headword split auto-approve from 'човен, човни'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: bc9c45f1d2de9578
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 959 :: paired-split::човни'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: чоловіки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: 1) husband, husbands;
+  sense_note: paired-headword split auto-approve from 'чоловік, чоловіки'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 73a2d39abfc236ce
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 960 :: paired-split::чоловіки'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: юристка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lawyer (male, female)
+  sense_note: paired-headword split auto-approve from 'юрист, юристка'; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 9290a3ed44451c72
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 993 :: paired-split::юристка'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier
+- lemma: імена
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: name, names
+  sense_note: paired-headword split auto-approve from "ім'я, імена"; no invented lemmas; no hand-injected
+    EN
+  source_inventory:
+    key: 84540becbda50adc
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-paired-split-legs-2026-08-12.yaml
+    locator: 'ohoiko-1000-words entry 314 :: paired-split::імена'
+    source_id: ohoiko-ulp-paired-split-legs-2026-08-12-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 'paired comma split policy #6370'
+  - VESUM attestation + heritage classifier

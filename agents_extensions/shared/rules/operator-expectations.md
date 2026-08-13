@@ -109,8 +109,9 @@ tie-breakers.
     process, or working-model decision** (see item 12).
 11. **Repo mechanics are part of the contract.** The hard gates codified in `AGENTS.md` and
     `/api/rules` bind as if written here — notably: dispatch worktree subtree layout
-    (`.worktrees/dispatch/<agent>/<task>/`); `.venv/bin/python` only (never bare
-    `python`/`sys.executable`); no generated `status/`, `audit/`, `review/`, or telemetry
+    (`.worktrees/dispatch/<agent>/<task>/`); project interpreter for shell/production
+    (never bare `python`/`python3`/`sys.executable`; tests spawning a Python child MUST use
+    `sys.executable`); no generated `status/`, `audit/`, `review/`, or telemetry
     artifacts in code PRs; no `.python-version`/linter-config drive-bys; builds only in
     worktrees; `Monitor` for event streams (never polling loops); never print secrets.
     This contract references them instead of duplicating them; violating them violates the

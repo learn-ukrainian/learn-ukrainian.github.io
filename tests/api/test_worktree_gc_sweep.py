@@ -19,6 +19,7 @@ def _patch_orient_sources(monkeypatch: pytest.MonkeyPatch) -> None:
     # Patch non-runtime sources to keep orient fast and hermetic
     monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main"})
     monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": []})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
 
     async def fake_pipeline():
         return {"summary": {}}

@@ -116,34 +116,83 @@ def _derived_task_status(task: dict[str, Any]) -> tuple[str, bool]:
     return status, alive
 
 
+_TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any] | None, str, bool]] = {}
+_LAST_TASKS_DIR_STR: str = ""
+
+
 def _delegate_task_rows(statuses: set[str] | None = None) -> list[dict[str, Any]]:
+    global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
+
+    tasks_dir_str = str(TASKS_DIR)
+    if tasks_dir_str != _LAST_TASKS_DIR_STR:
+        _TASK_STATE_CACHE.clear()
+        _LAST_TASKS_DIR_STR = tasks_dir_str
+
     rows: list[dict[str, Any]] = []
-    if TASKS_DIR.exists():
-        for path in sorted(TASKS_DIR.glob("*.json")):
-            task = _read_task_state(str(path))
+    if not TASKS_DIR.exists():
+        return rows
+
+    is_active_query = (statuses == ACTIVE_TASK_STATUSES)
+
+    try:
+        entries = list(os.scandir(tasks_dir_str))
+    except OSError:
+        return rows
+
+    for entry in entries:
+        if not entry.name.endswith(".json"):
+            continue
+
+        try:
+            mtime = entry.stat().st_mtime
+        except OSError:
+            continue
+
+        path_str = entry.path
+        cached = _TASK_STATE_CACHE.get(path_str)
+
+        if cached and cached[0] == mtime:
+            _, task, derived_status, alive = cached
+            if is_active_query and derived_status not in statuses:
+                continue
+            if task is None:
+                task = _read_task_state(path_str)
+                if task is None:
+                    continue
+                derived_status, alive = _derived_task_status(task)
+                _TASK_STATE_CACHE[path_str] = (mtime, task, derived_status, alive)
+        else:
+            task = _read_task_state(path_str)
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
-            if statuses is not None and derived_status not in statuses:
-                continue
-            rows.append({
-                "task_id": task.get("task_id") or path.stem,
-                "agent": task.get("agent"),
-                "model": task.get("model"),
-                "effort": task.get("effort"),
-                "cli_version": task.get("cli_version"),
-                "substitution": task.get("substitution"),
-                "status": derived_status,
-                "started_at": task.get("started_at"),
-                "duration_s": task.get("duration_s"),
-                "age_s": _task_age_seconds(task.get("started_at")),
-                "alive": alive,
-            })
+            if derived_status not in ACTIVE_TASK_STATUSES:
+                _TASK_STATE_CACHE[path_str] = (mtime, task, derived_status, alive)
+
+        if statuses is not None and derived_status not in statuses:
+            continue
+
+        task_id = task.get("task_id") or entry.name[:-5]
+        rows.append({
+            "task_id": task_id,
+            "agent": task.get("agent"),
+            "model": task.get("model"),
+            "effort": task.get("effort"),
+            "cli_version": task.get("cli_version"),
+            "substitution": task.get("substitution"),
+            "status": derived_status,
+            "started_at": task.get("started_at"),
+            "duration_s": task.get("duration_s"),
+            "age_s": _task_age_seconds(task.get("started_at")),
+            "alive": alive,
+        })
+
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
+
 
 
 def list_delegate_tasks(

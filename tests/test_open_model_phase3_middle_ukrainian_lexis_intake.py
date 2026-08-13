@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 import struct
 import zlib
 from pathlib import Path
@@ -40,6 +41,23 @@ def _write_private_file(path: Path, data: bytes) -> None:
     os.chmod(path.parent, 0o700)
     path.write_bytes(data)
     os.chmod(path, 0o600)
+
+
+def _simulate_group_readable_mode(
+    monkeypatch: pytest.MonkeyPatch,
+    target: Path,
+) -> None:
+    original_stat = Path.stat
+
+    def patched_stat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = original_stat(path, *args, **kwargs)
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP
+        return os.stat_result(values)
+
+    monkeypatch.setattr(Path, "stat", patched_stat)
 
 
 def _fixture_snapshot(root: Path) -> None:
@@ -252,7 +270,7 @@ def test_snapshot_rejects_extra_resource_and_unsafe_permissions(
         intake.inspect_snapshot(snapshot_dir)
     (snapshot_dir / "unexpected.txt").unlink()
 
-    os.chmod(snapshot_dir / "zyzlex/zyz.css", 0o644)
+    _simulate_group_readable_mode(monkeypatch, snapshot_dir / "zyzlex/zyz.css")
     with pytest.raises(MiddleUkrainianLexisIntakeError, match="permission bits"):
         intake.inspect_snapshot(snapshot_dir)
 
@@ -402,7 +420,7 @@ def test_receipt_self_hash_and_private_mode_drift_are_rejected(
     )
     assert receipt["safeguards"]["training_eligible"] is False
     second_receipt_path = tmp_path / "second-private-receipt" / intake.RECEIPT_FILENAME
-    os.chmod(second_receipt_path, 0o644)
+    _simulate_group_readable_mode(monkeypatch, second_receipt_path)
     with pytest.raises(MiddleUkrainianLexisIntakeError, match="permission bits"):
         intake.validate_existing_intake(
             snapshot_dir=snapshot_dir,

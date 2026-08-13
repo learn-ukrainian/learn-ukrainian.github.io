@@ -114,6 +114,7 @@ _EFFORT_TO_VARIANT = {
 # pipelines or with sensitive data; prefer a Western-lab reviewer for
 # top-stakes work. ``ask_glm`` refuses to run under CI as a runtime backstop.
 GLM_MODEL = "zai-coding-plan/glm-5.2"
+GLM_DEFAULT_VARIANT = "high"  # reasoning effort when --effort is omitted (operator 2026-08-13)
 GLM_DEFAULT_TIMEOUT_S = 1800
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM.
@@ -822,6 +823,7 @@ def ask_glm(
         lane="ask-glm", to_model=to_model, model=model, default=GLM_MODEL
     )
     effective_variant, effort_reason = _resolve_opencode_effort(lane="ask-glm", effort=effort)
+    effective_variant = effective_variant or GLM_DEFAULT_VARIANT
     msg_id = send_message(
         content,
         task_id,

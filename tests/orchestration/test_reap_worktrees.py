@@ -1148,3 +1148,107 @@ def test_adoption_journals_existing_dispatch_worktree(tmp_path: Path) -> None:
         }
     ]
     assert '"event": "adopt"' in reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
+
+
+def test_merged_pr_ancestor_head_reaps_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Worktree whose local HEAD is an ancestor of the MERGED PR head is reaped."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/ancestor-head")
+    ancestor_head = git(worktree, "rev-parse", "HEAD")
+    # Add a follow-up commit to the branch so PR head is ahead of local worktree HEAD
+    git(worktree, "commit", "--allow-empty", "-m", "followup commit on PR branch")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    # Reset worktree back to ancestor HEAD
+    git(worktree, "reset", "--hard", ancestor_head)
+
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/ancestor-head": [
+                {"number": 201, "state": "MERGED", "headRefOid": pr_head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "PR #201 MERGED"
+    assert not worktree.exists()
+
+
+def test_detached_worktree_matching_merged_pr_reaps(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Detached dispatch worktree whose HEAD matches a MERGED PR's head is reaped."""
+    repo = init_repo(tmp_path)
+    task_id = "6690-ci-fix"
+    worktree = repo / ".worktrees" / "dispatch" / "kimi" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    head = git(worktree, "rev-parse", "HEAD")
+
+    patch_gh(
+        monkeypatch,
+        {
+            "kimi/6690-ci-fix": [
+                {"number": 6690, "state": "MERGED", "headRefOid": head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.reason == "PR #6690 MERGED"
+    assert not worktree.exists()
+
+
+def test_detached_worktree_with_open_pr_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Detached dispatch worktree with an OPEN PR is not reaped."""
+    repo = init_repo(tmp_path)
+    task_id = "open-detached"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    head = git(worktree, "rev-parse", "HEAD")
+
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/open-detached": [
+                {"number": 301, "state": "OPEN", "headRefOid": head}
+            ]
+        },
+    )
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()

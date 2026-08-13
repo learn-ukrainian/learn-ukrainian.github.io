@@ -49,6 +49,7 @@ def test_glm_registry_and_choices_wiring():
     entry = registry.get_agent_entry("glm")
     assert entry["cli_available"] is True
     assert entry["default_model"] == "glm-5.2"
+    assert entry["default_effort"] == "high"
     assert entry["resume_policy"] == "never"
     assert "glm" in delegate._DISPATCH_AGENT_CHOICES
 
@@ -90,6 +91,17 @@ def test_glm_adapter_model_override_and_effort(tmp_path):
     assert "--variant" in plan.cmd
     variant_idx = plan.cmd.index("--variant")
     assert plan.cmd[variant_idx + 1] == "high"
+
+
+def test_glm_adapter_omitted_effort_defaults_to_variant_high(tmp_path):
+    """Operator 2026-08-13: omitted effort → --variant high."""
+    plan = _build("Analyze code", tmp_path)
+    assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
+
+
+def test_glm_adapter_explicit_effort_max_wins(tmp_path):
+    plan = _build("Analyze code", tmp_path, effort="max")
+    assert plan.cmd[plan.cmd.index("--variant") + 1] == "max"
 
 
 def test_glm_adapter_ci_refusal_guard(tmp_path, monkeypatch):

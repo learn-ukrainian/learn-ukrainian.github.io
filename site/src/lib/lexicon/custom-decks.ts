@@ -114,7 +114,7 @@ const defaultTeacherTableVirtualDeck: VirtualSpecialSet = {
   id: teacherTableData.id,
   title: teacherTableData.title,
   titleUk: teacherTableData.titleUk,
-  description: 'Practice set from the Combined Master Vocabulary Table.',
+  description: teacherTableData.description,
   lemma_keys: teacherTableData.lemma_keys,
   created_at: '2026-08-11T00:00:00.000Z',
   updated_at: '2026-08-11T00:00:00.000Z',

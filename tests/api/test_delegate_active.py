@@ -49,6 +49,7 @@ def _reset_orient_cache() -> None:
 def _patch_non_delegate_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main"})
     monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": []})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
 
     async def fake_pipeline():
         return {"summary": {}}
@@ -203,3 +204,56 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     assert response.json()["total"] == 1
     assert response.json()["tasks"][0]["task_id"] == "running"
     assert retry_delays == [delegate_router.TASK_READ_RETRY_SECONDS]
+
+
+def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+
+    def fake_kill(pid: int, sig: int) -> None:
+        if pid != 111:
+            raise ProcessLookupError
+
+    monkeypatch.setattr(delegate_router.os, "kill", fake_kill)
+    now = datetime.now(UTC)
+
+    # Fixture of 1,500 done task files + 2 active tasks
+    for index in range(1500):
+        _write_task(
+            tasks_dir / f"done-{index:04d}.json",
+            _task_payload(
+                f"done-{index:04d}",
+                started_at=_iso(now - timedelta(minutes=index)),
+            ),
+        )
+    _write_task(
+        tasks_dir / "running-active.json",
+        _task_payload(
+            "running-active",
+            status="running",
+            pid=111,
+            started_at=_iso(now - timedelta(minutes=1)),
+        ),
+    )
+    _write_task(
+        tasks_dir / "spawning-active.json",
+        _task_payload(
+            "spawning-active",
+            status="spawning",
+            pid=None,
+            started_at=_iso(now - timedelta(minutes=2)),
+        ),
+    )
+
+    t0 = datetime.now(UTC)
+    response = client.get("/api/delegate/active")
+    t1 = datetime.now(UTC)
+    duration_s = (t1 - t0).total_seconds()
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert [task["task_id"] for task in data["tasks"]] == ["running-active", "spawning-active"]
+    # Bound assertion: must execute in under 1 second (target < 3s SLA)
+    assert duration_s < 1.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 1.0s bound)"
+

@@ -82,6 +82,9 @@ class GlmAdapter:
     # Coding Plan provider pin is an opencode INVOCATION detail — applied in
     # build_invocation via _OPENCODE_MODEL_ROUTES, not stored as identity.
     default_model: str = "glm-5.2"
+    # Operator 2026-08-13: omitted effort defaults to high (--variant high);
+    # an explicit --effort always wins.
+    default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -119,9 +122,9 @@ class GlmAdapter:
         if mode in ("workspace-write", "danger"):
             cmd.append("--auto")
 
-        if effort:
-            variant = _EFFORT_TO_VARIANT.get(effort, effort)
-            cmd.extend(["--variant", variant])
+        effective_effort = effort or self.default_effort
+        variant = _EFFORT_TO_VARIANT.get(effective_effort, effective_effort)
+        cmd.extend(["--variant", variant])
 
         cmd.append("--")
         cmd.append(prompt)
@@ -131,7 +134,7 @@ class GlmAdapter:
             task_id,
             mode,
             target_model,
-            effort,
+            effective_effort,
         )
 
         return InvocationPlan(

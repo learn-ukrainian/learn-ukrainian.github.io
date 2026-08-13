@@ -13,10 +13,12 @@ import asyncio
 import json
 import logging
 import os
+import re
 import socket
 import sqlite3
 import subprocess
 import threading
+import time
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -232,12 +234,15 @@ SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
 #   - ``runtime``, ``delegate``, ``wiki``, ``health``, ``session_hints``
 #                            — pure-Python / filesystem, no inner
 #                              timeout; they rely on being cheap.
+#   - ``idle_prs``           — cache-first detached worker; ``gh`` never runs
+#                              in the request path.
 # If a sync collector ever starts to block (e.g. a network FS hang), it
 # will tie up a threadpool slot past the hard timeout. See
 # MONITOR-API.md for the full breakdown.
 ORIENT_SECTION_TTLS: dict[str, float] = {
     "git": 30.0,
     "issues": 120.0,
+    "idle_prs": 60.0,
     # Pipeline has TTL 0 on purpose — ``_collect_pipeline_orient_data``
     # calls ``state_summary()`` which has its own 60 s cache. Stacking
     # caches produced staleness up to 119 s with ``generated_at``
@@ -257,6 +262,7 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
 ORIENT_SECTION_SOURCES: dict[str, str] = {
     "git": "git",
     "issues": "gh",
+    "idle_prs": "gh",
     "pipeline": "fs",
     "runtime": "fs",
     "delegate": "fs",
@@ -270,6 +276,23 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
 }
 
 ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
+
+IDLE_PR_THRESHOLD_S = 60 * 60
+IDLE_PR_FETCH_TIMEOUT_S = 4.0
+IDLE_PR_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
+IDLE_PR_CACHE_KEY = "orient_idle_prs"
+IDLE_PR_SUCCESSFUL_CONCLUSIONS = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+IDLE_PR_ADVISORY_MARKER = "advisory"
+_CROSS_FAMILY_REVIEW_RE = re.compile(r"\bcross[- ]family\b", re.IGNORECASE)
+_REVIEW_PASS_RE = re.compile(r"\b(?:approve(?:d)?|pass(?:ed)?)\b", re.IGNORECASE)
+_REVIEW_BLOCK_RE = re.compile(
+    r"\b(?:changes?[- ]requested|needs?[- ]work|blocked|fail(?:ed|ure)?)\b",
+    re.IGNORECASE,
+)
+_REVIEW_HEAD_RE = re.compile(
+    r"\b(?:at\s+)?head\b\s*[:=]?\s*`?([0-9a-f]{40})`?",
+    re.IGNORECASE,
+)
 
 ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
 
@@ -300,6 +323,15 @@ _ORIENT_SYNC_EXECUTOR = ThreadPoolExecutor(
     max_workers=8,
     thread_name_prefix="orient-sync",
 )
+
+# The idle-PR feed is deliberately cache-first. A live GitHub request is run by
+# one detached daemon worker, never by the ASGI request path. The last successful
+# result remains available as a stale fallback when GitHub is slow or unavailable.
+_idle_pr_refresh_lock = threading.Lock()
+_idle_pr_refresh_thread: threading.Thread | None = None
+_idle_pr_last_good: tuple[dict[str, Any], str] | None = None
+_idle_pr_last_error: str | None = None
+_idle_pr_next_retry_at = 0.0
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -440,6 +472,253 @@ def _collect_issues_orient_data() -> dict:
             }
         )
     return {"issues": issues}
+
+
+def _pr_check_timestamp(check: dict[str, Any]) -> datetime | None:
+    for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
+        parsed = _parse_iso_datetime(check.get(field))
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
+    """Return whether every latest non-advisory check for a PR is green.
+
+    ``statusCheckRollup`` contains historical runs when a check has been
+    restarted. Grouping by context and selecting the newest timestamp avoids
+    resurrecting an old green run after a newer run went red or pending.
+    Missing or malformed status data fails closed. Explicitly advisory checks
+    follow the repository merge-hook convention and do not block eligibility.
+    """
+    rollup = pr.get("statusCheckRollup")
+    if not isinstance(rollup, list) or not rollup:
+        return False
+
+    latest: dict[str, tuple[datetime, dict[str, Any]]] = {}
+    for raw in rollup:
+        if not isinstance(raw, dict):
+            return False
+        name = raw.get("name") or raw.get("context")
+        timestamp = _pr_check_timestamp(raw)
+        if not isinstance(name, str) or not name.strip() or timestamp is None:
+            return False
+        current = latest.get(name)
+        if current is None or timestamp >= current[0]:
+            latest[name] = (timestamp, raw)
+
+    blocking_count = 0
+    for name, (_timestamp, check) in latest.items():
+        if IDLE_PR_ADVISORY_MARKER in name.casefold():
+            continue
+        blocking_count += 1
+        status = str(check.get("status") or "").upper()
+        if status and status not in {"COMPLETED", "SUCCESS"}:
+            return False
+        outcome = str(check.get("conclusion") or check.get("state") or "").upper()
+        if outcome not in IDLE_PR_SUCCESSFUL_CONCLUSIONS:
+            return False
+
+    return blocking_count > 0
+
+
+def _idle_pr_has_review_gate(pr: dict[str, Any]) -> bool:
+    """Return whether GitHub or a review comment proves a passed review gate."""
+    if str(pr.get("reviewDecision") or "").upper() == "APPROVED":
+        return True
+
+    head_sha = pr.get("headRefOid")
+    reviews = pr.get("reviews")
+    if isinstance(reviews, list):
+        for review in reviews:
+            if not isinstance(review, dict) or str(review.get("state") or "").upper() != "APPROVED":
+                continue
+            commit = review.get("commit")
+            commit_sha = commit.get("oid") if isinstance(commit, dict) else commit
+            if not isinstance(head_sha, str) or not commit_sha or commit_sha == head_sha:
+                return True
+
+    comments = pr.get("comments")
+    if not isinstance(comments, list):
+        return False
+    ordered_comments = sorted(
+        (comment for comment in comments if isinstance(comment, dict)),
+        key=lambda comment: _parse_iso_datetime(comment.get("createdAt")) or datetime.min.replace(tzinfo=UTC),
+    )
+    for comment in reversed(ordered_comments):
+        body = comment.get("body")
+        if not isinstance(body, str) or not _CROSS_FAMILY_REVIEW_RE.search(body):
+            continue
+        head_match = _REVIEW_HEAD_RE.search(body)
+        if (
+            head_match is not None
+            and isinstance(head_sha, str)
+            and head_match.group(1).casefold() != head_sha.casefold()
+        ):
+            continue
+        if _REVIEW_BLOCK_RE.search(body):
+            return False
+        return _REVIEW_PASS_RE.search(body) is not None
+    return False
+
+
+def _eligible_idle_pr(pr: dict[str, Any], *, now: datetime) -> dict[str, Any] | None:
+    if pr.get("state") is not None and str(pr.get("state")).upper() != "OPEN":
+        return None
+    merge_state = pr.get("mergeStateStatus")
+    if merge_state is not None and str(merge_state).upper() == "DIRTY":
+        return None
+    if pr.get("isDraft") is True or not _idle_pr_checks_green(pr):
+        return None
+    if not _idle_pr_has_review_gate(pr):
+        return None
+
+    number = pr.get("number")
+    branch = pr.get("headRefName")
+    updated_at = _parse_iso_datetime(pr.get("updatedAt"))
+    if (
+        not isinstance(number, int)
+        or isinstance(number, bool)
+        or number <= 0
+        or not isinstance(branch, str)
+        or not branch
+        or updated_at is None
+    ):
+        return None
+
+    idle_seconds = (now - updated_at).total_seconds()
+    if idle_seconds <= IDLE_PR_THRESHOLD_S:
+        return None
+    return {
+        "number": number,
+        "branch": branch,
+        "minutes_idle": max(0, int(idle_seconds // 60)),
+    }
+
+
+def _collect_idle_prs_orient_data() -> dict[str, Any]:
+    """Fetch and filter the compact green+reviewed+idle PR projection.
+
+    This function is only called by the detached refresh worker. The endpoint
+    itself uses ``_cached_idle_pr_section`` and never waits for this ``gh``
+    subprocess.
+    """
+    proc = _run_command(
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            IDLE_PR_REPOSITORY,
+            "--state",
+            "open",
+            "--limit",
+            "1000",
+            "--json",
+            "number,state,isDraft,headRefName,headRefOid,updatedAt,reviewDecision,reviews,comments,statusCheckRollup,mergeStateStatus",
+        ],
+        timeout=IDLE_PR_FETCH_TIMEOUT_S,
+    )
+    if proc.returncode != 0:
+        error = proc.stderr.strip() or proc.stdout.strip() or "gh pr list failed"
+        raise RuntimeError(error)
+    try:
+        payload = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"invalid gh json: {exc}") from exc
+    if not isinstance(payload, list):
+        raise RuntimeError("gh pr list returned a non-list payload")
+
+    now = datetime.now(UTC)
+    rows = [
+        row
+        for item in payload
+        if isinstance(item, dict)
+        if (row := _eligible_idle_pr(item, now=now)) is not None
+    ]
+    rows.sort(key=lambda row: (-row["minutes_idle"], row["number"]))
+    return {"idle_prs": rows}
+
+
+def _run_idle_pr_refresh(collector: Callable[[], Any]) -> None:
+    global _idle_pr_last_error, _idle_pr_last_good, _idle_pr_next_retry_at
+    try:
+        value = collector()
+        if not isinstance(value, dict) or not isinstance(value.get("idle_prs"), list):
+            raise RuntimeError("idle PR collector returned an invalid payload")
+    except subprocess.TimeoutExpired:
+        _idle_pr_last_error = "gh_timeout"
+        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        return
+    except Exception:
+        _idle_pr_last_error = "gh_unavailable"
+        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        return
+
+    generated_at = _isoformat_z(datetime.now(UTC))
+    cache_set(IDLE_PR_CACHE_KEY, (value, generated_at))
+    _idle_pr_last_good = (value, generated_at)
+    _idle_pr_last_error = None
+    _idle_pr_next_retry_at = 0.0
+
+
+def _schedule_idle_pr_refresh(collector: Callable[[], Any]) -> None:
+    global _idle_pr_refresh_thread
+    if time.monotonic() < _idle_pr_next_retry_at:
+        return
+    with _idle_pr_refresh_lock:
+        if _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive():
+            return
+        _idle_pr_refresh_thread = threading.Thread(
+            target=_run_idle_pr_refresh,
+            args=(collector,),
+            daemon=True,
+            name="orient-idle-pr-refresh",
+        )
+        _idle_pr_refresh_thread.start()
+
+
+def _cached_idle_pr_section(
+    collector: Callable[[], Any],
+    fallback: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    ttl = ORIENT_SECTION_TTLS["idle_prs"]
+    cached = cache_get(IDLE_PR_CACHE_KEY, ttl=ttl)
+    if isinstance(cached, tuple) and len(cached) == 2:
+        value, generated_at = cached
+        if isinstance(value, dict) and isinstance(generated_at, str):
+            return value, {
+                "generated_at": generated_at,
+                "stale_after_s": ttl,
+                "source": "gh",
+                "cache": "hit",
+            }
+
+    _schedule_idle_pr_refresh(collector)
+    if _idle_pr_last_good is not None:
+        value, generated_at = _idle_pr_last_good
+        meta: dict[str, Any] = {
+            "generated_at": generated_at,
+            "stale_after_s": ttl,
+            "source": "gh",
+            "cache": "miss",
+            "stale": True,
+            "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+        }
+        if _idle_pr_last_error is not None:
+            meta["error"] = _idle_pr_last_error
+        return value, meta
+
+    meta = {
+        "generated_at": _isoformat_z(datetime.now(UTC)),
+        "stale_after_s": ttl,
+        "source": "gh",
+        "cache": "miss",
+        "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+    }
+    if _idle_pr_last_error is not None:
+        meta["error"] = _idle_pr_last_error
+    return fallback, meta
 
 
 async def _collect_pipeline_orient_data() -> dict:
@@ -791,6 +1070,9 @@ async def _cached_orient_section(
     Errors are NOT cached — the next call retries. This is intentional:
     a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
     """
+    if key == "idle_prs":
+        return _cached_idle_pr_section(collector, fallback)  # type: ignore[arg-type]
+
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
     cache_key = f"orient_{key}"
@@ -880,6 +1162,7 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
     return {
         "git": (_collect_git_orient_data, {}, False),
         "issues": (_collect_issues_orient_data, {"issues": []}, False),
+        "idle_prs": (_collect_idle_prs_orient_data, {"idle_prs": []}, False),
         "pipeline": (_collect_pipeline_orient_data, {"summary": {}}, True),
         "runtime": (_collect_runtime_orient_data, {}, False),
         "delegate": (_collect_delegate_orient_data, {"active_count": 0, "recent": []}, False),
@@ -916,7 +1199,7 @@ async def orient(
         False,
         description="Lean cold-start preset: return only the lightweight sections "
         "(git, runtime, delegate, bridge_pending, rollovers, governance, health, session_hints), "
-        "skipping the heavy pipeline/issues/wiki. Ignored when 'sections' is given.",
+        "skipping the heavy pipeline/issues/wiki and idle_prs. Ignored when 'sections' is given.",
     ),
     sections: str | None = Query(
         None,
@@ -935,7 +1218,8 @@ async def orient(
             gathering. Use it when an agent just committed, renamed a
             file, or otherwise needs to see a change it made moments
             ago without waiting for the longest section TTL (up to
-            120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
+            120 s for ``issues``/``wiki``). The idle-PR refresh remains
+            cache-first and detached. Reviewer BLOCKER B3 / #1309.
         sections: comma-separated list of section keys to collect. Unknown
             keys return 400. Omitted = full payload (back-compat).
         role: ADR-011 P3 opt-in. Absent → the response is byte-identical to
@@ -984,6 +1268,9 @@ async def orient(
     if "issues" in section_data:
         issues_info = section_data["issues"]
         response["issues"] = issues_info.get("issues", []) if isinstance(issues_info, dict) else []
+    if "idle_prs" in section_data:
+        idle_prs_info = section_data["idle_prs"]
+        response["idle_prs"] = idle_prs_info.get("idle_prs", []) if isinstance(idle_prs_info, dict) else []
     if "pipeline" in section_data:
         response["pipeline"] = section_data["pipeline"]
     if "runtime" in section_data:
@@ -1011,6 +1298,10 @@ async def orient(
         issues_info = section_data["issues"]
         if isinstance(issues_info, dict) and issues_info.get("error"):
             response["issues_error"] = issues_info["error"]
+    if "idle_prs" in section_data:
+        idle_prs_info = section_data["idle_prs"]
+        if isinstance(idle_prs_info, dict) and idle_prs_info.get("error"):
+            response["idle_prs_error"] = idle_prs_info["error"]
 
     _attach_cold_start_research(response, role)
     return add_json_telemetry(response, session_id=session_id_from_request(request))
