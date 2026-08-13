@@ -118,7 +118,7 @@
         "successor_backup_gzip_integrity",
         "successor_backup_streamed_restore_sha256",
         "private_receipts_mode_0600",
-        "predecessor_backup_preserved"
+        "predecessor_backup_preserved_at_successor_backup_time"
       ],
       "properties": {
         "successor_backup_uploaded": {"const": true},
@@ -127,7 +127,7 @@
         "successor_backup_gzip_integrity": {"const": true},
         "successor_backup_streamed_restore_sha256": {"const": "de9e448896341cb33b0d73b3729ec966919f7aff2669183bcfc7295e7d5353b7"},
         "private_receipts_mode_0600": {"const": true},
-        "predecessor_backup_preserved": {"const": true}
+        "predecessor_backup_preserved_at_successor_backup_time": {"const": true}
       }
     },
     "authority": {

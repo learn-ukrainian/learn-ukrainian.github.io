@@ -140,6 +140,13 @@ def _patch_private_checks(monkeypatch: pytest.MonkeyPatch, paths: tuple[Path, Pa
     return inspected
 
 
+def _bind_live_database(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    live_database = tmp_path / "sources.db"
+    live_database.write_bytes(b"live-database-fixture")
+    monkeypatch.setattr(audit.cutover, "DEFAULT_LIVE_DB", live_database)
+    return live_database
+
+
 def test_schema_is_closed_and_valid() -> None:
     schema = json.loads(audit.SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
@@ -196,11 +203,12 @@ def test_receipt_rejects_runtime_binding_drift() -> None:
 
 
 def test_audit_rebinds_live_successor_database(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    live_database = _bind_live_database(monkeypatch, tmp_path)
     monkeypatch.setattr(audit, "_validate_private_evidence", lambda **_kwargs: _private_receipts())
     monkeypatch.setattr(audit.cutover, "_database_evidence", lambda _path: _live_evidence())
 
     receipt = audit.audit(
-        database_path=tmp_path / "sources.db",
+        database_path=live_database,
         cutover_receipt_path=tmp_path / "cutover.json",
         backup_receipt_path=tmp_path / "backup.json",
         compressed_backup_path=tmp_path / "sources.db.gz",
@@ -212,6 +220,7 @@ def test_audit_rebinds_live_successor_database(monkeypatch: pytest.MonkeyPatch, 
 
 
 def test_audit_rejects_live_database_count_drift(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    live_database = _bind_live_database(monkeypatch, tmp_path)
     evidence = _live_evidence()
     evidence["counts"] = {**audit.EXPECTED_COUNTS, "source_count": 189}
     monkeypatch.setattr(audit, "_validate_private_evidence", lambda **_kwargs: _private_receipts())
@@ -219,7 +228,29 @@ def test_audit_rejects_live_database_count_drift(monkeypatch: pytest.MonkeyPatch
 
     with pytest.raises(audit.VspuPostIngestAuditError, match="counts drift"):
         audit.audit(
-            database_path=tmp_path / "sources.db",
+            database_path=live_database,
+            cutover_receipt_path=tmp_path / "cutover.json",
+            backup_receipt_path=tmp_path / "backup.json",
+            compressed_backup_path=tmp_path / "sources.db.gz",
+        )
+
+
+def test_audit_rejects_nonlive_database_with_identical_bytes(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    live_database = _bind_live_database(monkeypatch, tmp_path)
+    copied_database = tmp_path / "copied-sources.db"
+    copied_database.write_bytes(live_database.read_bytes())
+    monkeypatch.setattr(
+        audit,
+        "_validate_private_evidence",
+        lambda **_kwargs: pytest.fail("private evidence must not be read for a nonlive database"),
+    )
+
+    with pytest.raises(audit.VspuPostIngestAuditError, match="restricted to the primary-checkout"):
+        audit.audit(
+            database_path=copied_database,
             cutover_receipt_path=tmp_path / "cutover.json",
             backup_receipt_path=tmp_path / "backup.json",
             compressed_backup_path=tmp_path / "sources.db.gz",
@@ -306,6 +337,42 @@ def test_private_evidence_rejects_backup_authority_drift(
     _patch_private_checks(monkeypatch, paths)
 
     with pytest.raises(audit.VspuPostIngestAuditError, match="authority drift"):
+        audit._validate_private_evidence(
+            cutover_receipt_path=paths[0],
+            backup_receipt_path=paths[1],
+            compressed_backup_path=paths[2],
+        )
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "value", "message"),
+    [
+        ("custody", "all_new_files_uploaded", False, "does not confirm upload"),
+        ("custody", "all_new_files_uploading", True, "reports active upload"),
+        ("custody", "all_new_files_provider_item_id_present", False, "lacks provider identity"),
+        ("custody", "all_new_files_readback_hash_match", False, "read-back proof failed"),
+        ("custody", "predecessor_backup_preserved", False, "predecessor backup was not preserved"),
+        ("cutover_receipt", "file_sha256", "0" * 64, "backup cutover file drift"),
+        ("cutover_receipt", "body_receipt_sha256", "0" * 64, "backup cutover body drift"),
+        ("database", "textbook_rows", 50_312, "database count drift"),
+    ],
+)
+def test_private_evidence_rejects_custody_binding_or_count_drift(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    section: str,
+    field: str,
+    value: object,
+    message: str,
+) -> None:
+    paths = _private_evidence_files(tmp_path)
+    backup_receipt = _valid_backup_receipt()
+    backup_receipt[section][field] = value
+    paths[1].write_text(json.dumps(backup_receipt), encoding="utf-8")
+    paths[1].chmod(0o600)
+    _patch_private_checks(monkeypatch, paths)
+
+    with pytest.raises(audit.VspuPostIngestAuditError, match=message):
         audit._validate_private_evidence(
             cutover_receipt_path=paths[0],
             backup_receipt_path=paths[1],

@@ -116,6 +116,23 @@ def _streamed_restore_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _require_live_database(path: Path) -> Path:
+    database_path = Path(path)
+    expected_path = Path(cutover.DEFAULT_LIVE_DB)
+    require(
+        database_path.resolve() == expected_path.resolve(),
+        "audit is restricted to the primary-checkout live sources database",
+    )
+    try:
+        require(
+            os.path.samefile(database_path, expected_path),
+            "audit database is not the live sources database inode",
+        )
+    except OSError as exc:
+        raise VspuPostIngestAuditError("cannot verify the live sources database inode") from exc
+    return database_path
+
+
 def _schema_validator() -> Draft202012Validator:
     schema = read_json(SCHEMA_PATH, "post-ingest schema")
     Draft202012Validator.check_schema(schema)
@@ -235,6 +252,7 @@ def audit(
     backup_receipt_path: Path,
     compressed_backup_path: Path,
 ) -> dict[str, Any]:
+    database_path = _require_live_database(database_path)
     cutover_receipt, backup_receipt = _validate_private_evidence(
         cutover_receipt_path=Path(cutover_receipt_path),
         backup_receipt_path=Path(backup_receipt_path),
@@ -303,7 +321,7 @@ def audit(
             "successor_backup_gzip_integrity": True,
             "successor_backup_streamed_restore_sha256": EXPECTED_POST_DB_SHA256,
             "private_receipts_mode_0600": True,
-            "predecessor_backup_preserved": True,
+            "predecessor_backup_preserved_at_successor_backup_time": True,
         },
         "authority": {
             "source_id": cutover.SOURCE_ID,
