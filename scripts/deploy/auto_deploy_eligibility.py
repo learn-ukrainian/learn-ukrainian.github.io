@@ -22,9 +22,20 @@ CONTENT_PATH_PREFIXES = (
     "site/src/data/",
 )
 
+# Exact release-pointer files under ``site/src/data/``.  A pointer bump only
+# retargets an already-published Release asset; it is not curriculum/content
+# drift.  Everything else under ``site/src/data/`` stays denied (#6733).
+SITE_CODE_PATH_EXCEPTIONS = frozenset(
+    {
+        "site/src/data/lexicon-practice-deck.pointer.json",
+        "site/src/data/lexicon-manifest.pointer.json",
+    }
+)
+
 # This is deliberately broad enough for regular Astro UI, style, asset, and
 # dependency changes, but it does not grant permission to any path outside the
-# site tree.  ``CONTENT_PATH_PREFIXES`` is always evaluated first.
+# site tree.  ``CONTENT_PATH_PREFIXES`` is always evaluated first unless the
+# path is an exact ``SITE_CODE_PATH_EXCEPTIONS`` entry.
 SITE_CODE_PATH_PREFIXES = ("site/",)
 
 
@@ -47,6 +58,12 @@ def decide_auto_deploy(changed_paths: Iterable[str]) -> AutoDeployDecision:
         return AutoDeployDecision(deploy=False, reason="no_changed_paths")
 
     for path in paths:
+        if path in SITE_CODE_PATH_EXCEPTIONS:
+            # Still require the site-code prefix so a typo'd exception cannot
+            # open non-site paths.
+            if not _has_prefix(path, SITE_CODE_PATH_PREFIXES):
+                return AutoDeployDecision(deploy=False, reason="unknown_path")
+            continue
         if _has_prefix(path, CONTENT_PATH_PREFIXES):
             return AutoDeployDecision(deploy=False, reason="content_drift")
         if not _has_prefix(path, SITE_CODE_PATH_PREFIXES):
