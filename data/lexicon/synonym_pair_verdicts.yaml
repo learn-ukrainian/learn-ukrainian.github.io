@@ -10,12 +10,22 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: абиде
+  b: де-небудь
+  polarity: synonym
+  sources:
+  - synonyms
 - a: абихто
   b: будь-хто
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: абихто
+  b: хто-небудь
+  polarity: synonym
+  sources:
+  - synonyms
 - a: абиякий
   b: будь-який
   polarity: synonym
@@ -28,18 +38,53 @@ approved:
   sources:
   - synonyms
 - a: або
+  b: жодний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: або
   b: чи
   polarity: synonym
   sources:
   - synonyms_karavansky
   - wiktionary
 - a: абстрактний
+  b: книжковий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: абстрактний
   b: конкретний
   polarity: antonym
   sources:
   - wiktionary
+- a: абстрактний
+  b: ідеальний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: абітурієнт
+  b: учень
+  polarity: synonym
+  sources:
+  - synonyms
+- a: адвокат
+  b: захисник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: адже
+  b: бо
+  polarity: synonym
+  sources:
+  - synonyms
 - a: адресант
   b: відправник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: акт
+  b: декрет
   polarity: synonym
   sources:
   - synonyms
@@ -70,6 +115,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: акцентування
+  b: підкреслення
+  polarity: synonym
+  sources:
+  - synonyms
 - a: альтернатива
   b: вибір
   polarity: synonym
@@ -80,17 +130,42 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: анонсувати
+  b: оголошувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: анонсувати
+  b: повідомляти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: анотація
   b: резюме
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: антикварний
+  b: давній
+  polarity: synonym
+  sources:
+  - synonyms
+- a: антитеза
+  b: протилежність
+  polarity: synonym
+  sources:
+  - synonyms
 - a: антитеза
   b: протиставлення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ані
+  b: жодний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: аптекар
   b: фармацевт
   polarity: synonym
@@ -114,11 +189,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: аромат
+  b: запах
+  polarity: synonym
+  sources:
+  - synonyms
 - a: архаїзм
   b: неологізм
   polarity: antonym
   sources:
   - wiktionary
+- a: асистент
+  b: товариш
+  polarity: synonym
+  sources:
+  - synonyms
 - a: ательє
   b: майстерня
   polarity: synonym
@@ -130,6 +215,16 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: ахнути
+  b: стріляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: багато
+  b: досхочу
+  polarity: synonym
+  sources:
+  - synonyms
 - a: багато
   b: мало
   polarity: antonym
@@ -147,6 +242,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: бажати
+  b: воліти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: бажати
   b: хотіти
   polarity: synonym
@@ -166,6 +266,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: байдужість
+  b: зневага
+  polarity: synonym
+  sources:
+  - synonyms
+- a: балакати
+  b: розмовляти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: батько
   b: тато
   polarity: synonym
@@ -179,17 +289,47 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: без
+  b: звісно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бездомний
+  b: здичавілий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: безкоштовний
+  b: безплатний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: безперечно
   b: безумовно
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: безперечно
+  b: звісно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: безперешкодний
+  b: вільний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: безпосередньо
   b: прямо
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: безумовно
+  b: звісно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: берег
   b: узбережжя
   polarity: synonym
@@ -202,6 +342,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: берегти
+  b: охороняти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: бирка
   b: наліпка
   polarity: synonym
@@ -213,6 +358,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: битися
+  b: боротися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: битися
+  b: тремтіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: блакитний
+  b: електрик
+  polarity: synonym
+  sources:
+  - synonyms
 - a: близько
   b: біля
   polarity: synonym
@@ -243,12 +403,42 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: боротьба
+  b: бійка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бос
+  b: шеф
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бочка
+  b: діжка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: боятися
+  b: злякатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: брак
+  b: відсутність
+  polarity: synonym
+  sources:
+  - synonyms
 - a: брама
   b: ворота
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: браслет
+  b: обручка
+  polarity: synonym
+  sources:
+  - synonyms
 - a: брат
   b: товариш
   polarity: synonym
@@ -262,10 +452,30 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: брати
+  b: заробляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: брати
+  b: знімати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: брати
   b: приймати
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: брехати
+  b: гавкати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: брехати
+  b: збрехати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: бридкий
   b: огидний
   polarity: synonym
@@ -289,6 +499,41 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: будити
+  b: викликати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будити
+  b: народжувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будити
+  b: творити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будувати
+  b: становити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будь-коли
+  b: коли-небудь
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будівля
+  b: забудова
+  polarity: synonym
+  sources:
+  - synonyms
+- a: будівництво
+  b: забудова
+  polarity: synonym
+  sources:
+  - synonyms
 - a: буква
   b: літера
   polarity: synonym
@@ -307,8 +552,103 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: бутерброд
+  b: канапка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бути
+  b: здійснюватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бути
+  b: перебувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бути
+  b: існувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханець
+  b: буханка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханець
+  b: кий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханець
+  b: коровай
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханець
+  b: удар
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханець
+  b: хліб
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буханка
+  b: хліб
+  polarity: synonym
+  sources:
+  - synonyms
+- a: буцім
+  b: буцімто
+  polarity: synonym
+  sources:
+  - synonyms
 - a: бігти
   b: їхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: біда
+  b: трагедія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідкатися
+  b: плакати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідкатися
+  b: скаржитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідкатися
+  b: турбуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідний
+  b: бідолашний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідний
+  b: жалюгідний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бідолашний
+  b: нещасний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бік
+  b: сторона
   polarity: synonym
   sources:
   - synonyms
@@ -324,6 +664,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: більше
+  b: гірше
+  polarity: synonym
+  sources:
+  - synonyms
 - a: біля
   b: коло
   polarity: synonym
@@ -337,12 +682,82 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: біліти
+  b: виділятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: біліти
+  b: відбиватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: біліти
+  b: зеленіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: біліти
+  b: синіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: біситися
+  b: сердитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: в'їхати
+  b: заїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вага
+  b: значення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вага
+  b: навантаження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: важити
+  b: зазіхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: важливість
+  b: значення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вазон
+  b: горщик
+  polarity: synonym
+  sources:
+  - synonyms
+- a: валитися
+  b: поплисти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: валитися
+  b: сунути
+  polarity: synonym
+  sources:
+  - synonyms
 - a: варити
   b: готувати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: варитися
+  b: кипіти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: варт
   b: гідний
   polarity: synonym
@@ -361,6 +776,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ввічливий
+  b: чемний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: великий
+  b: колосальний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: величезний
+  b: колосальний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вельми
   b: вкрай
   polarity: synonym
@@ -382,23 +812,78 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вередливий
+  b: примхливий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вертеп
+  b: печера
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вертеп
+  b: сцена
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вертеп
+  b: театр
+  polarity: synonym
+  sources:
+  - synonyms
 - a: веселий
   b: радісний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: веселитися
+  b: розважатися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: веснянки
   b: ластовиння
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вести
+  b: виводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вести
+  b: доводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вести
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вести
+  b: поводитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вести
+  b: проводити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вечір
   b: ранок
   polarity: antonym
   sources:
   - wiktionary
+- a: взагалі
+  b: загалом
+  polarity: synonym
+  sources:
+  - synonyms
 - a: взаємини
   b: відносини
   polarity: synonym
@@ -417,6 +902,76 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: взимку
+  b: узимку
+  polarity: synonym
+  sources:
+  - synonyms
+- a: взувати
+  b: взути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибачати
+  b: вибачити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибирати
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибирати
+  b: обирати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибирати
+  b: рити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибрати
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибігати
+  b: вибігти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибігати
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вибігти
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вивести
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виводити
+  b: доводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виводити
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виводити
+  b: становити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вивчати
   b: досліджувати
   polarity: synonym
@@ -429,12 +984,72 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вигадати
+  b: пригадати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигадати
+  b: пригадувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигадати
+  b: придумати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигадати
+  b: придумувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигадати
+  b: створити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигадати
+  b: створювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигляд
+  b: зовнішність
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигляд
+  b: краєвид
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигляд
+  b: пейзаж
+  polarity: synonym
+  sources:
+  - synonyms
 - a: виглядати
   b: чекати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вигода
+  b: користь
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вигода
+  b: інтерес
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виготовити
+  b: виготовляти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вид
   b: зовнішність
   polarity: synonym
@@ -458,6 +1073,11 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: видавати
+  b: давати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: видавати
   b: зраджувати
   polarity: synonym
   sources:
@@ -468,12 +1088,117 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: видимий
+  b: очевидний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: видимий
+  b: прямий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: видно
+  b: світло
+  polarity: synonym
+  sources:
+  - synonyms
+- a: видно
+  b: ясно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виділити
+  b: виділяти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: виділяти
   b: підкреслювати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: виділятися
+  b: відбиватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виживати
+  b: вижити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: визначити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: виробляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: встановлювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: запланувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: призначати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: визначати
+  b: розпізнавати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виймати
+  b: вийняти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: викинути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: випльовувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: витрачати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: гаяти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: губити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викидати
+  b: кидати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: викинути
+  b: випльовувати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: викладач
   b: вчитель
   polarity: synonym
@@ -486,6 +1211,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: викликати
+  b: народжувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виключати
+  b: вимикати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: виконувати
   b: здійснювати
   polarity: synonym
@@ -499,8 +1234,168 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: використати
+  b: використовувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вилазити
+  b: вилізти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вилетіти
+  b: вилітати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вилетіти
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вилити
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вилітати
+  b: висипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вимагати
+  b: намагатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вимагати
+  b: потребувати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вимова
   b: орфоепія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вимовити
+  b: вимовляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вимірювати
+  b: виміряти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вимірювати
+  b: приміряти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виміряти
+  b: виміряти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: винаймати
+  b: наймати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникати
+  b: виникнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникати
+  b: здійснюватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникати
+  b: приходити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникати
+  b: ставати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникати
+  b: формуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виникнути
+  b: здійснюватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: винятковий
+  b: рідкісний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадати
+  b: висипатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадати
+  b: дощити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадати
+  b: траплятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадковість
+  b: випадок
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадок
+  b: подія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадок
+  b: пригода
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випадок
+  b: інцидент
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випивати
+  b: випити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випивати
+  b: пропускати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випльовувати
+  b: плювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: випльовувати
+  b: плюнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виправити
+  b: відредагувати
   polarity: synonym
   sources:
   - synonyms
@@ -510,6 +1405,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: виправляти
+  b: відредагувати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: випробування
   b: іспит
   polarity: synonym
@@ -532,6 +1432,36 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: виробити
+  b: виробляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виробляти
+  b: створювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виростати
+  b: вирости
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виростати
+  b: рости
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виростити
+  b: вирощувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вирушати
+  b: вирушити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вирушати
   b: виїжджати
   polarity: synonym
@@ -540,6 +1470,11 @@ approved:
   - synonyms_karavansky
 - a: вирушати
   b: від'їжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вирушати
+  b: відправлятися
   polarity: synonym
   sources:
   - synonyms
@@ -573,6 +1508,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: висипати
+  b: з'явитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: висипатися
+  b: падати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: висловлювати
   b: говорити
   polarity: synonym
@@ -596,16 +1541,46 @@ approved:
   sources:
   - synonyms
 - a: високий
+  b: високо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: високий
   b: низький
   polarity: antonym
   sources:
   - wiktionary
+- a: високий
+  b: священний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: висота
   b: височина
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: витвір
+  b: утворення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: витратити
+  b: витрачати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: витрачати
+  b: гаяти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: витрачати
+  b: губити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: витяг
   b: уривок
   polarity: synonym
@@ -618,6 +1593,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: виходити
+  b: сходити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вихід
   b: виїзд
   polarity: synonym
@@ -630,10 +1610,56 @@ approved:
   sources:
   - wiktionary
   a2Exception: true
-  curator: "claude-opus/4698-a2-curation"
-  a2Rationale: "Canonical spatial antonym (exit / entrance); both A2 in PULS; dominant senses map 1:1, unmistakable at A2."
+  curator: claude-opus/4698-a2-curation
+  a2Rationale: Canonical spatial antonym (exit / entrance); both A2 in PULS; dominant
+    senses map 1:1, unmistakable at A2.
+- a: виявитися
+  b: виявлятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виявлятися
+  b: відбиватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виявлятися
+  b: почуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виявлятися
+  b: спостерігатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виїжджати
+  b: виїхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виїжджати
+  b: відправлятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виїжджати
+  b: залишати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: виїжджати
   b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виїжджати
+  b: покидати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виїзд
+  b: еміграція
   polarity: synonym
   sources:
   - synonyms
@@ -655,6 +1681,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: включати
+  b: включити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: включати
+  b: містити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вкрай
   b: значно
   polarity: synonym
@@ -666,6 +1702,51 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вкусити
+  b: жувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкусити
+  b: кусати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкусити
+  b: прасувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкусити
+  b: рубати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкусити
+  b: споживати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкусити
+  b: їсти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: влада
+  b: держава
+  polarity: synonym
+  sources:
+  - synonyms
+- a: влада
+  b: панування
+  polarity: synonym
+  sources:
+  - synonyms
+- a: влада
+  b: рука
+  polarity: synonym
+  sources:
+  - synonyms
 - a: власний
   b: свій
   polarity: synonym
@@ -690,6 +1771,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: вміння
+  b: мистецтво
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вміти
   b: могти
   polarity: synonym
@@ -713,24 +1799,99 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: возити
+  b: подавати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: возити
+  b: подати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вологий
+  b: сирий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: володіти
   b: мати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: воліти
+  b: прагнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: впертий
+  b: упертий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вплив
   b: дія
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: впливати
+  b: вплинути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вплинути
+  b: відбиватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вплинути
+  b: діяти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: впроваджувати
+  b: доводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: впроваджувати
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вражати
+  b: вразити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вражати
+  b: дивувати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: враження
   b: ефект
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: враження
+  b: твердження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вразити
+  b: рвати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вразити
+  b: різати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вранці
   b: зранку
   polarity: synonym
@@ -743,6 +1904,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: врешті
+  b: зрештою
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вродливий
   b: гарна
   polarity: synonym
@@ -776,7 +1942,22 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: вродливий
+  b: прекрасний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
   b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
+  b: хороший
+  polarity: synonym
+  sources:
+  - synonyms
+- a: всесвітній
+  b: світовий
   polarity: synonym
   sources:
   - synonyms
@@ -786,12 +1967,27 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: всупереч
+  b: усупереч
+  polarity: synonym
+  sources:
+  - synonyms
+- a: всюди
+  b: повсюди
+  polarity: synonym
+  sources:
+  - synonyms
 - a: втрачати
   b: губити
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: вчасно
+  b: якраз
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вчити
   b: навчати
   polarity: synonym
@@ -808,23 +2004,88 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: відбиватися
+  b: зеленіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відбуватися
+  b: здійснюватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відбуватися
+  b: ставатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відбуватися
+  b: траплятися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відбудова
   b: відновлення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відвести
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відволікати
+  b: відволікти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відвідати
+  b: завітати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відвідувати
+  b: завітати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відвідувач
+  b: гість
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відгук
+  b: відлуння
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відгук
   b: реакція
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: віддавати
+  b: звертати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відділ
   b: відділення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відзначати
+  b: відсвяткувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відзначати
+  b: справляти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відкладати
   b: заощаджувати
   polarity: synonym
@@ -836,6 +2097,36 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відкриватися
+  b: ставати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відкритий
+  b: щирий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відмовитися
+  b: відмовлятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відмовляти
+  b: відповідати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відміна
+  b: відмінність
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відміна
+  b: зміна
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відмінний
   b: найкращий
   polarity: synonym
@@ -851,6 +2142,26 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: відмінність
+  b: різниця
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відновити
+  b: відновлювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відновлювати
+  b: відроджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відновлюватися
+  b: повертати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відносини
   b: стосунки
   polarity: synonym
@@ -863,12 +2174,22 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відокремлений
+  b: окремий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відомий
   b: знайомий
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відомо
+  b: звісно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відповідати
   b: узгоджуватися
   polarity: synonym
@@ -879,19 +2200,139 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: відправити
+  b: відправляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відправитися
+  b: відправлятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відправлятися
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відразу
+  b: спершу
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відредагувати
+  b: редагувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відредагувати
+  b: справляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсвяткувати
+  b: провести
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсвяткувати
+  b: проводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсвяткувати
+  b: святкувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсвяткувати
+  b: справляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсоток
+  b: процент
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відсоток
   b: частка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: відстоювати
+  b: заборонити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відстоювати
+  b: обстоювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відстояти
+  b: заборонити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсутність
+  b: дефіцит
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відсутність
+  b: криза
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відходити
+  b: відійти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відходити
   b: подаватися
   polarity: synonym
   sources:
   - synonyms
+- a: відчувати
+  b: відчути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відчувати
+  b: почувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відчувати
+  b: почуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відчувати
+  b: чути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відчуття
+  b: почуття
+  polarity: synonym
+  sources:
+  - synonyms
 - a: відшкодувати
   b: компенсувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відіграти
+  b: зіграти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вікно
+  b: підвіконня
   polarity: synonym
   sources:
   - synonyms
@@ -906,11 +2347,21 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: вітати
+  b: завітати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: вітчизняний
   b: наш
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: галузь
+  b: сфера
+  polarity: synonym
+  sources:
+  - synonyms
 - a: гарна
   b: файний
   polarity: synonym
@@ -948,6 +2399,11 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: гарний
+  b: привабливий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарний
   b: файний
   polarity: synonym
   sources:
@@ -975,12 +2431,102 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: гарячка
+  b: лихоманка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гаяти
+  b: губити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: герой
   b: персонаж
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: геть
+  b: значно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глагол
+  b: мова
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глагол
+  b: мовлення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глагол
+  b: річ
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глагол
+  b: слово
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глагол
+  b: язик
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глузд
+  b: розум
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глузд
+  b: інтелект
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глухий
+  b: здичавілий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глянути
+  b: поглянути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: глянути
+  b: подивитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гнити
+  b: горіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гнів
+  b: злість
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гнів
+  b: обурення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гнів
+  b: серце
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гніватися
+  b: сердитися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: говорити
   b: казати
   polarity: synonym
@@ -1006,6 +2552,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: голос
+  b: мелодія
+  polarity: synonym
+  sources:
+  - synonyms
 - a: голосний
   b: гучний
   polarity: synonym
@@ -1017,12 +2568,37 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: горизонт
+  b: кругозір
+  polarity: synonym
+  sources:
+  - synonyms
+- a: горизонт
+  b: обрій
+  polarity: synonym
+  sources:
+  - synonyms
 - a: город
   b: місто
   polarity: synonym
   sources:
   - synonyms_karavansky
   - wiktionary
+- a: горіти
+  b: палати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: горіти
+  b: світити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: горіти
+  b: сяяти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: гостинець
   b: дорога
   polarity: synonym
@@ -1035,6 +2611,21 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гострий
+  b: напружений
+  polarity: synonym
+  sources:
+  - synonyms
+- a: готовий
+  b: завершений
+  polarity: synonym
+  sources:
+  - synonyms
+- a: готовий
+  b: зроблений
+  polarity: synonym
+  sources:
+  - synonyms
 - a: готуватися
   b: збиратися
   polarity: synonym
@@ -1052,12 +2643,32 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: груба
+  b: плита
+  polarity: synonym
+  sources:
+  - synonyms
+- a: груба
+  b: піч
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гід
+  b: екскурсовод
+  polarity: synonym
+  sources:
+  - synonyms
 - a: гідний
   b: шановний
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гімн
+  b: дифірамб
+  polarity: synonym
+  sources:
+  - synonyms
 - a: гіпербола
   b: перебільшення
   polarity: synonym
@@ -1069,6 +2680,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: гірше
+  b: найбільше
+  polarity: synonym
+  sources:
+  - synonyms
 - a: далеко
   b: набагато
   polarity: synonym
@@ -1081,12 +2697,22 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дах
+  b: кут
+  polarity: synonym
+  sources:
+  - synonyms
 - a: двір
   b: подвір'я
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: двір
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дебати
   b: дискусія
   polarity: synonym
@@ -1115,6 +2741,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: декрет
+  b: постанова
+  polarity: synonym
+  sources:
+  - synonyms
 - a: декілька
   b: кілька
   polarity: synonym
@@ -1126,29 +2757,104 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: депресія
+  b: занепад
+  polarity: synonym
+  sources:
+  - synonyms
+- a: депресія
+  b: розклад
+  polarity: synonym
+  sources:
+  - synonyms
 - a: десь
   b: мабуть
   polarity: synonym
   sources:
   - synonyms_karavansky
 - a: деталь
+  b: риса
+  polarity: synonym
+  sources:
+  - synonyms
+- a: деталь
   b: частина
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: детальний
+  b: докладний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: детальний
+  b: ретельний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дефект
+  b: недолік
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дефект
+  b: провина
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дефект
+  b: хиба
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дехто
+  b: хто
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дещо
   b: трохи
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: деякий
+  b: один
+  polarity: synonym
+  sources:
+  - synonyms
+- a: деякий
+  b: окремий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дзвонити
   b: телефонувати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дзеркало
+  b: поверхня
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дивний
+  b: прегарний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дивувати
+  b: дивуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дикий
+  b: здичавілий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: динамічний
   b: живий
   polarity: synonym
@@ -1176,8 +2882,63 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дно
+  b: ґрунт
+  polarity: synonym
+  sources:
+  - synonyms
+- a: добиратися
+  b: добратися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: добре
   b: набагато
+  polarity: synonym
+  sources:
+  - synonyms
+- a: добрий
+  b: сердечний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: добродійка
+  b: пані
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доброта
+  b: ласка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: довести
+  b: доводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доводити
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доводити
+  b: проводжати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доводити
+  b: проводити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доволі
+  b: достатньо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доволі
+  b: досхочу
   polarity: synonym
   sources:
   - synonyms
@@ -1188,17 +2949,42 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: договір
+  b: контракт
+  polarity: synonym
+  sources:
+  - synonyms
+- a: договір
   b: умова
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: додавати
+  b: підвищувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: додатковий
+  b: зайвий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дозволити
+  b: дозволяти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дозрілий
   b: достиглий
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дозрілий
+  b: зрілий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: доказ
   b: показник
   polarity: synonym
@@ -1210,13 +2996,63 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: доки
+  b: поки
+  polarity: synonym
+  sources:
+  - synonyms
+- a: докладний
+  b: ретельний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доктор
+  b: лікар
+  polarity: synonym
+  sources:
+  - synonyms
 - a: документ
   b: протокол
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: домашній
+  b: саморобний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домовитися
+  b: домовлятися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: домовленість
   b: умова
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домівка
+  b: дім
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домівка
+  b: житло
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домівка
+  b: помешкання
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домівка
+  b: поріг
+  polarity: synonym
+  sources:
+  - synonyms
+- a: домівка
+  b: хата
   polarity: synonym
   sources:
   - synonyms
@@ -1233,6 +3069,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: допитливий
+  b: цікавий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: допливати
+  b: доплисти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: допомога
   b: опора
   polarity: synonym
@@ -1244,6 +3090,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: доречний
+  b: такий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дорога
+  b: тракт
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дорога
   b: шлях
   polarity: synonym
@@ -1251,23 +3107,113 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: досвід
+  b: практика
+  polarity: synonym
+  sources:
+  - synonyms
+- a: досить
+  b: достатньо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: досить
+  b: досхочу
+  polarity: synonym
+  sources:
+  - synonyms
+- a: досить
+  b: значно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дослівний
   b: точний
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: дослід
+  b: дослідження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дослід
+  b: експеримент
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дослід
+  b: спроба
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дослідження
+  b: експеримент
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дослідження
   b: розвідка
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: досліджувати
+  b: дослідити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: досліджувати
+  b: обробляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доставити
+  b: доставляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доставляти
+  b: подавати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доставляти
+  b: привозити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: достатньо
+  b: досхочу
+  polarity: synonym
+  sources:
+  - synonyms
 - a: доступ
   b: прохід
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: доступний
+  b: зрозумілий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: досягати
+  b: досягти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дотриматися
+  b: дотримуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доходити
+  b: дійти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: доходити
   b: наближатися
   polarity: synonym
@@ -1283,6 +3229,41 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: дощити
+  b: падати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дощити
+  b: сипати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дощити
+  b: іти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доїжджати
+  b: доїхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доїжджати
+  b: заїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: доїхати
+  b: заїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дратувати
+  b: нервувати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: друг
   b: товариш
   polarity: synonym
@@ -1307,6 +3288,36 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дружній
+  b: лагідний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дружній
+  b: товариський
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дрімати
+  b: спати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дуже
+  b: занадто
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дуже
+  b: значно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дуже
+  b: сильно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: дума
   b: думка
   polarity: synonym
@@ -1320,7 +3331,22 @@ approved:
   sources:
   - synonyms
 - a: дума
+  b: переконання
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дума
   b: погляд
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дума
+  b: твердження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дума
+  b: ідея
   polarity: synonym
   sources:
   - synonyms
@@ -1344,6 +3370,56 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: думка
+  b: твердження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дівчатко
+  b: дівчина
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дівчатко
+  b: дівчинка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дізнаватися
+  b: дізнатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дійсно
+  b: насправді
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дійсно
+  b: практично
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дійсно
+  b: справді
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діло
+  b: заняття
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діло
+  b: праця
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діло
+  b: робота
+  polarity: synonym
+  sources:
+  - synonyms
 - a: ділянка
   b: площа
   polarity: synonym
@@ -1362,6 +3438,56 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: дія
+  b: діяльність
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дія
+  b: операція
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дія
+  b: чин
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: заняття
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: операція
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: практика
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: праця
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: робота
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: рух
+  polarity: synonym
+  sources:
+  - synonyms
+- a: діяльність
+  b: чин
+  polarity: synonym
+  sources:
+  - synonyms
 - a: евфонія
   b: милозвучність
   polarity: synonym
@@ -1374,24 +3500,114 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: економити
+  b: заощаджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: екскурсовод
+  b: провідник
+  polarity: synonym
+  sources:
+  - synonyms
 - a: екскурсія
   b: прогулянка
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: експеримент
+  b: спроба
+  polarity: synonym
+  sources:
+  - synonyms
+- a: електрик
+  b: синій
+  polarity: synonym
+  sources:
+  - synonyms
+- a: емоція
+  b: почуття
+  polarity: synonym
+  sources:
+  - synonyms
+- a: епідемія
+  b: мор
+  polarity: synonym
+  sources:
+  - synonyms
 - a: епітет
   b: означення
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: етап
+  b: період
+  polarity: synonym
+  sources:
+  - synonyms
 - a: ефект
   b: наслідок
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: ефективний
+  b: продуктивний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жарт
+  b: перець
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жарт
+  b: сіль
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жарт
+  b: те
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жах
+  b: кошмар
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жах
+  b: страх
+  polarity: synonym
+  sources:
+  - synonyms
 - a: живопис
   b: малювання
+  polarity: synonym
+  sources:
+  - synonyms
+- a: живіт
+  b: шлунок
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жирний
+  b: масний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жирний
+  b: родючий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жирний
+  b: товстий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жити
+  b: існувати
   polarity: synonym
   sources:
   - synonyms
@@ -1401,12 +3617,122 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: житло
+  b: проживання
+  polarity: synonym
+  sources:
+  - synonyms
+- a: житло
+  b: хата
+  polarity: synonym
+  sources:
+  - synonyms
+- a: життєвий
+  b: щоденний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: кожний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: котрий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: ні
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: ніякий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: один
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: той
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: який
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жодний
+  b: який-небудь
+  polarity: synonym
+  sources:
+  - synonyms
+- a: жувати
+  b: їсти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заборонити
+  b: обстоювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заборонити
+  b: охороняти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заборонити
+  b: стояти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: забігати
+  b: забігти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: забігати
   b: заходити
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: заважати
+  b: перешкоджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заважати
+  b: шкодити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завершений
+  b: зроблений
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завершений
+  b: зрілий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завершений
+  b: талановитий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завершений
+  b: тонкий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: завершення
   b: закінчення
   polarity: synonym
@@ -1425,21 +3751,121 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+- a: завести
+  b: запроваджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завжди
+  b: коли-небудь
+  polarity: synonym
+  sources:
+  - synonyms
 - a: завжди
   b: ніколи
   polarity: antonym
   sources:
   - wiktionary
+- a: завжди
+  b: постійно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: завтра
   b: сьогодні
   polarity: antonym
   sources:
   - wiktionary
+- a: завірюха
+  b: шторм
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: запрошувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: заходити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: звати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: покликати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: прийти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: приходити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: приїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: приїхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завітати
+  b: їздити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: загадковий
+  b: таємний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: загадковий
+  b: таємничий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: загалом
+  b: повністю
+  polarity: synonym
+  sources:
+  - synonyms
+- a: загалом
+  b: разом
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заголовок
+  b: назва
+  polarity: synonym
+  sources:
+  - synonyms
 - a: заголовок
   b: рубрика
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: загрожувати
+  b: погрожувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: загроза
+  b: небезпека
+  polarity: synonym
+  sources:
+  - synonyms
 - a: задля
   b: заради
   polarity: synonym
@@ -1451,23 +3877,108 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: заздрощі
+  b: заздрість
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зазначати
+  b: зазначити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зазначати
   b: позначати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зазіхати
+  b: наважуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: закон
+  b: закономірність
+  polarity: synonym
+  sources:
+  - synonyms
 - a: закритий
   b: замкнутий
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: закричати
+  b: крикнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: закричати
+  b: кричати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: закінчення
   b: фінал
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: залишати
+  b: залишити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: залишати
+  b: покидати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: залом
+  b: затор
+  polarity: synonym
+  sources:
+  - synonyms
+- a: залом
+  b: коліно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: залюбки
+  b: охоче
+  polarity: synonym
+  sources:
+  - synonyms
+- a: залюбки
+  b: радо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: замикати
+  b: замкнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: замикати
+  b: зачиняти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: занадто
+  b: надто
+  polarity: synonym
+  sources:
+  - synonyms
+- a: занепокоєний
+  b: нервовий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: занести
+  b: заносити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: заносити
   b: записувати
   polarity: synonym
@@ -1475,11 +3986,31 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: заощаджувати
+  b: заощадити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заощаджувати
   b: зберігати
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: запалювати
+  b: народжувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заперечити
+  b: заперечувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заперечний
+  b: негативний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: запис
   b: нотатки
   polarity: synonym
@@ -1497,6 +4028,36 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: запроваджувати
+  b: запровадити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запроваджувати
+  b: повести
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запроваджувати
+  b: привести
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запроваджувати
+  b: провести
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запроваджувати
+  b: проводжати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запроваджувати
+  b: проводити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: запрошувати
   b: звати
   polarity: synonym
@@ -1504,17 +4065,62 @@ approved:
   - synonyms
   - synonyms_karavansky
 - a: зараз
+  b: спершу
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зараз
   b: сьогодні
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: заробити
+  b: заробляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заробляти
+  b: отримувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: засвоювати
+  b: засвоїти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: засинати
+  b: заснути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: засмучений
+  b: сумний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: засохлий
+  b: мертвий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: засохлий
+  b: сухий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: застереження
   b: попередження
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: засіб
+  b: зразок
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зате
   b: однак
   polarity: synonym
@@ -1531,19 +4137,80 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: затінок
+  b: тінь
+  polarity: synonym
+  sources:
+  - synonyms
+- a: захопитися
+  b: захоплюватися
+  polarity: synonym
+  sources:
+  - synonyms
 - a: західний
   b: східний
   polarity: antonym
   sources:
   - wiktionary
   a2Exception: true
-  curator: "claude-opus/4698-a2-curation"
-  a2Rationale: "Cardinal-direction antonym (west / east); both A2 adjectives in PULS; core geography vocabulary, trivially fair at A2."
+  curator: claude-opus/4698-a2-curation
+  a2Rationale: Cardinal-direction antonym (west / east); both A2 adjectives in PULS;
+    core geography vocabulary, trivially fair at A2.
+- a: зачин
+  b: початок
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зачинити
+  b: зачиняти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заїжджати
+  b: приїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заїжджати
+  b: приїздити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: заїжджати
+  b: приїхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: збагатити
+  b: збагачувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зберегти
+  b: зберігати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: збереження
   b: охорона
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: збивати
+  b: збити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: збивати
+  b: утворювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: збирати
+  b: зібрати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: збирати
   b: набирати
   polarity: synonym
@@ -1555,6 +4222,46 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: збрехати
+  b: обманути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: збрехати
+  b: обманювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: збільшувати
+  b: підвищувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звання
+  b: чин
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звернутися
+  b: звертатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звертати
+  b: повертати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звикати
+  b: звикнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звичай
+  b: звичай
+  polarity: synonym
+  sources:
+  - synonyms
 - a: звичай
   b: традиція
   polarity: synonym
@@ -1566,11 +4273,171 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: звичайно
+  b: звісно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звичка
+  b: навичка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звісно
+  b: річ
+  polarity: synonym
+  sources:
+  - synonyms
+- a: звісно
+  b: ясно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: згадати
+  b: згадувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: згадати
+  b: нагадати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: згадати
+  b: пригадати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: згадка
+  b: спогад
+  polarity: synonym
+  sources:
+  - synonyms
+- a: згадувати
+  b: пригадувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здавати
+  b: здати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здача
+  b: решта
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здивувати
+  b: здивуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здоровий
+  b: квітучий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснити
+  b: здійснювати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: обходитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: пройти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: проходити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: статися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: трапитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: здійснюватися
+  b: іти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зима
   b: літо
   polarity: antonym
   sources:
   - wiktionary
+- a: зимний
+  b: холодний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: злодій
+  b: крадій
+  polarity: synonym
+  sources:
+  - synonyms
+- a: злякатися
+  b: тремтіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змога
+  b: можливість
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змокнути
+  b: промокати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змокнути
+  b: промокнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змусити
+  b: змушувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змушувати
+  b: примушувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зміна
+  b: перелом
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зміна
+  b: поворот
+  polarity: synonym
+  sources:
+  - synonyms
+- a: змішати
+  b: мішати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: знадобитися
+  b: підійти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: знак
   b: показник
   polarity: synonym
@@ -1594,6 +4461,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: знаходитися
+  b: перебувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: значний
+  b: незліченний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: значно
   b: набагато
   polarity: synonym
@@ -1606,11 +4483,91 @@ approved:
   sources:
   - synonyms
 - a: значно
+  b: сильно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: значно
+  b: суттєво
+  polarity: synonym
+  sources:
+  - synonyms
+- a: значно
   b: чимало
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: знижувати
+  b: знизити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зникати
+  b: зникнути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зникати
+  b: сходити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зникати
+  b: тікати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зняти
+  b: знімати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зобов'язання
+  b: контракт
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зовнішність
+  b: лице
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зовсім
+  b: назавжди
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зокрема
+  b: окремо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зосереджуватися
+  b: зосередитися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зосереджуватися
+  b: концентруватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зосередитися
+  b: концентруватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зрадіти
+  b: радіти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зразок
+  b: спосіб
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зранку
   b: рано
   polarity: synonym
@@ -1628,11 +4585,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зрозумілий
+  b: популярний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зручно
+  b: корисно
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зрідка
   b: рідко
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: зрідка
+  b: часом
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зрідка
   b: інколи
   polarity: synonym
@@ -1645,12 +4617,52 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зупинити
+  b: зупиняти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зупинитися
+  b: зупинятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зупинятися
+  b: ставати
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зустріч
   b: побачення
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: зустрічатися
+  b: траплятися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зібратися
+  b: концентруватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зіграти
+  b: поставити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зіграти
+  b: ставити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зійти
+  b: пройти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: зіставлення
   b: порівняння
   polarity: synonym
@@ -1674,6 +4686,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: карати
+  b: мучити
+  polarity: synonym
+  sources:
+  - synonyms
 - a: карта
   b: меню
   polarity: synonym
@@ -1723,6 +4740,16 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: квітник
+  b: клумба
+  polarity: synonym
+  sources:
+  - synonyms
+- a: квітучий
+  b: сильний
+  polarity: synonym
+  sources:
+  - synonyms
 - a: керування
   b: керівництво
   polarity: synonym
@@ -1735,6 +4762,26 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: керівник
+  b: шеф
+  polarity: synonym
+  sources:
+  - synonyms
+- a: кидати
+  b: кинути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: кипіти
+  b: шуміти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: киця
+  b: кішка
+  polarity: synonym
+  sources:
+  - synonyms
 - a: класифікація
   b: систематизація
   polarity: synonym
@@ -1751,6 +4798,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: кмітливий
+  b: хитрий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: книга
   b: книжка
   polarity: synonym
@@ -1758,6 +4810,46 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: князь
+  b: молодий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: князь
+  b: наречений
+  polarity: synonym
+  sources:
+  - synonyms
+- a: колесо
+  b: коло
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коли
+  b: коли-небудь
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коли-небудь
+  b: колись
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коли-небудь
+  b: не
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коли-небудь
+  b: то
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коли-небудь
+  b: хоч
+  polarity: synonym
+  sources:
+  - synonyms
 - a: колись
   b: раніше
   polarity: synonym
@@ -1771,6 +4863,16 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: коло
+  b: середовище
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коліно
+  b: поворот
+  polarity: synonym
+  sources:
+  - synonyms
 - a: команда
   b: наказ
   polarity: synonym
@@ -1828,17 +4930,52 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: конкурент
+  b: суперник
+  polarity: synonym
+  sources:
+  - synonyms
 - a: конструкція
   b: структура
   polarity: synonym
   sources:
   - synonyms
   - synonyms_karavansky
+- a: контакт
+  b: спілкування
+  polarity: synonym
+  sources:
+  - synonyms
+- a: контракт
+  b: ряд
+  polarity: synonym
+  sources:
+  - synonyms
+- a: контракт
+  b: угода
+  polarity: synonym
+  sources:
+  - synonyms
+- a: контролювати
+  b: перевіряти
+  polarity: synonym
+  sources:
+  - synonyms
 - a: конференція
   b: нарада
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: копнути
+  b: сунути
+  polarity: synonym
+  sources:
+  - synonyms
+- a: копнути
+  b: штовхнути
+  polarity: synonym
+  sources:
+  - synonyms
 - a: копіювати
   b: наслідувати
   polarity: synonym
@@ -1858,8 +4995,33 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+- a: користуватися
+  b: послуговуватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: короткий
+  b: короткочасний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: короткочасний
+  b: малий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: короткочасний
+  b: невеликий
+  polarity: synonym
+  sources:
+  - synonyms
 - a: корпус
   b: стан
+  polarity: synonym
+  sources:
+  - synonyms
+- a: корінь
+  b: хвіст
   polarity: synonym
   sources:
   - synonyms
@@ -2045,8 +5207,9 @@ approved:
   sources:
   - synonyms
   a2Exception: true
-  curator: "claude-opus/4698-a2-curation"
-  a2Rationale: "Both neutral A2 epistemic-possibility adverbs in PULS (probably / maybe); same POS and register, no polysemy trap; confidence nuance is degree-only."
+  curator: claude-opus/4698-a2-curation
+  a2Rationale: Both neutral A2 epistemic-possibility adverbs in PULS (probably / maybe);
+    same POS and register, no polysemy trap; confidence nuance is degree-only.
 - a: майбутній час
   b: минулий час
   polarity: antonym
@@ -2217,8 +5380,9 @@ approved:
   sources:
   - wiktionary
   a2Exception: true
-  curator: "claude-opus/4698-a2-curation"
-  a2Rationale: "Place-preposition antonym (over / under); both A2 in PULS; staple of A1-A2 prepositions-of-place lessons."
+  curator: claude-opus/4698-a2-curation
+  a2Rationale: Place-preposition antonym (over / under); both A2 in PULS; staple of
+    A1-A2 prepositions-of-place lessons.
 - a: надсилати
   b: подавати
   polarity: synonym
@@ -2258,6 +5422,11 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+- a: напій
+  b: пиття
+  polarity: synonym
+  sources:
+  - synonyms
 - a: нарада
   b: рада
   polarity: synonym
@@ -2789,6 +5958,11 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+- a: прихильник
+  b: учень
+  polarity: synonym
+  sources:
+  - synonyms
 - a: проводжати
   b: супроводжувати
   polarity: synonym
@@ -2837,8 +6011,9 @@ approved:
   sources:
   - wiktionary
   a2Exception: true
-  curator: "claude-opus/4698-a2-curation"
-  a2Rationale: "Cardinal-direction antonym (south / north); both A2 adjectives in PULS; core geography vocabulary, trivially fair at A2."
+  curator: claude-opus/4698-a2-curation
+  a2Rationale: Cardinal-direction antonym (south / north); both A2 adjectives in PULS;
+    core geography vocabulary, trivially fair at A2.
 - a: підробка
   b: фальсифікат
   polarity: synonym
@@ -2935,6 +6110,11 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+- a: селище
+  b: село
+  polarity: synonym
+  sources:
+  - synonyms
 - a: сердечний
   b: щирий
   polarity: synonym
