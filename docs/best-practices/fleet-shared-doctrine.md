@@ -70,11 +70,12 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 ## 4. Cost discipline (Sol / Fable / future xAI ceiling)
 
+- **Cursor Ultra month (operator 2026-08-13; sunset/review ~2026-09-13):** Ultra **20x** (~100% left at pin; resets unused ~30d). Prefer **`--agent cursor`** as the **first pick** for mechanical **and** ordinary infra/code implement when fit allows — not LANGUAGE-LANES, not advisor/authority. Spread remains; idle Ultra while burning Codex/Kimi/DeepSeek on those jobs is waste. `cursor:auto` never CF-of-record. DeepSeek Flash everyday; **Pro @ high = hard implement only**.
 - **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor Auto, DeepSeek Flash, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
 - **DeepSeek pin (2026-08-13):** Flash @ high = everyday DeepSeek. Pro @ high = hard implement only (complex multi-file, hard lookup). Language/VESUM/folk still forbidden. First-party deepseek-direct only. Default `--agent deepseek` remains Flash.
 - **OpenRouter:** mainly Pool + Gemma; not a general multi-model bus.
 - **Timed pauses:** near_cap/paused lanes carry **return-at** (e.g. Codex 2026-08-10T19:47Z) — auto-return, never permanent neglect.
-- **Cursor gate:** #6469 plan-only adapter must clear before cursor-first mechanical tier.
+- **Cursor gate:** #6469 plan-only adapter **fixed** — cursor-first mechanical tier is active; Ultra month strengthens first-pick preference through ~2026-09-13.
 
 - Use ceiling models **often** on *qualifying* hard work — not rarely, and not as free general labor.  
 - **Never** default ceiling models as orchestrator or first-pass implementer.  
