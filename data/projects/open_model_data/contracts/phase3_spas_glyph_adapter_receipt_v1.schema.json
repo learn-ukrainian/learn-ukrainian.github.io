@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_spas_glyph_adapter_receipt_v1.schema.json",
+  "title": "Phase 3 Spas na Berestovi Bukyvede glyph adapter text-free receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "mode",
+    "text_free",
+    "inputs",
+    "mapping_contract",
+    "denominator",
+    "output",
+    "rights_and_scope",
+    "safeguards",
+    "residuals",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_spas_glyph_adapter_receipt_v1"},
+    "implementation_version": {"const": "phase3_spas_glyph_adapter_v1"},
+    "mode": {"const": "source_verified_bukyvede_to_unicode_adapter"},
+    "text_free": {"const": true},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_pdf_sha256",
+        "raw_catalog_filename",
+        "raw_catalog_sha256",
+        "raw_materialization_receipt_filename",
+        "raw_materialization_receipt_file_sha256",
+        "raw_materialization_receipt_sha256",
+        "mapping_evidence_filename",
+        "mapping_evidence_sha256",
+        "embedded_font_sha256",
+        "to_unicode_cmap_sha256",
+        "implementation_sha256",
+        "receipt_schema_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "korniienko-spas-na-berestovi-2013"},
+        "source_pdf_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_catalog_filename": {"const": "spas-na-berestovi-raw-catalog.jsonl.gz"},
+        "raw_catalog_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_materialization_receipt_filename": {"const": "materialization-receipt-v1.json"},
+        "raw_materialization_receipt_file_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_materialization_receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "mapping_evidence_filename": {"const": "bukyvede-glyph-mapping-evidence-v1.json"},
+        "mapping_evidence_sha256": {"$ref": "#/$defs/sha256"},
+        "embedded_font_sha256": {"$ref": "#/$defs/sha256"},
+        "to_unicode_cmap_sha256": {"$ref": "#/$defs/sha256"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "mapping_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rules",
+        "observed_counts",
+        "longest_match_first",
+        "offset_basis",
+        "source_adapter_not_semantic_gold"
+      ],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {"$ref": "#/$defs/mapping_rule"}
+        },
+        "observed_counts": {
+          "type": "object",
+          "minProperties": 5,
+          "maxProperties": 5,
+          "propertyNames": {"type": "string", "minLength": 1},
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        },
+        "longest_match_first": {"const": true},
+        "offset_basis": {"const": "unicode_code_points"},
+        "source_adapter_not_semantic_gold": {"const": true}
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_records",
+        "output_records",
+        "input_characters",
+        "output_characters",
+        "records_with_mappings",
+        "mapping_events",
+        "input_private_use_occurrences",
+        "output_private_use_occurrences",
+        "raw_reconstruction_failures"
+      ],
+      "properties": {
+        "input_records": {"type": "integer", "minimum": 1},
+        "output_records": {"type": "integer", "minimum": 1},
+        "input_characters": {"type": "integer", "minimum": 1},
+        "output_characters": {"type": "integer", "minimum": 1},
+        "records_with_mappings": {"type": "integer", "minimum": 1},
+        "mapping_events": {"type": "integer", "minimum": 1},
+        "input_private_use_occurrences": {"type": "integer", "minimum": 1},
+        "output_private_use_occurrences": {"const": 0},
+        "raw_reconstruction_failures": {"const": 0}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "records", "bytes", "sha256", "record_identity_manifest_sha256"],
+      "properties": {
+        "filename": {"const": "spas-na-berestovi-unicode-adapter-v1.jsonl.gz"},
+        "records": {"type": "integer", "minimum": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "record_identity_manifest_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rights_and_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inherits_upstream_accepted_operational_risk",
+        "attribution_and_field_level_removal_preserved",
+        "binary_media_reuse_authorized",
+        "full_publication_training_export_authorized",
+        "adapt_on_substantiated_rights_notice"
+      ],
+      "properties": {
+        "inherits_upstream_accepted_operational_risk": {"const": true},
+        "attribution_and_field_level_removal_preserved": {"const": true},
+        "binary_media_reuse_authorized": {"const": false},
+        "full_publication_training_export_authorized": {"const": false},
+        "adapt_on_substantiated_rights_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_source_preserved_in_every_record",
+        "historical_forms_protected",
+        "deterministic_mapping_only",
+        "commentary_and_inscription_layers_separated",
+        "training_eligible",
+        "modern_correction_eligible",
+        "semantic_gold",
+        "provider_calls",
+        "phase4_authorized"
+      ],
+      "properties": {
+        "raw_source_preserved_in_every_record": {"const": true},
+        "historical_forms_protected": {"const": true},
+        "deterministic_mapping_only": {"const": true},
+        "commentary_and_inscription_layers_separated": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "semantic_gold": {"const": false},
+        "provider_calls": {"const": false},
+        "phase4_authorized": {"const": false}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "glyph_mapping_pending",
+        "commentary_transcription_separation_pending",
+        "qualified_historical_review_pending",
+        "lavra_cave_corpus_gap_closed"
+      ],
+      "properties": {
+        "glyph_mapping_pending": {"const": false},
+        "commentary_transcription_separation_pending": {"const": true},
+        "qualified_historical_review_pending": {"const": true},
+        "lavra_cave_corpus_gap_closed": {"const": false}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "codepoint": {"type": "string", "pattern": "^U\\+[0-9A-F]{4,6}$"},
+    "mapping_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mapping_id", "raw_pattern", "normalized_pattern", "unicode_name", "expected_occurrences"],
+      "properties": {
+        "mapping_id": {"type": "string", "minLength": 1},
+        "raw_pattern": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/codepoint"}},
+        "normalized_pattern": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/codepoint"}},
+        "unicode_name": {"type": "string", "minLength": 1},
+        "expected_occurrences": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}
