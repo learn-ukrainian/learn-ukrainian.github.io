@@ -47,6 +47,14 @@ Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
 
 ### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
+**Cursor Ultra month (operator 2026-08-13; sunset/review ~2026-09-13):** Ultra **20x** is live
+(~100% left at pin; resets unused ~30d). For **mechanical and ordinary infra/code implement**
+that is not LANGUAGE-LANES and not advisor/authority, prefer **`--agent cursor`**
+(`auto`) as the **first pick when fit allows**. Spread remains — Cursor is not the only seat —
+but idle Ultra while burning Codex/Kimi/DeepSeek on mechanical jobs is waste. Still never
+`cursor:auto` as CF-of-record identity. DeepSeek stays **Flash everyday**; **Pro @ high =
+hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13).
+
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `python -m scripts.fleet.capacity_pick` (preferred) + `codexbar usage --json --provider <lane>`
 + `/api/delegate/active` + disk.
@@ -72,7 +80,7 @@ stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor Auto** | code/infra CI, mechanical-with-judgment | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
+| **Cursor Auto** | code/infra CI, mechanical + ordinary infra/code implement (**Ultra month first pick** through ~2026-09-13) | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
 | **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
