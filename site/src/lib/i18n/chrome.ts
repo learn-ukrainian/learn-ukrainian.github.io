@@ -329,6 +329,10 @@ const en = {
   'practice.lapsedCount': 'Lapsed',
   'practice.advancedToReview': 'Advanced to Review',
   'practice.willRepeatNext': 'will repeat next time',
+  // #6722: results screen used to dead-end after a session — no review of the
+  // misses, no way onward besides another round or leaving.
+  'practice.reviewMisses': 'Review what you missed',
+  'practice.continueLearning': 'Keep exploring',
   'practice.retry': 'Try again',
   'practice.loadError': 'We couldn’t load practice.',
   'practice.loadErrorReload': 'We couldn’t load practice. Try reloading the page.',
@@ -657,6 +661,8 @@ const uk: Record<ChromeKey, string> = {
   'practice.lapsedCount': 'Помилки',
   'practice.advancedToReview': 'Перейшли на повторення',
   'practice.willRepeatNext': 'Повторимо наступного разу',
+  'practice.reviewMisses': 'Повторіть, що не вдалося',
+  'practice.continueLearning': 'Досліджуйте далі',
   'practice.retry': 'Спробувати ще раз',
   'practice.loadError': 'Не вдалося завантажити практику.',
   'practice.loadErrorReload': 'Не вдалося завантажити практику. Спробуйте оновити сторінку.',

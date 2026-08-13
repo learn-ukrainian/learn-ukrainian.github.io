@@ -718,6 +718,30 @@ const frontmatter = {
     color: var(--lu-state-wrong-fg);
   }
 
+  /* #6722: shared teaching-sentence panel for choice/classify/stress drills —
+     same visual language as .paronym-feedback above. */
+  :global(.mc-feedback) {
+    margin: 0.7rem 0 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 8px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  :global(.mc-feedback p) {
+    margin: 0;
+  }
+
+  :global(.mc-feedback.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.mc-feedback.wrong) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+  }
+
   :global(.mc-q) {
     margin: 0 0 0.3rem;
     color: var(--lu-text);
@@ -1082,6 +1106,34 @@ const frontmatter = {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
+  }
+
+  /* #6722: results screen used to dead-end at «Ще одна сесія» / «Готово» with no
+     review of the session's misses and no way onward besides another round. */
+  :global(.lexicon-session-misses li) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+
+  :global(.lexicon-session-miss-gloss) {
+    color: var(--lu-text-muted);
+  }
+
+  :global(.lexicon-session-continue) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lu-border);
+    font-size: 0.9rem;
+  }
+
+  :global(.lexicon-session-continue-label) {
+    color: var(--lu-text-muted);
+    font-weight: 800;
   }
 
   :global(.lexicon-session-proverb) {
