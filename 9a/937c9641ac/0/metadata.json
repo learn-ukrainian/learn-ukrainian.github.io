@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9a937c9641ac",
+  "session_id": "fleet-b294a3ef78424051b610a4cb100c0205",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T19:56:12.313014Z",
+  "branch": "cursor/6741-test-isolation",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "efba94145871",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T19:56:12.309776Z",
+    "agent_lines": 73,
+    "agent_removed": 7,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 73,
+    "total_lines_changed": 80,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
