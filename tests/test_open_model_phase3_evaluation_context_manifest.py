@@ -333,7 +333,9 @@ def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     assert stat.S_IMODE(paths["private_output"].stat().st_mode) == manifest.PRIVATE_FILE_MODE
     assert stat.S_IMODE(paths["private_output"].parent.stat().st_mode) == manifest.PRIVATE_DIR_MODE
     assert paths["public_receipt"].exists()
-    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == manifest.PUBLIC_FILE_MODE
+    receipt_mode = stat.S_IMODE(paths["public_receipt"].stat().st_mode)
+    assert receipt_mode == manifest.PRIVATE_FILE_MODE
+    assert receipt_mode & 0o077 == 0
     assert receipt["row_count"] == 3
     assert receipt["context_accounting"] == {
         "ua_gec_complete_context": 1,
@@ -354,6 +356,19 @@ def test_public_schema_is_closed_and_text_free() -> None:
     assert "source_text" not in serialized
     assert "unit_id" not in serialized
     assert schema["additionalProperties"] is False
+
+
+def test_text_free_receipt_rejects_world_readable_permissions(tmp_path: Path) -> None:
+    receipt_path = tmp_path / "receipt.json"
+    receipt = {
+        "schema_version": manifest.SCHEMA_VERSION,
+        "text_free": True,
+        "receipt_sha256": "a" * 64,
+    }
+    receipt_path.write_bytes(manifest.canonical_bytes(receipt))
+    os.chmod(receipt_path, 0o644)
+    with pytest.raises(manifest.EvaluationContextManifestError, match="0600"):
+        manifest._regular_text_free_receipt(receipt_path, "text-free receipt")
 
 
 def test_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -46,7 +46,6 @@ SCHEMA_VERSION = "phase3_evaluation_context_manifest_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_evaluation_context_manifest_v1"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
-PUBLIC_FILE_MODE = 0o644
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 ROW_COUNT = 9_392
 V2_SOURCE_UNITS = 67_041
@@ -213,14 +212,16 @@ def _regular_private(path: Path, label: str) -> None:
     require(stat.S_IMODE(state.st_mode) == PRIVATE_FILE_MODE, f"{label} permissions must be 0600")
 
 
-def _regular_public(path: Path, label: str) -> None:
+def _regular_text_free_receipt(path: Path, label: str) -> None:
     _reject_symlink_components(path, label)
     try:
         state = path.lstat()
     except OSError as exc:
         raise EvaluationContextManifestError(f"missing {label}: {path}") from exc
     require(stat.S_ISREG(state.st_mode) and not path.is_symlink(), f"{label} must be a regular file")
-    require(stat.S_IMODE(state.st_mode) == PUBLIC_FILE_MODE, f"{label} permissions must be 0644")
+    mode = stat.S_IMODE(state.st_mode)
+    require(mode == PRIVATE_FILE_MODE, f"{label} permissions must be 0600")
+    require(mode & 0o077 == 0, f"{label} must not grant group/other access")
 
 
 def _strict_json_bytes(raw: bytes, label: str, top: type[Any] = dict) -> Any:
@@ -239,8 +240,8 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def _read_public_json(path: Path, label: str) -> dict[str, Any]:
-    _regular_public(path, label)
+def _read_text_free_receipt_json(path: Path, label: str) -> dict[str, Any]:
+    _regular_text_free_receipt(path, label)
     value = _strict_json_bytes(path.read_bytes(), label)
     require(isinstance(value, dict), f"{label} must be an object")
     return value
@@ -635,21 +636,28 @@ def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
         raise
 
 
-def _write_public_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
-    _reject_symlink_components(path, "public receipt")
+def _write_text_free_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
+    """Atomically write a text-free commit-eligible receipt at owner-only mode 0600."""
+    _reject_symlink_components(path, "text-free receipt")
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = canonical_bytes(receipt)
     if path.exists():
-        _regular_public(path, "public receipt")
-        require(path.read_bytes() == payload, "refusing to overwrite an immutable public receipt")
+        _regular_text_free_receipt(path, "text-free receipt")
+        require(path.read_bytes() == payload, "refusing to overwrite an immutable text-free receipt")
         return
-    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
-        temporary = Path(handle.name)
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
-    os.chmod(path, PUBLIC_FILE_MODE)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
+            temporary = Path(handle.name)
+            os.chmod(temporary, PRIVATE_FILE_MODE)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        os.chmod(path, PRIVATE_FILE_MODE)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
 
 
 def _drive_item_id(path: Path) -> str:
@@ -833,7 +841,7 @@ def materialize(
         require(private_output.read_bytes() == payload, "refusing to overwrite a changed private manifest")
     else:
         _atomic_write(private_output, payload, PRIVATE_FILE_MODE)
-    _write_public_receipt(public_receipt_path, receipt)
+    _write_text_free_receipt(public_receipt_path, receipt)
     return receipt
 
 
@@ -895,7 +903,7 @@ def finish_custody(
     _reject_symlink_components(drive_backup_dir, "drive backup directory")
     private_output = drive_backup_dir / PRIVATE_FILENAME
     _regular_private(private_output, "private manifest")
-    receipt = _read_public_json(public_receipt_path, "public receipt")
+    receipt = _read_text_free_receipt_json(public_receipt_path, "text-free receipt")
     validated = validate_receipt(receipt)
     _verify_drive_readback(private_output, validated["manifest"]["private_jsonl_sha256"])
     checksums_path = _write_checksums(drive_backup_dir, {PRIVATE_FILENAME: private_output})
@@ -988,7 +996,7 @@ def verify_existing(
     payload = b"".join(canonical_bytes(row) for row in rows)
     _regular_private(private_output, "private manifest")
     require(private_output.read_bytes() == payload, "private manifest drift")
-    receipt = _read_public_json(public_receipt_path, "public receipt")
+    receipt = _read_text_free_receipt_json(public_receipt_path, "text-free receipt")
     validated = validate_receipt(receipt)
     require(
         validated["manifest"]["private_jsonl_sha256"] == sha256_bytes(payload), "public receipt manifest hash drift"
