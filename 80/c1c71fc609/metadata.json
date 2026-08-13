@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "80c1c71fc609",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-evaluation-context-manifest-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json",
+    "data/projects/open_model_data/evidence/phase3_evaluation_context_manifest_receipt_v1.json",
+    "scripts/projects/open_model_data/phase3_evaluation_context_manifest.py",
+    "tests/test_open_model_phase3_evaluation_context_manifest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/80/c1c71fc609/0/metadata.json",
+      "transcript": "/80/c1c71fc609/0/full.jsonl",
+      "compact_transcript": "/80/c1c71fc609/0/transcript.jsonl",
+      "content_hash": "/80/c1c71fc609/0/content_hash.txt",
+      "prompt": "/80/c1c71fc609/0/prompt.txt"
+    }
+  ]
+}

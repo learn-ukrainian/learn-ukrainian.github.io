@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "80c1c71fc609",
+  "session_id": "fleet-de660da821d24049aa9867ef9a278326",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T21:54:27.164683Z",
+  "branch": "cursor/phase3-6375-evaluation-context-manifest-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json",
+    "data/projects/open_model_data/evidence/phase3_evaluation_context_manifest_receipt_v1.json",
+    "scripts/projects/open_model_data/phase3_evaluation_context_manifest.py",
+    "tests/test_open_model_phase3_evaluation_context_manifest.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "204c300b495e",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T21:54:27.156894Z",
+    "agent_lines": 1699,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1699,
+    "total_lines_changed": 1699,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

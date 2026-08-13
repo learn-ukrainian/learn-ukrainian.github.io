@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-evaluation-context-manifest-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+IMPLEMENT NOW. Approval is already present. Do not return a plan or ask for approval. Create, test, run, commit, push and open the PR; stop only for a concrete failed invariant.
+
+Read exact custody and design evidence:
+- /Users/krisztiankoos/projects/learn-ukrainian/batch_state/tasks/phase3-6375-eval-context-input-preflight-cursor-v3.result
+- /Users/krisztiankoos/projects/learn-ukrainian/batch_state/tasks/phase3-6375-evaluation-context-manifest-cursor.result
+
+Own exactly four tracked files:
+1. scripts/projects/open_model_data/phase3_evaluation_context_manifest.py
+2. data/projects/open_model_data/contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json
+3. data/projects/open_model_data/evidence/phase3_evaluation_context_manifest_receipt_v1.json
+4. tests/test_open_model_phase3_evaluation_context_manifest.py
+
+Join the exact frozen 67,041-unit source JSONL, exact 9,392 heldout partition, and current UA-GEC closure-v2. Private row accounting must be exactly:
+- 907 ua_gec_complete_context
+- 2 ua_gec_typed_exclusion
+- 8,483 frozen_source_unit_text
+Never call non-UA frozen source-unit text complete sentence context; set complete_sentence_context=false and never infer surrounding text, corrections or evidence.
+
+Enforce exact family counts school 8005, UA-GEC 909, Pravopys-2026 235, Pravopys-2019 178, Antonenko 58, calque 7; lanes 2000/7392. Strict public receipt is text-free hashes/counts only: no unit IDs, locators, documents, text, snippets or fingerprints. Cycle002 diagnostic-only; labels absent; evidence-backed labels 0; authoring blocked; Phase 3 incomplete; Phase 4 blocked.
+
+Fail closed on hash/count/mode/symlink/duplicate/join/text-leak/unknown-field/authority drift. Secure atomic 0700/0600 private output; immutable existing output or byte-identical idempotence. Extract only required tar members to secure temp; never rematerialize from live DB. Production-run against exact Drive custody, write private manifest+custody receipt+SHA256SUMS to a new durable Phase 3 Drive backup directory, verify hash readback/provider identity, remove temp, and generate tracked receipt only through producer.
+
+Run focused and affected existing tests, Ruff check/format, diff-check, full Phase3 suite if practical. Do not modify other tracked files or existing contracts/denominators.
+
+Commit trailer:
+X-Agent: cursor/phase3-6375-evaluation-context-manifest-cursor-v2
+Push this branch and open a non-draft PR linked to #6375. Do not merge/auto-merge. Report PR/head, four files, private/public hashes, tests and residuals.
