@@ -86,12 +86,12 @@ import {
 import {
   CEFR_LEVELS,
   LEARNER_LEVEL_STORAGE_KEY,
-  prioritizeByLearnerLevel,
   normalizeCefrLevel,
   parseCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
 import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../lib/lexicon/daily';
+import { pickDailyForLevel } from '../lib/lexicon/daily-card';
 import {
   filterTeacherClozeItems,
   getCachedLowercaseLemmaKeySet,
@@ -2267,8 +2267,9 @@ function LexiconPracticeIsland({
   }, [deck, learnerLevel, shardBaseUrl]);
 
   // D2 (design delta 2026-07-26): the Words-of-the-Day zone renders the SAME 12
-  // lemmas as /words-of-the-day/ — pickDaily(prioritizeByLearnerLevel(pool, level),
-  // dateSeed(now), 12) over /lexicon/daily-pool.json. This is recomputed fresh
+  // lemmas as /words-of-the-day/ — pickDailyForLevel(pool, level, dateSeed(now), 12)
+  // over /lexicon/daily-pool.json (#6727: filter to the selected CEFR, then shuffle
+  // only that subset — never re-rank-and-reshuffle the full 300). Recomputed fresh
   // from (pool, level, date) on every run rather than reused from a persisted
   // snapshot, so there is no stale cache to silently pin the carousel on one
   // word across days (confirmed live bug: борщ every visit, while the page
@@ -2323,9 +2324,9 @@ function LexiconPracticeIsland({
             '/lexicon/daily-pool.json',
             shardJsonCacheRef.current,
           );
-          const eligiblePool = prioritizeByLearnerLevel(pool, learnerLevel);
-          picks = pickDaily(
-            eligiblePool,
+          picks = pickDailyForLevel(
+            pool,
+            learnerLevel,
             dateSeed(now) + reRollSeed(dailyReRollCount),
             DAILY_PRACTICE_DECK_SIZE,
           );

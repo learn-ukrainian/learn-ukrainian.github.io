@@ -1,4 +1,19 @@
-import type { DailyWord } from "./daily";
+import { pickDaily, type DailyWord } from "./daily";
+import { filterByCumulativeLevel } from "./levels";
+
+/**
+ * Shared WotD / practice daily draw (#6727): filter the pool to the selected
+ * CEFR first, then Fisher–Yates only that subset. Never re-rank-and-reshuffle
+ * the full daily pool — that produced mixed-level grids under a level status.
+ */
+export function pickDailyForLevel(
+  pool: readonly DailyWord[],
+  selectedLevel: unknown,
+  seed: number,
+  count: number,
+): DailyWord[] {
+  return pickDaily(filterByCumulativeLevel(pool, selectedLevel), seed, count);
+}
 
 /** Escape text for safe interpolation into Daily Words card HTML. */
 export function escapeDailyCardHtml(value: unknown): string {
