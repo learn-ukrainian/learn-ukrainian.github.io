@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "dace532832e6",
+  "session_id": "fleet-5b29aa3d15d64398a9cd2402ab980234",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-13T07:14:37.30765Z",
+  "branch": "cursor/6691-cf-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json",
+    "scripts/lexicon/publish_manifest.py",
+    "tests/test_ohoiko_paired_headword_split.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "afce3ad797e2",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-13T07:14:37.300675Z",
+    "agent_lines": 15,
+    "agent_removed": 788,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 15,
+    "total_lines_changed": 803,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

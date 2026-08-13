@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/6691-cf-fix
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Task: address Codex CF on #6691 (CHANGES_REQUESTED)
+
+**PR:** #6691 · branch `agy/atlas-6370-ocr-recover` · head `dd4130bed1`
+**X-Agent:** `cursor/6691-cf-fix`
+
+## CAPACITY_CARD
+pick=cursor mechanical CF deltas; language already reviewed. Codex weekly cool as alt.
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor Auto
+- why: mechanical revert + test mark + drop generated file
+- owned_paths: scripts/lexicon/ohoiko_paired_headword_split.py, scripts/lexicon/publish_manifest.py, tests/test_ohoiko_paired_headword_split.py, batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json
+- acceptance_cmd: pytest tests/test_ohoiko_paired_headword_split.py -q; file gone from git; publish_manifest.py matches main except if a *necessary* OCR-related hunk remains (expect full revert)
+- alternatives_considered: [codex, agy]
+- parallel: #6686 merge on other branch
+
+## Required fixes (from posted CF)
+1. **Remove** `batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json` from the PR (`git rm --cached` / stop tracking). Do not commit `batch_state/`. Residual counts can live in the PR comment only.
+2. Mark the new VESUM-dependent test with the same `requires_vesum_db` guard used in #6678.
+3. Correct catalog delta in PR body / any remaining commit text: live post-#6678 was **20111**, residual says **20112** (`+1` футболіст). Do not invent 20053.
+4. **Revert** unrelated `scripts/lexicon/publish_manifest.py` changes (failed/timeout uploads must not become warnings that still write the pointer).
+
+Do not collapse spaces. Do not promote heritage. Do not merge. Push to the same branch.
+
+## Worktree
+Reuse `.worktrees/dispatch/agy/atlas-6370-ocr-recover` **only if the AGY worker has exited**. If still running, fail closed and say so — do not fight a live author process.

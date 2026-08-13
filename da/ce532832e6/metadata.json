@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "dace532832e6",
+  "strategy": "manual-commit",
+  "branch": "cursor/6691-cf-fix",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "batch_state/atlas-drive/6370-residual-ocr-2026-08-13.json",
+    "scripts/lexicon/publish_manifest.py",
+    "tests/test_ohoiko_paired_headword_split.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/da/ce532832e6/0/metadata.json",
+      "transcript": "/da/ce532832e6/0/full.jsonl",
+      "compact_transcript": "/da/ce532832e6/0/transcript.jsonl",
+      "content_hash": "/da/ce532832e6/0/content_hash.txt",
+      "prompt": "/da/ce532832e6/0/prompt.txt"
+    }
+  ]
+}
