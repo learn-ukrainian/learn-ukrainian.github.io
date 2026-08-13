@@ -349,6 +349,35 @@ def test_in_place_cutover_rehearses_copy_preserves_inode_and_cleans_temps(
     assert not list(tmp_path.glob(".sources.db.vspu-*"))
 
 
+def test_in_place_cutover_waits_for_new_receipt_drive_identity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database, jsonl, policy, _ = _fixture(tmp_path, monkeypatch)
+    output = tmp_path / "cutover-receipt.json"
+    observed: list[Path] = []
+
+    def record_identity_wait(path: Path) -> str:
+        observed.append(path)
+        assert path.is_file()
+        return "drive-item-id"
+
+    monkeypatch.setattr(cutover, "_wait_for_drive_item_id", record_identity_wait)
+    cutover.reconcile(
+        database_path=database,
+        private_jsonl_path=jsonl,
+        preimage_backup_receipt_path=jsonl,
+        compressed_preimage_path=jsonl,
+        output_receipt_path=output,
+        additive_policy_path=policy,
+        apply_in_place=True,
+        expected_live_db_path=database,
+        require_google_drive_output=True,
+    )
+
+    assert observed == [output]
+
+
 def test_candidate_ingest_failure_keeps_live_database_and_receipt_absent(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -556,3 +585,116 @@ def test_private_receipt_is_immutable_and_rejects_symlink(tmp_path: Path) -> Non
     receipt.symlink_to(target)
     with pytest.raises(cutover.VspuDatabaseCutoverError, match="symlink"):
         cutover._atomic_write_private(receipt, {"ok": True})
+
+
+def test_new_drive_receipt_identity_is_retried(monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts = 0
+
+    def delayed_identity(_path: Path) -> str:
+        nonlocal attempts
+        attempts += 1
+        if attempts < 3:
+            raise cutover.DriveIdentityPendingError("private artifact lacks Google Drive provider identity")
+        return "drive-item-id"
+
+    monkeypatch.setattr(cutover, "_drive_item_id", delayed_identity)
+    monkeypatch.setattr(cutover.time, "sleep", lambda _seconds: None)
+
+    assert (
+        cutover._wait_for_drive_item_id(
+            Path("receipt.json"),
+            timeout_seconds=1,
+            poll_seconds=0,
+        )
+        == "drive-item-id"
+    )
+    assert attempts == 3
+
+
+def test_new_drive_receipt_identity_timeout_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        cutover,
+        "_drive_item_id",
+        lambda _path: (_ for _ in ()).throw(
+            cutover.DriveIdentityPendingError("private artifact lacks Google Drive provider identity")
+        ),
+    )
+
+    with pytest.raises(
+        cutover.VspuDatabaseCutoverError,
+        match="did not acquire Google Drive provider identity within 0 seconds",
+    ):
+        cutover._wait_for_drive_item_id(
+            Path("receipt.json"),
+            timeout_seconds=0,
+            poll_seconds=0,
+        )
+
+
+def test_new_drive_receipt_structural_error_is_not_retried(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempts = 0
+
+    def structural_failure(_path: Path) -> str:
+        nonlocal attempts
+        attempts += 1
+        raise cutover.VspuDatabaseCutoverError("private artifact is not inside exactly one Google Drive mount")
+
+    monkeypatch.setattr(cutover, "_drive_item_id", structural_failure)
+    monkeypatch.setattr(
+        cutover.time,
+        "sleep",
+        lambda _seconds: pytest.fail("structural errors must not be retried"),
+    )
+
+    with pytest.raises(cutover.VspuDatabaseCutoverError, match="not inside exactly one"):
+        cutover._wait_for_drive_item_id(
+            Path("receipt.json"),
+            timeout_seconds=120,
+            poll_seconds=1,
+        )
+    assert attempts == 1
+
+
+def test_drive_identity_timeout_restores_exact_prestate_and_removes_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database, jsonl, policy, expected = _fixture(tmp_path, monkeypatch)
+    output = tmp_path / "never.json"
+    original_wait = cutover._wait_for_drive_item_id
+    monkeypatch.setattr(
+        cutover,
+        "_drive_item_id",
+        lambda _path: (_ for _ in ()).throw(
+            cutover.DriveIdentityPendingError("private artifact lacks Google Drive provider identity")
+        ),
+    )
+    monkeypatch.setattr(
+        cutover,
+        "_wait_for_drive_item_id",
+        lambda path: original_wait(path, timeout_seconds=0, poll_seconds=0),
+    )
+
+    with pytest.raises(
+        cutover.VspuDatabaseCutoverError,
+        match="did not acquire Google Drive provider identity within 0 seconds",
+    ):
+        cutover.reconcile(
+            database_path=database,
+            private_jsonl_path=jsonl,
+            preimage_backup_receipt_path=jsonl,
+            compressed_preimage_path=jsonl,
+            output_receipt_path=output,
+            additive_policy_path=policy,
+            apply_in_place=True,
+            expected_live_db_path=database,
+            require_google_drive_output=True,
+        )
+
+    assert cutover.sha256_file(database) == expected
+    assert not output.exists()
+    assert not list(tmp_path.glob(".sources.db.vspu-*"))
