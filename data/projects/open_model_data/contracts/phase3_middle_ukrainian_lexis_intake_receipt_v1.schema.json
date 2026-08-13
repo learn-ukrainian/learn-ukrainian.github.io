@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_middle_ukrainian_lexis_intake_receipt_v1.schema.json",
+  "title": "Phase 3 Middle Ukrainian Zyzanii Lexis and Synonima raw-intake receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "source",
+    "implementation",
+    "snapshot",
+    "layer_inventory",
+    "evidence_scope",
+    "rights_and_custody",
+    "safeguards",
+    "residuals",
+    "text_free",
+    "provider_calls",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_middle_ukrainian_lexis_intake_receipt_v1"},
+    "implementation_version": {"const": "phase3_middle_ukrainian_lexis_intake_v1"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "title",
+        "preparer",
+        "publication_year",
+        "institutional_catalogue_url",
+        "electronic_publication_url",
+        "components"
+      ],
+      "properties": {
+        "collection_id": {"const": "zyzanii-lexis-1596-synonima-17c-nimchuk-1964"},
+        "title": {"const": "Лексис Лаврентія Зизанія. Синоніма славеноросская"},
+        "preparer": {"const": "В. В. Німчук"},
+        "publication_year": {"const": 1964},
+        "institutional_catalogue_url": {"const": "https://irbis-nbuv.gov.ua/ulib/item/0001524"},
+        "electronic_publication_url": {"const": "http://litopys.org.ua/zyzlex/zyz.htm"},
+        "components": {
+          "const": [
+            {
+              "component_id": "zyzanii-lexis-1596",
+              "title": "Лексис Лаврентія Зизанія",
+              "date": "1596",
+              "medium": "printed_lexicography"
+            },
+            {
+              "component_id": "synonima-slavenorosskaia-17c",
+              "title": "Синоніма славеноросская",
+              "date": "seventeenth_century_date_unresolved",
+              "medium": "manuscript_lexicography"
+            }
+          ]
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation_sha256", "receipt_schema_sha256", "parser"],
+      "properties": {
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "parser": {"const": "exact_static_snapshot_manifest_html_link_closure_and_png_crc_walker"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resources",
+        "html_pages",
+        "facsimile_png_assets",
+        "css_assets",
+        "total_bytes",
+        "html_bytes",
+        "png_bytes",
+        "css_bytes",
+        "resource_manifest_sha256",
+        "png_structure_manifest_sha256",
+        "source_specific_reference_paths",
+        "source_specific_reference_manifest_sha256",
+        "facsimile_page_image_links",
+        "html_charset",
+        "png_pixel_format",
+        "raw_snapshot_fully_walked"
+      ],
+      "properties": {
+        "resources": {"const": 196},
+        "html_pages": {"const": 103},
+        "facsimile_png_assets": {"const": 91},
+        "css_assets": {"const": 2},
+        "total_bytes": {"const": 2767216},
+        "html_bytes": {"const": 1581427},
+        "png_bytes": {"const": 1182465},
+        "css_bytes": {"const": 3324},
+        "resource_manifest_sha256": {
+          "const": "e23da810eb21d0b5c18fbc4a3ca527a4bb56c8c4d0502ccf765fbd7a27f5a37c"
+        },
+        "png_structure_manifest_sha256": {
+          "const": "c0c93041bc8cb3dde1a650e30175fc64c1c89143a29f47738dabde2687bcb538"
+        },
+        "source_specific_reference_paths": {"const": 196},
+        "source_specific_reference_manifest_sha256": {
+          "const": "59522ddfb38ab78426f90c0ec4be4eaf5df129166ed65143583aed997919b920"
+        },
+        "facsimile_page_image_links": {"const": 91},
+        "html_charset": {"const": "windows-1251"},
+        "png_pixel_format": {"const": "1_bit_grayscale_non_interlaced"},
+        "raw_snapshot_fully_walked": {"const": true}
+      }
+    },
+    "layer_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index_html_pages",
+        "scholarly_editorial_html_pages",
+        "target_monument_transcription_html_pages",
+        "supplemental_historical_transcription_html_pages",
+        "facsimile_wrapper_html_pages",
+        "facsimile_png_assets",
+        "layer_assignments_are_site_structure_only",
+        "editorial_and_source_layers_semantically_separated"
+      ],
+      "properties": {
+        "index_html_pages": {"const": 1},
+        "scholarly_editorial_html_pages": {"const": 3},
+        "target_monument_transcription_html_pages": {"const": 5},
+        "supplemental_historical_transcription_html_pages": {"const": 3},
+        "facsimile_wrapper_html_pages": {"const": 91},
+        "facsimile_png_assets": {"const": 91},
+        "layer_assignments_are_site_structure_only": {"const": true},
+        "editorial_and_source_layers_semantically_separated": {"const": false}
+      }
+    },
+    "evidence_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ukrainian_academic_scholarly_edition",
+        "direct_printed_lexicographic_source_candidate",
+        "direct_manuscript_lexicographic_source_candidate",
+        "candidate_gap_cell",
+        "mixed_church_slavonic_and_historical_ukrainian_layers_present",
+        "historical_stage_assignment",
+        "geographic_representativeness_verified",
+        "representative_of_all_middle_ukrainian_varieties",
+        "nimchuk_as_sole_periodization_authority"
+      ],
+      "properties": {
+        "ukrainian_academic_scholarly_edition": {"const": true},
+        "direct_printed_lexicographic_source_candidate": {"const": true},
+        "direct_manuscript_lexicographic_source_candidate": {"const": true},
+        "candidate_gap_cell": {"const": "middle_ukrainian_print_and_lexicography"},
+        "mixed_church_slavonic_and_historical_ukrainian_layers_present": {"const": true},
+        "historical_stage_assignment": {"const": "pending_qualified_historical_review"},
+        "geographic_representativeness_verified": {"const": false},
+        "representative_of_all_middle_ukrainian_varieties": {"const": false},
+        "nimchuk_as_sole_periodization_authority": {"const": false}
+      }
+    },
+    "rights_and_custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage",
+        "public_source_access",
+        "source_site_scan_and_processing_credit",
+        "standardized_dataset_license_present",
+        "retrieval_transport",
+        "retrieval_transport_authenticated",
+        "private_research_and_source_evidence_only",
+        "source_attribution_and_locators_preserved",
+        "full_scan_public_redistribution_authorized",
+        "full_text_public_redistribution_authorized",
+        "training_export_authorized",
+        "adapt_or_remove_on_substantiated_notice"
+      ],
+      "properties": {
+        "storage": {"const": "private_google_drive"},
+        "public_source_access": {"const": true},
+        "source_site_scan_and_processing_credit": {"const": "Максим, Ізборник, 27.IX.2003"},
+        "standardized_dataset_license_present": {"const": false},
+        "retrieval_transport": {"const": "plain_http_site_snapshot"},
+        "retrieval_transport_authenticated": {"const": false},
+        "private_research_and_source_evidence_only": {"const": true},
+        "source_attribution_and_locators_preserved": {"const": true},
+        "full_scan_public_redistribution_authorized": {"const": false},
+        "full_text_public_redistribution_authorized": {"const": false},
+        "training_export_authorized": {"const": false},
+        "adapt_or_remove_on_substantiated_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_inventory_exact",
+        "resource_hashes_verified",
+        "html_boundaries_and_charset_verified",
+        "source_specific_link_closure_verified",
+        "png_boundaries_and_crc_verified",
+        "content_layer_extracted",
+        "normalization_applied",
+        "inferred_character_repairs",
+        "qualified_historical_review_complete",
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "public_repo_contains_source_text",
+        "provider_calls",
+        "phase3_complete",
+        "phase4_authorized",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "resource_inventory_exact": {"const": true},
+        "resource_hashes_verified": {"const": true},
+        "html_boundaries_and_charset_verified": {"const": true},
+        "source_specific_link_closure_verified": {"const": true},
+        "png_boundaries_and_crc_verified": {"const": true},
+        "content_layer_extracted": {"const": false},
+        "normalization_applied": {"const": false},
+        "inferred_character_repairs": {"const": false},
+        "qualified_historical_review_complete": {"const": false},
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "public_repo_contains_source_text": {"const": false},
+        "provider_calls": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page_and_transcription_alignment_required",
+        "editorial_and_direct_source_layer_separation_required",
+        "church_slavonic_and_historical_ukrainian_layer_separation_required",
+        "qualified_historical_feature_review_required",
+        "print_and_lexicography_gap_narrowed_not_closed",
+        "private_writing_gap_remains_open",
+        "middle_ukrainian_genre_and_region_gap_closed",
+        "source_freeze_ready"
+      ],
+      "properties": {
+        "page_and_transcription_alignment_required": {"const": true},
+        "editorial_and_direct_source_layer_separation_required": {"const": true},
+        "church_slavonic_and_historical_ukrainian_layer_separation_required": {"const": true},
+        "qualified_historical_feature_review_required": {"const": true},
+        "print_and_lexicography_gap_narrowed_not_closed": {"const": true},
+        "private_writing_gap_remains_open": {"const": true},
+        "middle_ukrainian_genre_and_region_gap_closed": {"const": false},
+        "source_freeze_ready": {"const": false}
+      }
+    },
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
