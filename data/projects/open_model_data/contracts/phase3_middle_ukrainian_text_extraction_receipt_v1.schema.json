@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/contracts/phase3_middle_ukrainian_text_extraction_receipt_v1.schema.json",
+  "title": "Phase 3 Middle Ukrainian private page-text extraction receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "implementation_version",
+    "source_binding",
+    "decoder_binding",
+    "implementation_binding",
+    "private_output",
+    "extraction_scope",
+    "rights_and_custody",
+    "safeguards",
+    "residuals",
+    "text_free",
+    "provider_calls",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_middle_ukrainian_text_extraction_receipt_v1"},
+    "implementation_version": {"const": "phase3_middle_ukrainian_text_extraction_v1"},
+    "source_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection_id",
+        "source_filename",
+        "source_bytes",
+        "source_sha256",
+        "raw_intake_receipt_file_sha256",
+        "raw_intake_receipt_sha256"
+      ],
+      "properties": {
+        "collection_id": {"const": "boichuk-zhytomyr-municipal-act-book-1582-1588-1965"},
+        "source_filename": {"const": "boichuk-aktova-knyha-zhytomyr-1582-1588-1965.djvu"},
+        "source_bytes": {"const": 14631551},
+        "source_sha256": {"const": "3f274c60e4411b8df925008c318a92db00dec5cc211d05172e0896fce7802f9e"},
+        "raw_intake_receipt_file_sha256": {
+          "const": "16a9919e254817a246c3c0b368bf71fcb310bf0a2ed00e6aa6f9cc26cc72dc6d"
+        },
+        "raw_intake_receipt_sha256": {
+          "const": "5adb31db0f7542f6d3a4d7e0fca1e7dd08628ecdcd0ac0ba61a5fcddad2a7d36"
+        }
+      }
+    },
+    "decoder_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project",
+        "release_tag",
+        "release_url",
+        "asset_url",
+        "version",
+        "bytes",
+        "sha256",
+        "decoder_binary_copied_to_output",
+        "decoder_license_expression_verified",
+        "execution_tool_only_not_source_authority"
+      ],
+      "properties": {
+        "project": {"const": "DjVu.js"},
+        "release_tag": {"const": "L.0.5.4_V.0.10.1"},
+        "release_url": {"const": "https://github.com/RussCoder/djvujs/releases/tag/L.0.5.4_V.0.10.1"},
+        "asset_url": {
+          "const": "https://github.com/RussCoder/djvujs/releases/download/L.0.5.4_V.0.10.1/djvu.js"
+        },
+        "version": {"const": "0.5.4"},
+        "bytes": {"const": 556634},
+        "sha256": {"const": "10a831d62cc7ced39c30c7350a11410402d082a0f0a5b073a88d3d7ca662add3"},
+        "decoder_binary_copied_to_output": {"const": false},
+        "decoder_license_expression_verified": {"const": false},
+        "execution_tool_only_not_source_authority": {"const": true}
+      }
+    },
+    "implementation_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["controller_sha256", "runner_sha256", "receipt_schema_sha256"],
+      "properties": {
+        "controller_sha256": {"$ref": "#/$defs/sha256"},
+        "runner_sha256": {"$ref": "#/$defs/sha256"},
+        "receipt_schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "private_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "storage",
+        "pages",
+        "text_layer_pages",
+        "nonempty_text_pages",
+        "total_code_points",
+        "total_utf8_bytes",
+        "total_zones",
+        "private_jsonl_bytes",
+        "private_jsonl_sha256",
+        "page_text_hash_manifest_sha256",
+        "text_zone_hash_manifest_sha256",
+        "page_geometry_manifest_sha256",
+        "geometry_counts"
+      ],
+      "properties": {
+        "filename": {"const": "middle-ukrainian-page-text-private-v1.jsonl"},
+        "storage": {"const": "private_google_drive"},
+        "pages": {"const": 196},
+        "text_layer_pages": {"const": 194},
+        "nonempty_text_pages": {"const": 194},
+        "total_code_points": {"const": 475094},
+        "total_utf8_bytes": {"const": 811825},
+        "total_zones": {"const": 70566},
+        "private_jsonl_bytes": {"const": 5514409},
+        "private_jsonl_sha256": {
+          "const": "6368ab7308dc579a324ba29c233d7218e1a0735d127812f8b34e16cca49f4f0a"
+        },
+        "page_text_hash_manifest_sha256": {
+          "const": "fbf074151e7fe74937c6112c2fbdb8d51a39241b2bc6a1bc5c042a13411a61f7"
+        },
+        "text_zone_hash_manifest_sha256": {
+          "const": "636ca07572f07b7e95f67cc2946777834f62af9e2a99618cf5036a70a1d45c78"
+        },
+        "page_geometry_manifest_sha256": {
+          "const": "5292b823c7e53868151704153d382b190cedac91a035cbcc240b4d0328358a43"
+        },
+        "geometry_counts": {
+          "const": {
+            "3594x4980@600r0": 195,
+            "4356x4980@600r0": 1
+          }
+        }
+      }
+    },
+    "extraction_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "page_coordinate_alignment_structurally_verified",
+        "visual_text_image_alignment_quality_verified",
+        "embedded_text_quality_verified",
+        "source_transcription_candidate_only",
+        "ocr_used",
+        "normalization_applied",
+        "inferred_character_repairs"
+      ],
+      "properties": {
+        "method": {"const": "embedded_djvu_text_layer_decode"},
+        "page_coordinate_alignment_structurally_verified": {"const": true},
+        "visual_text_image_alignment_quality_verified": {"const": false},
+        "embedded_text_quality_verified": {"const": false},
+        "source_transcription_candidate_only": {"const": true},
+        "ocr_used": {"const": false},
+        "normalization_applied": {"const": false},
+        "inferred_character_repairs": {"const": false}
+      }
+    },
+    "rights_and_custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_and_text_storage",
+        "source_attribution_and_locators_inherited_from_raw_intake",
+        "private_research_and_source_evidence_only",
+        "full_scan_public_redistribution_authorized",
+        "full_text_public_redistribution_authorized",
+        "training_export_authorized",
+        "public_repo_contains_source_text",
+        "adapt_or_remove_on_substantiated_notice"
+      ],
+      "properties": {
+        "source_and_text_storage": {"const": "private_google_drive"},
+        "source_attribution_and_locators_inherited_from_raw_intake": {"const": true},
+        "private_research_and_source_evidence_only": {"const": true},
+        "full_scan_public_redistribution_authorized": {"const": false},
+        "full_text_public_redistribution_authorized": {"const": false},
+        "training_export_authorized": {"const": false},
+        "public_repo_contains_source_text": {"const": false},
+        "adapt_or_remove_on_substantiated_notice": {"const": true}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qualified_historical_review_complete",
+        "historical_stage_assignment_frozen",
+        "semantic_gold",
+        "training_eligible",
+        "modern_correction_eligible",
+        "provider_calls",
+        "source_freeze_ready",
+        "phase3_complete",
+        "phase4_authorized",
+        "phase4_blocked"
+      ],
+      "properties": {
+        "qualified_historical_review_complete": {"const": false},
+        "historical_stage_assignment_frozen": {"const": false},
+        "semantic_gold": {"const": false},
+        "training_eligible": {"const": false},
+        "modern_correction_eligible": {"const": false},
+        "provider_calls": {"const": false},
+        "source_freeze_ready": {"const": false},
+        "phase3_complete": {"const": false},
+        "phase4_authorized": {"const": false},
+        "phase4_blocked": {"const": true}
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qualified_page_sample_review_required",
+        "qualified_historical_language_review_required",
+        "additional_middle_ukrainian_regions_and_genres_required",
+        "middle_ukrainian_coverage_gap_closed"
+      ],
+      "properties": {
+        "qualified_page_sample_review_required": {"const": true},
+        "qualified_historical_language_review_required": {"const": true},
+        "additional_middle_ukrainian_regions_and_genres_required": {"const": true},
+        "middle_ukrainian_coverage_gap_closed": {"const": false}
+      }
+    },
+    "text_free": {"const": true},
+    "provider_calls": {"const": false},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
