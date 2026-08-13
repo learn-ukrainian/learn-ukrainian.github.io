@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
-        "sha256": "2e971c0e77ad3f76df3d9a95971e79e31d342e7f97e36b8bd56d704523a3239a"
+        "sha256": "0756a2a5c50b58955d1678b7cdf9bdf198d876b0e542a2d3903edee47e3111f6"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
