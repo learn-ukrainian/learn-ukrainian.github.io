@@ -87,6 +87,7 @@ import {
   LEARNER_LEVEL_STORAGE_KEY,
   prioritizeByLearnerLevel,
   normalizeCefrLevel,
+  parseCefrLevel,
   type CefrLevel,
 } from '../lib/lexicon/levels';
 import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../lib/lexicon/daily';
@@ -1337,6 +1338,31 @@ function sessionScopeIndexForMode(
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
 
+/**
+ * #6734: idle modeCounts load every published level's index (learner level is a
+ * preference, not a shard cap), but a newly started session plans against the
+ * selected level first. Counting higher-level synonym lemmas on an A1 home made
+ * Синоніми look stocked (live: 287) while the A1 plan was 0/0 and then briefly
+ * served a bled-in antonym-polarity item. Mode-card honesty follows the selected
+ * learner level's CEFR when the index mixes levels — empty stays empty even when
+ * antonym (or higher-level synonym) inventory exists elsewhere.
+ *
+ * Single-CEFR indexes (a level shard, or an `initialDeck` fixture) are left intact
+ * so a learnerLevel/deckLevel mismatch cannot zero out a real mode card.
+ */
+function indexForModeCounts(
+  index: PracticeIndexItem[],
+  learnerLevel: CefrLevel,
+): PracticeIndexItem[] {
+  const levels = new Set<CefrLevel>();
+  for (const item of index) {
+    const level = parseCefrLevel(item.cefr);
+    if (level) levels.add(level);
+  }
+  if (levels.size <= 1) return index;
+  return index.filter((item) => parseCefrLevel(item.cefr) === learnerLevel);
+}
+
 /** Shared match test for the Selected Deck filter (Teacher Lesson or a Custom Set),
  * keyed on lemmaId/lemma the same way for both index-level planning and per-candidate
  * selection — a single definition so the two can never drift apart. */
@@ -1884,11 +1910,19 @@ function LexiconPracticeIsland({
       }
     }
 
-    const plan = computeSessionScope(
-      sessionScopeIndexForMode(filterIndexByDeckFilter(deck.index, deckLemmaKeySet), mode),
-      sessionBudget,
-      { dailyNewCount },
+    const scopedIndex = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(deck.index, deckLemmaKeySet),
+      mode,
     );
+    // #6734: autoStart must not open an empty-mode session that later bleeds
+    // antonym-polarity synonym rows (beginSession already refuses this path).
+    if (scopedIndex.length === 0) {
+      setPlannedTotal(0);
+      setExtensionUsed(0);
+      setSessionCompleted(0);
+      return;
+    }
+    const plan = computeSessionScope(scopedIndex, sessionBudget, { dailyNewCount });
     resetSessionTracking(plan, sessionBudget);
 
     // Persist an initial snapshot for this newly started session so it is resumable.
@@ -2243,14 +2277,17 @@ function LexiconPracticeIsland({
   // — instead of mixed silently collapsing toward whichever modes happen to have
   // content and leaving an empty tap as the only way to discover a mode has nothing.
   const modeCounts = useMemo(() => {
-    const filtered = filterIndexByDeckFilter(indexForStats, deckLemmaKeySet);
+    const filtered = filterIndexByDeckFilter(
+      indexForModeCounts(indexForStats, learnerLevel),
+      deckLemmaKeySet,
+    );
     const counts: Partial<Record<VisiblePracticeModeFilter, number>> = { mixed: filtered.length };
     for (const visibleMode of MODE_CARD_ORDER) {
       if (visibleMode === 'mixed') continue;
       counts[visibleMode] = filtered.filter((item) => item.modes.includes(visibleMode)).length;
     }
     return counts;
-  }, [deckLemmaKeySet, indexForStats]);
+  }, [deckLemmaKeySet, indexForStats, learnerLevel]);
   // P0-3: a mode is only disabled once the index has actually loaded and confirms
   // zero content — not during the transient pre-load tick where every count is 0.
   // A real custom deck's synthesized items (`ensureDeckCustomSetCoverage`) only exist
@@ -2296,6 +2333,15 @@ function LexiconPracticeIsland({
 
   const selection = useMemo(() => {
     if (!selectionDeck || sessionPhase !== 'active') return null;
+    // #6734: refuse selection only when this mode's scoped index is empty (e.g. A1
+    // synonym with antonym-only inventory). Keying off plannedTotal was too broad —
+    // autoStart remounts and borrowed-due picks can have plannedTotal 0 while real
+    // mode inventory still exists, which starved heritage / remount flows.
+    const scopedIndex = sessionScopeIndexForMode(
+      filterIndexByDeckFilter(selectionDeck.index, deckLemmaKeySet),
+      mode,
+    );
+    if (scopedIndex.length === 0) return null;
     const fresh = selectNextPracticeItem(selectionDeck, {
       history,
       modeFilter: mode,
@@ -2319,7 +2365,16 @@ function LexiconPracticeIsland({
       return committed.selection;
     }
     return fresh;
-  }, [history, mode, poolFilter, revision, selectionDeck, sessionPhase, sessionSeed]);
+  }, [
+    deckLemmaKeySet,
+    history,
+    mode,
+    poolFilter,
+    revision,
+    selectionDeck,
+    sessionPhase,
+    sessionSeed,
+  ]);
 
   // Pin the board for the life of the selection to avoid mid-board changes.
   const pairsRef = useRef<{ itemId: string; pairs: ReturnType<typeof matchingPairs> } | null>(null);
@@ -2894,6 +2949,17 @@ function LexiconPracticeIsland({
       nextMode,
     );
     const plan = computeSessionScope(index, budget, { dailyNewCount });
+    // #6734: never open a 0/0 synonym (or any mode) session when the selected-level
+    // scope is empty — even if background shards later bleed higher-level items in.
+    if (!resume && index.length === 0) {
+      setFeedback({
+        uk: CHROME_STRINGS.uk['practice.modeNoExercises'],
+        en: CHROME_STRINGS.en['practice.modeNoExercises'],
+      });
+      clearResumeSnapshot(nextMode);
+      setSessionPhase('idle');
+      return;
+    }
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
     const seededHistory = resume ? resume.history : seedCrossSessionHistory(new Date());
     if (resume) {

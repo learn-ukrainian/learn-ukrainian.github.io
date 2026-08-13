@@ -4684,6 +4684,164 @@ describe('LexiconPractice', () => {
       expect(screen.getByTestId('practice-mode-count-cloze')).toHaveTextContent('0');
     });
 
+    test('#6734 A1 empty synonym stays 0 (disabled) even when antonym + higher-level synonym exist', async () => {
+      // Live bug: idle dueIndex flattened every CEFR shard, so Синоніми showed 287 while
+      // A1 modeCounts.synonym was 0 and antonym was 138. Tapping opened a 0/0 session that
+      // then served one bled-in A2 antonym-polarity synonym item and died at 1/1.
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const forms = { nominative: 'вхід', accusative: 'вхід', locative: 'вході' };
+
+      vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.includes('daily-pool.json')) return okJson([]);
+        if (url.includes('practice-index.A1.json')) {
+          return okJson({
+            deckVersion: 'a1-antonym-only',
+            level: 'A1',
+            items: [
+              {
+                lemmaId: 'vkhid',
+                lemma: 'вхід',
+                cefr: 'A1',
+                modes: ['flashcards', 'matching', 'choice', 'antonym'],
+                hasCloze: false,
+                clozeIds: [],
+                newOrder: 0,
+              },
+            ],
+          });
+        }
+        if (url.includes('practice-index.A2.json')) {
+          return okJson({
+            deckVersion: 'a2-synonym-antonym-polarity',
+            level: 'A2',
+            items: [
+              {
+                lemmaId: 'vkhid-a2',
+                lemma: 'вхід',
+                cefr: 'A2',
+                modes: ['flashcards', 'synonym'],
+                hasCloze: false,
+                clozeIds: [],
+                newOrder: 0,
+              },
+            ],
+          });
+        }
+        if (url.includes('practice-index.')) {
+          return okJson({ deckVersion: 'empty', level: 'B1', items: [] });
+        }
+        if (url.includes('practice-lexemes.A1.json')) {
+          return okJson({
+            deckVersion: 'a1-antonym-only',
+            level: 'A1',
+            lexemes: [lexeme('vkhid', 'вхід', 'entrance', forms, { cefr: 'A1' })],
+          });
+        }
+        if (url.includes('practice-lexemes.A2.json')) {
+          return okJson({
+            deckVersion: 'a2-synonym-antonym-polarity',
+            level: 'A2',
+            lexemes: [lexeme('vkhid-a2', 'вхід', 'entrance', forms, { cefr: 'A2' })],
+          });
+        }
+        if (url.includes('practice-synonym.A2.json')) {
+          return okJson({
+            synonym: [
+              {
+                synonymId: 'vkhid-ant',
+                lemmaId: 'vkhid-a2',
+                targetLemmaId: 'vykhid',
+                polarity: 'antonym',
+                prompt: 'вхід',
+                answer: 'вихід',
+                options: [
+                  { label: 'автор', lemmaId: 'avtor', kind: 'distractor' },
+                  { label: 'банка', lemmaId: 'banka', kind: 'distractor' },
+                  { label: 'вихід', lemmaId: 'vykhid', kind: 'answer' },
+                  { label: 'боєць', lemmaId: 'boyets', kind: 'distractor' },
+                ],
+                source: 'fixture',
+              },
+            ],
+          });
+        }
+        if (url.match(/practice-(lexemes|cloze|stress|classify|paradigm|synonym|paronym|heritage|antonym)\./)) {
+          return okJson({});
+        }
+        return notFoundResponse();
+      });
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice autoStart={false} />);
+
+      await waitFor(() =>
+        expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
+      );
+      // Selected-level honesty: A1 synonym is empty despite A2 synonym + A1 antonym inventory.
+      expect(screen.getByTestId('practice-mode-count-synonym')).toHaveTextContent('0');
+      const synonymCard = container.querySelector<HTMLButtonElement>('[data-mode="synonym"]');
+      expect(synonymCard).toHaveAttribute('data-mode-empty', 'true');
+      expect(synonymCard).toBeDisabled();
+
+      await user.click(synonymCard!);
+      expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+      expect(screen.queryByText(/Оберіть антонім до/)).not.toBeInTheDocument();
+      expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+    });
+
+    test('#6734 empty synonym + non-empty antonym autoStart stays itemless at 0/0', async () => {
+      // Companion to the mode-card test: even if a harness forces synonym autoStart on an
+      // A1 deck that only has antonym modes (and an empty synonym shard), the session must
+      // not surface an antonym-polarity MC item. Counter stays 0/0 with the catch-all empty
+      // state — never a one-shot «Оберіть антонім» round.
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const forms = { nominative: 'вхід', accusative: 'вхід', locative: 'вході' };
+      const a1Deck: PracticeDeckData = {
+        deckVersion: 'a1-empty-synonym',
+        level: 'A1',
+        lexemes: [lexeme('vkhid', 'вхід', 'entrance', forms, { cefr: 'A1' })],
+        index: [
+          {
+            lemmaId: 'vkhid',
+            lemma: 'вхід',
+            cefr: 'A1',
+            modes: ['flashcards', 'antonym'],
+            hasCloze: false,
+            clozeIds: [],
+            newOrder: 0,
+          },
+        ],
+        cloze: [],
+        synonym: [
+          // Poison pill: an antonym-polarity row whose lemma is NOT synonym-scoped in the
+          // index. Before #6734 a zero-plan session could still pick bled-in rows like this.
+          {
+            synonymId: 'vkhid-ant',
+            lemmaId: 'vkhid',
+            targetLemmaId: 'vykhid',
+            polarity: 'antonym',
+            prompt: 'вхід',
+            answer: 'вихід',
+            options: [
+              { label: 'автор', lemmaId: 'avtor', kind: 'distractor' },
+              { label: 'банка', lemmaId: 'banka', kind: 'distractor' },
+              { label: 'вихід', lemmaId: 'vykhid', kind: 'answer' },
+              { label: 'боєць', lemmaId: 'boyets', kind: 'distractor' },
+            ],
+            source: 'fixture',
+          },
+        ],
+      };
+
+      render(<LexiconPractice initialDeck={a1Deck} autoStart initialMode="synonym" />);
+
+      expect(await screen.findByTestId('practice-all-caught-up')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/0');
+      expect(screen.queryByText(/Оберіть антонім до/)).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /вихід/ })).not.toBeInTheDocument();
+    });
+
     test('#6530 embeds level-independent ЗНО/НМТ decks in the modes grid and session frame', async () => {
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
