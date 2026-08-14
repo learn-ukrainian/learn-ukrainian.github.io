@@ -21,7 +21,11 @@ _PENDING_NAME = "reap-pending.json"
 _CAP_NAME = "first-class-cap.json"
 _JOURNAL_NAME = "journal.jsonl"
 _FIRST_CLASS_DAYS = 7
-_DEFAULT_MAX_REAPS_PER_DAY = 10
+_DEFAULT_MAX_REAPS_PER_DAY = 25
+# Hard blast-radius ceiling for the dynamic cap: a day may expand to at most
+# this multiple of the configured base, no matter how large the backlog is.
+# Deliberately NOT env-configurable so a runaway is always stopped.
+_CAP_EXPANSION_MULTIPLIER = 2
 
 
 def utc_now() -> datetime:
@@ -153,8 +157,21 @@ def _max_reaps_per_day() -> int:
     return max(0, parsed)
 
 
-def cap_allows_reap(repo_root: Path, *, now: datetime | None = None) -> tuple[bool, str | None]:
-    """Apply the first-seven-days daily cap unless the policy flag lifts it."""
+def cap_allows_reap(
+    repo_root: Path,
+    *,
+    now: datetime | None = None,
+    eligible_backlog: int | None = None,
+) -> tuple[bool, str | None]:
+    """Apply the first-seven-days daily cap unless the policy flag lifts it.
+
+    The cap is dynamic: when the eligible backlog (worktrees that already
+    passed every reap safety proof in this run) exceeds the remaining daily
+    budget, the cap may expand — journaled with the justifying backlog size —
+    but never beyond a hard ceiling of 2x the configured base.  The ceiling
+    is not env-expandable, and any doubt about the backlog count means no
+    expansion.
+    """
     if os.environ.get("LU_REAPER_LIFT_FIRST_CLASS_CAP") == "1":
         return True, None
     current = now or utc_now()
@@ -168,8 +185,31 @@ def cap_allows_reap(repo_root: Path, *, now: datetime | None = None) -> tuple[bo
         return True, None
     counts = state.get("counts")
     count = counts.get(current.date().isoformat(), 0) if isinstance(counts, dict) else 0
-    if isinstance(count, int) and count >= _max_reaps_per_day():
-        return False, f"first-class daily reap cap reached ({_max_reaps_per_day()})"
+    if not isinstance(count, int) or isinstance(count, bool):
+        count = 0
+    base = _max_reaps_per_day()
+    ceiling = base * _CAP_EXPANSION_MULTIPLIER
+    if count >= ceiling:
+        return False, f"first-class daily reap cap ceiling reached ({ceiling})"
+    remaining = max(base - count, 0)
+    backlog_known = (
+        isinstance(eligible_backlog, int)
+        and not isinstance(eligible_backlog, bool)
+        and eligible_backlog >= 0
+    )
+    if backlog_known and eligible_backlog > remaining:
+        append_journal(
+            repo_root,
+            "cap-expansion",
+            day=current.date().isoformat(),
+            backlog=eligible_backlog,
+            base=base,
+            ceiling=ceiling,
+            day_count=count,
+        )
+        return True, None
+    if count >= base:
+        return False, f"first-class daily reap cap reached ({base})"
     return True, None
 
 

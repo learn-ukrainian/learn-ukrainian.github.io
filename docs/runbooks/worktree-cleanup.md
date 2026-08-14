@@ -51,7 +51,11 @@ reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. The first seven days are capped by
-`LU_REAPER_MAX_REAPS_PER_DAY` (default 10); an approved policy lift uses
+`LU_REAPER_MAX_REAPS_PER_DAY` (default 25); when the eligible backlog of
+fully safety-qualified worktrees exceeds the remaining daily budget, the cap
+may expand up to a hard ceiling of 2x the configured base (journaled as
+`cap-expansion` with the justifying backlog size; the ceiling is not
+env-expandable). An approved policy lift uses
 `LU_REAPER_LIFT_FIRST_CLASS_CAP=1`. Restore only to a new path under
 `.worktrees/`:
 
