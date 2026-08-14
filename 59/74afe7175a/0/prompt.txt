@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/atlas-5376-ui-policy-gate
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Implement #5376 — UI policy gate (advisory CI job): locale purity, selected states, no-auto-advance, axe, variety metrics
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: kimi × native (frontier coder; cross-file playwright + CI work)
+- why_this_tier: multi-surface test-infrastructure build with a written spec; no product redesign
+- owned_paths: site/e2e/** (or site/tests/e2e/**), scripts/practice/** (variety metrics), .github/workflows/** (ONE new advisory job only)
+- acceptance_cmd: cd site && npx playwright test <new specs> locally + the new job green on the PR itself
+- alternatives_considered: (1) codex — routed to #6371; (2) cursor — routed to #6711; (3) defer — operator ordered the backlog cleared
+- parallel_free_seats: none idle after this wave
+
+## Task
+GitHub issue **#5376** is the spec — read it fully, including the reopen note: a previous close was reverted because a sweep worker INVENTED the PR linkage (#M-4 audit). Your PR must genuinely reference #5376 and the evidence must be real.
+Implement the five checks as specified (locale purity EN/UK with fail-closed allowlists; selector-state rule; no-auto-advance behavioral assert; axe-core serious/critical; build-time deck variety metrics). Budget target ~2–3 min, runs on site/ PRs.
+**Hard boundary: the new CI job must be ADVISORY (non-blocking).** Promoting it to a blocking gate is an operator/advisor decision — say so in the PR body, do not wire it into the blocking set.
+Design notes from the issue bind: unknown text region = chrome = checked (fail-closed); content areas excluded via explicit allowlist selectors.
+
+## Evidence preamble (#M-4)
+Each check proven two-sided in the PR body: a run where it passes on current main surfaces AND a deliberate local mutation (e.g. injected English chrome string, removed aria-pressed) that the check catches — quoted output for both. No asserted-but-unrun claims.
+
+## Steps
+1. Dispatch worktree only. 2. Build the five checks + the advisory workflow job. 3. Two-sided evidence per check. 4. cd site && npx tsc --noEmit && lint changed files; run the new specs. 5. Conventional commit referencing #5376, push, PR, X-Agent trailer. 6. NO merge / NO auto-merge — driver owns review + merge.

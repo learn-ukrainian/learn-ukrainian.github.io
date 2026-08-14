@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "5974afe7175a",
+  "strategy": "manual-commit",
+  "branch": "kimi/atlas-5376-ui-policy-gate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ui-policy-gate.yml",
+    "scripts/practice/deck_variety_metrics.py",
+    "site/e2e/ui-policy-axe.spec.ts",
+    "site/e2e/ui-policy-locale-purity.spec.ts",
+    "site/e2e/ui-policy-no-auto-advance.spec.ts",
+    "site/e2e/ui-policy-selector-state.spec.ts",
+    "tests/test_deck_variety_metrics.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/59/74afe7175a/0/metadata.json",
+      "transcript": "/59/74afe7175a/0/full.jsonl",
+      "content_hash": "/59/74afe7175a/0/content_hash.txt",
+      "prompt": "/59/74afe7175a/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 152522,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 12012288,
+    "output_tokens": 53133,
+    "api_call_count": 103
+  }
+}
