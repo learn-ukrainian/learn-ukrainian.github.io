@@ -539,3 +539,47 @@ def test_codexbar_probe_failure_does_not_wipe_ledger_status_and_burn(monkeypatch
     assert codex["remaining_pct"] == 90.0
     assert codex["codexbar"]["status"] == "unavailable"
 
+
+def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tmp_path):
+    """The HTTP query flag must not wait for the CodexBar CLI.
+
+    Dispatch used to call /api/state/routing-budget?fresh_codexbar=true and
+    stall the Monitor worker for ~17–25s (then 504 at the 10s request
+    timeout while the thread kept running). HTTP now serves cache/LKG and
+    kicks one background refresh.
+    """
+    _configure(monkeypatch, tmp_path, [])
+    blocking_calls = []
+    kicked = []
+
+    def _block(*_args, **_kwargs):
+        blocking_calls.append("refresh_provider_usage_data")
+        raise AssertionError("HTTP must not block on CodexBar CLI")
+
+    monkeypatch.setattr(state_router, "refresh_provider_usage_data", _block)
+    monkeypatch.setattr(state_router, "trigger_background_refresh", lambda: kicked.append("kick"))
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: {
+            "lane": provider,
+            "weekly_used_pct": 10.0,
+            "will_last_to_reset": True,
+            "weekly_pace_delta_pct": -20.0,
+            "stale": False,
+            "age_s": 12.0,
+            "freshness": "fresh",
+        },
+    )
+
+    app = FastAPI()
+    app.include_router(state_router.router, prefix="/api/state")
+    response = TestClient(app).get("/api/state/routing-budget?fresh_codexbar=true")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert blocking_calls == []
+    assert kicked == ["kick"]
+    assert data["diagnostics"]["fresh_codexbar_requested"] is True
+    assert data["diagnostics"]["fresh_codexbar_blocking"] is False
+

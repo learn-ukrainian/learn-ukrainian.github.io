@@ -864,6 +864,7 @@ def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
     codexbar_usage_mod._last_good_data.pop(provider, None)
     codexbar_usage_mod._last_failure_data.pop(provider, None)
     monkeypatch.setattr(codexbar_usage_mod, "_refresh_thread", None)
+    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "1")
     entered = threading.Event()
     release = threading.Event()
 
@@ -944,6 +945,7 @@ def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
         return {}
 
     monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
     codexbar_usage_mod._run_all_refreshes()
     # No override passed -> refresh_provider_usage_data resolves the shared
     # realistic default itself, instead of the caller hardcoding 2.0.
@@ -965,3 +967,80 @@ def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
     assert timeout_result["status"] == "unavailable"
     assert timeout_result["error_kind"] == "timeout"
     assert _HEALTH_ALIASES[timeout_result["status"]] is None  # fail-open, not "unhealthy"
+
+
+def test_default_cache_ttl_is_twelve_minutes(monkeypatch):
+    monkeypatch.delenv("CODEXBAR_CACHE_TTL_S", raising=False)
+    monkeypatch.delenv("CODEXBAR_REFRESH_INTERVAL_S", raising=False)
+    assert codexbar_usage_mod.DEFAULT_CODEXBAR_CACHE_TTL_S == 720.0
+    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 720.0
+    assert codexbar_usage_mod._codexbar_refresh_interval_s() == 720.0
+
+
+def test_cache_ttl_env_override(monkeypatch):
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "900")
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "600")
+    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 900.0
+    assert codexbar_usage_mod._codexbar_refresh_interval_s() == 600.0
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "nope")
+    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 720.0
+
+
+def test_scheduler_running_skips_on_demand_refresh(monkeypatch):
+    """When the API scheduler owns refresh, a cache miss must not spawn another CLI fan-out."""
+    provider = "cursor"
+    cache_invalidate("codexbar_usage:")
+    codexbar_usage_mod._last_good_data.pop(provider, None)
+    codexbar_usage_mod._last_failure_data.pop(provider, None)
+    kicked = []
+    monkeypatch.setattr(codexbar_usage_mod, "_scheduler_is_running", lambda: True)
+    monkeypatch.setattr(
+        codexbar_usage_mod,
+        "trigger_background_refresh",
+        lambda: kicked.append("refresh"),
+    )
+    result = codexbar_usage_mod.get_provider_usage_data(provider)
+    assert kicked == []
+    assert result["freshness"] == "unavailable"
+
+
+def test_periodic_refresh_runs_immediately_then_stops(monkeypatch):
+    runs = threading.Event()
+
+    def fake_run() -> None:
+        runs.set()
+
+    monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
+    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "30")
+    monkeypatch.setattr(codexbar_usage_mod, "_run_all_refreshes", fake_run)
+    monkeypatch.setattr(codexbar_usage_mod, "_scheduler_thread", None)
+    try:
+        codexbar_usage_mod.start_periodic_refresh(run_immediately=True)
+        assert runs.wait(timeout=1.0)
+        assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is True
+        assert codexbar_usage_mod.scheduler_status()["cache_ttl_s"] == 720.0
+    finally:
+        codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=1.0)
+    assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is False
+
+
+def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
+    started = threading.Event()
+    release = threading.Event()
+    calls = []
+
+    def fake_refresh(providers, *, timeout_s=None):
+        calls.append(tuple(providers))
+        started.set()
+        release.wait(timeout=1.0)
+        return {}
+
+    monkeypatch.setattr(codexbar_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(codexbar_usage_mod, "_refresh_in_flight", threading.Lock())
+    worker = threading.Thread(target=codexbar_usage_mod._run_all_refreshes, daemon=True)
+    worker.start()
+    assert started.wait(timeout=1.0)
+    codexbar_usage_mod._run_all_refreshes()  # must no-op while first is in flight
+    release.set()
+    worker.join(timeout=1.0)
+    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_PROVIDERS)]

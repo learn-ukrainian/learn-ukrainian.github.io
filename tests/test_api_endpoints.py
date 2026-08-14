@@ -42,6 +42,9 @@ class TestHealthEndpoint:
         assert "version" in data
         assert "uptime_seconds" in data
         assert isinstance(data["uptime_seconds"], int)
+        assert "codexbar" in data
+        assert "scheduler_running" in data["codexbar"]
+        assert data["codexbar"]["cache_ttl_s"] == 720.0
 
     def test_version_matches_app(self):
         data = client.get("/api/health").json()

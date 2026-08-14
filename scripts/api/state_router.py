@@ -60,7 +60,7 @@ from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
 from . import preparation_state
-from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
+from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data, trigger_background_refresh
 from .config import CURRICULUM_ROOT, LEVELS, LIVE_REPO_ROOT, PROJECT_ROOT
 from .lane_health import compute_lane_health
 
@@ -585,7 +585,12 @@ def _recommend_agent(
     }
 
 
-def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool = False) -> dict[str, Any]:
+def compute_routing_budget(
+    now: datetime | None = None,
+    *,
+    fresh_codexbar: bool = False,
+    refresh_requested: bool | None = None,
+) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
@@ -1158,7 +1163,10 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             "codexbar_data_available": cb_sourced_any,
             "codexbar_freshness": cb_freshness,
             "codexbar_max_age_s": cb_max_age_s,
-            "fresh_codexbar_requested": fresh_codexbar,
+            "fresh_codexbar_requested": (
+                fresh_codexbar if refresh_requested is None else refresh_requested
+            ),
+            "fresh_codexbar_blocking": fresh_codexbar,
             "runtime_data_available": runtime_sourced_any,
             "usage_sources": {
                 "allotment": "codexbar",
@@ -1174,8 +1182,20 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
 
 @router.get("/routing-budget")
 async def routing_budget(fresh_codexbar: bool = Query(False)):
-    """Per-agent soft-cap burn and routing recommendation for dispatch planning."""
-    return await asyncio.to_thread(compute_routing_budget, fresh_codexbar=fresh_codexbar)
+    """Per-agent soft-cap burn and routing recommendation for dispatch planning.
+
+    HTTP never waits for the CodexBar CLI. ``?fresh_codexbar=true`` kicks a
+    background refresh and still returns the cached/LKG snapshot. In-process
+    callers that need a blocking probe use
+    ``compute_routing_budget(fresh_codexbar=True)`` directly.
+    """
+    if fresh_codexbar:
+        trigger_background_refresh()
+    return await asyncio.to_thread(
+        compute_routing_budget,
+        fresh_codexbar=False,
+        refresh_requested=fresh_codexbar,
+    )
 
 
 @router.get("/summary")
