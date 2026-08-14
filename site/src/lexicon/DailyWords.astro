@@ -1,16 +1,13 @@
 ---
 import { CEFR_LEVELS } from "../lib/lexicon/levels";
+import ChromeText from "../components/chrome/ChromeText.astro";
 
 type Props = {
-  title?: string;
-  description?: string;
   count?: number;
   showLevelSelector?: boolean;
 };
 
 const {
-  title = "Слова дня",
-  description = "Коротка щоденна добірка для повторення й відкриття словникових статей.",
   count = 8,
   showLevelSelector = false,
 } = Astro.props as Props;
@@ -26,13 +23,13 @@ const dailyCount = Math.max(1, Math.floor(count));
   data-daily-level-selector={showLevelSelector ? "true" : "false"}
 >
   <div class="lexicon-daily-heading">
-    <h2 id="lexicon-daily-title">{title}</h2>
-    <p>{description}</p>
+    <h2 id="lexicon-daily-title"><ChromeText k="wotd.todayTitle" /></h2>
+    <p><ChromeText k="wotd.todayDescription" /></p>
   </div>
 
   {showLevelSelector && (
     <div class="lexicon-daily-controls" aria-label="Learner level">
-      <span class="lexicon-daily-control-label">Рівень</span>
+      <span class="lexicon-daily-control-label"><ChromeText k="practice.level" /></span>
       <div class="lexicon-daily-levels" role="list" data-daily-levels>
         {CEFR_LEVELS.map((level) => (
           <button
@@ -48,20 +45,25 @@ const dailyCount = Math.max(1, Math.floor(count));
     </div>
   )}
 
-  <p class="lexicon-daily-status" data-daily-status>Завантажуємо добірку...</p>
+  <p
+    class="lexicon-daily-status"
+    data-daily-status
+    data-daily-loading="true"
+  >
+    <ChromeText k="wotd.loading" />
+  </p>
   <div class="lexicon-daily-fallback" data-daily-fallback hidden>
-    <p>Не вдалося завантажити добірку.</p>
-    <button type="button" data-daily-retry>Спробувати ще раз</button>
+    <p><ChromeText k="wotd.loadError" /></p>
+    <button type="button" data-daily-retry><ChromeText k="practice.retry" /></button>
   </div>
   <ul id="lexicon-daily-list" class="lexicon-daily-grid" aria-live="polite" data-daily-list></ul>
 </section>
 
 {/* Inline watchdog: if the processed DailyWords module never runs (CDN 503 on
-    the chunk, etc.), do not leave «Завантажуємо добірку...» as a dead end (#6771). */}
+    the chunk, etc.), do not leave the loading status as a dead end (#6771). */}
 <script is:inline>
 (() => {
   const TIMEOUT_MS = 10000;
-  const LOADING_COPY = 'Завантажуємо добірку...';
 
   function showSectionFallback(section) {
     if (section.dataset.dailyReady === 'true') return;
@@ -72,6 +74,7 @@ const dailyCount = Math.max(1, Math.floor(count));
     if (status) {
       status.hidden = true;
       status.textContent = '';
+      status.removeAttribute('data-daily-loading');
     }
     if (fallback) fallback.hidden = false;
     section.hidden = false;
@@ -94,7 +97,7 @@ const dailyCount = Math.max(1, Math.floor(count));
       const stillLoading =
         status &&
         !status.hidden &&
-        (status.textContent || '').trim() === LOADING_COPY;
+        status.getAttribute('data-daily-loading') === 'true';
       const list = section.querySelector('[data-daily-list]');
       const emptyList = !list || list.children.length === 0;
       if (stillLoading && emptyList) showSectionFallback(section);
@@ -127,6 +130,12 @@ const dailyCount = Math.max(1, Math.floor(count));
     normalizeCefrLevel,
     type CefrLevel,
   } from "../lib/lexicon/levels";
+  import {
+    CHROME_STRINGS,
+    chromeDualHtml,
+    formatWotdEmptyLevel,
+    formatWotdLevelCount,
+  } from "../lib/i18n/chrome";
 
   const readLearnerLevel = (): CefrLevel => {
     try {
@@ -142,6 +151,28 @@ const dailyCount = Math.max(1, Math.floor(count));
     } catch {
       // Storage can be unavailable in hardened browser contexts.
     }
+  };
+
+  const setLoadingStatus = (status: HTMLElement | null) => {
+    if (!status) return;
+    status.hidden = false;
+    status.dataset.dailyLoading = "true";
+    status.innerHTML = chromeDualHtml(
+      CHROME_STRINGS.en["wotd.loading"],
+      CHROME_STRINGS.uk["wotd.loading"],
+    );
+  };
+
+  const setStatusDual = (
+    status: HTMLElement | null,
+    variants: { en: string; uk: string },
+    opts: { loading?: boolean; hidden?: boolean } = {},
+  ) => {
+    if (!status) return;
+    status.hidden = Boolean(opts.hidden);
+    if (opts.loading) status.dataset.dailyLoading = "true";
+    else status.removeAttribute("data-daily-loading");
+    status.innerHTML = chromeDualHtml(variants.en, variants.uk);
   };
 
   const hydrateDailySection = (dailySection: HTMLElement) => {
@@ -174,6 +205,7 @@ const dailyCount = Math.max(1, Math.floor(count));
       if (dailyStatus) {
         dailyStatus.hidden = true;
         dailyStatus.textContent = "";
+        dailyStatus.removeAttribute("data-daily-loading");
       }
       if (dailyFallback) dailyFallback.hidden = false;
       dailySection.hidden = false;
@@ -183,10 +215,7 @@ const dailyCount = Math.max(1, Math.floor(count));
 
     const clearLoadError = () => {
       if (dailyFallback) dailyFallback.hidden = true;
-      if (dailyStatus) {
-        dailyStatus.hidden = false;
-        dailyStatus.textContent = "Завантажуємо добірку...";
-      }
+      setLoadingStatus(dailyStatus);
       dailySection.dataset.dailyReady = "false";
     };
 
@@ -210,10 +239,7 @@ const dailyCount = Math.max(1, Math.floor(count));
 
       if (picks.length === 0) {
         dailyList.innerHTML = "";
-        if (dailyStatus) {
-          dailyStatus.hidden = false;
-          dailyStatus.textContent = `Немає слів для рівня ${activeLevel}.`;
-        }
+        setStatusDual(dailyStatus, formatWotdEmptyLevel(activeLevel));
         if (dailyFallback) dailyFallback.hidden = true;
         dailySection.dataset.dailyReady = "true";
         return;
@@ -224,12 +250,12 @@ const dailyCount = Math.max(1, Math.floor(count));
         bindDailyCardInteractions(dailyList);
         interactionsBound = true;
       }
-      if (dailyStatus) {
-        dailyStatus.hidden = false;
-        dailyStatus.textContent = useLevelSelector
-          ? `${activeLevel} · ${picks.length} слів`
-          : "";
-        dailyStatus.hidden = !useLevelSelector;
+      if (useLevelSelector) {
+        setStatusDual(dailyStatus, formatWotdLevelCount(activeLevel, picks.length));
+      } else if (dailyStatus) {
+        dailyStatus.hidden = true;
+        dailyStatus.textContent = "";
+        dailyStatus.removeAttribute("data-daily-loading");
       }
       if (dailyFallback) dailyFallback.hidden = true;
       dailySection.dataset.dailyReady = "true";

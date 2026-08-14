@@ -15,7 +15,10 @@ export default getViteConfig({
     environment: 'happy-dom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
-    include: ['tests/unit/**/*.{test,spec}.{ts,tsx}'],
+    include: [
+      'tests/unit/**/*.{test,spec}.{ts,tsx}',
+      'src/pages/__tests__/**/*.{test,spec}.{ts,tsx}',
+    ],
     // build-renders.test.ts shells out to `npm run build`; parallel file workers
     // contend on data/atlas.db and can surface transient "Caught error rendering".
     fileParallelism: false,

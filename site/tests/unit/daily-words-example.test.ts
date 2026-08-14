@@ -9,7 +9,6 @@ import {
   bindDailyCardInteractions,
   dailyCardAtlasHref,
   isDailyCardAtlasLinkTarget,
-  pickDailyForLevel,
   renderDailyCardHtml,
   toggleDailyCardFlip,
 } from "@site/src/lib/lexicon/daily-card";
@@ -20,6 +19,10 @@ const dailyWordsSource = readFileSync(
 );
 const wordsOfTheDaySource = readFileSync(
   resolve(process.cwd(), "src/pages/words-of-the-day.astro"),
+  "utf8",
+);
+const chromeSource = readFileSync(
+  resolve(process.cwd(), "src/lib/i18n/chrome.ts"),
   "utf8",
 );
 
@@ -78,8 +81,10 @@ describe("DailyWords list example sentence (GH #5434)", () => {
 describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
   test("hub copy no longer claims every card goes to Atlas", () => {
     expect(wordsOfTheDaySource).not.toContain("кожна картка веде до повної статті Атласу");
-    expect(wordsOfTheDaySource).toContain("торкніться картки, щоб перевернути");
-    expect(wordsOfTheDaySource).toContain("Атласі");
+    // Helper copy lives in the chrome dictionary; DailyWords dual-renders it.
+    expect(dailyWordsSource).toContain('k="wotd.todayDescription"');
+    expect(chromeSource).toContain("торкніться картки, щоб перевернути");
+    expect(chromeSource).toContain("Атласі");
   });
 
   test("card chrome is a flip control, not a single Atlas anchor", () => {
@@ -156,11 +161,14 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(dailyWordsSource).not.toContain("words-of-the-day/daily-pool");
     expect(dailyWordsSource).toContain("data-daily-fallback");
     expect(dailyWordsSource).toContain("data-daily-retry");
-    expect(dailyWordsSource).toContain("Не вдалося завантажити добірку.");
-    expect(dailyWordsSource).toContain("Спробувати ще раз");
+    expect(dailyWordsSource).toContain('k="wotd.loadError"');
+    expect(dailyWordsSource).toContain('k="practice.retry"');
+    expect(chromeSource).toContain("Не вдалося завантажити добірку.");
+    expect(chromeSource).toContain("Спробувати ще раз");
     expect(dailyWordsSource).toContain("showLoadError");
     expect(dailyWordsSource).toContain("script is:inline");
     expect(dailyWordsSource).toContain("TIMEOUT_MS");
+    expect(dailyWordsSource).toContain("data-daily-loading");
     // Must not silently hide the section on transport/server failure.
     expect(dailyWordsSource).toMatch(/catch\s*\{\s*showLoadError\(\);/);
   });
