@@ -1,0 +1,744 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_pliush_2005_canonical_grammar_candidate_v1.schema.json",
+  "title": "Phase 3 Pliush 2005 canonical-grammar candidate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bindings",
+    "content_fitness",
+    "custody",
+    "denominators",
+    "gates",
+    "native_exactness",
+    "page_map",
+    "provider_calls",
+    "receipt_sha256",
+    "residuals",
+    "review_scope",
+    "rights",
+    "schema_version",
+    "source",
+    "status",
+    "text_free",
+    "text_layer",
+    "visual_qa"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_pliush_2005_canonical_grammar_candidate_v1"
+    },
+    "status": {
+      "const": "ACADEMIC_CANON_CORROBORATION_CANDIDATE_NO_GAP_TRANSITION"
+    },
+    "text_free": {
+      "const": true
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audience",
+        "authors",
+        "bitstream_is_complete_publication",
+        "institution",
+        "isbn_roles_recorded",
+        "item_url",
+        "metadata_authors",
+        "part_1_isbn",
+        "nbuv_presentation_pages",
+        "online_book_url",
+        "page_count_discrepancy_recorded",
+        "pages",
+        "pdf_url",
+        "private_input_locator",
+        "publisher",
+        "repository_custody",
+        "source_id",
+        "title",
+        "title_imprint_pages",
+        "work_isbn",
+        "year"
+      ],
+      "properties": {
+        "source_id": {
+          "const": "uni-ukrmova-grammar-morphemics-word-formation-morphology-pliush-2005"
+        },
+        "title": {
+          "const": "Граматика української мови. Ч. 1 : Морфеміка. Словотвір. Морфологія"
+        },
+        "authors": {
+          "const": ["Марія Яківна Плющ"]
+        },
+        "metadata_authors": {
+          "const": ["Плющ, Марія Яківна", "Плющ М. Я."]
+        },
+        "institution": {
+          "const": "НБУВ / електронна бібліотека «Україніка» (irbis-nbuv.gov.ua)"
+        },
+        "publisher": {
+          "const": "Київ: Вища школа"
+        },
+        "audience": {
+          "const": "native_ukrainian_philology_higher_education_students"
+        },
+        "year": {
+          "const": 2005
+        },
+        "work_isbn": {
+          "const": "966-642-264-6"
+        },
+        "part_1_isbn": {
+          "const": "966-642-263-8"
+        },
+        "isbn_roles_recorded": {
+          "const": true
+        },
+        "pages": {
+          "const": 289
+        },
+        "title_imprint_pages": {
+          "const": 286
+        },
+        "nbuv_presentation_pages": {
+          "const": 288
+        },
+        "page_count_discrepancy_recorded": {
+          "const": true
+        },
+        "item_url": {
+          "const": "https://irbis-nbuv.gov.ua/ulib/item/UKR0000663"
+        },
+        "pdf_url": {
+          "const": "https://irbis-nbuv.gov.ua/E_LIB/PDF/ukr0000402.pdf"
+        },
+        "online_book_url": {
+          "const": "https://irbis-nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21CNR=20&S21FMT=online_book&S21P01=0&S21P02=0&S21P03=FF%3D&S21REF=10&S21STN=1&S21STR=ukr0000402&Z21ID="
+        },
+        "private_input_locator": {
+          "const": "university_corpus/staging/phase3-6375-pliush-2005-canonical-grammar"
+        },
+        "bitstream_is_complete_publication": {
+          "const": true
+        },
+        "repository_custody": {
+          "const": "NBUV Ukrainica irbis-nbuv.gov.ua"
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete_source_policy_v4_sha256",
+        "implementation_sha256",
+        "item_html_bytes",
+        "item_html_sha256",
+        "item_response_headers_bytes",
+        "item_response_headers_sha256",
+        "online_book_html_bytes",
+        "online_book_html_sha256",
+        "online_book_response_headers_bytes",
+        "online_book_response_headers_sha256",
+        "pdf_response_headers_bytes",
+        "pdf_response_headers_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "schema_sha256",
+        "source_pdf_bytes",
+        "source_pdf_md5",
+        "source_pdf_sha256",
+        "university_content_audit_freeze_v1_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {
+          "const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+        },
+        "phase3_reboot_prompt_v3_sha256": {
+          "const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+        },
+        "source_pdf_sha256": {
+          "const": "af0e2fea1756d6b3a79fb2b94d8b9cf6b1e66afb4f1587b1bb46cdabe70d2f5e"
+        },
+        "source_pdf_md5": {
+          "const": "788711c54e286f38e23b8d452474a067"
+        },
+        "source_pdf_bytes": {
+          "const": 7548590
+        },
+        "item_html_sha256": {
+          "const": "e36bae96dd222f695fccdced53d13ea21027cded7f6581d21113ec5cc9dacc15"
+        },
+        "item_html_bytes": {
+          "const": 222581
+        },
+        "online_book_html_sha256": {
+          "const": "16660eba2e50b65f8daac5d7cbb79fa25787590990977fe05ff3b49edee34a55"
+        },
+        "online_book_html_bytes": {
+          "const": 216860
+        },
+        "pdf_response_headers_sha256": {
+          "const": "5db1f21afecdc04d1eeca0c0175b0ec6a9204b6e771630bf042ac76c8aa310a6"
+        },
+        "pdf_response_headers_bytes": {
+          "const": 265
+        },
+        "item_response_headers_sha256": {
+          "const": "8b3c2f376df7f71ae0d721628de367e96b9c3fc2abbd6a78d0917e03eace6d5b"
+        },
+        "item_response_headers_bytes": {
+          "const": 190
+        },
+        "online_book_response_headers_sha256": {
+          "const": "e7422225627740e65bed0d3a01df5ec692924878d91f5299851c54d296dac1dc"
+        },
+        "online_book_response_headers_bytes": {
+          "const": 190
+        },
+        "university_content_audit_freeze_v1_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "complete_source_policy_v4_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "text_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anomaly_page_count",
+        "empty_text_pages",
+        "encrypted",
+        "extracted_text_sha256",
+        "isbn_text_verified",
+        "normalization_applied",
+        "ocr_used",
+        "page_count_discrepancy",
+        "page_manifest_sha256",
+        "pages",
+        "repairs_applied",
+        "source_text_retained_in_public_receipt",
+        "text_bearing_pages",
+        "unicode_code_points",
+        "utf8_bytes"
+      ],
+      "properties": {
+        "pages": {
+          "const": 289
+        },
+        "text_bearing_pages": {
+          "const": 289
+        },
+        "empty_text_pages": {
+          "const": []
+        },
+        "unicode_code_points": {
+          "const": 576759
+        },
+        "utf8_bytes": {
+          "const": 1022704
+        },
+        "page_manifest_sha256": {
+          "const": "01e7d3fb72cd2a483e82c280cdb03418cd512082c5d26f44d43330076df85070"
+        },
+        "extracted_text_sha256": {
+          "const": "bde4c529607ea36a78fd79edd44904a1f32b8a6a95c716264fb7654403cf26b3"
+        },
+        "anomaly_page_count": {
+          "const": 0
+        },
+        "encrypted": {
+          "const": false
+        },
+        "isbn_text_verified": {
+          "const": true
+        },
+        "page_count_discrepancy": {
+          "const": {
+            "title_imprint_pages": 286,
+            "nbuv_presentation_pages": 288,
+            "pdf_page_objects": 289,
+            "recorded_without_correction": true
+          }
+        },
+        "normalization_applied": {
+          "const": false
+        },
+        "ocr_used": {
+          "const": false
+        },
+        "repairs_applied": {
+          "const": false
+        },
+        "source_text_retained_in_public_receipt": {
+          "const": false
+        }
+      }
+    },
+    "page_map": {
+      "const": {
+        "body_mapping_rule": "pdf_object_equals_printed_page_plus_one",
+        "prior_advisory_off_by_one_corrected": true,
+        "morphemics": {
+          "pdf_start": 8,
+          "pdf_end": 20,
+          "printed_start": 7,
+          "printed_end": 19
+        },
+        "word_formation": {
+          "pdf_start": 21,
+          "pdf_end": 69,
+          "printed_start": 20,
+          "printed_end": 68
+        },
+        "morphology_main_body": {
+          "pdf_start": 70,
+          "pdf_end": 280,
+          "printed_start": 69,
+          "printed_end": 279
+        },
+        "abbreviations": {
+          "pdf_start": 281,
+          "pdf_end": 282,
+          "printed_start": 280,
+          "printed_end": 281
+        },
+        "contents": {
+          "pdf_start": 283,
+          "pdf_end": 287,
+          "printed_start": 282,
+          "printed_end": 286
+        },
+        "colophon_pdf_page": 289
+      }
+    },
+    "visual_qa": {
+      "const": {
+        "passed_pdf_pages": [3, 8, 21, 70, 283, 289],
+        "native_anomaly_detector_flagged_pages": 0
+      }
+    },
+    "native_exactness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "flagged_page_count",
+        "pdf_page_objects",
+        "production_eligible_note",
+        "production_eligible_under_exactness_gate",
+        "text_bearing_pages"
+      ],
+      "properties": {
+        "flagged_page_count": {
+          "const": 0
+        },
+        "pdf_page_objects": {
+          "const": 289
+        },
+        "text_bearing_pages": {
+          "const": 289
+        },
+        "production_eligible_under_exactness_gate": {
+          "const": false
+        },
+        "production_eligible_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "content_fitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adversarial_dispositions",
+        "audience",
+        "cells",
+        "document_profile",
+        "explicit_limitations",
+        "provisional_effect",
+        "secondary_observation_cells",
+        "target_cells",
+        "topic_gaps_closed",
+        "topic_gaps_narrowed_claimed"
+      ],
+      "properties": {
+        "adversarial_dispositions": {
+          "const": {
+            "morphemics": "NARROW_ONLY",
+            "morphology": "SECONDARY_CORROBORATION",
+            "word_formation": "NARROW_ONLY"
+          }
+        },
+        "audience": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "current_ukrainian_philology_students",
+            "publication_period_post_2019",
+            "publication_year",
+            "publisher_institution",
+            "repository_type"
+          ],
+          "properties": {
+            "current_ukrainian_philology_students": {
+              "const": true
+            },
+            "publication_period_post_2019": {
+              "const": false
+            },
+            "publication_year": {
+              "const": 2005
+            },
+            "publisher_institution": {
+              "const": "Вища школа (Kyiv); custody via NBUV Ukrainica"
+            },
+            "repository_type": {
+              "const": "Book"
+            }
+          }
+        },
+        "cells": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["morphemics", "word_formation"],
+          "properties": {
+            "morphemics": {
+              "$ref": "#/$defs/primary_cell"
+            },
+            "word_formation": {
+              "$ref": "#/$defs/primary_cell"
+            }
+          }
+        },
+        "document_profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["genre", "printed_page_offset_note"],
+          "properties": {
+            "genre": {
+              "const": "university_philology_pidruchnyk_academic_canon_theory"
+            },
+            "printed_page_offset_note": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "explicit_limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "provisional_effect": {
+          "const": "academic_canon_corroboration_candidate_no_gap_transition"
+        },
+        "secondary_observation_cells": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["morphology"],
+          "properties": {
+            "morphology": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["disposition", "provisional_effect", "rationale_codes", "role"],
+              "properties": {
+                "disposition": {
+                  "const": "SECONDARY_CORROBORATION"
+                },
+                "provisional_effect": {
+                  "const": "academic_canon_secondary_corroboration_not_a_gap_transition"
+                },
+                "rationale_codes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "role": {
+                  "const": "secondary_corroboration"
+                }
+              }
+            }
+          }
+        },
+        "target_cells": {
+          "const": ["morphemics", "word_formation"]
+        },
+        "topic_gaps_closed": {
+          "const": []
+        },
+        "topic_gaps_narrowed_claimed": {
+          "const": []
+        }
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_new_files_readback_hash_match",
+        "artifacts",
+        "drive_relative_directory",
+        "google_drive_custody",
+        "google_drive_mount_containment_verified",
+        "google_drive_provider_identity_present",
+        "google_drive_provider_identity_sha256",
+        "private_directory_mode_0700",
+        "private_files_mode_0600"
+      ],
+      "properties": {
+        "google_drive_custody": {
+          "const": true
+        },
+        "google_drive_mount_containment_verified": {
+          "const": true
+        },
+        "google_drive_provider_identity_present": {
+          "const": true
+        },
+        "google_drive_provider_identity_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "item_html",
+            "item_response_headers",
+            "online_book_html",
+            "online_book_response_headers",
+            "pdf_response_headers",
+            "source_pdf"
+          ],
+          "properties": {
+            "item_html": {
+              "$ref": "#/$defs/sha256"
+            },
+            "item_response_headers": {
+              "$ref": "#/$defs/sha256"
+            },
+            "online_book_html": {
+              "$ref": "#/$defs/sha256"
+            },
+            "online_book_response_headers": {
+              "$ref": "#/$defs/sha256"
+            },
+            "pdf_response_headers": {
+              "$ref": "#/$defs/sha256"
+            },
+            "source_pdf": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        },
+        "drive_relative_directory": {
+          "const": "university_corpus/staging/phase3-6375-pliush-2005-canonical-grammar"
+        },
+        "private_files_mode_0600": {
+          "const": true
+        },
+        "private_directory_mode_0700": {
+          "const": true
+        },
+        "all_new_files_readback_hash_match": {
+          "const": true
+        },
+        "artifacts": {
+          "const": {
+            "item_html": "metadata/ukrainica-item-UKR0000663.html",
+            "item_response_headers": "metadata/ukrainica-item-response-headers.txt",
+            "online_book_html": "metadata/ukrainica-online-book-ukr0000402.html",
+            "online_book_response_headers": "metadata/ukrainica-online-book-response-headers.txt",
+            "pdf_response_headers": "metadata/pliush-2005-pdf-response-headers.txt",
+            "source_pdf": "source/pliush-2005-grammar-morphemics-word-formation-morphology.pdf"
+          }
+        }
+      }
+    },
+    "rights": {
+      "const": {
+        "visibility": "publicly_accessible_national_library_digital_library",
+        "nbuv_terms": "educational_and_scientific_noncommercial_with_attribution_no_downstream_full_text_reproduction",
+        "rights_statement": "NBUV Ukrainica educational/scientific noncommercial use with attribution; no downstream reproduction of full texts",
+        "attribution_required": true,
+        "private_acquisition": true,
+        "private_audit": true,
+        "private_training_preparation": true,
+        "public_full_text_export": false,
+        "unrestricted_training_export": false,
+        "public_redistribution_authorized": false,
+        "public_dataset_export_authorized": false,
+        "publish_source_text_authorized": false,
+        "unrestricted_reuse_authorized": false,
+        "legal_reuse_authorization_established": false,
+        "takedown_ready": true,
+        "adapt_or_remove_on_substantiated_complaint": true
+      }
+    },
+    "review_scope": {
+      "const": {
+        "content_disposition": "academic_canon_corroboration_candidate",
+        "ukrainian_canon_review_complete": false,
+        "scope_critic_complete": false,
+        "topic_gaps_closed": [],
+        "topic_gaps_narrowed": [],
+        "primary_cells": ["morphemics", "word_formation"],
+        "secondary_cells": ["morphology"],
+        "adversarial_dispositions": {
+          "morphemics": "NARROW_ONLY",
+          "word_formation": "NARROW_ONLY",
+          "morphology": "SECONDARY_CORROBORATION"
+        },
+        "coverage_effect": "academic_canon_corroboration_no_gap_transition"
+      }
+    },
+    "denominators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_additive_outside_v2_totals",
+        "candidate_source_count",
+        "cycle002_diagnostic_only",
+        "database_resident_source_count",
+        "phase3_labels",
+        "quarantine_source_count",
+        "reference_only_source_count",
+        "university_missing",
+        "university_partial",
+        "university_sufficient",
+        "university_topic_areas",
+        "v2_evaluation_identities",
+        "v2_source_units"
+      ],
+      "properties": {
+        "v2_source_units": {
+          "const": 67041
+        },
+        "v2_evaluation_identities": {
+          "const": 9392
+        },
+        "phase3_labels": {
+          "const": 0
+        },
+        "university_topic_areas": {
+          "const": 26
+        },
+        "university_sufficient": {
+          "const": 5
+        },
+        "university_partial": {
+          "const": 21
+        },
+        "university_missing": {
+          "const": 0
+        },
+        "candidate_source_count": {
+          "const": 30
+        },
+        "database_resident_source_count": {
+          "const": 20
+        },
+        "reference_only_source_count": {
+          "const": 6
+        },
+        "quarantine_source_count": {
+          "const": 4
+        },
+        "candidate_additive_outside_v2_totals": {
+          "const": true
+        },
+        "cycle002_diagnostic_only": {
+          "const": true
+        }
+      }
+    },
+    "gates": {
+      "const": {
+        "database_ingest_authorized": false,
+        "retained_extracted_text_authorized": false,
+        "private_training_conversion_candidate": false,
+        "training_conversion_complete": false,
+        "normative_rule_authority": false,
+        "semantic_gold": false,
+        "author_eval_membership": false,
+        "topic_gaps_closed": false,
+        "topic_gaps_narrowed": false,
+        "source_universe_frozen": false,
+        "source_coverage_ready": false,
+        "source_freeze_ready": false,
+        "phase3_complete": false,
+        "phase4_blocked": true,
+        "phase4_authorized": false
+      }
+    },
+    "residuals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "primary_cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "frozen_status",
+        "provisional_effect",
+        "qualified_source_needed",
+        "rationale_codes",
+        "role"
+      ],
+      "properties": {
+        "disposition": {
+          "const": "NARROW_ONLY"
+        },
+        "frozen_status": {
+          "const": "partial"
+        },
+        "provisional_effect": {
+          "const": "academic_canon_theory_corroboration_not_a_gap_transition"
+        },
+        "qualified_source_needed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "role": {
+          "const": "canonical_theory_corroboration"
+        }
+      }
+    }
+  }
+}
