@@ -1,0 +1,777 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_donnu_2023_morphemics_word_formation_candidate_v1.schema.json",
+  "title": "Phase 3 DonNU 2023 morphemics/word-formation candidate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bindings",
+    "content_fitness",
+    "custody",
+    "denominators",
+    "gates",
+    "native_exactness",
+    "provider_calls",
+    "receipt_sha256",
+    "residuals",
+    "review_scope",
+    "rights",
+    "schema_version",
+    "source",
+    "status",
+    "text_free",
+    "text_layer"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "phase3_donnu_2023_morphemics_word_formation_candidate_v1"
+    },
+    "status": {
+      "const": "NARROW_ONLY_CANDIDATE_PENDING_UKRAINIAN_CANON_REVIEW_AND_SCOPE_CRITIC"
+    },
+    "text_free": {
+      "const": true
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "source": {
+      "const": {
+        "source_id": "uni-ukrmova-morphemics-word-formation-donnu-2023",
+        "title": "Сучасна українська мова: Морфеміка. Словотвір: матеріали для дистанційної роботи студентів",
+        "metadata_title": "СУЧАСНА УКРАЇНСЬКА МОВА: МОРФЕМІКА. СЛОВОТВІР: МАТЕРІАЛИ ДЛЯ ДИСТАНЦІЙНОЇ РОБОТИ СТУДЕНТІВ. НАВЧАЛЬНИЙ ПОСІБНИК",
+        "authors": [
+          "Каріна Бортун",
+          "Олена Важеніна"
+        ],
+        "metadata_authors": [
+          "Бортун, Каріна",
+          "Важеніна, Олена"
+        ],
+        "institution": "DonNU DSpace r2.donnu.edu.ua (repository custody)",
+        "publisher": "Київ: Приватний вищий навчальний заклад «Європейський університет»",
+        "audience": "native_ukrainian_philology_students_distance_learning",
+        "year": 2023,
+        "isbn": "978-966-301-261-2",
+        "pages": 215,
+        "catalog_citation_pages": 214,
+        "page_count_discrepancy_recorded": true,
+        "item_url": "https://r2.donnu.edu.ua/items/74e2161c-c67f-4b5f-817c-4cc4707b9470",
+        "item_api_url": "https://r2.donnu.edu.ua/server/api/core/items/74e2161c-c67f-4b5f-817c-4cc4707b9470",
+        "bitstream_url": "https://r2.donnu.edu.ua/server/api/core/bitstreams/eee9a7c4-006f-45b8-8c9c-42f086942e25/content",
+        "license_bitstream_url": "https://r2.donnu.edu.ua/server/api/core/bitstreams/c48b8471-536d-408d-bc41-5969a449530d/content",
+        "private_input_locator": "university_corpus/staging/phase3-6375-donnu-2023-morphemics-word-formation",
+        "bitstream_is_complete_publication": true,
+        "repository_custody": "DonNU DSpace r2.donnu.edu.ua"
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bitstream_metadata_bytes",
+        "bitstream_metadata_sha256",
+        "checksums_sha256",
+        "complete_source_policy_v4_sha256",
+        "content_fit_audit_sha256",
+        "custody_receipt_body_sha256",
+        "custody_receipt_file_sha256",
+        "exactness_audit_sha256",
+        "extraction_facts_sha256",
+        "implementation_sha256",
+        "item_metadata_bytes",
+        "item_metadata_sha256",
+        "landing_html_bytes",
+        "landing_html_sha256",
+        "license_bitstream_metadata_sha256",
+        "license_text_bytes",
+        "license_text_sha256",
+        "page_text_index_sha256",
+        "phase3_reboot_prompt_v3_sha256",
+        "phase3_recovery_prompt_v2_sha256",
+        "private_jsonl_bytes",
+        "private_jsonl_sha256",
+        "schema_sha256",
+        "source_pdf_bytes",
+        "source_pdf_md5",
+        "source_pdf_sha256",
+        "university_content_audit_freeze_v1_sha256",
+        "visual_qa_receipt_sha256"
+      ],
+      "properties": {
+        "phase3_recovery_prompt_v2_sha256": {
+          "const": "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
+        },
+        "phase3_reboot_prompt_v3_sha256": {
+          "const": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d"
+        },
+        "source_pdf_sha256": {
+          "const": "f0bc5940e1aff1ae9cca8717306ba85f54eab878883cfa8dc9a82d1034cfccc5"
+        },
+        "source_pdf_md5": {
+          "const": "69e85724612a1575892154e11486f558"
+        },
+        "source_pdf_bytes": {
+          "const": 3561818
+        },
+        "landing_html_sha256": {
+          "const": "ff19ad7ce3b672745761448644f90988e2ade7d2122cd8c7def932f929272ce8"
+        },
+        "landing_html_bytes": {
+          "const": 368058
+        },
+        "item_metadata_sha256": {
+          "const": "78a838ad8042a4ee15168705ff5db845d3c72b7aac620e79a91c262f13d84101"
+        },
+        "item_metadata_bytes": {
+          "const": 6099
+        },
+        "bitstream_metadata_sha256": {
+          "const": "5fc7177018ea008b0f238c07f717b46e2a6097fbd543f69101387342d246f154"
+        },
+        "bitstream_metadata_bytes": {
+          "const": 2048
+        },
+        "license_text_sha256": {
+          "const": "ab044a4cadbd499552a26ad0ab8a241fd38197db21e666f11ad3bb4d4cafcd28"
+        },
+        "license_text_bytes": {
+          "const": 1748
+        },
+        "license_bitstream_metadata_sha256": {
+          "const": "8c39b96832a6eefd0b631571fa1329c6575aafcb111602061e4c5710a5e56eff"
+        },
+        "private_jsonl_sha256": {
+          "const": "e7595a03f81c94491fb96a74d9bcdc2bf303f7021b6c42329928009bf766f641"
+        },
+        "private_jsonl_bytes": {
+          "const": 566118
+        },
+        "exactness_audit_sha256": {
+          "const": "9b01a15062c54ab035024d75a2205c14dfd8f0f8cd5ff6cc352021140ff21a42"
+        },
+        "content_fit_audit_sha256": {
+          "const": "b39b63eac42ef89552c2c42da9ec4c5b75be0d8a7e04a09affb28b0f931d373a"
+        },
+        "custody_receipt_file_sha256": {
+          "const": "e089cecc947b822ef74f5f5fcc8efeb0c4f052e5fb3186cbb4d827b63db3da55"
+        },
+        "custody_receipt_body_sha256": {
+          "const": "194dcc099d6b27e0e57dbf2cd0dd877e4fbaa3cd55ffab60c075821108a4ec1f"
+        },
+        "checksums_sha256": {
+          "const": "31e0ac9b8a861e1b385986cf4349c760ffe7ef4466bee1de3b07f01dc4ffe469"
+        },
+        "page_text_index_sha256": {
+          "const": "779d9cf025bf21e22fb6940b54b118da7e29cf46f49271c26ad33dbe883fcf57"
+        },
+        "visual_qa_receipt_sha256": {
+          "const": "523bacce5373ef1d0c7f58709b687ad0af0fb28b1442450b5b2c65fb542a19c4"
+        },
+        "extraction_facts_sha256": {
+          "const": "a0540b56328e17970094ce46ab6f1fd788e8a283020f929e683706866430a090"
+        },
+        "university_content_audit_freeze_v1_sha256": {
+          "const": "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"
+        },
+        "complete_source_policy_v4_sha256": {
+          "const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "text_layer": {
+      "const": {
+        "pages": 215,
+        "text_bearing_pages": 214,
+        "empty_text_pages": [
+          1
+        ],
+        "unicode_code_points": 218710,
+        "utf8_bytes": 386290,
+        "page_manifest_sha256": "fbd671f02534359717bf13c2c0a0df2e4ab1b6df0d397f1ce38952f370495410",
+        "extracted_text_sha256": "1bdf9fdc17bc4e614fa4dddac1fff6fb1652d2af182e63af25ed48b4af5986a2",
+        "anomaly_page_count": 0,
+        "isbn_text_verified": true,
+        "page_count_discrepancy": {
+          "catalog_citation_pages": 214,
+          "pdf_page_objects": 215,
+          "delta": 1,
+          "recorded_without_correction": true
+        },
+        "normalization_applied": false,
+        "ocr_used": false,
+        "repairs_applied": false,
+        "source_text_retained_in_public_receipt": false
+      }
+    },
+    "native_exactness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audit_receipt_sha256",
+        "chunk_count",
+        "clean_chunk_count",
+        "empty_text_page_count",
+        "empty_text_pages",
+        "flagged_chunk_count",
+        "flagged_page_count",
+        "production_eligible_note",
+        "production_eligible_under_exactness_gate",
+        "schema_version",
+        "source_count",
+        "unverified_flagged_chunk_count",
+        "verified_flagged_chunk_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "textbook-native-exactness-audit.v1"
+        },
+        "source_count": {
+          "const": 1
+        },
+        "chunk_count": {
+          "const": 215
+        },
+        "flagged_chunk_count": {
+          "const": 0
+        },
+        "flagged_page_count": {
+          "const": 0
+        },
+        "verified_flagged_chunk_count": {
+          "const": 0
+        },
+        "unverified_flagged_chunk_count": {
+          "const": 0
+        },
+        "clean_chunk_count": {
+          "const": 215
+        },
+        "empty_text_page_count": {
+          "const": 1
+        },
+        "empty_text_pages": {
+          "const": [
+            1
+          ]
+        },
+        "production_eligible_under_exactness_gate": {
+          "const": false
+        },
+        "production_eligible_note": {
+          "const": "exactness detector flagged 0 chunks; page 1 is image-only cover with no native text"
+        },
+        "audit_receipt_sha256": {
+          "const": "9b01a15062c54ab035024d75a2205c14dfd8f0f8cd5ff6cc352021140ff21a42"
+        }
+      }
+    },
+    "content_fitness": {
+      "const": {
+        "adversarial_dispositions": {
+          "morphemics": "NARROW_ONLY",
+          "phraseology": "REJECT",
+          "semantics": "REJECT",
+          "word_formation": "NARROW_ONLY"
+        },
+        "audience": {
+          "board_recommendation_marker_verified": true,
+          "current_ukrainian_philology_students": true,
+          "philology_bachelor_marker_verified": true,
+          "programme_marker_verified": true,
+          "publication_period_post_2019": true,
+          "publication_year": 2023,
+          "publisher_institution": "ПВНЗ «Європейський університет» (Kyiv); custody via DonNU DSpace r2.donnu.edu.ua",
+          "repository_type": "Book"
+        },
+        "cells": {
+          "morphemics": {
+            "depth_evidence": {
+              "bibliography_marker_hits": 19,
+              "bibliography_pages": 8,
+              "definition_marker_hits": 12,
+              "definition_pages": 10,
+              "example_marker_hits": 3,
+              "example_pages": 3,
+              "exceptions_competing_marker_hits": 0,
+              "exceptions_competing_pages": 0,
+              "exercise_marker_hits": 37,
+              "exercise_pages": 13,
+              "paradigms_models_marker_hits": 52,
+              "paradigms_models_pages": 34,
+              "scope": "topic_conditioned",
+              "self_control_answer_marker_hits": 0,
+              "self_control_answer_pages": 0,
+              "theory_classification_marker_hits": 24,
+              "theory_classification_pages": 7,
+              "topic_marker_hits": 863,
+              "topic_pages": 132
+            },
+            "disposition": "NARROW_ONLY",
+            "frozen_status": "partial",
+            "provisional_effect": "diagnostic_narrow_only_candidate_not_a_gap_transition",
+            "qualified_source_needed": "Dedicated post-2019 university textbook on morphemics and morphemic structure of Ukrainian words.",
+            "rationale_codes": [
+              "dedicated_post_2019_university_posibnyk_title_and_toc",
+              "high_topic_marker_density_and_page_coverage",
+              "glossary_and_morphemic_analysis_schemes_present",
+              "exercise_and_test_coverage_strong",
+              "missing_answer_key_self_control_evidence",
+              "exceptions_competing_analyses_not_evidenced",
+              "theory_depth_secondary_to_test_workbook_format",
+              "ukrainian_canon_review_required_before_any_gap_transition"
+            ],
+            "role": "primary"
+          },
+          "word_formation": {
+            "depth_evidence": {
+              "bibliography_marker_hits": 22,
+              "bibliography_pages": 11,
+              "definition_marker_hits": 13,
+              "definition_pages": 12,
+              "example_marker_hits": 0,
+              "example_pages": 0,
+              "exceptions_competing_marker_hits": 0,
+              "exceptions_competing_pages": 0,
+              "exercise_marker_hits": 42,
+              "exercise_pages": 16,
+              "paradigms_models_marker_hits": 81,
+              "paradigms_models_pages": 49,
+              "scope": "topic_conditioned",
+              "self_control_answer_marker_hits": 0,
+              "self_control_answer_pages": 0,
+              "theory_classification_marker_hits": 13,
+              "theory_classification_pages": 6,
+              "topic_marker_hits": 859,
+              "topic_pages": 147
+            },
+            "disposition": "NARROW_ONLY",
+            "frozen_status": "partial",
+            "provisional_effect": "diagnostic_narrow_only_candidate_not_a_gap_transition",
+            "qualified_source_needed": "Specialized university coursebook on Ukrainian word formation (дериватологія).",
+            "rationale_codes": [
+              "dedicated_post_2019_university_posibnyk_title_and_toc",
+              "high_topic_marker_density_and_page_coverage",
+              "word_formation_analysis_schemes_and_glossary_present",
+              "exercise_and_test_coverage_strong",
+              "missing_answer_key_self_control_evidence",
+              "exceptions_competing_analyses_not_evidenced",
+              "theory_depth_secondary_to_test_workbook_format",
+              "ukrainian_canon_review_required_before_any_gap_transition"
+            ],
+            "role": "primary"
+          }
+        },
+        "document_profile": {
+          "genre": "distance_learning_test_and_task_posibnyk",
+          "printed_page_offset_note": "PDF object N roughly maps to printed page N-1 for body pages; PDF has 215 objects vs catalog 214 pp",
+          "toc_observed": [
+            "vstup",
+            "testovi_zavdannia_za_temamy",
+            "indyvidualno_naukovo_doslidne_zavdannia",
+            "prezentatsii_vymohy",
+            "samostiina_robota",
+            "indyvidualni_zavdannia",
+            "morfemnyi_analiz_samples",
+            "slovotvirnyi_analiz_samples",
+            "hlosarii",
+            "spysok_literatury",
+            "slovnyky"
+          ]
+        },
+        "document_wide_depth_evidence": {
+          "bibliography_marker_hits": 26,
+          "bibliography_pages": 14,
+          "definition_marker_hits": 16,
+          "definition_pages": 14,
+          "example_marker_hits": 6,
+          "example_pages": 5,
+          "exceptions_competing_marker_hits": 0,
+          "exceptions_competing_pages": 0,
+          "exercise_marker_hits": 45,
+          "exercise_pages": 19,
+          "paradigms_models_marker_hits": 91,
+          "paradigms_models_pages": 58,
+          "scope": "document_wide",
+          "self_control_answer_marker_hits": 0,
+          "self_control_answer_pages": 0,
+          "theory_classification_marker_hits": 30,
+          "theory_classification_pages": 9
+        },
+        "explicit_limitations": [
+          "Marker counts are provisional diagnostic evidence only.",
+          "Topic-conditioned depth must not be read as document-wide depth.",
+          "No university topic gap is closed or narrowed in repository state by this custody packet.",
+          "Workbook/test format dominates; theory/definitions exist mainly in intro, analysis schemes, and glossary rather than full lecture exposition.",
+          "No answer-key / self-control solution evidence observed.",
+          "Exceptions and competing analyses not evidenced by markers.",
+          "Catalog cites 214 pages; PDF has 215 page objects (page 1 image-only cover; page 214 notes; page 215 colophon) — discrepancy recorded, not repaired.",
+          "DSpace license bitstream is non-exclusive distribution/preservation grant only; reuse_license_not_established.",
+          "Independent Ukrainian-canon and cross-family review required before any admission disposition.",
+          "Semantics/phraseology observations are diagnostic secondary only."
+        ],
+        "flags_for_ukrainian_review": {
+          "adjudication": "pending_independent_ukrainian_canon_review",
+          "davnoruska_marker_hits": 0,
+          "etymology_marker_hits": 48,
+          "historical_origin_excluded_from_normative_authority": true,
+          "historical_origin_excluded_from_semantic_gold": true,
+          "historical_origin_marker_hits": 16,
+          "historical_origin_pages_in_intro_window": 3,
+          "russian_comparison_hits": 2,
+          "shared_east_slavic_calque_hits": 0,
+          "soviet_era_marker_hits": 2,
+          "yazyk_token_hits": 2
+        },
+        "historical_origin_exclusion": {
+          "etymology_marker_hits": 48,
+          "excluded_from_normative_authority": true,
+          "excluded_from_semantic_gold": true,
+          "historical_origin_marker_hits": 16,
+          "historical_origin_pages_in_window": 3,
+          "intro_page_window": "1-20",
+          "note": "Etymology/historical-structure mentions remain diagnostic only; excluded from semantic gold and normative authority."
+        },
+        "provisional_effect": "narrow_only_candidate",
+        "secondary_observation_cells": {
+          "phraseology": {
+            "depth_evidence": {
+              "bibliography_marker_hits": 0,
+              "bibliography_pages": 0,
+              "definition_marker_hits": 0,
+              "definition_pages": 0,
+              "example_marker_hits": 0,
+              "example_pages": 0,
+              "exceptions_competing_marker_hits": 0,
+              "exceptions_competing_pages": 0,
+              "exercise_marker_hits": 0,
+              "exercise_pages": 0,
+              "paradigms_models_marker_hits": 0,
+              "paradigms_models_pages": 0,
+              "scope": "topic_conditioned",
+              "self_control_answer_marker_hits": 0,
+              "self_control_answer_pages": 0,
+              "theory_classification_marker_hits": 0,
+              "theory_classification_pages": 0,
+              "topic_marker_hits": 0,
+              "topic_pages": 0
+            },
+            "disposition": "REJECT",
+            "provisional_effect": "diagnostic_marker_evidence_only",
+            "rationale_codes": [
+              "zero_phraseology_marker_hits",
+              "not_in_scope_for_this_candidate",
+              "diagnostic_secondary_observation_only"
+            ],
+            "role": "secondary_observation"
+          },
+          "semantics": {
+            "depth_evidence": {
+              "bibliography_marker_hits": 10,
+              "bibliography_pages": 3,
+              "definition_marker_hits": 3,
+              "definition_pages": 3,
+              "example_marker_hits": 0,
+              "example_pages": 0,
+              "exceptions_competing_marker_hits": 0,
+              "exceptions_competing_pages": 0,
+              "exercise_marker_hits": 1,
+              "exercise_pages": 1,
+              "paradigms_models_marker_hits": 29,
+              "paradigms_models_pages": 18,
+              "scope": "topic_conditioned",
+              "self_control_answer_marker_hits": 0,
+              "self_control_answer_pages": 0,
+              "theory_classification_marker_hits": 1,
+              "theory_classification_pages": 1,
+              "topic_marker_hits": 79,
+              "topic_pages": 48
+            },
+            "disposition": "REJECT",
+            "provisional_effect": "diagnostic_marker_evidence_only",
+            "rationale_codes": [
+              "not_a_primary_target_cell_for_this_candidate",
+              "marker_evidence_only_incidental_to_morphemics_word_formation",
+              "diagnostic_secondary_observation_only"
+            ],
+            "role": "secondary_observation"
+          }
+        },
+        "supporting_depth_outside_target_cells": {
+          "lexicography_marker_hits": 103,
+          "lexicography_pages": 38,
+          "lexicology_marker_hits": 6,
+          "lexicology_pages": 5,
+          "note": "lexicography hits largely reflect dictionary/task references; not a lexicography candidate"
+        },
+        "target_cells": [
+          "morphemics",
+          "word_formation"
+        ],
+        "topic_gaps_closed": [],
+        "topic_gaps_narrowed_claimed": []
+      }
+    },
+    "custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_new_files_readback_hash_match",
+        "artifacts",
+        "drive_relative_directory",
+        "google_drive_custody",
+        "google_drive_mount_containment_verified",
+        "google_drive_provider_identity_present",
+        "google_drive_provider_identity_sha256",
+        "private_directory_mode_0700",
+        "private_files_mode_0600"
+      ],
+      "properties": {
+        "google_drive_custody": {
+          "const": true
+        },
+        "google_drive_mount_containment_verified": {
+          "const": true
+        },
+        "google_drive_provider_identity_present": {
+          "const": true
+        },
+        "google_drive_provider_identity_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bitstream_metadata",
+            "content_fit_audit",
+            "exactness_audit",
+            "item_metadata",
+            "landing_html",
+            "license_text",
+            "private_jsonl",
+            "source_pdf"
+          ],
+          "properties": {
+            "bitstream_metadata": {
+              "const": "bddf658e837552c480228e2d0bdda0899239702244596f08c88569269a061a5e"
+            },
+            "content_fit_audit": {
+              "const": "26126eabff7126f6320ac45c845059fee00d08856a76b3cfe712700bba983de6"
+            },
+            "exactness_audit": {
+              "const": "5f48649af924d04dc0b6b542405756f5e5fe28e473eb636ebe5102f37259d55d"
+            },
+            "item_metadata": {
+              "const": "cd12372028e49b29d1b3f1ceb105fbdbfb16301f3c75e8d9a5bcab45a914900f"
+            },
+            "landing_html": {
+              "const": "4bd07da47078b46676da074eb86ed8a4482e247f94231e0791e6fde412a808ee"
+            },
+            "license_text": {
+              "const": "5dd8d9d6ce6372c8d25d9a8467fee16be2b252923614b0f6dddb8366b1896e60"
+            },
+            "private_jsonl": {
+              "const": "56972510cc19b5a91877d814e9af3821c3f52a9c40a0cf39a81a8bb71513abd4"
+            },
+            "source_pdf": {
+              "const": "2b0b3da00c592424d944e49ebbad6c9deaafc732f31276e66bfd76ddfbc7e31b"
+            }
+          }
+        },
+        "drive_relative_directory": {
+          "const": "university_corpus/staging/phase3-6375-donnu-2023-morphemics-word-formation"
+        },
+        "private_files_mode_0600": {
+          "const": true
+        },
+        "private_directory_mode_0700": {
+          "const": true
+        },
+        "all_new_files_readback_hash_match": {
+          "const": true
+        },
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bitstream_metadata",
+            "checksums",
+            "content_fit_audit",
+            "custody_receipt",
+            "exactness_audit",
+            "extraction_facts",
+            "item_metadata",
+            "landing_html",
+            "license_bitstream_metadata",
+            "license_text",
+            "page_text_index",
+            "private_jsonl",
+            "source_pdf",
+            "visual_qa_dir",
+            "visual_qa_receipt"
+          ],
+          "properties": {
+            "bitstream_metadata": {
+              "const": "donnu-dspace-eee9a7c4-006f-45b8-8c9c-42f086942e25-bitstream.json"
+            },
+            "checksums": {
+              "const": "SHA256SUMS"
+            },
+            "content_fit_audit": {
+              "const": "phase3_donnu_2023_content_fit_audit_v1.json"
+            },
+            "custody_receipt": {
+              "const": "phase3_donnu_2023_morphemics_word_formation_custody_receipt_v1.json"
+            },
+            "exactness_audit": {
+              "const": "exactness/textbook-native-exactness-audit-v1.json"
+            },
+            "extraction_facts": {
+              "const": "phase3_donnu_2023_extraction_facts_v1.json"
+            },
+            "item_metadata": {
+              "const": "donnu-dspace-74e2161c-c67f-4b5f-817c-4cc4707b9470-item.json"
+            },
+            "landing_html": {
+              "const": "donnu-dspace-74e2161c-c67f-4b5f-817c-4cc4707b9470-landing.html"
+            },
+            "license_bitstream_metadata": {
+              "const": "license/donnu-dspace-c48b8471-536d-408d-bc41-5969a449530d-bitstream.json"
+            },
+            "license_text": {
+              "const": "license/LICENSE_BITSTREAM.txt"
+            },
+            "page_text_index": {
+              "const": "page-text/page_text_index_v1.json"
+            },
+            "private_jsonl": {
+              "const": "processed/grade-00/uni-ukrmova-morphemics-word-formation-donnu-2023.jsonl"
+            },
+            "source_pdf": {
+              "const": "uni-ukrmova-morphemics-word-formation-donnu-2023.pdf"
+            },
+            "visual_qa_dir": {
+              "const": "visual-qa/"
+            },
+            "visual_qa_receipt": {
+              "const": "visual-qa/visual_qa_receipt_v1.json"
+            }
+          }
+        }
+      }
+    },
+    "rights": {
+      "const": {
+        "visibility": "publicly_accessible_institutional_repository",
+        "reuse_license": "reuse_license_not_established",
+        "rights_statement": "public DonNU DSpace distribution; author/publisher copyright; DSpace non-exclusive distribution/preservation grant only; reuse license not established",
+        "standardized_open_reuse_license_present": false,
+        "landing_standardized_license_present": false,
+        "landing_ui_i18n_creative_commons_label_present": false,
+        "landing_creativecommons_org_uri_present": false,
+        "creative_commons_uri_present": false,
+        "item_metadata_rights_fields_present": false,
+        "author_copyright_notice_present": true,
+        "dspace_license_bitstream_present": true,
+        "dspace_license_type": "non_exclusive_distribution_preservation_grant",
+        "public_repository_distribution_evidence": true,
+        "acquisition_and_private_analysis_may_proceed": true,
+        "legal_reuse_authorization_established": false,
+        "attribution_required": true,
+        "takedown_ready": true,
+        "adapt_or_remove_on_substantiated_complaint": true,
+        "public_redistribution_authorized": false,
+        "public_dataset_export_authorized": false,
+        "publish_source_text_authorized": false,
+        "unrestricted_reuse_authorized": false,
+        "unrestricted_training_export_authorized": false,
+        "private_corpus_text_and_pdf_required": true
+      }
+    },
+    "review_scope": {
+      "const": {
+        "content_disposition": "narrow_only_candidate",
+        "ukrainian_canon_review_complete": false,
+        "scope_critic_complete": false,
+        "topic_gaps_closed": [],
+        "topic_gaps_narrowed": [],
+        "provisional_narrow_cells": [
+          "morphemics",
+          "word_formation"
+        ],
+        "rejected_secondary_cells": [
+          "semantics",
+          "phraseology"
+        ],
+        "adversarial_dispositions": {
+          "morphemics": "NARROW_ONLY",
+          "word_formation": "NARROW_ONLY",
+          "semantics": "REJECT",
+          "phraseology": "REJECT"
+        },
+        "coverage_effect": "narrow_only_pending_ukrainian_canon_review_no_gap_transition"
+      }
+    },
+    "denominators": {
+      "const": {
+        "v2_source_units": 67041,
+        "v2_evaluation_identities": 9392,
+        "phase3_labels": 0,
+        "university_topic_areas": 26,
+        "university_sufficient": 5,
+        "university_partial": 21,
+        "university_missing": 0,
+        "candidate_source_count": 30,
+        "database_resident_source_count": 20,
+        "reference_only_source_count": 6,
+        "quarantine_source_count": 4,
+        "candidate_additive_outside_v2_totals": true,
+        "cycle002_diagnostic_only": true
+      }
+    },
+    "gates": {
+      "const": {
+        "database_ingest_authorized": false,
+        "retained_extracted_text_authorized": false,
+        "private_training_conversion_candidate": false,
+        "training_conversion_complete": false,
+        "normative_rule_authority": false,
+        "semantic_gold": false,
+        "topic_gaps_closed": false,
+        "topic_gaps_narrowed": false,
+        "source_universe_frozen": false,
+        "source_coverage_ready": false,
+        "source_freeze_ready": false,
+        "phase3_complete": false,
+        "phase4_blocked": true
+      }
+    },
+    "residuals": {
+      "const": [
+        "Exact official bytes are privately custodied; Git retains metadata only.",
+        "Native exactness is clean across 215/215 chunks with zero flagged pages; page 1 is image-only cover.",
+        "Cursor content-fit evidence supports NARROW_ONLY for morphemics and word formation but closes/narrows none.",
+        "Semantics is REJECT (incidental only); phraseology is REJECT (out of scope).",
+        "Catalog citation claims 214 pages; PDF has 215 page objects — discrepancy recorded, not corrected.",
+        "Distance-learning test/task posibnyk: thin full-theory exposition, no answer keys, no evidenced exceptions.",
+        "DSpace license is a generic non-exclusive distribution/preservation grant; reuse license not established.",
+        "Public redistribution, public dataset export, publish-source-text, and unrestricted training export remain false.",
+        "Independent Ukrainian-canon review and cross-family root disposition remain outstanding.",
+        "v2 denominators preserved: 67,041 / 9,392; Cycle002 diagnostic only; Phase 3 incomplete; Phase 4 blocked."
+      ]
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
