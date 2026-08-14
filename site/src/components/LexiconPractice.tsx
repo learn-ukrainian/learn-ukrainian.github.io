@@ -27,7 +27,6 @@ import {
   extendWithLowerDecks,
   itemIdPresentInDeck,
   computeSessionScope,
-  computeTodayRingDenominator,
   czNorm,
   isCaseClozeDrill,
   isPracticeNewCard,
@@ -1920,7 +1919,6 @@ function LexiconPracticeIsland({
     lastPracticeDate: null,
   });
   const [, setMastered] = useState(0);
-  const [completedToday, setCompletedToday] = useState(0);
   const [dailyNewCount, setDailyNewCount] = useState(0);
   const [storageWarning, setStorageWarning] = useState<string | null>(null);
   const [clozeInput, setClozeInput] = useState('');
@@ -2331,7 +2329,7 @@ function LexiconPracticeIsland({
   }, [sessionPhase]);
 
   // Eager-load ONLY the lightweight per-level index shards on mount (and on a
-  // pre-session level change) so the «До повторення» tile + today ring reflect the
+  // pre-session level change) so the «До повторення» tile reflects the
   // learner's real SRS due-count immediately — the most motivating number on the
   // home, and the reason a returning learner opens this page. The heavy
   // lexeme/cloze shards stay lazy until a mode actually starts (ensureDeck). Once a
@@ -3605,7 +3603,6 @@ function LexiconPracticeIsland({
     setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
     const nextCompleted = sessionCompleted + 1;
     setSessionCompleted(nextCompleted);
-    setCompletedToday((value) => value + 1);
     refreshProgress();
     persistSessionSnapshot({ completed: nextCompleted });
     const decision = resolveSessionCompletion({
@@ -3827,20 +3824,6 @@ function LexiconPracticeIsland({
         : { pendingDue: [], pendingNew: [], done: [] },
     [dailySnapshot, reviewLog],
   );
-  const todayDenominator = useMemo(
-    () =>
-      indexForStats.length
-        ? computeTodayRingDenominator(indexForStats, { dailyNewCount })
-        : 0,
-    [completedToday, dailyNewCount, indexForStats, revision],
-  );
-  const todayPct =
-    todayDenominator > 0
-      ? Math.min(100, (completedToday / todayDenominator) * 100)
-      : completedToday > 0
-        ? 100
-        : 0;
-  const todayRingStyle = { '--pct': String(todayPct) } as CSSProperties;
   const stageMode: PracticeModeFilter = selection?.mode ?? mode;
   const visibleStageMode = visiblePracticeMode(stageMode);
   const stageTitleUk =
