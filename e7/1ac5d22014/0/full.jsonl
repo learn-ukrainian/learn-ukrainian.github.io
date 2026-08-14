@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 56513,
-      "output": 5017,
-      "reasoning": 11117,
+      "input": 61922,
+      "output": 6593,
+      "reasoning": 11216,
       "cache": {
-        "read": 1331968,
+        "read": 1622976,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1786673671501,
-      "updated": 1786674240043
+      "updated": 1786674294719
     }
   },
   "messages": [
@@ -4048,19 +4048,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 58612,
+          "input": 2544,
+          "output": 272,
+          "reasoning": 52,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 55744
           }
         },
         "modelID": "glm-5.2",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1786674240042
+          "created": 1786674240042,
+          "completed": 1786674253535
         },
+        "finish": "tool-calls",
         "id": "msg_ffe155a2a001dTRIWxrqfqRGLK",
         "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE"
       },
@@ -4099,21 +4102,411 @@
           "tool": "bash",
           "callID": "call_70e04afbb8234b8ca46d2c76",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add site/src/components/LexiconPractice.tsx && git commit -m \"fix(practice): delete dead today-ring computation (#6760)\n\ncomputeTodayRingDenominator/todayPct/todayRingStyle and the\ncompletedToday counter were computed in LexiconPractice but never\nrendered: no element consumed todayRingStyle and there was no\nproduction CSS for the ring. The dashboard stats strip already shows\ntoday's Due/New/Done from the persisted dailyRows, and completedToday\nwas never rehydrated (reset to 0 on every reload), so wiring the ring\nwould duplicate the stats strip and show stale progress.\n\nDelete the dead component locals and the completedToday state that\nonly fed them. Keep computeTodayRingDenominator in srs.ts (documented\nSRS API per K3-BUILD-SPEC §76, unit-tested, protected by the P1-2\naudit do-not-change).\n\nX-Agent: glm/6760-today-ring\" 2>&1 | tail -5",
               "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
             },
+            "output": "[glm/6760-today-ring cbfa345f2c] fix(practice): delete dead today-ring computation (#6760)\n 1 file changed, 1 insertion(+), 18 deletions(-)\n",
+            "metadata": {
+              "output": "[glm/6760-today-ring cbfa345f2c] fix(practice): delete dead today-ring computation (#6760)\n 1 file changed, 1 insertion(+), 18 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add site/src/components/LexiconPractice.tsx && git commit -m \"fix(practice): delete dead today-ring computation (#6760)\n\ncomputeTodayRingDenominator/todayPct/todayRingStyle and the\ncompletedToday counter were computed in LexiconPractice but never\nrendered: no element consumed todayRingStyle and there was no\nproduction CSS for the ring. The dashboard stats strip already shows\ntoday's Due/New/Done from the persisted dailyRows, and completedToday\nwas never rehydrated (reset to 0 on every reload), so wiring the ring\nwould duplicate the stats strip and show stale progress.\n\nDelete the dead component locals and the completedToday state that\nonly fed them. Keep computeTodayRingDenominator in srs.ts (documented\nSRS API per K3-BUILD-SPEC §76, unit-tested, protected by the P1-2\naudit do-not-change).\n\nX-Agent: glm/6760-today-ring\" 2>&1 | tail -5",
             "time": {
-              "start": 1786674250997
+              "start": 1786674253358,
+              "end": 1786674253360
             }
           },
           "id": "prt_ffe1584f3001HyYmosprHH6l07",
           "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
           "messageID": "msg_ffe155a2a001dTRIWxrqfqRGLK"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-finish",
+          "tokens": {
+            "total": 58612,
+            "input": 2544,
+            "output": 272,
+            "reasoning": 52,
+            "cache": {
+              "write": 0,
+              "read": 55744
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffe158e8c001VINMgIODDOoEj0",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe155a2a001dTRIWxrqfqRGLK"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffe0cad6f0017hygYO9rdaUQbC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 58728,
+          "input": 423,
+          "output": 65,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 58240
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786674253538,
+          "completed": 1786674264348
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffe158ee2001pFeZkgdQMm76i9",
+        "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE"
+      },
+      "parts": [
+        {
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-start",
+          "id": "prt_ffe15a822001PLAR5mQbY7gXc4",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe158ee2001pFeZkgdQMm76i9"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_19a67df0f2f54eb88e0dfcd0",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin glm/6760-today-ring 2>&1 | tail -8",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+            },
+            "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'glm/6760-today-ring' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/glm/6760-today-ring        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/6760-today-ring -> glm/6760-today-ring\nbranch 'glm/6760-today-ring' set up to track 'origin/glm/6760-today-ring'.\n",
+            "metadata": {
+              "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'glm/6760-today-ring' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/glm/6760-today-ring        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/6760-today-ring -> glm/6760-today-ring\nbranch 'glm/6760-today-ring' set up to track 'origin/glm/6760-today-ring'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin glm/6760-today-ring 2>&1 | tail -8",
+            "time": {
+              "start": 1786674264136,
+              "end": 1786674264142
+            }
+          },
+          "id": "prt_ffe15a823001TbFAhD9e49X4pP",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe158ee2001pFeZkgdQMm76i9"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-finish",
+          "tokens": {
+            "total": 58728,
+            "input": 423,
+            "output": 65,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 58240
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffe15b8b40017wrQXKIkxpUD8r",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe158ee2001pFeZkgdQMm76i9"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffe0cad6f0017hygYO9rdaUQbC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 59543,
+          "input": 260,
+          "output": 659,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 58624
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786674264372,
+          "completed": 1786674283576
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffe15b93400150NNTBGws2B50s",
+        "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE"
+      },
+      "parts": [
+        {
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-start",
+          "id": "prt_ffe15fb76001e9lAgCQTDHUKxf",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe15b93400150NNTBGws2B50s"
+        },
+        {
+          "type": "text",
+          "text": "Now create the PR. I'll reference #6760 without a closing keyword (per \"Leaves #6760 open\"):",
+          "time": {
+            "start": 1786674281345,
+            "end": 1786674281362
+          },
+          "id": "prt_ffe15fb81001reaUt910db5DTE",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe15b93400150NNTBGws2B50s"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_2a90fb70d7ed4f91858c8635",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --base main --head glm/6760-today-ring --title \"fix(practice): delete dead today-ring computation (#6760)\" --body \"## What & why\n\nFixes the P1 finding from the learner-layout UX audit (P1-2 / P1-11): the \\\"today ring\\\" was **computed but never rendered**.\n\n\\`todayDenominator\\`, \\`todayPct\\`, \\`todayRingStyle\\` and the \\`completedToday\\` counter lived in \\`LexiconPractice.tsx\\` but no element ever consumed \\`todayRingStyle\\`, and there was **no production CSS** for the ring (only the \\`docs/poc\\` POC had \\`.ring\\`/\\`--pct\\`).\n\n**Why delete rather than wire:**\n- The dashboard stats strip already renders today's progress — **Due / New / Done** — from the persisted, rehydrated \\`dailyRows\\`. A ring would duplicate it.\n- The ring's numerator \\`completedToday\\` was **never rehydrated** (\\`useState(0)\\`, reset on every reload), so rendering it as-is would show stale \\\"0 of N\\\" progress — a regression in data accuracy vs. the existing persisted stats.\n\n## Changes\n\\`site/src/components/LexiconPractice.tsx\\` (-18/+1):\n- Dropped the \\`computeTodayRingDenominator\\` import.\n- Dropped the \\`completedToday\\`/\\`setCompletedToday\\` state (only fed the ring).\n- Dropped the \\`setCompletedToday(...)\\` increment in \\`completeSelection\\`.\n- Dropped the \\`todayDenominator\\`/\\`todayPct\\`/\\`todayRingStyle\\` locals.\n- Updated the stale \\\"tile + today ring\\\" comment.\n\n**Kept:** \\`computeTodayRingDenominator\\` in \\`srs.ts\\` — it is documented SRS API (\\`docs/practice/K3-BUILD-SPEC.md\\` §76), unit-tested, and explicitly protected by the audit's P1-2 *do-not-change*.\n\n## Verification\n- \\`astro check\\` — no new errors (all pre-existing errors are unrelated: \\`antonym\\`/\\`nextDeck\\`/custom-set lines untouched by this change).\n- \\`vitest run tests/unit/practice-session.test.ts\\` — **14/14 pass** (incl. the \\`today-ring denominator excludes uncapped deck size\\` test for the kept srs.ts function).\n- \\`vitest run tests/unit/LexiconPractice.test.tsx\\` — **166/166 pass**.\n\nNo UI was added, so no new UI tests are required; the existing component suite covers the affected screen.\n\nRefs #6760. No merge.\" 2>&1 | tail -5",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6785\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6785\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --base main --head glm/6760-today-ring --title \"fix(practice): delete dead today-ring computation (#6760)\" --body \"## What & why\n\nFixes the P1 finding from the learner-layout UX audit (P1-2 / P1-11): the \\\"today ring\\\" was **computed but never rendered**.\n\n\\`todayDenominator\\`, \\`todayPct\\`, \\`todayRingStyle\\` and the \\`completedToday\\` counter lived in \\`LexiconPractice.tsx\\` but no element ever consumed \\`todayRingStyle\\`, and there was **no production CSS** for the ring (only the \\`docs/poc\\` POC had \\`.ring\\`/\\`--pct\\`).\n\n**Why delete rather than wire:**\n- The dashboard stats strip already renders today's progress — **Due / New / Done** — from the persisted, rehydrated \\`dailyRows\\`. A ring would duplicate it.\n- The ring's numerator \\`completedToday\\` was **never rehydrated** (\\`useState(0)\\`, reset on every reload), so rendering it as-is would show stale \\\"0 of N\\\" progress — a regression in data accuracy vs. the existing persisted stats.\n\n## Changes\n\\`site/src/components/LexiconPractice.tsx\\` (-18/+1):\n- Dropped the \\`computeTodayRingDenominator\\` import.\n- Dropped the \\`completedToday\\`/\\`setCompletedToday\\` state (only fed the ring).\n- Dropped the \\`setCompletedToday(...)\\` increment in \\`completeSelection\\`.\n- Dropped the \\`todayDenominator\\`/\\`todayPct\\`/\\`todayRingStyle\\` locals.\n- Updated the stale \\\"tile + today ring\\\" comment.\n\n**Kept:** \\`computeTodayRingDenominator\\` in \\`srs.ts\\` — it is documented SRS API (\\`docs/practice/K3-BUILD-SPEC.md\\` §76), unit-tested, and explicitly protected by the audit's P1-2 *do-not-change*.\n\n## Verification\n- \\`astro check\\` — no new errors (all pre-existing errors are unrelated: \\`antonym\\`/\\`nextDeck\\`/custom-set lines untouched by this change).\n- \\`vitest run tests/unit/practice-session.test.ts\\` — **14/14 pass** (incl. the \\`today-ring denominator excludes uncapped deck size\\` test for the kept srs.ts function).\n- \\`vitest run tests/unit/LexiconPractice.test.tsx\\` — **166/166 pass**.\n\nNo UI was added, so no new UI tests are required; the existing component suite covers the affected screen.\n\nRefs #6760. No merge.\" 2>&1 | tail -5",
+            "time": {
+              "start": 1786674283387,
+              "end": 1786674283390
+            }
+          },
+          "id": "prt_ffe15fb86001PdFsoi5FJHdZsd",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe15b93400150NNTBGws2B50s"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-finish",
+          "tokens": {
+            "total": 59543,
+            "input": 260,
+            "output": 659,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 58624
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffe1603e4001M5LpbF6GzBEYpV",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe15b93400150NNTBGws2B50s"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffe0cad6f0017hygYO9rdaUQbC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 59750,
+          "input": 692,
+          "output": 131,
+          "reasoning": 47,
+          "cache": {
+            "write": 0,
+            "read": 58880
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786674283611,
+          "completed": 1786674294708
+        },
+        "finish": "tool-calls",
+        "id": "msg_ffe16045b001fOn9CQAL607UOx",
+        "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE"
+      },
+      "parts": [
+        {
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-start",
+          "id": "prt_ffe162aed001J9J6eKvJllOxuE",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe16045b001fOn9CQAL607UOx"
+        },
+        {
+          "type": "reasoning",
+          "text": "PR created: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6785\n\nLet me verify the PR state and CI. Let me do a final check of the PR.",
+          "time": {
+            "start": 1786674293497,
+            "end": 1786674293514
+          },
+          "id": "prt_ffe162af90014Qer6Q9KcZSHLA",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe16045b001fOn9CQAL607UOx"
+        },
+        {
+          "type": "text",
+          "text": "PR opened: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6785\n\nLet me verify the final state.",
+          "time": {
+            "start": 1786674293526,
+            "end": 1786674293558
+          },
+          "id": "prt_ffe162b16001fi1N4Fwyx5j3xx",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe16045b001fOn9CQAL607UOx"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_21da0d63c66d4a3e90e61e28",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr view 6785 --json number,title,state,baseRefName,headRefName,mergeable,statusCheckRollup 2>/dev/null | head -40; echo \"=== final git log ===\"; git log --oneline -2",
+              "workdir": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+            },
+            "output": "{\"baseRefName\":\"main\",\"headRefName\":\"glm/6760-today-ring\",\"mergeable\":\"MERGEABLE\",\"number\":6785,\"state\":\"OPEN\",\"statusCheckRollup\":[{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973808\",\"name\":\"Pytest plan\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970576\",\"name\":\"Analyze (actions)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641618/job/94654973112\",\"name\":\"changes\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"Content CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641590/job/94654973015\",\"name\":\"changes\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"Hygiene (advisory)\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641633/job/94654973249\",\"name\":\"actionlint (workflow files)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"actionlint\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970566\",\"name\":\"Analyze (go)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970467\",\"name\":\"Analyze (javascript-typescript)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970523\",\"name\":\"Analyze (python)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973770\",\"name\":\"Pytest fastlane (changed tests)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973817\",\"name\":\"Contracts (schema, MDX, atlas, BIO)\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973783\",\"name\":\"Frontend (build + vitest)\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"}],\"title\":\"fix(practice): delete dead today-ring computation (#6760)\"}\n=== final git log ===\ncbfa345f2c fix(practice): delete dead today-ring computation (#6760)\n5e66cc114d fix(practice): in-memory session when localStorage is blocked (#6780) (#6783)\n",
+            "metadata": {
+              "output": "{\"baseRefName\":\"main\",\"headRefName\":\"glm/6760-today-ring\",\"mergeable\":\"MERGEABLE\",\"number\":6785,\"state\":\"OPEN\",\"statusCheckRollup\":[{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973808\",\"name\":\"Pytest plan\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970576\",\"name\":\"Analyze (actions)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641618/job/94654973112\",\"name\":\"changes\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"Content CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641590/job/94654973015\",\"name\":\"changes\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"Hygiene (advisory)\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641633/job/94654973249\",\"name\":\"actionlint (workflow files)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"actionlint\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970566\",\"name\":\"Analyze (go)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970467\",\"name\":\"Analyze (javascript-typescript)\",\"startedAt\":\"2026-08-14T02:24:47Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763640134/job/94654970523\",\"name\":\"Analyze (python)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CodeQL\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973770\",\"name\":\"Pytest fastlane (changed tests)\",\"startedAt\":\"2026-08-14T02:24:48Z\",\"status\":\"IN_PROGRESS\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973817\",\"name\":\"Contracts (schema, MDX, atlas, BIO)\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"},{\"__typename\":\"CheckRun\",\"completedAt\":\"0001-01-01T00:00:00Z\",\"conclusion\":\"\",\"detailsUrl\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/31763641714/job/94654973783\",\"name\":\"Frontend (build + vitest)\",\"startedAt\":\"2026-08-14T02:24:46Z\",\"status\":\"QUEUED\",\"workflowName\":\"CI\"}],\"title\":\"fix(practice): delete dead today-ring computation (#6760)\"}\n=== final git log ===\ncbfa345f2c fix(practice): delete dead today-ring computation (#6760)\n5e66cc114d fix(practice): in-memory session when localStorage is blocked (#6780) (#6783)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr view 6785 --json number,title,state,baseRefName,headRefName,mergeable,statusCheckRollup 2>/dev/null | head -40; echo \"=== final git log ===\"; git log --oneline -2",
+            "time": {
+              "start": 1786674294464,
+              "end": 1786674294467
+            }
+          },
+          "id": "prt_ffe162b1e0019gkzsV4iu7F7WE",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe16045b001fOn9CQAL607UOx"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-finish",
+          "tokens": {
+            "total": 59750,
+            "input": 692,
+            "output": 131,
+            "reasoning": 47,
+            "cache": {
+              "write": 0,
+              "read": 58880
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffe162f3c001olypAKvtfMGQvq",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe16045b001fOn9CQAL607UOx"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ffe0cad6f0017hygYO9rdaUQbC",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring",
+          "root": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/glm/6760-today-ring"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 61459,
+          "input": 1490,
+          "output": 449,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 59520
+          }
+        },
+        "modelID": "glm-5.2",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1786674294718,
+          "completed": 1786674304225
+        },
+        "finish": "stop",
+        "id": "msg_ffe162fbe001RmbKfrUywtiBPD",
+        "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE"
+      },
+      "parts": [
+        {
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-start",
+          "id": "prt_ffe16418f0011jdxLavisMjOwt",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe162fbe001RmbKfrUywtiBPD"
+        },
+        {
+          "type": "text",
+          "text": "Done. PR #6785 is open against `main`, MERGEABLE, with CI running.\n\n## Summary\n\n**Issue #6760** — the \"today ring\" was computed but never rendered. I deleted the dead computation rather than wiring it.\n\n**Decision rationale (delete over wire):**\n- No element consumed `todayRingStyle` and there was **no production CSS** for the ring (only the `docs/poc` POC had `.ring`/`--pct`).\n- The dashboard stats strip already shows today's **Due / New / Done** from the persisted, rehydrated `dailyRows` — a ring would duplicate it.\n- The ring's numerator `completedToday` was `useState(0)` and **never rehydrated** (reset to 0 on every reload), so wiring it would have shown stale progress.\n\n**Change** (`site/src/components/LexiconPractice.tsx`, −18/+1): dropped the `computeTodayRingDenominator` import, the `completedToday` state + its increment in `completeSelection`, the three dead locals, and fixed the stale comment. **Kept** `computeTodayRingDenominator` in `srs.ts` — documented SRS API (K3-BUILD-SPEC §76), unit-tested, and protected by the audit's P1-2 do-not-change.\n\n**Verification:** `astro check` (no new errors), `practice-session.test.ts` 14/14, `LexiconPractice.test.tsx` 166/166. No UI added, so no new UI tests needed.\n\nPR: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/6785 — refs #6760 without closing it, no merge (per instructions).\n\n**Residual/notes:**\n- I symlinked `site/node_modules` → primary checkout's (read-only, mirroring the existing root `node_modules` symlink) to run verification; it's gitignored and not committed.\n- Per the task card, #4387 and #6760 remain open; a human decides whether this PR closes #6760.",
+          "time": {
+            "start": 1786674299281,
+            "end": 1786674304025
+          },
+          "id": "prt_ffe1641910012fiDdlL9VjnnGD",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe162fbe001RmbKfrUywtiBPD"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "730e0a116a08515aa188adbd8a147fc32bcdd808",
+          "type": "step-finish",
+          "tokens": {
+            "total": 61459,
+            "input": 1490,
+            "output": 449,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 59520
+            }
+          },
+          "cost": 0,
+          "id": "prt_ffe1654840014oGGKqdOvf0Rw6",
+          "sessionID": "ses_001f352b3ffeEK6YRR6dIeA2FE",
+          "messageID": "msg_ffe162fbe001RmbKfrUywtiBPD"
         }
       ]
     }
