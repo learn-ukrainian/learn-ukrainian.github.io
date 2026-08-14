@@ -1,0 +1,29 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-ohoiko-ulp-ocr-space-collapse-2026-08-14
+batch_label: ohoiko-ulp-ocr-space-collapse-2026-08-14
+reviewer: operator-curated-source-trust
+reviewed_at: '2026-08-14'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 1
+  approved_in_queue: 1
+  promotion_batch_size: 1
+production_outputs_updated: []
+decisions:
+- lemma: забоятися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to fear, to be afraid
+  sense_note: OCR space-collapse from 'забоя тися' to 'забоятися'; deterministic VESUM + split-component
+    guard; no invented lemma
+  source_inventory:
+    key: 0f2d83fa826f2937
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml
+    locator: 'ohoiko-1000-words entry 47 :: space-collapse::забоя тися -> забоятися'
+    source_id: ohoiko-ulp-ocr-space-collapse-2026-08-14-ohoiko
+    source_family: ohoiko
+  evidence_refs:
+  - '#6370 OCR residual'
+  - deterministic internal-whitespace collapse
+  - VESUM collapsed-form + split-component guard

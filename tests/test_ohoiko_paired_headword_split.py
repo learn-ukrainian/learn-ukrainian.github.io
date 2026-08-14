@@ -2,8 +2,16 @@
 
 from __future__ import annotations
 
+import json
+
+import pytest
+
 from scripts.lexicon.ohoiko_paired_headword_split import (
+    analyze_space_collapses,
+    append_space_collapse_audit,
     classify_split_leg,
+    collapse_internal_whitespace,
+    collect_space_collapse_candidates,
     is_single_orthographic_word,
     recover_latin_lookalike,
     resolve_leg_lemma,
@@ -70,3 +78,90 @@ def test_resolve_leg_lemma_recovers_ocr_lookalikes(requires_vesum_db) -> None:
     assert resolve_leg_lemma("жiнка") == "жінка"
     assert resolve_leg_lemma("футболiст") == "футболіст"
 
+
+def _space_candidate(original: str) -> dict[str, str]:
+    return {
+        "original_form": original,
+        "source_lemma": original,
+        "source_kind": "paired_headword_leg",
+        "source_family": "ohoiko",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "source_extraction_mode": "curated_bulk",
+        "source_locator": "ohoiko-1000-words entry 47",
+        "source_pos": "phrase",
+        "source_gloss": "to fear, to be afraid",
+    }
+
+
+def test_space_collapse_requires_collapsed_vesum_and_invalid_components(requires_vesum_db) -> None:
+    result = analyze_space_collapses(
+        [_space_candidate("забоя тися"), _space_candidate("боя тися")],
+        inventory_rel="data/lexicon/source-inventory/oneshot/input.yaml",
+    )
+
+    assert result["candidate_count"] == 2
+    assert result["collapsed_vesum_valid_count"] == 2
+    assert result["admissible_count"] == 1
+    assert result["manual_review_count"] == 1
+    assert result["admitted"][0]["collapsed_form"] == "забоятися"
+    rejected = result["manual_review"][0]
+    assert rejected["original_form"] == "боя тися"
+    assert rejected["valid_split_components"] == ["боя"]
+    assert rejected["reasons"] == ["split_component_vesum_valid"]
+
+
+def test_space_collapse_marks_multi_component_tokenization_manual(requires_vesum_db) -> None:
+    result = analyze_space_collapses(
+        [_space_candidate("перед тим як")],
+        inventory_rel="data/lexicon/source-inventory/oneshot/input.yaml",
+    )
+
+    assert result["admissible_count"] == 0
+    assert result["manual_review"][0]["reasons"] == [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid",
+    ]
+
+
+def test_space_collapse_rejects_non_ocr_source() -> None:
+    source_row = {
+        "source_family": "teacher_lesson",
+        "source_id": "lesson-1",
+        "locator": "lesson 1",
+        "gloss": "to fear",
+    }
+    with pytest.raises(ValueError, match="non-OCR source family"):
+        collect_space_collapse_candidates(
+            residual={"lemmas_by_category": {"multiword_phrases_other": ["боя тися"]}},
+            paired_analysis={"pairs": []},
+            inventory_rows_by_lemma={"боя тися": source_row},
+        )
+
+
+def test_collapse_internal_whitespace_changes_no_other_codepoints() -> None:
+    assert collapse_internal_whitespace("боя  тися") == "боятися"
+    assert collapse_internal_whitespace("чистий") == "чистий"
+
+
+def test_space_collapse_audit_appends_idempotently(tmp_path) -> None:
+    row = {
+        "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+        "inventory_path": "data/input.yaml",
+        "original_form": "забоя тися",
+        "split_components": ["забоя", "тися"],
+        "collapsed_form": "забоятися",
+        "transformation": {"type": "remove_internal_whitespace", "removed_codepoints": 1},
+        "collapsed_vesum_valid": True,
+        "valid_split_components": [],
+        "decision": "admit",
+        "reasons": [],
+        "source": {"id": "source-1", "locator": "entry 47"},
+    }
+    path = tmp_path / "audit.jsonl"
+
+    assert append_space_collapse_audit([row], path) == 1
+    assert append_space_collapse_audit([row], path) == 0
+    lines = path.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1
+    assert json.loads(lines[0])["original_form"] == "забоя тися"

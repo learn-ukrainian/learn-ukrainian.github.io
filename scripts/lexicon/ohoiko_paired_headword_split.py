@@ -45,7 +45,25 @@ DEFAULT_INVENTORY = (
 )
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_BATCH_ID = "ohoiko-ulp-paired-split-legs-2026-08-12"
+SPACE_COLLAPSE_BATCH_ID = "ohoiko-ulp-ocr-space-collapse-2026-08-14"
+DEFAULT_SPACE_COLLAPSE_INVENTORY = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-ocr-space-collapse-2026-08-14.yaml"
+)
+DEFAULT_SPACE_COLLAPSE_DECISIONS = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory-review-decisions/"
+    "2026-08-14-ohoiko-ulp-ocr-space-collapse-approve.yaml"
+)
+DEFAULT_SPACE_COLLAPSE_AUDIT = (
+    PROJECT_ROOT / "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse.jsonl"
+)
+DEFAULT_SPACE_COLLAPSE_MANUAL_REVIEW = (
+    PROJECT_ROOT
+    / "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse-manual-review.json"
+)
 TRAILING_PAREN_RE = re.compile(r"\s*\([^)]*\)\s*$")
+SPACE_RE = re.compile(r"\s+")
 LATIN_A = "a"
 HERITAGE_HOLD = frozenset({"russianism", "calque", "surzhyk", "sovietism"})
 LOOKALIKE_LATIN_TO_CYRILLIC = str.maketrans(
@@ -85,6 +103,11 @@ def resolve_leg_lemma(lemma: str) -> str:
         if hits:
             return recovered
     return raw
+
+
+def collapse_internal_whitespace(text: str) -> str:
+    """Remove whitespace from one OCR candidate without changing any other code point."""
+    return SPACE_RE.sub("", text)
 
 
 def strip_trailing_parentheticals(text: str) -> str:
@@ -178,6 +201,7 @@ def load_inventory_records(inventory_path: Path) -> list[dict[str, Any]]:
                     "locator": hw.get("locator"),
                     "source_id": src.get("id"),
                     "source_family": src.get("source_family"),
+                    "extraction_mode": src.get("extraction_mode"),
                 }
             )
     return records
@@ -298,6 +322,162 @@ def analyze_paired_splits(
         "promote_candidate_count": len(promote_legs),
         "promote_candidates": sorted(promote_legs, key=lambda r: r["lemma"]),
         "pairs": per_pair,
+    }
+
+
+OCR_SOURCE_FAMILIES = frozenset({"ohoiko", "ulp"})
+
+
+def _space_collapse_candidate(
+    *,
+    original: str,
+    source_row: Mapping[str, Any],
+    source_lemma: str,
+    source_kind: str,
+) -> dict[str, Any]:
+    source_family = str(source_row.get("source_family") or "")
+    if source_family not in OCR_SOURCE_FAMILIES:
+        raise ValueError(
+            "OCR space-collapse recovery received a non-OCR source family: "
+            f"{source_family or '<missing>'}"
+        )
+    return {
+        "original_form": original,
+        "source_lemma": source_lemma,
+        "source_kind": source_kind,
+        "source_family": source_family,
+        "source_id": source_row.get("source_id"),
+        "source_extraction_mode": source_row.get("extraction_mode"),
+        "source_locator": source_row.get("locator"),
+        "source_pos": source_row.get("pos"),
+        "source_gloss": source_row.get("gloss"),
+    }
+
+
+def collect_space_collapse_candidates(
+    *,
+    residual: Mapping[str, Any],
+    paired_analysis: Mapping[str, Any],
+    inventory_rows_by_lemma: Mapping[str, Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    """Collect only whitespace-bearing rows from the #6370 Ohoiko/ULP OCR residual."""
+    candidates: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+    for lemma in residual.get("lemmas_by_category", {}).get("multiword_phrases_other", []) or []:
+        source_row = inventory_rows_by_lemma.get(str(lemma))
+        if source_row is None:
+            raise KeyError(f"missing source provenance for residual lemma {lemma!r}")
+        candidate = _space_collapse_candidate(
+            original=str(lemma),
+            source_row=source_row,
+            source_lemma=str(lemma),
+            source_kind="inventory_multiword",
+        )
+        key = (
+            candidate["original_form"],
+            str(candidate.get("source_id") or ""),
+            str(candidate.get("source_locator") or ""),
+        )
+        candidates[key] = candidate
+
+    for pair in paired_analysis.get("pairs", []) or []:
+        paired = str(pair["paired"])
+        source_row = inventory_rows_by_lemma.get(paired)
+        if source_row is None:
+            raise KeyError(f"missing source provenance for paired residual {paired!r}")
+        for leg in pair.get("legs", []) or []:
+            if leg.get("category") != "multiword_after_split":
+                continue
+            original = str(leg["leg"])
+            candidate = _space_collapse_candidate(
+                original=original,
+                source_row=source_row,
+                source_lemma=paired,
+                source_kind="paired_headword_leg",
+            )
+            key = (
+                candidate["original_form"],
+                str(candidate.get("source_id") or ""),
+                str(candidate.get("source_locator") or ""),
+            )
+            candidates[key] = candidate
+
+    return sorted(
+        candidates.values(),
+        key=lambda row: (
+            str(row["original_form"]),
+            str(row.get("source_id") or ""),
+            str(row.get("source_locator") or ""),
+        ),
+    )
+
+
+def analyze_space_collapses(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    inventory_rel: str,
+) -> dict[str, Any]:
+    """Apply the fail-closed VESUM and split-component guard to OCR candidates."""
+    audit_rows: list[dict[str, Any]] = []
+    for candidate in candidates:
+        original = str(candidate["original_form"])
+        components = original.split()
+        collapsed = collapse_internal_whitespace(original)
+        collapsed_valid = bool(verify_word(collapsed) or [])
+        valid_components = [component for component in components if verify_word(component)]
+        reasons: list[str] = []
+        if len(components) != 2:
+            reasons.append("ambiguous_tokenization")
+        if not collapsed_valid:
+            reasons.append("collapsed_not_vesum_valid")
+        if valid_components:
+            reasons.append("split_component_vesum_valid")
+        decision = "admit" if not reasons else "manual_review"
+        audit_rows.append(
+            {
+                "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+                "inventory_path": inventory_rel,
+                "original_form": original,
+                "split_components": components,
+                "collapsed_form": collapsed,
+                "transformation": {
+                    "type": "remove_internal_whitespace",
+                    "removed_codepoints": len(original) - len(collapsed),
+                },
+                "collapsed_vesum_valid": collapsed_valid,
+                "valid_split_components": valid_components,
+                "decision": decision,
+                "reasons": reasons,
+                "source": {
+                    "kind": candidate["source_kind"],
+                    "lemma": candidate["source_lemma"],
+                    "family": candidate["source_family"],
+                    "id": candidate.get("source_id"),
+                    "extraction_mode": candidate.get("source_extraction_mode"),
+                    "locator": candidate.get("source_locator"),
+                    "pos": candidate.get("source_pos"),
+                    "gloss": candidate.get("source_gloss"),
+                },
+            }
+        )
+
+    reason_counts: dict[str, int] = {}
+    for row in audit_rows:
+        for reason in row["reasons"]:
+            reason_counts[reason] = reason_counts.get(reason, 0) + 1
+    admitted = [row for row in audit_rows if row["decision"] == "admit"]
+    manual_review = [row for row in audit_rows if row["decision"] == "manual_review"]
+    return {
+        "schema": "atlas-6370-ocr-space-collapse.v1",
+        "candidate_count": len(audit_rows),
+        "unique_form_count": len({row["original_form"] for row in audit_rows}),
+        "collapsed_vesum_valid_count": sum(row["collapsed_vesum_valid"] for row in audit_rows),
+        "admissible_count": len(admitted),
+        "manual_review_count": len(manual_review),
+        "reason_counts": dict(sorted(reason_counts.items())),
+        "admitted": admitted,
+        "manual_review": manual_review,
+        "audit_rows": audit_rows,
     }
 
 
@@ -468,6 +648,234 @@ def write_split_decisions(
     return path
 
 
+def build_space_collapse_rows(
+    admitted: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    """Materialize only VESUM-admitted OCR space collapses for the source path."""
+    rows: list[dict[str, Any]] = []
+    for audit in admitted:
+        source = audit["source"]
+        source_gloss = str(source.get("gloss") or "").strip()
+        if not source_gloss:
+            raise ValueError(
+                f"admitted OCR collapse has no source gloss: {audit['collapsed_form']!r}"
+            )
+        collapsed = str(audit["collapsed_form"])
+        original = str(audit["original_form"])
+        parent_locator = str(source.get("locator") or "ohoiko-ocr-space-collapse")
+        rows.append(
+            {
+                "lemma": collapsed,
+                "pos": _vesum_pos(collapsed) or "unknown",
+                "gloss": source_gloss,
+                "locator": f"{parent_locator} :: space-collapse::{original} -> {collapsed}",
+                "source_id": source.get("id"),
+                "source_family": source.get("family"),
+                "original_form": original,
+                "transformation": "remove_internal_whitespace",
+                "source_lemma": source.get("lemma"),
+            }
+        )
+    return dedupe_leg_rows(rows)
+
+
+def write_space_collapse_inventory(
+    rows: Sequence[Mapping[str, Any]],
+    path: Path,
+    *,
+    batch_id: str,
+) -> Path:
+    """Write the additive source inventory for admitted OCR collapses."""
+    by_family: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        family = str(row["source_family"])
+        by_family.setdefault(family, []).append(
+            {
+                "lemma": row["lemma"],
+                "pos": row["pos"],
+                "gloss": row["gloss"],
+                "locator": row["locator"],
+                "context": (
+                    f"OCR space-collapse from {row['original_form']!r} to {row['lemma']!r}; "
+                    "deterministic VESUM admission; #6370 guard; no invented lemma."
+                ),
+                "notes": (
+                    f"source_lemma={row['source_lemma']!r}; "
+                    "transformation=remove_internal_whitespace"
+                ),
+            }
+        )
+    sources = []
+    for family, headwords in sorted(by_family.items()):
+        sources.append(
+            {
+                "id": f"{batch_id}-{family}",
+                "source_family": family,
+                "extraction_mode": "ocr_space_collapse",
+                "title": f"{family} OCR space-collapse recovery {batch_id}",
+                "locator": "private Ohoiko/ULP extracts — lemmas only committed",
+                "notes": (
+                    "Only deterministic OCR residual collapses admitted by VESUM and the "
+                    "independent split-component guard are listed."
+                ),
+                "headwords": headwords,
+            }
+        )
+    doc = {"version": 1, "kind": "atlas_source_inventory", "sources": sources}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=100), encoding="utf-8")
+    return path
+
+
+def write_space_collapse_decisions(
+    rows: Sequence[Mapping[str, Any]],
+    path: Path,
+    *,
+    inventory_rel: str,
+    batch_id: str,
+) -> Path:
+    """Write #6691-shaped publish decisions while retaining transform provenance."""
+    decisions = []
+    for row in rows:
+        lemma = str(row["lemma"])
+        locator = str(row["locator"])
+        family = str(row["source_family"])
+        source_inventory_id = f"{batch_id}-{family}"
+        key = source_inventory_key(lemma=lemma, inventory_path=inventory_rel, locator=locator)
+        decisions.append(
+            {
+                "lemma": lemma,
+                "decision": "approve_for_publish",
+                "approved_pos": row["pos"],
+                "approved_gloss": row["gloss"],
+                "sense_note": (
+                    f"OCR space-collapse from {row['original_form']!r} to {lemma!r}; "
+                    "deterministic VESUM + split-component guard; no invented lemma"
+                ),
+                "source_inventory": {
+                    "key": key,
+                    "path": inventory_rel,
+                    "locator": locator,
+                    "source_id": source_inventory_id,
+                    "source_family": family,
+                },
+                "evidence_refs": [
+                    "#6370 OCR residual",
+                    "deterministic internal-whitespace collapse",
+                    "VESUM collapsed-form + split-component guard",
+                ],
+            }
+        )
+    doc = {
+        "version": 1,
+        "kind": "atlas_source_inventory_review_decisions",
+        "batch_id": f"source-inventory-{batch_id}",
+        "batch_label": batch_id,
+        "reviewer": "operator-curated-source-trust",
+        "reviewed_at": "2026-08-14",
+        "source_queue": {
+            "workflow": "source_inventory_publish_review_queue.v1",
+            "total_queue_rows": len(decisions),
+            "approved_in_queue": len(decisions),
+            "promotion_batch_size": len(decisions),
+        },
+        "production_outputs_updated": [],
+        "decisions": decisions,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=100), encoding="utf-8")
+    return path
+
+
+def _space_collapse_audit_key(row: Mapping[str, Any]) -> tuple[str, str, str, str]:
+    source = row.get("source") or {}
+    return (
+        str(source.get("id") or ""),
+        str(source.get("locator") or ""),
+        str(row.get("original_form") or ""),
+        str(row.get("collapsed_form") or ""),
+    )
+
+
+def append_space_collapse_audit(
+    rows: Sequence[Mapping[str, Any]],
+    path: Path,
+) -> int:
+    """Append unseen deterministic audit rows and return the number appended."""
+    existing: set[tuple[str, str, str, str]] = set()
+    if path.exists():
+        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.strip():
+                continue
+            try:
+                existing.add(_space_collapse_audit_key(json.loads(line)))
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"invalid space-collapse audit JSONL at line {line_number}") from exc
+    appended = 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        for row in rows:
+            key = _space_collapse_audit_key(row)
+            if key in existing:
+                continue
+            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+            existing.add(key)
+            appended += 1
+    return appended
+
+
+def write_space_collapse_manual_review(
+    analysis: Mapping[str, Any],
+    path: Path,
+    *,
+    batch_id: str,
+) -> Path:
+    """Write the exact fail-closed manual-review residual."""
+    payload = {
+        "schema": "atlas-6370-ocr-space-collapse-manual-review.v1",
+        "batch_id": batch_id,
+        "candidate_count": analysis["candidate_count"],
+        "collapsed_vesum_valid_count": analysis["collapsed_vesum_valid_count"],
+        "manual_review_count": analysis["manual_review_count"],
+        "reason_counts": analysis["reason_counts"],
+        "manual_review": analysis["manual_review"],
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def write_space_collapse_artifacts(
+    analysis: Mapping[str, Any],
+    *,
+    inventory_out: Path,
+    decisions_out: Path,
+    audit_out: Path,
+    manual_review_out: Path,
+    batch_id: str,
+) -> dict[str, Any]:
+    """Write source/decision data plus append-only audit and manual residual files."""
+    rows = build_space_collapse_rows(analysis["admitted"])
+    inventory_rel = inventory_out.relative_to(PROJECT_ROOT).as_posix()
+    write_space_collapse_inventory(rows, inventory_out, batch_id=batch_id)
+    write_space_collapse_decisions(
+        rows,
+        decisions_out,
+        inventory_rel=inventory_rel,
+        batch_id=batch_id,
+    )
+    appended = append_space_collapse_audit(analysis["audit_rows"], audit_out)
+    write_space_collapse_manual_review(analysis, manual_review_out, batch_id=batch_id)
+    return {
+        "inventory": str(inventory_out),
+        "decisions": str(decisions_out),
+        "audit": str(audit_out),
+        "audit_rows_appended": appended,
+        "manual_review": str(manual_review_out),
+        "admitted_rows": len(rows),
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
@@ -475,6 +883,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", type=Path, help="Write residual / split analysis JSON")
     p.add_argument("--rederive", action="store_true", help="Re-derive inventory residual")
     p.add_argument("--analyze-paired", action="store_true", help="Analyze paired splits")
+    p.add_argument(
+        "--analyze-space-collapse",
+        action="store_true",
+        help="Measure and classify OCR internal-whitespace collapse candidates",
+    )
+    p.add_argument(
+        "--write-space-collapse-artifacts",
+        action="store_true",
+        help="Write admitted source data, append audit, and manual-review residual",
+    )
     p.add_argument(
         "--write-promote-artifacts",
         action="store_true",
@@ -493,7 +911,16 @@ def build_parser() -> argparse.ArgumentParser:
         / "data/lexicon/source-inventory-review-decisions/"
         "2026-08-12-ohoiko-ulp-paired-split-legs-approve.yaml",
     )
+    p.add_argument("--space-collapse-inventory-out", type=Path, default=DEFAULT_SPACE_COLLAPSE_INVENTORY)
+    p.add_argument("--space-collapse-decisions-out", type=Path, default=DEFAULT_SPACE_COLLAPSE_DECISIONS)
+    p.add_argument("--space-collapse-audit-out", type=Path, default=DEFAULT_SPACE_COLLAPSE_AUDIT)
+    p.add_argument(
+        "--space-collapse-manual-review-out",
+        type=Path,
+        default=DEFAULT_SPACE_COLLAPSE_MANUAL_REVIEW,
+    )
     p.add_argument("--batch-id", default=DEFAULT_BATCH_ID)
+    p.add_argument("--space-collapse-batch-id", default=SPACE_COLLAPSE_BATCH_ID)
     return p
 
 
@@ -517,7 +944,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     payload: dict[str, Any] = {"residual": residual}
     analysis: dict[str, Any] | None = None
-    if args.analyze_paired or args.write_promote_artifacts:
+    if args.analyze_paired or args.write_promote_artifacts or args.analyze_space_collapse or args.write_space_collapse_artifacts:
         _entry_count, atlas_keys = atlas_lemma_keys(args.manifest)
         paired = residual["lemmas_by_category"].get("paired_headwords_comma") or []
         rows_by_lemma = {
@@ -564,6 +991,64 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "rows": len(rows),
             }
             print(json.dumps(payload["promote_artifacts"], ensure_ascii=False), flush=True)
+
+    if args.analyze_space_collapse or args.write_space_collapse_artifacts:
+        if analysis is None:
+            raise AssertionError("paired analysis is required for space-collapse recovery")
+        rows_by_lemma = {
+            str(r["lemma"]): r for r in load_inventory_records(args.inventory)
+        }
+        space_candidates = collect_space_collapse_candidates(
+            residual=residual,
+            paired_analysis=analysis,
+            inventory_rows_by_lemma=rows_by_lemma,
+        )
+        inventory_rel = args.inventory.relative_to(PROJECT_ROOT).as_posix()
+        space_analysis = analyze_space_collapses(
+            space_candidates,
+            inventory_rel=inventory_rel,
+        )
+        payload["space_collapse"] = space_analysis
+        print(
+            json.dumps(
+                {
+                    "space_collapse_candidates": space_analysis["candidate_count"],
+                    "unique_internal_whitespace_forms": space_analysis["unique_form_count"],
+                    "collapsed_vesum_valid": space_analysis["collapsed_vesum_valid_count"],
+                    "admissible": space_analysis["admissible_count"],
+                    "manual_review": space_analysis["manual_review_count"],
+                    "reason_counts": space_analysis["reason_counts"],
+                    "admitted_forms": [
+                        {
+                            "original": row["original_form"],
+                            "collapsed": row["collapsed_form"],
+                        }
+                        for row in space_analysis["admitted"]
+                    ],
+                    "manual_review_forms": [
+                        {
+                            "original": row["original_form"],
+                            "collapsed": row["collapsed_form"],
+                            "reasons": row["reasons"],
+                            "valid_split_components": row["valid_split_components"],
+                        }
+                        for row in space_analysis["manual_review"]
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            flush=True,
+        )
+        if args.write_space_collapse_artifacts:
+            payload["space_collapse_artifacts"] = write_space_collapse_artifacts(
+                space_analysis,
+                inventory_out=args.space_collapse_inventory_out,
+                decisions_out=args.space_collapse_decisions_out,
+                audit_out=args.space_collapse_audit_out,
+                manual_review_out=args.space_collapse_manual_review_out,
+                batch_id=args.space_collapse_batch_id,
+            )
+            print(json.dumps(payload["space_collapse_artifacts"], ensure_ascii=False), flush=True)
 
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)

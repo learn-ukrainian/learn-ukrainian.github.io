@@ -1,0 +1,18 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: ohoiko-ulp-ocr-space-collapse-2026-08-14-ohoiko
+  source_family: ohoiko
+  extraction_mode: ocr_space_collapse
+  title: ohoiko OCR space-collapse recovery ohoiko-ulp-ocr-space-collapse-2026-08-14
+  locator: private Ohoiko/ULP extracts — lemmas only committed
+  notes: Only deterministic OCR residual collapses admitted by VESUM and the independent split-component
+    guard are listed.
+  headwords:
+  - lemma: забоятися
+    pos: verb
+    gloss: to fear, to be afraid
+    locator: 'ohoiko-1000-words entry 47 :: space-collapse::забоя тися -> забоятися'
+    context: 'OCR space-collapse from ''забоя тися'' to ''забоятися''; deterministic VESUM admission;
+      #6370 guard; no invented lemma.'
+    notes: source_lemma='боя тися, забоя тися'; transformation=remove_internal_whitespace

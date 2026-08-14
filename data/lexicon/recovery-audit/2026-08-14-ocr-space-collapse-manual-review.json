@@ -1,0 +1,922 @@
+{
+  "batch_id": "ohoiko-ulp-ocr-space-collapse-2026-08-14",
+  "candidate_count": 28,
+  "collapsed_vesum_valid_count": 5,
+  "manual_review": [
+    {
+      "collapsed_form": "1)toring;",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "1) to ring;",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "дзвонити, задзвонити (1), 1) to ring;",
+        "locator": "ohoiko-1000-words entry 214",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "1)",
+        "to",
+        "ring;"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": []
+    },
+    {
+      "collapsed_form": "tobeliked",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "to be liked",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "подобатися, сподобатися to like, to be liked",
+        "locator": "ohoiko-1000-words entry 628",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "to",
+        "be",
+        "liked"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": []
+    },
+    {
+      "collapsed_form": "tocomeback",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "to come back",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "повертатися, повернутися to return, to come back",
+        "locator": "ohoiko-1000-words entry 616",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "to",
+        "come",
+        "back"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": []
+    },
+    {
+      "collapsed_form": "tokill(imperfective",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "to kill (imperfective",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "убивати, to kill (imperfective, perfective)",
+        "locator": "ohoiko-1000-words entry 67",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "to",
+        "kill",
+        "(imperfective"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": []
+    },
+    {
+      "collapsed_form": "боятися",
+      "collapsed_vesum_valid": true,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "боя тися",
+      "reasons": [
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to fear, to be afraid",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "боя тися, забоя тися",
+        "locator": "ohoiko-1000-words entry 47",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "боя",
+        "тися"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "боя"
+      ]
+    },
+    {
+      "collapsed_form": "бути",
+      "collapsed_vesum_valid": true,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "бу ти",
+      "reasons": [
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to be (imperfective, perfective)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "бу ти, побу ти",
+        "locator": "ohoiko-1000-words entry 57",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "бу",
+        "ти"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "ти"
+      ]
+    },
+    {
+      "collapsed_form": "бігти",
+      "collapsed_vesum_valid": true,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "біг ти",
+      "reasons": [
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to run (unidirectional)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "біг ти, побігти",
+        "locator": "ohoiko-1000-words entry 33",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "біг",
+        "ти"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "біг",
+        "ти"
+      ]
+    },
+    {
+      "collapsed_form": "виходитизаміж",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "виходити заміж",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to marry (a man)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "виходити заміж, вийти",
+        "locator": "ohoiko-1000-words entry 99",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "виходити",
+        "заміж"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "виходити",
+        "заміж"
+      ]
+    },
+    {
+      "collapsed_form": "деньтижня",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "день тижня",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "day of the week",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "день тижня",
+        "locator": "ohoiko-1000-words entry 208",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "день",
+        "тижня"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "день",
+        "тижня"
+      ]
+    },
+    {
+      "collapsed_form": "достатньо(2)",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "достатньо (2)",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "1) rather, quite; 2) enough",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "достатньо (2)",
+        "locator": "ohoiko-1000-words entry 236",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "достатньо",
+        "(2)"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "достатньо"
+      ]
+    },
+    {
+      "collapsed_form": "зліва(1)",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "зліва (1)",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "1) on the left, to the left;",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "зліва (1)",
+        "locator": "ohoiko-1000-words entry 405",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "зліва",
+        "(1)"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "зліва"
+      ]
+    },
+    {
+      "collapsed_form": "картопляфрі",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "картопля фрі",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "French fries",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "картопля фрі",
+        "locator": "ohoiko-1000-words entry 336",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "картопля",
+        "фрі"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "картопля",
+        "фрі"
+      ]
+    },
+    {
+      "collapsed_form": "кішка;коти",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "кішка; коти",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "cat (male, female); cats",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "кіт, кішка; коти",
+        "locator": "ohoiko-1000-words entry 349",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "кішка;",
+        "коти"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "коти"
+      ]
+    },
+    {
+      "collapsed_form": "мати(verb)",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "мати (verb)",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to have (imperfective only)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "мати (verb)",
+        "locator": "ohoiko-1000-words entry 437",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "мати",
+        "(verb)"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "мати"
+      ]
+    },
+    {
+      "collapsed_form": "передтимяк",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "перед тим як",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "before (an action)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "перед тим як",
+        "locator": "ohoiko-1000-words entry 589",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "перед",
+        "тим",
+        "як"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "перед",
+        "тим",
+        "як"
+      ]
+    },
+    {
+      "collapsed_form": "побути",
+      "collapsed_vesum_valid": true,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "побу ти",
+      "reasons": [
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "to be (imperfective, perfective)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "бу ти, побу ти",
+        "locator": "ohoiko-1000-words entry 57",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "побу",
+        "ти"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "ти"
+      ]
+    },
+    {
+      "collapsed_form": "повернутисяtoreturn",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "повернутися to return",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "повертатися, повернутися to return, to come back",
+        "locator": "ohoiko-1000-words entry 616",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "повернутися",
+        "to",
+        "return"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "повернутися"
+      ]
+    },
+    {
+      "collapsed_form": "подруга;друзі",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "подруга; друзі",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "friend (male, female), friends",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "друг, подруга; друзі",
+        "locator": "ohoiko-1000-words entry 239",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "подруга;",
+        "друзі"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "друзі"
+      ]
+    },
+    {
+      "collapsed_form": "попрацюватиtowork",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "попрацювати to work",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "працювати, попрацювати to work",
+        "locator": "ohoiko-1000-words entry 663",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "попрацювати",
+        "to",
+        "work"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "попрацювати"
+      ]
+    },
+    {
+      "collapsed_form": "поцілуватисяtokisseachother",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "поцілуватися to kiss each other",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "цілуватися, поцілуватися to kiss each other",
+        "locator": "ohoiko-1000-words entry 939",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "поцілуватися",
+        "to",
+        "kiss",
+        "each",
+        "other"
+      ],
+      "transformation": {
+        "removed_codepoints": 4,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "поцілуватися"
+      ]
+    },
+    {
+      "collapsed_form": "сподобатисяtolike",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "сподобатися to like",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "ohoiko 1000-words entry",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "paired_headword_leg",
+        "lemma": "подобатися, сподобатися to like, to be liked",
+        "locator": "ohoiko-1000-words entry 628",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "сподобатися",
+        "to",
+        "like"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "сподобатися"
+      ]
+    },
+    {
+      "collapsed_form": "справа(1)",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "справа (1)",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "1) on the right, to the right;",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "справа (1)",
+        "locator": "ohoiko-1000-words entry 658",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "справа",
+        "(1)"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "справа"
+      ]
+    },
+    {
+      "collapsed_form": "сільськегосподарство",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "сільське господарство",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "agriculture",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "сільське господарство",
+        "locator": "ohoiko-1000-words entry 762",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "сільське",
+        "господарство"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "сільське",
+        "господарство"
+      ]
+    },
+    {
+      "collapsed_form": "таксамо",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "так само",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "equally, the same way, alike",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "так само",
+        "locator": "ohoiko-1000-words entry 542",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "так",
+        "само"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "так",
+        "само"
+      ]
+    },
+    {
+      "collapsed_form": "такийсамий",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "такий самий",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "same (adjective)",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "такий самий",
+        "locator": "ohoiko-1000-words entry 843",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "такий",
+        "самий"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "такий",
+        "самий"
+      ]
+    },
+    {
+      "collapsed_form": "часвідчасу",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "час від часу",
+      "reasons": [
+        "ambiguous_tokenization",
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "from time to time, occasionally",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "час від часу",
+        "locator": "ohoiko-1000-words entry 945",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "час",
+        "від",
+        "часу"
+      ],
+      "transformation": {
+        "removed_codepoints": 2,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "час",
+        "від",
+        "часу"
+      ]
+    },
+    {
+      "collapsed_form": "і(1)",
+      "collapsed_vesum_valid": false,
+      "decision": "manual_review",
+      "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+      "original_form": "і (1)",
+      "reasons": [
+        "collapsed_not_vesum_valid",
+        "split_component_vesum_valid"
+      ],
+      "schema": "atlas-6370-ocr-space-collapse-audit.v1",
+      "source": {
+        "extraction_mode": "curated_bulk",
+        "family": "ohoiko",
+        "gloss": "1) and; 2) but",
+        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "kind": "inventory_multiword",
+        "lemma": "і (1)",
+        "locator": "ohoiko-1000-words entry 839",
+        "pos": "phrase"
+      },
+      "split_components": [
+        "і",
+        "(1)"
+      ],
+      "transformation": {
+        "removed_codepoints": 1,
+        "type": "remove_internal_whitespace"
+      },
+      "valid_split_components": [
+        "і"
+      ]
+    }
+  ],
+  "manual_review_count": 27,
+  "reason_counts": {
+    "ambiguous_tokenization": 10,
+    "collapsed_not_vesum_valid": 23,
+    "split_component_vesum_valid": 23
+  },
+  "schema": "atlas-6370-ocr-space-collapse-manual-review.v1"
+}
