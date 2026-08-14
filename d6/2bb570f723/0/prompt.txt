@@ -1,0 +1,45 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-school-parent-context-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Implement the next bounded Phase 3 school-context slice for issue #6375 from current origin/main (which includes merged PR #6782 / cf698725a8ce058f24aca90fadece39ce1ad292e). Read and obey batch_state/phase3-reboot-prompt-v3-draft.md, required SHA-256 5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d, especially complete-context representation, source/evidence separation, no-provider gates, and Phase4 block.
+
+Ownership is limited to these new files:
+- scripts/projects/open_model_data/phase3_school_parent_section_context.py
+- data/projects/open_model_data/contracts/phase3_school_parent_section_context_receipt_v1.schema.json
+- data/projects/open_model_data/inventory/phase3_school_parent_section_context_receipt_v1.json
+- tests/test_open_model_phase3_school_parent_section_context.py
+Do not modify v2-pinned contracts/modules, generated status/audit/review artifacts, lint config, .python-version, or the merged #6782 files. You are not alone in the codebase; never revert others.
+
+Outcome:
+Deterministically materialize complete ordered parent-section context for exactly the 3,526 held-out school units classified positive by merged #6782. Bind and reverify the #6782 public receipt/hash and the pinned private source/partition custody. Preserve the 4,479 typed negative cohort unchanged and explicitly outside this output.
+
+Private artifact requirements:
+- source text and complete contexts must never enter git, public receipt, logs, provider prompts, or result bodies;
+- write the private 3,526-row JSONL only to the existing approved Google Drive project custody under a narrowly named Phase3 #6375 directory, with 0600 atomic writes, immutable byte/hash receipt, readback hash verification, and no duplicate local retained copy;
+- use temporary extraction only under a private mktemp directory and clean it;
+- provider_calls=false, labels_present=false, semantic_gold=false;
+- no model/provider call may see the private text.
+
+Per-row deterministic invariants:
+- exact held-out unit id/source hash and immutable source_file + parent_section_id identity;
+- complete parent section assembled from every sibling in the same non-null parent group using the pinned source order, with stable separators;
+- target sentence/unit appears exactly at recorded Unicode code-point offsets and exact round-trip slicing;
+- source unit hash, full context hash, group membership/order hashes, sibling count, and boundary/offset facts;
+- no correction, linguistic gold label, normative claim, or source-role inference is invented;
+- reject duplicate/missing/extra heldouts, null parent IDs, incomplete groups, stale hashes, ambiguous ordering, source text mismatch, symlinks, output collisions, and noncanonical JSONL.
+
+Public committed receipt must be text-free and aggregate-only, with exact 3,526 denominator, source/group counts, private artifact byte/hash/Drive locator identity but no text or row-level heldout IDs, #6782 bindings, implementation/schema hashes, provider_calls=false, labels_present=false, school_complete_context_ready=false, global source/evaluation/Phase3 completion false, Phase4 blocked true. Existing output is immutable: identical rerun verifies; differing output refuses overwrite.
+
+Tests:
+Use hermetic fixtures plus production verification. Cover exact denominator from pinned custody, context roundtrip/offsets/order, unicode punctuation/apostrophe/combining marks, no text leakage in public receipt, 0600, symlink/output collision, stale binding/hash, missing/duplicate/extra rows, negative cohort exclusion, idempotent identical rerun, and all false gates. Run focused tests, Ruff, relevant Phase3 compatibility/evaluation suites, and production verify against Drive custody without printing private text.
+
+Commit with X-Agent: cursor/phase3-6375-school-parent-context-cursor, push, open a DRAFT PR linked to #6375. Never merge. Report only text-free counts/hashes/paths, exact head, tests, and residuals. Do not claim school family, evaluation freeze, labels, Phase3, or Phase4 ready.
