@@ -1222,6 +1222,38 @@ function classifyFeedbackFor(
     : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
 }
 
+/**
+ * #6816: 'synonym' mode (antonym-polarity items included — the prompt already reads
+ * «Оберіть антонім/синонім до …») locked with only a red ✗/green outline — handleChoice
+ * never built teaching feedback for mode==='synonym' (isMeaningChoiceSurface excludes it,
+ * selection.classify is unset for this mode), so a miss showed the status line only.
+ * Widening isMeaningChoiceSurface to cover 'synonym' would be wrong: it would restate the
+ * unrelated word↔gloss pair (#6807) instead of the antonym/synonym relation the learner was
+ * actually asked about. Restate the attested prompt ↔ correct-option pair from
+ * `selection.synonym` instead — same deck payload the option list and prompt already render.
+ */
+function synonymFeedbackFor(
+  selection: PracticeSelection,
+  option: ChoiceOption,
+  learnerLevel: CefrLevel,
+): DrillFeedback | null {
+  const synonym = selection.synonym;
+  if (!synonym) return null;
+  const answer = synonym.options.find((candidate) => candidate.kind === 'answer');
+  if (!answer) return null;
+  const answerLabel = displayPracticeForm(answer.label, learnerLevel);
+  const isAntonym = synonym.polarity === 'antonym';
+  const textUk = isAntonym
+    ? `Антонім до «${synonym.prompt}» — «${answerLabel}».`
+    : `Синонім до «${synonym.prompt}» — «${answerLabel}».`;
+  const textEn = isAntonym
+    ? `Antonym for «${synonym.prompt}» — «${answerLabel}».`
+    : `Synonym for «${synonym.prompt}» — «${answerLabel}».`;
+  return option.correct
+    ? { kind: 'correct', textUk: `Правильно! ${textUk}`, textEn: `Correct! ${textEn}` }
+    : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
+}
+
 function drillChoiceOptions(
   selection: PracticeSelection,
   showEnglishSubtitles: boolean,
@@ -3631,12 +3663,16 @@ function LexiconPracticeIsland({
     // a teaching sentence, not just a red ✗ / green outline.
     // #6801: antonym/homonym reuse the meaning-choice surface in mixed sessions —
     // teach those misses too (see isMeaningChoiceSurface).
+    // #6816: 'synonym' mode gets its own prompt↔answer teaching sentence — never routed
+    // through isMeaningChoiceSurface (see synonymFeedbackFor for why).
     const nextChoiceFeedback =
       isMeaningChoiceSurface(selection)
         ? choiceFeedbackFor(selection, option, learnerLevel)
         : selection.classify
           ? classifyFeedbackFor(selection, option, learnerLevel)
-          : null;
+          : selection.synonym
+            ? synonymFeedbackFor(selection, option, learnerLevel)
+            : null;
     setAnswerLocked(true);
     setChoiceSelectedLabel(option.label);
     if (selection.paradigm) setParadigmSelectedLabel(option.label);
@@ -4961,7 +4997,9 @@ function PracticeItem({
             testId={
               selection.mode === 'classify'
                 ? 'practice-classify-feedback'
-                : 'practice-choice-feedback'
+                : selection.mode === 'synonym'
+                  ? 'practice-synonym-feedback'
+                  : 'practice-choice-feedback'
             }
             showEnglishSubtitles={showEnglishSubtitles}
           />
@@ -5033,6 +5071,29 @@ function PracticeItem({
     );
   }
 
+  // #6816 point 2: buildStaticCandidates (srs.ts) only ever emits a mode==='synonym'
+  // selection paired with a matched PracticeSynonymItem, so `.synonym` is never absent in
+  // practice — but drillChoiceOptions/drillChoicePrompt above already treat a missing
+  // `.synonym` as "no synonym drill" (both return null), which would otherwise let a
+  // synonym-mode selection fall through to the word↔gloss meaning-choice surface below and
+  // invent an unrelated pair. Fail closed instead: never let 'synonym' mode reach the
+  // fallback meant for bare 'choice'/'antonym'/'homonym' selections.
+  if (selection.mode === 'synonym') {
+    return (
+      <div className="practice-empty-state" data-testid="practice-choice-empty">
+        <p className="lexicon-practice-muted">
+          <PracticeChromeLabel k="practice.noChoiceCards" />
+        </p>
+        <button
+          type="button"
+          className="btn btn-accent practice-empty-primary"
+          onClick={onBackToModes}
+        >
+          <PracticeChromeLabel k="practice.backToModes" />
+        </button>
+      </div>
+    );
+  }
   const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed, learnerLevel);
   if (!options.length) {
     return (

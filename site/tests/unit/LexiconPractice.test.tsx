@@ -924,6 +924,45 @@ function synonymDeck(): PracticeDeckData {
   };
 }
 
+function antonymPolaritySynonymDeck(): PracticeDeckData {
+  const entry = lexeme('svitlyi', 'світлий', 'light', {
+    nominative: 'світлий',
+    accusative: 'світлий',
+    locative: 'світлому',
+  });
+  return {
+    deckVersion: 'test-synonym-antonym-polarity',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['synonym'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [{
+      synonymId: 'svitlyi-ant',
+      lemmaId: 'svitlyi',
+      targetLemmaId: 'temnyi',
+      polarity: 'antonym',
+      prompt: 'світлий',
+      answer: 'темний',
+      options: [
+        { label: 'темний', lemmaId: 'temnyi', kind: 'answer' },
+        { label: 'яскравий', lemmaId: 'yaskravyi', kind: 'distractor' },
+      ],
+      source: 'fixture',
+    }],
+  };
+}
+
 beforeEach(() => {
   localStorage.clear();
   loadState(localStorage, NOW);
@@ -4764,6 +4803,46 @@ describe('LexiconPractice', () => {
 
       const feedback = screen.getByTestId('practice-choice-feedback');
       expect(feedback).toHaveTextContent('Неправильно. «книга» = book.');
+    });
+
+    test('synonym mode: wrong pick teaches the prompt ↔ correct-option pair, not the word↔gloss pair (#6816)', async () => {
+      // Before this fix, mode==='synonym' skipped choiceFeedbackFor (mode !== 'choice'/
+      // 'antonym'/'homonym') AND classifyFeedbackFor (selection.classify unset) — handleChoice
+      // set nextChoiceFeedback to null, so a miss showed the status line only, no red panel.
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
+      const scope = within(screen.getByTestId('practice-synonym'));
+
+      await user.click(scope.getByRole('button', { name: /чай/ }));
+
+      const feedback = screen.getByTestId('practice-synonym-feedback');
+      expect(feedback).toHaveTextContent('Неправильно. Синонім до «кава» — «кава».');
+      expect(feedback).toHaveTextContent('Incorrect. Synonym for «кава» — «кава».');
+      expect(screen.queryByTestId('practice-choice-feedback')).not.toBeInTheDocument();
+    });
+
+    test('synonym mode: correct pick affirms the prompt ↔ answer pair (#6816)', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
+      const scope = within(screen.getByTestId('practice-synonym'));
+
+      await user.click(scope.getByRole('button', { name: /кава/ }));
+
+      const feedback = screen.getByTestId('practice-synonym-feedback');
+      expect(feedback).toHaveTextContent('Правильно! Синонім до «кава» — «кава».');
+    });
+
+    test('synonym mode, antonym-polarity: «Оберіть антонім» miss teaches the antonym pair, not a synonym pair (#6816)', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={antonymPolaritySynonymDeck()} autoStart initialMode="synonym" />);
+      expect(screen.getByText(/^Оберіть антонім до «світлий»/)).toBeTruthy();
+      const scope = within(screen.getByTestId('practice-synonym'));
+
+      await user.click(scope.getByRole('button', { name: /яскравий/ }));
+
+      const feedback = screen.getByTestId('practice-synonym-feedback');
+      expect(feedback).toHaveTextContent('Неправильно. Антонім до «світлий» — «темний».');
+      expect(feedback).toHaveTextContent('Incorrect. Antonym for «світлий» — «темний».');
     });
 
     test('choice ("Вибір"): correct pick affirms the pairing with EN subtitle', async () => {
