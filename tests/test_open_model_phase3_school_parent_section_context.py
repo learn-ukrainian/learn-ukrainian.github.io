@@ -227,6 +227,7 @@ def test_hermetic_materialize_roundtrip_and_negative_exclusion(tmp_path: Path, m
 
     public = paths["public_receipt"]
     assert isinstance(public, Path)
+    assert stat.S_IMODE(public.stat().st_mode) == 0o644
     public_text = public.read_text(encoding="utf-8")
     assert "unit.school_textbooks." not in public_text
     assert "Перше" not in public_text
@@ -244,6 +245,119 @@ def test_hermetic_materialize_roundtrip_and_negative_exclusion(tmp_path: Path, m
     )
     assert again["receipt_sha256"] == receipt["receipt_sha256"]
     assert again["context"]["private_jsonl_sha256"] == receipt["context"]["private_jsonl_sha256"]
+    assert stat.S_IMODE(public.stat().st_mode) == 0o644
+
+
+def test_verify_existing_rejects_implementation_binding_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path)
+    _patch_pins(monkeypatch, paths)
+    parent_ctx.materialize(
+        source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+        partition_path=paths["partition"],  # type: ignore[arg-type]
+        private_output=paths["private_output"],  # type: ignore[arg-type]
+        public_receipt_path=paths["public_receipt"],  # type: ignore[arg-type]
+        started_at="2026-08-14T02:48:00Z",
+        completed_at="2026-08-14T02:48:30Z",
+    )
+    public = paths["public_receipt"]
+    assert isinstance(public, Path)
+    receipt = json.loads(public.read_text(encoding="utf-8"))
+    receipt["bindings"] = dict(receipt["bindings"])
+    receipt["bindings"]["implementation_sha256"] = "0" * 64
+    receipt["receipt_sha256"] = parent_ctx.receipt_sha256(receipt)
+    public.write_bytes(parent_ctx.canonical_bytes(receipt))
+    os.chmod(public, parent_ctx.PUBLIC_FILE_MODE)
+    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="implementation binding drift"):
+        parent_ctx.verify_existing(
+            source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+            partition_path=paths["partition"],  # type: ignore[arg-type]
+            private_output=paths["private_output"],  # type: ignore[arg-type]
+            public_receipt_path=public,
+        )
+
+
+def test_verify_existing_rejects_schema_binding_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path)
+    _patch_pins(monkeypatch, paths)
+    parent_ctx.materialize(
+        source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+        partition_path=paths["partition"],  # type: ignore[arg-type]
+        private_output=paths["private_output"],  # type: ignore[arg-type]
+        public_receipt_path=paths["public_receipt"],  # type: ignore[arg-type]
+        started_at="2026-08-14T02:48:00Z",
+        completed_at="2026-08-14T02:48:30Z",
+    )
+    public = paths["public_receipt"]
+    assert isinstance(public, Path)
+    receipt = json.loads(public.read_text(encoding="utf-8"))
+    receipt["bindings"] = dict(receipt["bindings"])
+    receipt["bindings"]["receipt_schema_sha256"] = "0" * 64
+    receipt["receipt_sha256"] = parent_ctx.receipt_sha256(receipt)
+    public.write_bytes(parent_ctx.canonical_bytes(receipt))
+    os.chmod(public, parent_ctx.PUBLIC_FILE_MODE)
+    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="schema binding drift"):
+        parent_ctx.verify_existing(
+            source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+            partition_path=paths["partition"],  # type: ignore[arg-type]
+            private_output=paths["private_output"],  # type: ignore[arg-type]
+            public_receipt_path=public,
+        )
+
+
+def test_verify_existing_rejects_stale_pinned_binding_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture(tmp_path)
+    _patch_pins(monkeypatch, paths)
+    parent_ctx.materialize(
+        source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+        partition_path=paths["partition"],  # type: ignore[arg-type]
+        private_output=paths["private_output"],  # type: ignore[arg-type]
+        public_receipt_path=paths["public_receipt"],  # type: ignore[arg-type]
+        started_at="2026-08-14T02:48:00Z",
+        completed_at="2026-08-14T02:48:30Z",
+    )
+    public = paths["public_receipt"]
+    assert isinstance(public, Path)
+    receipt = json.loads(public.read_text(encoding="utf-8"))
+    receipt["bindings"] = dict(receipt["bindings"])
+    receipt["bindings"]["source_universe_receipt_sha256"] = "0" * 64
+    receipt["receipt_sha256"] = parent_ctx.receipt_sha256(receipt)
+    public.write_bytes(parent_ctx.canonical_bytes(receipt))
+    os.chmod(public, parent_ctx.PUBLIC_FILE_MODE)
+    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="source universe binding drift"):
+        parent_ctx.verify_existing(
+            source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
+            partition_path=paths["partition"],  # type: ignore[arg-type]
+            private_output=paths["private_output"],  # type: ignore[arg-type]
+            public_receipt_path=public,
+        )
+
+
+def test_custody_receipt_preserves_prior_via_successor(tmp_path: Path) -> None:
+    drive = tmp_path / "drive"
+    drive.mkdir(mode=0o700)
+    os.chmod(drive, 0o700)
+    first = {
+        "schema_version": "phase3_school_parent_section_context_custody_receipt_v1",
+        "artifacts": {"public_receipt_sha256": "a" * 64},
+    }
+    second = {
+        "schema_version": "phase3_school_parent_section_context_custody_receipt_v1",
+        "artifacts": {"public_receipt_sha256": "b" * 64},
+    }
+    primary = parent_ctx._write_custody_receipt(drive, first)
+    assert primary.name == parent_ctx.CUSTODY_RECEIPT_FILENAME
+    assert stat.S_IMODE(primary.stat().st_mode) == 0o600
+    successor = parent_ctx._write_custody_receipt(drive, second)
+    assert successor.name == parent_ctx.CUSTODY_RECEIPT_SUCCESSOR_FILENAME
+    assert primary.read_bytes() == parent_ctx.canonical_bytes(first)
+    assert successor.read_bytes() == parent_ctx.canonical_bytes(second)
+    assert parent_ctx._write_custody_receipt(drive, second) == successor
 
 
 def test_idempotent_rerun_refuses_changed_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -340,10 +454,48 @@ def test_symlink_and_output_collision_rejected(tmp_path: Path) -> None:
 
 def test_atomic_write_api_and_mode(tmp_path: Path) -> None:
     params = inspect.signature(parent_ctx._atomic_write).parameters
-    assert list(params) == ["path", "payload"]
+    assert list(params) == ["path", "payload", "mode"]
+    assert params["mode"].kind is inspect.Parameter.KEYWORD_ONLY
+    assert params["mode"].default == parent_ctx.PRIVATE_FILE_MODE
     target = tmp_path / "secret.bin"
     parent_ctx._atomic_write(target, b"secret")
     assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    public = tmp_path / "public.json"
+    parent_ctx._atomic_write(public, b"{}\n", mode=parent_ctx.PUBLIC_FILE_MODE)
+    assert stat.S_IMODE(public.stat().st_mode) == 0o644
+
+
+def test_public_receipt_idempotent_at_tracked_mode(tmp_path: Path) -> None:
+    path = tmp_path / "receipt.json"
+    payload = b'{"ok":true}\n'
+    parent_ctx._write_public_receipt(path, payload)
+    assert stat.S_IMODE(path.stat().st_mode) == 0o644
+    parent_ctx._write_public_receipt(path, payload)
+    assert path.read_bytes() == payload
+    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="refusing to overwrite changed public receipt"):
+        parent_ctx._write_public_receipt(path, b'{"ok":false}\n')
+
+
+def test_canonical_temp_root_resolves_var_symlink(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    # Reproduce macOS /var -> /private/var TMPDIR alias without weakening the guard.
+    alias = tmp_path / "var"
+    real = tmp_path / "private" / "var"
+    real.mkdir(parents=True)
+    alias.symlink_to(real)
+    monkeypatch.setenv("TMPDIR", str(alias))
+    # tempfile may already have cached the tempdir; clear it.
+    monkeypatch.setattr(parent_ctx.tempfile, "tempdir", None)
+    root = parent_ctx._canonical_temp_root("phase3-school-parent-ctx-")
+    try:
+        parent_ctx._reject_symlink_components(root, "temp root")
+        assert stat.S_IMODE(root.stat().st_mode) == 0o700
+        # Lexical path must not walk through the /var-style alias symlink.
+        assert not any(Path(*root.parts[: i + 1]).is_symlink() for i in range(1, len(root.parts)))
+        assert root.resolve() == root or not root.is_symlink()
+    finally:
+        import shutil
+
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def test_source_text_mismatch_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -369,15 +521,17 @@ def test_committed_receipt_validates_when_present() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(receipt)
     assert parent_ctx.receipt_sha256(receipt) == receipt["receipt_sha256"]
-    assert receipt["denominators"]["positive_parent_section_heldout"] == 3526
-    assert receipt["denominators"]["negative_null_parent_heldout_excluded"] == 4479
-    assert receipt["provider_calls"] is False
-    assert receipt["labels_present"] is False
-    assert receipt["semantic_gold"] is False
-    assert receipt["gates"]["school_complete_context_ready"] is False
-    assert receipt["gates"]["phase3_complete"] is False
-    assert receipt["gates"]["phase4_blocked"] is True
-    dumped = json.dumps(receipt, ensure_ascii=False)
+    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == 0o644
+    validated = parent_ctx.validate_receipt(receipt)
+    assert validated["denominators"]["positive_parent_section_heldout"] == 3526
+    assert validated["denominators"]["negative_null_parent_heldout_excluded"] == 4479
+    assert validated["provider_calls"] is False
+    assert validated["labels_present"] is False
+    assert validated["semantic_gold"] is False
+    assert validated["gates"]["school_complete_context_ready"] is False
+    assert validated["gates"]["phase3_complete"] is False
+    assert validated["gates"]["phase4_blocked"] is True
+    dumped = json.dumps(validated, ensure_ascii=False)
     assert "unit.school_textbooks." not in dumped
     assert not any("\u0400" <= ch <= "\u04ff" for ch in dumped)
 
@@ -396,6 +550,7 @@ def test_production_verify_against_drive_custody() -> None:
     assert committed["context"]["private_jsonl_rows"] == 3526
     assert stat.S_IMODE(private.stat().st_mode) == 0o600
     assert stat.S_IMODE(DRIVE_BACKUP_DIR.stat().st_mode) == 0o700
+    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == 0o644
     # Re-run production: identical bytes must verify; no text printed.
     reproduced = parent_ctx.production_run(
         custody_tarball=CUSTODY_TARBALL,
@@ -408,3 +563,30 @@ def test_production_verify_against_drive_custody() -> None:
     assert reproduced["context"]["private_jsonl_sha256"] == committed["context"]["private_jsonl_sha256"]
     assert reproduced["gates"]["school_complete_context_ready"] is False
     assert reproduced["gates"]["phase4_blocked"] is True
+    # Prior custody evidence preserved; successor may pin the regenerated public hash.
+    primary = DRIVE_BACKUP_DIR / parent_ctx.CUSTODY_RECEIPT_FILENAME
+    successor = DRIVE_BACKUP_DIR / parent_ctx.CUSTODY_RECEIPT_SUCCESSOR_FILENAME
+    assert primary.is_file()
+    assert stat.S_IMODE(primary.stat().st_mode) == 0o600
+    matching = None
+    matched_body: dict[str, object] | None = None
+    for candidate in (primary, successor):
+        if not candidate.is_file():
+            continue
+        body = json.loads(candidate.read_text(encoding="utf-8"))
+        if body.get("artifacts", {}).get("public_receipt_sha256") == committed["receipt_sha256"]:
+            matching = candidate
+            matched_body = body
+            break
+    assert matching is not None
+    assert matched_body is not None
+    artifacts = matched_body["artifacts"]
+    assert isinstance(artifacts, dict)
+    assert artifacts["private_context_sha256"] == committed["context"]["private_jsonl_sha256"]
+    gates = matched_body["gates"]
+    assert isinstance(gates, dict)
+    assert gates["phase3_complete"] is False
+    assert gates["phase4_blocked"] is True
+    matched_text = matching.read_text(encoding="utf-8")
+    assert "unit.school_textbooks." not in matched_text
+    assert not any("\u0400" <= ch <= "\u04ff" for ch in matched_text)

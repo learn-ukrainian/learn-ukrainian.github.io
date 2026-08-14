@@ -49,6 +49,9 @@ SOURCE_UNIVERSE_RECEIPT = DATA / "evidence/source_universe_v1/source-universe-fr
 
 PRIVATE_FILENAME = "school_parent_section_context_v1.jsonl"
 CUSTODY_RECEIPT_FILENAME = "phase3_school_parent_section_context_custody_receipt_v1.json"
+CUSTODY_RECEIPT_SUCCESSOR_FILENAME = (
+    "phase3_school_parent_section_context_custody_receipt_v1.successor.json"
+)
 CHECKSUMS_FILENAME = "SHA256SUMS"
 SCHEMA_VERSION = "phase3_school_parent_section_context_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_school_parent_section_context_v1"
@@ -56,6 +59,7 @@ CONTEXT_KIND = "school_complete_parent_section_context"
 PARENT_SECTION_SEPARATOR = "\n\n"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+PUBLIC_FILE_MODE = 0o644
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 
 PINNED_SOURCE_UNITS_JSONL_SHA256 = eval_manifest.PINNED_SOURCE_UNITS_JSONL_SHA256
@@ -192,6 +196,14 @@ def _regular_private(path: Path, label: str) -> None:
     require(stat.S_IMODE(path.lstat().st_mode) == PRIVATE_FILE_MODE, f"{label} permissions must be 0600")
 
 
+def _regular_public(path: Path, label: str) -> None:
+    _regular_file(path, label)
+    require(
+        stat.S_IMODE(path.lstat().st_mode) == PUBLIC_FILE_MODE,
+        f"{label} permissions must be 0644",
+    )
+
+
 def _strict_json_object(raw: bytes, label: str) -> dict[str, Any]:
     try:
         value = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
@@ -212,8 +224,8 @@ def _iter_jsonl(path: Path, label: str) -> Iterator[dict[str, Any]]:
             yield _strict_json_object(line, f"{label} line {index}")
 
 
-def _atomic_write(path: Path, payload: bytes) -> None:
-    """Atomically write *payload* with owner-only permissions (mode 0600)."""
+def _atomic_write(path: Path, payload: bytes, *, mode: int = PRIVATE_FILE_MODE) -> None:
+    """Atomically write *payload* with the requested permission bits."""
     _reject_symlink_components(path, "output path")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
@@ -224,12 +236,12 @@ def _atomic_write(path: Path, payload: bytes) -> None:
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), 0o600)
+            os.fchmod(handle.fileno(), mode)
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        os.chmod(path, 0o600)
+        os.chmod(path, mode)
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
@@ -256,12 +268,40 @@ def _prepare_private_output(path: Path) -> None:
 
 
 def _write_immutable(path: Path, payload: bytes, *, label: str) -> None:
+    """Idempotent private write: existing files must remain mode 0600 with identical bytes."""
     _reject_symlink_components(path, label)
     if path.exists():
         _regular_private(path, label)
         require(path.read_bytes() == payload, f"refusing to overwrite changed {label}")
         return
-    _atomic_write(path, payload)
+    _atomic_write(path, payload, mode=PRIVATE_FILE_MODE)
+
+
+def _write_public_receipt(path: Path, payload: bytes) -> None:
+    """Idempotent public receipt write at tracked-file mode 0644 (never 0600)."""
+    _reject_symlink_components(path, "public receipt")
+    if path.exists():
+        _regular_public(path, "public receipt")
+        require(path.read_bytes() == payload, "refusing to overwrite changed public receipt")
+        return
+    _atomic_write(path, payload, mode=PUBLIC_FILE_MODE)
+
+
+def _canonical_temp_root(prefix: str) -> Path:
+    """Create a private temp directory on a symlink-free resolved path.
+
+    macOS often exposes ``TMPDIR`` under ``/var`` which is a symlink to
+    ``/private/var``. The strict symlink guard must keep rejecting that alias,
+    so production staging always uses the realpath canonical root.
+    """
+    created = Path(tempfile.mkdtemp(prefix=prefix, dir=None))
+    resolved = Path(os.path.realpath(created))
+    if resolved != created:
+        # realpath may return the same inode via a different lexical path.
+        require(resolved.exists(), "resolved temp root missing after mkdtemp")
+    os.chmod(resolved, PRIVATE_DIR_MODE)
+    _reject_symlink_components(resolved, "temp root")
+    return resolved
 
 
 def _drive_item_id(path: Path) -> str:
@@ -661,6 +701,51 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["school_complete_context_ready"] is False, "school complete context overclaim")
     require(receipt["gates"]["phase3_complete"] is False, "phase3 completion overclaim")
     require(receipt["gates"]["phase4_blocked"] is True, "phase4 must remain blocked")
+    bindings = receipt["bindings"]
+    require(
+        bindings["implementation_sha256"] == sha256_file(SCRIPT_PATH),
+        "implementation binding drift",
+    )
+    require(
+        bindings["receipt_schema_sha256"] == sha256_file(SCHEMA_PATH),
+        "schema binding drift",
+    )
+    require(
+        bindings["source_units_jsonl_sha256"] == PINNED_SOURCE_UNITS_JSONL_SHA256,
+        "source units binding drift",
+    )
+    require(
+        bindings["partition_manifest_sha256"] == PINNED_PARTITION_SHA256,
+        "partition binding drift",
+    )
+    require(
+        bindings["custody_tarball_sha256"] == PINNED_CUSTODY_TARBALL_SHA256,
+        "custody tarball binding drift",
+    )
+    require(
+        bindings["school_context_negative_recovery_receipt_body_sha256"]
+        == PINNED_NEGREC_RECEIPT_BODY_SHA256,
+        "negative-recovery body binding drift",
+    )
+    require(
+        bindings["school_context_negative_recovery_receipt_file_sha256"]
+        == PINNED_NEGREC_RECEIPT_FILE_SHA256,
+        "negative-recovery file binding drift",
+    )
+    require(
+        bindings["evaluation_context_manifest_receipt_body_sha256"]
+        == PINNED_EVAL_CONTEXT_RECEIPT_BODY_SHA256,
+        "evaluation context body binding drift",
+    )
+    require(
+        bindings["evaluation_context_manifest_receipt_file_sha256"]
+        == PINNED_EVAL_CONTEXT_RECEIPT_FILE_SHA256,
+        "evaluation context file binding drift",
+    )
+    require(
+        bindings["source_universe_receipt_sha256"] == PINNED_SOURCE_UNIVERSE_RECEIPT_SHA256,
+        "source universe binding drift",
+    )
     # Public receipt must not contain private source text or row-level held-out IDs.
     dumped = canonical_json(receipt)
     require("unit.school_textbooks." not in dumped, "public receipt leaked held-out unit id")
@@ -691,7 +776,7 @@ def materialize(
     )
     _prepare_private_output(private_output)
     _write_immutable(private_output, payload, label="private context artifact")
-    _write_immutable(public_receipt_path, canonical_bytes(receipt), label="public receipt")
+    _write_public_receipt(public_receipt_path, canonical_bytes(receipt))
     return validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
 
 
@@ -706,6 +791,7 @@ def verify_existing(
     payload = b"".join(canonical_bytes(row) for row in rows)
     _regular_private(private_output, "private context artifact")
     require(private_output.read_bytes() == payload, "private context artifact drift")
+    _regular_public(public_receipt_path, "public receipt")
     receipt = validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
     require(
         receipt["context"]["private_jsonl_sha256"] == sha256_bytes(payload),
@@ -722,30 +808,7 @@ def verify_existing(
         completed_at=receipt["completed_at"],
         custody=receipt.get("custody"),
     )
-    for key in (
-        "denominators",
-        "gates",
-        "labels_present",
-        "semantic_gold",
-        "provider_calls",
-        "text_free",
-    ):
-        require(receipt[key] == rebuilt[key], f"public receipt drift on {key}")
-    for key in (
-        "source_units_jsonl_sha256",
-        "partition_manifest_sha256",
-        "custody_tarball_sha256",
-        "school_context_negative_recovery_receipt_body_sha256",
-        "school_context_negative_recovery_receipt_file_sha256",
-        "evaluation_context_manifest_receipt_body_sha256",
-        "evaluation_context_manifest_receipt_file_sha256",
-        "source_universe_receipt_sha256",
-    ):
-        require(receipt["bindings"][key] == rebuilt["bindings"][key], f"binding drift on {key}")
-    require(
-        receipt["context"]["private_jsonl_sha256"] == rebuilt["context"]["private_jsonl_sha256"],
-        "context hash drift",
-    )
+    require(receipt == rebuilt, "public receipt drift against rebuilt proof")
     return receipt
 
 
@@ -754,6 +817,28 @@ def _write_checksums(directory: Path, files: Mapping[str, Path]) -> Path:
     checksums_path = directory / CHECKSUMS_FILENAME
     _write_immutable(checksums_path, "".join(lines).encode("utf-8"), label="checksums")
     return checksums_path
+
+
+def _write_custody_receipt(drive_backup_dir: Path, custody_receipt: Mapping[str, Any]) -> Path:
+    """Write custody receipt immutably, preserving prior evidence via a successor file."""
+    payload = canonical_bytes(custody_receipt)
+    primary = drive_backup_dir / CUSTODY_RECEIPT_FILENAME
+    if primary.exists():
+        _regular_private(primary, "custody receipt")
+        if primary.read_bytes() == payload:
+            return primary
+        successor = drive_backup_dir / CUSTODY_RECEIPT_SUCCESSOR_FILENAME
+        if successor.exists():
+            _regular_private(successor, "custody receipt successor")
+            require(
+                successor.read_bytes() == payload,
+                "refusing to overwrite changed custody receipt successor",
+            )
+            return successor
+        _atomic_write(successor, payload, mode=PRIVATE_FILE_MODE)
+        return successor
+    _write_immutable(primary, payload, label="custody receipt")
+    return primary
 
 
 def _build_custody_block(
@@ -795,7 +880,7 @@ def _extract_tarball_members(tarball: Path, destination: Path) -> dict[str, Path
             require(stream is not None, f"cannot extract tarball member: {member_name}")
             payload = stream.read()
             target = destination / Path(member_name).name
-            _atomic_write(target, payload)
+            _atomic_write(target, payload, mode=PRIVATE_FILE_MODE)
             extracted[key] = target
     return extracted
 
@@ -812,8 +897,7 @@ def production_run(
     _reject_symlink_components(drive_backup_dir, "drive backup directory")
     drive_backup_dir.mkdir(parents=True, exist_ok=True)
     os.chmod(drive_backup_dir, PRIVATE_DIR_MODE)
-    temp_root = Path(tempfile.mkdtemp(prefix="phase3-school-parent-ctx-", dir=None))
-    os.chmod(temp_root, PRIVATE_DIR_MODE)
+    temp_root = _canonical_temp_root("phase3-school-parent-ctx-")
     try:
         extracted = _extract_tarball_members(custody_tarball, temp_root)
         private_output = drive_backup_dir / PRIVATE_FILENAME
@@ -839,7 +923,7 @@ def production_run(
             completed_at=finished,
             custody=custody,
         )
-        _write_immutable(public_receipt_path, canonical_bytes(receipt), label="public receipt")
+        _write_public_receipt(public_receipt_path, canonical_bytes(receipt))
         checksums_path = _write_checksums(drive_backup_dir, {PRIVATE_FILENAME: private_output})
         custody_receipt = {
             "schema_version": "phase3_school_parent_section_context_custody_receipt_v1",
@@ -863,8 +947,7 @@ def production_run(
             },
         }
         custody_receipt["receipt_sha256"] = receipt_sha256(custody_receipt)
-        custody_path = drive_backup_dir / CUSTODY_RECEIPT_FILENAME
-        _write_immutable(custody_path, canonical_bytes(custody_receipt), label="custody receipt")
+        custody_path = _write_custody_receipt(drive_backup_dir, custody_receipt)
         _verify_drive_readback(custody_path, sha256_bytes(canonical_bytes(custody_receipt)))
         _verify_drive_readback(checksums_path, sha256_file(checksums_path))
         return validate_receipt(receipt)
