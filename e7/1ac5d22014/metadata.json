@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "e71ac5d22014",
+  "strategy": "manual-commit",
+  "branch": "glm/6760-today-ring",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e7/1ac5d22014/0/metadata.json",
+      "transcript": "/e7/1ac5d22014/0/full.jsonl",
+      "compact_transcript": "/e7/1ac5d22014/0/transcript.jsonl",
+      "content_hash": "/e7/1ac5d22014/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 56513,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1331968,
+    "output_tokens": 5017,
+    "api_call_count": 33
+  }
+}
