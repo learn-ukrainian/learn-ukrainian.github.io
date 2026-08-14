@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b2790ca1ed63",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-vspu-2025-source-admission-r1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_vspu_2025_morphemics_word_formation_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_vspu_2025_morphemics_word_formation_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_vspu_2025_morphemics_word_formation_intake.py",
+    "tests/test_open_model_phase3_vspu_2025_morphemics_word_formation_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b2/790ca1ed63/0/metadata.json",
+      "transcript": "/b2/790ca1ed63/0/full.jsonl",
+      "compact_transcript": "/b2/790ca1ed63/0/transcript.jsonl",
+      "content_hash": "/b2/790ca1ed63/0/content_hash.txt",
+      "prompt": "/b2/790ca1ed63/0/prompt.txt"
+    }
+  ]
+}
