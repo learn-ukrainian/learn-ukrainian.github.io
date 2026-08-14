@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import copy
 import io
 import json
 import os
 import stat
 import tarfile
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -111,7 +113,7 @@ def _write_json(path: Path, value: dict[str, object]) -> None:
 
 def _fixture_bundle(tmp_path: Path) -> dict[str, Path]:
     private = tmp_path / "private"
-    private.mkdir(mode=prav_context.PRIVATE_DIR_MODE)
+    private.mkdir(parents=True, mode=prav_context.PRIVATE_DIR_MODE)
     os.chmod(private, prav_context.PRIVATE_DIR_MODE)
 
     parent_2019 = "      4. Параграф батьківського правила 2019.\n      1) дитяче правило."
@@ -198,6 +200,82 @@ def _patch_fixture_pins(monkeypatch: pytest.MonkeyPatch, paths: dict[str, Path],
     monkeypatch.setattr(eval_manifest, "V2_SOURCE_UNITS", row_count)
     monkeypatch.setattr(eval_manifest, "validate_receipt", lambda receipt: dict(receipt))
     monkeypatch.setattr(prav_context, "validate_receipt", lambda receipt: dict(receipt))
+
+
+def _read_jsonl_rows(path: Path) -> list[dict[str, object]]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _call_build(paths: dict[str, Path]) -> tuple[list[dict[str, object]], object, object]:
+    return prav_context.build_context_rows(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        evaluation_manifest_path=paths["evaluation_manifest"],
+        evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+    )
+
+
+def _simulate_group_readable_mode(monkeypatch: pytest.MonkeyPatch, target: Path) -> None:
+    original_lstat = Path.lstat
+    original_stat = Path.stat
+
+    def _with_group_read(result: os.stat_result, path: Path) -> os.stat_result:
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP
+        return os.stat_result(values)
+
+    def patched_lstat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        return _with_group_read(original_lstat(path, *args, **kwargs), path)
+
+    def patched_stat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        return _with_group_read(original_stat(path, *args, **kwargs), path)
+
+    monkeypatch.setattr(Path, "lstat", patched_lstat)
+    monkeypatch.setattr(Path, "stat", patched_stat)
+
+
+def _simulate_world_readable_lstat(monkeypatch: pytest.MonkeyPatch, target: Path) -> None:
+    original_lstat = Path.lstat
+
+    def patched_lstat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = original_lstat(path, *args, **kwargs)
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP | stat.S_IROTH
+        return os.stat_result(values)
+
+    monkeypatch.setattr(Path, "lstat", patched_lstat)
+
+
+def _mutate_jsonl_row(
+    path: Path,
+    line_index: int,
+    mutator: Callable[[dict[str, object]], None],
+) -> None:
+    rows = _read_jsonl_rows(path)
+    row = copy.deepcopy(rows[line_index])
+    mutator(row)
+    rows[line_index] = row
+    _write_jsonl(path, rows)
+
+
+def _assert_hash_guard_probe(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    pin_attr: str,
+    drifted_path: Path,
+    match: str,
+    paths: dict[str, Path],
+) -> None:
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match=match):
+        _call_build(paths)
+    monkeypatch.setattr(prav_context, pin_attr, prav_context.sha256_file(drifted_path))
+    with pytest.raises(prav_context.PravopysEvaluationContextError) as exc_info:
+        _call_build(paths)
+    assert match not in str(exc_info.value)
 
 
 def test_self_and_child_parent_mapping_2019_and_2026(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -436,14 +514,483 @@ def test_tar_traversal_member_rejected() -> None:
 def test_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
-    paths["partition"].write_bytes(paths["partition"].read_bytes() + b"\n")
-    with pytest.raises(prav_context.PravopysEvaluationContextError, match="partition"):
-        prav_context.build_context_rows(
+    _mutate_jsonl_row(
+        paths["partition"],
+        0,
+        lambda row: row.update({"reason": "evaluation_only "}),
+    )
+    _assert_hash_guard_probe(
+        monkeypatch,
+        pin_attr="PINNED_PARTITION_SHA256",
+        drifted_path=paths["partition"],
+        match="partition manifest hash drift",
+        paths=paths,
+    )
+
+
+def test_source_materialization_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _mutate_jsonl_row(
+        paths["source_jsonl"],
+        0,
+        lambda row: row.update({"document_or_edition_identity": "drifted"}),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source materialization stream drift"):
+        _call_build(paths)
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_SOURCE_UNITS_JSONL_SHA256",
+        prav_context.sha256_file(paths["source_jsonl"]),
+    )
+    try:
+        _call_build(paths)
+    except prav_context.PravopysEvaluationContextError as exc:
+        assert "source materialization stream drift" not in str(exc)
+
+
+def test_evaluation_context_manifest_hash_drift_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _mutate_jsonl_row(
+        paths["evaluation_manifest"],
+        0,
+        lambda row: row.update({"context_kind": "frozen_source_unit_text "}),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="evaluation context manifest drift"):
+        _call_build(paths)
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256",
+        prav_context.sha256_file(paths["evaluation_manifest"]),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError) as exc_info:
+        _call_build(paths)
+    assert "evaluation context manifest drift" not in str(exc_info.value)
+
+
+def test_evaluation_context_manifest_receipt_binding_hash_drift_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _mutate_jsonl_row(
+        paths["evaluation_manifest"],
+        0,
+        lambda row: row.update({"context_kind": "frozen_source_unit_text "}),
+    )
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256",
+        prav_context.sha256_file(paths["evaluation_manifest"]),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="evaluation context manifest hash drift"):
+        _call_build(paths)
+
+
+def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _simulate_group_readable_mode(monkeypatch, paths["source_jsonl"])
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source materialization permissions must be 0600"):
+        _call_build(paths)
+
+    paths = _fixture_bundle(tmp_path / "partition-mode")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _simulate_group_readable_mode(monkeypatch, paths["partition"])
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="partition manifest permissions must be 0600"):
+        _call_build(paths)
+
+    paths = _fixture_bundle(tmp_path / "manifest-mode")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    _simulate_group_readable_mode(monkeypatch, paths["evaluation_manifest"])
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match="evaluation context manifest permissions must be 0600",
+    ):
+        _call_build(paths)
+
+    paths = _fixture_bundle(tmp_path / "source-symlink")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    source_link = tmp_path / "source-link.jsonl"
+    source_link.symlink_to(paths["source_jsonl"])
+    paths["source_jsonl"] = source_link
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="symlink forbidden for source materialization"):
+        _call_build(paths)
+
+    paths = _fixture_bundle(tmp_path / "partition-symlink")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    partition_link = tmp_path / "partition-link.jsonl"
+    partition_link.symlink_to(paths["partition"])
+    paths["partition"] = partition_link
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="symlink forbidden for partition manifest"):
+        _call_build(paths)
+
+    paths = _fixture_bundle(tmp_path / "manifest-symlink")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    manifest_link = tmp_path / "manifest-link.jsonl"
+    manifest_link.symlink_to(paths["evaluation_manifest"])
+    paths["evaluation_manifest"] = manifest_link
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match="symlink forbidden for evaluation context manifest",
+    ):
+        _call_build(paths)
+
+    secure_paths = _fixture_bundle(tmp_path / "secure-perms")
+    assert stat.S_IMODE(secure_paths["source_jsonl"].stat().st_mode) == prav_context.PRIVATE_FILE_MODE
+    assert stat.S_IMODE(secure_paths["source_jsonl"].parent.stat().st_mode) == prav_context.PRIVATE_DIR_MODE
+
+
+def test_private_output_rejects_wrong_mode_and_ancestor_symlink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+
+    _simulate_group_readable_mode(monkeypatch, paths["private_output"].parent)
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match="private output directory must be mode 0700",
+    ):
+        prav_context.materialize(
             source_jsonl=paths["source_jsonl"],
             partition_path=paths["partition"],
             evaluation_manifest_path=paths["evaluation_manifest"],
             evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+            private_output=paths["private_output"],
+            public_receipt_path=paths["public_receipt"],
+            started_at="2026-08-13T23:00:00Z",
+            completed_at="2026-08-13T23:00:01Z",
         )
+
+    paths = _fixture_bundle(tmp_path / "output-symlink")
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    root = tmp_path / "roots"
+    real = root / "real"
+    real.mkdir(parents=True, mode=prav_context.PRIVATE_DIR_MODE)
+    link = root / "link"
+    link.symlink_to(real)
+    nested = link / "nested"
+    nested.mkdir(mode=prav_context.PRIVATE_DIR_MODE)
+    os.chmod(nested, prav_context.PRIVATE_DIR_MODE)
+    private_output = nested / prav_context.PRIVATE_FILENAME
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="symlink forbidden for private output"):
+        prav_context.materialize(
+            source_jsonl=paths["source_jsonl"],
+            partition_path=paths["partition"],
+            evaluation_manifest_path=paths["evaluation_manifest"],
+            evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+            private_output=private_output,
+            public_receipt_path=tmp_path / "public-receipt-symlink.json",
+            started_at="2026-08-13T23:00:00Z",
+            completed_at="2026-08-13T23:00:01Z",
+        )
+
+    assert stat.S_IMODE(real.stat().st_mode) == prav_context.PRIVATE_DIR_MODE
+
+
+def test_text_free_receipt_rejects_world_readable_permissions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    receipt_path = tmp_path / "receipt.json"
+    receipt_path.write_bytes(b"{}\n")
+    os.chmod(receipt_path, prav_context.PRIVATE_FILE_MODE)
+    _simulate_world_readable_lstat(monkeypatch, receipt_path)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="text-free receipt permissions must be 0600"):
+        prav_context._regular_text_free_receipt(receipt_path, "text-free receipt")
+    assert stat.S_IMODE(receipt_path.stat().st_mode) == prav_context.PRIVATE_FILE_MODE
+
+
+def test_duplicate_source_identity_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    rows = _read_jsonl_rows(paths["source_jsonl"])
+    rows.append(copy.deepcopy(rows[0]))
+    _write_jsonl(paths["source_jsonl"], rows)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(eval_manifest, "V2_SOURCE_UNITS", 6)
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_SOURCE_UNITS_JSONL_SHA256",
+        prav_context.sha256_file(paths["source_jsonl"]),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="duplicate source identity: 6"):
+        _call_build(paths)
+
+
+def test_duplicate_partition_identity_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    rows = _read_jsonl_rows(paths["partition"])
+    rows.append(copy.deepcopy(rows[0]))
+    _write_jsonl(paths["partition"], rows)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(eval_manifest, "ROW_COUNT", 6)
+    monkeypatch.setattr(prav_context, "PINNED_PARTITION_SHA256", prav_context.sha256_file(paths["partition"]))
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="duplicate partition identity: 6"):
+        _call_build(paths)
+
+
+def test_missing_partition_identity_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    manifest_rows = _read_jsonl_rows(paths["evaluation_manifest"])
+    missing_id = str(manifest_rows[0]["unit_id"])
+    _mutate_jsonl_row(
+        paths["partition"],
+        0,
+        lambda row: row.update({"unit_id": f"{row['unit_id']}.mutated"}),
+    )
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match=f"partition identity missing: {missing_id}",
+    ):
+        _call_build(paths)
+
+
+def test_missing_source_identity_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    manifest_rows = _read_jsonl_rows(paths["evaluation_manifest"])
+    missing_id = str(manifest_rows[0]["unit_id"])
+    _mutate_jsonl_row(
+        paths["source_jsonl"],
+        0,
+        lambda row: row.update({"unit_id": f"{row['unit_id']}.mutated"}),
+    )
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_SOURCE_UNITS_JSONL_SHA256",
+        prav_context.sha256_file(paths["source_jsonl"]),
+    )
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match=f"source identity missing: {missing_id}",
+    ):
+        _call_build(paths)
+
+
+def test_duplicate_parent_path_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    rows = _read_jsonl_rows(paths["source_jsonl"])
+    template = rows[0]
+    section_path = template["frozen_locator"]["section_path"]
+    duplicate_parent = _prav_row(
+        str(template["family_id"]),
+        list(section_path),
+        "      99. інший батько з тим самим шляхом.",
+        unit_id="unit.pravopys.duplicate-parent-path",
+    )
+    rows.append(duplicate_parent)
+    _write_jsonl(paths["source_jsonl"], rows)
+    partition_rows = [_partition_row(row) for row in rows]
+    _write_jsonl(paths["partition"], partition_rows)
+    manifest_rows = [_manifest_row(row) for row in rows]
+    _write_jsonl(paths["evaluation_manifest"], manifest_rows)
+    _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+    _patch_fixture_pins(monkeypatch, paths, row_count=6)
+    monkeypatch.setattr(eval_manifest, "V2_SOURCE_UNITS", 6)
+    monkeypatch.setattr(eval_manifest, "ROW_COUNT", 6)
+    monkeypatch.setattr(prav_context, "ROW_COUNT", 6)
+    monkeypatch.setattr(prav_context, "FAMILY_COUNTS", {"pravopys_2019_complete": 3, "pravopys_2026_complete": 3})
+    monkeypatch.setattr(prav_context, "LANE_COUNTS", {"phenomenon_strata": 6})
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="duplicate parent path in materialization"):
+        _call_build(paths)
+
+
+def _swap_pravopys_family_on_row(rows: list[dict[str, object]], index: int) -> None:
+    current = str(rows[index]["family_id"])
+    swapped = "pravopys_2026_complete" if current == "pravopys_2019_complete" else "pravopys_2019_complete"
+    rows[index] = dict(rows[index], family_id=swapped)
+
+
+def _misbind_partition_family_preserving_counts(rows: list[dict[str, object]]) -> None:
+    for index, row in enumerate(rows):
+        if index == 0 or row["family_id"] != "pravopys_2026_complete":
+            continue
+        rows[0] = dict(rows[0], family_id="pravopys_2026_complete")
+        rows[index] = dict(row, family_id="pravopys_2019_complete")
+        return
+    raise AssertionError("fixture partition rows missing a pravopys_2026_complete swap target")
+
+
+@pytest.mark.parametrize(
+    ("target", "mutator", "match"),
+    [
+        (
+            "partition",
+            _misbind_partition_family_preserving_counts,
+            "partition/manifest family drift",
+        ),
+        (
+            "source",
+            lambda rows: _swap_pravopys_family_on_row(rows, 0),
+            "source/manifest family drift",
+        ),
+        (
+            "partition",
+            lambda rows: rows.__setitem__(0, dict(rows[0], candidate_lane="clean_modern")),
+            "lane drift",
+        ),
+        (
+            "partition",
+            lambda rows: rows.__setitem__(0, dict(rows[0], source_text_sha256="0" * 64)),
+            "manifest source hash drift",
+        ),
+        (
+            "partition",
+            lambda rows: rows.__setitem__(0, dict(rows[0], frozen_locator_sha256="0" * 64)),
+            "manifest locator hash drift",
+        ),
+        (
+            "manifest",
+            lambda rows: rows.__setitem__(0, dict(rows[0], source_text=str(rows[0]["source_text"]) + " ")),
+            "source/manifest text drift",
+        ),
+        (
+            "manifest",
+            lambda rows: rows.__setitem__(0, dict(rows[0], source_text_sha256="0" * 64)),
+            "manifest source hash drift",
+        ),
+        (
+            "manifest",
+            lambda rows: rows.__setitem__(0, dict(rows[0], frozen_locator_sha256="0" * 64)),
+            "manifest locator hash drift",
+        ),
+    ],
+)
+def test_manifest_binding_mismatches_fail_closed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    target: str,
+    mutator: Callable[[list[dict[str, object]]], None],
+    match: str,
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    if target == "partition":
+        rows = _read_jsonl_rows(paths["partition"])
+        mutator(rows)
+        _write_jsonl(paths["partition"], rows)
+        pin_path = paths["partition"]
+        pin_attr = "PINNED_PARTITION_SHA256"
+    elif target == "source":
+        rows = _read_jsonl_rows(paths["source_jsonl"])
+        mutator(rows)
+        _write_jsonl(paths["source_jsonl"], rows)
+        pin_path = paths["source_jsonl"]
+        pin_attr = "PINNED_SOURCE_UNITS_JSONL_SHA256"
+    else:
+        rows = _read_jsonl_rows(paths["evaluation_manifest"])
+        mutator(rows)
+        _write_jsonl(paths["evaluation_manifest"], rows)
+        _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+        pin_path = paths["evaluation_manifest"]
+        pin_attr = "PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256"
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    if target != "manifest":
+        monkeypatch.setattr(prav_context, pin_attr, prav_context.sha256_file(pin_path))
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match=match):
+        _call_build(paths)
+
+
+def test_source_manifest_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    wrong_hash = "0" * 64
+    _mutate_jsonl_row(paths["partition"], 0, lambda row: row.update({"source_text_sha256": wrong_hash}))
+    _mutate_jsonl_row(paths["evaluation_manifest"], 0, lambda row: row.update({"source_text_sha256": wrong_hash}))
+    _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(prav_context, "PINNED_PARTITION_SHA256", prav_context.sha256_file(paths["partition"]))
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source/manifest hash drift"):
+        _call_build(paths)
+
+
+def test_source_manifest_locator_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    wrong_hash = "0" * 64
+    _mutate_jsonl_row(paths["partition"], 0, lambda row: row.update({"frozen_locator_sha256": wrong_hash}))
+    _mutate_jsonl_row(paths["evaluation_manifest"], 0, lambda row: row.update({"frozen_locator_sha256": wrong_hash}))
+    _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(prav_context, "PINNED_PARTITION_SHA256", prav_context.sha256_file(paths["partition"]))
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source/manifest locator drift"):
+        _call_build(paths)
+
+
+def test_source_text_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _mutate_jsonl_row(
+        paths["source_jsonl"],
+        0,
+        lambda row: row.update({"source_text_sha256": "0" * 64}),
+    )
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_SOURCE_UNITS_JSONL_SHA256",
+        prav_context.sha256_file(paths["source_jsonl"]),
+    )
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="source text hash drift: 1"):
+        _call_build(paths)
+
+
+def test_pravopys_family_count_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _mutate_jsonl_row(
+        paths["evaluation_manifest"],
+        0,
+        lambda row: row.update({"family_id": "pravopys_2026_complete"}),
+    )
+    _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="pravopys family count drift"):
+        _call_build(paths)
+
+
+def test_pravopys_lane_count_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _mutate_jsonl_row(
+        paths["evaluation_manifest"],
+        0,
+        lambda row: row.update({"candidate_lane": "clean_modern"}),
+    )
+    _write_json(paths["evaluation_manifest_receipt"], _evaluation_manifest_receipt(paths["evaluation_manifest"]))
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="pravopys lane count drift"):
+        _call_build(paths)
+
+
+def test_partition_family_count_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _mutate_jsonl_row(
+        paths["partition"],
+        0,
+        lambda row: row.update({"family_id": "pravopys_2026_complete"}),
+    )
+    _patch_fixture_pins(monkeypatch, paths, row_count=5)
+    monkeypatch.setattr(prav_context, "PINNED_PARTITION_SHA256", prav_context.sha256_file(paths["partition"]))
+    with pytest.raises(
+        prav_context.PravopysEvaluationContextError,
+        match="partition family count drift: pravopys_2019_complete",
+    ):
+        _call_build(paths)
+
+
+def test_unicode_offset_round_trip_drift_fails_closed() -> None:
+    parent_text = "      4. Батько.\n      1) дитяче правило."
+    unit_text = "      1) дитяче правило."
+    start = parent_text.find(unit_text)
+    end = start + len(unit_text)
+
+    class _SliceDriftParent(str):
+        def __getitem__(self, key: object) -> str:
+            if key == slice(start, end):
+                return "x" * len(unit_text)
+            return super().__getitem__(key)
+
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="unicode offset round-trip drift"):
+        prav_context._unique_codepoint_offsets(_SliceDriftParent(parent_text), unit_text)
 
 
 def test_materialize_writes_restricted_private_output_and_text_free_receipt(
