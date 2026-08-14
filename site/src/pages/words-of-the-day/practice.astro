@@ -1262,7 +1262,7 @@ const frontmatter = {
   :global(.k3-levels button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
   }
   :global(.k3-level-soon) {
     display: block;
@@ -1456,7 +1456,7 @@ const frontmatter = {
   :global(.k3-session-budgets button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
   }
   /*
    * Primary Daily/Start CTA (#5502): `.btn-accent` is not a global style, so the
@@ -1474,19 +1474,19 @@ const frontmatter = {
     border: 1px solid var(--lu-primary);
     border-radius: 12px;
     background: var(--lu-primary);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
     font-size: 1.05rem;
     font-weight: 900;
     letter-spacing: 0.01em;
     box-shadow:
-      0 1px 0 color-mix(in srgb, var(--lu-on-accent) 18%, transparent) inset,
+      0 1px 0 color-mix(in srgb, var(--lu-on-primary-fill) 18%, transparent) inset,
       0 4px 14px color-mix(in srgb, var(--lu-primary) 32%, transparent);
   }
   :global(.lexicon-practice button.k3-session-primary:hover),
   :global(.lexicon-practice button.k3-session-primary:focus-visible) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
     filter: brightness(1.06);
     outline: none;
     box-shadow:
@@ -1749,11 +1749,11 @@ const frontmatter = {
   }
   :global(.daily-deck-counters .counter.new) {
     background: var(--lu-blue);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
   }
   :global(.daily-deck-counters .counter.done) {
     background: var(--lu-green);
-    color: var(--lu-on-accent);
+    color: var(--lu-on-primary-fill);
   }
   :global(.daily-deck-rows) {
     margin: 0;
