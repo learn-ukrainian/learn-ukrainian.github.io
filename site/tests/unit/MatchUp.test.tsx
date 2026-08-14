@@ -1,7 +1,10 @@
 import { describe, test, expect, vi } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MatchUp from '@site/src/components/MatchUp';
+
+// Mirrors packages/activity-kit MatchUp MISSHAKE_TIMEOUT_MS (wrong-pair reset).
+const MISSHAKE_TIMEOUT_MS = 240;
 
 // MatchUp shuffles the RIGHT column on mount, so tests find right-
 // tiles by text content, never by index. Left column is stable.
@@ -117,20 +120,28 @@ describe('MatchUp', () => {
   });
 
   test('reports an incorrect completion after a wrong pairing attempt', async () => {
-    const user = userEvent.setup();
-    const onComplete = vi.fn();
-    const { container } = render(<MatchUp pairs={pairs} onComplete={onComplete} />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      const onComplete = vi.fn();
+      const { container } = render(<MatchUp pairs={pairs} onComplete={onComplete} />);
 
-    await user.click(leftTiles(container)[0]);
-    await user.click(findRightByText(container, 'Bark'));
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    for (const pair of pairs) {
-      await user.click(leftTiles(container).find((button) => button.textContent?.trim() === pair.left)!);
-      await user.click(findRightByText(container, pair.right));
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'Bark'));
+      // Wrong-pair shake locks the board until MISSHAKE_TIMEOUT_MS clears.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(MISSHAKE_TIMEOUT_MS);
+      });
+      for (const pair of pairs) {
+        await user.click(leftTiles(container).find((button) => button.textContent?.trim() === pair.left)!);
+        await user.click(findRightByText(container, pair.right));
+      }
+
+      expect(onComplete).toHaveBeenCalledTimes(1);
+      expect(onComplete).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
     }
-
-    expect(onComplete).toHaveBeenCalledTimes(1);
-    expect(onComplete).toHaveBeenCalledWith(false);
   });
 
   test('clicking a correct pair marks both tiles as matched', async () => {
