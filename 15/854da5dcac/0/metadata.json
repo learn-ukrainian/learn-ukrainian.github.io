@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "15854da5dcac",
+  "session_id": "fleet-b4205d3b01584f669cd2d9766da6fde2",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T00:49:24.691548Z",
+  "branch": "cursor/6768-6771-loader",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "2ae88f18e824",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T00:49:24.684637Z",
+    "agent_lines": 155,
+    "agent_removed": 43,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 155,
+    "total_lines_changed": 198,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

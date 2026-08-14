@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "15854da5dcac",
+  "strategy": "manual-commit",
+  "branch": "cursor/6768-6771-loader",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/15/854da5dcac/0/metadata.json",
+      "transcript": "/15/854da5dcac/0/full.jsonl",
+      "compact_transcript": "/15/854da5dcac/0/transcript.jsonl",
+      "content_hash": "/15/854da5dcac/0/content_hash.txt",
+      "prompt": "/15/854da5dcac/0/prompt.txt"
+    }
+  ]
+}
