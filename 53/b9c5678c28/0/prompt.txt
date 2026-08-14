@@ -1,0 +1,40 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-vspu-2025-source-admission-r1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Cursor follow-up — PR #6795 custody binding blocker
+
+You are fixing the existing branch/worktree for draft PR #6795. You are not alone in the repository; preserve all unrelated work and do not alter any path outside the original four-file scope.
+
+Current reviewed head: `4ce2bf3296d4fda39ad324e85fdeae87bac64d07`.
+
+Root reproduced a fail-closed provenance defect:
+
+```text
+private_jsonl_sha256 ACCEPTED
+exactness_audit_sha256 ACCEPTED
+content_fit_audit_sha256 REJECTED
+```
+
+The probe deep-copied the committed receipt, replaced each named binding with 64 zeroes, recomputed `receipt_sha256`, and called `validate_receipt()`. A resealed receipt can therefore forge two exact private-custody artifact identities and still pass `--check`.
+
+Fix this root cause on the same PR:
+
+1. Schema-const and runtime-bind `bindings.private_jsonl_sha256` to `PRIVATE_JSONL_SHA256`.
+2. Schema-const and runtime-bind `bindings.private_jsonl_bytes` to `PRIVATE_JSONL_BYTES`.
+3. Schema-const and runtime-bind `bindings.exactness_audit_sha256` to `EXACTNESS_AUDIT_SHA256`.
+4. Audit the same receipt binding block for any sibling exact private-custody identity that is merely pattern-validated; bind it if it has an authoritative module constant. Do not invent new facts.
+5. Add focused reseal-mutation tests proving every corrected field is rejected independently.
+6. Regenerate the public receipt after final formatting so implementation/schema/self hashes agree.
+7. Run the 56-test relevant suite (or its current exact successor), Ruff, source-blind `--check`, and the root mutation probe.
+8. Commit with `X-Agent: cursor/phase3-6375-pr6795-custody-binding-fix-r1` and push to the existing PR branch. Keep the PR draft; do not merge or arm auto-merge.
+
+Preserve all existing no-overclaim gates, exact source facts, privacy/permission invariants, and four-path scope. Report the new exact head, fields bound, test counts, receipt body hash, and mutation-probe result.
