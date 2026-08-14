@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cf6f7f0f6703",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-uzhnu-2023-morph-deriv-intake-cursor-v2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_uzhnu_2023_morphemology_derivatology_intake.py",
+    "tests/test_open_model_phase3_uzhnu_2023_morphemology_derivatology_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/cf/6f7f0f6703/0/metadata.json",
+      "transcript": "/cf/6f7f0f6703/0/full.jsonl",
+      "compact_transcript": "/cf/6f7f0f6703/0/transcript.jsonl",
+      "content_hash": "/cf/6f7f0f6703/0/content_hash.txt",
+      "prompt": "/cf/6f7f0f6703/0/prompt.txt"
+    }
+  ]
+}

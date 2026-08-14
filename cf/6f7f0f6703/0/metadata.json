@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "cf6f7f0f6703",
+  "session_id": "fleet-00fb2b8e96214ba5a69fe47fb48993b7",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T14:01:15.122367Z",
+  "branch": "cursor/phase3-6375-uzhnu-2023-morph-deriv-intake-cursor-v2",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_uzhnu_2023_morphemology_derivatology_intake.py",
+    "tests/test_open_model_phase3_uzhnu_2023_morphemology_derivatology_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "6711d2640769",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T14:01:15.107014Z",
+    "agent_lines": 741,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 741,
+    "total_lines_changed": 741,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
