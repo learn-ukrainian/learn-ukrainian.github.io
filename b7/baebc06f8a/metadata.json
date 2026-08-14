@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b7baebc06f8a",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6711-wotd-hub-locale",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lib/lexicon/daily-loading.ts",
+    "site/src/pages/__tests__/wotd-hub-chrome-locale.test.ts",
+    "site/tests/unit/daily-words-example.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b7/baebc06f8a/0/metadata.json",
+      "transcript": "/b7/baebc06f8a/0/full.jsonl",
+      "compact_transcript": "/b7/baebc06f8a/0/transcript.jsonl",
+      "content_hash": "/b7/baebc06f8a/0/content_hash.txt",
+      "prompt": "/b7/baebc06f8a/0/prompt.txt"
+    }
+  ]
+}
