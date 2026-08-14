@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import stat
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,13 @@ from scripts.projects.open_model_data import phase3_school_context_negative_reco
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
 PUBLIC_RECEIPT = ROOT / "data/projects/open_model_data/inventory/phase3_school_context_negative_recovery_receipt_v1.json"
+DRIVE_ROOT = (
+    Path.home()
+    / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
+)
+CUSTODY_TARBALL = (
+    DRIVE_ROOT / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
+)
 
 
 def _school_row(
@@ -196,3 +204,35 @@ def test_symlink_receipt_rejected(tmp_path: Path) -> None:
     link.symlink_to(target)
     with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="symlink forbidden"):
         negrec._regular_file(link, "receipt")
+
+
+def test_atomic_write_rejects_group_or_other_bits(tmp_path: Path) -> None:
+    target = tmp_path / "out.bin"
+    with pytest.raises(ValueError, match="refuses group/other bits"):
+        negrec._atomic_write(target, b"secret", 0o644)
+    assert not target.exists()
+
+
+def test_atomic_write_sets_owner_only_mode(tmp_path: Path) -> None:
+    target = tmp_path / "out.bin"
+    negrec._atomic_write(target, b"secret", negrec.PRIVATE_FILE_MODE)
+    assert target.is_file()
+    assert stat.S_IMODE(target.stat().st_mode) == negrec.PRIVATE_FILE_MODE
+
+
+def test_production_receipt_reproducible_against_drive_custody(tmp_path: Path) -> None:
+    if not CUSTODY_TARBALL.is_file():
+        pytest.skip("Drive custody artifacts unavailable")
+    assert negrec.sha256_file(CUSTODY_TARBALL) == negrec.PINNED_CUSTODY_TARBALL_SHA256
+    committed = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
+    out = tmp_path / "receipt.json"
+    reproduced = negrec.production_run(
+        custody_tarball=CUSTODY_TARBALL,
+        public_receipt_path=out,
+        started_at=committed["started_at"],
+        completed_at=committed["completed_at"],
+    )
+    assert stat.S_IMODE(out.stat().st_mode) == negrec.PRIVATE_FILE_MODE
+    assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
+    assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
+    assert reproduced["bindings"]["implementation_sha256"] == negrec.sha256_file(negrec.SCRIPT_PATH)

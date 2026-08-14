@@ -199,19 +199,28 @@ def _iter_jsonl(path: Path, label: str) -> Iterator[dict[str, Any]]:
 
 
 def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
+    """Atomically write *payload* with owner-only permissions (no group/other bits)."""
+    if mode & 0o077:
+        raise ValueError(f"private write refuses group/other bits: {mode:04o}")
     _reject_symlink_components(path, "output path")
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp.{os.getpid()}")
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    temporary = Path(temporary_name)
     try:
-        with tmp.open("wb") as handle:
+        with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), mode)
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
-        os.chmod(tmp, mode)
-        os.replace(tmp, path)
-    finally:
-        if tmp.exists():
-            tmp.unlink(missing_ok=True)
+        os.replace(temporary, path)
+        os.chmod(path, mode)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def _validate_public_bindings() -> None:
@@ -494,7 +503,7 @@ def materialize(
         completed_at=finished,
         candidate_database=candidate_database,
     )
-    _atomic_write(public_receipt_path, canonical_bytes(receipt), 0o644)
+    _atomic_write(public_receipt_path, canonical_bytes(receipt), PRIVATE_FILE_MODE)
     return validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
 
 
