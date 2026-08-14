@@ -21,6 +21,7 @@ import {
   SRS_STORAGE_KEY,
   DAILY_PRACTICE_DECK_SIZE,
   cardKey,
+  clearLoadedSrsState,
   loadState,
   saveState,
   type PracticeDeckData,
@@ -1346,6 +1347,43 @@ describe('LexiconPractice', () => {
     expect(retry).toBeInTheDocument();
     // No slash-dual button chrome.
     expect(retry.textContent ?? '').not.toMatch(/\/\s*Try again|\/\s*Спробувати/);
+  });
+
+  test('blocked localStorage still mounts practice chrome with an in-memory session (#6780)', async () => {
+    const realStorage = globalThis.localStorage;
+    const denied = () => {
+      throw new DOMException('Access is denied', 'SecurityError');
+    };
+    vi.stubGlobal(
+      'localStorage',
+      {
+        get length() {
+          return 0;
+        },
+        clear: vi.fn(),
+        getItem: denied,
+        key: vi.fn(() => null),
+        removeItem: denied,
+        setItem: denied,
+      } as unknown as Storage,
+    );
+    clearLoadedSrsState();
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    const { fn } = mockShardFetch({ A1: 2 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+    try {
+      render(<LexiconPractice />);
+
+      expect(screen.queryByTestId('practice-error-fallback')).not.toBeInTheDocument();
+      expect(await screen.findByTestId('practice-start-session')).toBeInTheDocument();
+      expect(screen.getByText(/Прогрес призупинено, доки сховище браузера не стане доступним/)).toBeInTheDocument();
+      expect(screen.getByText(/Progress suspended until browser storage becomes available/)).toBeInTheDocument();
+    } finally {
+      vi.stubGlobal('localStorage', realStorage);
+      clearLoadedSrsState();
+    }
   });
 
   test('eager-loads the index and Words-of-the-Day lexemes, but no mode-specific drill shards, before a mode starts', async () => {

@@ -38,6 +38,9 @@ const SETTINGS_VERSION = 1;
 export const MAX_RAW_REVIEW_LOG_ENTRIES = 2_000;
 const RECOVERY_RAW_REVIEW_LOG_ENTRIES = 0;
 export const SRS_STORAGE_FULL_WARNING = 'Прогрес не зберігається — сховище переповнене';
+/** Shown when browser storage is blocked/disabled and Practice runs on the in-memory fallback. */
+export const SRS_STORAGE_UNAVAILABLE_WARNING =
+  'Прогрес призупинено, доки сховище браузера не стане доступним.';
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const SESSION_RESUME_MAX_MS = 6 * HOUR_MS;
@@ -730,18 +733,54 @@ const memoryStorage: StorageLike = {
 
 let activeState: LoadedSrsState | null = null;
 let activeStorage: StorageLike | null = null;
+/** True when `resolveStorage` fell back because browser localStorage is unusable. */
+let practiceStorageEphemeral = false;
 
+/**
+ * Prefer `window.localStorage`, but probe a read first.
+ *
+ * Chrome `--disable-local-storage` (and some private-mode builds) expose a Storage
+ * object whose `getItem`/`setItem` throw `SecurityError`. Returning that object
+ * made `loadState` / `nextDuePreviewTime` throw during Practice render and trip
+ * the error boundary (#6780). Quota-full storage still allows `getItem`, so a
+ * read probe does not mis-classify the existing quota-recovery path.
+ */
 function resolveStorage(): StorageLike {
-  if (typeof window === 'undefined') return memoryStorage;
+  if (typeof window === 'undefined') {
+    practiceStorageEphemeral = false;
+    return memoryStorage;
+  }
   try {
-    return window.localStorage;
+    const storage = window.localStorage;
+    void storage.getItem('__lu_srs_probe__');
+    practiceStorageEphemeral = false;
+    return storage;
   } catch {
+    practiceStorageEphemeral = true;
     return memoryStorage;
   }
 }
 
 function currentStorage(): StorageLike {
   return activeStorage ?? resolveStorage();
+}
+
+/** Whether Practice is using the session-only in-memory store (blocked localStorage). */
+export function isPracticeStorageEphemeral(): boolean {
+  if (activeStorage === memoryStorage) return true;
+  resolveStorage();
+  return practiceStorageEphemeral;
+}
+
+/**
+ * Drop the cached SRS hydrate so the next read re-resolves browser storage.
+ * Used after storage availability changes (and in unit tests that stub localStorage).
+ */
+export function clearLoadedSrsState(): void {
+  activeState = null;
+  activeStorage = null;
+  practiceStorageEphemeral = false;
+  memoryStore.clear();
 }
 
 function emptyFlags(): SrsFlags {
@@ -1045,17 +1084,26 @@ export function loadState(
   storage: StorageLike = resolveStorage(),
   now: Date | number = Date.now(),
 ): LoadedSrsState {
-  const raw = storage.getItem(SRS_STORAGE_KEY);
+  let resolved = storage;
+  let raw: string | null;
+  try {
+    raw = resolved.getItem(SRS_STORAGE_KEY);
+  } catch {
+    // Explicit broken Storage (or a stale activeStorage) must not crash render.
+    resolved = memoryStorage;
+    practiceStorageEphemeral = true;
+    raw = memoryStorage.getItem(SRS_STORAGE_KEY);
+  }
   if (
     activeState?.flags.storageWriteFailed &&
-    activeStorage === storage &&
+    activeStorage === resolved &&
     activeState.raw === raw
   ) {
     return activeState;
   }
 
-  activeStorage = storage;
-  const { settings, corrupt: settingsCorrupt } = loadSettings(storage);
+  activeStorage = resolved;
+  const { settings, corrupt: settingsCorrupt } = loadSettings(resolved);
   if (!raw) {
     activeState = {
       version: CURRENT_VERSION,
@@ -1092,7 +1140,7 @@ export function loadState(
     });
     if (state) {
       if (compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES)) {
-        persistWithQuotaRecovery(state, storage, toTime(now) ?? Date.now());
+        persistWithQuotaRecovery(state, resolved, toTime(now) ?? Date.now());
       }
       activeState = state;
       return state;
@@ -1119,7 +1167,7 @@ export function loadState(
     });
     if (!state) throw new Error('migrated SRS schema is invalid');
     activeState = state;
-    persistWithQuotaRecovery(state, storage, toTime(now) ?? Date.now());
+    persistWithQuotaRecovery(state, resolved, toTime(now) ?? Date.now());
     return state;
   } catch {
     activeState = {

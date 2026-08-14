@@ -18,6 +18,7 @@ import {
   DAILY_PRACTICE_DECK_SIZE,
   PUBLISHED_PRACTICE_LEVELS,
   SRS_STORAGE_FULL_WARNING,
+  SRS_STORAGE_UNAVAILABLE_WARNING,
   buildSessionPoolConstraintState,
   classifyDailyPracticeOrigin,
   clearPracticeSessionSnapshots,
@@ -31,6 +32,7 @@ import {
   isCaseClozeDrill,
   isPracticeNewCard,
   isPracticeSessionResumable,
+  isPracticeStorageEphemeral,
   isWrongCaseAnswer,
   loadState,
   masteredCount,
@@ -508,9 +510,9 @@ function translateStorageWarning(warning: string | null): { uk: string; en: stri
       en: 'Progress not saved — storage is full',
     };
   }
-  if (warning.includes('сховище браузера')) {
+  if (warning.includes('сховище браузера') || warning === SRS_STORAGE_UNAVAILABLE_WARNING) {
     return {
-      uk: 'Прогрес призупинено, доки сховище браузера не стане доступним.',
+      uk: SRS_STORAGE_UNAVAILABLE_WARNING,
       en: 'Progress suspended until browser storage becomes available.',
     };
   }
@@ -2190,8 +2192,13 @@ function LexiconPracticeIsland({
 
     if (state.flags.storageFull) {
       setStorageWarning(SRS_STORAGE_FULL_WARNING);
-    } else if (state.flags.storageWriteFailed || state.flags.corrupt || state.flags.migrationFailed) {
-      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+    } else if (
+      isPracticeStorageEphemeral() ||
+      state.flags.storageWriteFailed ||
+      state.flags.corrupt ||
+      state.flags.migrationFailed
+    ) {
+      setStorageWarning(SRS_STORAGE_UNAVAILABLE_WARNING);
     }
 
     if (typeof window !== 'undefined') {
@@ -2782,7 +2789,7 @@ function LexiconPracticeIsland({
       try {
         rateCard(pair.lemmaId, 'matching', rating, new Date());
       } catch (e) {
-        setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+        setStorageWarning(SRS_STORAGE_UNAVAILABLE_WARNING);
       }
     }
   }, [pairs, selection, sessionCompleted]);
@@ -3517,8 +3524,13 @@ function LexiconPracticeIsland({
     setReviewLog([...state.reviews]);
     if (state.flags.storageFull) {
       setStorageWarning(SRS_STORAGE_FULL_WARNING);
-    } else if (state.flags.storageWriteFailed || state.flags.corrupt || state.flags.migrationFailed) {
-      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+    } else if (
+      isPracticeStorageEphemeral() ||
+      state.flags.storageWriteFailed ||
+      state.flags.corrupt ||
+      state.flags.migrationFailed
+    ) {
+      setStorageWarning(SRS_STORAGE_UNAVAILABLE_WARNING);
     } else if (storageWarning === SRS_STORAGE_FULL_WARNING) {
       setStorageWarning(null);
     }
@@ -3581,7 +3593,7 @@ function LexiconPracticeIsland({
         en: `${current.lemma.lemma}: ${RATING_LABELS[rating].en}`,
       });
     } catch {
-      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+      setStorageWarning(SRS_STORAGE_UNAVAILABLE_WARNING);
     }
     return { nextUnresolved, nextDeferred };
   }
