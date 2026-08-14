@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "56bd559a67ff",
+  "strategy": "manual-commit",
+  "branch": "cursor/6781-rebase",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/lesson-schema.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/56/bd559a67ff/0/metadata.json",
+      "transcript": "/56/bd559a67ff/0/full.jsonl",
+      "compact_transcript": "/56/bd559a67ff/0/transcript.jsonl",
+      "content_hash": "/56/bd559a67ff/0/content_hash.txt",
+      "prompt": "/56/bd559a67ff/0/prompt.txt"
+    }
+  ]
+}
