@@ -26,15 +26,28 @@ WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
 # hang) while codex returned in ~2s. The prior 2.0s refresh timeout
 # guaranteed a false 'unavailable' classification for the claude lane on
 # every fresh-refresh call — Monitor/routing then painted a healthy lane as
-# capacity-unknown (routing-budget false-red). This floor covers both
-# refresh_provider_usage_data() callers: the explicit fresh-refresh path
+# capacity-unknown (routing-budget false-red). This floor covers the
+# explicit in-process fresh-refresh path
 # (state_router.compute_routing_budget(fresh_codexbar=True)) and the
-# background refresh thread (trigger_background_refresh). Neither blocks an
-# HTTP response thread past its own asyncio.to_thread call, so there is no
-# reason for the background path to run a shorter, more failure-prone
-# timeout than the explicit one — the prior 2.0s/5.0s split was itself the
-# bug, not a deliberate tradeoff.
+# background scheduler. HTTP handlers never wait for this CLI.
 DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S = 25.0
+
+# CodexBar snapshots are operator-facing capacity, not per-request truth.
+# 12 minutes sits in the 10–15 min window: long enough that a ~17s Claude
+# probe cannot saturate the API, short enough that dispatch still sees
+# current allotment. Override with CODEXBAR_CACHE_TTL_S /
+# CODEXBAR_REFRESH_INTERVAL_S.
+DEFAULT_CODEXBAR_CACHE_TTL_S = 720.0
+DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
+
+SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
+    "claude",
+    "codex",
+    "cursor",
+    "gemini",
+    "grok",
+    "kimi",
+)
 
 PROVIDER_TO_LANE = {
     "codex": "codex",
@@ -50,7 +63,13 @@ PROVIDER_TO_LANE = {
 _last_good_data: dict[str, tuple[float, dict[str, Any]]] = {}
 _last_failure_data: dict[str, dict[str, Any]] = {}
 _refresh_lock = threading.Lock()
+_refresh_in_flight = threading.Lock()
 _refresh_thread: threading.Thread | None = None
+_scheduler_lock = threading.Lock()
+_scheduler_stop = threading.Event()
+_scheduler_thread: threading.Thread | None = None
+_last_refresh_started_at: float | None = None
+_last_refresh_finished_at: float | None = None
 
 
 def _is_usable_capacity(data: dict[str, Any] | None) -> bool:
@@ -113,21 +132,60 @@ def _with_observation_metadata(
     return result
 
 
+def _env_positive_float(name: str, default: float) -> float:
+    """Read a positive float env override, else ``default``."""
+    raw = os.environ.get(name)
+    if not raw:
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        return default
+    if value <= 0:
+        return default
+    return value
+
+
 def _codexbar_refresh_timeout_s() -> float:
     """Per-provider CLI timeout floor for a blocking CodexBar refresh.
 
     Override via CODEXBAR_REFRESH_TIMEOUT_S (e.g. a slower box, or CI).
     Read fresh on every call so tests can monkeypatch the env var per-case.
     """
-    raw = os.environ.get("CODEXBAR_REFRESH_TIMEOUT_S")
-    if raw:
-        try:
-            value = float(raw)
-        except ValueError:
-            value = None
-        if value is not None and value > 0:
-            return value
-    return DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
+    return _env_positive_float("CODEXBAR_REFRESH_TIMEOUT_S", DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S)
+
+
+def _codexbar_cache_ttl_s() -> float:
+    """How long a successful snapshot is labelled fresh."""
+    return _env_positive_float("CODEXBAR_CACHE_TTL_S", DEFAULT_CODEXBAR_CACHE_TTL_S)
+
+
+def _codexbar_refresh_interval_s() -> float:
+    """Background scheduler period. Defaults to the same 12-minute TTL."""
+    return _env_positive_float(
+        "CODEXBAR_REFRESH_INTERVAL_S", DEFAULT_CODEXBAR_REFRESH_INTERVAL_S
+    )
+
+
+def _periodic_refresh_enabled() -> bool:
+    """Start the daemon unless tests or an explicit env override disable it.
+
+    TestClient lifespan must not spawn six CodexBar CLIs on every API test.
+    ``CODEXBAR_PERIODIC_REFRESH=1`` forces it on (scheduler unit tests).
+    ``CODEXBAR_PERIODIC_REFRESH=0`` forces it off.
+    """
+    raw = os.environ.get("CODEXBAR_PERIODIC_REFRESH")
+    if raw is not None:
+        return raw.strip().lower() not in {"0", "false", "off", "no"}
+    return os.environ.get("PYTEST_CURRENT_TEST") is None
+
+
+def _on_demand_refresh_enabled() -> bool:
+    """Whether a cache miss may start a one-shot background CLI fan-out."""
+    raw = os.environ.get("CODEXBAR_ON_DEMAND_REFRESH")
+    if raw is not None:
+        return raw.strip().lower() not in {"0", "false", "off", "no"}
+    return os.environ.get("PYTEST_CURRENT_TEST") is None
 
 
 def refresh_provider_usage_data(
@@ -180,7 +238,9 @@ def refresh_provider_usage_data(
     return refreshed
 
 
-def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str, Any]:
+def fetch_codexbar_usage(
+    provider: str, *, timeout_s: float | None = None
+) -> dict[str, Any]:
     """Run codexbar CLI, parse and normalize provider-specific usage data.
 
     Returns a normalized dictionary. If the CLI fails, times out, is missing,
@@ -188,6 +248,8 @@ def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str,
     and auth_error/error_kind set. Never raises exceptions.
     For provider 'gemini', it queries 'gemini' first, and falls back to 'antigravity' if the first fails.
     """
+    if timeout_s is None:
+        timeout_s = _codexbar_refresh_timeout_s()
     if provider == "gemini":
         data = _fetch_single_provider("gemini", timeout_s=timeout_s)
         if data.get("weekly_used_pct") is not None:
@@ -572,34 +634,110 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
 
 
 def trigger_background_refresh() -> None:
-    """Start bounded parallel refreshes without making an API request wait."""
+    """Start one bounded parallel refresh without making an API request wait."""
     global _refresh_thread
     with _refresh_lock:
         if _refresh_thread is not None and _refresh_thread.is_alive():
             return
-        _refresh_thread = threading.Thread(target=_run_all_refreshes, daemon=True)
+        _refresh_thread = threading.Thread(
+            target=_run_all_refreshes,
+            name="codexbar-refresh",
+            daemon=True,
+        )
         _refresh_thread.start()
 
 
 def _run_all_refreshes() -> None:
-    # The background path must not serially spend six long CLI timeouts. Its
-    # bounded probes are parallel and failed probes cannot poison LKG data.
-    # Runs on a daemon thread, so it does not block any HTTP response —
-    # it shares the same realistic timeout floor as the explicit fresh-refresh
-    # path (see _codexbar_refresh_timeout_s) rather than the prior 2.0s, which
-    # never let the claude lane's ~17s CLI probe complete.
-    providers = ["claude", "codex", "cursor", "gemini", "grok", "kimi"]
-    refresh_provider_usage_data(providers)
+    """Refresh every subscription lane. Overlapping callers no-op."""
+    global _last_refresh_started_at, _last_refresh_finished_at
+    if not _refresh_in_flight.acquire(blocking=False):
+        return
+    _last_refresh_started_at = time.monotonic()
+    try:
+        # Bounded probes are parallel. Failed probes cannot poison LKG data.
+        # Runs off the HTTP request path — it shares the same realistic timeout
+        # floor as the explicit fresh-refresh path (see _codexbar_refresh_timeout_s)
+        # rather than the prior 2.0s, which never let the claude lane's ~17s CLI
+        # probe complete.
+        refresh_provider_usage_data(SUBSCRIPTION_PROVIDERS)
+    finally:
+        _last_refresh_finished_at = time.monotonic()
+        _refresh_in_flight.release()
+
+
+def _scheduler_is_running() -> bool:
+    thread = _scheduler_thread
+    return thread is not None and thread.is_alive()
+
+
+def _periodic_loop(interval_s: float, run_immediately: bool) -> None:
+    if run_immediately:
+        _run_all_refreshes()
+    while not _scheduler_stop.wait(timeout=interval_s):
+        _run_all_refreshes()
+
+
+def start_periodic_refresh(*, run_immediately: bool = True) -> None:
+    """Keep CodexBar snapshots warm on a 12-minute timer.
+
+    Idempotent. No-ops when disabled (pytest, or CODEXBAR_PERIODIC_REFRESH=0).
+    """
+    global _scheduler_thread
+    if not _periodic_refresh_enabled():
+        return
+    with _scheduler_lock:
+        if _scheduler_thread is not None and _scheduler_thread.is_alive():
+            return
+        _scheduler_stop.clear()
+        interval_s = _codexbar_refresh_interval_s()
+        _scheduler_thread = threading.Thread(
+            target=_periodic_loop,
+            args=(interval_s, run_immediately),
+            name="codexbar-scheduler",
+            daemon=True,
+        )
+        _scheduler_thread.start()
+
+
+def stop_periodic_refresh(*, join_timeout_s: float = 1.0) -> None:
+    """Stop the background scheduler. Safe to call when it was never started."""
+    global _scheduler_thread
+    _scheduler_stop.set()
+    with _scheduler_lock:
+        thread = _scheduler_thread
+        _scheduler_thread = None
+    if thread is not None and thread.is_alive():
+        thread.join(timeout=join_timeout_s)
+
+
+def scheduler_status() -> dict[str, Any]:
+    """Process-local snapshot for /api/health. Never calls the CLI."""
+    now = time.monotonic()
+    started = _last_refresh_started_at
+    finished = _last_refresh_finished_at
+    return {
+        "scheduler_running": _scheduler_is_running(),
+        "refresh_in_flight": _refresh_in_flight.locked(),
+        "cache_ttl_s": _codexbar_cache_ttl_s(),
+        "refresh_interval_s": _codexbar_refresh_interval_s(),
+        "last_refresh_age_s": None if finished is None else round(now - finished, 3),
+        "last_refresh_started_age_s": None if started is None else round(now - started, 3),
+        "providers": list(SUBSCRIPTION_PROVIDERS),
+    }
 
 
 def get_provider_usage_data(provider: str) -> dict[str, Any]:
     """Retrieve provider data from cache.
 
-    Triggers a background refresh on cache miss/expiration.
-    Returns a normalized record indicating stale/unknown state.
+    HTTP and routing-budget always take this path. The CLI itself is owned by
+    the periodic scheduler (API process) or by an explicit
+    ``refresh_provider_usage_data`` caller. A cache miss here must not wait.
+
+    When no scheduler is running (CLI in-process callers, tests), a cache miss
+    still kicks a one-shot background refresh so the next read can see data.
     """
     cache_key = f"codexbar_usage:{provider}"
-    cached = cache_get_with_age(cache_key, ttl=300.0)
+    cached = cache_get_with_age(cache_key, ttl=_codexbar_cache_ttl_s())
 
     if cached is not None:
         val, age = cached
@@ -611,8 +749,12 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
                 provider=provider,
             )
 
-    # Cache miss or expired: trigger update background thread
-    trigger_background_refresh()
+    # Cache miss or expired. The scheduler owns refresh when the API is up.
+    # Under pytest, skip the on-demand CLI fan-out so later tests do not
+    # inherit a 25s in-flight lock; tests that need the kick opt in via
+    # CODEXBAR_ON_DEMAND_REFRESH=1 or call trigger_background_refresh().
+    if not _scheduler_is_running() and _on_demand_refresh_enabled():
+        trigger_background_refresh()
 
     # Serve last good data as stale fallback
     if provider in _last_good_data:

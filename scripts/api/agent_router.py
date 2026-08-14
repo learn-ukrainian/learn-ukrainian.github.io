@@ -3,6 +3,7 @@ import json
 import logging
 import subprocess
 import uuid
+from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, HTTPException
@@ -17,6 +18,24 @@ from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+_PROCESS_TIMEOUT_S = 2.0
+
+
+def _run_command(
+    args: list[str],
+    *,
+    cwd: Path | None = None,
+    timeout: float = _PROCESS_TIMEOUT_S,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+        check=False,
+    )
 
 
 @router.get("/module/{level}/{slug}")
@@ -120,7 +139,10 @@ def get_prompt_summary(level: str, slug: str):
 
 @router.get("/runtime")
 def get_runtime():
-    proc = subprocess.run(["ps", "-x", "-o", "pid,state,command"], capture_output=True, text=True)
+    try:
+        proc = _run_command(["ps", "-x", "-o", "pid,state,command"])
+    except subprocess.TimeoutExpired:
+        return {"active_processes": [], "error": "ps_timeout"}
     processes = []
     repo_name = PROJECT_ROOT.name
     for line in proc.stdout.splitlines()[1:]:
@@ -146,7 +168,15 @@ def get_runtime():
 
 @router.get("/worktree")
 def get_worktree():
-    proc = subprocess.run(["git", "status", "--porcelain"], cwd=LIVE_REPO_ROOT, capture_output=True, text=True)
+    try:
+        proc = _run_command(["git", "status", "--porcelain"], cwd=LIVE_REPO_ROOT)
+    except subprocess.TimeoutExpired:
+        return {
+            "source_code_changes": [],
+            "generated_artifacts": [],
+            "total_changes": 0,
+            "error": "git_timeout",
+        }
 
     source_code = []
     artifacts = []

@@ -51,6 +51,7 @@ from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
+from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
 from .config import (
@@ -117,7 +118,11 @@ async def _lifespan(_app: FastAPI):
         initialize_hramatka_store()
     except (OSError, RuntimeError, sqlite3.Error) as exc:
         logger.error("Hramatka store initialization failed; readyz will remain unhealthy: %s", exc)
-    yield
+    start_periodic_refresh()
+    try:
+        yield
+    finally:
+        stop_periodic_refresh()
 
 
 app = FastAPI(
@@ -1050,6 +1055,7 @@ async def health_check():
         "started_at": _SERVER_START.isoformat(),
         "checked_at": now.isoformat(),
         "resilience": get_resilience_snapshot(),
+        "codexbar": scheduler_status(),
     }
 
 
