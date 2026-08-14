@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fdcc4dbed2ce",
+  "session_id": "session_bc2bc1dc-9d80-4e94-8bd0-b8c19e0eb391",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T21:42:57.367985Z",
+  "branch": "kimi/atlas-a11y-6814-6815",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/tests/unit/k3-chrome-locale.test.ts"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "bdde2ba1f068",
+  "token_usage": {
+    "input_tokens": 11733,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 162560,
+    "output_tokens": 1113,
+    "api_call_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T21:42:57.33967Z",
+    "agent_lines": 2,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2,
+    "total_lines_changed": 3,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/atlas-a11y-6814-6815
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Dispatch: fix PR #6819 Frontend vitest (author-fix)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: kimi k3-256k (author of #6819)
+- why_this_tier: one-file unit-test update so the a11y token change matches the existing chrome-locale pin; author-fix on the same branch
+- advisor_packet: n/a
+- owned_paths:
+  - site/tests/unit/k3-chrome-locale.test.ts
+  - site/src/pages/words-of-the-day/practice.astro (only if the test pin is wrong and the token must move)
+- acceptance_cmd: `cd site && npx vitest run tests/unit/k3-chrome-locale.test.ts` exits 0; `gh pr checks 6819` Frontend not fail
+- alternatives_considered:
+  1. claude — busy on #6807 rebase
+  2. cursor — --check-budget status=hot (pace deficit)
+  3. codex — hot + deficit, refuse
+  4. glm — ACP review stubbed this session; not the implement seat for a 1-file test pin
+- parallel_free_seats: glm, grok, deepseek
+- CAPACITY_CARD: pick=kimi status=cool will_last=true free=kimi,glm,deepseek,grok avoid=codex(hot),cursor(hot) source=routing-budget
+
+## #M-4 evidence
+GitHub check annotation on head `8dd5cc4dc4de3318454e28020d5b2d9b846ec413`:
+
+`site/tests/unit/k3-chrome-locale.test.ts` > `practice.astro styles the primary Daily/Start CTA as a distinct primary control (#5502)`
+
+Expected regex:
+`/button\.k3-session-primary[^}]*color:\s*var\(--lu-on-primary\)/s`
+
+Received `practice.astro` now sets that color to `var(--lu-on-accent)` (the #6814 dark-theme contrast fix).
+
+Build step passed. Only this vitest assertion failed.
+
+## Work
+1. Stay on `kimi/atlas-a11y-6814-6815` (PR #6819). Rebase onto origin/main only if needed; do not expand scope.
+2. Update the unit test pin so it asserts the **a11y-correct** token (`--lu-on-accent` for `.k3-session-primary`, matching the dark-theme `--lu-on-accent` contract). Do **not** revert the contrast fix to make the old test pass.
+3. If other assertions in the same file pin `--lu-on-primary` / `--lu-on-yellow` for counters that this PR also changed, update those pins the same way.
+4. Run `cd site && npx vitest run tests/unit/k3-chrome-locale.test.ts` and the other tests you touch.
+5. Commit + push to the same branch. Trailer: `X-Agent: kimi/atlas-6819-ci-token-test`
+6. Do **not** merge or arm auto-merge.
+
+## Hard rules
+- Do not re-add axe suppressions.
+- Do not touch LexiconPractice.tsx (that's #6807's island).
+- Work only in this worktree.
+- OPSEC: **teacher** only.
+
+## Done means
+Pushed commit on #6819; local vitest for `k3-chrome-locale.test.ts` green; new head SHA printed.
