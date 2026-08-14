@@ -1,0 +1,44 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/atlas-6711-wotd-hub-locale
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix #6711 — UK chrome toggle leaves English strings (readings hero, search, WotD hub body)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: cursor × Auto (no model pin)
+- why_this_tier: bounded frontend i18n defect with exact operator repro; no architecture
+- owned_paths: site/src/** (locale/chrome components + their tests) — do NOT touch site/src/components/LexiconPractice.tsx (another lane owns it right now)
+- acceptance_cmd: cd site && npx tsc --noEmit && npx vitest run + repro walkthrough from #6711
+- alternatives_considered: (1) agy — busy on #6801; (2) codex — routed to #6371; (3) driver self-implement — forbidden
+- parallel_free_seats: none idle after this wave
+
+## Task
+GitHub issue **#6711** is the spec — but scope carefully: **the readings-page half (hero/subtitle/search placeholder) is ALREADY FIXED by merged PR #6750 — do not re-implement it.** Verify it on HEAD first; your scope is what remains:
+- The follow-up comment's Words-of-the-Day hub case: after toggling to English chrome, the entire hub body stays Ukrainian — title, subtitle, practice CTA, «Добірка на сьогодні», helper copy, «РІВЕНЬ», and the count line «A2 · 12 слів» (pluralized «слів»/words never switches).
+- The home hero staying English may be intentional (English-interface product line) — note your call in the PR body rather than silently changing it.
+Policy: chrome strings follow the toggle; module/learning CONTENT never switches (#3671). The Ukrainian words being taught are content; the interface around them is chrome.
+Root-cause where the hub's strings bypass the locale mechanism (compare with how #6750 wired the readings page) and fix at that layer — no per-page string hacks if the real gap is a missed wiring of the shared locale store.
+
+## Evidence preamble (#M-4)
+Every PR claim tool-backed: failing test (or DOM assertion) reproducing each leftover-English/leftover-Ukrainian chrome string BEFORE the fix; passing run after. Mutation check: revert → test fails.
+
+## Steps
+1. Work only inside your dispatch worktree.
+2. Reproduce each reported case with component/E2E tests; confirm they fail on unmodified HEAD.
+3. Implement (your design). Cover: readings hero/subtitle/search placeholder; WotD hub body chrome incl. pluralized count line in both locales.
+4. cd site && npx tsc --noEmit && npx eslint <changed files> --quiet && npx vitest run
+5. Conventional commit referencing #6711, push, open PR `fix(site): ...`, X-Agent trailer.
+6. Do NOT merge and do NOT enable auto-merge — the driver owns review + merge.
+
+## Ownership constraint (re-dispatch note)
+Another active task owns `site/src/components/LexiconPractice.tsx` and `site/src/components/__tests__/**`. Do NOT edit those paths. Put your tests under `site/src/pages/__tests__/` (create it) or colocated next to the files you own. If root-causing shows the fix REQUIRES editing a file owned by the other task, STOP, report that in the task output, and do not edit it.
+Your owned scope: `site/src/pages/words-of-the-day.astro`, `site/src/pages/words-of-the-day/**`, `site/src/pages/__tests__/**`, `site/src/components/PracticeDailyDeck.tsx`, plus whatever shared chrome-locale utility file the wiring genuinely needs — name it in the PR body if you touch one.

@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a27a6404f8c6",
+  "strategy": "manual-commit",
+  "branch": "cursor/atlas-6711-wotd-hub-locale",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lexicon/DailyWords.astro",
+    "site/src/lib/i18n/chrome.ts",
+    "site/src/pages/__tests__/wotd-hub-chrome-locale.test.ts",
+    "site/src/pages/words-of-the-day.astro",
+    "site/tests/unit/daily-words-example.test.ts",
+    "site/vitest.config.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a2/7a6404f8c6/0/metadata.json",
+      "transcript": "/a2/7a6404f8c6/0/full.jsonl",
+      "compact_transcript": "/a2/7a6404f8c6/0/transcript.jsonl",
+      "content_hash": "/a2/7a6404f8c6/0/content_hash.txt",
+      "prompt": "/a2/7a6404f8c6/0/prompt.txt"
+    }
+  ]
+}
