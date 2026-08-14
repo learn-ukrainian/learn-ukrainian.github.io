@@ -5,10 +5,10 @@
  * projection the live renderer uses today, then attaches aliases, relations,
  * provenance, and renderContext to match the versioned EntryRecord contract.
  *
- * Practice-index reconciliation (PR #2): match legacy ``getPracticeLemmas`` —
- * prefer ``public/api/lexicon/`` over ``public/lexicon/``, and index only
- * ``lemmaId`` (lookup still falls back to ``entry.lemma``, mirroring
- * ``has(url_slug) || has(lemma)``).
+ * Practice-index reconciliation (PR #2): shared ``readPracticeIndexItems`` —
+ * prefer ``public/lexicon/`` (canonical) then ``public/api/lexicon/`` alias,
+ * and index only ``lemmaId`` (lookup still falls back to ``entry.lemma``,
+ * mirroring ``has(url_slug) || has(lemma)``).
  */
 
 import Database from "better-sqlite3";
@@ -34,6 +34,7 @@ import {
   type SearchResponse,
 } from "./atlas-data-source.ts";
 import { normalizeAtlasText } from "./normalize.ts";
+import { readPracticeIndexItems } from "./practice-index-files.ts";
 import { PRACTICE_LEVELS, type PracticeLevel } from "./runtime-contract.ts";
 import { rankSearchResults, type SearchAlias, type SearchRow } from "./search.ts";
 import type { PracticeDeckData } from "./srs.ts";
@@ -73,29 +74,15 @@ function loadPracticeLevelsBySlug(): Map<string, PracticeLevel[]> {
   const levelsBySlug = new Map<string, Set<PracticeLevel>>();
   const dbDir = dirname(atlasDbPath());
   for (const level of PRACTICE_LEVELS) {
-    // Legacy getPracticeLemmas checks api/lexicon before lexicon/. Keep that order.
-    const candidates = [
-      resolve(dbDir, `../site/public/api/lexicon/practice-index.${level}.json`),
-      resolve(dbDir, `../site/public/lexicon/practice-index.${level}.json`),
-    ];
-    for (const path of candidates) {
-      if (!existsSync(path)) continue;
-      try {
-        const payload = JSON.parse(readFileSync(path, "utf-8")) as {
-          items?: Array<{ lemmaId?: string; lemma?: string }>;
-        };
-        for (const item of payload.items ?? []) {
-          // Legacy indexes only lemmaId; hasPractice then checks url_slug OR lemma
-          // against that set. Indexing lemma here would widen visibility.
-          if (!item.lemmaId) continue;
-          const set = levelsBySlug.get(item.lemmaId) ?? new Set<PracticeLevel>();
-          set.add(level);
-          levelsBySlug.set(item.lemmaId, set);
-        }
-        break;
-      } catch {
-        // ignore unreadable practice index
-      }
+    const items = readPracticeIndexItems(dbDir, level);
+    if (items === null) continue;
+    for (const item of items) {
+      // Legacy indexes only lemmaId; hasPractice then checks url_slug OR lemma
+      // against that set. Indexing lemma here would widen visibility.
+      if (!item.lemmaId) continue;
+      const set = levelsBySlug.get(item.lemmaId) ?? new Set<PracticeLevel>();
+      set.add(level);
+      levelsBySlug.set(item.lemmaId, set);
     }
   }
   const out = new Map<string, PracticeLevel[]>();

@@ -261,16 +261,20 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     status,
     endpoints: {
+      // Meta/status stay under /api/lexicon. Learner artifacts match the URLs
+      // LexiconPractice / Atlas typeahead / Daily Words actually fetch (/lexicon/…).
+      // Hydrate still copies practice (and keeps twin routes) under /api/lexicon/
+      // as a compatibility alias — see docs/runbooks/word-atlas-static-api.md.
       contract: "/api/lexicon/contract.json",
       status: "/api/lexicon/status.json",
-      searchIndex: "/api/lexicon/search-index.json",
+      searchIndex: "/lexicon/search-index.json",
       searchAliases: "/lexicon/search-aliases.json",
       searchShards: "/lexicon/search-shards.json",
-      dailyPool: "/api/lexicon/daily-pool.json",
+      dailyPool: "/lexicon/daily-pool.json",
       browseShardTemplate: "/lexicon/browse/{letter}.json",
-      practiceIndexTemplate: "/api/lexicon/practice-index.{level}.json",
-      practiceLexemesTemplate: "/api/lexicon/practice-lexemes.{level}.json",
-      practiceClozeTemplate: "/api/lexicon/practice-cloze.{level}.json",
+      practiceIndexTemplate: "/lexicon/practice-index.{level}.json",
+      practiceLexemesTemplate: "/lexicon/practice-lexemes.{level}.json",
+      practiceClozeTemplate: "/lexicon/practice-cloze.{level}.json",
     },
     manifest: {
       hydrated: entries !== null,

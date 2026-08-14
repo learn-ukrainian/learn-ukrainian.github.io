@@ -1,12 +1,5 @@
-import type { APIRoute } from "astro";
-import pool from "../../../data/lexicon-daily-pool.json";
-
-export const prerender = true;
-
-export const GET: APIRoute = () =>
-  new Response(JSON.stringify(pool), {
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+/**
+ * Compatibility alias of the canonical `/lexicon/daily-pool.json` learner URL.
+ * Kept so existing /api/lexicon bookmarks and docs links keep working.
+ */
+export { prerender, GET } from "../../lexicon/daily-pool.json.ts";
