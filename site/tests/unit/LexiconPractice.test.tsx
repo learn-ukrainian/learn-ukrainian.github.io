@@ -48,6 +48,21 @@ import { selectHeritagePracticePresentation } from '@site/src/lib/lexicon/practi
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
+/**
+ * Mirrors PracticeMatchBoard PRACTICE_MATCH_MISS_FLASH_MS in LexiconPractice.tsx —
+ * wrong-pair tiles stay locked until this flash clears.
+ */
+const PRACTICE_MATCH_MISS_FLASH_MS = 700;
+
+/** Simulated dwell window for “must not auto-advance” assertions (#5376 / #6765). */
+const DWELL_NO_AUTO_ADVANCE_MS = 750;
+
+async function advanceFakeTimers(ms: number): Promise<void> {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(ms);
+  });
+}
+
 function ThrowPracticeError(): never {
   throw new Error('practice render failed');
 }
@@ -3195,21 +3210,26 @@ describe('LexiconPractice', () => {
   });
 
   test('wrong answer dwells: feedback stays and never auto-advances', async () => {
-    const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
-    await user.click(
-      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
-    );
+      await user.click(
+        within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+      );
 
-    // A wrong (calque) pick parks in a dwell state with an explicit advance control.
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+      // A wrong (calque) pick parks in a dwell state with an explicit advance control.
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
 
-    // Wait — the item must still be here with no timer-driven advance.
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+      // Advance the clock — the item must still be here with no timer-driven advance.
+      await advanceFakeTimers(DWELL_NO_AUTO_ADVANCE_MS);
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('wrong answer advances on «Далі» click and on Enter', async () => {
@@ -3242,103 +3262,126 @@ describe('LexiconPractice', () => {
   });
 
   test('correct answer never auto-advances: next card waits for «Далі»', async () => {
-    const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+      // Flush the selection-mount stage focus (setTimeout 0) so it cannot steal
+      // focus from «Далі →» after the answer dwell layout effect runs.
+      await advanceFakeTimers(0);
 
-    await user.click(
-      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
-    );
+      await user.click(
+        within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
+      );
 
-    // Correct answers dwell identically to wrong ones — «Далі →» is required.
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
-    expect(screen.getByTestId('practice-heritage-sentence-en')).toHaveTextContent('I see ___ every day.');
-    expect(document.activeElement).toBe(screen.getByTestId('practice-advance-button'));
+      // Correct answers dwell identically to wrong ones — «Далі →» is required.
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+      expect(screen.getByTestId('practice-heritage-sentence-en')).toHaveTextContent('I see ___ every day.');
+      expect(document.activeElement).toBe(screen.getByTestId('practice-advance-button'));
 
-    // Still on the same card after a dwell window — no timer advance.
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      // Still on the same card after a dwell window — no timer advance.
+      await advanceFakeTimers(DWELL_NO_AUTO_ADVANCE_MS);
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
 
-    await user.click(screen.getByTestId('practice-advance-button'));
-    await waitFor(() =>
-      expect(screen.queryByTestId('practice-heritage-feedback')).not.toBeInTheDocument(),
-    );
+      await user.click(screen.getByTestId('practice-advance-button'));
+      await waitFor(() =>
+        expect(screen.queryByTestId('practice-heritage-feedback')).not.toBeInTheDocument(),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('heritage calque citation stays visible until «Далі»', async () => {
-    const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
 
-    await user.click(
-      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
-    );
+      await user.click(
+        within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+      );
 
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
-      'Джерело: Антоненко-Давидович: fixture',
-    );
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+        'Джерело: Антоненко-Давидович: fixture',
+      );
 
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
-      'Джерело: Антоненко-Давидович: fixture',
-    );
+      await advanceFakeTimers(200);
+      expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+        'Джерело: Антоненко-Давидович: fixture',
+      );
 
-    await user.click(screen.getByTestId('practice-advance-button'));
-    await waitFor(() =>
-      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
-    );
+      await user.click(screen.getByTestId('practice-advance-button'));
+      await waitFor(() =>
+        expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('cloze wrong chip dwells (no auto-advance) and «Далі» resets to a clean item', async () => {
-    seedRecognitionMastery('knyha');
-    const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      seedRecognitionMastery('knyha');
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
 
-    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
 
-    // A wrong CHIP pick (a different lemma — not a case-miss, not correct) populates
-    // the input; only Check commits it and parks in a dwell state with an explicit
-    // advance control instead of auto-advancing.
-    await user.click(screen.getByRole('button', { name: 'робота' }));
-    await user.click(screen.getByRole('button', { name: /Перевірити/ }));
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+      // A wrong CHIP pick (a different lemma — not a case-miss, not correct) populates
+      // the input; only Check commits it and parks in a dwell state with an explicit
+      // advance control instead of auto-advancing.
+      await user.click(screen.getByRole('button', { name: 'робота' }));
+      await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
 
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+      await advanceFakeTimers(DWELL_NO_AUTO_ADVANCE_MS);
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
 
-    // «Далі» advances. The lapsed card re-surfaces with the SAME itemId (so the
-    // selection-change effect does not re-fire) — it must still start clean: unlocked
-    // chips, empty input, no stale wrong-word feedback.
-    await user.click(screen.getByTestId('practice-advance-button'));
-    await waitFor(() =>
-      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
-    );
-    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
-    expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
-    expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
-    expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+      // «Далі» advances. The lapsed card re-surfaces with the SAME itemId (so the
+      // selection-change effect does not re-fire) — it must still start clean: unlocked
+      // chips, empty input, no stale wrong-word feedback.
+      await user.click(screen.getByTestId('practice-advance-button'));
+      await waitFor(() =>
+        expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+      );
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+      expect(screen.getByLabelText(/Поставте слово „книга” у правильному відмінку/)).toHaveValue('');
+      expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
+      expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('cloze correct answer also requires «Далі» before the next card', async () => {
-    seedRecognitionMastery('knyha');
-    const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      seedRecognitionMastery('knyha');
+      const user = userEvent.setup({ delay: null });
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
 
-    await user.click(screen.getByRole('button', { name: 'книгу' }));
-    await user.click(screen.getByRole('button', { name: /Перевірити/ }));
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
-    expect(within(screen.getByTestId('practice-cloze')).getByRole('status')).toHaveTextContent('книгу');
+      await user.click(screen.getByRole('button', { name: 'книгу' }));
+      await user.click(screen.getByRole('button', { name: /Перевірити/ }));
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      expect(within(screen.getByTestId('practice-cloze')).getByRole('status')).toHaveTextContent('книгу');
 
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
-    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+      await advanceFakeTimers(DWELL_NO_AUTO_ADVANCE_MS);
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
 
-    await user.click(screen.getByTestId('practice-advance-button'));
-    await waitFor(() =>
-      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
-    );
+      await user.click(screen.getByTestId('practice-advance-button'));
+      await waitFor(() =>
+        expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('session-size buttons expose aria-pressed and active class for the selection', async () => {
@@ -3821,115 +3864,120 @@ describe('LexiconPractice', () => {
   });
 
   test('matching mode rates every matched pair with proper ratings', async () => {
-    const user = userEvent.setup();
-    const deck = matchingDeck();
-    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      const deck = matchingDeck();
+      const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
 
-    expect(screen.getByTestId('practice-matching')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-matching')).toBeInTheDocument();
 
-    const leftCol = container.querySelector('[data-activity="match-left-column"]');
-    const rightCol = container.querySelector('[data-activity="match-right-column"]');
-    expect(leftCol).toBeInTheDocument();
-    expect(rightCol).toBeInTheDocument();
+      const leftCol = container.querySelector('[data-activity="match-left-column"]');
+      const rightCol = container.querySelector('[data-activity="match-right-column"]');
+      expect(leftCol).toBeInTheDocument();
+      expect(rightCol).toBeInTheDocument();
 
-    const findLeft = (text: string) => {
-      const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Left tile "${text}" not found`);
-      return btn;
-    };
-    const findRight = (text: string) => {
-      const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Right tile "${text}" not found`);
-      return btn;
-    };
+      const findLeft = (text: string) => {
+        const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Left tile "${text}" not found`);
+        return btn;
+      };
+      const findRight = (text: string) => {
+        const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Right tile "${text}" not found`);
+        return btn;
+      };
 
-    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
+      const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
-    const textToLemmaId: Record<string, string> = {
-      'книга': 'knyha',
-      'робота': 'robota',
-      'місто': 'misto',
-      'школа': 'shkola',
-      'сад': 'sady',
-      'дім': 'dimy',
-    };
-    const textToGloss: Record<string, string> = {
-      'книга': 'book',
-      'робота': 'work',
-      'місто': 'city',
-      'школа': 'school',
-      'сад': 'garden',
-      'дім': 'house',
-    };
+      const textToLemmaId: Record<string, string> = {
+        'книга': 'knyha',
+        'робота': 'robota',
+        'місто': 'misto',
+        'школа': 'shkola',
+        'сад': 'sady',
+        'дім': 'dimy',
+      };
+      const textToGloss: Record<string, string> = {
+        'книга': 'book',
+        'робота': 'work',
+        'місто': 'city',
+        'школа': 'school',
+        'сад': 'garden',
+        'дім': 'house',
+      };
 
-    const selectedLemmaId = textToLemmaId[selectedLemmaText];
-    const selectedGloss = textToGloss[selectedLemmaText];
-    const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
+      const selectedLemmaId = textToLemmaId[selectedLemmaText];
+      const selectedGloss = textToGloss[selectedLemmaText];
+      const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
 
-    // 1. Clean match for the first distractor -> good rating
-    const dist0 = distractorWords[0];
-    await user.click(findLeft(dist0));
-    await user.click(findRight(textToGloss[dist0]));
-    await waitFor(() => {
+      // 1. Clean match for the first distractor -> good rating
+      const dist0 = distractorWords[0];
+      await user.click(findLeft(dist0));
+      await user.click(findRight(textToGloss[dist0]));
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
+      });
+
+      // 2. Match the second distractor with 1 miss -> hard rating
+      const dist1 = distractorWords[1];
+      await user.click(findLeft(dist1));
+      await user.click(findRight(selectedGloss)); // wrong
+      await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
+      await user.click(findLeft(dist1));
+      await user.click(findRight(textToGloss[dist1]));
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist1] && r.rating === 'hard')).toBe(true);
+      });
+
+      // 3. Match the third distractor with 2 misses -> again rating
+      const dist2 = distractorWords[2];
+      await user.click(findLeft(dist2));
+      await user.click(findRight(textToGloss[distractorWords[3]])); // wrong 1
+      await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
+      await user.click(findLeft(dist2));
+      await user.click(findRight(textToGloss[distractorWords[4]])); // wrong 2
+      await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
+      await user.click(findLeft(dist2));
+      await user.click(findRight(textToGloss[dist2]));
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist2] && r.rating === 'again')).toBe(true);
+      });
+
+      // Complete the remaining pairs cleanly
+      const dist3 = distractorWords[3];
+      await user.click(findLeft(dist3));
+      await user.click(findRight(textToGloss[dist3]));
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist3] && r.rating === 'good')).toBe(true);
+      });
+
+      const dist4 = distractorWords[4];
+      await user.click(findLeft(dist4));
+      await user.click(findRight(textToGloss[dist4]));
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist4] && r.rating === 'good')).toBe(true);
+      });
+
+      // Finally, match the selected lemma cleanly
+      await user.click(findLeft(selectedLemmaText));
+      await user.click(findRight(selectedGloss));
+
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.some(r => r.lemmaId === selectedLemmaId && r.rating === 'good')).toBe(true);
+      });
+
       const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
-    });
-
-    // 2. Match the second distractor with 1 miss -> hard rating
-    const dist1 = distractorWords[1];
-    await user.click(findLeft(dist1));
-    await user.click(findRight(selectedGloss)); // wrong
-    await new Promise(resolve => setTimeout(resolve, 900));
-    await user.click(findLeft(dist1));
-    await user.click(findRight(textToGloss[dist1]));
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist1] && r.rating === 'hard')).toBe(true);
-    });
-
-    // 3. Match the third distractor with 2 misses -> again rating
-    const dist2 = distractorWords[2];
-    await user.click(findLeft(dist2));
-    await user.click(findRight(textToGloss[distractorWords[3]])); // wrong 1
-    await new Promise(resolve => setTimeout(resolve, 900));
-    await user.click(findLeft(dist2));
-    await user.click(findRight(textToGloss[distractorWords[4]])); // wrong 2
-    await new Promise(resolve => setTimeout(resolve, 900));
-    await user.click(findLeft(dist2));
-    await user.click(findRight(textToGloss[dist2]));
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist2] && r.rating === 'again')).toBe(true);
-    });
-
-    // Complete the remaining pairs cleanly
-    const dist3 = distractorWords[3];
-    await user.click(findLeft(dist3));
-    await user.click(findRight(textToGloss[dist3]));
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist3] && r.rating === 'good')).toBe(true);
-    });
-
-    const dist4 = distractorWords[4];
-    await user.click(findLeft(dist4));
-    await user.click(findRight(textToGloss[dist4]));
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist4] && r.rating === 'good')).toBe(true);
-    });
-
-    // Finally, match the selected lemma cleanly
-    await user.click(findLeft(selectedLemmaText));
-    await user.click(findRight(selectedGloss));
-
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.some(r => r.lemmaId === selectedLemmaId && r.rating === 'good')).toBe(true);
-    });
-
-    const state = storedState();
-    expect(state.reviews?.length).toBe(6);
+      expect(state.reviews?.length).toBe(6);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('abort after 2 matches rates exactly those 2', async () => {
@@ -4003,103 +4051,108 @@ describe('LexiconPractice', () => {
   });
 
   test('attempt counting resets between boards', async () => {
-    const user = userEvent.setup();
-    const deck = matchingDeck();
-    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      const deck = matchingDeck();
+      const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
 
-    const leftCol = container.querySelector('[data-activity="match-left-column"]');
-    const rightCol = container.querySelector('[data-activity="match-right-column"]');
-    expect(leftCol).toBeInTheDocument();
-    expect(rightCol).toBeInTheDocument();
+      const leftCol = container.querySelector('[data-activity="match-left-column"]');
+      const rightCol = container.querySelector('[data-activity="match-right-column"]');
+      expect(leftCol).toBeInTheDocument();
+      expect(rightCol).toBeInTheDocument();
 
-    const findLeft = (text: string) => {
-      const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Left tile "${text}" not found`);
-      return btn;
-    };
-    const findRight = (text: string) => {
-      const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Right tile "${text}" not found`);
-      return btn;
-    };
+      const findLeft = (text: string) => {
+        const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Left tile "${text}" not found`);
+        return btn;
+      };
+      const findRight = (text: string) => {
+        const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Right tile "${text}" not found`);
+        return btn;
+      };
 
-    const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
+      const selectedLemmaText = within(leftCol as HTMLElement).getAllByRole('button')[0]?.textContent?.trim() ?? '';
 
-    const textToLemmaId: Record<string, string> = {
-      'книга': 'knyha',
-      'робота': 'robota',
-      'місто': 'misto',
-      'школа': 'shkola',
-      'сад': 'sady',
-      'дім': 'dimy',
-    };
-    const textToGloss: Record<string, string> = {
-      'книга': 'book',
-      'робота': 'work',
-      'місто': 'city',
-      'школа': 'school',
-      'сад': 'garden',
-      'дім': 'house',
-    };
+      const textToLemmaId: Record<string, string> = {
+        'книга': 'knyha',
+        'робота': 'robota',
+        'місто': 'misto',
+        'школа': 'shkola',
+        'сад': 'sady',
+        'дім': 'dimy',
+      };
+      const textToGloss: Record<string, string> = {
+        'книга': 'book',
+        'робота': 'work',
+        'місто': 'city',
+        'школа': 'school',
+        'сад': 'garden',
+        'дім': 'house',
+      };
 
-    const selectedLemmaId = textToLemmaId[selectedLemmaText];
-    const selectedGloss = textToGloss[selectedLemmaText];
-    const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
+      const selectedLemmaId = textToLemmaId[selectedLemmaText];
+      const selectedGloss = textToGloss[selectedLemmaText];
+      const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
 
-    // Miss on the second distractor (dist1 - misto, which will still be a distractor on the next board)
-    const dist1 = distractorWords[1];
-    await user.click(findLeft(dist1));
-    await user.click(findRight(selectedGloss)); // wrong
-    await new Promise(resolve => setTimeout(resolve, 900));
+      // Miss on the second distractor (dist1 - misto, which will still be a distractor on the next board)
+      const dist1 = distractorWords[1];
+      await user.click(findLeft(dist1));
+      await user.click(findRight(selectedGloss)); // wrong
+      await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
 
-    // Complete that distractor -> hard
-    await user.click(findLeft(dist1));
-    await user.click(findRight(textToGloss[dist1]));
-    await waitFor(() => {
-      expect(storedState().reviews?.some(r => r.lemmaId === textToLemmaId[dist1] && r.rating === 'hard')).toBe(true);
-    });
-
-    // Complete all other matches cleanly
-    for (const dist of distractorWords.filter(w => w !== dist1)) {
-      await user.click(findLeft(dist));
-      await user.click(findRight(textToGloss[dist]));
-    }
-    await user.click(findLeft(selectedLemmaText));
-    await user.click(findRight(selectedGloss));
-
-    await waitFor(() => {
-      expect(storedState().reviews?.length).toBe(6);
-    });
-
-    // The completed board dwells; advance explicitly to the next selection/board.
-    await user.click(screen.getByTestId('practice-advance-button'));
-
-    // Clean match on next board for that same distractor (should start with 0 misses, rate as good)
-    const newLeftCol = container.querySelector('[data-activity="match-left-column"]');
-    const newRightCol = container.querySelector('[data-activity="match-right-column"]');
-    const findNewLeft = (text: string) => {
-      const btn = within(newLeftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Left tile "${text}" not found`);
-      return btn;
-    };
-    const findNewRight = (text: string) => {
-      const btn = within(newRightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
-      if (!btn) throw new Error(`Right tile "${text}" not found`);
-      return btn;
-    };
-
-    await user.click(findNewLeft(dist1));
-    await user.click(findNewRight(textToGloss[dist1]));
-
-    await waitFor(() => {
-      const state = storedState();
-      expect(state.reviews?.length).toBe(7);
-      expect(state.reviews?.[6]).toMatchObject({
-        lemmaId: textToLemmaId[dist1],
-        mode: 'matching',
-        rating: 'good',
+      // Complete that distractor -> hard
+      await user.click(findLeft(dist1));
+      await user.click(findRight(textToGloss[dist1]));
+      await waitFor(() => {
+        expect(storedState().reviews?.some(r => r.lemmaId === textToLemmaId[dist1] && r.rating === 'hard')).toBe(true);
       });
-    });
+
+      // Complete all other matches cleanly
+      for (const dist of distractorWords.filter(w => w !== dist1)) {
+        await user.click(findLeft(dist));
+        await user.click(findRight(textToGloss[dist]));
+      }
+      await user.click(findLeft(selectedLemmaText));
+      await user.click(findRight(selectedGloss));
+
+      await waitFor(() => {
+        expect(storedState().reviews?.length).toBe(6);
+      });
+
+      // The completed board dwells; advance explicitly to the next selection/board.
+      await user.click(screen.getByTestId('practice-advance-button'));
+
+      // Clean match on next board for that same distractor (should start with 0 misses, rate as good)
+      const newLeftCol = container.querySelector('[data-activity="match-left-column"]');
+      const newRightCol = container.querySelector('[data-activity="match-right-column"]');
+      const findNewLeft = (text: string) => {
+        const btn = within(newLeftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Left tile "${text}" not found`);
+        return btn;
+      };
+      const findNewRight = (text: string) => {
+        const btn = within(newRightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+        if (!btn) throw new Error(`Right tile "${text}" not found`);
+        return btn;
+      };
+
+      await user.click(findNewLeft(dist1));
+      await user.click(findNewRight(textToGloss[dist1]));
+
+      await waitFor(() => {
+        const state = storedState();
+        expect(state.reviews?.length).toBe(7);
+        expect(state.reviews?.[6]).toMatchObject({
+          lemmaId: textToLemmaId[dist1],
+          mode: 'matching',
+          rating: 'good',
+        });
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test('rapid double-click on the same match → exactly ONE review recorded', async () => {
@@ -5274,39 +5327,44 @@ describe('LexiconPractice', () => {
     });
 
     test('#6721 matching wrong pair flashes red and shows «Спробуйте ще раз» instead of silently deselecting', async () => {
-      const user = userEvent.setup();
-      const { container } = render(
-        <LexiconPractice initialDeck={matchingDeck()} autoStart initialMode="matching" />,
-      );
-      const leftCol = container.querySelector('[data-activity="match-left-column"]') as HTMLElement;
-      const rightCol = container.querySelector('[data-activity="match-right-column"]') as HTMLElement;
-      expect(leftCol).toBeInTheDocument();
-      expect(rightCol).toBeInTheDocument();
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      try {
+        const user = userEvent.setup({ delay: null });
+        const { container } = render(
+          <LexiconPractice initialDeck={matchingDeck()} autoStart initialMode="matching" />,
+        );
+        const leftCol = container.querySelector('[data-activity="match-left-column"]') as HTMLElement;
+        const rightCol = container.querySelector('[data-activity="match-right-column"]') as HTMLElement;
+        expect(leftCol).toBeInTheDocument();
+        expect(rightCol).toBeInTheDocument();
 
-      const firstLeft = within(leftCol).getAllByRole('button')[0]!;
-      const wrongRight = within(rightCol)
-        .getAllByRole('button')
-        .find((b) => b.getAttribute('data-original-index') !== '0')!;
+        const firstLeft = within(leftCol).getAllByRole('button')[0]!;
+        const wrongRight = within(rightCol)
+          .getAllByRole('button')
+          .find((b) => b.getAttribute('data-original-index') !== '0')!;
 
-      await user.click(firstLeft);
-      await user.click(wrongRight);
+        await user.click(firstLeft);
+        await user.click(wrongRight);
 
-      // The mismatch is visible: both tiles marked wrong + a persistent notice.
-      expect(firstLeft.className).toContain('wrong');
-      expect(wrongRight.className).toContain('wrong');
-      expect(screen.getByTestId('practice-match-miss')).toBeInTheDocument();
-      expect(screen.getByTestId('practice-match-miss')).toHaveTextContent('Спробуйте ще раз');
+        // The mismatch is visible: both tiles marked wrong + a persistent notice.
+        expect(firstLeft.className).toContain('wrong');
+        expect(wrongRight.className).toContain('wrong');
+        expect(screen.getByTestId('practice-match-miss')).toBeInTheDocument();
+        expect(screen.getByTestId('practice-match-miss')).toHaveTextContent('Спробуйте ще раз');
 
-      // After the flash, the pair can still be completed and the notice clears.
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      await user.click(within(leftCol).getAllByRole('button')[0]!);
-      expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
-      const correctRight = within(rightCol)
-        .getAllByRole('button')
-        .find((b) => b.getAttribute('data-original-index') === '0')!;
-      await user.click(correctRight);
-      expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
-      expect(within(leftCol).getAllByRole('button')[0]).toHaveAttribute('data-matched', 'true');
+        // After the flash, the pair can still be completed and the notice clears.
+        await advanceFakeTimers(PRACTICE_MATCH_MISS_FLASH_MS);
+        await user.click(within(leftCol).getAllByRole('button')[0]!);
+        expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
+        const correctRight = within(rightCol)
+          .getAllByRole('button')
+          .find((b) => b.getAttribute('data-original-index') === '0')!;
+        await user.click(correctRight);
+        expect(screen.queryByTestId('practice-match-miss')).not.toBeInTheDocument();
+        expect(within(leftCol).getAllByRole('button')[0]).toHaveAttribute('data-matched', 'true');
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     test('#6723 stats tiles reflect the just-played session on return home', async () => {
