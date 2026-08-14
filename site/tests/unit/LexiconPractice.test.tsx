@@ -6,6 +6,7 @@ import LexiconPractice, {
   addDailyExamples,
   isEnglishLearnerGloss,
   isMeaningMcEligible,
+  PracticeItem,
 } from '@site/src/components/LexiconPractice';
 import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
 import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
@@ -24,6 +25,7 @@ import {
   clearLoadedSrsState,
   loadState,
   saveState,
+  selectNextPracticeItem,
   type PracticeDeckData,
   type DailyPracticeDeckSnapshot,
   type DailyPracticeRowState,
@@ -32,6 +34,7 @@ import {
   type PracticeLexeme,
   type PracticeMode,
   type PracticeRating,
+  type PracticeSelection,
   type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
@@ -886,10 +889,14 @@ function paradigmDeck(): PracticeDeckData {
 }
 
 function synonymDeck(): PracticeDeckData {
-  const entry = lexeme('kava', 'кава', 'coffee', {
-    nominative: 'кава',
-    accusative: 'каву',
-    locative: 'каві',
+  // #6821: prompt and answer must be two DIFFERENT words — a tautological
+  // «синонім до «X» — «X»» fixture doesn't exercise the prompt↔answer teaching
+  // sentence at all. «будинок»/«дім» is an attested Ukrainian synonym pair
+  // (both mean "house/building"), unlike the coffee lexeme's own name.
+  const entry = lexeme('budynok', 'будинок', 'building', {
+    nominative: 'будинок',
+    accusative: 'будинок',
+    locative: 'будинку',
   });
   return {
     deckVersion: 'test-synonym',
@@ -909,15 +916,15 @@ function synonymDeck(): PracticeDeckData {
     classify: [],
     paradigm: [],
     synonym: [{
-      synonymId: 'kava-syn',
-      lemmaId: 'kava',
-      targetLemmaId: 'kava',
+      synonymId: 'budynok-syn',
+      lemmaId: 'budynok',
+      targetLemmaId: 'dim',
       polarity: 'synonym',
-      prompt: 'кава',
-      answer: 'кава',
+      prompt: 'будинок',
+      answer: 'дім',
       options: [
-        { label: 'кава', lemmaId: 'kava', kind: 'answer' },
-        { label: 'чай', lemmaId: 'chay', kind: 'distractor' },
+        { label: 'дім', lemmaId: 'dim', kind: 'answer' },
+        { label: 'школа', lemmaId: 'shkola', kind: 'distractor' },
       ],
       source: 'fixture',
     }],
@@ -4475,7 +4482,7 @@ describe('LexiconPractice', () => {
         mode: 'synonym',
         deck: synonymDeck(),
         answer: async (user) => {
-          await user.click(screen.getByRole('button', { name: /кава/ }));
+          await user.click(screen.getByRole('button', { name: /дім/ }));
         },
       },
       {
@@ -4615,7 +4622,7 @@ describe('LexiconPractice', () => {
       { mode: 'choice', deck: sampleDeckWithOnlyMode('knyha', 'choice'), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /книга/ })); } },
       { mode: 'stress', deck: stressDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button'); const target = buttons.find((button) => button.dataset.position === '1'); expect(target).toBeDefined(); await user.click(target!); } },
       { mode: 'classify', deck: classifyDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /жіночий/ })); } },
-      { mode: 'synonym', deck: synonymDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /кава/ })); } },
+      { mode: 'synonym', deck: synonymDeck(), expectRail: false, action: async (user: ReturnType<typeof userEvent.setup>) => { await user.click(screen.getByRole('button', { name: /дім/ })); } },
     ])('$mode: rail is $expectRail', async ({ mode, deck, expectRail, action }) => {
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />);
@@ -4640,7 +4647,7 @@ describe('LexiconPractice', () => {
     test.each([
       { mode: 'classify', deck: classifyDeck(), testId: 'practice-classify', wrongName: /чоловічий/, correctName: /жіночий/ },
       { mode: 'paradigm', deck: paradigmDeck(), testId: 'practice-paradigm', wrongName: /кава/, correctName: /кави/ },
-      { mode: 'synonym', deck: synonymDeck(), testId: 'practice-synonym', wrongName: /чай/, correctName: /кава/ },
+      { mode: 'synonym', deck: synonymDeck(), testId: 'practice-synonym', wrongName: /школа/, correctName: /дім/ },
       { mode: 'paronym', deck: paronymDeck(), testId: 'practice-paronym', wrongName: /біжить/, correctName: /бігає/ },
       { mode: 'heritage', deck: heritageDeck(), testId: 'practice-heritage', wrongName: /хата/, correctName: /дім/ },
     ])('$mode: wrong pick is marked red, correct option is marked green', async ({ mode, deck, testId, wrongName, correctName }) => {
@@ -4813,11 +4820,11 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
       const scope = within(screen.getByTestId('practice-synonym'));
 
-      await user.click(scope.getByRole('button', { name: /чай/ }));
+      await user.click(scope.getByRole('button', { name: /школа/ }));
 
       const feedback = screen.getByTestId('practice-synonym-feedback');
-      expect(feedback).toHaveTextContent('Неправильно. Синонім до «кава» — «кава».');
-      expect(feedback).toHaveTextContent('Incorrect. Synonym for «кава» — «кава».');
+      expect(feedback).toHaveTextContent('Неправильно. Синонім до «будинок» — «дім».');
+      expect(feedback).toHaveTextContent('Incorrect. Synonym for «будинок» — «дім».');
       expect(screen.queryByTestId('practice-choice-feedback')).not.toBeInTheDocument();
     });
 
@@ -4826,10 +4833,61 @@ describe('LexiconPractice', () => {
       render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
       const scope = within(screen.getByTestId('practice-synonym'));
 
-      await user.click(scope.getByRole('button', { name: /кава/ }));
+      await user.click(scope.getByRole('button', { name: /дім/ }));
 
       const feedback = screen.getByTestId('practice-synonym-feedback');
-      expect(feedback).toHaveTextContent('Правильно! Синонім до «кава» — «кава».');
+      expect(feedback).toHaveTextContent('Правильно! Синонім до «будинок» — «дім».');
+    });
+
+    test('synonym mode: a selection without `.synonym` fails closed to practice-choice-empty and teaches nothing (#6821)', () => {
+      // buildStaticCandidates (srs.ts) never emits mode==='synonym' without a matched
+      // `.synonym` item — this state is unreachable through the deck API (see the #6816
+      // point 2 comment in LexiconPractice.tsx). Exercise the guard directly: take a real
+      // synonym selection and strip `.synonym`, the one shape the render tree must never
+      // let fall through to the word↔gloss meaning-choice surface (#6816 point 2) or invent
+      // a teaching pair from.
+      const deck = synonymDeck();
+      const base = selectNextPracticeItem(deck, { modeFilter: 'synonym', now: NOW });
+      expect(base?.mode).toBe('synonym');
+      expect(base?.synonym).toBeDefined();
+      const selection: PracticeSelection = { ...base!, synonym: undefined };
+
+      render(
+        <PracticeItem
+          selection={selection}
+          deck={deck}
+          pairs={[]}
+          sessionSeed={1}
+          answerLocked={false}
+          clozeInput=""
+          clozeFeedback={null}
+          heritageFeedback={null}
+          paronymFeedback={null}
+          choiceFeedback={null}
+          stressSelectedPosition={null}
+          paradigmSelectedLabel={null}
+          paronymSelectedLabel={null}
+          heritageSelectedLabel={null}
+          choiceSelectedLabel={null}
+          onClozeInput={() => {}}
+          onFlashcardRating={() => {}}
+          onChoice={() => {}}
+          onStressSelect={() => {}}
+          onMatchingComplete={() => {}}
+          onClozeSubmit={() => {}}
+          onHeritageActivityComplete={() => {}}
+          presentationVariants={false}
+          onBackToModes={() => {}}
+          showEnglishSubtitles={false}
+          chromeLocale="uk"
+          learnerLevel="A1"
+        />,
+      );
+
+      expect(screen.getByTestId('practice-choice-empty')).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('practice-synonym-feedback')).not.toBeInTheDocument();
+      expect(screen.queryByText(/Синонім до|Антонім до|Synonym for|Antonym for/)).not.toBeInTheDocument();
     });
 
     test('synonym mode, antonym-polarity: «Оберіть антонім» miss teaches the antonym pair, not a synonym pair (#6816)', async () => {

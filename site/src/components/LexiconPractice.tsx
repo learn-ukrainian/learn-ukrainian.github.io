@@ -4666,7 +4666,11 @@ function DrillFeedbackPanel({
   );
 }
 
-function PracticeItem({
+// #6821: exported so a unit test can drive the mode==='synonym'-without-`.synonym`
+// fail-closed branch directly — buildStaticCandidates never emits that combination
+// in practice (see the #6816 point 2 comment below), so there's no deck fixture
+// that reaches it through the full LexiconPractice tree.
+export function PracticeItem({
   selection,
   deck,
   pairs,
