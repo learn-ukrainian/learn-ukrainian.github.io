@@ -5397,13 +5397,22 @@ describe('LexiconPractice', () => {
       await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '11', '1']));
     });
 
-    test('#6723 deck chip follows the accepted level switch after going home', async () => {
+    test('#6723 deck chip and stats tiles follow the accepted level switch after going home', async () => {
       document.documentElement.dataset.chromeLocale = 'en';
       localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
-      const { fn } = mockShardFetch({ A1: 15, B1: 15 });
+      // Distinct, sub-cap (<DAILY_PRACTICE_DECK_SIZE=12) counts per level so the "NEW"
+      // tile can only read 10/7 if it re-reads the CURRENT level's pool, not a stale one.
+      const { fn } = mockShardFetch({ A1: 10, B1: 7 });
       vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice />);
+
+      const statValues = () =>
+        Array.from(
+          container.querySelectorAll('[data-testid="practice-dashboard-stats"] .k3-stat-value'),
+        ).map((el) => el.textContent);
+
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '10', '0']));
 
       await user.click(await screen.findByTestId('practice-start-session'));
       await screen.findByTestId('practice-session-progress');
@@ -5412,6 +5421,7 @@ describe('LexiconPractice', () => {
       expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
         'All Words (A1)',
       );
+      expect(statValues().slice(0, 3)).toEqual(['0', '10', '0']);
 
       await user.click(screen.getByRole('button', { name: 'B1' }));
       await user.click(await screen.findByTestId('practice-switch-session-accept'));
@@ -5420,6 +5430,8 @@ describe('LexiconPractice', () => {
       expect(await screen.findByTestId('practice-active-deck-chip')).toHaveTextContent(
         'All Words (B1)',
       );
+      // The B1 pool's own count, not the A1 count left behind by the switch.
+      await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '7', '0']));
     });
   });
 });
