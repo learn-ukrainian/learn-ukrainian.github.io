@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "37b86029e37e",
+  "strategy": "manual-commit",
+  "branch": "cursor/6765-wallclock-tests",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/MatchUp.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/37/b86029e37e/0/metadata.json",
+      "transcript": "/37/b86029e37e/0/full.jsonl",
+      "compact_transcript": "/37/b86029e37e/0/transcript.jsonl",
+      "content_hash": "/37/b86029e37e/0/content_hash.txt",
+      "prompt": "/37/b86029e37e/0/prompt.txt"
+    }
+  ]
+}

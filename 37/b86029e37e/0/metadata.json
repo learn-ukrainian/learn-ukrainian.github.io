@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "37b86029e37e",
+  "session_id": "fleet-a32409ebbce747e4aaa6466f2f151702",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T02:18:56.055378Z",
+  "branch": "cursor/6765-wallclock-tests",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/MatchUp.test.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "9d337840ed44",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T02:18:56.049737Z",
+    "agent_lines": 374,
+    "agent_removed": 305,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 374,
+    "total_lines_changed": 679,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
