@@ -812,6 +812,7 @@ def _reap_qualified_worktree(
     preserve_then_reap: bool,
     prune_merged_branches: bool,
     require_terminal_dispatch_guards: bool,
+    eligible_backlog: int | None = None,
 ) -> ReapResult:
     expected_head = info.head
     if dirty is None:
@@ -853,7 +854,10 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
         )
 
-    cap_allowed, cap_reason = reaper_lifecycle.cap_allows_reap(repo_root)
+    cap_allowed, cap_reason = reaper_lifecycle.cap_allows_reap(
+        repo_root,
+        eligible_backlog=eligible_backlog,
+    )
     if not cap_allowed:
         return ReapResult(
             path=str(info.path),
@@ -1081,6 +1085,7 @@ def reap_worktrees(
     repo_root = repo_root.resolve()
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
+    qualified: list[tuple[WorktreeInfo, str, bool | None, PullRequestState | None]] = []
     active_ids = _active_task_ids()
     if require_activity_probe is None:
         require_activity_probe = bool(apply)
@@ -1220,6 +1225,17 @@ def reap_worktrees(
                 reason=reason,
                 pr=_pr_dict(pr_state),
             )
+            qualified.append((info, reason, dirty, pr_state))
+
+        # The dynamic daily cap may expand only against a known eligible
+        # backlog: worktrees that passed every listing-time safety proof in
+        # this run.  Count conservatively — only clean candidates (a dirty
+        # one fails the "clean" proof until preserve-then-reap re-verifies
+        # it); any doubt means no expansion.
+        eligible_backlog = (
+            sum(1 for _, _, dirty, _ in qualified if dirty is False) if apply else None
+        )
+        for info, reason, dirty, pr_state in qualified:
             results.append(
                 _reap_qualified_worktree(
                     repo_root=repo_root,
@@ -1234,6 +1250,7 @@ def reap_worktrees(
                         include_terminal_dispatches
                         and reason.startswith("settled dispatch task-id=")
                     ),
+                    eligible_backlog=eligible_backlog,
                 )
             )
 

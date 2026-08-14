@@ -1393,3 +1393,185 @@ def test_fresh_branch_on_main_tip_is_not_sha_reaped(
 
     assert result.action == "skipped"
     assert worktree.exists()
+
+
+def _cap_journal_rows(repo: Path, event: str) -> list[dict[str, Any]]:
+    path = reaper_lifecycle.journal_path(repo)
+    if not path.exists():
+        return []
+    return [
+        row
+        for row in (json.loads(line) for line in path.read_text(encoding="utf-8").splitlines())
+        if row.get("event") == event
+    ]
+
+
+def test_p0_dynamic_cap_default_is_25_and_blocks_at_base_without_backlog(
+    tmp_path: Path,
+) -> None:
+    repo = init_repo(tmp_path)
+
+    assert reaper_lifecycle._DEFAULT_MAX_REAPS_PER_DAY == 25
+    assert reaper_lifecycle.cap_allows_reap(repo) == (True, None)
+
+    for _ in range(25):
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    allowed, reason = reaper_lifecycle.cap_allows_reap(repo)
+    assert allowed is False
+    assert reason is not None and "daily reap cap reached (25)" in reason
+
+
+def test_p0_dynamic_cap_expands_when_backlog_exceeds_remaining_budget(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "3")
+    for _ in range(3):
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    allowed, reason = reaper_lifecycle.cap_allows_reap(repo, eligible_backlog=5)
+
+    assert allowed is True
+    assert reason is None
+    rows = _cap_journal_rows(repo, "cap-expansion")
+    assert len(rows) == 1
+    assert rows[0]["backlog"] == 5
+    assert rows[0]["base"] == 3
+    assert rows[0]["ceiling"] == 6
+    assert rows[0]["day_count"] == 3
+
+
+def test_p0_dynamic_cap_expands_before_base_when_backlog_exceeds_remaining(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "5")
+    for _ in range(4):
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    allowed, _reason = reaper_lifecycle.cap_allows_reap(repo, eligible_backlog=3)
+
+    assert allowed is True
+    assert len(_cap_journal_rows(repo, "cap-expansion")) == 1
+
+
+def test_p0_dynamic_cap_no_expansion_when_backlog_fits_remaining_budget(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "5")
+    for _ in range(3):
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    allowed, _reason = reaper_lifecycle.cap_allows_reap(repo, eligible_backlog=2)
+
+    assert allowed is True
+    assert _cap_journal_rows(repo, "cap-expansion") == []
+
+
+def test_p0_dynamic_cap_ceiling_never_exceeded(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Mutation check: raising the 2x ceiling multiplier must fail this test."""
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "3")
+    for _ in range(6):  # exactly 2x the configured base
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    allowed, reason = reaper_lifecycle.cap_allows_reap(repo, eligible_backlog=100)
+
+    assert allowed is False
+    assert reason is not None and "daily reap cap ceiling reached (6)" in reason
+    assert _cap_journal_rows(repo, "cap-expansion") == []
+
+
+def test_p0_dynamic_cap_fail_closed_on_unknown_backlog(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "3")
+    for _ in range(3):
+        reaper_lifecycle.record_reap_for_cap(repo)
+
+    for bad_backlog in (None, -1, "5", 2.5, True):
+        allowed, reason = reaper_lifecycle.cap_allows_reap(
+            repo,
+            eligible_backlog=bad_backlog,  # type: ignore[arg-type]
+        )
+        assert allowed is False, bad_backlog
+        assert reason is not None and "daily reap cap reached (3)" in reason
+    assert _cap_journal_rows(repo, "cap-expansion") == []
+
+
+def test_p0_dynamic_cap_env_zero_base_stays_closed_even_with_backlog(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "0")
+
+    allowed, reason = reaper_lifecycle.cap_allows_reap(repo, eligible_backlog=100)
+
+    assert allowed is False
+    assert reason is not None and "daily reap cap" in reason
+    assert _cap_journal_rows(repo, "cap-expansion") == []
+
+
+def test_p0_dynamic_cap_expansion_reaps_backlog_beyond_base(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """End-to-end: base=1, two qualified worktrees -> both reaped via expansion."""
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "1")
+    worktrees = []
+    states = {}
+    for index in range(2):
+        branch = f"codex/cap-expand-{index}"
+        worktrees.append(add_worktree(repo, branch))
+        states[branch] = [{"number": 90 + index, "state": "MERGED"}]
+    patch_gh(monkeypatch, states)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    for worktree in worktrees:
+        assert result_for(results, worktree).action == "removed"
+        assert not worktree.exists()
+    rows = _cap_journal_rows(repo, "cap-expansion")
+    assert rows
+    assert all(row["backlog"] == 2 for row in rows)
+
+
+def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """End-to-end: base=1, three qualified worktrees -> 2 reaped, 3rd blocked."""
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "1")
+    worktrees = []
+    states = {}
+    for index in range(3):
+        branch = f"codex/cap-ceiling-{index}"
+        worktrees.append(add_worktree(repo, branch))
+        states[branch] = [{"number": 95 + index, "state": "MERGED"}]
+    patch_gh(monkeypatch, states)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    actions = [result_for(results, worktree).action for worktree in worktrees]
+    assert actions.count("removed") == 2
+    blocked = [
+        result_for(results, worktree)
+        for worktree in worktrees
+        if result_for(results, worktree).action == "skipped"
+    ]
+    assert len(blocked) == 1
+    assert "daily reap cap ceiling reached (2)" in (blocked[0].reason or "")
+    assert Path(blocked[0].path).exists()
