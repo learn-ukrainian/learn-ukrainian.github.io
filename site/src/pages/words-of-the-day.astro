@@ -4,7 +4,10 @@ import ChromeText from "../components/chrome/ChromeText.astro";
 import DailyWords from "../lexicon/DailyWords.astro";
 
 const frontmatter = {
-  title: "Words of the Day",
+  // Document <title> only — CourseLayout titleKey dual-renders the hero <h1>, not
+  // <title> (same limit as #6750 readings). Keep the prior bilingual tab title so
+  // УКР mode is not English-only in the browser chrome.
+  title: "Слова дня / Words of the Day",
   description: "A daily Word Atlas surface with CEFR-capped Ukrainian vocabulary picks.",
 };
 ---

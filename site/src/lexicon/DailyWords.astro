@@ -136,6 +136,17 @@ const dailyCount = Math.max(1, Math.floor(count));
     formatWotdEmptyLevel,
     formatWotdLevelCount,
   } from "../lib/i18n/chrome";
+  import {
+    applyDailyLoadFallback,
+    beginDailyReload,
+    markDailyLoadSuccess,
+  } from "../lib/lexicon/daily-loading";
+
+  const loadingHtml = () =>
+    chromeDualHtml(
+      CHROME_STRINGS.en["wotd.loading"],
+      CHROME_STRINGS.uk["wotd.loading"],
+    );
 
   const readLearnerLevel = (): CefrLevel => {
     try {
@@ -153,31 +164,8 @@ const dailyCount = Math.max(1, Math.floor(count));
     }
   };
 
-  const setLoadingStatus = (status: HTMLElement | null) => {
-    if (!status) return;
-    status.hidden = false;
-    status.dataset.dailyLoading = "true";
-    status.innerHTML = chromeDualHtml(
-      CHROME_STRINGS.en["wotd.loading"],
-      CHROME_STRINGS.uk["wotd.loading"],
-    );
-  };
-
-  const setStatusDual = (
-    status: HTMLElement | null,
-    variants: { en: string; uk: string },
-    opts: { loading?: boolean; hidden?: boolean } = {},
-  ) => {
-    if (!status) return;
-    status.hidden = Boolean(opts.hidden);
-    if (opts.loading) status.dataset.dailyLoading = "true";
-    else status.removeAttribute("data-daily-loading");
-    status.innerHTML = chromeDualHtml(variants.en, variants.uk);
-  };
-
   const hydrateDailySection = (dailySection: HTMLElement) => {
     const dailyList = dailySection.querySelector<HTMLUListElement>("[data-daily-list]");
-    const dailyStatus = dailySection.querySelector<HTMLElement>("[data-daily-status]");
     const dailyFallback = dailySection.querySelector<HTMLElement>("[data-daily-fallback]");
     const levelButtons = Array.from(
       dailySection.querySelectorAll<HTMLButtonElement>("[data-daily-level]"),
@@ -201,22 +189,13 @@ const dailyCount = Math.max(1, Math.floor(count));
     };
 
     const showLoadError = () => {
-      if (dailyList) dailyList.innerHTML = "";
-      if (dailyStatus) {
-        dailyStatus.hidden = true;
-        dailyStatus.textContent = "";
-        dailyStatus.removeAttribute("data-daily-loading");
-      }
-      if (dailyFallback) dailyFallback.hidden = false;
-      dailySection.hidden = false;
-      // Mark ready so the inline watchdog does not race a second error paint.
-      dailySection.dataset.dailyReady = "true";
+      // Clear ready so applyDailyLoadFallback can paint (inline watchdog may have raced).
+      dailySection.dataset.dailyReady = "false";
+      applyDailyLoadFallback(dailySection);
     };
 
     const clearLoadError = () => {
-      if (dailyFallback) dailyFallback.hidden = true;
-      setLoadingStatus(dailyStatus);
-      dailySection.dataset.dailyReady = "false";
+      beginDailyReload(dailySection, loadingHtml());
     };
 
     const syncLevelButtons = () => {
@@ -239,9 +218,13 @@ const dailyCount = Math.max(1, Math.floor(count));
 
       if (picks.length === 0) {
         dailyList.innerHTML = "";
-        setStatusDual(dailyStatus, formatWotdEmptyLevel(activeLevel));
-        if (dailyFallback) dailyFallback.hidden = true;
-        dailySection.dataset.dailyReady = "true";
+        markDailyLoadSuccess(
+          dailySection,
+          chromeDualHtml(
+            formatWotdEmptyLevel(activeLevel).en,
+            formatWotdEmptyLevel(activeLevel).uk,
+          ),
+        );
         return;
       }
 
@@ -251,14 +234,14 @@ const dailyCount = Math.max(1, Math.floor(count));
         interactionsBound = true;
       }
       if (useLevelSelector) {
-        setStatusDual(dailyStatus, formatWotdLevelCount(activeLevel, picks.length));
-      } else if (dailyStatus) {
-        dailyStatus.hidden = true;
-        dailyStatus.textContent = "";
-        dailyStatus.removeAttribute("data-daily-loading");
+        const countLine = formatWotdLevelCount(activeLevel, picks.length);
+        markDailyLoadSuccess(
+          dailySection,
+          chromeDualHtml(countLine.en, countLine.uk),
+        );
+      } else {
+        markDailyLoadSuccess(dailySection, null);
       }
-      if (dailyFallback) dailyFallback.hidden = true;
-      dailySection.dataset.dailyReady = "true";
       syncLevelButtons();
     };
 
