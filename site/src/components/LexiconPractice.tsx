@@ -5,7 +5,7 @@ import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
 import PracticeFormRail, { type FormRailVerdict } from './PracticeFormRail';
-import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
+import PracticeSessionSummary, { type SessionMissItem, type SessionSummaryStats } from './PracticeSessionSummary';
 import PracticeStress from './PracticeStress';
 import { ErrorCorrectionItem } from './ErrorCorrection';
 import { FillInQuestion } from './FillIn';
@@ -71,6 +71,7 @@ import {
   type PracticeSessionIdentity,
   type PracticeSessionSnapshot,
   type PracticeSessionSnapshots,
+  type PracticeStressItem,
   type ReviewLogEntry,
   type SelectionHistoryItem,
   type SessionBudget,
@@ -407,7 +408,12 @@ function heritageSeverityLabel(severity: PracticeHeritageItem['severity']): { uk
     : { uk: 'Лексичне збагачення', en: 'Vocabulary enrichment' };
 }
 
-interface ParonymFeedback {
+/**
+ * Correct/wrong teaching feedback shown under a locked drill: paronym distinctions
+ * plus the generic choice/classify/stress feedback (#6722 — those three used to lock
+ * with only a red ✗/green outline and no explanatory sentence).
+ */
+interface DrillFeedback {
   kind: 'correct' | 'wrong';
   textUk: string;
   textEn?: string;
@@ -786,7 +792,7 @@ export function isEnglishLearnerGloss(label: string): boolean {
 }
 
 function postAnswerSentenceEnglish(
-  feedback: HeritageFeedback | ParonymFeedback | ClozeFeedback | null,
+  feedback: HeritageFeedback | DrillFeedback | ClozeFeedback | null,
   raw: string | null | undefined,
 ): string | null {
   // Intentional all-level post-answer English answer key; this is not dual-chrome.
@@ -1184,10 +1190,50 @@ function choicePrompt(selection: PracticeSelection, learnerLevel: CefrLevel): { 
   };
 }
 
+/**
+ * #6722: 'choice' ('Вибір') used to lock with only a red ✗/green outline — the pair
+ * itself (word ↔ gloss) is already attested in the deck payload for both MC
+ * directions, so restate it as the teaching sentence, same bar as paronym.
+ */
+function choiceFeedbackFor(
+  selection: PracticeSelection,
+  option: ChoiceOption,
+  learnerLevel: CefrLevel,
+): DrillFeedback {
+  const lemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
+  const gloss = glossLabel(selection.lemma);
+  const pair = `«${lemma}» = ${gloss}.`;
+  return option.correct
+    ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: 'Correct!' }
+    : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: 'Incorrect.' };
+}
+
 function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
   const sets = selection.classify?.sets ?? [];
   if (!sets.length) return null;
   return sets.find((set) => set.setId === selection.classifySetId) ?? sets[0] ?? null;
+}
+
+/**
+ * #6722: 'classify' ('Група') teaching sentence — names the correct VESUM group
+ * (`answerLabelUk`/`answerLabelEn` are already curated deck fields, same set used
+ * to render the option list) instead of leaving the learner to infer it from color.
+ */
+function classifyFeedbackFor(
+  selection: PracticeSelection,
+  option: ChoiceOption,
+  learnerLevel: CefrLevel,
+): DrillFeedback | null {
+  const set = classifySet(selection);
+  if (!set) return null;
+  const lemma = displayPracticeForm(selection.lemma.lemma, learnerLevel);
+  const answerEn = set.answerLabelEn || translateGrammarTerm(set.answerLabelUk);
+  const setLabelEn = set.setLabelEn || translateGrammarTerm(set.setLabelUk);
+  const textUk = `«${lemma}» — ${set.answerLabelUk} (${set.setLabelUk}).`;
+  const textEn = `«${lemma}» is ${answerEn} (${setLabelEn}).`;
+  return option.correct
+    ? { kind: 'correct', textUk: `Правильно! ${textUk}`, textEn: `Correct! ${textEn}` }
+    : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
 }
 
 function drillChoiceOptions(
@@ -1258,6 +1304,19 @@ function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): 
     textUk: 'Ще раз',
     textEn: 'Again',
   };
+}
+
+/**
+ * #6722: 'stress' ('Наголос') teaching sentence — restates the fully-marked form
+ * (`item.stressed` is already the attested deck field the flashcard back uses)
+ * so a wrong pick shows where the stress actually falls, not just a red ✗.
+ */
+function stressFeedbackFor(item: PracticeStressItem, correct: boolean): DrillFeedback {
+  const textUk = `Наголос: «${item.stressed}».`;
+  const textEn = `Stress: «${item.stressed}».`;
+  return correct
+    ? { kind: 'correct', textUk: `Правильно! ${textUk}`, textEn: `Correct! ${textEn}` }
+    : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
 }
 
 function drillChoicePrompt(
@@ -1808,6 +1867,12 @@ function LexiconPracticeIsland({
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionLapsed, setSessionLapsed] = useState(0);
   const [advancedToReview, setAdvancedToReview] = useState<string[]>([]);
+  /**
+   * #6722: every lemma missed this session (deduplicated, most-recent-last) — the
+   * results screen used to dead-end without ever surfacing which two words the
+   * learner actually got wrong.
+   */
+  const [sessionMisses, setSessionMisses] = useState<SessionMissItem[]>([]);
   const [resumeSnapshots, setResumeSnapshots] = useState<PracticeSessionSnapshots>({});
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
@@ -1845,7 +1910,7 @@ function LexiconPracticeIsland({
   const [clozeCaseMissCount, setClozeCaseMissCount] = useState(0);
   const clozeCaseMissOutcomeRef = useRef<CompletionOutcome | null>(null);
   const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
-  const [paronymFeedback, setParonymFeedback] = useState<ParonymFeedback | null>(null);
+  const [paronymFeedback, setParonymFeedback] = useState<DrillFeedback | null>(null);
   const [stressSelectedPosition, setStressSelectedPosition] = useState<number | null>(null);
   const [paradigmSelectedLabel, setParadigmSelectedLabel] = useState<string | null>(null);
   const [paronymSelectedLabel, setParonymSelectedLabel] = useState<string | null>(null);
@@ -1854,6 +1919,12 @@ function LexiconPracticeIsland({
    * (paronym and heritage keep their own dedicated state above — those feed
    * PracticeFormRail/slot copy, not just the option list). */
   const [choiceSelectedLabel, setChoiceSelectedLabel] = useState<string | null>(null);
+  /**
+   * #6722: explanatory correct/wrong sentence for choice ('Вибір'), classify ('Група'),
+   * and stress ('Наголос') drills — brings them up to the paronym-drill bar instead of
+   * leaving a bare red ✗ / green outline with no teaching content.
+   */
+  const [choiceFeedback, setChoiceFeedback] = useState<DrillFeedback | null>(null);
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [selectedDeckFilter, setSelectedDeckFilter] = useState<string>('all');
   const [deckPickerOpen, setDeckPickerOpen] = useState(false);
@@ -2079,6 +2150,7 @@ function LexiconPracticeIsland({
     setParonymSelectedLabel(null);
     setHeritageSelectedLabel(null);
     setChoiceSelectedLabel(null);
+    setChoiceFeedback(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
     matchedSelectedRatingRef.current = null;
@@ -3066,6 +3138,7 @@ function LexiconPracticeIsland({
     setSessionCorrect(0);
     setSessionLapsed(0);
     setAdvancedToReview([]);
+    setSessionMisses([]);
   }
 
   function buildSessionSnapshot(
@@ -3441,6 +3514,11 @@ function LexiconPracticeIsland({
       }
       if (rating === 'again') {
         setSessionLapsed((value) => value + 1);
+        // #6722: surface on the results screen — dedupe by lemma, keep the latest miss.
+        setSessionMisses((items) => [
+          ...items.filter((entry) => entry.lemmaId !== current.lemma.lemmaId),
+          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: glossLabel(current.lemma) },
+        ]);
       }
       if (wasNew && rating !== 'again') {
         const daily = readNewCardsDailyState();
@@ -3557,6 +3635,7 @@ function LexiconPracticeIsland({
     const correct = position === selection.stress.stressIndex;
     const rating = correct ? 'good' : 'again';
     const outcome = recordReview(selection, rating);
+    setChoiceFeedback(stressFeedbackFor(selection.stress, correct));
     setFeedback({
       uk: `${selection.stress.unstressed}: ${correct ? 'Правильно' : 'Ще раз'}`,
       en: `${selection.stress.unstressed}: ${correct ? 'Correct' : 'Again'}`,
@@ -3576,6 +3655,14 @@ function LexiconPracticeIsland({
     const nextParonymFeedback = selection.paronym
       ? paronymFeedbackFor(selection.paronym, option)
       : null;
+    // #6722: bring 'choice' ('Вибір') and 'classify' ('Група') up to the paronym bar —
+    // a teaching sentence, not just a red ✗ / green outline.
+    const nextChoiceFeedback =
+      selection.mode === 'choice'
+        ? choiceFeedbackFor(selection, option, learnerLevel)
+        : selection.classify
+          ? classifyFeedbackFor(selection, option, learnerLevel)
+          : null;
     setAnswerLocked(true);
     setChoiceSelectedLabel(option.label);
     if (selection.paradigm) setParadigmSelectedLabel(option.label);
@@ -3583,6 +3670,7 @@ function LexiconPracticeIsland({
     if (selection.heritage) setHeritageSelectedLabel(option.label);
     setHeritageFeedback(nextHeritageFeedback);
     setParonymFeedback(nextParonymFeedback);
+    setChoiceFeedback(nextChoiceFeedback);
     setFeedback({
       uk: option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
       en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
@@ -3743,6 +3831,9 @@ function LexiconPracticeIsland({
     streak: streak.current,
     nextDueLabel: formatNextDueLabel(nextDuePreviewTime()),
     deferredLemmas: deferredLemmas.filter((entry) => dailySnapshotIds.has(entry.lemmaId)),
+    // #6722: unlike advancedToReview/deferredLemmas, misses are not scoped to the
+    // daily ring — the learner missed the word in THIS session regardless of deck.
+    misses: sessionMisses,
   };
 
   function finishPractice() {
@@ -4419,6 +4510,10 @@ function LexiconPracticeIsland({
         <PracticeSessionSummary
           stats={summaryStats}
           chromeLocale={chromeLocale}
+          // #M-13 immersion: A2+ never gets English raised back up — the miss
+          // review shows the UA lemma + an Atlas link always, the gloss only
+          // where content glosses are already the level's norm (A1/EN chrome).
+          showMissGloss={showEnglishSubtitles}
           onAnotherSession={() => {
             // A fresh «another session» is never a focus session — startSession(focus=null)
             // clears any weakness so the next session is the full pool for `mode`.
@@ -4492,6 +4587,7 @@ function LexiconPracticeIsland({
                     clozeFeedback={clozeFeedback}
                     heritageFeedback={heritageFeedback}
                     paronymFeedback={paronymFeedback}
+                    choiceFeedback={choiceFeedback}
                     stressSelectedPosition={stressSelectedPosition}
                     paradigmSelectedLabel={paradigmSelectedLabel}
                     paronymSelectedLabel={paronymSelectedLabel}
@@ -4542,6 +4638,38 @@ function formatNextDueLabel(nextDue: Date | null): { uk: string; en: string } | 
   };
 }
 
+/**
+ * #6722: shared correct/wrong teaching sentence for choice ('Вибір'), classify
+ * ('Група'), and stress ('Наголос') drills — same visual language as the paronym
+ * feedback block (`.mc-feedback` mirrors `.paronym-feedback` in practice.astro).
+ */
+function DrillFeedbackPanel({
+  feedback,
+  testId,
+  showEnglishSubtitles,
+}: {
+  feedback: DrillFeedback | null;
+  testId: string;
+  showEnglishSubtitles: boolean;
+}) {
+  if (!feedback) return null;
+  return (
+    <div
+      className={`mc-feedback ${feedback.kind}`}
+      role={feedback.kind === 'wrong' ? 'alert' : 'status'}
+      aria-live="polite"
+      data-testid={testId}
+    >
+      <p>
+        <span lang="uk">{feedback.textUk}</span>
+        {showEnglishSubtitles && feedback.textEn ? (
+          <span className="btn-sub" lang="en">/ {feedback.textEn}</span>
+        ) : null}
+      </p>
+    </div>
+  );
+}
+
 function PracticeItem({
   selection,
   deck,
@@ -4552,6 +4680,7 @@ function PracticeItem({
   clozeFeedback,
   heritageFeedback,
   paronymFeedback,
+  choiceFeedback,
   stressSelectedPosition,
   paradigmSelectedLabel,
   paronymSelectedLabel,
@@ -4579,7 +4708,8 @@ function PracticeItem({
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
   heritageFeedback: HeritageFeedback | null;
-  paronymFeedback: ParonymFeedback | null;
+  paronymFeedback: DrillFeedback | null;
+  choiceFeedback: DrillFeedback | null;
   stressSelectedPosition: number | null;
   paradigmSelectedLabel: string | null;
   paronymSelectedLabel: string | null;
@@ -4670,6 +4800,11 @@ function PracticeItem({
           selectedPosition={stressSelectedPosition}
           answerLocked={answerLocked}
           onSelect={onStressSelect}
+        />
+        <DrillFeedbackPanel
+          feedback={choiceFeedback}
+          testId="practice-stress-feedback"
+          showEnglishSubtitles={showEnglishSubtitles}
         />
       </div>
     );
@@ -4857,6 +4992,13 @@ function PracticeItem({
             </li>
           ))}
         </ul>
+        {selection.mode === 'classify' ? (
+          <DrillFeedbackPanel
+            feedback={choiceFeedback}
+            testId="practice-classify-feedback"
+            showEnglishSubtitles={showEnglishSubtitles}
+          />
+        ) : null}
         {selection.mode === 'paradigm' && answerLocked && paradigmSelectedLabel !== null ? (
           <PracticeFormRail
             source={{
@@ -4974,6 +5116,11 @@ function PracticeItem({
           </li>
         ))}
       </ul>
+      <DrillFeedbackPanel
+        feedback={choiceFeedback}
+        testId="practice-choice-feedback"
+        showEnglishSubtitles={showEnglishSubtitles}
+      />
     </div>
   );
 }
@@ -4985,7 +5132,7 @@ function paronymOptions(item: PracticeParonymItem): ChoiceOption[] {
   }));
 }
 
-function paronymFeedbackFor(item: PracticeParonymItem, option: ChoiceOption): ParonymFeedback {
+function paronymFeedbackFor(item: PracticeParonymItem, option: ChoiceOption): DrillFeedback {
   if (option.correct) {
     return {
       kind: 'correct',
@@ -5011,7 +5158,7 @@ function PracticeParonym({
   learnerLevel,
 }: {
   item: PracticeParonymItem;
-  feedback: ParonymFeedback | null;
+  feedback: DrillFeedback | null;
   answerLocked: boolean;
   selectedLabel: string | null;
   chromeLocale: 'en' | 'uk';

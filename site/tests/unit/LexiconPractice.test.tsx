@@ -4398,6 +4398,99 @@ describe('LexiconPractice', () => {
     });
   });
 
+  describe('wrong-answer teaching feedback (#6722)', () => {
+    // Before this fix, choice/classify/stress locked with only a red ✗ / green
+    // outline and no explanatory sentence — paronym already had the good pattern
+    // (a distinction sentence on both correct and wrong picks). These bring the
+    // other MC drills up to the same bar using data already in the deck payload.
+    test('choice ("Вибір"): wrong pick states the word ↔ meaning pairing', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
+      const scope = within(screen.getByTestId('practice-choice'));
+
+      const promptText = screen.getByText(/^Що означає «/).textContent ?? '';
+      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river' };
+      const promptWord = Object.keys(promptToGloss).find((word) => promptText.includes(word))!;
+      const correctGloss = promptToGloss[promptWord];
+
+      const options = scope.getAllByRole('button');
+      const correctButton = options.find((button) => button.textContent?.includes(correctGloss))!;
+      const wrongButton = options.find((button) => button !== correctButton)!;
+
+      await user.click(wrongButton);
+
+      expect(screen.getByTestId('practice-choice-feedback')).toHaveTextContent(
+        `Неправильно. «${promptWord}» = ${correctGloss}.`,
+      );
+    });
+
+    test('choice ("Вибір"): correct pick affirms the pairing', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
+      const scope = within(screen.getByTestId('practice-choice'));
+
+      const promptText = screen.getByText(/^Що означає «/).textContent ?? '';
+      const promptToGloss: Record<string, string> = { сад: 'garden', дім: 'house', ліс: 'forest', річка: 'river' };
+      const promptWord = Object.keys(promptToGloss).find((word) => promptText.includes(word))!;
+      const correctGloss = promptToGloss[promptWord];
+
+      const correctButton = scope.getAllByRole('button').find((button) => button.textContent?.includes(correctGloss))!;
+      await user.click(correctButton);
+
+      expect(screen.getByTestId('practice-choice-feedback')).toHaveTextContent(
+        `Правильно! «${promptWord}» = ${correctGloss}.`,
+      );
+    });
+
+    test('classify ("Група"): wrong pick names the correct grammatical group', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={classifyDeck()} autoStart initialMode="classify" />);
+
+      await user.click(screen.getByRole('button', { name: /чоловічий/ }));
+
+      expect(screen.getByTestId('practice-classify-feedback')).toHaveTextContent(
+        'Неправильно. «кава» — жіночий (рід).',
+      );
+    });
+
+    test('classify ("Група"): correct pick affirms the group', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={classifyDeck()} autoStart initialMode="classify" />);
+
+      await user.click(screen.getByRole('button', { name: /жіночий/ }));
+
+      expect(screen.getByTestId('practice-classify-feedback')).toHaveTextContent(
+        'Правильно! «кава» — жіночий (рід).',
+      );
+    });
+
+    test('stress ("Наголос"): wrong pick shows the fully-stressed form', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={stressDeck()} autoStart initialMode="stress" />);
+
+      const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
+      const wrongTarget = buttons.find((button) => button.dataset.position === '3')!;
+      await user.click(wrongTarget);
+
+      expect(screen.getByTestId('practice-stress-feedback')).toHaveTextContent(
+        'Неправильно. Наголос: «ка́ва».',
+      );
+    });
+
+    test('stress ("Наголос"): correct pick affirms the stressed form', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={stressDeck()} autoStart initialMode="stress" />);
+
+      const buttons = within(screen.getByTestId('practice-stress')).getAllByRole('button');
+      const target = buttons.find((button) => button.dataset.position === '1')!;
+      await user.click(target);
+
+      expect(screen.getByTestId('practice-stress-feedback')).toHaveTextContent(
+        'Правильно! Наголос: «ка́ва».',
+      );
+    });
+  });
+
   test('heritage rail preserves source "день" and rail form "днями" while sentence keeps "Днями"', async () => {
     const item: PracticeHeritageItem = {
       ...heritagePracticeItem(),
@@ -4454,11 +4547,13 @@ describe('LexiconPractice', () => {
       streak: 5,
       nextDueLabel: null,
       deferredLemmas: [],
+      misses: [],
     };
     const { container } = render(
       <PracticeSessionSummary
         stats={stats}
         chromeLocale="uk"
+        showMissGloss={false}
         onAnotherSession={() => undefined}
         onDone={() => undefined}
       />,
@@ -4467,6 +4562,50 @@ describe('LexiconPractice', () => {
     expect(screen.getByTestId('practice-session-summary')).toHaveTextContent('18/20');
     expect(container.querySelector('blockquote')).toHaveTextContent('Терпи, козаче — отаманом будеш.');
     expect(container.querySelector('figcaption')).toHaveTextContent("Українське прислів'я");
+    expect(screen.queryByTestId('practice-session-misses')).not.toBeInTheDocument();
+  });
+
+  test('summary reviews the session misses instead of dead-ending (#6722)', () => {
+    const stats: SessionSummaryStats = {
+      correct: 8,
+      lapsed: 2,
+      roundSize: 10,
+      advancedToReview: [],
+      streak: 3,
+      nextDueLabel: null,
+      deferredLemmas: [],
+      misses: [
+        { lemmaId: 'mama', lemma: 'мама', gloss: 'mother' },
+        { lemmaId: 'znyshchyty', lemma: 'знищити', gloss: 'to destroy' },
+      ],
+    };
+    render(
+      <PracticeSessionSummary
+        stats={stats}
+        chromeLocale="uk"
+        showMissGloss
+        onAnotherSession={() => undefined}
+        onDone={() => undefined}
+      />,
+    );
+
+    const misses = screen.getByTestId('practice-session-misses');
+    expect(misses).toHaveTextContent('мама');
+    expect(misses).toHaveTextContent('mother');
+    expect(misses).toHaveTextContent('знищити');
+    expect(misses).toHaveTextContent('to destroy');
+    const links = within(misses).getAllByRole('link');
+    expect(links).toHaveLength(2);
+    expect(links[0]).toHaveAttribute('href', '/lexicon/mama/');
+    expect(links[1]).toHaveAttribute('href', '/lexicon/znyshchyty/');
+    // Same openInAtlasTab aria-label as in-session Atlas links (new tab).
+    expect(links[0]).toHaveAttribute('aria-label', 'Відкрити в Атласі (нова вкладка)');
+    expect(links[1]).toHaveAttribute('aria-label', 'Відкрити в Атласі (нова вкладка)');
+
+    // Dead-end fix: onward navigation is present, not just "another session"/"done".
+    const continueLinks = screen.getByTestId('practice-session-continue-links');
+    expect(within(continueLinks).getByText('Атлас слів').closest('a')).toHaveAttribute('href', '/lexicon/');
+    expect(within(continueLinks).getByText('Слова дня').closest('a')).toHaveAttribute('href', '/words-of-the-day/');
   });
 
   describe('Curated Deck & Custom Sets Automated UI Selection Tests', () => {
@@ -4965,6 +5104,52 @@ describe('LexiconPractice', () => {
       const summary = await screen.findByTestId('practice-session-summary');
       // Same denominator as the badge: the score is against the frozen round size.
       expect(summary).toHaveTextContent('3/3');
+    });
+
+    test('#6722 results screen reviews the actual miss instead of dead-ending at the score', async () => {
+      // { word: [lemmaId, gloss] } — session order is seeded, not array order, so the
+      // test reads whichever card comes up first rather than assuming «книга».
+      const lemmaByWord: Record<string, [string, string]> = {
+        книга: ['knyha', 'book'],
+        робота: ['robota', 'work'],
+        місто: ['misto', 'city'],
+      };
+      const user = userEvent.setup();
+      const { container } = render(
+        <LexiconPractice initialDeck={threeFlashcardDeck()} autoStart initialMode="flashcards" />,
+      );
+      expect(await screen.findByTestId('practice-session-progress')).toHaveTextContent('0/3');
+
+      const answerCurrent = async (rating: 'again' | 'good') => {
+        const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+        expect(flashcard).toBeInTheDocument();
+        const front = container.querySelector('.flashcard-word')?.textContent ?? '';
+        await user.click(flashcard!);
+        await user.click(container.querySelector<HTMLButtonElement>(`[data-rate="${rating}"]`)!);
+        await user.click(await screen.findByTestId('practice-advance-button'));
+        return front;
+      };
+
+      const missedWord = await answerCurrent('again'); // the miss the summary must review
+      expect(lemmaByWord[missedWord]).toBeDefined();
+      await answerCurrent('good');
+      await answerCurrent('good');
+      for (let i = 0; i < 8; i += 1) {
+        if (screen.queryByTestId('practice-session-summary')) break;
+        await answerCurrent('good');
+        if (screen.queryByTestId('practice-session-summary')) break;
+      }
+
+      const [missedLemmaId, missedGloss] = lemmaByWord[missedWord]!;
+      const summary = await screen.findByTestId('practice-session-summary');
+      const misses = within(summary).getByTestId('practice-session-misses');
+      expect(misses).toHaveTextContent(missedWord);
+      expect(misses).toHaveTextContent(missedGloss);
+      expect(within(misses).getByRole('link')).toHaveAttribute('href', `/lexicon/${missedLemmaId}/`);
+
+      // Onward navigation replaces the old dead end (proverb + two buttons only).
+      const continueLinks = within(summary).getByTestId('practice-session-continue-links');
+      expect(within(continueLinks).getAllByRole('link')).toHaveLength(2);
     });
 
     test('#6721 matching wrong pair flashes red and shows «Спробуйте ще раз» instead of silently deselecting', async () => {
