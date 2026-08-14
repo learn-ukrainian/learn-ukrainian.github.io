@@ -48,7 +48,9 @@ SCHEMA_VERSION = "phase3_school_context_negative_recovery_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_school_context_negative_recovery_v1"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
-PUBLIC_FILE_MODE = 0o644
+# Git-tracked text-free receipts check out as 0644; new writes stay owner-only 0600.
+TRACKED_PUBLIC_FILE_MODE = 0o644
+ACCEPTED_PUBLIC_RECEIPT_MODES = frozenset({PRIVATE_FILE_MODE, TRACKED_PUBLIC_FILE_MODE})
 
 PINNED_SOURCE_UNITS_JSONL_SHA256 = eval_manifest.PINNED_SOURCE_UNITS_JSONL_SHA256
 PINNED_PARTITION_SHA256 = eval_manifest.PINNED_PARTITION_SHA256
@@ -175,10 +177,16 @@ def _regular_file(path: Path, label: str) -> None:
 
 
 def _regular_public(path: Path, label: str) -> None:
+    """Accept only explicit safe modes for an existing public receipt.
+
+    New receipts are created owner-only (0600). A normal git checkout of the
+    committed text-free receipt is 0644. Any other mode fails closed.
+    """
     _regular_file(path, label)
+    mode = stat.S_IMODE(path.lstat().st_mode)
     require(
-        stat.S_IMODE(path.lstat().st_mode) == PUBLIC_FILE_MODE,
-        f"{label} permissions must be 0644",
+        mode in ACCEPTED_PUBLIC_RECEIPT_MODES,
+        f"{label} permissions must be 0600 or tracked 0644",
     )
 
 
@@ -230,35 +238,17 @@ def _atomic_write(path: Path, payload: bytes) -> None:
 
 
 def _write_public_receipt(path: Path, payload: bytes) -> None:
-    """Idempotent public receipt write at tracked-file mode 0644 (never 0600).
+    """Idempotent public receipt write via the fixed private atomic writer.
 
-    Existing files must already be mode 0644 with identical bytes; changed
-    content is refused rather than silently overwritten. Mode is fixed at every
-    fchmod/chmod site so static analysis can prove the public permission policy.
+    Creation always uses owner-only 0600. Existing files may be 0600 or the
+    normal git-tracked 0644 checkout mode; changed bytes are refused.
     """
     _reject_symlink_components(path, "public receipt")
     if path.exists():
         _regular_public(path, "public receipt")
         require(path.read_bytes() == payload, "refusing to overwrite changed public receipt")
         return
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.",
-        suffix=".tmp",
-        dir=path.parent,
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), 0o644)
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-        os.chmod(path, 0o644)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
+    _atomic_write(path, payload)
 
 
 def _canonical_temp_root(prefix: str) -> Path:
@@ -540,6 +530,8 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     require(receipt["gates"]["school_complete_context_ready"] is False, "school complete context overclaim")
     require(receipt["gates"]["phase3_complete"] is False, "phase3 completion overclaim")
     require(receipt["gates"]["phase4_blocked"] is True, "phase4 must remain blocked")
+    # Fail closed on stale/tampered *current* public binding inputs, not only pinned constants.
+    _validate_public_bindings()
     bindings = receipt["bindings"]
     require(
         bindings["implementation_sha256"] == sha256_file(SCRIPT_PATH),

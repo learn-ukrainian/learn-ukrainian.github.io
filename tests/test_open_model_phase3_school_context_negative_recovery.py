@@ -71,12 +71,21 @@ def test_schema_and_committed_receipt_validate() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(receipt)
     assert negrec.receipt_sha256(receipt) == receipt["receipt_sha256"]
-    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == negrec.PUBLIC_FILE_MODE
+    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
     assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
     assert receipt["disposition"] == "school_complete_parent_or_sentence_context_not_recoverable"
     assert receipt["gates"]["phase4_blocked"] is True
     assert receipt["gates"]["school_complete_context_ready"] is False
     assert receipt["context_retained"]["complete_sentence_context"] is False
+
+
+def _write_default_mode_file(path: Path, payload: bytes) -> None:
+    """Create a normal umask-governed file (typically 0644) without chmod/fchmod."""
+    previous = os.umask(0o022)
+    try:
+        path.write_bytes(payload)
+    finally:
+        os.umask(previous)
 
 
 def test_canonical_and_quarantine_invariants() -> None:
@@ -210,7 +219,8 @@ def test_atomic_write_api_has_no_mode_parameter() -> None:
     assert list(params) == ["path", "payload"]
     assert "mode" not in params
     assert negrec.PRIVATE_FILE_MODE == 0o600
-    assert negrec.PUBLIC_FILE_MODE == 0o644
+    assert negrec.TRACKED_PUBLIC_FILE_MODE == 0o644
+    assert frozenset({0o600, 0o644}) == negrec.ACCEPTED_PUBLIC_RECEIPT_MODES
 
 
 def test_atomic_write_sets_owner_only_mode(tmp_path: Path) -> None:
@@ -222,15 +232,44 @@ def test_atomic_write_sets_owner_only_mode(tmp_path: Path) -> None:
     assert stat.S_IMODE(target.stat().st_mode) == negrec.PRIVATE_FILE_MODE
 
 
-def test_public_receipt_idempotent_at_tracked_mode(tmp_path: Path) -> None:
+def test_public_receipt_create_is_owner_only_and_idempotent(tmp_path: Path) -> None:
     path = tmp_path / "receipt.json"
     payload = b'{"ok":true}\n'
     negrec._write_public_receipt(path, payload)
-    assert stat.S_IMODE(path.stat().st_mode) == negrec.PUBLIC_FILE_MODE
+    assert stat.S_IMODE(path.stat().st_mode) == negrec.PRIVATE_FILE_MODE
     negrec._write_public_receipt(path, payload)
     assert path.read_bytes() == payload
     with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="refusing to overwrite changed public receipt"):
         negrec._write_public_receipt(path, b'{"ok":false}\n')
+
+
+def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path) -> None:
+    path = tmp_path / "receipt.json"
+    payload = b'{"ok":true}\n'
+    _write_default_mode_file(path, payload)
+    assert stat.S_IMODE(path.stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
+    negrec._write_public_receipt(path, payload)
+    assert path.read_bytes() == payload
+    assert stat.S_IMODE(path.stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
+    with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="refusing to overwrite changed public receipt"):
+        negrec._write_public_receipt(path, b'{"ok":false}\n')
+
+
+def test_validate_receipt_rebinds_live_public_artifacts(monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
+    opened: list[Path] = []
+    real_sha256_file = negrec.sha256_file
+
+    def _tracking(path: Path) -> str:
+        opened.append(path.resolve())
+        return real_sha256_file(path)
+
+    monkeypatch.setattr(negrec, "sha256_file", _tracking)
+    assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
+    resolved = set(opened)
+    assert negrec.EVAL_CONTEXT_RECEIPT.resolve() in resolved
+    assert negrec.SCHOOL_LEDGER.resolve() in resolved
+    assert negrec.SOURCE_UNIVERSE_RECEIPT.resolve() in resolved
 
 
 def test_canonical_temp_root_resolves_var_symlink(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -264,7 +303,7 @@ def test_production_receipt_reproducible_against_drive_custody(tmp_path: Path) -
         started_at=committed["started_at"],
         completed_at=committed["completed_at"],
     )
-    assert stat.S_IMODE(out.stat().st_mode) == negrec.PUBLIC_FILE_MODE
+    assert stat.S_IMODE(out.stat().st_mode) == negrec.PRIVATE_FILE_MODE
     assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
     assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
     assert reproduced["bindings"]["implementation_sha256"] == negrec.sha256_file(negrec.SCRIPT_PATH)
@@ -387,7 +426,7 @@ def test_hermetic_materialize_idempotent_and_refuses_changed_receipt(
         started_at="2026-08-14T01:10:00Z",
         completed_at="2026-08-14T01:20:00Z",
     )
-    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.PUBLIC_FILE_MODE
+    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.PRIVATE_FILE_MODE
     second = negrec.materialize(
         source_jsonl=paths["source_jsonl"],
         partition_path=paths["partition"],
@@ -397,7 +436,6 @@ def test_hermetic_materialize_idempotent_and_refuses_changed_receipt(
     )
     assert second["receipt_sha256"] == first["receipt_sha256"]
     paths["public_receipt"].write_bytes(b'{"tampered":true}\n')
-    os.chmod(paths["public_receipt"], negrec.PUBLIC_FILE_MODE)
     with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="refusing to overwrite changed public receipt"):
         negrec.materialize(
             source_jsonl=paths["source_jsonl"],
@@ -406,6 +444,33 @@ def test_hermetic_materialize_idempotent_and_refuses_changed_receipt(
             started_at="2026-08-14T01:10:00Z",
             completed_at="2026-08-14T01:20:00Z",
         )
+
+
+def test_hermetic_materialize_accepts_existing_tracked_mode_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _hermetic_fixture(tmp_path)
+    _patch_hermetic(monkeypatch, paths)
+    first = negrec.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-14T01:10:00Z",
+        completed_at="2026-08-14T01:20:00Z",
+    )
+    payload = paths["public_receipt"].read_bytes()
+    paths["public_receipt"].unlink()
+    _write_default_mode_file(paths["public_receipt"], payload)
+    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
+    second = negrec.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-14T01:10:00Z",
+        completed_at="2026-08-14T01:20:00Z",
+    )
+    assert second["receipt_sha256"] == first["receipt_sha256"]
+    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
 
 
 def test_hermetic_verify_existing_rejects_implementation_binding_mutation(
@@ -425,7 +490,6 @@ def test_hermetic_verify_existing_rejects_implementation_binding_mutation(
     receipt["bindings"]["implementation_sha256"] = "0" * 64
     receipt["receipt_sha256"] = negrec.receipt_sha256(receipt)
     paths["public_receipt"].write_bytes(negrec.canonical_bytes(receipt))
-    os.chmod(paths["public_receipt"], negrec.PUBLIC_FILE_MODE)
     with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="implementation binding drift"):
         negrec.verify_existing(
             source_jsonl=paths["source_jsonl"],
