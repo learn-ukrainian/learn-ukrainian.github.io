@@ -15,13 +15,13 @@ from scripts.projects.open_model_data import phase3_zhdu_2026_lexicology_phraseo
 
 PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
-DRIVE_STAGING = (
-    Path.home()
-    / "Library/CloudStorage"
-    / "GoogleDrive-krisztian.koos@gmail.com"
-    / "My Drive/Projects/learn-ukrainian-data"
-    / intake.PRIVATE_INPUT_LOCATOR
-)
+
+
+def _drive_staging() -> Path | None:
+    try:
+        return intake.default_staging_root()
+    except intake.Zhdu2026LexicologyPhraseologyIntakeError:
+        return None
 
 
 class _FakePage:
@@ -515,16 +515,19 @@ def test_committed_receipt_validates_when_present() -> None:
 def test_production_verify_against_drive_custody() -> None:
     if not PUBLIC_RECEIPT.is_file():
         pytest.skip("public receipt not materialized yet")
-    pdf = DRIVE_STAGING / intake.PDF_FILENAME
-    landing = DRIVE_STAGING / intake.LANDING_FILENAME
-    jsonl = DRIVE_STAGING / "processed" / "grade-00" / intake.JSONL_FILENAME
-    exactness = DRIVE_STAGING / "exactness" / intake.EXACTNESS_AUDIT_FILENAME
-    custody = DRIVE_STAGING / intake.CUSTODY_RECEIPT_FILENAME
-    checksums = DRIVE_STAGING / intake.CHECKSUMS_FILENAME
-    required = [DRIVE_STAGING, pdf, landing, jsonl, exactness, custody, checksums]
+    drive_staging = _drive_staging()
+    if drive_staging is None:
+        pytest.skip("configured Drive mount unavailable")
+    pdf = drive_staging / intake.PDF_FILENAME
+    landing = drive_staging / intake.LANDING_FILENAME
+    jsonl = drive_staging / "processed" / "grade-00" / intake.JSONL_FILENAME
+    exactness = drive_staging / "exactness" / intake.EXACTNESS_AUDIT_FILENAME
+    custody = drive_staging / intake.CUSTODY_RECEIPT_FILENAME
+    checksums = drive_staging / intake.CHECKSUMS_FILENAME
+    required = [drive_staging, pdf, landing, jsonl, exactness, custody, checksums]
     if not all(path.exists() for path in required):
         pytest.skip("Drive custody artifacts unavailable")
-    assert stat.S_IMODE(DRIVE_STAGING.stat().st_mode) == 0o700
+    assert stat.S_IMODE(drive_staging.stat().st_mode) == 0o700
     for path in (pdf, landing, jsonl, exactness, custody, checksums):
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
     assert intake.sha256_file(pdf) == intake.PDF_SHA256
@@ -535,7 +538,7 @@ def test_production_verify_against_drive_custody() -> None:
     assert committed["bindings"]["exactness_audit_sha256"] == intake.sha256_file(exactness)
     assert committed["custody"]["all_new_files_readback_hash_match"] is True
     reproduced = intake.production_run(
-        staging_root=DRIVE_STAGING,
+        staging_root=drive_staging,
         public_receipt_path=PUBLIC_RECEIPT,
     )
     assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
