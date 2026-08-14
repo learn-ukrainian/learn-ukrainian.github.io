@@ -1,0 +1,21 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "877176848680",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-school-parent-context-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/contracts/phase3_school_parent_section_context_receipt_v1.schema.json",
+    "data/projects/open_model_data/inventory/phase3_school_parent_section_context_receipt_v1.json",
+    "scripts/projects/open_model_data/phase3_school_parent_section_context.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/87/7176848680/0/metadata.json",
+      "transcript": "/87/7176848680/0/full.jsonl",
+      "compact_transcript": "/87/7176848680/0/transcript.jsonl",
+      "content_hash": "/87/7176848680/0/content_hash.txt",
+      "prompt": "/87/7176848680/0/prompt.txt"
+    }
+  ]
+}
