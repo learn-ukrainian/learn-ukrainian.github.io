@@ -108,8 +108,16 @@ import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { selectHeritagePracticePresentation } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
+import {
+  appendDrillFields,
+  concatDrillFields,
+  fetchPracticeDrillFields,
+  getShardJson,
+  isMissingShard,
+} from '../lib/lexicon/practice-shard-fetch';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
-import ZnoPractice, { ZNO_PRACTICE_DECKS, type ZnoPracticeDeck } from './ZnoPractice';
+import ZnoPractice, { ZNO_PRACTICE_DECKS } from './ZnoPractice';
+import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 
 
 /**
@@ -664,61 +672,6 @@ const MODE_META: Record<
     step: 'Питома лексика',
     stepEn: 'Native vocabulary',
     accent: 'teal',
-  },
-};
-
-const ZNO_MODE_META: Record<
-  ZnoPracticeDeck['deckId'],
-  {
-    description: string;
-    descriptionEn: string;
-    accent: 'blue' | 'teal' | 'purple' | 'orange';
-  }
-> = {
-  'zno-stress': {
-    description: 'Тренуйте наголос на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Practise stress placement with official ZNO and NMT items.',
-    accent: 'teal',
-  },
-  'zno-paronym': {
-    description: 'Розрізняйте пароніми на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Distinguish paronyms with official ZNO and NMT items.',
-    accent: 'purple',
-  },
-  'zno-lexical-norm': {
-    description: 'Закріплюйте лексичну норму на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Reinforce lexical norms with official ZNO and NMT items.',
-    accent: 'orange',
-  },
-  'zno-morphological-norm': {
-    description: 'Закріплюйте морфологічну норму на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Reinforce morphological norms with official ZNO and NMT items.',
-    accent: 'purple',
-  },
-  'zno-syntactic-norm': {
-    description: 'Закріплюйте синтаксичну норму на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Reinforce syntactic norms with official ZNO and NMT items.',
-    accent: 'teal',
-  },
-  'zno-orthography': {
-    description: 'Тренуйте орфографію на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Practise orthography with official ZNO and NMT items.',
-    accent: 'blue',
-  },
-  'zno-morphology': {
-    description: 'Закріплюйте морфологію на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Reinforce morphology with official ZNO and NMT items.',
-    accent: 'purple',
-  },
-  'zno-syntax': {
-    description: 'Тренуйте синтаксис і розділові знаки на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Practise syntax and punctuation with official ZNO and NMT items.',
-    accent: 'teal',
-  },
-  'zno-phonetics': {
-    description: 'Тренуйте фонетику на офіційних завданнях ЗНО та НМТ.',
-    descriptionEn: 'Practise phonetics with official ZNO and NMT items.',
-    accent: 'orange',
   },
 };
 
@@ -1868,45 +1821,6 @@ function DigitChoiceShortcuts({
   return null;
 }
 
-/** Deduped fetch for practice and Atlas JSON by URL. Concurrent or repeated callers share the promise. */
-async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>): Promise<T> {
-  let p = cache.get(url) as Promise<T> | undefined;
-  if (!p) {
-    p = fetch(url).then((res) => {
-      if (!res.ok) {
-        // Tag the HTTP status so callers can tell an unpublished shard (404,
-        // soft-skippable) from a real load fault (network / server error).
-        const err = new Error(`Shard fetch failed: ${url}`) as Error & { status?: number };
-        err.status = res.status;
-        throw err;
-      }
-      return res.json() as Promise<T>;
-    });
-    // On failure allow retry next time
-    p = p.catch((err) => {
-      cache.delete(url);
-      throw err;
-    });
-    cache.set(url, p);
-  }
-  return p;
-}
-
-/**
- * Optional drill-kind shards (and some Atlas search fallbacks) are unpublished
- * per level/type: HTTP 404 means "not shipped", so callers may treat that as an
- * empty payload. Network faults and 5xx must not be rewritten as empty decks
- * (#6768) — rethrow so the Practice load-error path can surface.
- */
-function isMissingShard(reason: unknown): boolean {
-  return (reason as { status?: number } | null)?.status === 404;
-}
-
-function softSkipUnpublishedDrillShard(reason: unknown): Record<string, never> {
-  if (isMissingShard(reason)) return {};
-  throw reason;
-}
-
 export default function LexiconPractice(props: LexiconPracticeProps) {
   return (
     <PracticeErrorBoundary>
@@ -2115,8 +2029,12 @@ function LexiconPracticeIsland({
     return () => clearTimeout(timeoutId);
   }, []);
   const [hoveredMode, setHoveredMode] = useState<VisiblePracticeModeFilter | null>(null);
-  const [hoveredZnoDeckId, setHoveredZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
-  const [activeZnoDeckId, setActiveZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
+  const {
+    hoveredZnoDeckId,
+    setHoveredZnoDeckId,
+    setActiveZnoDeckId,
+    activeZnoDeck,
+  } = useZnoPracticeOverlay();
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
@@ -2171,10 +2089,6 @@ function LexiconPracticeIsland({
     const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
     return title ? { uk: title, en: title } : null;
   }, [selectedDeckFilter, customSets]);
-  const activeZnoDeck = useMemo(
-    () => ZNO_PRACTICE_DECKS.find((candidate) => candidate.deckId === activeZnoDeckId) ?? null,
-    [activeZnoDeckId],
-  );
   const modeDetail = hoveredZnoDeckId
     ? ZNO_MODE_META[hoveredZnoDeckId]
     : MODE_META[hoveredMode ?? 'mixed'];
@@ -2978,33 +2892,12 @@ function LexiconPracticeIsland({
         // them, e.g. initialMode=cloze or mixed). Other drill shards are background.
         // This also defers drill-kind shards for basic modes (flashcards etc) until a
         // drill mode surfaces (optional path kept clean).
-        const drillUrls = [
-          `${shardBaseUrl}/practice-cloze.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-stress.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-classify.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-paradigm.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-synonym.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-paronym.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-heritage.${targetLevel}.json`,
-          `${shardBaseUrl}/practice-antonym.${targetLevel}.json`,
-        ];
-        const drillResults = await Promise.all(
-          drillUrls.map((u) =>
-            getShardJson<any>(u, shardJsonCacheRef.current).catch(softSkipUnpublishedDrillShard),
-          ),
+        const drillFields = await fetchPracticeDrillFields(
+          shardBaseUrl,
+          targetLevel,
+          shardJsonCacheRef.current,
         );
-        const [clozeR, stressR, classifyR, paradigmR, synonymR, paronymR, heritageR, antonymR] = drillResults;
-        nextDeck = {
-          ...nextDeck!,
-          cloze: [...(nextDeck!.cloze ?? []), ...((clozeR as { cloze?: PracticeClozeItem[] }).cloze ?? [])],
-          stress: [...(nextDeck!.stress ?? []), ...((stressR as { stress?: any[] }).stress ?? [])],
-          classify: [...(nextDeck!.classify ?? []), ...((classifyR as { classify?: any[] }).classify ?? [])],
-          paradigm: [...(nextDeck!.paradigm ?? []), ...((paradigmR as { paradigm?: any[] }).paradigm ?? [])],
-          synonym: [...(nextDeck!.synonym ?? []), ...((synonymR as { synonym?: any[] }).synonym ?? [])],
-          paronym: [...(nextDeck!.paronym ?? []), ...((paronymR as { paronym?: any[] }).paronym ?? [])],
-          heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
-          antonym: [...(nextDeck!.antonym ?? []), ...((antonymR as { antonym?: any[] }).antonym ?? [])],
-        };
+        nextDeck = appendDrillFields(nextDeck!, drillFields);
 
         // Merge teacher deck pre-generated cloze items if active
         if (deckFilter === 'virtual_teacher_lesson') {
@@ -3049,48 +2942,14 @@ function LexiconPracticeIsland({
             const bgId = deckRequestId.current;
             try {
               const otherDrillBatches = await Promise.all(
-                otherLevels.map(async (lv) => {
-                  const urls = [
-                    `${shardBaseUrl}/practice-cloze.${lv}.json`,
-                    `${shardBaseUrl}/practice-stress.${lv}.json`,
-                    `${shardBaseUrl}/practice-classify.${lv}.json`,
-                    `${shardBaseUrl}/practice-paradigm.${lv}.json`,
-                    `${shardBaseUrl}/practice-synonym.${lv}.json`,
-                    `${shardBaseUrl}/practice-paronym.${lv}.json`,
-                    `${shardBaseUrl}/practice-heritage.${lv}.json`,
-                    `${shardBaseUrl}/practice-antonym.${lv}.json`,
-                  ];
-                  const rs = await Promise.all(
-                    urls.map((u) =>
-                      getShardJson<any>(u, shardJsonCacheRef.current).catch(softSkipUnpublishedDrillShard),
-                    ),
-                  );
-                  return {
-                    cloze: (rs[0] as { cloze?: PracticeClozeItem[] }).cloze ?? [],
-                    stress: (rs[1] as { stress?: any[] }).stress ?? [],
-                    classify: (rs[2] as { classify?: any[] }).classify ?? [],
-                    paradigm: (rs[3] as { paradigm?: any[] }).paradigm ?? [],
-                    synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
-                    paronym: (rs[5] as { paronym?: any[] }).paronym ?? [],
-                    heritage: (rs[6] as { heritage?: any[] }).heritage ?? [],
-                    antonym: (rs[7] as { antonym?: any[] }).antonym ?? [],
-                  };
-                }),
+                otherLevels.map((lv) =>
+                  fetchPracticeDrillFields(shardBaseUrl, lv, shardJsonCacheRef.current),
+                ),
               );
               if (deckRequestId.current !== bgId) return;
               setDeck((prev) => {
                 if (!prev) return prev;
-                return {
-                  ...prev,
-                  cloze: [...(prev.cloze ?? []), ...otherDrillBatches.flatMap((b) => b.cloze)],
-                  stress: [...(prev.stress ?? []), ...otherDrillBatches.flatMap((b) => b.stress)],
-                  classify: [...(prev.classify ?? []), ...otherDrillBatches.flatMap((b) => b.classify)],
-                  paradigm: [...(prev.paradigm ?? []), ...otherDrillBatches.flatMap((b) => b.paradigm)],
-                  synonym: [...(prev.synonym ?? []), ...otherDrillBatches.flatMap((b) => b.synonym)],
-                  paronym: [...(prev.paronym ?? []), ...otherDrillBatches.flatMap((b) => b.paronym)],
-                  heritage: [...(prev.heritage ?? []), ...otherDrillBatches.flatMap((b) => b.heritage)],
-                  antonym: [...(prev.antonym ?? []), ...otherDrillBatches.flatMap((b) => b.antonym)],
-                };
+                return appendDrillFields(prev, concatDrillFields(otherDrillBatches));
               });
             } catch {
               // Selected-level drills already committed; skip broken background
