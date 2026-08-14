@@ -8,18 +8,10 @@ import { expect, test } from '@playwright/test';
  * impact serious or critical, in both color themes. Moderate/minor findings
  * are logged but do not fail the gate.
  *
- * PRE-EXISTING VIOLATIONS ON MAIN (residual findings — product fixes are
- * outside this gate's owned paths, reported in the #5376 PR body):
- *
- * - `color-contrast` [serious]: the practice dashboard fails contrast minimums
- *   in BOTH themes (.daily-deck-example, .daily-deck-origin, .due/.new/.done
- *   status counters; dark theme adds .k3-levels > .active and
- *   .flashcard-back > .flashcard-subtitle). The rule is DISABLED below until
- *   the product CSS fix lands — every other serious/critical rule stays
- *   enforced fail-closed.
- * - `definition-list` [serious] on /lexicon/: `.atlas-runtime-grid` <dl> cards
- *   interleave a <p data-runtime-detail> between dd and the next dt/dd group.
- *   Excluded by selector below until the markup is fixed.
+ * This gate is fail-closed on every axe rule: the two pre-existing
+ * suppressions (color-contrast on the practice dashboard, definition-list on
+ * /lexicon/) were removed when the product fixes for #6814 and #6815 landed.
+ * Do not re-add rule disables or selector exclusions — fix the artifact.
  */
 
 const SURFACES = [
@@ -28,12 +20,6 @@ const SURFACES = [
 ];
 
 const FAIL_IMPACTS = new Set(['serious', 'critical']);
-
-const KNOWN_VIOLATION_EXCLUSIONS: Record<string, string[]> = {
-  '/lexicon/': ['.atlas-runtime-grid'], // definition-list [serious], see header
-};
-
-const DISABLED_RULES = ['color-contrast']; // pre-existing failures, see header
 
 for (const surface of SURFACES) {
   for (const theme of ['light', 'dark'] as const) {
@@ -48,11 +34,7 @@ for (const surface of SURFACES) {
       }
       await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
 
-      let builder = new AxeBuilder({ page }).disableRules(DISABLED_RULES);
-      for (const selector of KNOWN_VIOLATION_EXCLUSIONS[surface.path] ?? []) {
-        builder = builder.exclude(selector);
-      }
-      const results = await builder.analyze();
+      const results = await new AxeBuilder({ page }).analyze();
 
       const failing = results.violations.filter((v) => FAIL_IMPACTS.has(v.impact ?? ''));
       const advisory = results.violations.filter((v) => !FAIL_IMPACTS.has(v.impact ?? ''));

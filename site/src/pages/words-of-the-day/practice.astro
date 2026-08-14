@@ -1262,7 +1262,7 @@ const frontmatter = {
   :global(.k3-levels button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
   }
   :global(.k3-level-soon) {
     display: block;
@@ -1456,7 +1456,7 @@ const frontmatter = {
   :global(.k3-session-budgets button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
   }
   /*
    * Primary Daily/Start CTA (#5502): `.btn-accent` is not a global style, so the
@@ -1474,19 +1474,19 @@ const frontmatter = {
     border: 1px solid var(--lu-primary);
     border-radius: 12px;
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
     font-size: 1.05rem;
     font-weight: 900;
     letter-spacing: 0.01em;
     box-shadow:
-      0 1px 0 color-mix(in srgb, var(--lu-on-primary) 18%, transparent) inset,
+      0 1px 0 color-mix(in srgb, var(--lu-on-accent) 18%, transparent) inset,
       0 4px 14px color-mix(in srgb, var(--lu-primary) 32%, transparent);
   }
   :global(.lexicon-practice button.k3-session-primary:hover),
   :global(.lexicon-practice button.k3-session-primary:focus-visible) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
     filter: brightness(1.06);
     outline: none;
     box-shadow:
@@ -1685,21 +1685,23 @@ const frontmatter = {
     color: var(--lu-text-muted);
     font-size: 0.85rem;
   }
+  /* The preview card's back face is the fixed azure band (--lesson-blue-band)
+     in both themes, so its copy must read as white-on-azure, not page text. */
   :global(.daily-deck-example) {
     margin: 0.45rem 0 0;
-    color: var(--lu-text);
+    color: var(--lu-on-primary);
     font-size: 0.95rem;
     line-height: 1.35;
   }
   :global(.daily-deck-example-en) {
     display: block;
     margin-top: 0.2rem;
-    color: var(--lu-text-muted);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.88em;
   }
   :global(.daily-deck-origin) {
     margin: 0.55rem 0 0;
-    color: var(--lu-text-muted);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.88rem;
     font-style: italic;
     line-height: 1.35;
@@ -1741,16 +1743,17 @@ const frontmatter = {
     white-space: nowrap;
   }
   :global(.daily-deck-counters .counter.due) {
+    /* Yellow stays a light fill in BOTH themes, so its text is always dark. */
     background: var(--lu-yellow-dark);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-yellow);
   }
   :global(.daily-deck-counters .counter.new) {
     background: var(--lu-blue);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
   }
   :global(.daily-deck-counters .counter.done) {
     background: var(--lu-green);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-accent);
   }
   :global(.daily-deck-rows) {
     margin: 0;
