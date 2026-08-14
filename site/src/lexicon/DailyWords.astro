@@ -49,8 +49,71 @@ const dailyCount = Math.max(1, Math.floor(count));
   )}
 
   <p class="lexicon-daily-status" data-daily-status>Завантажуємо добірку...</p>
+  <div class="lexicon-daily-fallback" data-daily-fallback hidden>
+    <p>Не вдалося завантажити добірку.</p>
+    <button type="button" data-daily-retry>Спробувати ще раз</button>
+  </div>
   <ul id="lexicon-daily-list" class="lexicon-daily-grid" aria-live="polite" data-daily-list></ul>
 </section>
+
+{/* Inline watchdog: if the processed DailyWords module never runs (CDN 503 on
+    the chunk, etc.), do not leave «Завантажуємо добірку...» as a dead end (#6771). */}
+<script is:inline>
+(() => {
+  const TIMEOUT_MS = 10000;
+  const LOADING_COPY = 'Завантажуємо добірку...';
+
+  function showSectionFallback(section) {
+    if (section.dataset.dailyReady === 'true') return;
+    const status = section.querySelector('[data-daily-status]');
+    const fallback = section.querySelector('[data-daily-fallback]');
+    const list = section.querySelector('[data-daily-list]');
+    if (list) list.innerHTML = '';
+    if (status) {
+      status.hidden = true;
+      status.textContent = '';
+    }
+    if (fallback) fallback.hidden = false;
+    section.hidden = false;
+  }
+
+  function armSection(section) {
+    const fallback = section.querySelector('[data-daily-fallback]');
+    const retry = section.querySelector('[data-daily-retry]');
+    if (retry && !retry.dataset.bound) {
+      retry.dataset.bound = '1';
+      retry.addEventListener('click', () => {
+        window.location.reload();
+      });
+    }
+    if (fallback) fallback.hidden = true;
+
+    window.setTimeout(() => {
+      if (section.dataset.dailyReady === 'true') return;
+      const status = section.querySelector('[data-daily-status]');
+      const stillLoading =
+        status &&
+        !status.hidden &&
+        (status.textContent || '').trim() === LOADING_COPY;
+      const list = section.querySelector('[data-daily-list]');
+      const emptyList = !list || list.children.length === 0;
+      if (stillLoading && emptyList) showSectionFallback(section);
+    }, TIMEOUT_MS);
+  }
+
+  function init() {
+    for (const section of document.querySelectorAll('[data-daily-words]')) {
+      armSection(section);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
 
 <script>
   import { dateSeed, pickDaily, type DailyWord } from "../lib/lexicon/daily";
@@ -84,6 +147,7 @@ const dailyCount = Math.max(1, Math.floor(count));
   const hydrateDailySection = (dailySection: HTMLElement) => {
     const dailyList = dailySection.querySelector<HTMLUListElement>("[data-daily-list]");
     const dailyStatus = dailySection.querySelector<HTMLElement>("[data-daily-status]");
+    const dailyFallback = dailySection.querySelector<HTMLElement>("[data-daily-fallback]");
     const levelButtons = Array.from(
       dailySection.querySelectorAll<HTMLButtonElement>("[data-daily-level]"),
     );
@@ -100,7 +164,30 @@ const dailyCount = Math.max(1, Math.floor(count));
 
     const hideDailySection = () => {
       if (dailyList) dailyList.innerHTML = "";
+      if (dailyFallback) dailyFallback.hidden = true;
       dailySection.hidden = true;
+      dailySection.dataset.dailyReady = "true";
+    };
+
+    const showLoadError = () => {
+      if (dailyList) dailyList.innerHTML = "";
+      if (dailyStatus) {
+        dailyStatus.hidden = true;
+        dailyStatus.textContent = "";
+      }
+      if (dailyFallback) dailyFallback.hidden = false;
+      dailySection.hidden = false;
+      // Mark ready so the inline watchdog does not race a second error paint.
+      dailySection.dataset.dailyReady = "true";
+    };
+
+    const clearLoadError = () => {
+      if (dailyFallback) dailyFallback.hidden = true;
+      if (dailyStatus) {
+        dailyStatus.hidden = false;
+        dailyStatus.textContent = "Завантажуємо добірку...";
+      }
+      dailySection.dataset.dailyReady = "false";
     };
 
     const syncLevelButtons = () => {
@@ -127,6 +214,8 @@ const dailyCount = Math.max(1, Math.floor(count));
           dailyStatus.hidden = false;
           dailyStatus.textContent = `Немає слів для рівня ${activeLevel}.`;
         }
+        if (dailyFallback) dailyFallback.hidden = true;
+        dailySection.dataset.dailyReady = "true";
         return;
       }
 
@@ -142,6 +231,8 @@ const dailyCount = Math.max(1, Math.floor(count));
           : "";
         dailyStatus.hidden = !useLevelSelector;
       }
+      if (dailyFallback) dailyFallback.hidden = true;
+      dailySection.dataset.dailyReady = "true";
       syncLevelButtons();
     };
 
@@ -154,7 +245,9 @@ const dailyCount = Math.max(1, Math.floor(count));
     }
 
     const loadDailyWords = async () => {
+      clearLoadError();
       try {
+        // Absolute site path — never resolve relative to /words-of-the-day/ (#6771).
         const response = await fetch("/lexicon/daily-pool.json");
         if (!response.ok) throw new Error(`Daily pool request failed: ${response.status}`);
         const data = (await response.json()) as DailyWord[];
@@ -166,7 +259,7 @@ const dailyCount = Math.max(1, Math.floor(count));
         syncLevelButtons();
         renderDailyWords();
       } catch {
-        hideDailySection();
+        showLoadError();
       }
     };
 
@@ -267,6 +360,44 @@ const dailyCount = Math.max(1, Math.floor(count));
 
   .lexicon-daily-status {
     margin: 0 auto 1rem;
+  }
+
+  .lexicon-daily-fallback {
+    max-width: 960px;
+    margin: 0 auto 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+  }
+
+  .lexicon-daily-fallback[hidden] {
+    display: none;
+  }
+
+  .lexicon-daily-fallback p {
+    margin: 0;
+    color: var(--lu-text);
+    line-height: 1.5;
+  }
+
+  .lexicon-daily-fallback button {
+    margin-top: 0.65rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1px solid var(--lu-primary);
+    border-radius: 8px;
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+  }
+
+  .lexicon-daily-fallback button:hover,
+  .lexicon-daily-fallback button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
   .lexicon-daily-grid {
