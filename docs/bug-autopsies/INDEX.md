@@ -56,5 +56,6 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-07-10 | #4220 | destructive-restores | Destructive restores — restore tooling silently clobbering newer local work |
 | 2026-07-12 | #4998 | research-registry-p4-gate-wiring | Wiring the P4 strict-adoption gate surfaced two latent bugs |
 | 2026-08-06 | #6415 | review-rail-outage-cascade | Review machinery failed 7:1 against its catches; outage froze all merges; process defeated purpose → detail: 2026-08-06-review-rail-outage-cascade.md |
+| 2026-08-14 | #6734 (residual after #6741) | practice-index-content-shard-drift | A1 Пароніми opened a stuck 0/8 session — index shard declared a lemma paronym-eligible while the paronym content shard had no matching row (a variant #6741's cross-level fix didn't cover). Fix cross-checks declared scope against actually-loaded content before planning a session → detail: practice-index-content-shard-drift.md |
 <!-- INDEX-END -->
 - 2026-07-10 · destructive-restore: `npm run hydrate` overwrote the richer in-flight intake manifest (8,706→5,787) with the published release — restore tools must never destroy more data than they replace by default → detail: destructive-restores.md
