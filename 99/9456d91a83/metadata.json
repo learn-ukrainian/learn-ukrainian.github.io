@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "999456d91a83",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-thin-grow-syn-ant",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/lexicon/antonym_pairs.yaml",
+    "data/lexicon/synonym_pair_verdicts.yaml",
+    "scripts/audit/generate_practice_deck.py",
+    "tests/test_generate_practice_deck.py",
+    "tests/test_synonym_verdicts_pipeline.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/99/9456d91a83/0/metadata.json",
+      "transcript": "/99/9456d91a83/0/full.jsonl",
+      "compact_transcript": "/99/9456d91a83/0/transcript.jsonl",
+      "content_hash": "/99/9456d91a83/0/content_hash.txt",
+      "prompt": "/99/9456d91a83/0/prompt.txt"
+    }
+  ]
+}

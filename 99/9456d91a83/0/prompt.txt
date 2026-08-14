@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-thin-grow-syn-ant
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Practice thin-mode grow wave — synonym + antonym from ATTESTED pools (follow-up to the fleet inventory on #4387)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy x gemini (native AGY; sanctioned language lane)
+- why_this_tier: locked pattern (merged PRs #6710 synonym grow, #6714 antonym grow); deterministic extraction, no policy decisions
+- owned_paths: data/ practice pair sources + verdicts the #6710/#6714 pattern touched, site/public/lexicon practice shards via the established emit tooling, their tests
+- acceptance_cmd: python -m scripts.practice.thin_mode_source_inventory --practice-dir site/public/lexicon (before/after table quoted)
+- alternatives_considered: (1) codex — busy on #6370 space-collapse; (2) cursor — reserved for #6816; (3) kimi — busy on a11y
+- parallel_free_seats: none after this wave
+
+## Task
+The tool-backed inventory on epic #4387 (comment 2026-08-14, "Thin-mode attested-source inventory") found remaining ATTESTED headroom:
+- synonym: 667 unused attested pairs (src 1531 unique lemmas); further extractors: ULIF synonyms (structured terms via MCP query_ulif_synonyms), 5549 uncurated Wiktionary synonym keys, 1408 approved relation_pairs rows not yet in verdicts
+- antonym: 673 unused attested pairs (src 1423); ULIF antonyms (explicit paired rows), 238 uncurated Wiktionary keys
+
+Grow BOTH modes toward the >=1000-unique-lemma bar following the merged #6710/#6714 diffs as the locked pattern (read them first — same extraction, verdict, and shard-emit shape; do not invent a new pipeline). Rules that bind:
+- Pairs come ONLY from attested sources; NEVER invent or infer a pair. CODE decides admission (VESUM-gated), no LLM judgment of pair validity.
+- Start with the cheapest pool: the unused-attested pairs the inventory tool already counts. Then the extractors in the order listed, only as needed.
+- Quote the inventory table BEFORE and AFTER; name any remaining gap honestly (paronym/homonym/heritage are out of scope — no attested path, per the inventory).
+- No publish-pointer changes; shard emission via the established tooling only.
+
+## Evidence preamble (#M-4)
+Every count from tool output. New extractor code gets tests, mutation-checked.
+
+## Steps
+1. Dispatch worktree only. 2. Read #6710/#6714 merged diffs. 3. Grow synonym, then antonym. 4. ruff + targeted pytest + inventory before/after. 5. Conventional commit referencing #4387 (thin modes), push, PR with the table, X-Agent trailer. 6. NO merge / NO auto-merge — driver owns review + merge.
