@@ -129,6 +129,8 @@ def _content_fit_from_texts(texts: list[str]) -> dict[str, object]:
             if any(marker in text.lower() for marker in intake.CONTENT_FIT_MARKERS["self_control_answers"])
         ),
     }
+    document_wide_depth = intake._depth_evidence_from_pages(texts)
+    topic_conditioned = {cell: intake._topic_conditioned_depth(texts, cell) for cell in intake.PROVISIONAL_NARROW_CELLS}
     joined = "\n".join(texts)
     rights = {
         "author_copyright_marker_hits": joined.count("© Дяченко"),
@@ -148,6 +150,8 @@ def _content_fit_from_texts(texts: list[str]) -> dict[str, object]:
     return {
         "marker_hits": hits,
         "page_counts": page_counts,
+        "document_wide_depth": document_wide_depth,
+        "topic_conditioned": topic_conditioned,
         "rights_marker_hits": rights,
         "ukrainian_review_flags": flags,
     }
@@ -197,6 +201,8 @@ def _fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]
     monkeypatch.setattr(intake, "LANDING_BYTES", len(landing_payload))
     monkeypatch.setattr(intake, "CONTENT_FIT_MARKER_HITS", content_fit["marker_hits"])
     monkeypatch.setattr(intake, "CONTENT_FIT_PAGE_COUNTS", content_fit["page_counts"])
+    monkeypatch.setattr(intake, "CONTENT_FIT_DOCUMENT_WIDE_DEPTH", content_fit["document_wide_depth"])
+    monkeypatch.setattr(intake, "CONTENT_FIT_TOPIC_CONDITIONED", content_fit["topic_conditioned"])
     monkeypatch.setattr(intake, "RIGHTS_MARKER_HITS", content_fit["rights_marker_hits"])
     monkeypatch.setattr(intake, "UKRAINIAN_REVIEW_FLAGS", content_fit["ukrainian_review_flags"])
     monkeypatch.setattr(intake, "PdfReader", lambda path: _FakeReader(path, texts))
@@ -380,12 +386,82 @@ def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyP
     out.parent.mkdir(parents=True)
     (out.parent / ".git").mkdir()
     intake.write_public_receipt(out, receipt)
+    assert stat.S_IMODE(out.stat().st_mode) == intake.PRIVATE_FILE_MODE
     intake.write_public_receipt(out, receipt)
     other = dict(receipt)
     other["status"] = "TAMPERED"
     other["receipt_sha256"] = intake.receipt_sha256(other)
     with pytest.raises(intake.Zhdu2026LexicologyPhraseologyIntakeError, match="immutable public receipt"):
         intake.write_public_receipt(out, other)
+
+
+def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    out = tmp_path / "git" / "receipt.json"
+    out.parent.mkdir(parents=True)
+    (out.parent / ".git").mkdir()
+    payload = intake.canonical_bytes(receipt)
+    out.write_bytes(payload)
+    os.chmod(out, intake.TRACKED_PUBLIC_FILE_MODE)
+    assert stat.S_IMODE(out.stat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
+    intake.write_public_receipt(out, receipt)
+    assert out.read_bytes() == payload
+    assert stat.S_IMODE(out.stat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
+    other = dict(receipt)
+    other["status"] = "TAMPERED"
+    other["receipt_sha256"] = intake.receipt_sha256(other)
+    with pytest.raises(intake.Zhdu2026LexicologyPhraseologyIntakeError, match="immutable public receipt"):
+        intake.write_public_receipt(out, other)
+
+
+def test_atomic_write_api_has_no_mode_parameter() -> None:
+    import inspect
+
+    params = inspect.signature(intake._atomic_write).parameters
+    assert list(params) == ["path", "payload"]
+    assert "mode" not in params
+    assert intake.PRIVATE_FILE_MODE == 0o600
+    assert intake.TRACKED_PUBLIC_FILE_MODE == 0o644
+    assert frozenset({0o600, 0o644}) == intake.ACCEPTED_PUBLIC_RECEIPT_MODES
+
+
+def test_topic_conditioned_depth_ignores_off_topic_marker_pages() -> None:
+    semantics_page = "семантика визначення класифікація наприклад завдання"
+    phraseology_page = "фразеологія визначення класифікація наприклад завдання"
+    off_topic_depth_page = "визначення класифікація наприклад завдання самоконтроль відповіді " * 20
+    pages = [semantics_page, phraseology_page, off_topic_depth_page]
+    conditioned = {cell: intake._topic_conditioned_depth(pages, cell) for cell in ("semantics", "phraseology")}
+    document_wide = intake._depth_evidence_from_pages(pages)
+    assert conditioned["semantics"]["definition_marker_hits"] == 1
+    assert conditioned["phraseology"]["definition_marker_hits"] == 1
+    assert document_wide["definition_marker_hits"] == 22
+    assert conditioned["semantics"]["definition_marker_hits"] < document_wide["definition_marker_hits"]
+    assert conditioned["phraseology"]["definition_marker_hits"] < document_wide["definition_marker_hits"]
+    assert conditioned["semantics"]["exercise_pages"] == 1
+    assert conditioned["phraseology"]["exercise_pages"] == 1
+    assert document_wide["exercise_pages"] == 3
+
+
+def test_validate_receipt_rebinds_university_freeze_and_policy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    intake.validate_receipt(receipt)
+
+    tampered_freeze = tmp_path / "freeze.json"
+    tampered_freeze.write_bytes(b'{"tampered":true}\n')
+    monkeypatch.setattr(intake, "UNIVERSITY_FREEZE_PATH", tampered_freeze)
+    with pytest.raises(intake.Zhdu2026LexicologyPhraseologyIntakeError, match="university content-audit freeze"):
+        intake.validate_receipt(receipt)
+
+    monkeypatch.setattr(
+        intake, "UNIVERSITY_FREEZE_PATH", intake.DATA / "admission/phase3_university_content_audit_freeze_v1.json"
+    )
+    tampered_policy = tmp_path / "policy.json"
+    tampered_policy.write_bytes(b'{"tampered":true}\n')
+    monkeypatch.setattr(intake, "SOURCE_POLICY_PATH", tampered_policy)
+    with pytest.raises(intake.Zhdu2026LexicologyPhraseologyIntakeError, match="complete source policy v4"):
+        intake.validate_receipt(receipt)
 
 
 def test_validate_receipt_rejects_overclaims(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -408,8 +484,13 @@ def test_committed_receipt_validates_when_present() -> None:
     assert validated["status"] == intake.STATUS
     assert validated["bindings"]["source_pdf_sha256"] == intake.PDF_SHA256
     assert validated["bindings"]["source_pdf_bytes"] == intake.PDF_BYTES
+    assert validated["bindings"]["university_content_audit_freeze_v1_sha256"] == intake.UNIVERSITY_FREEZE_SHA256
+    assert validated["bindings"]["complete_source_policy_v4_sha256"] == intake.SOURCE_POLICY_SHA256
     assert validated["native_exactness"]["flagged_chunk_count"] == 0
     assert validated["review_scope"]["topic_gaps_narrowed"] == []
+    assert validated["content_fitness"]["cells"]["semantics"]["depth_evidence"]["scope"] == "topic_conditioned"
+    assert validated["content_fitness"]["cells"]["phraseology"]["depth_evidence"]["scope"] == "topic_conditioned"
+    assert validated["content_fitness"]["document_wide_depth_evidence"]["scope"] == "document_wide"
     assert validated["rights"]["rights_statement"] == intake.RIGHTS_STATEMENT
     assert validated["gates"]["phase3_complete"] is False
     assert validated["gates"]["phase4_blocked"] is True
@@ -448,3 +529,6 @@ def test_production_verify_against_drive_custody() -> None:
     assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
     assert reproduced["native_exactness"]["flagged_chunk_count"] == 0
     assert reproduced["gates"]["phase4_blocked"] is True
+    assert reproduced["content_fitness"]["cells"]["semantics"]["depth_evidence"]["definition_marker_hits"] == 22
+    assert reproduced["content_fitness"]["cells"]["phraseology"]["depth_evidence"]["definition_marker_hits"] == 11
+    assert reproduced["content_fitness"]["document_wide_depth_evidence"]["definition_marker_hits"] == 33

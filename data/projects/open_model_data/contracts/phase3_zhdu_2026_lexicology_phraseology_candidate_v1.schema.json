@@ -119,6 +119,8 @@
         "private_jsonl_sha256",
         "private_jsonl_bytes",
         "exactness_audit_sha256",
+        "university_content_audit_freeze_v1_sha256",
+        "complete_source_policy_v4_sha256",
         "implementation_sha256",
         "schema_sha256"
       ],
@@ -153,6 +155,12 @@
         },
         "exactness_audit_sha256": {
           "$ref": "#/$defs/sha256"
+        },
+        "university_content_audit_freeze_v1_sha256": {
+          "const": "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"
+        },
+        "complete_source_policy_v4_sha256": {
+          "const": "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"
         },
         "implementation_sha256": {
           "$ref": "#/$defs/sha256"
@@ -234,6 +242,7 @@
         "provisional_effect",
         "topic_gaps_closed",
         "topic_gaps_narrowed_claimed",
+        "document_wide_depth_evidence",
         "cells",
         "supporting_depth_outside_target_cells",
         "audience",
@@ -256,42 +265,61 @@
         "topic_gaps_narrowed_claimed": {
           "const": []
         },
+        "document_wide_depth_evidence": {
+          "const": {
+            "scope": "document_wide",
+            "definition_marker_hits": 33,
+            "definition_pages": 22,
+            "theory_classification_marker_hits": 27,
+            "theory_classification_pages": 20,
+            "example_marker_hits": 49,
+            "example_pages": 25,
+            "exercise_marker_hits": 115,
+            "exercise_pages": 52,
+            "self_control_answer_marker_hits": 11,
+            "self_control_answer_pages": 6
+          }
+        },
         "cells": {
           "const": {
             "semantics": {
               "frozen_status": "partial",
               "provisional_effect": "narrow_only_candidate",
+              "qualified_source_needed": "Advanced university textbook on lexical and structural semantics.",
               "depth_evidence": {
+                "scope": "topic_conditioned",
                 "topic_marker_hits": 331,
                 "topic_pages": 62,
-                "definition_marker_hits": 33,
-                "definition_pages": 22,
-                "theory_classification_marker_hits": 27,
-                "theory_classification_pages": 20,
-                "example_marker_hits": 49,
-                "example_pages": 25,
-                "exercise_marker_hits": 115,
-                "exercise_pages": 52,
-                "self_control_answer_marker_hits": 11,
-                "self_control_answer_pages": 6
+                "definition_marker_hits": 22,
+                "definition_pages": 15,
+                "theory_classification_marker_hits": 21,
+                "theory_classification_pages": 15,
+                "example_marker_hits": 37,
+                "example_pages": 18,
+                "exercise_marker_hits": 78,
+                "exercise_pages": 32,
+                "self_control_answer_marker_hits": 9,
+                "self_control_answer_pages": 4
               }
             },
             "phraseology": {
               "frozen_status": "partial",
               "provisional_effect": "narrow_only_candidate",
+              "qualified_source_needed": "Dedicated university phraseology manual (e.g. Uzhchenko Phraseology of Modern Ukrainian).",
               "depth_evidence": {
+                "scope": "topic_conditioned",
                 "topic_marker_hits": 181,
                 "topic_pages": 41,
-                "definition_marker_hits": 33,
-                "definition_pages": 22,
-                "theory_classification_marker_hits": 27,
-                "theory_classification_pages": 20,
-                "example_marker_hits": 49,
-                "example_pages": 25,
-                "exercise_marker_hits": 115,
-                "exercise_pages": 52,
-                "self_control_answer_marker_hits": 11,
-                "self_control_answer_pages": 6
+                "definition_marker_hits": 11,
+                "definition_pages": 8,
+                "theory_classification_marker_hits": 17,
+                "theory_classification_pages": 11,
+                "example_marker_hits": 12,
+                "example_pages": 7,
+                "exercise_marker_hits": 53,
+                "exercise_pages": 21,
+                "self_control_answer_marker_hits": 8,
+                "self_control_answer_pages": 3
               }
             }
           }
@@ -322,7 +350,8 @@
             "Cursor content-fit notes are provisional marker evidence only.",
             "Independent Ukrainian-canon review must adjudicate terminology, Russianisms/calques, and factual claims.",
             "No university topic is closed by this candidate.",
-            "Semantics and phraseology remain partial until root disposition after Ukrainian review."
+            "Semantics and phraseology remain partial until root disposition after Ukrainian review.",
+            "Cell depth_evidence is topic_conditioned; document_wide_depth_evidence is reported separately and must not be read as cell evidence."
           ]
         },
         "flags_for_ukrainian_review": {

@@ -38,6 +38,8 @@ DATA = ROOT / "data/projects/open_model_data"
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.json"
+UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
+SOURCE_POLICY_PATH = DATA / "admission/phase3_complete_source_policy_v4.json"
 
 SCHEMA_VERSION = "phase3_zhdu_2026_lexicology_phraseology_candidate_v1"
 STATUS = "NARROW_ONLY_CANDIDATE_PENDING_UKRAINIAN_CANON_REVIEW_AND_SCOPE_CRITIC"
@@ -85,6 +87,12 @@ UNIVERSITY_TOPIC_AREAS = 26
 UNIVERSITY_SUFFICIENT = 5
 UNIVERSITY_PARTIAL = 21
 UNIVERSITY_MISSING = 0
+UNIVERSITY_FREEZE_SHA256 = "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"
+SOURCE_POLICY_SHA256 = "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"
+SEMANTICS_QUALIFIED_SOURCE_NEEDED = "Advanced university textbook on lexical and structural semantics."
+PHRASEOLOGY_QUALIFIED_SOURCE_NEEDED = (
+    "Dedicated university phraseology manual (e.g. Uzhchenko Phraseology of Modern Ukrainian)."
+)
 
 CONTENT_FIT_MARKER_HITS = {
     "lexicology": 43,
@@ -109,6 +117,48 @@ CONTENT_FIT_PAGE_COUNTS = {
     "example_pages": 25,
     "exercise_pages": 52,
     "self_control_answer_pages": 6,
+}
+CONTENT_FIT_DOCUMENT_WIDE_DEPTH = {
+    "definition_marker_hits": 33,
+    "definition_pages": 22,
+    "theory_classification_marker_hits": 27,
+    "theory_classification_pages": 20,
+    "example_marker_hits": 49,
+    "example_pages": 25,
+    "exercise_marker_hits": 115,
+    "exercise_pages": 52,
+    "self_control_answer_marker_hits": 11,
+    "self_control_answer_pages": 6,
+}
+CONTENT_FIT_TOPIC_CONDITIONED = {
+    "semantics": {
+        "topic_marker_hits": 331,
+        "topic_pages": 62,
+        "definition_marker_hits": 22,
+        "definition_pages": 15,
+        "theory_classification_marker_hits": 21,
+        "theory_classification_pages": 15,
+        "example_marker_hits": 37,
+        "example_pages": 18,
+        "exercise_marker_hits": 78,
+        "exercise_pages": 32,
+        "self_control_answer_marker_hits": 9,
+        "self_control_answer_pages": 4,
+    },
+    "phraseology": {
+        "topic_marker_hits": 181,
+        "topic_pages": 41,
+        "definition_marker_hits": 11,
+        "definition_pages": 8,
+        "theory_classification_marker_hits": 17,
+        "theory_classification_pages": 11,
+        "example_marker_hits": 12,
+        "example_pages": 7,
+        "exercise_marker_hits": 53,
+        "exercise_pages": 21,
+        "self_control_answer_marker_hits": 8,
+        "self_control_answer_pages": 3,
+    },
 }
 RIGHTS_MARKER_HITS = {
     "author_copyright_marker_hits": 1,
@@ -225,6 +275,25 @@ def _private_regular_file(path: Path, label: str) -> None:
     require(not _inside_git_checkout(path), f"{label} cannot live inside Git")
 
 
+def _regular_public(path: Path, label: str) -> None:
+    """Accept only explicit safe modes for an existing public receipt.
+
+    New receipts are created owner-only (0600). A normal git checkout of the
+    committed text-free receipt is 0644. Any other mode fails closed.
+    """
+    _reject_symlink_components(path, label)
+    try:
+        result = Path(path).lstat()
+    except OSError as exc:
+        raise Zhdu2026LexicologyPhraseologyIntakeError(f"missing {label}: {path}") from exc
+    require(stat.S_ISREG(result.st_mode) and not Path(path).is_symlink(), f"{label} must be a regular file")
+    mode = stat.S_IMODE(result.st_mode)
+    require(
+        mode in ACCEPTED_PUBLIC_RECEIPT_MODES,
+        f"{label} permissions must be 0600 or tracked 0644",
+    )
+
+
 def _prepare_private_directory(path: Path, label: str) -> None:
     require(not _inside_git_checkout(path), f"{label} cannot live inside Git")
     _reject_symlink_components(path, label)
@@ -258,6 +327,34 @@ def _atomic_write_private_bytes(path: Path, payload: bytes, label: str) -> None:
         if temporary.exists():
             temporary.unlink()
     _private_regular_file(path, label)
+
+
+def _atomic_write(path: Path, payload: bytes) -> None:
+    """Atomically write *payload* with owner-only permissions (mode 0600).
+
+    Mode is a fixed literal at every fchmod/chmod site (no caller-controlled
+    argument) so static analysis can prove the permission policy without tracking
+    a variable.
+    """
+    _reject_symlink_components(path, "output path")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), 0o600)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        os.chmod(path, 0o600)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def _read_private_bytes(path: Path, label: str, expected_sha256: str) -> bytes:
@@ -372,6 +469,41 @@ def _page_count(pages: Sequence[str], markers: Sequence[str]) -> int:
     return sum(1 for page in pages if any(marker in page.lower() for marker in markers))
 
 
+def _page_matches(page: str, markers: Sequence[str]) -> bool:
+    text_lower = page.lower()
+    return any(marker in text_lower for marker in markers)
+
+
+def _depth_evidence_from_pages(pages: Sequence[str]) -> dict[str, int]:
+    joined_lower = "\n".join(pages).lower()
+    return {
+        "definition_marker_hits": _count_marker_hits(joined_lower, CONTENT_FIT_MARKERS["definitions"]),
+        "definition_pages": _page_count(pages, CONTENT_FIT_MARKERS["definitions"]),
+        "theory_classification_marker_hits": _count_marker_hits(
+            joined_lower, CONTENT_FIT_MARKERS["theory_classification"]
+        ),
+        "theory_classification_pages": _page_count(pages, CONTENT_FIT_MARKERS["theory_classification"]),
+        "example_marker_hits": _count_marker_hits(joined_lower, CONTENT_FIT_MARKERS["examples"]),
+        "example_pages": _page_count(pages, CONTENT_FIT_MARKERS["examples"]),
+        "exercise_marker_hits": _count_marker_hits(joined_lower, CONTENT_FIT_MARKERS["exercises"]),
+        "exercise_pages": _page_count(pages, CONTENT_FIT_MARKERS["exercises"]),
+        "self_control_answer_marker_hits": _count_marker_hits(
+            joined_lower, CONTENT_FIT_MARKERS["self_control_answers"]
+        ),
+        "self_control_answer_pages": _page_count(pages, CONTENT_FIT_MARKERS["self_control_answers"]),
+    }
+
+
+def _topic_conditioned_depth(pages: Sequence[str], cell: str) -> dict[str, int]:
+    topic_markers = CONTENT_FIT_MARKERS[cell]
+    topic_pages = [page for page in pages if _page_matches(page, topic_markers)]
+    return {
+        "topic_marker_hits": _count_marker_hits("\n".join(pages).lower(), topic_markers),
+        "topic_pages": len(topic_pages),
+        **_depth_evidence_from_pages(topic_pages),
+    }
+
+
 def _content_fit_from_pages(pages: Sequence[str]) -> dict[str, Any]:
     joined_lower = "\n".join(pages).lower()
     hits = {key: _count_marker_hits(joined_lower, markers) for key, markers in CONTENT_FIT_MARKERS.items()}
@@ -386,6 +518,8 @@ def _content_fit_from_pages(pages: Sequence[str]) -> dict[str, Any]:
         "exercise_pages": _page_count(pages, CONTENT_FIT_MARKERS["exercises"]),
         "self_control_answer_pages": _page_count(pages, CONTENT_FIT_MARKERS["self_control_answers"]),
     }
+    document_wide_depth = _depth_evidence_from_pages(pages)
+    topic_conditioned = {cell: _topic_conditioned_depth(pages, cell) for cell in PROVISIONAL_NARROW_CELLS}
     rights = {
         "author_copyright_marker_hits": len(re.findall(r"©\s*Дяченко", "\n".join(pages))),
         "university_copyright_marker_hits": len(re.findall(r"©\s*ЖДУ", "\n".join(pages))),
@@ -405,11 +539,15 @@ def _content_fit_from_pages(pages: Sequence[str]) -> dict[str, Any]:
     }
     require(hits == CONTENT_FIT_MARKER_HITS, "content-fit marker hit drift")
     require(page_counts == CONTENT_FIT_PAGE_COUNTS, "content-fit page-count drift")
+    require(document_wide_depth == CONTENT_FIT_DOCUMENT_WIDE_DEPTH, "document-wide depth drift")
+    require(topic_conditioned == CONTENT_FIT_TOPIC_CONDITIONED, "topic-conditioned depth drift")
     require(rights == RIGHTS_MARKER_HITS, "rights marker hit drift")
     require(flags == UKRAINIAN_REVIEW_FLAGS, "Ukrainian-review flag drift")
     return {
         "marker_hits": hits,
         "page_counts": page_counts,
+        "document_wide_depth": document_wide_depth,
+        "topic_conditioned": topic_conditioned,
         "rights_marker_hits": rights,
         "ukrainian_review_flags": flags,
     }
@@ -600,46 +738,33 @@ def run_exactness_audit(chunks_root: Path, audit_dir: Path) -> dict[str, Any]:
 def build_content_fitness(content_fit: Mapping[str, Any]) -> dict[str, Any]:
     hits = content_fit["marker_hits"]
     pages = content_fit["page_counts"]
+    topic_conditioned = content_fit["topic_conditioned"]
     return {
         "target_cells": list(PROVISIONAL_NARROW_CELLS),
         "provisional_effect": "narrow_only_candidate",
         "topic_gaps_closed": [],
         "topic_gaps_narrowed_claimed": [],
+        "document_wide_depth_evidence": {
+            "scope": "document_wide",
+            **dict(content_fit["document_wide_depth"]),
+        },
         "cells": {
             "semantics": {
                 "frozen_status": "partial",
                 "provisional_effect": "narrow_only_candidate",
+                "qualified_source_needed": SEMANTICS_QUALIFIED_SOURCE_NEEDED,
                 "depth_evidence": {
-                    "topic_marker_hits": hits["semantics"],
-                    "topic_pages": pages["semantics_topic_pages"],
-                    "definition_marker_hits": hits["definitions"],
-                    "definition_pages": pages["definition_pages"],
-                    "theory_classification_marker_hits": hits["theory_classification"],
-                    "theory_classification_pages": pages["theory_classification_pages"],
-                    "example_marker_hits": hits["examples"],
-                    "example_pages": pages["example_pages"],
-                    "exercise_marker_hits": hits["exercises"],
-                    "exercise_pages": pages["exercise_pages"],
-                    "self_control_answer_marker_hits": hits["self_control_answers"],
-                    "self_control_answer_pages": pages["self_control_answer_pages"],
+                    "scope": "topic_conditioned",
+                    **dict(topic_conditioned["semantics"]),
                 },
             },
             "phraseology": {
                 "frozen_status": "partial",
                 "provisional_effect": "narrow_only_candidate",
+                "qualified_source_needed": PHRASEOLOGY_QUALIFIED_SOURCE_NEEDED,
                 "depth_evidence": {
-                    "topic_marker_hits": hits["phraseology"],
-                    "topic_pages": pages["phraseology_topic_pages"],
-                    "definition_marker_hits": hits["definitions"],
-                    "definition_pages": pages["definition_pages"],
-                    "theory_classification_marker_hits": hits["theory_classification"],
-                    "theory_classification_pages": pages["theory_classification_pages"],
-                    "example_marker_hits": hits["examples"],
-                    "example_pages": pages["example_pages"],
-                    "exercise_marker_hits": hits["exercises"],
-                    "exercise_pages": pages["exercise_pages"],
-                    "self_control_answer_marker_hits": hits["self_control_answers"],
-                    "self_control_answer_pages": pages["self_control_answer_pages"],
+                    "scope": "topic_conditioned",
+                    **dict(topic_conditioned["phraseology"]),
                 },
             },
         },
@@ -665,8 +790,70 @@ def build_content_fitness(content_fit: Mapping[str, Any]) -> dict[str, Any]:
             "Independent Ukrainian-canon review must adjudicate terminology, Russianisms/calques, and factual claims.",
             "No university topic is closed by this candidate.",
             "Semantics and phraseology remain partial until root disposition after Ukrainian review.",
+            "Cell depth_evidence is topic_conditioned; document_wide_depth_evidence is reported separately and must not be read as cell evidence.",
         ],
         "flags_for_ukrainian_review": dict(content_fit["ukrainian_review_flags"]),
+    }
+
+
+def validate_authoritative_university_state(
+    *,
+    university_freeze_path: Path | None = None,
+    source_policy_path: Path | None = None,
+) -> dict[str, str]:
+    """Re-open and re-derive live university freeze / source-policy facts."""
+    freeze_path = university_freeze_path if university_freeze_path is not None else UNIVERSITY_FREEZE_PATH
+    policy_path = source_policy_path if source_policy_path is not None else SOURCE_POLICY_PATH
+    require(freeze_path.is_file(), "missing university content-audit freeze")
+    require(policy_path.is_file(), "missing complete source policy v4")
+    freeze_sha256 = sha256_file(freeze_path)
+    policy_sha256 = sha256_file(policy_path)
+    require(freeze_sha256 == UNIVERSITY_FREEZE_SHA256, "university content-audit freeze hash drift")
+    require(policy_sha256 == SOURCE_POLICY_SHA256, "complete source policy v4 hash drift")
+
+    freeze = _read_json(freeze_path, "university content-audit freeze")
+    counts = freeze.get("topic_coverage", {}).get("counts")
+    require(isinstance(counts, Mapping), "university freeze topic counts missing")
+    require(counts.get("areas_required") == UNIVERSITY_TOPIC_AREAS, "university topic-area denominator drift")
+    require(counts.get("sufficient") == UNIVERSITY_SUFFICIENT, "university sufficient denominator drift")
+    require(counts.get("partial") == UNIVERSITY_PARTIAL, "university partial denominator drift")
+    require(counts.get("missing") == UNIVERSITY_MISSING, "university missing denominator drift")
+
+    topics = freeze.get("topic_coverage", {}).get("topics")
+    require(isinstance(topics, list), "university freeze topics missing")
+    by_area = {topic.get("area"): topic for topic in topics if isinstance(topic, Mapping)}
+    semantics = by_area.get("semantics")
+    phraseology = by_area.get("phraseology")
+    require(isinstance(semantics, Mapping), "university freeze semantics topic missing")
+    require(isinstance(phraseology, Mapping), "university freeze phraseology topic missing")
+    require(semantics.get("status") == "partial", "university freeze semantics status drift")
+    require(phraseology.get("status") == "partial", "university freeze phraseology status drift")
+    require(
+        semantics.get("qualified_source_needed") == SEMANTICS_QUALIFIED_SOURCE_NEEDED,
+        "university freeze semantics qualified-source need drift",
+    )
+    require(
+        phraseology.get("qualified_source_needed") == PHRASEOLOGY_QUALIFIED_SOURCE_NEEDED,
+        "university freeze phraseology qualified-source need drift",
+    )
+
+    freeze_gates = freeze.get("gates")
+    require(isinstance(freeze_gates, Mapping), "university freeze gates missing")
+    require(freeze_gates.get("source_coverage_ready") is False, "university freeze overclaims source coverage")
+    require(freeze_gates.get("phase3_complete") is False, "university freeze overclaims Phase 3 completion")
+    require(freeze_gates.get("phase4_blocked") is True, "university freeze opens Phase 4")
+    require(
+        freeze_gates.get("overall_phase3_source_freeze_ready") is False,
+        "university freeze overclaims overall Phase 3 source freeze readiness",
+    )
+
+    policy = _read_json(policy_path, "complete source policy v4")
+    require(policy.get("phase3_complete") is False, "source policy overclaims Phase 3 completion")
+    require(policy.get("phase4_blocked") is True, "source policy opens Phase 4")
+    require(policy.get("source_freeze_ready") is False, "source policy overclaims source freeze readiness")
+    return {
+        "university_content_audit_freeze_v1_sha256": freeze_sha256,
+        "complete_source_policy_v4_sha256": policy_sha256,
     }
 
 
@@ -679,6 +866,7 @@ def build_receipt_body(
     private_jsonl_sha256: str,
     private_jsonl_bytes: int,
 ) -> dict[str, Any]:
+    authoritative = validate_authoritative_university_state()
     content_fitness = build_content_fitness(text_facts["content_fit"])
     body: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -712,6 +900,8 @@ def build_receipt_body(
             "private_jsonl_sha256": private_jsonl_sha256,
             "private_jsonl_bytes": private_jsonl_bytes,
             "exactness_audit_sha256": exactness["audit_receipt_sha256"],
+            "university_content_audit_freeze_v1_sha256": authoritative["university_content_audit_freeze_v1_sha256"],
+            "complete_source_policy_v4_sha256": authoritative["complete_source_policy_v4_sha256"],
             "implementation_sha256": sha256_file(SCRIPT_PATH),
             "schema_sha256": sha256_file(SCHEMA_PATH),
         },
@@ -813,22 +1003,59 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         location = "/".join(str(part) for part in errors[0].absolute_path) or "receipt"
         raise Zhdu2026LexicologyPhraseologyIntakeError(f"receipt schema violation at {location}: {errors[0].message}")
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
+    authoritative = validate_authoritative_university_state()
     require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
+    require(
+        receipt["bindings"]["university_content_audit_freeze_v1_sha256"]
+        == authoritative["university_content_audit_freeze_v1_sha256"],
+        "university freeze binding drift",
+    )
+    require(
+        receipt["bindings"]["complete_source_policy_v4_sha256"] == authoritative["complete_source_policy_v4_sha256"],
+        "source policy binding drift",
+    )
     require(receipt["bindings"]["source_pdf_sha256"] == PDF_SHA256, "receipt PDF hash drift")
     require(receipt["bindings"]["source_pdf_bytes"] == PDF_BYTES, "receipt PDF bytes drift")
     require(receipt["review_scope"]["topic_gaps_closed"] == [], "receipt overclaims a closed topic gap")
     require(receipt["review_scope"]["topic_gaps_narrowed"] == [], "receipt overclaims topic narrowing")
     require(receipt["content_fitness"]["topic_gaps_closed"] == [], "content-fitness overclaims closure")
     require(receipt["content_fitness"]["topic_gaps_narrowed_claimed"] == [], "content-fitness overclaims narrowing")
+    require(
+        receipt["content_fitness"]["cells"]["semantics"]["depth_evidence"]["scope"] == "topic_conditioned",
+        "semantics depth evidence must be topic_conditioned",
+    )
+    require(
+        receipt["content_fitness"]["cells"]["phraseology"]["depth_evidence"]["scope"] == "topic_conditioned",
+        "phraseology depth evidence must be topic_conditioned",
+    )
+    require(
+        receipt["content_fitness"]["document_wide_depth_evidence"]["scope"] == "document_wide",
+        "document-wide depth scope drift",
+    )
+    require(
+        receipt["content_fitness"]["cells"]["semantics"]["qualified_source_needed"]
+        == SEMANTICS_QUALIFIED_SOURCE_NEEDED,
+        "semantics qualified-source need drift",
+    )
+    require(
+        receipt["content_fitness"]["cells"]["phraseology"]["qualified_source_needed"]
+        == PHRASEOLOGY_QUALIFIED_SOURCE_NEEDED,
+        "phraseology qualified-source need drift",
+    )
     require(receipt["gates"]["semantic_gold"] is False, "receipt overclaims semantic gold")
     require(receipt["gates"]["phase3_complete"] is False, "receipt overclaims Phase 3 completion")
     require(receipt["gates"]["phase4_blocked"] is True, "receipt opens Phase 4")
+    require(receipt["gates"]["source_coverage_ready"] is False, "receipt overclaims source coverage")
     require(receipt["denominators"]["v2_source_units"] == V2_SOURCE_UNITS, "v2 source-unit denominator drift")
     require(
         receipt["denominators"]["v2_evaluation_identities"] == V2_EVALUATION_IDENTITIES,
         "v2 evaluation denominator drift",
     )
+    require(receipt["denominators"]["university_topic_areas"] == UNIVERSITY_TOPIC_AREAS, "topic-area denominator drift")
+    require(receipt["denominators"]["university_sufficient"] == UNIVERSITY_SUFFICIENT, "sufficient denominator drift")
+    require(receipt["denominators"]["university_partial"] == UNIVERSITY_PARTIAL, "partial denominator drift")
+    require(receipt["denominators"]["university_missing"] == UNIVERSITY_MISSING, "missing denominator drift")
     require(receipt["rights"]["rights_statement"] == RIGHTS_STATEMENT, "rights statement drift")
     require(receipt["rights"]["public_redistribution_authorized"] is False, "receipt overclaims redistribution")
     require(
@@ -859,30 +1086,24 @@ def _read_public_receipt_no_follow(path: Path) -> bytes:
 
 
 def write_public_receipt(path: Path, value: Mapping[str, Any]) -> None:
+    """Idempotent public receipt write via the fixed private atomic writer.
+
+    Creation always uses owner-only 0600. Existing files may be 0600 or the
+    normal git-tracked 0644 checkout mode; changed bytes are refused. Never
+    chmod/fchmod to 0644.
+    """
     require(_inside_git_checkout(path), "public receipt must live inside Git")
-    _reject_symlink_components(path.parent, "public receipt parent")
-    path.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(path, "public receipt")
     payload = canonical_bytes(value)
     if path.exists() or path.is_symlink():
-        require(_read_public_receipt_no_follow(path) == payload, "refusing to overwrite an immutable public receipt")
+        _regular_public(path, "public receipt")
+        require(
+            _read_public_receipt_no_follow(path) == payload,
+            "refusing to overwrite an immutable public receipt",
+        )
         return
-    temporary: Path | None = None
-    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
-        temporary = Path(handle.name)
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    try:
-        os.link(temporary, path, follow_symlinks=False)
-    except FileExistsError:
-        require(_read_public_receipt_no_follow(path) == payload, "refusing to overwrite an immutable public receipt")
-    except OSError as exc:
-        raise Zhdu2026LexicologyPhraseologyIntakeError("cannot atomically publish public receipt") from exc
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
-    if path.exists():
-        os.chmod(path, TRACKED_PUBLIC_FILE_MODE)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    _atomic_write(path, payload)
 
 
 def build_custody_block(
