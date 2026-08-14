@@ -163,7 +163,31 @@ def _fixture_bundle(tmp_path: Path) -> dict[str, Path]:
     }
 
 
-def _patch_fixture_pins(monkeypatch: pytest.MonkeyPatch, paths: dict[str, Path], row_count: int) -> None:
+def _accept_all_schema_validator() -> object:
+    class _AcceptAll:
+        def iter_errors(self, _value: object) -> list[object]:
+            return []
+
+    return _AcceptAll()
+
+
+def _load_public_receipt() -> dict[str, object]:
+    path = ROOT / "data/projects/open_model_data/inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _rehash_prav_receipt(receipt: dict[str, object]) -> dict[str, object]:
+    receipt["receipt_sha256"] = prav_context.receipt_sha256(receipt)
+    return receipt
+
+
+def _patch_fixture_pins(
+    monkeypatch: pytest.MonkeyPatch,
+    paths: dict[str, Path],
+    row_count: int,
+    *,
+    stub_prav_validate: bool = True,
+) -> None:
     monkeypatch.setattr(prav_context, "ROW_COUNT", row_count)
     monkeypatch.setattr(prav_context, "FAMILY_COUNTS", {"pravopys_2019_complete": 2, "pravopys_2026_complete": 3})
     monkeypatch.setattr(prav_context, "LANE_COUNTS", {"phenomenon_strata": row_count})
@@ -199,7 +223,11 @@ def _patch_fixture_pins(monkeypatch: pytest.MonkeyPatch, paths: dict[str, Path],
     monkeypatch.setattr(eval_manifest, "ROW_COUNT", row_count)
     monkeypatch.setattr(eval_manifest, "V2_SOURCE_UNITS", row_count)
     monkeypatch.setattr(eval_manifest, "validate_receipt", lambda receipt: dict(receipt))
-    monkeypatch.setattr(prav_context, "validate_receipt", lambda receipt: dict(receipt))
+    if stub_prav_validate:
+        monkeypatch.setattr(prav_context, "validate_receipt", lambda receipt: dict(receipt))
+    else:
+        # Fixture pins differ from schema consts; keep real validate_receipt require() guards.
+        monkeypatch.setattr(prav_context, "_schema_validator", _accept_all_schema_validator)
 
 
 def _read_jsonl_rows(path: Path) -> list[dict[str, object]]:
@@ -1077,6 +1105,129 @@ def test_live_database_path_is_rejected(tmp_path: Path) -> None:
         ]
     )
     assert exit_code == 2
+
+
+def test_evaluation_context_manifest_receipt_file_drift_fails_closed(tmp_path: Path) -> None:
+    drifted = tmp_path / "evaluation_context_manifest_receipt_v1.json"
+    receipt = json.loads(EVAL_RECEIPT.read_text(encoding="utf-8"))
+    drifted.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8"))
+    assert json.loads(drifted.read_text(encoding="utf-8")) == receipt
+    assert prav_context.sha256_file(drifted) != prav_context.PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="manifest receipt file drift"):
+        prav_context._validate_evaluation_context_manifest_receipt(drifted)
+
+
+def test_evaluation_context_manifest_receipt_body_drift_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    drifted = tmp_path / "evaluation_context_manifest_receipt_v1.json"
+    receipt = json.loads(EVAL_RECEIPT.read_text(encoding="utf-8"))
+    original_body = str(receipt["receipt_sha256"])
+    receipt["receipt_sha256"] = "0" * 64
+    drifted.write_bytes(EVAL_RECEIPT.read_bytes().replace(original_body.encode("ascii"), b"0" * 64))
+    assert json.loads(drifted.read_bytes().decode("utf-8"))["receipt_sha256"] == "0" * 64
+    monkeypatch.setattr(
+        prav_context,
+        "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256",
+        prav_context.sha256_file(drifted),
+    )
+    monkeypatch.setattr(eval_manifest, "validate_receipt", lambda value: dict(value))
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="manifest receipt body drift"):
+        prav_context._validate_evaluation_context_manifest_receipt(drifted)
+
+
+def test_validate_receipt_rejects_binding_drift() -> None:
+    receipt = _rehash_prav_receipt(_load_public_receipt())
+    receipt["bindings"] = dict(receipt["bindings"])
+    receipt["bindings"]["implementation_sha256"] = "0" * 64
+    _rehash_prav_receipt(receipt)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="implementation binding drift"):
+        prav_context.validate_receipt(receipt)
+
+
+def test_validate_receipt_rejects_gate_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(prav_context, "_schema_validator", _accept_all_schema_validator)
+    receipt = _rehash_prav_receipt(_load_public_receipt())
+    receipt["gates"] = dict(receipt["gates"])
+    receipt["gates"]["phase4_blocked"] = False
+    _rehash_prav_receipt(receipt)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="phase 4 opened"):
+        prav_context.validate_receipt(receipt)
+
+
+def test_validate_receipt_rejects_row_count_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(prav_context, "_schema_validator", _accept_all_schema_validator)
+    receipt = _rehash_prav_receipt(_load_public_receipt())
+    receipt["row_count"] = int(receipt["row_count"]) + 1
+    _rehash_prav_receipt(receipt)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="row count drift"):
+        prav_context.validate_receipt(receipt)
+
+
+def test_validate_receipt_rejects_receipt_self_hash_drift() -> None:
+    receipt = _load_public_receipt()
+    receipt["receipt_sha256"] = "0" * 64
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="receipt body hash drift"):
+        prav_context.validate_receipt(receipt)
+
+
+def test_verify_existing_rejects_tampered_private_jsonl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
+    prav_context.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        evaluation_manifest_path=paths["evaluation_manifest"],
+        evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+        private_output=paths["private_output"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-13T23:00:00Z",
+        completed_at="2026-08-13T23:00:01Z",
+    )
+    original = paths["private_output"].read_bytes()
+    paths["private_output"].write_bytes(original + b" ")
+    os.chmod(paths["private_output"], prav_context.PRIVATE_FILE_MODE)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="private context artifact drift"):
+        prav_context.verify_existing(
+            source_jsonl=paths["source_jsonl"],
+            partition_path=paths["partition"],
+            evaluation_manifest_path=paths["evaluation_manifest"],
+            evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+            private_output=paths["private_output"],
+            public_receipt_path=paths["public_receipt"],
+        )
+
+
+def test_verify_existing_rejects_tampered_public_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
+    prav_context.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        evaluation_manifest_path=paths["evaluation_manifest"],
+        evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+        private_output=paths["private_output"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-13T23:00:00Z",
+        completed_at="2026-08-13T23:00:01Z",
+    )
+    receipt = json.loads(paths["public_receipt"].read_text(encoding="utf-8"))
+    receipt["receipt_sha256"] = "0" * 64
+    paths["public_receipt"].write_bytes(prav_context.canonical_bytes(receipt))
+    os.chmod(paths["public_receipt"], prav_context.PRIVATE_FILE_MODE)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="receipt body hash drift"):
+        prav_context.verify_existing(
+            source_jsonl=paths["source_jsonl"],
+            partition_path=paths["partition"],
+            evaluation_manifest_path=paths["evaluation_manifest"],
+            evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+            private_output=paths["private_output"],
+            public_receipt_path=paths["public_receipt"],
+        )
 
 
 def test_production_replay_against_drive_custody() -> None:
