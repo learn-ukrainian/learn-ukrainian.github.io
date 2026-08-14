@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "1d1eb97d6224",
+  "strategy": "manual-commit",
+  "branch": "cursor/phase3-6375-zhdu-2026-source-admission-r1",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "data/projects/open_model_data/admission/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.json",
+    "data/projects/open_model_data/contracts/phase3_zhdu_2026_lexicology_phraseology_candidate_v1.schema.json",
+    "scripts/projects/open_model_data/phase3_zhdu_2026_lexicology_phraseology_intake.py",
+    "tests/test_open_model_phase3_zhdu_2026_lexicology_phraseology_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/1d/1eb97d6224/0/metadata.json",
+      "transcript": "/1d/1eb97d6224/0/full.jsonl",
+      "compact_transcript": "/1d/1eb97d6224/0/transcript.jsonl",
+      "content_hash": "/1d/1eb97d6224/0/content_hash.txt",
+      "prompt": "/1d/1eb97d6224/0/prompt.txt"
+    }
+  ]
+}

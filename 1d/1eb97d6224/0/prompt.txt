@@ -1,0 +1,71 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/phase3-6375-zhdu-2026-source-admission-r1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Cursor implementation task: admit and custody-audit one official 2026 Ukrainian philology source for Phase 3 #6375
+
+You own only the new bounded source-admission/custody slice you create for this candidate, plus the smallest existing source-admission adapter/test files that must be extended. You are not alone in the repository; do not revert other agents' edits and accommodate current `origin/main`.
+
+## Exact source identity frozen before dispatch
+
+- Official landing page: `https://eprints.zu.edu.ua/48784/`
+- Official direct bitstream: `https://eprints.zu.edu.ua/48784/1/1.pdf`
+- Institution: Zhytomyr Ivan Franko State University, Department of the Ukrainian Language and Methods of Its Teaching
+- Title: `Лексикологія, фразеологія, фонетика і фонологія сучасної української літературної мови: навчальний посібник. Ч. 1: Лексикологія, фразеологія, лексикографія`
+- Authors: Наталія Дяченко; Людмила Фальківська
+- Publication: 2026, ISBN 978-966-485-336-8
+- Exact official PDF identity independently probed by root on 2026-08-14:
+  - SHA-256 `fdaf6a524f4cc6dc2cb19c721fae9cb15d96a23c20c0ec75d8049458ca665019`
+  - bytes `744081`
+  - pages `98`
+- Repository/PDF audience evidence: Ukrainian-language university students in `Українська мова та література`; institutional repository labels it a Book and the university board recommended it for print on 2026-06-26.
+- Rights evidence currently visible: copyright notices for both authors and university; no Creative Commons/reuse license found. Record exactly as `publicly accessible; reuse license not stated`, never as open-license or unrestricted.
+
+## User outcome
+
+Preserve this exact complete official bitstream in private Google Drive custody, prove read-back identity, audit native-text exactness and content fitness, and land a metadata-only candidate receipt/adapter/tests that lets the root decide whether it narrows the frozen `semantics` / `phraseology` gaps. Do not claim that it closes a topic merely because it is recent or institutionally hosted.
+
+## Frozen denominator and invariants
+
+- Phase 3 issue #6375 / epic #6321.
+- Current university topic matrix: 26 required areas = 5 sufficient / 21 partial / 0 missing.
+- Immutable v2 denominators: 67,041 source units / 9,392 evaluation identities. This candidate is additive and outside all v2 author/eval totals.
+- Existing Phase 3 labels remain 0 / 9,392; no semantic gold may be minted.
+- Phase 3 remains incomplete; Phase 4 remains blocked.
+
+## Roles and review map
+
+- Cursor: deterministic implementation, source identity/custody, native exactness, text-free evidence.
+- Root Codex: scope/integration/final disposition.
+- Claude: independent cross-family exact-head PR review after CI.
+- Grok after measured quota reset: separate Ukrainian-canon/adversarial linguistic assessment. Cursor's content-fit notes cannot replace that review.
+
+## Required workflow
+
+1. Run the repository cold-start/rules, verify exact worktree/head, and inspect existing Phase 3 source acquisition, native-exactness, Drive custody, and candidate-receipt patterns before editing. Reuse existing scripts/contracts rather than inventing a parallel pipeline.
+2. Download only the exact official PDF above. Fail closed if SHA/bytes/pages differ.
+3. Store it under a new privacy-safe, versioned private Drive staging locator inside the existing `learn-ukrainian-data/university_corpus` Phase 3 convention. Do not copy private text/PDF into Git. Use private modes consistent with existing production adapters and create a read-back custody receipt with exact hashes.
+4. Run full-document native extraction and the established exactness audit. Do not OCR, repair, infer, normalize source text, or silently accept broken mappings. Preserve exact flagged-page/chunk counts. If any logical-text defect appears, quarantine or mark ineligible according to existing policy.
+5. Build a content-fitness matrix against the frozen `semantics` and `phraseology` cells, including depth evidence for definitions, theory/classification, examples, exercises, self-control answers, current Ukrainian-philology audience, publication period, and explicit limitations. Also flag questionable terminology, Russianisms/calques, factual/etymological errors, or over-broad historical claims for later Ukrainian review; do not adjudicate them as gold.
+6. Rights: public retrieval permits custody/audit, but absent reuse terms must keep corpus text/PDF private and block public redistribution and unrestricted training export. Do not wait for an email and do not overstate rights.
+7. Produce only metadata/text-free tracked artifacts. Any receipt must bind live implementation/schema/upstream inputs, reject stale/tampered inputs, be immutable/idempotent, and avoid source excerpts. Do not edit generated status/audit/review artifacts, linter configs, `.python-version`, v2 compatibility pins, or existing frozen receipts.
+8. Tests must cover exact identity, completeness, rights state, private/public separation, Drive read-back (using the repository's established real-Drive production-test convention where applicable), stale/tampered bindings, idempotence, and all preserved false completion gates.
+9. Run focused and proportionate broader tests, Ruff/diff checks, inspect status/diff, commit with `X-Agent: cursor/phase3-6375-zhdu-2026-source-admission-r1`, push a `cursor/` branch, and open a **draft** PR linked to #6375. Never merge or arm auto-merge.
+
+## Independent evidence and stop policy
+
+- Native exactness is a deterministic content-fidelity gate, not semantic validation.
+- Stop with `NO_GO` and do not create a PR if the exact official bytes cannot be obtained, source completeness differs, private Drive custody/read-back fails, source text is materially garbled, or the smallest coherent change would require changing v2 denominators/frozen source roles.
+- A truthful result may be `NARROW_ONLY`; the PR can still be useful if it adds verified custody and text-free evidence without claiming coverage closure.
+
+## Completion terms
+
+Success means: exact official bytes privately backed up and re-read, no private content in Git, native-exactness result captured, content-fit residuals explicit, a focused draft PR with passing local tests, and all Phase 3/Phase 4 non-completion gates preserved.
