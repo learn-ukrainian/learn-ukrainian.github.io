@@ -841,5 +841,5 @@ def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
         lemmas.add(item["a"])
         lemmas.add(item["b"])
 
-    assert len(approved) >= 1184
-    assert len(lemmas) >= 1531
+    assert len(approved) >= 2442
+    assert len(lemmas) >= 2828

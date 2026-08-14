@@ -2959,6 +2959,21 @@ pairs:
     answer_form: вада
     confusable_form: перевага
     origin: authored-antonym-frame
+- slugA: вада
+  slugB: чеснота
+  distinction_gloss_uk: «вада» — протилежність за значенням до «чеснота».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «вада» є антонімом до слова ___ .
+    answer_form: чеснота
+    confusable_form: вада
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «чеснота» є антонімом до слова ___ .
+    answer_form: вада
+    confusable_form: чеснота
+    origin: authored-antonym-frame
 - slugA: важкий
   slugB: легкий
   distinction_gloss_uk: «Важкий» — протилежність за значенням до «легкий».
@@ -3979,6 +3994,21 @@ pairs:
     answer_form: жити
     confusable_form: вмирати
     origin: authored-antonym-frame
+- slugA: угору
+  slugB: вниз
+  distinction_gloss_uk: «угору» — протилежність за значенням до «вниз».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «угору» є антонімом до слова ___ .
+    answer_form: вниз
+    confusable_form: угору
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «вниз» є антонімом до слова ___ .
+    answer_form: угору
+    confusable_form: вниз
+    origin: authored-antonym-frame
 - slugA: зверху
   slugB: внизу
   distinction_gloss_uk: «зверху» — протилежність за значенням до «внизу».
@@ -4173,6 +4203,21 @@ pairs:
   - sentence_with_slot: Слово «вподовж» є антонімом до слова ___ .
     answer_form: вшир
     confusable_form: вподовж
+    origin: authored-antonym-frame
+- slugA: вродливий
+  slugB: потворний
+  distinction_gloss_uk: «вродливий» — протилежність за значенням до «потворний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «вродливий» є антонімом до слова ___ .
+    answer_form: потворний
+    confusable_form: вродливий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «потворний» є антонімом до слова ___ .
+    answer_form: вродливий
+    confusable_form: потворний
     origin: authored-antonym-frame
 - slugA: ніщо
   slugB: все
@@ -4833,6 +4878,21 @@ pairs:
   - sentence_with_slot: Слово «короткочасність» є антонімом до слова ___ .
     answer_form: вічність
     confusable_form: короткочасність
+    origin: authored-antonym-frame
+- slugA: газ
+  slugB: гальмо
+  distinction_gloss_uk: «газ» — протилежність за значенням до «гальмо».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «газ» є антонімом до слова ___ .
+    answer_form: гальмо
+    confusable_form: газ
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «гальмо» є антонімом до слова ___ .
+    answer_form: газ
+    confusable_form: гальмо
     origin: authored-antonym-frame
 - slugA: твердий
   slugB: газоподібний
@@ -6499,6 +6559,21 @@ pairs:
     answer_form: історичний
     confusable_form: доісторичний
     origin: authored-antonym-frame
+- slugA: друг
+  slugB: недруг
+  distinction_gloss_uk: «друг» — протилежність за значенням до «недруг».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «друг» є антонімом до слова ___ .
+    answer_form: недруг
+    confusable_form: друг
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недруг» є антонімом до слова ___ .
+    answer_form: друг
+    confusable_form: недруг
+    origin: authored-antonym-frame
 - slugA: дружина
   slugB: чоловік
   distinction_gloss_uk: «Дружина» — протилежність за значенням до «чоловік».
@@ -6873,6 +6948,21 @@ pairs:
   - sentence_with_slot: Слово «пасивний» є антонімом до слова ___ .
     answer_form: енергійний
     confusable_form: пасивний
+    origin: authored-antonym-frame
+- slugA: жайворонок
+  slugB: сова
+  distinction_gloss_uk: «жайворонок» — протилежність за значенням до «сова».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «жайворонок» є антонімом до слова ___ .
+    answer_form: сова
+    confusable_form: жайворонок
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «сова» є антонімом до слова ___ .
+    answer_form: жайворонок
+    confusable_form: сова
     origin: authored-antonym-frame
 - slugA: жар
   slugB: стужа
@@ -7624,6 +7714,21 @@ pairs:
     answer_form: занедужати
     confusable_form: одужати
     origin: authored-antonym-frame
+- slugA: занепад
+  slugB: розквіт
+  distinction_gloss_uk: «занепад» — протилежність за значенням до «розквіт».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «занепад» є антонімом до слова ___ .
+    answer_form: розквіт
+    confusable_form: занепад
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «розквіт» є антонімом до слова ___ .
+    answer_form: занепад
+    confusable_form: розквіт
+    origin: authored-antonym-frame
 - slugA: очний
   slugB: заочний
   distinction_gloss_uk: «очний» — протилежність за значенням до «заочний».
@@ -8045,6 +8150,21 @@ pairs:
     confusable_form: хворий
     origin: authored-antonym-frame
 - slugA: земля
+  slugB: море
+  distinction_gloss_uk: «земля» — протилежність за значенням до «море».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «земля» є антонімом до слова ___ .
+    answer_form: море
+    confusable_form: земля
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «море» є антонімом до слова ___ .
+    answer_form: земля
+    confusable_form: море
+    origin: authored-antonym-frame
+- slugA: земля
   slugB: небо
   distinction_gloss_uk: «Земля» — протилежність за значенням до «небо».
   citations:
@@ -8088,6 +8208,21 @@ pairs:
   - sentence_with_slot: Слово «земний» є антонімом до слова ___ .
     answer_form: небесний
     confusable_form: земний
+    origin: authored-antonym-frame
+- slugA: ззаду
+  slugB: попереду
+  distinction_gloss_uk: «ззаду» — протилежність за значенням до «попереду».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «ззаду» є антонімом до слова ___ .
+    answer_form: попереду
+    confusable_form: ззаду
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «попереду» є антонімом до слова ___ .
+    answer_form: ззаду
+    confusable_form: попереду
     origin: authored-antonym-frame
 - slugA: ззаду
   slugB: спереду
@@ -8749,6 +8884,21 @@ pairs:
     answer_form: кохання
     confusable_form: ненависть
     origin: authored-antonym-frame
+- slugA: край
+  slugB: середина
+  distinction_gloss_uk: «край» — протилежність за значенням до «середина».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «край» є антонімом до слова ___ .
+    answer_form: середина
+    confusable_form: край
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «середина» є антонімом до слова ___ .
+    answer_form: край
+    confusable_form: середина
+    origin: authored-antonym-frame
 - slugA: серце
   slugB: край
   distinction_gloss_uk: «серце» — протилежність за значенням до «край».
@@ -8763,6 +8913,21 @@ pairs:
   - sentence_with_slot: Слово «край» є антонімом до слова ___ .
     answer_form: серце
     confusable_form: край
+    origin: authored-antonym-frame
+- slugA: край
+  slugB: центр
+  distinction_gloss_uk: «край» — протилежність за значенням до «центр».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «край» є антонімом до слова ___ .
+    answer_form: центр
+    confusable_form: край
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «центр» є антонімом до слова ___ .
+    answer_form: край
+    confusable_form: центр
     origin: authored-antonym-frame
 - slugA: краса
   slugB: потворність
@@ -8779,6 +8944,21 @@ pairs:
     answer_form: краса
     confusable_form: потворність
     origin: authored-antonym-frame
+- slugA: мавпа
+  slugB: красень
+  distinction_gloss_uk: «мавпа» — протилежність за значенням до «красень».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «мавпа» є антонімом до слова ___ .
+    answer_form: красень
+    confusable_form: мавпа
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «красень» є антонімом до слова ___ .
+    answer_form: мавпа
+    confusable_form: красень
+    origin: authored-antonym-frame
 - slugA: красота
   slugB: потворність
   distinction_gloss_uk: «Красота» — протилежність за значенням до «потворність».
@@ -8793,6 +8973,21 @@ pairs:
   - sentence_with_slot: Слово «потворність» є антонімом до слова ___ .
     answer_form: красота
     confusable_form: потворність
+    origin: authored-antonym-frame
+- slugA: мавпа
+  slugB: красуня
+  distinction_gloss_uk: «мавпа» — протилежність за значенням до «красуня».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «мавпа» є антонімом до слова ___ .
+    answer_form: красуня
+    confusable_form: мавпа
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «красуня» є антонімом до слова ___ .
+    answer_form: мавпа
+    confusable_form: красуня
     origin: authored-antonym-frame
 - slugA: кривда
   slugB: правда
@@ -8823,6 +9018,21 @@ pairs:
   - sentence_with_slot: Слово «справедливість» є антонімом до слова ___ .
     answer_form: кривда
     confusable_form: справедливість
+    origin: authored-antonym-frame
+- slugA: прямий
+  slugB: кривий
+  distinction_gloss_uk: «прямий» — протилежність за значенням до «кривий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «прямий» є антонімом до слова ___ .
+    answer_form: кривий
+    confusable_form: прямий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «кривий» є антонімом до слова ___ .
+    answer_form: прямий
+    confusable_form: кривий
     origin: authored-antonym-frame
 - slugA: кривий
   slugB: рівний
@@ -8913,6 +9123,21 @@ pairs:
   - sentence_with_slot: Слово «продавати» є антонімом до слова ___ .
     answer_form: купувати
     confusable_form: продавати
+    origin: authored-antonym-frame
+- slugA: яма
+  slugB: курган
+  distinction_gloss_uk: «яма» — протилежність за значенням до «курган».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «яма» є антонімом до слова ___ .
+    answer_form: курган
+    confusable_form: яма
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «курган» є антонімом до слова ___ .
+    answer_form: яма
+    confusable_form: курган
     origin: authored-antonym-frame
 - slugA: начало
   slugB: кінець
@@ -9228,6 +9453,21 @@ pairs:
   - sentence_with_slot: Слово «правий» є антонімом до слова ___ .
     answer_form: лівий
     confusable_form: правий
+    origin: authored-antonym-frame
+- slugA: лівиця
+  slugB: правиця
+  distinction_gloss_uk: «лівиця» — протилежність за значенням до «правиця».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «лівиця» є антонімом до слова ___ .
+    answer_form: правиця
+    confusable_form: лівиця
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «правиця» є антонімом до слова ___ .
+    answer_form: лівиця
+    confusable_form: правиця
     origin: authored-antonym-frame
 - slugA: лівобережний
   slugB: правобережний
@@ -9785,6 +10025,21 @@ pairs:
     answer_form: молодий
     confusable_form: старий
     origin: authored-antonym-frame
+- slugA: молодший
+  slugB: старший
+  distinction_gloss_uk: «молодший» — протилежність за значенням до «старший».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «молодший» є антонімом до слова ___ .
+    answer_form: старший
+    confusable_form: молодший
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «старший» є антонімом до слова ___ .
+    answer_form: молодший
+    confusable_form: старший
+    origin: authored-antonym-frame
 - slugA: молодість
   slugB: старість
   distinction_gloss_uk: «Молодість» — протилежність за значенням до «старість».
@@ -10219,6 +10474,21 @@ pairs:
   - sentence_with_slot: Слово «найвищий» є антонімом до слова ___ .
     answer_form: центр
     confusable_form: найвищий
+    origin: authored-antonym-frame
+- slugA: найменший
+  slugB: найстарший
+  distinction_gloss_uk: «найменший» — протилежність за значенням до «найстарший».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «найменший» є антонімом до слова ___ .
+    answer_form: найстарший
+    confusable_form: найменший
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «найстарший» є антонімом до слова ___ .
+    answer_form: найменший
+    confusable_form: найстарший
     origin: authored-antonym-frame
 - slugA: наймолодший
   slugB: найстарший
@@ -11405,6 +11675,21 @@ pairs:
     answer_form: спорадичний
     confusable_form: очікуваний
     origin: authored-antonym-frame
+- slugA: паніка
+  slugB: спокій
+  distinction_gloss_uk: «паніка» — протилежність за значенням до «спокій».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «паніка» є антонімом до слова ___ .
+    answer_form: спокій
+    confusable_form: паніка
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «спокій» є антонімом до слова ___ .
+    answer_form: паніка
+    confusable_form: спокій
+    origin: authored-antonym-frame
 - slugA: парадний
   slugB: чорний
   distinction_gloss_uk: «Парадний» — протилежність за значенням до «чорний».
@@ -11989,6 +12274,21 @@ pairs:
   - sentence_with_slot: Слово «потойбічний» є антонімом до слова ___ .
     answer_form: поцейбічний
     confusable_form: потойбічний
+    origin: authored-antonym-frame
+- slugA: тепер
+  slugB: потім
+  distinction_gloss_uk: «тепер» — протилежність за значенням до «потім».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «тепер» є антонімом до слова ___ .
+    answer_form: потім
+    confusable_form: тепер
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «потім» є антонімом до слова ___ .
+    answer_form: тепер
+    confusable_form: потім
     origin: authored-antonym-frame
 - slugA: правдивий
   slugB: фальшивий
@@ -12635,6 +12935,21 @@ pairs:
     answer_form: цивілізація
     confusable_form: регрес
     origin: authored-antonym-frame
+- slugA: рема
+  slugB: тема
+  distinction_gloss_uk: «рема» — протилежність за значенням до «тема».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «рема» є антонімом до слова ___ .
+    answer_form: тема
+    confusable_form: рема
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тема» є антонімом до слова ___ .
+    answer_form: рема
+    confusable_form: тема
+    origin: authored-antonym-frame
 - slugA: робочий
   slugB: святковий
   distinction_gloss_uk: «Робочий» — протилежність за значенням до «святковий».
@@ -13160,6 +13475,21 @@ pairs:
     answer_form: сонце
     confusable_form: туман
     origin: authored-antonym-frame
+- slugA: спека
+  slugB: холод
+  distinction_gloss_uk: «спека» — протилежність за значенням до «холод».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «спека» є антонімом до слова ___ .
+    answer_form: холод
+    confusable_form: спека
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «холод» є антонімом до слова ___ .
+    answer_form: спека
+    confusable_form: холод
+    origin: authored-antonym-frame
 - slugA: спекотний
   slugB: холодний
   distinction_gloss_uk: «Спекотний» — протилежність за значенням до «холодний».
@@ -13293,6 +13623,21 @@ pairs:
     origin: authored-antonym-frame
   - sentence_with_slot: Слово «стояти» є антонімом до слова ___ .
     answer_form: іти
+    confusable_form: стояти
+    origin: authored-antonym-frame
+- slugA: їхати
+  slugB: стояти
+  distinction_gloss_uk: «їхати» — протилежність за значенням до «стояти».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «їхати» є антонімом до слова ___ .
+    answer_form: стояти
+    confusable_form: їхати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «стояти» є антонімом до слова ___ .
+    answer_form: їхати
     confusable_form: стояти
     origin: authored-antonym-frame
 - slugA: стійкий
@@ -13519,6 +13864,36 @@ pairs:
   - sentence_with_slot: Слово «фронт» є антонімом до слова ___ .
     answer_form: тил
     confusable_form: фронт
+    origin: authored-antonym-frame
+- slugA: шум
+  slugB: тиша
+  distinction_gloss_uk: «шум» — протилежність за значенням до «тиша».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «шум» є антонімом до слова ___ .
+    answer_form: тиша
+    confusable_form: шум
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тиша» є антонімом до слова ___ .
+    answer_form: шум
+    confusable_form: тиша
+    origin: authored-antonym-frame
+- slugA: тло
+  slugB: фігура
+  distinction_gloss_uk: «тло» — протилежність за значенням до «фігура».
+  citations:
+  - uk.wiktionary.org
+  curator: wiktionary-explicit-antonym
+  frames:
+  - sentence_with_slot: Слово «тло» є антонімом до слова ___ .
+    answer_form: фігура
+    confusable_form: тло
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «фігура» є антонімом до слова ___ .
+    answer_form: тло
+    confusable_form: фігура
     origin: authored-antonym-frame
 - slugA: товстенький
   slugB: тоненький
