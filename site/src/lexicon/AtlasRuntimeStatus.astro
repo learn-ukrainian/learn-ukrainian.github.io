@@ -32,10 +32,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Публічний Атлас</span>
       </dt>
       <dd data-runtime-value="publicAtlas">-</dd>
-      <p data-runtime-detail="publicAtlas" class="lu-i18n-block">
+      <dd data-runtime-detail="publicAtlas" class="lu-i18n-block">
         <span data-loc="en">Search and browse</span>
         <span data-loc="uk">Пошук і перегляд</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -43,10 +43,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Маніфест</span>
       </dt>
       <dd data-runtime-value="manifest">-</dd>
-      <p data-runtime-detail="manifest" class="lu-i18n-block">
+      <dd data-runtime-detail="manifest" class="lu-i18n-block">
         <span data-loc="en">Release manifest</span>
         <span data-loc="uk">Маніфест релізу</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -54,10 +54,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">API</span>
       </dt>
       <dd data-runtime-value="api">-</dd>
-      <p data-runtime-detail="api" class="lu-i18n-block">
+      <dd data-runtime-detail="api" class="lu-i18n-block">
         <span data-loc="en">Data contract</span>
         <span data-loc="uk">Контракт даних</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -65,10 +65,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Слова дня</span>
       </dt>
       <dd data-runtime-value="daily">-</dd>
-      <p data-runtime-detail="daily" class="lu-i18n-block">
+      <dd data-runtime-detail="daily" class="lu-i18n-block">
         <span data-loc="en">Levels A1–B1</span>
         <span data-loc="uk">Рівні A1-B1</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -76,10 +76,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Практика</span>
       </dt>
       <dd data-runtime-value="practice">-</dd>
-      <p data-runtime-detail="practice" class="lu-i18n-block">
+      <dd data-runtime-detail="practice" class="lu-i18n-block">
         <span data-loc="en">Lexemes in the deck</span>
         <span data-loc="uk">Лексеми в деці</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -87,10 +87,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Пропуски</span>
       </dt>
       <dd data-runtime-value="cloze">-</dd>
-      <p data-runtime-detail="cloze" class="lu-i18n-block">
+      <dd data-runtime-detail="cloze" class="lu-i18n-block">
         <span data-loc="en">Reviewed sentences</span>
         <span data-loc="uk">Перевірені речення</span>
-      </p>
+      </dd>
     </div>
     <div class="atlas-runtime-card">
       <dt class="lu-i18n">
@@ -98,10 +98,10 @@ const statusUrl = "/api/lexicon/status.json";
         <span data-loc="uk">Джерела</span>
       </dt>
       <dd data-runtime-value="sourceInventory">-</dd>
-      <p data-runtime-detail="sourceInventory" class="lu-i18n-block">
+      <dd data-runtime-detail="sourceInventory" class="lu-i18n-block">
         <span data-loc="en">Words of the Day / practice / cloze</span>
         <span data-loc="uk">Слова дня / практика / пропуски</span>
-      </p>
+      </dd>
     </div>
   </dl>
 </section>
@@ -325,10 +325,11 @@ const statusUrl = "/api/lexicon/status.json";
     line-height: 1;
   }
 
-  .atlas-runtime-card p {
+  .atlas-runtime-card dd[data-runtime-detail] {
     margin: 0.45rem 0 0;
     color: var(--lu-text-muted);
     font-size: 0.82rem;
+    font-weight: 400;
     line-height: 1.35;
   }
 

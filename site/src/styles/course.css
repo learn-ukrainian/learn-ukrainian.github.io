@@ -42,6 +42,11 @@
   --lu-header-bg: rgba(255, 255, 255, 0.96);
   --lu-text: #212121;
   --lu-text-muted: #676F7A;
+  /* Text on primary/accent-filled pills/buttons (blue/green fills). White on
+     the light theme's saturated accents; dark on the dark theme's inverted
+     light tints. Named --lu-on-primary-fill so it does not shadow custom.css's
+     --lu-on-accent (dark text on the gold --lu-accent). */
+  --lu-on-primary-fill: #FFFFFF;
   --lu-radius: 8px;
   --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --lu-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -120,6 +125,7 @@
   --lu-header-bg: rgba(17, 20, 24, 0.94);
   --lu-text: #F4F7FB;
   --lu-text-muted: #A9B2BF;
+  --lu-on-primary-fill: #1A1A1A;
   --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
   --lu-shadow-lg: 0 4px 18px rgba(0, 0, 0, 0.36);
 

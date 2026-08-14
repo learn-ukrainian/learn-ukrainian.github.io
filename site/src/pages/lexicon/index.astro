@@ -114,7 +114,9 @@ const atlasWordsEn = `${atlasWordCount.toLocaleString("en-US")} words`;
 }
 
 /* `.word-atlas.lexicon-landing` (0,3,0) deterministically beats the global
-   `.lu-content .word-atlas a` (0,2,1) link color so the CTA text stays white. */
+   `.lu-content .word-atlas a` (0,2,1) link color so the CTA text keeps its
+   on-accent color (white in light theme, dark on the dark theme's light-blue
+   primary fill). */
 .word-atlas.lexicon-landing .lexicon-browse-link {
   display: inline-flex;
   align-items: center;
@@ -124,7 +126,7 @@ const atlasWordsEn = `${atlasWordCount.toLocaleString("en-US")} words`;
   border: 1px solid var(--lu-primary);
   border-radius: 6px;
   background: var(--lu-primary);
-  color: var(--lu-on-primary);
+  color: var(--lu-on-primary-fill);
   font-weight: 900;
   text-decoration: none;
 }

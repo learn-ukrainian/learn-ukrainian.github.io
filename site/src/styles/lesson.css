@@ -20,6 +20,9 @@
 /* ============= 1. DESIGN TOKENS ============= */
 :root {
   --lesson-blue: #0057B8;
+  /* Fixed azure band for solid card backs with white text — must NOT invert
+     by theme (dark theme's --lesson-blue #5B9BD5 fails white-text contrast). */
+  --lesson-blue-band: #0057B8;
   --lesson-yellow: #FFD700;
   --lesson-blue-light: #E8F0FE;
   --lesson-yellow-light: #FFF9E0;
@@ -506,7 +509,7 @@
 }
 
 .flashcard-back {
-  background: var(--lesson-blue);
+  background: var(--lesson-blue-band);
   color: white;
   transform: rotateY(180deg);
 }
