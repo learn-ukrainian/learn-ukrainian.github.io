@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "462955609f89",
+  "strategy": "manual-commit",
+  "branch": "cursor/6780-storage-load",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/src/lib/lexicon/srs.ts",
+    "site/tests/unit/LexiconPractice.test.tsx",
+    "site/tests/unit/practice-storage-fallback.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/46/2955609f89/0/metadata.json",
+      "transcript": "/46/2955609f89/0/full.jsonl",
+      "compact_transcript": "/46/2955609f89/0/transcript.jsonl",
+      "content_hash": "/46/2955609f89/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
