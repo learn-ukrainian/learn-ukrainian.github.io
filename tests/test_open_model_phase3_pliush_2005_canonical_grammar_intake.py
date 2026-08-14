@@ -323,7 +323,7 @@ def test_private_audit_rejects_symlink_and_mode_failures(
 
     staging = _synthetic_staging(tmp_path / "mode", monkeypatch)
     bad = staging / intake.PDF_FILENAME
-    os.chmod(bad, 0o644)
+    os.chmod(bad, 0o400)
     with pytest.raises(intake.Pliush2005CanonicalGrammarIntakeError, match="mode 0600"):
         intake.private_audit(staging)
 
