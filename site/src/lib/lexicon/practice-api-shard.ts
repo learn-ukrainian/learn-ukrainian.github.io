@@ -25,8 +25,10 @@ export function readPracticeShardBytes(kind: PracticeShardKind, level: PracticeL
 }
 
 /**
- * Copy practice shards to public/api/lexicon/ for static GitHub Pages hosting.
- * Astro 7 cannot prerender practice-*.{level}.json.ts routes with trailingSlash.
+ * Copy practice shards to public/api/lexicon/ as a compatibility alias of the
+ * canonical public/lexicon/ learner prefix. Astro 7 cannot prerender
+ * practice-*.{level}.json.ts routes with trailingSlash; pre-copied static
+ * files keep both URL prefixes working on GitHub Pages.
  */
 export function copyPracticeApiShards(siteRoot: string): void {
   const lexiconPublicDir = resolve(siteRoot, "public/lexicon");
@@ -44,7 +46,8 @@ export function copyPracticeApiShards(siteRoot: string): void {
   }
 }
 
-/** Contract helper for tests; production serves pre-generated public/api/lexicon/*.json. */
+/** Contract helper for tests; production serves pre-generated public/lexicon/*.json
+ *  (canonical) with a hydrate copy under public/api/lexicon/*.json (alias). */
 export function practiceShardResponse(
   kind: PracticeShardKind,
   level: string | undefined,

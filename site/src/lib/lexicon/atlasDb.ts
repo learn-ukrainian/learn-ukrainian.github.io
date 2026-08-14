@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { normalizeAtlasText as normalizeAtlasSearchText } from './normalize.ts';
+import { readPracticeIndexItems } from './practice-index-files.ts';
 
 export interface CourseUsage {
   track: string;
@@ -354,32 +355,17 @@ let _practiceLemmasCache: Set<string> | null = null;
 export function getPracticeLemmas(): Set<string> {
   if (_practiceLemmasCache) return _practiceLemmasCache;
   const lemmas = new Set<string>();
+  // Include C2 so a future deck is visible without a second probe path.
   const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   const dbDir = dirname(atlasDbPath());
   let resolvedAny = false;
 
   for (const level of levels) {
-    const paths = [
-      resolve(dbDir, `../site/public/api/lexicon/practice-index.${level}.json`),
-      resolve(dbDir, `../site/public/lexicon/practice-index.${level}.json`),
-    ];
-    for (const p of paths) {
-      if (existsSync(p)) {
-        try {
-          const content = JSON.parse(readFileSync(p, 'utf-8'));
-          if (content && Array.isArray(content.items)) {
-            for (const item of content.items) {
-              if (item.lemmaId) {
-                lemmas.add(item.lemmaId);
-              }
-            }
-          }
-          resolvedAny = true;
-          break;
-        } catch (e) {
-          // ignore parsing/reading errors
-        }
-      }
+    const items = readPracticeIndexItems(dbDir, level);
+    if (items === null) continue;
+    resolvedAny = true;
+    for (const item of items) {
+      if (item.lemmaId) lemmas.add(item.lemmaId);
     }
   }
 

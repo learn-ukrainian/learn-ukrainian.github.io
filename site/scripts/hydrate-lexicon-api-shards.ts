@@ -16,8 +16,8 @@ const siteRoot = resolve(scriptDir, "..");
 function hydrate(): void {
   copyPracticeApiShards(siteRoot);
   const searchShardCount = writeSearchShardFiles(siteRoot);
-  console.log(
-    `✓ lexicon API shards: ${3 * 5} practice files under public/api/lexicon, ${searchShardCount} search shards under public/lexicon/search`,
+    console.log(
+    `✓ lexicon API shards: ${3 * 5} practice files under public/lexicon (+ /api/lexicon alias), ${searchShardCount} search shards under public/lexicon/search`,
   );
 }
 

@@ -5,16 +5,35 @@ as static JSON, not as a live backend service.
 
 ## Canonical Endpoints
 
+Learner-facing artifacts use the `/lexicon/…` prefix (what Practice, Atlas
+typeahead, and Daily Words actually `fetch`). Meta/status stay under
+`/api/lexicon/…`.
+
 - `/api/lexicon/status.json` — status counts across Atlas search/browse,
   manifest hydration, Daily Word, Practice, cloze, and source-inventory
   admission.
-- `/api/lexicon/search-index.json` — compact approved-article typeahead rows.
+- `/api/lexicon/contract.json` — machine-readable surface contract.
+- `/lexicon/search-index.json` — compact approved-article typeahead rows.
 - `/lexicon/search-aliases.json` — public alias resolvers; every row
   targets an approved article slug and is not an Atlas entry itself.
-- `/api/lexicon/daily-pool.json` — Daily Word pool.
-- `/api/lexicon/practice-index.{level}.json` — per-level Practice index.
-- `/api/lexicon/practice-lexemes.{level}.json` — per-level Practice lexeme deck.
-- `/api/lexicon/practice-cloze.{level}.json` — per-level reviewed cloze deck.
+- `/lexicon/search-shards.json` — search shard map for typeahead paging.
+- `/lexicon/daily-pool.json` — Daily Word pool.
+- `/lexicon/practice-index.{level}.json` — per-level Practice index.
+- `/lexicon/practice-lexemes.{level}.json` — per-level Practice lexeme deck.
+- `/lexicon/practice-cloze.{level}.json` — per-level reviewed cloze deck.
+
+### Compatibility aliases (`/api/lexicon/…`)
+
+These URLs remain published so existing bookmarks and older contract links keep
+working. They are thin twins of the canonical `/lexicon/…` artifacts, not a
+second source of truth:
+
+- `/api/lexicon/search-index.json` — re-exports `/lexicon/search-index.json`
+- `/api/lexicon/daily-pool.json` — re-exports `/lexicon/daily-pool.json`
+- `/api/lexicon/practice-index.{level}.json` (and lexemes/cloze) — hydrate
+  copies of `public/lexicon/*.json` into `public/api/lexicon/`
+
+Do not delete a public `/api/lexicon/…` URL without operator authorization.
 
 ## Entry-Model Snapshot
 
@@ -66,9 +85,10 @@ Do not add FastAPI routes for public Atlas learner data unless the deployment
 target changes away from GitHub Pages or the route is explicitly local/admin
 only. Public learner data must stay available as static JSON.
 
-Practice and search shard JSON under `public/api/lexicon/` and
-`public/lexicon/search/` is materialized by `hydrate-lexicon-api-shards.ts`
-during `npm run hydrate`. GitHub Pages serves these as static files (default
-cache headers); the `search-api-shard` / `practice-api-shard` helpers document
-the intended `Cache-Control: public, max-age=3600` contract for tests and any
-future CDN `_headers` wiring.
+Practice shards under `public/lexicon/` (canonical) and the hydrate copy under
+`public/api/lexicon/`, plus search shards under `public/lexicon/search/`, are
+materialized by `hydrate-lexicon-api-shards.ts` during `npm run hydrate`.
+GitHub Pages serves these as static files (default cache headers); the
+`search-api-shard` / `practice-api-shard` helpers document the intended
+`Cache-Control: public, max-age=3600` contract for tests and any future CDN
+`_headers` wiring.

@@ -47,6 +47,7 @@ import {
   type ReviewLogEntry,
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
+import { PRACTICE_LEVELS } from '@site/src/lib/lexicon/runtime-contract';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 const HOUR_MS = 60 * 60 * 1000;
@@ -1506,6 +1507,7 @@ describe('daily practice deck (K3 chunk 1)', () => {
 
   test('published levels stay A1 through C1 and C2 is not added', () => {
     expect(PUBLISHED_PRACTICE_LEVELS).toEqual(['A1', 'A2', 'B1', 'B2', 'C1']);
+    expect(PUBLISHED_PRACTICE_LEVELS).toBe(PRACTICE_LEVELS);
   });
 
   test('a valid snapshot is stable after SRS mutations and page reload', () => {

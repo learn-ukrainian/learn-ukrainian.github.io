@@ -89,18 +89,18 @@ describe("lexicon static API routes", () => {
     expect(status.checks.searchMatchesReviewedEntries).toBe(true);
     expect(status.checks.singlePracticeDeckVersion).toBe(true);
     expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
-    expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
+    expect(status.endpoints.searchIndex).toBe("/lexicon/search-index.json");
     expect(status.endpoints.searchAliases).toBe("/lexicon/search-aliases.json");
-  expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
-  expect(status.endpoints.dailyPool).toBe("/api/lexicon/daily-pool.json");
+    expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
+    expect(status.endpoints.dailyPool).toBe("/lexicon/daily-pool.json");
     expect(status.endpoints.practiceIndexTemplate).toBe(
-      "/api/lexicon/practice-index.{level}.json",
+      "/lexicon/practice-index.{level}.json",
     );
     expect(status.endpoints.practiceLexemesTemplate).toBe(
-      "/api/lexicon/practice-lexemes.{level}.json",
+      "/lexicon/practice-lexemes.{level}.json",
     );
     expect(status.endpoints.practiceClozeTemplate).toBe(
-      "/api/lexicon/practice-cloze.{level}.json",
+      "/lexicon/practice-cloze.{level}.json",
     );
   });
 
@@ -144,11 +144,11 @@ describe("lexicon static API routes", () => {
     expect(contract.surfaces.cloze.totalItems).toBeGreaterThanOrEqual(200);
     expect(contract.surfaces.cloze.reviewedSourceRows).toBeGreaterThan(0);
     expect(contract.endpoints.practiceIndexTemplate).toBe(
-      "/api/lexicon/practice-index.{level}.json",
+      "/lexicon/practice-index.{level}.json",
     );
   });
 
-  test("publishes separate article and alias search artifacts under /api/lexicon", async () => {
+  test("publishes separate article and alias search artifacts under /lexicon (with /api aliases)", async () => {
     const search = await routeJson<unknown[]>(getSearchIndex);
     const aliases = await routeJson<Array<{ a: string; s: string; h: string }>>(getSearchAliases);
     const daily = await routeJson<unknown[]>(getDailyPool);
@@ -159,7 +159,7 @@ describe("lexicon static API routes", () => {
     expect(daily.length).toBeGreaterThanOrEqual(250);
   });
 
-  test("aliases static practice shards under /api/lexicon", async () => {
+  test("aliases static practice shards under /api/lexicon (hydrate copy of /lexicon)", async () => {
     await expect(routePaths(getPracticeIndexPaths)).resolves.toEqual([...PRACTICE_LEVELS]);
     await expect(routePaths(getPracticeLexemesPaths)).resolves.toEqual([...PRACTICE_LEVELS]);
     await expect(routePaths(getPracticeClozePaths)).resolves.toEqual([...PRACTICE_LEVELS]);

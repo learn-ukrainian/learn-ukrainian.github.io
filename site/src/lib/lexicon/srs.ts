@@ -9,6 +9,7 @@ import {
   type RecordLogItem,
 } from 'ts-fsrs';
 import { CEFR_LEVELS, type CefrLevel } from './levels';
+import { PRACTICE_LEVELS } from './runtime-contract';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
 export const SRS_SETTINGS_KEY = 'lu-lexicon-srs-settings';
@@ -30,7 +31,7 @@ export const DEFAULT_NEW_PER_DAY = 20;
 export const SESSION_CLOSURE_EXTENSION_MAX = 5;
 export const SESSION_ITEM_ESTIMATE_SEC = 20;
 /** Levels with published practice shards (C2 ships «скоро» until deck exists). */
-export const PUBLISHED_PRACTICE_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'] as const;
+export const PUBLISHED_PRACTICE_LEVELS = PRACTICE_LEVELS;
 
 const CURRENT_VERSION = 4;
 const SETTINGS_VERSION = 1;
