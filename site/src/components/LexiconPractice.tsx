@@ -1164,8 +1164,8 @@ function choiceFeedbackFor(
   const gloss = glossLabel(selection.lemma);
   const pair = `«${lemma}» = ${gloss}.`;
   return option.correct
-    ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: 'Correct!' }
-    : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: 'Incorrect.' };
+    ? { kind: 'correct', textUk: `Правильно! ${pair}`, textEn: `Correct! ${pair}` }
+    : { kind: 'wrong', textUk: `Неправильно. ${pair}`, textEn: `Incorrect. ${pair}` };
 }
 
 /**
