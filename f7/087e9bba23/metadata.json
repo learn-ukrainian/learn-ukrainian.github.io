@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "f7087e9bba23",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6801-meaning-choice-teach",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/lesson-schema.yaml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/f7/087e9bba23/0/metadata.json",
+      "transcript": "/f7/087e9bba23/0/full.jsonl",
+      "compact_transcript": "/f7/087e9bba23/0/transcript.jsonl",
+      "content_hash": "/f7/087e9bba23/0/content_hash.txt",
+      "prompt": "/f7/087e9bba23/0/prompt.txt"
+    }
+  ]
+}
