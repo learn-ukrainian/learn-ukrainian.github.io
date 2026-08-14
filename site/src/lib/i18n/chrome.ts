@@ -16,6 +16,8 @@
  * always Ukrainian — this toggle never touches it.
  */
 
+import { pluralizeUk } from './plural';
+
 export type ChromeLocale = 'uk' | 'en';
 
 /** No-JS / non-Ukrainian-browser fallback. See ADR "Default language". */
@@ -248,6 +250,15 @@ const en = {
   'readings.searchLabel': 'Search the reading reference',
   'readings.searchPlaceholder': 'Search a text, genre, or author…',
   'readings.empty': 'No matches. Try another word.',
+
+  // Words of the Day hub chrome (#6711) — interface only; lemmas stay content.
+  'wotd.subtitle': 'A daily Word Atlas pick capped to your current level.',
+  'wotd.practiceCta': 'Practice — spaced repetition for your level →',
+  'wotd.todayTitle': "Today's pick",
+  'wotd.todayDescription':
+    'Words refresh by calendar date; tap a card to flip, or the word itself to open its Atlas entry.',
+  'wotd.loading': "Loading today's pick…",
+  'wotd.loadError': "Couldn't load today's pick.",
 
   // Practice dashboard (K3 redesign)
   'practice.title': 'Practice',
@@ -581,6 +592,15 @@ const uk: Record<ChromeKey, string> = {
   'readings.searchPlaceholder': 'Шукайте текст, жанр або автора…',
   'readings.empty': 'Немає збігів. Спробуйте інше слово.',
 
+  // Words of the Day hub chrome (#6711)
+  'wotd.subtitle': 'Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем.',
+  'wotd.practiceCta': 'Практика — інтервальне повторення вашого рівня →',
+  'wotd.todayTitle': 'Добірка на сьогодні',
+  'wotd.todayDescription':
+    'Слова оновлюються за календарною датою; торкніться картки, щоб перевернути, або самого слова — щоб відкрити статтю в Атласі.',
+  'wotd.loading': 'Завантажуємо добірку…',
+  'wotd.loadError': 'Не вдалося завантажити добірку.',
+
   // Practice dashboard (K3 redesign)
   'practice.title': 'Практика',
   'practice.heroTitle': 'Практикуйте українську',
@@ -700,4 +720,55 @@ export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<C
 /** Both locale variants for a key — used by ChromeText for FOUC-safe dual-render. */
 export function chromeBoth(key: ChromeKey): Record<ChromeLocale, string> {
   return { en: CHROME_STRINGS.en[key], uk: CHROME_STRINGS.uk[key] };
+}
+
+/** Escape text for safe interpolation into dual-render chrome HTML fragments. */
+function escapeChromeHtml(value: string): string {
+  return value.replace(
+    /[&<>"]/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c,
+  );
+}
+
+/**
+ * FOUC-safe dual-render HTML for client-built chrome (status lines, counts).
+ * Same `.lu-i18n` / `data-loc` contract as ChromeText — CSS shows one locale.
+ */
+export function chromeDualHtml(enText: string, ukText: string): string {
+  return (
+    `<span class="lu-i18n">` +
+    `<span data-loc="en" lang="en">${escapeChromeHtml(enText)}</span>` +
+    `<span data-loc="uk" lang="uk">${escapeChromeHtml(ukText)}</span>` +
+    `</span>`
+  );
+}
+
+/** Pluralized «N word(s) / слово|слова|слів» for WotD status chrome (#6711). */
+export function formatWotdWordCount(count: number): Record<ChromeLocale, string> {
+  const enNoun = count === 1 ? 'word' : 'words';
+  const ukNoun = pluralizeUk(count, ['слово', 'слова', 'слів']);
+  return {
+    en: `${count} ${enNoun}`,
+    uk: `${count} ${ukNoun}`,
+  };
+}
+
+/** Level · count line, e.g. `A2 · 12 words` / `A2 · 12 слів`. */
+export function formatWotdLevelCount(
+  level: string,
+  count: number,
+): Record<ChromeLocale, string> {
+  const words = formatWotdWordCount(count);
+  return {
+    en: `${level} · ${words.en}`,
+    uk: `${level} · ${words.uk}`,
+  };
+}
+
+/** Empty-pool status when a CEFR tab has no daily words. */
+export function formatWotdEmptyLevel(level: string): Record<ChromeLocale, string> {
+  return {
+    en: `No words for level ${level}.`,
+    uk: `Немає слів для рівня ${level}.`,
+  };
 }

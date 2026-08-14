@@ -1,8 +1,12 @@
 ---
 import CourseLayout from "../layouts/CourseLayout.astro";
+import ChromeText from "../components/chrome/ChromeText.astro";
 import DailyWords from "../lexicon/DailyWords.astro";
 
 const frontmatter = {
+  // Document <title> only — CourseLayout titleKey dual-renders the hero <h1>, not
+  // <title> (same limit as #6750 readings). Keep the prior bilingual tab title so
+  // УКР mode is not English-only in the browser chrome.
   title: "Слова дня / Words of the Day",
   description: "A daily Word Atlas surface with CEFR-capped Ukrainian vocabulary picks.",
 };
@@ -18,21 +22,16 @@ const frontmatter = {
 >
   <main class="word-atlas words-day-page" data-word-atlas>
     <section class="words-day-hero" aria-labelledby="words-day-title">
-      <span class="words-day-badge">Слова дня</span>
-      <h1 id="words-day-title">Слова дня / Words of the Day</h1>
-      <p>Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем.</p>
+      <span class="words-day-badge"><ChromeText k="nav.dailyWords" /></span>
+      <h1 id="words-day-title"><ChromeText k="nav.dailyWords" /></h1>
+      <p><ChromeText k="wotd.subtitle" /></p>
       <a class="words-day-practice-cta" href="/words-of-the-day/practice/">
-        Практика — інтервальне повторення вашого рівня →
+        <ChromeText k="wotd.practiceCta" />
       </a>
     </section>
 
     {/* Practice daily set density (#5502): 12 first — atlas daily-pool.json unchanged. */}
-    <DailyWords
-      title="Добірка на сьогодні"
-      description="Слова оновлюються за календарною датою; торкніться картки, щоб перевернути, або самого слова — щоб відкрити статтю в Атласі."
-      count={12}
-      showLevelSelector
-    />
+    <DailyWords count={12} showLevelSelector />
   </main>
 </CourseLayout>
 

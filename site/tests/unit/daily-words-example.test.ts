@@ -2,17 +2,22 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
 import type { DailyWord } from "@site/src/lib/lexicon/daily";
 import {
   bindDailyCardInteractions,
   dailyCardAtlasHref,
   isDailyCardAtlasLinkTarget,
-  pickDailyForLevel,
   renderDailyCardHtml,
   toggleDailyCardFlip,
 } from "@site/src/lib/lexicon/daily-card";
+import {
+  applyDailyLoadFallback,
+  beginDailyReload,
+  markDailyLoadSuccess,
+} from "@site/src/lib/lexicon/daily-loading";
+import { chromeDualHtml } from "@site/src/lib/i18n/chrome";
 
 const dailyWordsSource = readFileSync(
   resolve(process.cwd(), "src/lexicon/DailyWords.astro"),
@@ -22,6 +27,25 @@ const wordsOfTheDaySource = readFileSync(
   resolve(process.cwd(), "src/pages/words-of-the-day.astro"),
   "utf8",
 );
+const chromeSource = readFileSync(
+  resolve(process.cwd(), "src/lib/i18n/chrome.ts"),
+  "utf8",
+);
+const dailyLoadingSource = readFileSync(
+  resolve(process.cwd(), "src/lib/lexicon/daily-loading.ts"),
+  "utf8",
+);
+
+/** Extract the intentional is:inline CDN-fail watchdog (must not import modules). */
+function extractInlineWatchdogSource(astroSource: string): string {
+  const match = astroSource.match(/<script is:inline>\s*([\s\S]*?)\s*<\/script>/);
+  if (!match) {
+    throw new Error("DailyWords.astro is missing the is:inline watchdog script");
+  }
+  return match[1]!;
+}
+
+const INLINE_WATCHDOG_TIMEOUT_MS = 10_000;
 
 const sampleWord: DailyWord = {
   lemma: "кошик",
@@ -31,6 +55,20 @@ const sampleWord: DailyWord = {
   example: "У кошику яблука.",
   exampleEn: "There are apples in the basket.",
 };
+
+function mountDailySection(): HTMLElement {
+  document.body.innerHTML = `
+    <section data-daily-words>
+      <p data-daily-status data-daily-loading="true">Loading…</p>
+      <div data-daily-fallback hidden>
+        <p>Load failed</p>
+        <button type="button" data-daily-retry>Retry</button>
+      </div>
+      <ul data-daily-list></ul>
+    </section>
+  `;
+  return document.querySelector<HTMLElement>("[data-daily-words]")!;
+}
 
 describe("DailyWords list example sentence (GH #5434)", () => {
   test("DailyWords Astro renders an example slot with bilingual scaffolding", () => {
@@ -78,8 +116,10 @@ describe("DailyWords list example sentence (GH #5434)", () => {
 describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
   test("hub copy no longer claims every card goes to Atlas", () => {
     expect(wordsOfTheDaySource).not.toContain("кожна картка веде до повної статті Атласу");
-    expect(wordsOfTheDaySource).toContain("торкніться картки, щоб перевернути");
-    expect(wordsOfTheDaySource).toContain("Атласі");
+    // Helper copy lives in the chrome dictionary; DailyWords dual-renders it.
+    expect(dailyWordsSource).toContain('k="wotd.todayDescription"');
+    expect(chromeSource).toContain("торкніться картки, щоб перевернути");
+    expect(chromeSource).toContain("Атласі");
   });
 
   test("card chrome is a flip control, not a single Atlas anchor", () => {
@@ -156,12 +196,129 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(dailyWordsSource).not.toContain("words-of-the-day/daily-pool");
     expect(dailyWordsSource).toContain("data-daily-fallback");
     expect(dailyWordsSource).toContain("data-daily-retry");
-    expect(dailyWordsSource).toContain("Не вдалося завантажити добірку.");
-    expect(dailyWordsSource).toContain("Спробувати ще раз");
+    expect(dailyWordsSource).toContain('k="wotd.loadError"');
+    expect(dailyWordsSource).toContain('k="practice.retry"');
+    expect(chromeSource).toContain("Не вдалося завантажити добірку.");
+    expect(chromeSource).toContain("Спробувати ще раз");
     expect(dailyWordsSource).toContain("showLoadError");
+    expect(dailyWordsSource).toContain("applyDailyLoadFallback");
     expect(dailyWordsSource).toContain("script is:inline");
     expect(dailyWordsSource).toContain("TIMEOUT_MS");
+    expect(dailyWordsSource).toContain("data-daily-loading");
     // Must not silently hide the section on transport/server failure.
     expect(dailyWordsSource).toMatch(/catch\s*\{\s*showLoadError\(\);/);
+  });
+});
+
+describe("DailyWords data-daily-loading state machine (#6771 review)", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    document.body.innerHTML = "";
+  });
+
+  test("initial markup is loading with data-daily-loading=true", () => {
+    expect(dailyWordsSource).toMatch(
+      /data-daily-status[\s\S]*?data-daily-loading="true"/,
+    );
+    const section = mountDailySection();
+    const status = section.querySelector<HTMLElement>("[data-daily-status]")!;
+    expect(status.getAttribute("data-daily-loading")).toBe("true");
+    expect(status.hidden).toBe(false);
+    expect(section.querySelector("[data-daily-fallback]")!).toHaveProperty("hidden", true);
+  });
+
+  test("success clears loading and marks ready", () => {
+    const section = mountDailySection();
+    const list = section.querySelector("[data-daily-list]")!;
+    list.innerHTML = "<li>word</li>";
+    markDailyLoadSuccess(
+      section,
+      chromeDualHtml("A1 · 1 word", "A1 · 1 слово"),
+    );
+
+    const status = section.querySelector<HTMLElement>("[data-daily-status]")!;
+    expect(status.getAttribute("data-daily-loading")).toBeNull();
+    expect(status.hidden).toBe(false);
+    expect(status.textContent).toContain("1 word");
+    expect(section.dataset.dailyReady).toBe("true");
+    expect(section.querySelector("[data-daily-fallback]")!).toHaveProperty("hidden", true);
+  });
+
+  test("load failure paints fallback and clears data-daily-loading", () => {
+    const section = mountDailySection();
+    applyDailyLoadFallback(section);
+
+    const status = section.querySelector<HTMLElement>("[data-daily-status]")!;
+    const fallback = section.querySelector<HTMLElement>("[data-daily-fallback]")!;
+    expect(status.hidden).toBe(true);
+    expect(status.getAttribute("data-daily-loading")).toBeNull();
+    expect(fallback.hidden).toBe(false);
+    expect(section.dataset.dailyReady).toBe("true");
+  });
+
+  test("retry restores loading state after failure", () => {
+    const section = mountDailySection();
+    applyDailyLoadFallback(section);
+    beginDailyReload(section, chromeDualHtml("Loading…", "Завантаження…"));
+
+    const status = section.querySelector<HTMLElement>("[data-daily-status]")!;
+    const fallback = section.querySelector<HTMLElement>("[data-daily-fallback]")!;
+    expect(fallback.hidden).toBe(true);
+    expect(status.hidden).toBe(false);
+    expect(status.getAttribute("data-daily-loading")).toBe("true");
+    expect(status.textContent).toContain("Loading…");
+    expect(section.dataset.dailyReady).toBe("false");
+  });
+
+  test("inline watchdog is self-contained (no module imports) and no parallel armDailyWatchdog", () => {
+    const inline = extractInlineWatchdogSource(dailyWordsSource);
+    expect(inline).toContain("TIMEOUT_MS");
+    expect(inline).toContain("10000");
+    expect(inline).not.toMatch(/\bimport\b/);
+    expect(inline).not.toContain("armDailyWatchdog");
+    expect(inline).not.toContain("../lib/lexicon/daily-loading");
+    // Dead parallel watchdog removed — production never called it.
+    expect(dailyLoadingSource).not.toContain("armDailyWatchdog");
+    expect(dailyLoadingSource).not.toContain("isDailyWatchdogDue");
+  });
+
+  test("production is:inline watchdog paints fallback when still loading after timeout", () => {
+    vi.useFakeTimers();
+    const section = mountDailySection();
+    // Evaluate the real inline script from DailyWords.astro against this DOM.
+    // eslint-disable-next-line no-eval -- intentional: exercise production is:inline source
+    (0, eval)(extractInlineWatchdogSource(dailyWordsSource));
+
+    expect(section.querySelector("[data-daily-fallback]")!).toHaveProperty("hidden", true);
+
+    vi.advanceTimersByTime(INLINE_WATCHDOG_TIMEOUT_MS - 1);
+    expect(section.querySelector("[data-daily-fallback]")!).toHaveProperty("hidden", true);
+    expect(section.querySelector("[data-daily-status]")!.getAttribute("data-daily-loading")).toBe(
+      "true",
+    );
+
+    vi.advanceTimersByTime(1);
+    const status = section.querySelector<HTMLElement>("[data-daily-status]")!;
+    const fallback = section.querySelector<HTMLElement>("[data-daily-fallback]")!;
+    expect(status.hidden).toBe(true);
+    expect(status.getAttribute("data-daily-loading")).toBeNull();
+    expect(fallback.hidden).toBe(false);
+  });
+
+  test("production is:inline watchdog leaves a ready section alone", () => {
+    vi.useFakeTimers();
+    const section = mountDailySection();
+    const list = section.querySelector("[data-daily-list]")!;
+    list.innerHTML = "<li>ok</li>";
+    markDailyLoadSuccess(section, null);
+
+    // eslint-disable-next-line no-eval -- intentional: exercise production is:inline source
+    (0, eval)(extractInlineWatchdogSource(dailyWordsSource));
+
+    vi.advanceTimersByTime(INLINE_WATCHDOG_TIMEOUT_MS + 50);
+    expect(section.querySelector("[data-daily-fallback]")!).toHaveProperty("hidden", true);
+    expect(section.dataset.dailyReady).toBe("true");
+    expect(list.children).toHaveLength(1);
+    expect(section.querySelector<HTMLElement>("[data-daily-status]")!.hidden).toBe(true);
   });
 });
