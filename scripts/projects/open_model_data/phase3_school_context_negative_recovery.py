@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import stat
 import sys
 import tarfile
@@ -47,21 +48,16 @@ SCHEMA_VERSION = "phase3_school_context_negative_recovery_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_school_context_negative_recovery_v1"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+PUBLIC_FILE_MODE = 0o644
 
 PINNED_SOURCE_UNITS_JSONL_SHA256 = eval_manifest.PINNED_SOURCE_UNITS_JSONL_SHA256
 PINNED_PARTITION_SHA256 = eval_manifest.PINNED_PARTITION_SHA256
 PINNED_CUSTODY_TARBALL_SHA256 = eval_manifest.PINNED_CUSTODY_TARBALL_SHA256
 PINNED_SOURCE_UNIVERSE_RECEIPT_SHA256 = eval_manifest.PINNED_SOURCE_UNIVERSE_RECEIPT_SHA256
-PINNED_EVAL_CONTEXT_RECEIPT_BODY_SHA256 = (
-    "f01d8efd0a1279d7cf4b742ad6909de4a7d2a3866195b7f7e1b56d8e1e2598d1"
-)
-PINNED_EVAL_CONTEXT_RECEIPT_FILE_SHA256 = (
-    "292a42ee85a3413859d2eb6063484ff55756ad026fbcd6fab8d83bde4d9345fb"
-)
+PINNED_EVAL_CONTEXT_RECEIPT_BODY_SHA256 = "f01d8efd0a1279d7cf4b742ad6909de4a7d2a3866195b7f7e1b56d8e1e2598d1"
+PINNED_EVAL_CONTEXT_RECEIPT_FILE_SHA256 = "292a42ee85a3413859d2eb6063484ff55756ad026fbcd6fab8d83bde4d9345fb"
 PINNED_SCHOOL_LEDGER_SHA256 = "fd39efa11d5689dfcc5baaaa1a6a97eb8f00db36780ee4ebbf59b73e94c9065e"
-PINNED_FREEZE_DATABASE_SHA256 = (
-    "eb5e0c3745020def62d5d5cdfb5190bc8a91d6c3dc04b05f5f98f259b3696c4d"
-)
+PINNED_FREEZE_DATABASE_SHA256 = "eb5e0c3745020def62d5d5cdfb5190bc8a91d6c3dc04b05f5f98f259b3696c4d"
 
 TARBALL_MEMBERS = {
     "source_jsonl": "batch_state/phase3-private/v21-cycle001/source-materialization/source_units_v1.jsonl",
@@ -178,6 +174,14 @@ def _regular_file(path: Path, label: str) -> None:
     require(stat.S_ISREG(state.st_mode) and not path.is_symlink(), f"{label} must be a regular file")
 
 
+def _regular_public(path: Path, label: str) -> None:
+    _regular_file(path, label)
+    require(
+        stat.S_IMODE(path.lstat().st_mode) == PUBLIC_FILE_MODE,
+        f"{label} permissions must be 0644",
+    )
+
+
 def _strict_json_object(raw: bytes, label: str) -> dict[str, Any]:
     try:
         value = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=_pairs)
@@ -223,6 +227,54 @@ def _atomic_write(path: Path, payload: bytes) -> None:
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
+
+
+def _write_public_receipt(path: Path, payload: bytes) -> None:
+    """Idempotent public receipt write at tracked-file mode 0644 (never 0600).
+
+    Existing files must already be mode 0644 with identical bytes; changed
+    content is refused rather than silently overwritten. Mode is fixed at every
+    fchmod/chmod site so static analysis can prove the public permission policy.
+    """
+    _reject_symlink_components(path, "public receipt")
+    if path.exists():
+        _regular_public(path, "public receipt")
+        require(path.read_bytes() == payload, "refusing to overwrite changed public receipt")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), 0o644)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        os.chmod(path, 0o644)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def _canonical_temp_root(prefix: str) -> Path:
+    """Create a private temp directory on a symlink-free resolved path.
+
+    macOS often exposes ``TMPDIR`` under ``/var`` which is a symlink to
+    ``/private/var``. The strict symlink guard must keep rejecting that alias,
+    so production staging always uses the realpath canonical root with mode 0700.
+    """
+    created = Path(tempfile.mkdtemp(prefix=prefix, dir=None))
+    resolved = Path(os.path.realpath(created))
+    if resolved != created:
+        require(resolved.exists(), "resolved temp root missing after mkdtemp")
+    os.chmod(resolved, PRIVATE_DIR_MODE)
+    _reject_symlink_components(resolved, "temp root")
+    return resolved
 
 
 def _validate_public_bindings() -> None:
@@ -334,9 +386,7 @@ def compute_parent_section_census(
         if meta["parent_section_id"] is None:
             school_null_parent += 1
         else:
-            groups[(meta["source_file"], meta["parent_section_id"])].append(
-                (meta["id"], meta["chunk_id"], unit_id)
-            )
+            groups[(meta["source_file"], meta["parent_section_id"])].append((meta["id"], meta["chunk_id"], unit_id))
         if unit_id in heldout:
             require(unit_id not in heldout_seen, f"duplicate school held-out materialization: {unit_id}")
             heldout_seen.add(unit_id)
@@ -398,8 +448,7 @@ def _assert_reanchor_invariants() -> None:
         "quarantine reanchor sum drift",
     )
     require(
-        QUARANTINE_REANCHOR["multi_chunk_section"] + QUARANTINE_REANCHOR["singleton_section"]
-        == PARENT_NULL_HELDOUT,
+        QUARANTINE_REANCHOR["multi_chunk_section"] + QUARANTINE_REANCHOR["singleton_section"] == PARENT_NULL_HELDOUT,
         "quarantine section grain sum drift",
     )
     require(QUARANTINE_REANCHOR["custody_bound_files"] == 0, "quarantine custody bind drift")
@@ -485,6 +534,49 @@ def build_receipt(
 def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     Draft202012Validator(json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))).validate(receipt)
     require(receipt_sha256(receipt) == receipt["receipt_sha256"], "receipt self-hash drift")
+    require(receipt.get("text_free") is True, "receipt must be text-free")
+    require(receipt.get("provider_calls") is False, "provider_calls must be false")
+    require(receipt.get("labels_present") is False, "labels_present must be false")
+    require(receipt["gates"]["school_complete_context_ready"] is False, "school complete context overclaim")
+    require(receipt["gates"]["phase3_complete"] is False, "phase3 completion overclaim")
+    require(receipt["gates"]["phase4_blocked"] is True, "phase4 must remain blocked")
+    bindings = receipt["bindings"]
+    require(
+        bindings["implementation_sha256"] == sha256_file(SCRIPT_PATH),
+        "implementation binding drift",
+    )
+    require(
+        bindings["receipt_schema_sha256"] == sha256_file(SCHEMA_PATH),
+        "schema binding drift",
+    )
+    require(
+        bindings["source_units_jsonl_sha256"] == PINNED_SOURCE_UNITS_JSONL_SHA256,
+        "source units binding drift",
+    )
+    require(
+        bindings["partition_manifest_sha256"] == PINNED_PARTITION_SHA256,
+        "partition binding drift",
+    )
+    require(
+        bindings["custody_tarball_sha256"] == PINNED_CUSTODY_TARBALL_SHA256,
+        "custody tarball binding drift",
+    )
+    require(
+        bindings["evaluation_context_manifest_receipt_body_sha256"] == PINNED_EVAL_CONTEXT_RECEIPT_BODY_SHA256,
+        "evaluation context body binding drift",
+    )
+    require(
+        bindings["evaluation_context_manifest_receipt_file_sha256"] == PINNED_EVAL_CONTEXT_RECEIPT_FILE_SHA256,
+        "evaluation context file binding drift",
+    )
+    require(
+        bindings["source_universe_receipt_sha256"] == PINNED_SOURCE_UNIVERSE_RECEIPT_SHA256,
+        "source universe binding drift",
+    )
+    require(
+        bindings["school_textbooks_units_jsonl_sha256"] == PINNED_SCHOOL_LEDGER_SHA256,
+        "school ledger binding drift",
+    )
     return dict(receipt)
 
 
@@ -505,7 +597,7 @@ def materialize(
         completed_at=finished,
         candidate_database=candidate_database,
     )
-    _atomic_write(public_receipt_path, canonical_bytes(receipt))
+    _write_public_receipt(public_receipt_path, canonical_bytes(receipt))
     return validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
 
 
@@ -517,6 +609,7 @@ def verify_existing(
     candidate_database: Path | None = None,
 ) -> dict[str, Any]:
     receipt = validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
+    _regular_public(public_receipt_path, "public receipt")
     rebuilt = build_receipt(
         source_jsonl=source_jsonl,
         partition_path=partition_path,
@@ -524,7 +617,8 @@ def verify_existing(
         completed_at=receipt["completed_at"],
         candidate_database=candidate_database,
     )
-    # Implementation/schema hashes may change with code edits; compare sealed findings.
+    # Fail closed on current implementation/schema bindings via validate_receipt;
+    # then compare sealed findings and remaining pinned bindings.
     for key in (
         "disposition",
         "school_heldout",
@@ -540,6 +634,8 @@ def verify_existing(
     ):
         require(receipt[key] == rebuilt[key], f"public receipt drift on {key}")
     for key in (
+        "implementation_sha256",
+        "receipt_schema_sha256",
         "source_units_jsonl_sha256",
         "partition_manifest_sha256",
         "custody_tarball_sha256",
@@ -581,8 +677,9 @@ def production_run(
     completed_at: str | None = None,
     candidate_database: Path | None = None,
 ) -> dict[str, Any]:
-    with tempfile.TemporaryDirectory(prefix="phase3-school-negrec-") as tmp:
-        extracted = _extract_tarball_members(custody_tarball, Path(tmp))
+    temp_root = _canonical_temp_root("phase3-school-negrec-")
+    try:
+        extracted = _extract_tarball_members(custody_tarball, temp_root)
         return materialize(
             source_jsonl=extracted["source_jsonl"],
             partition_path=extracted["partition"],
@@ -591,6 +688,8 @@ def production_run(
             completed_at=completed_at,
             candidate_database=candidate_database,
         )
+    finally:
+        shutil.rmtree(temp_root, ignore_errors=True)
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
