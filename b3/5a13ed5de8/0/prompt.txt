@@ -1,0 +1,56 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/atlas-6801-meaning-choice-teach
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix #6801 — meaning-choice miss must teach, not re-ask
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: agy × gemini-3.6-flash-high (native AGY)
+- why_this_tier: bounded learner-facing practice-UI defect with an exact operator repro and clear acceptance; no architecture or process decision involved
+- advisor_packet: n/a (tier=practical)
+- owned_paths: site/src/components/LexiconPractice.tsx, site/src/components/__tests__/** (practice tests)
+- acceptance_cmd: `cd site && npx vitest run` (component tests) + `npx tsc --noEmit` + repro walkthrough from #6801 against a local build
+- alternatives_considered: (1) cursor Auto — free Ultra capacity but agy is pick-order 1 for code implement and this touches learner-facing UK feedback strings (sanctioned language lane); (2) codex — avoided per current capacity note (deficit/habit-codex); (3) driver self-implement — forbidden (driver routes, lanes build)
+- parallel_free_seats: cursor, codex, kimi idle
+
+## Task
+GitHub issue **#6801** is the spec — read it fully, including the operator's live-QA comment
+(«світлий», «магазин» examples). Related prior art: #6722 / PR #6775 (choice+classify teaching),
+#6789 / PR #6791 (matching teaching), #6751. Do **not** re-implement those — they are merged.
+The defect: in a mixed practice session, a wrong tap on a meaning-choice card
+(«Що означає …?» / «Яке слово означає …?») locks the options and highlights the correct one,
+but shows only a status line («lemma: Ще раз») — no red teaching panel with the
+«Неправильно. «lemma» = gloss.» sentence. Same-session Форма/Група misses DO show the panel,
+so the gap is isolated to how meaning-choice cards are rendered in the mixed-session layout.
+Also per the issue: the English subtitle for a choice miss collapses to bare "Incorrect."
+without the pair.
+
+Root-cause the render path yourself and fix at the right layer; do not special-case one lemma.
+Never invent Ukrainian content: the teaching sentence must only restate the attested
+word ↔ gloss pair already present in the deck payload (same bar as the merged #6722/#6789 fixes).
+
+## Evidence preamble (#M-4)
+Every claim in your PR body must be tool-backed: quote the failing behavior via a component
+test that reproduces the miss BEFORE your fix (mutation check: revert the fix → test fails),
+and the passing run after. No asserted-but-unverified claims.
+
+## Steps
+1. Work only inside the dispatch worktree you were given (never the primary checkout).
+2. Reproduce: component test for a mixed-session meaning-choice miss showing the missing
+   teaching feedback; confirm it fails on unmodified HEAD.
+3. Implement the fix (your design). Cover both choice polarities and the English-subtitle pair.
+4. Sanity-check siblings: verify the other MC modes rendered by the same layout still show
+   their teaching feedback (no regression) — add/extend tests where coverage is missing.
+5. `cd site && npx tsc --noEmit && npx eslint src/components/LexiconPractice.tsx --quiet && npx vitest run`
+6. Conventional commit referencing #6801, push, open PR (title `fix(practice): ...`).
+   PR body: root cause, evidence, test list. Add `X-Agent: agy` trailer.
+7. Do NOT merge and do NOT enable auto-merge — the driver owns review + merge.

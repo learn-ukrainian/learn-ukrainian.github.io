@@ -1,0 +1,38 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b35a13ed5de8",
+  "session_id": "fleet-72263774aeab4213b92657901972e514",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T16:52:22.520325Z",
+  "branch": "agy/atlas-6801-meaning-choice-teach",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "agent": "Project Runner",
+  "model": "gemini-3.6-flash-high",
+  "turn_id": "c3442a70cf8b",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T16:52:22.513154Z",
+    "agent_lines": 39,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 39,
+    "total_lines_changed": 47,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b35a13ed5de8",
+  "strategy": "manual-commit",
+  "branch": "agy/atlas-6801-meaning-choice-teach",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/components/LexiconPractice.tsx",
+    "site/tests/unit/LexiconPractice.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b3/5a13ed5de8/0/metadata.json",
+      "transcript": "/b3/5a13ed5de8/0/full.jsonl",
+      "compact_transcript": "/b3/5a13ed5de8/0/transcript.jsonl",
+      "content_hash": "/b3/5a13ed5de8/0/content_hash.txt",
+      "prompt": "/b3/5a13ed5de8/0/prompt.txt"
+    }
+  ]
+}
