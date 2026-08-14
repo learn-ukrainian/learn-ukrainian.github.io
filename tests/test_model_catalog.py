@@ -51,7 +51,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "grok-4.5",
         "kimi-code/k3",
         "kimi-k3-max",
-        "glm-5.2",
+        "glm-5.3",
         "deepseek-v4-pro",
         "deepseek-v4-flash",
         "poolside/laguna-s-2.1",
@@ -86,7 +86,7 @@ def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
     """The two operator-requested cross-family seats must not silently disappear."""
     for ladder in load_model_catalog()["review_ladders"].values():
         candidates = {candidate for rung in ladder for candidate in rung}
-        assert {"kimi-k3", "glm-5.2"} <= candidates
+        assert {"kimi-k3", "glm-5.3"} <= candidates
 
 
 def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priority() -> None:
@@ -104,7 +104,7 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     )
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
-    assert practical.index("glm-5.2") < practical.index("deepseek-v4-flash")
+    assert practical.index("glm-5.3") < practical.index("deepseek-v4-flash")
     # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
     # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
     assert "deepseek-v4-flash" in practical
@@ -165,18 +165,19 @@ def test_generic_model_aliases_resolve_k3_256k_and_kimicc_endpoint_lists_it() ->
 
 def test_glm_model_aliases_and_consumer_lint() -> None:
     aliases = glm_model_aliases()
-    assert "glm-5.2" in aliases
-    assert aliases["glm-5.2"] == "glm-5.2"
-    assert aliases["glm52"] == "glm-5.2"
-    assert aliases["glm"] == "glm-5.2"
+    assert "glm-5.3" in aliases
+    assert aliases["glm-5.3"] == "glm-5.3"
+    assert aliases["glm52"] == "glm-5.2"  # prior pin
+    assert aliases["glm53"] == "glm-5.3"
+    assert aliases["glm"] == "glm-5.3"
 
     model_id, routes = resolve_glm_model("glm")
-    assert model_id == "glm-5.2"
+    assert model_id == "glm-5.3"
     assert routes == {
-        "glmcc_alias": "glm-5.2",
-        "platform_model_id": "glm-5.2",
-        "coding_model_id": "glm-5.2",
-        "context_profile": "glmcc_glm52",
+        "glmcc_alias": "glm-5.3",
+        "platform_model_id": "glm-5.3",
+        "coding_model_id": "glm-5.3",
+        "context_profile": "glmcc_glm53",
     }
     validate_glm_alias_consumers()
 
@@ -302,7 +303,10 @@ def test_formal_cf_defaults_pin_practical_seats_at_high_effort():
         "claude-opus-5",
         "claude-opus-4-8",
     }
-    assert defaults["glm"]["model_id"] == "glm-5.2"
+    assert defaults["glm"]["model_id"] == "glm-5.3"
+    assert defaults["glm"]["effort"] == "high"
+    assert defaults["glm"]["escalate_effort"] == "max"
+    assert defaults["glm"]["escalate_model_id"] == "glm-5.3"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
     assert defaults["grok"]["fallback_model_id"] == "grok-4.5"
@@ -361,7 +365,7 @@ def test_practical_ladders_exclude_authority_seats():
 def test_bridge_only_reviewers_expose_executable_invocations():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["pool"]["invocation"].endswith("ask-pool")
-    assert candidates["glm-5.2"]["invocation"].endswith("ask-glm")
+    assert candidates["glm-5.3"]["invocation"].endswith("ask-glm")
     assert candidates["gemini-3.1-pro"]["health_keys"] == ["gemini"]
 
 

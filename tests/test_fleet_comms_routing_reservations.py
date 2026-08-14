@@ -271,7 +271,7 @@ def test_one_result_invalid_substitution_is_linked_idempotent_and_single_use(tmp
         )
         substitute = replace(
             _request("repo:substitution:head", "substitute"),
-            route_mode="explicit", requested_reviewer="glm-5.2",
+            route_mode="explicit", requested_reviewer="glm-5.3",
         )
         evidence = {
             "prior_reservation_id": first.reservation_id,
@@ -280,7 +280,7 @@ def test_one_result_invalid_substitution_is_linked_idempotent_and_single_use(tmp
             "authority_key": "repo:substitution:head", "data_egress_policy": "approved",
         }
         def selection(context: object) -> RoutingSelection:
-            return replace(_selection(context), candidate="glm-5.2", family="zhipu")
+            return replace(_selection(context), candidate="glm-5.3", family="zhipu")
 
         second = ledger.reserve_selection(substitute, selection, now="2035-01-01T00:00:02Z", substitution=evidence)
         assert second.attempt == 2 and second.fallback_from is None
@@ -322,7 +322,7 @@ def _failed_result_invalid_reservation(
         original,
         idempotency_key="substitute",
         route_mode="explicit",
-        requested_reviewer="glm-5.2",
+        requested_reviewer="glm-5.3",
     )
     return substitute, {
         "prior_reservation_id": first.reservation_id,
@@ -335,7 +335,7 @@ def _failed_result_invalid_reservation(
 
 
 def _glm_selection(context: object) -> RoutingSelection:
-    return replace(_selection(context), candidate="glm-5.2", family="zhipu")
+    return replace(_selection(context), candidate="glm-5.3", family="zhipu")
 
 
 def _legacy_failed_result_invalid_reservation(
@@ -378,7 +378,7 @@ def _legacy_failed_result_invalid_reservation(
         original,
         idempotency_key="legacy-substitute",
         route_mode="explicit",
-        requested_reviewer="glm-5.2",
+        requested_reviewer="glm-5.3",
     )
     evidence = {
         "prior_reservation_id": first.reservation_id,
@@ -564,7 +564,7 @@ def test_substitution_without_a_prior_reservation_fails_closed_without_type_erro
         request = replace(
             _request("repo:substitution:no-prior", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
         with pytest.raises(RoutingReservationError, match="substitution_prior_reservation_missing"):
             ledger.reserve_selection(
@@ -578,7 +578,7 @@ def test_substitution_without_a_prior_reservation_fails_closed_without_type_erro
 @pytest.mark.parametrize(
     ("field", "value"),
     (
-        ("author_model", "glm-5.2"),
+        ("author_model", "glm-5.3"),
         ("author_family", "zhipu"),
         ("requested_role", "security-review"),
         ("requested_profile", "security"),
@@ -619,7 +619,7 @@ def test_active_substitution_validates_evidence_before_replacing_reservation(tmp
         request = replace(
             _request("repo:substitution:active-validation", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
 
         def selector_must_not_run(_context: object) -> RoutingSelection:
@@ -653,7 +653,7 @@ def test_active_substitution_replaces_reservation_and_records_single_grant(tmp_p
         request = replace(
             _request("repo:substitution:active-replacement", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
         evidence = {
             "prior_reservation_id": active.reservation_id,
@@ -669,7 +669,7 @@ def test_active_substitution_replaces_reservation_and_records_single_grant(tmp_p
         assert replacement.reservation_id != active.reservation_id
         assert replacement.attempt == active.attempt + 1
         assert replacement.status == "reserved"
-        assert replacement.requested_reviewer == replacement.resolved_candidate == "glm-5.2"
+        assert replacement.requested_reviewer == replacement.resolved_candidate == "glm-5.3"
         assert ledger.get(active.reservation_id).status == "cancelled"
         assert [item.event_type for item in ledger.decisions(active.reservation_id)] == ["reserved", "settled"]
         decisions = ledger.decisions(replacement.reservation_id)
@@ -704,7 +704,7 @@ def test_active_substitution_refusal_rolls_back_cancellation(tmp_path: Path) -> 
         request = replace(
             _request("repo:substitution:active-rollback", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
         evidence = {
             "prior_reservation_id": active.reservation_id,
@@ -733,7 +733,7 @@ def test_active_substitution_refuses_to_retarget_running_reservation(tmp_path: P
         request = replace(
             _request("repo:substitution:active-running", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
         evidence = {
             "prior_reservation_id": active.reservation_id,
@@ -769,7 +769,7 @@ def test_substitution_rejects_non_result_invalid_terminal_prior(tmp_path: Path) 
         request = replace(
             _request("repo:substitution:non-result-invalid", "substitute"),
             route_mode="explicit",
-            requested_reviewer="glm-5.2",
+            requested_reviewer="glm-5.3",
         )
         evidence = {
             "prior_reservation_id": active.reservation_id,

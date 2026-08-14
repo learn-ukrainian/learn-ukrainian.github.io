@@ -1,6 +1,6 @@
-"""GlmAdapter — wraps opencode CLI for Zhipu GLM-5.2 (glm-5.2).
+"""GlmAdapter — wraps opencode CLI for Zhipu GLM-5.3 (glm-5.3).
 
-GLM-5.2 is a strong cross-family code and review model.
+GLM-5.3 is a strong cross-family code and review model.
 LOCAL-ONLY: prompt data egresses to China — forbidden in CI.
 """
 
@@ -21,7 +21,10 @@ from .base import InvocationPlan
 _logger = logging.getLogger(__name__)
 
 # Bare catalog model id → subscription-pinned opencode provider route.
-_OPENCODE_MODEL_ROUTES: dict[str, str] = {"glm-5.2": "zai-coding-plan/glm-5.2"}
+_OPENCODE_MODEL_ROUTES: dict[str, str] = {
+    "glm-5.3": "zai-coding-plan/glm-5.3",
+    "glm-5.2": "zai-coding-plan/glm-5.2",  # prior pin
+}
 
 # Env vars whose presence indicates an automated/CI context where the
 # China-egress constraint forbids invoking GLM (matches ask-glm backstop).
@@ -48,6 +51,8 @@ def assert_glm_egress_allowed(verb: str = "glm adapter") -> None:
             )
 
 
+# GLM-5.3 native efforts are low|high|max. opencode --variant uses
+# minimal|high|max; Z.AI Coding Plan maps minimal→low, high→high, max→max.
 _EFFORT_TO_VARIANT: dict[str, str] = {
     "low": "minimal",
     "medium": "high",
@@ -75,13 +80,13 @@ def _extract_text_from_stdout(stdout: str) -> str:
 
 
 class GlmAdapter:
-    """Adapter for the opencode CLI with glm-5.2."""
+    """Adapter for the opencode CLI with glm-5.3."""
 
     name: str = "glm"
     # Fleet MODEL identity (must resolve in model_catalog.yaml). The Z.AI
     # Coding Plan provider pin is an opencode INVOCATION detail — applied in
     # build_invocation via _OPENCODE_MODEL_ROUTES, not stored as identity.
-    default_model: str = "glm-5.2"
+    default_model: str = "glm-5.3"
     # Operator 2026-08-13: omitted effort defaults to high (--variant high);
     # an explicit --effort always wins.
     default_effort: str = "high"
@@ -111,7 +116,7 @@ class GlmAdapter:
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
         # Route bare catalog ids to the subscription-pinned opencode provider —
-        # a bare "glm-5.2" would leave provider resolution to opencode and can
+        # a bare "glm-5.3" would leave provider resolution to opencode and can
         # land off the Z.AI Coding Plan sub. Explicit provider-prefixed ids
         # pass through untouched. Keep in sync with
         # scripts/ai_agent_bridge/_opencode.py GLM_MODEL.

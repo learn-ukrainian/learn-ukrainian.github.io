@@ -86,7 +86,7 @@ stampede one hot lane.
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
-| **Z.AI GLM-5.2** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
+| **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
 | **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.

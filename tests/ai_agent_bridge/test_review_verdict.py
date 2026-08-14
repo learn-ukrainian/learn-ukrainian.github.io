@@ -78,7 +78,7 @@ def test_publish_review_verdict_marks_legacy_verdict_without_evidence() -> None:
     publisher.publish_review_verdict(
         pr=99,
         verdict="CHANGES_REQUESTED",
-        model="glm-5.2",
+        model="glm-5.3",
         family="zhipu",
         harness="opencode",
         runner=fake_runner,
@@ -89,7 +89,7 @@ def test_publish_review_verdict_marks_legacy_verdict_without_evidence() -> None:
     comment = calls[1][5]
     assert "VERDICT: CHANGES_REQUESTED" in comment
     assert "Head SHA: abc123" in comment
-    assert "model=glm-5.2" in comment
+    assert "model=glm-5.3" in comment
     assert "NO EVIDENCE SUPPLIED" in comment
 
 

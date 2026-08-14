@@ -179,7 +179,7 @@ is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
   for example `--reviewer claude --model claude-fable-5` or
   `--reviewer codex --model gpt-5.6-sol`.
 - `agy` and `kimi` remain recognized request identities but fail closed until
-  their catalog endpoints satisfy sealed-review eligibility. GLM-5.2 is
+  their catalog endpoints satisfy sealed-review eligibility. GLM-5.3 is
   **LOCAL-ONLY** / China egress and requires the matching egress policy.
 - `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.

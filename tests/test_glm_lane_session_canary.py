@@ -71,7 +71,7 @@ def test_verify_transport_preconditions_ok(clear_ci_env: None, monkeypatch: pyte
     assert precond["status"] == "ok"
     assert precond["reason"] == "preconditions_satisfied"
     assert precond["opencode_binary"] == "/usr/local/bin/opencode"
-    assert precond["model_route"] == "zai-coding-plan/glm-5.2"
+    assert precond["model_route"] == "zai-coding-plan/glm-5.3"
 
 
 def test_run_glm_probe_refused_under_ci(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -103,7 +103,7 @@ def test_run_glm_probe_mocked_success(clear_ci_env: None, monkeypatch: pytest.Mo
 
     fake_adapter = MagicMock(spec=GlmAdapter)
     fake_adapter.build_invocation.return_value = MagicMock(
-        cmd=["/usr/local/bin/opencode", "run", "--model", "zai-coding-plan/glm-5.2", "--", "prompt"],
+        cmd=["/usr/local/bin/opencode", "run", "--model", "zai-coding-plan/glm-5.3", "--", "prompt"],
         cwd=tmp_path,
         stdin_payload="",
         env_overrides={},
@@ -140,7 +140,7 @@ def test_run_glm_probe_mocked_shape_mismatch(clear_ci_env: None, monkeypatch: py
 
     fake_adapter = MagicMock(spec=GlmAdapter)
     fake_adapter.build_invocation.return_value = MagicMock(
-        cmd=["/usr/local/bin/opencode", "run", "--model", "zai-coding-plan/glm-5.2", "--", "prompt"],
+        cmd=["/usr/local/bin/opencode", "run", "--model", "zai-coding-plan/glm-5.3", "--", "prompt"],
         cwd=tmp_path,
         stdin_payload="",
         env_overrides={},
@@ -170,11 +170,11 @@ def test_bootstrap_creates_boards(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
     cs_text = cold_start.read_text(encoding="utf-8")
     assert "GLM cold-start" in cs_text
     assert "Seat:" in cs_text
-    assert "GLM-5.2" in cs_text
+    assert "GLM-5.3" in cs_text
 
     ho_text = handoff.read_text(encoding="utf-8")
     assert "GLM driver handoff" in ho_text
-    assert "Seat: GLM-5.2" in ho_text
+    assert "Seat: GLM-5.3" in ho_text
 
 
 def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -230,7 +230,7 @@ def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
         "--out-dir", str(canary_dir),
         "--answers", str(answers_path),
         "--context-tokens", "100000",
-        "--model", "glm-5.2",
+        "--model", "glm-5.3",
     ])
     assert rc_score == 0
     verdict = json.loads((canary_dir / "last_verdict.json").read_text(encoding="utf-8"))

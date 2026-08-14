@@ -98,12 +98,23 @@ def test_glm_accepts_each_explicit_credential_source_without_leaking_value(crede
     assert secret not in result.stdout + result.stderr
 
 
-@pytest.mark.parametrize("alias", ("glm-5.2", "glm52", "glm"))
+@pytest.mark.parametrize("alias", ("glm-5.3", "glm53", "glm"))
 def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_path: Path) -> None:
     result = run_launcher(
         "start-glm.sh",
         "--model",
         alias,
+        env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model glm-5.3" in result.stdout
+
+
+def test_glm52_alias_still_resolves_to_fallback_glm_5_2(tmp_path: Path) -> None:
+    result = run_launcher(
+        "start-glm.sh",
+        "--model",
+        "glm52",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
     )
     assert result.returncode == 0, result.stderr
@@ -340,8 +351,8 @@ def test_glm_exports_trusted_profile_and_capacity_to_the_claude_adapter(tmp_path
     )
     assert result.returncode == 0, result.stderr
     assert "base=https://api.z.ai/api/anthropic" in result.stdout
-    assert "model=glm-5.2" in result.stdout
-    assert "profile=glmcc_glm52" in result.stdout
+    assert "model=glm-5.3" in result.stdout
+    assert "profile=glmcc_glm53" in result.stdout
     assert "window=1048576" in result.stdout
     assert "compact=996147" in result.stdout
 

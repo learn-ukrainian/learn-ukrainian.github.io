@@ -327,7 +327,7 @@ not permanent routing weights and do not override current CodexBar headroom.
   bypasses. DeepSeek runs Hermes against an isolated empty-tool/no-fallback
   config while reusing only the existing local credential files.
 - GLM uses native `opencode acp --pure`, pinned to
-  `zai-coding-plan/glm-5.2`, with both `permission.*=deny` and `tools.*=false`.
+  `zai-coding-plan/glm-5.3`, with both `permission.*=deny` and `tools.*=false`.
   GLM and first-party DeepSeek retain their local-only/never-CI egress guards.
 - Correlation / idempotency fields recorded as **evidence** (local runtime
   metadata only — never ACP protocol flags, argv, or stdin; never published

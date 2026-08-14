@@ -165,8 +165,8 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
 AGY_ACP_MODEL = "gemini-3.7-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
-GLM_ACP_MODEL = "glm-5.2"
-GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.2"
+GLM_ACP_MODEL = "glm-5.3"
+GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 DEEPSEEK_ACP_MODEL = "deepseek-v4-pro"
 # OpenCode advertises its existing local login as ACP auth method
 # ``opencode-login``. ACPX maps that method ID deterministically to this

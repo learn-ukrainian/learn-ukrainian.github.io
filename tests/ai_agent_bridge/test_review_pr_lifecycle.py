@@ -481,9 +481,9 @@ def test_expired_reservation_after_successful_substitution_never_reaches_provide
     )
     substitute = SimpleNamespace(
         reservation_id="routing-reservation_substitute",
-        resolved_candidate="glm-5.2",
+        resolved_candidate="glm-5.3",
         resolved_route="glm",
-        resolved_model="glm-5.2",
+        resolved_model="glm-5.3",
         resolved_family="zhipu",
         quota_bucket="glm-weekly",
     )

@@ -62,7 +62,7 @@ def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
 
     for ladder in ladders.values():
         rung_candidates = {candidate for rung in ladder for candidate in rung}
-        assert {"kimi-k3", "glm-5.2"} <= rung_candidates
+        assert {"kimi-k3", "glm-5.3"} <= rung_candidates
 
 
 def test_review_boundary_rejects_same_family_advisory_output() -> None:

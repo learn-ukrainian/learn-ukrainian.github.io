@@ -166,7 +166,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-kimi-code}"
       ;;
     glm)
-      LC_MODEL="${LAUNCHER_MODEL:-glm-5.2}"
+      LC_MODEL="${LAUNCHER_MODEL:-glm-5.3}"
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;

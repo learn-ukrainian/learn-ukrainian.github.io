@@ -101,6 +101,21 @@ profiles:
     rollover_warning_percentages: [75.0, 85.0, 92.0]
 
   # GLM Claude-Code adapter behind start-glm.sh.
+  glmcc_glm53:
+    profile_id: glmcc_glm53
+    transport: glmcc
+    main_model_id: glm-5.3
+    model_id_patterns:
+      - '^glm-5\.3$'
+      - '^glm53$'
+      - '^glm$'
+    main_context_window_tokens: 1048576
+    auto_compact_capacity_tokens: 996147
+    cold_start_profile: compact
+    cold_start_budget_tokens: 104857
+    rollover_warning_percentages: [75.0, 85.0, 92.0]
+
+  # Prior GLM-5.2 profile — kept for pinned glm52 / glm-5.2 launches.
   glmcc_glm52:
     profile_id: glmcc_glm52
     transport: glmcc
@@ -108,7 +123,6 @@ profiles:
     model_id_patterns:
       - '^glm-5\.2$'
       - '^glm52$'
-      - '^glm$'
     main_context_window_tokens: 1048576
     auto_compact_capacity_tokens: 996147
     cold_start_profile: compact

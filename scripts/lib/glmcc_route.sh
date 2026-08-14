@@ -105,7 +105,7 @@ glmcc_configure_route() {
     return 1
   fi
   if ! route="$("$python_bin" "$project_dir/scripts/review/model_catalog.py" --resolve-glm-model "$MODEL_ALIAS" --format glmcc 2>/dev/null)"; then
-    echo "Error: unsupported GLM model '$MODEL_ALIAS' (use glm-5.2)." >&2
+    echo "Error: unsupported GLM model '$MODEL_ALIAS' (use glm-5.3 / glm / glm53)." >&2
     return 2
   fi
   IFS=$'\t' read -r MODEL_ALIAS platform_model coding_model profile <<EOF

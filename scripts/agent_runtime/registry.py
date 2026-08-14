@@ -233,7 +233,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "qwen": {
         # Qwen path (DISABLED per user directive 2026-07-22: "we dont use qwen,
-        # but we use glm-5.2"). Kept in registry for historical lookups, but
+        # but we use glm-5.3"). Kept in registry for historical lookups, but
         # cli_available is False.
         "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
         "default_model": "qwen/qwen3.6-plus",
@@ -252,7 +252,7 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
         # Catalog model id; the Z.AI Coding Plan provider pin is applied at
         # invocation time by the adapter (_OPENCODE_MODEL_ROUTES).
-        "default_model": "glm-5.2",
+        "default_model": "glm-5.3",
         "default_effort": "high",
         "cost_tier": "low",
         "capabilities": frozenset(
@@ -387,7 +387,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "acpx-glm-shadow": {
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
-        "default_model": "glm-5.2",
+        "default_model": "glm-5.3",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,

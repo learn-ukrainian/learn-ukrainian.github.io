@@ -158,7 +158,7 @@ endpoint (`https://api.z.ai/api/anthropic`) per
 ```bash
 ./start-glmcc.sh                     # coding endpoint + isolated ~/.claude-glmcc
 ./start-glmcc.sh --endpoint platform
-./start-glm.sh --model glm-5.2
+./start-glm.sh --model glm-5.3
 ```
 
 **Credentials (first match wins):** `GLMCC_AUTH_TOKEN`, `ZAI_API_KEY`,

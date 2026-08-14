@@ -17,7 +17,7 @@ from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
 
 _SHA = "a" * 40
 _REPO = "learn-ukrainian/learn-ukrainian.github.io"
-_MODEL = "glm-5.2"
+_MODEL = "glm-5.3"
 
 
 class FakeGh:
@@ -250,7 +250,7 @@ def test_finalize_preserves_canonical_evidence_for_publication(tmp_path: Path) -
     assert "The mutable cache is reused by the next request." in body
 
 
-@pytest.mark.parametrize("model", ["glm-5.2", "gemini-3.1-pro"])
+@pytest.mark.parametrize("model", ["glm-5.3", "gemini-3.1-pro"])
 def test_finalize_accepts_catalog_model_and_alias(tmp_path: Path, model: str) -> None:
     result = finalize_formal_review_verdict(
         pr_number=302,

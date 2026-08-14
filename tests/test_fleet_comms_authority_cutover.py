@@ -876,7 +876,7 @@ def _substitution_request(authority_key: str, idempotency_key: str = "substitute
         requested_risk="high",
         route_mode="explicit",
         estimated_input_bytes=123,
-        requested_reviewer="glm-5.2",
+        requested_reviewer="glm-5.3",
         required_capabilities=("code_review", "sealed_evidence"),
         data_egress_policy="approved",
         isolation_required=True,
@@ -885,9 +885,9 @@ def _substitution_request(authority_key: str, idempotency_key: str = "substitute
 
 def _substitution_selection(_context: object) -> RoutingSelection:
     return RoutingSelection(
-        candidate="glm-5.2",
+        candidate="glm-5.3",
         route="glm",
-        model="glm-5.2",
+        model="glm-5.3",
         family="zhipu",
         quota_bucket="glm-weekly",
         credential_bucket="glm-key-a",
@@ -1004,7 +1004,7 @@ def _failed_formal_substitution_fixture(
         "authority_job_id": job.job_id,
         "authority_key": authority_key,
         "data_egress_policy": egress_policy,
-        "new_requested_reviewer": "glm-5.2",
+        "new_requested_reviewer": "glm-5.3",
     }
     return job, review, request, evidence
 

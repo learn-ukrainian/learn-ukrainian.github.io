@@ -341,7 +341,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
         (
             "acpx-glm-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
-            "glm-5.2",
+            "glm-5.3",
         ),
         (
             "acpx-deepseek-shadow",
@@ -540,7 +540,7 @@ def test_load_adapter_glm():
     adapter = _load_adapter("glm")
     assert adapter.__class__.__name__ == "GlmAdapter"
     assert adapter.name == "glm"
-    assert adapter.default_model == "glm-5.2"
+    assert adapter.default_model == "glm-5.3"
 
 
 def test_load_adapter_cached():

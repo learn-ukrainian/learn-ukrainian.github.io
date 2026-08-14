@@ -1,7 +1,7 @@
 """Tests for ab ask-pool / ask-glm bridge subcommands (opencode-routed fleet).
 
 pool = poolside.ai laguna-s-2.1 (free code + web-verify specialist).
-glm  = Zhipu glm-5.2 (code + review; ⚠️ China-hosted → LOCAL-ONLY, no CI).
+glm  = Zhipu glm-5.3 (code + review; ⚠️ China-hosted → LOCAL-ONLY, no CI).
 """
 
 from unittest.mock import MagicMock, patch
@@ -34,7 +34,7 @@ def test_pool_model_is_native_poolside_provider():
 
 
 def test_glm_model_is_zai_coding_plan():
-    assert GLM_MODEL == "zai-coding-plan/glm-5.2"
+    assert GLM_MODEL == "zai-coding-plan/glm-5.3"
 
 
 # --- invocation argv (variant + json format) ------------------------------
@@ -191,8 +191,8 @@ def test_ask_glm_honors_model_override_when_not_ci(monkeypatch):
         patch("scripts.ai_agent_bridge._opencode.acknowledge"),
         patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
     ):
-        ask_glm("hi", task_id="t", model="openrouter/z-ai/glm-5.2")
-        assert inv.call_args[0][1] == "openrouter/z-ai/glm-5.2"
+        ask_glm("hi", task_id="t", model="openrouter/z-ai/glm-5.3")
+        assert inv.call_args[0][1] == "openrouter/z-ai/glm-5.3"
 
 
 # --- capture fix for multi-message streams (first vs last assistant msg) ---
@@ -249,7 +249,7 @@ def test_get_max_output_tokens_defaults_for_glm_pool():
     assert _get_max_output_tokens(GLM_MODEL) == GLM_DEFAULT_MAX_OUTPUT_TOKENS
     assert _get_max_output_tokens(POOL_MODEL) == POOL_DEFAULT_MAX_OUTPUT_TOKENS
     # also matches on prefix variants
-    assert _get_max_output_tokens("openrouter/z-ai/glm-5.2") == GLM_DEFAULT_MAX_OUTPUT_TOKENS
+    assert _get_max_output_tokens("openrouter/z-ai/glm-5.3") == GLM_DEFAULT_MAX_OUTPUT_TOKENS
     assert _get_max_output_tokens("poolside/poolside/laguna-s-2.1") == POOL_DEFAULT_MAX_OUTPUT_TOKENS
 
 
@@ -361,3 +361,18 @@ def test_ask_glm_omitted_effort_defaults_to_variant_high(monkeypatch):
         ):
             ask_glm("hi", task_id="t", effort=effort)
         assert inv.call_args.kwargs["variant"] == expected_variant
+
+
+
+def test_ask_glm_advisory_defaults_to_variant_max(monkeypatch):
+    """Operator 2026-08-14: ask-glm --type advisory defaults to max effort."""
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    with (
+        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=42),
+        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+        patch("scripts.ai_agent_bridge._opencode.record_ask_reply"),
+        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
+    ):
+        ask_glm("advise", task_id="t", msg_type="advisory", effort=None)
+    assert inv.call_args.kwargs["variant"] == "max"

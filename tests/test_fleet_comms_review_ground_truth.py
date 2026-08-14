@@ -29,7 +29,7 @@ from scripts.fleet_comms.review_publication import (
 _SHA = "a" * 40
 _BASE = "b" * 40
 _REPO = "learn-ukrainian/learn-ukrainian.github.io"
-_MODEL = "glm-5.2"
+_MODEL = "glm-5.3"
 
 
 def _finding(*, path: str, finding_id: str = "F001") -> ReviewFinding:

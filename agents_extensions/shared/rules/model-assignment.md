@@ -49,7 +49,7 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
 * **Everyday Routine Formal Reviews** (practical seats @ `high` effort):
   * **Claude seat**: `claude-sonnet-5` (preserves frontier window; fast & efficient)
   * **Codex seat**: `gpt-5.6-terra` (standard practical review)
-  * **GLM seat**: `glm-5.2` (local-only)
+  * **GLM seat**: `glm-5.3` @ `high` (local-only; advisory `max`)
   * **Gemini seat**: `gemini-3.7-flash-high`
   * **DeepSeek seat**: `deepseek-v4-flash` through first-party OpenCode (`deepseek-direct/*`) at
     `high` effort for review/research AND dispatch, preserving native Entire capture (operator
@@ -68,7 +68,7 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
     escalation, never as the bounded-advisory default. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.7-flash-high` ·
-    `kimi-k3-max` · `glm-5.2` · `grok-4.5` @ `high`.
+    `kimi-k3-max` · `glm-5.3` @ `max` (advisory) · `grok-4.5` @ `high`.
   * `gpt-5.6-terra` is **not an advisor**; it remains the practical/routine
     Codex review seat.
   * `gemini-3.7-flash-high` is currently the strongest lane for Ukrainian.
@@ -119,7 +119,7 @@ or count as a formal review.
   consequential). Do not burn full-K3 on routine queue when k3-256k fits. Outside Moonshot
   lineage for CF of non-Moonshot authors; Composer shares Moonshot lineage conservatively.
 * **glm / Z.AI** (operator 2026-08-08 / #6468): **keep and use** — first-class rotation member
-  (`glm-5.2`, z.ai Coding Plan). Prefer the **z.ai account** over any legacy GLM account.
+  (`glm-5.3` @ high default / max advisory, z.ai Coding Plan). Prefer the **z.ai account** over any legacy GLM account.
   Rails unchanged: **LOCAL-ONLY**, bridge-diff, never CI/sensitive. Route everyday local-rail
   code/security/coherence work here when the 5h or monthly window has headroom.
 * **OpenRouter** (operator 2026-08-08): **mainly Pool + Gemma access.** Can reach more models;
@@ -249,7 +249,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   (measured 2026-07-26: a dispatch-heavy Fable orchestration hour costs ~2 weekly-quota
   points; inline-heavy driving is what burns the window in days). Also the escalation
   target and top Anthropic advisor seat.
-* **Understudy trial: `glm-5.2`** — sanctioned as a BOUNDED driver trial on one epic under
+* **Understudy trial: `glm-5.3`** — sanctioned as a BOUNDED driver trial on one epic under
   the standard capsule/handoff contract (operator 2026-07-26; untested as driver, repeatedly
   the sharpest cheap seat on code review). Evaluate against the same rails; report before
   widening.
@@ -374,7 +374,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **claude** (Sonnet routine; Fable summoned only) | hard judgment, CF, architecture briefs | don't burn Fable on queue grind |
 | **agy** (Gemini 3.7 Flash default) | agentic scripts, content (language lanes); **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
-| **glm / Z.AI** (`glm-5.2`) | deep security + large-context coherence audits | **LOCAL-ONLY** China egress; never CI/sensitive; prefer 5h when weekly hot |
+| **glm / Z.AI** (`glm-5.3`) | deep security + large-context coherence audits | **LOCAL-ONLY** China egress; never CI/sensitive; prefer 5h when weekly hot |
 | **grok-4.5** | daily driver / CF (not QG judge) | oversight may be native Grok; don't solo multi-file when free workers exist |
 | **kimi** (**keep**) | **`k3-256k` everyday** coding/impl; **`k3` @ high/max** advisory/complex only | don't burn full k3 on routine; throttle 5h windows when farAhead |
 | **glm / Z.AI** (**keep**) | local-rail security + large-context coherence | LOCAL-ONLY; prefer z.ai account; 5h when weekly hot |
@@ -390,7 +390,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 | --- | --- | --- |
 | **Native CLIs** (claude, codex, cursor, grok, kimi, agy) | default dispatch + ask for those families | — |
 | **DeepSeek first-party** (`deepseek-direct` / Hermes) | all DeepSeek work (`deepseek-v4-flash` only) | `openrouter/deepseek/*` is guard-REFUSED |
-| **Z.AI / opencode glm** | `glm-5.2` LOCAL-ONLY reviews | general multi-model fallback |
+| **Z.AI / opencode glm** | `glm-5.3` @ high (advisory max) LOCAL-ONLY reviews | general multi-model fallback |
 | **OpenRouter** | **mainly Pool + Gemma access** when that is the named path | **not** a general multi-model bus — can reach more, but we do not need to; prefer native/first-party seats |
 | **Cursor multi-model pin** | Fable/Grok **availability fallback** only when native dark; Composer 2.5 when family pin required | formal CF as `auto`; quality escalate disguised as pin |
 
@@ -424,7 +424,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **Ultra month (2026-08-13→~2026-09-13):** **cursor Auto** first when fit allows for mechanical + ordinary infra/code implement. Else **Luna @ `max`** for bounded work with exact owned paths + an objective scope ceiling; use a complete Sol envelope when consequential boundaries need definition. **Terra @ `high`** for broader autonomous integration or unresolved ambiguity | **agy** `gemini-3.7-flash-high` · **kimi** `k3-256k` · Luna/Terra when Cursor unfit or concurrency full | **deepseek-v4-flash** (tool-heavy / CF volume) · grok | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, **do not** park ruff/fingerprint/CI-fix on Terra; claude seat = only ≤5-LOC CI-fix-I-caused; Luna never sole authority; **Pro @ high = hard implement only** (complex multi-file, hard lookup — 2026-08-13) |
-| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.7-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.2 · **DeepSeek V4 Flash @ OpenCode high** · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · Gemini 3.5 Flash | DeepSeek review = Flash only (Pro stays off the routine review ladder — Pro @ high = hard implement only, 2026-08-13); never critical authority; first-party `deepseek-direct` + native Entire capture |
+| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Sol (authority) | **high/medium/low formal CF defaults:** `gpt-5.6-terra` · `claude-sonnet-5` · `gemini-3.7-flash-high` · native `grok-4.5` (Cursor **`grok-4.5` explicit** if native dark) · Kimi K3 · GLM-5.3 · **DeepSeek V4 Flash @ OpenCode high** · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · Gemini 3.5 Flash | DeepSeek review = Flash only (Pro stays off the routine review ladder — Pro @ high = hard implement only, 2026-08-13); never critical authority; first-party `deepseek-direct` + native Entire capture |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | **grok-4.5** | **LANGUAGE-LANES RULE below binds**: only these four; cursor/deepseek/kimi/pool/glm/gemma excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex** · **grok-4.5** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; NO grok as a QG judge seat (separate standing ban); FOLK stays cross-family GPT↔Claude per the folk rubric |
 | **Research / recon / triage** | **Luna @ `max`** with exact owned paths + an objective scope ceiling; add a Sol envelope when the boundaries themselves need judgment | Terra @ `high` for broader or ambiguous work | agy | Luna never sole authority on consequential calls |
@@ -441,11 +441,11 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; Fable 5 improvised 10/10 @ ~500K/1M 2026-07-07; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
 
 * **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.7 Flash default; Gemini 3.1 Pro for deep) · **GPT-5.6 Terra/Sol by risk** · **claude** · **grok-4.5**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
-* **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.7 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.6/3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Auto** (impl default) / **Composer 2.5** (pinned when family independence matters) · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Flash @ high** (OpenCode review/Entire continuity; Hermes tool-heavy; **V4 Pro @ high = hard implement only** — complex multi-file, hard lookup; 2026-08-13) · **Pool Laguna S 2.1** (free review volume) · **GLM-5.2 / Z.AI** (deep security/bug review + large-context coherence audits; LOCAL-ONLY) · **Gemma 4** (surface review only; often via OpenRouter). Pin Cursor's concrete model whenever family independence matters — never `auto` as CF identity.
+* **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** (Gemini 3.7 Flash top default / agentic / **orchestrator seat**; 3.1 Pro deep; 3.6/3.5 Flash back-compat) · **GPT-5.6 Terra/Sol** · **cursor Auto** (impl default) / **Composer 2.5** (pinned when family independence matters) · **native Grok 4.5** · **Kimi K3** · **DeepSeek V4 Flash @ high** (OpenCode review/Entire continuity; Hermes tool-heavy; **V4 Pro @ high = hard implement only** — complex multi-file, hard lookup; 2026-08-13) · **Pool Laguna S 2.1** (free review volume) · **GLM-5.3 / Z.AI** (deep security/bug review + large-context coherence audits; LOCAL-ONLY) · **Gemma 4** (surface review only; often via OpenRouter). Pin Cursor's concrete model whenever family independence matters — never `auto` as CF identity.
 
 Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.7-flash-high` (orchestrator/routine default; `--to-model gemini-3.1-pro-high` only for deep) · `ask-cursor --model auto` (or `--model composer-2.5`) · `ask-grok` (alias `ask-grok-build`) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. **deepseek has NO `ask-*`** — route it via `delegate.py dispatch --agent deepseek` (default = OpenCode first-party `deepseek-direct/deepseek-v4-flash` `--variant high`, with native Entire capture; Hermes only via `ask-hermes`; **Pro reachable via `--model deepseek-v4-pro` @ high for hard implement only** — complex multi-file, hard lookup; 2026-08-13). Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
 
-**opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode". **OpenRouter is mainly for Pool + Gemma access** (operator 2026-08-08); the catalog can reach more models through OpenRouter, but **we do not need to** — prefer native/first-party seats (DeepSeek first-party Flash, Cursor, Claude, AGY, Z.AI GLM, Codex, Kimi, Grok). Do not invent OpenRouter as a general multi-model fallback bus when a native lane exists (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — — **(b) wiki drafting RETIRED from gemma (LANGUAGE-LANES RULE 2026-07-17: wiki prose is language work → agy/codex/claude/grok-4.5 only; the 2026-07-05 source-citation probe evidence stands in `docs/projects/qg-quality-gate/model-evidence.md`). ** ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai **`laguna-s-2.1`** (default gen-2 S; also `laguna-xs-2.1` / fallback `laguna-m.1`), **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.2`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
+**opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode". **OpenRouter is mainly for Pool + Gemma access** (operator 2026-08-08); the catalog can reach more models through OpenRouter, but **we do not need to** — prefer native/first-party seats (DeepSeek first-party Flash, Cursor, Claude, AGY, Z.AI GLM, Codex, Kimi, Grok). Do not invent OpenRouter as a general multi-model fallback bus when a native lane exists (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — — **(b) wiki drafting RETIRED from gemma (LANGUAGE-LANES RULE 2026-07-17: wiki prose is language work → agy/codex/claude/grok-4.5 only; the 2026-07-05 source-citation probe evidence stands in `docs/projects/qg-quality-gate/model-evidence.md`). ** ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai **`laguna-s-2.1`** (default gen-2 S; also `laguna-xs-2.1` / fallback `laguna-m.1`), **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.3`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
 ## Advisor panels — per-area pools · pool-minus-author · size-by-stakes · Sol/Fable anchor (#5933, operator-ruled 2026-07-28)
 
@@ -465,9 +465,9 @@ seats rotate — operator wording; the catalog-refresh contract §above owns nam
 | --- | --- | --- |
 | Ukrainian language & pedagogy | Fable · Sol · Gemini (sanctioned language seats ONLY) | LANGUAGE-LANES RULE binds |
 | Architecture & process design | Sol (designer seat) · Fable (counter-reader) | fleet topology §above |
-| Code & infrastructure review | Kimi K3 · GLM-5.2 · Terra | Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
+| Code & infrastructure review | Kimi K3 · GLM-5.3 · Terra | Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
 | Security-sensitive changes | Terra/GPT family · Kimi | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
-| Debugging & forensics | Grok · GLM-5.2 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
+| Debugging & forensics | Grok · GLM-5.3 | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
 | Long-context sweeps & harness infra | Gemini | model catalog §above (window/tooling) |
 
 Terra's presence in area pools is as a practical PANEL PARTICIPANT — it does not promote
@@ -494,7 +494,7 @@ sign-off on this section approves them):**
    debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
 
 **Standing constraints (unchanged, restated because they bound the pools):** no Kimi/GLM on
-language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.2 is LOCAL-ONLY (China
+language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.3 is LOCAL-ONLY (China
 egress — no CI, no secrets, no sensitive data).
 
 *Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
@@ -543,7 +543,7 @@ adapter remains for `ask-hermes` only. `openrouter/deepseek/*` is **guard-REFUSE
 2026-07-07 — the OR account was drained by deepseek bakeoff cells; deepseek runs FIRST-PARTY only.
 The user's OR BYOK now bills deepseek underneath, so transport-comparison runs (#4321/#4358) are
 billing-safe behind `LU_ROUTING_GUARD_OVERRIDE=1` — deliberate, user-authorized only).
-² Qwen is excluded from routine routing; `glm-5.2` (Zhipu/opencode) is used for cross-family code and review.
+² Qwen is excluded from routine routing; `glm-5.3` (Zhipu/opencode; default high, advisory max) is used for cross-family code and review.
 
 Consequences:
 - **A model "lacking" a capability may just be in the wrong harness** — deepseek can't browse
