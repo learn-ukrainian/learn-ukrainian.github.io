@@ -149,4 +149,19 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(dailyWordsSource).not.toContain("filterByCumulativeLevel");
     expect(dailyWordsSource).not.toContain("prioritizeByLearnerLevel");
   });
+
+  test("DailyWords surfaces pool/script failure with error + retry, not a stuck spinner (#6771)", () => {
+    expect(dailyWordsSource).toContain('fetch("/lexicon/daily-pool.json")');
+    expect(dailyWordsSource).not.toContain('fetch("daily-pool.json")');
+    expect(dailyWordsSource).not.toContain("words-of-the-day/daily-pool");
+    expect(dailyWordsSource).toContain("data-daily-fallback");
+    expect(dailyWordsSource).toContain("data-daily-retry");
+    expect(dailyWordsSource).toContain("Не вдалося завантажити добірку.");
+    expect(dailyWordsSource).toContain("Спробувати ще раз");
+    expect(dailyWordsSource).toContain("showLoadError");
+    expect(dailyWordsSource).toContain("script is:inline");
+    expect(dailyWordsSource).toContain("TIMEOUT_MS");
+    // Must not silently hide the section on transport/server failure.
+    expect(dailyWordsSource).toMatch(/catch\s*\{\s*showLoadError\(\);/);
+  });
 });
