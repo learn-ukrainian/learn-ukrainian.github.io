@@ -403,11 +403,23 @@ def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path, m
     (out.parent / ".git").mkdir()
     payload = intake.canonical_bytes(receipt)
     out.write_bytes(payload)
-    os.chmod(out, intake.TRACKED_PUBLIC_FILE_MODE)
-    assert stat.S_IMODE(out.stat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
+    os.chmod(out, intake.PRIVATE_FILE_MODE)
+
+    real_lstat = Path.lstat
+
+    def lstat_with_tracked_checkout_mode(path: Path) -> os.stat_result:
+        result = real_lstat(path)
+        if path == out:
+            mode = (result.st_mode & ~0o777) | intake.TRACKED_PUBLIC_FILE_MODE
+            return os.stat_result((mode, *result[1:]))
+        return result
+
+    monkeypatch.setattr(Path, "lstat", lstat_with_tracked_checkout_mode)
+    assert stat.S_IMODE(os.lstat(out).st_mode) == intake.PRIVATE_FILE_MODE
+    assert stat.S_IMODE(out.lstat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
     intake.write_public_receipt(out, receipt)
     assert out.read_bytes() == payload
-    assert stat.S_IMODE(out.stat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
+    assert stat.S_IMODE(os.lstat(out).st_mode) == intake.PRIVATE_FILE_MODE
     other = dict(receipt)
     other["status"] = "TAMPERED"
     other["receipt_sha256"] = intake.receipt_sha256(other)
