@@ -56,10 +56,10 @@
           "const": "364055091f44e1c7ff4df71da81d7a43460100fd8a25cd06e7c820e1b114bc08"
         },
         "school_context_negative_recovery_receipt_body_sha256": {
-          "const": "2e3b327292ed8ff6723697d2713c915b5165c1c5af833d9adb236676914c2426"
+          "const": "c72ddf3c9c07f5a393c0bb4eb33c057c5d820d0cec4df29029d7a8ac7c7747ae"
         },
         "school_context_negative_recovery_receipt_file_sha256": {
-          "const": "12e8fe94f938077b61a6db1f96688a824d1b72a9c6333c2b4be957e1430cb1fe"
+          "const": "2d63b8295b1583abf835ab6a1661646ab15ea4b85979e37a7bf1ffcf8d39651c"
         },
         "evaluation_context_manifest_receipt_body_sha256": {
           "const": "f01d8efd0a1279d7cf4b742ad6909de4a7d2a3866195b7f7e1b56d8e1e2598d1"
