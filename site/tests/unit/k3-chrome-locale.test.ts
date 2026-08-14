@@ -94,7 +94,8 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
       /button\.k3-session-primary[^}]*background:\s*var\(--lu-primary\)/s,
     );
     expect(practiceSource).toMatch(
-      /button\.k3-session-primary[^}]*color:\s*var\(--lu-on-primary\)/s,
+      // #6814 dark-theme contrast fix: the on-fill color moved to --lu-on-accent.
+      /button\.k3-session-primary[^}]*color:\s*var\(--lu-on-accent\)/s,
     );
     expect(practiceSource).toMatch(
       /button\.k3-session-primary[^}]*min-height:\s*46px/s,
