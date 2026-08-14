@@ -1,0 +1,20 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "21686482753c",
+  "strategy": "manual-commit",
+  "branch": "cursor/6768-6771-loader",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/src/lexicon/DailyWords.astro",
+    "site/tests/unit/daily-words-example.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/21/686482753c/0/metadata.json",
+      "transcript": "/21/686482753c/0/full.jsonl",
+      "compact_transcript": "/21/686482753c/0/transcript.jsonl",
+      "content_hash": "/21/686482753c/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
