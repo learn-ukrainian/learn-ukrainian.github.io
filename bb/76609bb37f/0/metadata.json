@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bb76609bb37f",
+  "session_id": "session_82787fb9-94f3-4f3d-a751-48963b22d7cc",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T21:31:29.048177Z",
+  "branch": "kimi/atlas-a11y-6814-6815",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/e2e/ui-policy-axe.spec.ts",
+    "site/src/lexicon/AtlasRuntimeStatus.astro",
+    "site/src/pages/lexicon/index.astro",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/src/styles/course.css",
+    "site/src/styles/lesson.css"
+  ],
+  "agent": "Kimi Code",
+  "model": "kimi-code/k3-256k",
+  "turn_id": "95a2aa593375",
+  "token_usage": {
+    "input_tokens": 102258,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7138764,
+    "output_tokens": 41577,
+    "api_call_count": 96
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T21:31:28.98284Z",
+    "agent_lines": 47,
+    "agent_removed": 52,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 47,
+    "total_lines_changed": 99,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

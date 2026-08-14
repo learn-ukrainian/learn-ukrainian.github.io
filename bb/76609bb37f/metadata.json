@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bb76609bb37f",
+  "strategy": "manual-commit",
+  "branch": "kimi/atlas-a11y-6814-6815",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/e2e/ui-policy-axe.spec.ts",
+    "site/src/lexicon/AtlasRuntimeStatus.astro",
+    "site/src/pages/lexicon/index.astro",
+    "site/src/pages/words-of-the-day/practice.astro",
+    "site/src/styles/course.css",
+    "site/src/styles/lesson.css"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bb/76609bb37f/0/metadata.json",
+      "transcript": "/bb/76609bb37f/0/full.jsonl",
+      "content_hash": "/bb/76609bb37f/0/content_hash.txt",
+      "prompt": "/bb/76609bb37f/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 102258,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7138764,
+    "output_tokens": 41577,
+    "api_call_count": 96
+  }
+}

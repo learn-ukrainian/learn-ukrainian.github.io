@@ -1,0 +1,34 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/atlas-a11y-6814-6815
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Fix #6814 + #6815 — the two axe-core defects the #5376 gate found on main
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: kimi × native
+- why_this_tier: bounded a11y fixes with a machine gate (the advisory UI-policy job you built in #6806) as the acceptance oracle
+- owned_paths: site/src/styles/**, site/src/pages/lexicon/**, the practice-dashboard style/markup files the violations point at (NOT site/src/components/LexiconPractice.tsx — another task owns it until #6807 merges; if the contrast fix genuinely requires it, STOP and report)
+- acceptance_cmd: cd site && npx playwright test ui-policy-axe (your own gate) green on both surfaces/themes
+- alternatives_considered: (1) cursor — reserved for #6816; (2) codex — routed to #6370; (3) defer — operator ordered the backlog kept moving
+- parallel_free_seats: none after this wave
+
+## Task
+Two issues, one PR (both are axe serious/critical findings your #6806 gate reported on main — read the gate's spec output on that PR for the exact violation nodes):
+1. **#6814** — color-contrast failure on the practice dashboard, BOTH themes. Fix at the token/style layer; keep the design intent (adjust the failing pair minimally, verify in light AND dark).
+2. **#6815** — definition-list structure violation on /lexicon/ (dl/dt/dd semantics). Fix the markup properly, not by suppressing the rule.
+The acceptance oracle is your own gate: `ui-policy-axe.spec.ts` must pass on the practice + lexicon surfaces in both themes, and NO allowlist/rule-suppression additions are permitted — fix the artifact, not the check.
+
+## Evidence preamble (#M-4)
+Quote the axe violation output BEFORE (from the gate run on main) and the green gate run AFTER. Include a contrast-ratio measurement for the fixed pair (computed values, both themes).
+
+## Steps
+1. Dispatch worktree only. 2. Reproduce both violations with the gate locally. 3. Fix both. 4. cd site && npx tsc --noEmit && lint changed files && npx playwright test ui-policy. 5. Conventional commit referencing #6814 #6815, push, PR, X-Agent trailer. 6. NO merge / NO auto-merge — driver owns review + merge.
