@@ -1,0 +1,39 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/kimi/infra-reaper-dynamic-cap
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Reaper daily cap → dynamic: default 25/day with bounded backlog expansion (operator order 2026-08-14)
+
+## ROUTING_CARD_V1
+- tier: practical
+- model_x_harness: kimi × native (destructive-op safety code deserves a frontier coder)
+- why_this_tier: bounded, operator-specified change to an existing safety mechanism; design freedom is small and the reviewer checks it
+- owned_paths: scripts/orchestration/reaper_lifecycle.py, scripts/orchestration/reap_worktrees.py (only if needed), tests/orchestration/**
+- acceptance_cmd: .venv/bin/pytest tests/orchestration/test_reap_worktrees.py (+ new tests) -q
+- alternatives_considered: (1) cursor — routed to research inventory; (2) codex — busy on #6371; (3) env-var-only change — rejected: operator asked for a dynamic default, not per-launcher config
+- parallel_free_seats: agy (on #6801 round 2), cursor (inventory)
+
+## Task
+Operator order: make the merged-worktree reaper's first-class daily cap DYNAMIC — "25 per day by default, but let it expand occasionally."
+
+Current state (scripts/orchestration/reaper_lifecycle.py): _DEFAULT_MAX_REAPS_PER_DAY = 10, overridable via LU_REAPER_MAX_REAPS_PER_DAY; cap state in batch_state/worktree-reaper/first-class-cap.json; the cap exists as a blast-radius limiter on a destructive operation (see PR #6478 — closed-loop reap with rescue refs).
+
+Requirements:
+1. Default becomes 25/day.
+2. Bounded expansion: when the eligible backlog (worktrees that pass EVERY existing safety proof: clean, exact-MERGED head, unbound, guard-green) exceeds the remaining daily budget, the cap may expand — but never beyond a hard ceiling of 2× the default (50/day). Expansion must be journaled (append-only journal already exists) with the backlog size that justified it.
+3. The hard ceiling is NOT env-expandable past 2× the configured base — a runaway still gets stopped.
+4. LU_REAPER_MAX_REAPS_PER_DAY keeps working as the base override; LU_REAPER_DISABLED kill switch unchanged.
+5. Every existing safety proof stays exactly as-is — this change touches ONLY how many reaps a day may pass, never what qualifies.
+
+Design freedom: the expansion trigger/accounting shape is yours; keep it simple, fail-closed (any doubt about backlog counting → no expansion), and fully covered by tests: base cap honored; expansion grants when backlog demands; ceiling never exceeded; journal records expansions; env overrides respected; mutation-check the ceiling guard (raise it in test → guard test fails).
+
+## Steps
+1. Dispatch worktree only. 2. Implement + tests. 3. .venv/bin/ruff check changed files; run the orchestration test suite. 4. Conventional commit (reference the operator order and PR #6478 lineage), push, PR with two-sided evidence, X-Agent trailer. 5. NO merge / NO auto-merge — driver owns review + merge.
