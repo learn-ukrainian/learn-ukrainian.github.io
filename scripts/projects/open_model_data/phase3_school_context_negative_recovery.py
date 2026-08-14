@@ -198,10 +198,12 @@ def _iter_jsonl(path: Path, label: str) -> Iterator[dict[str, Any]]:
             yield row
 
 
-def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
-    """Atomically write *payload* with owner-only permissions (no group/other bits)."""
-    if mode & 0o077:
-        raise ValueError(f"private write refuses group/other bits: {mode:04o}")
+def _atomic_write(path: Path, payload: bytes) -> None:
+    """Atomically write *payload* with owner-only permissions (mode 0600).
+
+    Mode is fixed at every fchmod/chmod site (no caller-controlled argument) so
+    static analysis can prove the permission policy without tracking a variable.
+    """
     _reject_symlink_components(path, "output path")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
@@ -212,12 +214,12 @@ def _atomic_write(path: Path, payload: bytes, mode: int) -> None:
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), mode)
+            os.fchmod(handle.fileno(), 0o600)
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        os.chmod(path, mode)
+        os.chmod(path, 0o600)
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
@@ -503,7 +505,7 @@ def materialize(
         completed_at=finished,
         candidate_database=candidate_database,
     )
-    _atomic_write(public_receipt_path, canonical_bytes(receipt), PRIVATE_FILE_MODE)
+    _atomic_write(public_receipt_path, canonical_bytes(receipt))
     return validate_receipt(_strict_json_object(public_receipt_path.read_bytes(), "public receipt"))
 
 
@@ -566,7 +568,7 @@ def _extract_tarball_members(tarball: Path, destination: Path) -> dict[str, Path
             require(stream is not None, f"cannot extract tarball member: {member_name}")
             payload = stream.read()
             target = destination / Path(member_name).name
-            _atomic_write(target, payload, PRIVATE_FILE_MODE)
+            _atomic_write(target, payload)
             extracted[key] = target
     return extracted
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
 import stat
@@ -206,17 +207,20 @@ def test_symlink_receipt_rejected(tmp_path: Path) -> None:
         negrec._regular_file(link, "receipt")
 
 
-def test_atomic_write_rejects_group_or_other_bits(tmp_path: Path) -> None:
-    target = tmp_path / "out.bin"
-    with pytest.raises(ValueError, match="refuses group/other bits"):
-        negrec._atomic_write(target, b"secret", 0o644)
-    assert not target.exists()
+def test_atomic_write_api_has_no_mode_parameter() -> None:
+    # Callers cannot request a permissive mode; CodeQL must see a fixed 0600 policy.
+    params = inspect.signature(negrec._atomic_write).parameters
+    assert list(params) == ["path", "payload"]
+    assert "mode" not in params
+    assert negrec.PRIVATE_FILE_MODE == 0o600
 
 
 def test_atomic_write_sets_owner_only_mode(tmp_path: Path) -> None:
     target = tmp_path / "out.bin"
-    negrec._atomic_write(target, b"secret", negrec.PRIVATE_FILE_MODE)
+    negrec._atomic_write(target, b"secret")
     assert target.is_file()
+    assert target.read_bytes() == b"secret"
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
     assert stat.S_IMODE(target.stat().st_mode) == negrec.PRIVATE_FILE_MODE
 
 
