@@ -356,6 +356,7 @@ def test_deterministic_cli_mint_and_check(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert mint.returncode == 0, mint.stdout + mint.stderr
     mint_payload = json.loads(mint.stdout)
@@ -367,6 +368,7 @@ def test_deterministic_cli_mint_and_check(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert check.returncode == 0, check.stdout + check.stderr
     check_payload = json.loads(check.stdout)
