@@ -1,0 +1,25 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/cursor/fix-6783-wotd-404-cursor
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+Continue the completed #6783 WotD 404 investigation in this same clean dispatch worktree. Scope is now explicitly expanded to the actual root cause: site/src/css/custom.css and, only if required for a robust self-hosted solution, site/package.json, site/package-lock.json, narrowly related font assets/imports, and a focused regression test. You own only those paths. You are not alone in the codebase; do not revert others.
+
+Root evidence already established: two retired fonts.gstatic.com Noto Sans v42 woff2 URLs return 404 through the global Google Fonts @import in custom.css, causing Playwright console errors across CourseLayout pages. This is not DailyWords or lexicon-shard behavior.
+
+Implement the durable root fix. Requirements:
+- eliminate runtime dependence on fonts.googleapis.com/fonts.gstatic.com for this typography path;
+- preserve high-quality Ukrainian Cyrillic rendering and current typography as closely as practical; prefer a repository-built/self-hosted deterministic font solution over merely hiding errors;
+- do not suppress console errors, alter the existing Playwright assertion, or change #6781 DailyWords 404/5xx/network behavior;
+- do not commit generated lexicon drift or unrelated build artifacts;
+- add focused regression coverage proving built page/CSS has no Google Fonts runtime dependency, if the existing test architecture supports it;
+- run the exact failing Playwright test site/e2e/atlas-practice.spec.ts at the WotD case or the whole file, relevant Vitest/tests, and a production build;
+- inspect final diff/status, commit with X-Agent: cursor/fix-6783-wotd-404-cursor, push, open a DRAFT PR against main, link #6783/#6375 as appropriate, never merge;
+- report exact head SHA, files, tests, root cause, and any residual.

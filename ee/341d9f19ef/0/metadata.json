@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ee341d9f19ef",
+  "session_id": "fleet-5b27cd74392b47178235e5a69f72d889",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T02:41:16.061393Z",
+  "branch": "cursor/fix-6783-fonts-404-cursor",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/src/css/custom.css",
+    "site/tests/unit/noto-sans-self-hosted.test.ts"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "e20ca3b17779",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T02:41:16.053561Z",
+    "agent_lines": 84,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 19,
+    "human_removed": 3,
+    "total_committed": 103,
+    "total_lines_changed": 107,
+    "agent_percentage": 79.43925233644859,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

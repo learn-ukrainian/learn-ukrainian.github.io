@@ -1,0 +1,22 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "ee341d9f19ef",
+  "strategy": "manual-commit",
+  "branch": "cursor/fix-6783-fonts-404-cursor",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "site/package-lock.json",
+    "site/package.json",
+    "site/src/css/custom.css",
+    "site/tests/unit/noto-sans-self-hosted.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/ee/341d9f19ef/0/metadata.json",
+      "transcript": "/ee/341d9f19ef/0/full.jsonl",
+      "compact_transcript": "/ee/341d9f19ef/0/transcript.jsonl",
+      "content_hash": "/ee/341d9f19ef/0/content_hash.txt",
+      "prompt": "/ee/341d9f19ef/0/prompt.txt"
+    }
+  ]
+}
