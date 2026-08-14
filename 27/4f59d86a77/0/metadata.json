@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "274f59d86a77",
+  "session_id": "fleet-fd31c4ed05954937a7901face956d98e",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-14T12:01:08.648152Z",
+  "branch": "codex/6375-pliush-canonical-grammar",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "tests/test_open_model_phase3_pliush_2005_canonical_grammar_intake.py"
+  ],
+  "agent": "Project Runner",
+  "model": "",
+  "turn_id": "2efc4c68cf3f",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-14T12:01:08.573448Z",
+    "agent_lines": 409,
+    "agent_removed": 0,
+    "human_added": 19,
+    "human_modified": 2,
+    "human_removed": 0,
+    "total_committed": 430,
+    "total_lines_changed": 430,
+    "agent_percentage": 95.11627906976744,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

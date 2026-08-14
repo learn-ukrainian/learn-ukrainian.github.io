@@ -1,0 +1,19 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "274f59d86a77",
+  "strategy": "manual-commit",
+  "branch": "codex/6375-pliush-canonical-grammar",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_open_model_phase3_pliush_2005_canonical_grammar_intake.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/27/4f59d86a77/0/metadata.json",
+      "transcript": "/27/4f59d86a77/0/full.jsonl",
+      "compact_transcript": "/27/4f59d86a77/0/transcript.jsonl",
+      "content_hash": "/27/4f59d86a77/0/content_hash.txt",
+      "prompt": "/27/4f59d86a77/0/prompt.txt"
+    }
+  ]
+}
